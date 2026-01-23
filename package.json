@@ -32,6 +32,12 @@
     "test:performance": "jest --testPathPattern=performance --coverage",
     "perf:budget": "npm run test:performance && npm run lint:max-lines",
     "perf:bundle-check": "echo 'Run: find src app -name \"*.ts\" -o -name \"*.tsx\" | xargs wc -c | tail -1'",
+    "audit:deps": "npm audit --audit-level=high",
+    "audit:deps:json": "npm audit --json > audit-results.json || true",
+    "audit:deps:fix": "npm audit fix",
+    "audit:deps:report": "npm audit --json | jq '.metadata.vulnerabilities'",
+    "audit:licenses": "npx license-checker --production --onlyAllow \"MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;0BSD;Unlicense;CC0-1.0;CC-BY-3.0;CC-BY-4.0;Python-2.0;PSF-2.0;BlueOak-1.0.0\"",
+    "audit:outdated": "npm outdated --json | jq 'to_entries | map(select(.value.current != .value.latest)) | from_entries' || true",
     "postinstall": "patch-package",
     "prepare": "husky"
   },
