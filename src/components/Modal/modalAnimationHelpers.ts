@@ -3,8 +3,7 @@
  * Common animation utilities
  */
 
-import { Easing, runOnJS } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { Easing } from 'react-native-reanimated';
 
 export const fadeIn = (duration: number) => ({
   duration,
@@ -15,7 +14,3 @@ export const fadeOut = (duration: number) => ({
   duration,
   easing: Easing.in(Easing.cubic),
 });
-
-export const hapticCallback = (finished?: boolean) => {
-  if (finished) runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
-};

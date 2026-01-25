@@ -10,7 +10,7 @@ import {
   BOTTOM_SHEET_SPRING_CONFIG,
 } from './Modal.constants';
 import type { AnimationValues } from './modalAnimationEffects.types';
-import { fadeIn, hapticCallback } from './modalAnimationHelpers';
+import { fadeIn } from './modalAnimationHelpers';
 
 export function runEnterAnimation(
   variant: ModalVariant,
@@ -34,7 +34,7 @@ export function runEnterAnimation(
         : withTiming(targetOpacity, fadeIn(200));
       translateY.value = useReduced
         ? 0
-        : withSpring(0, BOTTOM_SHEET_SPRING_CONFIG, hapticCallback);
+        : withSpring(0, BOTTOM_SHEET_SPRING_CONFIG);
       break;
     }
     case 'fullScreen': {
@@ -43,7 +43,7 @@ export function runEnterAnimation(
         : withTiming(targetOpacity, fadeIn(400));
       fullScreenProgress.value = useReduced
         ? 1
-        : withSpring(1, FULLSCREEN_ORGANIC_SPRING, hapticCallback);
+        : withSpring(1, FULLSCREEN_ORGANIC_SPRING);
       fullScreenGestureY.value = 0;
       break;
     }

@@ -27,19 +27,26 @@ export function useModalStyles({
   alertOpacity,
   backdropOpacityValue,
 }: UseModalStylesParams) {
-  const backdropStyle = useAnimatedStyle(() => ({
-    opacity: backdropOpacityValue.value,
-  }));
+  const backdropStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: backdropOpacityValue.value ?? 0,
+    };
+  });
 
-  const bottomSheetStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
-  }));
+  const bottomSheetStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ translateY: translateY.value ?? 0 }],
+    };
+  });
 
   // Apple-like fullScreen animated style
   const fullScreenStyle = useAnimatedStyle(() => {
+    'worklet';
     // Scale: starts at 0.94, ends at 1.0
     const scaleValue = interpolate(
-      fullScreenProgress.value,
+      fullScreenProgress.value ?? 0,
       [0, 1],
       [0.94, 1],
       Extrapolation.CLAMP
@@ -47,7 +54,7 @@ export function useModalStyles({
 
     // Opacity: starts at 0, ends at 1
     const opacityValue = interpolate(
-      fullScreenProgress.value,
+      fullScreenProgress.value ?? 0,
       [0, 0.5, 1],
       [0, 0.8, 1],
       Extrapolation.CLAMP
@@ -55,14 +62,14 @@ export function useModalStyles({
 
     // TranslateY: starts at 80, ends at 0 (slides up)
     const translateYValue = interpolate(
-      fullScreenProgress.value,
+      fullScreenProgress.value ?? 0,
       [0, 1],
       [80, 0],
       Extrapolation.CLAMP
     );
 
     // Add gesture translation
-    const gestureTranslateY = fullScreenGestureY.value;
+    const gestureTranslateY = fullScreenGestureY.value ?? 0;
 
     // Scale down slightly when dragging (interactive feedback)
     const gestureScale = interpolate(
@@ -81,10 +88,13 @@ export function useModalStyles({
     };
   });
 
-  const centerAlertStyle = useAnimatedStyle(() => ({
-    opacity: alertOpacity.value,
-    transform: [{ scale: scale.value }],
-  }));
+  const centerAlertStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: alertOpacity.value ?? 0,
+      transform: [{ scale: scale.value ?? 1 }],
+    };
+  });
 
   return {
     backdropStyle,
