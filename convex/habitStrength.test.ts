@@ -58,8 +58,16 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
       const completed = true;
       const completionsLast7Days = 7;
 
-      const lowGrowth = calculateNewStrength(lowStrength, completed, completionsLast7Days);
-      const highGrowth = calculateNewStrength(highStrength, completed, completionsLast7Days);
+      const lowGrowth = calculateNewStrength(
+        lowStrength,
+        completed,
+        completionsLast7Days
+      );
+      const highGrowth = calculateNewStrength(
+        highStrength,
+        completed,
+        completionsLast7Days
+      );
 
       const lowIncrease = lowGrowth - lowStrength;
       const highIncrease = highGrowth - highStrength;
@@ -151,8 +159,16 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
       const currentStrength = 50;
       const completed = false;
 
-      const noStreakStrength = calculateNewStrength(currentStrength, completed, 0);
-      const fullStreakStrength = calculateNewStrength(currentStrength, completed, 7);
+      const noStreakStrength = calculateNewStrength(
+        currentStrength,
+        completed,
+        0
+      );
+      const fullStreakStrength = calculateNewStrength(
+        currentStrength,
+        completed,
+        7
+      );
 
       const noStreakDrop = currentStrength - noStreakStrength;
       const fullStreakDrop = currentStrength - fullStreakStrength;
@@ -209,15 +225,19 @@ describe('calculateNewStrength - Momentum-Based Formula v2.0', () => {
     });
 
     it('should show progressive growth aligned with PRD', () => {
-      const progressionPoints: Array<{ day: number; expectedMin: number; expectedMax: number }> = [
-        { day: 1, expectedMin: 2.5, expectedMax: 3.5 },    // ~3%
-        { day: 7, expectedMin: 18, expectedMax: 21 },       // ~19.2%
-        { day: 14, expectedMin: 33, expectedMax: 36 },      // ~34.7%
-        { day: 21, expectedMin: 46, expectedMax: 49 },      // ~47.3%
-        { day: 30, expectedMin: 58, expectedMax: 62 },      // ~59.9%
-        { day: 45, expectedMin: 73, expectedMax: 77 },      // ~74.6%
-        { day: 60, expectedMin: 82, expectedMax: 86 },      // ~83.9%
-        { day: 66, expectedMin: 85, expectedMax: 89 },      // ~86.6%
+      const progressionPoints: Array<{
+        day: number;
+        expectedMin: number;
+        expectedMax: number;
+      }> = [
+        { day: 1, expectedMin: 2.5, expectedMax: 3.5 }, // ~3%
+        { day: 7, expectedMin: 18, expectedMax: 21 }, // ~19.2%
+        { day: 14, expectedMin: 33, expectedMax: 36 }, // ~34.7%
+        { day: 21, expectedMin: 46, expectedMax: 49 }, // ~47.3%
+        { day: 30, expectedMin: 58, expectedMax: 62 }, // ~59.9%
+        { day: 45, expectedMin: 73, expectedMax: 77 }, // ~74.6%
+        { day: 60, expectedMin: 82, expectedMax: 86 }, // ~83.9%
+        { day: 66, expectedMin: 85, expectedMax: 89 }, // ~86.6%
       ];
 
       for (const point of progressionPoints) {
@@ -380,5 +400,143 @@ describe('calculateMomentumStrengthSnapshot - day-by-day simulation', () => {
     // Day 2 completion: 3.0 + (100 - 3.0) * 0.03 = 5.91
     expect(snapshot.daysProcessed).toBe(2);
     expect(snapshot.strength100).toBeCloseTo(5.91, 2);
+  });
+
+  // TEST-002: Edge Cases for calculateMomentumStrengthSnapshot
+  describe('Edge Cases (TEST-002)', () => {
+    it('should handle empty tracking array (earliestDateKey null)', () => {
+      const habitCreatedAt = new Date(2025, 0, 1).getTime();
+      const tracking: Array<{ completed: boolean; date: string }> = [];
+
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt,
+        throughDate: '2025-01-03',
+        tracking,
+      });
+
+      // With empty tracking, starts from creation date, no completions
+      // Day 1 miss: 0 * (1 - 0.02) = 0
+      // Day 2 miss: 0 * (1 - 0.02) = 0
+      // Day 3 miss: 0 * (1 - 0.02) = 0
+      expect(snapshot.daysProcessed).toBe(3);
+      expect(snapshot.strength100).toBe(0);
+      expect(snapshot.strength).toBe(0);
+      expect(snapshot.strengthLevel).toBe('starting');
+    });
+
+    it('should use earliestDate when before creationDate (backfill scenario)', () => {
+      // Habit created on Jan 5, but tracking has backfilled entries from Jan 1
+      const habitCreatedAt = new Date(2025, 0, 5).getTime();
+      const tracking = [
+        { completed: true, date: '2025-01-01' },
+        { completed: true, date: '2025-01-02' },
+        { completed: false, date: '2025-01-03' },
+      ];
+
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt,
+        throughDate: '2025-01-05',
+        tracking,
+      });
+
+      // Should start from Jan 1 (earliestDate), not Jan 5 (creationDate)
+      expect(snapshot.daysProcessed).toBe(5);
+      expect(snapshot.strength100).toBeGreaterThan(0);
+    });
+
+    it('should return zero values when startDate > evaluationDate (future habit)', () => {
+      // Habit created "tomorrow" but evaluating "today"
+      const tomorrow = new Date(2025, 0, 2).getTime();
+
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt: tomorrow,
+        throughDate: '2025-01-01', // "today" is before creation
+        tracking: [],
+      });
+
+      // Early return path: startDate > evaluationDate
+      expect(snapshot.daysProcessed).toBe(0);
+      expect(snapshot.strength).toBe(0);
+      expect(snapshot.strength100).toBe(0);
+      expect(snapshot.strengthLevel).toBe('starting');
+    });
+
+    it('should handle tracking with no completions (empty completionDates Set)', () => {
+      const habitCreatedAt = new Date(2025, 0, 1).getTime();
+      const tracking = [
+        { completed: false, date: '2025-01-01' },
+        { completed: false, date: '2025-01-02' },
+        { completed: false, date: '2025-01-03' },
+      ];
+
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt,
+        throughDate: '2025-01-03',
+        tracking,
+      });
+
+      // All days missed, but tracking records exist
+      // All days have completed: false, so strength stays 0
+      expect(snapshot.daysProcessed).toBe(3);
+      expect(snapshot.strength100).toBe(0);
+      expect(snapshot.strength).toBe(0);
+    });
+
+    it('should use creationDate when no valid dates in tracking', () => {
+      const habitCreatedAt = new Date(2025, 0, 1).getTime();
+      // Tracking with only invalid date formats
+      const tracking = [
+        { completed: true, date: 'invalid-date' },
+        { completed: true, date: '2025/01/01' }, // wrong format
+      ];
+
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt,
+        throughDate: '2025-01-03',
+        tracking,
+      });
+
+      // Invalid dates are skipped, so earliestDateKey is null
+      // Falls back to creationDate, no valid completions
+      expect(snapshot.daysProcessed).toBe(3);
+      expect(snapshot.strength100).toBe(0);
+    });
+
+    it('should handle throughDate defaulting to current date', () => {
+      const habitCreatedAt = new Date(2025, 0, 1).getTime();
+      const tracking = [{ completed: true, date: '2025-01-01' }];
+
+      // Don't provide throughDate - should use current date
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt,
+        tracking,
+      });
+
+      // Since we're testing in 2026, daysProcessed should be > 0
+      expect(snapshot.daysProcessed).toBeGreaterThan(0);
+      // Some strength should exist from the Jan 1 completion (heavily decayed)
+      expect(snapshot.strength100).toBeGreaterThanOrEqual(0);
+    });
+
+    it('should correctly filter only completed entries for completionDates', () => {
+      const habitCreatedAt = new Date(2025, 0, 1).getTime();
+      const tracking = [
+        { completed: true, date: '2025-01-01' },
+        { completed: false, date: '2025-01-02' },
+        { completed: true, date: '2025-01-03' },
+      ];
+
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt,
+        throughDate: '2025-01-03',
+        tracking,
+      });
+
+      // Day 1: completion 0 -> 3.0
+      // Day 2: miss (1/7 shield) 3.0 * (1 - 0.018) = 2.946
+      // Day 3: completion 2.946 + (100 - 2.946) * 0.03 ≈ 5.8576
+      expect(snapshot.daysProcessed).toBe(3);
+      expect(snapshot.strength100).toBeCloseTo(5.8576, 2);
+    });
   });
 });
