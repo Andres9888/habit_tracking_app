@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Testing
-- **Agent:** refactor-performance-security-testing
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
+- **Agent:** Tests
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/Tests
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -22,7 +22,8 @@ Using the coverage report from the analysis phase, identify specific untested fu
 
 ## Gap Finding Checklist
 
-- [ ] **Find untested code (or skip if not needed)**: Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_COVERAGE_REPORT.md`. If the report shows overall line coverage of 80% or higher, OR there are no files with coverage below 80%, mark this task complete without creating a gaps file—the coverage target has been met. Otherwise, examine low-coverage files, identify specific functions and branches without test coverage. List each gap with file path, function name, and why it matters. Output to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAPS.md`.
+- [x] **Find untested code (or skip if not needed)**: Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_COVERAGE_REPORT.md`. If the report shows overall line coverage of 80% or higher, OR there are no files with coverage below 80%, mark this task complete without creating a gaps file—the coverage target has been met. Otherwise, examine low-coverage files, identify specific functions and branches without test coverage. List each gap with file path, function name, and why it matters. Output to `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAPS.md`.
+  - **Completed 2026-01-27**: Coverage at 39.72% (below 80% target). Updated `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_GAPS.md` with 24 gaps identified. Key findings: codebase has been decomposed into ≤100 line files; `convex/habits/`, `convex/habitStrength/`, and analytics files are the main targets. Some habitStrength tests already exist (momentum.ts ~70% covered).
 
 ## What to Look For
 

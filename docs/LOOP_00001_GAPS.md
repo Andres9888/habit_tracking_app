@@ -8,18 +8,33 @@
 - **Current Overall Coverage:** 39.72%
 - **Target Coverage:** 80%
 
+**Note (Updated 2026-01-27):** The codebase has been decomposed into smaller files following the project's ≤100 line rule. The `convex/habits.ts` file is now a barrel export that re-exports from decomposed modules in `convex/habits/`. Similarly, `convex/habitStrength.ts` is a barrel export from `convex/habitStrength/`. Test targets should reference the actual implementation files.
+
 ## Gap List
 
-### GAP-001: convex/habits.ts - All CRUD Operations
+### GAP-001: convex/habits/\* - All CRUD Operations (Decomposed)
 
-- **File:** `convex/habits.ts`
-- **Location:** Lines 18-927
+- **File:** `convex/habits/` directory (barrel: `convex/habits.ts`)
+- **Implementation Files:**
+  - `convex/habits/create.ts` (49 lines)
+  - `convex/habits/toggle.ts` (100 lines)
+  - `convex/habits/update.ts` (82 lines)
+  - `convex/habits/archive.ts` (135 lines)
+  - `convex/habits/pause.ts`
+  - `convex/habits/remove.ts`
+  - `convex/habits/reorder.ts`
+  - `convex/habits/get.ts`, `convex/habits/list.ts`, `convex/habits/getTracking.ts`, `convex/habits/stats.ts`
 - **Type:** Unit
 - **Priority:** Critical
-- **Description:** The entire habits.ts file has 0% coverage. Contains 15 Convex mutations/queries including `create`, `update`, `archive`, `unarchive`, `pause`, `resume`, `reorderHabits`, `remove`, `restore`, `get`, `list`, `listArchived`, `deleteAllArchived`, `listPaused`, `toggleHabit`, `getTracking`, and `getStats`.
-- **Current Coverage:** 0% (217 lines)
+- **Description:** The habits module has been decomposed but all files have 0% coverage. Each file contains focused mutations/queries including `create`, `update`, `archive`, `unarchive`, `pause`, `resume`, `reorderHabits`, `remove`, `restore`, `get`, `list`, `listArchived`, `deleteAllArchived`, `listPaused`, `toggleHabit`, `getTracking`, and `getStats`.
+- **Current Coverage:** 0% total (~500 lines across files)
 - **Why It Matters:** Core habit CRUD operations affect every user interaction. These are the most critical business logic functions in the app. Bugs here corrupt user data or break the main user flow.
 - **Test Approach:** Create unit tests with mocked Convex context. Test each mutation handler in isolation with fixture data.
+- **Key Untested Functions:**
+  - `toggle.ts:toggleHabit` - Auth check (lines 21-23), date validation (25-30), ownership (37-39), existing vs new tracking (48-56)
+  - `create.ts:create` - Validation (line 19), order calculation (line 23)
+  - `update.ts:update/updateNotes` - Auth (14-17, 59-62), ownership (26-28, 69-71), validation (31, 74)
+  - `archive.ts:archive/unarchive/deleteAllArchived` - Auth, ownership, cascading deletes (116-128)
 
 ### GAP-002: convex/habits.ts - toggleHabit Future Date Validation
 
@@ -43,27 +58,35 @@
 - **Why It Matters:** Error handling paths should return proper error messages and not crash the app.
 - **Test Approach:** Call mutations with non-existent habit IDs and verify error messages.
 
-### GAP-004: convex/habitStrength.ts - calculateNewStrength (v2.0 Momentum Formula)
+### GAP-004: convex/habitStrength/momentum.ts - calculateNewStrength (v2.0 Momentum Formula)
 
-- **File:** `convex/habitStrength.ts`
-- **Location:** Lines 118-148
+- **File:** `convex/habitStrength/momentum.ts` (barrel: `convex/habitStrength.ts`)
+- **Location:** Lines 22-37
 - **Type:** Unit
-- **Priority:** Critical
-- **Description:** The NEW momentum-based strength formula `calculateNewStrength` is NOT tested. Existing tests cover only the legacy `calculateHabitStrength` function from Klein et al. (2011). The v2.0 formula with GROWTH_RATE, BASE_DECAY, and SHIELD_EFFECTIVENESS is what's actually used in production.
-- **Current Coverage:** 0% (this specific function)
-- **Why It Matters:** This is the ACTUAL formula used when users toggle habits. Incorrect calculations would break the core gamification/motivation system.
-- **Test Approach:** Test growth on completion (3% of remaining gap), decay with streak shield protection (0-7 completions), boundary conditions (0%, 100%).
+- **Priority:** Critical (PARTIALLY RESOLVED)
+- **Description:** The v2.0 momentum-based strength formula `calculateNewStrength` now HAS tests in `convex/habitStrength.test.ts`. Tests cover growth on completion, decay with streak shield, boundary conditions. The legacy `calculateHabitStrength` in `legacyFormula.ts` also has extensive tests.
+- **Current Coverage:** ~70% (tests exist in habitStrength.test.ts, lines 22-304)
+- **Remaining Gaps:**
+  - Edge case: negative currentStrength input (clamped to 0)
+  - Edge case: completionsLast7Days > 7 (clamped)
+- **Why It Matters:** This is the ACTUAL formula used when users toggle habits.
+- **Test Approach:** Existing tests are comprehensive. Add edge cases for input clamping.
 
-### GAP-005: convex/habitStrength.ts - calculateMomentumStrengthSnapshot
+### GAP-005: convex/habitStrength/momentum.ts - calculateMomentumStrengthSnapshot
 
-- **File:** `convex/habitStrength.ts`
-- **Location:** Lines 179-269
+- **File:** `convex/habitStrength/momentum.ts` (barrel: `convex/habitStrength.ts`)
+- **Location:** Lines 40-114
 - **Type:** Unit
-- **Priority:** Critical
-- **Description:** The day-by-day momentum simulation function is untested. This function processes tracking history and simulates strength over time.
-- **Current Coverage:** 0%
-- **Why It Matters:** Incorrect snapshot calculations would show wrong strength levels to users, undermining trust in the app.
-- **Test Approach:** Test with various tracking histories: empty, all completions, all misses, mixed patterns, backfilled dates.
+- **Priority:** High (PARTIALLY RESOLVED)
+- **Description:** The day-by-day momentum simulation function HAS tests in `convex/habitStrength.test.ts` (lines 347-384). Tests cover decay between completions and backfilled dates.
+- **Current Coverage:** ~60%
+- **Remaining Gaps:**
+  - Line 59-62: `earliestDateKey` null case (empty tracking array)
+  - Lines 64-67: earliestDate < creationDate branch
+  - Lines 69-76: startDate > evaluationDate early return (future creation date)
+  - Lines 78-80: tracking with no completions (empty completionDates Set)
+- **Why It Matters:** Incorrect snapshot calculations would show wrong strength levels to users.
+- **Test Approach:** Add tests for empty tracking, future creation date, no completions scenarios.
 
 ### GAP-006: convex/habitStrength.ts - parseDateKeyToLocalDate Validation
 
@@ -98,16 +121,26 @@
 - **Why It Matters:** Used for migrations and data recovery. Incorrect recalculation could corrupt historical strength data.
 - **Test Approach:** Test with habits that have various tracking histories.
 
-### GAP-009: convex/analytics.ts - All Analytics Queries
+### GAP-009: convex/analytics\*.ts - All Analytics Queries (Decomposed)
 
-- **File:** `convex/analytics.ts`
-- **Location:** Lines 1-480
+- **Files:**
+  - `convex/analytics.ts` (barrel export, 31 lines)
+  - `convex/analyticsOverview.ts` (89 lines) - `getOverviewStats`
+  - `convex/analyticsTrend.ts` (54 lines) - `get30DayTrend`
+  - `convex/analyticsWeekly.ts` (77 lines) - `getWeeklyInsights`, `generateWeeklyInsights`
+  - `convex/analyticsCompliance.ts` - `getComplianceData`
+  - `convex/analyticsDistribution.ts` - `getStrengthDistribution`
+  - `convex/analytics/weeklyHelpers.ts` - Helper functions
 - **Type:** Unit
 - **Priority:** High
-- **Description:** All 6 analytics queries are untested: `getOverviewStats`, `getStrengthDistribution`, `get30DayTrend`, `getComplianceData`, `getWeeklyInsights`, `generateWeeklyInsights`.
-- **Current Coverage:** 0% (146 lines)
+- **Description:** All 6 analytics queries are untested. Each file is focused but has no coverage.
+- **Current Coverage:** 0% (~300 lines total)
 - **Why It Matters:** Analytics drive the dashboard visualizations. Wrong data could mislead users about their progress.
 - **Test Approach:** Create tests with mock habit and tracking data, verify correct aggregation and calculations.
+- **Key Untested Functions:**
+  - `analyticsOverview.ts:getOverviewStats` - Empty habits early return (19-26), strength calculation loop (30-44), ranking (46-62)
+  - `analyticsTrend.ts:get30DayTrend` - Date iteration (33-50), completion rate calculation (41-44)
+  - `analyticsWeekly.ts:getWeeklyInsights` - Week date calculation (26-28), habit change categorization (54-55)
 
 ### GAP-010: convex/analytics.ts - getStreaksForHabit Helper
 
@@ -156,13 +189,23 @@
 ### GAP-014: App.tsx - Main Entry Point
 
 - **File:** `App.tsx`
-- **Location:** Lines 1-123
+- **Location:** Lines 1-545
 - **Type:** Integration
 - **Priority:** Critical
-- **Description:** Main app entry point has 0% coverage. Contains provider setup, ConvexProvider, navigation structure.
-- **Current Coverage:** 0% (123 lines)
-- **Why It Matters:** If the app fails to initialize properly, nothing works. Integration test candidate.
-- **Test Approach:** Smoke test that app renders without crashing with all providers. May need extensive mocking.
+- **Description:** Main app entry point has 0% coverage. Contains provider setup (Clerk, Convex, Paper, SafeArea, GestureHandler, Sentry), HabitsApp component with extensive state management, theme logic, and date calculations.
+- **Current Coverage:** 0% (545 lines - significantly larger than previously noted)
+- **Why It Matters:** If the app fails to initialize properly, nothing works. Contains critical logic:
+  - Lines 79-234: `HabitsApp` component with all state hooks and callbacks
+  - Lines 101-132: High contrast theme calculation (memoized)
+  - Lines 135-146: Week date calculation (memoized)
+  - Lines 197-214: `getHabitStatus` function with timezone-aware date parsing
+  - Lines 406-431: `calculateStreak` inline function
+  - Lines 504-523: Clerk-less development path
+- **Test Approach:**
+  1. Create `renderWithProviders` test utility wrapping all providers
+  2. Mock Clerk, Convex hooks, SecureStore
+  3. Smoke test both auth paths (with/without Clerk key)
+  4. Extract `getHabitStatus` and `calculateStreak` to testable utilities
 
 ### GAP-015: convex/templates.ts - Template Definitions
 
@@ -336,5 +379,16 @@ Based on impact and difficulty:
 ---
 
 _Generated: 2026-01-08_
-_Agent: refactor-performance-security-testing_
+_Updated: 2026-01-27_
+_Agent: Tests_
 _Loop: 00001_
+
+## Update Notes (2026-01-27)
+
+- Discovered codebase has been decomposed following ≤100 line rule
+- `convex/habits.ts` is now barrel export from `convex/habits/` directory
+- `convex/habitStrength.ts` is now barrel export from `convex/habitStrength/` directory
+- `convex/analytics.ts` is now barrel export with separate files for each query
+- Updated GAP-001, GAP-004, GAP-005, GAP-009, GAP-014 with actual file locations
+- Note: Tests exist for momentum formula (`habitStrength.test.ts`) - coverage better than 0%
+- App.tsx is 545 lines (not 123) - needs extraction of inline functions for testability
