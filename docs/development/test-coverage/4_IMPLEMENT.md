@@ -23,8 +23,7 @@ Implement tests for `PENDING` candidates from the evaluation phase. Write high-q
 
 ## Implementation Checklist
 
-- [x] **Write tests (or skip if none)**: Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`. If the file doesn't exist OR contains no items with status exactly `PENDING`, mark this task complete without changes. Otherwise, implement tests for ONE `PENDING` item with EASY/MEDIUM testability and HIGH/CRITICAL importance. Follow project test conventions. Run tests to verify they pass. Update status to `IMPLEMENTED` in the plan. Log to `/Users/andres/Code/habit_tracking_app/docs/TEST_LOG_Tests_2026-01-27.md`. Only implement ONE test per task execution.
-  - **Completed:** 2026-01-27 - TEST-001 (calculateNewStrength) already had comprehensive tests (24 test cases). Verified all tests pass. Updated status to IMPLEMENTED in plan file.
+- [ ] **Write tests (or skip if none)**: Read `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`. If the file doesn't exist OR contains no items with status exactly `PENDING`, mark this task complete without changes. Otherwise, implement tests for ONE `PENDING` item with EASY/MEDIUM testability and HIGH/CRITICAL importance. Follow project test conventions. Run tests to verify they pass. Update status to `IMPLEMENTED` in the plan. Log to `/Users/andres/Code/habit_tracking_app/docs/TEST_LOG_Tests_2026-01-27.md`. Only implement ONE test per task execution.
 
 ## Test Writing Guidelines
 

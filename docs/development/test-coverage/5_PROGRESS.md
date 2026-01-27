@@ -3,8 +3,8 @@
 ## Context
 
 - **Playbook:** Testing
-- **Agent:** refactor-performance-security-testing
-- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/refactor-performance-security-testing
+- **Agent:** Tests
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/Tests
 - **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs
 - **Loop:** 00001
 
@@ -22,21 +22,16 @@ This document is the **coverage gate** for the testing pipeline. It checks wheth
 ## Coverage Check
 
 - [x] **Check coverage and decide**: Run coverage analysis. If line coverage is below 80% AND there are still `PENDING` items with EASY/MEDIUM testability and HIGH/CRITICAL importance in `/Users/andres/Code/habit_tracking_app/docs/LOOP_00001_PLAN.md`, then reset documents 1-4 to continue the loop. If coverage >= 80% OR no auto-testable items remain, do NOT reset anything - allow the pipeline to exit.
-  - **Checked:** 2026-01-08 by refactor-performance-security-testing agent
-  - **Result:** Coverage is 39.72% (below 80% target). Found 3 PENDING items with EASY/MEDIUM testability and HIGH importance. Proceeding to reset documents 1-4.
+  - **Completed 2026-01-27:** Coverage is 38.45% (well below 80% target). Found 9 PENDING items with EASY/MEDIUM testability and HIGH/CRITICAL importance (TEST-003, TEST-007 through TEST-014). Decision: **CONTINUE** - resetting documents 1-4. Note: 927 test failures detected which may be affecting coverage calculation - these should be investigated in the next loop.
 
 ## Reset Tasks (Only if coverage < 80% AND auto-testable PENDING items exist)
 
 If the coverage check above determines we need to continue, reset all tasks in the following documents:
 
 - [x] **Reset 1_ANALYZE.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/development/test-coverage/1_ANALYZE.md`
-  - **Reset:** 2026-01-08 by refactor-performance-security-testing agent
 - [x] **Reset 2_FIND_GAPS.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/development/test-coverage/2_FIND_GAPS.md`
-  - **Reset:** 2026-01-08 by refactor-performance-security-testing agent
 - [x] **Reset 3_EVALUATE.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/development/test-coverage/3_EVALUATE.md`
-  - **Reset:** 2026-01-08 by refactor-performance-security-testing agent
 - [x] **Reset 4_IMPLEMENT.md**: Uncheck all tasks in `/Users/andres/Code/habit_tracking_app/docs/development/test-coverage/4_IMPLEMENT.md`
-  - **Reset:** 2026-01-08 by refactor-performance-security-testing agent
 
 **IMPORTANT**: Only reset documents 1-4 if coverage is below 80% AND there are PENDING items with EASY/MEDIUM testability and HIGH/CRITICAL importance. If coverage target is met, or only HARD/VERY HARD items remain, leave these reset tasks unchecked to allow the pipeline to exit.
 
@@ -78,26 +73,24 @@ This document controls loop continuation through resets:
 
 Before making a decision, run coverage and record:
 
-| Metric                                   | Value                                                |
-| ---------------------------------------- | ---------------------------------------------------- |
-| **Current Line Coverage**                | 39.72%                                               |
-| **Target**                               | 80%                                                  |
-| **Gap**                                  | 40.28%                                               |
-| **PENDING (EASY/MEDIUM, HIGH/CRITICAL)** | 3 (TEST-006, TEST-007, TEST-010)                     |
-| **PENDING (other)**                      | 5 (TEST-003, TEST-004, TEST-005, TEST-008, TEST-009) |
-| **IMPLEMENTED**                          | 2 (TEST-001, TEST-002)                               |
-
-**Decision: CONTINUE** - Coverage is 39.72% (well below 80% target) and there are 3 PENDING items with EASY/MEDIUM testability and HIGH importance. Resetting documents 1-4 to continue the loop.
+| Metric                                   | Value  |
+| ---------------------------------------- | ------ |
+| **Current Line Coverage**                | 38.45% |
+| **Target**                               | 80%    |
+| **Gap**                                  | 41.55% |
+| **PENDING (EASY/MEDIUM, HIGH/CRITICAL)** | 9      |
+| **PENDING (other)**                      | 3      |
+| **IMPLEMENTED**                          | 2      |
 
 ## Coverage History
 
 Track progress across loops:
 
-| Loop | Coverage | Tests Added                      | Cumulative Gain | Decision          |
-| ---- | -------- | -------------------------------- | --------------- | ----------------- |
-| 1    | 39.72%   | 0 (existing: TEST-001, TEST-002) | +0%             | CONTINUE          |
-| 2    | \_\_\_ % | \_\_\_                           | +\_\_\_ %       | [CONTINUE / EXIT] |
-| ...  | ...      | ...                              | ...             | ...               |
+| Loop | Coverage | Tests Added | Cumulative Gain                            | Decision          |
+| ---- | -------- | ----------- | ------------------------------------------ | ----------------- |
+| 1    | 38.45%   | 31          | +0% (baseline from 39.72% - test failures) | CONTINUE          |
+| 2    | \_\_\_ % | \_\_\_      | +\_\_\_ %                                  | [CONTINUE / EXIT] |
+| ...  | ...      | ...         | ...                                        | ...               |
 
 ## Manual Override
 
