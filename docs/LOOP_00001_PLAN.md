@@ -19,7 +19,11 @@
 
 ### TEST-001: calculateNewStrength (v2.0 Momentum Formula)
 
-- **Status:** `PENDING`
+- **Status:** `IMPLEMENTED`
+- **Implemented In:** Loop 00001
+- **Test File:** `convex/habitStrength.test.ts`
+- **Test Cases Added:** 24 (pre-existing)
+- **Coverage Gain:** Already included in baseline 39.72%
 - **File:** `convex/habitStrength/momentum.ts`
 - **Gap ID:** GAP-004
 - **Importance:** CRITICAL
@@ -27,11 +31,12 @@
 - **Est. Coverage Gain:** +2.0%
 - **Test Type:** Unit
 - **Test Strategy:**
-  - Test growth on completion with various streak lengths
-  - Test decay without completion (with and without streak shield)
-  - Test boundary conditions (0 strength, 100 strength)
-  - **Add edge cases:** negative currentStrength input, completionsLast7Days > 7
+  - Test growth on completion with various streak lengths ✅
+  - Test decay without completion (with and without streak shield) ✅
+  - Test boundary conditions (0 strength, 100 strength) ✅
+  - **Add edge cases:** negative currentStrength input, completionsLast7Days > 7 ✅
 - **Mocks Needed:** None (pure function)
+- **Note:** All test cases were already implemented in existing test file. Verified 24 passing tests covering all required scenarios.
 
 ### TEST-002: calculateMomentumStrengthSnapshot Edge Cases
 
