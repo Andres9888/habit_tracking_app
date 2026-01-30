@@ -1,6 +1,10 @@
 import type { CharacterData } from './types';
 
-// Mock data - TODO: Connect to actual habit data
+/**
+ * Default/fallback character data for testing and development.
+ * Real data is now computed via useCharacterData hook from actual habits.
+ * @deprecated Use useCharacterData() hook for real data
+ */
 export const MOCK_CHARACTER_DATA: CharacterData = {
   attributes: {
     energy: 41,
@@ -28,25 +32,25 @@ export const MOCK_CHARACTER_DATA: CharacterData = {
 };
 
 export const ATTRIBUTE_CONFIGS = {
-  vitality: {
-    bgGradient: ['#ffe2e2', '#fdf2f8'] as const,
-    gradientColors: ['#fb2c36', '#f6339a'] as const,
-    iconColor: '#fb2c36',
+  energy: {
+    bgGradient: ['#fef9c2', '#fff7ed'] as const,
+    gradientColors: ['#f0b100', '#ff6900'] as const,
+    iconColor: '#f0b100',
   },
   strength: {
     bgGradient: ['#ffedd4', '#fffbeb'] as const,
     gradientColors: ['#ff6900', '#fe9a00'] as const,
     iconColor: '#ff6900',
   },
+  vitality: {
+    bgGradient: ['#ffe2e2', '#fdf2f8'] as const,
+    gradientColors: ['#fb2c36', '#f6339a'] as const,
+    iconColor: '#fb2c36',
+  },
   wisdom: {
     bgGradient: ['#f3e8ff', '#eef2ff'] as const,
     gradientColors: ['#ad46ff', '#615fff'] as const,
     iconColor: '#ad46ff',
-  },
-  energy: {
-    bgGradient: ['#fef9c2', '#fff7ed'] as const,
-    gradientColors: ['#f0b100', '#ff6900'] as const,
-    iconColor: '#f0b100',
   },
 } as const;
 
