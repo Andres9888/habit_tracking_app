@@ -1,5 +1,6 @@
 /**
- * ChainConnector - Previous week connector for HabitChainVisualizer
+ * ChainConnector - Week connector for HabitChainVisualizer
+ * Connects the chain to previous/next weeks when streak continues
  */
 
 import React from 'react';
@@ -11,6 +12,7 @@ interface ChainConnectorProps {
   accentColor: string;
   connectorColor: string;
   currentStreak: number;
+  position?: 'start' | 'end';
 }
 
 export function ChainConnector({
@@ -18,13 +20,16 @@ export function ChainConnector({
   accentColor,
   connectorColor,
   currentStreak,
+  position = 'start',
 }: ChainConnectorProps) {
   if (!visible) return null;
+
+  const isEnd = position === 'end';
 
   return (
     <View
       style={{
-        left: -10,
+        [isEnd ? 'right' : 'left']: -10,
         marginTop: -1,
         position: 'absolute',
         top: '50%',
