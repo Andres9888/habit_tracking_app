@@ -2,7 +2,7 @@
  * SyncStatus Components
  *
  * Visual indicators for offline sync status.
- * Implements US3 (Visual Sync Status Indicators) and FR-009.
+ * Implements US3 (Visual Sync Status Indicators), US4 (Conflict Resolution), and FR-009.
  */
 
 export { OfflineIndicator } from './OfflineIndicator';
@@ -16,3 +16,12 @@ export type { PendingSyncBadgeProps } from './PendingSyncBadge';
 
 export { SyncedToast, useSyncedToast } from './SyncedToast';
 export type { SyncedToastProps, UseSyncedToastResult } from './SyncedToast';
+
+export {
+  ConflictNotification,
+  useConflictNotification,
+} from './ConflictNotification';
+export type {
+  ConflictNotificationProps,
+  UseConflictNotificationResult,
+} from './ConflictNotification';
