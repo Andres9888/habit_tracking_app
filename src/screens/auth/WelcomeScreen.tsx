@@ -1,6 +1,6 @@
 /**
- * WelcomeScreen - Redesigned auth landing page
- * Features animated hero, social proof, and clear CTAs
+ * WelcomeScreen - Auth landing page
+ * Clean design consistent with app style
  */
 
 import React, { useState, useEffect } from 'react';
@@ -12,15 +12,16 @@ import Animated, {
   withDelay,
   withSpring,
   withTiming,
+  withRepeat,
+  withSequence,
 } from 'react-native-reanimated';
+import { Link } from 'lucide-react-native';
 import {
   AuthDivider,
   AuthError,
   BackButton,
   SocialSignInButton,
 } from './components';
-import { HeroAnimation } from './components/HeroAnimation';
-import { SocialProofBadge } from './components/SocialProofBadge';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
@@ -34,20 +35,33 @@ export default function WelcomeScreen() {
     useOAuthSignIn();
 
   // Entrance animations
+  const iconScale = useSharedValue(0.8);
+  const iconOpacity = useSharedValue(0);
   const titleOpacity = useSharedValue(0);
-  const titleTranslateY = useSharedValue(20);
+  const titleTranslateY = useSharedValue(15);
   const subtitleOpacity = useSharedValue(0);
   const buttonsOpacity = useSharedValue(0);
-  const buttonsTranslateY = useSharedValue(20);
+  const buttonsTranslateY = useSharedValue(15);
 
   useEffect(() => {
-    // Staggered entrance
-    titleOpacity.value = withDelay(200, withSpring(1));
-    titleTranslateY.value = withDelay(200, withSpring(0));
-    subtitleOpacity.value = withDelay(300, withSpring(1));
-    buttonsOpacity.value = withDelay(500, withTiming(1, { duration: 400 }));
-    buttonsTranslateY.value = withDelay(500, withSpring(0));
+    // Icon entrance
+    iconOpacity.value = withDelay(100, withSpring(1));
+    iconScale.value = withDelay(100, withSpring(1));
+    
+    // Text entrance
+    titleOpacity.value = withDelay(250, withSpring(1));
+    titleTranslateY.value = withDelay(250, withSpring(0));
+    subtitleOpacity.value = withDelay(350, withSpring(1));
+    
+    // Buttons entrance
+    buttonsOpacity.value = withDelay(450, withTiming(1, { duration: 300 }));
+    buttonsTranslateY.value = withDelay(450, withSpring(0));
   }, []);
+
+  const iconStyle = useAnimatedStyle(() => ({
+    opacity: iconOpacity.value,
+    transform: [{ scale: iconScale.value }],
+  }));
 
   const titleStyle = useAnimatedStyle(() => ({
     opacity: titleOpacity.value,
@@ -87,20 +101,20 @@ export default function WelcomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.content, { paddingTop: insets.top + 40 }]}>
+      <View style={[styles.content, { paddingTop: insets.top + 60 }]}>
         {/* Hero Section */}
         <View style={styles.heroSection}>
-          <HeroAnimation />
+          <Animated.View style={[styles.iconContainer, iconStyle]}>
+            <Link size={40} color="#1c1917" strokeWidth={2} />
+          </Animated.View>
 
           <Animated.Text style={[styles.title, titleStyle]}>
             Chain Day
           </Animated.Text>
 
           <Animated.Text style={[styles.subtitle, subtitleStyle]}>
-            Build habits that actually stick
+            Build habits that stick
           </Animated.Text>
-
-          <SocialProofBadge />
         </View>
 
         {/* Action Section */}
@@ -163,20 +177,28 @@ const styles = StyleSheet.create({
   },
   heroSection: {
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
+  },
+  iconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 20,
+    backgroundColor: '#f5f5f4',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
   },
   title: {
-    fontSize: 36,
-    fontWeight: '800',
+    fontSize: 32,
+    fontWeight: '700',
     color: '#1c1917',
-    letterSpacing: -1,
+    letterSpacing: -0.5,
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 17,
     color: '#78716c',
     textAlign: 'center',
-    marginBottom: 8,
   },
   actionSection: {
     gap: 12,
@@ -186,11 +208,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingVertical: 18,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   primaryButtonText: {
     color: '#ffffff',
