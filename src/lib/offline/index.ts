@@ -121,5 +121,8 @@ export {
   type UseOfflineQueueReturn,
 } from './hooks';
 
-// Calculations (offline streak calculation) - re-export all
+// Calculations (offline streak calculation)
 export * from './calculations';
+
+// Sync Orchestrator (US2 - Auto-sync on reconnect)
+export * from './sync';
