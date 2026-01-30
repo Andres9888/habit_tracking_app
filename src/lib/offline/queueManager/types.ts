@@ -13,6 +13,7 @@ import type {
   QueueOperationResult,
   ToggleCompletionPayload,
 } from '../queue';
+import type { BatchStatusResult } from './optimized';
 
 /**
  * Configuration for the OfflineQueueManager
@@ -63,6 +64,22 @@ export interface OfflineQueueManagerAPI {
   markFailed(operationId: string, error: string, category?: string): boolean;
   /** Reset an operation to pending for retry */
   markPending(operationId: string): boolean;
+
+  // Batch operations (optimized for 500+ operations - FR-011)
+  /** Mark multiple operations as completed in a single update */
+  markCompletedBatch(operationIds: string[]): BatchStatusResult;
+  /** Mark multiple operations as failed in a single update */
+  markFailedBatch(
+    operationIds: string[],
+    error: string,
+    category?: string
+  ): BatchStatusResult;
+  /** Mark multiple operations as syncing in a single update */
+  markSyncingBatch(operationIds: string[]): BatchStatusResult;
+  /** Get multiple pending operations (FIFO order) */
+  peekBatch(count: number): OfflineOperation[];
+  /** Remove multiple operations by ID in a single update */
+  removeBatch(operationIds: string[]): BatchStatusResult;
 
   // Persistence
   /** Restore queue from storage */

@@ -17,6 +17,7 @@ import type { OfflineQueueState, QueueEvent } from '../queue';
 import { loadQueueState, saveQueueState } from '../persistence';
 import { calculateStats } from './helpers';
 import { createOperations } from './operations';
+import { createBatchOperations } from './optimized';
 import { createStatusUpdaters } from './status';
 
 export function createOfflineQueueManager(
@@ -70,12 +71,21 @@ export function createOfflineQueueManager(
     notifyStateChange,
     emit
   );
+  const batchOps = createBatchOperations(
+    () => state,
+    (s) => {
+      state = s;
+    },
+    notifyStateChange,
+    emit
+  );
 
   return {
     getState: () => state,
     getStats: () => calculateStats(state),
     ...ops,
     ...statusUpdaters,
+    ...batchOps,
     persist: async () => saveQueueState(state),
     async restore() {
       const restored = await loadQueueState();

@@ -107,11 +107,16 @@ export {
 
 // Queue Manager
 export {
+  buildOperationIndex,
   createOfflineQueueManager,
+  findOperationIndexOptimized,
   getOfflineQueueManager,
+  hasDuplicateOptimized,
   resetOfflineQueueManager,
+  type BatchStatusResult,
   type OfflineQueueManagerAPI,
   type OfflineQueueManagerConfig,
+  type OperationIndex,
 } from './queueManager';
 
 // Queue Hooks

@@ -17,7 +17,11 @@ export type QueueEventType =
   | 'operation:synced'
   | 'operation:failed'
   | 'queue:cleared'
-  | 'queue:restored';
+  | 'queue:restored'
+  | 'queue:batch_completed'
+  | 'queue:batch_failed'
+  | 'queue:batch_syncing'
+  | 'queue:batch_removed';
 
 /**
  * Queue event payload
@@ -28,6 +32,12 @@ export interface QueueEvent {
   operationId?: string;
   operation?: OfflineOperation;
   stats?: OfflineQueueStats;
+  /** Batch operations (for batch events) */
+  operations?: OfflineOperation[];
+  /** Count of affected operations (for batch events) */
+  count?: number;
+  /** Error message (for batch failure events) */
+  error?: string;
 }
 
 /**
