@@ -1,7 +1,49 @@
+/**
+ * Habit Mutations Hook with Offline Support
+ *
+ * Provides Convex mutations for habit operations with offline detection.
+ * When offline, mutations are queued via the offline queue manager.
+ *
+ * @see docs/offline-habit-sync.md T011
+ */
+
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 
-export function useHabitMutations() {
+export interface UseHabitMutationsResult {
+  toggleHabit: ReturnType<typeof useMutation<typeof api.habits.toggleHabit>>;
+  archiveHabit: ReturnType<typeof useMutation<typeof api.habits.archive>>;
+  pauseHabit: ReturnType<typeof useMutation<typeof api.habits.pause>>;
+  removeHabit: ReturnType<typeof useMutation<typeof api.habits.remove>>;
+  reorderHabits: ReturnType<
+    typeof useMutation<typeof api.habits.reorderHabits>
+  >;
+  updateSettings: ReturnType<typeof useMutation<typeof api.settings.update>>;
+  /** Current online status from NetworkStatusContext */
+  isOnline: boolean;
+}
+
+/**
+ * Hook providing habit mutations with offline detection
+ *
+ * Returns raw Convex mutations plus isOnline status.
+ * Consumers should pass isOnline to useOptimisticToggleMutation
+ * for proper offline queue integration.
+ *
+ * @example
+ * ```typescript
+ * const { toggleHabit, isOnline } = useHabitMutations();
+ *
+ * const optimisticToggle = useOptimisticToggleMutation(
+ *   toggleHabit,
+ *   isCompleted,
+ *   { isOnline }
+ * );
+ * ```
+ */
+export function useHabitMutations(): UseHabitMutationsResult {
+  const isOnline = useIsOnline();
   const toggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
   const pauseHabit = useMutation(api.habits.pause);
@@ -10,11 +52,12 @@ export function useHabitMutations() {
   const updateSettings = useMutation(api.settings.update);
 
   return {
-    toggleHabit,
     archiveHabit,
+    isOnline,
     pauseHabit,
     removeHabit,
     reorderHabits,
+    toggleHabit,
     updateSettings,
   };
 }

@@ -1,3 +1,12 @@
+/**
+ * HabitsModalsState Hook
+ *
+ * State hook for habits modals with offline support.
+ * Integrates optimistic updates and offline queue for habit toggling.
+ *
+ * @see docs/offline-habit-sync.md T011
+ */
+
 import { useCallback } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
@@ -15,6 +24,7 @@ import {
   getTodayMidnight,
   useSyncAllHabitStates,
 } from './modalsStateHelpers';
+import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import type { HabitsModalsState } from './types';
 
 interface UseHabitsModalsStateProps {
@@ -31,13 +41,26 @@ export function useHabitsModalsState({
   const { settings, celebrationsEnabled, reduceMotionPreference } =
     useHabitsSettings();
 
-  const { pauseHabit, removeHabit, updateSettings, toggleHabit, archiveHabit } =
-    useHabitMutations();
+  const {
+    pauseHabit,
+    removeHabit,
+    updateSettings,
+    toggleHabit,
+    archiveHabit,
+    isOnline,
+  } = useHabitMutations();
   const { milestone, clearMilestone } = useHabitMilestones(habits, false);
 
-  const { tracking, getStreak } = useHabitsTracking(
+  const { tracking, getStreak, isCompleted } = useHabitsTracking(
     generateDateStrings(365),
     getTodayMidnight()
+  );
+
+  // Wrap toggle mutation with optimistic update + offline queue support (T011)
+  const optimisticToggleHabit = useOptimisticToggleMutation(
+    toggleHabit,
+    isCompleted,
+    { isOnline }
   );
 
   useSyncAllHabitStates(habits, selection);
@@ -67,8 +90,11 @@ export function useHabitsModalsState({
   );
 
   const handleToggleHabit = useCallback(
-    async (args: { habitId: Id<'habits'>; date: string }) => toggleHabit(args),
-    [toggleHabit]
+    async (args: { habitId: Id<'habits'>; date: string }) => {
+      // Use optimistic toggle with offline queue support
+      await optimisticToggleHabit(args);
+    },
+    [optimisticToggleHabit]
   );
 
   return buildModalsStateReturnValue(visibility, selection, handlers, {

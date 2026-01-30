@@ -1,9 +1,12 @@
 /**
  * HabitsModalsState Types
  * State interface for the habits modal management
+ *
+ * @see docs/offline-habit-sync.md T011
  */
 
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { ToggleMutationResult } from '../../../lib/optimistic';
 import type {
   Habit,
   HabitSettings,
@@ -72,7 +75,11 @@ export interface HabitsModalsState {
   onShareMilestone: (data: ShareCardData) => void;
   clearMilestone: () => void;
   confirmPause: () => Promise<void>;
-  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<void>;
+  /** Toggle habit completion with offline queue support (T011) */
+  toggleHabit: (args: {
+    habitId: Id<'habits'>;
+    date: string;
+  }) => Promise<ToggleMutationResult>;
   getStreak: (habitId: string) => number;
   handleArchive: (habitId: Id<'habits'>) => Promise<void>;
   reduceMotionPreference: boolean;
