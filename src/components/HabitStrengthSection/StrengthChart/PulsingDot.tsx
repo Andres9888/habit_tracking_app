@@ -33,18 +33,22 @@ export const PulsingDot = React.memo(function PulsingDot({
   color,
   animatedDotProps,
 }: PulsingDotProps) {
+  // Guard against NaN coordinates - default to 0
+  const safeCx = typeof cx === 'number' && !isNaN(cx) ? cx : 0;
+  const safeCy = typeof cy === 'number' && !isNaN(cy) ? cy : 0;
+
   return (
     <>
       {/* Pulsing outer dot */}
       <AnimatedCircle
         animatedProps={animatedDotProps}
-        cx={cx}
-        cy={cy}
+        cx={safeCx}
+        cy={safeCy}
         fill={color}
       />
 
       {/* Solid dot center */}
-      <Circle cx={cx} cy={cy} fill={color} r={DOT_RADIUS} />
+      <Circle cx={safeCx} cy={safeCy} fill={color} r={DOT_RADIUS} />
     </>
   );
 });

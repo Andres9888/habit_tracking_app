@@ -8,7 +8,7 @@
  * - Uses reanimated for smooth 60fps animation
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, {
@@ -46,6 +46,10 @@ export function ProgressRing({
 }: ProgressRingProps) {
   const shouldReduceMotion = useReducedMotion();
 
+  // Use ref for callback to prevent it from triggering useEffect re-runs
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
   // Calculate ring geometry
   const strokeWidth = PROGRESS_RING.strokeWidth;
   const radius = (size - strokeWidth) / 2;
@@ -59,7 +63,7 @@ export function ProgressRing({
     if (shouldReduceMotion) {
       // Complete instantly if reduced motion is preferred
       progress.value = 1;
-      onComplete?.();
+      onCompleteRef.current?.();
       return;
     }
 
@@ -71,13 +75,13 @@ export function ProgressRing({
         easing: Easing.linear,
       },
       (finished) => {
-        if (finished && onComplete) {
+        if (finished && onCompleteRef.current) {
           // Note: onComplete is called from JS thread, no runOnJS needed
           // since we're using the callback form of withTiming
         }
       }
     );
-  }, [duration, progress, shouldReduceMotion, onComplete]);
+  }, [duration, progress, shouldReduceMotion]);
 
   // Animated props for the progress circle
   const animatedProps = useAnimatedProps(() => {

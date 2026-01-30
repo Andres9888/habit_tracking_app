@@ -8,7 +8,10 @@ export function getTemplateCardState(props: TemplateCardProps) {
     iconColor: iconColorProp,
   } = props;
   const isLocked = isPremium && !hasAccess;
-  const iconColor = iconColorProp?.trim() || DEFAULT_ICON_COLOR;
+  const iconColor =
+    typeof iconColorProp === 'string' && iconColorProp.trim()
+      ? iconColorProp.trim()
+      : DEFAULT_ICON_COLOR;
 
   return { iconColor, isLocked };
 }

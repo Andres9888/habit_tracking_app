@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
 interface UseSparkleBurstAnimationProps {
@@ -16,19 +16,23 @@ export function useSparkleBurstAnimation({
 }: UseSparkleBurstAnimationProps) {
   const opacity = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(0.6)).current;
+  
+  // Use ref for callback to prevent it from triggering useEffect re-runs
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
+  const triggerComplete = useCallback(() => {
+    onCompleteRef.current?.();
+  }, []);
 
   useEffect(() => {
-    console.log('🌟 SparkleBurst:', { color, isActive, reduceMotion });
-
     if (!isActive || reduceMotion) {
       if (isActive && reduceMotion) {
-        console.log('🌟 SparkleBurst skipped (reduceMotion enabled)');
-        onComplete?.();
+        triggerComplete();
       }
       return;
     }
 
-    console.log('🌟 SparkleBurst TRIGGERED!');
     opacity.setValue(0.9);
     scale.setValue(0.6);
 
@@ -46,10 +50,9 @@ export function useSparkleBurstAnimation({
         useNativeDriver: true,
       }),
     ]).start(() => {
-      console.log('🌟 SparkleBurst completed');
-      onComplete?.();
+      triggerComplete();
     });
-  }, [isActive, onComplete, opacity, reduceMotion, scale, color]);
+  }, [isActive, reduceMotion, opacity, scale, triggerComplete]);
 
   return { opacity, scale };
 }

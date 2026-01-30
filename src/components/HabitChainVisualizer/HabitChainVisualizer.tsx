@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { ChainDayItem } from './ChainDayItem';
 import { ChainConnector } from './ChainConnector';
@@ -43,6 +43,11 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
     weekDateStrings,
     weekStatus,
   });
+
+  // Memoize callback to prevent infinite re-render loop in SparkleBurst
+  const handleBurstComplete = useCallback(() => {
+    setActiveBurst(null);
+  }, [setActiveBurst]);
 
   const getAccessibilityLabel = (dateLabel: string, completed: boolean) =>
     dateLabel === todayLabel
@@ -94,7 +99,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
               completed &&
               isCompleted(index + 1)
             }
-            onBurstComplete={() => setActiveBurst(null)}
+            onBurstComplete={handleBurstComplete}
             onPress={() =>
               handleToggleDay(dateString, completed, disabled, index)
             }

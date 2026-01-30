@@ -41,10 +41,10 @@ export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
           { fontFamily: theme.custom.fontFamilies.primary.text },
         ]}
       >
-        "{template.scientificReference}"
+        "{template?.scientificReference ?? ''}"
       </Text>
 
-      {template.scientificLink && (
+      {template?.scientificLink && (
         <AnimatedPressable
           accessible
           accessibilityHint='Opens the research paper in your browser'

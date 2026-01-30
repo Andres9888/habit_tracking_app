@@ -2,7 +2,7 @@
  * Toast Animation Hook
  */
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   useAnimatedStyle,
@@ -28,23 +28,27 @@ export function useToastAnimations({
   const translateY = useSharedValue(100);
   const opacity = useSharedValue(0);
 
+  // Use ref for callback to prevent it from triggering useEffect re-runs
+  const onDismissRef = useRef(onDismiss);
+  onDismissRef.current = onDismiss;
+
   const handleDismiss = useCallback(() => {
     translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
     opacity.value = withTiming(0, { duration: 200 });
 
-    if (onDismiss) {
+    if (onDismissRef.current) {
       setTimeout(() => {
-        onDismiss();
+        onDismissRef.current?.();
       }, 250);
     }
-  }, [onDismiss, translateY, opacity]);
+  }, [translateY, opacity]);
 
   useEffect(() => {
     if (visible) {
       translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
       opacity.value = withTiming(1, { duration: 200 });
 
-      if (duration > 0 && onDismiss) {
+      if (duration > 0 && onDismissRef.current) {
         const timer = setTimeout(() => {
           handleDismiss();
         }, duration);
@@ -54,7 +58,7 @@ export function useToastAnimations({
       translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
       opacity.value = withTiming(0, { duration: 200 });
     }
-  }, [visible, duration, onDismiss, translateY, opacity, handleDismiss]);
+  }, [visible, duration, translateY, opacity, handleDismiss]);
 
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
@@ -73,10 +77,13 @@ export function useToastAnimations({
       }
     });
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: opacity.value ?? 0,
+      transform: [{ translateY: translateY.value ?? 100 }],
+    };
+  });
 
   return { animatedStyle, handleDismiss, panGesture };
 }

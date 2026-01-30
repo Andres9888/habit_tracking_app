@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { getStrengthLevel } from '../../components/HabitStrengthIndicator/HabitStrengthIndicator';
+import { getStrengthLevel } from '../../components/HabitStrengthIndicator';
 import type {
   MilestoneAchievement,
   UseMultiMilestoneDetectionReturn,

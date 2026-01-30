@@ -18,11 +18,15 @@ export function AnimatedPercentage({ animatedValue }: AnimatedPercentageProps) {
   const [displayValue, setDisplayValue] = useState(0);
 
   useDerivedValue(() => {
+    'worklet';
     // Use Math.trunc to ensure integer (avoids Reanimated precision errors)
-    const rounded = Math.trunc(animatedValue.value + 0.5);
+    // Guard against NaN/undefined - default to 0
+    const rawValue = animatedValue.value;
+    const value = typeof rawValue === 'number' && !isNaN(rawValue) ? rawValue : 0;
+    const rounded = Math.trunc(value + 0.5);
     runOnJS(setDisplayValue)(rounded);
     return rounded;
-  });
+  }, [animatedValue]);
 
   return (
     <Text className='text-2xl font-bold text-stone-900'>{displayValue}%</Text>

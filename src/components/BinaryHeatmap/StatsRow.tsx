@@ -45,9 +45,12 @@ export const StatsRow = memo(function StatsRow({
     }
   }, [settingsScale, shouldReduceMotion]);
 
-  const settingsAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: settingsScale.value }],
-  }));
+  const settingsAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: settingsScale.value ?? 1 }],
+    };
+  });
 
   return (
     <View

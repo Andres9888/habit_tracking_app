@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   useAnimatedStyle,
@@ -35,25 +35,35 @@ export function useDeleteToastAnimations({
   const opacity = useSharedValue(0);
   const progressWidth = useSharedValue(100);
 
+  // Use refs for callbacks to prevent them from triggering re-renders
+  const onConfirmRef = useRef(onConfirm);
+  onConfirmRef.current = onConfirm;
+  
+  const onUndoRef = useRef(onUndo);
+  onUndoRef.current = onUndo;
+  
+  const onDismissRef = useRef(onDismiss);
+  onDismissRef.current = onDismiss;
+
   const handleDismiss = useCallback(() => {
     translateY.value = withSpring(100, SPRING_CONFIG);
     opacity.value = withTiming(0, { duration: 200 });
     progressWidth.value = 100;
 
-    if (onDismiss) {
-      setTimeout(onDismiss, 250);
+    if (onDismissRef.current) {
+      setTimeout(() => onDismissRef.current?.(), 250);
     }
-  }, [onDismiss, translateY, opacity, progressWidth]);
+  }, [translateY, opacity, progressWidth]);
 
   const handleUndo = useCallback(() => {
-    onUndo();
+    onUndoRef.current?.();
     handleDismiss();
-  }, [onUndo, handleDismiss]);
+  }, [handleDismiss]);
 
   const handleConfirm = useCallback(() => {
-    onConfirm();
+    onConfirmRef.current?.();
     handleDismiss();
-  }, [onConfirm, handleDismiss]);
+  }, [handleDismiss]);
 
   useEffect(() => {
     if (visible) {

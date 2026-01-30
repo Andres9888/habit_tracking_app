@@ -4,16 +4,32 @@
  * Date formatting and tooltip helpers.
  */
 
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isValid } from 'date-fns';
 
 import type { BinaryDay } from './types';
+
+/**
+ * Safely format a date, returning fallback on error
+ */
+function safeFormat(date: Date, formatStr: string, fallback: string): string {
+  try {
+    if (!date || !(date instanceof Date) || !isValid(date)) {
+      return fallback;
+    }
+    return format(date, formatStr);
+  } catch {
+    return fallback;
+  }
+}
 
 /**
  * Format tooltip text for a day cell
  */
 export function formatTooltipText(day: BinaryDay): string {
+  if (!day?.date) return 'Unknown date';
+
   const date = parseISO(day.date);
-  const formattedDate = format(date, 'MMM d');
+  const formattedDate = safeFormat(date, 'MMM d', day.date);
 
   if (day.isToday) return `${formattedDate}: Today`;
   if (day.isFuture) return `${formattedDate}: Future`;
@@ -35,7 +51,8 @@ export function isValidDateString(dateStr: string): boolean {
 
 /**
  * Convert a Date to YYYY-MM-DD format
+ * Returns empty string for invalid dates to prevent crashes
  */
 export function formatDateString(date: Date): string {
-  return format(date, 'yyyy-MM-dd');
+  return safeFormat(date, 'yyyy-MM-dd', '');
 }

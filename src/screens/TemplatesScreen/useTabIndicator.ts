@@ -19,14 +19,15 @@ export function useTabIndicator({ reducedMotion }: UseTabIndicatorOptions) {
   const tabBarWidth = useSharedValue(0);
 
   const tabIndicatorStyle = useAnimatedStyle(() => {
+    'worklet';
     const padding = 5;
-    const availableWidth = tabBarWidth.value - padding * 2;
-    const indicatorWidth = availableWidth / 2;
+    const availableWidth = Math.max(0, tabBarWidth.value - padding * 2);
+    const indicatorWidth = availableWidth > 0 ? availableWidth / 2 : 100;
     const translateX = tabIndicatorPosition.value * indicatorWidth;
 
     return {
-      transform: [{ translateX }],
-      width: indicatorWidth,
+      transform: [{ translateX: translateX || 0 }],
+      width: indicatorWidth || 100,
     };
   });
 

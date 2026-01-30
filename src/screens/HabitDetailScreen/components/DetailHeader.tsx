@@ -40,7 +40,7 @@ export function DetailHeader({
         <View>
           <Text className='text-base font-bold leading-tight text-stone-900'>
             {/* Strip leading emoji from name if icon is shown separately */}
-            {habit.icon ? habit.name.replace(/^\p{Emoji}\s*/u, '') : habit.name}
+            {habit.icon ? (habit.name ?? '').replace(/^\p{Emoji}\s*/u, '') : (habit.name ?? 'Habit')}
           </Text>
           {(habit.currentStreak ?? 0) >= 7 && (
             <Text className='text-xs font-medium text-orange-600'>

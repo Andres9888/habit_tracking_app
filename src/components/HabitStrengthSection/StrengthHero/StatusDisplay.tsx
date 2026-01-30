@@ -20,12 +20,17 @@ export function StatusDisplay({
   delta,
   deltaLabel,
 }: StatusDisplayProps) {
-  const colors = STRENGTH_COLORS[label];
+  // Guard against invalid label - default to 'weak'
+  const safeLabel = label && STRENGTH_COLORS[label] ? label : 'weak';
+  const colors = STRENGTH_COLORS[safeLabel];
+
+  // Guard against NaN/undefined delta - default to 0
+  const safeDelta = typeof delta === 'number' && !isNaN(delta) ? delta : 0;
 
   // Format delta for display
-  const deltaText = delta >= 0 ? `+${delta}%` : `${delta}%`;
-  const deltaIsPositive = delta > 0;
-  const deltaIsNegative = delta < 0;
+  const deltaText = safeDelta >= 0 ? `+${safeDelta}%` : `${safeDelta}%`;
+  const deltaIsPositive = safeDelta > 0;
+  const deltaIsNegative = safeDelta < 0;
 
   return (
     <View className='ml-4 flex-1'>
@@ -38,7 +43,7 @@ export function StatusDisplay({
           className='text-sm font-semibold'
           style={{ color: colors.primary }}
         >
-          {STRENGTH_LABELS[label]}
+          {STRENGTH_LABELS[safeLabel]}
         </Text>
       </View>
 

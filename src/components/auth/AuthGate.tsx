@@ -1,6 +1,6 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -12,14 +12,36 @@ export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const getOrCreateUser = useMutation(api.users.getOrCreateUser);
 
-  // Sync user to Convex when signed in (fire and forget)
+  // Use ref to store mutation to prevent it from triggering useEffect re-runs
+  const getOrCreateUserRef = useRef(getOrCreateUser);
+  getOrCreateUserRef.current = getOrCreateUser;
+
+  // Retry with exponential backoff to handle auth token propagation delay
+  const syncUserWithRetry = useCallback(async (retries = 3, delay = 500) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        await getOrCreateUserRef.current();
+        return; // Success, exit
+      } catch (error) {
+        const isAuthError =
+          error instanceof Error && error.message.includes('Not authenticated');
+        if (!isAuthError || i === retries - 1) {
+          // Not an auth error, or last retry - log and exit
+          console.error('Failed to sync user:', error);
+          return;
+        }
+        // Wait before retry (auth token may be propagating)
+        await new Promise((resolve) => setTimeout(resolve, delay * (i + 1)));
+      }
+    }
+  }, []);
+
+  // Sync user to Convex when signed in
   useEffect(() => {
     if (isSignedIn) {
-      getOrCreateUser().catch((error) => {
-        console.error('Failed to sync user:', error);
-      });
+      syncUserWithRetry();
     }
-  }, [isSignedIn, getOrCreateUser]);
+  }, [isSignedIn, syncUserWithRetry]);
 
   // Show loading while Clerk initializes
   if (!isLoaded) {

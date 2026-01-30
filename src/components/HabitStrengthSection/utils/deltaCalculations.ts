@@ -21,12 +21,17 @@ export function calculateWeekDelta(
   habitCreatedAt: Date,
   currentStrength: number
 ): number {
+  // Guard against invalid date
+  if (!habitCreatedAt || isNaN(habitCreatedAt.getTime())) {
+    return Math.round(currentStrength);
+  }
+
   const today = startOfDay(new Date());
   const oneWeekAgo = subDays(today, 7);
 
   // If habit is less than 7 days old, return current strength as delta
   if (oneWeekAgo < startOfDay(habitCreatedAt)) {
-    return currentStrength;
+    return Math.round(currentStrength);
   }
 
   const weekAgoStrength = calculateStrengthAtDate(
@@ -52,12 +57,17 @@ export function calculateMonthDelta(
   habitCreatedAt: Date,
   currentStrength: number
 ): number {
+  // Guard against invalid date
+  if (!habitCreatedAt || isNaN(habitCreatedAt.getTime())) {
+    return Math.round(currentStrength);
+  }
+
   const today = startOfDay(new Date());
   const thirtyDaysAgo = subDays(today, 30);
 
   // If habit is less than 30 days old, return current strength as delta
   if (thirtyDaysAgo < startOfDay(habitCreatedAt)) {
-    return currentStrength;
+    return Math.round(currentStrength);
   }
 
   const monthAgoStrength = calculateStrengthAtDate(

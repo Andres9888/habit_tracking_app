@@ -19,29 +19,46 @@ import { formatDateString } from './formatting';
 export function calculateStrengthExtremes(
   strengthHistory: StrengthSnapshot[]
 ): { peak: StrengthSnapshot; lowest: StrengthSnapshot } {
-  if (strengthHistory.length === 0) {
-    const now = new Date();
-    const emptySnapshot: StrengthSnapshot = {
-      date: now,
-      dateString: formatDateString(now),
-      label: 'weak',
-      strength: 0,
-    };
+  // Create fallback snapshot for empty or invalid cases
+  const now = new Date();
+  const emptySnapshot: StrengthSnapshot = {
+    date: now,
+    dateString: formatDateString(now),
+    label: 'weak',
+    strength: 0,
+  };
+
+  // Guard against null, undefined, or empty arrays
+  if (!strengthHistory || !Array.isArray(strengthHistory) || strengthHistory.length === 0) {
     return { lowest: emptySnapshot, peak: emptySnapshot };
   }
 
-  let peak = strengthHistory[0];
+  // Get first valid snapshot, or use fallback
+  const firstSnapshot = strengthHistory[0];
+  if (!firstSnapshot) {
+    return { lowest: emptySnapshot, peak: emptySnapshot };
+  }
+
+  let peak = firstSnapshot;
   for (const snapshot of strengthHistory) {
+    // Skip undefined/null entries
+    if (!snapshot || typeof snapshot.strength !== 'number') continue;
     if (snapshot.strength > peak.strength) {
       peak = snapshot;
     }
   }
 
-  let lowest =
-    strengthHistory.length > 1 ? strengthHistory[1] : strengthHistory[0];
+  // For lowest, skip day 1 if possible
+  let lowest = strengthHistory.length > 1
+    ? (strengthHistory[1] ?? firstSnapshot)
+    : firstSnapshot;
+
   for (let i = 1; i < strengthHistory.length; i++) {
-    if (strengthHistory[i].strength < lowest.strength) {
-      lowest = strengthHistory[i];
+    const snapshot = strengthHistory[i];
+    // Skip undefined/null entries
+    if (!snapshot || typeof snapshot.strength !== 'number') continue;
+    if (snapshot.strength < lowest.strength) {
+      lowest = snapshot;
     }
   }
 

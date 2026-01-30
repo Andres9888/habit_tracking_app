@@ -29,7 +29,11 @@ export function calculateExtendedMetrics(
   strengthHistory: StrengthSnapshot[],
   timeRange: TimeRange
 ): ExtendedStrengthMetrics {
-  const createdAtDate = new Date(habitCreatedAt);
+  // Guard against invalid habitCreatedAt - use current time as fallback
+  const safeCreatedAt = typeof habitCreatedAt === 'number' && !isNaN(habitCreatedAt) && habitCreatedAt > 0
+    ? habitCreatedAt
+    : Date.now();
+  const createdAtDate = new Date(safeCreatedAt);
 
   // Calculate week delta using current strength (from database)
   const deltaVsWeek = calculateWeekDelta(

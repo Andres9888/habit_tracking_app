@@ -15,10 +15,13 @@ export function AnimatedPercentageText({
   const [displayText, setDisplayText] = React.useState('0%');
 
   useDerivedValue(() => {
-    const formatted = `${Math.round(animatedValue.value)}%`;
+    'worklet';
+    const rawValue = animatedValue.value;
+    const safeValue = typeof rawValue === 'number' && !isNaN(rawValue) ? rawValue : 0;
+    const formatted = `${Math.round(safeValue)}%`;
     runOnJS(setDisplayText)(formatted);
     return formatted;
-  });
+  }, [animatedValue]);
 
   return (
     <Text

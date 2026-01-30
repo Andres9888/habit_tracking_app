@@ -8,14 +8,15 @@ import type { TemplateCustomizations } from '../TemplatesScreen.types';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
 export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
-  const showSuccess = () => {
+  const showSuccess = useCallback(() => {
     o.setShowToast(true);
     o.setToastMessage('Imported habit successfully');
-  };
-  const showError = () => {
+  }, [o.setShowToast, o.setToastMessage]);
+
+  const showError = useCallback(() => {
     o.setShowToast(true);
     o.setToastMessage('Failed to import template. Please try again.');
-  };
+  }, [o.setShowToast, o.setToastMessage]);
 
   const handleTemplatePreview = useCallback(
     (t: Doc<'templates'>) => {
@@ -59,6 +60,8 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
       o.setImportedTemplateIds,
       o.setImportingTemplateId,
       o.setShowFullsizePreview,
+      showSuccess,
+      showError,
     ]
   );
 
@@ -87,6 +90,8 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
       o.setImportedTemplateIds,
       o.setImportingTemplateId,
       o.setShowCustomizeModal,
+      showSuccess,
+      showError,
     ]
   );
 

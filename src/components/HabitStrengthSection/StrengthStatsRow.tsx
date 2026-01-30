@@ -80,31 +80,36 @@ export const StrengthStatsRow = React.memo(function StrengthStatsRow({
   lastMonth,
   lastWeek,
 }: StrengthStatsRowProps) {
+  // Guard against NaN/undefined values - default to 0
+  const safeSinceStart = typeof sinceStart === 'number' && !isNaN(sinceStart) ? sinceStart : 0;
+  const safeLastMonth = typeof lastMonth === 'number' && !isNaN(lastMonth) ? lastMonth : 0;
+  const safeLastWeek = typeof lastWeek === 'number' && !isNaN(lastWeek) ? lastWeek : 0;
+
   return (
     <View
       className="flex-row items-center justify-between rounded-lg bg-stone-50 px-3 py-2"
-      accessibilityLabel={`Statistics: ${sinceStart}% since start, ${formatDelta(lastMonth)} last month, ${formatDelta(lastWeek)} last week`}
+      accessibilityLabel={`Statistics: ${safeSinceStart}% since start, ${formatDelta(safeLastMonth)} last month, ${formatDelta(safeLastWeek)} last week`}
     >
       <StatColumn
         label="Since Start"
-        value={`${sinceStart}%`}
-        isPositive={sinceStart > 0}
+        value={`${safeSinceStart}%`}
+        isPositive={safeSinceStart > 0}
       />
 
       <Divider />
 
       <StatColumn
         label="Last Month"
-        value={formatDelta(lastMonth)}
-        isPositive={lastMonth > 0}
+        value={formatDelta(safeLastMonth)}
+        isPositive={safeLastMonth > 0}
       />
 
       <Divider />
 
       <StatColumn
         label="Last Week"
-        value={formatDelta(lastWeek)}
-        isPositive={lastWeek > 0}
+        value={formatDelta(safeLastWeek)}
+        isPositive={safeLastWeek > 0}
       />
     </View>
   );

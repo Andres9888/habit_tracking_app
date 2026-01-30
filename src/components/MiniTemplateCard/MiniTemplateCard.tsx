@@ -23,20 +23,20 @@ import { createImportHandler, createPressHandlers } from './usePressHandlers';
 
 export function MiniTemplateCard(props: MiniTemplateCardProps) {
   const {
-    description,
+    description = '',
     hasResearch,
-    icon,
+    icon = '📝',
     iconColor: iconColorProp,
     isImported,
     isImporting,
-    name,
+    name = 'Untitled',
     onImport,
     onPress,
   } = props;
 
   const reducedMotion = useReduceMotion();
   const iconColor =
-    iconColorProp && iconColorProp.trim() !== ''
+    iconColorProp && typeof iconColorProp === 'string' && iconColorProp.trim() !== ''
       ? iconColorProp
       : DEFAULT_ICON_COLOR;
 

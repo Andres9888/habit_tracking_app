@@ -13,6 +13,7 @@ export const useHabitDayToggleAnimations = ({
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
   const buttonScale = useRef(new Animated.Value(1)).current;
   const breathingPulse = useRef(new Animated.Value(1)).current;
+  const prevCompletedRef = useRef(completed);
 
   // Combine scale values using Animated.multiply
   const combinedScale = useMemo(
@@ -22,6 +23,16 @@ export const useHabitDayToggleAnimations = ({
   );
 
   useEffect(() => {
+    const prevCompleted = prevCompletedRef.current;
+    prevCompletedRef.current = completed;
+
+    // If the value hasn't changed, just ensure it's set correctly (no animation)
+    if (prevCompleted === completed) {
+      completion.setValue(completed ? 1 : 0);
+      return;
+    }
+
+    // Value changed - animate the transition
     let animation: Animated.CompositeAnimation | null = null;
 
     animation = completed

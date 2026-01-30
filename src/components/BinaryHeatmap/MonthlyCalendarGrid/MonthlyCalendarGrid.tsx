@@ -54,15 +54,17 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
         ))}
       </View>
 
-      {weeks.map((week, weekIndex) => (
+      {(weeks ?? []).map((week, weekIndex) => (
         <View key={`week-${weekIndex}`} style={styles.row}>
-          {week.map((day) => (
+          {(week ?? []).map((day, dayIndex) => day && day.dateString ? (
             <CalendarDay
               key={day.dateString}
               day={day}
               habitColor={habitColor}
               onPress={handleDayPress}
             />
+          ) : (
+            <View key={`empty-${weekIndex}-${dayIndex}`} style={styles.dayWrapper} />
           ))}
         </View>
       ))}

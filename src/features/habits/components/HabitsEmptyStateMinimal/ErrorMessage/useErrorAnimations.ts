@@ -2,7 +2,7 @@
  * Animation hooks for ErrorMessage
  */
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import Animated, {
   Easing,
   runOnJS,
@@ -29,13 +29,17 @@ export function useErrorAnimations({
   const translateY = useSharedValue(-10);
   const translateX = useSharedValue(0);
 
+  // Use ref for callback to prevent it from triggering useEffect re-runs
+  const onDismissRef = useRef(onDismiss);
+  onDismissRef.current = onDismiss;
+
   const handleDismiss = useCallback(() => {
     opacity.value = withTiming(0, { duration: 150 }, (finished) => {
-      if (finished) {
-        runOnJS(onDismiss)();
+      if (finished && onDismissRef.current) {
+        runOnJS(onDismissRef.current)();
       }
     });
-  }, [onDismiss, opacity]);
+  }, [opacity]);
 
   useEffect(() => {
     if (shouldReduceMotion) {

@@ -26,6 +26,7 @@ import { Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { useHabitStrength } from '../../hooks/useHabitStrength';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { getStrengthLabel } from '../HabitStrengthHistory/strengthUtils';
 import { COLORS } from './constants';
 import { StrengthChart } from './StrengthChart';
@@ -51,9 +52,30 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   // Time range state (default to 1 year)
   const [timeRange, setTimeRange] = useState<TimeRange>('1y');
 
+  // Check for reduce motion to disable entering animations (prevents native crashes)
+  const reduceMotion = useReduceMotion();
+
+  // Ensure completedDates is a valid Set (defensive check)
+  const safeCompletedDates = useMemo(() => {
+    if (!completedDates) return new Set<string>();
+    if (completedDates instanceof Set) return completedDates;
+    // If somehow an array was passed, convert it
+    if (Array.isArray(completedDates)) return new Set(completedDates as unknown as string[]);
+    return new Set<string>();
+  }, [completedDates]);
+
+  // Ensure habitCreatedAt is a valid number (memoized to prevent re-renders)
+  const safeHabitCreatedAt = useMemo(() => {
+    if (typeof habitCreatedAt === 'number' && !isNaN(habitCreatedAt)) {
+      return habitCreatedAt;
+    }
+    // Fallback to current time, but only calculated once
+    return Date.now();
+  }, [habitCreatedAt]);
+
   // Get strength data from existing hook (for history and metrics)
   const { currentStrength: calculatedStrength, strengthHistory, metrics, isCalculating } =
-    useHabitStrength(completedDates, habitCreatedAt);
+    useHabitStrength(safeCompletedDates, safeHabitCreatedAt);
 
   // Use database strength if provided (converted from 0-1 to 0-100), otherwise use calculated
   // This ensures consistency with HabitCard which uses habit.strength
@@ -63,16 +85,16 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   // Calculate extended metrics with time range filtering
   const extendedMetrics = useMemo(() => {
     return calculateExtendedMetrics(
-      completedDates,
-      habitCreatedAt,
+      safeCompletedDates,
+      safeHabitCreatedAt,
       currentStrength,
       metrics.deltaVsMonth,
       strengthHistory,
       timeRange
     );
   }, [
-    completedDates,
-    habitCreatedAt,
+    safeCompletedDates,
+    safeHabitCreatedAt,
     currentStrength,
     metrics.deltaVsMonth,
     strengthHistory,
@@ -81,9 +103,9 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 
   // Generate chart data directly from completedDates (bypasses broken strengthHistory)
   const chartData = useMemo(() => {
-    const rawChartData = generateChartDataFromCompletions(completedDates, timeRange);
+    const rawChartData = generateChartDataFromCompletions(safeCompletedDates, timeRange);
     return sampleHistoryForChart(rawChartData, 50);
-  }, [completedDates, timeRange]);
+  }, [safeCompletedDates, timeRange]);
 
   // Get strength label for display
   const strengthLabel = getStrengthLabel(currentStrength);
@@ -100,7 +122,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   }
 
   // Handle empty state (no completions)
-  if (completedDates.size === 0) {
+  if (safeCompletedDates.size === 0) {
     return (
       <View className="rounded-2xl bg-white p-5 shadow-sm">
         <Text className="mb-2 text-lg font-bold text-stone-800">
@@ -119,7 +141,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   return (
     <Animated.View
       className="overflow-hidden rounded-2xl bg-white shadow-sm"
-      entering={FadeInDown.delay(100).springify()}
+      entering={reduceMotion ? undefined : FadeInDown.delay(100).springify()}
       style={{
         shadowColor: COLORS.textPrimary,
         shadowOffset: { width: 0, height: 2 },

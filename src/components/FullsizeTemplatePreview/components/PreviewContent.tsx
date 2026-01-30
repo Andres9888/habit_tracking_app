@@ -61,7 +61,7 @@ export function PreviewContent({
         isImporting={isImporting}
         successButtonGlowStyle={animatedStyles.successButtonGlowStyle}
         successIconBounceStyle={animatedStyles.successIconBounceStyle}
-        templateName={template.name}
+        templateName={template?.name ?? ''}
         onCustomize={handlers.handleCustomize}
         onImport={handlers.handleImport}
       />

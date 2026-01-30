@@ -22,7 +22,7 @@ export const useHabitDetailScreenComputed = ({
         const dateKey = date.toISOString().split('T')[0];
         return dateKey === today
           ? isCompletedToday
-          : completedDates.has(dateKey);
+          : (completedDates?.has(dateKey) ?? false);
       }),
     [today, isCompletedToday, completedDates]
   );
@@ -35,7 +35,7 @@ export const useHabitDetailScreenComputed = ({
         const dateKey = date.toISOString().split('T')[0];
         return {
           completed:
-            dateKey === today ? isCompletedToday : completedDates.has(dateKey),
+            dateKey === today ? isCompletedToday : (completedDates?.has(dateKey) ?? false),
           date: dateKey,
         };
       }),
@@ -64,7 +64,7 @@ export const useHabitDetailScreenComputed = ({
       const isTodayDate = dateKey === today;
 
       return {
-        completed: isTodayDate ? isCompletedToday : completedDates.has(dateKey),
+        completed: isTodayDate ? isCompletedToday : (completedDates?.has(dateKey) ?? false),
         date: dateKey,
         isToday: isTodayDate,
       };
@@ -86,7 +86,7 @@ export const useHabitDetailScreenComputed = ({
       const date = new Date(lastMonday);
       date.setDate(lastMonday.getDate() + i);
       const dateKey = date.toISOString().split('T')[0];
-      if (completedDates.has(dateKey)) {
+      if (completedDates?.has(dateKey)) {
         count++;
       }
     }
