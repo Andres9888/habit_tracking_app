@@ -3,12 +3,16 @@
  * Type definitions for the HabitCard component
  *
  * @see docs/offline-habit-sync.md T013 - Offline state support
+ * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
  */
 
 import type { ViewStyle } from 'react-native';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { TrackingRecord } from '../../lib/offline';
 import type { HabitCardEntranceVariant } from './useHabitCardEntrance';
+
+/** Completion icon type - chain link for visual "chain building" or checkbox */
+export type CompletionIconType = 'chain' | 'checkbox';
 
 export interface HabitCardProps {
   /** Habit ID */
@@ -98,4 +102,14 @@ export interface HabitCardProps {
    * @see docs/offline-habit-sync.md T013
    */
   offlineSyncEnabled?: boolean;
+
+  /**
+   * Type of completion icon to display.
+   * - 'chain': Shows chain link icon with linking animation (for "don't break the chain")
+   * - 'checkbox': Shows checkmark icon (traditional checkbox style)
+   *
+   * @default 'checkbox'
+   * @see docs/offline-habit-sync.md T014
+   */
+  completionIcon?: CompletionIconType;
 }

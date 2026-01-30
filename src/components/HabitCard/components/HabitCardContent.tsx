@@ -1,16 +1,21 @@
 /**
  * HabitCardContent Component
  * Inner content of the HabitCard including name, icon, streak, and progress
+ *
+ * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
  */
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+import Animated, {
+  type AnimatedStyle,
+  type SharedValue,
+} from 'react-native-reanimated';
 import type { AppTheme } from '../../../theme';
 import { StrengthProgressBar } from '../../StrengthProgressBar/StrengthProgressBar';
 import { styles } from '../HabitCard.styles';
 import { streakStyles } from '../HabitCard.streakStyles';
-import { StatusIndicator } from './StatusIndicator';
+import { StatusIndicator, type CompletionIconType } from './StatusIndicator';
 import { StreakBadge } from './StreakBadge';
 
 interface HabitCardContentProps {
@@ -25,6 +30,14 @@ interface HabitCardContentProps {
   entranceContentStyle: AnimatedStyle<object>;
   checkmarkAnimatedStyle: AnimatedStyle<object>;
   rippleAnimatedStyle: AnimatedStyle<object>;
+  /** Type of completion icon to display - T014 */
+  completionIcon?: CompletionIconType;
+  /** Whether there are pending offline operations - T014 */
+  hasPendingOfflineOps?: boolean;
+  /** Animated scale for chain link animation - T014 */
+  chainScale?: SharedValue<number>;
+  /** Animated rotation for chain link animation - T014 */
+  chainRotate?: SharedValue<number>;
 }
 
 export function HabitCardContent({
@@ -39,6 +52,10 @@ export function HabitCardContent({
   entranceContentStyle,
   checkmarkAnimatedStyle,
   rippleAnimatedStyle,
+  completionIcon = 'checkbox',
+  hasPendingOfflineOps = false,
+  chainScale,
+  chainRotate,
 }: HabitCardContentProps) {
   return (
     <Animated.View style={[styles.content, entranceContentStyle]}>
@@ -59,8 +76,12 @@ export function HabitCardContent({
         <View style={styles.statusContainer}>
           <StatusIndicator
             atRisk={atRisk}
+            chainRotate={chainRotate}
+            chainScale={chainScale}
             checkmarkAnimatedStyle={checkmarkAnimatedStyle}
             completed={completed}
+            completionIcon={completionIcon}
+            hasPendingOfflineOps={hasPendingOfflineOps}
           />
         </View>
       </View>
