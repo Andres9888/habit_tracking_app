@@ -102,3 +102,26 @@ export {
   parseHabitDateKey,
   resolveConflict,
 } from '../conflictResolver';
+
+// Auth Handler (Edge Case: Auth expiry while offline)
+export {
+  createAuthHandler,
+  DEFAULT_AUTH_CONFIG,
+  getAuthHandler,
+  hasAuthHandler,
+  resetAuthHandler,
+  useAuthHandler,
+  type AuthHandlerAPI,
+} from '../authHandler';
+
+// Auth Handler Helpers
+export {
+  createAuthEvent,
+  createInitialState as createInitialAuthState,
+  getAuthDisplayMessage,
+  getSuggestedAction,
+  isAuthError,
+  isTokenExpiredError,
+  requiresUserAction,
+  shouldPauseSync,
+} from '../authHandler';

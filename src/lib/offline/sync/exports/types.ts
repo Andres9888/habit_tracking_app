@@ -74,3 +74,17 @@ export type {
   ConflictResolverConfig,
   ServerCompletionState,
 } from '../conflictResolver';
+
+// Auth Handler Types (Edge Case: Auth expiry while offline)
+export type {
+  AuthEvent,
+  AuthEventData,
+  AuthEventListener,
+  AuthEventType,
+  AuthHandlerConfig,
+  AuthHandlerDeps,
+  AuthHandlerState,
+  AuthStatus,
+  UseAuthHandlerOptions,
+  UseAuthHandlerReturn,
+} from '../authHandler';
