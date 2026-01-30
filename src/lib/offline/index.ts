@@ -120,3 +120,6 @@ export {
   type UseOfflineQueueOptions,
   type UseOfflineQueueReturn,
 } from './hooks';
+
+// Calculations (offline streak calculation) - re-export all
+export * from './calculations';
