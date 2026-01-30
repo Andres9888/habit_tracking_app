@@ -38,6 +38,16 @@ export {
   updateSyncRetryContext,
 } from './retryStrategy';
 
+// Queue Processing (FR-005: FIFO processing)
+export {
+  DEFAULT_BATCH_SIZE,
+  operationToSyncItem as operationToSyncItemForQueue,
+  processQueue,
+  processQueueUntilEmpty,
+  processSingleOperation,
+  shouldSkipOperation,
+} from './processQueue';
+
 // Types
 export type {
   BatchResult,
@@ -56,3 +66,14 @@ export type {
   ToggleCompletionPayload,
   ToggleSyncExecutor,
 } from './types';
+
+// Process Queue Types
+export type {
+  ProcessOperationResult,
+  ProcessQueueConfig,
+  ProcessQueueResult,
+  ProcessingContext,
+  ProcessSingleOptions,
+  QueueProcessorDeps,
+  QueueProgressCallback,
+} from './processQueue';
