@@ -93,7 +93,7 @@ export default function WelcomeScreen() {
           <HeroAnimation />
 
           <Animated.Text style={[styles.title, titleStyle]}>
-            Daily Habits
+            Chain Day
           </Animated.Text>
 
           <Animated.Text style={[styles.subtitle, subtitleStyle]}>
