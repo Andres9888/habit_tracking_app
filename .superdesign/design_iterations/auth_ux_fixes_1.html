@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auth UI/UX Fixes - Before & After</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #1a1a1a !important; }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: white;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #1a1a1a;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+    .status-bar {
+      height: 44px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Button styles */
+    .btn-apple {
+      background: #000;
+      color: white;
+    }
+    .btn-google {
+      background: white;
+      border: 1px solid #e7e5e4;
+      color: #1c1917;
+    }
+    .btn-primary {
+      background: #059669;
+      color: white;
+    }
+    .btn-primary-old {
+      background: #1c1917;
+      color: white;
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e7e5e4;
+    }
+
+    /* Labels */
+    .label-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ef4444;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .label-badge.green {
+      background: #22c55e;
+    }
+
+    /* Issue callout */
+    .issue-callout {
+      position: absolute;
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #92400e;
+      white-space: nowrap;
+      z-index: 20;
+    }
+    .issue-callout::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+      border: 6px solid transparent;
+    }
+    .issue-callout.left::after {
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left-color: #f59e0b;
+    }
+    .issue-callout.right::after {
+      left: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-right-color: #f59e0b;
+    }
+    .issue-callout.bottom::after {
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: #f59e0b;
+    }
+
+    /* Fix callout */
+    .fix-callout {
+      position: absolute;
+      background: #dcfce7;
+      border: 2px solid #22c55e;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #166534;
+      white-space: nowrap;
+      z-index: 20;
+    }
+    .fix-callout::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+      border: 6px solid transparent;
+    }
+    .fix-callout.left::after {
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left-color: #22c55e;
+    }
+    .fix-callout.right::after {
+      left: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-right-color: #22c55e;
+    }
+
+    /* Input focus styles */
+    .input-focused {
+      border-color: #059669 !important;
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+      background: white !important;
+    }
+
+    /* Press animation demo */
+    .btn-pressed {
+      transform: scale(0.97);
+      transition: transform 0.1s ease;
+    }
+
+    /* Tab navigation */
+    .tab-btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: #059669;
+      color: white;
+    }
+    .tab-btn:not(.active) {
+      background: #292524;
+      color: #a8a29e;
+    }
+    .tab-btn:not(.active):hover {
+      background: #44403c;
+      color: white;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold text-white mb-2 text-center">Auth UI/UX Fixes</h1>
+    <p class="text-stone-400 text-center mb-4">12 Issues Identified and Fixed</p>
+
+    <!-- Tab Navigation -->
+    <div class="flex justify-center gap-2 mb-12">
+      <button class="tab-btn active" onclick="showSection('welcome')">Welcome Screen</button>
+      <button class="tab-btn" onclick="showSection('signin')">Sign In Screen</button>
+      <button class="tab-btn" onclick="showSection('components')">Component Details</button>
+    </div>
+
+    <!-- SECTION 1: Welcome Screen -->
+    <div id="welcome-section" class="section">
+      <div class="flex flex-wrap justify-center gap-16">
+
+        <!-- BEFORE: Welcome Screen -->
+        <div class="relative">
+          <div class="label-badge">BEFORE</div>
+
+          <!-- Issue callouts -->
+          <div class="issue-callout left" style="top: 340px; left: -140px;">UX-001: Emoji icon 🔵</div>
+          <div class="issue-callout left" style="top: 400px; left: -160px;">UX-002: rounded-3xl (24px)</div>
+          <div class="issue-callout left" style="top: 520px; left: -140px;">UX-010: my-6 (48px total)</div>
+
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span class="text-xs font-medium">9:41</span>
+              <div class="flex gap-1 items-center">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 019 9h-2a7 7 0 00-7-7V3z"/></svg>
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/></svg>
+              </div>
+            </div>
+
+            <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-12 pb-8 justify-between">
+              <!-- Hero -->
+              <div class="flex flex-col items-center gap-3">
+                <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-400 flex items-center justify-center shadow-lg">
+                  <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17L4 12"/>
+                  </svg>
+                </div>
+                <h1 class="text-3xl font-extrabold tracking-tight text-stone-800 text-center mt-2">
+                  Daily Habits
+                </h1>
+                <p class="text-base text-stone-500 text-center leading-relaxed">
+                  Build lasting habits with<br>science-backed techniques
+                </p>
+
+                <!-- Social proof -->
+                <div class="bg-gradient-to-r from-amber-100 to-amber-200 border border-amber-300 rounded-full px-4 py-2 flex items-center gap-2 mt-2">
+                  <span class="text-amber-600">★</span>
+                  <span class="text-amber-800 font-semibold text-sm">10,000+ habits tracked</span>
+                </div>
+              </div>
+
+              <!-- Buttons -->
+              <div class="flex flex-col gap-3">
+                <!-- Apple - with emoji issue highlighted -->
+                <button class="btn-apple py-4 rounded-3xl font-semibold text-base flex items-center justify-center gap-3">
+                  <span class="text-lg"></span>
+                  Continue with Apple
+                </button>
+
+                <!-- Google - EMOJI PROBLEM -->
+                <button class="btn-google py-4 rounded-3xl font-semibold text-base flex items-center justify-center gap-3">
+                  <span class="text-lg">🔵</span>
+                  Continue with Google
+                </button>
+
+                <!-- Divider with large spacing -->
+                <div class="divider text-xs text-stone-400 font-medium tracking-widest my-6">
+                  or
+                </div>
+
+                <!-- Email button -->
+                <button class="btn-primary-old py-4 rounded-3xl font-semibold text-sm tracking-wide">
+                  Continue with Email
+                </button>
+
+                <p class="text-center text-stone-500 text-sm mt-1">
+                  Already have an account? <span class="text-stone-800 font-semibold">Sign in</span>
+                </p>
+              </div>
+
+              <!-- Footer -->
+              <div class="flex justify-center gap-2 text-xs text-stone-400 mt-4">
+                <span class="underline">Terms</span>
+                <span>·</span>
+                <span class="underline">Privacy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AFTER: Welcome Screen -->
+        <div class="relative">
+          <div class="label-badge green">AFTER</div>
+
+          <!-- Fix callouts -->
+          <div class="fix-callout right" style="top: 340px; right: -140px;">✓ Proper SVG icon</div>
+          <div class="fix-callout right" style="top: 400px; right: -150px;">✓ rounded-2xl (16px)</div>
+          <div class="fix-callout right" style="top: 500px; right: -140px;">✓ my-4 (32px total)</div>
+
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span class="text-xs font-medium">9:41</span>
+              <div class="flex gap-1 items-center">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 019 9h-2a7 7 0 00-7-7V3z"/></svg>
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/></svg>
+              </div>
+            </div>
+
+            <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-12 pb-8 justify-between">
+              <!-- Hero -->
+              <div class="flex flex-col items-center gap-3">
+                <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-400 flex items-center justify-center shadow-lg">
+                  <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17L4 12"/>
+                  </svg>
+                </div>
+                <h1 class="text-3xl font-extrabold tracking-tight text-stone-800 text-center mt-2">
+                  Daily Habits
+                </h1>
+                <p class="text-base text-stone-500 text-center leading-relaxed">
+                  Build lasting habits with<br>science-backed techniques
+                </p>
+
+                <!-- Social proof -->
+                <div class="bg-gradient-to-r from-amber-100 to-amber-200 border border-amber-300 rounded-full px-4 py-2 flex items-center gap-2 mt-2">
+                  <span class="text-amber-600">★</span>
+                  <span class="text-amber-800 font-semibold text-sm">10,000+ habits tracked</span>
+                </div>
+              </div>
+
+              <!-- Buttons - FIXED -->
+              <div class="flex flex-col gap-3">
+                <!-- Apple - proper SVG -->
+                <button class="btn-apple py-4 rounded-2xl font-semibold text-base flex items-center justify-center gap-3 hover:opacity-90 transition-all">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                  </svg>
+                  Continue with Apple
+                </button>
+
+                <!-- Google - PROPER SVG -->
+                <button class="btn-google py-4 rounded-2xl font-semibold text-base flex items-center justify-center gap-3 hover:bg-stone-50 transition-all">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  Continue with Google
+                </button>
+
+                <!-- Divider - tighter spacing -->
+                <div class="divider text-xs text-stone-400 font-medium tracking-widest my-4">
+                  or
+                </div>
+
+                <!-- Email button - emerald + rounded-2xl -->
+                <button class="btn-primary py-4 rounded-2xl font-semibold text-sm tracking-wide shadow-sm hover:bg-emerald-700 transition-all">
+                  Continue with Email
+                </button>
+
+                <p class="text-center text-stone-500 text-sm mt-1">
+                  Already have an account? <span class="text-emerald-600 font-semibold">Sign in</span>
+                </p>
+              </div>
+
+              <!-- Footer -->
+              <div class="flex justify-center gap-2 text-xs text-stone-400 mt-4">
+                <span class="underline">Terms</span>
+                <span>·</span>
+                <span class="underline">Privacy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 2: Sign In Screen -->
+    <div id="signin-section" class="section hidden">
+      <div class="flex flex-wrap justify-center gap-16">
+
+        <!-- BEFORE: Sign In -->
+        <div class="relative">
+          <div class="label-badge">BEFORE</div>
+
+          <!-- Issue callouts -->
+          <div class="issue-callout left" style="top: 120px; left: -130px;">UX-004: Text back btn</div>
+          <div class="issue-callout left" style="top: 420px; left: -130px;">UX-005: No "Forgot?"</div>
+          <div class="issue-callout left" style="top: 350px; left: -160px;">UX-006: No focus ring</div>
+          <div class="issue-callout left" style="top: 490px; left: -130px;">UX-008: Flat inputs</div>
+          <div class="issue-callout left" style="top: 560px; left: -160px;">UX-012: No eye toggle</div>
+
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span class="text-xs font-medium">9:41</span>
+              <div class="flex gap-1">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 019 9h-2a7 7 0 00-7-7V3z"/></svg>
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/></svg>
+              </div>
+            </div>
+
+            <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-8">
+              <!-- Back button - plain text -->
+              <button class="text-stone-800 font-semibold text-base mb-6 text-left">← Back</button>
+
+              <!-- Header -->
+              <h1 class="text-2xl font-extrabold tracking-tight text-stone-900 mb-1">
+                Welcome back
+              </h1>
+              <p class="text-base text-stone-500 mb-6">
+                Sign in to continue your streak
+              </p>
+
+              <!-- Social Buttons -->
+              <div class="flex flex-col gap-3 mb-4">
+                <button class="btn-apple py-3.5 rounded-3xl font-semibold text-sm flex items-center justify-center gap-3">
+                  <span class="text-base"></span>
+                  Continue with Apple
+                </button>
+                <button class="btn-google py-3.5 rounded-3xl font-semibold text-sm flex items-center justify-center gap-3">
+                  <span class="text-base">🔵</span>
+                  Continue with Google
+                </button>
+              </div>
+
+              <!-- Divider -->
+              <div class="divider text-xs text-stone-400 font-medium tracking-widest my-4">
+                or
+              </div>
+
+              <!-- Form -->
+              <div class="flex flex-col gap-4">
+                <div>
+                  <label class="text-stone-500 font-medium text-sm mb-2 block">Email</label>
+                  <input type="email" placeholder="you@example.com" class="w-full py-3 px-4 border border-stone-200 rounded-xl text-base bg-white">
+                </div>
+
+                <div>
+                  <label class="text-stone-500 font-medium text-sm mb-2 block">Password</label>
+                  <input type="password" value="••••••••" class="w-full py-3 px-4 border border-stone-200 rounded-xl text-base bg-white">
+                </div>
+
+                <button class="btn-primary py-4 rounded-xl font-semibold text-sm tracking-wide mt-2">
+                  Sign In
+                </button>
+              </div>
+
+              <p class="text-center text-stone-500 text-sm mt-4">
+                Don't have an account? <span class="text-stone-800 font-semibold">Sign up</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- AFTER: Sign In -->
+        <div class="relative">
+          <div class="label-badge green">AFTER</div>
+
+          <!-- Fix callouts -->
+          <div class="fix-callout right" style="top: 120px; right: -150px;">✓ Icon + touch target</div>
+          <div class="fix-callout right" style="top: 420px; right: -130px;">✓ Inline "Forgot?"</div>
+          <div class="fix-callout right" style="top: 350px; right: -160px;">✓ Emerald focus ring</div>
+          <div class="fix-callout right" style="top: 490px; right: -130px;">✓ Depth styling</div>
+          <div class="fix-callout right" style="top: 560px; right: -130px;">✓ Eye toggle</div>
+
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span class="text-xs font-medium">9:41</span>
+              <div class="flex gap-1">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 019 9h-2a7 7 0 00-7-7V3z"/></svg>
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/></svg>
+              </div>
+            </div>
+
+            <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-8">
+              <!-- Back button - icon + proper target -->
+              <button class="flex items-center gap-1 text-stone-700 font-medium text-base mb-6 -ml-2 p-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Back
+              </button>
+
+              <!-- Header -->
+              <h1 class="text-2xl font-extrabold tracking-tight text-stone-900 mb-1">
+                Welcome back
+              </h1>
+              <p class="text-base text-stone-500 mb-6">
+                Sign in to continue your streak
+              </p>
+
+              <!-- Social Buttons - FIXED -->
+              <div class="flex flex-col gap-3 mb-4">
+                <button class="btn-apple py-3.5 rounded-2xl font-semibold text-sm flex items-center justify-center gap-3">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                  </svg>
+                  Continue with Apple
+                </button>
+                <button class="btn-google py-3.5 rounded-2xl font-semibold text-sm flex items-center justify-center gap-3">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  Continue with Google
+                </button>
+              </div>
+
+              <!-- Divider - tighter -->
+              <div class="divider text-xs text-stone-400 font-medium tracking-widest my-3">
+                or
+              </div>
+
+              <!-- Form - FIXED -->
+              <div class="flex flex-col gap-4">
+                <div>
+                  <label class="text-stone-500 font-medium text-sm mb-2 block">Email</label>
+                  <input type="email" placeholder="you@example.com" class="w-full py-3 px-4 border border-stone-200 rounded-xl text-base bg-stone-50/50">
+                </div>
+
+                <div>
+                  <div class="flex justify-between items-center mb-2">
+                    <label class="text-stone-500 font-medium text-sm">Password</label>
+                    <button class="text-emerald-600 font-medium text-sm">Forgot?</button>
+                  </div>
+                  <div class="relative">
+                    <input type="password" value="••••••••" class="w-full py-3 px-4 pr-12 border rounded-xl text-base bg-white input-focused">
+                    <button class="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <button class="btn-primary py-4 rounded-2xl font-semibold text-sm tracking-wide shadow-sm">
+                  Sign In
+                </button>
+              </div>
+
+              <p class="text-center text-stone-500 text-sm mt-4">
+                Don't have an account? <span class="text-emerald-600 font-semibold">Sign up</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 3: Component Details -->
+    <div id="components-section" class="section hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+
+        <!-- UX-001: Google Icon -->
+        <div class="bg-stone-800/50 rounded-2xl p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">P0</span>
+            <span class="text-white font-semibold">UX-001: Google Icon</span>
+          </div>
+          <div class="flex gap-4 items-center justify-center mb-4">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-2">
+                <span class="text-2xl">🔵</span>
+              </div>
+              <span class="text-red-400 text-xs">Before</span>
+            </div>
+            <span class="text-stone-500">→</span>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-2">
+                <svg class="w-6 h-6" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+              </div>
+              <span class="text-green-400 text-xs">After</span>
+            </div>
+          </div>
+          <p class="text-stone-400 text-sm">Replace emoji placeholder with official 4-color Google "G" SVG logo.</p>
+        </div>
+
+        <!-- UX-002: Border Radius -->
+        <div class="bg-stone-800/50 rounded-2xl p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">P0</span>
+            <span class="text-white font-semibold">UX-002: Border Radius</span>
+          </div>
+          <div class="flex gap-4 items-center justify-center mb-4">
+            <div class="text-center">
+              <div class="bg-stone-900 text-white px-4 py-2 rounded-3xl text-sm mb-2">rounded-3xl</div>
+              <span class="text-red-400 text-xs">24px</span>
+            </div>
+            <span class="text-stone-500">→</span>
+            <div class="text-center">
+              <div class="bg-emerald-600 text-white px-4 py-2 rounded-2xl text-sm mb-2">rounded-2xl</div>
+              <span class="text-green-400 text-xs">16px</span>
+            </div>
+          </div>
+          <p class="text-stone-400 text-sm">Standardize all buttons to 16px radius for modern, balanced look.</p>
+        </div>
+
+        <!-- UX-006: Focus Ring -->
+        <div class="bg-stone-800/50 rounded-2xl p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">P1</span>
+            <span class="text-white font-semibold">UX-006: Focus Ring</span>
+          </div>
+          <div class="flex gap-4 items-center justify-center mb-4">
+            <div class="text-center">
+              <input type="text" value="No focus" class="w-28 py-2 px-3 border border-stone-300 rounded-lg text-sm bg-white" readonly>
+              <div class="text-red-400 text-xs mt-2">Before</div>
+            </div>
+            <span class="text-stone-500">→</span>
+            <div class="text-center">
+              <input type="text" value="Focused" class="w-28 py-2 px-3 border rounded-lg text-sm input-focused" readonly>
+              <div class="text-green-400 text-xs mt-2">After</div>
+            </div>
+          </div>
+          <p class="text-stone-400 text-sm">Add emerald focus ring with subtle shadow for clear focus state.</p>
+        </div>
+
+        <!-- UX-007: Press Animation -->
+        <div class="bg-stone-800/50 rounded-2xl p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">P1</span>
+            <span class="text-white font-semibold">UX-007: Press Animation</span>
+          </div>
+          <div class="flex flex-col gap-3 items-center mb-4">
+            <button class="bg-emerald-600 text-white px-6 py-3 rounded-2xl text-sm font-semibold">
+              Normal State
+            </button>
+            <button class="bg-emerald-600 text-white px-6 py-3 rounded-2xl text-sm font-semibold btn-pressed">
+              Pressed (0.97x)
+            </button>
+          </div>
+          <p class="text-stone-400 text-sm">Add scale(0.97) animation on press for tactile feedback.</p>
+        </div>
+
+        <!-- UX-012: Password Toggle -->
+        <div class="bg-stone-800/50 rounded-2xl p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">P2</span>
+            <span class="text-white font-semibold">UX-012: Password Toggle</span>
+          </div>
+          <div class="flex gap-4 items-center justify-center mb-4">
+            <div class="text-center">
+              <div class="relative">
+                <input type="password" value="password" class="w-28 py-2 px-3 border border-stone-300 rounded-lg text-sm bg-white" readonly>
+              </div>
+              <div class="text-red-400 text-xs mt-2">No toggle</div>
+            </div>
+            <span class="text-stone-500">→</span>
+            <div class="text-center">
+              <div class="relative">
+                <input type="text" value="password" class="w-28 py-2 px-3 pr-10 border border-stone-300 rounded-lg text-sm bg-white" readonly>
+                <button class="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="text-green-400 text-xs mt-2">With toggle</div>
+            </div>
+          </div>
+          <p class="text-stone-400 text-sm">Add eye icon to toggle password visibility.</p>
+        </div>
+
+        <!-- UX-005: Forgot Link -->
+        <div class="bg-stone-800/50 rounded-2xl p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">P1</span>
+            <span class="text-white font-semibold">UX-005: Forgot Link</span>
+          </div>
+          <div class="bg-white rounded-lg p-4 mb-4">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-stone-500 font-medium text-sm">Password</span>
+              <span class="text-emerald-600 font-medium text-sm">Forgot?</span>
+            </div>
+            <div class="h-10 bg-stone-100 rounded-lg"></div>
+          </div>
+          <p class="text-stone-400 text-sm">Add inline "Forgot?" link next to Password label.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Issue Summary Table -->
+    <div class="mt-16 bg-stone-800/50 rounded-2xl p-8 max-w-4xl mx-auto">
+      <h3 class="text-xl font-bold text-white mb-6">All 12 Issues Summary</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-stone-700">
+              <th class="text-left py-3 px-2 text-stone-400 font-medium">Priority</th>
+              <th class="text-left py-3 px-2 text-stone-400 font-medium">Issue</th>
+              <th class="text-left py-3 px-2 text-stone-400 font-medium">Screen</th>
+              <th class="text-left py-3 px-2 text-stone-400 font-medium">Fix</th>
+            </tr>
+          </thead>
+          <tbody class="text-stone-300">
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-red-500 text-white text-xs px-2 py-0.5 rounded">P0</span></td>
+              <td class="py-3 px-2">UX-001: Google emoji icon</td>
+              <td class="py-3 px-2">All auth</td>
+              <td class="py-3 px-2 text-green-400">SVG logo</td>
+            </tr>
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-red-500 text-white text-xs px-2 py-0.5 rounded">P0</span></td>
+              <td class="py-3 px-2">UX-002: Inconsistent border radius</td>
+              <td class="py-3 px-2">All auth</td>
+              <td class="py-3 px-2 text-green-400">rounded-2xl</td>
+            </tr>
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-red-500 text-white text-xs px-2 py-0.5 rounded">P0</span></td>
+              <td class="py-3 px-2">UX-003: Label casing inconsistent</td>
+              <td class="py-3 px-2">Verification</td>
+              <td class="py-3 px-2 text-green-400">Sentence case</td>
+            </tr>
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-yellow-500 text-white text-xs px-2 py-0.5 rounded">P1</span></td>
+              <td class="py-3 px-2">UX-004: Back button styling</td>
+              <td class="py-3 px-2">SignIn, SignUp</td>
+              <td class="py-3 px-2 text-green-400">Icon + 44px target</td>
+            </tr>
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-yellow-500 text-white text-xs px-2 py-0.5 rounded">P1</span></td>
+              <td class="py-3 px-2">UX-005: Missing "Forgot?"</td>
+              <td class="py-3 px-2">SignIn</td>
+              <td class="py-3 px-2 text-green-400">Inline link</td>
+            </tr>
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-yellow-500 text-white text-xs px-2 py-0.5 rounded">P1</span></td>
+              <td class="py-3 px-2">UX-006: No focus ring</td>
+              <td class="py-3 px-2">SignIn, SignUp</td>
+              <td class="py-3 px-2 text-green-400">Emerald ring</td>
+            </tr>
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-yellow-500 text-white text-xs px-2 py-0.5 rounded">P1</span></td>
+              <td class="py-3 px-2">UX-007: No press feedback</td>
+              <td class="py-3 px-2">All buttons</td>
+              <td class="py-3 px-2 text-green-400">scale(0.97)</td>
+            </tr>
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-yellow-500 text-white text-xs px-2 py-0.5 rounded">P1</span></td>
+              <td class="py-3 px-2">UX-008: Flat input styling</td>
+              <td class="py-3 px-2">SignIn, SignUp</td>
+              <td class="py-3 px-2 text-green-400">bg-stone-50/50</td>
+            </tr>
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-green-500 text-white text-xs px-2 py-0.5 rounded">P2</span></td>
+              <td class="py-3 px-2">UX-009: Social press animation</td>
+              <td class="py-3 px-2">All auth</td>
+              <td class="py-3 px-2 text-green-400">scale(0.97)</td>
+            </tr>
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-green-500 text-white text-xs px-2 py-0.5 rounded">P2</span></td>
+              <td class="py-3 px-2">UX-010: Divider spacing</td>
+              <td class="py-3 px-2">All auth</td>
+              <td class="py-3 px-2 text-green-400">my-4 (32px)</td>
+            </tr>
+            <tr class="border-b border-stone-700/50">
+              <td class="py-3 px-2"><span class="bg-green-500 text-white text-xs px-2 py-0.5 rounded">P2</span></td>
+              <td class="py-3 px-2">UX-011: Verification colors</td>
+              <td class="py-3 px-2">Verification</td>
+              <td class="py-3 px-2 text-green-400">slate → stone</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-2"><span class="bg-green-500 text-white text-xs px-2 py-0.5 rounded">P2</span></td>
+              <td class="py-3 px-2">UX-012: Password toggle</td>
+              <td class="py-3 px-2">SignIn, SignUp</td>
+              <td class="py-3 px-2 text-green-400">Eye icon</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="text-stone-600 text-center mt-8 text-xs">
+      Auth UI/UX Fixes Mockup • Daily Habits App • January 2026
+    </p>
+  </div>
+
+  <script>
+    // Tab navigation
+    function showSection(section) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+      // Show selected section
+      document.getElementById(section + '-section').classList.remove('hidden');
+      // Update tab buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // Initialize Lucide icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>

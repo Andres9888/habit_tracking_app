@@ -1,3 +1,8 @@
+import type {
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from 'react-native';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import type { HabitTemplate } from '../types';
 import { TemplateListEmpty } from './TemplateListEmpty';
@@ -11,9 +16,9 @@ interface TemplateListProps {
   onSelectTemplate: (template: HabitTemplate) => void;
   onViewScience: (template: HabitTemplate) => void;
   onClose: () => void;
-  onScroll: (event: any) => void;
+  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onContentSizeChange: (width: number, height: number) => void;
-  onLayout: (event: any) => void;
+  onLayout: (event: LayoutChangeEvent) => void;
   showTopShadow: boolean;
   showBottomShadow: boolean;
 }
@@ -33,30 +38,36 @@ export const TemplateList = ({
   <View className='relative max-h-[300px]'>
     {isLoading ? (
       <View className='items-center justify-center py-12'>
-        <ActivityIndicator color='#1a1a1a' size='small' />
+        <ActivityIndicator color='#1c1917' size='small' />
       </View>
     ) : templates.length === 0 ? (
       <TemplateListEmpty />
     ) : (
       <FlatList
+        nestedScrollEnabled
+        showsVerticalScrollIndicator
+        accessibilityLabel='Habit templates list'
+        accessibilityRole='list'
         data={templates}
         keyExtractor={(item) => item._id}
         ListFooterComponent={() => <TemplateListFooter onClose={onClose} />}
-        nestedScrollEnabled
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <TemplateListItem
+            index={index}
             template={item}
             onSelect={onSelectTemplate}
             onViewScience={onViewScience}
           />
         )}
         scrollEventThrottle={16}
-        showsVerticalScrollIndicator
         onContentSizeChange={onContentSizeChange}
         onLayout={onLayout}
         onScroll={onScroll}
       />
     )}
-    <TemplateListShadows showTop={showTopShadow} showBottom={showBottomShadow} />
+    <TemplateListShadows
+      showBottom={showBottomShadow}
+      showTop={showTopShadow}
+    />
   </View>
 );

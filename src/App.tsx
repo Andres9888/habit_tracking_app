@@ -1,66 +1,63 @@
 import '../global.css';
 
 import { ConvexProvider } from 'convex/react';
-import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
-import { PropsWithChildren, useEffect } from 'react';
+import { ClerkProvider } from '@clerk/clerk-expo';
+import type { PropsWithChildren } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { AuthGate } from './components/auth/AuthGate';
+import HabitsApp from './features/habits/HabitsApp';
 import { convexClient } from './lib/appConfig';
 import theme from './theme';
+import { initSentry, SentryErrorBoundary } from './lib/sentry';
+import { SentryUserSync, ConvexClerkProvider } from './providers';
 
-const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+// Initialize Sentry as early as possible
+initSentry();
 
-// Component to sync Clerk auth token with Convex
-function ConvexClerkProvider({ children }: PropsWithChildren) {
-  const { getToken, isSignedIn } = useAuth();
-
-  useEffect(() => {
-    // Set auth token fetcher for Convex
-    convexClient.setAuth(async () => {
-      if (!isSignedIn) {
-        return null;
-      }
-
-      try {
-        // Get the Clerk token with 'convex' JWT template
-        // Make sure you've created this template in Clerk Dashboard
-        const token = await getToken({ template: 'convex' });
-        console.log('Convex auth token fetched:', token ? 'SUCCESS' : 'NULL');
-        return token ?? null;
-      } catch (error) {
-        console.error('Failed to get Clerk token:', error);
-        // Fallback to default token if template doesn't exist
-        try {
-          const defaultToken = await getToken();
-          console.log('Fallback to default token:', defaultToken ? 'SUCCESS' : 'NULL');
-          return defaultToken ?? null;
-        } catch {
-          return null;
-        }
-      }
-    });
-  }, [getToken, isSignedIn]);
-
-  return <ConvexProvider client={convexClient}>{children}</ConvexProvider>;
-}
+const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 function Providers({ children }: PropsWithChildren) {
   return (
-    <SafeAreaProvider>
-      <PaperProvider theme={theme}>
-        <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-          <ConvexClerkProvider>
-            {children}
-          </ConvexClerkProvider>
-        </ClerkProvider>
-      </PaperProvider>
-    </SafeAreaProvider>
+    <SentryErrorBoundary>
+      <SafeAreaProvider>
+        <PaperProvider theme={theme}>
+          <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+            <SentryUserSync>
+              <ConvexClerkProvider>{children}</ConvexClerkProvider>
+            </SentryUserSync>
+          </ClerkProvider>
+        </PaperProvider>
+      </SafeAreaProvider>
+    </SentryErrorBoundary>
+  );
+}
+
+function DevProviders({ children }: PropsWithChildren) {
+  return (
+    <SentryErrorBoundary>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <PaperProvider theme={theme}>
+            <ConvexProvider client={convexClient}>{children}</ConvexProvider>
+          </PaperProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </SentryErrorBoundary>
   );
 }
 
 export default function App() {
+  if (!CLERK_PUBLISHABLE_KEY) {
+    return (
+      <DevProviders>
+        <HabitsApp />
+      </DevProviders>
+    );
+  }
+
   return (
     <Providers>
       <AuthGate />

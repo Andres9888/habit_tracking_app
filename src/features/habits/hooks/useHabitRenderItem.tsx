@@ -1,117 +1,65 @@
 import { useCallback } from 'react';
-import { View } from 'react-native';
-import { addDays, format, parse } from 'date-fns';
-import { ScaleDecorator, type RenderItemParams } from 'react-native-draggable-flatlist';
-import DraggableHabit from '../../../components/DraggableHabit';
-import type { Id } from '../../../../convex/_generated/dataModel';
-import type { Habit, HabitStatus } from '../types';
+import type { RenderItemParams } from 'react-native-draggable-flatlist';
+import type { Habit } from '../types';
+import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
+import {
+  getHabitRenderData,
+  getRenderItemDependencies,
+} from './useHabitRenderItem.helpers';
+import { HabitRenderContent } from './HabitRenderContent';
 
-interface UseHabitRenderItemArgs {
-  celebrationsEnabled: boolean;
-  completionIcon: 'chain' | 'checkbox';
-  dayShape?: 'circle' | 'square';
-  getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
-  getStreak: (habitId: string) => number;
-  handleArchive: (habitId: Id<'habits'>) => Promise<void> | void;
-  handleHabitPress: (habit: Habit) => void;
-  highlightHabitId?: Id<'habits'> | null;
-  isReorderingEnabled: boolean;
-  notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
-  reduceMotionPreference: boolean;
-  showConnectors?: boolean;
-  showHabitStrengthPercentage: boolean;
-  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<unknown> | void;
-  weekDateStrings: string[];
-}
+export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
+  const {
+    celebrationsEnabled,
+    completionIcon,
+    dayShape = 'square',
+    entranceVariant = 'widthExpansion',
+    handleArchive,
+    handleHabitPress,
+    highlightHabitId,
+    isReorderingEnabled,
+    notifyWeekCompletion,
+    onHabitEntranceComplete,
+    reduceMotionPreference,
+    showConnectors = true,
+    showHabitStrengthPercentage,
+    toggleHabit,
+    weekDateStrings,
+  } = args;
 
-export function useHabitRenderItem({
-  celebrationsEnabled,
-  completionIcon,
-  dayShape = 'square',
-  getHabitStatus,
-  getStreak,
-  handleArchive,
-  handleHabitPress,
-  highlightHabitId,
-  isReorderingEnabled,
-  notifyWeekCompletion,
-  reduceMotionPreference,
-  showConnectors = true,
-  showHabitStrengthPercentage,
-  toggleHabit,
-  weekDateStrings,
-}: UseHabitRenderItemArgs) {
   return useCallback(
-    ({ item, drag, isActive }: RenderItemParams<Habit>) => {
-      const weekStatus = weekDateStrings.map((dateString) =>
-        getHabitStatus(item._id, dateString)
-      );
-      const streak = getStreak(item._id);
-
-      // Check if previous day was completed to show connecting chain
-      const firstDateString = weekDateStrings[0];
-      let isConnectedToPreviousWeek = false;
-
-      if (firstDateString) {
-        try {
-          const firstDate = parse(firstDateString, 'yyyy-MM-dd', new Date());
-          const previousDate = addDays(firstDate, -1);
-          const previousDateString = format(previousDate, 'yyyy-MM-dd');
-          isConnectedToPreviousWeek = getHabitStatus(item._id, previousDateString) === 'done';
-        } catch (e) {
-          console.warn('Error calculating previous date status', e);
-        }
-      }
+    ({ item, drag, isActive, getIndex }: RenderItemParams<Habit>) => {
+      const index = getIndex?.() ?? 0;
+      const renderData = getHabitRenderData(item, index, args);
 
       return (
-        <ScaleDecorator>
-          <View
-            className='mb-5'
-            style={{
-              opacity: isActive ? 0.7 : 1,
-            }}
-          >
-            <DraggableHabit
-              celebrationsEnabled={celebrationsEnabled}
-              completionIcon={completionIcon}
-              dayShape={dayShape}
-              habit={item}
-              isConnectedToPreviousWeek={isConnectedToPreviousWeek}
-              isJustCreated={highlightHabitId === item._id}
-              onArchive={handleArchive}
-              onLongPress={isReorderingEnabled ? drag : undefined}
-              onPress={handleHabitPress}
-              onWeekComplete={({ completedDate }) =>
-                notifyWeekCompletion({ completedDate, habit: item })
-              }
-              reduceMotionPreference={reduceMotionPreference}
-              showConnectors={showConnectors}
-              showHabitStrengthPercentage={showHabitStrengthPercentage}
-              streak={streak}
-              toggleHabit={toggleHabit}
-              weekDateStrings={weekDateStrings}
-              weekStatus={weekStatus}
-            />
-          </View>
-        </ScaleDecorator>
+        <HabitRenderContent
+          celebrationsEnabled={celebrationsEnabled}
+          completionIcon={completionIcon}
+          dayShape={dayShape}
+          drag={drag}
+          entranceDelay={renderData.entranceDelay}
+          entranceVariant={entranceVariant}
+          handleArchive={handleArchive}
+          handleHabitPress={handleHabitPress}
+          highlightHabitId={highlightHabitId}
+          isActive={isActive}
+          isConnectedToPreviousWeek={renderData.isConnectedToPreviousWeek}
+          isReorderingEnabled={isReorderingEnabled}
+          item={item}
+          notifyWeekCompletion={notifyWeekCompletion}
+          reduceMotionPreference={reduceMotionPreference}
+          showConnectors={showConnectors}
+          showHabitStrengthPercentage={showHabitStrengthPercentage}
+          streak={renderData.streak}
+          toggleHabit={toggleHabit}
+          triggerEntrance={renderData.triggerEntrance}
+          weekDateStrings={weekDateStrings}
+          weekStatus={renderData.weekStatus}
+          onHabitEntranceComplete={onHabitEntranceComplete}
+        />
       );
     },
-    [
-      celebrationsEnabled,
-      completionIcon,
-      dayShape,
-      getHabitStatus,
-      getStreak,
-      handleArchive,
-      handleHabitPress,
-      highlightHabitId,
-      isReorderingEnabled,
-      notifyWeekCompletion,
-      reduceMotionPreference,
-      showConnectors,
-      showHabitStrengthPercentage,
-      toggleHabit,
-      weekDateStrings,
-    ]
+    getRenderItemDependencies(args)
   );
 }

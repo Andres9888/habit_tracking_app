@@ -1,112 +1,72 @@
-import { Modal, ScrollView, View } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Modal, View } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
 import { ColorPickerSheet } from './ColorPickerSheet';
 import TemplateScienceModal from '../TemplateScienceModal';
-import { COLORS } from './constants';
 import type { CreateHabitModalProps } from './types';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
+import { useSwipeDismiss } from './hooks/useSwipeDismiss';
+import { useFormHandlers } from './hooks/useFormHandlers';
 import { ModalHeader } from './components/ModalHeader';
-import { TemplateBrowser } from './components/TemplateBrowser';
+import { ModalContent } from './components/ModalContent';
 import { TemplateReminderPrompt } from './components/TemplateReminderPrompt';
-import { HabitPreview } from './components/HabitPreview';
-import { HabitNameField } from './components/HabitNameField';
-import { NameSuggestions } from './components/NameSuggestions';
-import { EmojiPicker } from './components/EmojiPicker';
-import { ColorPickerSection } from './components/ColorPickerSection';
-import { ReminderSection } from './components/ReminderSection';
-import { CollapsibleAdvancedOptions } from './components/CollapsibleAdvancedOptions';
-import { PhaseSelector } from './components/PhaseSelector';
-import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { StickyCreateBar } from './components/StickyCreateBar';
 
 export default function CreateHabitModal(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
-  const { isEditMode, form, template, science, handleCreate } = useCreateHabitModal(props);
-  const { triggerSelection } = useHapticFeedback();
+  const { isEditMode, form, template, science, handleCreate } =
+    useCreateHabitModal(props);
+
+  const { panGesture, animatedStyle } = useSwipeDismiss({ onClose });
+  const handlers = useFormHandlers(form);
 
   return (
-    <Modal transparent animationType='slide' visible={visible} onRequestClose={onClose}>
+    <Modal
+      transparent
+      animationType='slide'
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <View className='flex-1 bg-black/50'>
-        <View className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'>
-          <ModalHeader isEditMode={isEditMode} habitName={form.habitName} onClose={onClose} onSave={handleCreate} />
-          <ScrollView
-            ref={template.scrollViewRef}
-            className='flex-1 px-4'
-            contentContainerStyle={{ paddingBottom: isEditMode ? 32 : 160 }}
-            keyboardShouldPersistTaps='handled'
-            scrollEventThrottle={16}
-            showsVerticalScrollIndicator={false}
-            onScroll={template.handleMainScroll}
+        <GestureDetector gesture={panGesture}>
+          <Animated.View
+            className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'
+            style={animatedStyle}
           >
-            <TemplateBrowser isEditMode={isEditMode} template={template} onViewScience={science.open} />
-            <HabitPreview
+            <ModalHeader
               habitName={form.habitName}
-              selectedEmoji={form.selectedEmoji}
+              isEditMode={isEditMode}
+              onClose={onClose}
+              onSave={handleCreate}
+            />
+            <ModalContent
+              habitName={form.habitName}
+              isEditMode={isEditMode}
+              reminderOption={form.reminderOption}
+              reminderTime={form.reminderTime}
               selectedColor={form.selectedColor}
-              frequencyLabel={form.frequency}
-            />
-            <NameSuggestions
-              query={form.habitName}
-              onPick={(emoji, name, color) => {
-                form.setHabitName(name);
-                form.setSelectedEmoji(emoji);
-                if (color) form.setSelectedColor(color);
-                triggerSelection();
-              }}
-            />
-            <HabitNameField value={form.habitName} onChange={form.setHabitName} autoFocus={visible && !isEditMode} />
-            <PhaseSelector
-              selectedPhase={form.dayPhase}
-              onSelect={form.setDayPhase}
-            />
-            {/* Emoji Picker - uses the new modal picker */}
-            <EmojiPicker
               selectedEmoji={form.selectedEmoji}
-              onSelect={form.setSelectedEmoji}
-              habitName={form.habitName}
+              visible={visible}
+              onColorSelect={handlers.handleColorSelect}
+              onCustomColorPress={form.openColorPicker}
+              onEmojiSelect={handlers.handleEmojiSelect}
+              onNameChange={handlers.handleNameChange}
+              onReminderTimeChange={handlers.handleReminderTimeChange}
+              onReminderToggle={handlers.handleReminderToggle}
+              onScroll={template.handleMainScroll}
             />
-            <CollapsibleAdvancedOptions>
-              <ColorPickerSection
-                colors={COLORS}
-                selectedColor={form.selectedColor}
-                onSelectColor={form.setSelectedColor}
-                onCustomPress={form.openColorPicker}
-              />
-              <ReminderSection
-                remindersEnabled={form.remindersEnabled}
-                onToggle={form.setRemindersEnabled}
-                reminderTime={form.reminderTime}
-                onTimePress={() => form.setShowTimePicker(true)}
-                reminderSound={form.reminderSound}
-                onQuickTimeSelect={form.setReminderTime}
-              />
-            </CollapsibleAdvancedOptions>
-          </ScrollView>
-          <TemplateReminderPrompt
-            visible={template.shouldShowTemplateReminder}
-            bottomOffset={template.reminderBottomOffset}
-            onPress={template.handleReminderPress}
-          />
-          <StickyCreateBar
-            disabled={!form.habitName.trim().length}
-            onPress={handleCreate}
-          />
-          {form.showTimePicker && (
-            <DateTimePicker
-              display='spinner'
-              is24Hour={false}
-              mode='time'
-              value={form.reminderTime}
-              onChange={(_event, selected) => {
-                form.setShowTimePicker(false);
-                if (selected) {
-                  triggerSelection();
-                  form.setReminderTime(selected);
-                }
-              }}
+            <TemplateReminderPrompt
+              bottomOffset={template.reminderBottomOffset}
+              visible={template.shouldShowTemplateReminder}
+              onPress={template.handleReminderPress}
             />
-          )}
-        </View>
+            <StickyCreateBar
+              disabled={form.habitName.trim().length < 2}
+              selectedColor={form.selectedColor}
+              onPress={handleCreate}
+            />
+          </Animated.View>
+        </GestureDetector>
       </View>
       <ColorPickerSheet
         value={form.selectedColor}

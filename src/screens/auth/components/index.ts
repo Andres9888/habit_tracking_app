@@ -1,7 +1,12 @@
 export { AnimatedLogo } from './AnimatedLogo';
+export { AuthDivider } from './AuthDivider';
+export { AuthError } from './AuthError';
+export { BackButton } from './BackButton';
+export { ForgotPasswordLink } from './ForgotPasswordLink';
 export { ForgotPasswordModal } from './ForgotPasswordModal';
 export { FormInput } from './FormInput';
 export { PasswordInput } from './PasswordInput';
+export { SocialSignInButton } from './SocialSignInButton';
 export { SubmitButton } from './SubmitButton';
 export { SuccessOverlay } from './SuccessOverlay';
 export { VerificationView } from './VerificationView';

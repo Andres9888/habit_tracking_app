@@ -34,14 +34,14 @@ export const Springs = {
   sheet: {
     damping: 32,
     stiffness: 180,
-    mass: 1.3,
+    mass: 1,
   },
 
   /** Gentle content reveals */
   gentle: {
     damping: 28,
     stiffness: 180,
-    mass: 1.2,
+    mass: 1,
   },
 
   /** Button press feedback - snappy response */

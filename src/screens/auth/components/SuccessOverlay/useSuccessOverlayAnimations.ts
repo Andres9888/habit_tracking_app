@@ -1,0 +1,91 @@
+import { useEffect } from 'react';
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+
+export function useSuccessOverlayAnimations(
+  visible: boolean,
+  onAnimationComplete?: () => void
+) {
+  const overlayOpacity = useSharedValue(0);
+  const checkmarkScale = useSharedValue(0);
+  const checkmarkOpacity = useSharedValue(0);
+  const ringScale = useSharedValue(0);
+  const ringOpacity = useSharedValue(0);
+  const textOpacity = useSharedValue(0);
+  const textTranslateY = useSharedValue(20);
+
+  useEffect(() => {
+    if (visible) {
+      overlayOpacity.value = withTiming(1, { duration: 300 });
+
+      ringScale.value = withDelay(
+        100,
+        withSequence(
+          withSpring(1.2, { damping: 8, stiffness: 100 }),
+          withTiming(1.5, { duration: 400 })
+        )
+      );
+      ringOpacity.value = withDelay(
+        100,
+        withSequence(
+          withTiming(0.5, { duration: 200 }),
+          withTiming(0, { duration: 400 })
+        )
+      );
+
+      checkmarkScale.value = withDelay(
+        200,
+        withSpring(1, { damping: 10, stiffness: 150 })
+      );
+      checkmarkOpacity.value = withDelay(200, withTiming(1, { duration: 200 }));
+
+      textOpacity.value = withDelay(400, withTiming(1, { duration: 300 }));
+      textTranslateY.value = withDelay(
+        400,
+        withSpring(0, { damping: 12, stiffness: 100 })
+      );
+
+      if (onAnimationComplete) {
+        const timer = setTimeout(() => {
+          onAnimationComplete();
+        }, 1500);
+        return () => clearTimeout(timer);
+      }
+    } else {
+      overlayOpacity.value = 0;
+      checkmarkScale.value = 0;
+      checkmarkOpacity.value = 0;
+      ringScale.value = 0;
+      ringOpacity.value = 0;
+      textOpacity.value = 0;
+      textTranslateY.value = 20;
+    }
+  }, [visible, onAnimationComplete]);
+
+  const overlayStyle = useAnimatedStyle(() => ({
+    opacity: overlayOpacity.value,
+  }));
+
+  const checkmarkStyle = useAnimatedStyle(() => ({
+    opacity: checkmarkOpacity.value,
+    transform: [{ scale: checkmarkScale.value }],
+  }));
+
+  const ringStyle = useAnimatedStyle(() => ({
+    opacity: ringOpacity.value,
+    transform: [{ scale: ringScale.value }],
+  }));
+
+  const textStyle = useAnimatedStyle(() => ({
+    opacity: textOpacity.value,
+    transform: [{ translateY: textTranslateY.value }],
+  }));
+
+  return { checkmarkStyle, overlayStyle, ringStyle, textStyle };
+}

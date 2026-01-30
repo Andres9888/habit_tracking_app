@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Animated, Easing, View } from 'react-native';
+import { Animated, View } from 'react-native';
+import { useSparkleBurstAnimation } from './useSparkleBurstAnimation';
 
 interface SparkleBurstProps {
   color?: string;
@@ -9,57 +9,27 @@ interface SparkleBurstProps {
   size?: number;
 }
 
-const DOT_COUNT = 6; // Enhanced sparkle for premium celebrations
+const DOT_COUNT = 6;
 
 export const SparkleBurst = ({
   color = '#34D399',
   isActive,
   onComplete,
   reduceMotion = false,
-  size = 40, // Slightly larger for more impact
+  size = 40,
 }: SparkleBurstProps) => {
-  const opacity = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(0.6)).current;
-
-  useEffect(() => {
-    console.log('🌟 SparkleBurst:', { isActive, reduceMotion, color });
-
-    if (!isActive || reduceMotion) {
-      if (isActive && reduceMotion) {
-        console.log('🌟 SparkleBurst skipped (reduceMotion enabled)');
-        onComplete?.();
-      }
-      return;
-    }
-
-    console.log('🌟 SparkleBurst TRIGGERED!');
-    opacity.setValue(0.9); // More prominent for celebration
-    scale.setValue(0.6);
-
-    Animated.parallel([
-      Animated.timing(opacity, {
-        duration: 400, // Slightly longer celebration
-        easing: Easing.out(Easing.ease),
-        toValue: 0,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scale, {
-        duration: 400, // Longer expansion for impact
-        easing: Easing.out(Easing.cubic),
-        toValue: 1.6, // More expansive celebration
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      console.log('🌟 SparkleBurst completed');
-      onComplete?.();
-    });
-  }, [isActive, onComplete, opacity, reduceMotion, scale]);
+  const { opacity, scale } = useSparkleBurstAnimation({
+    color,
+    isActive,
+    onComplete,
+    reduceMotion,
+  });
 
   if (!isActive || reduceMotion) {
     return null;
   }
 
-  const dotSize = size * 0.18; // Small, subtle sparkles
+  const dotSize = size * 0.18;
 
   return (
     <Animated.View
@@ -70,51 +40,47 @@ export const SparkleBurst = ({
         opacity,
         transform: [{ scale }],
         width: size,
-        zIndex: 1000, // Render ABOVE everything
+        zIndex: 1000,
       }}
     >
       {Array.from({ length: DOT_COUNT }).map((_, index) => {
         const angle = (index / DOT_COUNT) * Math.PI * 2;
-        const translateX = Math.cos(angle) * (size / 2.2);
-        const translateY = Math.sin(angle) * (size / 2.2);
+        const translateX = Math.round(Math.cos(angle) * (size / 2.2));
+        const translateY = Math.round(Math.sin(angle) * (size / 2.2));
 
         return (
           <Animated.View
-            // eslint-disable-next-line react/no-array-index-key
             key={index}
             className='absolute rounded-full'
             style={{
-              backgroundColor: color, // Use accent color
+              backgroundColor: color,
+              elevation: 4,
               height: dotSize,
               left: size / 2 - dotSize / 2,
-              top: size / 2 - dotSize / 2,
-              transform: [
-                { translateX },
-                { translateY },
-              ],
-              width: dotSize,
               shadowColor: color,
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: 0.5, // Subtle glow
+              shadowOffset: { height: 0, width: 0 },
+              shadowOpacity: 0.5,
               shadowRadius: 3,
-              elevation: 4,
+              top: size / 2 - dotSize / 2,
+              transform: [{ translateX }, { translateY }],
+              width: dotSize,
             }}
           />
         );
       })}
 
-      {/* Center glow - subtle */}
+      {/* Center glow */}
       <View
         className='absolute rounded-full'
         pointerEvents='none'
         style={{
-          backgroundColor: `${color}40`, // 25% opacity
+          backgroundColor: `${color}40`,
           height: dotSize * 2,
-          width: dotSize * 2,
           shadowColor: color,
-          shadowOffset: { width: 0, height: 0 },
+          shadowOffset: { height: 0, width: 0 },
           shadowOpacity: 0.4,
           shadowRadius: 4,
+          width: dotSize * 2,
         }}
       />
     </Animated.View>
@@ -122,4 +88,3 @@ export const SparkleBurst = ({
 };
 
 export default SparkleBurst;
-

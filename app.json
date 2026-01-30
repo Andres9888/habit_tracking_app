@@ -12,13 +12,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#F5F1ED"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.andres9888.daily-habits"
+      "bundleIdentifier": "com.andres9888.daily-habits",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
@@ -36,7 +35,27 @@
     "plugins": [
       "expo-font",
       "expo-notifications",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone for voice note recordings."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos to create your Vision Board.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to capture images for your Vision Board."
+        }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "daily-habits",
+          "project": "react-native"
+        }
+      ]
     ]
   }
 }

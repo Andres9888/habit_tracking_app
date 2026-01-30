@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 export const useTemplateScrollIndicators = () => {
   const scrollOffset = useRef(0);
@@ -17,7 +18,7 @@ export const useTemplateScrollIndicators = () => {
   }, []);
 
   const handleScroll = useCallback(
-    (event: any) => {
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const { contentOffset, layoutMeasurement, contentSize } =
         event.nativeEvent;
       scrollOffset.current = contentOffset.y;
@@ -39,7 +40,7 @@ export const useTemplateScrollIndicators = () => {
   );
 
   const handleLayout = useCallback(
-    (event: any) => {
+    (event: LayoutChangeEvent) => {
       metrics.current = {
         ...metrics.current,
         layoutHeight: event.nativeEvent.layout.height,

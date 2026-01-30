@@ -274,6 +274,24 @@ jest.mock('react-native-reanimated', () => {
       duration: jest.fn().mockReturnThis(),
     },
 
+    // Layout animations
+    LinearTransition: {
+      springify: jest.fn(() => ({
+        damping: jest.fn().mockReturnThis(),
+        stiffness: jest.fn().mockReturnThis(),
+        mass: jest.fn().mockReturnThis(),
+      })),
+      duration: jest.fn().mockReturnThis(),
+      delay: jest.fn().mockReturnThis(),
+      easing: jest.fn().mockReturnThis(),
+    },
+    Layout: {
+      springify: jest.fn().mockReturnThis(),
+      duration: jest.fn().mockReturnThis(),
+      delay: jest.fn().mockReturnThis(),
+      easing: jest.fn().mockReturnThis(),
+    },
+
     // runOnJS - CRITICAL: Must be defined as a function that executes callbacks
     runOnJS: (fn) => fn,
 
@@ -284,6 +302,23 @@ jest.mock('react-native-reanimated', () => {
     useDerivedValue: (callback) => ({ value: callback() }),
     useAnimatedScrollHandler: () => ({}),
     useAnimatedGestureHandler: () => ({}),
+    useReducedMotion: () => false,
+    interpolateColor: (value, inputRange, outputRange) => outputRange[Math.round(value)],
+
+    // Interpolate function (used by ParticleBurst)
+    interpolate: (value, inputRange, outputRange) => {
+      // Simple linear interpolation for testing
+      if (value <= inputRange[0]) return outputRange[0];
+      if (value >= inputRange[inputRange.length - 1]) return outputRange[outputRange.length - 1];
+      // Find the appropriate segment
+      for (let i = 0; i < inputRange.length - 1; i++) {
+        if (value >= inputRange[i] && value <= inputRange[i + 1]) {
+          const ratio = (value - inputRange[i]) / (inputRange[i + 1] - inputRange[i]);
+          return outputRange[i] + ratio * (outputRange[i + 1] - outputRange[i]);
+        }
+      }
+      return outputRange[0];
+    },
   };
 });
 
@@ -301,6 +336,28 @@ jest.mock('@shopify/react-native-skia', () => ({
     },
   },
 }));
+
+// Mock @react-native-community/netinfo (virtual module - not installed)
+jest.mock('@react-native-community/netinfo', () => ({
+  fetch: jest.fn(() => Promise.resolve({
+    isConnected: true,
+    isInternetReachable: true,
+    type: 'wifi',
+    details: { isConnectionExpensive: false },
+  })),
+  addEventListener: jest.fn(() => jest.fn()), // Returns unsubscribe function
+  NetInfoStateType: {
+    unknown: 'unknown',
+    none: 'none',
+    cellular: 'cellular',
+    wifi: 'wifi',
+    bluetooth: 'bluetooth',
+    ethernet: 'ethernet',
+    wimax: 'wimax',
+    vpn: 'vpn',
+    other: 'other',
+  },
+}), { virtual: true });
 
 // Mock react-native-draggable-flatlist
 jest.mock('react-native-draggable-flatlist', () => {

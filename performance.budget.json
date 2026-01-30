@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Performance budget configuration for CI-004",
+  "version": "1.0.0",
+  "budgets": {
+    "bundle": {
+      "javascript": {
+        "maxSize": "2MB",
+        "maxSizeBytes": 2097152,
+        "warning": "1.8MB",
+        "warningBytes": 1887436
+      },
+      "css": {
+        "maxSize": "500KB",
+        "maxSizeBytes": 512000,
+        "warning": "450KB",
+        "warningBytes": 460800
+      },
+      "assets": {
+        "maxSize": "5MB",
+        "maxSizeBytes": 5242880,
+        "warning": "4.5MB",
+        "warningBytes": 4718592
+      },
+      "total": {
+        "maxSize": "7MB",
+        "maxSizeBytes": 7340032,
+        "warning": "6.3MB",
+        "warningBytes": 6606028
+      }
+    },
+    "runtime": {
+      "startup": {
+        "tti": {
+          "budget": 3000,
+          "unit": "ms",
+          "description": "Time to Interactive - app becomes responsive"
+        },
+        "fcp": {
+          "budget": 1500,
+          "unit": "ms",
+          "description": "First Contentful Paint - first content visible"
+        },
+        "warmStart": {
+          "budget": 1500,
+          "unit": "ms",
+          "description": "Warm start should be < 50% of TTI budget"
+        }
+      },
+      "rendering": {
+        "fps": {
+          "target": 60,
+          "minimum": 55,
+          "unit": "fps",
+          "description": "Target and minimum acceptable frame rate"
+        },
+        "frameTime": {
+          "budget": 16.67,
+          "unit": "ms",
+          "description": "Maximum time per frame for 60fps"
+        },
+        "renderTime": {
+          "budget": 16,
+          "unit": "ms",
+          "description": "Maximum component render time"
+        },
+        "complexComponent": {
+          "budget": 32,
+          "unit": "ms",
+          "description": "Complex components get 2x budget"
+        },
+        "jankThreshold": {
+          "maxPercent": 5,
+          "description": "Maximum percentage of frames exceeding budget"
+        }
+      },
+      "memory": {
+        "maxUsage": {
+          "budget": 200,
+          "unit": "MB",
+          "description": "Maximum memory usage during normal operation"
+        },
+        "leakThreshold": {
+          "budget": 10,
+          "unit": "MB",
+          "description": "Maximum acceptable memory growth over time"
+        }
+      },
+      "network": {
+        "apiLatencyP50": {
+          "budget": 100,
+          "unit": "ms",
+          "description": "Median API response time"
+        },
+        "apiLatencyP95": {
+          "budget": 200,
+          "unit": "ms",
+          "description": "95th percentile API response time"
+        },
+        "initialDataLoad": {
+          "budget": 500,
+          "unit": "ms",
+          "description": "Time to load initial app data"
+        }
+      }
+    },
+    "codeQuality": {
+      "maxFileLines": {
+        "budget": 100,
+        "unit": "lines",
+        "description": "Maximum lines per file (excluding blanks/comments)"
+      },
+      "maxCascadeDepth": {
+        "budget": 5,
+        "unit": "components",
+        "description": "Maximum re-render cascade depth"
+      }
+    }
+  },
+  "enforcement": {
+    "strict": true,
+    "failOnWarning": false,
+    "blockMerge": true
+  },
+  "categories": {
+    "startup": ["tti", "fcp", "warmStart"],
+    "rendering": ["fps", "frameTime", "renderTime", "jankThreshold"],
+    "memory": ["maxUsage", "leakThreshold"],
+    "network": ["apiLatencyP50", "apiLatencyP95", "initialDataLoad"],
+    "bundle": ["javascript", "css", "assets", "total"]
+  },
+  "thresholdMapping": {
+    "tti": "maxStartupTime",
+    "fps": "targetFPS",
+    "frameTime": "maxFrameTime",
+    "renderTime": "maxRenderTime",
+    "maxUsage": "maxMemoryUsage",
+    "apiLatencyP95": "maxNetworkLatency"
+  }
+}

@@ -24,9 +24,9 @@ const STATUS_STYLES: Record<
     text: 'text-rose-500',
   },
   planned: {
-    container: 'border-blue-200 bg-blue-50',
-    indicator: 'bg-blue-500',
-    text: 'text-blue-600',
+    container: 'border-emerald-200 bg-emerald-50',
+    indicator: 'bg-emerald-500',
+    text: 'text-emerald-600',
   },
   upcoming: {
     container: 'border-stone-200 bg-white',
@@ -69,7 +69,7 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
         className={clsx(
           'w-full flex-1 items-center justify-center rounded-lg border bg-white px-0.5 py-1',
           container,
-          isCurrentDay && 'border-blue-400'
+          isCurrentDay && 'border-emerald-400'
         )}
       >
         <Text className={clsx('text-sm font-semibold', text)}>

@@ -23,6 +23,15 @@ export { InsightChips } from './InsightChips';
 export { WeeklyPatternChart } from './WeeklyPatternChart';
 export { ActionableTipCard } from './ActionableTipCard';
 export { StreakRecordsAccordion } from './StreakRecordsAccordion';
+export { TodaysFocusCard } from './TodaysFocusCard';
+export { WeeklySummaryStrip } from './WeeklySummaryStrip';
+export { StatsGrid } from './StatsGrid';
+export { CompactStrengthRing } from './CompactStrengthRing';
+export { StatCard } from './StatCard';
+export { MilestoneProgress } from './MilestoneProgress';
+export { TipQuickActionsSheet } from './TipQuickActionsSheet';
+export { ConsistencyIndexCard } from './ConsistencyIndexCard';
+export { WeeklyComparisonCard } from './WeeklyComparisonCard';
 
 // Helper components (used internally)
 export { TrendIndicator } from './TrendIndicator';
@@ -31,6 +40,17 @@ export { DayBar } from './DayBar';
 
 // Types
 export * from './types';
+export * from './TodaysFocusCardTypes';
+export * from './WeeklySummaryStripTypes';
+export * from './StatsGridTypes';
+export * from './MilestoneProgressTypes';
+export {
+  getQuickActionsForTipType,
+  determineTipTypeFromText,
+  type TipType,
+  type QuickAction,
+  type TipQuickActionsSheetProps,
+} from './TipQuickActionsSheet';
 
 // Re-export utility functions from existing ProgressSection
 // These are reused for data calculations

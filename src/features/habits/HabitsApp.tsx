@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { View, Alert } from 'react-native';
+import { useMemo } from 'react';
+import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { HabitsList } from './components/HabitsList';
@@ -7,63 +7,48 @@ import { HabitsModals } from './components/HabitsModals';
 import FloatingActionButton from './components/FloatingActionButton';
 import WebToaster from './components/WebToaster';
 import { ArchiveUndoToast } from '../../components/ArchiveUndoToast';
+import { RevenueCatPaywall } from '../../components/RevenueCatPaywall';
 import { useHabitsApp } from './hooks/useHabitsApp';
-import { logInteraction } from '../../lib/analytics/interactions';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { useNotificationResponse } from '../../hooks/useNotificationResponse';
+import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 
 export function HabitsApp() {
   const { list, modals } = useHabitsApp();
-  const { openCreateHabitScreen, openTemplatesScreen } = modals;
-  const [upgradePromptVisible, setUpgradePromptVisible] = useState(false);
+  const { openCreateHabitScreen, openActivationModalById } = modals;
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
   });
 
-  const handleUpgradeIntent = useCallback(() => {
-    logInteraction('premium_home_cta_view', { source: 'home_hero' });
-    triggerSelection();
-    setUpgradePromptVisible(true);
-  }, [triggerSelection]);
+  const notificationHandlers = useMemo(
+    () => ({
+      onHabitNotificationTap: (habitId: string) => {
+        console.log('[HabitsApp] Opening ActivationModal for habit:', habitId);
+        openActivationModalById(habitId);
+      },
+    }),
+    [openActivationModalById]
+  );
 
-  const handleUpgradeDismiss = useCallback(() => {
-    setUpgradePromptVisible(false);
-  }, []);
+  useNotificationResponse(notificationHandlers);
 
-  const handleUpgradeConfirm = useCallback(() => {
-    logInteraction('premium_upgrade_cta', { source: 'home_prompt' });
-    triggerSelection();
-    setUpgradePromptVisible(false);
-    openTemplatesScreen();
-  }, [openTemplatesScreen, triggerSelection]);
-
-  const handleCreateHabitRequest = useCallback(() => {
-    // Check if user has reached the free limit (3 habits)
-    if (!list.isPremiumUser && list.hasReachedHabitLimit) {
-      triggerWarning();
-
-      // TODO: Integrate RevenueCat for subscription management
-      // Show toast notification for 4th habit creation attempt
-      Alert.alert(
-        '🎉 Great progress!',
-        'You\'ve built 3 solid habits! Ready to track more? Upgrade to premium for unlimited habits and advanced insights.',
-        [
-          { text: 'Keep 3 Free', style: 'cancel' },
-          { text: 'Unlock Unlimited', onPress: () => {
-            // TODO: Navigate to RevenueCat paywall
-            console.log('Navigate to RevenueCat paywall');
-          }}
-        ]
-      );
-      return;
-    }
-    openCreateHabitScreen();
-  }, [
-    list.hasReachedHabitLimit,
-    list.isPremiumUser,
+  const {
+    handleCreateHabitRequest,
+    handlePaywallClose,
+    handlePaywallSuccess,
+    handleUpgradeConfirm,
+    handleUpgradeDismiss,
+    handleUpgradeIntent,
+    paywallVisible,
+    upgradePromptVisible,
+  } = useHabitsAppHandlers({
+    hasReachedHabitLimit: list.hasReachedHabitLimit,
+    isPremiumUser: list.isPremiumUser,
     openCreateHabitScreen,
+    triggerSelection,
     triggerWarning,
-  ]);
+  });
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -71,17 +56,17 @@ export function HabitsApp() {
         <View className='pointer-events-none absolute inset-0 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100' />
         <View className='pointer-events-none absolute inset-x-0 top-0 h-56 rounded-b-[40px] bg-white/95 shadow-[0px_24px_48px_rgba(120,90,50,0.06)]' />
         <HabitsList
+          canNavigateForward={list.canNavigateForward}
           list={list}
           modals={modals}
-          canNavigateForward={list.canNavigateForward}
+          upgradePromptVisible={upgradePromptVisible}
+          weekDates={list.weekDates}
           onCreateHabitRequest={handleCreateHabitRequest}
+          onNextWeek={list.handleNextWeek}
+          onPreviousWeek={list.handlePreviousWeek}
           onUpgradeConfirm={handleUpgradeConfirm}
           onUpgradeDismiss={handleUpgradeDismiss}
           onUpgradeIntent={handleUpgradeIntent}
-          upgradePromptVisible={upgradePromptVisible}
-          weekDates={list.weekDates}
-          onNextWeek={list.handleNextWeek}
-          onPreviousWeek={list.handlePreviousWeek}
         />
 
         {list.habits.length > 0 && (
@@ -99,11 +84,19 @@ export function HabitsApp() {
 
         {/* Archive Undo Toast */}
         <ArchiveUndoToast
-          visible={list.archiveUndoVisible}
-          habitName={list.archiveUndoHabitName}
           duration={5000}
+          habitName={list.archiveUndoHabitName}
+          visible={list.archiveUndoVisible}
           onDismiss={list.dismissArchiveUndo}
           onUndo={list.handleArchiveUndo}
+        />
+
+        {/* RevenueCat Paywall */}
+        <RevenueCatPaywall
+          visible={paywallVisible}
+          onClose={handlePaywallClose}
+          onPurchaseSuccess={handlePaywallSuccess}
+          onRestoreSuccess={handlePaywallSuccess}
         />
       </View>
     </GestureHandlerRootView>

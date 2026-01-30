@@ -1,0 +1,65 @@
+/**
+ * StatusDisplay Component
+ *
+ * Displays the strength label badge and delta change indicator.
+ */
+
+import React from 'react';
+import { Text, View } from 'react-native';
+
+import { TrendingDown, TrendingUp } from 'lucide-react-native';
+
+import { COLORS, STRENGTH_COLORS, STRENGTH_LABELS } from '../constants';
+import type { StatusDisplayProps } from './types';
+
+/**
+ * Displays strength label and delta change.
+ */
+export function StatusDisplay({
+  label,
+  delta,
+  deltaLabel,
+}: StatusDisplayProps) {
+  const colors = STRENGTH_COLORS[label];
+
+  // Format delta for display
+  const deltaText = delta >= 0 ? `+${delta}%` : `${delta}%`;
+  const deltaIsPositive = delta > 0;
+  const deltaIsNegative = delta < 0;
+
+  return (
+    <View className='ml-4 flex-1'>
+      {/* Strength label */}
+      <View
+        className='mb-1 self-start rounded-full px-2.5 py-1'
+        style={{ backgroundColor: colors.background }}
+      >
+        <Text
+          className='text-sm font-semibold'
+          style={{ color: colors.primary }}
+        >
+          {STRENGTH_LABELS[label]}
+        </Text>
+      </View>
+
+      {/* Delta badge */}
+      <View className='flex-row items-center gap-1'>
+        {deltaIsPositive && <TrendingUp color={COLORS.positive} size={14} />}
+        {deltaIsNegative && <TrendingDown color={COLORS.negative} size={14} />}
+        <Text
+          className='text-sm'
+          style={{
+            color: deltaIsPositive
+              ? COLORS.positive
+              : deltaIsNegative
+                ? COLORS.negative
+                : COLORS.textSecondary,
+          }}
+        >
+          {deltaText}
+        </Text>
+        <Text className='text-sm text-stone-500'>{deltaLabel}</Text>
+      </View>
+    </View>
+  );
+}

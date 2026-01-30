@@ -1,105 +1,107 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { DEFAULT_COLOR } from '../constants';
-import type { HabitDoc } from '../types';
-import { buildHabitName, parseHabitName, parseReminderTime } from '../utils';
-import {
-  type HubermanPhase,
-  getPhaseFromPreferredTime,
-} from '../../../constants/hubermanPhases';
+/**
+ * useHabitForm - Main habit form hook
+ */
 
-const DEFAULT_SOUND = 'Default';
+import { useCallback, useMemo } from 'react';
+import type { HabitDoc } from '../types';
+import { buildHabitName } from '../utils';
+import type { ReminderOption } from '../components/ReminderSelector';
+import { useReminderOptionSync } from './useReminderOptionSync';
+import { useHabitFormState } from './useHabitFormState';
+import { useHabitFormInit } from './useHabitFormInit';
+import { useHabitFormReset } from './useHabitFormReset';
 
 interface UseHabitFormOptions {
   habitToEdit?: HabitDoc | null;
 }
 
 export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
-  const parsed = useMemo(
-    () => parseHabitName(habitToEdit?.name ?? ''),
-    [habitToEdit?.name]
-  );
-
-  const [habitName, setHabitName] = useState(parsed.name);
-  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(
-    parsed.emoji
-  );
-  const [selectedColor, setSelectedColor] = useState(
-    habitToEdit?.iconColor ?? DEFAULT_COLOR
-  );
-  const [isColorPickerVisible, setColorPickerVisible] = useState(false);
-  const [remindersEnabled, setRemindersEnabled] = useState(
-    habitToEdit?.remindersEnabled ?? false
-  );
-  const [reminderTime, setReminderTime] = useState(() =>
-    parseReminderTime(habitToEdit?.reminderTime)
-  );
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [reminderSound, setReminderSound] = useState(
-    habitToEdit?.reminderSound ?? DEFAULT_SOUND
-  );
-  const [frequency, setFrequency] = useState<string>(
-    (habitToEdit as any)?.frequency ?? ''
-  );
-  const [dayPhase, setDayPhase] = useState<HubermanPhase | null>(
-    getPhaseFromPreferredTime(habitToEdit?.preferredTime)
-  );
+  const state = useHabitFormState({ habitToEdit });
 
   const fullHabitName = useMemo(
-    () => buildHabitName(selectedEmoji, habitName),
-    [selectedEmoji, habitName]
+    () => buildHabitName(state.selectedEmoji, state.habitName),
+    [state.selectedEmoji, state.habitName]
   );
 
-  useEffect(() => {
-    if (!habitToEdit) {
-      return;
-    }
+  const syncReminderOption = useReminderOptionSync({
+    setDayPhase: state.setDayPhase,
+    setRemindersEnabled: state.setRemindersEnabled,
+    setReminderTime: state.setReminderTime,
+  });
 
-    setHabitName(parsed.name);
-    setSelectedEmoji(parsed.emoji);
-    setSelectedColor(habitToEdit.iconColor ?? DEFAULT_COLOR);
-    setRemindersEnabled(habitToEdit.remindersEnabled ?? false);
-    setReminderTime(parseReminderTime(habitToEdit.reminderTime));
-    setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);
-    setFrequency((habitToEdit as any)?.frequency ?? '');
-    setDayPhase(getPhaseFromPreferredTime(habitToEdit.preferredTime));
-  }, [habitToEdit, parsed]);
+  const setReminderOption = useCallback(
+    (option: ReminderOption) => {
+      state.setReminderOptionState(option);
+      syncReminderOption(option);
+    },
+    [state.setReminderOptionState, syncReminderOption]
+  );
 
-  const resetForm = useCallback(() => {
-    setHabitName('');
-    setSelectedEmoji(null);
-    setSelectedColor(DEFAULT_COLOR);
-    setColorPickerVisible(false);
-    setRemindersEnabled(false);
-    setReminderTime(parseReminderTime(undefined));
-    setShowTimePicker(false);
-    setReminderSound(DEFAULT_SOUND);
-    setFrequency('');
-    setDayPhase(null);
-  }, []);
+  useHabitFormInit({
+    habitToEdit,
+    parsed: state.parsed,
+    setters: {
+      setDayPhase: state.setDayPhase,
+      setFrequency: state.setFrequency,
+      setHabitName: state.setHabitName,
+      setReminderOptionState: state.setReminderOptionState,
+      setRemindersEnabled: state.setRemindersEnabled,
+      setReminderSound: state.setReminderSound,
+      setReminderTime: state.setReminderTime,
+      setSelectedColor: state.setSelectedColor,
+      setSelectedEmoji: state.setSelectedEmoji,
+    },
+  });
+
+  const resetForm = useHabitFormReset({
+    setColorPickerVisible: state.setColorPickerVisible,
+    setDayPhase: state.setDayPhase,
+    setFrequency: state.setFrequency,
+    setHabitName: state.setHabitName,
+    setReminderOptionState: state.setReminderOptionState,
+    setRemindersEnabled: state.setRemindersEnabled,
+    setReminderSound: state.setReminderSound,
+    setReminderTime: state.setReminderTime,
+    setSelectedColor: state.setSelectedColor,
+    setSelectedEmoji: state.setSelectedEmoji,
+    setShowTimePicker: state.setShowTimePicker,
+  });
+
+  const closeColorPicker = useCallback(
+    () => state.setColorPickerVisible(false),
+    [state.setColorPickerVisible]
+  );
+
+  const openColorPicker = useCallback(
+    () => state.setColorPickerVisible(true),
+    [state.setColorPickerVisible]
+  );
 
   return {
-    dayPhase,
-    frequency,
+    closeColorPicker,
+    dayPhase: state.dayPhase,
+    frequency: state.frequency,
     fullHabitName,
-    habitName,
-    isColorPickerVisible,
-    openColorPicker: () => setColorPickerVisible(true),
-    closeColorPicker: () => setColorPickerVisible(false),
-    reminderSound,
-    reminderTime,
-    remindersEnabled,
+    habitName: state.habitName,
+    isColorPickerVisible: state.isColorPickerVisible,
+    openColorPicker,
+    reminderOption: state.reminderOption,
+    remindersEnabled: state.remindersEnabled,
+    reminderSound: state.reminderSound,
+    reminderTime: state.reminderTime,
     resetForm,
-    selectedColor,
-    selectedEmoji,
-    setDayPhase,
-    setFrequency,
-    setHabitName,
-    setReminderSound,
-    setReminderTime,
-    setRemindersEnabled,
-    setSelectedColor,
-    setSelectedEmoji,
-    setShowTimePicker,
-    showTimePicker,
+    selectedColor: state.selectedColor,
+    selectedEmoji: state.selectedEmoji,
+    setDayPhase: state.setDayPhase,
+    setFrequency: state.setFrequency,
+    setHabitName: state.setHabitName,
+    setReminderOption,
+    setRemindersEnabled: state.setRemindersEnabled,
+    setReminderSound: state.setReminderSound,
+    setReminderTime: state.setReminderTime,
+    setSelectedColor: state.setSelectedColor,
+    setSelectedEmoji: state.setSelectedEmoji,
+    setShowTimePicker: state.setShowTimePicker,
+    showTimePicker: state.showTimePicker,
   };
 };

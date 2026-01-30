@@ -1,54 +1,75 @@
-import { useEffect, useRef } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import STRINGS from '../../../constants/strings';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import {
+  MAX_LENGTH,
+  MAX_CHARS,
+  WARNING_THRESHOLD,
+  SHOW_THRESHOLD,
+  type HabitNameFieldProps,
+} from './HabitNameField.constants';
+import { useHabitNameFieldAnimation } from './useHabitNameFieldAnimation';
 
-interface HabitNameFieldProps {
-  value: string;
-  onChange: (text: string) => void;
-  autoFocus: boolean;
-}
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
-export const HabitNameField = ({ value, onChange, autoFocus }: HabitNameFieldProps) => {
-  const MAX_LENGTH = 50;
+const HabitNameFieldComponent = ({
+  value,
+  onChange,
+  autoFocus,
+}: HabitNameFieldProps) => {
   const charCount = value.length;
-  const isNearLimit = charCount > 40;
-  const isAtLimit = charCount >= 50;
+  const showCounter = charCount > SHOW_THRESHOLD;
+  const isWarning = charCount > WARNING_THRESHOLD;
+  const isError = charCount > MAX_CHARS;
+  const [isFocused, setIsFocused] = useState(false);
   const { triggerWarning } = useHapticFeedback();
-  const previousCount = useRef(charCount);
 
-  // Trigger haptic when hitting character limit
-  useEffect(() => {
-    if (charCount === 50 && previousCount.current < 50) {
-      triggerWarning();
-    }
-    previousCount.current = charCount;
-  }, [charCount, triggerWarning]);
+  const { animatedInputStyle } = useHabitNameFieldAnimation({
+    charCount,
+    isError,
+    isFocused,
+    triggerWarning,
+  });
+
+  const handleFocus = useCallback(() => setIsFocused(true), []);
+  const handleBlur = useCallback(() => setIsFocused(false), []);
+
+  const counterColor = isError ? '#EF4444' : isWarning ? '#F59E0B' : '#78716c';
 
   return (
-    <View className='mb-6'>
-      <View className='mb-1 flex-row items-center justify-between'>
-        <Text className='text-base font-semibold text-[#1a1a1a]'>
-          {STRINGS.CREATE_HABIT.nameLabel}
-        </Text>
-        <Text className={`text-xs ${isNearLimit ? 'text-[#f59e0b]' : 'text-[#a8a29e]'}`}>
-          {charCount}/{MAX_LENGTH}
-        </Text>
-      </View>
-      <Text className='mb-2 text-xs text-[#78716c]'>
-        {STRINGS.CREATE_HABIT.nameHelper}
-      </Text>
-      <TextInput
-        autoFocus={autoFocus}
+    <View className='mb-3'>
+      <AnimatedTextInput
         blurOnSubmit
-        className='h-14 rounded-xl bg-white px-4 text-base text-[#1a1a1a]'
+        accessibilityHint='Enter a name for your habit, up to 50 characters'
+        accessibilityLabel='Habit name'
+        autoFocus={autoFocus}
+        className='h-14 rounded-xl bg-white px-4 text-base text-stone-800'
+        maxLength={MAX_LENGTH}
         placeholder={STRINGS.CREATE_HABIT.namePlaceholder}
         placeholderTextColor='#a8a29e'
         returnKeyType='done'
+        style={animatedInputStyle}
         value={value}
-        maxLength={MAX_LENGTH}
+        onBlur={handleBlur}
         onChangeText={onChange}
+        onFocus={handleFocus}
       />
+
+      {/* V11: Character counter - only show when > 20 chars */}
+      {showCounter && (
+        <Text
+          accessibilityLabel={`${charCount} of ${MAX_CHARS} characters used${isWarning ? ', approaching limit' : ''}${isError ? ', limit exceeded' : ''}`}
+          accessibilityRole='text'
+          className='mt-1 text-center text-xs'
+          style={{ color: counterColor }}
+        >
+          {charCount}/{MAX_CHARS}
+        </Text>
+      )}
     </View>
   );
 };
+
+export const HabitNameField = memo(HabitNameFieldComponent);

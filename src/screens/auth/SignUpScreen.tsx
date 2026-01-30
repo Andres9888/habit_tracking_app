@@ -1,11 +1,26 @@
-import { Text, View } from 'react-native';
-import { SocialLoginButtons } from '../../components/auth/SocialLoginButtons';
-import { FormInput } from './components/FormInput';
-import { SubmitButton } from './components/SubmitButton';
-import { VerificationView } from './components/VerificationView';
+import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  AuthDivider,
+  AuthError,
+  FormInput,
+  SignInLink,
+  SocialSignInButton,
+  SubmitButton,
+  VerificationView,
+} from './components';
+import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignUpFlow } from './hooks/useSignUpFlow';
+import { SignUpHeader } from './components/SignUpHeader';
 
-export default function SignUpScreen() {
+interface SignUpScreenProps {
+  onNavigateToSignIn?: () => void;
+}
+
+export default function SignUpScreen({
+  onNavigateToSignIn,
+}: SignUpScreenProps) {
+  const insets = useSafeAreaInsets();
   const {
     emailAddress,
     setEmailAddress,
@@ -16,6 +31,15 @@ export default function SignUpScreen() {
     handleSignUp,
     handleVerification,
   } = useSignUpFlow();
+  const {
+    signInWithGoogle,
+    signInWithApple,
+    isLoading: oauthLoading,
+    error: oauthError,
+    clearError,
+  } = useOAuthSignIn();
+
+  const isAnyLoading = isLoading || !!oauthLoading;
 
   if (pendingVerification) {
     return (
@@ -29,44 +53,66 @@ export default function SignUpScreen() {
 
   return (
     <View className='flex-1 bg-white'>
-      <View className='pt-15 flex-1 px-6'>
-        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-stone-900'>
-          Create Account
-        </Text>
-        <Text className='mb-10 text-base text-stone-500'>
-          Start tracking your habits today
-        </Text>
+      <View className='flex-1 px-6' style={{ paddingTop: insets.top + 16 }}>
+        <SignUpHeader />
 
-        <SocialLoginButtons />
+        {oauthError && (
+          <AuthError message={oauthError} onDismiss={clearError} />
+        )}
+
+        <View className='gap-3'>
+          <SocialSignInButton
+            disabled={isAnyLoading}
+            isLoading={oauthLoading === 'oauth_apple'}
+            provider='apple'
+            onPress={signInWithApple}
+          />
+          <SocialSignInButton
+            disabled={isAnyLoading}
+            isLoading={oauthLoading === 'oauth_google'}
+            provider='google'
+            onPress={signInWithGoogle}
+          />
+        </View>
+
+        <AuthDivider />
 
         <View className='gap-6'>
           <FormInput
             autoCapitalize='none'
             autoComplete='email'
+            editable={!isAnyLoading}
             keyboardType='email-address'
-            label='EMAIL'
+            label='Email'
             placeholder='Enter your email'
             value={emailAddress}
             onChangeText={setEmailAddress}
           />
-
           <FormInput
             secureTextEntry
             autoComplete='password-new'
-            label='PASSWORD'
+            editable={!isAnyLoading}
+            label='Password'
             placeholder='Create a password'
             value={password}
             onChangeText={setPassword}
           />
-
           <SubmitButton
-            disabled={!emailAddress || !password}
+            disabled={!emailAddress || !password || isAnyLoading}
             isLoading={isLoading}
-            label='CREATE ACCOUNT'
-            loadingLabel='CREATING ACCOUNT...'
+            label='Create account'
+            loadingLabel='Creating account...'
             onPress={handleSignUp}
           />
         </View>
+
+        {onNavigateToSignIn && (
+          <SignInLink
+            className='mt-6'
+            disabled={isAnyLoading}
+            onPress={onNavigateToSignIn}
+          />
+        )}
       </View>
     </View>
   );

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { getSettingsRowColors } from './SettingsRow.colors';
 
 interface SettingsRowProps {
   icon: ReactNode;
@@ -25,27 +26,7 @@ export function SettingsRow({
   showBorder = true,
   highContrastMode = false,
 }: SettingsRowProps) {
-  const colors = highContrastMode
-    ? {
-        background: '#111111',
-        border: '#2f2f2f',
-        chevron: '#facc15',
-        label: '#ffffff',
-        switchThumb: '#000000',
-        switchTrackFalse: '#525252',
-        switchTrackTrue: '#facc15',
-        value: '#facc15',
-      }
-    : {
-        background: '#ffffff',
-        border: '#f5f5f4',
-        chevron: '#8a8a8a',
-        label: '#1a1a1a',
-        switchThumb: '#ffffff',
-        switchTrackFalse: '#d1d5db',
-        switchTrackTrue: '#1a1a1a',
-        value: '#8a8a8a',
-      };
+  const colors = getSettingsRowColors(highContrastMode);
 
   const content = (
     <View

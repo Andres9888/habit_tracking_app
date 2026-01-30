@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Consistency Guidelines - Habit Tracking App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; }
+        body { background: #0c0a09 !important; }
+
+        :root {
+            --stone-50: #fafaf9;
+            --stone-100: #f5f5f4;
+            --stone-200: #e7e5e4;
+            --stone-300: #d6d3d1;
+            --stone-400: #a8a29e;
+            --stone-500: #78716c;
+            --stone-600: #57534e;
+            --stone-700: #44403c;
+            --stone-800: #292524;
+            --stone-900: #1c1917;
+            --stone-950: #0c0a09;
+        }
+
+        .code-block {
+            background: var(--stone-900);
+            border: 1px solid var(--stone-800);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'SF Mono', 'Fira Code', monospace !important;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+
+        .code-comment { color: #6b7280; }
+        .code-key { color: #a78bfa; }
+        .code-string { color: #34d399; }
+        .code-number { color: #fbbf24; }
+
+        .guideline-card {
+            background: var(--stone-900);
+            border: 1px solid var(--stone-800);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .swatch {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-8 text-stone-300">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="mb-12">
+            <h1 class="text-4xl font-bold text-stone-100 mb-3">Design Consistency Guidelines</h1>
+            <p class="text-lg text-stone-400">Visual language & component patterns for the Habit Tracking App</p>
+            <div class="flex gap-2 mt-4">
+                <span class="px-3 py-1 bg-violet-500/20 text-violet-400 rounded-full text-sm">v1.0</span>
+                <span class="px-3 py-1 bg-stone-800 text-stone-400 rounded-full text-sm">January 2026</span>
+            </div>
+        </div>
+
+        <!-- Color System -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-stone-100 mb-6">Color System</h2>
+
+            <div class="guideline-card mb-6">
+                <h3 class="text-lg font-semibold text-stone-200 mb-4">Neutral Palette (Stone)</h3>
+                <p class="text-sm text-stone-400 mb-4">The foundation of our dark theme. Stone colors provide warmth compared to pure grays.</p>
+                <div class="flex flex-wrap gap-3">
+                    <div class="swatch text-stone-900" style="background: #fafaf9;">50</div>
+                    <div class="swatch text-stone-900" style="background: #f5f5f4;">100</div>
+                    <div class="swatch text-stone-900" style="background: #e7e5e4;">200</div>
+                    <div class="swatch text-stone-900" style="background: #d6d3d1;">300</div>
+                    <div class="swatch text-stone-900" style="background: #a8a29e;">400</div>
+                    <div class="swatch text-white" style="background: #78716c;">500</div>
+                    <div class="swatch text-white" style="background: #57534e;">600</div>
+                    <div class="swatch text-white" style="background: #44403c;">700</div>
+                    <div class="swatch text-white" style="background: #292524;">800</div>
+                    <div class="swatch text-white" style="background: #1c1917;">900</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="guideline-card">
+                    <h3 class="text-lg font-semibold text-stone-200 mb-4">Semantic Colors</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-4">
+                            <div class="swatch" style="background: #8b5cf6;">
+                                <i data-lucide="star" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-stone-200">Violet 500</div>
+                                <div class="text-sm text-stone-500">#8b5cf6 · Primary accent, default habit color</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="swatch" style="background: #10b981;">
+                                <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-stone-200">Emerald 500</div>
+                                <div class="text-sm text-stone-500">#10b981 · Success, completions, perfect week</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="swatch" style="background: #f59e0b;">
+                                <i data-lucide="alert-triangle" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-stone-200">Amber 500</div>
+                                <div class="text-sm text-stone-500">#f59e0b · Warning, at-risk states, AM phase</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="swatch" style="background: #f43f5e;">
+                                <i data-lucide="x" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-stone-200">Rose 500</div>
+                                <div class="text-sm text-stone-500">#f43f5e · Destructive, streak broken</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="swatch" style="background: #0ea5e9;">
+                                <i data-lucide="info" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-stone-200">Sky 500</div>
+                                <div class="text-sm text-stone-500">#0ea5e9 · Info, links, secondary actions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="guideline-card">
+                    <h3 class="text-lg font-semibold text-stone-200 mb-4">Usage Rules</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 flex-shrink-0"></i>
+                            <span><strong class="text-stone-200">DO:</strong> Use accent colors at 15-20% opacity for backgrounds</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 flex-shrink-0"></i>
+                            <span><strong class="text-stone-200">DO:</strong> Keep stone-800 as primary card background</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 flex-shrink-0"></i>
+                            <span><strong class="text-stone-200">DO:</strong> Use stone-400 for secondary text</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <i data-lucide="x-circle" class="w-5 h-5 text-rose-500 flex-shrink-0"></i>
+                            <span><strong class="text-stone-200">DON'T:</strong> Use pure black (#000) or pure white (#fff)</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <i data-lucide="x-circle" class="w-5 h-5 text-rose-500 flex-shrink-0"></i>
+                            <span><strong class="text-stone-200">DON'T:</strong> Mix cool grays with stone palette</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <i data-lucide="x-circle" class="w-5 h-5 text-rose-500 flex-shrink-0"></i>
+                            <span><strong class="text-stone-200">DON'T:</strong> Use blue as primary (conflicts with system UI)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-stone-100 mb-6">Typography</h2>
+
+            <div class="guideline-card">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold text-stone-200 mb-4">Type Scale</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="text-2xl font-bold text-stone-100" style="letter-spacing: -0.5px;">Screen Title</div>
+                                <div class="text-xs text-stone-500 mt-1">24px / 700 / -0.5px tracking</div>
+                            </div>
+                            <div>
+                                <div class="text-xl font-semibold text-stone-100" style="letter-spacing: -0.3px;">Section Header</div>
+                                <div class="text-xs text-stone-500 mt-1">20px / 600 / -0.3px tracking</div>
+                            </div>
+                            <div>
+                                <div class="text-base font-bold text-stone-100" style="letter-spacing: -0.3px;">Card Title</div>
+                                <div class="text-xs text-stone-500 mt-1">17px / 700 / -0.3px tracking</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-stone-300">Body Text</div>
+                                <div class="text-xs text-stone-500 mt-1">14px / 400 / normal</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-stone-400">Caption / Meta</div>
+                                <div class="text-xs text-stone-500 mt-1">12-13px / 500 / normal</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-stone-400 uppercase tracking-wide">Label / Tag</div>
+                                <div class="text-xs text-stone-500 mt-1">11px / 500 / 0.5px tracking / uppercase</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-stone-200 mb-4">Code Reference</h3>
+                        <div class="code-block">
+                            <span class="code-comment">// NativeWind / Tailwind classes</span><br><br>
+                            <span class="code-key">screenTitle:</span> <span class="code-string">"text-2xl font-bold text-stone-100"</span><br>
+                            <span class="code-key">sectionHeader:</span> <span class="code-string">"text-xl font-semibold text-stone-100"</span><br>
+                            <span class="code-key">cardTitle:</span> <span class="code-string">"text-[17px] font-bold text-stone-100"</span><br>
+                            <span class="code-key">body:</span> <span class="code-string">"text-sm text-stone-300"</span><br>
+                            <span class="code-key">caption:</span> <span class="code-string">"text-xs text-stone-400"</span><br>
+                            <span class="code-key">label:</span> <span class="code-string">"text-[11px] font-medium uppercase tracking-wide"</span>
+                        </div>
+                        <div class="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                            <div class="flex gap-2 text-sm text-amber-400">
+                                <i data-lucide="alert-triangle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                                <span>Use negative letter-spacing (-0.3px to -0.5px) for titles to match iOS native feel</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacing & Layout -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-stone-100 mb-6">Spacing & Layout</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="guideline-card">
+                    <h3 class="text-lg font-semibold text-stone-200 mb-4">Border Radius Scale</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-violet-500/30 border border-violet-500/50" style="border-radius: 8px;"></div>
+                            <div>
+                                <div class="font-medium text-stone-200">8px (rounded-lg)</div>
+                                <div class="text-sm text-stone-500">Phase tags, small badges</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-violet-500/30 border border-violet-500/50" style="border-radius: 12px;"></div>
+                            <div>
+                                <div class="font-medium text-stone-200">12px (rounded-xl)</div>
+                                <div class="text-sm text-stone-500">Streak badges, buttons</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-violet-500/30 border border-violet-500/50" style="border-radius: 16px;"></div>
+                            <div>
+                                <div class="font-medium text-stone-200">16px (rounded-2xl)</div>
+                                <div class="text-sm text-stone-500">Icon containers, checkboxes</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-violet-500/30 border border-violet-500/50" style="border-radius: 24px;"></div>
+                            <div>
+                                <div class="font-medium text-stone-200">24px (rounded-3xl)</div>
+                                <div class="text-sm text-stone-500">Cards, bottom sheets</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="guideline-card">
+                    <h3 class="text-lg font-semibold text-stone-200 mb-4">Spacing Units</h3>
+                    <div class="code-block mb-4">
+                        <span class="code-comment">// Base unit: 4px</span><br><br>
+                        <span class="code-key">cardPadding:</span> <span class="code-number">16</span> <span class="code-comment">// 4 units</span><br>
+                        <span class="code-key">cardGap:</span> <span class="code-number">12</span> <span class="code-comment">// 3 units</span><br>
+                        <span class="code-key">listGap:</span> <span class="code-number">16</span> <span class="code-comment">// 4 units</span><br>
+                        <span class="code-key">screenPadding:</span> <span class="code-number">16</span> <span class="code-comment">// 4 units</span><br>
+                        <span class="code-key">accentBorderWidth:</span> <span class="code-number">4</span> <span class="code-comment">// 1 unit</span>
+                    </div>
+                    <p class="text-sm text-stone-400">Always use multiples of 4px for spacing. This ensures visual consistency and aligns with the native 4-point grid.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shadows -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-stone-100 mb-6">Shadows & Elevation</h2>
+
+            <div class="guideline-card">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-24 h-24 mx-auto bg-stone-800 rounded-3xl mb-4" style="box-shadow: 0 2px 8px rgba(120, 113, 108, 0.06);"></div>
+                        <div class="font-medium text-stone-200">Level 1 - Cards</div>
+                        <div class="text-xs text-stone-500 mt-1">0 2px 8px stone-500/6%</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-24 h-24 mx-auto bg-stone-800 rounded-3xl mb-4" style="box-shadow: 0 4px 16px rgba(120, 113, 108, 0.1);"></div>
+                        <div class="font-medium text-stone-200">Level 2 - Raised</div>
+                        <div class="text-xs text-stone-500 mt-1">0 4px 16px stone-500/10%</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-24 h-24 mx-auto bg-stone-800 rounded-3xl mb-4" style="box-shadow: 0 8px 32px rgba(120, 113, 108, 0.15);"></div>
+                        <div class="font-medium text-stone-200">Level 3 - Floating</div>
+                        <div class="text-xs text-stone-500 mt-1">0 8px 32px stone-500/15%</div>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 bg-stone-800 rounded-xl">
+                    <p class="text-sm text-stone-400"><strong class="text-stone-200">Note:</strong> Use stone-500 as the shadow color base (not black) for warmer, more cohesive shadows in dark mode. Keep opacity low (6-15%) for subtlety.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Animation -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-stone-100 mb-6">Animation Tokens</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="guideline-card">
+                    <h3 class="text-lg font-semibold text-stone-200 mb-4">Spring Configurations</h3>
+                    <div class="code-block">
+                        <span class="code-comment">// Reanimated 2 spring configs</span><br><br>
+                        <span class="code-key">entrance:</span> {<br>
+                        &nbsp;&nbsp;<span class="code-key">damping:</span> <span class="code-number">15</span>,<br>
+                        &nbsp;&nbsp;<span class="code-key">stiffness:</span> <span class="code-number">300</span><br>
+                        }<br><br>
+                        <span class="code-key">bouncy:</span> {<br>
+                        &nbsp;&nbsp;<span class="code-key">damping:</span> <span class="code-number">10</span>,<br>
+                        &nbsp;&nbsp;<span class="code-key">stiffness:</span> <span class="code-number">200</span><br>
+                        }<br><br>
+                        <span class="code-key">gentle:</span> {<br>
+                        &nbsp;&nbsp;<span class="code-key">damping:</span> <span class="code-number">20</span>,<br>
+                        &nbsp;&nbsp;<span class="code-key">stiffness:</span> <span class="code-number">150</span><br>
+                        }
+                    </div>
+                </div>
+
+                <div class="guideline-card">
+                    <h3 class="text-lg font-semibold text-stone-200 mb-4">Timing Functions</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 text-center">
+                                <span class="text-lg font-mono text-violet-400">100ms</span>
+                            </div>
+                            <div>
+                                <div class="font-medium text-stone-200">Press feedback</div>
+                                <div class="text-sm text-stone-500">Button scale, checkbox tap</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 text-center">
+                                <span class="text-lg font-mono text-violet-400">200ms</span>
+                            </div>
+                            <div>
+                                <div class="font-medium text-stone-200">State transitions</div>
+                                <div class="text-sm text-stone-500">Color changes, opacity fades</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 text-center">
+                                <span class="text-lg font-mono text-violet-400">300ms</span>
+                            </div>
+                            <div>
+                                <div class="font-medium text-stone-200">Sheet/modal open</div>
+                                <div class="text-sm text-stone-500">Bottom sheet, overlays</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 text-center">
+                                <span class="text-lg font-mono text-violet-400">50ms</span>
+                            </div>
+                            <div>
+                                <div class="font-medium text-stone-200">Stagger delay</div>
+                                <div class="text-sm text-stone-500">Per item in list animations</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Component Patterns -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-stone-100 mb-6">Component Patterns</h2>
+
+            <div class="guideline-card">
+                <h3 class="text-lg font-semibold text-stone-200 mb-4">Habit Card Anatomy</h3>
+                <div class="bg-stone-800 rounded-3xl overflow-hidden flex max-w-md">
+                    <!-- Accent Border -->
+                    <div class="w-1 bg-violet-500 rounded-l-3xl"></div>
+                    <!-- Content -->
+                    <div class="flex-1 p-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-lg">🧘</span>
+                                    <span class="text-base font-bold text-stone-100" style="letter-spacing: -0.3px;">Habit Title</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 rounded-lg text-xs font-medium uppercase" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; letter-spacing: 0.5px;">AM</span>
+                                    <span class="px-2 py-1 rounded-xl text-xs font-semibold flex items-center gap-1" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">
+                                        <i data-lucide="flame" class="w-3 h-3"></i>
+                                        12 days
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="w-10 h-10 rounded-2xl border-2 border-stone-600 flex items-center justify-center">
+                                <i data-lucide="check" class="w-5 h-5 text-stone-600"></i>
+                            </div>
+                        </div>
+                        <!-- Chain dots -->
+                        <div class="flex items-center gap-1 mt-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-violet-500 opacity-50"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-violet-500 opacity-60"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-violet-500 opacity-70"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-violet-500 opacity-80"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-violet-500 opacity-90"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-violet-500"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-stone-600"></div>
+                        </div>
+                        <!-- Strength bar -->
+                        <div class="h-0.5 rounded-full bg-stone-700 mt-3 overflow-hidden">
+                            <div class="h-full w-3/5 rounded-full bg-violet-500"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    <div class="p-3 bg-stone-800 rounded-xl text-center">
+                        <div class="text-violet-400 text-sm font-medium">Accent Border</div>
+                        <div class="text-xs text-stone-500 mt-1">4px wide, left side</div>
+                    </div>
+                    <div class="p-3 bg-stone-800 rounded-xl text-center">
+                        <div class="text-violet-400 text-sm font-medium">Phase Tag</div>
+                        <div class="text-xs text-stone-500 mt-1">8px radius, uppercase</div>
+                    </div>
+                    <div class="p-3 bg-stone-800 rounded-xl text-center">
+                        <div class="text-violet-400 text-sm font-medium">Streak Badge</div>
+                        <div class="text-xs text-stone-500 mt-1">12px radius, with icon</div>
+                    </div>
+                    <div class="p-3 bg-stone-800 rounded-xl text-center">
+                        <div class="text-violet-400 text-sm font-medium">Checkbox</div>
+                        <div class="text-xs text-stone-500 mt-1">40×40, 16px radius</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Reference -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-stone-100 mb-6">Quick Reference</h2>
+
+            <div class="guideline-card">
+                <div class="code-block">
+                    <span class="code-comment">// Copy-paste design tokens for DraggableHabit.tsx</span><br><br>
+
+                    <span class="code-key">const CARD_TOKENS</span> = {<br>
+                    &nbsp;&nbsp;<span class="code-comment">// Layout</span><br>
+                    &nbsp;&nbsp;<span class="code-key">borderRadius:</span> <span class="code-number">24</span>,<br>
+                    &nbsp;&nbsp;<span class="code-key">accentWidth:</span> <span class="code-number">4</span>,<br>
+                    &nbsp;&nbsp;<span class="code-key">padding:</span> <span class="code-number">16</span>,<br>
+                    &nbsp;&nbsp;<span class="code-key">checkboxSize:</span> <span class="code-number">40</span>,<br>
+                    &nbsp;&nbsp;<span class="code-key">checkboxRadius:</span> <span class="code-number">16</span>,<br><br>
+
+                    &nbsp;&nbsp;<span class="code-comment">// Colors (dark mode)</span><br>
+                    &nbsp;&nbsp;<span class="code-key">cardBg:</span> <span class="code-string">'#292524'</span>, <span class="code-comment">// stone-800</span><br>
+                    &nbsp;&nbsp;<span class="code-key">defaultAccent:</span> <span class="code-string">'#8b5cf6'</span>, <span class="code-comment">// violet-500</span><br>
+                    &nbsp;&nbsp;<span class="code-key">successAccent:</span> <span class="code-string">'#10b981'</span>, <span class="code-comment">// emerald-500</span><br>
+                    &nbsp;&nbsp;<span class="code-key">warningAccent:</span> <span class="code-string">'#f59e0b'</span>, <span class="code-comment">// amber-500</span><br><br>
+
+                    &nbsp;&nbsp;<span class="code-comment">// Typography</span><br>
+                    &nbsp;&nbsp;<span class="code-key">titleSize:</span> <span class="code-number">17</span>,<br>
+                    &nbsp;&nbsp;<span class="code-key">titleWeight:</span> <span class="code-string">'700'</span>,<br>
+                    &nbsp;&nbsp;<span class="code-key">titleTracking:</span> <span class="code-number">-0.3</span>,<br><br>
+
+                    &nbsp;&nbsp;<span class="code-comment">// Shadow</span><br>
+                    &nbsp;&nbsp;<span class="code-key">shadowColor:</span> <span class="code-string">'#78716c'</span>, <span class="code-comment">// stone-500</span><br>
+                    &nbsp;&nbsp;<span class="code-key">shadowOpacity:</span> <span class="code-number">0.06</span>,<br>
+                    &nbsp;&nbsp;<span class="code-key">shadowOffset:</span> { <span class="code-key">width:</span> <span class="code-number">0</span>, <span class="code-key">height:</span> <span class="code-number">2</span> },<br>
+                    &nbsp;&nbsp;<span class="code-key">shadowRadius:</span> <span class="code-number">8</span>,<br><br>
+
+                    &nbsp;&nbsp;<span class="code-comment">// Animation</span><br>
+                    &nbsp;&nbsp;<span class="code-key">entranceSpring:</span> { <span class="code-key">damping:</span> <span class="code-number">15</span>, <span class="code-key">stiffness:</span> <span class="code-number">300</span> },<br>
+                    &nbsp;&nbsp;<span class="code-key">staggerDelay:</span> <span class="code-number">50</span>,<br>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-stone-500 text-sm py-8 border-t border-stone-800">
+            <p>Habit Tracking App · Design System v1.0</p>
+            <p class="mt-1">Last updated: January 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

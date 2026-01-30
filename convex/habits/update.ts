@@ -1,0 +1,82 @@
+/**
+ * Habit Update Mutations
+ * Update habit properties (name, notes, settings, etc.)
+ */
+import { v } from 'convex/values';
+import { mutation } from '../_generated/server';
+import { updateHabitArgs } from './types';
+import { validateHabitUpdateFields } from './validation';
+
+export const update = mutation({
+  args: updateHabitArgs,
+  handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to update habits');
+    }
+
+    const { habitId, ...updates } = args;
+
+    // SEC-001: Ownership verification
+    const habit = await ctx.db.get(habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to modify this habit');
+    }
+
+    // SEC-003: Input validation
+    const validated = validateHabitUpdateFields(updates);
+
+    // Merge validated string fields with non-string fields (daysOfWeek, etc.)
+    const cleanedUpdates = {
+      ...Object.fromEntries(
+        Object.entries(updates).filter(
+          ([key, value]) =>
+            value !== undefined && !Object.keys(validated).includes(key)
+        )
+      ),
+      ...Object.fromEntries(
+        Object.entries(validated).filter(([_, value]) => value !== undefined)
+      ),
+    };
+
+    await ctx.db.patch(habitId, cleanedUpdates);
+    return null;
+  },
+  returns: v.null(),
+});
+
+export const updateNotes = mutation({
+  args: {
+    habitId: v.id('habits'),
+    notes: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to update habit notes');
+    }
+
+    // SEC-001: Ownership verification
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to modify this habit');
+    }
+
+    // SEC-003: Input validation
+    const validated = validateHabitUpdateFields({ notes: args.notes });
+
+    await ctx.db.patch(args.habitId, {
+      notes: validated.notes,
+    });
+    return null;
+  },
+  returns: v.null(),
+});

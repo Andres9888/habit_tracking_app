@@ -1,0 +1,94 @@
+/**
+ * HabitRankingItem Styles
+ */
+
+import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
+import { typography } from '../../theme/typography';
+import { spacing } from '../../theme/spacing';
+
+export const itemStyles = StyleSheet.create({
+  habitEmoji: {
+    fontSize: 20,
+    marginRight: spacing.xs,
+  },
+  habitHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: spacing.xs,
+  },
+  habitInfo: {
+    flex: 1,
+  },
+  habitItem: {
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: spacing.xs,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+  },
+  habitItemLeft: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+  },
+  habitItemRight: {
+    alignItems: 'flex-end',
+    marginLeft: spacing.md,
+  },
+  habitName: {
+    ...typography.bodyBold,
+    color: colors.text.primary,
+    flex: 1,
+  },
+  habitStats: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  rankBadge: {
+    fontSize: 24,
+  },
+  rankContainer: {
+    alignItems: 'center',
+    marginRight: spacing.md,
+    width: 32,
+  },
+  rankNumber: {
+    ...typography.bodyBold,
+    color: colors.text.tertiary,
+    fontSize: 14,
+  },
+  riskBadge: {
+    alignItems: 'center',
+    backgroundColor: '#FEE2E2',
+    borderRadius: 4,
+    flexDirection: 'row',
+    marginLeft: spacing.xs,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 2,
+  },
+  riskText: {
+    ...typography.caption,
+    color: colors.error,
+    fontSize: 10,
+    marginLeft: 2,
+  },
+  statItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginRight: spacing.md,
+  },
+  statText: {
+    ...typography.caption,
+    color: colors.text.tertiary,
+    marginLeft: spacing.xxs,
+  },
+  strengthPercentage: {
+    ...typography.h3,
+    color: colors.primary[500],
+    marginBottom: spacing.xs,
+  },
+});

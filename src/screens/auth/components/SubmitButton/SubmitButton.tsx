@@ -1,47 +1,21 @@
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
-/**
- * Props for the SubmitButton component
- */
 interface SubmitButtonProps {
-  /** Button text in normal state */
   label: string;
-  /** Button text during loading state */
   loadingLabel: string;
-  /** Whether the button is in loading state */
   isLoading: boolean;
-  /** Whether the button is disabled */
   disabled?: boolean;
-  /** Callback when button is pressed */
   onPress: () => void;
 }
 
-/**
- * SubmitButton - Primary action button with animations and loading state
- *
- * Features:
- * - Press animation with spring physics (scale 0.98)
- * - Loading state with ActivityIndicator
- * - Disabled state with 40% opacity
- * - Arrow icon in normal state
- * - Shadow when enabled
- * - Full accessibility support
- *
- * @example
- * <SubmitButton
- *   label="SIGN IN"
- *   loadingLabel="SIGNING IN..."
- *   isLoading={isLoading}
- *   disabled={!isValid}
- *   onPress={handleSubmit}
- * />
- */
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 export function SubmitButton({
   label,
   loadingLabel,
@@ -50,55 +24,49 @@ export function SubmitButton({
   onPress,
 }: SubmitButtonProps) {
   const isDisabled = isLoading || disabled;
+  const reduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
-
-  // Press animation with gesture handler
-  const gesture = Gesture.Tap()
-    .enabled(!isDisabled)
-    .onBegin(() => {
-      scale.value = withSpring(0.98, { damping: 15, stiffness: 400 });
-    })
-    .onFinalize(() => {
-      scale.value = withSpring(1, { damping: 15, stiffness: 400 });
-    })
-    .onEnd(() => {
-      onPress();
-    });
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
+  const handlePressIn = () => {
+    if (!reduceMotion) {
+      scale.value = withSpring(0.97, { damping: 15 });
+    }
+  };
+
+  const handlePressOut = () => {
+    if (!reduceMotion) {
+      scale.value = withSpring(1, { damping: 15 });
+    }
+  };
+
   return (
-    <GestureDetector gesture={gesture}>
-      <Animated.View
-        style={[animatedStyle]}
-        className={`mt-4 rounded-3xl border border-stone-900 bg-stone-900 py-4 ${
-          isDisabled ? 'opacity-40' : 'shadow-md shadow-stone-900/20'
-        }`}
-        accessible={true}
-        accessibilityRole='button'
-        accessibilityLabel={isLoading ? loadingLabel : label}
-        accessibilityState={{ disabled: isDisabled, busy: isLoading }}
-      >
-        <View className='flex-row items-center justify-center gap-2'>
-          {isLoading ? (
-            <>
-              <ActivityIndicator size='small' color='#ffffff' />
-              <Text className='text-[13px] font-bold tracking-[3px] text-white'>
-                {loadingLabel}
-              </Text>
-            </>
-          ) : (
-            <>
-              <Text className='text-[13px] font-bold tracking-[3px] text-white'>
-                {label}
-              </Text>
-              <Text className='text-lg text-white'>→</Text>
-            </>
-          )}
-        </View>
-      </Animated.View>
-    </GestureDetector>
+    <AnimatedPressable
+      accessibilityLabel={isLoading ? loadingLabel : label}
+      accessibilityRole='button'
+      accessibilityState={{ busy: isLoading, disabled: isDisabled }}
+      className={`mt-4 flex-row items-center justify-center rounded-2xl border border-stone-800 bg-stone-800 py-4 ${
+        isDisabled ? 'opacity-40' : ''
+      }`}
+      disabled={isDisabled}
+      style={animatedStyle}
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
+        {isLoading ? loadingLabel : label}
+      </Text>
+      <View className='ml-2 w-5 items-center justify-center'>
+        {isLoading ? (
+          <ActivityIndicator color='#FFFFFF' size='small' />
+        ) : (
+          <Text className='text-white'>→</Text>
+        )}
+      </View>
+    </AnimatedPressable>
   );
 }

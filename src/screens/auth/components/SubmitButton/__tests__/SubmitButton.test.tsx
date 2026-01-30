@@ -29,8 +29,8 @@ jest.mock('react-native-gesture-handler', () => {
 describe('SubmitButton', () => {
   const mockOnPress = jest.fn();
   const defaultProps = {
-    label: 'SIGN IN',
-    loadingLabel: 'SIGNING IN...',
+    label: 'Sign in',
+    loadingLabel: 'Signing in...',
     isLoading: false,
     onPress: mockOnPress,
   };
@@ -43,7 +43,7 @@ describe('SubmitButton', () => {
     it('renders correctly with default props', () => {
       const { getByText } = render(<SubmitButton {...defaultProps} />);
 
-      expect(getByText('SIGN IN')).toBeTruthy();
+      expect(getByText('Sign in')).toBeTruthy();
       expect(getByText('→')).toBeTruthy();
     });
 
@@ -52,7 +52,7 @@ describe('SubmitButton', () => {
         <SubmitButton {...defaultProps} isLoading={true} />
       );
 
-      expect(getByText('SIGNING IN...')).toBeTruthy();
+      expect(getByText('Signing in...')).toBeTruthy();
       expect(queryByText('→')).toBeNull();
     });
 
@@ -60,12 +60,12 @@ describe('SubmitButton', () => {
       const { getByText } = render(
         <SubmitButton
           {...defaultProps}
-          label='SUBMIT'
-          loadingLabel='SUBMITTING...'
+          label='Submit'
+          loadingLabel='Submitting...'
         />
       );
 
-      expect(getByText('SUBMIT')).toBeTruthy();
+      expect(getByText('Submit')).toBeTruthy();
     });
 
     it('displays loading label when isLoading is true', () => {
@@ -73,12 +73,12 @@ describe('SubmitButton', () => {
         <SubmitButton {...defaultProps} />
       );
 
-      expect(getByText('SIGN IN')).toBeTruthy();
+      expect(getByText('Sign in')).toBeTruthy();
 
       rerender(<SubmitButton {...defaultProps} isLoading={true} />);
 
-      expect(getByText('SIGNING IN...')).toBeTruthy();
-      expect(queryByText('SIGN IN')).toBeNull();
+      expect(getByText('Signing in...')).toBeTruthy();
+      expect(queryByText('Sign in')).toBeNull();
     });
   });
 
@@ -133,8 +133,7 @@ describe('SubmitButton', () => {
       );
 
       // ActivityIndicator should be rendered
-      const ActivityIndicator =
-        require('react-native').ActivityIndicator;
+      const ActivityIndicator = require('react-native').ActivityIndicator;
       expect(() => UNSAFE_getByType(ActivityIndicator)).not.toThrow();
 
       // Arrow should not be visible
@@ -177,7 +176,7 @@ describe('SubmitButton', () => {
     it('has correct accessibility label in normal state', () => {
       const { getByLabelText } = render(<SubmitButton {...defaultProps} />);
 
-      expect(getByLabelText('SIGN IN')).toBeTruthy();
+      expect(getByLabelText('Sign in')).toBeTruthy();
     });
 
     it('has correct accessibility label in loading state', () => {
@@ -185,7 +184,7 @@ describe('SubmitButton', () => {
         <SubmitButton {...defaultProps} isLoading={true} />
       );
 
-      expect(getByLabelText('SIGNING IN...')).toBeTruthy();
+      expect(getByLabelText('Signing in...')).toBeTruthy();
     });
 
     it('sets accessibilityState.busy when loading', () => {
@@ -258,12 +257,12 @@ describe('SubmitButton', () => {
         <SubmitButton {...defaultProps} />
       );
 
-      expect(getByText('SIGN IN')).toBeTruthy();
+      expect(getByText('Sign in')).toBeTruthy();
 
       rerender(<SubmitButton {...defaultProps} isLoading={true} />);
 
-      expect(getByText('SIGNING IN...')).toBeTruthy();
-      expect(queryByText('SIGN IN')).toBeNull();
+      expect(getByText('Signing in...')).toBeTruthy();
+      expect(queryByText('Sign in')).toBeNull();
     });
 
     it('handles transition from loading to enabled', () => {
@@ -271,12 +270,12 @@ describe('SubmitButton', () => {
         <SubmitButton {...defaultProps} isLoading={true} />
       );
 
-      expect(getByText('SIGNING IN...')).toBeTruthy();
+      expect(getByText('Signing in...')).toBeTruthy();
 
       rerender(<SubmitButton {...defaultProps} isLoading={false} />);
 
-      expect(getByText('SIGN IN')).toBeTruthy();
-      expect(queryByText('SIGNING IN...')).toBeNull();
+      expect(getByText('Sign in')).toBeTruthy();
+      expect(queryByText('Signing in...')).toBeNull();
     });
 
     it('handles empty labels gracefully', () => {

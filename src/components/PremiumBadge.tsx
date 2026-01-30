@@ -24,7 +24,7 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
   if (variant === 'popular') {
     return (
       <View style={[styles.badge, styles.popularBadge, style]}>
-        <Flame size={12} color="#ff4500" strokeWidth={2.5} />
+        <Flame color='#ff4500' size={12} strokeWidth={2.5} />
         <Text style={[styles.badgeText, { color: '#ff4500' }]}>Popular</Text>
       </View>
     );
@@ -33,21 +33,21 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
   if (variant === 'new') {
     return (
       <View style={[styles.badge, styles.newBadge, style]}>
-        <Sparkles size={12} color="#3b82f6" strokeWidth={2.5} />
+        <Sparkles color='#3b82f6' size={12} strokeWidth={2.5} />
         <Text style={[styles.badgeText, { color: '#3b82f6' }]}>New</Text>
       </View>
     );
   }
 
-  // Pro badge with gradient
+  // Pro badge with violet gradient (premium color)
   return (
     <LinearGradient
-      colors={['#FFD700', '#FFA500']}
-      start={{ x: 0, y: 0 }}
+      colors={['#8b5cf6', '#7c3aed']}
       end={{ x: 1, y: 1 }}
+      start={{ x: 0, y: 0 }}
       style={[styles.badge, styles.proBadge, style]}
     >
-      <Lock size={11} color="#6b4500" strokeWidth={2.75} />
+      <Lock color='#ffffff' size={11} strokeWidth={2.75} />
       <Text style={[styles.badgeText, styles.proBadgeText]}>PRO</Text>
     </LinearGradient>
   );
@@ -55,34 +55,21 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
 
 const styles = StyleSheet.create({
   badge: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    alignItems: 'center',
     borderRadius: 6,
     flexDirection: 'row',
-    alignItems: 'center',
     gap: 4,
+    elevation: 3,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    position: 'absolute',
+    right: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { height: 2, width: 0 },
+    top: 12,
     shadowOpacity: 0.15,
     shadowRadius: 3,
-    elevation: 3,
     zIndex: 10,
-  },
-  proBadge: {
-    // Gradient applied via LinearGradient
-  },
-  popularBadge: {
-    backgroundColor: '#fff5f5',
-    borderWidth: 1,
-    borderColor: '#fecaca',
-  },
-  newBadge: {
-    backgroundColor: '#eff6ff',
-    borderWidth: 1,
-    borderColor: '#bfdbfe',
   },
   badgeText: {
     fontSize: 10,
@@ -90,8 +77,21 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
+  newBadge: {
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderWidth: 1,
+  },
+  popularBadge: {
+    backgroundColor: '#fff5f5',
+    borderColor: '#fecaca',
+    borderWidth: 1,
+  },
+  proBadge: {
+    // Gradient applied via LinearGradient
+  },
   proBadgeText: {
-    color: '#6b4500',
+    color: '#ffffff',
   },
 });
 

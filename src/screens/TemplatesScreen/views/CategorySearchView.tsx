@@ -1,0 +1,91 @@
+/**
+ * Category/Search view mode - shows filtered template list
+ */
+
+import { Pressable, View } from 'react-native';
+import Toast from '../../../components/Toast';
+import { styles } from '../../templates/templatesScreenStyles';
+import {
+  CategoryHeader,
+  FilterControls,
+  ResearchFilterButton,
+  SearchBar,
+  TemplateModals,
+} from '../components';
+import type { CategorySearchViewProps } from './CategorySearchView.types';
+import { TemplatesList } from './TemplatesList';
+
+export function CategorySearchView(p: CategorySearchViewProps) {
+  const { handlers: h, filteredTemplates: templates } = p;
+  const toggle = () => p.setResearchOnly((v) => !v);
+
+  return (
+    <View style={styles.container}>
+      <CategoryHeader
+        categories={p.categories}
+        filteredCount={templates.length}
+        getCategoryLabel={p.getCategoryLabel}
+        selectedCategory={p.selectedCategory}
+        viewMode={p.effectiveViewMode}
+        onBackPress={h.handleBackToBrowse}
+      />
+      <View style={styles.searchSection}>
+        <SearchBar
+          placeholder='Search habits or science keywords'
+          value={p.searchQuery}
+          onChangeText={p.setSearchQuery}
+          onClear={() => p.setSearchQuery('')}
+        />
+        <View style={styles.controlRow}>
+          <FilterControls
+            researchOnly={p.researchOnly}
+            showSortOptions={p.showSortOptions}
+            sortOption={p.sortOption}
+            onResearchToggle={toggle}
+            onSelectSort={h.handleSelectSortOption}
+            onToggleSortOptions={() => p.setShowSortOptions((v) => !v)}
+          />
+          <ResearchFilterButton
+            researchOnly={p.researchOnly}
+            onToggle={toggle}
+          />
+        </View>
+      </View>
+      <TemplatesList
+        effectiveViewMode={p.effectiveViewMode}
+        filteredTemplates={templates}
+        hasActiveFilters={p.hasActiveFilters}
+        importingTemplateId={p.importingTemplateId}
+        selectedCategory={p.selectedCategory}
+        onImport={h.handleTemplateImport}
+        onPreview={h.handleTemplatePreview}
+        onResetFilters={h.handleResetFilters}
+      />
+      <TemplateModals
+        importedTemplateIds={p.importedTemplateIds}
+        importingTemplateId={p.importingTemplateId}
+        previewTemplate={p.previewTemplate}
+        showCustomizeModal={p.showCustomizeModal}
+        showFullsizePreview={p.showFullsizePreview}
+        onCloseCustomize={() => p.setShowCustomizeModal(false)}
+        onCloseFullsize={() => p.setShowFullsizePreview(false)}
+        onCustomize={h.handleCustomizeFromPreview}
+        onDirectImport={h.handleDirectImport}
+        onImport={h.handleTemplateImport}
+      />
+      <Toast
+        duration={3000}
+        message={p.toastMessage}
+        variant={p.toastMessage.includes('Failed') ? 'error' : 'success'}
+        visible={p.showToast}
+        onDismiss={() => p.setShowToast(false)}
+      />
+      {p.showSortOptions && (
+        <Pressable
+          style={styles.dropdownBackdrop}
+          onPress={() => p.setShowSortOptions(false)}
+        />
+      )}
+    </View>
+  );
+}

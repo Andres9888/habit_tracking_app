@@ -9,7 +9,7 @@ export function NativeWindTest() {
   return (
     <View className='flex-1 items-center justify-center bg-stone-100 p-4'>
       <View className='mb-4 rounded-lg border border-stone-200 bg-white p-6 shadow-md'>
-        <Text className='mb-2 text-2xl font-bold text-stone-900'>
+        <Text className='mb-2 text-2xl font-bold tracking-tight text-stone-900'>
           NativeWind Test
         </Text>
         <Text className='text-sm text-stone-600'>

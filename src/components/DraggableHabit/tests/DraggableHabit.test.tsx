@@ -28,8 +28,8 @@ const weekStatus: Array<'done' | 'missed' | 'planned'> = [
   'planned',
 ];
 
-describe('DraggableHabit compact mode', () => {
-  it('has consistent padding in default mode', () => {
+describe('DraggableHabit color accent border', () => {
+  it('renders with flex-row layout for color accent border', () => {
     const { toJSON } = render(
       <DraggableHabit
         celebrationsEnabled={false}
@@ -46,19 +46,39 @@ describe('DraggableHabit compact mode', () => {
     const tree = toJSON();
     expect(tree).toBeTruthy();
 
-    const className = Array.isArray(tree)
-      ? tree[0]?.props?.className
-      : tree?.props?.className;
-    // Current implementation uses specific padding values
-    expect(className).toContain('px-[21px]');
-    expect(className).toContain('pt-[21px]');
+    // Verify the card has flex-row layout for color accent border
+    const treeString = JSON.stringify(tree);
+    expect(treeString).toContain('flex-row');
+    expect(treeString).toContain('overflow-hidden');
+    expect(treeString).toContain('rounded-3xl');
   });
 
-  it('maintains consistent padding structure', () => {
+  it('renders 4px color accent left border', () => {
     const { toJSON } = render(
       <DraggableHabit
         celebrationsEnabled={false}
-        isCompactMode
+        habit={buildHabit({ iconColor: '#059669' })}
+        reduceMotionPreference={true}
+        streak={0}
+        toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
+      />
+    );
+
+    const tree = toJSON();
+    expect(tree).toBeTruthy();
+
+    // Verify the color accent border exists with 4px width
+    const treeString = JSON.stringify(tree);
+    expect(treeString).toContain('"width":4');
+    expect(treeString).toContain('#059669'); // emerald color
+  });
+
+  it('computes accent color from habit name when no iconColor is set', () => {
+    const { toJSON } = render(
+      <DraggableHabit
+        celebrationsEnabled={false}
         habit={buildHabit()}
         reduceMotionPreference={true}
         streak={0}
@@ -71,12 +91,31 @@ describe('DraggableHabit compact mode', () => {
     const tree = toJSON();
     expect(tree).toBeTruthy();
 
-    const className = Array.isArray(tree)
-      ? tree[0]?.props?.className
-      : tree?.props?.className;
-    // Current implementation uses specific padding values
-    expect(className).toContain('px-[21px]');
-    expect(className).toContain('pt-[21px]');
+    // Accent color is computed from habit name "✅ Daily Reflection" → #db2777 (pink)
+    const treeString = JSON.stringify(tree);
+    expect(treeString).toContain('#db2777');
+  });
+
+  it('uses yellow accent in high contrast mode for visibility', () => {
+    const { toJSON } = render(
+      <DraggableHabit
+        celebrationsEnabled={false}
+        habit={buildHabit({ iconColor: '#7c3aed' })}
+        highContrastMode={true}
+        reduceMotionPreference={true}
+        streak={0}
+        toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
+      />
+    );
+
+    const tree = toJSON();
+    expect(tree).toBeTruthy();
+
+    // High contrast mode uses yellow (#facc15) for maximum visibility
+    const treeString = JSON.stringify(tree);
+    expect(treeString).toContain('#facc15');
   });
 });
 

@@ -1,5 +1,5 @@
 import { useCallback, type Dispatch, type SetStateAction } from 'react';
-import type { ScrollView } from 'react-native';
+import type { NativeScrollEvent, NativeSyntheticEvent, ScrollView } from 'react-native';
 import type { HabitTemplate } from '../types';
 
 interface UseTemplateBrowserHandlersOptions {
@@ -46,7 +46,7 @@ export const useTemplateBrowserHandlers = ({
   }, [closeBrowser, isOpen, openBrowser, scrollViewRef]);
 
   const handleMainScroll = useCallback(
-    (event: any) => {
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (isEditMode || isOpen) return;
       const next = event.nativeEvent.contentOffset.y > 120;
       setHasScrolledPastHero((prev) => (prev === next ? prev : next));

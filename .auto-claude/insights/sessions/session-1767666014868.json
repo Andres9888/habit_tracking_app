@@ -1,0 +1,15 @@
+{
+  "id": "session-1767666014868",
+  "projectId": "a24a06ce-7084-470e-9431-54f05c835469",
+  "title": "Are there any security concerns?",
+  "messages": [
+    {
+      "id": "msg-1767666018799",
+      "role": "user",
+      "content": "Are there any security concerns?",
+      "timestamp": "2026-01-06T02:20:18.799Z"
+    }
+  ],
+  "createdAt": "2026-01-06T02:20:14.868Z",
+  "updatedAt": "2026-01-06T02:20:18.799Z"
+}

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Card Entrance Animation Variations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%) !important;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .phone-frame {
+      width: 375px;
+      height: 200px;
+      background: #fafaf9;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .habit-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      padding-left: 22px;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .accent-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      background: #047857;
+      border-top-left-radius: 16px;
+      border-bottom-left-radius: 16px;
+    }
+
+    .habit-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: #1c1917;
+      margin-bottom: 4px;
+    }
+
+    .habit-meta {
+      font-size: 13px;
+      color: #78716c;
+    }
+
+    .checkbox {
+      width: 28px;
+      height: 28px;
+      border: 2px solid #d6d3d1;
+      border-radius: 8px;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Animation Keyframes */
+
+    /* Variation 1: Standard Fade Up (Current) */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Variation 2: Accent Bar Slides In First */
+    @keyframes accentSlideIn {
+      0% {
+        transform: scaleY(0);
+        transform-origin: top;
+      }
+      100% {
+        transform: scaleY(1);
+        transform-origin: top;
+      }
+    }
+
+    @keyframes cardFadeAfterAccent {
+      0%, 30% {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Variation 3: Accent Bar Grows from Center */
+    @keyframes accentGrowCenter {
+      0% {
+        transform: scaleY(0);
+        transform-origin: center;
+      }
+      100% {
+        transform: scaleY(1);
+        transform-origin: center;
+      }
+    }
+
+    /* Variation 4: Card Slides from Left (Following Accent) */
+    @keyframes slideFromLeft {
+      0% {
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Variation 5: Accent Wipe + Content Reveal */
+    @keyframes accentWipe {
+      0% {
+        clip-path: inset(0 0 100% 0);
+      }
+      100% {
+        clip-path: inset(0 0 0 0);
+      }
+    }
+
+    @keyframes contentReveal {
+      0%, 40% {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Variation 6: Border Draws Around Card */
+    @keyframes borderDraw {
+      0% {
+        clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+      }
+      50% {
+        clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+      }
+      100% {
+        clip-path: polygon(0 0, 6px 0, 6px 100%, 0 100%);
+      }
+    }
+
+    .variation-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #a8a29e;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .variation-desc {
+      font-size: 13px;
+      color: #d6d3d1;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .play-btn {
+      background: #047857;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: background 0.2s;
+    }
+
+    .play-btn:hover {
+      background: #059669;
+    }
+
+    .section-title {
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+      color: #a8a29e;
+      font-size: 15px;
+      margin-bottom: 32px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .variation-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .recommendation-badge {
+      background: linear-gradient(135deg, #047857, #059669);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width: 1400px; margin: 0 auto;">
+    <h1 class="section-title">Empty → Habit Card Entrance Animations</h1>
+    <p class="section-subtitle">Click "Replay" to see each animation variation. Focus: Left accent bar integration.</p>
+
+    <div class="grid">
+
+      <!-- Variation 1: Current (Fade Up) -->
+      <div class="variation-card">
+        <div class="variation-label">Variation 1: Current (Fade Up)</div>
+        <div class="phone-frame" id="v1-frame">
+          <div class="habit-card" id="v1-card" style="opacity: 0;">
+            <div class="accent-bar"></div>
+            <div class="habit-title">Morning Meditation</div>
+            <div class="habit-meta">Daily at 7:00 AM</div>
+            <div class="checkbox"></div>
+          </div>
+        </div>
+        <p class="variation-desc">
+          <strong>Current behavior:</strong> Entire card fades up together. The accent bar appears instantly with the card, which can feel abrupt when transitioning from the empty state.
+        </p>
+        <button class="play-btn" onclick="playV1()">Replay Animation</button>
+      </div>
+
+      <!-- Variation 2: Accent Slides Down First -->
+      <div class="variation-card">
+        <div class="variation-label">Variation 2: Accent Slides Down First <span class="recommendation-badge">Recommended</span></div>
+        <div class="phone-frame" id="v2-frame">
+          <div class="habit-card" id="v2-card" style="opacity: 0;">
+            <div class="accent-bar" id="v2-accent" style="transform: scaleY(0); transform-origin: top;"></div>
+            <div id="v2-content" style="opacity: 0;">
+              <div class="habit-title">Morning Meditation</div>
+              <div class="habit-meta">Daily at 7:00 AM</div>
+              <div class="checkbox"></div>
+            </div>
+          </div>
+        </div>
+        <p class="variation-desc">
+          <strong>Accent bar leads:</strong> The green accent slides down first (150ms), then content fades in from left (300ms). Creates visual hierarchy and draws attention to the color coding.
+        </p>
+        <button class="play-btn" onclick="playV2()">Replay Animation</button>
+      </div>
+
+      <!-- Variation 3: Accent Grows from Center -->
+      <div class="variation-card">
+        <div class="variation-label">Variation 3: Accent Grows from Center</div>
+        <div class="phone-frame" id="v3-frame">
+          <div class="habit-card" id="v3-card" style="opacity: 0;">
+            <div class="accent-bar" id="v3-accent" style="transform: scaleY(0); transform-origin: center;"></div>
+            <div id="v3-content" style="opacity: 0;">
+              <div class="habit-title">Morning Meditation</div>
+              <div class="habit-meta">Daily at 7:00 AM</div>
+              <div class="checkbox"></div>
+            </div>
+          </div>
+        </div>
+        <p class="variation-desc">
+          <strong>Center expansion:</strong> Accent bar grows outward from center, then content reveals. More playful feel, good for celebratory moments.
+        </p>
+        <button class="play-btn" onclick="playV3()">Replay Animation</button>
+      </div>
+
+      <!-- Variation 4: Slide from Left -->
+      <div class="variation-card">
+        <div class="variation-label">Variation 4: Slide from Left</div>
+        <div class="phone-frame" id="v4-frame">
+          <div class="habit-card" id="v4-card" style="opacity: 0; transform: translateX(-40px);">
+            <div class="accent-bar"></div>
+            <div class="habit-title">Morning Meditation</div>
+            <div class="habit-meta">Daily at 7:00 AM</div>
+            <div class="checkbox"></div>
+          </div>
+        </div>
+        <p class="variation-desc">
+          <strong>Directional entrance:</strong> Card slides in from left, accent bar acts as the "leading edge". Creates strong directional flow but may feel too aggressive.
+        </p>
+        <button class="play-btn" onclick="playV4()">Replay Animation</button>
+      </div>
+
+      <!-- Variation 5: Card Border First, Then Fill -->
+      <div class="variation-card">
+        <div class="variation-label">Variation 5: Ghost Card → Accent → Content</div>
+        <div class="phone-frame" id="v5-frame">
+          <div class="habit-card" id="v5-card" style="opacity: 0; border: 2px solid #e7e5e4;">
+            <div class="accent-bar" id="v5-accent" style="opacity: 0;"></div>
+            <div id="v5-content" style="opacity: 0;">
+              <div class="habit-title">Morning Meditation</div>
+              <div class="habit-meta">Daily at 7:00 AM</div>
+              <div class="checkbox"></div>
+            </div>
+          </div>
+        </div>
+        <p class="variation-desc">
+          <strong>Three-stage reveal:</strong> Ghost card outline appears first, accent bar fills in, then content fades. Sophisticated but slower (500ms total).
+        </p>
+        <button class="play-btn" onclick="playV5()">Replay Animation</button>
+      </div>
+
+      <!-- Variation 6: Accent Bar Width Animation -->
+      <div class="variation-card">
+        <div class="variation-label">Variation 6: Accent Bar Expands Width</div>
+        <div class="phone-frame" id="v6-frame">
+          <div class="habit-card" id="v6-card" style="opacity: 0;">
+            <div class="accent-bar" id="v6-accent" style="width: 0;"></div>
+            <div id="v6-content" style="opacity: 0;">
+              <div class="habit-title">Morning Meditation</div>
+              <div class="habit-meta">Daily at 7:00 AM</div>
+              <div class="checkbox"></div>
+            </div>
+          </div>
+        </div>
+        <p class="variation-desc">
+          <strong>Width growth:</strong> Card fades in, then accent bar grows from 0 to 6px width. Subtle but adds polish without being distracting.
+        </p>
+        <button class="play-btn" onclick="playV6()">Replay Animation</button>
+      </div>
+
+    </div>
+
+    <!-- Recommendations Section -->
+    <div style="margin-top: 48px; background: rgba(4, 120, 87, 0.1); border: 1px solid rgba(4, 120, 87, 0.3); border-radius: 16px; padding: 24px;">
+      <h2 style="color: #10b981; font-size: 18px; font-weight: 600; margin-bottom: 12px;">Recommendations</h2>
+      <div style="color: #d6d3d1; line-height: 1.7;">
+        <p style="margin-bottom: 12px;"><strong style="color: white;">1. Variation 2 (Accent Slides Down First)</strong> - Best balance of visual interest and performance. The accent bar leading creates a natural visual anchor and emphasizes the color-coding feature. Duration: ~400ms total.</p>
+        <p style="margin-bottom: 12px;"><strong style="color: white;">2. Variation 6 (Width Expansion)</strong> - More subtle alternative. Good if you want minimal disruption to existing animation flow. The width animation is quick and adds polish without being distracting.</p>
+        <p><strong style="color: white;">Avoid:</strong> Variation 4 (Slide from Left) can feel too aggressive for a habit list, and Variation 5 adds too much latency for a common interaction.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Animation timing configurations
+    const SPRING_DURATION = 350;
+    const EASE_OUT = 'cubic-bezier(0.33, 1, 0.68, 1)';
+    const EASE_OUT_BACK = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+
+    function resetElement(el, styles) {
+      Object.assign(el.style, styles);
+    }
+
+    // Variation 1: Current (simple fade up)
+    function playV1() {
+      const card = document.getElementById('v1-card');
+      resetElement(card, { opacity: '0', transform: 'translateY(20px)', transition: 'none' });
+
+      requestAnimationFrame(() => {
+        card.style.transition = `opacity ${SPRING_DURATION}ms ${EASE_OUT}, transform ${SPRING_DURATION}ms ${EASE_OUT}`;
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      });
+    }
+
+    // Variation 2: Accent slides down first (RECOMMENDED)
+    function playV2() {
+      const card = document.getElementById('v2-card');
+      const accent = document.getElementById('v2-accent');
+      const content = document.getElementById('v2-content');
+
+      resetElement(card, { opacity: '0', transition: 'none' });
+      resetElement(accent, { transform: 'scaleY(0)', transformOrigin: 'top', transition: 'none' });
+      resetElement(content, { opacity: '0', transform: 'translateX(-10px)', transition: 'none' });
+
+      requestAnimationFrame(() => {
+        // Step 1: Card container fades in
+        card.style.transition = `opacity 150ms ${EASE_OUT}`;
+        card.style.opacity = '1';
+
+        // Step 2: Accent bar slides down (after 50ms)
+        setTimeout(() => {
+          accent.style.transition = `transform 250ms ${EASE_OUT_BACK}`;
+          accent.style.transform = 'scaleY(1)';
+        }, 50);
+
+        // Step 3: Content fades in from left (after 150ms)
+        setTimeout(() => {
+          content.style.transition = `opacity 300ms ${EASE_OUT}, transform 300ms ${EASE_OUT}`;
+          content.style.opacity = '1';
+          content.style.transform = 'translateX(0)';
+        }, 150);
+      });
+    }
+
+    // Variation 3: Accent grows from center
+    function playV3() {
+      const card = document.getElementById('v3-card');
+      const accent = document.getElementById('v3-accent');
+      const content = document.getElementById('v3-content');
+
+      resetElement(card, { opacity: '0', transition: 'none' });
+      resetElement(accent, { transform: 'scaleY(0)', transformOrigin: 'center', transition: 'none' });
+      resetElement(content, { opacity: '0', transition: 'none' });
+
+      requestAnimationFrame(() => {
+        card.style.transition = `opacity 150ms ${EASE_OUT}`;
+        card.style.opacity = '1';
+
+        setTimeout(() => {
+          accent.style.transition = `transform 300ms ${EASE_OUT_BACK}`;
+          accent.style.transform = 'scaleY(1)';
+        }, 50);
+
+        setTimeout(() => {
+          content.style.transition = `opacity 250ms ${EASE_OUT}`;
+          content.style.opacity = '1';
+        }, 200);
+      });
+    }
+
+    // Variation 4: Slide from left
+    function playV4() {
+      const card = document.getElementById('v4-card');
+      resetElement(card, { opacity: '0', transform: 'translateX(-40px)', transition: 'none' });
+
+      requestAnimationFrame(() => {
+        card.style.transition = `opacity ${SPRING_DURATION}ms ${EASE_OUT}, transform ${SPRING_DURATION}ms ${EASE_OUT_BACK}`;
+        card.style.opacity = '1';
+        card.style.transform = 'translateX(0)';
+      });
+    }
+
+    // Variation 5: Ghost card → accent → content
+    function playV5() {
+      const card = document.getElementById('v5-card');
+      const accent = document.getElementById('v5-accent');
+      const content = document.getElementById('v5-content');
+
+      resetElement(card, { opacity: '0', background: 'transparent', transition: 'none' });
+      resetElement(accent, { opacity: '0', transition: 'none' });
+      resetElement(content, { opacity: '0', transition: 'none' });
+
+      requestAnimationFrame(() => {
+        // Step 1: Ghost card outline appears
+        card.style.transition = `opacity 150ms ${EASE_OUT}`;
+        card.style.opacity = '1';
+
+        // Step 2: Card fills with white + accent appears
+        setTimeout(() => {
+          card.style.transition = `background 200ms ${EASE_OUT}`;
+          card.style.background = 'white';
+          accent.style.transition = `opacity 200ms ${EASE_OUT}`;
+          accent.style.opacity = '1';
+        }, 150);
+
+        // Step 3: Content fades in
+        setTimeout(() => {
+          content.style.transition = `opacity 200ms ${EASE_OUT}`;
+          content.style.opacity = '1';
+        }, 300);
+      });
+    }
+
+    // Variation 6: Accent bar width expansion
+    function playV6() {
+      const card = document.getElementById('v6-card');
+      const accent = document.getElementById('v6-accent');
+      const content = document.getElementById('v6-content');
+
+      resetElement(card, { opacity: '0', transform: 'translateY(20px)', transition: 'none' });
+      resetElement(accent, { width: '0', transition: 'none' });
+      resetElement(content, { opacity: '0', transition: 'none' });
+
+      requestAnimationFrame(() => {
+        // Step 1: Card fades up (without accent visible)
+        card.style.transition = `opacity ${SPRING_DURATION}ms ${EASE_OUT}, transform ${SPRING_DURATION}ms ${EASE_OUT}`;
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+        content.style.transition = `opacity ${SPRING_DURATION}ms ${EASE_OUT}`;
+        content.style.opacity = '1';
+
+        // Step 2: Accent bar width grows
+        setTimeout(() => {
+          accent.style.transition = `width 200ms ${EASE_OUT_BACK}`;
+          accent.style.width = '6px';
+        }, 200);
+      });
+    }
+
+    // Auto-play all animations on load with stagger
+    window.addEventListener('load', () => {
+      setTimeout(playV1, 500);
+      setTimeout(playV2, 700);
+      setTimeout(playV3, 900);
+      setTimeout(playV4, 1100);
+      setTimeout(playV5, 1300);
+      setTimeout(playV6, 1500);
+    });
+  </script>
+</body>
+</html>

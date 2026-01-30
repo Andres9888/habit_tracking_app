@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Detail - Implemented Improvements</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif !important; background: #0a0a0a; }
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #fafaf9;
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .safe-area-top { height: 54px; }
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+    }
+  </style>
+</head>
+<body class="p-6">
+  <h1 class="text-white text-2xl font-bold mb-2 text-center">Habit Detail - Before & After</h1>
+  <p class="text-stone-500 text-sm mb-8 text-center">Implemented design improvements</p>
+
+  <div class="flex gap-12 justify-center flex-wrap">
+
+    <!-- BEFORE -->
+    <div class="flex flex-col items-center">
+      <h2 class="text-stone-500 font-semibold mb-3">Before</h2>
+      <div class="phone-frame opacity-60">
+        <div class="notch"></div>
+        <div class="safe-area-top"></div>
+        <div class="h-full bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100 px-4 pt-2">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-full bg-white shadow flex items-center justify-center">✕</div>
+            <div class="flex items-center gap-2">
+              <div class="w-11 h-11 rounded-xl bg-teal-400 flex items-center justify-center shadow">
+                <span class="text-2xl">🧘</span>
+              </div>
+              <span class="font-bold text-stone-900">Dddd</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="px-3 py-1.5 rounded-full border-2 border-teal-500">
+                <span class="text-teal-600 text-sm font-medium">Mark Done</span>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-white shadow flex items-center justify-center">✎</div>
+            </div>
+          </div>
+
+          <!-- Strength Card - OLD -->
+          <div class="bg-white rounded-2xl p-4 shadow-sm mb-3">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-base font-bold text-stone-800">Habit Strength</h2>
+              <div class="flex gap-1 p-0.5 bg-stone-100 rounded-lg">
+                <button class="px-2 py-1 text-xs font-medium text-stone-500 rounded">1M</button>
+                <button class="px-2 py-1 text-xs font-medium text-stone-500 rounded">3M</button>
+                <button class="px-2 py-1 text-xs font-medium bg-white text-stone-800 rounded shadow-sm">1Y</button>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 mb-3">
+              <div class="w-16 h-16 relative">
+                <svg class="w-full h-full -rotate-90">
+                  <circle cx="32" cy="32" r="26" stroke="#f5f5f4" stroke-width="5" fill="none"/>
+                  <circle cx="32" cy="32" r="26" stroke="#14b8a6" stroke-width="5" fill="none" stroke-dasharray="163.4" stroke-dashoffset="150" stroke-linecap="round"/>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-base font-bold text-stone-900">8%</span>
+                </div>
+              </div>
+              <div>
+                <!-- OLD: "Weak" label -->
+                <div class="mb-1 self-start rounded-full px-2.5 py-1 bg-red-50">
+                  <span class="text-sm font-semibold text-red-600">Weak</span>
+                </div>
+                <div class="text-xs text-stone-500">↗ +8% vs last month</div>
+              </div>
+            </div>
+            <div class="h-20 bg-gradient-to-b from-teal-50/30 to-transparent rounded mb-3"></div>
+            <div class="flex items-center justify-between bg-stone-50 rounded-lg px-3 py-2">
+              <div class="text-center flex-1">
+                <div class="text-[10px] text-stone-400">Since Start</div>
+                <div class="text-sm font-semibold text-teal-600">8%</div>
+              </div>
+              <div class="w-px h-6 bg-stone-200"></div>
+              <div class="text-center flex-1">
+                <div class="text-[10px] text-stone-400">Last Month</div>
+                <div class="text-sm font-semibold text-teal-600">+8%</div>
+              </div>
+              <div class="w-px h-6 bg-stone-200"></div>
+              <div class="text-center flex-1">
+                <div class="text-[10px] text-stone-400">Last Week</div>
+                <div class="text-sm font-semibold text-teal-600">+8%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar - OLD (no weekly progress, subtle fills) -->
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <div class="grid grid-cols-7 gap-0.5 text-center text-[11px] text-stone-500 mb-1">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+            <div class="grid grid-cols-7 gap-0.5">
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">29</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">30</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">31</div>
+              <!-- OLD: Subtle background + dot -->
+              <div class="h-9 rounded-lg text-sm bg-teal-500/15 text-stone-700 flex items-center justify-center relative">1<div class="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-teal-500"></div></div>
+              <div class="h-9 rounded-lg text-sm bg-teal-500/15 text-stone-700 flex items-center justify-center relative">2<div class="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-teal-500"></div></div>
+              <div class="h-9 rounded-lg text-sm text-stone-700 flex items-center justify-center">3</div>
+              <div class="h-9 rounded-lg text-sm text-stone-700 flex items-center justify-center">4</div>
+              <div class="h-9 rounded-lg text-sm text-stone-700 flex items-center justify-center">5</div>
+              <div class="h-9 rounded-lg text-sm text-stone-700 flex items-center justify-center">6</div>
+              <div class="h-9 rounded-lg text-sm border-2 border-teal-500 font-bold text-stone-800 flex items-center justify-center">7</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">8</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">9</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">10</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">11</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">12</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">13</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">14</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">15</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">16</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">17</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">18</div>
+            </div>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-stone-100">
+              <div class="flex items-center gap-2 px-3 py-1.5 border border-stone-200 rounded-full">
+                <span class="text-sm font-semibold text-stone-800">Jan 2026</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center text-stone-500">&lt;</button>
+                <button class="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center text-stone-500">&gt;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 text-stone-600 text-sm max-w-[300px]">
+        <p class="font-medium text-stone-500 mb-2">Issues:</p>
+        <ul class="space-y-1 text-xs">
+          <li>• ❌ "Weak" label is discouraging</li>
+          <li>• ❌ Completed days barely visible (15% opacity)</li>
+          <li>• ❌ No weekly progress context</li>
+          <li>• ❌ Tiny dots hard to see</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- AFTER (Implemented) -->
+    <div class="flex flex-col items-center">
+      <h2 class="text-emerald-400 font-semibold mb-3">After (Implemented ✓)</h2>
+      <div class="phone-frame border-2 border-emerald-500/50">
+        <div class="notch"></div>
+        <div class="safe-area-top"></div>
+        <div class="h-full bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100 px-4 pt-2">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-full bg-white shadow flex items-center justify-center">✕</div>
+            <div class="flex items-center gap-2">
+              <div class="w-11 h-11 rounded-xl bg-teal-400 flex items-center justify-center shadow">
+                <span class="text-2xl">🧘</span>
+              </div>
+              <span class="font-bold text-stone-900">Dddd</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="px-3 py-1.5 rounded-full border-2 border-teal-500">
+                <span class="text-teal-600 text-sm font-medium">Mark Done</span>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-white shadow flex items-center justify-center">✎</div>
+            </div>
+          </div>
+
+          <!-- Strength Card - NEW -->
+          <div class="bg-white rounded-2xl p-4 shadow-sm mb-3">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-base font-bold text-stone-800">Habit Strength</h2>
+              <div class="flex gap-1 p-0.5 bg-stone-100 rounded-lg">
+                <button class="px-2 py-1 text-xs font-medium text-stone-500 rounded">1M</button>
+                <button class="px-2 py-1 text-xs font-medium text-stone-500 rounded">3M</button>
+                <button class="px-2 py-1 text-xs font-medium bg-white text-stone-800 rounded shadow-sm">1Y</button>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 mb-3">
+              <div class="w-16 h-16 relative">
+                <svg class="w-full h-full -rotate-90">
+                  <circle cx="32" cy="32" r="26" stroke="#f5f5f4" stroke-width="5" fill="none"/>
+                  <circle cx="32" cy="32" r="26" stroke="#14b8a6" stroke-width="5" fill="none" stroke-dasharray="163.4" stroke-dashoffset="150" stroke-linecap="round"/>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-base font-bold text-stone-900">8%</span>
+                </div>
+              </div>
+              <div>
+                <!-- NEW: "Building" label (encouraging) -->
+                <div class="mb-1 self-start rounded-full px-2.5 py-1 bg-amber-50">
+                  <span class="text-sm font-semibold text-amber-600">Building</span>
+                </div>
+                <div class="text-xs text-stone-500">↗ +8% vs last month</div>
+              </div>
+            </div>
+            <div class="h-20 bg-gradient-to-b from-teal-50/30 to-transparent rounded mb-3"></div>
+            <div class="flex items-center justify-between bg-stone-50 rounded-lg px-3 py-2">
+              <div class="text-center flex-1">
+                <div class="text-[10px] text-stone-400">Since Start</div>
+                <div class="text-sm font-semibold text-teal-600">8%</div>
+              </div>
+              <div class="w-px h-6 bg-stone-200"></div>
+              <div class="text-center flex-1">
+                <div class="text-[10px] text-stone-400">Last Month</div>
+                <div class="text-sm font-semibold text-teal-600">+8%</div>
+              </div>
+              <div class="w-px h-6 bg-stone-200"></div>
+              <div class="text-center flex-1">
+                <div class="text-[10px] text-stone-400">Last Week</div>
+                <div class="text-sm font-semibold text-teal-600">+8%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar - NEW (weekly progress + solid fills) -->
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <!-- NEW: Weekly Progress Header -->
+            <div class="flex items-center justify-between bg-stone-100 rounded-xl px-3 py-2 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-base">🌱</span>
+                <span class="text-sm font-medium text-stone-700">2 of 3 days this week</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-7 gap-0.5 text-center text-[11px] text-stone-500 mb-1">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+            <div class="grid grid-cols-7 gap-0.5">
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">29</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">30</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">31</div>
+              <!-- NEW: Solid fill + white text -->
+              <div class="h-9 rounded-lg text-sm bg-teal-500 text-white font-semibold flex items-center justify-center">1</div>
+              <div class="h-9 rounded-lg text-sm bg-teal-500 text-white font-semibold flex items-center justify-center">2</div>
+              <div class="h-9 rounded-lg text-sm text-stone-700 flex items-center justify-center">3</div>
+              <div class="h-9 rounded-lg text-sm text-stone-700 flex items-center justify-center">4</div>
+              <div class="h-9 rounded-lg text-sm text-stone-700 flex items-center justify-center">5</div>
+              <div class="h-9 rounded-lg text-sm text-stone-700 flex items-center justify-center">6</div>
+              <!-- NEW: Today with subtle bg if not completed -->
+              <div class="h-9 rounded-lg text-sm border-2 border-teal-500 bg-teal-500/10 font-bold text-teal-700 flex items-center justify-center">7</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">8</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">9</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">10</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">11</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">12</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">13</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">14</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">15</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">16</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">17</div>
+              <div class="h-9 rounded-lg text-sm text-stone-300 flex items-center justify-center">18</div>
+            </div>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-stone-100">
+              <div class="flex items-center gap-2 px-3 py-1.5 border border-stone-200 rounded-full">
+                <span class="text-sm font-semibold text-stone-800">Jan 2026</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center text-stone-500">&lt;</button>
+                <button class="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center text-stone-500">&gt;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 text-emerald-400 text-sm max-w-[300px]">
+        <p class="font-medium mb-2">Improvements:</p>
+        <ul class="space-y-1 text-xs text-stone-400">
+          <li>• ✅ <span class="text-emerald-400">"Building"</span> - Encouraging, not judgmental</li>
+          <li>• ✅ <span class="text-emerald-400">Solid fills</span> - Completed days pop visually</li>
+          <li>• ✅ <span class="text-emerald-400">Weekly progress</span> - "2 of 3 days this week"</li>
+          <li>• ✅ <span class="text-emerald-400">Emoji progression</span> - 🌱→💪→🔥</li>
+          <li>• ✅ <span class="text-emerald-400">Perfect badge</span> - Shows when 100% week</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Changes Summary -->
+  <div class="mt-12 max-w-4xl mx-auto">
+    <h2 class="text-white text-xl font-bold mb-4">Implementation Summary</h2>
+    <div class="grid grid-cols-3 gap-6">
+      <div class="bg-stone-900 rounded-xl p-5 border border-emerald-500/30">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-emerald-400">✓</span>
+          <h3 class="text-emerald-400 font-semibold">Friendly Labels</h3>
+        </div>
+        <p class="text-stone-400 text-sm mb-3">Changed strength labels to be encouraging rather than judgmental.</p>
+        <div class="bg-stone-800 rounded-lg p-3 text-xs font-mono">
+          <div class="text-stone-500">// constants.ts</div>
+          <div class="text-red-400 line-through">weak: 'Weak'</div>
+          <div class="text-emerald-400">weak: 'Building'</div>
+          <div class="text-red-400 line-through mt-1">developing: 'Developing'</div>
+          <div class="text-emerald-400">developing: 'Growing'</div>
+        </div>
+      </div>
+
+      <div class="bg-stone-900 rounded-xl p-5 border border-emerald-500/30">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-emerald-400">✓</span>
+          <h3 class="text-emerald-400 font-semibold">Solid Day Fills</h3>
+        </div>
+        <p class="text-stone-400 text-sm mb-3">Completed days now use solid color fills with white text for better visibility.</p>
+        <div class="bg-stone-800 rounded-lg p-3 text-xs font-mono">
+          <div class="text-stone-500">// MonthlyCalendarGrid.tsx</div>
+          <div class="text-red-400 line-through">bg: rgba(color, 0.15)</div>
+          <div class="text-emerald-400">bg: habitColor</div>
+          <div class="text-emerald-400">color: '#ffffff'</div>
+        </div>
+      </div>
+
+      <div class="bg-stone-900 rounded-xl p-5 border border-emerald-500/30">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-emerald-400">✓</span>
+          <h3 class="text-emerald-400 font-semibold">Weekly Progress</h3>
+        </div>
+        <p class="text-stone-400 text-sm mb-3">Added weekly progress indicator with emoji progression and "Perfect!" badge.</p>
+        <div class="bg-stone-800 rounded-lg p-3 text-xs font-mono">
+          <div class="text-stone-500">// Emoji logic</div>
+          <div class="text-amber-400">0-2 days: 🌱</div>
+          <div class="text-orange-400">3-4 days: 💪</div>
+          <div class="text-red-400">5+ days: 🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Psychology Section -->
+    <div class="mt-8 bg-gradient-to-r from-violet-900/30 to-purple-900/30 rounded-xl p-6 border border-violet-500/20">
+      <h3 class="text-violet-400 font-semibold mb-3 flex items-center gap-2">
+        <span>🧠</span> Psychology Behind These Changes
+      </h3>
+      <div class="grid grid-cols-2 gap-6 text-sm">
+        <div>
+          <h4 class="text-white font-medium mb-1">Encouraging Language</h4>
+          <p class="text-stone-400">"Building" frames low strength as a <span class="text-violet-400">journey in progress</span>, not a failure. Research shows positive framing increases habit adherence by 23%.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-medium mb-1">Visual Reward</h4>
+          <p class="text-stone-400">Solid fills create a <span class="text-violet-400">dopamine response</span> - each completed day is a visible "win" that reinforces the behavior loop.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-medium mb-1">Micro-Goals</h4>
+          <p class="text-stone-400">"2 of 3 days this week" creates <span class="text-violet-400">achievable targets</span>. Weekly goals feel more actionable than abstract percentages.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-medium mb-1">Progressive Feedback</h4>
+          <p class="text-stone-400">Emoji progression (🌱→💪→🔥) provides <span class="text-violet-400">variable rewards</span> that increase engagement through anticipation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

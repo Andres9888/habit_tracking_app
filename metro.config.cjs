@@ -50,6 +50,9 @@ config.resolver = {
     /\/design-mockups\/.*/,
     /\/HabitHome-FigmaCode\/.*/,
     /\/worktrees\/.*/,
+    /\/\.worktrees\/.*/,
+    /\/superdesign\/.*/,
+    /\/\.superdesign\/.*/,
   ],
 };
 

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Auth - Before & After</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #1a1a1a !important; }
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: white;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #1a1a1a;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+    .status-bar {
+      height: 44px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .btn-apple {
+      background: #000;
+      color: white;
+    }
+    .btn-google {
+      background: white;
+      border: 1px solid #e7e5e4;
+      color: #1c1917;
+    }
+    .btn-primary {
+      background: #1c1917;
+      color: white;
+    }
+    .btn-secondary {
+      background: white;
+      border: 1px solid #e7e5e4;
+      color: #1c1917;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e7e5e4;
+    }
+    .label-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ef4444;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .label-badge.green {
+      background: #22c55e;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold text-white mb-2 text-center">Social Authentication UI</h1>
+    <p class="text-stone-400 text-center mb-12">Daily Habits App - Clerk Social Login Integration</p>
+
+    <div class="flex flex-wrap justify-center gap-12">
+
+      <!-- BEFORE: Current Welcome Screen -->
+      <div class="relative">
+        <div class="label-badge">BEFORE (Current)</div>
+        <div class="phone-frame">
+          <div class="status-bar">
+            <span class="text-xs font-medium">9:41</span>
+            <div class="flex gap-1">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 019 9h-2a7 7 0 00-7-7V3z"/></svg>
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/></svg>
+            </div>
+          </div>
+
+          <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-16 pb-16 justify-between">
+            <!-- Hero -->
+            <div class="flex flex-col items-center gap-4">
+              <span class="text-7xl mb-4">✓</span>
+              <h1 class="text-4xl font-extrabold tracking-tight text-stone-800 text-center">
+                Habit Tracker
+              </h1>
+              <p class="text-lg text-stone-500 text-center leading-7">
+                Build better habits, one day at a time
+              </p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex flex-col gap-4">
+              <button class="btn-primary py-4 rounded-3xl font-semibold tracking-widest text-sm">
+                GET STARTED
+              </button>
+              <button class="btn-secondary py-4 rounded-3xl font-semibold tracking-widest text-sm">
+                SIGN IN
+              </button>
+            </div>
+          </div>
+        </div>
+        <p class="text-stone-500 text-center mt-4 text-sm">Only email/password auth</p>
+      </div>
+
+      <!-- AFTER: With Social Login -->
+      <div class="relative">
+        <div class="label-badge green">AFTER (With Social)</div>
+        <div class="phone-frame">
+          <div class="status-bar">
+            <span class="text-xs font-medium">9:41</span>
+            <div class="flex gap-1">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 019 9h-2a7 7 0 00-7-7V3z"/></svg>
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/></svg>
+            </div>
+          </div>
+
+          <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-16 pb-16 justify-between">
+            <!-- Hero -->
+            <div class="flex flex-col items-center gap-4">
+              <span class="text-7xl mb-4">✓</span>
+              <h1 class="text-4xl font-extrabold tracking-tight text-stone-800 text-center">
+                Habit Tracker
+              </h1>
+              <p class="text-lg text-stone-500 text-center leading-7">
+                Build better habits, one day at a time
+              </p>
+            </div>
+
+            <!-- Social + Email Buttons -->
+            <div class="flex flex-col gap-3">
+              <!-- Social Buttons -->
+              <button class="btn-apple py-4 rounded-3xl font-semibold text-base flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                Continue with Apple
+              </button>
+
+              <button class="btn-google py-4 rounded-3xl font-semibold text-base flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continue with Google
+              </button>
+
+              <!-- Divider -->
+              <div class="divider text-xs text-stone-400 font-medium tracking-widest my-2">
+                OR
+              </div>
+
+              <!-- Email Buttons -->
+              <button class="btn-primary py-4 rounded-3xl font-semibold tracking-widest text-sm">
+                GET STARTED
+              </button>
+              <button class="btn-secondary py-4 rounded-3xl font-semibold tracking-widest text-sm">
+                SIGN IN
+              </button>
+            </div>
+          </div>
+        </div>
+        <p class="text-stone-500 text-center mt-4 text-sm">Social + email/password auth</p>
+      </div>
+
+    </div>
+
+    <!-- Sign In Screen Comparison -->
+    <h2 class="text-2xl font-bold text-white mt-16 mb-8 text-center">Sign In Screen</h2>
+
+    <div class="flex flex-wrap justify-center gap-12">
+
+      <!-- BEFORE: Current Sign In -->
+      <div class="relative">
+        <div class="label-badge">BEFORE</div>
+        <div class="phone-frame">
+          <div class="status-bar">
+            <span class="text-xs font-medium">9:41</span>
+            <div class="flex gap-1">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 019 9h-2a7 7 0 00-7-7V3z"/></svg>
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/></svg>
+            </div>
+          </div>
+
+          <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-16">
+            <!-- Back button -->
+            <button class="text-stone-800 font-semibold text-base mb-8 text-left">← Back</button>
+
+            <!-- Header -->
+            <h1 class="text-3xl font-extrabold tracking-tight text-stone-900 mb-2">
+              Sign In
+            </h1>
+            <p class="text-base text-stone-500 mb-10">
+              Welcome back to Daily Habits
+            </p>
+
+            <!-- Form -->
+            <div class="flex flex-col gap-6">
+              <div>
+                <label class="text-xs font-semibold tracking-widest text-stone-500 mb-2 block">EMAIL</label>
+                <input type="email" placeholder="Enter your email" class="w-full py-3 px-4 border border-stone-200 rounded-xl text-base">
+              </div>
+
+              <div>
+                <label class="text-xs font-semibold tracking-widest text-stone-500 mb-2 block">PASSWORD</label>
+                <input type="password" placeholder="Enter your password" class="w-full py-3 px-4 border border-stone-200 rounded-xl text-base">
+              </div>
+
+              <button class="btn-primary py-4 rounded-3xl font-semibold tracking-widest text-sm mt-2">
+                SIGN IN
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER: Sign In with Social -->
+      <div class="relative">
+        <div class="label-badge green">AFTER</div>
+        <div class="phone-frame">
+          <div class="status-bar">
+            <span class="text-xs font-medium">9:41</span>
+            <div class="flex gap-1">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 019 9h-2a7 7 0 00-7-7V3z"/></svg>
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/></svg>
+            </div>
+          </div>
+
+          <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-16">
+            <!-- Back button -->
+            <button class="text-stone-800 font-semibold text-base mb-8 text-left">← Back</button>
+
+            <!-- Header -->
+            <h1 class="text-3xl font-extrabold tracking-tight text-stone-900 mb-2">
+              Sign In
+            </h1>
+            <p class="text-base text-stone-500 mb-8">
+              Welcome back to Daily Habits
+            </p>
+
+            <!-- Social Buttons -->
+            <div class="flex flex-col gap-3 mb-4">
+              <button class="btn-apple py-3.5 rounded-3xl font-semibold text-sm flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                Continue with Apple
+              </button>
+
+              <button class="btn-google py-3.5 rounded-3xl font-semibold text-sm flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continue with Google
+              </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider text-xs text-stone-400 font-medium tracking-widest my-3">
+              OR
+            </div>
+
+            <!-- Form -->
+            <div class="flex flex-col gap-5">
+              <div>
+                <label class="text-xs font-semibold tracking-widest text-stone-500 mb-2 block">EMAIL</label>
+                <input type="email" placeholder="Enter your email" class="w-full py-3 px-4 border border-stone-200 rounded-xl text-base">
+              </div>
+
+              <div>
+                <label class="text-xs font-semibold tracking-widest text-stone-500 mb-2 block">PASSWORD</label>
+                <input type="password" placeholder="Enter your password" class="w-full py-3 px-4 border border-stone-200 rounded-xl text-base">
+              </div>
+
+              <button class="btn-primary py-4 rounded-3xl font-semibold tracking-widest text-sm">
+                SIGN IN
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Loading & Error States -->
+    <h2 class="text-2xl font-bold text-white mt-16 mb-8 text-center">Loading & Error States</h2>
+
+    <div class="flex flex-wrap justify-center gap-12">
+
+      <!-- Loading State -->
+      <div class="relative">
+        <div class="label-badge" style="background: #3b82f6;">LOADING</div>
+        <div class="phone-frame">
+          <div class="status-bar">
+            <span class="text-xs font-medium">9:41</span>
+          </div>
+
+          <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-16 pb-16 justify-between">
+            <div class="flex flex-col items-center gap-4">
+              <span class="text-7xl mb-4">✓</span>
+              <h1 class="text-4xl font-extrabold tracking-tight text-stone-800 text-center">
+                Habit Tracker
+              </h1>
+              <p class="text-lg text-stone-500 text-center leading-7">
+                Build better habits, one day at a time
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-3">
+              <!-- Loading Apple Button -->
+              <button class="btn-apple py-4 rounded-3xl font-semibold text-base flex items-center justify-center gap-3 opacity-60" disabled>
+                <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+                  <path d="M12 2a10 10 0 0 1 10 10" stroke-opacity="1"/>
+                </svg>
+                Signing in...
+              </button>
+
+              <button class="btn-google py-4 rounded-3xl font-semibold text-base flex items-center justify-center gap-3 opacity-40" disabled>
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continue with Google
+              </button>
+
+              <div class="divider text-xs text-stone-400 font-medium tracking-widest my-2">OR</div>
+
+              <button class="btn-primary py-4 rounded-3xl font-semibold tracking-widest text-sm opacity-40" disabled>
+                GET STARTED
+              </button>
+              <button class="btn-secondary py-4 rounded-3xl font-semibold tracking-widest text-sm opacity-40" disabled>
+                SIGN IN
+              </button>
+            </div>
+          </div>
+        </div>
+        <p class="text-stone-500 text-center mt-4 text-sm">During OAuth redirect</p>
+      </div>
+
+      <!-- Error State -->
+      <div class="relative">
+        <div class="label-badge">ERROR</div>
+        <div class="phone-frame">
+          <div class="status-bar">
+            <span class="text-xs font-medium">9:41</span>
+          </div>
+
+          <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-16 pb-16 justify-between">
+            <div class="flex flex-col items-center gap-4">
+              <span class="text-7xl mb-4">✓</span>
+              <h1 class="text-4xl font-extrabold tracking-tight text-stone-800 text-center">
+                Habit Tracker
+              </h1>
+              <p class="text-lg text-stone-500 text-center leading-7">
+                Build better habits, one day at a time
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-3">
+              <!-- Error Banner -->
+              <div class="bg-red-50 rounded-2xl p-4 mb-2">
+                <div class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                    <path stroke-width="2" d="M12 8v4m0 4h.01"/>
+                  </svg>
+                  <div class="flex-1">
+                    <p class="text-sm text-red-800">Sign in was cancelled</p>
+                    <button class="text-sm font-medium text-red-600 mt-1">Dismiss</button>
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn-apple py-4 rounded-3xl font-semibold text-base flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                Continue with Apple
+              </button>
+
+              <button class="btn-google py-4 rounded-3xl font-semibold text-base flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continue with Google
+              </button>
+
+              <div class="divider text-xs text-stone-400 font-medium tracking-widest my-2">OR</div>
+
+              <button class="btn-primary py-4 rounded-3xl font-semibold tracking-widest text-sm">
+                GET STARTED
+              </button>
+              <button class="btn-secondary py-4 rounded-3xl font-semibold tracking-widest text-sm">
+                SIGN IN
+              </button>
+            </div>
+          </div>
+        </div>
+        <p class="text-stone-500 text-center mt-4 text-sm">User cancelled or error occurred</p>
+      </div>
+
+    </div>
+
+    <!-- Component Specs -->
+    <div class="mt-16 bg-stone-800/50 rounded-2xl p-8 max-w-2xl mx-auto">
+      <h3 class="text-xl font-bold text-white mb-4">Component Specifications</h3>
+      <div class="space-y-4 text-sm">
+        <div class="flex justify-between border-b border-stone-700 pb-2">
+          <span class="text-stone-400">Apple Button</span>
+          <span class="text-white font-mono">bg-black, text-white, rounded-3xl, py-4</span>
+        </div>
+        <div class="flex justify-between border-b border-stone-700 pb-2">
+          <span class="text-stone-400">Google Button</span>
+          <span class="text-white font-mono">bg-white, border-stone-200, rounded-3xl, py-4</span>
+        </div>
+        <div class="flex justify-between border-b border-stone-700 pb-2">
+          <span class="text-stone-400">Divider</span>
+          <span class="text-white font-mono">h-px bg-stone-200, "OR" text-stone-400</span>
+        </div>
+        <div class="flex justify-between border-b border-stone-700 pb-2">
+          <span class="text-stone-400">Error Banner</span>
+          <span class="text-white font-mono">bg-red-50, text-red-800, rounded-2xl</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-stone-400">Loading State</span>
+          <span class="text-white font-mono">opacity-40 (disabled), spinner in active btn</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-stone-600 text-center mt-8 text-xs">
+      Mock created for Daily Habits App • Clerk Social Auth Integration
+    </p>
+  </div>
+</body>
+</html>

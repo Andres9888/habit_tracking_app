@@ -1,4 +1,4 @@
-import { DayStatus } from './StreakChain';
+import type { DayStatus } from './StreakChain.types';
 
 export const useStreakChainLogic = (
   statuses: DayStatus[],

@@ -1,0 +1,77 @@
+{
+  "complexity": "simple",
+  "workflow_type": "simple",
+  "confidence": 0.30,
+  "reasoning": "Task description 'test' is too vague to assess accurately. No specific feature, requirements, acceptance criteria, or scope defined. Cannot determine actual complexity without clarification from user.",
+
+  "analysis": {
+    "scope": {
+      "estimated_files": 0,
+      "estimated_services": 0,
+      "is_cross_cutting": false,
+      "notes": "Cannot estimate scope - task is undefined. 'test' could mean anything from running existing tests to adding test infrastructure."
+    },
+    "integrations": {
+      "external_services": [],
+      "new_dependencies": [],
+      "research_needed": false,
+      "notes": "No integrations can be identified without clear requirements."
+    },
+    "infrastructure": {
+      "docker_changes": false,
+      "database_changes": false,
+      "config_changes": false,
+      "notes": "Cannot assess infrastructure impact - requirements are undefined."
+    },
+    "knowledge": {
+      "patterns_exist": true,
+      "research_required": false,
+      "unfamiliar_tech": [],
+      "notes": "Project uses Jest for testing with existing test directories (tests/, __tests__/). If this refers to testing, patterns exist."
+    },
+    "risk": {
+      "level": "low",
+      "concerns": [
+        "Requirements are completely undefined",
+        "Cannot validate implementation without acceptance criteria",
+        "May waste effort implementing wrong thing"
+      ],
+      "notes": "Primary risk is scope creep or misalignment due to undefined requirements. Task should not proceed without clarification."
+    }
+  },
+
+  "recommended_phases": [
+    "discovery",
+    "quick_spec",
+    "validation"
+  ],
+
+  "flags": {
+    "needs_research": false,
+    "needs_self_critique": false,
+    "needs_infrastructure_setup": false,
+    "needs_requirement_clarification": true
+  },
+
+  "validation_recommendations": {
+    "risk_level": "trivial",
+    "skip_validation": true,
+    "minimal_mode": true,
+    "test_types_required": [],
+    "security_scan_required": false,
+    "staging_deployment_required": false,
+    "reasoning": "Cannot determine validation requirements without knowing what 'test' means. Current requirements are insufficient - task should be blocked pending clarification. If this is a placeholder task, validation can be skipped entirely."
+  },
+
+  "blockers": {
+    "requires_user_clarification": true,
+    "clarification_needed": [
+      "What specific feature or functionality is 'test' referring to?",
+      "What are the acceptance criteria for this task?",
+      "Which parts of the codebase should be affected?",
+      "Is this a placeholder task or an actual implementation request?"
+    ]
+  },
+
+  "created_at": "2025-01-05T12:00:00.000Z"
+}

@@ -1,0 +1,1 @@
+export { SignUpHeader } from './SignUpHeader';
