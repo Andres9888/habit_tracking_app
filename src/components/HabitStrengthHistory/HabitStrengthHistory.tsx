@@ -2,32 +2,18 @@
  * HabitStrengthHistory Component
  *
  * Main container that composes all Habit Strength History sub-components.
- * Displays habit strength evolution using exponential smoothing algorithm.
  */
 
 import React from 'react';
-import Animated, {
-  FadeIn,
-  FadeInUp,
-  useReducedMotion,
-} from 'react-native-reanimated';
+import { useReducedMotion } from 'react-native-reanimated';
 
 import { useHabitStrength } from '../../hooks/useHabitStrength';
+import { HabitStrengthInfoModal } from '../HabitStrengthInfoModal';
 import { EmptyStrengthState } from './EmptyStrengthState';
 import { HabitStrengthHistorySkeleton } from './HabitStrengthHistorySkeleton';
-import { SectionHeader } from './SectionHeader';
-import { StrengthComparisonCards } from './StrengthComparisonCards';
-import { StrengthTimelineChart } from './StrengthTimelineChart';
-import { StrengthInsightsRow } from './StrengthInsightsRow';
+import { HabitStrengthHistoryContent } from './HabitStrengthHistoryContent';
+import { useInfoModal } from './useInfoModal';
 import type { HabitStrengthHistoryProps } from './types';
-
-const SECTION_FADE_DURATION = 400;
-const SECTION_SLIDE_DURATION = 400;
-const SECTION_SLIDE_DELAY = 200;
-
-const handleInfoPress = () => {
-  // TODO: Show info modal explaining habit strength calculation
-};
 
 export function HabitStrengthHistory({
   habitId: _habitId,
@@ -35,6 +21,7 @@ export function HabitStrengthHistory({
   habitCreatedAt,
   habitColor,
 }: HabitStrengthHistoryProps) {
+  const infoModal = useInfoModal();
   const shouldReduceMotion = useReducedMotion();
   const { currentStrength, strengthHistory, metrics, isCalculating } =
     useHabitStrength(completedDates, habitCreatedAt);
@@ -49,46 +36,35 @@ export function HabitStrengthHistory({
 
   if (completedDates.size === 0) {
     return (
-      <EmptyStrengthState
-        habitAgeDays={metrics.habitAgeDays}
-        reduceMotion={shouldReduceMotion ?? false}
-        onInfoPress={handleInfoPress}
-      />
+      <>
+        <EmptyStrengthState
+          habitAgeDays={metrics.habitAgeDays}
+          reduceMotion={shouldReduceMotion ?? false}
+          onInfoPress={infoModal.show}
+        />
+        <HabitStrengthInfoModal
+          visible={infoModal.visible}
+          onClose={infoModal.hide}
+        />
+      </>
     );
   }
 
-  const slideUpEntering = shouldReduceMotion
-    ? FadeIn.duration(SECTION_FADE_DURATION)
-    : FadeInUp.duration(SECTION_SLIDE_DURATION).delay(SECTION_SLIDE_DELAY);
-
   return (
-    <Animated.View
-      accessible
-      accessibilityLabel='Habit strength history section'
-      accessibilityRole='none'
-      className='gap-4'
-      entering={slideUpEntering}
-      testID='habit-strength-history'
-    >
-      <SectionHeader title='Strength History' onInfoPress={handleInfoPress} />
-      <StrengthComparisonCards
+    <>
+      <HabitStrengthHistoryContent
         completedDates={completedDates}
-        current={currentStrength}
-        deltaVsMonth={metrics.deltaVsMonth}
-        habitAgeDays={metrics.habitAgeDays}
-        oneYearAgo={metrics.oneYearAgo}
-        thirtyDaysAgo={metrics.thirtyDaysAgo}
-      />
-      <StrengthTimelineChart
+        currentStrength={currentStrength}
         habitColor={habitColor}
+        metrics={metrics}
         strengthHistory={strengthHistory}
+        onInfoPress={infoModal.show}
       />
-      <StrengthInsightsRow
-        deltaVsMonth={metrics.deltaVsMonth}
-        lowest={metrics.lowest}
-        peak={metrics.peak}
+      <HabitStrengthInfoModal
+        visible={infoModal.visible}
+        onClose={infoModal.hide}
       />
-    </Animated.View>
+    </>
   );
 }
 
