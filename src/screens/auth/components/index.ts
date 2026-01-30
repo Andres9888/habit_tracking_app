@@ -7,6 +7,7 @@ export { ForgotPasswordModal } from './ForgotPasswordModal';
 export { FormInput } from './FormInput';
 export { HeroAnimation } from './HeroAnimation';
 export { PasswordInput } from './PasswordInput';
+export { SignInLink } from './SignInLink';
 export { SocialProofBadge } from './SocialProofBadge';
 export { SocialSignInButton } from './SocialSignInButton';
 export { SubmitButton } from './SubmitButton';
