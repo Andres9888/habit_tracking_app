@@ -9,6 +9,7 @@ import * as Haptics from 'expo-haptics';
 import { X } from 'lucide-react-native';
 
 import CustomModal from '../../../../components/Modal';
+import ErrorBoundary from '../../../../components/ErrorBoundary';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
 
@@ -40,7 +41,9 @@ export function TemplatesModalSection({
       onClose={handleClose}
     >
       <View className='flex-1' style={{ paddingTop: insets.top }}>
-        <TemplatesScreen />
+        <ErrorBoundary>
+          <TemplatesScreen />
+        </ErrorBoundary>
         <View className='absolute right-4' style={{ top: insets.top + 8 }}>
           <AnimatedPressable
             accessibilityLabel='Close templates'

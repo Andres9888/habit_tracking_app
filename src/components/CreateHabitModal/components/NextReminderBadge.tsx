@@ -72,14 +72,14 @@ export const NextReminderBadge = ({
   reminderTime,
   enabled,
 }: NextReminderBadgeProps) => {
+  // Memoize the text computation - must be called before any early returns
+  // to follow React's rules of hooks (consistent hook call order)
+  const text = useMemo(() => getNextReminderText(reminderTime), [reminderTime]);
+
   // Don't render if reminders are disabled
   if (!enabled) {
     return null;
   }
-
-  // Memoize the text computation
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const text = useMemo(() => getNextReminderText(reminderTime), [reminderTime]);
 
   return (
     <Animated.View

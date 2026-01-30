@@ -13,18 +13,18 @@
  * ```
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { AccessibilityInfo, Pressable, Text, View } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { Pressable, Text, View } from 'react-native';
 
 import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from 'react-native-reanimated';
 
-import { COLORS, TIME_RANGE_OPTIONS } from './constants';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { TIME_RANGE_OPTIONS } from './constants';
 import type { TimeRange, TimeRangeToggleProps } from './types';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -36,20 +36,15 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
   value,
   onChange,
 }: TimeRangeToggleProps) {
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const reduceMotion = useReduceMotion();
 
-  // Check for reduce motion preference
-  useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
-  }, []);
-
-  // Calculate selected index for indicator position
-  const selectedIndex = TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value);
+  // Calculate selected index for indicator position (default to 0 if not found)
+  const selectedIndex = Math.max(0, TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value));
   const indicatorPosition = useSharedValue(selectedIndex);
 
   // Update indicator position when value changes
   useEffect(() => {
-    const newIndex = TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value);
+    const newIndex = Math.max(0, TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value));
     if (reduceMotion) {
       indicatorPosition.value = newIndex;
     } else {
@@ -73,9 +68,13 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
   // Width of each pill segment (fixed width for consistent spacing)
   const segmentWidth = 44;
 
-  const indicatorStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: indicatorPosition.value * segmentWidth }],
-  }));
+  const indicatorStyle = useAnimatedStyle(() => {
+    'worklet';
+    const position = indicatorPosition.value ?? 0;
+    return {
+      transform: [{ translateX: position * segmentWidth }],
+    };
+  });
 
   return (
     <View

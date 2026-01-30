@@ -24,3 +24,6 @@ export const useScienceModal = ({ onSelectTemplate }: UseScienceModalOptions) =>
 
   return { isVisible, template, open, close, useTemplate };
 };
+
+/** Type for the return value of useScienceModal */
+export type UseScienceModal = ReturnType<typeof useScienceModal>;

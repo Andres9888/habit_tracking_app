@@ -24,7 +24,7 @@ export const GridRow = memo(function GridRow({
   habitColor,
 }: GridRowProps) {
   return (
-    <View accessibilityRole='row' style={styles.gridRow}>
+    <View accessibilityRole='none' style={styles.gridRow}>
       {row.map((day, weekIndex) => (
         <View
           key={day?.date ?? `empty-${dayIndex}-${weekIndex}`}

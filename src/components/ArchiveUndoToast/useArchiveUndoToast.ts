@@ -4,7 +4,7 @@
  * Manages animation values, gestures, and timing for the toast
  */
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   useAnimatedStyle,
@@ -34,6 +34,13 @@ export function useArchiveUndoToast({
   const translateY = useSharedValue(100);
   const opacity = useSharedValue(0);
   const progressWidth = useSharedValue(100);
+  
+  // Use refs for callbacks to avoid triggering useEffect re-runs
+  const onDismissRef = useRef(onDismiss);
+  onDismissRef.current = onDismiss;
+  
+  const onUndoRef = useRef(onUndo);
+  onUndoRef.current = onUndo;
 
   // Handle dismiss
   const handleDismiss = useCallback(() => {
@@ -41,16 +48,16 @@ export function useArchiveUndoToast({
     opacity.value = withTiming(0, { duration: 200 });
     progressWidth.value = 100;
 
-    if (onDismiss) {
-      setTimeout(() => onDismiss(), 250);
+    if (onDismissRef.current) {
+      setTimeout(() => onDismissRef.current?.(), 250);
     }
-  }, [onDismiss, translateY, opacity, progressWidth]);
+  }, [translateY, opacity, progressWidth]);
 
   // Handle undo action
   const handleUndo = useCallback(() => {
-    onUndo?.();
+    onUndoRef.current?.();
     handleDismiss();
-  }, [onUndo, handleDismiss]);
+  }, [handleDismiss]);
 
   // Enter/exit animation
   useEffect(() => {

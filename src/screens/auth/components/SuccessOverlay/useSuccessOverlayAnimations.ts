@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -19,6 +19,10 @@ export function useSuccessOverlayAnimations(
   const ringOpacity = useSharedValue(0);
   const textOpacity = useSharedValue(0);
   const textTranslateY = useSharedValue(20);
+  
+  // Use ref for callback to avoid triggering useEffect re-runs
+  const onAnimationCompleteRef = useRef(onAnimationComplete);
+  onAnimationCompleteRef.current = onAnimationComplete;
 
   useEffect(() => {
     if (visible) {
@@ -51,9 +55,9 @@ export function useSuccessOverlayAnimations(
         withSpring(0, { damping: 12, stiffness: 100 })
       );
 
-      if (onAnimationComplete) {
+      if (onAnimationCompleteRef.current) {
         const timer = setTimeout(() => {
-          onAnimationComplete();
+          onAnimationCompleteRef.current?.();
         }, 1500);
         return () => clearTimeout(timer);
       }
@@ -66,7 +70,7 @@ export function useSuccessOverlayAnimations(
       textOpacity.value = 0;
       textTranslateY.value = 20;
     }
-  }, [visible, onAnimationComplete]);
+  }, [visible, overlayOpacity, checkmarkScale, checkmarkOpacity, ringScale, ringOpacity, textOpacity, textTranslateY]);
 
   const overlayStyle = useAnimatedStyle(() => ({
     opacity: overlayOpacity.value,

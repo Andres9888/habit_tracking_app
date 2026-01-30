@@ -38,9 +38,12 @@ const TimeRangeButton = memo(function TimeRangeButton({
 }: TimeRangeButtonProps) {
   const scale = useSharedValue(1);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: scale.value ?? 1 }],
+    };
+  });
 
   const handlePressIn = useCallback(() => {
     if (!reduceMotion) scale.value = withSpring(0.95, { damping: 15 });

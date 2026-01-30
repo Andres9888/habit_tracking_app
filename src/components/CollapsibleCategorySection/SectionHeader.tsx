@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ChevronDown } from 'lucide-react-native';
 
 import type { CategoryColors } from './types';
@@ -19,9 +19,9 @@ interface SectionHeaderProps {
   scienceCount: number;
   isExpanded: boolean;
   colors: CategoryColors;
-  headerAnimatedStyle: ReturnType<typeof Animated.useAnimatedStyle>;
-  iconAnimatedStyle: ReturnType<typeof Animated.useAnimatedStyle>;
-  chevronAnimatedStyle: ReturnType<typeof Animated.useAnimatedStyle>;
+  headerAnimatedStyle: AnimatedStyle;
+  iconAnimatedStyle: AnimatedStyle;
+  chevronAnimatedStyle: AnimatedStyle;
   onPress: () => void;
   onPressIn: () => void;
   onPressOut: () => void;

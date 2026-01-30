@@ -75,8 +75,8 @@ export function CategorySearchView(p: CategorySearchViewProps) {
       />
       <Toast
         duration={3000}
-        message={p.toastMessage}
-        variant={p.toastMessage.includes('Failed') ? 'error' : 'success'}
+        message={p.toastMessage ?? ''}
+        variant={(p.toastMessage ?? '').includes('Failed') ? 'error' : 'success'}
         visible={p.showToast}
         onDismiss={() => p.setShowToast(false)}
       />

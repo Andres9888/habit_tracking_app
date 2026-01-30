@@ -91,3 +91,6 @@ export const useTemplateBrowser = ({ isEditMode, visible, onTemplateSelect }: Us
     templateBrowserTranslate: translateY,
   };
 };
+
+/** Type for the return value of useTemplateBrowser */
+export type UseTemplateBrowser = ReturnType<typeof useTemplateBrowser>;

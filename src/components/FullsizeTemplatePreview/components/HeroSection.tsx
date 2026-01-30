@@ -30,9 +30,9 @@ export function HeroSection({
     '#FAFAF9',
   ] as const;
   const formattedFrequency =
-    FREQUENCY_LABELS[template.frequency] || template.frequency;
+    FREQUENCY_LABELS[template?.frequency] || template?.frequency || 'Daily';
   const formattedCategory =
-    CATEGORY_LABELS[template.category] || template.category;
+    CATEGORY_LABELS[template?.category] || template?.category || 'General';
 
   return (
     <LinearGradient colors={gradientColors} style={heroStyles.heroGradient}>
@@ -51,7 +51,7 @@ export function HeroSection({
               { backgroundColor: `${iconColor}20` },
             ]}
           >
-            <Text style={heroStyles.iconText}>{template.icon}</Text>
+            <Text style={heroStyles.iconText}>{template?.icon ?? '✨'}</Text>
           </View>
         </Animated.View>
 
@@ -61,7 +61,7 @@ export function HeroSection({
             { fontFamily: theme.custom.fontFamilies.primary.text },
           ]}
         >
-          {template.name}
+          {template?.name ?? 'Template'}
         </Text>
 
         <View style={heroStyles.pillsRow}>

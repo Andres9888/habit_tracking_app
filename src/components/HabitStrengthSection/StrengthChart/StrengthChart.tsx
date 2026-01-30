@@ -2,11 +2,12 @@
  * StrengthChart - Full-width timeline chart with smooth bezier curve,
  * gradient fill, grid lines, X-axis labels, and a pulsing dot.
  */
-import React, { useEffect, useMemo, useState } from 'react';
-import { AccessibilityInfo, LayoutChangeEvent, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { LayoutChangeEvent, View } from 'react-native';
 
 import Svg from 'react-native-svg';
 
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import {
   CHART_HEIGHT,
   CHART_PADDING_BOTTOM,
@@ -34,40 +35,42 @@ export const StrengthChart = React.memo(function StrengthChart({
   color,
 }: StrengthChartProps) {
   const [chartWidth, setChartWidth] = useState(300);
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const reduceMotion = useReduceMotion();
 
   const strengthLabel = getStrengthLabel(currentStrength);
   const chartColor = color || STRENGTH_COLORS[strengthLabel].primary;
-
-  useEffect(() => {
-    void AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
-  }, []);
 
   const handleLayout = (event: LayoutChangeEvent) => {
     setChartWidth(event.nativeEvent.layout.width);
   };
 
+  // Guard against undefined/null data early
+  const safeData = data ?? [];
+
   const { lastPoint, pathD, fillPathD, pathLength } = useChartData({
     chartWidth,
-    data,
+    data: safeData,
   });
   const gridLines = useChartGridLines();
   const { animatedPathProps, animatedDotProps } = useStrengthChartAnimations({
-    dataLength: data.length,
+    dataLength: safeData.length,
     pathLength,
     reduceMotion,
   });
 
-  const xAxisLabels = useMemo(() => getXAxisLabelsFromData(data), [data]);
+  const xAxisLabels = useMemo(() => getXAxisLabelsFromData(safeData), [safeData]);
   const accessibilityLabel = useMemo(() => {
-    if (data.length < 2) return 'No strength history available';
-    const startStrength = Math.round(data[0].strength);
-    const endStrength = Math.round(data.at(-1).strength);
+    if (safeData.length < 2) return 'No strength history available';
+    const firstData = safeData[0];
+    const lastData = safeData[safeData.length - 1];
+    if (!firstData || !lastData) return 'No strength history available';
+    const startStrength = Math.round(firstData.strength);
+    const endStrength = Math.round(lastData.strength);
     const trend = endStrength > startStrength ? 'upward' : 'downward';
     return `Strength chart showing ${trend} trend from ${startStrength}% to ${endStrength}%`;
-  }, [data]);
+  }, [safeData]);
 
-  if (data.length < 2) return <EmptyState />;
+  if (safeData.length < 2) return <EmptyState />;
 
   return (
     <View

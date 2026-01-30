@@ -59,3 +59,34 @@
 - Edge cases for negative inputs and over-100 inputs are properly tested
 
 ---
+
+#### TEST-002: calculateMomentumStrengthSnapshot Edge Cases
+
+- **Status:** IMPLEMENTED
+- **Test File:** `convex/habitStrength.test.ts`
+- **Test Cases:**
+  1. should handle empty tracking array (earliestDateKey null)
+  2. should use earliestDate when before creationDate (backfill scenario)
+  3. should return zero values when startDate > evaluationDate (future habit)
+  4. should handle tracking with no completions (empty completionDates Set)
+  5. should use creationDate when no valid dates in tracking
+  6. should handle throughDate defaulting to current date
+  7. should correctly filter only completed entries for completionDates
+- **Total Test Cases Added:** 7
+- **Coverage Before:** 39.72%
+- **Coverage After:** ~41.2% (estimated +1.5% gain)
+- **Gain:** +1.5% (estimated)
+
+**Notes:**
+
+- All 7 edge case tests pass (66 total tests in habitStrength.test.ts)
+- Tests cover all branches in calculateMomentumStrengthSnapshot:
+  - Empty tracking array → earliestDateKey returns null, uses creationDate
+  - Backfill scenario → earliestDate < creationDate, uses earliestDate
+  - Future habit → startDate > evaluationDate early return path
+  - No completions → completionDates Set is empty, all misses
+  - Invalid date formats → skipped by findEarliestTrackingDate
+  - Default throughDate → uses formatDateKey(startOfDay(new Date()))
+  - Filtering completed → only records with completed: true in Set
+
+---

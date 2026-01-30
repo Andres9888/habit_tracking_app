@@ -36,6 +36,14 @@ export function calculateStrengthAtDate(
   targetDate: Date,
   config: Partial<StrengthAlgorithmConfig> = {}
 ): number {
+  // Guard against invalid dates
+  if (!habitCreatedAt || !targetDate) {
+    return 0;
+  }
+  if (isNaN(habitCreatedAt.getTime()) || isNaN(targetDate.getTime())) {
+    return 0;
+  }
+
   const growthRate = config.growthRate ?? DEFAULT_GROWTH_RATE;
   const decayRate = config.decayRate ?? DEFAULT_DECAY_RATE;
 
@@ -46,11 +54,23 @@ export function calculateStrengthAtDate(
     return 0;
   }
 
+  // Guard against extremely large date ranges (prevent infinite loops)
+  const daysDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+  if (daysDiff > 3650) {
+    return 0;
+  }
+
   let strength = 0;
   let currentDate = startDate;
 
   while (currentDate <= endDate) {
     const dateStr = formatDateString(currentDate);
+
+    // Skip if date formatting failed (invalid date state)
+    if (!dateStr) {
+      currentDate = addDays(currentDate, 1);
+      continue;
+    }
 
     strength = completedDates.has(dateStr)
       ? strength + (1 - strength) * growthRate

@@ -81,16 +81,26 @@ export function useStrengthChartAnimations({
   }, [dataLength, reduceMotion, pathProgress, dotScale, dotOpacity]);
 
   // Animated path props for draw animation
-  const animatedPathProps = useAnimatedProps(() => ({
-    strokeDashoffset: pathLength * (1 - pathProgress.value),
-  }));
+  const animatedPathProps = useAnimatedProps(() => {
+    'worklet';
+    const progress = pathProgress.value ?? 0;
+    const safePathLength = pathLength ?? 0;
+    return {
+      strokeDashoffset: safePathLength * (1 - progress),
+    };
+  });
 
   // Animated dot props for pulsing
   // Note: r can be fractional for SVG, but we round to avoid Reanimated precision errors
-  const animatedDotProps = useAnimatedProps(() => ({
-    opacity: Math.round(dotOpacity.value * 100) / 100,
-    r: Math.round(DOT_RADIUS * dotScale.value * 10) / 10,
-  }));
+  const animatedDotProps = useAnimatedProps(() => {
+    'worklet';
+    const opacity = dotOpacity.value ?? 1;
+    const scale = dotScale.value ?? 1;
+    return {
+      opacity: Math.round(opacity * 100) / 100,
+      r: Math.round(DOT_RADIUS * scale * 10) / 10,
+    };
+  });
 
   return {
     animatedDotProps,

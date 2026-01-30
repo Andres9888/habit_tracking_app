@@ -5,12 +5,7 @@
 
 import React from 'react';
 import { ScrollView } from 'react-native';
-import Animated, {
-  FadeIn,
-  FadeOut,
-  SlideInRight,
-  SlideOutLeft,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import type { Doc } from '../../../convex/_generated/dataModel';
 import MiniTemplateCard from '../MiniTemplateCard';
@@ -52,22 +47,18 @@ export function TemplatesList({
       scrollEventThrottle={16}
       showsHorizontalScrollIndicator={false}
     >
-      {templates.map((template, index) => {
+      {(templates || []).map((template, index) => {
+        // Skip invalid templates
+        if (!template || !template._id) return null;
+
         const staggerDelay = Math.min(
           index * CARD_STAGGER_DELAY,
           MAX_STAGGER_DELAY
         );
 
-        const enteringAnimation = reducedMotion
-          ? FadeIn.duration(0)
-          : SlideInRight.delay(staggerDelay)
-              .springify()
-              .damping(18)
-              .stiffness(120);
-
-        const exitingAnimation = reducedMotion
-          ? FadeOut.duration(0)
-          : SlideOutLeft.delay(Math.min(index * 30, 200)).duration(150);
+        // Simplified animations to avoid potential crash issues
+        const enteringAnimation = FadeIn.delay(staggerDelay).duration(200);
+        const exitingAnimation = FadeOut.duration(100);
 
         return (
           <Animated.View
@@ -76,15 +67,15 @@ export function TemplatesList({
             exiting={exitingAnimation}
           >
             <MiniTemplateCard
-              description={template.description}
+              description={template.description || ''}
               hasResearch={Boolean(template.scientificLink)}
-              icon={template.icon}
+              icon={template.icon || '📝'}
               iconColor={template.iconColor}
               isImporting={importingTemplateId === template._id}
-              name={template.name}
+              name={template.name || 'Untitled'}
               scientificReference={template.scientificReference}
               subtitle={
-                FREQUENCY_LABELS[template.frequency] || template.frequency
+                FREQUENCY_LABELS[template.frequency] || template.frequency || 'daily'
               }
               onImport={() => onImport(template)}
               onPress={() => onTemplatePress(template)}

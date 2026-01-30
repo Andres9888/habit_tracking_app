@@ -34,9 +34,12 @@ export function HeaderCompleteToggle({
       onUncomplete,
     });
 
-  const buttonAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: buttonScale.value }],
-  }));
+  const buttonAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: buttonScale.value ?? 1 }],
+    };
+  });
 
   return (
     <View style={styles.wrapper}>

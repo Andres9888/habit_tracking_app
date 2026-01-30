@@ -10,6 +10,7 @@ import {
   differenceInDays,
   subDays,
   format,
+  isValid,
 } from 'date-fns';
 
 import type { StrengthSnapshot } from '../../HabitStrengthHistory/types';
@@ -20,6 +21,18 @@ import { TIME_RANGE_DAYS } from '../constants';
 /** Exponential smoothing constants (matches Loop Habit Tracker) */
 const GROWTH_RATE = 0.05; // +5% of remaining on completion
 const DECAY_RATE = 0.95; // -5% on miss
+
+/** Safely format a date, returning empty string on error */
+function safeFormatDate(date: Date): string {
+  try {
+    if (!date || !(date instanceof Date) || !isValid(date)) {
+      return '';
+    }
+    return format(date, 'yyyy-MM-dd');
+  } catch {
+    return '';
+  }
+}
 
 /**
  * Generate strength history directly from completedDates.
@@ -42,19 +55,37 @@ export function generateChartDataFromCompletions(
 
   // Find the earliest completion date
   const sortedDates = [...completedDates].sort();
-  const earliestDate = startOfDay(new Date(sortedDates[0]));
+  const firstDateStr = sortedDates[0];
+
+  // Validate date string exists and is parseable
+  if (!firstDateStr) {
+    return [];
+  }
+
+  const earliestDate = startOfDay(new Date(firstDateStr));
   const today = startOfDay(new Date());
+
+  // Validate parsed date is valid (catches Invalid Date)
+  if (isNaN(earliestDate.getTime())) {
+    return [];
+  }
 
   // Apply time range filter to start date
   const days = TIME_RANGE_DAYS[timeRange];
   const timeRangeStart = startOfDay(subDays(today, days));
 
   // Use the later of earliest completion or time range start
-  const chartStartDate = Math.max(timeRangeStart, earliestDate);
+  // Convert to timestamps for proper comparison
+  const chartStartDate = new Date(Math.max(timeRangeStart.getTime(), earliestDate.getTime()));
 
   // We need to calculate strength from the very beginning to get accurate values
   // even if we only display from chartStartDate
   const totalDays = differenceInDays(today, earliestDate) + 1;
+
+  // Guard against negative or extremely large day counts (prevents infinite loops)
+  if (totalDays <= 0 || totalDays > 3650) {
+    return [];
+  }
 
   // Generate full history from earliest date
   const fullHistory: StrengthSnapshot[] = [];
@@ -62,7 +93,12 @@ export function generateChartDataFromCompletions(
   let currentDate = earliestDate;
 
   for (let i = 0; i < totalDays; i++) {
-    const dateStr = format(currentDate, 'yyyy-MM-dd');
+    const dateStr = safeFormatDate(currentDate);
+    // Skip iteration if date formatting failed (invalid date)
+    if (!dateStr) {
+      currentDate = addDays(currentDate, 1);
+      continue;
+    }
     const wasCompleted = completedDates.has(dateStr);
 
     // Apply exponential smoothing
@@ -74,7 +110,7 @@ export function generateChartDataFromCompletions(
     const strengthPercent = Math.round(strength * 1000) / 10;
 
     // Only include in result if on or after chart start date
-    if (currentDate >= chartStartDate) {
+    if (currentDate.getTime() >= chartStartDate.getTime()) {
       fullHistory.push({
         date: new Date(currentDate),
         dateString: dateStr,

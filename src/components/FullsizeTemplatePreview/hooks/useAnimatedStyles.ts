@@ -24,60 +24,96 @@ interface UseAnimatedStylesProps {
 }
 
 export const useAnimatedStyles = (props: UseAnimatedStylesProps) => {
-  const backdropStyle = useAnimatedStyle(() => ({
-    opacity: props.backdropOpacity.value,
-  }));
+  const backdropStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: props.backdropOpacity.value ?? 0,
+    };
+  });
 
-  const contentStyle = useAnimatedStyle(() => ({
-    opacity: props.contentOpacity.value,
-    transform: [{ translateY: props.contentTranslateY.value }],
-  }));
+  const contentStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: props.contentOpacity.value ?? 0,
+      transform: [{ translateY: props.contentTranslateY.value ?? 0 }],
+    };
+  });
 
-  const iconAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: props.iconScale.value }],
-  }));
+  const iconAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: props.iconScale.value ?? 1 }],
+    };
+  });
 
-  const iconGlowStyle = useAnimatedStyle(() => ({
-    opacity: props.iconGlowOpacity.value,
-    transform: [{ scale: props.iconGlowScale.value }],
-  }));
+  const iconGlowStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: props.iconGlowOpacity.value ?? 0,
+      transform: [{ scale: props.iconGlowScale.value ?? 1 }],
+    };
+  });
 
-  const closeButtonStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: props.closeButtonScale.value }],
-  }));
+  const closeButtonStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: props.closeButtonScale.value ?? 1 }],
+    };
+  });
 
-  const closeButtonAnimatedOpacityStyle = useAnimatedStyle(() => ({
-    opacity: props.closeButtonOpacity.value,
-  }));
+  const closeButtonAnimatedOpacityStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: props.closeButtonOpacity.value ?? 0,
+    };
+  });
 
-  const importButtonStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: props.importButtonScale.value }],
-  }));
+  const importButtonStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: props.importButtonScale.value ?? 1 }],
+    };
+  });
 
-  const customizeButtonStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: props.customizeButtonScale.value }],
-  }));
+  const customizeButtonStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: props.customizeButtonScale.value ?? 1 }],
+    };
+  });
 
-  const successGlowStyle = useAnimatedStyle(() => ({
-    opacity: props.successGlow.value,
-    transform: [{ scale: props.successGlowScale.value }],
-  }));
+  const successGlowStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: props.successGlow.value ?? 0,
+      transform: [{ scale: props.successGlowScale.value ?? 1 }],
+    };
+  });
 
-  const checkmarkAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: props.checkmarkScale.value,
-    transform: [
-      { scale: props.checkmarkScale.value },
-      { rotate: `${Math.round(props.checkmarkRotation.value)}deg` },
-    ],
-  }));
+  const checkmarkAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: props.checkmarkScale.value ?? 0,
+      transform: [
+        { scale: props.checkmarkScale.value ?? 0 },
+        { rotate: `${Math.round(props.checkmarkRotation.value ?? 0)}deg` },
+      ],
+    };
+  });
 
-  const successButtonGlowStyle = useAnimatedStyle(() => ({
-    opacity: props.successButtonGlow.value,
-  }));
+  const successButtonGlowStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: props.successButtonGlow.value ?? 0,
+    };
+  });
 
-  const successIconBounceStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: props.successIconBounce.value }],
-  }));
+  const successIconBounceStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ translateY: props.successIconBounce.value ?? 0 }],
+    };
+  });
 
   return {
     backdropStyle,

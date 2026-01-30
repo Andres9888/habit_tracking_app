@@ -33,25 +33,37 @@ export function useEntranceAnimations({
     contentOpacity.value = 1;
   }, [reducedMotion]);
 
-  const headerAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: headerOpacity.value,
-    transform: [{ translateY: headerTranslateY.value }],
-  }));
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: headerOpacity.value ?? 1,
+      transform: [{ translateY: headerTranslateY.value ?? 0 }],
+    };
+  });
 
-  const searchAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: searchOpacity.value,
-    transform: [{ translateY: searchTranslateY.value }],
-  }));
+  const searchAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: searchOpacity.value ?? 1,
+      transform: [{ translateY: searchTranslateY.value ?? 0 }],
+    };
+  });
 
-  const tabBarAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: tabBarOpacity.value,
-    transform: [{ translateY: tabBarTranslateY.value }],
-  }));
+  const tabBarAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: tabBarOpacity.value ?? 1,
+      transform: [{ translateY: tabBarTranslateY.value ?? 0 }],
+    };
+  });
 
-  const contentAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: contentOpacity.value,
-    transform: [{ translateY: contentTranslateY.value }],
-  }));
+  const contentAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: contentOpacity.value ?? 1,
+      transform: [{ translateY: contentTranslateY.value ?? 0 }],
+    };
+  });
 
   return {
     contentAnimatedStyle,

@@ -75,22 +75,36 @@ export function useTemplateCardAnimations({
     };
   }, [isImported, checkmarkScale, successGlow, reducedMotion]);
 
-  const containerStyle = useAnimatedStyle(() => ({
-    opacity: cardOpacity.value,
-    transform: [
-      { translateY: cardTranslateY.value },
-      { scale: pressScale.value },
-    ],
-  }));
+  const containerStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: cardOpacity.value ?? 1,
+      transform: [
+        { translateY: cardTranslateY.value ?? 0 },
+        { scale: pressScale.value ?? 1 },
+      ],
+    };
+  });
 
-  const shadowStyle = useAnimatedStyle(() => ({
-    shadowOpacity: shadowOpacity.value,
-  }));
-  const glowStyle = useAnimatedStyle(() => ({ opacity: successGlow.value }));
-  const checkmarkStyle = useAnimatedStyle(() => ({
-    opacity: checkmarkScale.value,
-    transform: [{ scale: checkmarkScale.value }],
-  }));
+  const shadowStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      shadowOpacity: shadowOpacity.value ?? 0.06,
+    };
+  });
+
+  const glowStyle = useAnimatedStyle(() => {
+    'worklet';
+    return { opacity: successGlow.value ?? 0 };
+  });
+
+  const checkmarkStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: checkmarkScale.value ?? 0,
+      transform: [{ scale: checkmarkScale.value ?? 0 }],
+    };
+  });
 
   return {
     checkmarkStyle,

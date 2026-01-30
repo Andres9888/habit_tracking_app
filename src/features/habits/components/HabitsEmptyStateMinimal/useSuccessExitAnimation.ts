@@ -34,13 +34,17 @@ export function useSuccessExitAnimation({
 }: UseSuccessExitAnimationParams) {
   const isExiting = useRef(false);
   const values = useExitAnimationValues();
+  
+  // Use ref for callback to avoid triggering useCallback re-creation
+  const onTransitionCompleteRef = useRef(onTransitionComplete);
+  onTransitionCompleteRef.current = onTransitionComplete;
 
   const triggerExitAnimation = useCallback(() => {
     if (isExiting.current) return;
     isExiting.current = true;
 
     if (shouldReduceMotion) {
-      onTransitionComplete?.();
+      onTransitionCompleteRef.current?.();
       return;
     }
 
@@ -67,12 +71,12 @@ export function useSuccessExitAnimation({
     values.containerOpacity.value = withDelay(
       EXIT_TRANSITION.onCompleteDelay,
       withTiming(0, { duration: 200 }, (finished) => {
-        if (finished && onTransitionComplete) {
-          runOnJS(onTransitionComplete)();
+        if (finished && onTransitionCompleteRef.current) {
+          runOnJS(onTransitionCompleteRef.current)();
         }
       })
     );
-  }, [shouldReduceMotion, onTransitionComplete, contentOpacity, values]);
+  }, [shouldReduceMotion, contentOpacity, values]);
 
   useAutoTransitionTimer({
     autoTransition,

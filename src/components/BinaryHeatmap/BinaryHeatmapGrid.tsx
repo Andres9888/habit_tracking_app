@@ -56,10 +56,10 @@ const GridRow = memo(function GridRow({
   onCellPress,
 }: GridRowProps) {
   return (
-    <View accessibilityRole='row' style={styles.gridRow}>
+    <View accessibilityRole='none' style={styles.gridRow}>
       {row.map((day, weekIndex) => {
         // Determine background color inline
-        let bgColor = COLORS.CELL_EMPTY;
+        let bgColor: string = COLORS.CELL_EMPTY;
         if (day === null) {
           bgColor = 'transparent';
         } else if (day.isBeforeCreation) {
@@ -168,7 +168,7 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
       <ScrollView
         horizontal
         accessibilityLabel='Habit completion heatmap grid'
-        accessibilityRole='grid'
+        accessibilityRole='none'
         contentContainerStyle={[
           styles.gridScrollContent,
           { width: gridContentWidth },

@@ -42,17 +42,26 @@ export const useHabitDetailScreenState = ({
   // Today's date
   const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
-  // Completed dates set
+  // Create a stable string key for completed dates to prevent unnecessary re-renders
+  // when tracking array reference changes but content is the same
+  const completedDatesKey = useMemo(() => {
+    if (!habitId || !tracking || !Array.isArray(tracking)) return '';
+    const dates = tracking
+      .filter((entry) => entry && entry.habitId === habitId && entry.completed)
+      .map((entry) => entry.date)
+      .filter((date): date is string => typeof date === 'string');
+    if (dates.length === 0) return '';
+    return dates.sort().join(',');
+  }, [habitId, tracking]);
+
+  // Completed dates set - only recalculates when the actual dates change
+  // Note: ''.split(',') returns [''] not [], so we must check for empty string first
   const completedDates = useMemo(() => {
-    if (!habitId) {
+    if (!completedDatesKey) {
       return new Set<string>();
     }
-    return new Set(
-      tracking
-        .filter((entry) => entry.habitId === habitId && entry.completed)
-        .map((entry) => entry.date)
-    );
-  }, [habitId, tracking]);
+    return new Set(completedDatesKey.split(','));
+  }, [completedDatesKey]);
 
   const isCompletedToday = completedDates.has(today);
 

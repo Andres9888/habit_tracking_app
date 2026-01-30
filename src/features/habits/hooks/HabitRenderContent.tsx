@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import DraggableHabit from '../../../components/DraggableHabit';
@@ -58,6 +58,20 @@ export function HabitRenderContent({
   toggleHabit,
   weekDateStrings,
 }: HabitRenderContentProps) {
+  // Memoize callbacks to prevent recreating on every render
+  const handleEntranceComplete = useCallback(() => {
+    onHabitEntranceComplete?.(item._id);
+  }, [onHabitEntranceComplete, item._id]);
+
+  const handleWeekComplete = useCallback(
+    ({ completedDate }: { completedDate: string }) => {
+      notifyWeekCompletion({ completedDate, habit: item });
+    },
+    [notifyWeekCompletion, item]
+  );
+
+  const handleLongPress = isReorderingEnabled ? drag : undefined;
+
   return (
     <ScaleDecorator>
       <View className='mb-5' style={{ opacity: isActive ? 0.7 : 1 }}>
@@ -79,12 +93,10 @@ export function HabitRenderContent({
           weekDateStrings={weekDateStrings}
           weekStatus={weekStatus}
           onArchive={handleArchive}
-          onEntranceComplete={() => onHabitEntranceComplete?.(item._id)}
-          onLongPress={isReorderingEnabled ? drag : undefined}
+          onEntranceComplete={handleEntranceComplete}
+          onLongPress={handleLongPress}
           onPress={handleHabitPress}
-          onWeekComplete={({ completedDate }) =>
-            notifyWeekCompletion({ completedDate, habit: item })
-          }
+          onWeekComplete={handleWeekComplete}
         />
       </View>
     </ScaleDecorator>

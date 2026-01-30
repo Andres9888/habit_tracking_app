@@ -195,6 +195,45 @@ Complete these steps in order. Each section builds on the previous.
 
 ---
 
+## 10. Paywall Design (RevenueCat Dashboard)
+
+> **Why:** RevenueCat provides a remote paywall builder. You need to design the actual paywall UI that users will see when prompted to subscribe.
+
+- [ ] **10.1** Design paywall in RevenueCat Dashboard
+  - Go to: RevenueCat → Project → Paywalls
+  - Choose a template or create from scratch
+  - Configure colors, copy, and layout to match app branding
+- [ ] **10.2** Set paywall copy
+  - Headline (e.g., "Unlock Your Full Potential")
+  - Feature list (what premium includes)
+  - CTA button text
+  - Price display format
+- [ ] **10.3** Configure paywall styling
+  - Primary/accent colors matching app theme
+  - Font choices
+  - Image/illustration assets
+- [ ] **10.4** Link paywall to offering
+  - Ensure the paywall is connected to your `default` offering
+- [ ] **10.5** Test paywall appearance on device
+- [ ] **10.6** A/B test considerations (optional)
+  - Set up paywall variants if needed
+
+---
+
+## 11. Bug Fixes & Final Testing
+
+> **Why:** Ensure the RevenueCat integration is bug-free before release.
+
+- [ ] **11.1** Fix any RevenueCat integration bugs
+- [ ] **11.2** Test complete purchase flow end-to-end
+- [ ] **11.3** Test paywall displays correctly on all screen sizes
+- [ ] **11.4** Test restore purchases functionality
+- [ ] **11.5** Verify premium features unlock properly after purchase
+- [ ] **11.6** Test subscription expiration handling
+- [ ] **11.7** Verify webhook events are processed correctly
+
+---
+
 ## Current Status
 
 **You have:**
@@ -203,6 +242,7 @@ Complete these steps in order. Each section builds on the previous.
 - ✅ Convex backend working
 - ✅ Premium UI components (MotivationPaywall)
 - ✅ `hasPremium` field in userSettings schema
+- ✅ RevenueCat paywall component integrated in code
 
 **You need:**
 - ⬜ Apple subscription product created
@@ -210,4 +250,25 @@ Complete these steps in order. Each section builds on the previous.
 - ⬜ SDK initialization code
 - ⬜ usePremium hook
 - ⬜ Webhook endpoint
+- ⬜ **Paywall design in RevenueCat Dashboard** ← PRIORITY
+- ⬜ **Bug fixes and testing** ← PRIORITY
 - ⬜ Testing on physical device
+
+---
+
+## Priority Tasks (Next Up)
+
+Based on current progress, these are the immediate next steps:
+
+1. **Design the RevenueCat Paywall** (Section 10)
+   - Create visual design in RevenueCat Dashboard
+   - Match app branding and theme
+   - Set compelling copy and feature list
+
+2. **Fix RevenueCat Integration Bugs** (Section 11)
+   - Identify and resolve any integration issues
+   - Test end-to-end purchase flow
+
+3. **Complete Testing** (Section 8)
+   - Test on physical device with sandbox account
+   - Verify premium features unlock correctly

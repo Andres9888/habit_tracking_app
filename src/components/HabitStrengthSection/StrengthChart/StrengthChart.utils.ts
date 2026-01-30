@@ -8,13 +8,18 @@ export function catmullRomToBezier(
   points: Array<{ x: number; y: number }>,
   tension = 0.5
 ): string {
-  if (points.length < 2) return '';
-  const path: string[] = [`M ${points[0].x} ${points[0].y}`];
+  if (!points || points.length < 2) return '';
+  const firstPoint = points[0];
+  // Guard against undefined first point
+  if (!firstPoint) return '';
+  const path: string[] = [`M ${firstPoint.x} ${firstPoint.y}`];
   for (let i = 0; i < points.length - 1; i++) {
     const p0 = points[Math.max(0, i - 1)];
     const p1 = points[i];
     const p2 = points[i + 1];
     const p3 = points[Math.min(points.length - 1, i + 2)];
+    // Guard against undefined points (shouldn't happen but prevents crashes)
+    if (!p0 || !p1 || !p2 || !p3) continue;
     const cp1x = p1.x + ((p2.x - p0.x) * tension) / 6;
     const cp1y = p1.y + ((p2.y - p0.y) * tension) / 6;
     const cp2x = p2.x - ((p3.x - p1.x) * tension) / 6;
@@ -24,22 +29,47 @@ export function catmullRomToBezier(
   return path.join(' ');
 }
 
+/** Safely format a date, returning fallback on error */
+function safeFormat(date: Date, formatStr: string, fallback: string): string {
+  try {
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+      return fallback;
+    }
+    return format(date, formatStr);
+  } catch {
+    return fallback;
+  }
+}
+
 /** Generate X-axis labels based on actual data range (not time range selection). */
 export function getXAxisLabelsFromData(data: Array<{ date: Date }>): string[] {
-  if (data.length < 2) return ['Start', 'Now'];
-  const startDate = data[0].date;
-  const endDate = data.at(-1).date;
+  if (!data || data.length < 2) return ['Start', 'Now'];
+  const firstItem = data[0];
+  const lastItem = data[data.length - 1];
+  if (!firstItem || !lastItem) return ['Start', 'Now'];
+  const startDate = firstItem.date;
+  const endDate = lastItem.date;
+  // Guard against invalid dates
+  if (!startDate || !endDate || isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    return ['Start', 'Now'];
+  }
   const daySpan = Math.ceil(
     (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
   );
+  // Guard against NaN or negative daySpan
+  if (isNaN(daySpan) || daySpan < 0) return ['Start', 'Now'];
   if (daySpan < 14) {
-    return [format(startDate, 'MMM d'), 'Now'];
+    return [safeFormat(startDate, 'MMM d', 'Start'), 'Now'];
   }
   if (daySpan < 60) {
     const midDate = new Date(
       startDate.getTime() + (endDate.getTime() - startDate.getTime()) / 2
     );
-    return [format(startDate, 'MMM d'), format(midDate, 'MMM d'), 'Now'];
+    return [
+      safeFormat(startDate, 'MMM d', 'Start'),
+      safeFormat(midDate, 'MMM d', ''),
+      'Now',
+    ];
   }
   const oneThird = new Date(
     startDate.getTime() + (endDate.getTime() - startDate.getTime()) / 3
@@ -49,16 +79,16 @@ export function getXAxisLabelsFromData(data: Array<{ date: Date }>): string[] {
   );
   if (daySpan < 365) {
     return [
-      format(startDate, 'MMM d'),
-      format(oneThird, 'MMM d'),
-      format(twoThirds, 'MMM d'),
+      safeFormat(startDate, 'MMM d', 'Start'),
+      safeFormat(oneThird, 'MMM d', ''),
+      safeFormat(twoThirds, 'MMM d', ''),
       'Now',
     ];
   }
   return [
-    format(startDate, "MMM ''yy"),
-    format(oneThird, "MMM ''yy"),
-    format(twoThirds, "MMM ''yy"),
+    safeFormat(startDate, "MMM ''yy", 'Start'),
+    safeFormat(oneThird, "MMM ''yy", ''),
+    safeFormat(twoThirds, "MMM ''yy", ''),
     'Now',
   ];
 }

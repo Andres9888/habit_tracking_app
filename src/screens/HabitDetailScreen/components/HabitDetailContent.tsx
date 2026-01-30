@@ -5,13 +5,14 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
+import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import type { Habit } from '../../../features/habits/types';
 
 interface HabitDetailContentProps {
   habit: Habit;
-  completedDates: string[];
-  onDayPress: (dateString: string) => void;
+  completedDates: Set<string>;
+  onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
 export function HabitDetailContent({
@@ -27,21 +28,25 @@ export function HabitDetailContent({
       showsVerticalScrollIndicator={false}
     >
       {habit.createdAt && (
-        <HabitStrengthSection
+        <ErrorBoundary>
+          <HabitStrengthSection
+            completedDates={completedDates}
+            habitColor={habit.iconColor}
+            habitCreatedAt={habit.createdAt}
+            habitId={habit._id}
+            habitStrength={habit.strength}
+          />
+        </ErrorBoundary>
+      )}
+      <ErrorBoundary>
+        <MonthlyCalendarGrid
           completedDates={completedDates}
-          habitColor={habit.iconColor}
+          habitColor={habit.iconColor ?? '#10b981'}
           habitCreatedAt={habit.createdAt}
           habitId={habit._id}
-          habitStrength={habit.strength}
+          onDayPress={onDayPress}
         />
-      )}
-      <MonthlyCalendarGrid
-        completedDates={completedDates}
-        habitColor={habit.iconColor ?? '#10b981'}
-        habitCreatedAt={habit.createdAt}
-        habitId={habit._id}
-        onDayPress={onDayPress}
-      />
+      </ErrorBoundary>
     </ScrollView>
   );
 }

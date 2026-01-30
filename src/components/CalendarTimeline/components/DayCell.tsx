@@ -29,8 +29,8 @@ export const DayCell: React.FC<DayCellProps> = ({
   const dayNumber = format(date, 'd');
   const baseLabel = `${weekday}, ${format(date, 'MMM')} ${dayNumber}`;
 
-  const isDayDisabled = isUpcoming && disableFutureDayPress;
-  const canPressDay = isDayPressEnabled && onDayPress && !isDayDisabled;
+  const isDayDisabled = Boolean(isUpcoming && disableFutureDayPress);
+  const canPressDay = Boolean(isDayPressEnabled && onDayPress && !isDayDisabled);
 
   const statusText = getStatusText(completionStatus);
   const accessibilityLabel = buildAccessibilityLabel(
