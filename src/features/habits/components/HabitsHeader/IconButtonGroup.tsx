@@ -1,7 +1,6 @@
 import { ArrowUpDown, BookOpen, Settings } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { TemplateTooltip } from '../../../../components/TemplateTooltip';
 import { NotificationBadge } from '../../../../components/NotificationBadge';
 import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
 
@@ -9,11 +8,9 @@ interface IconButtonGroupProps {
   // Templates button
   templatesAnimatedStyle: AnimatedStyleProp<ViewStyle>;
   showBadge: boolean;
-  showTooltip: boolean;
   onTemplatesPress: () => void;
   onTemplatesPressIn: () => void;
   onTemplatesPressOut: () => void;
-  onDismissTooltip: () => void;
   // Sort button
   sortAnimatedStyle: AnimatedStyleProp<ViewStyle>;
   onSortPress: () => void;
@@ -32,11 +29,9 @@ interface IconButtonGroupProps {
 export function IconButtonGroup({
   templatesAnimatedStyle,
   showBadge,
-  showTooltip,
   onTemplatesPress,
   onTemplatesPressIn,
   onTemplatesPressOut,
-  onDismissTooltip,
   sortAnimatedStyle,
   onSortPress,
   onSortPressIn,
@@ -64,7 +59,6 @@ export function IconButtonGroup({
           </Pressable>
           <NotificationBadge count={1} visible={showBadge} />
         </View>
-        <TemplateTooltip visible={showTooltip} onDismiss={onDismissTooltip} />
       </Animated.View>
 
       <View className='mx-0.5 h-4 w-px bg-stone-200' />

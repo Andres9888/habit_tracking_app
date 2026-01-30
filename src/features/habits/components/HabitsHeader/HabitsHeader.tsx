@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import { DailyMomentumMeter } from '../../../../components/DailyMomentumMeter';
-import { useTemplateTooltip } from '../../hooks/useTemplateTooltip';
 import { useTemplateBadge } from '../../hooks/useTemplateBadge';
 import type { HabitsHeaderProps } from './types';
 import { useHeaderAnimations } from './useHeaderAnimations';
@@ -22,7 +21,6 @@ export function HabitsHeader({
   showCompletionSummary = true,
   totalHabits = 0,
 }: HabitsHeaderProps) {
-  const { dismissTooltip, showTooltip } = useTemplateTooltip();
   const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });
 
   const animations = useHeaderAnimations();
@@ -64,10 +62,8 @@ export function HabitsHeader({
         <IconButtonGroup
           settingsAnimatedStyle={animations.settingsButtonAnimatedStyle}
           showBadge={showBadge}
-          showTooltip={showTooltip}
           sortAnimatedStyle={animations.sortButtonAnimatedStyle}
           templatesAnimatedStyle={animations.templatesButtonAnimatedStyle}
-          onDismissTooltip={dismissTooltip}
           onSettingsPress={handlers.handleSettingsPress}
           onSettingsPressIn={handlers.handleSettingsPressIn}
           onSettingsPressOut={handlers.handleSettingsPressOut}
