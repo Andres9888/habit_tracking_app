@@ -3,7 +3,7 @@
  * Default content for each variant
  */
 
-import type { EmptyStateVariant, VariantConfig } from './types';
+import type { EmptyStateVariant, QuickStartTemplate, VariantConfig } from './types';
 
 export const VARIANT_CONFIG: Record<EmptyStateVariant, VariantConfig> = {
   noData: {
@@ -14,11 +14,10 @@ export const VARIANT_CONFIG: Record<EmptyStateVariant, VariantConfig> = {
     icon: '📊',
   },
   noHabits: {
-    ctaLabel: 'New Habit',
-    description:
-      'Add a habit to start tracking your progress and building streaks.',
-    headline: 'Create your first habit',
-    icon: '🌱',
+    ctaLabel: 'Create Custom Habit',
+    description: 'Or start with a popular template:',
+    headline: 'Ready to build a new habit?',
+    icon: '🚀',
   },
   noResults: {
     ctaLabel: 'Clear Filters',
@@ -34,3 +33,14 @@ export const VARIANT_CONFIG: Record<EmptyStateVariant, VariantConfig> = {
     icon: '🔒',
   },
 };
+
+/**
+ * Quick start templates for first-time users
+ * Reduces decision fatigue by offering popular habits
+ */
+export const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
+  { emoji: '🧘', name: 'Meditate', duration: '10 min' },
+  { emoji: '📖', name: 'Read', duration: '20 min' },
+  { emoji: '💪', name: 'Exercise', duration: '30 min' },
+  { emoji: '💧', name: 'Drink Water', duration: '8 glasses' },
+];

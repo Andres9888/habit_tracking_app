@@ -3,4 +3,5 @@
  */
 
 export { EmptyState, default } from './EmptyState';
-export type { EmptyStateProps, EmptyStateVariant } from './types';
+export { QUICK_START_TEMPLATES } from './constants';
+export type { EmptyStateProps, EmptyStateVariant, QuickStartTemplate } from './types';

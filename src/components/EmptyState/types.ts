@@ -11,6 +11,15 @@ export type EmptyStateVariant =
   | 'noResults'
   | 'premiumLocked';
 
+/**
+ * Quick start template for one-tap habit creation
+ */
+export interface QuickStartTemplate {
+  emoji: string;
+  name: string;
+  duration?: string;
+}
+
 export interface EmptyStateProps {
   /** Variant type */
   variant?: EmptyStateVariant;
@@ -29,6 +38,9 @@ export interface EmptyStateProps {
 
   /** CTA button handler */
   onCTA?: () => void;
+
+  /** Quick start template handler (noHabits variant) */
+  onQuickStart?: (template: QuickStartTemplate) => void;
 
   /** Hide CTA button */
   hideCTA?: boolean;
