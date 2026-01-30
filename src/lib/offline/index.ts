@@ -96,3 +96,11 @@ export {
   useSyncEvent,
   useSyncStatus,
 } from './context';
+
+// Persistence
+export {
+  clearQueueState,
+  loadQueueState,
+  OFFLINE_QUEUE_STORAGE_KEY,
+  saveQueueState,
+} from './persistence';
