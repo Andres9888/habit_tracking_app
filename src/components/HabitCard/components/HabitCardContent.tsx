@@ -3,6 +3,7 @@
  * Inner content of the HabitCard including name, icon, streak, and progress
  *
  * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
+ * @see docs/offline-habit-sync.md T028 - PendingSyncBadge integration
  */
 
 import React from 'react';
@@ -13,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { AppTheme } from '../../../theme';
 import { StrengthProgressBar } from '../../StrengthProgressBar/StrengthProgressBar';
+import { PendingSyncBadge } from '../../SyncStatus';
 import { styles } from '../HabitCard.styles';
 import { streakStyles } from '../HabitCard.streakStyles';
 import { StatusIndicator, type CompletionIconType } from './StatusIndicator';
@@ -74,6 +76,11 @@ export function HabitCardContent({
           </Text>
         </View>
         <View style={styles.statusContainer}>
+          <PendingSyncBadge
+            size='small'
+            testID='habit-card-pending-sync-badge'
+            visible={hasPendingOfflineOps}
+          />
           <StatusIndicator
             atRisk={atRisk}
             chainRotate={chainRotate}
