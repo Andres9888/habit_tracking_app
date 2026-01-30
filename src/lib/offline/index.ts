@@ -104,3 +104,12 @@ export {
   OFFLINE_QUEUE_STORAGE_KEY,
   saveQueueState,
 } from './persistence';
+
+// Queue Manager
+export {
+  createOfflineQueueManager,
+  getOfflineQueueManager,
+  resetOfflineQueueManager,
+  type OfflineQueueManagerAPI,
+  type OfflineQueueManagerConfig,
+} from './queueManager';
