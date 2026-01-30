@@ -55,6 +55,7 @@ describe('queueStorage', () => {
 
       await saveQueueState(state);
 
+      // Transaction-safe write: writes to main key (second call after pending)
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         OFFLINE_QUEUE_STORAGE_KEY,
         expect.any(String)
@@ -81,7 +82,8 @@ describe('queueStorage', () => {
 
       await saveQueueState(state);
 
-      const savedJson = (AsyncStorage.setItem as jest.Mock).mock.calls[0][1];
+      // Main key is the second setItem call (index 1) due to transaction safety
+      const savedJson = (AsyncStorage.setItem as jest.Mock).mock.calls[1][1];
       const parsed = JSON.parse(savedJson);
 
       expect(parsed.version).toBe(OFFLINE_QUEUE_VERSION);
@@ -97,7 +99,8 @@ describe('queueStorage', () => {
       await saveQueueState(state);
       const afterSave = Date.now();
 
-      const savedJson = (AsyncStorage.setItem as jest.Mock).mock.calls[0][1];
+      // Main key is the second setItem call (index 1) due to transaction safety
+      const savedJson = (AsyncStorage.setItem as jest.Mock).mock.calls[1][1];
       const parsed = JSON.parse(savedJson);
 
       expect(parsed.updatedAt).toBeGreaterThanOrEqual(beforeSave);
@@ -128,7 +131,8 @@ describe('queueStorage', () => {
 
       await saveQueueState(state);
 
-      const savedJson = (AsyncStorage.setItem as jest.Mock).mock.calls[0][1];
+      // Main key is the second setItem call (index 1) due to transaction safety
+      const savedJson = (AsyncStorage.setItem as jest.Mock).mock.calls[1][1];
       const parsed = JSON.parse(savedJson);
 
       expect(parsed.lastSyncCompletedAt).toBeDefined();
@@ -394,6 +398,12 @@ describe('queueStorage', () => {
   });
 
   describe('round-trip persistence', () => {
+    // Reset all mocks before each round-trip test since previous tests may have
+    // set mockRejectedValue which persists across clearAllMocks()
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
     it('saves and loads state correctly', async () => {
       const originalState = createTestQueueState({
         operations: [
@@ -413,11 +423,13 @@ describe('queueStorage', () => {
         lastSyncCompletedAt: Date.now() - 1000,
       });
 
-      // Capture what gets saved
-      let savedData: string | undefined;
+      // Capture what gets saved to main key
+      let mainKeyData: string | undefined;
       (AsyncStorage.setItem as jest.Mock).mockImplementation(
-        (_key: string, value: string) => {
-          savedData = value;
+        (key: string, value: string) => {
+          if (key === OFFLINE_QUEUE_STORAGE_KEY) {
+            mainKeyData = value;
+          }
           return Promise.resolve();
         }
       );
@@ -425,7 +437,7 @@ describe('queueStorage', () => {
       await saveQueueState(originalState);
 
       // Return the saved data on load
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(savedData);
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(mainKeyData);
 
       const loadedState = await loadQueueState();
 
@@ -441,16 +453,19 @@ describe('queueStorage', () => {
     it('handles empty operations array', async () => {
       const emptyState = createTestQueueState({ operations: [] });
 
-      let savedData: string | undefined;
+      // Capture what gets saved to main key
+      let mainKeyData: string | undefined;
       (AsyncStorage.setItem as jest.Mock).mockImplementation(
-        (_key: string, value: string) => {
-          savedData = value;
+        (key: string, value: string) => {
+          if (key === OFFLINE_QUEUE_STORAGE_KEY) {
+            mainKeyData = value;
+          }
           return Promise.resolve();
         }
       );
 
       await saveQueueState(emptyState);
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(savedData);
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(mainKeyData);
 
       const loadedState = await loadQueueState();
 
@@ -473,16 +488,19 @@ describe('queueStorage', () => {
 
       const largeState = createTestQueueState({ operations });
 
-      let savedData: string | undefined;
+      // Capture what gets saved to main key
+      let mainKeyData: string | undefined;
       (AsyncStorage.setItem as jest.Mock).mockImplementation(
-        (_key: string, value: string) => {
-          savedData = value;
+        (key: string, value: string) => {
+          if (key === OFFLINE_QUEUE_STORAGE_KEY) {
+            mainKeyData = value;
+          }
           return Promise.resolve();
         }
       );
 
       await saveQueueState(largeState);
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(savedData);
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(mainKeyData);
 
       const loadedState = await loadQueueState();
 

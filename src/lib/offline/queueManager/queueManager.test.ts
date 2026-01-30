@@ -453,23 +453,28 @@ describe('OfflineQueueManager', () => {
   describe('persistence', () => {
     it('restore loads state from storage', async () => {
       const AsyncStorage = require('@react-native-async-storage/async-storage');
-      AsyncStorage.getItem.mockResolvedValueOnce(
-        JSON.stringify({
-          version: 1,
-          operations: [
-            {
-              id: 'op_1',
-              type: 'toggleCompletion',
-              payload: { habitId: 'h1', date: '2026-01-30', toCompleted: true },
-              status: 'pending',
-              createdAt: Date.now(),
-              retryCount: 0,
-            },
-          ],
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-        })
-      );
+      const savedState = JSON.stringify({
+        version: 1,
+        operations: [
+          {
+            id: 'op_1',
+            type: 'toggleCompletion',
+            payload: { habitId: 'h1', date: '2026-01-30', toCompleted: true },
+            status: 'pending',
+            createdAt: Date.now(),
+            retryCount: 0,
+          },
+        ],
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      // loadQueueState now checks pending key first (transaction recovery), then main key
+      // First call: pending key check (returns null - no pending transaction)
+      // Second call: main key (returns saved state)
+      AsyncStorage.getItem
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(savedState);
 
       const events: QueueEvent[] = [];
       manager.subscribe((e) => events.push(e));
