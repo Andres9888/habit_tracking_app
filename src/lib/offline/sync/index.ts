@@ -25,6 +25,19 @@ export {
   shouldSkipSync,
 } from './helpers';
 
+// Retry Strategy (FR-006: Exponential backoff)
+export {
+  calculateSyncRetryDelay,
+  createSyncRetryContext,
+  FAST_SYNC_RETRY_STRATEGY,
+  getTimeUntilSyncRetry,
+  RATE_LIMITED_RETRY_STRATEGY,
+  selectSyncRetryStrategy,
+  shouldRetrySyncOperation,
+  SYNC_RETRY_STRATEGY,
+  updateSyncRetryContext,
+} from './retryStrategy';
+
 // Types
 export type {
   BatchResult,
