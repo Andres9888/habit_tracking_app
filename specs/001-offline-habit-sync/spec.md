@@ -5,6 +5,8 @@
 **Status**: Draft
 **Input**: User description: "Enable offline functionality for the ChainDay habit tracking app. Users should be able to mark habits as complete while offline, with changes automatically syncing when connectivity returns."
 
+---
+
 ## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Complete Habits While Offline (Priority: P1)
@@ -77,45 +79,59 @@ As a user who may have completed habits on multiple devices while both were offl
 - What happens if the app crashes while writing to the offline queue? The queue must be transaction-safe to prevent corruption.
 - How does the system behave if the user's authentication expires while offline? Completions should still be stored locally and prompt re-authentication on sync attempt.
 
+---
+
 ## Requirements _(mandatory)_
 
 ### Functional Requirements
 
-- **FR-001**: System MUST store habit completions locally when offline, independent of server connectivity.
-- **FR-002**: System MUST provide immediate visual feedback (under 200ms) when a user completes a habit, regardless of connectivity status.
-- **FR-003**: System MUST persist the offline completion queue across app restarts and device reboots.
-- **FR-004**: System MUST automatically detect connectivity changes and trigger sync when connection is restored.
-- **FR-005**: System MUST process the offline queue in chronological order (FIFO) to maintain data consistency.
-- **FR-006**: System MUST implement retry logic with exponential backoff for failed sync attempts.
-- **FR-007**: System MUST update local streak and completion counts immediately on offline completion (optimistic calculation).
-- **FR-008**: System MUST reconcile local calculations with server-authoritative values after successful sync.
-- **FR-009**: System MUST display subtle, non-blocking indicators for offline status and pending sync operations.
-- **FR-010**: System MUST resolve conflicts by preserving habit completions (favor "completed" over "not completed").
-- **FR-011**: System MUST handle queue sizes of at least 500 pending operations without performance degradation.
-- **FR-012**: System MUST NOT block the main UI thread during sync operations.
+| ID     | Requirement                                                                                             |
+| ------ | ------------------------------------------------------------------------------------------------------- |
+| FR-001 | System MUST store habit completions locally when offline, independent of server connectivity.           |
+| FR-002 | System MUST provide immediate visual feedback (under 200ms) when a user completes a habit.              |
+| FR-003 | System MUST persist the offline completion queue across app restarts and device reboots.                |
+| FR-004 | System MUST automatically detect connectivity changes and trigger sync when connection is restored.     |
+| FR-005 | System MUST process the offline queue in chronological order (FIFO) to maintain data consistency.       |
+| FR-006 | System MUST implement retry logic with exponential backoff for failed sync attempts.                    |
+| FR-007 | System MUST update local streak and completion counts immediately on offline completion (optimistic).   |
+| FR-008 | System MUST reconcile local calculations with server-authoritative values after successful sync.        |
+| FR-009 | System MUST display subtle, non-blocking indicators for offline status and pending sync operations.     |
+| FR-010 | System MUST resolve conflicts by preserving habit completions (favor "completed" over "not completed"). |
+| FR-011 | System MUST handle queue sizes of at least 500 pending operations without performance degradation.      |
+| FR-012 | System MUST NOT block the main UI thread during sync operations.                                        |
 
 ### Non-Functional Requirements
 
-- **NFR-001**: Offline queue persistence MUST survive app termination and device restart.
-- **NFR-002**: Sync operations MUST complete within 30 seconds of connectivity restoration for queues under 50 items.
-- **NFR-003**: Battery impact of background sync MUST be negligible (no continuous polling when offline).
+| ID      | Requirement                                                                                      |
+| ------- | ------------------------------------------------------------------------------------------------ |
+| NFR-001 | Offline queue persistence MUST survive app termination and device restart.                       |
+| NFR-002 | Sync operations MUST complete within 30 seconds of connectivity restoration (queues < 50 items). |
+| NFR-003 | Battery impact of background sync MUST be negligible (no continuous polling when offline).       |
 
 ### Key Entities
 
-- **Offline Operation**: Represents a single queued mutation (habit completion toggle). Contains: operation ID, habit ID, date, timestamp, operation type, retry count, status (pending/syncing/failed/confirmed).
-- **Sync Queue**: The persistent collection of offline operations awaiting sync. Managed as FIFO with status tracking.
-- **Connectivity State**: Boolean indicator of current network availability, plus metadata about connection type.
+| Entity             | Description                                                                                                                      |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| Offline Operation  | A single queued mutation (habit toggle). Contains: operation ID, habit ID, date, timestamp, operation type, retry count, status. |
+| Sync Queue         | The persistent collection of offline operations awaiting sync. Managed as FIFO with status tracking.                             |
+| Connectivity State | Boolean indicator of current network availability, plus metadata about connection type.                                          |
+
+---
 
 ## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
-- **SC-001**: Users can complete habits with visual feedback in under 200ms, regardless of connectivity status.
-- **SC-002**: 100% of offline completions sync successfully within 60 seconds of connectivity restoration (for queues under 50 items).
-- **SC-003**: Zero data loss: all offline completions persist through app restarts, device reboots, and app updates.
-- **SC-004**: Sync indicator transitions (offline → syncing → synced) complete within 2 seconds of state change.
-- **SC-005**: Users report no confusion about whether their habits were saved (measurable via reduced support tickets about "lost completions").
-- **SC-006**: App launch time increases by no more than 100ms when loading persisted offline queue.
+| ID     | Criterion                                                                                              |
+| ------ | ------------------------------------------------------------------------------------------------------ |
+| SC-001 | Users can complete habits with visual feedback in under 200ms, regardless of connectivity status.      |
+| SC-002 | 100% of offline completions sync successfully within 60 seconds of connectivity restoration.           |
+| SC-003 | Zero data loss: all offline completions persist through app restarts, device reboots, and app updates. |
+| SC-004 | Sync indicator transitions (offline → syncing → synced) complete within 2 seconds of state change.     |
+| SC-005 | Users report no confusion about whether their habits were saved (reduced support tickets).             |
+| SC-006 | App launch time increases by no more than 100ms when loading persisted offline queue.                  |
+
+---
 
 ## Scope Boundaries
 
@@ -137,6 +153,8 @@ As a user who may have completed habits on multiple devices while both were offl
 - Detailed sync history/audit log
 - Cross-device real-time sync notifications
 
+---
+
 ## Assumptions
 
 - Users have the app installed and authenticated before going offline (no offline login flow).
@@ -144,3 +162,34 @@ As a user who may have completed habits on multiple devices while both were offl
 - The existing network status context accurately detects connectivity changes.
 - AsyncStorage or equivalent is available and has sufficient capacity (typically 6MB+ on mobile).
 - Convex mutations are idempotent or can be made idempotent for safe retry.
+
+---
+
+## Quality Checklist
+
+### Content Quality
+
+- [x] No implementation details (languages, frameworks, APIs)
+- [x] Focused on user value and business needs
+- [x] Written for non-technical stakeholders
+- [x] All mandatory sections completed
+
+### Requirement Completeness
+
+- [x] No [NEEDS CLARIFICATION] markers remain
+- [x] Requirements are testable and unambiguous
+- [x] Success criteria are measurable
+- [x] Success criteria are technology-agnostic
+- [x] All acceptance scenarios are defined
+- [x] Edge cases are identified
+- [x] Scope is clearly bounded
+- [x] Dependencies and assumptions identified
+
+### Feature Readiness
+
+- [x] All functional requirements have clear acceptance criteria
+- [x] User scenarios cover primary flows
+- [x] Feature meets measurable outcomes defined in Success Criteria
+- [x] No implementation details leak into specification
+
+**Status**: Ready for `/speckit.plan`
