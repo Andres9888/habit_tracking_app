@@ -60,3 +60,17 @@ export type {
   HabitExistsResult,
   OrphanedOperation,
 } from '../cleanupOrphans';
+
+// Conflict Resolution Types (US4: Graceful Conflict Resolution)
+export type {
+  BatchCompletionStateChecker,
+  BatchConflictResolutionResult,
+  CompletionStateChecker,
+  ConflictEvent,
+  ConflictEventListener,
+  ConflictEventType,
+  ConflictResolution,
+  ConflictResolutionResult,
+  ConflictResolverConfig,
+  ServerCompletionState,
+} from '../conflictResolver';

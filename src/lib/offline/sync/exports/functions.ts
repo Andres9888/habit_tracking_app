@@ -82,3 +82,23 @@ export {
   groupOperationsByHabit as groupOperationsByHabitForCleanup,
   identifyOrphans,
 } from '../cleanupOrphans';
+
+// Conflict Resolution (US4: Graceful Conflict Resolution, FR-010: completion wins)
+export {
+  DEFAULT_CONFLICT_RESOLVER_CONFIG,
+  resolveOperation,
+  resolveOperations,
+  resolveOperationsBatch,
+} from '../conflictResolver';
+
+// Conflict Resolution Helpers
+export {
+  buildBatchResult as buildConflictBatchResult,
+  buildResolutionResult,
+  createConflictEvent,
+  createEmptyBatchResult as createEmptyConflictBatchResult,
+  createHabitDateKey,
+  detectConflict,
+  parseHabitDateKey,
+  resolveConflict,
+} from '../conflictResolver';
