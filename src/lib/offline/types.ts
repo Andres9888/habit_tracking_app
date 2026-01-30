@@ -1,5 +1,12 @@
 /**
  * Types for offline support utilities
+ *
+ * This module defines types for:
+ * - Error classification and retry logic
+ * - Circuit breaker pattern
+ * - Sync status and events
+ *
+ * For offline queue types, see ./queue/index.ts
  */
 
 /**

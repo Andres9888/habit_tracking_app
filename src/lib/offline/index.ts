@@ -5,10 +5,11 @@
  * - Error classification for intelligent retry decisions
  * - Circuit breaker pattern to prevent service hammering
  * - Smart retry strategies with exponential backoff
+ * - Offline queue for habit operations while disconnected
  * - React context for easy integration
  */
 
-// Types
+// Core Types (error classification, circuit breaker, retry, sync status)
 export type {
   CircuitBreakerConfig,
   CircuitBreakerStatus,
@@ -21,6 +22,30 @@ export type {
   SyncEventType,
   SyncStatus,
 } from './types';
+
+// Offline Queue Types
+export type {
+  ConnectivityState,
+  OfflineOperation,
+  OfflineOperationPayload,
+  OfflineOperationStatus,
+  OfflineOperationType,
+  OfflineQueueState,
+  OfflineQueueStats,
+  QueueEvent,
+  QueueEventCallback,
+  QueueEventType,
+  QueueOperationOptions,
+  QueueOperationResult,
+  ToggleCompletionOperation,
+  ToggleCompletionPayload,
+} from './queue';
+
+export {
+  DEFAULT_QUEUE_STATE,
+  OFFLINE_QUEUE_VERSION,
+  QUEUE_THRESHOLDS,
+} from './queue';
 
 // Error Classification
 export {
