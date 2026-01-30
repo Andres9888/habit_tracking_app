@@ -10,3 +10,6 @@ export type { OfflineIndicatorProps } from './OfflineIndicator';
 
 export { SyncingIndicator } from './SyncingIndicator';
 export type { SyncingIndicatorProps } from './SyncingIndicator';
+
+export { PendingSyncBadge } from './PendingSyncBadge';
+export type { PendingSyncBadgeProps } from './PendingSyncBadge';
