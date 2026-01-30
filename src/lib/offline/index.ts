@@ -113,3 +113,10 @@ export {
   type OfflineQueueManagerAPI,
   type OfflineQueueManagerConfig,
 } from './queueManager';
+
+// Queue Hooks
+export {
+  useOfflineQueue,
+  type UseOfflineQueueOptions,
+  type UseOfflineQueueReturn,
+} from './hooks';

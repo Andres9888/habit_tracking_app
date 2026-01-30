@@ -73,6 +73,10 @@ export interface OfflineQueueManagerAPI {
   // Event subscription
   /** Subscribe to queue events */
   subscribe(callback: QueueEventCallback): () => void;
+
+  // State subscription (for React useSyncExternalStore)
+  /** Subscribe to state changes (for React integration) */
+  subscribeToState(callback: QueueStateListener): () => void;
 }
 
 /**
