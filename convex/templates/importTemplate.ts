@@ -19,24 +19,34 @@ export const importTemplate = mutation({
     templateId: v.id('templates'),
   },
   handler: async (ctx, args) => {
+    // Get authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    const userId = identity?.subject;
+
     const template = await ctx.db.get(args.templateId);
     if (!template) {
       throw new Error('Template not found');
     }
 
+    // Get max order to place new habit at the end
+    const allHabits = await ctx.db.query('habits').collect();
+    const maxOrder = allHabits.reduce((max, h) => Math.max(max, h.order ?? 0), 0);
+
     // Create habit from template
     const habitId = await ctx.db.insert('habits', {
       accessibility: 1,
       accessibilityUpdatedAt: Date.now(),
+      bestStreak: 0,
       consecutiveDays: 0,
       createdAt: Date.now(),
+      currentStreak: 0,
       frequency: template.frequency,
       icon: template.icon,
       iconColor: args.customizations?.iconColor || template.iconColor,
       name: args.customizations?.name || template.name,
       notes:
         template.description + '\n\nSource: ' + template.scientificReference,
-      order: 0,
+      order: maxOrder + 1,
       remindersEnabled: !!args.customizations?.reminderTime,
       reminderTime: args.customizations?.reminderTime,
       strength: 0,
@@ -44,6 +54,7 @@ export const importTemplate = mutation({
       strengthUpdatedAt: Date.now(),
       totalCompletions: 0,
       totalMisses: 0,
+      userId,
     });
 
     // Track template usage analytics
