@@ -4,7 +4,7 @@
  */
 
 import type { AppTheme } from '../../theme';
-import { getStrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
+import { getStrengthLevel } from '../HabitStrengthIndicator';
 
 /**
  * Get the color associated with a habit's strength level

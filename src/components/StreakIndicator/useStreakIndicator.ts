@@ -2,7 +2,7 @@
  * Hook for StreakIndicator animation and state logic
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -29,6 +29,10 @@ export function useStreakIndicator({
   const theme = useAppTheme();
   const scale = useSharedValue(1);
 
+  // Use ref for callback to prevent it from triggering useEffect re-runs
+  const onMilestoneRef = useRef(onMilestone);
+  onMilestoneRef.current = onMilestone;
+
   // Get the highest milestone reached
   let currentMilestone: Milestone | null = null;
   for (const milestone of MILESTONES) {
@@ -39,14 +43,14 @@ export function useStreakIndicator({
 
   // Trigger animation and callback when milestone changes
   useEffect(() => {
-    if (currentMilestone && onMilestone) {
-      onMilestone(currentMilestone);
+    if (currentMilestone && onMilestoneRef.current) {
+      onMilestoneRef.current(currentMilestone);
       scale.value = withSequence(
         withSpring(1.2, { damping: 8 }),
         withSpring(1, { damping: 10 })
       );
     }
-  }, [currentMilestone, onMilestone]);
+  }, [currentMilestone, scale]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

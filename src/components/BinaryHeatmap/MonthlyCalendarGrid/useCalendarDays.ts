@@ -16,8 +16,21 @@ import {
   isAfter,
   startOfWeek,
   endOfWeek,
+  isValid,
 } from 'date-fns';
 import type { DayData } from './types';
+
+/** Safely format a date, returning empty string on error */
+function safeFormat(date: Date, formatStr: string): string {
+  try {
+    if (!date || !(date instanceof Date) || !isValid(date)) {
+      return '';
+    }
+    return format(date, formatStr);
+  } catch {
+    return '';
+  }
+}
 
 interface UseCalendarDaysParams {
   currentMonth: Date;
@@ -30,21 +43,28 @@ export function useCalendarDays({
   completedDates,
   habitCreatedAt,
 }: UseCalendarDaysParams) {
-  const today = startOfToday();
+  // Memoize today's date string to prevent new Date object on every render
+  const todayString = useMemo(() => safeFormat(startOfToday(), 'yyyy-MM-dd'), []);
+  const today = useMemo(() => startOfToday(), [todayString]);
 
   const days = useMemo(() => {
+    // Guard against invalid currentMonth
+    if (!currentMonth || isNaN(currentMonth.getTime())) {
+      return [];
+    }
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(currentMonth);
     const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
     const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
 
-    return eachDayOfInterval({ end: calendarEnd, start: calendarStart }).map(
-      (date): DayData => {
-        const dateString = format(date, 'yyyy-MM-dd');
+    return eachDayOfInterval({ end: calendarEnd, start: calendarStart })
+      .filter((date) => date && isValid(date))
+      .map((date): DayData => {
+        const dateString = safeFormat(date, 'yyyy-MM-dd');
         const isCurrentMonth = date.getMonth() === currentMonth.getMonth();
         const isToday = isSameDay(date, today);
         const isFuture = isAfter(date, today);
-        const isCompleted = completedDates.has(dateString);
+        const isCompleted = dateString ? (completedDates?.has(dateString) ?? false) : false;
         const isBeforeCreation = habitCreatedAt
           ? isBefore(date, new Date(habitCreatedAt)) && !isCompleted
           : false;
@@ -59,9 +79,8 @@ export function useCalendarDays({
           isFuture,
           isToday,
         };
-      }
-    );
-  }, [currentMonth, today, completedDates, habitCreatedAt]);
+      });
+  }, [currentMonth, todayString, completedDates, habitCreatedAt]);
 
   // Chunk days into weeks for row-based rendering
   const weeks = useMemo(() => {

@@ -1,6 +1,9 @@
 import { createDateFromTimeString, getDefaultReminderTime } from '../../utils/notifications';
 import { HABIT_NAME_REGEX } from './constants';
 
+// Re-export from utils folder
+export { extractTemplateDetails } from './utils/templateUtils';
+
 export interface ParsedHabitName {
   emoji: string | null;
   name: string;

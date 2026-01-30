@@ -1,3 +1,4 @@
+import ErrorBoundary from '../../../../components/ErrorBoundary';
 import HabitCalendarModal from '../../../../components/HabitCalendarModal';
 import HabitDetailScreen from '../../../../screens/HabitDetailScreen';
 import HabitEditScreen from '../../../../screens/HabitEditScreen';
@@ -39,37 +40,43 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
 
   return (
     <>
-      <HabitCalendarModal
-        habit={selectedHabit}
-        streak={selectedHabit ? getStreak(selectedHabit._id) : 0}
-        toggleHabit={toggleHabit}
-        tracking={tracking}
-        visible={showHabitCalendar}
-        onClose={closeHabitCalendar}
-        onOpenMotivationTab={openMotivationTab}
-      />
-      <HabitDetailScreen
-        habit={selectedHabit}
-        tracking={tracking}
-        visible={showHabitDetail}
-        onArchive={handleArchive}
-        onClose={closeHabitDetail}
-        onDelete={onDeleteHabit}
-        onEdit={(habit) => {
-          closeHabitDetail();
-          openEditHabit(habit);
-        }}
-        onOpenCalendar={openHabitCalendar}
-        onPause={openPauseModal}
-      />
-      <HabitEditScreen
-        habitId={habitToEdit?._id ?? null}
-        visible={showEditScreen}
-        onClose={closeEditScreen}
-        onOpenAffirmationsEditor={openMotivationFromEdit}
-        onOpenCueEditor={openMotivationFromEdit}
-        onOpenVisionBoard={openMotivationFromEdit}
-      />
+      <ErrorBoundary>
+        <HabitCalendarModal
+          habit={selectedHabit}
+          streak={selectedHabit ? getStreak(selectedHabit._id) : 0}
+          toggleHabit={toggleHabit}
+          tracking={tracking}
+          visible={showHabitCalendar}
+          onClose={closeHabitCalendar}
+          onOpenMotivationTab={openMotivationTab}
+        />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <HabitDetailScreen
+          habit={selectedHabit}
+          tracking={tracking}
+          visible={showHabitDetail}
+          onArchive={handleArchive}
+          onClose={closeHabitDetail}
+          onDelete={onDeleteHabit}
+          onEdit={(habit) => {
+            closeHabitDetail();
+            openEditHabit(habit);
+          }}
+          onOpenCalendar={openHabitCalendar}
+          onPause={openPauseModal}
+        />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <HabitEditScreen
+          habitId={habitToEdit?._id ?? null}
+          visible={showEditScreen}
+          onClose={closeEditScreen}
+          onOpenAffirmationsEditor={openMotivationFromEdit}
+          onOpenCueEditor={openMotivationFromEdit}
+          onOpenVisionBoard={openMotivationFromEdit}
+        />
+      </ErrorBoundary>
     </>
   );
 }

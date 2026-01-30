@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { AuthGate } from './components/auth/AuthGate';
+import { PurchasesProvider } from './components/providers/PurchasesProvider';
 import HabitsApp from './features/habits/HabitsApp';
 import { convexClient } from './lib/appConfig';
 import theme from './theme';
@@ -26,7 +27,9 @@ function Providers({ children }: PropsWithChildren) {
         <PaperProvider theme={theme}>
           <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
             <SentryUserSync>
-              <ConvexClerkProvider>{children}</ConvexClerkProvider>
+              <ConvexClerkProvider>
+                <PurchasesProvider>{children}</PurchasesProvider>
+              </ConvexClerkProvider>
             </SentryUserSync>
           </ClerkProvider>
         </PaperProvider>

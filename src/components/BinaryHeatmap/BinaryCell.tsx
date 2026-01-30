@@ -57,9 +57,12 @@ export const BinaryCell = memo(function BinaryCell({
   const staggerDelay = reduceMotion ? 0 : index * ANIMATION.CELL_STAGGER_DELAY;
 
   // Animated scale style for tap feedback
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: scale.value ?? 1 }],
+    };
+  });
 
   // Handle press in - scale down for tap feedback
   const handlePressIn = useCallback(() => {

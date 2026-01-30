@@ -26,20 +26,26 @@ export function useHeaderAnimations({
   const iconBounce = useSharedValue(0);
   const iconScale = useSharedValue(1);
 
-  const headerAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: headerScale.value }],
-  }));
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: headerScale.value ?? 1 }],
+    };
+  });
 
-  const chevronAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { rotate: withTiming(isExpanded ? '0deg' : '-90deg', { duration: 200 }) },
-    ],
-  }));
+  const chevronAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [
+        { rotate: withTiming(isExpanded ? '0deg' : '-90deg', { duration: 200 }) },
+      ],
+    };
+  });
 
   const iconAnimatedStyle = useAnimatedStyle(() => {
     'worklet';
     return {
-      transform: [{ translateY: iconBounce.value }, { scale: iconScale.value }],
+      transform: [{ translateY: iconBounce.value ?? 0 }, { scale: iconScale.value ?? 1 }],
     };
   });
 

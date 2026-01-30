@@ -21,14 +21,18 @@ export function filterHistoryByTimeRange(
   history: StrengthSnapshot[],
   timeRange: TimeRange
 ): StrengthSnapshot[] {
-  if (history.length === 0) {
-    return history;
+  if (!history || history.length === 0) {
+    return [];
   }
 
   const days = TIME_RANGE_DAYS[timeRange];
   const cutoffDate = startOfDay(subDays(new Date(), days));
 
-  return history.filter((snapshot) => snapshot.date >= cutoffDate);
+  return history.filter((snapshot) => {
+    // Guard against invalid snapshots or dates
+    if (!snapshot || !snapshot.date) return false;
+    return snapshot.date >= cutoffDate;
+  });
 }
 
 /**
@@ -43,6 +47,9 @@ export function sampleHistoryForChart(
   history: StrengthSnapshot[],
   maxPoints: number = 50
 ): StrengthSnapshot[] {
+  if (!history || history.length === 0) {
+    return [];
+  }
   if (history.length <= maxPoints) {
     return history;
   }
@@ -51,8 +58,12 @@ export function sampleHistoryForChart(
   const step = (history.length - 1) / (maxPoints - 1);
 
   for (let i = 0; i < maxPoints; i++) {
-    const index = Math.round(i * step);
-    result.push(history[index]);
+    const index = Math.min(Math.round(i * step), history.length - 1);
+    const snapshot = history[index];
+    // Guard against undefined entries
+    if (snapshot) {
+      result.push(snapshot);
+    }
   }
 
   return result;

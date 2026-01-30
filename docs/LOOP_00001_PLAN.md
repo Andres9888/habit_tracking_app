@@ -40,7 +40,11 @@
 
 ### TEST-002: calculateMomentumStrengthSnapshot Edge Cases
 
-- **Status:** `PENDING`
+- **Status:** `IMPLEMENTED`
+- **Implemented In:** Loop 00001
+- **Test File:** `convex/habitStrength.test.ts`
+- **Test Cases Added:** 7
+- **Coverage Gain:** +1.5% (estimated)
 - **File:** `convex/habitStrength/momentum.ts`
 - **Gap ID:** GAP-005
 - **Importance:** HIGH
@@ -48,11 +52,15 @@
 - **Est. Coverage Gain:** +1.5%
 - **Test Type:** Unit
 - **Test Strategy:**
-  - Test empty tracking array (earliestDateKey null case)
-  - Test earliestDate < creationDate branch
-  - Test startDate > evaluationDate early return (future creation date)
-  - Test tracking with no completions (empty completionDates Set)
+  - Test empty tracking array (earliestDateKey null case) ✅
+  - Test earliestDate < creationDate branch ✅
+  - Test startDate > evaluationDate early return (future creation date) ✅
+  - Test tracking with no completions (empty completionDates Set) ✅
+  - Test invalid date formats in tracking array ✅
+  - Test throughDate defaulting to current date ✅
+  - Test filtering only completed entries for completionDates ✅
 - **Mocks Needed:** None (pure function with date inputs)
+- **Note:** Added 7 edge case tests covering all specified scenarios plus additional boundary conditions.
 
 ### TEST-003: calculateStreakFromHistory
 

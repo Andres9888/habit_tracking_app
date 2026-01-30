@@ -1,13 +1,12 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { Check } from 'lucide-react-native';
-import Animated from 'react-native-reanimated';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
 interface ActionButtonsProps {
   habitName: string;
   isRestoring: boolean;
   showSuccess: boolean;
-  successIconStyle: AnimatedStyleProp<ViewStyle>;
+  successIconStyle: AnimatedStyle;
   onRestorePress: () => void;
   onDeletePress: () => void;
 }

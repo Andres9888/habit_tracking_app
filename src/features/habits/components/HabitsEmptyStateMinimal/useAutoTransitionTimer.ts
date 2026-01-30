@@ -4,7 +4,7 @@
  * Triggers exit animation after celebration delay.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { SharedValue, cancelAnimation } from 'react-native-reanimated';
 
 interface UseAutoTransitionTimerParams {
@@ -27,12 +27,19 @@ export function useAutoTransitionTimer({
   containerOpacity,
 }: UseAutoTransitionTimerParams) {
   const autoTransitionTimeout = useRef<NodeJS.Timeout | null>(null);
+  
+  // Use refs for callbacks to avoid triggering useEffect re-runs
+  const onTransitionCompleteRef = useRef(onTransitionComplete);
+  onTransitionCompleteRef.current = onTransitionComplete;
+  
+  const triggerExitAnimationRef = useRef(triggerExitAnimation);
+  triggerExitAnimationRef.current = triggerExitAnimation;
 
   useEffect(() => {
-    if (!autoTransition || !onTransitionComplete) return;
+    if (!autoTransition || !onTransitionCompleteRef.current) return;
 
     autoTransitionTimeout.current = setTimeout(() => {
-      triggerExitAnimation();
+      triggerExitAnimationRef.current();
     }, CELEBRATION_DELAY);
 
     return () => {
@@ -45,8 +52,6 @@ export function useAutoTransitionTimer({
     };
   }, [
     autoTransition,
-    onTransitionComplete,
-    triggerExitAnimation,
     iconTranslateY,
     iconExitScale,
     containerOpacity,

@@ -37,8 +37,10 @@ export const StrengthHero = React.memo(function StrengthHero({
   deltaLabel,
   color,
 }: StrengthHeroProps) {
+  // Guard against invalid label - default to 'weak'
+  const safeLabel = label && STRENGTH_COLORS[label] ? label : 'weak';
   // Get colors based on strength level
-  const colors = STRENGTH_COLORS[label];
+  const colors = STRENGTH_COLORS[safeLabel];
   const ringColor = color || colors.primary;
 
   // Animation state

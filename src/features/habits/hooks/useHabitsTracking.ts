@@ -20,7 +20,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
     // First, process server data
     for (const entry of tracking) {
-      if (!entry.completed) continue;
+      if (!entry || !entry.completed) continue;
       if (!map.has(entry.habitId)) {
         map.set(entry.habitId, new Set<string>());
       }
@@ -63,7 +63,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
       // Fall back to server state
       const entry = tracking.find(
-        (item) => item.habitId === habitId && item.date === dateString
+        (item) => item && item.habitId === habitId && item.date === dateString
       );
 
       if (entry?.completed) {

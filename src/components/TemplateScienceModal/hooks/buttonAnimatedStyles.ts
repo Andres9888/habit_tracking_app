@@ -14,25 +14,40 @@ interface ButtonScaleValues {
 }
 
 export const useButtonAnimatedStyles = (values: ButtonScaleValues) => {
-  const backButton = useAnimatedStyle(() => ({
-    transform: [{ scale: values.backButtonScale.value }],
-  }));
+  const backButton = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: values.backButtonScale.value ?? 1 }],
+    };
+  });
 
-  const closeButton = useAnimatedStyle(() => ({
-    transform: [{ scale: values.closeButtonScale.value }],
-  }));
+  const closeButton = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: values.closeButtonScale.value ?? 1 }],
+    };
+  });
 
-  const linkButton = useAnimatedStyle(() => ({
-    transform: [{ scale: values.linkButtonScale.value }],
-  }));
+  const linkButton = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: values.linkButtonScale.value ?? 1 }],
+    };
+  });
 
-  const shareButton = useAnimatedStyle(() => ({
-    transform: [{ scale: values.shareButtonScale.value }],
-  }));
+  const shareButton = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: values.shareButtonScale.value ?? 1 }],
+    };
+  });
 
-  const youtubeButton = useAnimatedStyle(() => ({
-    transform: [{ scale: values.youtubeButtonScale.value }],
-  }));
+  const youtubeButton = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: values.youtubeButtonScale.value ?? 1 }],
+    };
+  });
 
   return {
     backButton,

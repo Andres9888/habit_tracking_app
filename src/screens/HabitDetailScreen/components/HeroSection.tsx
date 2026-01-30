@@ -3,7 +3,7 @@
  * Icon, Name, Description, and Streak Badge
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -11,6 +11,7 @@ import Animated, {
   withSpring,
   withTiming,
   Easing,
+  cancelAnimation,
 } from 'react-native-reanimated';
 import type { HeroSectionProps } from '../HabitDetailScreen.types';
 
@@ -28,25 +29,43 @@ export function HeroSection({
   reduceMotion = false,
 }: HeroSectionProps) {
   // Icon bounce animation on load (T1.1)
-  const iconScale = useSharedValue(reduceMotion ? 1 : 0.8);
-  const iconTranslateY = useSharedValue(reduceMotion ? 0 : -10);
+  // Initialize unconditionally to follow rules of hooks
+  const iconScale = useSharedValue(1);
+  const iconTranslateY = useSharedValue(0);
 
   // Streak badge animation on load (T1.2)
+  // Initialize unconditionally - animation state set in useEffect
+  const badgeScale = useSharedValue(0);
+  const badgeOpacity = useSharedValue(0);
+
+  // Track timeout for cleanup
+  const badgeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const showStreakBadge = currentStreak >= 7;
-  const badgeScale = useSharedValue(reduceMotion && showStreakBadge ? 1 : 0);
-  const badgeOpacity = useSharedValue(reduceMotion && showStreakBadge ? 1 : 0);
 
   useEffect(() => {
+    // Clear any pending timeout from previous render
+    if (badgeTimeoutRef.current) {
+      clearTimeout(badgeTimeoutRef.current);
+      badgeTimeoutRef.current = null;
+    }
+
     if (reduceMotion) {
+      // Immediately set final values without animation
       iconScale.value = 1;
       iconTranslateY.value = 0;
-      if (showStreakBadge) {
-        badgeScale.value = 1;
-        badgeOpacity.value = 1;
-      }
+      badgeScale.value = showStreakBadge ? 1 : 0;
+      badgeOpacity.value = showStreakBadge ? 1 : 0;
       return;
     }
 
+    // Set initial values for entrance animation
+    iconScale.value = 0.8;
+    iconTranslateY.value = -10;
+    badgeScale.value = 0;
+    badgeOpacity.value = 0;
+
+    // Animate icon entrance
     iconScale.value = withSpring(1, { damping: 8, mass: 1, stiffness: 150 });
     iconTranslateY.value = withSpring(0, {
       damping: 8,
@@ -54,8 +73,9 @@ export function HeroSection({
       stiffness: 150,
     });
 
+    // Animate badge entrance with delay
     if (showStreakBadge) {
-      setTimeout(() => {
+      badgeTimeoutRef.current = setTimeout(() => {
         badgeOpacity.value = withTiming(1, {
           duration: 200,
           easing: Easing.out(Easing.ease),
@@ -67,19 +87,45 @@ export function HeroSection({
         });
       }, 400);
     }
-  }, [showStreakBadge, reduceMotion]);
 
-  const iconAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { scale: iconScale.value },
-      { translateY: iconTranslateY.value },
-    ],
-  }));
+    // Cleanup: cancel animations and clear timeout on unmount
+    return () => {
+      if (badgeTimeoutRef.current) {
+        clearTimeout(badgeTimeoutRef.current);
+        badgeTimeoutRef.current = null;
+      }
+      // Cancel any running animations to prevent writes to unmounted component
+      cancelAnimation(iconScale);
+      cancelAnimation(iconTranslateY);
+      cancelAnimation(badgeScale);
+      cancelAnimation(badgeOpacity);
+    };
+  }, [
+    showStreakBadge,
+    reduceMotion,
+    iconScale,
+    iconTranslateY,
+    badgeScale,
+    badgeOpacity,
+  ]);
 
-  const badgeAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: badgeOpacity.value,
-    transform: [{ scale: badgeScale.value }],
-  }));
+  const iconAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [
+        { scale: iconScale.value ?? 1 },
+        { translateY: iconTranslateY.value ?? 0 },
+      ],
+    };
+  });
+
+  const badgeAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: badgeOpacity.value ?? 0,
+      transform: [{ scale: badgeScale.value ?? 0 }],
+    };
+  });
 
   return (
     <View className='items-center pb-4'>

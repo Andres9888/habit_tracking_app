@@ -27,7 +27,7 @@ export function ScrollableContent({
   iconGlowStyle,
   onResearchPress,
 }: ScrollableContentProps) {
-  const tips = (template as any).tips;
+  const tips = (template as any)?.tips;
 
   return (
     <ScrollView
@@ -41,7 +41,7 @@ export function ScrollableContent({
         iconGlowStyle={iconGlowStyle}
         template={template}
       />
-      <DescriptionSection description={template.description} />
+      <DescriptionSection description={template?.description ?? ''} />
       <ScienceBox template={template} onResearchPress={onResearchPress} />
       {tips && Array.isArray(tips) && tips.length > 0 && (
         <TipsBox iconColor={iconColor} tips={tips} />

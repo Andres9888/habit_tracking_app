@@ -53,8 +53,8 @@ export function BrowseCategoriesTab({
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.categorySections}>
-          {categories
-            ?.filter((cat) => cat.id !== 'all')
+          {(categories ?? [])
+            .filter((cat) => cat.id !== 'all')
             .map((category) => {
               const templates = templatesByCategory.get(category.id) || [];
               if (templates.length === 0) return null;

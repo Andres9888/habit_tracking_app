@@ -21,14 +21,17 @@ export const XAxisLabels = React.memo(function XAxisLabels({
   labels,
   height,
 }: XAxisLabelsProps) {
+  // Guard against null/undefined labels
+  const safeLabels = labels ?? [];
+
   return (
     <View
       className='absolute bottom-0 left-0 right-0 flex-row justify-between px-4'
       style={{ height }}
     >
-      {labels.map((label, i) => (
+      {safeLabels.map((label, i) => (
         <Text key={i} className='text-xs text-stone-400'>
-          {label}
+          {label ?? ''}
         </Text>
       ))}
     </View>

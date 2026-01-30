@@ -17,8 +17,8 @@ interface CalendarDayProps {
 }
 
 function getTextColor(day: DayData): string {
-  if (!day.isCurrentMonth) return COLORS.TEXT_MUTED;
-  if (day.isFuture) return COLORS.TEXT_TERTIARY;
+  if (!day?.isCurrentMonth) return COLORS.TEXT_MUTED;
+  if (day?.isFuture) return COLORS.TEXT_TERTIARY;
   return COLORS.TEXT_PRIMARY;
 }
 
@@ -27,14 +27,15 @@ export const CalendarDay = memo(function CalendarDay({
   habitColor,
   onPress,
 }: CalendarDayProps) {
-  const showCompleted = day.isCompleted && day.isCurrentMonth && !day.isFuture;
-  const isToday = day.isToday;
+  // Guard against undefined day properties
+  const showCompleted = Boolean(day?.isCompleted && day?.isCurrentMonth && !day?.isFuture);
+  const isToday = Boolean(day?.isToday);
 
   return (
     <Pressable
-      disabled={day.isFuture || day.isBeforeCreation}
+      disabled={Boolean(day?.isFuture || day?.isBeforeCreation)}
       style={styles.dayWrapper}
-      onPress={() => onPress(day.dateString, day.isCompleted)}
+      onPress={() => onPress(day?.dateString ?? '', Boolean(day?.isCompleted))}
     >
       <View
         style={[
@@ -50,7 +51,7 @@ export const CalendarDay = memo(function CalendarDay({
             isToday && styles.todayText,
           ]}
         >
-          {day.dayNumber}
+          {day?.dayNumber ?? ''}
         </Text>
         {showCompleted && (
           <View style={[styles.dot, { backgroundColor: habitColor }]} />

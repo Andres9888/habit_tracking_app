@@ -39,29 +39,48 @@ export function useChartData({
       };
     }
 
-    const mappedPoints = data.map((snapshot, index) => ({
-      x: CHART_PADDING_X + (index / (data.length - 1)) * chartAreaWidth,
-      y:
-        CHART_PADDING_TOP +
-        chartAreaHeight -
-        (snapshot.strength / 100) * chartAreaHeight,
-    }));
+    const mappedPoints = data
+      .filter((snapshot): snapshot is StrengthSnapshot => snapshot != null)
+      .map((snapshot, index, arr) => ({
+        x: CHART_PADDING_X + (index / Math.max(1, arr.length - 1)) * chartAreaWidth,
+        y:
+          CHART_PADDING_TOP +
+          chartAreaHeight -
+          ((snapshot.strength ?? 0) / 100) * chartAreaHeight,
+      }));
 
     const curvePath = catmullRomToBezier(mappedPoints);
-    const fillPath = `${curvePath} L ${mappedPoints.at(-1).x} ${
+    const lastPoint = mappedPoints[mappedPoints.length - 1];
+    const firstPoint = mappedPoints[0];
+
+    // Safety check - should never happen due to length check above, but prevents crashes
+    if (!lastPoint || !firstPoint) {
+      return {
+        fillPathD: '',
+        lastPoint: { x: chartWidth / 2, y: CHART_HEIGHT / 2 },
+        pathD: '',
+        pathLength: 0,
+        points: [],
+      };
+    }
+
+    const fillPath = `${curvePath} L ${lastPoint.x} ${
       CHART_PADDING_TOP + chartAreaHeight
-    } L ${mappedPoints[0].x} ${CHART_PADDING_TOP + chartAreaHeight} Z`;
+    } L ${firstPoint.x} ${CHART_PADDING_TOP + chartAreaHeight} Z`;
 
     let estimatedLength = 0;
     for (let i = 1; i < mappedPoints.length; i++) {
       const prev = mappedPoints[i - 1];
       const point = mappedPoints[i];
-      estimatedLength += Math.hypot(point.x - prev.x, point.y - prev.y);
+      // Guard against undefined points (shouldn't happen but prevents crashes)
+      if (prev && point) {
+        estimatedLength += Math.hypot(point.x - prev.x, point.y - prev.y);
+      }
     }
 
     return {
       fillPathD: fillPath,
-      lastPoint: mappedPoints.at(-1),
+      lastPoint,
       pathD: curvePath,
       pathLength: estimatedLength,
       points: mappedPoints,

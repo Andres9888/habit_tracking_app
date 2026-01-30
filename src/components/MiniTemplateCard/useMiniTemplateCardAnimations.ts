@@ -72,12 +72,18 @@ export function useAnimatedCardStyle(
   pressScale: SharedValue<number>,
   pressRotation: SharedValue<number>
 ) {
-  return useAnimatedStyle(() => ({
-    elevation: shadowElevation.value,
-    shadowOpacity: interpolate(shadowElevation.value, [3, 8], [0.08, 0.15]),
-    transform: [
-      { scale: pressScale.value },
-      { rotate: `${Math.round(pressRotation.value)}deg` },
-    ],
-  }));
+  return useAnimatedStyle(() => {
+    'worklet';
+    const elevation = shadowElevation.value ?? 3;
+    const scale = pressScale.value ?? 1;
+    const rotation = pressRotation.value ?? 0;
+    return {
+      elevation,
+      shadowOpacity: interpolate(elevation, [3, 8], [0.08, 0.15]),
+      transform: [
+        { scale },
+        { rotate: `${Math.round(rotation)}deg` },
+      ],
+    };
+  });
 }

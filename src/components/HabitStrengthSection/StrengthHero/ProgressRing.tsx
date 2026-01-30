@@ -35,7 +35,9 @@ export function ProgressRing({
 
   // Animated props for the progress circle
   const animatedCircleProps = useAnimatedProps(() => {
-    const progress = animatedStrength.value / 100;
+    'worklet';
+    const strengthValue = animatedStrength.value ?? 0;
+    const progress = strengthValue / 100;
     return {
       strokeDashoffset: RING_CIRCUMFERENCE * (1 - progress),
     };

@@ -44,10 +44,13 @@ export const HeatmapTooltip = memo(function HeatmapTooltip({
     }
   }, [visible, opacity, scale, animationDuration, reduceMotion]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }],
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: opacity.value ?? 0,
+      transform: [{ scale: scale.value ?? 0.9 }],
+    };
+  });
   const tooltipText = formatTooltipText(day);
 
   if (!visible) return null;
@@ -72,7 +75,7 @@ export const HeatmapTooltip = memo(function HeatmapTooltip({
           accessible
           accessibilityLabel={tooltipText}
           accessibilityLiveRegion='polite'
-          accessibilityRole='tooltip'
+          accessibilityRole='alert'
           style={[styles.tooltip, tooltipStyle, animatedStyle]}
         >
           <Text style={styles.tooltipText}>{tooltipText}</Text>

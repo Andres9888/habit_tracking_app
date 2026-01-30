@@ -8,7 +8,7 @@
 import React, { memo, useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 
-import type { MonthLabel, BinaryDay } from './types';
+import type { BinaryMonthLabel, BinaryDay } from './types';
 import { CELL_SIZE, CELL_GAP, GRID } from './constants';
 import { styles } from './BinaryHeatmapNew.styles';
 import { getCellBackgroundColor, transformWeeksToRows } from './cellHelpers';
@@ -17,7 +17,7 @@ const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export interface InlineHeatmapGridProps {
   weeks: (BinaryDay | null)[][];
-  monthLabels: MonthLabel[];
+  monthLabels: BinaryMonthLabel[];
   habitColor: string;
 }
 

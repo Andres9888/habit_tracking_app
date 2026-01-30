@@ -43,21 +43,22 @@ export function useTemplatesScreenState({
   const [isSeeding, setIsSeeding] = useState(false);
 
   useEffect(() => {
-    if (categories && !hasInitializedExpanded) {
-      const nonAll = categories.filter((c) => c.id !== 'all');
+    if (Array.isArray(categories) && categories.length > 0 && !hasInitializedExpanded) {
+      const nonAll = categories.filter((c) => c?.id !== 'all');
       const init = new Set<string>();
       for (const [i, c] of nonAll.entries()) {
-        if ((i + 1) % 3 === 0) init.add(c.id);
+        if (c?.id && (i + 1) % 3 === 0) init.add(c.id);
       }
       setExpandedCategories(init);
       setHasInitializedExpanded(true);
     }
   }, [categories, hasInitializedExpanded]);
 
-  const isSearching = searchQuery.trim().length > 0;
+  const safeSearchQuery = searchQuery ?? '';
+  const isSearching = safeSearchQuery.trim().length > 0;
   const effectiveViewMode = isSearching ? 'search' : viewMode;
   const hasActiveFilters =
-    selectedCategory !== 'all' || Boolean(searchQuery.trim()) || researchOnly;
+    selectedCategory !== 'all' || Boolean(safeSearchQuery.trim()) || researchOnly;
 
   return {
     browseTab,

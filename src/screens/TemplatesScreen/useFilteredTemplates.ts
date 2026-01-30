@@ -14,8 +14,10 @@ export function useTemplatesByCategory(
 
     const grouped = new Map<string, Doc<'templates'>[]>();
     for (const template of allTemplates) {
-      const existing = grouped.get(template.category) || [];
-      grouped.set(template.category, [...existing, template]);
+      if (!template) continue;
+      const category = template.category || 'uncategorized';
+      const existing = grouped.get(category) || [];
+      grouped.set(category, [...existing, template]);
     }
 
     for (const [category, templates] of grouped.entries()) {
@@ -75,12 +77,13 @@ export function useFilteredTemplates(
       data = data.filter((t) => t.category === selectedCategory);
     if (researchOnly) data = data.filter((t) => Boolean(t.scientificLink));
 
-    if (searchQuery.trim()) {
-      const query = searchQuery.trim().toLowerCase();
+    const safeSearchQuery = (searchQuery ?? '').trim();
+    if (safeSearchQuery) {
+      const query = safeSearchQuery.toLowerCase();
       data = data.filter(
         (t) =>
-          t.name.toLowerCase().includes(query) ||
-          t.description.toLowerCase().includes(query)
+          (t.name || '').toLowerCase().includes(query) ||
+          (t.description || '').toLowerCase().includes(query)
       );
     }
 
@@ -88,8 +91,8 @@ export function useFilteredTemplates(
       SortOption,
       (a: Doc<'templates'>, b: Doc<'templates'>) => number
     > = {
-      az: (a, b) => a.name.localeCompare(b.name),
-      newest: (a, b) => b.createdAt - a.createdAt,
+      az: (a, b) => (a.name || '').localeCompare(b.name || ''),
+      newest: (a, b) => (b.createdAt || 0) - (a.createdAt || 0),
       popular: (a, b) => (b.popularityScore || 0) - (a.popularityScore || 0),
     };
 

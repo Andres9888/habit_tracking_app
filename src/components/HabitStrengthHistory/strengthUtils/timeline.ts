@@ -21,9 +21,20 @@ export function generateStrengthTimeline(
   habitCreatedAt: Date,
   sampleSize: number = DEFAULT_MAX_SAMPLE_POINTS
 ): StrengthSnapshot[] {
+  // Guard against invalid dates
+  if (!habitCreatedAt || isNaN(habitCreatedAt.getTime())) {
+    return [];
+  }
+
   const startDate = startOfDay(habitCreatedAt);
   const endDate = startOfDay(new Date());
   const totalDays = differenceInDays(endDate, startDate) + 1;
+
+  // Guard against negative or extremely large day counts
+  if (totalDays <= 0 || totalDays > 3650) {
+    return [];
+  }
+
   const dataPoints = iterateStrengthValues(completedDates, startDate, endDate);
 
   if (totalDays <= sampleSize) {
@@ -43,12 +54,21 @@ function sampleTimeline(
   totalDays: number,
   sampleSize: number
 ): StrengthSnapshot[] {
+  // Guard against empty or invalid data
+  if (dataPoints.length === 0) {
+    return [];
+  }
+
   const timeline: StrengthSnapshot[] = [];
   const step = (totalDays - 1) / (sampleSize - 1);
 
   for (let i = 0; i < sampleSize; i++) {
-    const index = Math.round(i * step);
+    const index = Math.min(Math.round(i * step), dataPoints.length - 1);
     const sample = dataPoints[index];
+    // Safety check in case index calculation goes wrong
+    if (!sample) {
+      continue;
+    }
     timeline.push({
       date: sample.date,
       dateString: formatDateString(sample.date),

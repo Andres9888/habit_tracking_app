@@ -23,26 +23,10 @@ let isInitialized = false;
 
 /**
  * Check if running in Expo Go (where native stores are unavailable)
+ * StoreClient = Expo Go, Standalone/Bare = development build
  */
 function isExpoGo(): boolean {
-  // In dev builds, executionEnvironment may not be set correctly
-  // Check for the presence of the native module instead
-  const hasNativeModule = !!Purchases;
-  const envCheck = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
-
-  console.log('[Purchases] Environment check:', {
-    executionEnvironment: Constants.executionEnvironment,
-    storeClient: ExecutionEnvironment.StoreClient,
-    envCheck,
-    hasNativeModule,
-  });
-
-  // If we have the native module, we're NOT in Expo Go
-  if (hasNativeModule) {
-    return false;
-  }
-
-  return envCheck;
+  return Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 }
 
 /**
@@ -60,6 +44,13 @@ export async function initializePurchases(userId?: string): Promise<void> {
   // Skip on web - RevenueCat doesn't support web
   if (Platform.OS === 'web') {
     console.log('[Purchases] Web platform not supported, skipping');
+    return;
+  }
+
+  // Skip in Expo Go - native stores unavailable
+  if (isExpoGo()) {
+    console.log('[Purchases] Expo Go detected - native stores unavailable, skipping');
+    console.log('[Purchases] Use a development build to test purchases');
     return;
   }
 

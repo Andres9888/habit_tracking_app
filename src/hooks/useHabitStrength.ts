@@ -59,7 +59,11 @@ export function useHabitStrength(
   // Key insight: We use completedDates.size as a proxy for content changes
   // This works because the Set is typically recreated when entries change
   const result = useMemo(() => {
-    const createdAtDate = new Date(habitCreatedAt);
+    // Defensive check for invalid habitCreatedAt
+    const safeCreatedAt = typeof habitCreatedAt === 'number' && !isNaN(habitCreatedAt) && habitCreatedAt > 0
+      ? habitCreatedAt
+      : Date.now();
+    const createdAtDate = new Date(safeCreatedAt);
     const today = startOfDay(new Date());
     const habitAgeDays = differenceInDays(today, startOfDay(createdAtDate)) + 1;
 
