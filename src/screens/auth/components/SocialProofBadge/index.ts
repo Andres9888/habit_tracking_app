@@ -1,1 +1,1 @@
-export { SocialProofBadge } from './SocialProofBadge';
+export { SocialProofBadge, default } from './SocialProofBadge';
