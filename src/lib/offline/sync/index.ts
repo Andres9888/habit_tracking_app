@@ -77,3 +77,36 @@ export type {
   QueueProcessorDeps,
   QueueProgressCallback,
 } from './processQueue';
+
+// State Reconciliation (FR-008: Reconcile local with server values)
+export {
+  DEFAULT_RECONCILIATION_CONFIG,
+  getStateReconciler,
+  resetStateReconciler,
+  StateReconciler,
+  useReconciliation,
+} from './reconcile';
+
+// Reconciliation Helpers
+export {
+  buildReconciliationResult,
+  createEmptyReconciliationResult,
+  extractSyncedHabits,
+  updateHabitSyncTimestamps,
+  wasHabitSyncedAfter,
+} from './reconcile';
+
+// Reconciliation Types
+export type {
+  ProcessedOperation,
+  ReconciliationCallback,
+  ReconciliationConfig,
+  ReconciliationEvent,
+  ReconciliationEventListener,
+  ReconciliationEventType,
+  ReconciliationResult,
+  ReconciliationState,
+  SyncedHabit,
+  UseReconciliationOptions,
+  UseReconciliationReturn,
+} from './reconcile';
