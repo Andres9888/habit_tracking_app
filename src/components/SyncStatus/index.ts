@@ -13,3 +13,6 @@ export type { SyncingIndicatorProps } from './SyncingIndicator';
 
 export { PendingSyncBadge } from './PendingSyncBadge';
 export type { PendingSyncBadgeProps } from './PendingSyncBadge';
+
+export { SyncedToast, useSyncedToast } from './SyncedToast';
+export type { SyncedToastProps, UseSyncedToastResult } from './SyncedToast';
