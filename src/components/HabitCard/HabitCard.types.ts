@@ -1,10 +1,13 @@
 /**
  * HabitCard Types
  * Type definitions for the HabitCard component
+ *
+ * @see docs/offline-habit-sync.md T013 - Offline state support
  */
 
 import type { ViewStyle } from 'react-native';
-import type { Id } from '../../../../convex/_generated/dataModel';
+import type { Id } from '../../../convex/_generated/dataModel';
+import type { TrackingRecord } from '../../lib/offline';
 import type { HabitCardEntranceVariant } from './useHabitCardEntrance';
 
 export interface HabitCardProps {
@@ -76,4 +79,23 @@ export interface HabitCardProps {
    * Callback fired when entrance animation completes.
    */
   onEntranceComplete?: () => void;
+
+  /**
+   * Server-side tracking records for offline streak calculation.
+   * When provided with offlineSyncEnabled, enables offline-aware
+   * streak and completion display.
+   *
+   * @see docs/offline-habit-sync.md T013
+   */
+  serverTracking?: TrackingRecord[];
+
+  /**
+   * Enable offline sync integration for this habit card.
+   * When true, the card will merge server state with pending
+   * offline operations for accurate display.
+   *
+   * @default false
+   * @see docs/offline-habit-sync.md T013
+   */
+  offlineSyncEnabled?: boolean;
 }

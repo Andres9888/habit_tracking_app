@@ -1,16 +1,17 @@
 /**
  * useHabitCard Hook - Core orchestration logic
+ *
+ * @see docs/offline-habit-sync.md T013 - Offline state integration
  */
 
-import { useState } from 'react';
-import { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
-import { useMutation, useQuery } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
+import { useAnimatedStyle } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
 import { useHabitCardEntrance } from './useHabitCardEntrance';
 import { useHabitCardAnimations } from './useHabitCardAnimations';
 import { useHabitCardGestures } from './useHabitCardGestures';
 import { useHabitCardEffects } from './useHabitCardEffects';
+import { useHabitCardState } from './hooks';
+import { useHabitCardValues } from './useHabitCardValues';
 import { getStrengthColor, getBackgroundColor } from './HabitCard.utils';
 import type { HabitCardProps } from './HabitCard.types';
 
@@ -20,6 +21,8 @@ export function useHabitCard(props: HabitCardProps) {
     name,
     color,
     strength,
+    currentStreak: currentStreakProp = 0,
+    bestStreak: bestStreakProp = 0,
     atRisk = false,
     completed: completedProp = false,
     disabled = false,
@@ -29,23 +32,21 @@ export function useHabitCard(props: HabitCardProps) {
     entranceDelay = 0,
     triggerEntrance: shouldTriggerEntrance = true,
     onEntranceComplete,
+    serverTracking = [],
+    offlineSyncEnabled = false,
   } = props;
 
   const theme = useAppTheme();
-  const translateX = useSharedValue(0);
-  const cardScale = useSharedValue(1);
-  const strengthFillWidth = useSharedValue(strength);
-  const [showFloatingXP, setShowFloatingXP] = useState(false);
-  const [xpPosition, setXPPosition] = useState({ x: 0, y: 0 });
-  const [isToggling, setIsToggling] = useState(false);
+  const values = useHabitCardValues(strength);
 
-  const today = new Date().toISOString().split('T')[0];
-  const completedQuery = useQuery(api.tracking.getCompletionStatus, {
-    date: today,
-    habitId: id,
+  const habitState = useHabitCardState({
+    bestStreakProp,
+    completedProp,
+    currentStreakProp,
+    id,
+    offlineSyncEnabled,
+    serverTracking,
   });
-  const completed = completedQuery ?? completedProp;
-  const toggleCompletionMutation = useMutation(api.tracking.toggleCompletion);
 
   const entrance = useHabitCardEntrance({
     autoTrigger: shouldTriggerEntrance,
@@ -55,25 +56,25 @@ export function useHabitCard(props: HabitCardProps) {
   });
 
   const animations = useHabitCardAnimations({
-    cardScale,
-    setShowFloatingXP,
-    setXPPosition,
-    translateX,
+    cardScale: values.cardScale,
+    setShowFloatingXP: values.setShowFloatingXP,
+    setXPPosition: values.setXPPosition,
+    translateX: values.translateX,
   });
 
   const { composedGesture } = useHabitCardGestures({
-    cardScale,
-    completed,
+    cardScale: values.cardScale,
+    completed: habitState.completed,
     disabled,
     id,
-    isToggling,
+    isToggling: values.isToggling,
     name,
     onLongPress,
     onPress,
-    setIsToggling,
-    today,
-    toggleCompletionMutation,
-    translateX,
+    setIsToggling: values.setIsToggling,
+    today: habitState.today,
+    toggleCompletionMutation: habitState.toggleCompletionMutation,
+    translateX: values.translateX,
     triggerCompletionCelebration: animations.triggerCompletionCelebration,
     triggerUncheckAnimation: animations.triggerUncheckAnimation,
   });
@@ -81,29 +82,32 @@ export function useHabitCard(props: HabitCardProps) {
   useHabitCardEffects({
     checkmarkRotate: animations.checkmarkRotate,
     checkmarkScale: animations.checkmarkScale,
-    completed,
+    completed: habitState.completed,
     strength,
-    strengthFillWidth,
+    strengthFillWidth: values.strengthFillWidth,
   });
 
   const strengthFillStyle = useAnimatedStyle(() => ({
-    width: `${strengthFillWidth.value}%`,
+    width: `${values.strengthFillWidth.value}%`,
   }));
 
   return {
     accentColor: color || theme.custom.colors.primary[500],
     animations,
-    backgroundColor: getBackgroundColor(completed, atRisk, theme),
+    backgroundColor: getBackgroundColor(habitState.completed, atRisk, theme),
+    bestStreak: habitState.bestStreak,
     borderRadius: theme.custom.borderRadius.large,
-    completed,
+    completed: habitState.completed,
     composedGesture,
+    currentStreak: habitState.currentStreak,
     entrance,
-    setShowFloatingXP,
-    showFloatingXP,
+    hasPendingOfflineOps: habitState.hasPendingOfflineOps,
+    setShowFloatingXP: values.setShowFloatingXP,
+    showFloatingXP: values.showFloatingXP,
     strengthColor: getStrengthColor(strength, theme),
     strengthFillStyle,
     theme,
-    translateX,
-    xpPosition,
+    translateX: values.translateX,
+    xpPosition: values.xpPosition,
   };
 }
