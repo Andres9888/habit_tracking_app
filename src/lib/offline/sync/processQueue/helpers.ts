@@ -12,6 +12,7 @@ import type { ProcessQueueResult, ProcessOperationResult } from './types';
 export function createEmptyResult(): ProcessQueueResult {
   return {
     allSucceeded: true,
+    conflictSkipped: 0,
     failed: 0,
     hasMore: false,
     results: [],
@@ -34,9 +35,11 @@ export function aggregateResults(
   const succeeded = results.filter((r) => r.success).length;
   const failed = results.filter((r) => !r.success && !r.shouldRetry).length;
   const skipped = results.filter((r) => !r.success && r.shouldRetry).length;
+  const conflictSkipped = results.filter((r) => r.skippedDueToConflict).length;
 
   return {
     allSucceeded: succeeded === results.length && results.length > 0,
+    conflictSkipped,
     failed,
     hasMore: totalOperationsInQueue > batchSize,
     results,

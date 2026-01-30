@@ -9,6 +9,12 @@ import type { OfflineOperation } from '../../queue';
 import type { OfflineQueueManagerAPI } from '../../queueManager';
 import type { OfflineSyncManager } from '../../syncManager';
 import type { ToggleSyncExecutor } from '../types';
+import type {
+  CompletionStateChecker,
+  ConflictEventListener,
+  ConflictResolverConfig,
+  ConflictResolution,
+} from '../conflictResolver';
 
 /**
  * Result of processing a single operation
@@ -24,6 +30,10 @@ export interface ProcessOperationResult {
   error?: string;
   /** Duration of the operation in milliseconds */
   durationMs: number;
+  /** Conflict resolution that was applied (if any) */
+  conflictResolution?: ConflictResolution;
+  /** Whether operation was skipped due to conflict resolution */
+  skippedDueToConflict?: boolean;
 }
 
 /**
@@ -38,6 +48,8 @@ export interface ProcessQueueResult {
   failed: number;
   /** Operations skipped (not ready for retry yet or circuit open) */
   skipped: number;
+  /** Operations skipped due to conflict resolution (server already has desired state) */
+  conflictSkipped: number;
   /** Individual results for each operation */
   results: ProcessOperationResult[];
   /** Total processing duration in milliseconds */
@@ -73,6 +85,12 @@ export interface ProcessQueueConfig {
   onFailure?: (op: OfflineOperation, error: string) => void;
   /** Callback when an operation is skipped */
   onSkipped?: (op: OfflineOperation, reason: string) => void;
+  /** Conflict resolution configuration */
+  conflictConfig?: ConflictResolverConfig;
+  /** Callback when a conflict is detected */
+  onConflict?: ConflictEventListener;
+  /** Callback when an operation is skipped due to conflict resolution */
+  onConflictSkip?: (op: OfflineOperation, reason: string) => void;
 }
 
 /**
@@ -85,6 +103,8 @@ export interface QueueProcessorDeps {
   syncManager: OfflineSyncManager;
   /** Executor function for syncing toggle operations */
   executor: ToggleSyncExecutor;
+  /** Optional server state checker for conflict detection (US4) */
+  serverStateChecker?: CompletionStateChecker;
 }
 
 /**
@@ -116,5 +136,9 @@ export interface ProcessSingleOptions {
     onSuccess?: (op: OfflineOperation) => void;
     onFailure?: (op: OfflineOperation, error: string) => void;
     onSkipped?: (op: OfflineOperation, reason: string) => void;
+    onConflict?: ConflictEventListener;
+    onConflictSkip?: (op: OfflineOperation, reason: string) => void;
   };
+  /** Conflict resolution configuration */
+  conflictConfig?: ConflictResolverConfig;
 }

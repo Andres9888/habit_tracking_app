@@ -45,7 +45,7 @@ function updateContext(
  * Process the offline queue in FIFO order
  *
  * @param deps - Queue manager, sync manager, and executor
- * @param config - Processing configuration
+ * @param config - Processing configuration (includes US4 conflict options)
  * @returns Aggregated result of processing
  */
 export async function processQueue(
@@ -59,6 +59,9 @@ export async function processQueue(
     onSuccess,
     onFailure,
     onSkipped,
+    conflictConfig,
+    onConflict,
+    onConflictSkip,
   } = config;
 
   const { queueManager } = deps;
@@ -77,7 +80,14 @@ export async function processQueue(
     onProgress?.(i, pendingOperations.length, operation);
 
     const result = await processSingleOperation(operation, deps, {
-      callbacks: { onFailure, onSkipped, onSuccess },
+      callbacks: {
+        onConflict,
+        onConflictSkip,
+        onFailure,
+        onSkipped,
+        onSuccess,
+      },
+      conflictConfig,
       context,
     });
 

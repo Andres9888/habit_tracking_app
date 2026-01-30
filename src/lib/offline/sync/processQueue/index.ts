@@ -16,6 +16,15 @@ export {
   shouldSkipOperation,
 } from './processSingleOperation';
 
+// Conflict check (US4)
+export {
+  checkAndResolveConflict,
+  type ConflictCheckResult,
+} from './conflictCheck';
+
+// Sync execution
+export { executeSync } from './executeSync';
+
 // Helpers
 export { createEmptyResult, aggregateResults } from './helpers';
 
