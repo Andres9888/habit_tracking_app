@@ -9,7 +9,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, type ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, Pressable, type ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -24,6 +24,15 @@ export type EmptyStateVariant =
   | 'noData'
   | 'noResults'
   | 'premiumLocked';
+
+/**
+ * Quick start template for one-tap habit creation
+ */
+export interface QuickStartTemplate {
+  emoji: string;
+  name: string;
+  duration?: string;
+}
 
 export interface EmptyStateProps {
   /** Variant type */
@@ -44,12 +53,26 @@ export interface EmptyStateProps {
   /** CTA button handler */
   onCTA?: () => void;
 
+  /** Quick start template handler (noHabits variant) */
+  onQuickStart?: (template: QuickStartTemplate) => void;
+
   /** Hide CTA button */
   hideCTA?: boolean;
 
   /** Custom style */
   style?: ViewStyle;
 }
+
+/**
+ * Quick start templates for first-time users
+ * Reduces decision fatigue by offering popular habits
+ */
+export const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
+  { emoji: '🧘', name: 'Meditate', duration: '10 min' },
+  { emoji: '📖', name: 'Read', duration: '20 min' },
+  { emoji: '💪', name: 'Exercise', duration: '30 min' },
+  { emoji: '💧', name: 'Drink Water', duration: '8 glasses' },
+];
 
 /**
  * Default content for each variant
@@ -71,11 +94,10 @@ const VARIANT_CONFIG: Record<
     icon: '📊',
   },
   noHabits: {
-    ctaLabel: 'New Habit',
-    description:
-      'Add a habit to start tracking your progress and building streaks.',
-    headline: 'Create your first habit',
-    icon: '🌱',
+    ctaLabel: 'Create Custom Habit',
+    description: 'Or start with a popular template:',
+    headline: 'Ready to build a new habit?',
+    icon: '🚀',
   },
   noResults: {
     ctaLabel: 'Clear Filters',
@@ -99,6 +121,7 @@ export function EmptyState({
   description,
   ctaLabel,
   onCTA,
+  onQuickStart,
   hideCTA = false,
   style,
 }: EmptyStateProps) {
@@ -203,6 +226,29 @@ export function EmptyState({
         {displayDescription}
       </Animated.Text>
 
+      {/* Quick Start Templates (noHabits variant only) */}
+      {variant === 'noHabits' && onQuickStart && (
+        <Animated.View style={[styles.quickStartSection, descriptionStyle]}>
+          <View style={styles.templateRow}>
+            {QUICK_START_TEMPLATES.map((template) => (
+              <Pressable
+                key={template.name}
+                accessibilityLabel={`Create ${template.name} habit`}
+                accessibilityRole='button'
+                style={({ pressed }) => [
+                  styles.templateChip,
+                  pressed && styles.templateChipPressed,
+                ]}
+                onPress={() => onQuickStart(template)}
+              >
+                <Text style={styles.templateEmoji}>{template.emoji}</Text>
+                <Text style={styles.templateName}>{template.name}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </Animated.View>
+      )}
+
       {/* CTA Button */}
       {!hideCTA && onCTA && (
         <Animated.View style={ctaStyle}>
@@ -229,7 +275,7 @@ const styles = StyleSheet.create({
     paddingVertical: 64,
   },
   description: {
-    marginBottom: 24,
+    marginBottom: 16,
     maxWidth: 320,
     textAlign: 'center',
   },
@@ -240,6 +286,40 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 64,
     marginBottom: 16,
+  },
+  // Quick start templates
+  quickStartSection: {
+    marginTop: 8,
+    marginBottom: 24,
+    alignItems: 'center',
+    width: '100%',
+  },
+  templateRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  templateChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 20,
+    gap: 6,
+  },
+  templateChipPressed: {
+    backgroundColor: '#e5e7eb',
+    transform: [{ scale: 0.98 }],
+  },
+  templateEmoji: {
+    fontSize: 16,
+  },
+  templateName: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#374151',
   },
 });
 
