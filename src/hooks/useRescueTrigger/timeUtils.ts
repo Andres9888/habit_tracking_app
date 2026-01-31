@@ -18,13 +18,28 @@ export function getHoursUntilMidnight(): number {
 
 /**
  * Parse time string (HH:MM) to hours and minutes
+ * Returns default values (0, 0) if parsing fails
  */
 export function parseTimeString(time: string): {
   hours: number;
   minutes: number;
 } {
-  const [hours, minutes] = time.split(':').map(Number);
-  return { hours: hours || 0, minutes: minutes || 0 };
+  if (!time || typeof time !== 'string') {
+    return { hours: 0, minutes: 0 };
+  }
+
+  const parts = time.split(':');
+  if (parts.length < 2) {
+    return { hours: 0, minutes: 0 };
+  }
+
+  const hours = Number(parts[0]);
+  const minutes = Number(parts[1]);
+
+  return {
+    hours: Number.isNaN(hours) ? 0 : Math.max(0, Math.min(23, hours)),
+    minutes: Number.isNaN(minutes) ? 0 : Math.max(0, Math.min(59, minutes)),
+  };
 }
 
 /**
@@ -62,7 +77,7 @@ export function isPastScheduledTime(scheduledTime?: string | Date): boolean {
   let scheduled: Date;
 
   if (typeof scheduledTime === 'string') {
-    const [hours, minutes] = scheduledTime.split(':').map(Number);
+    const { hours, minutes } = parseTimeString(scheduledTime);
     scheduled = new Date(now);
     scheduled.setHours(hours, minutes, 0, 0);
   } else {
