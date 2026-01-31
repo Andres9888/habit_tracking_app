@@ -16,7 +16,9 @@ export function AuthGate() {
   useEffect(() => {
     if (isSignedIn) {
       getOrCreateUser().catch((error) => {
-        console.error('Failed to sync user:', error);
+        if (__DEV__) {
+          console.error('Failed to sync user:', error);
+        }
       });
     }
   }, [isSignedIn, getOrCreateUser]);
