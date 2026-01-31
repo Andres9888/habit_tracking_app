@@ -15,6 +15,7 @@ interface CTAFooterProps {
   onPressIn: () => void;
   onPressOut: () => void;
   reduceMotion: boolean;
+  isRestoring?: boolean;
 }
 
 export function CTAFooter({
@@ -24,6 +25,7 @@ export function CTAFooter({
   onPressIn,
   onPressOut,
   reduceMotion,
+  isRestoring = false,
 }: CTAFooterProps) {
   return (
     <View className='absolute bottom-0 left-0 right-0 border-t border-stone-200 bg-white px-4 pb-8 pt-4'>
@@ -58,9 +60,13 @@ export function CTAFooter({
           </LinearGradient>
         </Animated.View>
       </Pressable>
-      <Pressable className='mt-2 py-2' onPress={onRestorePurchases}>
+      <Pressable
+        className='mt-2 py-2'
+        disabled={isRestoring}
+        onPress={onRestorePurchases}
+      >
         <Text className='text-center text-xs text-violet-600'>
-          Already premium? Restore purchases
+          {isRestoring ? 'Restoring...' : 'Already premium? Restore purchases'}
         </Text>
       </Pressable>
     </View>

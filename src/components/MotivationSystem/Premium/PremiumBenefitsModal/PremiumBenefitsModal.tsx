@@ -1,9 +1,4 @@
-/**
- * PremiumBenefitsModal Component
- *
- * A modal that displays all premium motivation features with their
- * benefits and scientific backing.
- */
+/** PremiumBenefitsModal - Displays premium features with benefits and scientific backing. */
 
 import React, { useCallback } from 'react';
 import { View, ScrollView, Modal } from 'react-native';
@@ -20,6 +15,7 @@ import { HeroSection } from './HeroSection';
 import { FeatureRow } from './FeatureRow';
 import { SocialProof } from './SocialProof';
 import { CTAFooter } from './CTAFooter';
+import { useRestorePurchases } from './useRestorePurchases';
 
 export function PremiumBenefitsModal({
   visible,
@@ -30,6 +26,7 @@ export function PremiumBenefitsModal({
   testID,
 }: PremiumBenefitsModalProps) {
   const { triggerSelection, triggerLightImpact } = useHapticFeedback({});
+  const { handleRestore, isRestoring } = useRestorePurchases(onClose);
   const buttonScale = useSharedValue(1);
 
   const handleClose = useCallback(() => {
@@ -42,20 +39,15 @@ export function PremiumBenefitsModal({
     onStartTrial();
   }, [onStartTrial, triggerSelection]);
 
-  const handleRestorePurchases = useCallback(() => {
-    triggerLightImpact();
-    // TODO: Implement restore purchases
-  }, [triggerLightImpact]);
-
   const buttonAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: buttonScale.value }],
   }));
 
-  const handleButtonPressIn = useCallback(() => {
+  const handlePressIn = useCallback(() => {
     buttonScale.value = withTiming(0.97, { duration: 100 });
   }, [buttonScale]);
 
-  const handleButtonPressOut = useCallback(() => {
+  const handlePressOut = useCallback(() => {
     buttonScale.value = withTiming(1, { duration: 100 });
   }, [buttonScale]);
 
@@ -95,10 +87,11 @@ export function PremiumBenefitsModal({
         </ScrollView>
         <CTAFooter
           buttonAnimatedStyle={buttonAnimatedStyle}
+          isRestoring={isRestoring}
           reduceMotion={reduceMotion}
-          onPressIn={handleButtonPressIn}
-          onPressOut={handleButtonPressOut}
-          onRestorePurchases={handleRestorePurchases}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          onRestorePurchases={() => void handleRestore()}
           onStartTrial={handleStartTrial}
         />
       </View>
