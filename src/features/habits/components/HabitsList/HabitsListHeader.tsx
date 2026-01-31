@@ -1,3 +1,4 @@
+import { getTodayString } from '../../../../../utils/getLocalDateString';
 /**
  * HabitsListHeader Component
  * Renders the header section with HabitsHeader and CalendarTimeline
@@ -40,7 +41,7 @@ export function HabitsListHeader(props: HabitsListHeaderProps) {
     openTemplatesScreen,
   } = props;
 
-  const todayString = new Date().toISOString().split('T')[0];
+  const todayString = getTodayString();
   const completedToday = habits.filter(
     (h) => getHabitStatus(h._id, todayString) === 'done'
   ).length;

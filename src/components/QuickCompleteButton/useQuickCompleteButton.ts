@@ -1,3 +1,4 @@
+import { getTodayString } from '../../utils/getLocalDateString';
 /**
  * useQuickCompleteButton Hook
  * Manages state and animations for the QuickCompleteButton
@@ -46,7 +47,7 @@ export function useQuickCompleteButton({
     });
 
   const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
 
   useEffect(() => {
     setLocalCompleted(completedToday);
