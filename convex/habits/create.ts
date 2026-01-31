@@ -11,9 +11,12 @@ import { validateHabitFields } from './validation';
 export const create = mutation({
   args: createHabitArgs,
   handler: async (ctx, args) => {
-    // Get authenticated user (optional for now during auth debugging)
+    // SEC-001: Authentication check - require user to be logged in
     const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.subject;
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to create habits');
+    }
+    const userId = identity.subject;
 
     // SEC-003: Input validation
     const validated = validateHabitFields(args);
