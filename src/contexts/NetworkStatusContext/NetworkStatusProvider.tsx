@@ -4,15 +4,18 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import NetInfo from '@react-native-community/netinfo';
+import * as Network from 'expo-network';
 import type {
   NetworkStatus,
   NetworkStatusContextValue,
   NetworkStatusProviderProps,
 } from './types';
-import { netInfoToStatus, calculateIsOnline } from './utils';
+import { networkStateToStatus, calculateIsOnline } from './utils';
+import type { NetworkState } from './utils';
 import { defaultNetworkStatus } from './defaults';
 import { NetworkStatusContext } from './context';
+
+// Re-export context for consumers
 
 export function NetworkStatusProvider({
   children,
@@ -29,8 +32,8 @@ export function NetworkStatusProvider({
   const isOnline = calculateIsOnline(status);
 
   const handleStatusUpdate = useCallback(
-    (newState: Parameters<typeof netInfoToStatus>[0]) => {
-      const newStatus = netInfoToStatus(newState);
+    (newState: NetworkState) => {
+      const newStatus = networkStateToStatus(newState);
       const wasOnline = previousIsOnlineRef.current;
       const nowOnline = calculateIsOnline(newStatus);
 
@@ -57,15 +60,15 @@ export function NetworkStatusProvider({
   );
 
   useEffect(() => {
-    void NetInfo.fetch().then(handleStatusUpdate);
-    const unsubscribe = NetInfo.addEventListener(handleStatusUpdate);
-    return () => unsubscribe();
+    void Network.getNetworkStateAsync().then(handleStatusUpdate);
+    const subscription = Network.addNetworkStateListener(handleStatusUpdate);
+    return () => subscription.remove();
   }, [handleStatusUpdate]);
 
   const refresh = useCallback(async () => {
     setIsChecking(true);
     try {
-      handleStatusUpdate(await NetInfo.fetch());
+      handleStatusUpdate(await Network.getNetworkStateAsync());
     } catch (error) {
       console.warn('Error refreshing network status:', error);
       setIsChecking(false);
@@ -103,3 +106,5 @@ export function NetworkStatusProvider({
 }
 
 export default NetworkStatusProvider;
+
+export { NetworkStatusContext } from './context';

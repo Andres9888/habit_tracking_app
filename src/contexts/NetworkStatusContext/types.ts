@@ -3,7 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
-import type { NetInfoStateType } from '@react-native-community/netinfo';
+import type { NetworkStateType } from 'expo-network';
 
 /**
  * Network status details
@@ -14,7 +14,7 @@ export interface NetworkStatus {
   /** Whether the internet is reachable (not just connected to a network) */
   isInternetReachable: boolean | null;
   /** Type of connection (wifi, cellular, none, etc.) */
-  connectionType: NetInfoStateType;
+  connectionType: NetworkStateType | string;
   /** Whether the connection is expensive (cellular) */
   isExpensive: boolean;
   /** Timestamp of last status change */

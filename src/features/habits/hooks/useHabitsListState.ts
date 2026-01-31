@@ -1,3 +1,12 @@
+/**
+ * HabitsListState Hook
+ *
+ * Main state hook for the habits list view with offline support.
+ * Integrates optimistic updates and offline queue for habit toggling.
+ *
+ * @see docs/offline-habit-sync.md T011
+ */
+
 import { useCallback, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
@@ -9,12 +18,14 @@ import { useHabitsArchive } from './useHabitsArchive';
 import { useRewardToast } from './useRewardToast';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
+import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import type { HabitsListState } from './types';
 
 const FREE_HABIT_LIMIT = 3;
 
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
+  const isOnline = useIsOnline();
   const toggleHabitMutation = useMutation(api.habits.toggleHabit);
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
@@ -69,9 +80,11 @@ export function useHabitsListState(): HabitsListState {
   }, []);
 
   // Wrap toggle mutation with optimistic update for immediate feedback
+  // Pass isOnline for offline queue integration (T011)
   const toggleHabit = useOptimisticToggleMutation(
     toggleHabitMutation,
-    isCompleted
+    isCompleted,
+    { isOnline }
   );
 
   return {

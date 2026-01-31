@@ -51,3 +51,6 @@ export type {
   ReorderOperationPayload,
   PauseOperationPayload,
 } from './types';
+
+// T010: Offline queue integration types
+export type { OptimisticToggleOptions, ToggleMutationResult } from './hooks';

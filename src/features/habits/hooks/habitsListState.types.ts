@@ -1,9 +1,12 @@
 /**
  * HabitsListState Types
  * State interface for the habits list view
+ *
+ * @see docs/offline-habit-sync.md T011
  */
 
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { ToggleMutationResult } from '../../../lib/optimistic';
 import type {
   Habit,
   HabitSettings,
@@ -48,6 +51,10 @@ export interface HabitsListState {
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
   rewardToast: RewardToastData | null;
-  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<void>;
+  /** Toggle habit completion with offline queue support (T011) */
+  toggleHabit: (args: {
+    habitId: Id<'habits'>;
+    date: string;
+  }) => Promise<ToggleMutationResult>;
   isPremiumUser: boolean;
 }

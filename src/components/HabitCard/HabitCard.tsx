@@ -1,5 +1,7 @@
 /**
  * HabitCard Component - Display individual habit with tracking and animations
+ *
+ * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
  */
 
 import React from 'react';
@@ -30,6 +32,7 @@ export function HabitCard(props: HabitCardProps) {
     onEdit,
     onDelete,
     style,
+    completionIcon = 'checkbox',
   } = props;
 
   const habit = useHabitCard(props);
@@ -77,11 +80,15 @@ export function HabitCard(props: HabitCardProps) {
           />
           <HabitCardContent
             atRisk={atRisk}
-            bestStreak={bestStreak}
+            bestStreak={habit.bestStreak}
+            chainRotate={habit.animations.chainRotate}
+            chainScale={habit.animations.chainScale}
             checkmarkAnimatedStyle={habit.animations.checkmarkAnimatedStyle}
             completed={habit.completed}
-            currentStreak={currentStreak}
+            completionIcon={completionIcon}
+            currentStreak={habit.currentStreak}
             entranceContentStyle={habit.entrance.contentStyle}
+            hasPendingOfflineOps={habit.hasPendingOfflineOps}
             icon={icon}
             name={name}
             rippleAnimatedStyle={habit.animations.rippleAnimatedStyle}

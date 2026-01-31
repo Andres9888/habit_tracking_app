@@ -1,15 +1,17 @@
 /**
  * HabitsListHeader Component
  * Renders the header section with HabitsHeader and CalendarTimeline
+ *
+ * Implements US3 (Visual Sync Status Indicators) - displays OfflineIndicator
+ * when app is offline per acceptance criteria 1.
  */
 
 import { Animated, View } from 'react-native';
 import { HabitsHeader } from '../HabitsHeader';
-import {
-  CalendarTimeline,
-  type DayCompletionStatus,
-} from '../../../../components/CalendarTimeline';
+import { CalendarTimeline } from '../../../../components/CalendarTimeline';
+import { OfflineIndicator } from '../../../../components/SyncStatus';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
+import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
 export function HabitsListHeader(props: HabitsListHeaderProps) {
   const {
@@ -20,15 +22,11 @@ export function HabitsListHeader(props: HabitsListHeaderProps) {
     justCreatedHabitId,
     reduceMotionPreference,
     showWeekCompletionBar,
-  } = props;
-  const {
     headerOpacity,
     headerTranslateY,
     calendarOpacity,
     calendarTranslateY,
     getHabitStatus,
-  } = props;
-  const {
     isPremiumUser,
     onAddHabitPress,
     onDayPress,
@@ -40,26 +38,28 @@ export function HabitsListHeader(props: HabitsListHeaderProps) {
     openTemplatesScreen,
   } = props;
 
-  const todayString = new Date().toISOString().split('T')[0];
-  const completedToday = habits.filter(
-    (h) => getHabitStatus(h._id, todayString) === 'done'
-  ).length;
-  const totalHabits = habits.length;
-
-  const completionByDay: Record<string, DayCompletionStatus> = {};
-  for (const dateString of weekDateStrings) {
-    completionByDay[dateString] = {
-      completed: habits.filter(
-        (h) => getHabitStatus(h._id, dateString) === 'done'
-      ).length,
-      total: totalHabits,
-    };
-  }
-
-  const shouldShowTimeline = totalHabits > 0 || justCreatedHabitId !== null;
+  const {
+    completedToday,
+    totalHabits,
+    completionByDay,
+    shouldShowTimeline,
+    isOffline,
+  } = useHabitsListHeaderComputed({
+    getHabitStatus,
+    habits,
+    justCreatedHabitId,
+    weekDateStrings,
+  });
 
   return (
     <View className='gap-3 pb-2.5 pt-16'>
+      {/* US3: Subtle offline indicator - positioned at top center */}
+      <View className='absolute left-0 right-0 top-4 z-10 flex-row justify-center'>
+        <OfflineIndicator
+          testID='habits-offline-indicator'
+          visible={isOffline}
+        />
+      </View>
       <Animated.View
         style={{
           opacity: headerOpacity,

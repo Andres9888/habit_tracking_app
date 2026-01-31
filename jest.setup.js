@@ -303,21 +303,39 @@ jest.mock('react-native-reanimated', () => {
     useAnimatedScrollHandler: () => ({}),
     useAnimatedGestureHandler: () => ({}),
     useReducedMotion: () => false,
-    interpolateColor: (value, inputRange, outputRange) => outputRange[Math.round(value)],
+    interpolateColor: (value, inputRange, outputRange) =>
+      outputRange[Math.round(value)],
 
-    // Interpolate function (used by ParticleBurst)
-    interpolate: (value, inputRange, outputRange) => {
+    // Interpolate function (used by ParticleBurst, ChainLinkAnimation)
+    interpolate: (value, inputRange, outputRange, extrapolation) => {
       // Simple linear interpolation for testing
+      // extrapolation parameter is ignored in tests (CLAMP/EXTEND/etc)
       if (value <= inputRange[0]) return outputRange[0];
-      if (value >= inputRange[inputRange.length - 1]) return outputRange[outputRange.length - 1];
+      if (value >= inputRange[inputRange.length - 1])
+        return outputRange[outputRange.length - 1];
       // Find the appropriate segment
       for (let i = 0; i < inputRange.length - 1; i++) {
         if (value >= inputRange[i] && value <= inputRange[i + 1]) {
-          const ratio = (value - inputRange[i]) / (inputRange[i + 1] - inputRange[i]);
+          const ratio =
+            (value - inputRange[i]) / (inputRange[i + 1] - inputRange[i]);
           return outputRange[i] + ratio * (outputRange[i + 1] - outputRange[i]);
         }
       }
       return outputRange[0];
+    },
+
+    // Extrapolation constants (T014 ChainLinkAnimation)
+    Extrapolation: {
+      CLAMP: 'clamp',
+      EXTEND: 'extend',
+      IDENTITY: 'identity',
+    },
+
+    // Extrapolate (deprecated, but still used in some animations)
+    Extrapolate: {
+      CLAMP: 'clamp',
+      EXTEND: 'extend',
+      IDENTITY: 'identity',
     },
   };
 });
@@ -338,26 +356,32 @@ jest.mock('@shopify/react-native-skia', () => ({
 }));
 
 // Mock @react-native-community/netinfo (virtual module - not installed)
-jest.mock('@react-native-community/netinfo', () => ({
-  fetch: jest.fn(() => Promise.resolve({
-    isConnected: true,
-    isInternetReachable: true,
-    type: 'wifi',
-    details: { isConnectionExpensive: false },
-  })),
-  addEventListener: jest.fn(() => jest.fn()), // Returns unsubscribe function
-  NetInfoStateType: {
-    unknown: 'unknown',
-    none: 'none',
-    cellular: 'cellular',
-    wifi: 'wifi',
-    bluetooth: 'bluetooth',
-    ethernet: 'ethernet',
-    wimax: 'wimax',
-    vpn: 'vpn',
-    other: 'other',
-  },
-}), { virtual: true });
+jest.mock(
+  '@react-native-community/netinfo',
+  () => ({
+    fetch: jest.fn(() =>
+      Promise.resolve({
+        isConnected: true,
+        isInternetReachable: true,
+        type: 'wifi',
+        details: { isConnectionExpensive: false },
+      })
+    ),
+    addEventListener: jest.fn(() => jest.fn()), // Returns unsubscribe function
+    NetInfoStateType: {
+      unknown: 'unknown',
+      none: 'none',
+      cellular: 'cellular',
+      wifi: 'wifi',
+      bluetooth: 'bluetooth',
+      ethernet: 'ethernet',
+      wimax: 'wimax',
+      vpn: 'vpn',
+      other: 'other',
+    },
+  }),
+  { virtual: true }
+);
 
 // Mock react-native-draggable-flatlist
 jest.mock('react-native-draggable-flatlist', () => {

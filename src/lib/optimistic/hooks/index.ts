@@ -18,6 +18,11 @@ export {
   useOptimisticUnarchiveMutation,
 } from './useOptimisticMutations';
 
+export type {
+  OptimisticToggleOptions,
+  ToggleMutationResult,
+} from './useOptimisticMutations';
+
 export {
   useOptimisticReorderMutation,
   useOptimisticPauseMutation,

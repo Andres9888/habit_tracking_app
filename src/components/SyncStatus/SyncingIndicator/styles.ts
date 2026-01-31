@@ -1,0 +1,54 @@
+/**
+ * SyncingIndicator Styles
+ *
+ * Subtle, non-intrusive styling for the syncing status indicator.
+ * Uses amber/orange tones to indicate active sync process.
+ */
+
+import { StyleSheet } from 'react-native';
+
+export const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    backgroundColor: '#fffbeb', // amber-50 - warm active background
+    borderColor: '#fde68a', // amber-200 - soft border
+    borderRadius: 16,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+
+  countBadge: {
+    backgroundColor: '#f59e0b', // amber-500
+    borderRadius: 6,
+    marginLeft: 2,
+    minWidth: 16,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+  },
+
+  countText: {
+    color: '#ffffff',
+    fontSize: 10,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+
+  iconContainer: {
+    alignItems: 'center',
+    backgroundColor: '#fef3c7', // amber-100
+    borderRadius: 8,
+    height: 20,
+    justifyContent: 'center',
+    width: 20,
+  },
+
+  text: {
+    color: '#92400e', // amber-800 - visible but not harsh
+    fontSize: 12,
+    fontWeight: '500',
+    letterSpacing: 0.2,
+  },
+});
