@@ -41,7 +41,7 @@ export function Hero() {
           {/* CTA Buttons */}
           <div className="mt-10 flex items-center gap-x-4">
             <a
-              href="https://apps.apple.com/app/daily-habits"
+              href="https://apps.apple.com/app/chain-day"
               className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
