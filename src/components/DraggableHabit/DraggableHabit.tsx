@@ -17,6 +17,7 @@ export default function DraggableHabit(props: DraggableHabitProps) {
     entranceVariant = 'widthExpansion',
     habit,
     highContrastMode = false,
+    isConnectedToNextWeek = false,
     isConnectedToPreviousWeek = false,
     isJustCreated = false,
     onArchive,
@@ -90,6 +91,7 @@ export default function DraggableHabit(props: DraggableHabitProps) {
       entranceContentStyle={entrance.contentStyle}
       habit={habit}
       highContrastMode={highContrastMode}
+      isConnectedToNextWeek={isConnectedToNextWeek}
       isConnectedToPreviousWeek={isConnectedToPreviousWeek}
       reduceMotionPreference={reduceMotionPreference}
       showConnectors={showConnectors}

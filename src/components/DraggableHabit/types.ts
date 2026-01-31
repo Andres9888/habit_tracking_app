@@ -32,6 +32,7 @@ export interface DraggableHabitProps {
   habit: Habit;
   highContrastMode?: boolean;
   isCompactMode?: boolean;
+  isConnectedToNextWeek?: boolean;
   isConnectedToPreviousWeek?: boolean;
   isJustCreated?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;

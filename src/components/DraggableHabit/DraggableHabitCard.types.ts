@@ -24,6 +24,7 @@ export interface DraggableHabitCardProps {
   highContrastMode: boolean;
   highlightGlow: Animated.Value;
   iconPulse: Animated.Value;
+  isConnectedToNextWeek: boolean;
   isConnectedToPreviousWeek: boolean;
   isWeekComplete: boolean;
   name: string;

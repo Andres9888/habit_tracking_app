@@ -44,6 +44,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           handleHabitPress={handleHabitPress}
           highlightHabitId={highlightHabitId}
           isActive={isActive}
+          isConnectedToNextWeek={renderData.isConnectedToNextWeek}
           isConnectedToPreviousWeek={renderData.isConnectedToPreviousWeek}
           isReorderingEnabled={isReorderingEnabled}
           item={item}

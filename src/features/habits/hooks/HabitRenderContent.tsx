@@ -12,6 +12,7 @@ type HabitRenderContentProps = {
   triggerEntrance: boolean;
   weekStatus: string[];
   streak: number;
+  isConnectedToNextWeek: boolean;
   isConnectedToPreviousWeek: boolean;
   drag?: () => void;
 } & Pick<
@@ -40,6 +41,7 @@ export function HabitRenderContent({
   triggerEntrance,
   weekStatus,
   streak,
+  isConnectedToNextWeek,
   isConnectedToPreviousWeek,
   drag,
   celebrationsEnabled,
@@ -82,6 +84,7 @@ export function HabitRenderContent({
           entranceDelay={entranceDelay}
           entranceVariant={entranceVariant}
           habit={item}
+          isConnectedToNextWeek={isConnectedToNextWeek}
           isConnectedToPreviousWeek={isConnectedToPreviousWeek}
           isJustCreated={highlightHabitId === item._id}
           reduceMotionPreference={reduceMotionPreference}

@@ -1,4 +1,5 @@
 import type { Habit } from '../types';
+import { getNextWeekConnection } from './getNextWeekConnection';
 import { getPreviousWeekConnection } from './getPreviousWeekConnection';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
 
@@ -28,9 +29,15 @@ export function getHabitRenderData(
     item._id,
     getHabitStatus
   );
+  const isConnectedToNextWeek = getNextWeekConnection(
+    weekDateStrings.at(-1),
+    item._id,
+    getHabitStatus
+  );
 
   return {
     entranceDelay,
+    isConnectedToNextWeek,
     isConnectedToPreviousWeek,
     streak,
     triggerEntrance,
