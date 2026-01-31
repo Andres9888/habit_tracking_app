@@ -9,7 +9,9 @@ export const getCompactMode = async (): Promise<boolean> => {
       return raw === 'true';
     }
   } catch (error) {
-    console.warn('Failed to read compact mode from localStorage', error);
+    if (__DEV__) {
+      console.warn('Failed to read compact mode from localStorage', error);
+    }
   }
 
   // Fallback to Expo SecureStore (native only)
@@ -31,7 +33,9 @@ export const setCompactMode = async (value: boolean): Promise<void> => {
       return;
     }
   } catch (error) {
-    console.warn('Failed to write compact mode to localStorage', error);
+    if (__DEV__) {
+      console.warn('Failed to write compact mode to localStorage', error);
+    }
   }
 
   // Fallback to Expo SecureStore (native only)

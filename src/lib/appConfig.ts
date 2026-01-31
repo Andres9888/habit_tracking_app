@@ -15,7 +15,9 @@ export const tokenCache = {
     try {
       return SecureStore.getItemAsync(key);
     } catch (error) {
-      console.warn('Failed to read token from secure store', error);
+      if (__DEV__) {
+        console.warn('Failed to read token from secure store', error);
+      }
       return null;
     }
   },
@@ -23,7 +25,9 @@ export const tokenCache = {
     try {
       return SecureStore.setItemAsync(key, value);
     } catch (error) {
-      console.warn('Failed to save token to secure store', error);
+      if (__DEV__) {
+        console.warn('Failed to save token to secure store', error);
+      }
       return;
     }
   },
