@@ -19,7 +19,7 @@ describe('AnimatedLogo', () => {
       const { getByLabelText } = render(<AnimatedLogo />);
 
       // Should have accessibility label
-      expect(getByLabelText('Daily Habits Logo')).toBeTruthy();
+      expect(getByLabelText('Chain Day Logo')).toBeTruthy();
     });
 
     it('renders with custom size', () => {
@@ -40,7 +40,7 @@ describe('AnimatedLogo', () => {
   describe('Accessibility', () => {
     it('has correct accessibility label', () => {
       const { getByLabelText } = render(<AnimatedLogo />);
-      expect(getByLabelText('Daily Habits Logo')).toBeTruthy();
+      expect(getByLabelText('Chain Day Logo')).toBeTruthy();
     });
 
     it('has accessibility role of image', () => {
