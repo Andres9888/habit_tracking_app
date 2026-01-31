@@ -32,7 +32,9 @@ export async function getDraft(
     }
     return stored.content;
   } catch (error) {
-    console.warn('Failed to read draft:', error);
+    if (__DEV__) {
+      console.warn('Failed to read draft:', error);
+    }
     return null;
   }
 }
@@ -52,7 +54,9 @@ export async function saveDraft(
     const stored: StoredDraft = { content, timestamp: Date.now(), version: 1 };
     await AsyncStorage.setItem(key, JSON.stringify(stored));
   } catch (error) {
-    console.warn('Failed to save draft:', error);
+    if (__DEV__) {
+      console.warn('Failed to save draft:', error);
+    }
     throw error;
   }
 }
@@ -66,7 +70,9 @@ export async function clearDraft(
     const key = getDraftKey(habitId, contentType);
     await AsyncStorage.removeItem(key);
   } catch (error) {
-    console.warn('Failed to clear draft:', error);
+    if (__DEV__) {
+      console.warn('Failed to clear draft:', error);
+    }
   }
 }
 
@@ -81,7 +87,9 @@ export async function clearAllDraftsForHabit(habitId: string): Promise<void> {
       await AsyncStorage.multiRemove(habitDraftKeys);
     }
   } catch (error) {
-    console.warn('Failed to clear habit drafts:', error);
+    if (__DEV__) {
+      console.warn('Failed to clear habit drafts:', error);
+    }
   }
 }
 
@@ -91,7 +99,9 @@ export async function getAllDraftKeys(): Promise<string[]> {
     const allKeys = await AsyncStorage.getAllKeys();
     return allKeys.filter((key) => key.startsWith(DRAFT_KEY_PREFIX));
   } catch (error) {
-    console.warn('Failed to get draft keys:', error);
+    if (__DEV__) {
+      console.warn('Failed to get draft keys:', error);
+    }
     return [];
   }
 }
