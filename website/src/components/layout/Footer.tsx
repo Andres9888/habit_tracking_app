@@ -8,12 +8,12 @@ const footerLinks = {
     { name: "Press Kit", href: "/press" },
   ],
   legal: [
-    { name: "Privacy", href: "/privacy" },
-    { name: "Terms", href: "/terms" },
+    { name: "Privacy", href: "https://andres9888.github.io/chainday-landing/privacy.html" },
+    { name: "Terms", href: "https://andres9888.github.io/chainday-landing/terms.html" },
   ],
   connect: [
-    { name: "Twitter", href: "https://twitter.com/dailyhabitsapp" },
-    { name: "Email", href: "mailto:hello@dailyhabits.app" },
+    { name: "Twitter", href: "https://twitter.com/AndresGutworker" },
+    { name: "Email", href: "mailto:support@chainday.app" },
   ],
 };
 
@@ -26,7 +26,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-2">
               <span className="text-2xl">🔗</span>
               <span className="text-xl font-bold text-zinc-900 dark:text-white">
-                Daily Habits
+                Chain Day
               </span>
             </Link>
             <p className="text-sm leading-6 text-zinc-600 dark:text-zinc-400">
@@ -93,7 +93,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-zinc-900/10 pt-8 dark:border-zinc-700">
           <p className="text-center text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-            &copy; {new Date().getFullYear()} Daily Habits. All rights reserved.
+            &copy; {new Date().getFullYear()} Chain Day. All rights reserved.
           </p>
         </div>
       </div>
