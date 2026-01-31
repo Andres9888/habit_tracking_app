@@ -40,6 +40,7 @@ export function ModalHeader({
         accessibilityHint='Double tap to close this preview'
         accessibilityLabel='Close preview'
         accessibilityRole='button'
+        hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
         style={[layoutStyles.closeButton, closeButtonStyle]}
         onPress={onClose}
         {...closeButtonPressHandlers}
