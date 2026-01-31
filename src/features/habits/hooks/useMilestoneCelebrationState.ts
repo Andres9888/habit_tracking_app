@@ -16,7 +16,8 @@ export function useMilestoneCelebrationState(habits: Habit[], isHabitsLoading: b
   );
 
   useEffect(() => {
-    if (milestone) {
+    if (__DEV__ && milestone) {
+      // eslint-disable-next-line no-console
       console.log('🎉 MILESTONE DETECTED!', {
         level: milestone.level,
         strength: milestone.strength + '%',
@@ -35,11 +36,14 @@ export function useMilestoneCelebrationState(habits: Habit[], isHabitsLoading: b
       const currentStrength = (habit.strength as number | undefined) ?? 0;
 
       if (currentStrength > prevStrength) {
-        console.log('🎯 Strength increased!', {
-          habitName: habit.name,
-          prevStrength: (prevStrength * 100).toFixed(1) + '%',
-          currentStrength: (currentStrength * 100).toFixed(1) + '%',
-        });
+        if (__DEV__) {
+          // eslint-disable-next-line no-console
+          console.log('🎯 Strength increased!', {
+            habitName: habit.name,
+            prevStrength: (prevStrength * 100).toFixed(1) + '%',
+            currentStrength: (currentStrength * 100).toFixed(1) + '%',
+          });
+        }
         setLastUpdatedHabit({
           id: habit._id,
           name: habit.name,

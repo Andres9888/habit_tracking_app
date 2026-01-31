@@ -18,17 +18,26 @@ export function useSparkleBurstAnimation({
   const scale = useRef(new Animated.Value(0.6)).current;
 
   useEffect(() => {
-    console.log('🌟 SparkleBurst:', { color, isActive, reduceMotion });
+    if (__DEV__) {
+      // eslint-disable-next-line no-console
+      console.log('🌟 SparkleBurst:', { color, isActive, reduceMotion });
+    }
 
     if (!isActive || reduceMotion) {
       if (isActive && reduceMotion) {
-        console.log('🌟 SparkleBurst skipped (reduceMotion enabled)');
+        if (__DEV__) {
+          // eslint-disable-next-line no-console
+          console.log('🌟 SparkleBurst skipped (reduceMotion enabled)');
+        }
         onComplete?.();
       }
       return;
     }
 
-    console.log('🌟 SparkleBurst TRIGGERED!');
+    if (__DEV__) {
+      // eslint-disable-next-line no-console
+      console.log('🌟 SparkleBurst TRIGGERED!');
+    }
     opacity.setValue(0.9);
     scale.setValue(0.6);
 
@@ -46,7 +55,10 @@ export function useSparkleBurstAnimation({
         useNativeDriver: true,
       }),
     ]).start(() => {
-      console.log('🌟 SparkleBurst completed');
+      if (__DEV__) {
+        // eslint-disable-next-line no-console
+        console.log('🌟 SparkleBurst completed');
+      }
       onComplete?.();
     });
   }, [isActive, onComplete, opacity, reduceMotion, scale, color]);

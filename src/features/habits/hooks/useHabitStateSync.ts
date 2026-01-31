@@ -22,7 +22,8 @@ export function useHabitStateSync(
     const referenceChanged = updated !== currentHabit;
 
     if (streakChanged || strengthChanged || referenceChanged) {
-      if (debugLabel) {
+      if (__DEV__ && debugLabel) {
+        // eslint-disable-next-line no-console
         console.log(`🔄 Syncing ${debugLabel}:`, {
           habitName: updated.name,
           streakChanged,

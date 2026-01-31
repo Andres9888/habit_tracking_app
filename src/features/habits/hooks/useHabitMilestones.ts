@@ -40,7 +40,8 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
   }, [habits, isLoading]);
 
   useEffect(() => {
-    if (milestone) {
+    if (__DEV__ && milestone) {
+      // eslint-disable-next-line no-console
       console.log('🎉 MILESTONE DETECTED!', {
         level: milestone.level,
         strength: `${milestone.strength}%`,

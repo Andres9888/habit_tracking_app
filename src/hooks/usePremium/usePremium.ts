@@ -71,13 +71,19 @@ export function usePremium(): UsePremiumReturn {
     async function fetchData() {
       // Wait for SDK to be available (handles race condition)
       while (!isPurchasesAvailable() && retryCount < maxRetries) {
-        console.log(`[usePremium] SDK not available yet, retry ${retryCount + 1}/${maxRetries}...`);
+        if (__DEV__) {
+          // eslint-disable-next-line no-console
+          console.log(`[usePremium] SDK not available yet, retry ${retryCount + 1}/${maxRetries}...`);
+        }
         await new Promise(resolve => setTimeout(resolve, retryDelay));
         retryCount++;
       }
 
       if (!isPurchasesAvailable()) {
-        console.log('[usePremium] SDK not available after retries, giving up');
+        if (__DEV__) {
+          // eslint-disable-next-line no-console
+          console.log('[usePremium] SDK not available after retries, giving up');
+        }
         if (isMounted) {
           setIsLoading(false);
           setIsLoadingOfferings(false);
@@ -85,7 +91,10 @@ export function usePremium(): UsePremiumReturn {
         return;
       }
 
-      console.log('[usePremium] SDK available, fetching data...');
+      if (__DEV__) {
+        // eslint-disable-next-line no-console
+        console.log('[usePremium] SDK available, fetching data...');
+      }
       try {
         // Fetch customer info and offerings in parallel
         const [info, offeringsResult] = await Promise.all([
@@ -94,24 +103,28 @@ export function usePremium(): UsePremiumReturn {
         ]);
 
         // Debug logging for offerings
-        console.log('[usePremium] === OFFERINGS DEBUG ===');
-        console.log('[usePremium] All offerings:', Object.keys(offeringsResult.all || {}));
-        console.log('[usePremium] Current offering:', offeringsResult.current?.identifier ?? 'NONE');
-        console.log('[usePremium] Available packages:', offeringsResult.current?.availablePackages?.length ?? 0);
+        if (__DEV__) {
+          /* eslint-disable no-console */
+          console.log('[usePremium] === OFFERINGS DEBUG ===');
+          console.log('[usePremium] All offerings:', Object.keys(offeringsResult.all || {}));
+          console.log('[usePremium] Current offering:', offeringsResult.current?.identifier ?? 'NONE');
+          console.log('[usePremium] Available packages:', offeringsResult.current?.availablePackages?.length ?? 0);
 
-        if (offeringsResult.current?.availablePackages) {
-          offeringsResult.current.availablePackages.forEach((pkg, i) => {
-            console.log(`[usePremium] Package ${i}: ${pkg.identifier} - ${pkg.product.identifier} - ${pkg.product.priceString}`);
-          });
-        } else {
-          console.log('[usePremium] ⚠️ No packages available in current offering');
+          if (offeringsResult.current?.availablePackages) {
+            offeringsResult.current.availablePackages.forEach((pkg, i) => {
+              console.log(`[usePremium] Package ${i}: ${pkg.identifier} - ${pkg.product.identifier} - ${pkg.product.priceString}`);
+            });
+          } else {
+            console.log('[usePremium] ⚠️ No packages available in current offering');
+          }
+
+          // Debug logging for customer info
+          console.log('[usePremium] === CUSTOMER INFO DEBUG ===');
+          console.log('[usePremium] Original App User ID:', info.originalAppUserId);
+          console.log('[usePremium] Active entitlements:', Object.keys(info.entitlements.active));
+          console.log('[usePremium] All entitlements:', Object.keys(info.entitlements.all));
+          /* eslint-enable no-console */
         }
-
-        // Debug logging for customer info
-        console.log('[usePremium] === CUSTOMER INFO DEBUG ===');
-        console.log('[usePremium] Original App User ID:', info.originalAppUserId);
-        console.log('[usePremium] Active entitlements:', Object.keys(info.entitlements.active));
-        console.log('[usePremium] All entitlements:', Object.keys(info.entitlements.all));
 
         if (isMounted) {
           setCustomerInfo(info);
@@ -139,12 +152,18 @@ export function usePremium(): UsePremiumReturn {
           listenerRef.current = Purchases.addCustomerInfoUpdateListener(
             (info: CustomerInfo) => {
               if (isMounted) {
-                console.log('[usePremium] Customer info updated via listener');
+                if (__DEV__) {
+                  // eslint-disable-next-line no-console
+                  console.log('[usePremium] Customer info updated via listener');
+                }
                 setCustomerInfo(info);
               }
             }
           );
-          console.log('[usePremium] Listener attached successfully');
+          if (__DEV__) {
+            // eslint-disable-next-line no-console
+            console.log('[usePremium] Listener attached successfully');
+          }
         } catch (e) {
           console.error('[usePremium] Failed to add listener:', e);
         }
@@ -161,7 +180,10 @@ export function usePremium(): UsePremiumReturn {
     return () => {
       isMounted = false;
       if (listenerRef.current) {
-        console.log('[usePremium] Removing listener on cleanup');
+        if (__DEV__) {
+          // eslint-disable-next-line no-console
+          console.log('[usePremium] Removing listener on cleanup');
+        }
         listenerRef.current.remove();
         listenerRef.current = null;
       }
@@ -183,17 +205,23 @@ export function usePremium(): UsePremiumReturn {
 
         const success =
           newInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID] !== undefined;
-        console.log(
-          '[usePremium] Purchase result:',
-          success ? 'SUCCESS' : 'NO ENTITLEMENT'
-        );
+        if (__DEV__) {
+          // eslint-disable-next-line no-console
+          console.log(
+            '[usePremium] Purchase result:',
+            success ? 'SUCCESS' : 'NO ENTITLEMENT'
+          );
+        }
         return success;
       } catch (e) {
         const purchaseError = e as PurchasesError;
 
         // Don't show error if user cancelled
         if (purchaseError.userCancelled) {
-          console.log('[usePremium] Purchase cancelled by user');
+          if (__DEV__) {
+            // eslint-disable-next-line no-console
+            console.log('[usePremium] Purchase cancelled by user');
+          }
           return false;
         }
 
@@ -219,7 +247,10 @@ export function usePremium(): UsePremiumReturn {
 
       const success =
         info.entitlements.active[PREMIUM_ENTITLEMENT_ID] !== undefined;
-      console.log('[usePremium] Restore result:', success ? 'FOUND' : 'NONE');
+      if (__DEV__) {
+        // eslint-disable-next-line no-console
+        console.log('[usePremium] Restore result:', success ? 'FOUND' : 'NONE');
+      }
       return success;
     } catch (e) {
       console.error('[usePremium] Restore failed:', e);

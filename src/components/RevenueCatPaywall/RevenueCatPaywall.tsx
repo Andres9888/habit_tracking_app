@@ -73,22 +73,34 @@ export function RevenueCatPaywall({
           displayCloseButton: true,
         }}
         onDismiss={() => {
-          console.log('[RevenueCatPaywall] Dismissed');
+          if (__DEV__) {
+            // eslint-disable-next-line no-console
+            console.log('[RevenueCatPaywall] Dismissed');
+          }
           onClose();
         }}
         onPurchaseCompleted={({ customerInfo }) => {
-          console.log('[RevenueCatPaywall] Purchase completed:', customerInfo);
+          if (__DEV__) {
+            // eslint-disable-next-line no-console
+            console.log('[RevenueCatPaywall] Purchase completed:', customerInfo);
+          }
           onPurchaseSuccess?.();
           onClose();
         }}
         onPurchaseCancelled={() => {
-          console.log('[RevenueCatPaywall] Purchase cancelled');
+          if (__DEV__) {
+            // eslint-disable-next-line no-console
+            console.log('[RevenueCatPaywall] Purchase cancelled');
+          }
         }}
         onPurchaseError={({ error }) => {
           console.error('[RevenueCatPaywall] Purchase error:', error);
         }}
         onRestoreCompleted={({ customerInfo }) => {
-          console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
+          if (__DEV__) {
+            // eslint-disable-next-line no-console
+            console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
+          }
           onRestoreSuccess?.();
           onClose();
         }}
