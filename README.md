@@ -1,17 +1,21 @@
-# Daily Habits Tracker - Expo App
+# Chain Day 🔗
 
-A mobile habit tracking app built with React Native, Expo, and Convex.
+**Don't break the chain.** A habit tracking app that makes consistency visible.
+
+Built with React Native, Expo, and Convex.
 
 ## Features
 
-- 🐱 Cat-themed motivational messages
-- 📊 Habit streaks and consistency tracking
+- 🔗 **Chain Visualization** - See your habit chains grow as you maintain streaks
+- 📊 **Habit Strength** - Scientific algorithm shows how established each habit is
 - 📅 Week and calendar views
 - 📝 Notes for each habit
+- 🎮 **Character Screen** - Gamification with XP, levels, and achievements
 - ⚙️ Customizable settings
-- 🔐 User authentication
+- 🔐 User authentication (Clerk + Apple/Google Sign-In)
 - 📱 Cross-platform (iOS, Android, Web)
-- 🕐 **Time-Based Habit Suggestions** - Smart habit chips that adapt to your time of day
+- 🕐 **Time-Based Suggestions** - Smart habit chips that adapt to your time of day
+- 📴 **Offline Support** - Complete habits offline, syncs when back online
 
 ### Time-Based Habit Suggestions
 
