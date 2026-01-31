@@ -25,7 +25,9 @@ export async function getCalendarCollapsePreferences(): Promise<CalendarCollapse
     }
     return {};
   } catch (error) {
-    console.error('Error reading calendar collapse preferences:', error);
+    if (__DEV__) {
+      console.error('Error reading calendar collapse preferences:', error);
+    }
     return {};
   }
 }
@@ -43,7 +45,9 @@ export async function getCalendarExpandedState(
     const entry = preferences[habitId];
     return entry ? entry.isExpanded : null;
   } catch (error) {
-    console.error('Error getting calendar expanded state:', error);
+    if (__DEV__) {
+      console.error('Error getting calendar expanded state:', error);
+    }
     return null;
   }
 }
@@ -68,7 +72,9 @@ export async function setCalendarExpandedState(
     };
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (error) {
-    console.error('Error saving calendar expanded state:', error);
+    if (__DEV__) {
+      console.error('Error saving calendar expanded state:', error);
+    }
   }
 }
 
@@ -85,7 +91,9 @@ export async function clearCalendarCollapsePreference(
     delete updated[habitId];
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (error) {
-    console.error('Error clearing calendar collapse preference:', error);
+    if (__DEV__) {
+      console.error('Error clearing calendar collapse preference:', error);
+    }
   }
 }
 
@@ -96,6 +104,8 @@ export async function clearAllCalendarCollapsePreferences(): Promise<void> {
   try {
     await AsyncStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.error('Error clearing all calendar collapse preferences:', error);
+    if (__DEV__) {
+      console.error('Error clearing all calendar collapse preferences:', error);
+    }
   }
 }

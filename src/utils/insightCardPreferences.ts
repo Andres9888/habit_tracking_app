@@ -25,7 +25,9 @@ export async function getDismissedInsights(): Promise<DismissedInsights> {
     }
     return {};
   } catch (error) {
-    console.error('Error reading dismissed insights:', error);
+    if (__DEV__) {
+      console.error('Error reading dismissed insights:', error);
+    }
     return {};
   }
 }
@@ -50,7 +52,9 @@ export async function isInsightDismissed(
     const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
     return entry.weakDay === weakDay && entry.dismissedAt > sevenDaysAgo;
   } catch (error) {
-    console.error('Error checking dismissed insight:', error);
+    if (__DEV__) {
+      console.error('Error checking dismissed insight:', error);
+    }
     return false;
   }
 }
@@ -75,7 +79,9 @@ export async function dismissInsight(
     };
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (error) {
-    console.error('Error dismissing insight:', error);
+    if (__DEV__) {
+      console.error('Error dismissing insight:', error);
+    }
   }
 }
 
@@ -90,7 +96,9 @@ export async function clearDismissedInsight(habitId: Id<'habits'>): Promise<void
     delete updated[habitId];
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (error) {
-    console.error('Error clearing dismissed insight:', error);
+    if (__DEV__) {
+      console.error('Error clearing dismissed insight:', error);
+    }
   }
 }
 
@@ -101,6 +109,8 @@ export async function clearAllDismissedInsights(): Promise<void> {
   try {
     await AsyncStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.error('Error clearing all dismissed insights:', error);
+    if (__DEV__) {
+      console.error('Error clearing all dismissed insights:', error);
+    }
   }
 }
