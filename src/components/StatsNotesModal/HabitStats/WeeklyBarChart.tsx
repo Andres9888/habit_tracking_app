@@ -55,7 +55,7 @@ export function WeeklyBarChart({ data }: WeeklyBarChartProps) {
       </Svg>
       <Text className='mt-2 text-xs text-stone-500'>
         {format(new Date(data[0].date), 'MMM d')} -{' '}
-        {format(new Date(data.at(-1).date), 'MMM d')}
+        {format(new Date(data[data.length - 1].date), 'MMM d')}
       </Text>
     </View>
   );

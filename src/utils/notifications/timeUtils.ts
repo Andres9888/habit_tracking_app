@@ -74,13 +74,33 @@ export function getDefaultReminderTime(): Date {
 
 /**
  * Parse HH:MM time string to hours and minutes
+ * Returns default values (0, 0) if parsing fails
  */
 export function parseTimeString(time: string): {
   hours: number;
   minutes: number;
 } {
-  const [hours, minutes] = time.split(':').map(Number);
-  return { hours, minutes };
+  if (!time || typeof time !== 'string') {
+    return { hours: 0, minutes: 0 };
+  }
+
+  const parts = time.split(':');
+  if (parts.length < 2) {
+    return { hours: 0, minutes: 0 };
+  }
+
+  const hours = Number(parts[0]);
+  const minutes = Number(parts[1]);
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+    return { hours: 0, minutes: 0 };
+  }
+
+  // Clamp to valid ranges
+  return {
+    hours: Math.max(0, Math.min(23, hours)),
+    minutes: Math.max(0, Math.min(59, minutes)),
+  };
 }
 
 // Note: formatRelativeTime and getNextReminderRelativeTime are in ./relativeTimeFormatter.ts
