@@ -34,7 +34,7 @@ export const GRADIENT_PRESETS: GradientPreset[] = [
   { colors: ['#F59E0B', '#D97706', '#B45309'], name: 'Sunset' },
 ];
 
-export const APP_STORE_LINK = 'https://apps.apple.com/app/habit-tracker';
+export const APP_STORE_LINK = 'https://apps.apple.com/app/chain-day';
 
 export const DEFAULT_PLATFORM: SharePlatform = 'instagram-story';
 
