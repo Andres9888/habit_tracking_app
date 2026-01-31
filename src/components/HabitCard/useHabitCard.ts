@@ -1,3 +1,4 @@
+import { getTodayString } from '../../utils/getLocalDateString';
 /**
  * useHabitCard Hook - Core orchestration logic
  */
@@ -39,7 +40,7 @@ export function useHabitCard(props: HabitCardProps) {
   const [xpPosition, setXPPosition] = useState({ x: 0, y: 0 });
   const [isToggling, setIsToggling] = useState(false);
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
   const completedQuery = useQuery(api.tracking.getCompletionStatus, {
     date: today,
     habitId: id,

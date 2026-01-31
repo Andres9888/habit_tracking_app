@@ -1,5 +1,6 @@
 import { Alert } from 'react-native';
 import { QuickActionsSheet } from '../../../../components/QuickActionsSheet';
+import { getTodayString } from '../../../../utils/getLocalDateString';
 import type { QuickActionsSectionProps } from './HabitsModals.types';
 
 function buildHabitData(
@@ -32,7 +33,7 @@ export function QuickActionsSection({
   toggleHabit,
   tracking,
 }: QuickActionsSectionProps) {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
   const habit = quickActionsHabit
     ? buildHabitData(quickActionsHabit, tracking, today)
     : null;

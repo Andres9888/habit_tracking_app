@@ -1,4 +1,5 @@
 import { ActivationModal } from '../../../../components/MotivationSystem/Activation/ActivationModal';
+import { getTodayString } from '../../../../utils/getLocalDateString';
 import type { ActivationModalSectionProps } from './HabitsModals.types';
 
 /** Build the activation habit data structure from the habit object */
@@ -44,7 +45,7 @@ export function ActivationModalSection({
   showActivationModal,
   toggleHabit,
 }: ActivationModalSectionProps) {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
 
   const handleStartNow = () => {
     if (activationModalHabit) {
