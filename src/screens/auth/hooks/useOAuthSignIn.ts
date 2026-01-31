@@ -36,7 +36,7 @@ export function useOAuthSignIn() {
       try {
         const { createdSessionId, setActive, signIn, signUp } =
           await startSSOFlow({
-            redirectUrl: 'habit-tracker://sso-callback',
+            redirectUrl: 'chain-day://sso-callback',
             strategy,
           });
 

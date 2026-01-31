@@ -28,13 +28,13 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="habit-tracker"/>
+        <data android:scheme="chain-day"/>
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="exp+daily-habits"/>
+        <data android:scheme="exp+chain-day"/>
       </intent-filter>
     </activity>
   </application>

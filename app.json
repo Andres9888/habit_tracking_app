@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Chain Day",
-    "slug": "daily-habits",
-    "scheme": "habit-tracker",
+    "slug": "chain-day",
+    "scheme": "chain-day",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
