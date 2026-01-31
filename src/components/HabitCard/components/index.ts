@@ -2,8 +2,9 @@
  * HabitCard Sub-components Barrel Export
  */
 
-export { SwipeActions } from './SwipeActions';
-export { StreakBadge } from './StreakBadge';
-export { StatusIndicator } from './StatusIndicator';
-export { StrengthFillBackground } from './StrengthFillBackground';
+export { ChainLinkAnimation } from './ChainLinkAnimation';
 export { HabitCardContent } from './HabitCardContent';
+export { StatusIndicator, type CompletionIconType } from './StatusIndicator';
+export { StreakBadge } from './StreakBadge';
+export { StrengthFillBackground } from './StrengthFillBackground';
+export { SwipeActions } from './SwipeActions';

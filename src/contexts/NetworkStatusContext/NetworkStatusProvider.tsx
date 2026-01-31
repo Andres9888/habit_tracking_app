@@ -14,6 +14,8 @@ import { netInfoToStatus, calculateIsOnline } from './utils';
 import { defaultNetworkStatus } from './defaults';
 import { NetworkStatusContext } from './context';
 
+// Re-export context for consumers
+
 export function NetworkStatusProvider({
   children,
   onStatusChange,
@@ -103,3 +105,5 @@ export function NetworkStatusProvider({
 }
 
 export default NetworkStatusProvider;
+
+export { NetworkStatusContext } from './context';

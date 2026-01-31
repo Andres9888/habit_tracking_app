@@ -1,6 +1,8 @@
 /**
  * HabitCard Animations Hook
  * Manages completion celebration and animated styles
+ *
+ * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
  */
 
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
@@ -28,6 +30,8 @@ export function useHabitCardAnimations({
   setShowFloatingXP,
   setXPPosition,
 }: UseHabitCardAnimationsOptions) {
+  // These values are used for both checkmark and chain link animations
+  // The animation behavior is identical, only the visual differs
   const checkmarkScale = useSharedValue(0);
   const checkmarkRotate = useSharedValue(0);
   const rippleScale = useSharedValue(0);
@@ -62,6 +66,9 @@ export function useHabitCardAnimations({
   return {
     actionsAnimatedStyle,
     cardAnimatedStyle,
+    // Chain link animation uses same values as checkmark (T014)
+    chainRotate: checkmarkRotate,
+    chainScale: checkmarkScale,
     checkmarkAnimatedStyle,
     checkmarkRotate,
     checkmarkScale,
