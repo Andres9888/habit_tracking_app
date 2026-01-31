@@ -35,7 +35,9 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   }, []);
 
   const handleHabitPress = useCallback((habitId: string) => {
-    console.log('Navigate to habit detail:', habitId);
+    if (__DEV__) {
+      console.log('Navigate to habit detail:', habitId);
+    }
   }, []);
 
   const handleExportPress = useCallback(() => {
@@ -60,7 +62,9 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
           [{ text: 'OK' }]
         );
       } catch (error) {
-        console.error('Export error:', error);
+        if (__DEV__) {
+          console.error('Export error:', error);
+        }
         Alert.alert(
           'Export Failed',
           error instanceof Error ? error.message : 'Unable to export data',

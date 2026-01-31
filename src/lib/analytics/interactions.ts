@@ -1,7 +1,7 @@
 type InteractionPayload = Record<string, unknown> | undefined;
 
 export const logInteraction = (eventName: string, payload: InteractionPayload = undefined) => {
-  if (!eventName) {
+  if (!eventName || !__DEV__) {
     return;
   }
 

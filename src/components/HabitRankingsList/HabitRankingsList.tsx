@@ -19,7 +19,7 @@ export default function HabitRankingsList({
     (habitId: string) => {
       if (onHabitPress) {
         onHabitPress(habitId);
-      } else {
+      } else if (__DEV__) {
         console.log('Navigate to habit detail:', habitId);
       }
     },
