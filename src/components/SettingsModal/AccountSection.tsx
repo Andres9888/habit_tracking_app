@@ -1,0 +1,93 @@
+/**
+ * Account section for settings modal
+ */
+
+import React, { useState, useCallback } from 'react';
+import { Alert, Linking, Platform, Share } from 'react-native';
+import { useClerk, useUser } from '@clerk/clerk-expo';
+import { AccountInfo, AppActions, LegalLinks } from './sections';
+
+const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
+const SUPPORT_EMAIL = 'support@chainday.app';
+const PRIVACY_URL =
+  'https://andres9888.github.io/chainday-landing/privacy.html';
+const TERMS_URL = 'https://andres9888.github.io/chainday-landing/terms.html';
+
+interface AccountSectionProps {
+  isHighContrastActive: boolean;
+}
+
+export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
+  const { signOut } = useClerk();
+  const { user } = useUser();
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const userEmail = user?.primaryEmailAddress?.emailAddress;
+
+  const handleSignOut = useCallback(() => {
+    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+      { style: 'cancel', text: 'Cancel' },
+      {
+        onPress: () => {
+          setIsSigningOut(true);
+          void signOut()
+            .catch(() => Alert.alert('Error', 'Failed to sign out.'))
+            .finally(() => setIsSigningOut(false));
+        },
+        style: 'destructive',
+        text: 'Sign Out',
+      },
+    ]);
+  }, [signOut]);
+
+  const handleRateApp = useCallback(() => {
+    void (async () => {
+      if (Platform.OS === 'ios') {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const StoreReview = require('expo-store-review') as {
+            hasAction: () => Promise<boolean>;
+            requestReview: () => Promise<void>;
+          };
+          if (await StoreReview.hasAction()) {
+            await StoreReview.requestReview();
+            return;
+          }
+        } catch {
+          // Fall through
+        }
+      }
+      void Linking.openURL(APP_STORE_URL);
+    })();
+  }, []);
+
+  const handleShare = useCallback(() => {
+    void Share.share({ message: 'Building habits with Chain Day!' });
+  }, []);
+
+  const openUrl = useCallback(
+    (url: string) => () => void Linking.openURL(url),
+    []
+  );
+
+  return (
+    <>
+      <AccountInfo
+        email={userEmail}
+        highContrast={isHighContrastActive}
+        isLoading={isSigningOut}
+        onSignOut={handleSignOut}
+      />
+      <AppActions
+        highContrast={isHighContrastActive}
+        onRate={handleRateApp}
+        onShare={handleShare}
+        onSupport={openUrl(`mailto:${SUPPORT_EMAIL}?subject=Chain Day`)}
+      />
+      <LegalLinks
+        highContrast={isHighContrastActive}
+        onPrivacy={openUrl(PRIVACY_URL)}
+        onTerms={openUrl(TERMS_URL)}
+      />
+    </>
+  );
+}

@@ -7,7 +7,7 @@ interface SettingsRowProps {
   icon: ReactNode;
   iconBackgroundColor: string;
   label: string;
-  type: 'toggle' | 'navigation' | 'selection';
+  type: 'toggle' | 'navigation' | 'selection' | 'info';
   value?: boolean | string;
   onPress?: () => void;
   onToggle?: (value: boolean) => void;
@@ -86,10 +86,13 @@ export function SettingsRow({
       {type === 'navigation' && (
         <ChevronRight color={colors.chevron} size={16} />
       )}
+
+      {/* Info type shows nothing on the right - just displays the label */}
     </View>
   );
 
-  if (type === 'toggle') {
+  // Info and toggle types are not pressable
+  if (type === 'toggle' || type === 'info') {
     return content;
   }
 
