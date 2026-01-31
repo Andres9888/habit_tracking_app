@@ -137,6 +137,9 @@ export default function WelcomeScreen() {
           <AuthDivider />
 
           <TouchableOpacity
+            accessibilityLabel='Get started with Chain Day'
+            accessibilityRole='button'
+            accessibilityState={{ disabled: !!isLoading }}
             style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
             disabled={!!isLoading}
             activeOpacity={0.8}
@@ -146,6 +149,9 @@ export default function WelcomeScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
+            accessibilityLabel='Sign in to existing account'
+            accessibilityRole='link'
+            accessibilityState={{ disabled: !!isLoading }}
             style={styles.textLink}
             disabled={!!isLoading}
             onPress={() => setMode('signin')}
