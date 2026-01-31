@@ -28,7 +28,7 @@ export async function cancelLetterUnlockNotification(
       )
     );
 
-    if (toCancel.length > 0) {
+    if (toCancel.length > 0 && __DEV__) {
       // eslint-disable-next-line no-console
       console.info('cancelLetterUnlockNotification: cancelled', {
         count: toCancel.length,
@@ -36,6 +36,8 @@ export async function cancelLetterUnlockNotification(
       });
     }
   } catch (error) {
-    console.warn('cancelLetterUnlockNotification failed', { error, letterId });
+    if (__DEV__) {
+      console.warn('cancelLetterUnlockNotification failed', { error, letterId });
+    }
   }
 }

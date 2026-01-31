@@ -23,10 +23,12 @@ export async function scheduleAffirmationDelivery({
     // Validate time format
     const timeMatch = scheduledTime.match(/^([01]?[0-9]|2[0-3]):([0-5][0-9])$/);
     if (!timeMatch) {
-      console.warn(
-        'scheduleAffirmationDelivery: invalid time format',
-        scheduledTime
-      );
+      if (__DEV__) {
+        console.warn(
+          'scheduleAffirmationDelivery: invalid time format',
+          scheduledTime
+        );
+      }
       return null;
     }
 
@@ -61,9 +63,11 @@ export async function scheduleAffirmationDelivery({
       );
     } else {
       if (!daysOfWeek || daysOfWeek.length === 0) {
-        console.warn(
-          'scheduleAffirmationDelivery: weekly frequency requires daysOfWeek'
-        );
+        if (__DEV__) {
+          console.warn(
+            'scheduleAffirmationDelivery: weekly frequency requires daysOfWeek'
+          );
+        }
         return null;
       }
 
@@ -77,20 +81,24 @@ export async function scheduleAffirmationDelivery({
       );
     }
 
-    // eslint-disable-next-line no-console
-    console.info('scheduleAffirmationDelivery success', {
-      affirmationId,
-      frequency,
-      notificationId,
-      scheduledTime,
-    });
+    if (__DEV__) {
+      // eslint-disable-next-line no-console
+      console.info('scheduleAffirmationDelivery success', {
+        affirmationId,
+        frequency,
+        notificationId,
+        scheduledTime,
+      });
+    }
 
     return notificationId;
   } catch (error) {
-    console.error('scheduleAffirmationDelivery failed', {
-      affirmationId,
-      error,
-    });
+    if (__DEV__) {
+      console.error('scheduleAffirmationDelivery failed', {
+        affirmationId,
+        error,
+      });
+    }
     return null;
   }
 }
