@@ -73,7 +73,9 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
           state.setIsInSuccessCelebration(true);
         }
       } catch (error) {
-        console.error('Failed to create habit:', error);
+        if (__DEV__) {
+          console.error('Failed to create habit:', error);
+        }
       }
     },
     [
