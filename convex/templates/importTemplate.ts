@@ -19,9 +19,12 @@ export const importTemplate = mutation({
     templateId: v.id('templates'),
   },
   handler: async (ctx, args) => {
-    // Get authenticated user
+    // SEC-001: Authentication check - require user to be logged in
     const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.subject;
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to import templates');
+    }
+    const userId = identity.subject;
 
     const template = await ctx.db.get(args.templateId);
     if (!template) {
