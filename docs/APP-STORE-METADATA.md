@@ -86,6 +86,10 @@ habits,tracker,streak,chain,routine,goals,daily,motivation,productivity,wellness
 
 https://andres9888.github.io/chainday-landing/privacy.html
 
+## Terms of Service URL (EULA)
+
+https://andres9888.github.io/chainday-landing/terms.html
+
 ## Support URL
 
 https://andres9888.github.io/chainday-landing/
