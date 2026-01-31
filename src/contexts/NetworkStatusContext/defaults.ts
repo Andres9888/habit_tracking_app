@@ -2,7 +2,7 @@
  * NetworkStatus default values
  */
 
-import { NetInfoStateType } from '@react-native-community/netinfo';
+import { NetworkStateType } from 'expo-network';
 import type { NetworkStatus, NetworkStatusContextValue } from './types';
 
 // No-op functions for default context
@@ -10,7 +10,7 @@ const noop = () => {};
 const noopUnsubscribe = () => noop;
 
 export const defaultNetworkStatus: NetworkStatus = {
-  connectionType: NetInfoStateType.unknown,
+  connectionType: NetworkStateType.UNKNOWN,
   isConnected: true,
   isExpensive: false,
   isInternetReachable: null,

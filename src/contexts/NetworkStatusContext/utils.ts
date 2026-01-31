@@ -2,21 +2,24 @@
  * NetworkStatus utility functions
  */
 
-import type { NetInfoState } from '@react-native-community/netinfo';
+import { NetworkStateType, type NetworkState } from 'expo-network';
 import type { NetworkStatus } from './types';
 
 /**
- * Convert NetInfo state to our NetworkStatus format
+ * Convert expo-network state to our NetworkStatus format
  */
-export function netInfoToStatus(state: NetInfoState): NetworkStatus {
+export function networkStateToStatus(state: NetworkState): NetworkStatus {
   return {
-    connectionType: state.type,
+    connectionType: state.type ?? 'unknown',
     isConnected: state.isConnected ?? false,
-    isExpensive: state.details?.isConnectionExpensive ?? false,
-    isInternetReachable: state.isInternetReachable,
+    // expo-network doesn't expose isConnectionExpensive, assume cellular is expensive
+    isExpensive: state.type === NetworkStateType.CELLULAR,
+    isInternetReachable: state.isInternetReachable ?? null,
     lastStatusChangeAt: Date.now(),
   };
 }
+
+// Re-export for type compatibility
 
 /**
  * Determine if we're truly online
@@ -32,3 +35,5 @@ export function calculateIsOnline(status: NetworkStatus): boolean {
   // Otherwise, use the internet reachability status
   return status.isInternetReachable;
 }
+
+export { type NetworkState, type NetworkStateType } from 'expo-network';
