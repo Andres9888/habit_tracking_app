@@ -52,6 +52,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSUserNotificationsUsageDescription</key>
-	<string>Daily Habits uses notifications to remind you to complete your habits at the times you choose.</string>
+	<string>Chain Day uses notifications to remind you to complete your habits at the times you choose.</string>
 </dict>
 </plist>
