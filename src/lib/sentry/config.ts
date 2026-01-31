@@ -37,7 +37,7 @@ function getRelease(): string {
     Constants.expoConfig?.ios?.buildNumber ??
     Constants.expoConfig?.android?.versionCode ??
     '1';
-  return `daily-habits@${version}+${buildNumber}`;
+  return `chain-day@${version}+${buildNumber}`;
 }
 
 /** Build complete Sentry configuration */
