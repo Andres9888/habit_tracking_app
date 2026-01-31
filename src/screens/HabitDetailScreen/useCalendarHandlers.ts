@@ -47,7 +47,9 @@ export const useCalendarHandlers = ({
       setIsTogglingCalendar(true);
       toggleHabitMutation({ date, habitId: habit._id })
         .catch((error: unknown) => {
-          console.error('Failed to toggle habit:', error);
+          if (__DEV__) {
+            console.error('Failed to toggle habit:', error);
+          }
           Alert.alert('Error', 'Failed to update habit. Please try again.');
         })
         .finally(() => setIsTogglingCalendar(false));

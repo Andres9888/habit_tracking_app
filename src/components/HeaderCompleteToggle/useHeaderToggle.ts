@@ -79,7 +79,9 @@ export function useHeaderToggle({
     } catch (error) {
       // Revert on error
       setLocalCompleted(wasCompleted);
-      console.error('Failed to toggle completion:', error);
+      if (__DEV__) {
+        console.error('Failed to toggle completion:', error);
+      }
     } finally {
       setIsToggling(false);
     }
