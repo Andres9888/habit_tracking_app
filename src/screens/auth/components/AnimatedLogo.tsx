@@ -76,7 +76,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
   return (
     <View
       accessible
-      accessibilityLabel='Daily Habits Logo'
+      accessibilityLabel='Chain Day Logo'
       accessibilityRole='image'
       className='mb-4'
     >
