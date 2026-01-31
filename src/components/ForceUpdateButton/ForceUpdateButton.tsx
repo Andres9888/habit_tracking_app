@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Pressable, Text, View, ActivityIndicator } from 'react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
+import { getTodayString } from '../../utils/getLocalDateString';
 import { assertUpdateStrengthResponse } from './types';
 import type { ForceUpdateButtonProps } from './types';
 
@@ -19,7 +20,7 @@ export function ForceUpdateButton({
     setResult(null);
 
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const today = getTodayString();
       const response = await updateStrength({
         behaviorPerformed: true,
         date: today,

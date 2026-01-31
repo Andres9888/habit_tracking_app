@@ -7,6 +7,7 @@ import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id, Doc } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
+import { getTodayString } from '../../utils/getLocalDateString';
 
 interface UseHabitDetailScreenStateProps {
   habitCreatedAt: number | undefined;
@@ -39,8 +40,8 @@ export const useHabitDetailScreenState = ({
   const habitNotes =
     useQuery(api.notes.search, visible && habitId ? { habitId } : 'skip') ?? [];
 
-  // Today's date
-  const today = useMemo(() => new Date().toISOString().split('T')[0], []);
+  // Today's date (local timezone)
+  const today = useMemo(() => getTodayString(), []);
 
   // Completed dates set
   const completedDates = useMemo(() => {
