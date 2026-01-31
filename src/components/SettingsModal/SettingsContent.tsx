@@ -2,6 +2,7 @@ import { Activity, BookOpen, Check, Circle } from 'lucide-react-native';
 import { ScrollView, Text, View } from 'react-native';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
+import { AccountSection } from './AccountSection';
 import type { SettingsContentProps } from './types';
 
 export function SettingsContent({
@@ -76,6 +77,12 @@ export function SettingsContent({
             onPress={onOpenArchivedHabits}
           />
         </SettingsSection>
+
+        {/* Account, App, and Legal sections */}
+        <AccountSection
+          colors={colors}
+          isHighContrastActive={isHighContrastActive}
+        />
       </View>
 
       {/* Footer */}
@@ -84,7 +91,7 @@ export function SettingsContent({
           className='text-center text-[13px] leading-[18px]'
           style={{ color: colors.versionText }}
         >
-          Habit Tracker v1.0.0
+          Chain Day v1.0.0
         </Text>
       </View>
     </ScrollView>
