@@ -9,31 +9,32 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Daily Habits - Build Habits That Stick",
+  title: "Chain Day - Build Habits That Stick",
   description:
     "Track your daily habits with beautiful chain visualizations. Watch your streaks grow and build lasting habits with our intuitive iOS app.",
   keywords: [
     "habit tracker",
     "habit app",
     "streak tracker",
+    "chain day",
     "daily habits",
     "habit building",
     "iOS app",
-    "chain visualization",
+    "dont break the chain",
   ],
-  authors: [{ name: "Daily Habits" }],
+  authors: [{ name: "Chain Day" }],
   openGraph: {
-    title: "Daily Habits - Build Habits That Stick",
+    title: "Chain Day - Build Habits That Stick",
     description:
       "Track your daily habits with beautiful chain visualizations. Watch your streaks grow.",
-    url: "https://dailyhabits.app",
-    siteName: "Daily Habits",
+    url: "https://chainday.app",
+    siteName: "Chain Day",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Daily Habits App",
+        alt: "Chain Day App",
       },
     ],
     locale: "en_US",
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Daily Habits - Build Habits That Stick",
+    title: "Chain Day - Build Habits That Stick",
     description:
       "Track your daily habits with beautiful chain visualizations.",
     images: ["/og-image.png"],

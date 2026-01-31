@@ -89,7 +89,7 @@ export function Features() {
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
           >
-            Why Daily Habits?
+            Why Chain Day?
           </motion.p>
           <motion.p
             className="mt-6 text-lg leading-8 text-zinc-600 dark:text-zinc-400"
