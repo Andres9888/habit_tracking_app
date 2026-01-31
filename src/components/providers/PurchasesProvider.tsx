@@ -23,7 +23,9 @@ export function PurchasesProvider({ children }: PurchasesProviderProps) {
   // Initialize RevenueCat on mount (works for anonymous users too)
   useEffect(() => {
     initializePurchases().catch((error) => {
-      console.warn('[PurchasesProvider] Failed to initialize:', error);
+      if (__DEV__) {
+        console.warn('[PurchasesProvider] Failed to initialize:', error);
+      }
     });
   }, []);
 
@@ -31,11 +33,15 @@ export function PurchasesProvider({ children }: PurchasesProviderProps) {
   useEffect(() => {
     if (isSignedIn && user?.id) {
       identifyUser(user.id).catch((error) => {
-        console.warn('[PurchasesProvider] Failed to identify user:', error);
+        if (__DEV__) {
+          console.warn('[PurchasesProvider] Failed to identify user:', error);
+        }
       });
     } else if (!isSignedIn) {
       logoutPurchases().catch((error) => {
-        console.warn('[PurchasesProvider] Failed to logout:', error);
+        if (__DEV__) {
+          console.warn('[PurchasesProvider] Failed to logout:', error);
+        }
       });
     }
   }, [isSignedIn, user?.id]);

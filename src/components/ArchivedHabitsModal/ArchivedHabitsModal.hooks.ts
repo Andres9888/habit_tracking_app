@@ -18,7 +18,9 @@ export const useArchivedHabitsModalLogic = () => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       return true;
     } catch (error) {
-      console.error('Failed to restore habit:', error);
+      if (__DEV__) {
+        console.error('Failed to restore habit:', error);
+      }
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       Alert.alert(
         'Error',
@@ -47,7 +49,9 @@ export const useArchivedHabitsModalLogic = () => {
                 Haptics.NotificationFeedbackType.Success
               );
             } catch (error) {
-              console.error('Failed to delete habit:', error);
+              if (__DEV__) {
+                console.error('Failed to delete habit:', error);
+              }
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
               Alert.alert(
                 'Error',
