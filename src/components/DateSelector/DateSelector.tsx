@@ -25,7 +25,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
 
   // Get date range text (first and last date)
   const firstDate = dates[0];
-  const lastDate = dates[dates.length - 1];
+  const lastDate = dates.at(-1);
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
   return (
@@ -35,7 +35,8 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
         <Pressable
           accessibilityLabel='Previous week'
           accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6]'
+          className='h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6] active:bg-stone-200'
+          hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onPreviousWeek}
         >
           <ChevronLeft color='#1c1917' size={16} strokeWidth={2.25} />
@@ -49,8 +50,9 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           accessibilityLabel='Next week'
           accessibilityRole='button'
           accessibilityState={{ disabled: !canNavigateForward }}
-          className={`h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6] ${canNavigateForward ? '' : 'opacity-40'}`}
+          className={`h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6] active:bg-stone-200 ${canNavigateForward ? '' : 'opacity-40'}`}
           disabled={!canNavigateForward}
+          hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onNextWeek}
         >
           <ChevronRight color='#1c1917' size={16} strokeWidth={2.25} />
