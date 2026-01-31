@@ -14,7 +14,13 @@ export function SignInLink({
   return (
     <View className={`flex-row items-center justify-center ${className}`}>
       <Text className='text-sm text-stone-500'>Already have an account? </Text>
-      <TouchableOpacity disabled={disabled} onPress={onPress}>
+      <TouchableOpacity
+        accessibilityLabel='Sign in to existing account'
+        accessibilityRole='link'
+        accessibilityState={{ disabled }}
+        disabled={disabled}
+        onPress={onPress}
+      >
         <Text className='text-sm font-semibold text-emerald-700'>Sign in</Text>
       </TouchableOpacity>
     </View>
