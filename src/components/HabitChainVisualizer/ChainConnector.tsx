@@ -29,10 +29,11 @@ export function ChainConnector({
   return (
     <View
       style={{
-        [isEnd ? 'right' : 'left']: -10,
-        marginTop: -1,
+        [isEnd ? 'right' : 'left']: 0,
+        marginTop: -1.5,
         position: 'absolute',
         top: '50%',
+        width: 18, // Extend from edge to center of first/last button
         zIndex: -1,
       }}
     >
@@ -41,6 +42,7 @@ export function ChainConnector({
         accentColor={accentColor}
         baseColor={connectorColor}
         currentStreak={currentStreak}
+        style={{ flex: 1 }}
       />
     </View>
   );

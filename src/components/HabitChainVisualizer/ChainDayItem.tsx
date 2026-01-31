@@ -71,10 +71,10 @@ export const ChainDayItem: React.FC<ChainDayItemProps> = ({
         style={{
           height: 3,
           left: '50%',
-          marginLeft: 20,
+          marginLeft: 18, // Align with edge of 36px button (36/2 = 18)
           marginTop: -1.5,
           position: 'absolute',
-          right: -16,
+          right: -18, // Extend to center of next button
           top: '50%',
           zIndex: -1,
         }}
