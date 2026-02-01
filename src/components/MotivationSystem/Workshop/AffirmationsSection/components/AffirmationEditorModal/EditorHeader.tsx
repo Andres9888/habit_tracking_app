@@ -30,7 +30,9 @@ export function EditorHeader({ isEditing, onClose }: EditorHeaderProps) {
       </View>
       <Pressable
         accessibilityLabel='Close'
+        accessibilityRole='button'
         className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={onClose}
       >
         <X className='text-stone-500' size={20} />
