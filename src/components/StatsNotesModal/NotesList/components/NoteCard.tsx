@@ -48,6 +48,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
         <TouchableOpacity
           accessibilityLabel='Edit note'
           accessibilityRole='button'
+          activeOpacity={0.7}
           className='rounded-full bg-stone-200 p-2'
           disabled={isDeleting}
           onPress={onEdit}
@@ -57,6 +58,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
         <TouchableOpacity
           accessibilityLabel='Delete note'
           accessibilityRole='button'
+          activeOpacity={0.7}
           className='rounded-full bg-red-100 p-2'
           disabled={isDeleting}
           onPress={onDelete}
