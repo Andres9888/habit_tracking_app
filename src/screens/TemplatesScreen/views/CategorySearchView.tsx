@@ -76,12 +76,16 @@ export function CategorySearchView(p: CategorySearchViewProps) {
       <Toast
         duration={3000}
         message={p.toastMessage ?? ''}
-        variant={(p.toastMessage ?? '').includes('Failed') ? 'error' : 'success'}
+        variant={
+          (p.toastMessage ?? '').includes('Failed') ? 'error' : 'success'
+        }
         visible={p.showToast}
         onDismiss={() => p.setShowToast(false)}
       />
       {p.showSortOptions && (
         <Pressable
+          accessibilityLabel='Close sort options'
+          accessibilityRole='button'
           style={styles.dropdownBackdrop}
           onPress={() => p.setShowSortOptions(false)}
         />
