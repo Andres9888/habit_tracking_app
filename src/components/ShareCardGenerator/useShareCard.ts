@@ -68,11 +68,11 @@ export function useShareCard(data: ShareCardData) {
           UTI: 'public.png',
         });
       } else {
-        console.warn('Sharing is not available on this device');
+        if (__DEV__) console.warn('Sharing is not available on this device');
         alert('Sharing is not available. Please save the image manually.');
       }
     } catch (error) {
-      console.error('Error sharing card:', error);
+      if (__DEV__) console.error('Error sharing card:', error);
       alert('Failed to share card. Please try again.');
     } finally {
       setIsGenerating(false);
@@ -80,19 +80,19 @@ export function useShareCard(data: ShareCardData) {
   };
 
   return {
-    personalMessage,
-    isGenerating,
-    selectedGradient,
     format,
-    selectedPlatform,
     gradient,
-    setPersonalMessage,
     handleShare,
-    setSelectedGradient,
+    isGenerating,
     milestoneConfig,
-    viewShotRef,
+    personalMessage,
+    selectedGradient,
+    selectedPlatform,
+    setPersonalMessage,
+    setSelectedGradient,
     setSelectedPlatform,
     setShowUserName,
     showUserName,
+    viewShotRef,
   };
 }
