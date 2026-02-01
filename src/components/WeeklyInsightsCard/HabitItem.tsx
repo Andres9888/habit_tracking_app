@@ -22,11 +22,26 @@ function getChangeIcon(type: HabitChangeType) {
   return { color: colors.warning[500], name: 'warning' };
 }
 
+function getAccessibilityLabel(
+  habit: HabitChange,
+  type: HabitChangeType
+): string {
+  const status =
+    type === 'gained' ? 'improved' : type === 'lost' ? 'declined' : 'at risk';
+  const base = `${habit.emoji} ${habit.name}, ${status}`;
+  if (type === 'risk') return base;
+  const sign = habit.percentageChange > 0 ? '+' : '';
+  return `${base}, ${sign}${Math.round(habit.percentageChange)}% change`;
+}
+
 export function HabitItem({ habit, type, onPress }: HabitItemProps) {
   const icon = getChangeIcon(type);
 
   return (
     <TouchableOpacity
+      accessibilityHint='Opens habit detail'
+      accessibilityLabel={getAccessibilityLabel(habit, type)}
+      accessibilityRole='button'
       activeOpacity={0.7}
       style={styles.habitItem}
       onPress={() => onPress?.(habit.habitId)}

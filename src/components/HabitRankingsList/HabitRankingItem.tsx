@@ -26,6 +26,9 @@ export function HabitRankingItem({
 }: HabitRankingItemProps) {
   return (
     <TouchableOpacity
+      accessibilityHint='Opens habit detail'
+      accessibilityLabel={`${item.emoji} ${item.name}, rank ${rank}, ${Math.round(item.strength)}% strength, ${item.currentStreak} day streak${item.isAtRisk ? ', at risk' : ''}`}
+      accessibilityRole='button'
       activeOpacity={0.7}
       style={styles.habitItem}
       onPress={onPress}
