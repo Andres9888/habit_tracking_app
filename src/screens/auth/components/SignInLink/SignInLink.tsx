@@ -18,6 +18,7 @@ export function SignInLink({
         accessibilityLabel='Sign in to existing account'
         accessibilityRole='link'
         accessibilityState={{ disabled }}
+        activeOpacity={0.7}
         disabled={disabled}
         onPress={onPress}
       >
