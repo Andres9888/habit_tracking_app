@@ -32,21 +32,21 @@ export function RevenueCatPaywall({
     if (!visible) return null;
 
     return (
-      <Modal transparent visible={visible} animationType="fade">
-        <View className="flex-1 items-center justify-center bg-black/50">
-          <View className="mx-6 rounded-2xl bg-white p-6">
-            <Text className="mb-2 text-center text-lg font-semibold text-stone-900">
+      <Modal transparent animationType='fade' visible={visible}>
+        <View className='flex-1 items-center justify-center bg-black/50'>
+          <View className='mx-6 rounded-2xl bg-white p-6'>
+            <Text className='mb-2 text-center text-lg font-semibold text-stone-900'>
               Premium Subscription
             </Text>
-            <Text className="mb-4 text-center text-stone-600">
+            <Text className='mb-4 text-center text-stone-600'>
               In-app purchases are not available on web. Please use the mobile
               app to subscribe.
             </Text>
             <Pressable
-              className="rounded-xl bg-amber-500 px-6 py-3"
+              className='rounded-xl bg-amber-500 px-6 py-3'
               onPress={onClose}
             >
-              <Text className="text-center font-semibold text-white">
+              <Text className='text-center font-semibold text-white'>
                 Got it
               </Text>
             </Pressable>
@@ -62,38 +62,45 @@ export function RevenueCatPaywall({
   // Use RevenueCat's Paywall JSX component (more reliable with Expo)
   return (
     <Modal
+      animationType='slide'
+      presentationStyle='fullScreen'
       visible={visible}
-      animationType="slide"
-      presentationStyle="fullScreen"
       onRequestClose={onClose}
     >
       <RevenueCatUI.Paywall
-        style={{ flex: 1 }}
         options={{
           displayCloseButton: true,
         }}
+        style={{ flex: 1 }}
         onDismiss={() => {
-          console.log('[RevenueCatPaywall] Dismissed');
-          onClose();
-        }}
-        onPurchaseCompleted={({ customerInfo }) => {
-          console.log('[RevenueCatPaywall] Purchase completed:', customerInfo);
-          onPurchaseSuccess?.();
+          if (__DEV__) console.log('[RevenueCatPaywall] Dismissed');
           onClose();
         }}
         onPurchaseCancelled={() => {
-          console.log('[RevenueCatPaywall] Purchase cancelled');
+          if (__DEV__) console.log('[RevenueCatPaywall] Purchase cancelled');
+        }}
+        onPurchaseCompleted={({ customerInfo }) => {
+          if (__DEV__)
+            console.log(
+              '[RevenueCatPaywall] Purchase completed:',
+              customerInfo
+            );
+          onPurchaseSuccess?.();
+          onClose();
         }}
         onPurchaseError={({ error }) => {
-          console.error('[RevenueCatPaywall] Purchase error:', error);
+          if (__DEV__)
+            console.error('[RevenueCatPaywall] Purchase error:', error);
         }}
         onRestoreCompleted={({ customerInfo }) => {
-          console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
+          if (__DEV__)
+            console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
           onRestoreSuccess?.();
           onClose();
         }}
         onRestoreError={({ error }) => {
-          console.error('[RevenueCatPaywall] Restore error:', error);
+          if (__DEV__)
+            console.error('[RevenueCatPaywall] Restore error:', error);
         }}
       />
     </Modal>
