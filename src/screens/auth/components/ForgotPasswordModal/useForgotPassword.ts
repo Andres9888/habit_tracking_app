@@ -55,7 +55,7 @@ export function useForgotPassword(): UseForgotPasswordReturn {
       setSuccess(true);
       setError(null);
     } catch (error_: any) {
-      console.error('Password reset error:', error_);
+      if (__DEV__) console.error('Password reset error:', error_);
 
       // Handle common errors
       if (error_.errors?.[0]?.code === 'form_identifier_not_found') {
