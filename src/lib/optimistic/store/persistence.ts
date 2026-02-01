@@ -83,9 +83,11 @@ export async function loadOptimisticStore(): Promise<OptimisticStore | null> {
     const parsed = JSON.parse(raw) as unknown;
 
     if (!isValidSerializedStore(parsed)) {
-      console.warn(
-        '[optimistic/persistence] Invalid store state in storage, discarding'
-      );
+      if (__DEV__) {
+        console.warn(
+          '[optimistic/persistence] Invalid store state in storage, discarding'
+        );
+      }
       return null;
     }
 
@@ -97,7 +99,12 @@ export async function loadOptimisticStore(): Promise<OptimisticStore | null> {
 
     return deserializeStore(migrated);
   } catch (error) {
-    console.warn('[optimistic/persistence] Failed to load store state:', error);
+    if (__DEV__) {
+      console.warn(
+        '[optimistic/persistence] Failed to load store state:',
+        error
+      );
+    }
     return null;
   }
 }

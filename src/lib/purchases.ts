@@ -15,8 +15,8 @@ import { Platform } from 'react-native';
 import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 
 const API_KEYS = {
-  ios: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY || '',
   android: process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY || '',
+  ios: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY || '',
 };
 
 let isInitialized = false;
@@ -29,6 +29,14 @@ function isExpoGo(): boolean {
   return Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 }
 
+// Helper for dev-only logging
+const devLog = (...args: unknown[]) => {
+  if (__DEV__) {
+    // eslint-disable-next-line no-console
+    console.log(...args);
+  }
+};
+
 /**
  * Initialize RevenueCat SDK
  * Should be called once on app startup, after auth is ready
@@ -37,87 +45,64 @@ function isExpoGo(): boolean {
  */
 export async function initializePurchases(userId?: string): Promise<void> {
   if (isInitialized) {
-    console.log('[Purchases] Already initialized, skipping');
+    devLog('[Purchases] Already initialized, skipping');
     return;
   }
 
-  // Skip on web - RevenueCat doesn't support web
   if (Platform.OS === 'web') {
-    console.log('[Purchases] Web platform not supported, skipping');
+    devLog('[Purchases] Web platform not supported, skipping');
     return;
   }
 
-  // Skip in Expo Go - native stores unavailable
   if (isExpoGo()) {
-    console.log('[Purchases] Expo Go detected - native stores unavailable, skipping');
-    console.log('[Purchases] Use a development build to test purchases');
+    devLog('[Purchases] Expo Go detected - native stores unavailable');
+    devLog('[Purchases] Use a development build to test purchases');
     return;
   }
-
-  // Log environment for debugging
-  console.log('[Purchases] Environment:', Constants.executionEnvironment);
 
   const apiKey = Platform.OS === 'ios' ? API_KEYS.ios : API_KEYS.android;
 
-  // Debug: Log API key info (first/last 4 chars only for security)
-  console.log('[Purchases] === CONFIGURATION DEBUG ===');
-  console.log('[Purchases] Platform:', Platform.OS);
-  console.log('[Purchases] API Key configured:', apiKey ? `${apiKey.slice(0, 4)}...${apiKey.slice(-4)}` : 'MISSING');
-  console.log('[Purchases] User ID:', userId || 'anonymous');
+  devLog('[Purchases] Platform:', Platform.OS);
+  devLog('[Purchases] User ID:', userId || 'anonymous');
 
   if (!apiKey) {
-    console.warn('[Purchases] No API key configured for platform:', Platform.OS);
+    if (__DEV__) {
+      console.warn(
+        '[Purchases] No API key configured for platform:',
+        Platform.OS
+      );
+    }
     return;
   }
 
-  // Enable verbose logging in development
   if (__DEV__) {
     Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
   }
 
   try {
-    await Purchases.configure({
-      apiKey,
-      appUserID: userId,
-    });
-
+    Purchases.configure({ apiKey, appUserID: userId });
     isInitialized = true;
-    console.log('[Purchases] SDK initialized successfully');
-
-    // Debug: Fetch and log app info
-    try {
-      const appUserID = await Purchases.getAppUserID();
-      console.log('[Purchases] App User ID after init:', appUserID);
-    } catch (e) {
-      console.log('[Purchases] Could not get App User ID:', e);
-    }
-
-    if (userId) {
-      console.log('[Purchases] User identified:', userId);
-    }
+    devLog('[Purchases] SDK initialized successfully');
   } catch (error) {
-    console.error('[Purchases] Failed to initialize:', error);
-    // Don't throw - let app continue without purchases
-    // This can happen in Expo Go or if SDK has issues
+    if (__DEV__) {
+      console.error('[Purchases] Failed to initialize:', error);
+    }
   }
 }
 
 /**
  * Update the user ID after authentication
- * Call this when user signs in/out
  */
 export async function identifyUser(userId: string): Promise<void> {
-  if (Platform.OS === 'web') return;
-  if (!isInitialized) {
-    console.warn('[Purchases] SDK not initialized, skipping identify');
-    return;
-  }
+  if (Platform.OS === 'web' || !isInitialized) return;
 
   try {
     await Purchases.logIn(userId);
-    console.log('[Purchases] User logged in:', userId);
+    devLog('[Purchases] User logged in:', userId);
   } catch (error) {
-    console.error('[Purchases] Failed to identify user:', error);
+    if (__DEV__) {
+      console.error('[Purchases] Failed to identify user:', error);
+    }
   }
 }
 
@@ -125,17 +110,15 @@ export async function identifyUser(userId: string): Promise<void> {
  * Clear user identification on logout
  */
 export async function logoutPurchases(): Promise<void> {
-  if (Platform.OS === 'web') return;
-  if (!isInitialized) {
-    console.log('[Purchases] SDK not initialized, skipping logout');
-    return;
-  }
+  if (Platform.OS === 'web' || !isInitialized) return;
 
   try {
     await Purchases.logOut();
-    console.log('[Purchases] User logged out');
+    devLog('[Purchases] User logged out');
   } catch (error) {
-    console.error('[Purchases] Failed to logout:', error);
+    if (__DEV__) {
+      console.error('[Purchases] Failed to logout:', error);
+    }
   }
 }
 
@@ -146,4 +129,4 @@ export function isPurchasesAvailable(): boolean {
   return isInitialized && Platform.OS !== 'web';
 }
 
-export { Purchases };
+export { default as Purchases } from 'react-native-purchases';

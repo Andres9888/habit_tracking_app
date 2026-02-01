@@ -48,7 +48,9 @@ export function NetworkStatusProvider({
           try {
             cb();
           } catch (error) {
-            console.warn('Callback error:', error);
+            if (__DEV__) {
+              console.warn('Callback error:', error);
+            }
           }
         }
       }
@@ -70,7 +72,9 @@ export function NetworkStatusProvider({
     try {
       handleStatusUpdate(await Network.getNetworkStateAsync());
     } catch (error) {
-      console.warn('Error refreshing network status:', error);
+      if (__DEV__) {
+        console.warn('Error refreshing network status:', error);
+      }
       setIsChecking(false);
     }
   }, [handleStatusUpdate]);
