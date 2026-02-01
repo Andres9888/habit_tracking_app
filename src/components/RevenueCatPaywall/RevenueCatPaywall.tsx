@@ -43,7 +43,10 @@ export function RevenueCatPaywall({
               app to subscribe.
             </Text>
             <Pressable
+              accessibilityLabel="Close"
+              accessibilityRole="button"
               className="rounded-xl bg-amber-500 px-6 py-3"
+              style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
               onPress={onClose}
             >
               <Text className="text-center font-semibold text-white">
