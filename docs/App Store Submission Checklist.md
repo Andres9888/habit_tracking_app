@@ -10,10 +10,10 @@
 
 These items will cause immediate rejection if not addressed:
 
-- [ ] **Create proper splash screen** - Current `assets/splash.png` is a 1×1px placeholder (68 bytes). Needs 2048×2048 or configure EAS to auto-generate from icon
-- [ ] **Write and host Privacy Policy** - Required by Apple. Must cover: data collection, Convex backend, Clerk auth, third-party services, data retention
+- [x] **Create proper splash screen** - ✅ Updated splash.png (180KB)
+- [x] **Write and host Privacy Policy** - ✅ LIVE at https://andres9888.github.io/chainday-landing/privacy.html
 - [ ] **Capture App Store screenshots** - Need 3-10 screenshots in required sizes (1290×2796 for 6.7", 1242×2688 for 6.5")
-- [ ] **Add notification permission description** - Missing `NSUserNotificationsUsageDescription` in `ios/DailyHabits/Info.plist`
+- [x] **Add notification permission description** - ✅ Added: "Chain Day uses notifications to remind you to complete your habits at the times you choose."
 
 ---
 
@@ -40,16 +40,19 @@ These items will cause immediate rejection if not addressed:
 ## 📸 Visual Assets
 
 ### Screenshots (Required)
+
 - [ ] iPhone 6.7" (1290×2796) - iPhone 14 Pro Max / 15 Plus
 - [ ] iPhone 6.5" (1242×2688) - iPhone 11 Pro Max / XS Max
 - [ ] iPhone 5.5" (1242×2208) - iPhone 8 Plus (if supporting older devices)
 - [ ] iPad Pro 12.9" (2048×2732) - If `supportsTablet: true`
 
 ### App Preview Videos (Optional)
+
 - [ ] 15-30 second video showing key features
 - [ ] Capture with iPhone screen recording
 
 ### Icon & Splash
+
 - [x] App icon 1024×1024 (`assets/icon.png` ✓)
 - [x] Adaptive icon (`assets/adaptive-icon.png` ✓)
 - [ ] Splash screen 2048×2048 or auto-generated
@@ -59,17 +62,20 @@ These items will cause immediate rejection if not addressed:
 ## ⚙️ iOS Configuration Updates
 
 ### Info.plist (`ios/DailyHabits/Info.plist`)
+
 - [ ] Add `NSUserNotificationsUsageDescription` with user-friendly message
 - [ ] Remove or disable `NSAllowsLocalNetworking` for production
 - [ ] Verify `MinimumOSVersion` (currently 12.0, recommend 13.0+)
 - [ ] Ensure all permission descriptions are clear and accurate
 
 ### Entitlements
+
 - [ ] Change `aps-environment` from `development` to `production` in:
   - `ios/DailyHabits/DailyHabits.entitlements`
   - Or configure via Xcode capabilities
 
 ### app.json / app.config.js
+
 - [ ] Add `privacyPolicyUrl` field
 - [ ] Verify `bundleIdentifier` matches App Store Connect
 - [ ] Confirm version number (currently 1.0.0)
@@ -79,21 +85,28 @@ These items will cause immediate rejection if not addressed:
 ## 📝 Legal & Compliance
 
 ### Privacy Policy (Required)
-- [ ] Draft privacy policy document
-- [ ] Cover these topics:
-  - [ ] What data is collected (habits, completion data, profile info)
-  - [ ] How data is used
-  - [ ] Third-party services (Convex, Clerk, RevenueCat if used)
-  - [ ] Data retention and deletion policies
-  - [ ] Contact information
-- [ ] Host on publicly accessible URL
+
+- [x] Draft privacy policy document
+- [x] Cover these topics:
+  - [x] What data is collected (habits, completion data, profile info)
+  - [x] How data is used
+  - [x] Third-party services (Convex, Clerk, RevenueCat if used)
+  - [x] Data retention and deletion policies
+  - [x] Contact information
+- [x] Host on publicly accessible URL
 - [ ] Add URL to App Store Connect
 
+**Privacy Policy URL:** https://andres9888.github.io/chainday-landing/privacy.html
+
 ### Terms of Service (Recommended)
-- [ ] Draft ToS document
-- [ ] Host on publicly accessible URL
+
+- [x] Draft ToS document
+- [x] Host on publicly accessible URL
+
+**Terms of Service URL:** https://andres9888.github.io/chainday-landing/terms.html
 
 ### Support
+
 - [ ] Create support email address
 - [ ] Create support webpage or FAQ
 - [ ] Add support URL to App Store Connect
@@ -133,6 +146,7 @@ These items will cause immediate rejection if not addressed:
 ## 🧪 Testing
 
 ### Internal Testing
+
 - [ ] Run full test suite (`npm test`)
 - [ ] Manual smoke test all features:
   - [ ] User registration/login
@@ -145,6 +159,7 @@ These items will cause immediate rejection if not addressed:
 - [ ] Test on multiple screen sizes (iPhone SE, Pro Max, iPad)
 
 ### TestFlight Beta
+
 - [ ] Build production .ipa: `eas build --platform ios --profile production`
 - [ ] Submit to TestFlight: `eas submit --platform ios`
 - [ ] Invite internal testers
@@ -156,6 +171,7 @@ These items will cause immediate rejection if not addressed:
 ## 🏗️ Build & Submission
 
 ### Pre-Build Checklist
+
 - [ ] Commit all changes to `main` branch
 - [ ] Ensure no uncommitted changes: `git status`
 - [ ] Merge `dev` branch if needed
@@ -163,6 +179,7 @@ These items will cause immediate rejection if not addressed:
 - [ ] Verify environment variables are set
 
 ### Build Commands
+
 ```bash
 # Build for production
 eas build --platform ios --profile production
@@ -175,6 +192,7 @@ eas build --platform ios --profile production --auto-submit
 ```
 
 ### App Review Notes
+
 - [ ] Prepare notes for Apple reviewer:
   - [ ] Demo account credentials
   - [ ] Any special instructions for testing
