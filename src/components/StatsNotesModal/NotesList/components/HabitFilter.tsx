@@ -31,6 +31,8 @@ export const HabitFilter: React.FC<HabitFilterProps> = ({
       <TouchableOpacity
         accessibilityLabel='Show all notes'
         accessibilityRole='button'
+        accessibilityState={{ selected: selectedFilter === 'all' }}
+        activeOpacity={0.7}
         className={`rounded-xl px-3 py-2 ${
           selectedFilter === 'all' ? 'bg-stone-900' : 'bg-stone-100'
         }`}
@@ -49,6 +51,8 @@ export const HabitFilter: React.FC<HabitFilterProps> = ({
           key={habit._id}
           accessibilityLabel={`Filter by ${habit.name}`}
           accessibilityRole='button'
+          accessibilityState={{ selected: selectedFilter === habit._id }}
+          activeOpacity={0.7}
           className={`rounded-xl px-3 py-2 ${
             selectedFilter === habit._id ? 'bg-stone-900' : 'bg-stone-100'
           }`}
