@@ -16,6 +16,7 @@ export function BackButton({
     <TouchableOpacity
       accessibilityLabel={label}
       accessibilityRole='button'
+      activeOpacity={0.7}
       className='-ml-2 flex-row items-center p-2'
       hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
       testID={testID}
