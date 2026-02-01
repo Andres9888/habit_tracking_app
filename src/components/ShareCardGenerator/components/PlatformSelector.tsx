@@ -32,6 +32,9 @@ export function PlatformSelector({
         {(Object.keys(SHARE_FORMATS) as SharePlatform[]).map((platform) => (
           <Pressable
             key={platform}
+            accessibilityLabel={`${platform.replace('-', ' ')} platform`}
+            accessibilityRole='button'
+            accessibilityState={{ selected: selectedPlatform === platform }}
             style={[
               styles.platformButton,
               selectedPlatform === platform && {

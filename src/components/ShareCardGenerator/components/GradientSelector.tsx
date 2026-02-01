@@ -32,6 +32,9 @@ export function GradientSelector({
         {GRADIENT_PRESETS.map((gradient, index) => (
           <Pressable
             key={gradient.name}
+            accessibilityLabel={`${gradient.name} gradient`}
+            accessibilityRole='button'
+            accessibilityState={{ selected: selectedGradient === index }}
             style={[
               styles.gradientButton,
               selectedGradient === index && styles.gradientButtonSelected,
