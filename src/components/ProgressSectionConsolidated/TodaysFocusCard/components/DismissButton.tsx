@@ -32,7 +32,7 @@ export function DismissButton({
       accessibilityHint='Dismiss celebration and continue'
       accessibilityLabel='Continue'
       accessibilityRole='button'
-      style={styles.dismissButton}
+      style={({ pressed }) => [styles.dismissButton, { opacity: pressed ? 0.7 : 1 }]}
       onPress={onPress}
     >
       <Text style={[styles.dismissText, { color: subTextColor }]}>
