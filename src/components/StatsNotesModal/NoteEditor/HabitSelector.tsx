@@ -22,6 +22,8 @@ export function HabitSelector({
         <TouchableOpacity
           accessibilityLabel='No habit selected'
           accessibilityRole='button'
+          accessibilityState={{ selected: !selectedHabitId }}
+          activeOpacity={0.7}
           className={`rounded-xl px-3 py-2 ${
             selectedHabitId ? 'bg-stone-100' : 'bg-stone-900'
           }`}
@@ -40,6 +42,8 @@ export function HabitSelector({
             key={habit._id}
             accessibilityLabel={`Link to ${habit.name}`}
             accessibilityRole='button'
+            accessibilityState={{ selected: selectedHabitId === habit._id }}
+            activeOpacity={0.7}
             className={`rounded-xl px-3 py-2 ${
               selectedHabitId === habit._id ? 'bg-stone-900' : 'bg-stone-100'
             }`}
