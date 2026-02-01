@@ -23,7 +23,10 @@ export function ExamplesSection({ onSelectExample }: ExamplesSectionProps) {
         {EXAMPLE_AFFIRMATIONS.map((example, index) => (
           <Pressable
             key={index}
+            accessibilityLabel={`Use example: ${example}`}
+            accessibilityRole='button'
             className='flex-row items-start gap-2 rounded-lg bg-stone-50 px-3 py-2'
+            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               onSelectExample(example);
