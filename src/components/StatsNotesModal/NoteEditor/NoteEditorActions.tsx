@@ -18,7 +18,9 @@ export function NoteEditorActions({
   return (
     <View className='flex-row items-center justify-end gap-3'>
       <TouchableOpacity
+        accessibilityLabel='Cancel'
         accessibilityRole='button'
+        activeOpacity={0.7}
         className='py-2'
         disabled={isSaving}
         onPress={onCancel}
@@ -28,7 +30,9 @@ export function NoteEditorActions({
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
+        accessibilityLabel={isEditing ? 'Save note' : 'Add note'}
         accessibilityRole='button'
+        activeOpacity={0.7}
         className={`rounded-3xl border border-stone-900 px-5 py-2 ${
           !isValid || isSaving ? 'opacity-40' : ''
         }`}
