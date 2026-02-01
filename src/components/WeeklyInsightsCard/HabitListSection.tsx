@@ -42,6 +42,9 @@ export function HabitListSection({
 
   return (
     <TouchableOpacity
+      accessibilityLabel={`${title}, ${habits.length} habits, ${isExpanded ? 'expanded' : 'collapsed'}`}
+      accessibilityRole='button'
+      accessibilityState={{ expanded: isExpanded }}
       activeOpacity={0.7}
       style={styles.section}
       onPress={onToggle}
