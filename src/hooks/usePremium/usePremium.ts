@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * usePremium Hook
  *
@@ -71,13 +72,19 @@ export function usePremium(): UsePremiumReturn {
     async function fetchData() {
       // Wait for SDK to be available (handles race condition)
       while (!isPurchasesAvailable() && retryCount < maxRetries) {
-        console.log(`[usePremium] SDK not available yet, retry ${retryCount + 1}/${maxRetries}...`);
-        await new Promise(resolve => setTimeout(resolve, retryDelay));
+        if (__DEV__)
+          console.log(
+            `[usePremium] SDK not available yet, retry ${retryCount + 1}/${maxRetries}...`
+          );
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
         retryCount++;
       }
 
       if (!isPurchasesAvailable()) {
-        console.log('[usePremium] SDK not available after retries, giving up');
+        if (__DEV__)
+          console.log(
+            '[usePremium] SDK not available after retries, giving up'
+          );
         if (isMounted) {
           setIsLoading(false);
           setIsLoadingOfferings(false);
@@ -85,7 +92,7 @@ export function usePremium(): UsePremiumReturn {
         return;
       }
 
-      console.log('[usePremium] SDK available, fetching data...');
+      if (__DEV__) console.log('[usePremium] SDK available, fetching data...');
       try {
         // Fetch customer info and offerings in parallel
         const [info, offeringsResult] = await Promise.all([
@@ -94,32 +101,70 @@ export function usePremium(): UsePremiumReturn {
         ]);
 
         // Debug logging for offerings
-        console.log('[usePremium] === OFFERINGS DEBUG ===');
-        console.log('[usePremium] All offerings:', Object.keys(offeringsResult.all || {}));
-        console.log('[usePremium] Current offering:', offeringsResult.current?.identifier ?? 'NONE');
-        console.log('[usePremium] Available packages:', offeringsResult.current?.availablePackages?.length ?? 0);
+        if (__DEV__) console.log('[usePremium] === OFFERINGS DEBUG ===');
+        if (__DEV__)
+          console.log(
+            '[usePremium] All offerings:',
+            Object.keys(offeringsResult.all || {})
+          );
+        if (__DEV__)
+          console.log(
+            '[usePremium] Current offering:',
+            offeringsResult.current?.identifier ?? 'NONE'
+          );
+        if (__DEV__)
+          console.log(
+            '[usePremium] Available packages:',
+            offeringsResult.current?.availablePackages?.length ?? 0
+          );
 
         if (offeringsResult.current?.availablePackages) {
-          offeringsResult.current.availablePackages.forEach((pkg, i) => {
-            console.log(`[usePremium] Package ${i}: ${pkg.identifier} - ${pkg.product.identifier} - ${pkg.product.priceString}`);
-          });
+          for (const [
+            i,
+            pkg,
+          ] of offeringsResult.current.availablePackages.entries()) {
+            if (__DEV__)
+              console.log(
+                `[usePremium] Package ${i}: ${pkg.identifier} - ${pkg.product.identifier} - ${pkg.product.priceString}`
+              );
+          }
         } else {
-          console.log('[usePremium] ⚠️ No packages available in current offering');
+          if (__DEV__)
+            console.log(
+              '[usePremium] ⚠️ No packages available in current offering'
+            );
         }
 
         // Debug logging for customer info
-        console.log('[usePremium] === CUSTOMER INFO DEBUG ===');
-        console.log('[usePremium] Original App User ID:', info.originalAppUserId);
-        console.log('[usePremium] Active entitlements:', Object.keys(info.entitlements.active));
-        console.log('[usePremium] All entitlements:', Object.keys(info.entitlements.all));
+        if (__DEV__) console.log('[usePremium] === CUSTOMER INFO DEBUG ===');
+        if (__DEV__)
+          console.log(
+            '[usePremium] Original App User ID:',
+            info.originalAppUserId
+          );
+        if (__DEV__)
+          console.log(
+            '[usePremium] Active entitlements:',
+            Object.keys(info.entitlements.active)
+          );
+        if (__DEV__)
+          console.log(
+            '[usePremium] All entitlements:',
+            Object.keys(info.entitlements.all)
+          );
 
         if (isMounted) {
           setCustomerInfo(info);
           setPackages(offeringsResult.current?.availablePackages ?? null);
         }
-      } catch (e) {
-        console.error('[usePremium] Failed to fetch data:', e);
-        console.error('[usePremium] Error details:', JSON.stringify(e, null, 2));
+      } catch (error_) {
+        if (__DEV__)
+          console.error('[usePremium] Failed to fetch data:', error_);
+        if (__DEV__)
+          console.error(
+            '[usePremium] Error details:',
+            JSON.stringify(error_, null, 2)
+          );
         if (isMounted) {
           setError('Failed to load subscription info');
         }
@@ -139,14 +184,19 @@ export function usePremium(): UsePremiumReturn {
           listenerRef.current = Purchases.addCustomerInfoUpdateListener(
             (info: CustomerInfo) => {
               if (isMounted) {
-                console.log('[usePremium] Customer info updated via listener');
+                if (__DEV__)
+                  console.log(
+                    '[usePremium] Customer info updated via listener'
+                  );
                 setCustomerInfo(info);
               }
             }
           );
-          console.log('[usePremium] Listener attached successfully');
-        } catch (e) {
-          console.error('[usePremium] Failed to add listener:', e);
+          if (__DEV__)
+            console.log('[usePremium] Listener attached successfully');
+        } catch (error_) {
+          if (__DEV__)
+            console.error('[usePremium] Failed to add listener:', error_);
         }
       }
     };
@@ -161,7 +211,7 @@ export function usePremium(): UsePremiumReturn {
     return () => {
       isMounted = false;
       if (listenerRef.current) {
-        console.log('[usePremium] Removing listener on cleanup');
+        if (__DEV__) console.log('[usePremium] Removing listener on cleanup');
         listenerRef.current.remove();
         listenerRef.current = null;
       }
@@ -183,21 +233,23 @@ export function usePremium(): UsePremiumReturn {
 
         const success =
           newInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID] !== undefined;
-        console.log(
-          '[usePremium] Purchase result:',
-          success ? 'SUCCESS' : 'NO ENTITLEMENT'
-        );
+        if (__DEV__)
+          console.log(
+            '[usePremium] Purchase result:',
+            success ? 'SUCCESS' : 'NO ENTITLEMENT'
+          );
         return success;
-      } catch (e) {
-        const purchaseError = e as PurchasesError;
+      } catch (error_) {
+        const purchaseError = error_ as PurchasesError;
 
         // Don't show error if user cancelled
         if (purchaseError.userCancelled) {
-          console.log('[usePremium] Purchase cancelled by user');
+          if (__DEV__) console.log('[usePremium] Purchase cancelled by user');
           return false;
         }
 
-        console.error('[usePremium] Purchase failed:', purchaseError);
+        if (__DEV__)
+          console.error('[usePremium] Purchase failed:', purchaseError);
         setError(purchaseError.message || 'Purchase failed');
         return false;
       }
@@ -219,10 +271,11 @@ export function usePremium(): UsePremiumReturn {
 
       const success =
         info.entitlements.active[PREMIUM_ENTITLEMENT_ID] !== undefined;
-      console.log('[usePremium] Restore result:', success ? 'FOUND' : 'NONE');
+      if (__DEV__)
+        console.log('[usePremium] Restore result:', success ? 'FOUND' : 'NONE');
       return success;
-    } catch (e) {
-      console.error('[usePremium] Restore failed:', e);
+    } catch (error_) {
+      if (__DEV__) console.error('[usePremium] Restore failed:', error_);
       setError('Failed to restore purchases');
       return false;
     }
@@ -235,8 +288,8 @@ export function usePremium(): UsePremiumReturn {
     try {
       const info = await Purchases.getCustomerInfo();
       setCustomerInfo(info);
-    } catch (e) {
-      console.error('[usePremium] Refresh failed:', e);
+    } catch (error_) {
+      if (__DEV__) console.error('[usePremium] Refresh failed:', error_);
     }
   }, []);
 
@@ -255,27 +308,35 @@ export function usePremium(): UsePremiumReturn {
   const managementUrl = customerInfo?.managementURL ?? null;
 
   return {
-    // State
-    isPremium,
-    status,
-    isLoading,
     error,
 
-    // Offerings
-    packages,
-    monthlyPackage,
-    priceString,
-    isLoadingOfferings,
-
-    // Actions
-    purchasePackage,
-    restorePurchases,
-    refreshStatus,
+    isLoading,
 
     // Subscription info
     expirationDate,
-    isTrialActive,
-    managementUrl,
+
+    isLoadingOfferings,
+
     customerInfo,
+
+    // State
+    isPremium,
+
+    isTrialActive,
+
+    monthlyPackage,
+
+    managementUrl,
+
+    // Offerings
+    packages,
+
+    priceString,
+
+    status,
+    // Actions
+    purchasePackage,
+    refreshStatus,
+    restorePurchases,
   };
 }
