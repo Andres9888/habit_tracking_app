@@ -34,6 +34,7 @@ export function SwipeActions({
       <Pressable
         accessibilityLabel={`Edit ${name}`}
         accessibilityRole='button'
+        className='active:opacity-80'
         style={[
           actionStyles.actionButton,
           { backgroundColor: theme.custom.colors.secondary[500] },
@@ -49,6 +50,7 @@ export function SwipeActions({
       <Pressable
         accessibilityLabel={`Delete ${name}`}
         accessibilityRole='button'
+        className='active:opacity-80'
         style={[
           actionStyles.actionButton,
           { backgroundColor: theme.custom.colors.error },
