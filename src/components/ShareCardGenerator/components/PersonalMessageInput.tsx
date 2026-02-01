@@ -29,6 +29,7 @@ export function PersonalMessageInput({
       </Text>
       <TextInput
         multiline
+        accessibilityLabel='Personal message, optional'
         maxLength={MESSAGE_MAX_LENGTH}
         placeholder='Add a personal touch...'
         placeholderTextColor={theme.custom.colors.gray[400]}

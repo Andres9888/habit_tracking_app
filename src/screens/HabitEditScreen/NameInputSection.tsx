@@ -5,7 +5,10 @@ interface NameInputSectionProps {
   onChangeText: (text: string) => void;
 }
 
-export function NameInputSection({ habitName, onChangeText }: NameInputSectionProps) {
+export function NameInputSection({
+  habitName,
+  onChangeText,
+}: NameInputSectionProps) {
   return (
     <View className='items-center' style={{ marginBottom: 32, marginTop: 32 }}>
       <Text className='mb-3 text-center text-2xl font-bold text-stone-900'>
@@ -13,6 +16,7 @@ export function NameInputSection({ habitName, onChangeText }: NameInputSectionPr
       </Text>
 
       <TextInput
+        accessibilityLabel='Habit name'
         className='w-full rounded-2xl border-2 border-stone-200 bg-white px-6 py-5 text-center text-xl text-stone-900'
         maxLength={50}
         placeholder='e.g., Read for 20 minutes'
@@ -23,7 +27,9 @@ export function NameInputSection({ habitName, onChangeText }: NameInputSectionPr
         onSubmitEditing={Keyboard.dismiss}
       />
 
-      <Text className='mt-2 text-xs text-stone-400'>{habitName.length}/50 characters</Text>
+      <Text className='mt-2 text-xs text-stone-400'>
+        {habitName.length}/50 characters
+      </Text>
     </View>
   );
 }
