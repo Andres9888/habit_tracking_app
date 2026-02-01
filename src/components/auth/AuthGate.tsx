@@ -27,7 +27,7 @@ export function AuthGate() {
           error instanceof Error && error.message.includes('Not authenticated');
         if (!isAuthError || i === retries - 1) {
           // Not an auth error, or last retry - log and exit
-          console.error('Failed to sync user:', error);
+          if (__DEV__) console.error('Failed to sync user:', error);
           return;
         }
         // Wait before retry (auth token may be propagating)
