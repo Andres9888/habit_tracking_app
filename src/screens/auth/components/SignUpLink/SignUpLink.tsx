@@ -13,6 +13,7 @@ export function SignUpLink({ disabled, onPress }: SignUpLinkProps) {
         accessibilityLabel='Create a new account'
         accessibilityRole='link'
         accessibilityState={{ disabled }}
+        activeOpacity={0.7}
         disabled={disabled}
         onPress={onPress}
       >
