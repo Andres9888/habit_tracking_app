@@ -62,6 +62,7 @@ export function SearchBar({
           <Pressable
             accessibilityLabel='Clear search'
             accessibilityRole='button'
+            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             onPress={onClear}
           >
             <X color='#9ca3af' size={18} />
