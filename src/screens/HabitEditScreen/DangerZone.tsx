@@ -1,3 +1,11 @@
+/**
+ * DangerZone Component
+ *
+ * Destructive actions section for habit management.
+ * Provides archive (recoverable) and delete (permanent) options
+ * with appropriate visual warnings.
+ */
+
 import { View, Text, Pressable } from 'react-native';
 import { Trash2, Archive } from 'lucide-react-native';
 
@@ -23,7 +31,9 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         onPress={onArchive}
       >
         <Archive color='#d97706' size={18} strokeWidth={2} />
-        <Text className='text-base font-medium text-amber-700'>Archive Habit</Text>
+        <Text className='text-base font-medium text-amber-700'>
+          Archive Habit
+        </Text>
       </Pressable>
 
       <Pressable

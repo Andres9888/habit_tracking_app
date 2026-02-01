@@ -1,3 +1,15 @@
+/**
+ * HabitEditScreen Component
+ *
+ * Full-screen modal for editing an existing habit's properties.
+ * Allows modification of:
+ * - Habit name
+ * - Emoji icon and accent color
+ * - Archive/delete actions
+ *
+ * Includes unsaved changes protection and haptic feedback.
+ */
+
 import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { EditHeader } from './EditHeader';

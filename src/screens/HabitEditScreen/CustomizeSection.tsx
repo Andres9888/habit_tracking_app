@@ -1,3 +1,12 @@
+/**
+ * CustomizeSection Component
+ *
+ * Visual customization options for a habit including:
+ * - Emoji icon picker
+ * - Accent color selection
+ * - Reminder scheduling
+ */
+
 import { View, Text } from 'react-native';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
