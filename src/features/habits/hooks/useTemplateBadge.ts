@@ -15,7 +15,10 @@ interface UseTemplateBadgeParams {
  * - Hide if dismissed
  * - Auto-dismiss after 3 sessions
  */
-export function useTemplateBadge({ totalHabits, hasViewedTemplates }: UseTemplateBadgeParams) {
+export function useTemplateBadge({
+  totalHabits,
+  hasViewedTemplates,
+}: UseTemplateBadgeParams) {
   const [showBadge, setShowBadge] = useState(false);
 
   useEffect(() => {
@@ -40,12 +43,17 @@ export function useTemplateBadge({ totalHabits, hasViewedTemplates }: UseTemplat
       // Show badge if user has 2+ habits (engaged user)
       if (totalHabits >= 2) {
         // Track how many times shown
-        const shownCount = await SecureStore.getItemAsync(BADGE_SHOWN_COUNT_KEY);
-        const count = parseInt(shownCount || '0', 10);
+        const shownCount = await SecureStore.getItemAsync(
+          BADGE_SHOWN_COUNT_KEY
+        );
+        const count = Number.parseInt(shownCount || '0', 10);
 
         if (count < 3) {
           // Auto-dismiss after 3 sessions
-          await SecureStore.setItemAsync(BADGE_SHOWN_COUNT_KEY, String(count + 1));
+          await SecureStore.setItemAsync(
+            BADGE_SHOWN_COUNT_KEY,
+            String(count + 1)
+          );
           setShowBadge(true);
         } else {
           setShowBadge(false);
@@ -54,7 +62,7 @@ export function useTemplateBadge({ totalHabits, hasViewedTemplates }: UseTemplat
         setShowBadge(false);
       }
     } catch (error) {
-      console.error('Error checking badge visibility:', error);
+      if (__DEV__) console.error('Error checking badge visibility:', error);
       setShowBadge(false);
     }
   };
@@ -64,12 +72,12 @@ export function useTemplateBadge({ totalHabits, hasViewedTemplates }: UseTemplat
       await SecureStore.setItemAsync(BADGE_DISMISSED_KEY, 'true');
       setShowBadge(false);
     } catch (error) {
-      console.error('Error dismissing badge:', error);
+      if (__DEV__) console.error('Error dismissing badge:', error);
     }
   };
 
   return {
-    showBadge,
     dismissBadge,
+    showBadge,
   };
 }

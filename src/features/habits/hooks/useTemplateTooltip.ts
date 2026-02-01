@@ -18,7 +18,8 @@ export const useTemplateTooltip = (): UseTemplateTooltipReturn => {
   useEffect(() => {
     const checkTooltipStatus = async () => {
       try {
-        const hasSeenTooltip = await SecureStore.getItemAsync(TOOLTIP_STORAGE_KEY);
+        const hasSeenTooltip =
+          await SecureStore.getItemAsync(TOOLTIP_STORAGE_KEY);
 
         // Show tooltip only if user hasn't seen it before
         if (hasSeenTooltip === null) {
@@ -28,7 +29,7 @@ export const useTemplateTooltip = (): UseTemplateTooltipReturn => {
           }, 800);
         }
       } catch (error) {
-        console.error('Error checking tooltip status:', error);
+        if (__DEV__) console.error('Error checking tooltip status:', error);
       }
     };
 
@@ -40,7 +41,7 @@ export const useTemplateTooltip = (): UseTemplateTooltipReturn => {
       await SecureStore.setItemAsync(TOOLTIP_STORAGE_KEY, 'true');
       setShowTooltip(false);
     } catch (error) {
-      console.error('Error dismissing tooltip:', error);
+      if (__DEV__) console.error('Error dismissing tooltip:', error);
       // Still hide it even if storage fails
       setShowTooltip(false);
     }
@@ -51,4 +52,3 @@ export const useTemplateTooltip = (): UseTemplateTooltipReturn => {
     showTooltip,
   };
 };
-

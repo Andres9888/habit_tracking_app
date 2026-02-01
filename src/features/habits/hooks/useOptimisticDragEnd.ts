@@ -31,7 +31,7 @@ export function useOptimisticDragEnd(
         optimisticStore.confirm(operationId);
       } catch (error) {
         optimisticStore.fail(operationId, error as Error);
-        console.error('Failed to reorder habits:', error);
+        if (__DEV__) console.error('Failed to reorder habits:', error);
       }
     },
     [habitSortMode, reorderHabits, habits]
