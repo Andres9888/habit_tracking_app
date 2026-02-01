@@ -36,7 +36,11 @@ export async function cancelAffirmationDelivery(
       });
     }
   } catch (error) {
-    console.warn('cancelAffirmationDelivery failed', { affirmationId, error });
+    if (__DEV__)
+      console.warn('cancelAffirmationDelivery failed', {
+        affirmationId,
+        error,
+      });
   }
 }
 
@@ -74,9 +78,10 @@ export async function cancelAllAffirmationDeliveriesForHabit(
       });
     }
   } catch (error) {
-    console.warn('cancelAllAffirmationDeliveriesForHabit failed', {
-      error,
-      habitId,
-    });
+    if (__DEV__)
+      console.warn('cancelAllAffirmationDeliveriesForHabit failed', {
+        error,
+        habitId,
+      });
   }
 }

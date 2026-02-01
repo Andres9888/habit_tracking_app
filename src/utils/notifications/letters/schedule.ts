@@ -29,10 +29,11 @@ export async function scheduleLetterUnlockNotification({
   try {
     // Don't schedule if unlock time is in the past
     if (unlockAt <= Date.now()) {
-      console.warn(
-        'scheduleLetterUnlockNotification: unlock time is in the past',
-        { letterId, unlockAt }
-      );
+      if (__DEV__)
+        console.warn(
+          'scheduleLetterUnlockNotification: unlock time is in the past',
+          { letterId, unlockAt }
+        );
       return null;
     }
 
@@ -80,10 +81,11 @@ export async function scheduleLetterUnlockNotification({
 
     return notificationId;
   } catch (error) {
-    console.error('scheduleLetterUnlockNotification failed', {
-      error,
-      letterId,
-    });
+    if (__DEV__)
+      console.error('scheduleLetterUnlockNotification failed', {
+        error,
+        letterId,
+      });
     return null;
   }
 }

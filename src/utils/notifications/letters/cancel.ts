@@ -36,6 +36,10 @@ export async function cancelLetterUnlockNotification(
       });
     }
   } catch (error) {
-    console.warn('cancelLetterUnlockNotification failed', { error, letterId });
+    if (__DEV__)
+      console.warn('cancelLetterUnlockNotification failed', {
+        error,
+        letterId,
+      });
   }
 }
