@@ -27,8 +27,8 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>habit-tracker</string>
-          <string>org.name.DailyHabits</string>
+          <string>chain-day</string>
+          <string>org.name.ChainDay</string>
         </array>
       </dict>
     </array>
