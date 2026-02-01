@@ -44,7 +44,8 @@ export default function StatsNotesModal({
               <TouchableOpacity
                 accessibilityLabel='Close stats and notes'
                 accessibilityRole='button'
-                className='h-8 w-8 items-center justify-center rounded-full bg-stone-100'
+                className='h-8 w-8 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+                hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
                 onPress={onClose}
               >
                 <Text className='text-lg font-semibold text-stone-500'>✕</Text>
