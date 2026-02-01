@@ -30,6 +30,9 @@ export function ColorPicker({
         {ICON_COLORS.map((color) => (
           <Pressable
             key={color}
+            accessibilityLabel={`${color} color`}
+            accessibilityRole='button'
+            accessibilityState={{ selected: customColor === color }}
             disabled={disabled}
             style={[
               styles.colorOption,
