@@ -45,6 +45,8 @@ export default function PremiumAnalyticsPaywall({
         <View style={styles.header}>
           {onClose && (
             <TouchableOpacity
+              accessibilityLabel='Close paywall'
+              accessibilityRole='button'
               activeOpacity={0.7}
               style={styles.closeButton}
               onPress={handleClose}
