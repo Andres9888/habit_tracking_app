@@ -66,7 +66,7 @@ export function useImageUploader({
         await onAddImage(result.storageId);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       } catch (error) {
-        console.error('Failed to add image:', error);
+        if (__DEV__) console.error('Failed to add image:', error);
         Alert.alert(
           'Upload Failed',
           'There was a problem adding your image. Please try again.'
