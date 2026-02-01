@@ -1,11 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import type { Id } from '../../convex/_generated/dataModel';
+import type { Doc, Id } from '../../convex/_generated/dataModel';
 
 interface Props {
   habitId: Id<'habits'>;
   linkedHabits: Id<'habits'>[];
-  allHabits: any[];
+  allHabits: Doc<'habits'>[];
   isActive: boolean;
   habitIndex: number;
   weekDateStrings: string[];
