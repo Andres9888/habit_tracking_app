@@ -6,6 +6,7 @@ import { Alert } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { exportData, prepareExportData } from '../../utils/exportData';
+import { usePremium } from '../../hooks/usePremium';
 import type {
   ExportFormat,
   UseAnalyticsScreenReturn,
@@ -16,8 +17,8 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const [showPaywall, setShowPaywall] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
 
-  // TODO: Replace with actual premium status check
-  const isPremiumUser = true;
+  // Use actual premium status from RevenueCat
+  const { isPremium: isPremiumUser } = usePremium();
 
   // Fetch analytics data from Convex
   const overviewStats = useQuery(api.analytics.getOverviewStats);
@@ -35,7 +36,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   }, []);
 
   const handleHabitPress = useCallback((habitId: string) => {
-    console.log('Navigate to habit detail:', habitId);
+    if (__DEV__) console.warn('Navigate to habit detail:', habitId);
   }, []);
 
   const handleExportPress = useCallback(() => {
@@ -82,19 +83,19 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
 
   return {
     complianceData,
-    isLoading,
-    handleExportPress,
-    isPremiumUser,
     handleExport,
-    onRefresh,
+    handleExportPress,
     handleHabitPress,
-    refreshing,
     handleStartTrial,
-    showExportMenu,
+    isLoading,
+    isPremiumUser,
+    onRefresh,
     overviewStats,
-    showPaywall,
+    refreshing,
     setShowExportMenu,
     setShowPaywall,
+    showExportMenu,
+    showPaywall,
     strengthDistribution,
     trendData,
     weeklyInsights,
