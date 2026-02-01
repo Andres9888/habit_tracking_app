@@ -3,6 +3,7 @@
  */
 
 import type { HabitTrackingEntry } from '../../../features/habits/types';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { DayStats } from '../InsightsSection.types';
 import { DAY_LABELS } from '../InsightsSection.constants';
 
@@ -44,7 +45,7 @@ export function calculateDayOfWeekStats(
 
   while (current <= today) {
     const dayOfWeek = current.getDay();
-    const dateStr = current.toISOString().split('T')[0];
+    const dateStr = getLocalDateString(current);
 
     dayStats[dayOfWeek].total++;
     if (completedDates.has(dateStr)) {
