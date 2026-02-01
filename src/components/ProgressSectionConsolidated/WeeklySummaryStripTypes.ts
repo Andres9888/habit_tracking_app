@@ -10,6 +10,7 @@ export type {
   TrendDirection,
   WeeklySummaryStripProps,
   DayStateConfig,
+  IconName,
 } from './WeeklySummaryStrip/WeeklySummaryStrip.types';
 
 export {

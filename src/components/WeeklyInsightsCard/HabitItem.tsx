@@ -3,6 +3,7 @@
  * Displays a single habit with change indicator
  */
 
+import type { ComponentProps } from 'react';
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,13 +11,19 @@ import { colors } from '../../theme/colors';
 import type { HabitChange, HabitChangeType } from './WeeklyInsightsCard.types';
 import { habitItemStyles as styles } from './HabitItem.styles';
 
+/** Valid Ionicons icon name */
+type IconName = ComponentProps<typeof Ionicons>['name'];
+
 interface HabitItemProps {
   habit: HabitChange;
   type: HabitChangeType;
   onPress?: (habitId: string) => void;
 }
 
-function getChangeIcon(type: HabitChangeType) {
+function getChangeIcon(type: HabitChangeType): {
+  color: string;
+  name: IconName;
+} {
   if (type === 'gained') return { color: colors.success, name: 'trending-up' };
   if (type === 'lost') return { color: colors.error, name: 'trending-down' };
   return { color: colors.warning[500], name: 'warning' };
@@ -46,7 +53,7 @@ export function HabitItem({ habit, type, onPress }: HabitItemProps) {
       </View>
 
       <View style={styles.habitItemRight}>
-        <Ionicons color={icon.color} name={icon.name as any} size={20} />
+        <Ionicons color={icon.color} name={icon.name} size={20} />
         {type !== 'risk' && (
           <Text
             style={[
