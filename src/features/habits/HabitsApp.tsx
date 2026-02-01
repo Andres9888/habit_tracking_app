@@ -24,7 +24,11 @@ export function HabitsApp() {
   const notificationHandlers = useMemo(
     () => ({
       onHabitNotificationTap: (habitId: string) => {
-        console.log('[HabitsApp] Opening ActivationModal for habit:', habitId);
+        if (__DEV__)
+          console.log(
+            '[HabitsApp] Opening ActivationModal for habit:',
+            habitId
+          );
         openActivationModalById(habitId);
       },
     }),
