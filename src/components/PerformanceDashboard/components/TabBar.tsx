@@ -26,6 +26,9 @@ export function TabBar({ activeTab, onTabChange }: TabBarProps) {
       {TABS.map((tab) => (
         <Pressable
           key={tab.key}
+          accessibilityLabel={`${tab.label} tab`}
+          accessibilityRole='tab'
+          accessibilityState={{ selected: activeTab === tab.key }}
           style={[styles.tab, activeTab === tab.key && styles.activeTab]}
           onPress={() => onTabChange(tab.key)}
         >
