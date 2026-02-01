@@ -32,6 +32,8 @@ export function HabitSelector({
             key={habit._id}
             accessibilityLabel={`View stats for ${habit.name}`}
             accessibilityRole='button'
+            accessibilityState={{ selected: selectedHabitId === habit._id }}
+            activeOpacity={0.7}
             className={`rounded-xl px-4 py-2 ${
               selectedHabitId === habit._id ? 'bg-stone-900' : 'bg-stone-100'
             }`}
