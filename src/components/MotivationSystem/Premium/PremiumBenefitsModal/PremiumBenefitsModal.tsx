@@ -20,6 +20,7 @@ import { HeroSection } from './HeroSection';
 import { FeatureRow } from './FeatureRow';
 import { SocialProof } from './SocialProof';
 import { CTAFooter } from './CTAFooter';
+import { useRestorePurchases } from './useRestorePurchases';
 
 export function PremiumBenefitsModal({
   visible,
@@ -30,6 +31,9 @@ export function PremiumBenefitsModal({
   testID,
 }: PremiumBenefitsModalProps) {
   const { triggerSelection, triggerLightImpact } = useHapticFeedback({});
+  const { isRestoring, handleRestore } = useRestorePurchases({
+    onSuccess: onClose,
+  });
   const buttonScale = useSharedValue(1);
 
   const handleClose = useCallback(() => {
@@ -41,11 +45,6 @@ export function PremiumBenefitsModal({
     triggerSelection();
     onStartTrial();
   }, [onStartTrial, triggerSelection]);
-
-  const handleRestorePurchases = useCallback(() => {
-    triggerLightImpact();
-    // TODO: Implement restore purchases
-  }, [triggerLightImpact]);
 
   const buttonAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: buttonScale.value }],
@@ -95,10 +94,11 @@ export function PremiumBenefitsModal({
         </ScrollView>
         <CTAFooter
           buttonAnimatedStyle={buttonAnimatedStyle}
+          isRestoring={isRestoring}
           reduceMotion={reduceMotion}
           onPressIn={handleButtonPressIn}
           onPressOut={handleButtonPressOut}
-          onRestorePurchases={handleRestorePurchases}
+          onRestorePurchases={handleRestore}
           onStartTrial={handleStartTrial}
         />
       </View>

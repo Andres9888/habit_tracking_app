@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
@@ -15,6 +15,7 @@ interface CTAFooterProps {
   onPressIn: () => void;
   onPressOut: () => void;
   reduceMotion: boolean;
+  isRestoring?: boolean;
 }
 
 export function CTAFooter({
@@ -24,6 +25,7 @@ export function CTAFooter({
   onPressIn,
   onPressOut,
   reduceMotion,
+  isRestoring = false,
 }: CTAFooterProps) {
   return (
     <View className='absolute bottom-0 left-0 right-0 border-t border-stone-200 bg-white px-4 pb-8 pt-4'>
@@ -58,10 +60,23 @@ export function CTAFooter({
           </LinearGradient>
         </Animated.View>
       </Pressable>
-      <Pressable className='mt-2 py-2' onPress={onRestorePurchases}>
-        <Text className='text-center text-xs text-violet-600'>
-          Already premium? Restore purchases
-        </Text>
+      <Pressable
+        className='mt-2 py-2'
+        disabled={isRestoring}
+        onPress={onRestorePurchases}
+      >
+        {isRestoring ? (
+          <View className='flex-row items-center justify-center gap-2'>
+            <ActivityIndicator color='#7c3aed' size='small' />
+            <Text className='text-center text-xs text-violet-600'>
+              Restoring...
+            </Text>
+          </View>
+        ) : (
+          <Text className='text-center text-xs text-violet-600'>
+            Already premium? Restore purchases
+          </Text>
+        )}
       </Pressable>
     </View>
   );
