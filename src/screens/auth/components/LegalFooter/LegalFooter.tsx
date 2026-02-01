@@ -12,6 +12,7 @@ export function LegalFooter() {
       <TouchableOpacity
         accessibilityLabel='Terms of Service'
         accessibilityRole='link'
+        activeOpacity={0.7}
         onPress={openTerms}
       >
         <Text className='text-xs text-stone-500'>Terms</Text>
@@ -20,6 +21,7 @@ export function LegalFooter() {
       <TouchableOpacity
         accessibilityLabel='Privacy Policy'
         accessibilityRole='link'
+        activeOpacity={0.7}
         onPress={openPrivacy}
       >
         <Text className='text-xs text-stone-500'>Privacy</Text>
