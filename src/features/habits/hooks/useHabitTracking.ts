@@ -1,9 +1,14 @@
-import { format } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import type { HabitStatus } from '../types';
 
-export function useHabitTracking(tracking: any[], today: Date) {
+interface TrackingEntry {
+  habitId: string;
+  date: string;
+  completed?: boolean;
+}
+
+export function useHabitTracking(tracking: TrackingEntry[], today: Date) {
   const completedDatesByHabit = useMemo(() => {
     const map = new Map<string, Set<string>>();
     for (const entry of tracking) {
@@ -42,5 +47,5 @@ export function useHabitTracking(tracking: any[], today: Date) {
     [tracking, today]
   );
 
-  return { completedDatesByHabit, getStreak, getHabitStatus };
+  return { completedDatesByHabit, getHabitStatus, getStreak };
 }
