@@ -10,6 +10,7 @@ import type { MD3Theme } from 'react-native-paper';
 import { colors } from './colors';
 import { typography, fontFamilies, fontWeights } from './typography';
 import { spacing, borderRadius, shadows, componentSpacing } from './spacing';
+import { durations, easings, springs } from './animations';
 
 /**
  * Custom font configuration for React Native Paper
@@ -31,19 +32,19 @@ const customFonts = configureFonts({
       letterSpacing: -0.24,
       lineHeight: 20,
     },
-    displayLarge: {
-      fontFamily: fontFamilies.primary.display,
-      fontSize: 34,
-      fontWeight: fontWeights.bold as any,
-      letterSpacing: 0.37,
-      lineHeight: 41,
-    },
     bodySmall: {
       fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       fontWeight: fontWeights.regular as any,
       letterSpacing: -0.08,
       lineHeight: 18,
+    },
+    displayLarge: {
+      fontFamily: fontFamilies.primary.display,
+      fontSize: 34,
+      fontWeight: fontWeights.bold as any,
+      letterSpacing: 0.37,
+      lineHeight: 41,
     },
     displayMedium: {
       fontFamily: fontFamilies.primary.display,
@@ -133,62 +134,43 @@ export const theme: MD3Theme = {
   colors: {
     ...MD3LightTheme.colors,
 
+    // Background & Surface
+    background: colors.light.background,
+
+    // Error
+    error: colors.error,
+
+    errorContainer: '#FFEBEE',
+
+    onBackground: colors.gray[900],
+
+    onError: '#FFFFFF',
+
+    onErrorContainer: '#B71C1C',
+
     onPrimary: '#FFFFFF',
 
     onPrimaryContainer: colors.primary[700],
 
     onSecondary: '#FFFFFF',
 
-    // Error
-    error: colors.error,
-
-    onSecondaryContainer: colors.secondary[600],
-
-    errorContainer: '#FFEBEE',
-
-    onTertiary: '#FFFFFF',
-
-    // Background & Surface
-    background: colors.light.background,
-
-    // Primary (Brand Green)
-    primary: colors.primary[500],
-
-    onBackground: colors.gray[900],
-
-    primaryContainer: colors.primary[400],
-
-    onError: '#FFFFFF',
-
-    // Secondary (Science Blue)
-    secondary: colors.secondary[500],
-
-    onErrorContainer: '#B71C1C',
-
-    secondaryContainer: colors.secondary[400],
-
-    onSurface: colors.gray[900],
-
-    // Tertiary (can be used for accents)
-    tertiary: colors.primary[600],
-    onSurfaceDisabled: colors.gray[400],
-    tertiaryContainer: colors.primary[400],
     // Inverse
     inverseSurface: colors.gray[900],
 
-    onTertiaryContainer: colors.primary[700],
+    onSecondaryContainer: colors.secondary[600],
 
     inverseOnSurface: colors.gray[50],
 
+    onSurface: colors.gray[900],
+
     inversePrimary: colors.primary[400],
 
-    onSurfaceVariant: colors.gray[600],
+    onSurfaceDisabled: colors.gray[400],
 
     // Backdrop
     backdrop: 'rgba(0, 0, 0, 0.6)',
 
-    // Outline
-    outline: colors.gray[300],
+    onTertiary: '#FFFFFF',
 
     // Elevation
     elevation: {
@@ -200,18 +182,40 @@ export const theme: MD3Theme = {
       level5: colors.gray[100],
     },
 
-    surface: colors.light.surface,
+    // Primary (Brand Green)
+    primary: colors.primary[500],
+
+    onSurfaceVariant: colors.gray[600],
+
+    primaryContainer: colors.primary[400],
+
+    onTertiaryContainer: colors.primary[700],
+
+    // Secondary (Science Blue)
+    secondary: colors.secondary[500],
+
+    // Outline
+    outline: colors.gray[300],
+
+    secondaryContainer: colors.secondary[400],
 
     outlineVariant: colors.gray[200],
 
-    surfaceVariant: colors.gray[100],
+    // Tertiary (can be used for accents)
+    tertiary: colors.primary[600],
 
     scrim: '#000000',
 
-    surfaceDisabled: colors.gray[200],
+    tertiaryContainer: colors.primary[400],
 
     // Shadow
     shadow: '#000000',
+
+    surface: colors.light.surface,
+
+    surfaceDisabled: colors.gray[200],
+
+    surfaceVariant: colors.gray[100],
   },
   fonts: customFonts,
   roundness: borderRadius.medium, // Default: 12pt
@@ -224,6 +228,11 @@ export const theme: MD3Theme = {
 export const extendedTheme = {
   ...theme,
   custom: {
+    animations: {
+      durations,
+      easings,
+      springs,
+    },
     borderRadius,
     colors,
     componentSpacing,
@@ -266,3 +275,4 @@ export default extendedTheme;
 export { colors } from './colors';
 export { typography } from './typography';
 export { spacing, borderRadius, shadows, componentSpacing } from './spacing';
+export { durations, easings, springs } from './animations';
