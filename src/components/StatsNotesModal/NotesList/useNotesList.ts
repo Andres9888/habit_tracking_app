@@ -61,7 +61,7 @@ export function useNotesList(initialHabitId?: Id<'habits'>) {
     try {
       await deleteNote({ noteId });
     } catch (error) {
-      console.error('Failed to delete note:', error);
+      if (__DEV__) console.error('Failed to delete note:', error);
     } finally {
       setDeletingNoteId(null);
     }
@@ -79,20 +79,20 @@ export function useNotesList(initialHabitId?: Id<'habits'>) {
 
   return {
     deletingNoteId,
+    editingNote,
     editingNoteId,
     groupedNotes,
-    isAdding,
-    editingNote,
-    searchText,
     habits,
-    selectedHabitFilter,
     handleCloseVisualizationGuide,
-    setEditingNoteId,
     handleDelete,
-    setSearchText,
     handleOpenVisualizationGuide,
-    setSelectedHabitFilter,
+    isAdding,
+    searchText,
+    selectedHabitFilter,
+    setEditingNoteId,
     setIsAdding,
+    setSearchText,
+    setSelectedHabitFilter,
     showVisualizationGuide,
   };
 }
