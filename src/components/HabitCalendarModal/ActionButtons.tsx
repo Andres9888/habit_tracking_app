@@ -16,6 +16,7 @@ export function ActionButtons({ isTodayCompleted, onMarkToday, onEdit }: ActionB
           isTodayCompleted ? 'Today already completed' : 'Mark this habit as done today'
         }
         accessibilityRole='button'
+        activeOpacity={0.8}
         className={`flex-1 rounded-2xl px-4 py-3 ${
           isTodayCompleted ? 'bg-stone-200' : 'bg-blue-500'
         }`}
@@ -35,6 +36,7 @@ export function ActionButtons({ isTodayCompleted, onMarkToday, onEdit }: ActionB
         accessibilityLabel='Edit habit'
         accessibilityRole='button'
         className='w-[110px] items-center justify-center rounded-2xl border border-stone-200 px-3'
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={onEdit}
       >
         <Text className='text-sm font-semibold text-stone-700'>Edit habit</Text>
