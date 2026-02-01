@@ -72,7 +72,7 @@ export function useWriteLetterModal({
       await onSave(content.trim(), unlockDays, title.trim() || undefined);
       onClose();
     } catch (error) {
-      console.error('Failed to save letter:', error);
+      if (__DEV__) console.error('Failed to save letter:', error);
     }
   }, [canSave, isSaving, content, unlockDays, title, onSave, onClose]);
 
