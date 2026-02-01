@@ -1,14 +1,17 @@
 type InteractionPayload = Record<string, unknown> | undefined;
 
-export const logInteraction = (eventName: string, payload: InteractionPayload = undefined) => {
+export const logInteraction = (
+  eventName: string,
+  payload?: InteractionPayload
+) => {
   if (!eventName) {
     return;
   }
 
   const timestamp = new Date().toISOString();
   // eslint-disable-next-line no-console
-  console.log(`[interaction:${eventName}]`, { payload, timestamp });
+  if (__DEV__)
+    console.log(`[interaction:${eventName}]`, { payload, timestamp });
 };
 
 export default logInteraction;
-

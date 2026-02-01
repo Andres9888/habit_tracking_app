@@ -44,11 +44,12 @@ export class SentryErrorBoundary extends Component<
 
     // Log in development
     if (__DEV__) {
-      console.error('[ErrorBoundary] Caught error:', error);
-      console.error(
-        '[ErrorBoundary] Component stack:',
-        errorInfo.componentStack
-      );
+      if (__DEV__) console.error('[ErrorBoundary] Caught error:', error);
+      if (__DEV__)
+        console.error(
+          '[ErrorBoundary] Component stack:',
+          errorInfo.componentStack
+        );
     }
 
     // Call custom error handler if provided
