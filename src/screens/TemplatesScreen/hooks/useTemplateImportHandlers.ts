@@ -49,7 +49,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
           setTimeout(() => o.setShowFullsizePreview(false), 1000);
         }
       } catch (error) {
-        console.error('Failed to import:', error);
+        if (__DEV__) console.error('Failed to import:', error);
         showError();
       } finally {
         o.setImportingTemplateId(null);
@@ -79,7 +79,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
           o.setShowCustomizeModal(false);
         }
       } catch (error) {
-        console.error('Failed to import:', error);
+        if (__DEV__) console.error('Failed to import:', error);
         showError();
       } finally {
         o.setImportingTemplateId(null);
