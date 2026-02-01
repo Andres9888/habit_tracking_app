@@ -17,6 +17,7 @@ export const NotesHeader: React.FC<NotesHeaderProps> = ({ onAddNote }) => (
     <TouchableOpacity
       accessibilityLabel='Add new note'
       accessibilityRole='button'
+      activeOpacity={0.7}
       className='h-9 w-9 items-center justify-center rounded-full bg-stone-900'
       onPress={onAddNote}
     >
