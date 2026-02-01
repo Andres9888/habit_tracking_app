@@ -38,7 +38,7 @@ export function ShareButton({
         accessibilityLabel='Share'
         accessibilityRole='button'
         hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
-        style={styles.shareButton}
+        style={({ pressed }) => [styles.shareButton, { opacity: pressed ? 0.7 : 1 }]}
         onPress={onPress}
       >
         <Ionicons color={iconColor} name='share-outline' size={20} />
