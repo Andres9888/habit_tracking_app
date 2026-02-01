@@ -24,6 +24,7 @@ export function FormInput({ label, labelRight, ...props }: FormInputProps) {
         style={animatedStyle}
       >
         <TextInput
+          accessibilityLabel={label}
           className='px-5 py-3.5 text-base font-medium text-stone-900'
           placeholderTextColor='#94a3b8'
           onBlur={handleBlur}
