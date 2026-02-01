@@ -32,6 +32,7 @@ export function SaveButton({
           canSave && !isSaving ? 'bg-amber-500' : 'bg-stone-200'
         )}
         disabled={!canSave || isSaving}
+        style={({ pressed }) => ({ opacity: pressed && canSave && !isSaving ? 0.8 : 1 })}
         onPress={onSave}
       >
         {isEditing ? (
