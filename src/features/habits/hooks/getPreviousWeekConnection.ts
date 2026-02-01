@@ -22,7 +22,9 @@ export function getPreviousWeekConnection(
     const previousDateString = format(previousDate, 'yyyy-MM-dd');
     return getHabitStatus(habitId, previousDateString) === 'done';
   } catch (error) {
-    console.warn('Error calculating previous date status', error);
+    if (__DEV__) {
+      console.warn('Error calculating previous date status', error);
+    }
     return false;
   }
 }

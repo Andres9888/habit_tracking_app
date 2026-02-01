@@ -2,7 +2,10 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useMilestoneDetection } from '../../../hooks/useMilestoneDetection';
 import type { Habit, ShareCardData } from '../types';
 
-export function useMilestoneCelebrationState(habits: Habit[], isHabitsLoading: boolean) {
+export function useMilestoneCelebrationState(
+  habits: Habit[],
+  isHabitsLoading: boolean
+) {
   const [lastUpdatedHabit, setLastUpdatedHabit] = useState<{
     id: string;
     name: string;
@@ -16,11 +19,11 @@ export function useMilestoneCelebrationState(habits: Habit[], isHabitsLoading: b
   );
 
   useEffect(() => {
-    if (milestone) {
+    if (milestone && __DEV__) {
       console.log('🎉 MILESTONE DETECTED!', {
+        habitName: milestone.habitName,
         level: milestone.level,
         strength: milestone.strength + '%',
-        habitName: milestone.habitName,
       });
     }
   }, [milestone]);
@@ -30,16 +33,18 @@ export function useMilestoneCelebrationState(habits: Habit[], isHabitsLoading: b
   useEffect(() => {
     if (isHabitsLoading) return;
 
-    habits.forEach((habit) => {
+    for (const habit of habits) {
       const prevStrength = prevStrengthsRef.current.get(habit._id) || 0;
-      const currentStrength = (habit.strength as number | undefined) ?? 0;
+      const currentStrength = habit.strength ?? 0;
 
       if (currentStrength > prevStrength) {
-        console.log('🎯 Strength increased!', {
-          habitName: habit.name,
-          prevStrength: (prevStrength * 100).toFixed(1) + '%',
-          currentStrength: (currentStrength * 100).toFixed(1) + '%',
-        });
+        if (__DEV__) {
+          console.log('🎯 Strength increased!', {
+            currentStrength: (currentStrength * 100).toFixed(1) + '%',
+            habitName: habit.name,
+            prevStrength: (prevStrength * 100).toFixed(1) + '%',
+          });
+        }
         setLastUpdatedHabit({
           id: habit._id,
           name: habit.name,
@@ -48,10 +53,12 @@ export function useMilestoneCelebrationState(habits: Habit[], isHabitsLoading: b
       }
 
       prevStrengthsRef.current.set(habit._id, currentStrength);
-    });
+    }
   }, [habits, isHabitsLoading]);
 
-  const [shareCardData, setShareCardData] = useState<ShareCardData | null>(null);
+  const [shareCardData, setShareCardData] = useState<ShareCardData | null>(
+    null
+  );
   const [showShareCard, setShowShareCard] = useState(false);
 
   const openShareCard = useCallback(() => {
@@ -77,11 +84,11 @@ export function useMilestoneCelebrationState(habits: Habit[], isHabitsLoading: b
   }, [clearMilestone]);
 
   return {
-    milestone,
-    showShareCard,
-    shareCardData,
-    openShareCard,
-    closeShareCard,
     closeCelebration,
+    closeShareCard,
+    milestone,
+    openShareCard,
+    shareCardData,
+    showShareCard,
   };
 }

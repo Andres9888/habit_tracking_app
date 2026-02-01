@@ -4,7 +4,7 @@ import type { Habit } from '../types';
 /**
  * Syncs a habit state snapshot when the habits array updates
  * Used to keep modal/screen state in sync with the source of truth
- * 
+ *
  * Only syncs when actual tracked values change (streak, strength)
  * to avoid infinite loops from reference changes
  */
@@ -27,7 +27,11 @@ export function useHabitStateSync(
 
   useEffect(() => {
     if (!currentHabit) {
-      prevValuesRef.current = { id: null, streak: undefined, strength: undefined };
+      prevValuesRef.current = {
+        id: null,
+        streak: undefined,
+        strength: undefined,
+      };
       return;
     }
 
@@ -40,12 +44,14 @@ export function useHabitStateSync(
 
     // Track if values changed from last sync (not from currentHabit which may be stale)
     const idChanged = prevValuesRef.current.id !== updated._id;
-    const prevStreakChanged = prevValuesRef.current.streak !== updated.currentStreak;
-    const prevStrengthChanged = prevValuesRef.current.strength !== updated.strength;
+    const prevStreakChanged =
+      prevValuesRef.current.streak !== updated.currentStreak;
+    const prevStrengthChanged =
+      prevValuesRef.current.strength !== updated.strength;
 
     // Only sync if meaningful values changed
     if (idChanged || prevStreakChanged || prevStrengthChanged) {
-      if (debugLabel && (streakChanged || strengthChanged)) {
+      if (__DEV__ && debugLabel && (streakChanged || strengthChanged)) {
         console.log(`🔄 Syncing ${debugLabel}:`, {
           habitName: updated.name,
           streakChanged,

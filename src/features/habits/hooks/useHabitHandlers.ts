@@ -4,7 +4,9 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 
 interface UseHabitHandlersArgs {
-  reorderHabits: (args: { habitIds: Id<'habits'>[] }) => Promise<unknown> | void;
+  reorderHabits: (args: {
+    habitIds: Id<'habits'>[];
+  }) => Promise<unknown> | void;
   archiveHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown> | void;
   removeHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown> | void;
   setSelectedHabit: (habit: Habit | null) => void;
@@ -26,7 +28,9 @@ export function useHabitHandlers({
       try {
         await reorderHabits({ habitIds });
       } catch (error) {
-        console.error('Failed to reorder habits:', error);
+        if (__DEV__) {
+          console.error('Failed to reorder habits:', error);
+        }
       }
     },
     [reorderHabits]
@@ -63,11 +67,11 @@ export function useHabitHandlers({
         'Delete Habit',
         'Are you sure you want to delete this habit? This cannot be undone.',
         [
-          { text: 'Cancel', style: 'cancel' },
+          { style: 'cancel', text: 'Cancel' },
           {
-            text: 'Delete',
-            style: 'destructive',
             onPress: finalizeDeletion,
+            style: 'destructive',
+            text: 'Delete',
           },
         ]
       );
@@ -92,10 +96,10 @@ export function useHabitHandlers({
   );
 
   return {
-    handleDragEnd,
     handleArchive,
     handleDeleteHabit,
-    handleHabitPress,
+    handleDragEnd,
     handleHabitLongPress,
+    handleHabitPress,
   };
 }
