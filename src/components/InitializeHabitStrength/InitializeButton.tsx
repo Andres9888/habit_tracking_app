@@ -18,10 +18,14 @@ export function InitializeButton({
 }: InitializeButtonProps) {
   return (
     <Pressable
+      accessibilityLabel='Initialize habit strength'
+      accessibilityRole='button'
+      accessibilityState={{ disabled: isInitializing }}
       className={`rounded-lg px-4 py-3 ${
         isInitializing ? 'bg-blue-300' : 'bg-blue-500'
       }`}
       disabled={isInitializing}
+      style={({ pressed }) => ({ opacity: pressed && !isInitializing ? 0.8 : 1 })}
       onPress={onPress}
     >
       {isInitializing ? (
