@@ -98,7 +98,7 @@ export function useQuickCompleteButton({
       setLocalCompleted(wasCompleted);
       checkScale.value = wasCompleted ? 1 : 0;
       checkRotation.value = wasCompleted ? 0 : -90;
-      console.error('Failed to toggle completion:', error);
+      if (__DEV__) console.error('Failed to toggle completion:', error);
     } finally {
       setTimeout(() => setIsToggling(false), 300);
     }
