@@ -48,7 +48,7 @@ export function useDraftRecovery({
           onDraftRecovered?.(recovered);
         }
       } catch (error) {
-        console.warn('Draft recovery failed:', error);
+        if (__DEV__) console.warn('Draft recovery failed:', error);
       } finally {
         if (isMounted) setIsInitialized(true);
       }

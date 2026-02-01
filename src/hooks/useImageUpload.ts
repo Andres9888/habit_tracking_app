@@ -108,7 +108,7 @@ export function useImageUpload(): UseImageUploadReturn {
         setError(errorMessage);
         setIsUploading(false);
         setProgress(0);
-        console.error('Image upload error:', error_);
+        if (__DEV__) console.error('Image upload error:', error_);
         return null;
       }
     },
