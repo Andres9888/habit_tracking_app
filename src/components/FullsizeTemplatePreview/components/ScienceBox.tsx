@@ -3,9 +3,13 @@
  * Displays scientific research and reference link
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { ExternalLink } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { scienceStyles } from '../styles';
@@ -20,6 +24,19 @@ interface ScienceBoxProps {
 
 export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
   const theme = useAppTheme();
+  const scale = useSharedValue(1);
+
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.95, { damping: 15, stiffness: 300 });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+  }, [scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <View style={scienceStyles.scienceBox}>
@@ -50,8 +67,10 @@ export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
           accessibilityHint='Opens the research paper in your browser'
           accessibilityLabel='Read research paper'
           accessibilityRole='link'
-          style={scienceStyles.researchLinkButton}
+          style={[scienceStyles.researchLinkButton, animatedStyle]}
           onPress={onResearchPress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
         >
           <ExternalLink color='#3B82F6' size={16} strokeWidth={2} />
           <Text style={scienceStyles.researchLinkText}>Read Research</Text>
