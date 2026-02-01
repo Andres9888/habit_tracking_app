@@ -15,7 +15,7 @@ function extractWords(habitName: string): string[] {
     .toLowerCase()
     .replaceAll(/[^a-z\s]/g, '') // Remove non-letter characters
     .split(/\s+/)
-    .filter((word) => word.length >= 2); // Filter out single characters
+    .filter((word: string) => word.length >= 2); // Filter out single characters
 }
 
 /**

@@ -33,7 +33,9 @@ const styles = StyleSheet.create({
 });
 
 const formatCategory = (category: string): string => {
-  return category.replace('_', ' ').replaceAll(/\b\w/g, (c) => c.toUpperCase());
+  return category
+    .replaceAll('_', ' ')
+    .replaceAll(/\b\w/g, (c: string) => c.toUpperCase());
 };
 
 const formatFrequency = (frequency: string): string => {
