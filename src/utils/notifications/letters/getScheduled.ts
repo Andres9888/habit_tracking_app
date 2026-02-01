@@ -40,7 +40,8 @@ export async function getScheduledLetterUnlockNotifications(): Promise<
         };
       });
   } catch (error) {
-    console.error('getScheduledLetterUnlockNotifications failed', error);
+    if (__DEV__)
+      console.error('getScheduledLetterUnlockNotifications failed', error);
     return [];
   }
 }

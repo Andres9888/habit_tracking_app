@@ -22,13 +22,12 @@ export function useHabitStateSync(
     const referenceChanged = updated !== currentHabit;
 
     if (streakChanged || strengthChanged || referenceChanged) {
-      if (debugLabel) {
+      if (debugLabel && __DEV__)
         console.log(`🔄 Syncing ${debugLabel}:`, {
           habitName: updated.name,
           streakChanged,
           strengthChanged,
         });
-      }
       setHabit(updated);
     }
   }, [habits, currentHabit, setHabit, debugLabel]);

@@ -14,7 +14,7 @@ export async function getLastCustomColor(): Promise<string | null> {
     }
     return null;
   } catch (error) {
-    console.error('Error reading last custom color:', error);
+    if (__DEV__) console.error('Error reading last custom color:', error);
     return null;
   }
 }
@@ -26,12 +26,13 @@ export async function getLastCustomColor(): Promise<string | null> {
 export async function saveLastCustomColor(color: string): Promise<void> {
   try {
     if (!color || !/^#[0-9A-Fa-f]{6}$/i.test(color)) {
-      console.warn('Invalid color format for saveLastCustomColor:', color);
+      if (__DEV__)
+        console.warn('Invalid color format for saveLastCustomColor:', color);
       return;
     }
     await AsyncStorage.setItem(STORAGE_KEY, color.toUpperCase());
   } catch (error) {
-    console.error('Error saving last custom color:', error);
+    if (__DEV__) console.error('Error saving last custom color:', error);
   }
 }
 
@@ -42,6 +43,6 @@ export async function clearLastCustomColor(): Promise<void> {
   try {
     await AsyncStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.error('Error clearing last custom color:', error);
+    if (__DEV__) console.error('Error clearing last custom color:', error);
   }
 }

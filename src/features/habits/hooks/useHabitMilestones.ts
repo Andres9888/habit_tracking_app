@@ -23,7 +23,7 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
       return;
     }
 
-    habits.forEach((habit) => {
+    for (const habit of habits) {
       const previousStrength = previousStrengthsRef.current.get(habit._id) ?? 0;
       const currentStrength = habit.strength ?? 0;
 
@@ -36,17 +36,16 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
       }
 
       previousStrengthsRef.current.set(habit._id, currentStrength);
-    });
+    }
   }, [habits, isLoading]);
 
   useEffect(() => {
-    if (milestone) {
+    if (milestone && __DEV__)
       console.log('🎉 MILESTONE DETECTED!', {
+        habitName: milestone.habitName,
         level: milestone.level,
         strength: `${milestone.strength}%`,
-        habitName: milestone.habitName,
       });
-    }
   }, [milestone]);
 
   const resetMilestone = () => {
@@ -54,5 +53,5 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
     setLastUpdatedHabit(null);
   };
 
-  return { milestone, clearMilestone: resetMilestone };
+  return { clearMilestone: resetMilestone, milestone };
 }
