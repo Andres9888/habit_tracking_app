@@ -26,6 +26,7 @@ export function PasswordResetButtons({
         accessibilityLabel='Send reset email'
         accessibilityRole='button'
         accessibilityState={{ busy: isLoading, disabled: isDisabled }}
+        activeOpacity={0.8}
         className={`items-center rounded-3xl border border-stone-900 bg-stone-900 py-4 ${isDisabled ? 'opacity-40' : ''}`}
         disabled={isDisabled}
         onPress={onSubmit}
@@ -42,6 +43,7 @@ export function PasswordResetButtons({
         accessibilityHint='Closes this dialog without sending reset email'
         accessibilityLabel='Cancel password reset'
         accessibilityRole='button'
+        activeOpacity={0.7}
         className='items-center rounded-3xl border border-stone-200 bg-white py-4'
         disabled={isLoading}
         onPress={onCancel}
