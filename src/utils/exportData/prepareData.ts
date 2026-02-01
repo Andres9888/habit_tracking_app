@@ -2,7 +2,20 @@
  * Prepare export data from Convex queries
  */
 
+import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import type { HabitData, ExportData } from './types';
+
+interface TrackingDoc {
+  _id: Id<'tracking'>;
+  habitId: Id<'habits'>;
+  date: string;
+  completed: boolean;
+}
+
+interface OverviewStats {
+  averageStrength?: number;
+  totalHabits?: number;
+}
 
 /**
  * Calculate streaks for a habit based on completions
@@ -55,9 +68,9 @@ function calculateStreaks(
  * Prepare export data from Convex queries
  */
 export async function prepareExportData(
-  habits: any[],
-  trackings: any[],
-  overviewStats: any
+  habits: Doc<'habits'>[],
+  trackings: TrackingDoc[],
+  overviewStats: OverviewStats | null | undefined
 ): Promise<ExportData> {
   const habitData: HabitData[] = habits.map((habit) => {
     const habitTrackings = trackings.filter((t) => t.habitId === habit._id);
