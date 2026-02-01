@@ -1,3 +1,11 @@
+/**
+ * Insight Card Preferences Utility
+ *
+ * Manages dismissed state for habit insight cards.
+ * When a user dismisses a "weak day" insight, it stays hidden
+ * for 7 days or until the weak day changes.
+ */
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Id } from '../../convex/_generated/dataModel';
 
@@ -83,7 +91,9 @@ export async function dismissInsight(
  * Clears dismissed insight for a specific habit (re-enables the card)
  * @param habitId - The habit ID
  */
-export async function clearDismissedInsight(habitId: Id<'habits'>): Promise<void> {
+export async function clearDismissedInsight(
+  habitId: Id<'habits'>
+): Promise<void> {
   try {
     const current = await getDismissedInsights();
     const updated = { ...current };

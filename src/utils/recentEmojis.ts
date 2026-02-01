@@ -1,3 +1,11 @@
+/**
+ * Recent Emojis Utility
+ *
+ * Manages the list of recently used emojis for the emoji picker.
+ * Persists to AsyncStorage for cross-session continuity.
+ * Maintains a maximum of 10 recent emojis.
+ */
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STORAGE_KEY = '@habit_app:recent_emojis';

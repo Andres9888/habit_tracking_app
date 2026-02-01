@@ -1,3 +1,11 @@
+/**
+ * Calendar Collapse Preferences Utility
+ *
+ * Manages per-habit calendar expand/collapse state.
+ * Persists user preferences to AsyncStorage so calendar views
+ * remember their state across sessions.
+ */
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Id } from '../../convex/_generated/dataModel';
 
