@@ -26,6 +26,7 @@ export function NameInput({
         Habit Name
       </Text>
       <TextInput
+        accessibilityLabel='Habit name'
         editable={!disabled}
         placeholder='Enter habit name'
         placeholderTextColor='#a8a29e'
