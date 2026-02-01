@@ -5,12 +5,13 @@
 import type { Habit } from '../types';
 import type { useHabitSelectionState } from './useHabitSelectionState';
 import { useHabitStateSync } from './useHabitStateSync';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
 
 export function generateDateStrings(days: number): string[] {
   return Array.from({ length: days }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() - i);
-    return date.toISOString().split('T')[0];
+    return getLocalDateString(date);
   });
 }
 
