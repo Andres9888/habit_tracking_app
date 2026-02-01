@@ -1,6 +1,13 @@
 import type { Animated } from 'react-native';
+import type { AnimatedStyle } from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { CardColors, Habit, HabitStatus } from './types';
+
+/** Animated style type for strength emoji */
+export type StrengthEmojiAnimatedStyle = AnimatedStyle<{
+  opacity: number;
+  transform: { scale: number; rotate: string }[];
+}>;
 
 export interface DraggableHabitCardProps {
   accentColor: string;
@@ -38,7 +45,7 @@ export interface DraggableHabitCardProps {
   showHabitStrengthPercentage: boolean;
   showNewRecord: boolean;
   streak: number;
-  strengthEmojiAnimatedStyle: object;
+  strengthEmojiAnimatedStyle: StrengthEmojiAnimatedStyle;
   strengthPercent: number;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
   translateY: Animated.Value;
