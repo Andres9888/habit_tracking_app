@@ -22,6 +22,7 @@ export function SettingsHeader({
         <TouchableOpacity
           accessibilityLabel='Back'
           accessibilityRole='button'
+          activeOpacity={0.7}
           className='size-10 items-center justify-center rounded-full'
           onPress={onClose}
         >
