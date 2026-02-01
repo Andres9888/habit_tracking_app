@@ -53,14 +53,15 @@ export function MonetizationHero({
           accessibilityLabel='Upgrade to premium for unlimited habits'
           accessibilityRole='button'
           className='flex-1 items-center rounded-full bg-[#6d28d9] px-5 py-3'
-          style={{
+          style={({ pressed }: { pressed: boolean }) => ({
             elevation: 6,
+            opacity: pressed ? 0.8 : 1,
             shadowColor: '#312e81',
             shadowOffset: { height: 8, width: 0 },
             shadowOpacity: 0.32,
             shadowRadius: 16,
             transform: [{ scale: ctaPulse }],
-          }}
+          })}
           onPress={onUpgradePress}
         >
           <Text className='text-[15px] font-semibold leading-[20px] tracking-wide text-white'>
