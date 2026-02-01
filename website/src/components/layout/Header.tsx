@@ -24,7 +24,7 @@ export function Header() {
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="flex items-center gap-2 text-xl font-bold text-zinc-900 dark:text-white">
               <span className="text-2xl">🔗</span>
-              Daily Habits
+              Chain Day
             </span>
           </Link>
         </div>
@@ -54,7 +54,7 @@ export function Header() {
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <a
-            href="https://apps.apple.com/app/daily-habits"
+            href="https://apps.apple.com/app/chain-day"
             className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             Download
@@ -71,7 +71,7 @@ export function Header() {
               <Link href="/" className="-m-1.5 p-1.5">
                 <span className="flex items-center gap-2 text-xl font-bold text-zinc-900 dark:text-white">
                   <span className="text-2xl">🔗</span>
-                  Daily Habits
+                  Chain Day
                 </span>
               </Link>
               <button
@@ -99,7 +99,7 @@ export function Header() {
                 </div>
                 <div className="py-6">
                   <a
-                    href="https://apps.apple.com/app/daily-habits"
+                    href="https://apps.apple.com/app/chain-day"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-zinc-900 hover:bg-zinc-50 dark:text-white dark:hover:bg-zinc-900"
                   >
                     Download

@@ -1,7 +1,7 @@
 import { Linking, Text, TouchableOpacity, View } from 'react-native';
 
-const TERMS_URL = 'https://dailyhabits.app/terms';
-const PRIVACY_URL = 'https://dailyhabits.app/privacy';
+const TERMS_URL = 'https://andres9888.github.io/chainday-landing/terms.html';
+const PRIVACY_URL = 'https://andres9888.github.io/chainday-landing/privacy.html';
 
 const openTerms = () => void Linking.openURL(TERMS_URL);
 const openPrivacy = () => void Linking.openURL(PRIVACY_URL);

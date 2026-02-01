@@ -43,14 +43,15 @@ export function IconButtonGroup({
 }: IconButtonGroupProps) {
   return (
     <View className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'>
-      {/* Templates Button */}
+      {/* Templates Button - highlighted with subtle purple bg */}
       <Animated.View style={templatesAnimatedStyle}>
         <View style={{ position: 'relative' }}>
           <Pressable
             accessibilityHint='Browse habit templates to add'
             accessibilityLabel='Browse habit templates'
             accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full'
+            className='h-11 w-11 items-center justify-center rounded-full bg-violet-50'
+            style={{ backgroundColor: 'rgba(139, 92, 246, 0.08)' }}
             onPress={onTemplatesPress}
             onPressIn={onTemplatesPressIn}
             onPressOut={onTemplatesPressOut}

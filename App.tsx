@@ -286,12 +286,12 @@ function HabitsApp() {
           <View className='mb-5 flex-row items-center justify-between'>
             {/* App Title */}
             <View className='flex-row items-center gap-3'>
-              <Text className='text-2xl'>🌱</Text>
+              <Text className='text-2xl'>🔗</Text>
               <Text
                 className='text-[22px] font-bold tracking-tight'
                 style={{ color: theme.primaryText }}
               >
-                Daily Habits
+                Chain Day
               </Text>
             </View>
 

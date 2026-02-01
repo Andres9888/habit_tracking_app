@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
@@ -26,6 +26,17 @@ export function HabitsEmptyState({
   const [successHabit, setSuccessHabit] = useState<string | null>(null);
   const { triggerMediumImpact, triggerSuccess, triggerLightImpact } =
     useHapticFeedback();
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // Cleanup timeouts on unmount to prevent memory leaks
+  useEffect(() => {
+    const timeouts = timeoutsRef.current;
+    return () => {
+      for (const t of timeouts) {
+        clearTimeout(t);
+      }
+    };
+  }, []);
 
   if (isLoading) {
     return <LoadingState />;
@@ -43,8 +54,9 @@ export function HabitsEmptyState({
       await onQuickCreateHabit(habitName);
       setSuccessHabit(habitName);
       triggerSuccess();
-      setTimeout(() => triggerLightImpact(), 400);
-      setTimeout(() => setSuccessHabit(null), 1500);
+      const t1 = setTimeout(() => triggerLightImpact(), 400);
+      const t2 = setTimeout(() => setSuccessHabit(null), 1500);
+      timeoutsRef.current.push(t1, t2);
     } finally {
       setCreatingHabit(null);
     }

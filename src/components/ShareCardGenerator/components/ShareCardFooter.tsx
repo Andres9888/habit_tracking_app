@@ -25,7 +25,7 @@ export function ShareCardFooter({
       </View>
 
       <View style={styles.appInfo}>
-        <Text style={styles.appName}>Habit Tracker</Text>
+        <Text style={styles.appName}>Chain Day</Text>
         {showUserName && userName && (
           <Text style={styles.userName}>by {userName}</Text>
         )}

@@ -17,12 +17,12 @@ export function CTA() {
             Ready to Build Better Habits?
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-zinc-300">
-            Join thousands of people who have transformed their lives with Daily
-            Habits. Start your journey today.
+            Join thousands of people who have transformed their lives with Chain
+            Day. Start your journey today.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <a
-              href="https://apps.apple.com/app/daily-habits"
+              href="https://apps.apple.com/app/chain-day"
               className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">

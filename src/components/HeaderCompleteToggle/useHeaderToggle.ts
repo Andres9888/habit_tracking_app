@@ -1,3 +1,4 @@
+import { getTodayString } from '../../utils/getLocalDateString';
 /**
  * Hook for HeaderCompleteToggle toggle logic
  */
@@ -36,7 +37,7 @@ export function useHeaderToggle({
   const buttonScale = useSharedValue(1);
 
   const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
 
   // Sync local state with prop - always trust the source of truth
   useEffect(() => {
