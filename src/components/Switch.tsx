@@ -1,6 +1,13 @@
-import React from 'react';
-import { Pressable, View, ViewStyle, Animated } from 'react-native';
+/**
+ * Switch Component
+ * Toggle switch with haptic feedback for tactile response
+ */
+
+import React, { useCallback } from 'react';
+import { Pressable, View, ViewStyle } from 'react-native';
 import { clsx } from 'clsx';
+
+import { useHapticFeedback } from '../hooks/useHapticFeedback';
 
 type SwitchSize = 'sm' | 'md' | 'lg';
 
@@ -30,6 +37,13 @@ export const Switch = React.forwardRef<View, SwitchProps>(function Switch(
   },
   ref
 ) {
+  const { triggerLightImpact } = useHapticFeedback();
+
+  const handlePress = useCallback(() => {
+    triggerLightImpact();
+    onPress?.();
+  }, [onPress, triggerLightImpact]);
+
   return (
     <Pressable
       ref={ref}
@@ -39,7 +53,7 @@ export const Switch = React.forwardRef<View, SwitchProps>(function Switch(
       className='self-start'
       disabled={disabled}
       style={style}
-      onPress={onPress}
+      onPress={handlePress}
     >
       <View
         className={clsx(
