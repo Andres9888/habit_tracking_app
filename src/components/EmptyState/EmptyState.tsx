@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
 import Button from '../Button/Button';
@@ -17,6 +17,7 @@ import type { EmptyStateProps } from './types';
 import { VARIANT_CONFIG, QUICK_START_TEMPLATES } from './constants';
 import { useEmptyStateAnimations } from './useEmptyStateAnimations';
 import { styles } from './styles';
+import { TemplateChip } from './TemplateChip';
 
 export function EmptyState({
   variant = 'noHabits',
@@ -81,19 +82,11 @@ export function EmptyState({
         <Animated.View style={[styles.quickStartSection, descriptionStyle]}>
           <View style={styles.templateRow}>
             {QUICK_START_TEMPLATES.map((template) => (
-              <Pressable
+              <TemplateChip
                 key={template.name}
-                accessibilityLabel={`Create ${template.name} habit`}
-                accessibilityRole='button'
-                style={({ pressed }) => [
-                  styles.templateChip,
-                  pressed && styles.templateChipPressed,
-                ]}
-                onPress={() => onQuickStart(template)}
-              >
-                <Text style={styles.templateEmoji}>{template.emoji}</Text>
-                <Text style={styles.templateName}>{template.name}</Text>
-              </Pressable>
+                template={template}
+                onPress={onQuickStart}
+              />
             ))}
           </View>
         </Animated.View>

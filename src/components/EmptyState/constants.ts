@@ -3,7 +3,11 @@
  * Default content for each variant
  */
 
-import type { EmptyStateVariant, QuickStartTemplate, VariantConfig } from './types';
+import type {
+  EmptyStateVariant,
+  QuickStartTemplate,
+  VariantConfig,
+} from './types';
 
 export const VARIANT_CONFIG: Record<EmptyStateVariant, VariantConfig> = {
   noData: {
@@ -39,8 +43,8 @@ export const VARIANT_CONFIG: Record<EmptyStateVariant, VariantConfig> = {
  * Reduces decision fatigue by offering popular habits
  */
 export const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
-  { emoji: '🧘', name: 'Meditate', duration: '10 min' },
-  { emoji: '📖', name: 'Read', duration: '20 min' },
-  { emoji: '💪', name: 'Exercise', duration: '30 min' },
-  { emoji: '💧', name: 'Drink Water', duration: '8 glasses' },
+  { duration: '10 min', emoji: '🧘', name: 'Meditate' },
+  { duration: '20 min', emoji: '📖', name: 'Read' },
+  { duration: '30 min', emoji: '💪', name: 'Exercise' },
+  { duration: '8 glasses', emoji: '💧', name: 'Drink Water' },
 ];
