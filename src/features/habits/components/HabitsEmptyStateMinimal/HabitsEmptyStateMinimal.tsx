@@ -60,8 +60,9 @@ export function HabitsEmptyStateMinimal({
         {
           alignItems: 'center',
           flex: 1,
+          justifyContent: 'center',
           minHeight: '100%',
-          paddingHorizontal: 16,
+          paddingHorizontal: 24,
           width: '100%',
         },
         animations.containerAnimatedStyle,

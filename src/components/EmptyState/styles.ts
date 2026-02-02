@@ -7,9 +7,11 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 32,
-    paddingVertical: 64,
+    paddingHorizontal: 24,
+    paddingVertical: 48,
+    width: '100%',
   },
   description: {
     marginBottom: 16,
