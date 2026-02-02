@@ -228,7 +228,7 @@ const applicationTables = {
     // WOOP - Wish-Outcome-Obstacle-Plan (Oettingen, 2014)
     // Mental contrasting + implementation intentions = 2x goal achievement
     woopWish: v.optional(v.string()),
-  }),
+  }).index('by_userId', ['userId']),
 
   // Letters to Self - Time-locked messages from past self to future self
   // Scientific Basis:

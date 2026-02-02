@@ -1,23 +1,23 @@
 import { ArrowUpDown, BookOpen, Settings } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { NotificationBadge } from '../../../../components/NotificationBadge';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 
 interface IconButtonGroupProps {
   // Templates button
-  templatesAnimatedStyle: AnimatedStyleProp<ViewStyle>;
+  templatesAnimatedStyle: AnimatedStyle<ViewStyle>;
   showBadge: boolean;
   onTemplatesPress: () => void;
   onTemplatesPressIn: () => void;
   onTemplatesPressOut: () => void;
   // Sort button
-  sortAnimatedStyle: AnimatedStyleProp<ViewStyle>;
+  sortAnimatedStyle: AnimatedStyle<ViewStyle>;
   onSortPress: () => void;
   onSortPressIn: () => void;
   onSortPressOut: () => void;
   // Settings button
-  settingsAnimatedStyle: AnimatedStyleProp<ViewStyle>;
+  settingsAnimatedStyle: AnimatedStyle<ViewStyle>;
   onSettingsPress: () => void;
   onSettingsPressIn: () => void;
   onSettingsPressOut: () => void;

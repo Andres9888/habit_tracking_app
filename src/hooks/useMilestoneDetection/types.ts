@@ -2,7 +2,7 @@
  * Milestone Detection Types
  */
 
-import type { StrengthLevel } from '../../components/HabitStrengthIndicator/HabitStrengthIndicator';
+import type { StrengthLevel } from '../../components/HabitStrengthIndicator';
 
 export interface MilestoneAchievement {
   /** The new level achieved */

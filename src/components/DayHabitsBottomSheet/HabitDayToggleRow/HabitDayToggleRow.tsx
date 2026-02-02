@@ -59,7 +59,7 @@ function HabitDayToggleRowComponent({
         onPress={handlePress}
       >
         <View className='h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm'>
-          <Text className='text-[20px]'>{habit.emoji || '🎯'}</Text>
+          <Text className='text-[20px]'>{habit.icon || '🎯'}</Text>
         </View>
 
         <Text

@@ -4,8 +4,8 @@
 
 import { useEffect } from 'react';
 import { AccessibilityInfo } from 'react-native';
-import { STRENGTH_LEVEL_CONFIG } from '../HabitStrengthIndicator/HabitStrengthIndicator';
-import type { StrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
+import { STRENGTH_LEVEL_CONFIG } from '../HabitStrengthIndicator';
+import type { StrengthLevel } from '../HabitStrengthIndicator';
 
 interface UseAccessibilityAnnouncementProps {
   visible: boolean;

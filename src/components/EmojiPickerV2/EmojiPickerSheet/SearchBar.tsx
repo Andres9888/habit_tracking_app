@@ -10,6 +10,7 @@ import Animated, {
   useSharedValue,
   withTiming,
   type AnimatedStyle,
+  type SharedValue,
 } from 'react-native-reanimated';
 import { styles } from './EmojiPickerSheet.styles';
 
@@ -19,7 +20,7 @@ interface SearchBarProps {
   onClear: () => void;
   isSearchFocused: boolean;
   setIsSearchFocused: (focused: boolean) => void;
-  searchFocusAnim: Animated.SharedValue<number>;
+  searchFocusAnim: SharedValue<number>;
   animatedStyle: AnimatedStyle<ViewStyle>;
 }
 

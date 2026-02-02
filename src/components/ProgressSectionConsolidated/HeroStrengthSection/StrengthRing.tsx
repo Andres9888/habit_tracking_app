@@ -7,7 +7,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import Animated from 'react-native-reanimated';
+import Animated, { type SharedValue } from 'react-native-reanimated';
 
 import {
   RING_SIZE,
@@ -25,7 +25,7 @@ interface StrengthRingProps {
   currentLevelEmoji: string;
   animatedCircleProps: { strokeDashoffset: number };
   emojiAnimatedStyle: object;
-  animatedStrength: Animated.SharedValue<number>;
+  animatedStrength: SharedValue<number>;
 }
 
 export function StrengthRing({

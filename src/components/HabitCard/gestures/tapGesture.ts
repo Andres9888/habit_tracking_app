@@ -6,7 +6,7 @@
 import { Gesture } from 'react-native-gesture-handler';
 import { withSpring, runOnJS, type SharedValue } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import type { Id } from '../../../../../convex/_generated/dataModel';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import { Springs } from '../../../constants/motion';
 
 interface TapGestureOptions {
