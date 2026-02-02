@@ -1,3 +1,10 @@
+/**
+ * useAnimationEffects Types
+ *
+ * Types for milestone progress animation hook.
+ * Manages celebration animations and progress transitions.
+ */
+
 import type { SharedValue } from 'react-native-reanimated';
 import type { MilestoneDisplayState } from '../MilestoneProgressTypes';
 

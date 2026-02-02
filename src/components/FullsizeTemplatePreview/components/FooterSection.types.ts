@@ -1,3 +1,9 @@
+/**
+ * FooterSection Types
+ *
+ * Props for the template preview footer with import/customize buttons.
+ */
+
 import type { SharedValue } from 'react-native-reanimated';
 import type { PressHandlers } from '../FullsizeTemplatePreview.types';
 
