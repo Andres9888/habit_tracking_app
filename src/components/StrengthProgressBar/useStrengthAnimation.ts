@@ -30,30 +30,48 @@ export function useStrengthAnimation(
   const emojiRotation = useSharedValue(0);
 
   useEffect(() => {
-    if (isFirstRenderRef.current) {
-      isFirstRenderRef.current = false;
-      progressWidth.value = clampedStrength;
-      previousStrengthRef.current = clampedStrength;
-      return;
-    }
-
     const previousStrength = previousStrengthRef.current;
     previousStrengthRef.current = clampedStrength;
 
+    // Skip if no change
+    if (previousStrength === clampedStrength && !isFirstRenderRef.current) {
+      return;
+    }
+
     const isEmptyingTransition =
       clampedStrength <= 5 && previousStrength > clampedStrength;
+    const isIncreasing = clampedStrength > previousStrength;
 
     if (reduceMotion) {
       progressWidth.value = clampedStrength;
+    } else if (isFirstRenderRef.current) {
+      // Animate from 0 on first render for dramatic reveal
+      isFirstRenderRef.current = false;
+      progressWidth.value = 0;
+      progressWidth.value = withDelay(
+        200,
+        withTiming(clampedStrength, {
+          duration: 800,
+          easing: Easing.out(Easing.cubic),
+        })
+      );
     } else if (isEmptyingTransition) {
       progressWidth.value = withTiming(clampedStrength, {
         duration: 400,
         easing: Easing.out(Easing.cubic),
       });
-    } else {
+    } else if (isIncreasing) {
+      // Satisfying spring animation when strength increases
       progressWidth.value = withSpring(clampedStrength, {
-        damping: 15,
-        stiffness: 100,
+        damping: 12,
+        stiffness: 80,
+        mass: 0.8,
+      });
+    } else {
+      // Decreasing - quick ease out
+      progressWidth.value = withTiming(clampedStrength, {
+        duration: 300,
+        easing: Easing.out(Easing.quad),
       });
     }
 
