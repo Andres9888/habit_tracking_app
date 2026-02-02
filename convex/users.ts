@@ -1,3 +1,10 @@
+/**
+ * Users Convex Functions
+ *
+ * User management operations including creation,
+ * profile updates, and Clerk identity sync.
+ */
+
 import { mutation, query } from './_generated/server';
 import { v } from 'convex/values';
 
@@ -30,12 +37,12 @@ export const getOrCreateUser = mutation({
     // Create new user
     const userId = await ctx.db.insert('users', {
       clerkId: identity.subject,
-      email: identity.email ?? undefined,
-      name: identity.name ?? undefined,
-      imageUrl: identity.pictureUrl ?? undefined,
       createdAt: Date.now(),
-      lastLoginAt: Date.now(),
+      email: identity.email ?? undefined,
+      imageUrl: identity.pictureUrl ?? undefined,
       isAnonymous: false,
+      lastLoginAt: Date.now(),
+      name: identity.name ?? undefined,
     });
 
     return userId;
