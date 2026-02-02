@@ -1,13 +1,19 @@
 /**
  * Toast Action Buttons
+ * Includes haptic feedback and press animation for better tactile response
  */
 
 import React from 'react';
 import { Text, Pressable } from 'react-native';
+import Animated from 'react-native-reanimated';
 
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useAppTheme } from '../../theme';
 import type { ToastVariant } from './types';
 import { styles } from './styles';
+import { useToastButtonAnimation } from './useToastButtonAnimation';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface ToastActionsProps {
   variant: ToastVariant;
@@ -17,6 +23,71 @@ interface ToastActionsProps {
   onDismiss: () => void;
 }
 
+function ActionButton({
+  label,
+  onPress,
+}: {
+  label: string;
+  onPress: () => void;
+}) {
+  const theme = useAppTheme();
+  const { triggerLightImpact } = useHapticFeedback();
+  const { animatedStyle, handlePressIn, handlePressOut } =
+    useToastButtonAnimation({ pressedScale: 0.92 });
+
+  return (
+    <AnimatedPressable
+      accessibilityLabel={label}
+      accessibilityRole='button'
+      style={[styles.actionButton, animatedStyle]}
+      onPress={() => {
+        triggerLightImpact();
+        onPress();
+      }}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      <Text
+        style={[
+          theme.custom.typography.button,
+          { color: theme.custom.colors.primary[400] },
+        ]}
+      >
+        {label}
+      </Text>
+    </AnimatedPressable>
+  );
+}
+
+function DismissButton({
+  textColor,
+  onDismiss,
+}: {
+  textColor: string;
+  onDismiss: () => void;
+}) {
+  const { triggerLightImpact } = useHapticFeedback();
+  const { animatedStyle, handlePressIn, handlePressOut } =
+    useToastButtonAnimation({ pressedScale: 0.85 });
+
+  return (
+    <AnimatedPressable
+      accessibilityLabel='Dismiss'
+      accessibilityRole='button'
+      hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
+      style={[styles.dismissButton, animatedStyle]}
+      onPress={() => {
+        triggerLightImpact();
+        onDismiss();
+      }}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      <Text style={[styles.dismissIcon, { color: textColor }]}>✕</Text>
+    </AnimatedPressable>
+  );
+}
+
 export function ToastActions({
   variant,
   textColor,
@@ -24,40 +95,17 @@ export function ToastActions({
   onAction,
   onDismiss,
 }: ToastActionsProps) {
-  const theme = useAppTheme();
-
   if (variant === 'undo' && onAction) {
     return (
-      <Pressable
-        accessibilityLabel={actionLabel}
-        accessibilityRole='button'
-        style={styles.actionButton}
+      <ActionButton
+        label={actionLabel}
         onPress={() => {
           onAction();
           onDismiss();
         }}
-      >
-        <Text
-          style={[
-            theme.custom.typography.button,
-            { color: theme.custom.colors.primary[400] },
-          ]}
-        >
-          {actionLabel}
-        </Text>
-      </Pressable>
+      />
     );
   }
 
-  return (
-    <Pressable
-      accessibilityLabel='Dismiss'
-      accessibilityRole='button'
-      hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
-      style={styles.dismissButton}
-      onPress={onDismiss}
-    >
-      <Text style={[styles.dismissIcon, { color: textColor }]}>✕</Text>
-    </Pressable>
-  );
+  return <DismissButton textColor={textColor} onDismiss={onDismiss} />;
 }
