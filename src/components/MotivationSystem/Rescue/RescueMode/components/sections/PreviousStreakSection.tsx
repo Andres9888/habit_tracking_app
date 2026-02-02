@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import type { VoiceNote } from '../../../../../../types';
+import type { StreakVoiceNoteData } from '../../../PreviousStreakVoiceNotes';
 import { PreviousStreakVoiceNotes } from '../../../PreviousStreakVoiceNotes';
 import { AnimatedContent } from '../AnimatedContent';
 import { getAnimationIndex } from '../useAnimationIndex';
@@ -8,7 +8,7 @@ import type { ContentFlags } from '../RescueModeContent.helpers';
 
 type PreviousStreakSectionProps = {
   bestStreak: number;
-  voiceNotes: VoiceNote[];
+  voiceNotes: StreakVoiceNoteData[];
   visible: boolean;
   reduceMotion: boolean;
   flags: ContentFlags;
