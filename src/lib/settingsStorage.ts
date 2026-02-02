@@ -1,3 +1,11 @@
+/**
+ * Settings Storage
+ *
+ * Cross-platform persistence for app settings.
+ * Uses localStorage on web, SecureStore on native.
+ * Provides fallback handling for environments where storage is unavailable.
+ */
+
 const COMPACT_KEY = 'habitTrackerSettings.compactMode';
 
 export const getCompactMode = async (): Promise<boolean> => {

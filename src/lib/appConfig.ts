@@ -1,3 +1,12 @@
+/**
+ * App Configuration
+ *
+ * Core application configuration including:
+ * - Convex client for real-time database
+ * - Clerk authentication keys
+ * - Secure token storage for auth persistence
+ */
+
 import { ConvexReactClient } from 'convex/react';
 import * as SecureStore from 'expo-secure-store';
 
@@ -8,7 +17,8 @@ if (!convexUrl) {
 
 export const convexClient = new ConvexReactClient(convexUrl);
 
-export const clerkPublishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+export const clerkPublishableKey =
+  process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 export const tokenCache = {
   async getToken(key: string) {
