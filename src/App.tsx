@@ -1,3 +1,16 @@
+/**
+ * App Root Component
+ *
+ * Main application entry point that sets up the provider hierarchy:
+ * - Sentry: Error tracking and monitoring
+ * - Clerk: Authentication
+ * - Convex: Real-time database
+ * - RevenueCat: Subscription management
+ * - React Native Paper: UI theming
+ *
+ * The provider order matters for dependency injection.
+ */
+
 import '../global.css';
 
 import { ConvexProvider } from 'convex/react';
