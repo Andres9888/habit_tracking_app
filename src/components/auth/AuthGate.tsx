@@ -1,3 +1,12 @@
+/**
+ * AuthGate Component
+ *
+ * Authentication boundary that controls app access.
+ * Shows WelcomeScreen for unauthenticated users,
+ * HabitsApp for authenticated users.
+ * Syncs user to Convex database on sign-in.
+ */
+
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
 import { useCallback, useEffect, useRef } from 'react';
