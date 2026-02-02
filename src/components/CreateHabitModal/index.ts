@@ -1,3 +1,14 @@
+/**
+ * CreateHabitModal Components
+ *
+ * Modal variants for creating new habits:
+ * - Default: Full flow with emoji/color pickers
+ * - V2: Inline emoji input variant
+ * - Centered: Progressive disclosure with optional customization
+ *
+ * Also exports reusable sub-components for custom flows.
+ */
+
 // Original modal - simple flow with full input, emoji picker, color picker
 export { default } from './CreateHabitModal';
 
