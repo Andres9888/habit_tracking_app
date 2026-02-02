@@ -4,8 +4,8 @@
 
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
-import Animated from 'react-native-reanimated';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Button } from '../Button/Button';
 import { styles } from './styles';
@@ -13,8 +13,8 @@ import { styles } from './styles';
 interface MilestoneActionsProps {
   onShare?: () => void;
   onClose: () => void;
-  shareButtonStyle: AnimatedStyleProp<ViewStyle>;
-  continueButtonStyle: AnimatedStyleProp<ViewStyle>;
+  shareButtonStyle: AnimatedStyle<ViewStyle>;
+  continueButtonStyle: AnimatedStyle<ViewStyle>;
 }
 
 export function MilestoneActions({

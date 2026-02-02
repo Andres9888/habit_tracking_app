@@ -9,7 +9,8 @@ import type {
   QueueStats,
   OfflineSubmissionType,
 } from '../../hooks/useOfflineQueue';
-import type { AnimatedStyle, ViewStyle } from 'react-native-reanimated';
+import type { AnimatedStyle } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 
 interface ExpandedStatsProps {
   stats: QueueStats | null;

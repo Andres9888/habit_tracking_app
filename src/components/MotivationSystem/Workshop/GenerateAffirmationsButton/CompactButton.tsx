@@ -5,11 +5,11 @@
 
 import React from 'react';
 import { Text, Pressable, GestureResponderEvent } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { Wand2, Crown, Check } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import { SparkleAnimation } from './SparkleAnimation';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 
 interface CompactButtonProps {
   isPremium: boolean;
@@ -17,7 +17,7 @@ interface CompactButtonProps {
   showSuccess: boolean;
   hasHabitContext: boolean;
   reduceMotion: boolean;
-  animatedStyle: AnimatedStyleProp<ViewStyle>;
+  animatedStyle: AnimatedStyle<ViewStyle>;
   onPress: () => void;
   onPressIn: (event: GestureResponderEvent) => void;
   onPressOut: (event: GestureResponderEvent) => void;

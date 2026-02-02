@@ -3,7 +3,8 @@ import { Pressable, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronDown, RefreshCw } from 'lucide-react-native';
 import { styles } from './OfflinePendingBanner.styles';
-import type { AnimatedStyle, ViewStyle } from 'react-native-reanimated';
+import type { AnimatedStyle } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 
 interface SyncButtonProps {
   showSyncButton: boolean;

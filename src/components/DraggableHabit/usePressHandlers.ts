@@ -1,12 +1,13 @@
 import { Animated, Easing } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import type { Id } from '../../../convex/_generated/dataModel';
 import type { Habit } from './types';
 
 interface PressHandlersParams {
   cardScale: Animated.Value;
   archiveFlash: Animated.Value;
   habit: Habit;
-  onArchive?: (habitId: string) => void;
+  onArchive?: (habitId: Id<'habits'>) => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
   triggerSelection: () => void;
 }

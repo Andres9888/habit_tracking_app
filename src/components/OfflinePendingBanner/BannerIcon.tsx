@@ -2,7 +2,8 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 import { Cloud, CloudOff, RefreshCw, WifiOff } from 'lucide-react-native';
 import { styles } from './OfflinePendingBanner.styles';
-import type { AnimatedStyle, ViewStyle } from 'react-native-reanimated';
+import type { AnimatedStyle } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 
 interface BannerIconProps {
   isOffline: boolean;
