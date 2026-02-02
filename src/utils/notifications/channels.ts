@@ -1,3 +1,12 @@
+/**
+ * Notification Channels
+ *
+ * Configures Android notification channels for different notification types:
+ * - Habit reminders
+ * - Affirmations
+ * - Letters
+ */
+
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
