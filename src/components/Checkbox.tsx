@@ -1,6 +1,13 @@
-import React from 'react';
+/**
+ * Checkbox Component
+ * Checkbox with haptic feedback for tactile confirmation
+ */
+
+import React, { useCallback } from 'react';
 import { Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { clsx } from 'clsx';
+
+import { useHapticFeedback } from '../hooks/useHapticFeedback';
 
 type CheckboxSize = 'sm' | 'md' | 'lg';
 type CheckboxVariant = 'primary' | 'success' | 'neutral' | 'danger';
@@ -42,8 +49,14 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
   },
   ref
 ) {
+  const { triggerLightImpact } = useHapticFeedback();
   const isIndeterminate = indeterminate && !checked;
   const isActive = checked || isIndeterminate;
+
+  const handlePress = useCallback(() => {
+    triggerLightImpact();
+    onPress?.();
+  }, [onPress, triggerLightImpact]);
 
   return (
     <TouchableOpacity
@@ -55,7 +68,7 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
       className='self-start'
       disabled={disabled}
       style={style}
-      onPress={onPress}
+      onPress={handlePress}
     >
       <View
         className={clsx(
