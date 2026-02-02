@@ -3,7 +3,7 @@
  */
 
 import type { SharedValue } from 'react-native-reanimated';
-import type { Id } from '../../../../../convex/_generated/dataModel';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 export interface UseHabitCardGesturesOptions {
   id: Id<'habits'>;
