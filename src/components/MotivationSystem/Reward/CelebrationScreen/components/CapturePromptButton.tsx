@@ -34,7 +34,7 @@ export function CapturePromptButton({
 
   const handlePress = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onPress();
+    onPress?.();
   }, [onPress]);
 
   const animatedStyle = useAnimatedStyle(() => ({

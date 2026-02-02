@@ -1,11 +1,10 @@
 import { Plus } from 'lucide-react-native';
-import { Pressable, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Pressable, Text, ViewStyle } from 'react-native';
+import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
 
 interface AddHabitButtonProps {
-  animatedStyle: AnimatedStyleProp<ViewStyle>;
+  animatedStyle: AnimatedStyle<ViewStyle>;
   onPress: () => void;
   onPressIn: () => void;
   onPressOut: () => void;

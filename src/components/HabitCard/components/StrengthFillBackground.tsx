@@ -4,13 +4,13 @@
  */
 
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+import { StyleSheet, type ViewStyle, type StyleProp } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from '../HabitCard.styles';
 
 interface StrengthFillBackgroundProps {
-  strengthFillStyle: AnimatedStyle<{ width: string }>;
+  strengthFillStyle: StyleProp<ViewStyle>;
   strengthColor: string;
   borderRadius: number;
 }

@@ -109,9 +109,9 @@ export interface SecondaryLinksProps {
  */
 export interface InlineHintProps {
   /** Callback to open templates screen */
-  onBrowseTemplates: () => void;
+  onBrowseTemplates?: () => void;
   /** Callback to open create habit modal */
-  onCreateCustom: () => void;
+  onCreateCustom?: () => void;
 }
 
 /**

@@ -8,7 +8,7 @@ import { Check } from 'lucide-react-native';
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
 
 interface AnimatedCompletionIconProps {
-  completionIcon: 'checkbox' | 'chainLink';
+  completionIcon: 'checkbox' | 'chain';
   completion: Animated.Value;
 }
 
@@ -30,10 +30,10 @@ export function AnimatedCompletionIcon({
         ],
       }}
     >
-      {completionIcon === 'checkbox' ? (
-        <Check color='#ffffff' size={20} strokeWidth={2.25} />
-      ) : (
+      {completionIcon === 'chain' ? (
         <ChainLinkIcon color='#ffffff' size={20} variant='stroke' />
+      ) : (
+        <Check color='#ffffff' size={20} strokeWidth={2.25} />
       )}
     </Animated.View>
   );

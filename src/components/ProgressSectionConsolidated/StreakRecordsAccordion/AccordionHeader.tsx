@@ -3,16 +3,15 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import Animated from 'react-native-reanimated';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
+import { View, Text, Pressable, ViewStyle } from 'react-native';
+import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 
 interface AccordionHeaderProps {
   isExpanded: boolean;
   hasRecords: boolean;
   previewText: string;
-  chevronStyle: AnimatedStyleProp<ViewStyle>;
+  chevronStyle: AnimatedStyle<ViewStyle>;
   onToggle: () => void;
 }
 

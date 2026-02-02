@@ -38,7 +38,7 @@ export function useVisibilityReset({
 }
 
 interface HabitDataParams {
-  dayPhase: string;
+  dayPhase: string | null;
   fullHabitName: string;
   reminderSound: string | null;
   reminderTime: Date;
@@ -51,7 +51,7 @@ export function useHabitData(params: HabitDataParams) {
     () => ({
       dayPhase: params.dayPhase,
       fullHabitName: params.fullHabitName,
-      reminderSound: params.reminderSound,
+      reminderSound: params.reminderSound ?? undefined,
       reminderTime: params.reminderTime,
       selectedColor: params.selectedColor,
       selectedEmoji: params.selectedEmoji,

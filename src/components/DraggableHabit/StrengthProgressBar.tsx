@@ -1,14 +1,11 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
+import { View, Text, type StyleProp, type ViewStyle } from 'react-native';
+import ReAnimated from 'react-native-reanimated';
 import { getStrengthEmoji } from './strengthUtils';
 
 interface StrengthProgressBarProps {
   strengthPercent: number;
-  strengthEmojiAnimatedStyle: AnimatedStyle<{
-    opacity: number;
-    transform: { scale: number; rotate: string }[];
-  }>;
+  strengthEmojiAnimatedStyle: StyleProp<ViewStyle>;
 }
 
 export function StrengthProgressBar({

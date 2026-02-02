@@ -54,7 +54,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           showHabitStrengthPercentage={showHabitStrengthPercentage}
           streak={renderData.streak}
           toggleHabit={toggleHabit}
-          triggerEntrance={renderData.triggerEntrance}
+          triggerEntrance={renderData.triggerEntrance ?? false}
           weekDateStrings={weekDateStrings}
           weekStatus={renderData.weekStatus}
           onHabitEntranceComplete={onHabitEntranceComplete}

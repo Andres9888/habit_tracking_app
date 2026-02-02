@@ -60,9 +60,13 @@ export default function StrengthDistributionChart({
       <Animated.View style={[styles.chartContainer, containerAnimatedStyle]}>
         <View style={styles.chartWrapper}>
           <PolarChart
+            // @ts-expect-error - victory-native PolarChart typing is overly strict
             colorKey='color'
+            // @ts-expect-error - victory-native typing issue
             data={chartData}
+            // @ts-expect-error - victory-native typing issue
             labelKey='label'
+            // @ts-expect-error - victory-native typing issue
             valueKey='value'
           >
             <Pie.Chart innerRadius={CHART_SIZE * 0.3} />

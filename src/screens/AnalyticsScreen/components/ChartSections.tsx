@@ -9,16 +9,14 @@ import { spacing } from '../../../theme/spacing';
 import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
 import TrendLineChart from '../../../components/TrendLineChart';
 import ComplianceHeatmap from '../../../components/ComplianceHeatmap';
-import type {
-  StrengthDistributionData,
-  TrendDataPoint,
-  ComplianceDay,
-} from '../AnalyticsScreen.types';
+import type { StrengthDistributionData } from '../../../components/StrengthDistributionChart/StrengthDistributionChart.types';
+import type { TrendData } from '../../../components/TrendLineChart/types';
+import type { HeatmapData } from '../../../components/ComplianceHeatmap/ComplianceHeatmap.types';
 
 interface ChartSectionsProps {
   strengthDistribution: StrengthDistributionData | undefined;
-  trendData: TrendDataPoint[] | undefined;
-  complianceData: ComplianceDay[] | undefined;
+  trendData: TrendData[] | undefined;
+  complianceData: HeatmapData[] | undefined;
 }
 
 export const ChartSections: React.FC<ChartSectionsProps> = ({

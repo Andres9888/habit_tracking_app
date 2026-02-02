@@ -27,9 +27,7 @@ export function useTemplateCardCallbacks({
     }
   }, [onPreview]);
 
-  const handleImportPress = useCallback(
-    (e: any) => {
-      e.stopPropagation();
+  const handleImportPress = useCallback(() => {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       if (isLocked && onUpgrade) {
         onUpgrade();

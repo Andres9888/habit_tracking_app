@@ -14,7 +14,7 @@ function buildActivationHabitData(
     icon: habit.icon,
     id: habit._id,
     name: habit.name,
-    totalCompletions: habit.completedDays ?? 0,
+    totalCompletions: habit.totalCompletions ?? 0,
     vizFailureBody: habit.vizFailureBody,
     vizFailureEmotion: habit.vizFailureEmotion,
     vizFailureMind: habit.vizFailureMind,

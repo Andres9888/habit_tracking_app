@@ -2,7 +2,7 @@
  * Types for MilestoneCelebration component
  */
 
-import type { StrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
+import type { StrengthLevel } from '../HabitStrengthIndicator/types';
 
 export interface MilestoneCelebrationProps {
   /** Modal visibility */

@@ -40,7 +40,7 @@ export function PendingSyncBadge({
       accessible
       accessibilityHint='This habit has changes waiting to sync'
       accessibilityLabel='Pending sync'
-      accessibilityRole='img'
+      accessibilityRole={'image' as const}
       style={[styles.container, animatedStyle, style]}
       testID={testID}
     >

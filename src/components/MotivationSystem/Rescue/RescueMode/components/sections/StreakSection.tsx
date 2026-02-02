@@ -1,10 +1,10 @@
 import React from 'react';
-import type { Habit } from '../../../../../../types';
+import type { RescueHabitData } from '../../RescueMode.types';
 import { AnimatedContent } from '../AnimatedContent';
 import { StreakAtRiskHeader } from '../StreakAtRiskHeader';
 
 type StreakSectionProps = {
-  habit: Habit;
+  habit: RescueHabitData;
   visible: boolean;
   reduceMotion: boolean;
 };
@@ -19,7 +19,7 @@ export function StreakSection({
       <StreakAtRiskHeader
         hoursRemaining={habit.hoursRemaining}
         reduceMotion={reduceMotion}
-        streak={habit.currentStreak}
+        streak={habit.currentStreak ?? 0}
       />
     </AnimatedContent>
   );

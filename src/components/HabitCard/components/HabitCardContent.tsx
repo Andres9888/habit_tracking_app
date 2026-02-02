@@ -7,11 +7,8 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
-import Animated, {
-  type AnimatedStyle,
-  type SharedValue,
-} from 'react-native-reanimated';
+import { View, Text, type ViewStyle, type StyleProp } from 'react-native';
+import Animated, { type SharedValue } from 'react-native-reanimated';
 import type { AppTheme } from '../../../theme';
 import { StrengthProgressBar } from '../../StrengthProgressBar/StrengthProgressBar';
 import { PendingSyncBadge } from '../../SyncStatus';
@@ -29,9 +26,9 @@ interface HabitCardContentProps {
   completed: boolean;
   atRisk: boolean;
   theme: AppTheme;
-  entranceContentStyle: AnimatedStyle<object>;
-  checkmarkAnimatedStyle: AnimatedStyle<object>;
-  rippleAnimatedStyle: AnimatedStyle<object>;
+  entranceContentStyle: StyleProp<ViewStyle>;
+  checkmarkAnimatedStyle: StyleProp<ViewStyle>;
+  rippleAnimatedStyle: StyleProp<ViewStyle>;
   /** Type of completion icon to display - T014 */
   completionIcon?: CompletionIconType;
   /** Whether there are pending offline operations - T014 */

@@ -41,13 +41,19 @@ export const PARTICLE_BURST = {
  * Tap hint pulse animation config
  * Draws attention to the "Tap anywhere to continue" text
  */
-export const TAP_HINT_PULSE = {
+export const TAP_HINT_PULSE: {
+  duration: number;
+  maxOpacity: number;
+  maxScale: number;
+  minOpacity: number;
+  minScale: number;
+} = {
   duration: 2000,
   maxOpacity: 1,
   maxScale: 1.02,
   minOpacity: 0.6,
   minScale: 1,
-} as const;
+};
 
 /**
  * Exit transition animation config for success → list transition

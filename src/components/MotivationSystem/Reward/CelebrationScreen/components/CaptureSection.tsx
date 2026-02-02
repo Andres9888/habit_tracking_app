@@ -9,8 +9,8 @@ import { Mic, Mail } from 'lucide-react-native';
 import { CapturePromptButton } from './CapturePromptButton';
 
 interface CaptureSectionProps {
-  onRecordVoice: () => void;
-  onWriteLetter: () => void;
+  onRecordVoice?: () => void;
+  onWriteLetter?: () => void;
 }
 
 export function CaptureSection({

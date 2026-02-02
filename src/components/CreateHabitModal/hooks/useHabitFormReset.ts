@@ -2,10 +2,12 @@
  * useHabitFormReset - Reset habit form to default state
  */
 
-import { useCallback } from 'react';
+import { useCallback, type Dispatch, type SetStateAction } from 'react';
 import { DEFAULT_COLOR } from '../constants';
 import { parseReminderTime } from '../utils';
 import { getSmartReminderDefault } from '../../../utils/reminderDefaults';
+import type { HubermanPhase } from '../../../constants/hubermanPhases';
+import type { ReminderOption } from '../components/ReminderSelector';
 
 const DEFAULT_SOUND = 'Default';
 
@@ -19,8 +21,8 @@ interface ResetFormSetters {
   setShowTimePicker: (show: boolean) => void;
   setReminderSound: (sound: string) => void;
   setFrequency: (freq: string) => void;
-  setDayPhase: (phase: string | null) => void;
-  setReminderOptionState: (option: string) => void;
+  setDayPhase: Dispatch<SetStateAction<HubermanPhase | null>>;
+  setReminderOptionState: Dispatch<SetStateAction<ReminderOption>>;
 }
 
 export const useHabitFormReset = (setters: ResetFormSetters) => {

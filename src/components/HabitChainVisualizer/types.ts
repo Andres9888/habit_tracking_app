@@ -41,6 +41,7 @@ export interface HabitChainVisualizerProps {
   currentStreak?: number;
   habitId: Id<'habits'>;
   highContrastMode?: boolean;
+  isConnectedToNextWeek?: boolean;
   isConnectedToPreviousWeek?: boolean;
   onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;
   onWeekComplete?: (args: { completedDate: string }) => void;

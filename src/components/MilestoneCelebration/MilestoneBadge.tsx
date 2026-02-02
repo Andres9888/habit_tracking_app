@@ -3,18 +3,17 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, type ViewStyle, type StyleProp } from 'react-native';
 import Animated from 'react-native-reanimated';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
-import { STRENGTH_LEVEL_CONFIG } from '../HabitStrengthIndicator/HabitStrengthIndicator';
-import type { StrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicator';
+import { STRENGTH_LEVEL_CONFIG } from '../HabitStrengthIndicator/constants';
+import type { StrengthLevel } from '../HabitStrengthIndicator/types';
 import { styles } from './styles';
 
 interface MilestoneBadgeProps {
   level: StrengthLevel;
-  badgeContainerStyle: AnimatedStyleProp<ViewStyle>;
-  glowStyle: AnimatedStyleProp<ViewStyle>;
+  badgeContainerStyle: StyleProp<ViewStyle>;
+  glowStyle: StyleProp<ViewStyle>;
 }
 
 export function MilestoneBadge({

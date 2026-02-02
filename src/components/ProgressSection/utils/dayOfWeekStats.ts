@@ -28,10 +28,11 @@ export function calculateDayOfWeekStats(
   }
 
   // Get the start date (habit creation or first tracking entry)
+  const lastEntry = tracking.at(-1);
   const startDate = habitCreatedAt
     ? new Date(habitCreatedAt)
-    : tracking.length > 0
-      ? new Date(tracking.at(-1).date)
+    : lastEntry
+      ? new Date(lastEntry.date)
       : new Date();
 
   const today = new Date();

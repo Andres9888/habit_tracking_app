@@ -3,21 +3,19 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, type ViewStyle } from 'react-native';
 import { CategoryPills } from '../CategoryPills';
 import { EmojiGrid } from '../EmojiGrid';
 import { styles } from './EmojiPickerSheet.styles';
 import { SearchBar } from './SearchBar';
 import { SuggestionsSection } from './SuggestionsSection';
-import type { AnimatedStyle } from 'react-native-reanimated';
-import type { ViewStyle } from 'react-native';
-import type { SharedValue } from 'react-native-reanimated';
+import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
 
 interface SheetContentProps {
   habitName: string;
   selectedEmoji: string | null;
   searchQuery: string;
-  selectedCategory: number;
+  selectedCategory: string;
   currentCategoryName: string;
   displayedEmojis: string[];
   suggestedEmojis: string[];
@@ -27,7 +25,7 @@ interface SheetContentProps {
   setIsSearchFocused: (focused: boolean) => void;
   setSearchQuery: (query: string) => void;
   handleClearSearch: () => void;
-  handleCategorySelect: (category: number) => void;
+  handleCategorySelect: (categoryId: string) => void;
   onEmojiSelect: (emoji: string) => void;
   onNoIcon: () => void;
 }

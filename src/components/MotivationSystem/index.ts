@@ -9,7 +9,51 @@
  * - Reward: Components for post-completion celebration
  */
 
-export * from './Workshop';
-export * from './Activation';
+// Workshop exports
+export {
+  YourWhySection,
+  type YourWhySectionProps,
+  IdentitySection,
+  type IdentitySectionProps,
+  CueTriggerSection,
+  type CueTriggerSectionProps,
+  type CueTriggerData,
+  WOOPSection,
+  type WOOPSectionProps,
+  type WOOPData,
+  DualVizSetup,
+  type DualVizSetupProps,
+  type VisualizationData,
+  VisionBoardSection,
+  type VisionBoardSectionProps,
+  type VisionBoardImage,
+  AffirmationsSection,
+  type AffirmationsSectionProps,
+  type AffirmationData,
+  type AffirmationType,
+  getRandomAffirmation,
+  getRandomAffirmationByType,
+  VoiceNotesSection,
+  type VoiceNotesSectionProps,
+  type VoiceNoteSummary,
+  LettersSection,
+  type LettersSectionProps,
+  type LetterSummary,
+} from './Workshop';
+
+// Activation exports (rename VisualizationData to avoid conflict)
+export {
+  ActivationModal,
+  type ActivationModalProps,
+  type ActivationHabitData,
+  MotivationCheck,
+  shouldShowFailureViz,
+  type MotivationCheckProps,
+  type MotivationLevel,
+  ContextAwareViz,
+  type ContextAwareVizProps,
+} from './Activation';
+export type { VisualizationData as ActivationVisualizationData } from './Activation';
+
 export * from './Rescue';
 export * from './Reward';

@@ -5,7 +5,7 @@
  */
 
 import { useMemo } from 'react';
-import type { Tracking } from './types';
+import type { HabitTrackingEntry } from '../../features/habits/types';
 import {
   calculateDayOfWeekStats,
   calculateStreakRecords,
@@ -15,8 +15,8 @@ import {
 } from './utils';
 
 interface UseProgressSectionDataArgs {
-  tracking: Tracking[];
-  habitCreatedAt: string | Date;
+  tracking: HabitTrackingEntry[];
+  habitCreatedAt: number | undefined;
 }
 
 export function useProgressSectionData({

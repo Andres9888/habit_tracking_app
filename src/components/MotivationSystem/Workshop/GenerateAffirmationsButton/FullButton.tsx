@@ -4,12 +4,11 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable, GestureResponderEvent } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { View, Text, Pressable, GestureResponderEvent, ViewStyle } from 'react-native';
+import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { Sparkles } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import { ButtonContent } from './ButtonContent';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
 
 interface FullButtonProps {
   isPremium: boolean;
@@ -19,7 +18,7 @@ interface FullButtonProps {
   hasHabitContext: boolean;
   reduceMotion: boolean;
   remainingSlots: number;
-  animatedStyle: AnimatedStyleProp<ViewStyle>;
+  animatedStyle: AnimatedStyle<ViewStyle>;
   onPress: () => void;
   onPressIn: (event: GestureResponderEvent) => void;
   onPressOut: (event: GestureResponderEvent) => void;

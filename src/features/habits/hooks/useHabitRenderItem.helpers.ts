@@ -17,7 +17,7 @@ export function getHabitRenderData(
     weekDateStrings,
   } = args;
 
-  const entranceDelay = index * entranceStaggerDelay;
+  const entranceDelay = index * (entranceStaggerDelay ?? 0);
   const hasBeenSeen = seenHabitIds?.has(item._id) ?? false;
   const triggerEntrance = shouldTriggerEntrance && !hasBeenSeen;
   const weekStatus = weekDateStrings.map((dateString) =>

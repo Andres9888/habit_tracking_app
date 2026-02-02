@@ -2,6 +2,8 @@
  * Type definitions for AnalyticsScreen
  */
 
+import type { Id } from '../../../convex/_generated/dataModel';
+
 export interface StatCardProps {
   title: string;
   value: string | number;
@@ -15,26 +17,28 @@ export interface AnalyticsOverviewStats {
   totalHabits: number;
   averageStrength: number;
   strongestHabit: {
-    id: string;
+    id: Id<'habits'>;
     name: string;
-    emoji?: string;
+    emoji: string;
     strength: number;
   } | null;
   weakestHabit: {
-    id: string;
+    id: Id<'habits'>;
     name: string;
-    emoji?: string;
+    emoji: string;
     strength: number;
   } | null;
   rankedHabits: RankedHabit[];
 }
 
 export interface RankedHabit {
-  id: string;
+  id: Id<'habits'>;
   name: string;
-  emoji?: string;
+  emoji: string;
   strength: number;
-  rank: number;
+  currentStreak: number;
+  longestStreak: number;
+  isAtRisk: boolean;
 }
 
 export interface StrengthDistributionData {
@@ -47,19 +51,34 @@ export interface StrengthDistributionData {
 
 export interface TrendDataPoint {
   date: string;
-  value: number;
+  averageStrength: number;
 }
 
 export interface ComplianceDay {
   date: string;
-  compliance: number;
+  completionRate: number;
+  level: 'none' | 'low' | 'medium' | 'high';
+  completedHabits: number;
+  totalHabits: number;
 }
 
-export interface WeeklyInsight {
-  id: string;
-  type: string;
-  message: string;
-  habitId?: string;
+export interface HabitChange {
+  habitId: Id<'habits'>;
+  name: string;
+  emoji: string;
+  changePercent: number;
+  previousStrength: number;
+  currentStrength: number;
+}
+
+export interface WeeklyInsights {
+  gainedStrength: HabitChange[];
+  lostStrength: HabitChange[];
+  atRisk: HabitChange[];
+  totalCompletionsThisWeek: number;
+  totalCompletionsLastWeek: number;
+  weekOverWeekChange: number;
+  generatedAt: string;
 }
 
 export type ExportFormat = 'csv' | 'json';
@@ -77,7 +96,7 @@ export interface UseAnalyticsScreenReturn {
   strengthDistribution: StrengthDistributionData | undefined;
   trendData: TrendDataPoint[] | undefined;
   complianceData: ComplianceDay[] | undefined;
-  weeklyInsights: WeeklyInsight[] | undefined;
+  weeklyInsights: WeeklyInsights | undefined;
 
   // Handlers
   onRefresh: () => Promise<void>;

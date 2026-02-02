@@ -107,7 +107,7 @@ export function getNextMilestone(currentStreak: number): Milestone | null {
 export function getCurrentMilestone(currentStreak: number): Milestone | null {
   // Find the highest milestone that has been achieved
   const achieved = MILESTONES.filter((m) => m.days <= currentStreak);
-  return achieved.length > 0 ? achieved.at(-1) : null;
+  return achieved.length > 0 ? (achieved.at(-1) ?? null) : null;
 }
 
 /**

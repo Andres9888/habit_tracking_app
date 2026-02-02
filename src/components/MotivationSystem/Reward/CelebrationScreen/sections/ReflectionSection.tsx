@@ -1,16 +1,16 @@
 import React from 'react';
-import { QuickReflection } from '../../QuickReflection';
+import { QuickReflection, type EmojiType } from '../../QuickReflection';
 import { AnimatedSection } from '../components/AnimatedSection';
 
 type ReflectionSectionProps = {
   localNote: string;
-  localEmoji?: string;
+  localEmoji?: EmojiType;
   reduceMotion: boolean;
   visible: boolean;
   index: number;
-  handleEmojiSelect: (emoji: string) => void;
+  handleEmojiSelect: (emoji: EmojiType) => void;
   handleNoteChange: (text: string) => void;
-  onReflectionSubmit: () => void;
+  onReflectionSubmit?: () => void;
 };
 
 export function ReflectionSection({

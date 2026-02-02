@@ -18,14 +18,11 @@ export const list = query({
 
     const habits = await ctx.db
       .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .filter((q) =>
         q.and(
           q.neq(q.field('archived'), true),
-          q.neq(q.field('paused'), true),
-          q.or(
-            q.eq(q.field('userId'), identity.subject),
-            q.eq(q.field('userId'))
-          )
+          q.neq(q.field('paused'), true)
         )
       )
       .collect();

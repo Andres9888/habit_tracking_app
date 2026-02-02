@@ -37,7 +37,7 @@ export function TemplateCardRender({
 }: TemplateCardRenderProps) {
   return (
     <ScrollRevealWrapper
-      enabled={enableScrollReveal}
+      enabled={enableScrollReveal ?? false}
       reducedMotion={reducedMotion}
     >
       <CardContainer
@@ -45,7 +45,7 @@ export function TemplateCardRender({
         description={description}
         glowStyle={glowStyle}
         iconColor={iconColor}
-        isImported={isImported}
+        isImported={isImported ?? false}
         isLocked={isLocked}
         name={name}
         shadowStyle={shadowStyle}
@@ -61,15 +61,15 @@ export function TemplateCardRender({
           frequency={frequency}
           icon={icon}
           iconColor={iconColor}
-          isImported={isImported}
-          isImporting={isImporting}
+          isImported={isImported ?? false}
+          isImporting={isImporting ?? false}
           isLocked={isLocked}
-          isPremium={isPremium}
+          isPremium={isPremium ?? false}
           name={name}
           popularityScore={popularityScore}
           scientificLink={scientificLink}
           scientificReference={scientificReference}
-          showPreviewCTA={showPreviewCTA}
+          showPreviewCTA={showPreviewCTA ?? false}
           youtubeLink={youtubeLink}
           onImportPress={handleImportPress}
           onPreview={onPreview}

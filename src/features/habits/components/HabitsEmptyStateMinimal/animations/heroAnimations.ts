@@ -8,11 +8,15 @@
  * Hero icon breathing animation
  * Gentle scale: 1.0 → 1.08 → 1.0 (3s ease-in-out, infinite)
  */
-export const BREATHING_ANIMATION = {
+export const BREATHING_ANIMATION: {
+  duration: number;
+  maxScale: number;
+  minScale: number;
+} = {
   duration: 3000,
   maxScale: 1.08,
   minScale: 1,
-} as const;
+};
 
 /**
  * Hero glow pulse animation (synced with breathing)

@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { View, Text, ViewStyle } from 'react-native';
+import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
 import { styles } from './OfflinePendingBanner.styles';
 import { TYPE_LABELS } from './constants';
@@ -9,7 +9,6 @@ import type {
   QueueStats,
   OfflineSubmissionType,
 } from '../../hooks/useOfflineQueue';
-import type { AnimatedStyle, ViewStyle } from 'react-native-reanimated';
 
 interface ExpandedStatsProps {
   stats: QueueStats | null;

@@ -42,6 +42,8 @@ import * as SecureStore from 'expo-secure-store';
 import { extendedTheme, useAppTheme } from './src/theme';
 import { HapticTest } from './src/components/HapticTest';
 import { initSentry, SentryErrorBoundary } from './src/lib/sentry';
+import { OnboardingFlow, useOnboardingStorage } from './src/components/Onboarding';
+import { ActivityIndicator } from 'react-native';
 
 // Initialize Sentry as early as possible
 initSentry();
@@ -501,6 +503,51 @@ function Providers({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * AppContent - Handles onboarding flow on first launch
+ */
+function AppContent() {
+  const { isLoading, hasCompletedOnboarding, markOnboardingComplete } =
+    useOnboardingStorage();
+  const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setShowOnboarding(!hasCompletedOnboarding);
+    }
+  }, [isLoading, hasCompletedOnboarding]);
+
+  // Show loading while checking onboarding status
+  if (isLoading || showOnboarding === null) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#faf9f7',
+        }}
+      >
+        <ActivityIndicator size="large" color="#10B981" />
+      </View>
+    );
+  }
+
+  // Show onboarding for first-time users
+  if (showOnboarding) {
+    return (
+      <OnboardingFlow
+        onComplete={() => {
+          setShowOnboarding(false);
+        }}
+      />
+    );
+  }
+
+  // Show main app
+  return <HabitsApp />;
+}
+
 export default function App() {
   // Temporarily bypass Clerk authentication for development
   if (!clerkPublishableKey) {
@@ -514,7 +561,7 @@ export default function App() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SafeAreaProvider>
             <Providers>
-              <HabitsApp />
+              <AppContent />
             </Providers>
           </SafeAreaProvider>
         </GestureHandlerRootView>
@@ -534,7 +581,7 @@ export default function App() {
           >
             <ClerkLoaded>
               <Providers>
-                <HabitsApp />
+                <AppContent />
               </Providers>
             </ClerkLoaded>
           </ClerkProvider>

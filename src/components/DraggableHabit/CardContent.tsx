@@ -53,7 +53,6 @@ export function CardContent(props: CardContentProps) {
           currentStreak={props.streak}
           habitId={props.habit._id}
           highContrastMode={props.highContrastMode}
-          isConnectedToNextWeek={props.isConnectedToNextWeek}
           isConnectedToPreviousWeek={props.isConnectedToPreviousWeek}
           reduceMotionPreference={props.reduceMotionPreference}
           shape={props.dayShape}

@@ -6,11 +6,8 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
-import Animated, {
-  type AnimatedStyle,
-  type SharedValue,
-} from 'react-native-reanimated';
+import { View, Text, type ViewStyle, type StyleProp } from 'react-native';
+import Animated, { type SharedValue } from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
 import { styles } from '../HabitCard.styles';
 import { ChainLinkAnimation } from './ChainLinkAnimation';
@@ -21,9 +18,7 @@ export type CompletionIconType = 'chain' | 'checkbox';
 interface StatusIndicatorProps {
   completed: boolean;
   atRisk: boolean;
-  checkmarkAnimatedStyle: AnimatedStyle<{
-    transform: { scale: number; rotate: string }[];
-  }>;
+  checkmarkAnimatedStyle: StyleProp<ViewStyle>;
   /** Type of completion icon to display */
   completionIcon?: CompletionIconType;
   /** Whether there are pending offline operations */

@@ -3,15 +3,16 @@
  */
 
 import type { CelebrationScreenContentProps } from './types';
+import type { EmojiType } from '../QuickReflection';
 
 export interface CelebrationScreenContentPropsExtended extends CelebrationScreenContentProps {
   hasStreak: boolean;
   hasStats: boolean;
   localNote: string;
-  localEmoji: string | null;
-  handleEmojiSelect: (emoji: string) => void;
+  localEmoji: EmojiType | undefined;
+  handleEmojiSelect: (emoji: EmojiType) => void;
   handleNoteChange: (note: string) => void;
-  handleRecordVoice: () => void;
-  handleWriteLetter: () => void;
+  handleRecordVoice?: () => void;
+  handleWriteLetter?: () => void;
   onReflectionSubmit?: () => void;
 }

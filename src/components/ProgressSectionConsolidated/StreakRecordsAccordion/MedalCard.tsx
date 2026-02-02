@@ -3,9 +3,8 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
+import { View, Text, ViewStyle } from 'react-native';
+import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { MEDALS, MEDAL_COLORS } from './constants';
 import { formatDate } from './utils';
 
@@ -18,7 +17,7 @@ interface MedalCardProps {
   };
   index: number;
   isCurrentRecord: boolean;
-  pulseStyle?: AnimatedStyleProp<ViewStyle>;
+  pulseStyle?: AnimatedStyle<ViewStyle>;
   reduceMotion: boolean;
   isForMeasurement?: boolean;
 }

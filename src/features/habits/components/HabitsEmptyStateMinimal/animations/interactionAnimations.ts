@@ -8,12 +8,17 @@
  * Success state pop animation
  * Scale: 0.8 → 1.1 → 1.0 with bounce (0.4s)
  */
-export const POP_ANIMATION = {
+export const POP_ANIMATION: {
+  duration: number;
+  finalScale: number;
+  initialScale: number;
+  overshootScale: number;
+} = {
   duration: 400,
   finalScale: 1,
   initialScale: 0.8,
   overshootScale: 1.1,
-} as const;
+};
 
 /**
  * Chip interaction transforms

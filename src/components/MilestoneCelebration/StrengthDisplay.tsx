@@ -3,15 +3,14 @@
  */
 
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, type ViewStyle, type StyleProp } from 'react-native';
 import Animated from 'react-native-reanimated';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
 import { styles } from './styles';
 
 interface StrengthDisplayProps {
   strength: number;
-  percentageStyle: AnimatedStyleProp<ViewStyle>;
+  percentageStyle: StyleProp<ViewStyle>;
 }
 
 export function StrengthDisplay({

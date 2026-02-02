@@ -6,7 +6,7 @@
 
 import { useMemo } from 'react';
 
-import type { TrackingRecord } from './types';
+import type { HabitTrackingEntry } from '../../features/habits/types';
 import {
   calculateCurrentStreak,
   calculateDayOfWeekStats,
@@ -17,7 +17,7 @@ import {
 import { calculateMonthlyChangeForStatsGrid } from '../../utils/trendCalculations';
 
 interface UseProgressSectionStatsProps {
-  tracking: TrackingRecord[];
+  tracking: HabitTrackingEntry[];
   habitCreatedAt?: string;
 }
 

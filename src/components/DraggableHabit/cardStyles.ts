@@ -2,13 +2,15 @@
  * Card style utilities for DraggableHabitCard
  */
 
+import type { Animated } from 'react-native';
+
 interface CardStyleParams {
   isWeekComplete: boolean;
   highContrastMode: boolean;
   colors: { cardBackground: string; border: string };
-  fade: number;
-  translateY: number;
-  cardScale: number;
+  fade: Animated.Value;
+  translateY: Animated.Value;
+  cardScale: Animated.Value;
 }
 
 export function buildCardStyle({

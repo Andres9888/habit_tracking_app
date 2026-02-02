@@ -27,7 +27,7 @@ export function useErrorAnimations({
   const shouldReduceMotion = useReducedMotion();
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(-10);
-  const translateX = useSharedValue(0);
+  const translateX = useSharedValue<number>(0);
 
   // Use ref for callback to prevent it from triggering useEffect re-runs
   const onDismissRef = useRef(onDismiss);
@@ -65,7 +65,7 @@ export function useErrorAnimations({
     });
 
     const segmentDuration = shakeDuration / (shakeOscillations * 2);
-    const shakeSequence = [];
+    const shakeSequence: ReturnType<typeof withTiming>[] = [];
     for (let i = 0; i < shakeOscillations; i++) {
       shakeSequence.push(
         withTiming(shakeDistance, { duration: segmentDuration }),
@@ -75,7 +75,7 @@ export function useErrorAnimations({
     shakeSequence.push(withTiming(0, { duration: segmentDuration }));
 
     setTimeout(() => {
-      translateX.value = withSequence(...shakeSequence);
+      translateX.value = withSequence(...shakeSequence) as number;
     }, entranceDuration);
   }, [opacity, shouldReduceMotion, translateX, translateY]);
 

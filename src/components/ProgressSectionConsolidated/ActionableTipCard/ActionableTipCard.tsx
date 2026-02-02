@@ -14,11 +14,9 @@ import Animated from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import type { ActionableTipCardProps } from '../types';
-import { TipQuickActionsSheet } from '../TipQuickActionsSheet';
-import {
-  determineTipTypeFromText,
-  type QuickAction,
-} from '../TipQuickActionsSheet';
+import { TipQuickActionsSheet } from '../TipQuickActionsSheet/TipQuickActionsSheet';
+import { determineTipTypeFromText } from '../TipQuickActionsSheet/determineTipTypeFromText';
+import type { QuickAction } from '../TipQuickActionsSheet/types';
 import { useTipAnimations } from './useTipAnimations';
 import { TipCardContent } from './TipCardContent';
 

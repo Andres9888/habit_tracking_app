@@ -13,7 +13,7 @@ import type { ShareFormat, GradientPreset } from '../ShareCardGenerator.types';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface ShareCardPreviewProps {
-  viewShotRef: RefObject<ViewShot>;
+  viewShotRef: RefObject<ViewShot | null>;
   habitName: string;
   emoji: string;
   milestoneLabel: string;

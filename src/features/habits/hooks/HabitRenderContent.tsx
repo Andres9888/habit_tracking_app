@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import DraggableHabit from '../../../components/DraggableHabit';
-import type { Habit } from '../types';
+import type { Habit, HabitStatus } from '../types';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
 
 type HabitRenderContentProps = {
@@ -10,7 +10,7 @@ type HabitRenderContentProps = {
   isActive: boolean;
   entranceDelay: number;
   triggerEntrance: boolean;
-  weekStatus: string[];
+  weekStatus: HabitStatus[];
   streak: number;
   isConnectedToNextWeek: boolean;
   isConnectedToPreviousWeek: boolean;

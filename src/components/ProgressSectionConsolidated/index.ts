@@ -44,13 +44,9 @@ export * from './TodaysFocusCardTypes';
 export * from './WeeklySummaryStripTypes';
 export * from './StatsGridTypes';
 export * from './MilestoneProgressTypes';
-export {
-  getQuickActionsForTipType,
-  determineTipTypeFromText,
-  type TipType,
-  type QuickAction,
-  type TipQuickActionsSheetProps,
-} from './TipQuickActionsSheet';
+export { getQuickActionsForTipType } from './TipQuickActionsSheet/getQuickActionsForTipType';
+export { determineTipTypeFromText } from './TipQuickActionsSheet/determineTipTypeFromText';
+export type { TipType, QuickAction, TipQuickActionsSheetProps } from './TipQuickActionsSheet/types';
 
 // Re-export utility functions from existing ProgressSection
 // These are reused for data calculations

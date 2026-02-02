@@ -70,7 +70,7 @@ function finalizeStreakRecords(
 ): StreakRecord[] {
   if (streakDays >= 2) {
     const today = getTodayString();
-    const lastDate = completedDates.at(-1);
+    const lastDate = completedDates.at(-1) ?? streakStart;
     const daysSinceLastCompletion = differenceInDays(today, lastDate);
     const isCurrent = daysSinceLastCompletion <= 1;
     streaks.push({

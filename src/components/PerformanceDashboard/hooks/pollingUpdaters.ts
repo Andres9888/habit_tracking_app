@@ -3,7 +3,7 @@
  * Pure functions for updating dashboard metrics via dispatch.
  */
 
-import type { RenderTiming } from '../../../lib/performance';
+import type { NetworkTiming, RenderTiming } from '../../../lib/performance';
 import type { DashboardAction, MemoryData } from '../types';
 import { formatBytes, getStatusLevel } from '../statusUtils';
 
@@ -29,9 +29,10 @@ export function updateMemory(
 
   const history = historyRef.current;
   const peak = Math.max(...history.map((h) => h.jsHeapUsed ?? 0));
+  const lastEntry = history.at(-1);
   const growthRate =
-    history.length >= 2
-      ? (history.at(-1).jsHeapUsed ?? 0) - (history[0].jsHeapUsed ?? 0)
+    history.length >= 2 && lastEntry
+      ? (lastEntry.jsHeapUsed ?? 0) - (history[0].jsHeapUsed ?? 0)
       : null;
 
   dispatch({
@@ -54,7 +55,7 @@ export function updateNetwork(
     errorRate: number;
     p95Latency: number;
   },
-  getReport: () => { networkTimings: unknown[] },
+  getReport: () => { networkTimings: NetworkTiming[] },
   maxLatency: number,
   dispatch: React.Dispatch<DashboardAction>
 ) {

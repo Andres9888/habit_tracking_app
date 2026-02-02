@@ -47,7 +47,7 @@ export interface CapturePromptButtonProps {
   icon: React.ReactNode;
   label: string;
   description: string;
-  onPress: () => void;
+  onPress?: () => void;
   isPremium?: boolean;
 }
 

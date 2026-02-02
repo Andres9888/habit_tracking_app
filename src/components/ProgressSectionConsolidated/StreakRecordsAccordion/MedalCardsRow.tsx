@@ -3,8 +3,8 @@
  */
 
 import React from 'react';
-import { View } from 'react-native';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
+import { View, ViewStyle } from 'react-native';
+import { AnimatedStyle } from 'react-native-reanimated';
 import { MedalCard } from './MedalCard';
 import { EmptyMedalSlot } from './EmptyMedalSlot';
 
@@ -18,7 +18,7 @@ interface StreakRecord {
 interface MedalCardsRowProps {
   records: StreakRecord[];
   currentStreak: number;
-  pulseStyle?: AnimatedStyleProp<ViewStyle>;
+  pulseStyle?: AnimatedStyle<ViewStyle>;
   reduceMotion: boolean;
   isForMeasurement?: boolean;
 }

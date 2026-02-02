@@ -12,13 +12,14 @@ import { StrengthChart } from './StrengthChart';
 import { StrengthHero } from './StrengthHero';
 import { TimeRangeToggle } from './TimeRangeToggle';
 import type { TimeRange } from './types';
+import type { StrengthLabel, StrengthSnapshot } from '../HabitStrengthHistory/types';
 
 export interface HabitStrengthContentProps {
-  chartData: Array<{ date: string; strength: number }>;
+  chartData: StrengthSnapshot[];
   currentStrength: number;
   delta: number;
   habitColor?: string;
-  strengthLabel: string;
+  strengthLabel: StrengthLabel;
   timeRange: TimeRange;
   onTimeRangeChange: (range: TimeRange) => void;
 }

@@ -7,6 +7,7 @@ import ColorPicker, {
   BrightnessSlider,
   Preview,
 } from 'reanimated-color-picker';
+import type { ColorPickerValue } from 'reanimated-color-picker';
 // @ts-expect-error - These exports exist but aren't in TS definitions
 import { HueSlider } from 'reanimated-color-picker/lib/module/components/Sliders/Hue/HueSlider';
 // @ts-expect-error - These exports exist but aren't in TS definitions
@@ -15,8 +16,8 @@ import { SaturationSlider } from 'reanimated-color-picker/lib/module/components/
 interface ColorSlidersProps {
   currentColor: string;
   currentColorName: string;
-  onColorChange: (color: { hex: string }) => void;
-  onColorComplete: (color: { hex: string }) => void;
+  onColorChange: (color: ColorPickerValue) => void;
+  onColorComplete: (color: ColorPickerValue) => void;
 }
 
 export function ColorSliders({
