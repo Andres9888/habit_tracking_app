@@ -26,25 +26,19 @@ export const styles = StyleSheet.create({
   },
   // Quick start templates
   quickStartSection: {
-    marginTop: 8,
-    marginBottom: 24,
     alignItems: 'center',
+    marginBottom: 24,
+    marginTop: 8,
     width: '100%',
   },
-  templateRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: 8,
-  },
   templateChip: {
-    flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
     backgroundColor: '#f3f4f6',
     borderRadius: 20,
+    flexDirection: 'row',
     gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
   },
   templateChipPressed: {
     backgroundColor: '#e5e7eb',
@@ -54,8 +48,14 @@ export const styles = StyleSheet.create({
     fontSize: 16,
   },
   templateName: {
+    color: '#374151',
     fontSize: 14,
     fontWeight: '500',
-    color: '#374151',
+  },
+  templateRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    justifyContent: 'center',
   },
 });

@@ -1,0 +1,61 @@
+/**
+ * TemplateChip Component
+ * Quick start template button with haptic feedback and spring animation
+ */
+
+import React from 'react';
+import { Text, Pressable } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import type { QuickStartTemplate } from './types';
+import { styles } from './styles';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+const SPRING_CONFIG = { damping: 15, stiffness: 200 };
+
+interface TemplateChipProps {
+  template: QuickStartTemplate;
+  onPress: (template: QuickStartTemplate) => void;
+}
+
+export function TemplateChip({ template, onPress }: TemplateChipProps) {
+  const { triggerLightImpact } = useHapticFeedback();
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.95, SPRING_CONFIG);
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, SPRING_CONFIG);
+  };
+
+  const handlePress = () => {
+    triggerLightImpact();
+    onPress(template);
+  };
+
+  return (
+    <AnimatedPressable
+      accessibilityLabel={`Create ${template.name} habit`}
+      accessibilityRole='button'
+      style={[styles.templateChip, animatedStyle]}
+      onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      <Text style={styles.templateEmoji}>{template.emoji}</Text>
+      <Text style={styles.templateName}>{template.name}</Text>
+    </AnimatedPressable>
+  );
+}
