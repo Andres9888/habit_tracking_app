@@ -20,10 +20,10 @@ export function StrengthProgressBar({
       {/* Column 1: Animated plant emoji */}
       <View className='flex-1 items-center justify-center'>
         <ReAnimated.Text
-          // @ts-expect-error - AnimatedStyle typing incompatibility with Reanimated
           style={[
             { fontSize: 20, textAlign: 'center' },
-            strengthEmojiAnimatedStyle,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            strengthEmojiAnimatedStyle as any,
           ]}
         >
           {getStrengthEmoji(strengthPercent)}
