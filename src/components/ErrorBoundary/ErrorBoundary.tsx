@@ -5,7 +5,8 @@
  */
 
 import React, { Component, type ErrorInfo, type ReactNode } from 'react';
-import { View, Text, Pressable } from 'react-native';
+
+import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -24,21 +25,26 @@ export class ErrorBoundary extends Component<
 > {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { error: null, hasError: false };
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+    return { error, hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error('[ErrorBoundary] Caught error:', error);
-    console.error('[ErrorBoundary] Component stack:', errorInfo.componentStack);
+    if (__DEV__) {
+      console.error('[ErrorBoundary] Caught error:', error);
+      console.error(
+        '[ErrorBoundary] Component stack:',
+        errorInfo.componentStack
+      );
+    }
     this.props.onError?.(error, errorInfo);
   }
 
   handleRetry = (): void => {
-    this.setState({ hasError: false, error: null });
+    this.setState({ error: null, hasError: false });
   };
 
   render(): ReactNode {
@@ -46,77 +52,10 @@ export class ErrorBoundary extends Component<
       if (this.props.fallback) {
         return this.props.fallback;
       }
-
       return (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 24,
-            backgroundColor: '#fafaf9',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 48,
-              marginBottom: 16,
-            }}
-          >
-            😕
-          </Text>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: '600',
-              color: '#1c1917',
-              marginBottom: 8,
-              textAlign: 'center',
-            }}
-          >
-            Something went wrong
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              color: '#78716c',
-              marginBottom: 24,
-              textAlign: 'center',
-            }}
-          >
-            We encountered an unexpected error. Please try again.
-          </Text>
-          <Pressable
-            style={{
-              backgroundColor: '#22c55e',
-              paddingHorizontal: 24,
-              paddingVertical: 12,
-              borderRadius: 8,
-            }}
-            onPress={this.handleRetry}
-          >
-            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 16 }}>
-              Try Again
-            </Text>
-          </Pressable>
-          {__DEV__ && this.state.error && (
-            <Text
-              style={{
-                marginTop: 24,
-                fontSize: 12,
-                color: '#dc2626',
-                fontFamily: 'monospace',
-                textAlign: 'left',
-                maxWidth: 300,
-              }}
-            >
-              {this.state.error.message}
-            </Text>
-          )}
-        </View>
+        <ErrorFallback error={this.state.error} onRetry={this.handleRetry} />
       );
     }
-
     return this.props.children;
   }
 }
