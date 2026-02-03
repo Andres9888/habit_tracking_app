@@ -8,10 +8,12 @@ import FloatingActionButton from './components/FloatingActionButton';
 import WebToaster from './components/WebToaster';
 import { ArchiveUndoToast } from '../../components/ArchiveUndoToast';
 import { RevenueCatPaywall } from '../../components/RevenueCatPaywall';
+import { SyncingIndicator, SyncedToast, useSyncedToast } from '../../components/SyncStatus';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useNotificationResponse } from '../../hooks/useNotificationResponse';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { useSyncStatus } from '../../contexts/SyncStatusContext';
 
 export function HabitsApp() {
   const { list, modals } = useHabitsApp();
@@ -20,6 +22,10 @@ export function HabitsApp() {
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
   });
+
+  // Offline sync status
+  const { status: syncStatus } = useSyncStatus();
+  const { visible: syncedToastVisible, syncedCount } = useSyncedToast();
 
   const notificationHandlers = useMemo(
     () => ({
@@ -55,6 +61,26 @@ export function HabitsApp() {
       <View className='flex-1 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100'>
         <View className='pointer-events-none absolute inset-0 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100' />
         <View className='pointer-events-none absolute inset-x-0 top-0 h-56 rounded-b-[40px] bg-white/95 shadow-[0px_24px_48px_rgba(120,90,50,0.06)]' />
+        
+        {/* Sync Status Indicators - Global position */}
+        <View className='absolute left-0 right-0 top-20 z-50 flex-row justify-center'>
+          <SyncingIndicator
+            pendingCount={syncStatus.pendingCount}
+            reduceMotion={list.reduceMotionPreference}
+            testID='global-syncing-indicator'
+            visible={syncStatus.isSyncing}
+          />
+        </View>
+        
+        <View className='absolute left-0 right-0 top-32 z-50 flex-row justify-center'>
+          <SyncedToast
+            reduceMotion={list.reduceMotionPreference}
+            syncedCount={syncedCount}
+            testID='global-synced-toast'
+            visible={syncedToastVisible}
+          />
+        </View>
+
         <HabitsList
           canNavigateForward={list.canNavigateForward}
           list={list}
