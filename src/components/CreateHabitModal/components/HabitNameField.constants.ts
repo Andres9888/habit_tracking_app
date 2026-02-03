@@ -11,4 +11,6 @@ export interface HabitNameFieldProps {
   value: string;
   onChange: (text: string) => void;
   autoFocus: boolean;
+  error?: string;
+  onBlur?: () => void;
 }

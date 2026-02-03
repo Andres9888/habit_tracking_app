@@ -15,11 +15,13 @@ export function ModalContent({
   isEditMode,
   visible,
   habitName,
+  habitNameError,
   selectedEmoji,
   selectedColor,
   reminderOption,
   reminderTime,
   onNameChange,
+  onNameBlur,
   onEmojiSelect,
   onColorSelect,
   onReminderToggle,
@@ -40,7 +42,9 @@ export function ModalContent({
         <View className='mt-4' />
         <HabitNameField
           autoFocus={visible && !isEditMode}
+          error={habitNameError}
           value={habitName}
+          onBlur={onNameBlur}
           onChange={onNameChange}
         />
         <LivePreview

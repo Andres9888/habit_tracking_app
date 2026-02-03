@@ -18,11 +18,13 @@ const HabitNameFieldComponent = ({
   value,
   onChange,
   autoFocus,
+  error,
+  onBlur: onBlurProp,
 }: HabitNameFieldProps) => {
   const charCount = value.length;
   const showCounter = charCount > SHOW_THRESHOLD;
   const isWarning = charCount > WARNING_THRESHOLD;
-  const isError = charCount > MAX_CHARS;
+  const isError = charCount > MAX_CHARS || !!error;
   const [isFocused, setIsFocused] = useState(false);
   const { triggerWarning } = useHapticFeedback();
 
@@ -34,7 +36,10 @@ const HabitNameFieldComponent = ({
   });
 
   const handleFocus = useCallback(() => setIsFocused(true), []);
-  const handleBlur = useCallback(() => setIsFocused(false), []);
+  const handleBlur = useCallback(() => {
+    setIsFocused(false);
+    onBlurProp?.();
+  }, [onBlurProp]);
 
   const counterColor = isError ? '#EF4444' : isWarning ? '#F59E0B' : '#78716c';
 
@@ -57,8 +62,19 @@ const HabitNameFieldComponent = ({
         onFocus={handleFocus}
       />
 
-      {/* V11: Character counter - only show when > 20 chars */}
-      {showCounter && (
+      {/* Validation error message */}
+      {error && (
+        <Text
+          accessibilityLabel={`Error: ${error}`}
+          accessibilityRole='alert'
+          className='mt-1 text-center text-xs text-red-500'
+        >
+          {error}
+        </Text>
+      )}
+
+      {/* V11: Character counter - only show when > 20 chars and no error */}
+      {showCounter && !error && (
         <Text
           accessibilityLabel={`${charCount} of ${MAX_CHARS} characters used${isWarning ? ', approaching limit' : ''}${isError ? ', limit exceeded' : ''}`}
           accessibilityRole='text'

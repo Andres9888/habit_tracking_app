@@ -3,8 +3,17 @@
  * Clean design with chain branding and smooth animations
  */
 
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
@@ -35,6 +44,8 @@ export default function SignInScreen() {
   const {
     emailAddress,
     setEmailAddress,
+    emailError,
+    onEmailBlur,
     password,
     setPassword,
     isLoading,
@@ -58,23 +69,26 @@ export default function SignInScreen() {
   const headerTranslateY = useSharedValue(20);
   const contentOpacity = useSharedValue(0);
   const contentTranslateY = useSharedValue(30);
-  
+
   // Breathing animation for logo
   const breathe = useSharedValue(0);
 
   useEffect(() => {
     // Logo entrance
-    logoScale.value = withDelay(50, withSpring(1, { damping: 12, stiffness: 100 }));
+    logoScale.value = withDelay(
+      50,
+      withSpring(1, { damping: 12, stiffness: 100 })
+    );
     logoOpacity.value = withDelay(50, withTiming(1, { duration: 400 }));
-    
+
     // Header entrance
     headerOpacity.value = withDelay(200, withTiming(1, { duration: 500 }));
     headerTranslateY.value = withDelay(200, withSpring(0, { damping: 15 }));
-    
+
     // Content entrance
     contentOpacity.value = withDelay(400, withTiming(1, { duration: 500 }));
     contentTranslateY.value = withDelay(400, withSpring(0, { damping: 15 }));
-    
+
     // Breathing animation
     breathe.value = withRepeat(
       withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
@@ -109,17 +123,17 @@ export default function SignInScreen() {
         locations={[0, 0.5, 1]}
         style={StyleSheet.absoluteFill}
       />
-      
-      <KeyboardAvoidingView 
+
+      <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
       >
         <ScrollView
           contentContainerStyle={[
             styles.scrollContent,
-            { paddingTop: insets.top + 40, paddingBottom: insets.bottom + 24 }
+            { paddingBottom: insets.bottom + 24, paddingTop: insets.top + 40 },
           ]}
-          keyboardShouldPersistTaps="handled"
+          keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >
           {/* Logo & Brand */}
@@ -132,7 +146,7 @@ export default function SignInScreen() {
                 <Text style={styles.logoEmoji}>🔗</Text>
               </LinearGradient>
             </Animated.View>
-            
+
             <Animated.View style={headerStyle}>
               <Text style={styles.appName}>Chain Day</Text>
               <Text style={styles.tagline}>Don't break the chain</Text>
@@ -175,10 +189,12 @@ export default function SignInScreen() {
                 autoCapitalize='none'
                 autoComplete='email'
                 editable={!isAnyLoading}
+                error={emailError}
                 keyboardType='email-address'
                 label='Email'
                 placeholder='your@email.com'
                 value={emailAddress}
+                onBlur={onEmailBlur}
                 onChangeText={setEmailAddress}
               />
 
@@ -188,7 +204,9 @@ export default function SignInScreen() {
                 editable={!isAnyLoading}
                 label='Password'
                 labelRight={
-                  <ForgotPasswordLink onPress={() => setShowForgotPassword(true)} />
+                  <ForgotPasswordLink
+                    onPress={() => setShowForgotPassword(true)}
+                  />
                 }
                 placeholder='Enter your password'
                 value={password}
@@ -223,86 +241,86 @@ export default function SignInScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fafaf9',
-  },
-  flex: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: 24,
+  appName: {
+    color: '#1c1917',
+    fontSize: 24,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    textAlign: 'center',
   },
   brandSection: {
     alignItems: 'center',
     marginBottom: 32,
   },
-  logoContainer: {
-    marginBottom: 16,
-  },
-  logoGradient: {
-    width: 80,
-    height: 80,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#22c55e',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  logoEmoji: {
-    fontSize: 40,
-  },
-  appName: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#1c1917',
-    textAlign: 'center',
-    letterSpacing: -0.5,
-  },
-  tagline: {
-    fontSize: 14,
-    color: '#78716c',
-    textAlign: 'center',
-    marginTop: 4,
-  },
-  welcomeSection: {
-    marginBottom: 32,
-  },
-  welcomeTitle: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#1c1917',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  welcomeSubtitle: {
-    fontSize: 16,
-    color: '#57534e',
-    textAlign: 'center',
-    lineHeight: 24,
-    paddingHorizontal: 16,
+  container: {
+    backgroundColor: '#fafaf9',
+    flex: 1,
   },
   authContent: {
     gap: 24,
   },
-  socialButtons: {
-    gap: 12,
+  flex: {
+    flex: 1,
   },
   formSection: {
     gap: 20,
+  },
+  logoContainer: {
+    marginBottom: 16,
   },
   footer: {
     marginTop: 32,
     paddingHorizontal: 16,
   },
+  logoEmoji: {
+    fontSize: 40,
+  },
   footerText: {
-    fontSize: 12,
     color: '#a8a29e',
-    textAlign: 'center',
+    fontSize: 12,
     lineHeight: 18,
+    textAlign: 'center',
+  },
+  logoGradient: {
+    alignItems: 'center',
+    height: 80,
+    borderRadius: 24,
+    width: 80,
+    justifyContent: 'center',
+    shadowColor: '#22c55e',
+    elevation: 8,
+    shadowOffset: { height: 8, width: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+  },
+  socialButtons: {
+    gap: 12,
+  },
+  tagline: {
+    color: '#78716c',
+    fontSize: 14,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  welcomeSection: {
+    marginBottom: 32,
+  },
+  welcomeSubtitle: {
+    color: '#57534e',
+    fontSize: 16,
+    lineHeight: 24,
+    paddingHorizontal: 16,
+    textAlign: 'center',
+  },
+  welcomeTitle: {
+    color: '#1c1917',
+    fontSize: 28,
+    fontWeight: '700',
+    marginBottom: 8,
+    textAlign: 'center',
   },
 });

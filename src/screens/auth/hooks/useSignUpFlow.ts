@@ -1,20 +1,50 @@
+/* eslint-disable max-lines-per-function */
 import { useSignUp } from '@clerk/clerk-expo';
 import { useState } from 'react';
 import { Alert } from 'react-native';
+import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
+import { validateEmail, validatePassword } from '../../../utils/validation';
 
 export function useSignUpFlow() {
   const { isLoaded, signUp, setActive } = useSignUp();
-  const [emailAddress, setEmailAddress] = useState('');
-  const [password, setPassword] = useState('');
   const [pendingVerification, setPendingVerification] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Email validation
+  const emailField = useFieldValidation({
+    debounceMs: 500,
+    showErrorsAfterBlur: true,
+    validate: validateEmail,
+  });
+
+  // Password validation
+  const passwordField = useFieldValidation({
+    debounceMs: 500,
+    showErrorsAfterBlur: true,
+    validate: validatePassword,
+  });
 
   const handleSignUp = async () => {
     if (!isLoaded) return;
 
+    // Validate before submitting
+    const emailResult = emailField.validateNow();
+    const passwordResult = passwordField.validateNow();
+
+    if (!emailResult.isValid || !passwordResult.isValid) {
+      Alert.alert(
+        'Validation Error',
+        'Please fix the errors before continuing'
+      );
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await signUp.create({ emailAddress, password });
+      await signUp.create({
+        emailAddress: emailField.value,
+        password: passwordField.value,
+      });
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
       setPendingVerification(true);
     } catch (error: any) {
@@ -50,13 +80,18 @@ export function useSignUpFlow() {
   };
 
   return {
-    emailAddress,
+    emailAddress: emailField.value,
+    emailError: emailField.error,
     handleSignUp,
     handleVerification,
+    isFormValid: emailField.isValid && passwordField.isValid,
     isLoading,
-    password,
+    onEmailBlur: emailField.onBlur,
+    onPasswordBlur: passwordField.onBlur,
+    password: passwordField.value,
+    passwordError: passwordField.error,
     pendingVerification,
-    setEmailAddress,
-    setPassword,
+    setEmailAddress: emailField.setValue,
+    setPassword: passwordField.setValue,
   };
 }

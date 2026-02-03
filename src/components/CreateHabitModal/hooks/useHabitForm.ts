@@ -2,6 +2,8 @@
  * useHabitForm - Main habit form hook
  */
 
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 import { useCallback, useMemo } from 'react';
 import type { HabitDoc } from '../types';
 import { buildHabitName } from '../utils';
@@ -10,6 +12,8 @@ import { useReminderOptionSync } from './useReminderOptionSync';
 import { useHabitFormState } from './useHabitFormState';
 import { useHabitFormInit } from './useHabitFormInit';
 import { useHabitFormReset } from './useHabitFormReset';
+import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
+import { validateHabitName } from '../../../utils/validation';
 
 interface UseHabitFormOptions {
   habitToEdit?: HabitDoc | null;
@@ -18,9 +22,26 @@ interface UseHabitFormOptions {
 export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
   const state = useHabitFormState({ habitToEdit });
 
+  // Habit name validation
+  const habitNameValidation = useFieldValidation({
+    debounceMs: 500,
+    initialValue: state.habitName,
+    showErrorsAfterBlur: true,
+    validate: validateHabitName,
+  });
+
+  // Sync validation state with form state
+  const setHabitNameWithValidation = useCallback(
+    (value: string) => {
+      habitNameValidation.setValue(value);
+      state.setHabitName(value);
+    },
+    [habitNameValidation.setValue, state.setHabitName]
+  );
+
   const fullHabitName = useMemo(
-    () => buildHabitName(state.selectedEmoji, state.habitName),
-    [state.selectedEmoji, state.habitName]
+    () => buildHabitName(state.selectedEmoji, habitNameValidation.value),
+    [state.selectedEmoji, habitNameValidation.value]
   );
 
   const syncReminderOption = useReminderOptionSync({
@@ -82,8 +103,11 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     dayPhase: state.dayPhase,
     frequency: state.frequency,
     fullHabitName,
-    habitName: state.habitName,
+    habitName: habitNameValidation.value,
+    habitNameError: habitNameValidation.error,
+    habitNameIsValid: habitNameValidation.isValid,
     isColorPickerVisible: state.isColorPickerVisible,
+    onHabitNameBlur: habitNameValidation.onBlur,
     openColorPicker,
     reminderOption: state.reminderOption,
     remindersEnabled: state.remindersEnabled,
@@ -94,7 +118,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     selectedEmoji: state.selectedEmoji,
     setDayPhase: state.setDayPhase,
     setFrequency: state.setFrequency,
-    setHabitName: state.setHabitName,
+    setHabitName: setHabitNameWithValidation,
     setReminderOption,
     setRemindersEnabled: state.setRemindersEnabled,
     setReminderSound: state.setReminderSound,
