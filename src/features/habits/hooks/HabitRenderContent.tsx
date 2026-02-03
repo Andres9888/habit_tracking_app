@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+/* eslint-disable max-lines */
+import React, { useCallback, memo } from 'react';
 import { View } from 'react-native';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import DraggableHabit from '../../../components/DraggableHabit';
@@ -34,7 +35,7 @@ type HabitRenderContentProps = {
   | 'weekDateStrings'
 >;
 
-export function HabitRenderContent({
+function HabitRenderContentComponent({
   item,
   isActive,
   entranceDelay,
@@ -105,3 +106,5 @@ export function HabitRenderContent({
     </ScaleDecorator>
   );
 }
+
+export const HabitRenderContent = memo(HabitRenderContentComponent);

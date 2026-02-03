@@ -6,7 +6,7 @@
  * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
@@ -23,7 +23,7 @@ import {
 
 export type { HabitCardProps } from './HabitCard.types';
 
-export function HabitCard(props: HabitCardProps) {
+function HabitCardComponent(props: HabitCardProps) {
   const {
     name,
     icon = '📝',
@@ -113,4 +113,5 @@ export function HabitCard(props: HabitCardProps) {
   );
 }
 
+export const HabitCard = memo(HabitCardComponent);
 export default HabitCard;
