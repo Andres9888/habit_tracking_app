@@ -1,3 +1,10 @@
+/**
+ * Emoji Data Module
+ *
+ * Provides emoji data and search functionality for the emoji picker.
+ * Includes habit-focused categories and keyword search.
+ */
+
 // Types
 export type { EmojiCategory } from './types';
 

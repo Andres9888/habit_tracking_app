@@ -1,3 +1,9 @@
+/**
+ * Emoji Search Utilities
+ *
+ * Functions for searching and filtering emojis by keyword or category.
+ */
+
 import { EMOJI_CATEGORIES } from './categories';
 import { EMOJI_KEYWORDS } from './keywords';
 
