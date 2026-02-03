@@ -8,12 +8,9 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { TipQuickActionsSheet } from '../TipQuickActionsSheet';
-import {
-  getQuickActionsForTipType,
-  determineTipTypeFromText,
-  type QuickAction,
-  type TipType,
-} from '../TipQuickActionsSheet';
+import { getQuickActionsForTipType } from '../TipQuickActionsSheet/getQuickActionsForTipType';
+import { determineTipTypeFromText } from '../TipQuickActionsSheet/determineTipTypeFromText';
+import type { QuickAction, TipType } from '../TipQuickActionsSheet/types';
 
 // Mock useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({
