@@ -1,3 +1,19 @@
+/**
+ * Convex Schema Definition
+ *
+ * Defines all database tables for the Chain Day habit tracking app.
+ * Tables include:
+ * - habits: Core habit data with tracking entries
+ * - users: User profiles and preferences
+ * - templates: Pre-built habit templates
+ * - affirmations: Positive self-talk cards
+ * - letters: Future self letters
+ * - visionBoardImages: Vision board images
+ * - And various supporting tables for subscriptions, analytics, etc.
+ *
+ * Each table includes indexes for efficient querying.
+ */
+
 import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 
@@ -313,31 +329,40 @@ const applicationTables = {
   // SEC-002: Server-side premium validation
   // This is the source of truth for subscription status, synced via webhooks
   subscriptions: defineTable({
-    // User identification
-    clerkId: v.string(), // Primary identifier - matches Clerk user ID
-    revenueCatId: v.optional(v.string()), // RevenueCat's internal user ID
-
-    // Subscription state
-    status: subscriptionStatus,
-
-    // Product info
-    productId: v.optional(v.string()), // e.g., "premium_monthly_699"
-    planType: v.optional(planType),
-
-    // Important dates (timestamps in ms)
-    startedAt: v.number(),
-    expiresAt: v.optional(v.number()),
-    trialEndsAt: v.optional(v.number()),
     cancelledAt: v.optional(v.number()),
+
+    // User identification
+    clerkId: v.string(),
+
+    // Audit fields
+    createdAt: v.number(),
+
+    expiresAt: v.optional(v.number()),
 
     // Billing status
     hasBillingIssue: v.optional(v.boolean()),
 
-    // Audit fields
-    createdAt: v.number(),
-    updatedAt: v.number(),
-    lastWebhookEvent: v.optional(v.string()),
     lastWebhookAt: v.optional(v.number()),
+
+    // e.g., "premium_monthly_699"
+    planType: v.optional(planType),
+
+    lastWebhookEvent: v.optional(v.string()),
+
+    // Product info
+    productId: v.optional(v.string()),
+
+    // Primary identifier - matches Clerk user ID
+    revenueCatId: v.optional(v.string()),
+
+    // Important dates (timestamps in ms)
+    startedAt: v.number(),
+
+    // RevenueCat's internal user ID
+    // Subscription state
+    status: subscriptionStatus,
+    trialEndsAt: v.optional(v.number()),
+    updatedAt: v.number(),
   })
     .index('by_clerk_id', ['clerkId'])
     .index('by_revenuecat_id', ['revenueCatId'])
