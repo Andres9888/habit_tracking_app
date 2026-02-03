@@ -23,6 +23,7 @@ export function SearchBar({
     <View style={styles.searchBar}>
       <Search color='#a8a29e' size={18} strokeWidth={2.25} />
       <TextInput
+        accessibilityLabel='Search habits'
         placeholder={placeholder}
         placeholderTextColor='#a8a29e'
         style={styles.searchInput}
@@ -30,7 +31,12 @@ export function SearchBar({
         onChangeText={onChangeText}
       />
       {value ? (
-        <TouchableOpacity accessibilityLabel='Clear search' onPress={onClear}>
+        <TouchableOpacity
+          accessibilityLabel='Clear search'
+          accessibilityRole='button'
+          activeOpacity={0.7}
+          onPress={onClear}
+        >
           <X color='#a8a29e' size={18} strokeWidth={2.25} />
         </TouchableOpacity>
       ) : null}
