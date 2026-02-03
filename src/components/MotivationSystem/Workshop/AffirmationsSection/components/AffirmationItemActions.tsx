@@ -37,10 +37,12 @@ export function AffirmationItemActions({
               ? `Scheduled at ${formatTimeForDisplay(scheduledTime)}`
               : 'Schedule delivery'
           }
+          accessibilityRole='button'
           className={clsx(
             'h-8 w-8 items-center justify-center rounded-full',
             hasSchedule ? 'bg-emerald-100' : 'bg-white'
           )}
+          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             onSchedule();
@@ -55,7 +57,9 @@ export function AffirmationItemActions({
       )}
       <Pressable
         accessibilityLabel='Edit affirmation'
+        accessibilityRole='button'
         className='h-8 w-8 items-center justify-center rounded-full bg-white'
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           onEdit();
@@ -65,7 +69,9 @@ export function AffirmationItemActions({
       </Pressable>
       <Pressable
         accessibilityLabel='Delete affirmation'
+        accessibilityRole='button'
         className='h-8 w-8 items-center justify-center rounded-full bg-white'
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           onDelete();
