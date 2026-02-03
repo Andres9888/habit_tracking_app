@@ -10,17 +10,17 @@ interface AchievementCardProps {
 export function AchievementCard({ achievement }: AchievementCardProps) {
   return (
     <Animated.View
-      className='flex-row items-center gap-4 rounded-3xl border border-stone-100 bg-white px-6 py-6'
+      className='flex-row items-center gap-4 rounded-3xl border border-stone-100 bg-white px-6 py-6 dark:border-stone-700 dark:bg-stone-800'
       entering={FadeInDown.duration(600)}
     >
-      <View className='h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm'>
-        <Trophy color='#f59e0b' size={24} />
+      <View className='h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm dark:bg-orange-900/30'>
+        <Trophy className='text-amber-500 dark:text-amber-400' size={24} />
       </View>
       <View className='flex-1 flex-col'>
-        <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
+        <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-stone-900 dark:text-stone-100'>
           {achievement.title}
         </Text>
-        <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#6a7282]'>
+        <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-stone-500 dark:text-stone-400'>
           {achievement.description}
         </Text>
       </View>

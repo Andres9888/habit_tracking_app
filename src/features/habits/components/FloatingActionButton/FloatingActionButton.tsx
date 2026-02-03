@@ -42,7 +42,7 @@ export function FloatingActionButton({
       accessibilityHint='Open create habit modal'
       accessibilityLabel='Add habit'
       accessibilityRole='button'
-      className='h-14 w-14 items-center justify-center rounded-full bg-[#1c1917] shadow-lg'
+      className='h-14 w-14 items-center justify-center rounded-full bg-stone-900 shadow-lg dark:bg-stone-50'
       style={animatedStyle}
       onPress={handlePress}
     >
@@ -55,7 +55,11 @@ export function FloatingActionButton({
           transform: [{ scale: rippleScale }],
         }}
       />
-      <Plus color='#ffffff' size={24} strokeWidth={2.25} />
+      <Plus
+        className='text-white dark:text-stone-900'
+        size={24}
+        strokeWidth={2.25}
+      />
     </AnimatedPressable>
   );
 }

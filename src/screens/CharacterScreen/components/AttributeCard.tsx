@@ -34,14 +34,14 @@ export function AttributeCard({
         <View className='flex-col gap-3 px-6 pt-6'>
           <View className='flex-row items-center justify-between'>
             <View className='flex-row items-center gap-3'>
-              <View className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md'>
+              <View className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md dark:bg-stone-800'>
                 {icon}
               </View>
-              <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
+              <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-stone-900 dark:text-stone-100'>
                 {name}
               </Text>
             </View>
-            <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
+            <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-stone-900 dark:text-stone-100'>
               {value}
             </Text>
           </View>
