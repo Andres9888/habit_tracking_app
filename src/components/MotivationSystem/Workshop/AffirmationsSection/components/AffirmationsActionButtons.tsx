@@ -55,6 +55,7 @@ export function AffirmationsActionButtons({
             accessibilityLabel='Add a new affirmation'
             accessibilityRole='button'
             className='flex-row items-center gap-2 rounded-full bg-amber-500 px-4 py-2'
+            style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
             onPress={onOpenEditor}
           >
             <Plus className='text-white' size={16} />
@@ -92,6 +93,7 @@ export function AffirmationsActionButtons({
           accessibilityLabel='Upgrade to add more affirmations'
           accessibilityRole='button'
           className='flex-row items-center gap-2 rounded-full bg-stone-100 px-4 py-2'
+          style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
           onPress={onPremiumRequired}
         >
           <Sparkles className='text-amber-500' size={16} />
