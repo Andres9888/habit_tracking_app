@@ -17,6 +17,8 @@ export interface HabitCardValues {
   setXPPosition: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
   isToggling: boolean;
   setIsToggling: React.Dispatch<React.SetStateAction<boolean>>;
+  showConfetti: boolean;
+  setShowConfetti: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function useHabitCardValues(strength: number): HabitCardValues {
@@ -26,13 +28,16 @@ export function useHabitCardValues(strength: number): HabitCardValues {
   const [showFloatingXP, setShowFloatingXP] = useState(false);
   const [xpPosition, setXPPosition] = useState({ x: 0, y: 0 });
   const [isToggling, setIsToggling] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   return {
     cardScale,
     isToggling,
     setIsToggling,
+    setShowConfetti,
     setShowFloatingXP,
     setXPPosition,
+    showConfetti,
     showFloatingXP,
     strengthFillWidth,
     translateX,

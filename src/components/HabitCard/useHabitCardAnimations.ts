@@ -22,6 +22,7 @@ interface UseHabitCardAnimationsOptions {
   cardScale: SharedValue<number>;
   setShowFloatingXP: (show: boolean) => void;
   setXPPosition: (position: { x: number; y: number }) => void;
+  setShowConfetti: (show: boolean) => void;
 }
 
 export function useHabitCardAnimations({
@@ -29,6 +30,7 @@ export function useHabitCardAnimations({
   cardScale,
   setShowFloatingXP,
   setXPPosition,
+  setShowConfetti,
 }: UseHabitCardAnimationsOptions) {
   // These values are used for both checkmark and chain link animations
   // The animation behavior is identical, only the visual differs
@@ -43,6 +45,7 @@ export function useHabitCardAnimations({
     checkmarkScale,
     rippleOpacity,
     rippleScale,
+    setShowConfetti,
     setShowFloatingXP,
     setXPPosition,
   });

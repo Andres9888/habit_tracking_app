@@ -11,6 +11,7 @@ import {
   Easing,
   type SharedValue,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { Springs } from '../../../constants/motion';
 
 interface CelebrationOptions {
@@ -21,6 +22,7 @@ interface CelebrationOptions {
   rippleOpacity: SharedValue<number>;
   setShowFloatingXP: (show: boolean) => void;
   setXPPosition: (position: { x: number; y: number }) => void;
+  setShowConfetti: (show: boolean) => void;
 }
 
 export function createCelebrationTrigger(options: CelebrationOptions) {
@@ -32,15 +34,20 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
     rippleOpacity,
     setShowFloatingXP,
     setXPPosition,
+    setShowConfetti,
   } = options;
 
   return () => {
     'worklet';
-    // Card bounce
+    // Haptic feedback
+    runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
+
+    // Card bounce (enhanced pulse)
     cardScale.value = withSequence(
       withSpring(1.05, Springs.bouncy),
       withSpring(1, Springs.button)
     );
+
     // Checkmark animation
     checkmarkScale.value = withSequence(
       withSpring(1.2, Springs.bouncy),
@@ -50,6 +57,7 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
       duration: 400,
       easing: Easing.out(Easing.cubic),
     });
+
     // Ripple effect
     rippleScale.value = 0;
     rippleOpacity.value = 0.3;
@@ -61,6 +69,10 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
       duration: 500,
       easing: Easing.out(Easing.cubic),
     });
+
+    // Confetti burst
+    runOnJS(setShowConfetti)(true);
+
     // Floating XP
     runOnJS(setShowFloatingXP)(true);
     runOnJS(() => {
