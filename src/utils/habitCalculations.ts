@@ -1,3 +1,12 @@
+/**
+ * Habit Calculations Utility
+ *
+ * Pure functions for calculating habit statistics:
+ * - Best streak (longest consecutive completion sequence)
+ * - Completion percentage (days completed / total days)
+ * - Activity date/time formatting
+ */
+
 import { format, parseISO, differenceInDays } from 'date-fns';
 
 interface TrackingEntry {
