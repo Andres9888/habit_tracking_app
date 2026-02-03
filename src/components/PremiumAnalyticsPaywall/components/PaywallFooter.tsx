@@ -30,7 +30,8 @@ export const PaywallFooter: React.FC<PaywallFooterProps> = ({
 
     <Text style={styles.finePrint}>
       By starting your trial, you agree to our Terms of Service and Privacy
-      Policy. You won't be charged until after your 7-day trial ends.
+      Policy. Subscription auto-renews at $9.99/month after your 7-day free
+      trial. Cancel anytime before trial ends to avoid charges.
     </Text>
 
     <TouchableOpacity
@@ -64,8 +65,8 @@ const styles = StyleSheet.create({
   },
   finePrint: {
     color: colors.text.tertiary,
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: 14,
+    lineHeight: 20,
     marginBottom: spacing.lg,
     textAlign: 'center',
   },

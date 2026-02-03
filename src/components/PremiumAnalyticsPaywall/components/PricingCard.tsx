@@ -15,7 +15,9 @@ export const PricingCard: React.FC = () => (
       <Text style={styles.pricingAmount}>$9.99</Text>
       <Text style={styles.pricingPeriod}>/month</Text>
     </View>
-    <Text style={styles.pricingNote}>• 7-day free trial • Cancel anytime</Text>
+    <Text style={styles.pricingNote}>
+      7-day free trial • Auto-renews at $9.99/month • Cancel anytime
+    </Text>
   </View>
 );
 
@@ -46,8 +48,8 @@ const styles = StyleSheet.create({
   },
   pricingNote: {
     color: colors.text.tertiary,
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: 14,
+    lineHeight: 20,
     textAlign: 'center',
   },
   pricingPeriod: {

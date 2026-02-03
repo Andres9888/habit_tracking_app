@@ -16,8 +16,8 @@ export function PricingCard() {
           <Text className='text-3xl font-bold text-white'>$6.99</Text>
           <Text className='text-base text-white/70'>/month</Text>
         </View>
-        <Text className='mt-1 text-xs text-white/60'>
-          7-day free trial • Cancel anytime
+        <Text className='mt-1 text-sm text-white/60'>
+          7-day free trial • Auto-renews at $6.99/month • Cancel anytime
         </Text>
       </View>
     </View>

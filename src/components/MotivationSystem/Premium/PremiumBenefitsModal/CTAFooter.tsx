@@ -32,8 +32,8 @@ export function CTAFooter({
           <Text className='text-2xl font-bold text-stone-800'>$6.99</Text>
           <Text className='text-sm text-stone-500'>/month</Text>
         </View>
-        <Text className='text-xs text-stone-400'>
-          7-day free trial • Cancel anytime
+        <Text className='text-sm text-stone-500'>
+          7-day free trial • Auto-renews at $6.99/month • Cancel anytime
         </Text>
       </View>
       <Pressable
