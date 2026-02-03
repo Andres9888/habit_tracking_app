@@ -46,6 +46,7 @@ export function TypeSelector({
                 !isPremium && 'opacity-50'
               )}
               disabled={!isPremium}
+              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 onSelectType(isSelected ? undefined : type);
