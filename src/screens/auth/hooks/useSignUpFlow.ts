@@ -48,7 +48,7 @@ export function useSignUpFlow() {
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
       setPendingVerification(true);
     } catch (error: any) {
-      console.error(JSON.stringify(error, null, 2));
+      if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert('Error', error.errors?.[0]?.message || 'Failed to sign up');
     } finally {
       setIsLoading(false);
@@ -65,11 +65,11 @@ export function useSignUpFlow() {
       if (attempt.status === 'complete') {
         await setActive({ session: attempt.createdSessionId });
       } else {
-        console.error(JSON.stringify(attempt, null, 2));
+        if (__DEV__) console.error(JSON.stringify(attempt, null, 2));
         Alert.alert('Error', 'Verification incomplete. Please try again.');
       }
     } catch (error: any) {
-      console.error(JSON.stringify(error, null, 2));
+      if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert(
         'Error',
         error.errors?.[0]?.message || 'Failed to verify email'
