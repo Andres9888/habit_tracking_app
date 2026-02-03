@@ -63,6 +63,7 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
             accessibilityHint='Toggle password visibility'
             accessibilityLabel={isSecure ? 'Show password' : 'Hide password'}
             accessibilityRole='button'
+            activeOpacity={0.7}
             className='min-h-[44px] min-w-[44px] items-center justify-center pr-2'
             hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
             testID='password-visibility-toggle'
