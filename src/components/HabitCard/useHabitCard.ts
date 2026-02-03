@@ -1,4 +1,5 @@
-import { getTodayString } from '../../utils/getLocalDateString';
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 /**
  * useHabitCard Hook - Core orchestration logic
  *
@@ -58,6 +59,7 @@ export function useHabitCard(props: HabitCardProps) {
 
   const animations = useHabitCardAnimations({
     cardScale: values.cardScale,
+    setShowConfetti: values.setShowConfetti,
     setShowFloatingXP: values.setShowFloatingXP,
     setXPPosition: values.setXPPosition,
     translateX: values.translateX,
@@ -103,7 +105,9 @@ export function useHabitCard(props: HabitCardProps) {
     currentStreak: habitState.currentStreak,
     entrance,
     hasPendingOfflineOps: habitState.hasPendingOfflineOps,
+    setShowConfetti: values.setShowConfetti,
     setShowFloatingXP: values.setShowFloatingXP,
+    showConfetti: values.showConfetti,
     showFloatingXP: values.showFloatingXP,
     strengthColor: getStrengthColor(strength, theme),
     strengthFillStyle,

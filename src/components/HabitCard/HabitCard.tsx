@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 /**
  * HabitCard Component - Display individual habit with tracking and animations
  *
@@ -16,6 +18,7 @@ import {
   SwipeActions,
   StrengthFillBackground,
   HabitCardContent,
+  ConfettiBurst,
 } from './components';
 
 export type { HabitCardProps } from './HabitCard.types';
@@ -25,8 +28,6 @@ export function HabitCard(props: HabitCardProps) {
     name,
     icon = '📝',
     strength,
-    currentStreak = 0,
-    bestStreak = 0,
     atRisk = false,
     disabled = false,
     onEdit,
@@ -104,6 +105,10 @@ export function HabitCard(props: HabitCardProps) {
           onComplete={() => habit.setShowFloatingXP(false)}
         />
       )}
+      <ConfettiBurst
+        active={habit.showConfetti}
+        onComplete={() => habit.setShowConfetti(false)}
+      />
     </View>
   );
 }
