@@ -9,7 +9,10 @@ export const useArchivedHabitsModalLogic = () => {
   const unarchiveHabit = useMutation(api.habits.unarchive);
   const removeHabit = useMutation(api.habits.remove);
 
-  const handleRestore = async (habitId: Id<'habits'>, habitName: string): Promise<boolean> => {
+  const handleRestore = async (
+    habitId: Id<'habits'>,
+    habitName: string
+  ): Promise<boolean> => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     try {
@@ -18,7 +21,7 @@ export const useArchivedHabitsModalLogic = () => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       return true;
     } catch (error) {
-      console.error('Failed to restore habit:', error);
+      if (__DEV__) console.error('Failed to restore habit:', error);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       Alert.alert(
         'Error',
@@ -47,7 +50,7 @@ export const useArchivedHabitsModalLogic = () => {
                 Haptics.NotificationFeedbackType.Success
               );
             } catch (error) {
-              console.error('Failed to delete habit:', error);
+              if (__DEV__) console.error('Failed to delete habit:', error);
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
               Alert.alert(
                 'Error',
