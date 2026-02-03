@@ -8,7 +8,7 @@ import { Check } from 'lucide-react-native';
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
 
 interface AnimatedCompletionIconProps {
-  completionIcon: 'checkbox' | 'chainLink';
+  completionIcon: 'checkbox' | 'chain';
   completion: Animated.Value;
 }
 
