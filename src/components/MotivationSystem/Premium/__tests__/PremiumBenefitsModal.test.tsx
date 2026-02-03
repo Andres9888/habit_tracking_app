@@ -230,10 +230,14 @@ describe('PremiumBenefitsModal', () => {
       expect(getByText('/month')).toBeTruthy();
     });
 
-    it('displays trial and cancellation info', () => {
+    it('displays trial and auto-renewal info', () => {
       const { getByText } = render(<PremiumBenefitsModal {...defaultProps} />);
 
-      expect(getByText('7-day free trial • Cancel anytime')).toBeTruthy();
+      expect(
+        getByText(
+          '7-day free trial • Auto-renews at $6.99/month • Cancel anytime'
+        )
+      ).toBeTruthy();
     });
   });
 

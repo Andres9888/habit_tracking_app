@@ -123,7 +123,11 @@ describe('MotivationPaywall', () => {
 
     expect(getByText('$6.99')).toBeTruthy();
     expect(getByText('/month')).toBeTruthy();
-    expect(getByText('7-day free trial • Cancel anytime')).toBeTruthy();
+    expect(
+      getByText(
+        '7-day free trial • Auto-renews at $6.99/month • Cancel anytime'
+      )
+    ).toBeTruthy();
   });
 
   it('calls onClose when close button is pressed', () => {

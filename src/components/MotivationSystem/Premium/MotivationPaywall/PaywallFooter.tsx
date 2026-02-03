@@ -30,9 +30,10 @@ export function PaywallFooter({
         </Pressable>
       )}
 
-      <Text className='mt-4 text-center text-xs text-white/40'>
+      <Text className='mt-4 text-center text-sm text-white/50'>
         By starting your trial, you agree to our Terms of Service and Privacy
-        Policy. You won't be charged until your 7-day trial ends.
+        Policy. Subscription auto-renews at $6.99/month after your 7-day free
+        trial. Cancel anytime before trial ends to avoid charges.
       </Text>
     </>
   );
