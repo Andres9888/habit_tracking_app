@@ -1,5 +1,11 @@
 import type { ReactNode } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import {
+  Text,
+  TextInput,
+  View,
+  type NativeSyntheticEvent,
+  type TextInputFocusEventData,
+} from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useFormInputAnimations } from './useFormInputAnimations';
@@ -25,7 +31,13 @@ export function FormInput({
     handleBlur: handleBlurAnimation,
   } = useFormInputAnimations();
 
-  const handleBlurWrapper = (e: any) => {
+  /**
+   * Wraps the blur handler to trigger both animation and parent onBlur
+   * @param e - Native focus event from TextInput
+   */
+  const handleBlurWrapper = (
+    e: NativeSyntheticEvent<TextInputFocusEventData>
+  ) => {
     handleBlurAnimation(e);
     onBlur?.(e);
   };
