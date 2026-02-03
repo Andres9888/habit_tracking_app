@@ -2,6 +2,7 @@ import { Check } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 
 interface SortOptionRowProps {
   /**
@@ -47,6 +48,11 @@ export function SortOptionRow({
   selected,
   onPress,
 }: SortOptionRowProps) {
+  const handlePress = () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onPress();
+  };
+
   return (
     <Pressable
       accessibilityLabel={`${title}. ${description}`}
@@ -55,7 +61,7 @@ export function SortOptionRow({
       className={`flex-row items-center gap-3 rounded-xl px-3 py-3 ${
         selected ? 'border border-amber-100 bg-amber-50' : 'active:bg-stone-50'
       }`}
-      onPress={onPress}
+      onPress={handlePress}
     >
       {/* Icon container with gradient */}
       <LinearGradient
