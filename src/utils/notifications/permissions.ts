@@ -1,3 +1,10 @@
+/**
+ * Notification Permissions
+ *
+ * Handles requesting and checking notification permissions.
+ * Manages platform-specific permission flows (iOS/Android).
+ */
+
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
