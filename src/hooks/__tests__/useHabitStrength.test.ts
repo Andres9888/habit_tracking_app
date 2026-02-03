@@ -35,7 +35,10 @@ describe('useHabitStrength', () => {
       );
 
       expect(result.current.currentStrength).toBe(0);
-      expect(result.current.strengthHistory).toEqual([]);
+      expect(result.current.strengthHistory.length).toBeGreaterThan(0); // Timeline exists even with no completions
+      expect(
+        result.current.strengthHistory.every((entry) => entry.strength === 0)
+      ).toBe(true);
       expect(result.current.metrics.current).toBe(0);
       expect(result.current.isCalculating).toBe(false);
     });
