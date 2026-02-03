@@ -19,11 +19,7 @@ export const FeatureListItem: React.FC<FeatureListItemProps> = ({
 }) => (
   <View style={styles.featureItem}>
     <View style={styles.featureIcon}>
-      <Ionicons
-        color={colors.premium[600]}
-        name={feature.icon as any}
-        size={24}
-      />
+      <Ionicons color={colors.premium[600]} name={feature.icon} size={24} />
     </View>
     <View style={styles.featureContent}>
       <Text style={styles.featureTitle}>{feature.title}</Text>
