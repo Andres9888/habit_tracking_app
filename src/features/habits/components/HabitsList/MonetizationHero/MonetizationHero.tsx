@@ -38,14 +38,14 @@ export function MonetizationHero({
     >
       <View className='gap-2'>
         <Text className='text-[10px] font-medium uppercase tracking-[4px] text-[#a5b4fc]'>
-          Level up
+          ✨ Try Premium Free
         </Text>
         <Text className='text-[24px] font-bold leading-[32px] tracking-tight text-white'>
-          Ready to build more?
+          Ready for unlimited habits?
         </Text>
         <Text className='text-[15px] font-normal leading-[22px] text-[#cbd5f5]'>
-          Track unlimited habits, get smart reminders, and unlock insights to
-          guide your growth.
+          Start a 7-day free trial to track every area of your life, get smart
+          reminders, and unlock AI-powered insights.
         </Text>
       </View>
       <View className='flex-row items-center gap-3'>
@@ -65,7 +65,7 @@ export function MonetizationHero({
           onPress={onUpgradePress}
         >
           <Text className='text-[15px] font-semibold leading-[20px] tracking-wide text-white'>
-            Go Premium
+            Start Free Trial →
           </Text>
         </AnimatedPressable>
         <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>
