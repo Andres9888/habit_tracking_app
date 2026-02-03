@@ -70,7 +70,7 @@ export function createTapGesture(options: TapGestureOptions) {
           try {
             await toggleCompletionMutation({ date: today, habitId: id });
           } catch (error) {
-            console.error('Toggle completion failed:', error);
+            if (__DEV__) console.error('Toggle completion failed:', error);
           } finally {
             setTimeout(() => {
               setIsToggling(false);
