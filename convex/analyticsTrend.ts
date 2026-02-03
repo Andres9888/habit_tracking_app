@@ -14,7 +14,17 @@ import { getDateString, getDaysAgo } from './analytics/index';
 export const get30DayTrend = query({
   args: {},
   handler: async (ctx) => {
-    const habits = await ctx.db.query('habits').collect();
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view analytics');
+    }
+
+    // SEC-001: Filter habits by authenticated user
+    const habits = await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .collect();
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
     const habitIds = activeHabits.map((h) => h._id);
 

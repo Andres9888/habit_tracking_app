@@ -11,8 +11,19 @@ import { getTodayDateKey, maxDateKey } from './utils';
 export const get = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view habits');
+    }
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) return null;
+
+    // SEC-001: Ownership verification
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to view this habit');
+    }
 
     const tracking = await ctx.db
       .query('tracking')

@@ -16,11 +16,23 @@ export const getHabitsAtRisk = query({
     threshold: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view predictions');
+    }
+
     const threshold = args.threshold ?? 0.4;
 
+    // SEC-001: Filter habits by authenticated user
     const habits = await ctx.db
       .query('habits')
-      .filter((q) => q.eq(q.field('archived'), false))
+      .filter((q) => 
+        q.and(
+          q.eq(q.field('archived'), false),
+          q.eq(q.field('userId'), identity.subject)
+        )
+      )
       .collect();
 
     const atRiskHabits = [];
@@ -57,10 +69,21 @@ export const getHabitPrediction = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view predictions');
+    }
+
     const habit = await ctx.db.get(args.habitId);
 
     if (!habit || habit.archived) {
       return null;
+    }
+
+    // SEC-001: Ownership verification
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to view this habit prediction');
     }
 
     const strength = habit.strength ?? 0;

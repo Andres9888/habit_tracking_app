@@ -23,8 +23,19 @@ import {
 export const predict7Days = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to view predictions');
+    }
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) return null;
+
+    // SEC-001: Ownership verification
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to view this habit prediction');
+    }
 
     const strength = habit.strength ?? 0;
     const accessibility = habit.accessibility ?? 1;
