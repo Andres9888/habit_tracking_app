@@ -1,4 +1,4 @@
-import { Modal, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { ColorPickerSheet } from './ColorPickerSheet';
@@ -27,51 +27,56 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className='flex-1 bg-black/50'>
-        <GestureDetector gesture={panGesture}>
-          <Animated.View
-            className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'
-            style={animatedStyle}
-          >
-            <ModalHeader
-              habitName={form.habitName}
-              isEditMode={isEditMode}
-              onClose={onClose}
-              onSave={handleCreate}
-            />
-            <ModalContent
-              habitName={form.habitName}
-              habitNameError={form.habitNameError}
-              isEditMode={isEditMode}
-              reminderOption={form.reminderOption}
-              reminderTime={form.reminderTime}
-              selectedColor={form.selectedColor}
-              selectedEmoji={form.selectedEmoji}
-              visible={visible}
-              onColorSelect={handlers.handleColorSelect}
-              onCustomColorPress={form.openColorPicker}
-              onEmojiSelect={handlers.handleEmojiSelect}
-              onNameBlur={form.onHabitNameBlur}
-              onNameChange={handlers.handleNameChange}
-              onReminderTimeChange={handlers.handleReminderTimeChange}
-              onReminderToggle={handlers.handleReminderToggle}
-              onScroll={template.handleMainScroll}
-            />
-            <TemplateReminderPrompt
-              bottomOffset={template.reminderBottomOffset}
-              visible={template.shouldShowTemplateReminder}
-              onPress={template.handleReminderPress}
-            />
-            <StickyCreateBar
-              disabled={
-                form.habitName.trim().length < 2 || !form.habitNameIsValid
-              }
-              selectedColor={form.selectedColor}
-              onPress={handleCreate}
-            />
-          </Animated.View>
-        </GestureDetector>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className='flex-1'
+      >
+        <View className='flex-1 bg-black/50'>
+          <GestureDetector gesture={panGesture}>
+            <Animated.View
+              className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'
+              style={animatedStyle}
+            >
+              <ModalHeader
+                habitName={form.habitName}
+                isEditMode={isEditMode}
+                onClose={onClose}
+                onSave={handleCreate}
+              />
+              <ModalContent
+                habitName={form.habitName}
+                habitNameError={form.habitNameError}
+                isEditMode={isEditMode}
+                reminderOption={form.reminderOption}
+                reminderTime={form.reminderTime}
+                selectedColor={form.selectedColor}
+                selectedEmoji={form.selectedEmoji}
+                visible={visible}
+                onColorSelect={handlers.handleColorSelect}
+                onCustomColorPress={form.openColorPicker}
+                onEmojiSelect={handlers.handleEmojiSelect}
+                onNameBlur={form.onHabitNameBlur}
+                onNameChange={handlers.handleNameChange}
+                onReminderTimeChange={handlers.handleReminderTimeChange}
+                onReminderToggle={handlers.handleReminderToggle}
+                onScroll={template.handleMainScroll}
+              />
+              <TemplateReminderPrompt
+                bottomOffset={template.reminderBottomOffset}
+                visible={template.shouldShowTemplateReminder}
+                onPress={template.handleReminderPress}
+              />
+              <StickyCreateBar
+                disabled={
+                  form.habitName.trim().length < 2 || !form.habitNameIsValid
+                }
+                selectedColor={form.selectedColor}
+                onPress={handleCreate}
+              />
+            </Animated.View>
+          </GestureDetector>
+        </View>
+      </KeyboardAvoidingView>
       <ColorPickerSheet
         value={form.selectedColor}
         visible={form.isColorPickerVisible}
