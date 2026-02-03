@@ -1,3 +1,4 @@
+import React, { memo, useMemo } from 'react';
 import { Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
@@ -9,10 +10,10 @@ import type { WelcomeHeroProps } from '../../HabitsEmptyState.types';
 import { FloatingParticle } from '../FloatingParticle';
 import { useWelcomeHeroAnimations } from './useWelcomeHeroAnimations';
 
-export function WelcomeHero({ greeting, period }: WelcomeHeroProps) {
+function WelcomeHeroComponent({ greeting, period }: WelcomeHeroProps) {
   const { waveStyle, streakStyle, glowStyle } = useWelcomeHeroAnimations();
-  const periodEmoji = getPeriodEmoji(period);
-  const particles = getParticlesForPeriod(period);
+  const periodEmoji = useMemo(() => getPeriodEmoji(period), [period]);
+  const particles = useMemo(() => getParticlesForPeriod(period), [period]);
 
   return (
     <Animated.View
@@ -80,3 +81,5 @@ export function WelcomeHero({ greeting, period }: WelcomeHeroProps) {
     </Animated.View>
   );
 }
+
+export const WelcomeHero = memo(WelcomeHeroComponent);
