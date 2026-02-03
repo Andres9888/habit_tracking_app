@@ -1,3 +1,10 @@
+/**
+ * MotivationCheck Component
+ *
+ * Quick motivation level assessment.
+ * Routes user to appropriate support based on response.
+ */
+
 export { MotivationCheck, default } from './MotivationCheck';
 export { MotivationButton } from './MotivationButton';
 export {
