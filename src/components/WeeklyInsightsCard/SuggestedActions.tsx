@@ -13,13 +13,23 @@ export function SuggestedActions() {
   return (
     <View style={styles.suggestedActions}>
       <Text style={styles.suggestedActionsTitle}>Suggested Focus</Text>
-      <TouchableOpacity activeOpacity={0.7} style={styles.actionButton}>
+      <TouchableOpacity
+        accessibilityLabel='Set reminders for at-risk habits'
+        accessibilityRole='button'
+        activeOpacity={0.7}
+        style={styles.actionButton}
+      >
         <Ionicons color={colors.primary[500]} name='notifications' size={16} />
         <Text style={styles.actionButtonText}>
           Set reminders for at-risk habits
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.7} style={styles.actionButton}>
+      <TouchableOpacity
+        accessibilityLabel='Review habit difficulty'
+        accessibilityRole='button'
+        activeOpacity={0.7}
+        style={styles.actionButton}
+      >
         <Ionicons color={colors.primary[500]} name='bulb' size={16} />
         <Text style={styles.actionButtonText}>Review habit difficulty</Text>
       </TouchableOpacity>
