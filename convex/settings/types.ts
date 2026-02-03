@@ -20,6 +20,7 @@ export type HabitSortMode = (typeof HABIT_SORT_MODE_OPTIONS)[number];
 export const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
   catTheme: true,
+  celebrationsEnabled: true,
   darkMode: 'light' as DarkModePreference,
   dayShape: 'square' as const,
   habitCompletionIcon: 'chain' as const,

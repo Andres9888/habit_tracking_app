@@ -29,6 +29,8 @@ export const get = query({
     return {
       appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
+      celebrationsEnabled:
+        settings?.celebrationsEnabled ?? DEFAULT_SETTINGS.celebrationsEnabled,
       darkMode: normalizeDarkMode(settings?.darkMode),
       dayShape: settings?.dayShape ?? DEFAULT_SETTINGS.dayShape,
       habitCompletionIcon:
