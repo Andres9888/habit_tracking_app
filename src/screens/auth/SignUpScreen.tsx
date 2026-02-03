@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -24,12 +26,17 @@ export default function SignUpScreen({
   const {
     emailAddress,
     setEmailAddress,
+    emailError,
+    onEmailBlur,
     password,
     setPassword,
+    passwordError,
+    onPasswordBlur,
     pendingVerification,
     isLoading,
     handleSignUp,
     handleVerification,
+    isFormValid,
   } = useSignUpFlow();
   const {
     signInWithGoogle,
@@ -82,23 +89,29 @@ export default function SignUpScreen({
             autoCapitalize='none'
             autoComplete='email'
             editable={!isAnyLoading}
+            error={emailError}
             keyboardType='email-address'
             label='Email'
             placeholder='Enter your email'
             value={emailAddress}
+            onBlur={onEmailBlur}
             onChangeText={setEmailAddress}
           />
           <FormInput
             secureTextEntry
             autoComplete='password-new'
             editable={!isAnyLoading}
+            error={passwordError}
             label='Password'
             placeholder='Create a password'
             value={password}
+            onBlur={onPasswordBlur}
             onChangeText={setPassword}
           />
           <SubmitButton
-            disabled={!emailAddress || !password || isAnyLoading}
+            disabled={
+              !emailAddress || !password || isAnyLoading || !isFormValid
+            }
             isLoading={isLoading}
             label='Create account'
             loadingLabel='Creating account...'

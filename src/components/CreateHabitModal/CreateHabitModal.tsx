@@ -41,6 +41,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
             />
             <ModalContent
               habitName={form.habitName}
+              habitNameError={form.habitNameError}
               isEditMode={isEditMode}
               reminderOption={form.reminderOption}
               reminderTime={form.reminderTime}
@@ -50,6 +51,7 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               onColorSelect={handlers.handleColorSelect}
               onCustomColorPress={form.openColorPicker}
               onEmojiSelect={handlers.handleEmojiSelect}
+              onNameBlur={form.onHabitNameBlur}
               onNameChange={handlers.handleNameChange}
               onReminderTimeChange={handlers.handleReminderTimeChange}
               onReminderToggle={handlers.handleReminderToggle}
@@ -61,7 +63,9 @@ export default function CreateHabitModal(props: CreateHabitModalProps) {
               onPress={template.handleReminderPress}
             />
             <StickyCreateBar
-              disabled={form.habitName.trim().length < 2}
+              disabled={
+                form.habitName.trim().length < 2 || !form.habitNameIsValid
+              }
               selectedColor={form.selectedColor}
               onPress={handleCreate}
             />
