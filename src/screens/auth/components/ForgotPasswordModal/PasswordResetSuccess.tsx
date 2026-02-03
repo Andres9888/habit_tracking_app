@@ -18,6 +18,7 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
         accessibilityHint='Closes this dialog and returns to sign in'
         accessibilityLabel='Close modal'
         accessibilityRole='button'
+        activeOpacity={0.8}
         className='items-center rounded-3xl border border-stone-900 bg-stone-900 py-4'
         onPress={onClose}
       >
