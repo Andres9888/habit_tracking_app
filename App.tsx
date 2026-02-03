@@ -443,6 +443,8 @@ function HabitsApp() {
                   weekDateStrings={displayWeekDateStrings}
                   weekStatus={weekStatus}
                   onArchive={handleArchive}
+                  celebrationsEnabled={settings?.celebrationsEnabled ?? true}
+                  reduceMotionPreference={settings?.reduceMotion ?? false}
                 />
               );
             })}

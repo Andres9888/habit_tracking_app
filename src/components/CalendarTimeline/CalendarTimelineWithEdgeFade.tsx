@@ -50,7 +50,7 @@ const CalendarTimelineWithEdgeFade: React.FC<CalendarTimelineProps> = ({
 
   // Get date range text (first and last date) - safe array access
   const firstDate = dates[0];
-  const lastDate = dates.at(-1);
+  const lastDate = dates.at(-1) ?? firstDate;
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
 
   const colors = highContrastMode

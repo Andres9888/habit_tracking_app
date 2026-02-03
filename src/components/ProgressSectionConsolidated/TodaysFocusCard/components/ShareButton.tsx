@@ -5,10 +5,10 @@
  */
 
 import React from 'react';
-import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 
+import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import type { FocusState } from '../../TodaysFocusCardTypes';
 import { styles } from '../TodaysFocusCard.styles';
 
@@ -33,7 +33,7 @@ export function ShareButton({
 
   return (
     <Animated.View style={shareButtonAnimatedStyle}>
-      <Pressable
+      <AnimatedPressable
         accessibilityHint='Share your milestone achievement'
         accessibilityLabel='Share'
         accessibilityRole='button'
@@ -42,7 +42,7 @@ export function ShareButton({
         onPress={onPress}
       >
         <Ionicons color={iconColor} name='share-outline' size={20} />
-      </Pressable>
+      </AnimatedPressable>
     </Animated.View>
   );
 }

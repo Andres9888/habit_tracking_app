@@ -69,28 +69,28 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
     it('should NOT show counter with 10 characters (< 20)', () => {
       const { queryByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(10) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(10)} />
       );
       expect(queryByText(/\/40/)).toBeNull();
     });
 
     it('should NOT show counter with exactly 20 characters', () => {
       const { queryByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(20) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(20)} />
       );
       expect(queryByText(/\/40/)).toBeNull();
     });
 
     it('should show counter when > 20 characters (21+)', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(21) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(21)} />
       );
       expect(getByText('21/40')).toBeDefined();
     });
 
     it('should show counter with 25 characters', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(25) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(25)} />
       );
       expect(getByText('25/40')).toBeDefined();
     });
@@ -99,7 +99,7 @@ describe('HabitNameField - V11 Validation Logic', () => {
   describe('V11 Character Counter Color States', () => {
     it('should show stone-500 color for 21-30 characters (normal)', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(25) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(25)} />
       );
       const counter = getByText('25/40');
       expect(counter.props.style).toEqual(
@@ -109,7 +109,7 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
     it('should show amber-500 color for 31-40 characters (warning)', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(35) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(35)} />
       );
       const counter = getByText('35/40');
       expect(counter.props.style).toEqual(
@@ -119,7 +119,7 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
     it('should show red-500 color for 41+ characters (error)', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(45) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(45)} />
       );
       const counter = getByText('45/40');
       expect(counter.props.style).toEqual(
@@ -129,13 +129,13 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
     it('should transition from normal to warning at 31 characters', () => {
       const { getByText, rerender } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(30) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(30)} />
       );
 
       let counter = getByText('30/40');
       expect(counter.props.style.color).toBe('#78716c'); // stone-500
 
-      rerender(<HabitNameField {...defaultProps} value='A'.repeat(31) />);
+      rerender(<HabitNameField {...defaultProps} value={'A'.repeat(31)} />);
 
       counter = getByText('31/40');
       expect(counter.props.style.color).toBe('#F59E0B'); // amber-500
@@ -143,13 +143,13 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
     it('should transition from warning to error at 41 characters', () => {
       const { getByText, rerender } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(40) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(40)} />
       );
 
       let counter = getByText('40/40');
       expect(counter.props.style.color).toBe('#F59E0B'); // amber-500
 
-      rerender(<HabitNameField {...defaultProps} value='A'.repeat(41) />);
+      rerender(<HabitNameField {...defaultProps} value={'A'.repeat(41)} />);
 
       counter = getByText('41/40');
       expect(counter.props.style.color).toBe('#EF4444'); // red-500
@@ -159,7 +159,7 @@ describe('HabitNameField - V11 Validation Logic', () => {
   describe('V11 Accessibility Labels', () => {
     it('should have correct accessibility label for normal state (25 chars)', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(25) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(25)} />
       );
       const counter = getByText('25/40');
       expect(counter.props.accessibilityLabel).toBe('25 of 40 characters used');
@@ -167,7 +167,7 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
     it('should indicate approaching limit in accessibility label (35 chars)', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(35) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(35)} />
       );
       const counter = getByText('35/40');
       expect(counter.props.accessibilityLabel).toContain('approaching limit');
@@ -175,7 +175,7 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
     it('should indicate limit exceeded in accessibility label (45 chars)', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(45) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(45)} />
       );
       const counter = getByText('45/40');
       expect(counter.props.accessibilityLabel).toContain('limit exceeded');
@@ -185,7 +185,7 @@ describe('HabitNameField - V11 Validation Logic', () => {
   describe('V11 Shake Animation Trigger', () => {
     it('should trigger shake animation when exceeding 40 chars', async () => {
       const { rerender } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(40) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(40)} />
       );
 
       // Clear previous calls
@@ -193,7 +193,7 @@ describe('HabitNameField - V11 Validation Logic', () => {
       mockTriggerWarning.mockClear();
 
       // Exceed the soft limit (40 chars)
-      rerender(<HabitNameField {...defaultProps} value='A'.repeat(41) />);
+      rerender(<HabitNameField {...defaultProps} value={'A'.repeat(41)} />);
 
       await waitFor(() => {
         // Should trigger haptic warning
@@ -205,14 +205,14 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
     it('should NOT trigger shake when staying above 40 chars', async () => {
       const { rerender } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(41) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(41)} />
       );
 
       mockWithTiming.mockClear();
       mockTriggerWarning.mockClear();
 
       // Stay above limit (41 -> 42)
-      rerender(<HabitNameField {...defaultProps} value='A'.repeat(42) />);
+      rerender(<HabitNameField {...defaultProps} value={'A'.repeat(42)} />);
 
       // Should not trigger haptic or shake again
       expect(mockTriggerWarning).not.toHaveBeenCalled();
@@ -220,13 +220,13 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
     it('should trigger haptic at hard limit (50 chars)', async () => {
       const { rerender } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(49) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(49)} />
       );
 
       mockTriggerWarning.mockClear();
 
       // Hit hard limit
-      rerender(<HabitNameField {...defaultProps} value='A'.repeat(50) />);
+      rerender(<HabitNameField {...defaultProps} value={'A'.repeat(50)} />);
 
       await waitFor(() => {
         expect(mockTriggerWarning).toHaveBeenCalled();
@@ -269,24 +269,24 @@ describe('HabitNameField - V11 Validation Logic', () => {
   describe('V11 Edge Cases', () => {
     it('should handle rapid typing across thresholds', async () => {
       const { rerender, queryByText, getByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(19) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(19)} />
       );
 
       // Below threshold - no counter
       expect(queryByText(/\/40/)).toBeNull();
 
       // Cross 20 char threshold
-      rerender(<HabitNameField {...defaultProps} value='A'.repeat(21) />);
+      rerender(<HabitNameField {...defaultProps} value={'A'.repeat(21)} />);
       expect(getByText('21/40')).toBeDefined();
 
       // Cross 30 char threshold (warning)
-      rerender(<HabitNameField {...defaultProps} value='A'.repeat(31) />);
+      rerender(<HabitNameField {...defaultProps} value={'A'.repeat(31)} />);
       const warningCounter = getByText('31/40');
       expect(warningCounter.props.style.color).toBe('#F59E0B');
 
       // Cross 40 char threshold (error)
       mockWithTiming.mockClear();
-      rerender(<HabitNameField {...defaultProps} value='A'.repeat(41) />);
+      rerender(<HabitNameField {...defaultProps} value={'A'.repeat(41)} />);
 
       await waitFor(() => {
         const errorCounter = getByText('41/40');
@@ -297,14 +297,14 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
     it('should handle deleting text back below threshold', () => {
       const { rerender, queryByText, getByText } = render(
-        <HabitNameField {...defaultProps} value='A'.repeat(25) />
+        <HabitNameField {...defaultProps} value={'A'.repeat(25)} />
       );
 
       // Counter visible
       expect(getByText('25/40')).toBeDefined();
 
       // Delete back to 20 chars (threshold)
-      rerender(<HabitNameField {...defaultProps} value='A'.repeat(20) />);
+      rerender(<HabitNameField {...defaultProps} value={'A'.repeat(20)} />);
 
       // Counter should disappear
       expect(queryByText(/\/40/)).toBeNull();

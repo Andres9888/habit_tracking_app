@@ -359,7 +359,7 @@ describe('LivePreview Component - V11', () => {
         <LivePreview
           emoji='📖'
           color='#3b82f6'
-          habitName='Read' + 'a'.repeat(49)
+          habitName={'Read' + 'a'.repeat(49)}
         />
       )).not.toThrow();
     });
