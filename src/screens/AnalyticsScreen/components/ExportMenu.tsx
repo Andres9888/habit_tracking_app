@@ -27,6 +27,8 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
       onRequestClose={onClose}
     >
       <TouchableOpacity
+        accessibilityLabel='Close export menu'
+        accessibilityRole='button'
         activeOpacity={1}
         style={styles.modalOverlay}
         onPress={onClose}
@@ -34,6 +36,9 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
         <View style={styles.exportMenu}>
           <Text style={styles.exportMenuTitle}>Choose Export Format</Text>
           <TouchableOpacity
+            accessibilityHint='Exports data in spreadsheet format'
+            accessibilityLabel='Export as CSV'
+            accessibilityRole='button'
             activeOpacity={0.7}
             style={styles.exportMenuItem}
             onPress={() => onExport('csv')}
@@ -51,6 +56,9 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
             </View>
           </TouchableOpacity>
           <TouchableOpacity
+            accessibilityHint='Exports data in developer-friendly format'
+            accessibilityLabel='Export as JSON'
+            accessibilityRole='button'
             activeOpacity={0.7}
             style={styles.exportMenuItem}
             onPress={() => onExport('json')}
@@ -68,6 +76,8 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
             </View>
           </TouchableOpacity>
           <TouchableOpacity
+            accessibilityLabel='Cancel'
+            accessibilityRole='button'
             activeOpacity={0.7}
             style={styles.exportMenuCancel}
             onPress={onClose}
