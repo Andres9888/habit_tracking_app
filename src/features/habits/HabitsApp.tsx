@@ -24,7 +24,10 @@ export function HabitsApp() {
   const notificationHandlers = useMemo(
     () => ({
       onHabitNotificationTap: (habitId: string) => {
-        console.log('[HabitsApp] Opening ActivationModal for habit:', habitId);
+        if (__DEV__) {
+          // eslint-disable-next-line no-console
+          console.log('[HabitsApp] Opening ActivationModal for habit:', habitId);
+        }
         openActivationModalById(habitId);
       },
     }),

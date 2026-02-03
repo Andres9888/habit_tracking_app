@@ -45,7 +45,8 @@ export function useHabitStateSync(
 
     // Only sync if meaningful values changed
     if (idChanged || prevStreakChanged || prevStrengthChanged) {
-      if (debugLabel && (streakChanged || strengthChanged)) {
+      if (__DEV__ && debugLabel && (streakChanged || strengthChanged)) {
+        // eslint-disable-next-line no-console
         console.log(`🔄 Syncing ${debugLabel}:`, {
           habitName: updated.name,
           streakChanged,
