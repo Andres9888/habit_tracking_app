@@ -17,9 +17,13 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
     <View className='mb-4 flex-row rounded-lg bg-stone-100 p-1'>
       {/* Month Tab */}
       <Pressable
+        accessibilityLabel='Month view'
+        accessibilityRole='tab'
+        accessibilityState={{ selected: activeView === 'month' }}
         className={`flex-1 rounded-md py-2 ${
           activeView === 'month' ? 'bg-white' : 'bg-transparent'
         }`}
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={() => onViewChange('month')}
       >
         <Text
@@ -33,9 +37,13 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
 
       {/* Year Tab */}
       <Pressable
+        accessibilityLabel='Year view'
+        accessibilityRole='tab'
+        accessibilityState={{ selected: activeView === 'year' }}
         className={`flex-1 rounded-md py-2 ${
           activeView === 'year' ? 'bg-white' : 'bg-transparent'
         }`}
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={() => onViewChange('year')}
       >
         <Text
