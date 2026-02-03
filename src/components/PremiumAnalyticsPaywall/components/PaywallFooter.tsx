@@ -14,22 +14,30 @@ import { typography } from '../../../theme/typography';
 interface PaywallFooterProps {
   onStartTrial: () => void;
   onRestore: () => void;
+  isProcessing?: boolean;
 }
 
 export const PaywallFooter: React.FC<PaywallFooterProps> = ({
   onStartTrial,
   onRestore,
+  isProcessing = false,
 }) => (
   <View>
     <AnimatedPressable
       accessibilityHint='Opens subscription options'
       accessibilityLabel='Start 7-day free trial'
       accessibilityRole='button'
-      style={styles.ctaButton}
+      activeOpacity={0.8}
+      disabled={isProcessing}
+      style={[styles.ctaButton, isProcessing && styles.ctaButtonDisabled]}
       onPress={onStartTrial}
     >
-      <Text style={styles.ctaButtonText}>Start 7-Day Free Trial</Text>
-      <Ionicons color={colors.surface} name='arrow-forward' size={20} />
+      <Text style={styles.ctaButtonText}>
+        {isProcessing ? 'Processing...' : 'Start 7-Day Free Trial'}
+      </Text>
+      {!isProcessing && (
+        <Ionicons color={colors.surface} name='arrow-forward' size={20} />
+      )}
     </AnimatedPressable>
 
     <Text style={styles.finePrint}>
@@ -60,6 +68,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: spacing.md,
     paddingVertical: spacing.lg,
+  },
+  ctaButtonDisabled: {
+    backgroundColor: colors.premium[400],
+    opacity: 0.6,
   },
   ctaButtonText: {
     color: colors.surface,
