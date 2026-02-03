@@ -2,9 +2,12 @@
  * WOOPSectionHeader - Header row for WOOPSection
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { HelpCircle, Plus, Pencil } from 'lucide-react-native';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface WOOPSectionHeaderProps {
   hasWoop: boolean;
@@ -15,6 +18,20 @@ export function WOOPSectionHeader({
   hasWoop,
   onHelpPress,
 }: WOOPSectionHeaderProps) {
+  const scale = useSharedValue(1);
+
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.9, { damping: 15, stiffness: 300 });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+  }, [scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   return (
     <View className='mb-2 flex-row items-center justify-between'>
       <View className='flex-row items-center gap-2'>
@@ -22,14 +39,18 @@ export function WOOPSectionHeader({
         <Text className='text-xs font-semibold text-stone-800'>WOOP Plan</Text>
       </View>
       <View className='flex-row items-center gap-2'>
-        <Pressable
+        <AnimatedPressable
           accessibilityLabel='Learn about WOOP'
+          accessibilityRole='button'
           className='h-6 w-6 items-center justify-center rounded-full'
           hitSlop={8}
+          style={animatedStyle}
           onPress={onHelpPress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
         >
           <HelpCircle className='text-stone-400' size={16} />
-        </Pressable>
+        </AnimatedPressable>
         {hasWoop ? (
           <Pencil className='text-stone-400' size={14} />
         ) : (
