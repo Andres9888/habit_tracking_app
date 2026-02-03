@@ -1,19 +1,28 @@
+/**
+ * Motion Constants
+ *
+ * Standardized animation timing and easing values.
+ * Based on iOS design patterns for natural, responsive feel.
+ *
+ * @see Springs for spring-based animations
+ */
+
 import { Easing } from 'react-native';
 
 export const Motion = {
   duration: {
-    fast: 100,
     base: 150,
-    reveal: 180,
     emphasized: 220,
     enter: 280,
     exit: 220,
+    fast: 100,
+    reveal: 180,
   },
   easing: {
-    outEase: Easing.out(Easing.ease),
+    inCubic: Easing.in(Easing.cubic),
     inEase: Easing.in(Easing.ease),
     outCubic: Easing.out(Easing.cubic),
-    inCubic: Easing.in(Easing.cubic),
+    outEase: Easing.out(Easing.ease),
   },
 } as const;
 
@@ -30,18 +39,10 @@ export const Motion = {
  * - pulse: Slow, organic pulses and glows
  */
 export const Springs = {
-  /** Sheet/Modal presentations (iOS-like) - ~400-500ms organic feel */
-  sheet: {
-    damping: 32,
-    stiffness: 180,
-    mass: 1,
-  },
-
-  /** Gentle content reveals */
-  gentle: {
-    damping: 28,
-    stiffness: 180,
-    mass: 1,
+  /** Bouncy celebrations - playful feel */
+  bouncy: {
+    damping: 8,
+    stiffness: 300,
   },
 
   /** Button press feedback - snappy response */
@@ -50,10 +51,11 @@ export const Springs = {
     stiffness: 300,
   },
 
-  /** Bouncy celebrations - playful feel */
-  bouncy: {
-    damping: 8,
-    stiffness: 300,
+  /** Gentle content reveals */
+  gentle: {
+    damping: 28,
+    mass: 1,
+    stiffness: 180,
   },
 
   /** Subtle micro-interactions */
@@ -67,7 +69,13 @@ export const Springs = {
     damping: 12,
     stiffness: 60,
   },
+
+  /** Sheet/Modal presentations (iOS-like) - ~400-500ms organic feel */
+  sheet: {
+    damping: 32,
+    mass: 1,
+    stiffness: 180,
+  },
 } as const;
 
 export default Motion;
-
