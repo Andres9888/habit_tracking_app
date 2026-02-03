@@ -6,6 +6,7 @@
 
 import { v } from 'convex/values';
 import { query, internalMutation } from './_generated/server';
+import { Doc } from './_generated/dataModel';
 import { getStreaksForHabit } from './analytics/index';
 import {
   calculateHabitChanges,
@@ -28,7 +29,7 @@ export const getWeeklyInsights = query({
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
     // Get all trackings for these habits
-    const trackings: any[] = [];
+    const trackings: Doc<'tracking'>[] = [];
     for (const habit of activeHabits) {
       const habitTrackings = await ctx.db
         .query('tracking')
@@ -68,7 +69,7 @@ export const getWeeklyInsights = query({
 export const generateWeeklyInsights = internalMutation({
   args: { userId: v.string() },
   handler: async (_ctx, { userId }) => {
-    const insightData = {
+    const _insightData = {
       generatedAt: new Date().toISOString(),
       userId,
     };

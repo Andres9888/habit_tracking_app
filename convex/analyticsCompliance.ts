@@ -5,6 +5,7 @@
  */
 
 import { query } from './_generated/server';
+import { Doc } from './_generated/dataModel';
 import {
   getDateString,
   getDaysAgo,
@@ -22,7 +23,7 @@ export const getComplianceData = query({
     const habitIds = activeHabits.map((h) => h._id);
 
     // Get all trackings for these habits
-    const trackings: any[] = [];
+    const trackings: Doc<'tracking'>[] = [];
     for (const habitId of habitIds) {
       const habitTrackings = await ctx.db
         .query('tracking')
