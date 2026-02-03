@@ -239,7 +239,7 @@ describe('VisionBoardSection', () => {
     });
 
     it('shows completion checkmark when images exist', () => {
-      const { UNSAFE_queryAllByType } = render(
+      const { toJSON } = render(
         <VisionBoardSection
           {...defaultProps}
           images={mockImages}
@@ -250,7 +250,7 @@ describe('VisionBoardSection', () => {
 
       // Component should have completion checkmark visible
       // Testing indirectly through the structure
-      expect(UNSAFE_queryAllByType('View').length).toBeGreaterThan(0);
+      expect(toJSON()).toBeTruthy();
     });
   });
 

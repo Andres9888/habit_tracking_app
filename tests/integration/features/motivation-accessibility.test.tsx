@@ -887,7 +887,7 @@ describe('Motivation System Accessibility Audit', () => {
         <PremiumBenefitsModal
           visible={true}
           onClose={jest.fn()}
-          onUpgrade={jest.fn()}
+          onStartTrial={jest.fn()}
         />
       );
 
@@ -899,7 +899,7 @@ describe('Motivation System Accessibility Audit', () => {
         <PremiumBenefitsModal
           visible={true}
           onClose={jest.fn()}
-          onUpgrade={jest.fn()}
+          onStartTrial={jest.fn()}
         />
       );
 
