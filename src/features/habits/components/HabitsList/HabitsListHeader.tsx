@@ -1,4 +1,3 @@
-import { getTodayString } from '../../../../utils/getLocalDateString';
 /**
  * HabitsListHeader Component
  * Renders the header section with HabitsHeader and CalendarTimeline
@@ -7,10 +6,17 @@ import { getTodayString } from '../../../../utils/getLocalDateString';
  * when app is offline per acceptance criteria 1.
  */
 
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
+
 import { Animated, View } from 'react-native';
 import { HabitsHeader } from '../HabitsHeader';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
 import { OfflineIndicator } from '../../../../components/SyncStatus';
+import {
+  TrialCountdownBanner,
+  useTrialCountdown,
+} from '../../../../components/TrialCountdownBanner';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
@@ -51,6 +57,9 @@ export function HabitsListHeader(props: HabitsListHeaderProps) {
     justCreatedHabitId,
     weekDateStrings,
   });
+
+  // Trial countdown banner
+  const { shouldShowBanner, daysRemaining } = useTrialCountdown();
 
   return (
     <View className='gap-3 pb-2.5 pt-16'>
@@ -100,6 +109,14 @@ export function HabitsListHeader(props: HabitsListHeaderProps) {
             onPreviousWeek={onPreviousWeek}
           />
         </Animated.View>
+      )}
+
+      {/* Trial Countdown Banner */}
+      {shouldShowBanner && daysRemaining !== null && (
+        <TrialCountdownBanner
+          daysRemaining={daysRemaining}
+          onUpgrade={onUpgradePress}
+        />
       )}
     </View>
   );
