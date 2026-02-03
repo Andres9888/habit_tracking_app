@@ -42,6 +42,7 @@ export function UpgradePrompt({
             accessibilityLabel='Upgrade to premium'
             accessibilityRole='button'
             className='items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
+            style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
             onPress={onUpgradePress}
           >
             <Text className='text-[15px] font-semibold text-white'>
@@ -52,6 +53,7 @@ export function UpgradePrompt({
             accessibilityLabel='Continue with free plan'
             accessibilityRole='button'
             className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
+            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             onPress={onClose}
           >
             <Text className='text-[13px] font-normal text-stone-500'>
