@@ -1,3 +1,10 @@
+/**
+ * Auth Screen Components
+ *
+ * Reusable UI components for authentication screens:
+ * sign-in, sign-up, password reset, verification.
+ */
+
 export { AnimatedLogo } from './AnimatedLogo';
 export { AuthDivider } from './AuthDivider';
 export { AuthError } from './AuthError';
