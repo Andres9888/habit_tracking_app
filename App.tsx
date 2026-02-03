@@ -511,7 +511,8 @@ export default function App() {
     // Note: Authentication is optional for development
     // Add EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY to .env to enable
     if (__DEV__) {
-      console.log('ℹ️ Running in development mode without authentication');
+      if (__DEV__)
+        console.log('ℹ️ Running in development mode without authentication');
     }
     return (
       <SentryErrorBoundary>
