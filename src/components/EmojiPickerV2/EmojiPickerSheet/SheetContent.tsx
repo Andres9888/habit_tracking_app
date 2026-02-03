@@ -17,7 +17,7 @@ interface SheetContentProps {
   habitName: string;
   selectedEmoji: string | null;
   searchQuery: string;
-  selectedCategory: number;
+  selectedCategory: string;
   currentCategoryName: string;
   displayedEmojis: string[];
   suggestedEmojis: string[];
@@ -27,7 +27,7 @@ interface SheetContentProps {
   setIsSearchFocused: (focused: boolean) => void;
   setSearchQuery: (query: string) => void;
   handleClearSearch: () => void;
-  handleCategorySelect: (category: number) => void;
+  handleCategorySelect: (categoryId: string) => void;
   onEmojiSelect: (emoji: string) => void;
   onNoIcon: () => void;
 }
