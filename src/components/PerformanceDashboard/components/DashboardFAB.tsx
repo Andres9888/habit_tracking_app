@@ -22,7 +22,12 @@ export function DashboardFAB({
   status,
 }: DashboardFABProps) {
   return (
-    <Pressable style={[styles.fab, positionStyle]} onPress={onPress}>
+    <Pressable
+      accessibilityLabel={`Performance dashboard, ${currentFPS.toFixed(0)} FPS, ${status} status`}
+      accessibilityRole='button'
+      style={[styles.fab, positionStyle]}
+      onPress={onPress}
+    >
       <StatusIndicator size='small' status={status} />
       <Text style={styles.fabText}>{currentFPS.toFixed(0)}</Text>
     </Pressable>

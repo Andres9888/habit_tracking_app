@@ -22,13 +22,25 @@ export function DashboardHeader({
   status,
 }: DashboardHeaderProps) {
   return (
-    <Pressable style={styles.header} onPress={onClose}>
+    <Pressable
+      accessibilityLabel='Close performance dashboard'
+      accessibilityRole='button'
+      style={styles.header}
+      onPress={onClose}
+    >
       <View style={styles.headerLeft}>
         <StatusIndicator size='medium' status={status} />
         <Text style={styles.headerTitle}>Performance</Text>
       </View>
       <View style={styles.headerRight}>
-        <Pressable style={styles.expandButton} onPress={onToggleExpand}>
+        <Pressable
+          accessibilityLabel={
+            isExpanded ? 'Collapse dashboard' : 'Expand dashboard'
+          }
+          accessibilityRole='button'
+          style={styles.expandButton}
+          onPress={onToggleExpand}
+        >
           <Text style={styles.expandIcon}>{isExpanded ? '▼' : '▲'}</Text>
         </Pressable>
         <Text style={styles.closeButton}>×</Text>
