@@ -66,6 +66,10 @@ function calculateStreaks(
 
 /**
  * Prepare export data from Convex queries
+ * @param habits - Array of habit documents from Convex
+ * @param trackings - Array of tracking documents from Convex
+ * @param overviewStats - Overview statistics or null if not available
+ * @returns Formatted export data ready for CSV or JSON conversion
  */
 export async function prepareExportData(
   habits: Doc<'habits'>[],
