@@ -4,6 +4,7 @@
  */
 
 import { updateStreak, differenceInDays } from '../../../convex/streakUtils';
+import type { StreakData } from '../../../convex/streakUtils/types';
 
 describe('Streak Tracking System', () => {
   describe('differenceInDays', () => {
@@ -286,7 +287,7 @@ describe('Streak Tracking System', () => {
     });
 
     it('AC Test 4: Build 10-day streak, skip, build 5-day → bestStreak = 10, currentStreak = 5', () => {
-      let streakData: any = {};
+      let streakData: Partial<StreakData> = {};
 
       // Build 10-day streak
       for (let i = 1; i <= 10; i++) {
@@ -316,7 +317,7 @@ describe('Streak Tracking System', () => {
       const startTime = performance.now();
 
       // Simulate 100 streak updates
-      let streakData: any = {};
+      let streakData: Partial<StreakData> = {};
       for (let i = 1; i <= 100; i++) {
         const date = `2025-01-${String((i % 30) + 1).padStart(2, '0')}`;
         streakData = updateStreak(streakData, date, true);

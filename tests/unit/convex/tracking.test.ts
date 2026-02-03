@@ -3,12 +3,14 @@
  * Tests toggleCompletion and getCompletionStatus functionality
  */
 
+import { Id } from '../../../convex/_generated/dataModel';
+
 describe('toggleCompletion mutation', () => {
   describe('argument validation', () => {
     it('requires habitId and date parameters', () => {
       const validArgs = {
         date: '2025-01-15',
-        habitId: 'test_habit_id' as any,
+        habitId: 'test_habit_id' as Id<'habits'>,
       };
 
       expect(validArgs).toHaveProperty('habitId');
@@ -83,7 +85,7 @@ describe('toggleCompletion mutation', () => {
 
   describe('habit existence validation', () => {
     it('should require valid habit ID', () => {
-      const habitId = 'test_habit_id' as any;
+      const habitId = 'test_habit_id' as Id<'habits'>;
 
       expect(habitId).toBeDefined();
       expect(typeof habitId).toBe('string');
@@ -96,7 +98,7 @@ describe('toggleCompletion mutation', () => {
       const newRecord = {
         completed: true,
         date: '2025-01-15',
-        habitId: 'test_habit_id' as any,
+        habitId: 'test_habit_id' as Id<'habits'>,
       };
 
       expect(newRecord).toHaveProperty('habitId');
@@ -115,7 +117,7 @@ describe('toggleCompletion mutation', () => {
       const insertedRecord = {
         completed: true,
         date: '2025-01-15',
-        habitId: 'habit_123' as any,
+        habitId: 'habit_123' as Id<'habits'>,
       };
 
       expect(insertedRecord.habitId).toBe('habit_123');
@@ -127,10 +129,10 @@ describe('toggleCompletion mutation', () => {
   describe('toggle behavior - unchecking (existing record)', () => {
     it('should delete tracking record when it exists', () => {
       const existingRecord = {
-        _id: 'tracking_123' as any,
+        _id: 'tracking_123' as Id<'tracking'>,
         completed: true,
         date: '2025-01-15',
-        habitId: 'habit_123' as any,
+        habitId: 'habit_123' as Id<'habits'>,
       };
 
       expect(existingRecord._id).toBeDefined();
@@ -146,7 +148,7 @@ describe('toggleCompletion mutation', () => {
     it('should use indexed query to find existing record', () => {
       const queryParams = {
         date: '2025-01-15',
-        habitId: 'habit_123' as any,
+        habitId: 'habit_123' as Id<'habits'>,
         index: 'by_habit_and_date',
       };
 
@@ -195,12 +197,12 @@ describe('toggleCompletion mutation', () => {
     it('should handle different dates for same habit independently', () => {
       const habit1Date1 = {
         date: '2025-01-15',
-        habitId: 'habit_1' as any,
+        habitId: 'habit_1' as Id<'habits'>,
       };
 
       const habit1Date2 = {
         date: '2025-01-16',
-        habitId: 'habit_1' as any,
+        habitId: 'habit_1' as Id<'habits'>,
       };
 
       // These are independent records
@@ -211,12 +213,12 @@ describe('toggleCompletion mutation', () => {
     it('should handle different habits for same date independently', () => {
       const habit1 = {
         date: '2025-01-15',
-        habitId: 'habit_1' as any,
+        habitId: 'habit_1' as Id<'habits'>,
       };
 
       const habit2 = {
         date: '2025-01-15',
-        habitId: 'habit_2' as any,
+        habitId: 'habit_2' as Id<'habits'>,
       };
 
       // These are independent records
@@ -238,7 +240,7 @@ describe('toggleCompletion mutation', () => {
     });
 
     it('should throw error for non-existent habit', () => {
-      const nonExistentHabitId = 'non_existent_habit' as any;
+      const nonExistentHabitId = 'non_existent_habit' as Id<'habits'>;
 
       expect(nonExistentHabitId).toBeDefined();
       // Mutation should throw: "Habit not found"
@@ -267,7 +269,7 @@ describe('getCompletionStatus query', () => {
     it('requires habitId and date parameters', () => {
       const validArgs = {
         date: '2025-01-15',
-        habitId: 'test_habit_id' as any,
+        habitId: 'test_habit_id' as Id<'habits'>,
       };
 
       expect(validArgs).toHaveProperty('habitId');
@@ -286,10 +288,10 @@ describe('getCompletionStatus query', () => {
   describe('query behavior', () => {
     it('should return true when tracking record exists', () => {
       const existingRecord = {
-        _id: 'tracking_123' as any,
+        _id: 'tracking_123' as Id<'tracking'>,
         completed: true,
         date: '2025-01-15',
-        habitId: 'habit_123' as any,
+        habitId: 'habit_123' as Id<'habits'>,
       };
 
       const result = existingRecord !== null;
@@ -308,7 +310,7 @@ describe('getCompletionStatus query', () => {
     it('should use indexed query to find record', () => {
       const queryParams = {
         date: '2025-01-15',
-        habitId: 'habit_123' as any,
+        habitId: 'habit_123' as Id<'habits'>,
         index: 'by_habit_and_date',
       };
 
@@ -483,7 +485,7 @@ describe('toggleCompletion and getCompletionStatus integration', () => {
     it('both query with habitId and date', () => {
       const queryParams = {
         date: '2025-01-15',
-        habitId: 'habit_123' as any,
+        habitId: 'habit_123' as Id<'habits'>,
       };
 
       expect(queryParams).toHaveProperty('habitId');
