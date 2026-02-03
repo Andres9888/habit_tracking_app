@@ -13,6 +13,7 @@ export function ScreenHeader({ onBack }: ScreenHeaderProps) {
           accessibilityLabel='Go back'
           accessibilityRole='button'
           className='mr-4 h-10 w-10 items-center justify-center'
+          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
           onPress={onBack}
         >
           <ArrowLeft color='#101828' size={24} />
