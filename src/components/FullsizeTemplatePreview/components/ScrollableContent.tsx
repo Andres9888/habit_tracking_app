@@ -27,7 +27,7 @@ export function ScrollableContent({
   iconGlowStyle,
   onResearchPress,
 }: ScrollableContentProps) {
-  const tips = (template as any)?.tips;
+  const tips = template?.tips;
 
   return (
     <ScrollView
