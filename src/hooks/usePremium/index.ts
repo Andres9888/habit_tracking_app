@@ -1,3 +1,10 @@
+/**
+ * usePremium Hook
+ *
+ * Manages premium subscription state via RevenueCat.
+ * Provides purchase actions and subscription status.
+ */
+
 export { usePremium } from './usePremium';
 export type {
   UsePremiumReturn,
