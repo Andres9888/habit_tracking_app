@@ -9,11 +9,13 @@ interface StrengthProgressBarProps {
     opacity: number;
     transform: { scale: number; rotate: string }[];
   }>;
+  progressAnimatedStyle: AnimatedStyle<{ width: string }>;
 }
 
 export function StrengthProgressBar({
   strengthPercent,
   strengthEmojiAnimatedStyle,
+  progressAnimatedStyle,
 }: StrengthProgressBarProps) {
   return (
     <View className='relative mb-3 flex-row items-center justify-between px-3'>
@@ -22,7 +24,7 @@ export function StrengthProgressBar({
         <ReAnimated.Text
           style={[
             { fontSize: 20, textAlign: 'center' },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             strengthEmojiAnimatedStyle as any,
           ]}
         >
@@ -65,13 +67,16 @@ export function StrengthProgressBar({
             width: '100%',
           }}
         >
-          <View
-            style={{
-              backgroundColor: '#65a30d',
-              borderRadius: 4,
-              height: '100%',
-              width: `${strengthPercent}%`,
-            }}
+          {/* Animated progress bar fill */}
+          <ReAnimated.View
+            style={[
+              {
+                backgroundColor: '#65a30d',
+                borderRadius: 4,
+                height: '100%',
+              },
+              progressAnimatedStyle,
+            ]}
           />
           {/* Dividers at 20%, 40%, 60%, 80% */}
           {[20, 40, 60, 80].map((pos) => (

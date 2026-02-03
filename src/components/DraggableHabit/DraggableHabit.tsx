@@ -65,10 +65,8 @@ function DraggableHabit(props: DraggableHabitProps) {
     triggerSuccess,
   });
 
-  const { strengthEmojiAnimatedStyle } = useStrengthAnimation(
-    state.strengthPercent,
-    reduceMotionPreference
-  );
+  const { progressAnimatedStyle, strengthEmojiAnimatedStyle } =
+    useStrengthAnimation(state.strengthPercent, reduceMotionPreference);
 
   const pressHandlers = usePressHandlers({
     archiveFlash: animations.archiveFlash,
@@ -94,6 +92,7 @@ function DraggableHabit(props: DraggableHabitProps) {
       highContrastMode={highContrastMode}
       isConnectedToNextWeek={isConnectedToNextWeek}
       isConnectedToPreviousWeek={isConnectedToPreviousWeek}
+      progressAnimatedStyle={progressAnimatedStyle}
       reduceMotionPreference={reduceMotionPreference}
       showConnectors={showConnectors}
       showHabitStrengthPercentage={showHabitStrengthPercentage}

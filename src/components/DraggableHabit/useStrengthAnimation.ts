@@ -3,13 +3,13 @@ import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  withSequence,
   withTiming,
   withDelay,
   Easing as ReanimatedEasing,
 } from 'react-native-reanimated';
 
 import { getStrengthLabel } from './strengthUtils';
+import { runLevelUpAnimation, runSubtlePulse } from './animationHelpers';
 
 export function useStrengthAnimation(
   strengthPercent: number,
@@ -18,12 +18,46 @@ export function useStrengthAnimation(
   const strengthEmojiScale = useSharedValue(1);
   const strengthEmojiOpacity = useSharedValue(1);
   const strengthEmojiRotation = useSharedValue(0);
+  const progressWidth = useSharedValue(strengthPercent);
   const previousStrengthLevelRef = useRef(getStrengthLabel(strengthPercent));
+  const previousStrengthRef = useRef(strengthPercent);
+  const isFirstRenderRef = useRef(true);
 
   useEffect(() => {
+    const previousStrength = previousStrengthRef.current;
+    previousStrengthRef.current = strengthPercent;
     const currentLabel = getStrengthLabel(strengthPercent);
     const levelChanged = previousStrengthLevelRef.current !== currentLabel;
     previousStrengthLevelRef.current = currentLabel;
+
+    // Animate the progress bar width
+    const isIncreasing = strengthPercent > previousStrength;
+    if (reduceMotionPreference) {
+      progressWidth.value = strengthPercent;
+    } else if (isFirstRenderRef.current) {
+      isFirstRenderRef.current = false;
+      progressWidth.value = 0;
+      progressWidth.value = withDelay(
+        200,
+        withTiming(strengthPercent, {
+          duration: 800,
+          easing: ReanimatedEasing.out(ReanimatedEasing.cubic),
+        })
+      );
+    } else if (isIncreasing) {
+      // Satisfying spring animation when strength increases
+      progressWidth.value = withSpring(strengthPercent, {
+        damping: 12,
+        mass: 0.8,
+        stiffness: 80,
+      });
+    } else {
+      // Decreasing - quick ease out
+      progressWidth.value = withTiming(strengthPercent, {
+        duration: 300,
+        easing: ReanimatedEasing.out(ReanimatedEasing.quad),
+      });
+    }
 
     if (reduceMotionPreference) return;
 
@@ -33,10 +67,17 @@ export function useStrengthAnimation(
         strengthEmojiScale,
         strengthEmojiRotation
       );
-    } else {
+    } else if (isIncreasing) {
       runSubtlePulse(strengthEmojiScale);
     }
-  }, [strengthPercent, reduceMotionPreference]);
+  }, [
+    strengthPercent,
+    reduceMotionPreference,
+    progressWidth,
+    strengthEmojiOpacity,
+    strengthEmojiRotation,
+    strengthEmojiScale,
+  ]);
 
   const strengthEmojiAnimatedStyle = useAnimatedStyle(() => ({
     opacity: strengthEmojiOpacity.value,
@@ -46,58 +87,9 @@ export function useStrengthAnimation(
     ],
   }));
 
-  return { strengthEmojiAnimatedStyle };
-}
+  const progressAnimatedStyle = useAnimatedStyle(() => ({
+    width: `${progressWidth.value}%`,
+  }));
 
-function runLevelUpAnimation(
-  opacity: { value: number },
-  scale: { value: number },
-  rotation: { value: number }
-) {
-  opacity.value = withTiming(0.3, {
-    duration: 150,
-    easing: ReanimatedEasing.out(ReanimatedEasing.ease),
-  });
-  scale.value = withTiming(0.6, {
-    duration: 150,
-    easing: ReanimatedEasing.out(ReanimatedEasing.ease),
-  });
-  rotation.value = withSequence(
-    withTiming(-8, {
-      duration: 80,
-      easing: ReanimatedEasing.inOut(ReanimatedEasing.ease),
-    }),
-    withTiming(8, {
-      duration: 80,
-      easing: ReanimatedEasing.inOut(ReanimatedEasing.ease),
-    }),
-    withTiming(0, {
-      duration: 60,
-      easing: ReanimatedEasing.out(ReanimatedEasing.ease),
-    })
-  );
-  opacity.value = withDelay(
-    150,
-    withTiming(1, {
-      duration: 200,
-      easing: ReanimatedEasing.out(ReanimatedEasing.ease),
-    })
-  );
-  scale.value = withDelay(
-    150,
-    withSequence(
-      withSpring(1.4, { damping: 6, stiffness: 120 }),
-      withSpring(1, { damping: 10, stiffness: 180 })
-    )
-  );
-}
-
-function runSubtlePulse(scale: { value: number }) {
-  scale.value = withSequence(
-    withTiming(1.08, {
-      duration: 100,
-      easing: ReanimatedEasing.out(ReanimatedEasing.ease),
-    }),
-    withSpring(1, { damping: 15, stiffness: 200 })
-  );
+  return { progressAnimatedStyle, strengthEmojiAnimatedStyle };
 }

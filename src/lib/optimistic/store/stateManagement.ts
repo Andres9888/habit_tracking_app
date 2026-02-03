@@ -51,12 +51,24 @@ export function createStateManagement(
       operation.state = 'confirmed';
       operation.completedAt = Date.now();
 
-      clearPendingState(operation);
+      // Delay clearing pending state to allow Convex subscription to sync
+      // This prevents a race condition where:
+      // 1. Server confirms the mutation
+      // 2. We clear optimistic state immediately
+      // 3. Convex subscription hasn't updated yet
+      // 4. UI briefly shows stale (pre-toggle) state
+      // 300ms is enough for most Convex subscription updates to propagate
+      setTimeout(() => {
+        clearPendingState(operation);
+        notify();
+      }, 300);
+
       setTimeout(() => {
         state.operations.delete(operationId);
         notify();
-      }, 100);
+      }, 400);
 
+      // Notify immediately that operation state changed to 'confirmed'
       notify();
     },
 
