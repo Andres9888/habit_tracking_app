@@ -1,3 +1,12 @@
+/**
+ * Type Declarations for reanimated-color-picker
+ *
+ * Provides TypeScript types for the color picker library.
+ * The library lacks official type definitions, so we define them here.
+ *
+ * @see https://github.com/alabsi91/reanimated-color-picker
+ */
+
 declare module 'reanimated-color-picker' {
   import type { ComponentType } from 'react';
   import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
