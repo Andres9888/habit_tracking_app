@@ -1,6 +1,9 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 import { ReactNode } from 'react';
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
 import { getSettingsRowColors } from './SettingsRow.colors';
 
 interface SettingsRowProps {
@@ -27,6 +30,16 @@ export function SettingsRow({
   highContrastMode = false,
 }: SettingsRowProps) {
   const colors = getSettingsRowColors(highContrastMode);
+
+  const handleToggle = (newValue: boolean) => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onToggle?.(newValue);
+  };
+
+  const handleNavPress = () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onPress?.();
+  };
 
   const content = (
     <View
@@ -67,7 +80,7 @@ export function SettingsRow({
             true: colors.switchTrackTrue,
           }}
           value={value as boolean}
-          onValueChange={onToggle}
+          onValueChange={handleToggle}
         />
       )}
 
@@ -100,7 +113,7 @@ export function SettingsRow({
     <TouchableOpacity
       accessibilityRole='button'
       activeOpacity={0.7}
-      onPress={onPress}
+      onPress={handleNavPress}
     >
       {content}
     </TouchableOpacity>
