@@ -4,5 +4,5 @@
  * Barrel export for the TemplateCard component
  */
 
-export { default, TemplateCard } from './TemplateCard';
+export { TemplateCard, TemplateCard as default } from './TemplateCard';
 export type { TemplateCardProps } from './TemplateCard.types';

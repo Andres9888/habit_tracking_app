@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
 interface UseHabitDayToggleAnimationsParams {
@@ -10,10 +10,12 @@ export const useHabitDayToggleAnimations = ({
   completed,
   isToday,
 }: UseHabitDayToggleAnimationsParams) => {
+  // Initialize animated values. We use refs to persist across renders.
+  // The completion value controls icon opacity and scale.
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
   const buttonScale = useRef(new Animated.Value(1)).current;
   const breathingPulse = useRef(new Animated.Value(1)).current;
-  const prevCompletedRef = useRef(completed);
+  const prevCompletedRef = useRef<boolean | null>(null);
 
   // Combine scale values using Animated.multiply
   const combinedScale = useMemo(
@@ -22,20 +24,33 @@ export const useHabitDayToggleAnimations = ({
     []
   );
 
+  // Sync animated value immediately before paint to prevent flicker.
+  // This handles cases where the component renders with a completed state
+  // but the animated value was initialized before the final props arrived.
+  useLayoutEffect(() => {
+    const targetValue = completed ? 1 : 0;
+    // Only set on initial mount or if somehow out of sync
+    if (prevCompletedRef.current === null) {
+      completion.setValue(targetValue);
+    }
+  }, [completed, completion]);
+
   useEffect(() => {
     const prevCompleted = prevCompletedRef.current;
     prevCompletedRef.current = completed;
 
-    // If the value hasn't changed, just ensure it's set correctly (no animation)
+    // On initial mount (prevCompleted is null), value already set by useLayoutEffect
+    if (prevCompleted === null) {
+      return;
+    }
+
+    // After mount, only animate if value actually changed
     if (prevCompleted === completed) {
-      completion.setValue(completed ? 1 : 0);
       return;
     }
 
     // Value changed - animate the transition
-    let animation: Animated.CompositeAnimation | null = null;
-
-    animation = completed
+    const animation = completed
       ? Animated.parallel([
           Animated.spring(buttonScale, {
             friction: 6,
@@ -60,7 +75,7 @@ export const useHabitDayToggleAnimations = ({
     animation.start();
 
     return () => {
-      animation?.stop();
+      animation.stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [completed]);
