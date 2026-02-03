@@ -15,15 +15,29 @@ interface ErrorFallbackProps {
 
 export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.emoji}>😕</Text>
-      <Text style={styles.headline}>Something went wrong</Text>
+    <View
+      accessibilityLabel='Error occurred'
+      accessibilityLiveRegion='assertive'
+      accessibilityRole='alert'
+      style={styles.container}
+    >
+      <Text accessibilityLabel='Error icon' style={styles.emoji}>
+        😕
+      </Text>
+      <Text accessibilityRole='header' style={styles.headline}>
+        Something went wrong
+      </Text>
       <Text style={styles.description}>
         We encountered an unexpected error. Please try again.
       </Text>
       <RetryButton onRetry={onRetry} />
       {__DEV__ && error && (
-        <Text style={styles.errorMessage}>{error.message}</Text>
+        <Text
+          accessibilityLabel={`Error details: ${error.message}`}
+          style={styles.errorMessage}
+        >
+          {error.message}
+        </Text>
       )}
     </View>
   );

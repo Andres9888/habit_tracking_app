@@ -1,3 +1,10 @@
+/**
+ * SettingsHeader Component
+ *
+ * Header bar for the Settings modal with back button and title.
+ * Handles safe area padding for notched devices.
+ */
+
 import { ChevronLeft } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 import type { SettingsColors } from './types';

@@ -1,3 +1,11 @@
+/**
+ * SettingsSection Component
+ *
+ * A grouped container for related settings rows.
+ * Displays a title label and wraps children in a styled card.
+ * Supports high contrast mode for accessibility.
+ */
+
 import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 

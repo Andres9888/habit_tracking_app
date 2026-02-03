@@ -1,5 +1,19 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
+
+/**
+ * SettingsRow Component
+ *
+ * A single row in the settings list. Supports multiple types:
+ * - toggle: Switch control for boolean settings
+ * - navigation: Chevron indicating tappable row
+ * - selection: Shows current value with chevron
+ * - info: Display-only row without interaction
+ *
+ * Includes icon, label, and appropriate right-side control.
+ * Supports high contrast mode for accessibility.
+ */
+
 import { ReactNode } from 'react';
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
