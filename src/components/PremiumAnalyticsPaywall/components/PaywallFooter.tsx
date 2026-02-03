@@ -20,6 +20,9 @@ export const PaywallFooter: React.FC<PaywallFooterProps> = ({
 }) => (
   <View>
     <TouchableOpacity
+      accessibilityHint='Opens subscription options'
+      accessibilityLabel='Start 7-day free trial'
+      accessibilityRole='button'
       activeOpacity={0.8}
       style={styles.ctaButton}
       onPress={onStartTrial}
@@ -35,6 +38,8 @@ export const PaywallFooter: React.FC<PaywallFooterProps> = ({
     </Text>
 
     <TouchableOpacity
+      accessibilityLabel='Restore purchases'
+      accessibilityRole='button'
       activeOpacity={0.7}
       style={styles.restoreButton}
       onPress={onRestore}
