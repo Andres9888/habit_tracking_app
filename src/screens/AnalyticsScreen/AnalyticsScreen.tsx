@@ -78,6 +78,7 @@ export default function AnalyticsScreen() {
 
       <ChartSections
         complianceData={complianceData}
+        isLoading={isLoading}
         strengthDistribution={strengthDistribution}
         trendData={trendData}
       />
