@@ -27,6 +27,9 @@ import { convexClient } from './lib/appConfig';
 import theme from './theme';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { SentryUserSync, ConvexClerkProvider } from './providers';
+import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
+import { SyncStatusProvider } from './contexts/SyncStatusContext';
+import { OfflineProvider } from './providers/OfflineProvider';
 
 // Initialize Sentry as early as possible
 initSentry();
@@ -41,7 +44,13 @@ function Providers({ children }: PropsWithChildren) {
           <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
             <SentryUserSync>
               <ConvexClerkProvider>
-                <PurchasesProvider>{children}</PurchasesProvider>
+                <NetworkStatusProvider>
+                  <OfflineProvider>
+                    <SyncStatusProvider>
+                      <PurchasesProvider>{children}</PurchasesProvider>
+                    </SyncStatusProvider>
+                  </OfflineProvider>
+                </NetworkStatusProvider>
               </ConvexClerkProvider>
             </SentryUserSync>
           </ClerkProvider>
@@ -57,7 +66,13 @@ function DevProviders({ children }: PropsWithChildren) {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
           <PaperProvider theme={theme}>
-            <ConvexProvider client={convexClient}>{children}</ConvexProvider>
+            <ConvexProvider client={convexClient}>
+              <NetworkStatusProvider>
+                <OfflineProvider>
+                  <SyncStatusProvider>{children}</SyncStatusProvider>
+                </OfflineProvider>
+              </NetworkStatusProvider>
+            </ConvexProvider>
           </PaperProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
