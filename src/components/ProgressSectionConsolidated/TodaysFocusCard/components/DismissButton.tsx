@@ -5,8 +5,9 @@
  */
 
 import React from 'react';
-import { Pressable, Text } from 'react-native';
+import { Text } from 'react-native';
 
+import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import type { FocusState } from '../../TodaysFocusCardTypes';
 import { styles } from '../TodaysFocusCard.styles';
 
@@ -28,7 +29,7 @@ export function DismissButton({
   }
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityHint='Dismiss celebration and continue'
       accessibilityLabel='Continue'
       accessibilityRole='button'
@@ -38,7 +39,7 @@ export function DismissButton({
       <Text style={[styles.dismissText, { color: subTextColor }]}>
         Tap to continue
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 

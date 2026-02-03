@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text, Pressable } from 'react-native';
+import { Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
 
 interface ViewAllButtonProps {
   noteCount: number;
@@ -15,7 +16,7 @@ export function ViewAllButton({ noteCount, onPress }: ViewAllButtonProps) {
   };
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel={`View all ${noteCount} notes`}
       accessibilityRole='button'
       className='flex-row items-center justify-center gap-1 rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50'
@@ -25,6 +26,6 @@ export function ViewAllButton({ noteCount, onPress }: ViewAllButtonProps) {
         View all ({noteCount})
       </Text>
       <ChevronRight className='text-stone-400' size={16} />
-    </Pressable>
+    </AnimatedPressable>
   );
 }
