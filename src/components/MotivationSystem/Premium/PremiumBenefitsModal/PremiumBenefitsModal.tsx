@@ -5,14 +5,15 @@
  * benefits and scientific backing.
  */
 
-import React, { useCallback } from 'react';
-import { View, ScrollView, Modal } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { View, ScrollView, Modal, Alert } from 'react-native';
 import {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { usePremium } from '../../../../hooks/usePremium';
 import type { PremiumBenefitsModalProps } from './PremiumBenefitsModal.types';
 import { PREMIUM_FEATURES } from './premiumFeatures';
 import { ModalHeader } from './ModalHeader';
@@ -29,8 +30,10 @@ export function PremiumBenefitsModal({
   reduceMotion = false,
   testID,
 }: PremiumBenefitsModalProps) {
-  const { triggerSelection, triggerLightImpact } = useHapticFeedback({});
+  const { triggerSelection, triggerLightImpact, triggerSuccess, triggerError } = useHapticFeedback({});
+  const { priceString, isLoadingOfferings, restorePurchases } = usePremium();
   const buttonScale = useSharedValue(1);
+  const [isRestoring, setIsRestoring] = useState(false);
 
   const handleClose = useCallback(() => {
     triggerLightImpact();
@@ -42,10 +45,51 @@ export function PremiumBenefitsModal({
     onStartTrial();
   }, [onStartTrial, triggerSelection]);
 
-  const handleRestorePurchases = useCallback(() => {
+  const handleRestorePurchases = useCallback(async () => {
     triggerLightImpact();
-    // TODO: Implement restore purchases
-  }, [triggerLightImpact]);
+    setIsRestoring(true);
+
+    try {
+      const success = await restorePurchases();
+
+      if (success) {
+        // Success - found premium purchase
+        triggerSuccess();
+        Alert.alert(
+          '✓ Purchases Restored',
+          'Your premium subscription has been successfully restored!',
+          [
+            {
+              text: 'Great!',
+              onPress: () => {
+                // Close modal since they now have premium
+                onClose();
+              },
+            },
+          ]
+        );
+      } else {
+        // No purchases found
+        triggerLightImpact();
+        Alert.alert(
+          'No Purchases Found',
+          'We couldn\'t find any previous purchases for this account. If you believe this is an error, please contact support.',
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      // Error during restore
+      triggerError();
+      console.error('[PremiumBenefitsModal] Restore error:', error);
+      Alert.alert(
+        'Restore Failed',
+        'There was a problem restoring your purchases. Please try again or contact support if the issue persists.',
+        [{ text: 'OK' }]
+      );
+    } finally {
+      setIsRestoring(false);
+    }
+  }, [triggerLightImpact, triggerSuccess, triggerError, restorePurchases, onClose]);
 
   const buttonAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: buttonScale.value }],
@@ -95,6 +139,9 @@ export function PremiumBenefitsModal({
         </ScrollView>
         <CTAFooter
           buttonAnimatedStyle={buttonAnimatedStyle}
+          isLoadingPrice={isLoadingOfferings}
+          isRestoring={isRestoring}
+          priceString={priceString}
           reduceMotion={reduceMotion}
           onPressIn={handleButtonPressIn}
           onPressOut={handleButtonPressOut}
