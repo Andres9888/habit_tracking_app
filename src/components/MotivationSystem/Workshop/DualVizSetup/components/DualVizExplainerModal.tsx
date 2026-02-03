@@ -24,10 +24,14 @@ export function DualVizExplainerModal({
       onRequestClose={onClose}
     >
       <Pressable
+        accessibilityLabel='Close modal'
+        accessibilityRole='button'
         className='flex-1 items-center justify-center bg-black/50 px-6'
         onPress={onClose}
       >
         <Pressable
+          accessibilityLabel='Visualization protocol explanation'
+          accessibilityRole='none'
           className='w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl'
           onPress={(e) => e.stopPropagation()}
         >
