@@ -37,7 +37,7 @@ export function useImageViewer({
       await onUpdateCaption(captionText.trim() || undefined);
       setIsEditingCaption(false);
     } catch (error) {
-      console.error('Failed to save caption:', error);
+      if (__DEV__) console.error('Failed to save caption:', error);
     } finally {
       setIsSaving(false);
     }
@@ -56,7 +56,7 @@ export function useImageViewer({
               await onDelete();
               onClose();
             } catch (error) {
-              console.error('Failed to delete:', error);
+              if (__DEV__) console.error('Failed to delete:', error);
             } finally {
               setIsDeleting(false);
             }
