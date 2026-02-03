@@ -3,10 +3,27 @@
  * Header bar for the image viewer modal with close, edit, and delete actions
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Pressable, ActivityIndicator } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { X, Edit3, Trash2 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+function usePressAnimation() {
+  const scale = useSharedValue(1);
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.9, { damping: 15, stiffness: 300 });
+  }, [scale]);
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+  }, [scale]);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+  return { animatedStyle, handlePressIn, handlePressOut };
+}
 
 interface ViewerHeaderProps {
   onClose: () => void;
@@ -21,47 +38,60 @@ export function ViewerHeader({
   onDelete,
   isDeleting,
 }: ViewerHeaderProps) {
+  const closeAnim = usePressAnimation();
+  const editAnim = usePressAnimation();
+  const deleteAnim = usePressAnimation();
+
   return (
     <View className='flex-row items-center justify-between px-4 pb-4 pt-14'>
-      <Pressable
+      <AnimatedPressable
         accessibilityLabel='Close image viewer'
         accessibilityRole='button'
         className='h-10 w-10 items-center justify-center rounded-full bg-white/10'
+        style={closeAnim.animatedStyle}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           onClose();
         }}
+        onPressIn={closeAnim.handlePressIn}
+        onPressOut={closeAnim.handlePressOut}
       >
         <X className='text-white' size={20} />
-      </Pressable>
+      </AnimatedPressable>
       <View className='flex-row gap-2'>
-        <Pressable
+        <AnimatedPressable
           accessibilityLabel='Edit caption'
           accessibilityRole='button'
           className='h-10 w-10 items-center justify-center rounded-full bg-white/10'
+          style={editAnim.animatedStyle}
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             onToggleEdit();
           }}
+          onPressIn={editAnim.handlePressIn}
+          onPressOut={editAnim.handlePressOut}
         >
           <Edit3 className='text-white' size={20} />
-        </Pressable>
-        <Pressable
+        </AnimatedPressable>
+        <AnimatedPressable
           accessibilityLabel='Delete image'
           accessibilityRole='button'
           className='h-10 w-10 items-center justify-center rounded-full bg-white/10'
           disabled={isDeleting}
+          style={deleteAnim.animatedStyle}
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             onDelete();
           }}
+          onPressIn={deleteAnim.handlePressIn}
+          onPressOut={deleteAnim.handlePressOut}
         >
           {isDeleting ? (
             <ActivityIndicator color='#fff' size='small' />
           ) : (
             <Trash2 className='text-white' size={20} />
           )}
-        </Pressable>
+        </AnimatedPressable>
       </View>
     </View>
   );
