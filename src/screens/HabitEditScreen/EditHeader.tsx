@@ -1,3 +1,10 @@
+/**
+ * EditHeader Component
+ *
+ * Header bar for the habit edit screen with cancel and save actions.
+ * Handles safe area padding for notched devices.
+ */
+
 import { View, Pressable, Text } from 'react-native';
 import { ChevronLeft } from 'lucide-react-native';
 
