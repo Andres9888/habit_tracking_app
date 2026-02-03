@@ -20,7 +20,11 @@ export function ShareCardHeader({ onClose }: ShareCardHeaderProps) {
       <Text style={[styles.title, { color: theme.custom.colors.gray[900] }]}>
         Share Your Achievement
       </Text>
-      <Pressable onPress={onClose}>
+      <Pressable
+        accessibilityLabel='Done'
+        accessibilityRole='button'
+        onPress={onClose}
+      >
         <Text
           style={[
             styles.closeButton,
