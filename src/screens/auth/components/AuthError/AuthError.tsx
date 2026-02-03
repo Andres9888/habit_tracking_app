@@ -19,6 +19,7 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
         accessibilityHint='Removes the error message from the screen'
         accessibilityLabel='Dismiss error'
         accessibilityRole='button'
+        activeOpacity={0.7}
         className='mt-2'
         onPress={handleDismiss}
       >
