@@ -1,0 +1,195 @@
+# Backend Security Fixes - Apply these manually
+
+## File: convex/analyticsCompliance.ts
+Change line 18-19 from:
+```typescript
+  handler: async (ctx) => {
+    const habits = await ctx.db.query('habits').collect();
+```
+To:
+```typescript
+  handler: async (ctx) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
+    const habits = await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .collect();
+```
+
+## File: convex/analyticsDistribution.ts
+Change line 11-12 from:
+```typescript
+  handler: async (ctx) => {
+    const habits = await ctx.db.query('habits').collect();
+```
+To:
+```typescript
+  handler: async (ctx) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return {
+        automatic: { count: 0, emoji: '⚡', percentage: 0 },
+        building: { count: 0, emoji: '🌿', percentage: 0 },
+        developing: { count: 0, emoji: '🌳', percentage: 0 },
+        starting: { count: 0, emoji: '🌱', percentage: 0 },
+        strong: { count: 0, emoji: '💪', percentage: 0 },
+        total: 0,
+      };
+    }
+
+    const habits = await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .collect();
+```
+
+## File: convex/analyticsOverview.ts
+Change line 14-15 from:
+```typescript
+  handler: async (ctx) => {
+    const habits = await ctx.db.query('habits').collect();
+```
+To:
+```typescript
+  handler: async (ctx) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return {
+        averageStrength: 0,
+        rankedHabits: [],
+        strongestHabit: null,
+        totalHabits: 0,
+        weakestHabit: null,
+      };
+    }
+
+    const habits = await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .collect();
+```
+
+## File: convex/analyticsTrend.ts
+Change line 13-14 from:
+```typescript
+  handler: async (ctx) => {
+    const habits = await ctx.db.query('habits').collect();
+```
+To:
+```typescript
+  handler: async (ctx) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
+    const habits = await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .collect();
+```
+
+## File: convex/analyticsWeekly.ts
+Change line 19-20 from:
+```typescript
+  handler: async (ctx) => {
+    const habits = await ctx.db.query('habits').collect();
+```
+To:
+```typescript
+  handler: async (ctx) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return {
+        atRisk: [],
+        generatedAt: new Date().toISOString(),
+        improved: [],
+        stable: [],
+        totalHabits: 0,
+        weekOverWeekChange: 0,
+      };
+    }
+
+    const habits = await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .collect();
+```
+
+## File: convex/diagnose.ts
+Change line 6 from:
+```typescript
+import { query, mutation } from './_generated/server';
+```
+To:
+```typescript
+import { internalQuery, internalMutation } from './_generated/server';
+```
+
+And change line 9 from:
+```typescript
+export const show = query({
+```
+To:
+```typescript
+export const show = internalQuery({
+```
+
+And change line 47 from:
+```typescript
+export const fix = mutation({
+```
+To:
+```typescript
+export const fix = internalMutation({
+```
+
+## File: convex/schema.ts
+In the templates defineTable (around line 394), change:
+```typescript
+  }).index('by_category', ['category']),
+```
+To:
+```typescript
+  })
+    .index('by_category', ['category'])
+    .index('by_popularity', ['popularityScore']),
+```
+
+Note: userSettings already has the by_user_id index ✅
+
+## File: convex/templates/queries.ts
+Replace the getPopular function (around line 40-51) with:
+```typescript
+/**
+ * Query: Get popular templates (sorted by popularity score)
+ * PERF: Uses by_popularity index for efficient sorting
+ */
+export const getPopular = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 10;
+    
+    // Use index for efficient sorting - descending order
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_popularity')
+      .order('desc')
+      .take(limit * 2); // Take more to filter out undefined scores
+
+    // Filter out templates without popularityScore and take final limit
+    return templates
+      .filter((t) => t.popularityScore !== undefined)
+      .slice(0, limit);
+  },
+});
+```

@@ -26,7 +26,10 @@ export function useHabitHandlers({
       try {
         await reorderHabits({ habitIds });
       } catch (error) {
-        console.error('Failed to reorder habits:', error);
+        if (__DEV__) {
+          console.error('Failed to reorder habits:', error);
+        }
+        // Error is handled silently - order reverts on failure
       }
     },
     [reorderHabits]

@@ -13,7 +13,22 @@ import { calculateHabitStrength, getStreaksForHabit } from './analytics/index';
 export const getOverviewStats = query({
   args: {},
   handler: async (ctx) => {
-    const habits = await ctx.db.query('habits').collect();
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return {
+        averageStrength: 0,
+        rankedHabits: [],
+        strongestHabit: null,
+        totalHabits: 0,
+        weakestHabit: null,
+      };
+    }
+
+    const habits = await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .collect();
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
     if (activeHabits.length === 0) {

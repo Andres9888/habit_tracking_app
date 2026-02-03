@@ -12,7 +12,23 @@ import { query } from './_generated/server';
 export const getStrengthDistribution = query({
   args: {},
   handler: async (ctx) => {
-    const habits = await ctx.db.query('habits').collect();
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return {
+        automatic: { count: 0, emoji: '⚡', percentage: 0 },
+        building: { count: 0, emoji: '🌿', percentage: 0 },
+        developing: { count: 0, emoji: '🌳', percentage: 0 },
+        starting: { count: 0, emoji: '🌱', percentage: 0 },
+        strong: { count: 0, emoji: '💪', percentage: 0 },
+        total: 0,
+      };
+    }
+
+    const habits = await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .collect();
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
     // Categorize by strength level
