@@ -5,7 +5,9 @@ import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 
 export const useArchivedHabitsModalLogic = () => {
-  const archivedHabits = useQuery(api.habits.listArchived) ?? [];
+  const archivedHabitsData = useQuery(api.habits.listArchived);
+  const isLoading = archivedHabitsData === undefined;
+  const archivedHabits = archivedHabitsData ?? [];
   const unarchiveHabit = useMutation(api.habits.unarchive);
   const removeHabit = useMutation(api.habits.remove);
 
@@ -70,5 +72,6 @@ export const useArchivedHabitsModalLogic = () => {
     archivedHabits,
     handlePermanentDelete,
     handleRestore,
+    isLoading,
   };
 };

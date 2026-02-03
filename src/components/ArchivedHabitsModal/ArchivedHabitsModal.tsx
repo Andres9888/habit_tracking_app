@@ -8,6 +8,7 @@ import {
   ModalHeader,
   StatsSummaryBar,
 } from './components';
+import { LoadingState } from './components/LoadingState';
 import type { ArchivedHabitsModalProps } from './types';
 
 export default function ArchivedHabitsModal({
@@ -16,21 +17,23 @@ export default function ArchivedHabitsModal({
 }: ArchivedHabitsModalProps) {
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
-  const { archivedHabits, handleRestore, handlePermanentDelete } =
+  const { archivedHabits, handleRestore, handlePermanentDelete, isLoading } =
     useArchivedHabitsModalLogic();
 
   return (
     <>
       <ModalHeader insets={insets} onBack={onBack} onClose={onClose} />
 
-      <StatsSummaryBar habitCount={archivedHabits.length} />
+      <StatsSummaryBar habitCount={isLoading ? 0 : archivedHabits.length} />
 
       <ScrollView
         className='flex-1'
         contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
         showsVerticalScrollIndicator={false}
       >
-        {archivedHabits.length === 0 ? (
+        {isLoading ? (
+          <LoadingState />
+        ) : archivedHabits.length === 0 ? (
           <EmptyState />
         ) : (
           <View className='gap-3'>
