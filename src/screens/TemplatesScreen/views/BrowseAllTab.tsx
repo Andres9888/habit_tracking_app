@@ -81,6 +81,8 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
       />
       {p.showSortOptions && (
         <Pressable
+          accessibilityLabel='Close sort options'
+          accessibilityRole='button'
           style={styles.dropdownBackdrop}
           onPress={p.onCloseSortOptions}
         />
