@@ -438,6 +438,8 @@ function HabitsApp() {
                   habit={habit}
                   isCompactMode={isCompactMode}
                   highContrastMode={highContrastMode}
+                  celebrationsEnabled={settings?.celebrationsEnabled ?? true}
+                  reduceMotionPreference={settings?.reduceMotion ?? false}
                   streak={streak}
                   toggleHabit={toggleHabit}
                   weekDateStrings={displayWeekDateStrings}

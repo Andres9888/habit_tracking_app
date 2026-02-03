@@ -6,6 +6,7 @@ import { v } from 'convex/values';
 export const settingsReturnValidator = v.object({
   appIcon: v.string(),
   catTheme: v.boolean(),
+  celebrationsEnabled: v.boolean(),
   darkMode: v.union(v.literal('system'), v.literal('light'), v.literal('dark')),
   dayShape: v.union(v.literal('circle'), v.literal('square')),
   habitCompletionIcon: v.union(v.literal('chain'), v.literal('checkbox')),
@@ -36,6 +37,7 @@ export const settingsReturnValidator = v.object({
 export const updateArgsValidator = {
   appIcon: v.optional(v.string()),
   catTheme: v.boolean(),
+  celebrationsEnabled: v.optional(v.boolean()),
   darkMode: v.union(
     v.literal('system'),
     v.literal('light'),
