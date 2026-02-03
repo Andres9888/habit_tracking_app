@@ -21,6 +21,8 @@ export function MonthNavigator({
 
       <View className='flex-row gap-2'>
         <Pressable
+          accessibilityLabel='Previous month'
+          accessibilityRole='button'
           className='h-8 w-8 items-center justify-center rounded-full active:bg-stone-100'
           onPress={onPreviousMonth}
         >
@@ -28,6 +30,8 @@ export function MonthNavigator({
         </Pressable>
 
         <Pressable
+          accessibilityLabel='Next month'
+          accessibilityRole='button'
           className='h-8 w-8 items-center justify-center rounded-full active:bg-stone-100'
           onPress={onNextMonth}
         >
