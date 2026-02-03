@@ -11,30 +11,29 @@ export { screenWidth, screenHeight };
 export const PREMIUM_FEATURES: FeatureItem[] = [
   {
     description:
-      'Visualize your habits across 5 strength levels with interactive charts',
+      'Track unlimited habits and build routines in every area of your life',
+    icon: 'infinite',
+    title: 'Unlimited Habits',
+  },
+  {
+    description: 'See which habits are strongest and which need more attention',
     icon: 'stats-chart',
-    title: 'Strength Distribution',
+    title: 'Habit Strength Insights',
   },
   {
-    description: 'Track your progress over time with detailed trend analysis',
-    icon: 'trending-up',
-    title: '30-Day Trends',
-  },
-  {
-    description:
-      'GitHub-style calendar showing 90 days of habit completion patterns',
+    description: 'Visualize your progress with beautiful habit calendars',
     icon: 'calendar',
-    title: 'Compliance Heatmap',
+    title: 'Progress Heatmaps',
   },
   {
-    description: 'AI-powered insights on habits gaining or losing strength',
+    description: 'Get personalized tips to build unbreakable habits',
     icon: 'bulb',
-    title: 'Weekly Insights',
+    title: 'AI-Powered Insights',
   },
   {
-    description: 'See your habits ranked by strength with current streaks',
-    icon: 'trophy',
-    title: 'Rankings & Streaks',
+    description: 'Track trends over time with detailed analytics',
+    icon: 'trending-up',
+    title: 'Advanced Analytics',
   },
   {
     description: 'Export your complete habit data as CSV or JSON',

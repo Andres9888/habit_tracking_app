@@ -49,11 +49,11 @@ export function LockedHabitCard({
         <Text className='text-[24px]'>✨</Text>
         <View className='gap-1'>
           <Text className='text-center text-[17px] font-semibold text-stone-800'>
-            Want to add more habits?
+            Ready to unlock more?
           </Text>
           <Text className='text-center text-[13px] font-normal leading-[18px] text-stone-500'>
-            Track unlimited habits, get smart reminders, and unlock deeper
-            insights to build stronger routines.
+            Start a 7-day free trial to track unlimited habits and get
+            AI-powered insights. No credit card required.
           </Text>
         </View>
       </View>
@@ -65,7 +65,7 @@ export function LockedHabitCard({
         onPress={onUpgradePress}
       >
         <Text className='text-[15px] font-semibold text-white'>
-          ✨ Upgrade to Premium
+          Start Free Trial
         </Text>
       </Pressable>
     </Animated.View>

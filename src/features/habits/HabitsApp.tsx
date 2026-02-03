@@ -1,4 +1,6 @@
-import { useMemo } from 'react';
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
+import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -8,12 +10,18 @@ import FloatingActionButton from './components/FloatingActionButton';
 import WebToaster from './components/WebToaster';
 import { ArchiveUndoToast } from '../../components/ArchiveUndoToast';
 import { RevenueCatPaywall } from '../../components/RevenueCatPaywall';
-import { SyncingIndicator, SyncedToast, useSyncedToast } from '../../components/SyncStatus';
+import { TrialPromptModal } from '../../components/TrialPromptModal';
+import {
+  SyncingIndicator,
+  SyncedToast,
+  useSyncedToast,
+} from '../../components/SyncStatus';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useNotificationResponse } from '../../hooks/useNotificationResponse';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 import { useSyncStatus } from '../../contexts/SyncStatusContext';
+import { useTrialPrompt } from '../../hooks/useTrialPrompt';
 
 export function HabitsApp() {
   const { list, modals } = useHabitsApp();
@@ -56,12 +64,24 @@ export function HabitsApp() {
     triggerWarning,
   });
 
+  // Trial prompt - shows after first habit creation
+  const trialPrompt = useTrialPrompt({
+    habitCount: list.habits.length,
+    isPremiumUser: list.isPremiumUser,
+  });
+
+  const handleTrialStart = useCallback(() => {
+    trialPrompt.onStartTrial();
+    // Show the paywall to start the trial
+    handleUpgradeIntent();
+  }, [trialPrompt, handleUpgradeIntent]);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className='flex-1 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100'>
         <View className='pointer-events-none absolute inset-0 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100' />
         <View className='pointer-events-none absolute inset-x-0 top-0 h-56 rounded-b-[40px] bg-white/95 shadow-[0px_24px_48px_rgba(120,90,50,0.06)]' />
-        
+
         {/* Sync Status Indicators - Global position */}
         <View className='absolute left-0 right-0 top-20 z-50 flex-row justify-center'>
           <SyncingIndicator
@@ -71,7 +91,7 @@ export function HabitsApp() {
             visible={syncStatus.isSyncing}
           />
         </View>
-        
+
         <View className='absolute left-0 right-0 top-32 z-50 flex-row justify-center'>
           <SyncedToast
             reduceMotion={list.reduceMotionPreference}
@@ -123,6 +143,14 @@ export function HabitsApp() {
           onClose={handlePaywallClose}
           onPurchaseSuccess={handlePaywallSuccess}
           onRestoreSuccess={handlePaywallSuccess}
+        />
+
+        {/* Trial Prompt - shows after first habit creation */}
+        <TrialPromptModal
+          context='first_habit'
+          visible={trialPrompt.visible}
+          onSkip={trialPrompt.onSkip}
+          onStartTrial={handleTrialStart}
         />
       </View>
     </GestureHandlerRootView>
