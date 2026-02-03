@@ -344,10 +344,10 @@ const applicationTables = {
 
     lastWebhookAt: v.optional(v.number()),
 
+    lastWebhookEvent: v.optional(v.string()),
+
     // e.g., "premium_monthly_699"
     planType: v.optional(planType),
-
-    lastWebhookEvent: v.optional(v.string()),
 
     // Product info
     productId: v.optional(v.string()),
@@ -453,6 +453,8 @@ const applicationTables = {
     appIcon: v.optional(v.string()),
 
     catTheme: v.boolean(),
+
+    celebrationsEnabled: v.optional(v.boolean()),
 
     darkMode: v.optional(
       v.union(

@@ -6,7 +6,7 @@
 
 import { Doc, Id } from '../_generated/dataModel';
 
-type ImageWithUrl = Doc<'visionBoardImages'> & { imageUrl: string | null };
+type ImageWithUrl = Doc<'visionBoardImages'> & { imageUrl?: string };
 
 /**
  * Resolve storage URLs for vision board images
@@ -36,6 +36,6 @@ export async function resolveImageUrl(
   const url = await ctx.storage.getUrl(image.storageId);
   return {
     ...image,
-    imageUrl: url,
+    imageUrl: url ?? undefined,
   };
 }
