@@ -23,6 +23,7 @@ export function NameInputSection({
       </Text>
 
       <TextInput
+        accessibilityLabel='Habit name'
         className='w-full rounded-2xl border-2 border-stone-200 bg-white px-6 py-5 text-center text-xl text-stone-900'
         maxLength={50}
         placeholder='e.g., Read for 20 minutes'
