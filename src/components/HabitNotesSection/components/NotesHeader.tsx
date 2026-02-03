@@ -17,8 +17,8 @@ export function NotesHeader({ noteCount, onAddNote }: NotesHeaderProps) {
   return (
     <View className='mb-3 flex-row items-center justify-between'>
       <View className='flex-row items-center gap-2'>
-        <View className='h-10 w-10 items-center justify-center rounded-xl bg-amber-100'>
-          <StickyNote className='text-amber-500' size={20} strokeWidth={2.25} />
+        <View className='size-10 items-center justify-center rounded-xl bg-amber-100'>
+          <StickyNote className='text-amber-500' size={20} strokeWidth={2} />
         </View>
         <View>
           <View className='flex-row items-center gap-2'>
@@ -42,11 +42,11 @@ export function NotesHeader({ noteCount, onAddNote }: NotesHeaderProps) {
       <Pressable
         accessibilityLabel='Add note'
         accessibilityRole='button'
-        className='rounded-full bg-amber-500 px-3 py-1.5 active:bg-amber-600'
+        className='rounded-full bg-amber-500 px-4 py-2 active:bg-amber-600'
         onPress={handleAddNote}
       >
         <View className='flex-row items-center gap-1'>
-          <Plus color='#ffffff' size={14} strokeWidth={2.5} />
+          <Plus color='#ffffff' size={16} strokeWidth={2} />
           <Text className='text-xs font-semibold text-white'>Add</Text>
         </View>
       </Pressable>

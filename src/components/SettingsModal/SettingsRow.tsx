@@ -51,7 +51,7 @@ export function SettingsRow({
     >
       {/* Icon */}
       <View
-        className='mr-4 size-10 items-center justify-center rounded-lg'
+        className='mr-4 size-10 items-center justify-center rounded-xl'
         style={{
           backgroundColor: iconBackgroundColor,
           borderColor: highContrastMode ? '#facc15' : 'transparent',
@@ -92,12 +92,12 @@ export function SettingsRow({
           >
             {value as string}
           </Text>
-          <ChevronRight color={colors.chevron} size={16} />
+          <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
         </View>
       )}
 
       {type === 'navigation' && (
-        <ChevronRight color={colors.chevron} size={16} />
+        <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
       )}
 
       {/* Info type shows nothing on the right - just displays the label */}

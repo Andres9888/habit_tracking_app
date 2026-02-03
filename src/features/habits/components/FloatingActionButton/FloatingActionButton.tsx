@@ -55,7 +55,7 @@ export function FloatingActionButton({
           transform: [{ scale: rippleScale }],
         }}
       />
-      <Plus color='#ffffff' size={24} strokeWidth={2.25} />
+      <Plus color='#ffffff' size={24} strokeWidth={2.5} />
     </AnimatedPressable>
   );
 }
