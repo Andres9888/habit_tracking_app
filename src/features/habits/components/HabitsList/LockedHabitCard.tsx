@@ -61,6 +61,7 @@ export function LockedHabitCard({
         accessibilityLabel='Upgrade to unlock unlimited habits'
         accessibilityRole='button'
         className='items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 shadow-[0px_8px_16px_rgba(109,40,217,0.2)]'
+        style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
         onPress={onUpgradePress}
       >
         <Text className='text-[15px] font-semibold text-white'>
