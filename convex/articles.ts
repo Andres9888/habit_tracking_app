@@ -1,3 +1,10 @@
+/**
+ * Articles Convex Functions
+ *
+ * CRUD operations for educational articles.
+ * Articles provide habit-building knowledge and tips.
+ */
+
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 
