@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable max-lines */
+import React, { memo } from 'react';
 import { useHabitCardEntrance } from '../HabitCard/useHabitCardEntrance';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useDraggableHabitAnimations } from './useDraggableHabitAnimations';
@@ -8,7 +9,7 @@ import { useDraggableHabitState } from './useDraggableHabitState';
 import { DraggableHabitCard } from './DraggableHabitCard';
 import type { DraggableHabitProps } from './types';
 
-export default function DraggableHabit(props: DraggableHabitProps) {
+function DraggableHabit(props: DraggableHabitProps) {
   const {
     celebrationsEnabled,
     completionIcon = 'chain',
@@ -107,3 +108,5 @@ export default function DraggableHabit(props: DraggableHabitProps) {
     />
   );
 }
+
+export default memo(DraggableHabit);
