@@ -60,6 +60,16 @@ export function ReminderTimePicker({
         Reminder Time
       </Text>
       <Pressable
+        accessibilityHint='Opens time picker'
+        accessibilityLabel={`Reminder time: ${reminderTime.toLocaleTimeString(
+          'en-US',
+          {
+            hour: 'numeric',
+            hour12: true,
+            minute: '2-digit',
+          }
+        )}`}
+        accessibilityRole='button'
         disabled={disabled}
         style={[
           localStyles.timePickerButton,
