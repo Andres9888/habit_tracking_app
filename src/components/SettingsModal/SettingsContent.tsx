@@ -1,3 +1,13 @@
+/**
+ * SettingsContent Component
+ *
+ * Main scrollable content area for the Settings modal.
+ * Organizes settings into logical sections:
+ * - Visual Preferences (progress bar, icons, shapes)
+ * - Habit Management (archived habits)
+ * - Account (sign out, delete account)
+ */
+
 import { Activity, BookOpen, Check, Circle } from 'lucide-react-native';
 import { ScrollView, Text, View } from 'react-native';
 import { SettingsRow } from './SettingsRow';
