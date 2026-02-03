@@ -1,22 +1,78 @@
+/**
+ * useReduceMotion Hook
+ *
+ * Detects whether the user has enabled "Reduce Motion" in their device's
+ * accessibility settings. This preference indicates the user wants minimal
+ * or no animations.
+ *
+ * Respects platform accessibility:
+ * - iOS: Settings → Accessibility → Motion → Reduce Motion
+ * - Android: Settings → Accessibility → Remove animations
+ * - Web: Always returns false (no native support)
+ *
+ * @example
+ * ```tsx
+ * const reduceMotion = useReduceMotion();
+ *
+ * const animationConfig = {
+ *   duration: reduceMotion ? 0 : 300,
+ *   useNativeDriver: true,
+ * };
+ *
+ * Animated.timing(opacity, animationConfig).start();
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Override with explicit preference
+ * const reduceMotion = useReduceMotion({ preference: true });
+ * ```
+ */
+
 import { useEffect, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 
+/**
+ * Options for useReduceMotion hook
+ */
 interface UseReduceMotionOptions {
+  /**
+   * Explicit preference override. If provided, system setting is ignored.
+   * Useful for testing or per-component overrides.
+   */
   preference?: boolean;
 }
 
 const isNativePlatform = Platform.OS === 'ios' || Platform.OS === 'android';
 
-// Lazy import AccessibilityInfo only when available
-let AccessibilityInfo: any;
-try {
-  AccessibilityInfo = require('react-native').AccessibilityInfo;
-} catch (e) {
-  // AccessibilityInfo not available in this environment
-  AccessibilityInfo = null;
+// Conditionally import AccessibilityInfo only when available
+// This allows the hook to work across web and native platforms
+let AccessibilityInfo: any = null;
+if (isNativePlatform) {
+  try {
+    // Dynamic require needed for cross-platform compatibility
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    AccessibilityInfo = require('react-native').AccessibilityInfo;
+  } catch {
+    // AccessibilityInfo not available - will use default behavior
+  }
 }
 
-export const useReduceMotion = ({ preference }: UseReduceMotionOptions = {}) => {
+/**
+ * Hook that returns whether reduce motion is enabled.
+ *
+ * Listens to system accessibility setting changes and updates automatically.
+ * Returns the explicit preference if provided, otherwise returns the system setting.
+ *
+ * On web platforms, always returns false (no AccessibilityInfo API).
+ * Fails silently if unable to read system preferences.
+ *
+ * @param options - Configuration options
+ * @returns Boolean indicating if reduce motion is enabled
+ */
+export const useReduceMotion = ({
+  preference,
+}: UseReduceMotionOptions = {}) => {
   const [systemReduceMotion, setSystemReduceMotion] = useState(false);
 
   useEffect(() => {
@@ -55,8 +111,10 @@ export const useReduceMotion = ({ preference }: UseReduceMotionOptions = {}) => 
     };
   }, []);
 
-  return useMemo(() => Boolean(preference ?? systemReduceMotion), [preference, systemReduceMotion]);
+  return useMemo(
+    () => Boolean(preference ?? systemReduceMotion),
+    [preference, systemReduceMotion]
+  );
 };
 
 export default useReduceMotion;
-
