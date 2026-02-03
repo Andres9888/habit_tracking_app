@@ -1,6 +1,12 @@
 import type { CharacterData } from './types';
 
-// Mock data - TODO: Connect to actual habit data
+/**
+ * Mock character data for development
+ * TODO(feature): Connect to actual habit tracking data
+ * - Calculate attributes based on habit completion patterns
+ * - Derive level from total XP earned
+ * - Pull recent achievements from milestone system
+ */
 export const MOCK_CHARACTER_DATA: CharacterData = {
   attributes: {
     energy: 41,

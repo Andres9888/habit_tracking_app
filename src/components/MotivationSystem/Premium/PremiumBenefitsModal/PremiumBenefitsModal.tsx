@@ -44,7 +44,8 @@ export function PremiumBenefitsModal({
 
   const handleRestorePurchases = useCallback(() => {
     triggerLightImpact();
-    // TODO: Implement restore purchases
+    // TODO(integration): Implement restore purchases
+    // Call RevenueCat's restorePurchases() and update subscription state
   }, [triggerLightImpact]);
 
   const buttonAnimatedStyle = useAnimatedStyle(() => ({

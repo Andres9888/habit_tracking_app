@@ -26,7 +26,11 @@ const SECTION_SLIDE_DURATION = 400;
 const SECTION_SLIDE_DELAY = 200;
 
 const handleInfoPress = () => {
-  // TODO: Show info modal explaining habit strength calculation
+  // TODO(ux): Show info modal explaining habit strength calculation
+  // Modal should explain:
+  // - How strength builds with consistent completion
+  // - Impact of missed days and recovery time
+  // - Scientific basis (habit formation research)
 };
 
 export function HabitStrengthHistory({

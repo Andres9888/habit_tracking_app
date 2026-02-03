@@ -11,8 +11,11 @@ import { styles } from './styles';
 export function GraphIndicator() {
   const theme = useAppTheme();
 
-  // TODO: Implement graph variant with Victory Native or react-native-svg
-  // This will be implemented in Phase 7: Premium Features
+  // TODO(premium-feature): Implement graph variant with Victory Native or react-native-svg
+  // - Show 7-day or 30-day strength trend line
+  // - Animate line drawing on mount
+  // - Add interactive tooltips on touch
+  // Target: Phase 7 - Premium Features
   return (
     <View style={styles.graphContainer}>
       <Text

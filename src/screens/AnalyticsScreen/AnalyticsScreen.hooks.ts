@@ -16,7 +16,8 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const [showPaywall, setShowPaywall] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
 
-  // TODO: Replace with actual premium status check
+  // TODO(integration): Replace with actual premium status check from RevenueCat
+  // Temporarily set to true to allow development/testing of premium features
   const isPremiumUser = true;
 
   // Fetch analytics data from Convex
