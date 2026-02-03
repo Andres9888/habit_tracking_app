@@ -3,6 +3,7 @@
  * Collapsible section for habit lists (gained, lost, at-risk)
  */
 
+import type { ComponentProps } from 'react';
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,11 +12,14 @@ import type { HabitChange, HabitChangeType } from './WeeklyInsightsCard.types';
 import { styles } from './WeeklyInsightsCard.styles';
 import { HabitItem } from './HabitItem';
 
+/** Valid Ionicons icon name */
+type IconName = ComponentProps<typeof Ionicons>['name'];
+
 interface HabitListSectionProps {
   habits: HabitChange[];
   title: string;
   type: HabitChangeType;
-  iconName: string;
+  iconName: IconName;
   iconColor: string;
   badgeBgColor?: string;
   badgeTextColor?: string;
@@ -51,7 +55,7 @@ export function HabitListSection({
     >
       <View style={styles.sectionHeader}>
         <View style={styles.sectionHeaderLeft}>
-          <Ionicons color={iconColor} name={iconName as any} size={20} />
+          <Ionicons color={iconColor} name={iconName} size={20} />
           <Text style={styles.sectionTitle}>{title}</Text>
           <View style={[styles.badge, { backgroundColor: badgeBgColor }]}>
             <Text style={[styles.badgeText, { color: badgeTextColor }]}>

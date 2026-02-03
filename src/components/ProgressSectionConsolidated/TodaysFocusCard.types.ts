@@ -7,6 +7,12 @@
  * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
 
+import type { ComponentProps } from 'react';
+import type { Ionicons } from '@expo/vector-icons';
+
+/** Valid Ionicons icon name */
+export type IconName = ComponentProps<typeof Ionicons>['name'];
+
 /**
  * Focus states for the Today's Focus Card
  *
@@ -37,7 +43,7 @@ export interface FocusStateConfig {
   /** Gradient colors [start, end] */
   gradientColors: [string, string];
   /** Ionicons icon name */
-  icon: string;
+  icon: IconName;
   /** Icon color */
   iconColor: string;
   /** Primary text color */

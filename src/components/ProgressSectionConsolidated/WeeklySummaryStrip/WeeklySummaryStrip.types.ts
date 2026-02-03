@@ -4,6 +4,12 @@
  * Type definitions for the Weekly Summary Strip component.
  */
 
+import type { ComponentProps } from 'react';
+import type { Ionicons } from '@expo/vector-icons';
+
+/** Valid Ionicons icon name */
+export type IconName = ComponentProps<typeof Ionicons>['name'];
+
 /**
  * Data for a single day in the week
  */
@@ -51,7 +57,7 @@ export interface DayStateConfig {
   borderColor: string;
   borderStyle: 'solid' | 'dashed';
   borderWidth: number;
-  icon: string | null;
+  icon: IconName | null;
   iconColor: string;
   hasPulse: boolean;
   hasRing: boolean;

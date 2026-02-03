@@ -67,7 +67,7 @@ export const CardContent = React.memo(function CardContent({
           </Text>
           <Ionicons
             color={getTrendColor(trend)}
-            name={getTrendIcon(trend) as any}
+            name={getTrendIcon(trend)}
             size={14}
             style={styles.trendIcon}
           />

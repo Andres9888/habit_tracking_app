@@ -73,11 +73,7 @@ export const DayCell = React.memo(function DayCell({
         ]}
       >
         {config.icon ? (
-          <Ionicons
-            color={config.iconColor}
-            name={config.icon as any}
-            size={16}
-          />
+          <Ionicons color={config.iconColor} name={config.icon} size={16} />
         ) : null}
         {config.text ? (
           <Text style={[styles.todayText, { color: config.textColor }]}>

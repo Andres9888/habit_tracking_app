@@ -46,7 +46,7 @@ export function FocusIcon({
       importantForAccessibility='no-hide-descendants'
       style={styles.iconContainer}
     >
-      <Ionicons color={config.iconColor} name={config.icon as any} size={28} />
+      <Ionicons color={config.iconColor} name={config.icon} size={28} />
     </View>
   );
 }

@@ -8,6 +8,7 @@ import type {
   WeekDayData,
   DayVisualState,
   TrendDirection,
+  IconName,
 } from '../WeeklySummaryStripTypes';
 
 /**
@@ -48,7 +49,7 @@ export function getTrendDirection(
 /**
  * Get trend icon name
  */
-export function getTrendIcon(direction: TrendDirection): string {
+export function getTrendIcon(direction: TrendDirection): IconName {
   switch (direction) {
     case 'up': {
       return 'arrow-up';
