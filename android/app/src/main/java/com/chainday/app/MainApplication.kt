@@ -1,4 +1,4 @@
-package com.andres9888.dailyhabits
+package com.chainday.app
 
 import android.app.Application
 import android.content.res.Configuration
