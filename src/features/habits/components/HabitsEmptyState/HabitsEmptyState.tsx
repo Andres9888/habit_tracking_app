@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
@@ -38,29 +38,38 @@ export function HabitsEmptyState({
     };
   }, []);
 
+  // Memoize time context to prevent recalculating on every render
+  const timeContext = useMemo(() => getTimeBasedHabits(), []);
+
+  const handleQuickCreate = useCallback(
+    async (habitName: string) => {
+      if (!onQuickCreateHabit) return;
+
+      setCreatingHabit(habitName);
+      triggerMediumImpact();
+
+      try {
+        await onQuickCreateHabit(habitName);
+        setSuccessHabit(habitName);
+        triggerSuccess();
+        const t1 = setTimeout(() => triggerLightImpact(), 400);
+        const t2 = setTimeout(() => setSuccessHabit(null), 1500);
+        timeoutsRef.current.push(t1, t2);
+      } finally {
+        setCreatingHabit(null);
+      }
+    },
+    [
+      onQuickCreateHabit,
+      triggerMediumImpact,
+      triggerSuccess,
+      triggerLightImpact,
+    ]
+  );
+
   if (isLoading) {
     return <LoadingState />;
   }
-
-  const timeContext = getTimeBasedHabits();
-
-  const handleQuickCreate = async (habitName: string) => {
-    if (!onQuickCreateHabit) return;
-
-    setCreatingHabit(habitName);
-    triggerMediumImpact();
-
-    try {
-      await onQuickCreateHabit(habitName);
-      setSuccessHabit(habitName);
-      triggerSuccess();
-      const t1 = setTimeout(() => triggerLightImpact(), 400);
-      const t2 = setTimeout(() => setSuccessHabit(null), 1500);
-      timeoutsRef.current.push(t1, t2);
-    } finally {
-      setCreatingHabit(null);
-    }
-  };
 
   return (
     <View
