@@ -51,7 +51,11 @@ export function IconButtonGroup({
             accessibilityLabel='Browse habit templates'
             accessibilityRole='button'
             className='h-11 w-11 items-center justify-center rounded-full bg-violet-50'
-            style={{ backgroundColor: 'rgba(139, 92, 246, 0.08)' }}
+            style={({ pressed }) => ({
+              backgroundColor: pressed
+                ? 'rgba(139, 92, 246, 0.15)'
+                : 'rgba(139, 92, 246, 0.08)',
+            })}
             onPress={onTemplatesPress}
             onPressIn={onTemplatesPressIn}
             onPressOut={onTemplatesPressOut}
@@ -71,6 +75,9 @@ export function IconButtonGroup({
           accessibilityLabel='Sort habits'
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-full'
+          style={({ pressed }) => ({
+            backgroundColor: pressed ? 'rgba(0, 0, 0, 0.05)' : 'transparent',
+          })}
           onPress={onSortPress}
           onPressIn={onSortPressIn}
           onPressOut={onSortPressOut}
@@ -87,6 +94,9 @@ export function IconButtonGroup({
           accessibilityLabel='Open settings'
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-full'
+          style={({ pressed }) => ({
+            backgroundColor: pressed ? 'rgba(0, 0, 0, 0.05)' : 'transparent',
+          })}
           onPress={onSettingsPress}
           onPressIn={onSettingsPressIn}
           onPressOut={onSettingsPressOut}
