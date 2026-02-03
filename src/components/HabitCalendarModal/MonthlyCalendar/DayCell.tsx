@@ -10,7 +10,14 @@ interface DayCellProps {
 
 export function DayCell({ date, isToday, hasCompletion, onToggle }: DayCellProps) {
   return (
-    <Pressable className='mb-2 w-[14.28%] items-center' onPress={onToggle}>
+    <Pressable
+      accessibilityLabel={`${format(date, 'MMMM d')}${hasCompletion ? ', completed' : ''}`}
+      accessibilityRole='button'
+      accessibilityState={{ checked: hasCompletion }}
+      className='mb-2 w-[14.28%] items-center'
+      style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+      onPress={onToggle}
+    >
       <View className='relative items-center'>
         {isToday ? (
           <View className='h-8 w-8 items-center justify-center rounded-full bg-stone-900'>
