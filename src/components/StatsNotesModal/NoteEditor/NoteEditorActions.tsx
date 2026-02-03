@@ -33,7 +33,7 @@ export function NoteEditorActions({
         accessibilityLabel={isEditing ? 'Save note' : 'Add note'}
         accessibilityRole='button'
         activeOpacity={0.7}
-        className={`rounded-3xl border border-stone-900 px-5 py-2 ${
+        className={`rounded-3xl border border-stone-900 px-4 py-2.5 ${
           !isValid || isSaving ? 'opacity-40' : ''
         }`}
         disabled={!isValid || isSaving}

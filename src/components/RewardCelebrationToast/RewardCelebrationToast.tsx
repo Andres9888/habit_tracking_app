@@ -52,7 +52,7 @@ export const RewardCelebrationToast = ({
           <Pressable
             accessibilityHint='Share this streak to motivate friends'
             accessibilityLabel='Share streak'
-            className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-3 py-2.5 active:bg-stone-100'
+            className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-4 py-2.5 active:bg-stone-100'
             onPress={() => {
               triggerSelection();
               onSecondaryAction();
@@ -65,7 +65,7 @@ export const RewardCelebrationToast = ({
           <Pressable
             accessibilityHint={`${premiumCTA.text}: ${premiumCTA.benefit}`}
             accessibilityLabel={premiumCTA.text}
-            className='flex-1 items-center justify-center rounded-full px-3 py-2.5 active:opacity-80'
+            className='flex-1 items-center justify-center rounded-full px-4 py-2.5 active:opacity-80'
             style={{ backgroundColor: '#7c3aed' }}
             onPress={() => {
               triggerSelection();
