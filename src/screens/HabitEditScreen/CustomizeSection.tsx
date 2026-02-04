@@ -1,17 +1,17 @@
 /**
  * CustomizeSection Component
  *
- * Visual customization options for a habit including:
- * - Emoji icon picker
- * - Accent color selection
- * - Reminder scheduling
+ * Visual customization options for a habit split into cards:
+ * - Appearance card: Emoji icon and accent color
+ * - Reminders card: Toggle and time selection
  */
 
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
+import { Card } from './Card';
 
 interface CustomizeSectionProps {
   habitName: string;
@@ -37,34 +37,35 @@ export function CustomizeSection({
   onReminderTimeChange,
 }: CustomizeSectionProps) {
   return (
-    <View className='flex-1'>
-      <Text
-        className='mb-4 text-center text-xs font-semibold text-stone-500'
-        style={{ letterSpacing: 0.5 }}
-      >
-        CUSTOMIZE
-      </Text>
+    <View>
+      {/* Appearance Card */}
+      <Card delay={150} icon='✨' title='Appearance'>
+        <EmojiPicker
+          hideLabel
+          habitName={habitName}
+          selectedEmoji={selectedEmoji}
+          onSelect={onEmojiSelect}
+        />
 
-      <EmojiPicker
-        hideLabel
-        habitName={habitName}
-        selectedEmoji={selectedEmoji}
-        onSelect={onEmojiSelect}
-      />
+        <View className='mt-4'>
+          <ColorPickerSection
+            hideLabel
+            colors={HABIT_COLORS}
+            selectedColor={selectedColor}
+            onSelectColor={onColorSelect}
+          />
+        </View>
+      </Card>
 
-      <ColorPickerSection
-        hideLabel
-        colors={HABIT_COLORS}
-        selectedColor={selectedColor}
-        onSelectColor={onColorSelect}
-      />
-
-      <EnhancedReminderSelector
-        enabled={remindersEnabled}
-        reminderTime={reminderTime}
-        onTimeChange={onReminderTimeChange}
-        onToggle={onReminderToggle}
-      />
+      {/* Reminders Card */}
+      <Card delay={200} icon='🔔' title='Reminders'>
+        <EnhancedReminderSelector
+          enabled={remindersEnabled}
+          reminderTime={reminderTime}
+          onTimeChange={onReminderTimeChange}
+          onToggle={onReminderToggle}
+        />
+      </Card>
     </View>
   );
 }
