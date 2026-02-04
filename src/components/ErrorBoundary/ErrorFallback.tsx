@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
+import { colors } from '../../theme/colors';
 import { RetryButton } from './RetryButton';
 
 interface ErrorFallbackProps {
@@ -46,13 +47,13 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#fafaf9',
+    backgroundColor: colors.light.surfaceMuted,
     flex: 1,
     justifyContent: 'center',
     padding: 24,
   },
   description: {
-    color: '#78716c',
+    color: colors.text.secondary,
     fontSize: 14,
     marginBottom: 24,
     textAlign: 'center',
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   errorMessage: {
-    color: '#dc2626',
+    color: colors.error,
     fontFamily: 'monospace',
     fontSize: 12,
     marginTop: 24,
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   headline: {
-    color: '#1c1917',
+    color: colors.text.primary,
     fontSize: 20,
     fontWeight: '600',
     marginBottom: 8,
