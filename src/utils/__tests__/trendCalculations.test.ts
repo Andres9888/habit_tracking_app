@@ -6,6 +6,7 @@
  * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
 
+import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
 import {
   getWeekStart,
@@ -26,11 +27,11 @@ function createTrackingEntry(
     id: `tracking-${date}`,
     date,
     completed,
-    habitId: 'test-habit',
+    habitId: 'test-habit' as Id<'habits'>,
     createdAt: new Date(date).getTime(),
     updatedAt: new Date(date).getTime(),
     notes: null,
-  };
+  } as HabitTrackingEntry;
 }
 
 /**
