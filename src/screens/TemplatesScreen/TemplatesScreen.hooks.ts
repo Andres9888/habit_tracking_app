@@ -42,14 +42,14 @@ export function useTemplatesScreenState({
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
 
+  // Categories collapsed by default per spec - reduces initial overwhelm
   useEffect(() => {
-    if (Array.isArray(categories) && categories.length > 0 && !hasInitializedExpanded) {
-      const nonAll = categories.filter((c) => c?.id !== 'all');
-      const init = new Set<string>();
-      for (const [i, c] of nonAll.entries()) {
-        if (c?.id && (i + 1) % 3 === 0) init.add(c.id);
-      }
-      setExpandedCategories(init);
+    if (
+      Array.isArray(categories) &&
+      categories.length > 0 &&
+      !hasInitializedExpanded
+    ) {
+      setExpandedCategories(new Set<string>());
       setHasInitializedExpanded(true);
     }
   }, [categories, hasInitializedExpanded]);
@@ -58,7 +58,9 @@ export function useTemplatesScreenState({
   const isSearching = safeSearchQuery.trim().length > 0;
   const effectiveViewMode = isSearching ? 'search' : viewMode;
   const hasActiveFilters =
-    selectedCategory !== 'all' || Boolean(safeSearchQuery.trim()) || researchOnly;
+    selectedCategory !== 'all' ||
+    Boolean(safeSearchQuery.trim()) ||
+    researchOnly;
 
   return {
     browseTab,

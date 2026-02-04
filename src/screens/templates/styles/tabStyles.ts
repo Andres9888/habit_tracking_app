@@ -36,7 +36,7 @@ export const tabStyles = StyleSheet.create({
     marginLeft: 6,
   },
   tabCountActive: {
-    color: '#6366f1',
+    color: '#10B981', // Emerald green per spec
   },
   tabIndicator: {
     backgroundColor: '#fff',
