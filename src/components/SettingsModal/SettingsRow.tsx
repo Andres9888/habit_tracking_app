@@ -1,135 +1,227 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * SettingsRow Component
  *
- * A single row in the settings list. Supports multiple types:
- * - toggle: Switch control for boolean settings
- * - navigation: Chevron indicating tappable row
- * - selection: Shows current value with chevron
- * - info: Display-only row without interaction
- *
- * Includes icon, label, and appropriate right-side control.
- * Supports high contrast mode for accessibility.
+ * A versatile settings row supporting navigation, toggle, and action types.
+ * Features animated press feedback, haptic response, and accessibility support.
+ * Uses emoji icons with tinted backgrounds for visual interest.
  */
 
-import { ReactNode } from 'react';
-import { Switch, Text, TouchableOpacity, View } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
+import React, { useCallback } from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { getSettingsRowColors } from './SettingsRow.colors';
+import { SettingsToggle } from './SettingsToggle';
+import { ICON_COLORS, SETTINGS_COLORS } from './types';
+import type {
+  SettingsRowProps,
+  SettingsRowNavigationProps,
+  SettingsRowToggleProps,
+} from './types';
 
-interface SettingsRowProps {
-  icon: ReactNode;
-  iconBackgroundColor: string;
-  label: string;
-  type: 'toggle' | 'navigation' | 'selection' | 'info';
-  value?: boolean | string;
-  onPress?: () => void;
-  onToggle?: (value: boolean) => void;
-  showBorder?: boolean;
-  highContrastMode?: boolean;
-}
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export function SettingsRow({
-  icon,
-  iconBackgroundColor,
-  label,
-  type,
-  value,
-  onPress,
-  onToggle,
-  showBorder = true,
-  highContrastMode = false,
-}: SettingsRowProps) {
-  const colors = getSettingsRowColors(highContrastMode);
+export function SettingsRow(props: SettingsRowProps) {
+  const {
+    icon,
+    iconColor,
+    label,
+    description,
+    badge,
+    disabled = false,
+    isFirst = false,
+    accessibilityLabel,
+    accessibilityHint,
+    type,
+  } = props;
 
-  const handleToggle = (newValue: boolean) => {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.98, { damping: 15, stiffness: 400 });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 400 });
+  }, [scale]);
+
+  const handlePress = useCallback(() => {
+    if (disabled) return;
+
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onToggle?.(newValue);
-  };
 
-  const handleNavPress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onPress?.();
-  };
+    if (type === 'navigation' || type === 'action') {
+      props.onPress();
+    }
+  }, [disabled, type, props]);
 
-  const content = (
-    <View
-      className={`flex-row items-center px-4 py-4 ${showBorder ? 'border-b border-stone-100' : ''}`}
-      style={{
-        backgroundColor: colors.background,
-        borderColor: showBorder ? colors.border : undefined,
-      }}
+  const handleToggle = useCallback(
+    (value: boolean) => {
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      if (type === 'toggle') {
+        props.onToggle(value);
+      }
+    },
+    [type, props]
+  );
+
+  const rowAccessibilityLabel =
+    accessibilityLabel ??
+    (type === 'toggle'
+      ? label
+      : `${label}${props.value ? `, ${props.value}` : ''}`);
+
+  return (
+    <AnimatedPressable
+      accessibilityHint={accessibilityHint}
+      accessibilityLabel={rowAccessibilityLabel}
+      accessibilityRole={type === 'toggle' ? 'switch' : 'button'}
+      accessibilityState={
+        type === 'toggle' ? { checked: props.isEnabled } : undefined
+      }
+      disabled={disabled && type !== 'toggle'}
+      style={[
+        styles.container,
+        !isFirst && styles.containerBorder,
+        disabled && styles.containerDisabled,
+        animatedStyle,
+      ]}
+      onPress={type === 'toggle' ? undefined : handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
     >
       {/* Icon */}
       <View
-        className='mr-4 size-10 items-center justify-center rounded-xl'
-        style={{
-          backgroundColor: iconBackgroundColor,
-          borderColor: highContrastMode ? '#facc15' : 'transparent',
-          borderWidth: highContrastMode ? 2 : 0,
-        }}
+        style={[
+          styles.iconContainer,
+          { backgroundColor: ICON_COLORS[iconColor] },
+        ]}
       >
-        {icon}
+        <Text style={styles.iconEmoji}>{icon}</Text>
       </View>
 
-      {/* Label */}
-      <Text
-        className='flex-1 text-[17px] font-semibold'
-        style={{ color: colors.label }}
-      >
-        {label}
-      </Text>
-
-      {/* Right side content */}
-      {type === 'toggle' && (
-        <Switch
-          accessibilityLabel={label}
-          ios_backgroundColor={colors.switchTrackFalse}
-          thumbColor={colors.switchThumb}
-          trackColor={{
-            false: colors.switchTrackFalse,
-            true: colors.switchTrackTrue,
-          }}
-          value={value as boolean}
-          onValueChange={handleToggle}
-        />
-      )}
-
-      {type === 'selection' && (
-        <View className='flex-row items-center gap-1'>
-          <Text
-            className='text-[17px] font-medium'
-            style={{ color: colors.value }}
-          >
-            {value as string}
+      {/* Content */}
+      <View style={styles.content}>
+        <View style={styles.labelRow}>
+          <Text style={[styles.label, disabled && styles.labelDisabled]}>
+            {label}
           </Text>
-          <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
+          {badge && (
+            <View style={[styles.badge, badge === 'pro' && styles.badgePro]}>
+              <Text
+                style={[
+                  styles.badgeText,
+                  badge === 'pro' && styles.badgeTextPro,
+                ]}
+              >
+                {badge.toUpperCase()}
+              </Text>
+            </View>
+          )}
         </View>
+        {description && <Text style={styles.description}>{description}</Text>}
+      </View>
+
+      {/* Right Side */}
+      {type === 'toggle' ? (
+        <SettingsToggle
+          accessibilityLabel={label}
+          disabled={disabled}
+          isEnabled={props.isEnabled}
+          onToggle={handleToggle}
+        />
+      ) : (
+        <>
+          {props.value && <Text style={styles.value}>{props.value}</Text>}
+          <Text style={styles.chevron}>›</Text>
+        </>
       )}
-
-      {type === 'navigation' && (
-        <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
-      )}
-
-      {/* Info type shows nothing on the right - just displays the label */}
-    </View>
-  );
-
-  // Info and toggle types are not pressable
-  if (type === 'toggle' || type === 'info') {
-    return content;
-  }
-
-  return (
-    <TouchableOpacity
-      accessibilityRole='button'
-      activeOpacity={0.7}
-      onPress={handleNavPress}
-    >
-      {content}
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    backgroundColor: 'rgba(99, 102, 241, 0.2)',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  badgePro: {
+    backgroundColor: 'rgba(245, 158, 11, 0.2)',
+  },
+  badgeText: {
+    color: SETTINGS_COLORS.accent,
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  badgeTextPro: {
+    color: SETTINGS_COLORS.warning,
+  },
+  chevron: {
+    color: SETTINGS_COLORS.textTertiary,
+    fontSize: 18,
+  },
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 14,
+    minHeight: 56,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  containerBorder: {
+    borderTopColor: SETTINGS_COLORS.cardBorder,
+    borderTopWidth: 1,
+  },
+  containerDisabled: {
+    opacity: 0.5,
+  },
+  content: {
+    flex: 1,
+    minWidth: 0,
+  },
+  description: {
+    color: SETTINGS_COLORS.textSecondary,
+    fontSize: 13,
+    marginTop: 2,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    borderRadius: 10,
+    height: 36,
+    justifyContent: 'center',
+    width: 36,
+  },
+  iconEmoji: {
+    fontSize: 18,
+  },
+  label: {
+    color: SETTINGS_COLORS.textPrimary,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  labelDisabled: {
+    color: SETTINGS_COLORS.textTertiary,
+  },
+  labelRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  value: {
+    color: SETTINGS_COLORS.textSecondary,
+    fontSize: 15,
+  },
+});

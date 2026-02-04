@@ -1,86 +1,112 @@
+/* eslint-disable max-lines-per-function */
 /**
- * SettingsModal Component
+ * SettingsModal Component (v2)
  *
- * Full-screen modal for app settings. Manages navigation between:
- * - Main settings view (visual preferences, account)
- * - Archived habits sub-view
+ * Full-screen modal for app settings with dark theme and animations.
+ * Features:
+ * - Account management with subscription status
+ * - Notification preferences
+ * - Visual customization options
+ * - App and legal sections
+ * - Data export and account deletion
  *
- * Provides controls for:
- * - Visual preferences (progress bar, icons, shapes)
- * - Habit management (archived habits)
- * - Account actions (sign out, delete)
- *
- * Supports high contrast mode for accessibility.
+ * Uses react-native-reanimated for 60fps animations
+ * and expo-haptics for tactile feedback.
  */
 
-import React from 'react';
-import { Modal, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Modal, View, StyleSheet, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
-import { useSettingsModalLogic } from './SettingsModal.hooks';
-import { getSettingsColors } from './colors';
 import { SettingsHeader } from './SettingsHeader';
 import { SettingsContent } from './SettingsContent';
+import { SETTINGS_COLORS } from './types';
 import type { SettingsModalProps } from './types';
 
+type SettingsView = 'settings' | 'archived';
+
 export default function SettingsModal({
+  visible,
+  onClose,
   dayShape = 'square',
   habitCompletionIcon = 'chain',
-  isHighContrastActive = false,
+  showWeekCompletionBar = true,
   onChangeDayShape = () => {},
   onChangeHabitCompletionIcon = () => {},
   onChangeShowWeekCompletionBar = () => {},
-  onClose,
-  showWeekCompletionBar = true,
-  visible,
 }: SettingsModalProps) {
-  const { view, setView, handleClose } = useSettingsModalLogic({
-    onClose,
-    visible,
-  });
+  const [view, setView] = useState<SettingsView>('settings');
   const insets = useSafeAreaInsets();
-  const colors = getSettingsColors(isHighContrastActive);
+
+  const handleClose = useCallback(() => {
+    setView('settings'); // Reset view on close
+    onClose();
+  }, [onClose]);
+
+  const handleOpenArchivedHabits = useCallback(() => {
+    setView('archived');
+  }, []);
+
+  const handleBackFromArchived = useCallback(() => {
+    setView('settings');
+  }, []);
 
   if (!visible) return null;
 
+  // Show archived habits sub-view
   if (view === 'archived') {
     return (
       <Modal
+        statusBarTranslucent
         animationType='slide'
         visible={visible}
         onRequestClose={handleClose}
       >
         <ArchivedHabitsModal
-          onBack={() => setView('settings')}
+          onBack={handleBackFromArchived}
           onClose={handleClose}
         />
       </Modal>
     );
   }
 
+  // Main settings view
   return (
-    <Modal animationType='slide' visible={visible} onRequestClose={handleClose}>
-      <View
-        className='flex-1 bg-background'
-        style={{ backgroundColor: colors.background }}
+    <Modal
+      statusBarTranslucent
+      animationType='slide'
+      visible={visible}
+      onRequestClose={handleClose}
+    >
+      <StatusBar barStyle='light-content' />
+      <LinearGradient
+        colors={[
+          SETTINGS_COLORS.background,
+          SETTINGS_COLORS.backgroundGradientEnd,
+        ]}
+        style={styles.container}
       >
-        <SettingsHeader
-          colors={colors}
-          paddingTop={insets.top + 8}
-          onClose={handleClose}
-        />
+        <View style={{ paddingTop: insets.top }}>
+          <SettingsHeader paddingTop={16} onClose={handleClose} />
+        </View>
         <SettingsContent
-          colors={colors}
           dayShape={dayShape}
           habitCompletionIcon={habitCompletionIcon}
-          isHighContrastActive={isHighContrastActive}
           showWeekCompletionBar={showWeekCompletionBar}
           onChangeDayShape={onChangeDayShape}
           onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
           onChangeShowWeekCompletionBar={onChangeShowWeekCompletionBar}
-          onOpenArchivedHabits={() => setView('archived')}
+          onClose={handleClose}
+          onOpenArchivedHabits={handleOpenArchivedHabits}
         />
-      </View>
+      </LinearGradient>
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

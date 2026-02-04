@@ -9,13 +9,9 @@ export interface HabitsModalsProps {
 
 /** Props for the SettingsModalSection component */
 export interface SettingsModalSectionProps {
-  celebrationsEnabled: boolean;
   settings: HabitsModalsState['settings'];
   showSettings: boolean;
-  showHabitStrengthPercentage: boolean;
   closeSettings: () => void;
-  openHapticTest: () => void;
-  setShowHabitStrengthPercentage: (value: boolean) => void;
   onSettingsChange: HabitsModalsState['onSettingsChange'];
 }
 

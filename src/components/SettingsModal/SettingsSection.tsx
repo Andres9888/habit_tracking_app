@@ -1,55 +1,89 @@
 /**
  * SettingsSection Component
  *
- * A grouped container for related settings rows.
- * Displays a title label and wraps children in a styled card.
- * Supports high contrast mode for accessibility.
+ * A grouped container for related settings rows with staggered entrance animations.
+ * Supports default and danger variants for visual distinction.
+ * Respects reduced motion preferences for accessibility.
  */
 
-import { ReactNode } from 'react';
-import { Text, View } from 'react-native';
-
-interface SettingsSectionProps {
-  title: string;
-  children: ReactNode;
-  highContrastMode?: boolean;
-}
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import Animated, {
+  FadeInDown,
+  useReducedMotion,
+} from 'react-native-reanimated';
+import { SETTINGS_COLORS } from './types';
+import type { SettingsSectionProps } from './types';
 
 export function SettingsSection({
   title,
+  icon,
+  variant = 'default',
+  index = 0,
   children,
-  highContrastMode = false,
 }: SettingsSectionProps) {
-  const colors = highContrastMode
-    ? {
-        background: '#111111',
-        border: '#2f2f2f',
-        title: '#facc15',
-      }
-    : {
-        background: '#ffffff',
-        border: '#f5f5f4',
-        title: '#78716c', // stone-500
-      };
+  const reducedMotion = useReducedMotion();
+  const delay = reducedMotion ? 0 : index * 50;
+
+  const isDanger = variant === 'danger';
 
   return (
-    <View className='gap-2'>
-      <Text
-        className='px-2 text-[13px] font-semibold uppercase tracking-[0.7px]'
-        style={{ color: colors.title }}
-      >
-        {title}
-      </Text>
-      <View
-        className='overflow-hidden rounded-[16px]'
-        style={{
-          backgroundColor: colors.background,
-          borderColor: highContrastMode ? colors.border : undefined,
-          borderWidth: highContrastMode ? 1 : 0,
-        }}
-      >
+    <Animated.View
+      entering={
+        reducedMotion ? undefined : FadeInDown.delay(delay).duration(300)
+      }
+      style={styles.container}
+    >
+      <View style={styles.header}>
+        {icon && <Text style={styles.icon}>{icon}</Text>}
+        <Text
+          accessibilityRole='header'
+          style={[styles.title, isDanger && styles.titleDanger]}
+        >
+          {title}
+        </Text>
+      </View>
+      <View style={[styles.card, isDanger && styles.cardDanger]}>
         {children}
       </View>
-    </View>
+    </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: SETTINGS_COLORS.card,
+    borderColor: SETTINGS_COLORS.cardBorder,
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  cardDanger: {
+    backgroundColor: SETTINGS_COLORS.cardDanger,
+    borderColor: SETTINGS_COLORS.cardDangerBorder,
+  },
+  container: {
+    marginBottom: 24,
+  },
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    paddingBottom: 8,
+    paddingHorizontal: 4,
+    paddingTop: 16,
+  },
+  icon: {
+    fontSize: 16,
+  },
+  title: {
+    color: SETTINGS_COLORS.textSecondary,
+    fontSize: 13,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  titleDanger: {
+    color: SETTINGS_COLORS.textDanger,
+  },
+});

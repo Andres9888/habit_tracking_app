@@ -455,9 +455,6 @@ function HabitsApp() {
         <SettingsModal
           visible={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
-          isCompact={isCompactMode}
-          onChangeCompact={handleCompactChange}
-          isHighContrastActive={highContrastMode}
         />
       </ScrollView>
       {/* Centered Floating Action Button - Distinguished from habit cards */}
