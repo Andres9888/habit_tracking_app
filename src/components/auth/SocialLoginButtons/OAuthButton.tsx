@@ -48,7 +48,7 @@ export function OAuthButton({
       )}
       <Text
         className='text-[15px] font-semibold tracking-[2px] text-stone-900'
-        style={{ opacity: loading ? 0.6 : 1 }}
+        style={{ opacity: loading ? 0.5 : 1 }}
       >
         CONTINUE WITH {providerName}
       </Text>

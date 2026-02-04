@@ -12,6 +12,7 @@ import {
   runOnJS,
 } from 'react-native-reanimated';
 
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { DISMISS_THRESHOLD } from './constants';
 
 interface UseToastAnimationsParams {
@@ -27,21 +28,30 @@ export function useToastAnimations({
 }: UseToastAnimationsParams) {
   const translateY = useSharedValue(100);
   const opacity = useSharedValue(0);
+  const haptic = useHapticFeedback();
 
   // Use ref for callback to prevent it from triggering useEffect re-runs
   const onDismissRef = useRef(onDismiss);
   onDismissRef.current = onDismiss;
 
-  const handleDismiss = useCallback(() => {
-    translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
-    opacity.value = withTiming(0, { duration: 200 });
+  const handleDismiss = useCallback(
+    (fromSwipe = false) => {
+      // Provide haptic feedback when user swipes to dismiss
+      if (fromSwipe) {
+        haptic.triggerLightImpact();
+      }
 
-    if (onDismissRef.current) {
-      setTimeout(() => {
-        onDismissRef.current?.();
-      }, 250);
-    }
-  }, [translateY, opacity]);
+      translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
+      opacity.value = withTiming(0, { duration: 200 });
+
+      if (onDismissRef.current) {
+        setTimeout(() => {
+          onDismissRef.current?.();
+        }, 250);
+      }
+    },
+    [translateY, opacity, haptic]
+  );
 
   useEffect(() => {
     if (visible) {
@@ -60,6 +70,10 @@ export function useToastAnimations({
     }
   }, [visible, duration, translateY, opacity, handleDismiss]);
 
+  const handleSwipeDismiss = useCallback(() => {
+    handleDismiss(true);
+  }, [handleDismiss]);
+
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
       if (event.translationY > 0) {
@@ -70,7 +84,7 @@ export function useToastAnimations({
     .onEnd((event) => {
       const velocityY = Math.round(event.velocityY);
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
-        runOnJS(handleDismiss)();
+        runOnJS(handleSwipeDismiss)();
       } else {
         translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
         opacity.value = withTiming(1, { duration: 150 });

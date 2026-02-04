@@ -166,7 +166,7 @@ describe('habitCalculations', () => {
 
     it('handles habit created today', () => {
       const habitCreatedAt = new Date('2024-02-01').getTime();
-      const tracking = [];
+      const tracking: { date: string; completed: boolean }[] = [];
       // 0 completed / 1 day = 0%
       expect(calculateCompletionPercentage(habitCreatedAt, tracking)).toBe(0);
     });

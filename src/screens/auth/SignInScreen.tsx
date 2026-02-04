@@ -38,7 +38,14 @@ import {
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
 
-export default function SignInScreen() {
+interface SignInScreenProps {
+  /** Auto-focus the email input on mount */
+  autoFocusEmail?: boolean;
+  /** Callback when user wants to navigate to sign up */
+  onNavigateToSignUp?: () => void;
+}
+
+export default function SignInScreen(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const {

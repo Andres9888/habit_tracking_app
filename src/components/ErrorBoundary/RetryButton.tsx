@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { colors } from '../../theme/colors';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -49,7 +50,7 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
       accessibilityRole='button'
       style={[
         {
-          backgroundColor: '#22c55e',
+          backgroundColor: colors.primary[500],
           borderRadius: 8,
           paddingHorizontal: 24,
           paddingVertical: 12,
@@ -60,7 +61,9 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>
+      <Text
+        style={{ color: colors.text.inverse, fontSize: 16, fontWeight: '600' }}
+      >
         Try Again
       </Text>
     </AnimatedPressable>

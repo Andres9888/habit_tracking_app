@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   importButtonDisabled: {
-    opacity: 0.6,
+    opacity: 0.5,
   },
   importButtonText: {
     color: '#ffffff',
