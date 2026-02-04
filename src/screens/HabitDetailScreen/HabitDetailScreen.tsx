@@ -1,4 +1,10 @@
-/** HabitDetailScreen - Calendar-focused Habit Detail Page */
+/** HabitDetailScreen - Redesigned Habit Detail Page
+ * 
+ * Simplified 3-section layout per HABIT-DETAIL-AFTER-SPEC.md:
+ * - Progress Hero (streak prominence)
+ * - Quick Stats + Calendar (with inline milestones)
+ * - Actions (Notes, Archive)
+ */
 
 import React from 'react';
 import { View } from 'react-native';
@@ -51,6 +57,16 @@ export default function HabitDetailScreen({
 
   if (!habit) return null;
 
+  // Notes press handler - opens notes list
+  const handleNotesPress = () => {
+    state.setIsNotesListOpen(true);
+  };
+
+  // Archive press handler - triggers archive flow
+  const handleArchivePress = () => {
+    state.setPendingArchive(true);
+  };
+
   return (
     <Modal
       disableGestureClose
@@ -72,7 +88,10 @@ export default function HabitDetailScreen({
         <HabitDetailContent
           completedDates={state.completedDates}
           habit={habit}
+          notesCount={state.habitNotes.length}
           onDayPress={calendarHandlers.handleCalendarDayPress}
+          onNotesPress={handleNotesPress}
+          onArchivePress={handleArchivePress}
         />
       </View>
       <HabitDetailModals
