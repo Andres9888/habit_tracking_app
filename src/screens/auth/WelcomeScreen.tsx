@@ -12,8 +12,6 @@ import Animated, {
   withDelay,
   withSpring,
   withTiming,
-  withRepeat,
-  withSequence,
 } from 'react-native-reanimated';
 import { Link } from 'lucide-react-native';
 import {
@@ -168,7 +166,7 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#faf9f7',
   },
   content: {
     flex: 1,
@@ -210,10 +208,15 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   primaryButton: {
-    backgroundColor: '#1c1917',
-    borderRadius: 16,
-    paddingVertical: 18,
+    backgroundColor: '#10B981',
+    borderRadius: 14,
+    paddingVertical: 16,
     alignItems: 'center',
+    shadowColor: '#10B981',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+    elevation: 4,
   },
   primaryButtonText: {
     color: '#ffffff',
@@ -235,6 +238,6 @@ const styles = StyleSheet.create({
   textLinkAction: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1c1917',
+    color: '#10B981',
   },
 });
