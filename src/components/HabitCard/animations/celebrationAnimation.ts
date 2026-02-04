@@ -1,18 +1,17 @@
 /**
  * Celebration Animation
- * Triggers completion celebration effects
+ * Implements home-screen-redesign-spec.md check animation:
+ * - 240ms total: scale 1→1.15 (120ms) then 1.15→1 (120ms)
+ * - Light impact haptic feedback
+ * - Uncheck: 200ms scale 1→0.92→1 with soft tap
  */
 
 import {
-  withSpring,
-  withSequence,
   withTiming,
   runOnJS,
-  Easing,
   type SharedValue,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { Springs } from '../../../constants/motion';
 
 interface CelebrationOptions {
   cardScale: SharedValue<number>;
@@ -27,7 +26,6 @@ interface CelebrationOptions {
 
 export function createCelebrationTrigger(options: CelebrationOptions) {
   const {
-    cardScale,
     checkmarkScale,
     checkmarkRotate,
     rippleScale,
@@ -39,41 +37,28 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
 
   return () => {
     'worklet';
-    // Haptic feedback
-    runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
+    // Light haptic feedback
+    runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
 
-    // Card bounce (enhanced pulse)
-    cardScale.value = withSequence(
-      withSpring(1.05, Springs.bouncy),
-      withSpring(1, Springs.button)
+    // 240ms check animation: 1→1.15→1
+    checkmarkScale.value = withTiming(
+      1.15,
+      { duration: 120 },
+      () => {
+        'worklet';
+        checkmarkScale.value = withTiming(1, { duration: 120 });
+      }
     );
 
-    // Checkmark animation
-    checkmarkScale.value = withSequence(
-      withSpring(1.2, Springs.bouncy),
-      withSpring(1, Springs.button)
-    );
-    checkmarkRotate.value = withTiming(360, {
-      duration: 400,
-      easing: Easing.out(Easing.cubic),
-    });
+    checkmarkRotate.value = 0;
 
-    // Ripple effect
+    // Subtle ripple
     rippleScale.value = 0;
-    rippleOpacity.value = 0.3;
-    rippleScale.value = withTiming(2, {
-      duration: 500,
-      easing: Easing.out(Easing.cubic),
-    });
-    rippleOpacity.value = withTiming(0, {
-      duration: 500,
-      easing: Easing.out(Easing.cubic),
-    });
+    rippleOpacity.value = 0.2;
+    rippleScale.value = withTiming(1.5, { duration: 240 });
+    rippleOpacity.value = withTiming(0, { duration: 240 });
 
-    // Confetti burst
     runOnJS(setShowConfetti)(true);
-
-    // Floating XP
     runOnJS(setShowFloatingXP)(true);
     runOnJS(() => {
       setXPPosition({ x: 150, y: 20 });
@@ -88,10 +73,18 @@ export function createUncheckTrigger(
 ) {
   return () => {
     'worklet';
-    checkmarkScale.value = withTiming(0, {
-      duration: 200,
-      easing: Easing.in(Easing.cubic),
-    });
+    runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Soft);
+
+    // 200ms uncheck: 1→0.92→1
+    checkmarkScale.value = withTiming(
+      0.92,
+      { duration: 100 },
+      () => {
+        'worklet';
+        checkmarkScale.value = withTiming(1, { duration: 100 });
+      }
+    );
+
     checkmarkRotate.value = 0;
   };
 }
