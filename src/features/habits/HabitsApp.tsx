@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -10,7 +10,6 @@ import FloatingActionButton from './components/FloatingActionButton';
 import WebToaster from './components/WebToaster';
 import { ArchiveUndoToast } from '../../components/ArchiveUndoToast';
 import { RevenueCatPaywall } from '../../components/RevenueCatPaywall';
-import { TrialPromptModal } from '../../components/TrialPromptModal';
 import {
   SyncingIndicator,
   SyncedToast,
@@ -21,7 +20,6 @@ import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useNotificationResponse } from '../../hooks/useNotificationResponse';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 import { useSyncStatus } from '../../contexts/SyncStatusContext';
-import { useTrialPrompt } from '../../hooks/useTrialPrompt';
 
 export function HabitsApp() {
   const { list, modals } = useHabitsApp();
@@ -63,18 +61,6 @@ export function HabitsApp() {
     triggerSelection,
     triggerWarning,
   });
-
-  // Trial prompt - shows after first habit creation
-  const trialPrompt = useTrialPrompt({
-    habitCount: list.habits.length,
-    isPremiumUser: list.isPremiumUser,
-  });
-
-  const handleTrialStart = useCallback(() => {
-    trialPrompt.onStartTrial();
-    // Show the paywall to start the trial
-    handleUpgradeIntent();
-  }, [trialPrompt, handleUpgradeIntent]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -143,14 +129,6 @@ export function HabitsApp() {
           onClose={handlePaywallClose}
           onPurchaseSuccess={handlePaywallSuccess}
           onRestoreSuccess={handlePaywallSuccess}
-        />
-
-        {/* Trial Prompt - shows after first habit creation */}
-        <TrialPromptModal
-          context='first_habit'
-          visible={trialPrompt.visible}
-          onSkip={trialPrompt.onSkip}
-          onStartTrial={handleTrialStart}
         />
       </View>
     </GestureHandlerRootView>
