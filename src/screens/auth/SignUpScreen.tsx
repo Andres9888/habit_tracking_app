@@ -59,7 +59,7 @@ export default function SignUpScreen({
   }
 
   return (
-    <View className='flex-1 bg-white'>
+    <View className='flex-1 bg-[#faf9f7]'>
       <View className='flex-1 px-6' style={{ paddingTop: insets.top + 16 }}>
         <SignUpHeader />
 

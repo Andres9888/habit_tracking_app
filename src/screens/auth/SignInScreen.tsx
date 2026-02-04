@@ -1,6 +1,6 @@
 /**
- * SignInScreen - Premium sign in experience
- * Clean design with chain branding and smooth animations
+ * SignInScreen - Sign in experience
+ * Warm minimal design with staggered animations
  */
 
 /* eslint-disable max-lines */
@@ -15,16 +15,13 @@ import {
   Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Link } from 'lucide-react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withDelay,
   withSpring,
   withTiming,
-  withRepeat,
-  Easing,
-  interpolate,
 } from 'react-native-reanimated';
 import {
   AuthDivider,
@@ -69,47 +66,32 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 
   const isAnyLoading = isLoading || !!oauthLoading;
 
-  // Entrance animations
-  const logoScale = useSharedValue(0.5);
-  const logoOpacity = useSharedValue(0);
+  // Entrance animations (staggered, no breathing)
+  const iconScale = useSharedValue(0.8);
+  const iconOpacity = useSharedValue(0);
   const headerOpacity = useSharedValue(0);
   const headerTranslateY = useSharedValue(20);
   const contentOpacity = useSharedValue(0);
-  const contentTranslateY = useSharedValue(30);
-
-  // Breathing animation for logo
-  const breathe = useSharedValue(0);
+  const contentTranslateY = useSharedValue(24);
 
   useEffect(() => {
-    // Logo entrance
-    logoScale.value = withDelay(
-      50,
-      withSpring(1, { damping: 12, stiffness: 100 })
-    );
-    logoOpacity.value = withDelay(50, withTiming(1, { duration: 400 }));
+    // Icon entrance
+    iconOpacity.value = withTiming(1, { duration: 400 });
+    iconScale.value = withSpring(1, { damping: 15 });
 
     // Header entrance
-    headerOpacity.value = withDelay(200, withTiming(1, { duration: 500 }));
-    headerTranslateY.value = withDelay(200, withSpring(0, { damping: 15 }));
+    headerOpacity.value = withDelay(100, withTiming(1, { duration: 350 }));
+    headerTranslateY.value = withDelay(100, withSpring(0, { damping: 15 }));
 
     // Content entrance
-    contentOpacity.value = withDelay(400, withTiming(1, { duration: 500 }));
-    contentTranslateY.value = withDelay(400, withSpring(0, { damping: 15 }));
-
-    // Breathing animation
-    breathe.value = withRepeat(
-      withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true
-    );
+    contentOpacity.value = withDelay(280, withTiming(1, { duration: 350 }));
+    contentTranslateY.value = withDelay(280, withSpring(0, { damping: 15 }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const logoStyle = useAnimatedStyle(() => ({
-    opacity: logoOpacity.value,
-    transform: [
-      { scale: logoScale.value },
-      { scale: interpolate(breathe.value, [0, 1], [1, 1.05]) },
-    ],
+  const iconStyle = useAnimatedStyle(() => ({
+    opacity: iconOpacity.value,
+    transform: [{ scale: iconScale.value }],
   }));
 
   const headerStyle = useAnimatedStyle(() => ({
@@ -124,13 +106,6 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 
   return (
     <View style={styles.container}>
-      {/* Subtle gradient background */}
-      <LinearGradient
-        colors={['#fafaf9', '#f5f5f4', '#fafaf9']}
-        locations={[0, 0.5, 1]}
-        style={StyleSheet.absoluteFill}
-      />
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -143,30 +118,19 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >
-          {/* Logo & Brand */}
-          <View style={styles.brandSection}>
-            <Animated.View style={[styles.logoContainer, logoStyle]}>
-              <LinearGradient
-                colors={['#22c55e', '#16a34a']}
-                style={styles.logoGradient}
-              >
-                <Text style={styles.logoEmoji}>🔗</Text>
-              </LinearGradient>
+          {/* Header Section */}
+          <View style={styles.headerSection}>
+            <Animated.View style={[styles.iconContainer, iconStyle]}>
+              <Link color='#1F2937' size={40} strokeWidth={2} />
             </Animated.View>
 
             <Animated.View style={headerStyle}>
-              <Text style={styles.appName}>Chain Day</Text>
-              <Text style={styles.tagline}>Don't break the chain</Text>
+              <Text style={styles.welcomeTitle}>Welcome back</Text>
+              <Text style={styles.welcomeSubtitle}>
+                Your habits are waiting. Let's keep the momentum going.
+              </Text>
             </Animated.View>
           </View>
-
-          {/* Welcome Message */}
-          <Animated.View style={[styles.welcomeSection, headerStyle]}>
-            <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
-            <Text style={styles.welcomeSubtitle}>
-              Your habits are waiting. Let's keep the momentum going.
-            </Text>
-          </Animated.View>
 
           {/* Auth Content */}
           <Animated.View style={[styles.authContent, contentStyle]}>
@@ -248,57 +212,41 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 }
 
 const styles = StyleSheet.create({
-  appName: {
-    color: '#1c1917',
-    fontSize: 24,
-    fontWeight: '700',
-    letterSpacing: -0.5,
-    textAlign: 'center',
-  },
-  brandSection: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  container: {
-    backgroundColor: '#fafaf9',
-    flex: 1,
-  },
   authContent: {
     gap: 24,
   },
-  flex: {
+  container: {
+    backgroundColor: '#faf9f7',
     flex: 1,
   },
-  formSection: {
-    gap: 20,
-  },
-  logoContainer: {
-    marginBottom: 16,
+  flex: {
+    flex: 1,
   },
   footer: {
     marginTop: 32,
     paddingHorizontal: 16,
   },
-  logoEmoji: {
-    fontSize: 40,
-  },
   footerText: {
     color: '#a8a29e',
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: 13,
+    lineHeight: 20,
     textAlign: 'center',
   },
-  logoGradient: {
+  formSection: {
+    gap: 20,
+  },
+  headerSection: {
     alignItems: 'center',
+    marginBottom: 32,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    backgroundColor: '#f5f5f4',
+    borderRadius: 20,
     height: 80,
-    borderRadius: 24,
-    width: 80,
     justifyContent: 'center',
-    shadowColor: '#22c55e',
-    elevation: 8,
-    shadowOffset: { height: 8, width: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
+    marginBottom: 16,
+    width: 80,
   },
   scrollContent: {
     flexGrow: 1,
@@ -306,15 +254,6 @@ const styles = StyleSheet.create({
   },
   socialButtons: {
     gap: 12,
-  },
-  tagline: {
-    color: '#78716c',
-    fontSize: 14,
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  welcomeSection: {
-    marginBottom: 32,
   },
   welcomeSubtitle: {
     color: '#57534e',
@@ -324,9 +263,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   welcomeTitle: {
-    color: '#1c1917',
+    color: '#1F2937',
     fontSize: 28,
     fontWeight: '700',
+    letterSpacing: -0.42,
     marginBottom: 8,
     textAlign: 'center',
   },

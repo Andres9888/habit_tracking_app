@@ -48,7 +48,7 @@ export function SubmitButton({
       accessibilityLabel={isLoading ? loadingLabel : label}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
-      className={`mt-4 flex-row items-center justify-center rounded-2xl border border-stone-800 bg-stone-800 py-4 ${
+      className={`mt-4 flex-row items-center justify-center rounded-[14px] border border-emerald-500 bg-emerald-500 py-4 shadow-lg shadow-emerald-500/20 ${
         isDisabled ? 'opacity-40' : ''
       }`}
       disabled={isDisabled}

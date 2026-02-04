@@ -3,6 +3,8 @@
  * Clean design consistent with app style
  */
 
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 import React, { useState, useEffect } from 'react';
 import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,8 +14,6 @@ import Animated, {
   withDelay,
   withSpring,
   withTiming,
-  withRepeat,
-  withSequence,
 } from 'react-native-reanimated';
 import { Link } from 'lucide-react-native';
 import {
@@ -47,15 +47,16 @@ export default function WelcomeScreen() {
     // Icon entrance
     iconOpacity.value = withDelay(100, withSpring(1));
     iconScale.value = withDelay(100, withSpring(1));
-    
+
     // Text entrance
     titleOpacity.value = withDelay(250, withSpring(1));
     titleTranslateY.value = withDelay(250, withSpring(0));
     subtitleOpacity.value = withDelay(350, withSpring(1));
-    
+
     // Buttons entrance
     buttonsOpacity.value = withDelay(450, withTiming(1, { duration: 300 }));
     buttonsTranslateY.value = withDelay(450, withSpring(0));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const iconStyle = useAnimatedStyle(() => ({
@@ -105,7 +106,7 @@ export default function WelcomeScreen() {
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <Link size={40} color="#1c1917" strokeWidth={2} />
+            <Link color='#1c1917' size={40} strokeWidth={2} />
           </Animated.View>
 
           <Animated.Text style={[styles.title, titleStyle]}>
@@ -140,9 +141,9 @@ export default function WelcomeScreen() {
             accessibilityLabel='Get started with Chain Day'
             accessibilityRole='button'
             accessibilityState={{ disabled: !!isLoading }}
-            style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
-            disabled={!!isLoading}
             activeOpacity={0.8}
+            disabled={!!isLoading}
+            style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
             onPress={() => setMode('signup')}
           >
             <Text style={styles.primaryButtonText}>Get Started</Text>
@@ -152,8 +153,8 @@ export default function WelcomeScreen() {
             accessibilityLabel='Sign in to existing account'
             accessibilityRole='link'
             accessibilityState={{ disabled: !!isLoading }}
-            style={styles.textLink}
             disabled={!!isLoading}
+            style={styles.textLink}
             onPress={() => setMode('signin')}
           >
             <Text style={styles.textLinkLabel}>Already have an account?</Text>
@@ -166,75 +167,80 @@ export default function WelcomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  actionSection: {
+    gap: 12,
+  },
+  backButton: {
+    left: 16,
+    position: 'absolute',
+    zIndex: 10,
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
   container: {
+    backgroundColor: '#faf9f7',
     flex: 1,
-    backgroundColor: '#ffffff',
   },
   content: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingHorizontal: 24,
     paddingBottom: 48,
-  },
-  backButton: {
-    position: 'absolute',
-    left: 16,
-    zIndex: 10,
+    paddingHorizontal: 24,
   },
   heroSection: {
     alignItems: 'center',
     gap: 12,
   },
   iconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 20,
-    backgroundColor: '#f5f5f4',
     alignItems: 'center',
+    backgroundColor: '#f5f5f4',
+    borderRadius: 20,
+    height: 80,
     justifyContent: 'center',
     marginBottom: 8,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#1c1917',
-    letterSpacing: -0.5,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 17,
-    color: '#78716c',
-    textAlign: 'center',
-  },
-  actionSection: {
-    gap: 12,
+    width: 80,
   },
   primaryButton: {
-    backgroundColor: '#1c1917',
-    borderRadius: 16,
-    paddingVertical: 18,
     alignItems: 'center',
+    backgroundColor: '#10B981',
+    borderRadius: 14,
+    elevation: 4,
+    paddingVertical: 16,
+    shadowColor: '#10B981',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
   },
   primaryButtonText: {
     color: '#ffffff',
     fontSize: 17,
     fontWeight: '600',
   },
-  buttonDisabled: {
-    opacity: 0.5,
+  subtitle: {
+    color: '#78716c',
+    fontSize: 17,
+    textAlign: 'center',
   },
   textLink: {
     flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: 12,
   },
-  textLinkLabel: {
-    fontSize: 15,
-    color: '#78716c',
-  },
   textLinkAction: {
+    color: '#1c1917',
     fontSize: 15,
     fontWeight: '600',
+  },
+  textLinkLabel: {
+    color: '#78716c',
+    fontSize: 15,
+  },
+  title: {
     color: '#1c1917',
+    fontSize: 32,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    textAlign: 'center',
   },
 });
