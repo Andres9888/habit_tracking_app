@@ -1,0 +1,1309 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day - Settings v2 Mockup</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+          Roboto, sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px 20px;
+      }
+
+      .mockup-container {
+        display: flex;
+        gap: 32px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 1600px;
+      }
+
+      .phone-frame {
+        width: 320px;
+        min-height: 680px;
+        background: #000;
+        border-radius: 44px;
+        padding: 12px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        position: relative;
+      }
+
+      .phone-frame::before {
+        content: '';
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 28px;
+        background: #000;
+        border-radius: 20px;
+        z-index: 10;
+      }
+
+      .screen {
+        width: 100%;
+        min-height: 656px;
+        background: linear-gradient(180deg, #0f0f23 0%, #1a1a3e 100%);
+        border-radius: 36px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+
+      .screen-label {
+        position: absolute;
+        bottom: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #8b8ba7;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        white-space: nowrap;
+      }
+
+      /* Settings Header */
+      .settings-header {
+        padding: 60px 20px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .back-button {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .back-button:hover {
+        background: rgba(99, 102, 241, 0.2);
+      }
+
+      .back-button svg {
+        width: 20px;
+        height: 20px;
+        stroke: #a5b4fc;
+      }
+
+      .settings-header h1 {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 700;
+        flex: 1;
+      }
+
+      /* Settings Content */
+      .settings-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px 16px 32px;
+      }
+
+      /* Section Styles */
+      .settings-section {
+        margin-bottom: 24px;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 4px 8px;
+      }
+
+      .section-icon {
+        font-size: 16px;
+      }
+
+      .section-title {
+        color: #8b8ba7;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+
+      .section-card {
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      /* Settings Row */
+      .settings-row {
+        display: flex;
+        align-items: center;
+        padding: 14px 16px;
+        min-height: 56px;
+        gap: 14px;
+        cursor: pointer;
+        transition: background 0.15s;
+        position: relative;
+      }
+
+      .settings-row:hover {
+        background: rgba(99, 102, 241, 0.08);
+      }
+
+      .settings-row:active {
+        transform: scale(0.98);
+      }
+
+      .settings-row + .settings-row {
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .row-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      .row-icon.blue {
+        background: rgba(59, 130, 246, 0.2);
+      }
+      .row-icon.green {
+        background: rgba(34, 197, 94, 0.2);
+      }
+      .row-icon.purple {
+        background: rgba(139, 92, 246, 0.2);
+      }
+      .row-icon.orange {
+        background: rgba(249, 115, 22, 0.2);
+      }
+      .row-icon.pink {
+        background: rgba(236, 72, 153, 0.2);
+      }
+      .row-icon.gray {
+        background: rgba(107, 114, 128, 0.2);
+      }
+      .row-icon.red {
+        background: rgba(239, 68, 68, 0.2);
+      }
+      .row-icon.yellow {
+        background: rgba(234, 179, 8, 0.2);
+      }
+      .row-icon.indigo {
+        background: rgba(99, 102, 241, 0.2);
+      }
+      .row-icon.cyan {
+        background: rgba(34, 211, 238, 0.2);
+      }
+
+      .row-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .row-label {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .row-description {
+        color: #8b8ba7;
+        font-size: 13px;
+        margin-top: 2px;
+      }
+
+      .row-value {
+        color: #8b8ba7;
+        font-size: 15px;
+      }
+
+      .row-chevron {
+        color: #6b7280;
+        font-size: 18px;
+      }
+
+      /* Toggle Switch */
+      .toggle-switch {
+        width: 48px;
+        height: 28px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 14px;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.3s;
+        flex-shrink: 0;
+      }
+
+      .toggle-switch.active {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      }
+
+      .toggle-switch::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 22px;
+        height: 22px;
+        background: #fff;
+        border-radius: 11px;
+        transition: transform 0.3s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .toggle-switch.active::after {
+        transform: translateX(20px);
+      }
+
+      /* Premium Badge */
+      .premium-badge {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-left: 8px;
+      }
+
+      /* Account Card Special */
+      .account-card {
+        background: linear-gradient(
+          135deg,
+          rgba(99, 102, 241, 0.15) 0%,
+          rgba(139, 92, 246, 0.1) 100%
+        );
+        border-color: rgba(99, 102, 241, 0.3);
+      }
+
+      .account-info {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        gap: 14px;
+      }
+
+      .avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: 600;
+        color: #fff;
+        flex-shrink: 0;
+      }
+
+      .account-details {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .account-name {
+        color: #fff;
+        font-size: 17px;
+        font-weight: 600;
+      }
+
+      .account-email {
+        color: #a5b4fc;
+        font-size: 14px;
+        margin-top: 2px;
+      }
+
+      .subscription-badge {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* Notification Preview */
+      .notification-preview {
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 12px;
+        padding: 12px;
+        margin: 0 16px 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .notification-icon {
+        font-size: 24px;
+      }
+
+      .notification-text {
+        flex: 1;
+      }
+
+      .notification-title {
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .notification-body {
+        color: #a5b4fc;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+
+      /* Preferences Grid */
+      .preferences-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 12px 16px;
+      }
+
+      .preference-option {
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        padding: 12px 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 2px solid transparent;
+      }
+
+      .preference-option:hover {
+        background: rgba(99, 102, 241, 0.15);
+      }
+
+      .preference-option.selected {
+        background: rgba(99, 102, 241, 0.2);
+        border-color: #6366f1;
+      }
+
+      .preference-emoji {
+        font-size: 24px;
+        margin-bottom: 6px;
+      }
+
+      .preference-label {
+        color: #fff;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      /* Danger Zone */
+      .danger-section .section-title {
+        color: #f87171;
+      }
+
+      .danger-card {
+        background: rgba(239, 68, 68, 0.08);
+        border-color: rgba(239, 68, 68, 0.2);
+      }
+
+      .danger-card .row-label {
+        color: #f87171;
+      }
+
+      /* Footer */
+      .settings-footer {
+        padding: 16px;
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .version-text {
+        color: #6b7280;
+        font-size: 13px;
+      }
+
+      .version-text .chain-icon {
+        margin-right: 4px;
+      }
+
+      /* Animations */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .settings-section {
+        animation: slideIn 0.3s ease-out backwards;
+      }
+
+      .settings-section:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .settings-section:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .settings-section:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .settings-section:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .settings-section:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+
+      /* Spec Notes */
+      .spec-panel {
+        background: rgba(15, 15, 35, 0.95);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 16px;
+        padding: 24px;
+        max-width: 400px;
+        color: #fff;
+      }
+
+      .spec-panel h2 {
+        color: #a5b4fc;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .spec-item {
+        margin-bottom: 16px;
+      }
+
+      .spec-label {
+        color: #8b8ba7;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+
+      .spec-value {
+        color: #fff;
+        font-size: 14px;
+        font-family: 'SF Mono', Monaco, monospace;
+      }
+
+      .spec-color-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .spec-swatch {
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+      }
+
+      .spec-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 16px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mockup-container">
+      <!-- Screen 1: Main Settings -->
+      <div class="phone-frame">
+        <div class="screen">
+          <div class="settings-header">
+            <div class="back-button">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </div>
+            <h1>Settings</h1>
+          </div>
+
+          <div class="settings-content">
+            <!-- Account Section -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">👤</span>
+                <span class="section-title">Account</span>
+              </div>
+              <div class="section-card account-card">
+                <div class="account-info">
+                  <div class="avatar">A</div>
+                  <div class="account-details">
+                    <div class="account-name">Andres Garcia</div>
+                    <div class="account-email">andres@example.com</div>
+                  </div>
+                  <div class="subscription-badge">
+                    <span>✨</span>
+                    <span>Pro</span>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon indigo">🔑</div>
+                  <div class="row-content">
+                    <div class="row-label">Manage Subscription</div>
+                  </div>
+                  <span class="row-chevron">›</span>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon gray">🚪</div>
+                  <div class="row-content">
+                    <div class="row-label">Sign Out</div>
+                  </div>
+                  <span class="row-chevron">›</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">🔔</span>
+                <span class="section-title">Notifications</span>
+              </div>
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon purple">📱</div>
+                  <div class="row-content">
+                    <div class="row-label">Push Notifications</div>
+                    <div class="row-description">Daily reminders</div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+                <div class="notification-preview">
+                  <span class="notification-icon">🔗</span>
+                  <div class="notification-text">
+                    <div class="notification-title">
+                      Time to extend your chain! 🔥
+                    </div>
+                    <div class="notification-body">
+                      3 habits waiting • 7 day streak
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon orange">⏰</div>
+                  <div class="row-content">
+                    <div class="row-label">Default Reminder Time</div>
+                  </div>
+                  <span class="row-value">9:00 AM</span>
+                  <span class="row-chevron">›</span>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon yellow">🎉</div>
+                  <div class="row-content">
+                    <div class="row-label">Milestone Alerts</div>
+                    <div class="row-description">
+                      7, 30, 100 day celebrations
+                    </div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Appearance Section -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">🎨</span>
+                <span class="section-title">Appearance</span>
+              </div>
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon blue">🌙</div>
+                  <div class="row-content">
+                    <div class="row-label">Theme</div>
+                  </div>
+                  <span class="row-value">Dark</span>
+                  <span class="row-chevron">›</span>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon green">✅</div>
+                  <div class="row-content">
+                    <div class="row-label">Completion Icon</div>
+                  </div>
+                  <span class="row-value">✓ Checkmark</span>
+                  <span class="row-chevron">›</span>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon cyan">📊</div>
+                  <div class="row-content">
+                    <div class="row-label">Show Progress Bar</div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- App Section -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">📱</span>
+                <span class="section-title">App</span>
+              </div>
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon yellow">⭐</div>
+                  <div class="row-content">
+                    <div class="row-label">Rate Chain Day</div>
+                    <div class="row-description">Help others discover us</div>
+                  </div>
+                  <span class="row-chevron">›</span>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon pink">💝</div>
+                  <div class="row-content">
+                    <div class="row-label">Share with Friends</div>
+                  </div>
+                  <span class="row-chevron">›</span>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon blue">💬</div>
+                  <div class="row-content">
+                    <div class="row-label">Contact Support</div>
+                  </div>
+                  <span class="row-chevron">›</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Legal Section -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">📋</span>
+                <span class="section-title">Legal</span>
+              </div>
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon gray">🔒</div>
+                  <div class="row-content">
+                    <div class="row-label">Privacy Policy</div>
+                  </div>
+                  <span class="row-chevron">›</span>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon gray">📄</div>
+                  <div class="row-content">
+                    <div class="row-label">Terms of Service</div>
+                  </div>
+                  <span class="row-chevron">›</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data Section -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">💾</span>
+                <span class="section-title">Data</span>
+              </div>
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon green">📦</div>
+                  <div class="row-content">
+                    <div class="row-label">Export Data</div>
+                    <div class="row-description">
+                      Download your habits & streaks
+                    </div>
+                  </div>
+                  <span class="row-chevron">›</span>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon gray">📁</div>
+                  <div class="row-content">
+                    <div class="row-label">Archived Habits</div>
+                  </div>
+                  <span class="row-value">3</span>
+                  <span class="row-chevron">›</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="settings-section danger-section">
+              <div class="section-header">
+                <span class="section-icon">⚠️</span>
+                <span class="section-title">Danger Zone</span>
+              </div>
+              <div class="section-card danger-card">
+                <div class="settings-row">
+                  <div class="row-icon red">🗑️</div>
+                  <div class="row-content">
+                    <div class="row-label">Delete Account</div>
+                    <div class="row-description">
+                      Permanently remove all data
+                    </div>
+                  </div>
+                  <span class="row-chevron">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-footer">
+            <div class="version-text">
+              <span class="chain-icon">🔗</span>
+              Chain Day v1.2.0 (Build 42)
+            </div>
+          </div>
+        </div>
+        <span class="screen-label">Main Settings</span>
+      </div>
+
+      <!-- Screen 2: Notifications Detail -->
+      <div class="phone-frame">
+        <div class="screen">
+          <div class="settings-header">
+            <div class="back-button">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </div>
+            <h1>Notifications</h1>
+          </div>
+
+          <div class="settings-content">
+            <!-- Global Toggle -->
+            <div class="settings-section">
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon purple">🔔</div>
+                  <div class="row-content">
+                    <div class="row-label">Enable Notifications</div>
+                    <div class="row-description">Required for reminders</div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reminder Settings -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">⏰</span>
+                <span class="section-title">Reminders</span>
+              </div>
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon orange">🌅</div>
+                  <div class="row-content">
+                    <div class="row-label">Morning Reminder</div>
+                    <div class="row-description">Start the day right</div>
+                  </div>
+                  <span class="row-value">9:00 AM</span>
+                  <span class="row-chevron">›</span>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon yellow">🌆</div>
+                  <div class="row-content">
+                    <div class="row-label">Evening Reminder</div>
+                    <div class="row-description">Don't forget!</div>
+                  </div>
+                  <span class="row-value">8:00 PM</span>
+                  <span class="row-chevron">›</span>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon blue">📍</div>
+                  <div class="row-content">
+                    <div class="row-label">Smart Reminders</div>
+                    <div class="row-description">Based on your activity</div>
+                  </div>
+                  <span class="premium-badge">Pro</span>
+                  <div class="toggle-switch"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Celebration Alerts -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">🎉</span>
+                <span class="section-title">Celebrations</span>
+              </div>
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon green">🔥</div>
+                  <div class="row-content">
+                    <div class="row-label">Streak Milestones</div>
+                    <div class="row-description">7, 30, 100, 365 days</div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon pink">🏆</div>
+                  <div class="row-content">
+                    <div class="row-label">Achievement Unlocks</div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon cyan">📈</div>
+                  <div class="row-content">
+                    <div class="row-label">Weekly Summary</div>
+                    <div class="row-description">Every Sunday at 6 PM</div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quiet Hours -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">🌙</span>
+                <span class="section-title">Quiet Hours</span>
+              </div>
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon gray">🔕</div>
+                  <div class="row-content">
+                    <div class="row-label">Do Not Disturb</div>
+                    <div class="row-description">
+                      No notifications during this time
+                    </div>
+                  </div>
+                  <div class="toggle-switch"></div>
+                </div>
+                <div class="settings-row" style="opacity: 0.5">
+                  <div class="row-icon gray">🕐</div>
+                  <div class="row-content">
+                    <div class="row-label">Quiet Period</div>
+                  </div>
+                  <span class="row-value">10 PM - 8 AM</span>
+                  <span class="row-chevron">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="screen-label">Notifications</span>
+      </div>
+
+      <!-- Screen 3: Appearance -->
+      <div class="phone-frame">
+        <div class="screen">
+          <div class="settings-header">
+            <div class="back-button">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </div>
+            <h1>Appearance</h1>
+          </div>
+
+          <div class="settings-content">
+            <!-- Theme Selection -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">🎨</span>
+                <span class="section-title">Theme</span>
+              </div>
+              <div class="section-card">
+                <div class="preferences-grid">
+                  <div class="preference-option">
+                    <div class="preference-emoji">☀️</div>
+                    <div class="preference-label">Light</div>
+                  </div>
+                  <div class="preference-option selected">
+                    <div class="preference-emoji">🌙</div>
+                    <div class="preference-label">Dark</div>
+                  </div>
+                  <div class="preference-option">
+                    <div class="preference-emoji">📱</div>
+                    <div class="preference-label">System</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Completion Icons -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">✅</span>
+                <span class="section-title">Completion Icon</span>
+              </div>
+              <div class="section-card">
+                <div class="preferences-grid">
+                  <div class="preference-option selected">
+                    <div class="preference-emoji">✓</div>
+                    <div class="preference-label">Check</div>
+                  </div>
+                  <div class="preference-option">
+                    <div class="preference-emoji">🔗</div>
+                    <div class="preference-label">Chain</div>
+                  </div>
+                  <div class="preference-option">
+                    <div class="preference-emoji">⭐</div>
+                    <div class="preference-label">Star</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Day Shape -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">⬜</span>
+                <span class="section-title">Day Shape</span>
+              </div>
+              <div class="section-card">
+                <div class="preferences-grid">
+                  <div class="preference-option selected">
+                    <div class="preference-emoji" style="font-size: 28px">
+                      ⬜
+                    </div>
+                    <div class="preference-label">Square</div>
+                  </div>
+                  <div class="preference-option">
+                    <div class="preference-emoji" style="font-size: 28px">
+                      ⚫
+                    </div>
+                    <div class="preference-label">Circle</div>
+                  </div>
+                  <div class="preference-option">
+                    <div class="preference-emoji" style="font-size: 28px">
+                      🔷
+                    </div>
+                    <div class="preference-label">Diamond</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Display Options -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">👁️</span>
+                <span class="section-title">Display</span>
+              </div>
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon cyan">📊</div>
+                  <div class="row-content">
+                    <div class="row-label">Show Progress Bar</div>
+                    <div class="row-description">Daily completion ring</div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon orange">🔥</div>
+                  <div class="row-content">
+                    <div class="row-label">Show Streak Flames</div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon green">💪</div>
+                  <div class="row-content">
+                    <div class="row-label">Show Habit Strength</div>
+                    <div class="row-description">Percentage indicator</div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon purple">🎬</div>
+                  <div class="row-content">
+                    <div class="row-label">Animations</div>
+                  </div>
+                  <span class="row-value">On</span>
+                  <span class="row-chevron">›</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accessibility -->
+            <div class="settings-section">
+              <div class="section-header">
+                <span class="section-icon">♿</span>
+                <span class="section-title">Accessibility</span>
+              </div>
+              <div class="section-card">
+                <div class="settings-row">
+                  <div class="row-icon blue">🔆</div>
+                  <div class="row-content">
+                    <div class="row-label">High Contrast</div>
+                  </div>
+                  <div class="toggle-switch"></div>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon gray">📳</div>
+                  <div class="row-content">
+                    <div class="row-label">Haptic Feedback</div>
+                  </div>
+                  <div class="toggle-switch active"></div>
+                </div>
+                <div class="settings-row">
+                  <div class="row-icon yellow">🔤</div>
+                  <div class="row-content">
+                    <div class="row-label">Larger Text</div>
+                  </div>
+                  <div class="toggle-switch"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="screen-label">Appearance</span>
+      </div>
+
+      <!-- Screen 4: Delete Account Confirmation -->
+      <div class="phone-frame">
+        <div class="screen" style="justify-content: center; padding: 24px">
+          <div
+            style="
+              background: rgba(239, 68, 68, 0.1);
+              border: 1px solid rgba(239, 68, 68, 0.3);
+              border-radius: 24px;
+              padding: 32px 24px;
+              text-align: center;
+            "
+          >
+            <div style="font-size: 56px; margin-bottom: 16px">⚠️</div>
+            <h2
+              style="
+                color: #fff;
+                font-size: 22px;
+                font-weight: 700;
+                margin-bottom: 8px;
+              "
+            >
+              Delete Account?
+            </h2>
+            <p
+              style="
+                color: #f87171;
+                font-size: 15px;
+                line-height: 1.5;
+                margin-bottom: 24px;
+              "
+            >
+              This will permanently delete all your habits, streaks, and
+              progress. This action cannot be undone.
+            </p>
+
+            <div
+              style="
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 12px;
+                padding: 16px;
+                margin-bottom: 24px;
+                text-align: left;
+              "
+            >
+              <div
+                style="
+                  color: #8b8ba7;
+                  font-size: 12px;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                  margin-bottom: 8px;
+                "
+              >
+                What you'll lose:
+              </div>
+              <div style="color: #f87171; font-size: 14px; margin-bottom: 6px">
+                • 12 habits tracked
+              </div>
+              <div style="color: #f87171; font-size: 14px; margin-bottom: 6px">
+                • 847 days of progress
+              </div>
+              <div style="color: #f87171; font-size: 14px">
+                • All streaks & achievements
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px">
+              <button
+                style="
+                  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                  color: #fff;
+                  border: none;
+                  border-radius: 14px;
+                  padding: 16px;
+                  font-size: 16px;
+                  font-weight: 600;
+                  cursor: pointer;
+                "
+              >
+                Delete Forever
+              </button>
+              <button
+                style="
+                  background: rgba(255, 255, 255, 0.08);
+                  color: #fff;
+                  border: none;
+                  border-radius: 14px;
+                  padding: 16px;
+                  font-size: 16px;
+                  font-weight: 600;
+                  cursor: pointer;
+                "
+              >
+                Keep My Account
+              </button>
+            </div>
+          </div>
+        </div>
+        <span class="screen-label">Delete Confirmation</span>
+      </div>
+
+      <!-- Design Specs Panel -->
+      <div class="spec-panel">
+        <h2>🎨 Design Specs</h2>
+
+        <div class="spec-item">
+          <div class="spec-label">Typography</div>
+          <div class="spec-value">
+            Header: SF Pro Display, 24px, 700<br />
+            Section: 13px, 600, uppercase<br />
+            Row Label: 16px, 500<br />
+            Row Desc: 13px, 400
+          </div>
+        </div>
+
+        <div class="spec-divider"></div>
+
+        <div class="spec-item">
+          <div class="spec-label">Spacing</div>
+          <div class="spec-value">
+            Section margin: 24px<br />
+            Card padding: 16px<br />
+            Row height: 56px min<br />
+            Icon size: 36×36px<br />
+            Touch target: 44×44px min
+          </div>
+        </div>
+
+        <div class="spec-divider"></div>
+
+        <div class="spec-item">
+          <div class="spec-label">Border Radius</div>
+          <div class="spec-value">
+            Cards: 16px<br />
+            Icon bg: 10px<br />
+            Toggle: 14px<br />
+            Back button: 12px
+          </div>
+        </div>
+
+        <div class="spec-divider"></div>
+
+        <div class="spec-item">
+          <div class="spec-label">Colors</div>
+          <div class="spec-color-row">
+            <div
+              class="spec-swatch"
+              style="background: linear-gradient(180deg, #0f0f23, #1a1a3e)"
+            ></div>
+            <div class="spec-value">Background</div>
+          </div>
+          <div class="spec-color-row">
+            <div
+              class="spec-swatch"
+              style="
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+              "
+            ></div>
+            <div class="spec-value">Card bg: rgba(255,255,255,0.04)</div>
+          </div>
+          <div class="spec-color-row">
+            <div class="spec-swatch" style="background: #8b8ba7"></div>
+            <div class="spec-value">Secondary: #8b8ba7</div>
+          </div>
+          <div class="spec-color-row">
+            <div
+              class="spec-swatch"
+              style="background: linear-gradient(135deg, #6366f1, #8b5cf6)"
+            ></div>
+            <div class="spec-value">Primary: #6366f1 → #8b5cf6</div>
+          </div>
+          <div class="spec-color-row">
+            <div class="spec-swatch" style="background: #22c55e"></div>
+            <div class="spec-value">Success: #22c55e</div>
+          </div>
+          <div class="spec-color-row">
+            <div class="spec-swatch" style="background: #ef4444"></div>
+            <div class="spec-value">Danger: #ef4444</div>
+          </div>
+        </div>
+
+        <div class="spec-divider"></div>
+
+        <div class="spec-item">
+          <div class="spec-label">Animations</div>
+          <div class="spec-value">
+            Row press: scale(0.98), 150ms<br />
+            Toggle: 300ms ease-out<br />
+            Section entrance: 300ms slide-up<br />
+            Stagger delay: 50ms
+          </div>
+        </div>
+
+        <div class="spec-divider"></div>
+
+        <div class="spec-item">
+          <div class="spec-label">Haptics</div>
+          <div class="spec-value">
+            Row tap: Light impact<br />
+            Toggle: Light impact<br />
+            Delete: Medium impact<br />
+            Success: Success notification
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
