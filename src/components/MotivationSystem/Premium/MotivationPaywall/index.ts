@@ -3,4 +3,4 @@
  */
 
 export { MotivationPaywall, default } from './MotivationPaywall';
-export type { MotivationPaywallProps } from './types';
+export type { MotivationPaywallProps, PlanType } from './types';

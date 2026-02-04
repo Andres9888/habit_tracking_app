@@ -4,51 +4,25 @@
 
 import type { MotivationPremiumFeature } from '../PremiumFeatureLock';
 
+export type PlanType = 'yearly' | 'monthly';
+
 export interface MotivationPaywallProps {
-  /**
-   * Whether the paywall is visible
-   */
-  visible: boolean;
-
-  /**
-   * Callback when user closes the paywall
-   */
   onClose: () => void;
-
-  /**
-   * Callback when user wants to start trial/purchase
-   * Returns true if purchase was successful
-   */
-  onStartTrial: () => Promise<boolean>;
-
-  /**
-   * Callback for restoring purchases
-   */
   onRestorePurchases?: () => Promise<boolean>;
-
-  /**
-   * Which feature triggered the paywall (for analytics and highlighting)
-   */
-  triggeredByFeature?: MotivationPremiumFeature;
-
-  /**
-   * Whether to reduce motion for accessibility
-   */
+  onStartTrial: (plan: PlanType) => Promise<boolean>;
   reduceMotion?: boolean;
-
-  /**
-   * Test ID for testing
-   */
   testID?: string;
+  triggeredByFeature?: MotivationPremiumFeature;
+  visible: boolean;
 }
 
 export interface FeatureCheckProps {
   icon: React.ComponentType<{ color: string; size: number }>;
-  title: string;
-  subtitle: string;
-  isHighlighted: boolean;
   index: number;
+  isHighlighted: boolean;
   reduceMotion: boolean;
+  subtitle: string;
+  title: string;
 }
 
 export interface PaywallFeature {

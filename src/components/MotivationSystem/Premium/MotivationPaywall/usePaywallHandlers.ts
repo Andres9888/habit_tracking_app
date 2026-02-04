@@ -5,11 +5,12 @@
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import type { PlanType } from './types';
 
 interface UsePaywallHandlersParams {
   onClose: () => void;
-  onStartTrial: () => Promise<boolean>;
   onRestorePurchases?: () => Promise<boolean>;
+  onStartTrial: (plan: PlanType) => Promise<boolean>;
 }
 
 export function usePaywallHandlers({
@@ -17,23 +18,29 @@ export function usePaywallHandlers({
   onStartTrial,
   onRestorePurchases,
 }: UsePaywallHandlersParams) {
-  const { triggerSelection, triggerLightImpact, triggerSuccess } =
+  const { triggerLightImpact, triggerSelection, triggerSuccess } =
     useHapticFeedback({});
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<PlanType>('yearly');
 
   const handleClose = useCallback(() => {
     triggerLightImpact();
     onClose();
   }, [onClose, triggerLightImpact]);
+  const handleSelectPlan = useCallback(
+    (plan: PlanType) => {
+      triggerLightImpact();
+      setSelectedPlan(plan);
+    },
+    [triggerLightImpact]
+  );
 
   const handleStartTrial = useCallback(async () => {
     if (isProcessing) return;
-
     triggerSelection();
     setIsProcessing(true);
-
     try {
-      const success = await onStartTrial();
+      const success = await onStartTrial(selectedPlan);
       if (success) {
         triggerSuccess();
         onClose();
@@ -47,14 +54,19 @@ export function usePaywallHandlers({
     } finally {
       setIsProcessing(false);
     }
-  }, [isProcessing, onStartTrial, onClose, triggerSelection, triggerSuccess]);
+  }, [
+    isProcessing,
+    onStartTrial,
+    selectedPlan,
+    onClose,
+    triggerSelection,
+    triggerSuccess,
+  ]);
 
   const handleRestorePurchases = useCallback(async () => {
     if (isProcessing || !onRestorePurchases) return;
-
     triggerLightImpact();
     setIsProcessing(true);
-
     try {
       const success = await onRestorePurchases();
       if (success) {
@@ -63,7 +75,7 @@ export function usePaywallHandlers({
       } else {
         Alert.alert(
           'No purchases found',
-          "We couldn't find any previous purchases. Start a new subscription to unlock premium features.",
+          "We couldn't find any previous purchases.",
           [{ text: 'OK' }]
         );
       }
@@ -85,7 +97,9 @@ export function usePaywallHandlers({
   return {
     handleClose,
     handleRestorePurchases,
+    handleSelectPlan,
     handleStartTrial,
     isProcessing,
+    selectedPlan,
   };
 }

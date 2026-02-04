@@ -1,23 +1,21 @@
 /**
- * MotivationPaywall Component
- *
- * Full-screen paywall specifically for Motivation System features.
- * Combines the feature lock UI, benefits modal, and actual purchase flow.
- *
- * @see motivation-system-spec.md - Premium Gating UX section
+ * MotivationPaywall - Human-optimized paywall
+ * @see paywall-redesign-spec.md
  */
 
 import React from 'react';
-import { View, ScrollView, Modal } from 'react-native';
-import { BlurView } from 'expo-blur';
-import { CloseButton } from './CloseButton';
-import { PaywallHero } from './PaywallHero';
-import { FeaturesList } from './FeaturesList';
-import { SocialProof } from './SocialProof';
-import { PricingCard } from './PricingCard';
-import { CTAButton } from './CTAButton';
-import { PaywallFooter } from './PaywallFooter';
+import { ScrollView, Modal, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
+import { PaywallHeader } from './PaywallHeader';
+import { PaywallHeadline } from './PaywallHeadline';
+import { PaywallFeatures } from './PaywallFeatures';
+import { PricingCards } from './PricingCards';
+import { PaywallCTA } from './PaywallCTA';
+import { PaywallFooterRedesign } from './PaywallFooterRedesign';
+import { useBackgroundAnimation } from './usePaywallEntryAnimations';
 import { usePaywallHandlers } from './usePaywallHandlers';
+import { PAYWALL_COLORS } from './paywall.constants';
 import type { MotivationPaywallProps } from './types';
 
 export function MotivationPaywall({
@@ -25,13 +23,19 @@ export function MotivationPaywall({
   onClose,
   onStartTrial,
   onRestorePurchases,
-  triggeredByFeature,
   reduceMotion = false,
   testID,
 }: MotivationPaywallProps) {
+  const insets = useSafeAreaInsets();
+  const { animatedStyle: bgAnim } = useBackgroundAnimation(
+    visible,
+    reduceMotion
+  );
   const {
     isProcessing,
+    selectedPlan,
     handleClose,
+    handleSelectPlan,
     handleStartTrial,
     handleRestorePurchases,
   } = usePaywallHandlers({ onClose, onRestorePurchases, onStartTrial });
@@ -44,40 +48,52 @@ export function MotivationPaywall({
       visible={visible}
       onRequestClose={handleClose}
     >
-      <View className='flex-1'>
-        <BlurView className='absolute inset-0' intensity={80} tint='dark' />
-        <View className='flex-1 bg-black/40'>
-          <CloseButton onPress={handleClose} />
-          <ScrollView
-            className='flex-1 px-5'
-            contentContainerStyle={{ paddingBottom: 32 }}
-            showsVerticalScrollIndicator={false}
-          >
-            <PaywallHero />
-            <FeaturesList
-              reduceMotion={reduceMotion}
-              triggeredByFeature={triggeredByFeature}
-            />
-            <SocialProof />
-            <PricingCard />
-            <View className='mb-4'>
-              <CTAButton
-                isProcessing={isProcessing}
-                reduceMotion={reduceMotion}
-                visible={visible}
-                onPress={handleStartTrial}
-              />
-            </View>
-            <PaywallFooter
-              isProcessing={isProcessing}
-              showRestorePurchases={!!onRestorePurchases}
-              onRestorePurchases={handleRestorePurchases}
-            />
-          </ScrollView>
-        </View>
-      </View>
+      <Animated.View
+        style={[
+          styles.container,
+          { paddingTop: insets.top },
+          reduceMotion ? undefined : bgAnim,
+        ]}
+      >
+        <PaywallHeader onClose={handleClose} />
+        <ScrollView
+          contentContainerStyle={[
+            styles.scrollContent,
+            { paddingBottom: insets.bottom + 32 },
+          ]}
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollView}
+        >
+          <PaywallHeadline reduceMotion={reduceMotion} visible={visible} />
+          <PaywallFeatures reduceMotion={reduceMotion} visible={visible} />
+          <PricingCards
+            reduceMotion={reduceMotion}
+            selectedPlan={selectedPlan}
+            visible={visible}
+            onSelectPlan={handleSelectPlan}
+          />
+          <PaywallCTA
+            isProcessing={isProcessing}
+            reduceMotion={reduceMotion}
+            selectedPlan={selectedPlan}
+            visible={visible}
+            onPress={handleStartTrial}
+          />
+          <PaywallFooterRedesign
+            isProcessing={isProcessing}
+            showRestorePurchases={!!onRestorePurchases}
+            onRestorePurchases={handleRestorePurchases}
+          />
+        </ScrollView>
+      </Animated.View>
     </Modal>
   );
 }
 
 export default MotivationPaywall;
+
+const styles = StyleSheet.create({
+  container: { backgroundColor: PAYWALL_COLORS.background, flex: 1 },
+  scrollContent: { flexGrow: 1 },
+  scrollView: { flex: 1 },
+});
