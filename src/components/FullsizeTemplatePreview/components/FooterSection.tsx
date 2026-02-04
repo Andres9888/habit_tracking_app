@@ -70,7 +70,7 @@ export function FooterSection({
               style={[
                 footerStyles.importButton,
                 { backgroundColor: iconColor },
-                isImporting && { opacity: 0.6 },
+                isImporting && { opacity: 0.5 },
                 importButtonStyle,
               ]}
               onPress={onImport}
