@@ -6,6 +6,7 @@
  * @see docs/offline-habit-sync.md T013 - Offline state integration
  */
 
+import { useCallback } from 'react';
 import { useAnimatedStyle } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
@@ -69,6 +70,11 @@ export function useHabitCard(props: HabitCardProps) {
     variant: entranceVariant,
   });
 
+  // Wrap the celebration trigger to also show the completion toast
+  const triggerCompletionWithToast = useCallback(() => {
+    values.setShowCompletionToast(true);
+  }, [values]);
+
   const animations = useHabitCardAnimations({
     cardScale: values.cardScale,
     reduceMotion,
@@ -92,7 +98,10 @@ export function useHabitCard(props: HabitCardProps) {
     today: habitState.today,
     toggleCompletionMutation: habitState.toggleCompletionMutation,
     translateX: values.translateX,
-    triggerCompletionCelebration: animations.triggerCompletionCelebration,
+    triggerCompletionCelebration: () => {
+      animations.triggerCompletionCelebration();
+      triggerCompletionWithToast();
+    },
     triggerUncheckAnimation: animations.triggerUncheckAnimation,
   });
 
@@ -119,8 +128,10 @@ export function useHabitCard(props: HabitCardProps) {
     currentStreak: habitState.currentStreak,
     entrance,
     hasPendingOfflineOps: habitState.hasPendingOfflineOps,
+    setShowCompletionToast: values.setShowCompletionToast,
     setShowConfetti: values.setShowConfetti,
     setShowFloatingXP: values.setShowFloatingXP,
+    showCompletionToast: values.showCompletionToast,
     showConfetti: values.showConfetti,
     showFloatingXP: values.showFloatingXP,
     strengthColor: getStrengthColor(strength, theme),
