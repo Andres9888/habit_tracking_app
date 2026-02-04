@@ -1,12 +1,10 @@
 /**
  * Global CSS for NativeWind / Tailwind CSS (web-only).
- *
- * Expo's Metro bundler ignores global CSS on native platforms, so it's safe to
- * keep web-specific CSS variables and font imports here.
+ * Home Screen Redesign: Warm Minimalism palette
  */
 
 /** @import must precede all other statements */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Source+Sans+3:wght@400;500;600&family=Inter:wght@400;600;700;800&display=swap');
 @import url('https://fonts.cdnfonts.com/css/opendyslexic');
 
 @tailwind base;
@@ -15,38 +13,37 @@
 
 @layer base {
   :root {
-    --background: 30 2% 95%;
-    --foreground: 240 6% 10%;
+    /* Warm Minimalism palette */
+    --background: 36 33% 97%; /* #FAF8F5 */
+    --foreground: 30 10% 16%; /* #2D2A26 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 6% 10%;
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 30 10% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 6% 10%;
+    --popover-foreground: 30 10% 16%;
 
-    --primary: 240 5% 8%;
+    --primary: 13 77% 57%; /* #E85D3B accent */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 95%;
-    --secondary-foreground: 240 6% 12%;
+    --secondary: 36 33% 97%;
+    --secondary-foreground: 30 10% 16%;
 
-    --muted: 0 0% 92%;
-    --muted-foreground: 240 5% 42%;
+    --muted: 30 8% 74%; /* #C4BFB7 neutral */
+    --muted-foreground: 30 10% 16%;
 
-    --accent: 0 0% 88%;
-    --accent-foreground: 240 6% 12%;
+    --accent: 13 58% 90%; /* #F5DDD6 accent-muted */
+    --accent-foreground: 30 10% 16%;
 
     --destructive: 4 82% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --input: 240 5% 86%;
-    --ring: 240 6% 16%;
+    --border: 30 8% 74%; /* neutral */
+    --input: 30 8% 74%;
+    --ring: 13 77% 57%; /* accent */
 
-    --radius: 0.5rem;
+    --radius: 0.75rem; /* 12px */
   }
-
-  /* Dark mode removed - app is light-mode only */
 }
 
 @layer base {
@@ -56,7 +53,16 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Source Sans 3', 'Inter', system-ui, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
   }
 
   body.dyslexic-font,
