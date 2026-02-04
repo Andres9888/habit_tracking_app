@@ -29,14 +29,12 @@ export function HabitsApp() {
     preference: list.reduceMotionPreference,
   });
 
-  // Offline sync status
   const { status: syncStatus } = useSyncStatus();
   const { visible: syncedToastVisible, syncedCount } = useSyncedToast();
 
   const notificationHandlers = useMemo(
     () => ({
       onHabitNotificationTap: (habitId: string) => {
-        console.log('[HabitsApp] Opening ActivationModal for habit:', habitId);
         openActivationModalById(habitId);
       },
     }),
@@ -64,9 +62,7 @@ export function HabitsApp() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View className='flex-1 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100'>
-        <View className='pointer-events-none absolute inset-0 bg-gradient-to-b from-stone-50 via-amber-50/20 to-stone-100' />
-        <View className='pointer-events-none absolute inset-x-0 top-0 h-56 rounded-b-[40px] bg-white/95 shadow-[0px_24px_48px_rgba(120,90,50,0.06)]' />
+      <View style={{ flex: 1, backgroundColor: '#FAF8F5' }}>
 
         {/* Sync Status Indicators - Global position */}
         <View className='absolute left-0 right-0 top-20 z-50 flex-row justify-center'>
@@ -105,7 +101,9 @@ export function HabitsApp() {
           <View className='absolute bottom-8 right-6'>
             <FloatingActionButton
               celebrationsEnabled={list.celebrationsEnabled}
-              openCreateHabitScreen={handleCreateHabitRequest}
+              openCreateHabitScreen={(): void => {
+                void handleCreateHabitRequest();
+              }}
               reduceMotionPreference={list.reduceMotionPreference}
             />
           </View>
