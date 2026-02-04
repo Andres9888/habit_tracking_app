@@ -1,4 +1,11 @@
-import { TouchableOpacity, View } from 'react-native';
+/**
+ * ColorSwatch Component
+ * Per spec: 36×36px visual, 48×48px tap, scale 1.15 selected with white+color rings
+ */
+
+import { useCallback, useRef } from 'react';
+import { Animated, TouchableOpacity, View } from 'react-native';
+import { Motion } from '../../../../constants/motion';
 
 interface ColorSwatchProps {
   color: string;
@@ -9,10 +16,21 @@ interface ColorSwatchProps {
   onPressOut: () => void;
 }
 
-/**
- * Inner color swatch with selection ring UI
- * Handles the nested ring structure for selected state
- */
+const SWATCH_SIZE = 36;
+const TAP_TARGET = 48;
+
+const getSwatchStyle = (color: string, isSelected: boolean) => ({
+  backgroundColor: color,
+  borderRadius: 999,
+  elevation: isSelected ? 3 : 1,
+  height: SWATCH_SIZE,
+  shadowColor: '#000',
+  shadowOffset: { height: 1, width: 0 },
+  shadowOpacity: isSelected ? 0.15 : 0.08,
+  shadowRadius: isSelected ? 4 : 2,
+  width: SWATCH_SIZE,
+});
+
 export const ColorSwatch = ({
   color,
   colorName,
@@ -20,45 +38,72 @@ export const ColorSwatch = ({
   onPress,
   onPressIn,
   onPressOut,
-}: ColorSwatchProps) => (
-  <View
-    style={{
-      alignItems: 'center',
-      backgroundColor: isSelected ? color : 'transparent',
-      borderRadius: 999,
-      height: isSelected ? 52 : 44,
-      justifyContent: 'center',
-      width: isSelected ? 52 : 44,
-    }}
-  >
-    {/* White gap ring */}
+}: ColorSwatchProps) => {
+  const scale = useRef(new Animated.Value(isSelected ? 1.15 : 1)).current;
+
+  const handlePressIn = useCallback(() => {
+    Animated.timing(scale, {
+      duration: Motion.duration.fast,
+      toValue: isSelected ? 1.1 : 0.95,
+      useNativeDriver: true,
+    }).start();
+    onPressIn();
+  }, [scale, isSelected, onPressIn]);
+
+  const handlePressOut = useCallback(() => {
+    Animated.spring(scale, {
+      friction: 8,
+      tension: 200,
+      toValue: isSelected ? 1.15 : 1,
+      useNativeDriver: true,
+    }).start();
+    onPressOut();
+  }, [scale, isSelected, onPressOut]);
+
+  return (
     <View
       style={{
         alignItems: 'center',
-        backgroundColor: isSelected ? '#ffffff' : 'transparent',
-        borderRadius: 999,
-        height: isSelected ? 48 : 44,
+        height: TAP_TARGET,
         justifyContent: 'center',
-        width: isSelected ? 48 : 44,
+        width: TAP_TARGET,
       }}
     >
-      <TouchableOpacity
-        accessibilityLabel={`${colorName} color${isSelected ? ', selected' : ''}`}
-        accessibilityRole='button'
-        accessibilityState={{ selected: isSelected }}
+      <Animated.View
         style={{
           alignItems: 'center',
-          backgroundColor: color,
-          borderRadius: 999,
-          height: 44,
           justifyContent: 'center',
-          width: 44,
+          transform: [{ scale }],
         }}
-        testID={`color-swatch-${color.replace('#', '')}`}
-        onPress={onPress}
-        onPressIn={onPressIn}
-        onPressOut={onPressOut}
-      />
+      >
+        <View
+          style={{
+            backgroundColor: isSelected ? color : 'transparent',
+            borderRadius: 999,
+            padding: isSelected ? 2 : 0,
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: isSelected ? '#fff' : 'transparent',
+              borderRadius: 999,
+              padding: isSelected ? 3 : 0,
+            }}
+          >
+            <TouchableOpacity
+              accessibilityLabel={`${colorName} color${isSelected ? ', selected' : ''}`}
+              accessibilityRole='button'
+              accessibilityState={{ selected: isSelected }}
+              activeOpacity={0.8}
+              style={getSwatchStyle(color, isSelected)}
+              testID={`color-swatch-${color.replace('#', '')}`}
+              onPress={onPress}
+              onPressIn={handlePressIn}
+              onPressOut={handlePressOut}
+            />
+          </View>
+        </View>
+      </Animated.View>
     </View>
-  </View>
-);
+  );
+};
