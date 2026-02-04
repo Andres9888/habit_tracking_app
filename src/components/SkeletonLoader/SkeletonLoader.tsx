@@ -5,6 +5,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
+import { colors } from '../../theme/colors';
 import type { SkeletonLoaderProps } from './types';
 
 export function SkeletonLoader({
@@ -47,7 +48,7 @@ export function SkeletonLoader({
     <Animated.View
       style={[
         {
-          backgroundColor: '#e7e5e4',
+          backgroundColor: colors.border,
           borderRadius,
           height,
           opacity: shimmerAnim,
