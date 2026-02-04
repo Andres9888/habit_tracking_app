@@ -44,17 +44,22 @@ module.exports = {
           foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          DEFAULT: '#E85D3B',
+          foreground: '#FFFFFF',
         },
+        'accent-muted': '#F5DDD6',
         popover: {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
         },
         card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
+          DEFAULT: '#FFFFFF',
+          foreground: '#2D2A26',
         },
+        // Home screen redesign palette
+        dominant: '#FAF8F5',
+        'secondary-text': '#2D2A26',
+        neutral: '#C4BFB7',
       },
       borderRadius: {
         lg: 'var(--radius)',
