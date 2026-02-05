@@ -1,15 +1,20 @@
-import { ScrollView, View } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+/**
+ * ModalContent - Main scrollable content for Create Habit modal
+ * Per spec: Bold 34px title, no live preview, unified CUSTOMIZE section
+ */
+
+import { ScrollView, Text } from 'react-native';
+import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
 import { HabitNameField } from './HabitNameField';
-import { LivePreview } from './LivePreview';
+import { HeroTitle } from './HeroTitle';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
 import { HABIT_COLORS } from '../constants';
 import type { ModalContentProps } from './ModalContent.types';
 
-const ANIMATION_STAGGER_DELAY = 50;
-const ANIMATION_DURATION = 300;
+const STAGGER = 60;
+const DURATION = 240;
 
 export function ModalContent({
   isEditMode,
@@ -32,14 +37,20 @@ export function ModalContent({
   return (
     <ScrollView
       className='flex-1 px-4'
-      contentContainerStyle={{ paddingBottom: isEditMode ? 32 : 160 }}
+      contentContainerStyle={{
+        paddingBottom: isEditMode ? 32 : 160,
+        paddingTop: 16,
+      }}
       keyboardShouldPersistTaps='handled'
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
       onScroll={onScroll}
     >
-      <Animated.View entering={FadeInUp.duration(ANIMATION_DURATION).delay(0)}>
-        <View className='mt-4' />
+      <Animated.View entering={FadeInDown.duration(DURATION).delay(100)}>
+        <HeroTitle />
+      </Animated.View>
+
+      <Animated.View entering={FadeInUp.duration(DURATION).delay(160)}>
         <HabitNameField
           autoFocus={visible && !isEditMode}
           error={habitNameError}
@@ -47,16 +58,22 @@ export function ModalContent({
           onBlur={onNameBlur}
           onChange={onNameChange}
         />
-        <LivePreview
-          color={selectedColor}
-          emoji={selectedEmoji}
-          habitName={habitName}
-        />
       </Animated.View>
+
       <Animated.View
-        entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-          ANIMATION_STAGGER_DELAY
-        )}
+        className='mb-4 mt-8'
+        entering={FadeInUp.duration(DURATION).delay(220)}
+      >
+        <Text
+          className='text-center text-xs font-semibold text-stone-500'
+          style={{ letterSpacing: 0.5 }}
+        >
+          CUSTOMIZE
+        </Text>
+      </Animated.View>
+
+      <Animated.View
+        entering={FadeInUp.duration(DURATION).delay(220 + STAGGER)}
       >
         <EmojiPicker
           habitName={habitName}
@@ -64,24 +81,24 @@ export function ModalContent({
           onSelect={onEmojiSelect}
         />
       </Animated.View>
+
       <Animated.View
-        entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-          ANIMATION_STAGGER_DELAY * 2
-        )}
+        entering={FadeInUp.duration(DURATION).delay(220 + STAGGER * 2)}
       >
         <ColorPickerSection
+          hideLabel
           colors={HABIT_COLORS}
           selectedColor={selectedColor}
           onCustomPress={onCustomColorPress}
           onSelectColor={onColorSelect}
         />
       </Animated.View>
+
       <Animated.View
-        entering={FadeInUp.duration(ANIMATION_DURATION).delay(
-          ANIMATION_STAGGER_DELAY * 3
-        )}
+        entering={FadeInUp.duration(DURATION).delay(220 + STAGGER * 3)}
       >
         <EnhancedReminderSelector
+          showNextReminder
           enabled={reminderOption !== 'none'}
           reminderTime={reminderTime}
           onTimeChange={onReminderTimeChange}

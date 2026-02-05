@@ -5,6 +5,8 @@
 export interface ReminderPreset {
   id: string;
   label: string;
+  /** Optional time display string (e.g., "7:00 AM") */
+  time?: string;
   emoji: string;
   hour: number;
   minute: number;

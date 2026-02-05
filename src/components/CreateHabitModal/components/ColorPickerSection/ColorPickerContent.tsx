@@ -1,3 +1,8 @@
+/**
+ * ColorPickerContent - 12 colors in 2 rows of 6
+ * Per spec: 36×36px visual, 48×48px tap, centered rows
+ */
+
 import { Text, View } from 'react-native';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import STRINGS from '../../../../constants/strings';
@@ -5,12 +10,6 @@ import { ColorButton } from './ColorButton';
 import { CustomColorButton } from './CustomColorButton';
 import type { ColorPickerSectionProps } from './types';
 
-/**
- * V8 Color Picker - 12 colors with wrapping
- * Responsive sizing to fit iPhone 14/15 Pro (390px width)
- * V11 Task 8: Reduced motion support
- * V12: Increased touch targets (44px swatches in 52px containers)
- */
 export const ColorPickerContent = ({
   colors,
   selectedColor,
@@ -19,6 +18,25 @@ export const ColorPickerContent = ({
   hideLabel = false,
 }: ColorPickerSectionProps) => {
   const reduceMotion = useReduceMotion();
+  const row1 = colors.slice(0, 6);
+  const row2 = colors.slice(6, 12);
+
+  const renderRow = (rowColors: string[], testId: string) => (
+    <View
+      style={{ flexDirection: 'row', gap: 4, justifyContent: 'center' }}
+      testID={testId}
+    >
+      {rowColors.map((color) => (
+        <ColorButton
+          key={color}
+          color={color}
+          isSelected={selectedColor === color}
+          reduceMotion={reduceMotion}
+          onSelect={onSelectColor}
+        />
+      ))}
+    </View>
+  );
 
   return (
     <View className='mb-6'>
@@ -31,25 +49,13 @@ export const ColorPickerContent = ({
           {STRINGS.CREATE_HABIT.colorLabel}
         </Text>
       )}
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}
-        testID='color-picker-row'
-      >
-        {colors.map((color) => (
-          <ColorButton
-            key={color}
-            color={color}
-            isSelected={selectedColor === color}
-            reduceMotion={reduceMotion}
-            onSelect={onSelectColor}
-          />
-        ))}
-        {onCustomPress && <CustomColorButton onPress={onCustomPress} />}
-      </View>
+      <View className='mb-2'>{renderRow(row1, 'color-picker-row-1')}</View>
+      {renderRow(row2, 'color-picker-row-2')}
+      {onCustomPress && (
+        <View className='mt-3 items-center'>
+          <CustomColorButton onPress={onCustomPress} />
+        </View>
+      )}
     </View>
   );
 };
