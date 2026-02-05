@@ -1,17 +1,13 @@
 /**
- * PresetButton - Individual preset button with animation
+ * PresetButton - Reminder preset with time label
+ * Per spec: 48px height, Morning/Midday/Evening with time labels
  */
 
 import { memo, useCallback, useRef } from 'react';
-import { Animated, Pressable, Text } from 'react-native';
+import { Animated, Pressable, Text, View } from 'react-native';
 import type { PresetButtonProps } from './types';
 
-function PresetButtonComponent({
-  preset,
-  isSelected,
-  onPress,
-  reduceMotion,
-}: PresetButtonProps) {
+const useButtonAnimation = (reduceMotion: boolean) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = useCallback(() => {
@@ -37,9 +33,21 @@ function PresetButtonComponent({
     }).start();
   }, [scaleAnim, reduceMotion]);
 
+  return { handlePressIn, handlePressOut, scaleAnim };
+};
+
+function PresetButtonComponent({
+  preset,
+  isSelected,
+  onPress,
+  reduceMotion,
+}: PresetButtonProps) {
+  const { scaleAnim, handlePressIn, handlePressOut } =
+    useButtonAnimation(reduceMotion);
+
   return (
     <Pressable
-      accessibilityLabel={`Set reminder for ${preset.label}`}
+      accessibilityLabel={`Set reminder for ${preset.label}${preset.time ? ` at ${preset.time}` : ''}`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
       className='flex-1'
@@ -49,23 +57,32 @@ function PresetButtonComponent({
       onPressOut={handlePressOut}
     >
       <Animated.View
-        className='items-center justify-center rounded-2xl px-3 py-3.5'
-        style={[
-          {
-            backgroundColor: isSelected ? '#ECFDF5' : '#f5f5f4',
-            borderColor: isSelected ? '#10B981' : 'transparent',
-            borderWidth: isSelected ? 2 : 1,
-            transform: [{ scale: scaleAnim }],
-          },
-        ]}
+        className='items-center justify-center rounded-xl px-3'
+        style={{
+          backgroundColor: isSelected ? '#ECFDF5' : '#f5f5f4',
+          borderColor: isSelected ? '#10B981' : 'transparent',
+          borderWidth: isSelected ? 2 : 1,
+          height: 48,
+          transform: [{ scale: scaleAnim }],
+        }}
       >
-        <Text className='mb-1 text-lg'>{preset.emoji}</Text>
-        <Text
-          className='text-sm font-medium'
-          style={{ color: isSelected ? '#059669' : '#57534e' }}
-        >
-          {preset.label}
-        </Text>
+        <View className='flex-row items-center gap-1.5'>
+          <Text className='text-base'>{preset.emoji}</Text>
+          <Text
+            className='text-sm font-semibold'
+            style={{ color: isSelected ? '#059669' : '#57534e' }}
+          >
+            {preset.label}
+          </Text>
+        </View>
+        {preset.time && (
+          <Text
+            className='mt-0.5 text-xs'
+            style={{ color: isSelected ? '#10B981' : '#a8a29e' }}
+          >
+            {preset.time}
+          </Text>
+        )}
       </Animated.View>
     </Pressable>
   );

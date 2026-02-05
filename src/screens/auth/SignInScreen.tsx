@@ -15,16 +15,13 @@ import {
   Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Link } from 'lucide-react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withDelay,
   withSpring,
   withTiming,
-  withRepeat,
-  Easing,
-  interpolate,
 } from 'react-native-reanimated';
 import {
   AuthDivider,
@@ -77,9 +74,6 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
   const contentOpacity = useSharedValue(0);
   const contentTranslateY = useSharedValue(30);
 
-  // Breathing animation for logo
-  const breathe = useSharedValue(0);
-
   useEffect(() => {
     // Logo entrance
     logoScale.value = withDelay(
@@ -95,21 +89,11 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
     // Content entrance
     contentOpacity.value = withDelay(400, withTiming(1, { duration: 500 }));
     contentTranslateY.value = withDelay(400, withSpring(0, { damping: 15 }));
-
-    // Breathing animation
-    breathe.value = withRepeat(
-      withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true
-    );
   }, []);
 
   const logoStyle = useAnimatedStyle(() => ({
     opacity: logoOpacity.value,
-    transform: [
-      { scale: logoScale.value },
-      { scale: interpolate(breathe.value, [0, 1], [1, 1.05]) },
-    ],
+    transform: [{ scale: logoScale.value }],
   }));
 
   const headerStyle = useAnimatedStyle(() => ({
@@ -124,13 +108,6 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 
   return (
     <View style={styles.container}>
-      {/* Subtle gradient background */}
-      <LinearGradient
-        colors={['#fafaf9', '#f5f5f4', '#fafaf9']}
-        locations={[0, 0.5, 1]}
-        style={StyleSheet.absoluteFill}
-      />
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -145,13 +122,8 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
         >
           {/* Logo & Brand */}
           <View style={styles.brandSection}>
-            <Animated.View style={[styles.logoContainer, logoStyle]}>
-              <LinearGradient
-                colors={['#22c55e', '#16a34a']}
-                style={styles.logoGradient}
-              >
-                <Text style={styles.logoEmoji}>🔗</Text>
-              </LinearGradient>
+            <Animated.View style={[styles.iconContainer, logoStyle]}>
+              <Link color='#1F2937' size={40} strokeWidth={2} />
             </Animated.View>
 
             <Animated.View style={headerStyle}>
@@ -162,7 +134,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 
           {/* Welcome Message */}
           <Animated.View style={[styles.welcomeSection, headerStyle]}>
-            <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
+            <Text style={styles.welcomeTitle}>Welcome back</Text>
             <Text style={styles.welcomeSubtitle}>
               Your habits are waiting. Let's keep the momentum going.
             </Text>
@@ -255,50 +227,41 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
     textAlign: 'center',
   },
+  authContent: {
+    gap: 24,
+  },
   brandSection: {
     alignItems: 'center',
     marginBottom: 32,
   },
   container: {
-    backgroundColor: '#fafaf9',
+    backgroundColor: '#faf9f7',
     flex: 1,
-  },
-  authContent: {
-    gap: 24,
   },
   flex: {
     flex: 1,
-  },
-  formSection: {
-    gap: 20,
-  },
-  logoContainer: {
-    marginBottom: 16,
   },
   footer: {
     marginTop: 32,
     paddingHorizontal: 16,
   },
-  logoEmoji: {
-    fontSize: 40,
-  },
   footerText: {
     color: '#a8a29e',
-    fontSize: 12,
+    fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',
   },
-  logoGradient: {
+  formSection: {
+    gap: 20,
+  },
+  iconContainer: {
     alignItems: 'center',
+    backgroundColor: '#f5f5f4',
+    borderRadius: 20,
     height: 80,
-    borderRadius: 24,
-    width: 80,
     justifyContent: 'center',
-    shadowColor: '#22c55e',
-    elevation: 8,
-    shadowOffset: { height: 8, width: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
+    marginBottom: 16,
+    width: 80,
   },
   scrollContent: {
     flexGrow: 1,
