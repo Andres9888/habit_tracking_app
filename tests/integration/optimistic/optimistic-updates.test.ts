@@ -12,6 +12,7 @@ const mockHabitId = (id: string) => id as Id<'habits'>;
 
 describe('Optimistic Updates Integration', () => {
   beforeEach(() => {
+    jest.useFakeTimers();
     // Reset store state
     const snapshot = optimisticStore.getSnapshot();
     for (const op of snapshot.operations.values()) {
@@ -19,6 +20,12 @@ describe('Optimistic Updates Integration', () => {
         optimisticStore.confirm(op.id);
       }
     }
+    jest.runAllTimers();
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
   });
 
   describe('Toggle Completion Flow', () => {
@@ -49,8 +56,10 @@ describe('Optimistic Updates Integration', () => {
       expect(optimisticStore.getPendingToggle(habitId, date)).toBe(true);
       timeline.push('state_checked');
 
-      // Execute server mutation
-      await serverMutation();
+      // Execute server mutation — advance timers to resolve the promise
+      const mutation = serverMutation();
+      jest.advanceTimersByTime(100);
+      await mutation;
 
       // Confirm
       optimisticStore.confirm(operationId);
@@ -108,8 +117,9 @@ describe('Optimistic Updates Integration', () => {
       });
       expect(optimisticStore.getPendingToggle(habitId, date)).toBe(false);
 
-      // Confirm second toggle
+      // Confirm second toggle — pending state clears after timeout
       optimisticStore.confirm(op2);
+      jest.advanceTimersByTime(1100);
       expect(optimisticStore.getPendingToggle(habitId, date)).toBeUndefined();
     });
 
@@ -230,6 +240,7 @@ describe('Optimistic Updates Integration', () => {
       expect(optimisticStore.getPendingReorder()).toEqual(newOrder);
 
       optimisticStore.confirm(operationId);
+      jest.advanceTimersByTime(1100);
       expect(optimisticStore.getPendingReorder()).toBeNull();
     });
 

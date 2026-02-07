@@ -16,6 +16,23 @@ export function createStateManagement(
   state: OptimisticStore,
   notify: () => void
 ) {
+  // Track timeout IDs per operation so they can be cancelled
+  const pendingTimeouts = new Map<string, ReturnType<typeof setTimeout>[]>();
+
+  const trackTimeout = (operationId: string, id: ReturnType<typeof setTimeout>) => {
+    const existing = pendingTimeouts.get(operationId) ?? [];
+    existing.push(id);
+    pendingTimeouts.set(operationId, existing);
+  };
+
+  const clearTimeouts = (operationId: string) => {
+    const timeouts = pendingTimeouts.get(operationId);
+    if (timeouts) {
+      for (const id of timeouts) clearTimeout(id);
+      pendingTimeouts.delete(operationId);
+    }
+  };
+
   const clearPendingState = (operation: OptimisticOperation): void => {
     switch (operation.type) {
       case 'toggle': {
@@ -48,25 +65,30 @@ export function createStateManagement(
       const operation = state.operations.get(operationId);
       if (!operation) return;
 
+      // Cancel any existing timeouts for this operation (e.g. from duplicate confirms)
+      clearTimeouts(operationId);
+
       operation.state = 'confirmed';
       operation.completedAt = Date.now();
 
-      // Delay clearing pending state to allow Convex subscription to sync
-      // This prevents a race condition where:
-      // 1. Server confirms the mutation
-      // 2. We clear optimistic state immediately
-      // 3. Convex subscription hasn't updated yet
-      // 4. UI briefly shows stale (pre-toggle) state
-      // 300ms is enough for most Convex subscription updates to propagate
-      setTimeout(() => {
-        clearPendingState(operation);
-        notify();
-      }, 300);
+      // Delay clearing pending state to allow Convex subscription to sync.
+      // 1000ms handles slow networks where 300ms was insufficient.
+      trackTimeout(
+        operationId,
+        setTimeout(() => {
+          clearPendingState(operation);
+          notify();
+        }, 1000)
+      );
 
-      setTimeout(() => {
-        state.operations.delete(operationId);
-        notify();
-      }, 400);
+      trackTimeout(
+        operationId,
+        setTimeout(() => {
+          state.operations.delete(operationId);
+          pendingTimeouts.delete(operationId);
+          notify();
+        }, 1100)
+      );
 
       // Notify immediately that operation state changed to 'confirmed'
       notify();
@@ -76,15 +98,23 @@ export function createStateManagement(
       const operation = state.operations.get(operationId);
       if (!operation) return;
 
+      // Cancel any pending confirm timeouts for this operation
+      clearTimeouts(operationId);
+
       operation.state = 'failed';
       operation.completedAt = Date.now();
       operation.error = error;
 
       clearPendingState(operation);
-      setTimeout(() => {
-        state.operations.delete(operationId);
-        notify();
-      }, 5000);
+
+      trackTimeout(
+        operationId,
+        setTimeout(() => {
+          state.operations.delete(operationId);
+          pendingTimeouts.delete(operationId);
+          notify();
+        }, 5000)
+      );
 
       notify();
     },

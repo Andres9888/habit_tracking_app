@@ -5,18 +5,23 @@
 import { optimisticStore } from '../store';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
-// Helper to create mock habit ID
 const mockHabitId = (id: string) => id as Id<'habits'>;
 
 describe('OptimisticStore', () => {
   beforeEach(() => {
-    // Reset store state by confirming/failing all operations
+    jest.useFakeTimers();
     const snapshot = optimisticStore.getSnapshot();
     for (const op of snapshot.operations.values()) {
       if (op.state === 'pending') {
         optimisticStore.confirm(op.id);
       }
     }
+    jest.runAllTimers();
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
   });
 
   describe('Toggle operations', () => {
@@ -38,16 +43,12 @@ describe('OptimisticStore', () => {
       const habitId = mockHabitId('habit_456');
       const date = '2026-01-21';
 
-      optimisticStore.addToggle({
-        habitId,
-        date,
-        toCompleted: false,
-      });
+      optimisticStore.addToggle({ habitId, date, toCompleted: false });
 
       expect(optimisticStore.getPendingToggle(habitId, date)).toBe(false);
     });
 
-    it('should clear pending state on confirm', () => {
+    it('should keep pending state immediately after confirm', () => {
       const habitId = mockHabitId('habit_789');
       const date = '2026-01-20';
 
@@ -58,6 +59,23 @@ describe('OptimisticStore', () => {
       });
 
       optimisticStore.confirm(operationId);
+
+      // Pending state persists until Convex subscription syncs (1000ms)
+      expect(optimisticStore.getPendingToggle(habitId, date)).toBe(true);
+    });
+
+    it('should clear pending state after confirm timeout', () => {
+      const habitId = mockHabitId('habit_clear');
+      const date = '2026-01-20';
+
+      const operationId = optimisticStore.addToggle({
+        habitId,
+        date,
+        toCompleted: true,
+      });
+
+      optimisticStore.confirm(operationId);
+      jest.advanceTimersByTime(1100);
 
       expect(optimisticStore.getPendingToggle(habitId, date)).toBeUndefined();
     });
@@ -116,7 +134,7 @@ describe('OptimisticStore', () => {
       expect(optimisticStore.getPendingArchive(habitId)).toBe(false);
     });
 
-    it('should clear archive state on confirm', () => {
+    it('should clear archive state after confirm timeout', () => {
       const habitId = mockHabitId('habit_confirm_archive');
 
       const operationId = optimisticStore.addArchive({
@@ -126,6 +144,7 @@ describe('OptimisticStore', () => {
       });
 
       optimisticStore.confirm(operationId);
+      jest.advanceTimersByTime(1100);
 
       expect(optimisticStore.getPendingArchive(habitId)).toBeUndefined();
     });
@@ -153,7 +172,7 @@ describe('OptimisticStore', () => {
       expect(optimisticStore.getPendingReorder()).toEqual(habitIds);
     });
 
-    it('should clear reorder on confirm', () => {
+    it('should clear reorder after confirm timeout', () => {
       const habitIds = [mockHabitId('habit_x'), mockHabitId('habit_y')];
 
       const operationId = optimisticStore.addReorder({
@@ -162,6 +181,7 @@ describe('OptimisticStore', () => {
       });
 
       optimisticStore.confirm(operationId);
+      jest.advanceTimersByTime(1100);
 
       expect(optimisticStore.getPendingReorder()).toBeNull();
     });
@@ -183,10 +203,7 @@ describe('OptimisticStore', () => {
     it('should handle resume operations', () => {
       const habitId = mockHabitId('habit_to_resume');
 
-      optimisticStore.addPause({
-        habitId,
-        toPaused: false,
-      });
+      optimisticStore.addPause({ habitId, toPaused: false });
 
       expect(optimisticStore.getPendingPause(habitId)).toBe(false);
     });
@@ -240,7 +257,6 @@ describe('OptimisticStore', () => {
       const listener = jest.fn();
       const unsubscribe = optimisticStore.subscribe(listener);
       unsubscribe();
-
       listener.mockClear();
 
       optimisticStore.addToggle({
@@ -267,6 +283,94 @@ describe('OptimisticStore', () => {
       }
 
       expect(ids.size).toBe(100);
+    });
+  });
+
+  describe('Timeout management', () => {
+    it('should cancel confirm timeouts when fail is called', () => {
+      const habitId = mockHabitId('cancel_test');
+      const date = '2026-01-22';
+      const listener = jest.fn();
+      const unsubscribe = optimisticStore.subscribe(listener);
+
+      const operationId = optimisticStore.addToggle({
+        habitId,
+        date,
+        toCompleted: true,
+      });
+
+      optimisticStore.confirm(operationId);
+      listener.mockClear();
+
+      // Fail before confirm timeouts fire — cancels the confirm timeouts
+      optimisticStore.fail(operationId, new Error('Late failure'));
+      jest.advanceTimersByTime(1100);
+
+      // Pending state was cleared by fail(), not by confirm's timeout
+      expect(optimisticStore.getPendingToggle(habitId, date)).toBeUndefined();
+      unsubscribe();
+    });
+
+    it('should remove operation record after confirm timeout', () => {
+      const operationId = optimisticStore.addToggle({
+        habitId: mockHabitId('cleanup_test'),
+        date: '2026-01-22',
+        toCompleted: true,
+      });
+
+      optimisticStore.confirm(operationId);
+
+      // Before 1100ms: operation still in map
+      jest.advanceTimersByTime(500);
+      expect(
+        optimisticStore.getSnapshot().operations.has(operationId)
+      ).toBe(true);
+
+      // After 1100ms: operation removed
+      jest.advanceTimersByTime(700);
+      expect(
+        optimisticStore.getSnapshot().operations.has(operationId)
+      ).toBe(false);
+    });
+
+    it('should remove operation record after fail timeout', () => {
+      const operationId = optimisticStore.addToggle({
+        habitId: mockHabitId('fail_cleanup_test'),
+        date: '2026-01-22',
+        toCompleted: true,
+      });
+
+      optimisticStore.fail(operationId, new Error('Server error'));
+
+      // Before 5000ms: operation still in map
+      jest.advanceTimersByTime(3000);
+      expect(
+        optimisticStore.getSnapshot().operations.has(operationId)
+      ).toBe(true);
+
+      // After 5000ms: operation removed
+      jest.advanceTimersByTime(2500);
+      expect(
+        optimisticStore.getSnapshot().operations.has(operationId)
+      ).toBe(false);
+    });
+
+    it('should handle duplicate confirm calls gracefully', () => {
+      const habitId = mockHabitId('dup_confirm');
+      const date = '2026-01-22';
+
+      const operationId = optimisticStore.addToggle({
+        habitId,
+        date,
+        toCompleted: true,
+      });
+
+      optimisticStore.confirm(operationId);
+      // Second confirm should cancel first timeouts and set new ones
+      optimisticStore.confirm(operationId);
+
+      jest.advanceTimersByTime(1100);
+      expect(optimisticStore.getPendingToggle(habitId, date)).toBeUndefined();
     });
   });
 });
