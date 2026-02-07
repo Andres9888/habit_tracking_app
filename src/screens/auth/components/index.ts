@@ -20,3 +20,5 @@ export { SocialSignInButton } from './SocialSignInButton';
 export { SubmitButton } from './SubmitButton';
 export { SuccessOverlay } from './SuccessOverlay';
 export { VerificationView } from './VerificationView';
+export { SignInBrandSection } from './SignInBrandSection';
+export { SignInFormSection } from './SignInFormSection';
