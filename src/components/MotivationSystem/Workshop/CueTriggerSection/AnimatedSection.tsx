@@ -10,6 +10,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import { SPRING_GENTLE, STAGGER_DELAY } from '../../../animations';
 
 interface AnimatedSectionProps {
@@ -25,8 +26,10 @@ export function AnimatedSection({
   children,
   index,
   shouldAnimate,
-  reduceMotion = false,
+  reduceMotion: reduceMotionProp,
 }: AnimatedSectionProps) {
+  const systemReduceMotion = useReduceMotion();
+  const reduceMotion = reduceMotionProp ?? systemReduceMotion;
   const translateY = useSharedValue(
     shouldAnimate && !reduceMotion ? INITIAL_TRANSLATE_Y : 0
   );

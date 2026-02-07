@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { useReduceMotion } from '../../../../../../hooks/useReduceMotion';
 import {
   INITIAL_TRANSLATE_Y,
   SPRING_GENTLE,
@@ -22,8 +23,10 @@ export function AnimatedContent({
   children,
   index,
   visible,
-  reduceMotion = false,
+  reduceMotion: reduceMotionProp,
 }: AnimatedContentProps) {
+  const systemReduceMotion = useReduceMotion();
+  const reduceMotion = reduceMotionProp ?? systemReduceMotion;
   const translateY = useSharedValue(INITIAL_TRANSLATE_Y);
   const opacity = useSharedValue(0);
 

@@ -11,6 +11,7 @@ export interface UseHabitCardGesturesOptions {
   completed: boolean;
   disabled: boolean;
   isToggling: boolean;
+  reduceMotion: boolean;
   translateX: SharedValue<number>;
   cardScale: SharedValue<number>;
   today: string;

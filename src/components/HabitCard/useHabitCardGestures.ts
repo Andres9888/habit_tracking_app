@@ -12,7 +12,7 @@ import type { UseHabitCardGesturesOptions } from './gestures/types';
 export type { UseHabitCardGesturesOptions } from './gestures/types';
 
 export function useHabitCardGestures(options: UseHabitCardGesturesOptions) {
-  const panGesture = createPanGesture(options.translateX);
+  const panGesture = createPanGesture(options.translateX, options.reduceMotion);
 
   const tapGesture = createTapGesture({
     cardScale: options.cardScale,
@@ -21,6 +21,7 @@ export function useHabitCardGestures(options: UseHabitCardGesturesOptions) {
     id: options.id,
     isToggling: options.isToggling,
     onPress: options.onPress,
+    reduceMotion: options.reduceMotion,
     setIsToggling: options.setIsToggling,
     today: options.today,
     toggleCompletionMutation: options.toggleCompletionMutation,

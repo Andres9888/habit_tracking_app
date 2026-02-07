@@ -4,12 +4,20 @@
  */
 
 import { Gesture } from 'react-native-gesture-handler';
-import { withSpring, runOnJS, type SharedValue } from 'react-native-reanimated';
+import {
+  withSpring,
+  withTiming,
+  runOnJS,
+  type SharedValue,
+} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { springs } from '../../../theme/animations';
 import { SWIPE_THRESHOLD, ACTION_WIDTH } from '../HabitCard.constants';
 
-export function createPanGesture(translateX: SharedValue<number>) {
+export function createPanGesture(
+  translateX: SharedValue<number>,
+  reduceMotion = false
+) {
   return Gesture.Pan()
     .activeOffsetX([-10, 10])
     .onUpdate((event) => {
@@ -18,15 +26,18 @@ export function createPanGesture(translateX: SharedValue<number>) {
       }
     })
     .onEnd((event) => {
+      const snap = reduceMotion
+        ? (v: number) => withTiming(v, { duration: 0 })
+        : (v: number) => withSpring(v, springs.snappy);
       if (event.translationX < SWIPE_THRESHOLD) {
-        translateX.value = withSpring(ACTION_WIDTH * -2, springs.snappy);
+        translateX.value = snap(ACTION_WIDTH * -2);
         runOnJS(() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
             () => {}
           );
         })();
       } else {
-        translateX.value = withSpring(0, springs.snappy);
+        translateX.value = snap(0);
       }
     });
 }

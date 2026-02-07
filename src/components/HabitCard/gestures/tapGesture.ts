@@ -4,7 +4,12 @@
  */
 
 import { Gesture } from 'react-native-gesture-handler';
-import { withSpring, runOnJS, type SharedValue } from 'react-native-reanimated';
+import {
+  withSpring,
+  withTiming,
+  runOnJS,
+  type SharedValue,
+} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { Springs } from '../../../constants/motion';
@@ -14,6 +19,7 @@ interface TapGestureOptions {
   completed: boolean;
   disabled: boolean;
   isToggling: boolean;
+  reduceMotion: boolean;
   cardScale: SharedValue<number>;
   today: string;
   onPress?: () => void;
@@ -32,6 +38,7 @@ export function createTapGesture(options: TapGestureOptions) {
     completed,
     disabled,
     isToggling,
+    reduceMotion,
     cardScale,
     today,
     onPress,
@@ -40,13 +47,17 @@ export function createTapGesture(options: TapGestureOptions) {
     triggerCompletionCelebration,
     triggerUncheckAnimation,
   } = options;
+  const press = (v: number) =>
+    reduceMotion
+      ? withTiming(v, { duration: 0 })
+      : withSpring(v, Springs.button);
 
   return Gesture.Tap()
     .onBegin(() => {
-      cardScale.value = withSpring(0.96, Springs.button);
+      cardScale.value = press(0.96);
     })
     .onFinalize(() => {
-      cardScale.value = withSpring(1, Springs.button);
+      cardScale.value = press(1);
     })
     .onEnd(() => {
       if (!disabled && !isToggling) {
