@@ -21,10 +21,17 @@ export * from './affirmations/index';
 
 /**
  * List all affirmations for a specific habit
+ * SEC-001: Requires authentication and verifies habit ownership
  */
 export const listByHabit = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit || habit.userId !== identity.subject) return [];
+
     const affirmations = await ctx.db
       .query('affirmations')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
