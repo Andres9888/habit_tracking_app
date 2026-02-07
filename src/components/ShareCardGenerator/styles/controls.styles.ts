@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
 import { typography } from '@/theme/typography';
 
 export const controlsStyles = StyleSheet.create({
@@ -27,7 +28,7 @@ export const controlsStyles = StyleSheet.create({
     gap: 12,
   },
   gradientButtonSelected: {
-    borderColor: '#10B981',
+    borderColor: colors.primary[500],
   },
   messageInput: {
     borderRadius: 8,
@@ -46,8 +47,8 @@ export const controlsStyles = StyleSheet.create({
     marginBottom: 12,
   },
   platformButton: {
-    backgroundColor: '#f5f5f4',
-    borderColor: '#e7e5e4',
+    backgroundColor: colors.gray[100],
+    borderColor: colors.border,
     borderRadius: 8,
     borderWidth: 1,
     paddingHorizontal: 16,
@@ -59,13 +60,13 @@ export const controlsStyles = StyleSheet.create({
     gap: 8,
   },
   platformButtonText: {
-    color: '#4B5563',
+    color: colors.gray[600],
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
     textTransform: 'capitalize',
   },
   platformButtonTextActive: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
   },
   shareButton: {
     marginTop: 8,

@@ -2,7 +2,9 @@
  * Styles for ShareCard content sections (emoji, info, progress)
  */
 
+// Intentional: static color for share card rendering — white text/fills on gradient backgrounds
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 
@@ -23,7 +25,7 @@ export const shareCardContentStyles = StyleSheet.create({
     marginTop: 48,
   },
   habitName: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 36,
     fontWeight: '700',
     marginBottom: 24,
@@ -38,7 +40,7 @@ export const shareCardContentStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   milestoneLabel: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 28,
     fontWeight: '600',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
@@ -52,7 +54,7 @@ export const shareCardContentStyles = StyleSheet.create({
     marginBottom: 16,
   },
   personalMessage: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: typography.heading2.fontSize,
     fontStyle: 'italic',
     marginTop: 32,
@@ -73,12 +75,12 @@ export const shareCardContentStyles = StyleSheet.create({
     width: '100%',
   },
   progressBarFill: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.text.inverse,
     borderRadius: borderRadius.small,
     height: '100%',
   },
   strengthPercentage: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 48,
     fontWeight: '800',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',

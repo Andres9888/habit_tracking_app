@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
 import { typography } from '../../../theme/typography';
 
 export const containerStyles = StyleSheet.create({
@@ -11,17 +12,17 @@ export const containerStyles = StyleSheet.create({
     fontWeight: '600',
   },
   container: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.light.card,
     flex: 1,
   },
   customizationSection: {
-    borderTopColor: '#e7e5e4',
+    borderTopColor: colors.border,
     borderTopWidth: 1,
     padding: 24,
   },
   header: {
     alignItems: 'center',
-    borderBottomColor: '#e7e5e4',
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -29,7 +30,7 @@ export const containerStyles = StyleSheet.create({
     paddingVertical: 16,
   },
   previewContainer: {
-    backgroundColor: '#f5f5f4',
+    backgroundColor: colors.gray[100],
     borderRadius: 12,
     overflow: 'hidden',
   },

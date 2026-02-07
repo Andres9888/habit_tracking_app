@@ -26,6 +26,7 @@ export const MILESTONE_CONFIG: Record<MilestoneLevel, MilestoneConfig> = {
   strong: { emoji: '💪', label: 'Strong', range: '60-80%' },
 };
 
+// Intentional: static colors for share card rendering (gradient backgrounds baked into shared images)
 export const GRADIENT_PRESETS: GradientPreset[] = [
   { colors: ['#10B981', '#059669', '#047857'], name: 'Growth' },
   { colors: ['#34D399', '#10B981', '#059669'], name: 'Achievement' },
