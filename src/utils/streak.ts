@@ -3,7 +3,7 @@ import { format, parseISO } from 'date-fns';
 /**
  * Compute a streak by starting at the most recent completed day (<= today)
  * and counting backwards through consecutive completed days.
- * Ensures a single isolated completion counts as a 1-day streak.
+ * Returns 0 if the most recent completion is more than 1 day ago (streak broken).
  */
 export const computeCurrentStreakFromDates = (
   completedDates: Set<string>,
@@ -22,6 +22,19 @@ export const computeCurrentStreakFromDates = (
     .pop();
 
   if (!latestCompleted) {
+    return 0;
+  }
+
+  // A streak is only "current" if the most recent completion was today or yesterday.
+  // If the gap is larger, the streak is broken regardless of past consecutive days.
+  const latestDate = parseISO(latestCompleted);
+  const todayDate = new Date(today);
+  todayDate.setHours(0, 0, 0, 0);
+  latestDate.setHours(0, 0, 0, 0);
+  const msDiff = todayDate.getTime() - latestDate.getTime();
+  const daysSinceLastCompletion = Math.floor(msDiff / (1000 * 60 * 60 * 24));
+
+  if (daysSinceLastCompletion > 1) {
     return 0;
   }
 

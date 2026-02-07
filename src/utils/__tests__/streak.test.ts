@@ -3,6 +3,7 @@
  * Tests consecutive completion counting logic
  */
 
+import { describe, it, expect } from 'vitest';
 import { computeCurrentStreakFromDates } from '../streak';
 import { format, subDays } from 'date-fns';
 
@@ -33,7 +34,7 @@ describe('streak', () => {
 
     it('returns 0 for completion older than yesterday', () => {
       const completedDates = new Set([formatDate(subDays(today, 5))]);
-      expect(computeCurrentStreakFromDates(completedDates, today)).toBe(1);
+      expect(computeCurrentStreakFromDates(completedDates, today)).toBe(0);
     });
 
     it('calculates streak for consecutive days', () => {
@@ -96,9 +97,9 @@ describe('streak', () => {
       expect(computeCurrentStreakFromDates(completedDates, today)).toBe(3);
     });
 
-    it('treats isolated old completion as 1-day streak', () => {
+    it('returns 0 for isolated old completion (streak broken)', () => {
       const completedDates = new Set([formatDate(subDays(today, 50))]);
-      expect(computeCurrentStreakFromDates(completedDates, today)).toBe(1);
+      expect(computeCurrentStreakFromDates(completedDates, today)).toBe(0);
     });
 
     it('counts from most recent completion, not today', () => {
@@ -233,6 +234,62 @@ describe('streak', () => {
 
         expect(result).toBe(400); // Capped at maxLookbackDays
         expect(endTime - startTime).toBeLessThan(100); // Should be fast
+      });
+    });
+
+    describe('broken streak validation (daysSinceLastCompletion > 1)', () => {
+      it('returns 0 when last completion was 2 days ago', () => {
+        const completedDates = new Set([
+          formatDate(subDays(today, 2)),
+          formatDate(subDays(today, 3)),
+          formatDate(subDays(today, 4)),
+        ]);
+        expect(computeCurrentStreakFromDates(completedDates, today)).toBe(0);
+      });
+
+      it('returns 0 for a 5-day run that ended 10 days ago', () => {
+        const completedDates = new Set([
+          formatDate(subDays(today, 10)),
+          formatDate(subDays(today, 11)),
+          formatDate(subDays(today, 12)),
+          formatDate(subDays(today, 13)),
+          formatDate(subDays(today, 14)),
+        ]);
+        expect(computeCurrentStreakFromDates(completedDates, today)).toBe(0);
+      });
+
+      it('returns streak when last completion was yesterday', () => {
+        const completedDates = new Set([
+          formatDate(subDays(today, 1)),
+          formatDate(subDays(today, 2)),
+          formatDate(subDays(today, 3)),
+        ]);
+        // Yesterday is within 1 day, streak is still active
+        expect(computeCurrentStreakFromDates(completedDates, today)).toBe(3);
+      });
+
+      it('returns streak when last completion is today', () => {
+        const completedDates = new Set([
+          formatDate(today),
+          formatDate(subDays(today, 1)),
+          formatDate(subDays(today, 2)),
+        ]);
+        expect(computeCurrentStreakFromDates(completedDates, today)).toBe(3);
+      });
+
+      it('returns 0 for single completion 3 days ago', () => {
+        const completedDates = new Set([formatDate(subDays(today, 3))]);
+        expect(computeCurrentStreakFromDates(completedDates, today)).toBe(0);
+      });
+
+      it('returns 1 for single completion yesterday', () => {
+        const completedDates = new Set([formatDate(subDays(today, 1))]);
+        expect(computeCurrentStreakFromDates(completedDates, today)).toBe(1);
+      });
+
+      it('returns 1 for single completion today', () => {
+        const completedDates = new Set([formatDate(today)]);
+        expect(computeCurrentStreakFromDates(completedDates, today)).toBe(1);
       });
     });
 
