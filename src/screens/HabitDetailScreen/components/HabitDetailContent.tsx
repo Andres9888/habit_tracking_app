@@ -52,7 +52,7 @@ export function HabitDetailContent({
         <ErrorBoundary>
           <MonthlyCalendarGrid
             completedDates={completedDates}
-            habitColor={habit.iconColor ?? '#10b981'}
+            habitColor={habit.iconColor ?? '#047857'}
             habitCreatedAt={habit.createdAt}
             habitId={habit._id}
             onDayPress={onDayPress}

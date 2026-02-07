@@ -13,10 +13,10 @@ import { formatTodayDate } from './headerUtils';
 
 const DATE_STYLE = {
   color: '#2D2A26',
-  fontFamily: 'PlusJakartaSans-Bold',
+  fontFamily: 'System',
   letterSpacing: -0.76,
 };
-const STREAK_STYLE = { color: '#C4BFB7', fontFamily: 'SourceSans3-Regular' };
+const STREAK_STYLE = { color: '#C4BFB7', fontFamily: 'System' };
 
 function HabitsHeaderComponent({
   completedToday = 0,
