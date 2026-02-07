@@ -96,32 +96,31 @@ export const easings = {
 
 /**
  * Spring Presets
- * Common spring configurations for Reanimated
+ * Canonical spring configurations for Reanimated.
+ * Consolidated from constants/motion.ts — all consumers should
+ * import springs from here (or via @/theme).
  */
 export const springs = {
-  /**
-   * Bouncy - playful feel for celebrations
-   */
-  bouncy: {
-    damping: 10,
-    stiffness: 180,
-  },
+  /** Bouncy - playful feel for celebrations */
+  bouncy: { damping: 10, stiffness: 180 },
 
-  /**
-   * Gentle - smooth with minimal bounce
-   */
-  gentle: {
-    damping: 20,
-    stiffness: 100,
-  },
+  /** Button press feedback - snappy response */
+  button: { damping: 15, stiffness: 300 },
 
-  /**
-   * Snappy - quick response with slight bounce
-   */
-  snappy: {
-    damping: 15,
-    stiffness: 150,
-  },
+  /** Gentle - smooth with minimal bounce */
+  gentle: { damping: 20, stiffness: 100 },
+
+  /** Subtle micro-interactions */
+  micro: { damping: 15, stiffness: 400 },
+
+  /** Organic pulse / glow */
+  pulse: { damping: 12, stiffness: 250 },
+
+  /** Sheet / Modal presentations */
+  sheet: { damping: 20, stiffness: 200 },
+
+  /** Snappy - quick response with slight bounce */
+  snappy: { damping: 15, stiffness: 150 },
 } as const;
 
 export type Duration = keyof typeof durations;

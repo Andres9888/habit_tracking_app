@@ -4,7 +4,8 @@
  * Standardized animation timing and easing values.
  * Based on iOS design patterns for natural, responsive feel.
  *
- * @see Springs for spring-based animations
+ * Springs are re-exported from @/theme/animations (canonical source).
+ * Motion (duration + easing) stays here because it depends on react-native Easing.
  */
 
 import { Easing } from 'react-native';
@@ -27,55 +28,9 @@ export const Motion = {
 } as const;
 
 /**
- * Standardized spring configurations for consistent animations across the app.
- * Based on Apple iOS patterns and refined through animation consistency audit.
- *
- * Usage:
- * - sheet: Full screen modals and sheet presentations (~400-500ms)
- * - gentle: Content reveals and subtle transitions
- * - button: Press feedback and interactive elements
- * - bouncy: Celebrations and success animations
- * - micro: Subtle micro-interactions
- * - pulse: Slow, organic pulses and glows
+ * Re-export springs from the canonical theme source.
+ * Existing consumers can continue importing { Springs } from 'constants/motion'.
  */
-export const Springs = {
-  /** Bouncy celebrations - playful feel */
-  bouncy: {
-    damping: 8,
-    stiffness: 300,
-  },
-
-  /** Button press feedback - snappy response */
-  button: {
-    damping: 15,
-    stiffness: 300,
-  },
-
-  /** Gentle content reveals */
-  gentle: {
-    damping: 28,
-    mass: 1,
-    stiffness: 180,
-  },
-
-  /** Subtle micro-interactions */
-  micro: {
-    damping: 12,
-    stiffness: 180,
-  },
-
-  /** Slow, organic pulses */
-  pulse: {
-    damping: 12,
-    stiffness: 60,
-  },
-
-  /** Sheet/Modal presentations (iOS-like) - ~400-500ms organic feel */
-  sheet: {
-    damping: 32,
-    mass: 1,
-    stiffness: 180,
-  },
-} as const;
-
 export default Motion;
+
+export { springs as Springs } from '@/theme/animations';
