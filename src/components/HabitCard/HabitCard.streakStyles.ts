@@ -5,16 +5,17 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { spacing, borderRadius } from '@/theme/spacing';
 
 export const streakStyles = StyleSheet.create({
   bestStreakBadge: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius.small,
     borderWidth: 1,
     flexDirection: 'row',
-    gap: 3,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    gap: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   bestStreakIcon: {
     fontSize: 12,
@@ -25,7 +26,7 @@ export const streakStyles = StyleSheet.create({
   },
   rippleOverlay: {
     backgroundColor: colors.primary[500],
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     height: 40,
     left: '50%',
     marginLeft: -20,
@@ -36,11 +37,11 @@ export const streakStyles = StyleSheet.create({
   },
   streakBadge: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
-    gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    gap: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   streakFireIcon: {
     fontSize: 14,
@@ -48,9 +49,9 @@ export const streakStyles = StyleSheet.create({
   streakRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
     marginBottom: 2,
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   streakText: {
     fontSize: 12,

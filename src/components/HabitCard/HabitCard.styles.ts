@@ -7,6 +7,7 @@
  */
 
 import { StyleSheet, Platform } from 'react-native';
+import { spacing, borderRadius } from '@/theme/spacing';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 import { statusStyles } from './HabitCard.statusStyles';
 
@@ -24,7 +25,7 @@ const coreStyles = StyleSheet.create({
   card: {
     backgroundColor: REDESIGN_COLORS.cardSurface,
     borderColor: REDESIGN_COLORS.neutral,
-    borderRadius: 14,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     elevation: 3,
     flex: 1,
@@ -38,19 +39,19 @@ const coreStyles = StyleSheet.create({
   // Card container background for depth
   cardsContainer: {
     backgroundColor: REDESIGN_COLORS.cardBg,
-    borderRadius: 20,
-    marginHorizontal: 12,
-    padding: 12,
+    borderRadius: borderRadius.xl,
+    marginHorizontal: spacing.md,
+    padding: spacing.md,
   },
   completedText: { opacity: 0.7 },
-  container: { height: 76, marginVertical: 5, position: 'relative' },
-  content: { flex: 1, justifyContent: 'center', padding: 16 },
+  container: { height: 76, marginVertical: spacing.xs, position: 'relative' },
+  content: { flex: 1, justifyContent: 'center', padding: spacing.base },
   disabled: { opacity: 0.5 },
   habitInfo: {
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
-    gap: 14,
+    gap: spacing.md,
   },
   // Meta text for habit strength
   habitMeta: {
