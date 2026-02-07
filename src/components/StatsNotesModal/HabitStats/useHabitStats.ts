@@ -17,6 +17,24 @@ export function useHabitStats() {
 
   const today = useMemo(() => startOfDay(new Date()), []);
 
+  const todayString = format(today, 'yyyy-MM-dd');
+
+  const range30 = useMemo(
+    () => ({
+      startDate: format(subDays(today, 29), 'yyyy-MM-dd'),
+      endDate: todayString,
+    }),
+    [today, todayString]
+  );
+
+  const range7 = useMemo(
+    () => ({
+      startDate: format(subDays(today, 6), 'yyyy-MM-dd'),
+      endDate: todayString,
+    }),
+    [today, todayString]
+  );
+
   const last30Days = useMemo(
     () =>
       Array.from({ length: 30 }, (_, i) =>
@@ -34,9 +52,9 @@ export function useHabitStats() {
   );
 
   const tracking30 =
-    useQuery(api.habits.getTracking, { dates: last30Days }) ?? [];
+    useQuery(api.habits.getTracking, range30) ?? [];
   const tracking7 =
-    useQuery(api.habits.getTracking, { dates: last7Days }) ?? [];
+    useQuery(api.habits.getTracking, range7) ?? [];
 
   const selectedHabit = habits.find((h) => h._id === selectedHabitId);
 

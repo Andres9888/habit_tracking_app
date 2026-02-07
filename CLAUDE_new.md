@@ -144,8 +144,7 @@ The app uses 4 main tables defined in `convex/schema.ts`:
 
 - `list()` - Get all non-archived habits
 - `listArchived()` - Get archived habits
-- `getTracking({ dates })` - Fetch completion data for date range
-  - Optimized to query a range and filter to requested dates
+- `getTracking({ startDate, endDate })` - Fetch completion data for inclusive date range
 - `getStats({ habitId })` - Calculate streak and 30-day consistency percentage
 
 ### Frontend Architecture

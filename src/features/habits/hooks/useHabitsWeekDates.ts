@@ -1,4 +1,4 @@
-import { addDays, eachDayOfInterval, format, startOfDay, subMonths } from 'date-fns';
+import { addDays, format, startOfDay, subMonths } from 'date-fns';
 import { useCallback, useMemo, useState } from 'react';
 
 export function useHabitsWeekDates() {
@@ -15,16 +15,11 @@ export function useHabitsWeekDates() {
     [weekDates]
   );
 
-  const extendedDateRange = useMemo(() => {
-    const endDate = today;
-    const startDate = subMonths(endDate, 12);
-    return eachDayOfInterval({ start: startDate, end: endDate });
+  const trackingDateRange = useMemo(() => {
+    const endDate = format(today, 'yyyy-MM-dd');
+    const startDate = format(subMonths(today, 12), 'yyyy-MM-dd');
+    return { startDate, endDate };
   }, [today]);
-
-  const extendedDateStrings = useMemo(
-    () => extendedDateRange.map((date) => format(date, 'yyyy-MM-dd')),
-    [extendedDateRange]
-  );
 
   const canNavigateForward = useMemo(
     () => weekAnchor.getTime() < today.getTime(),
@@ -43,7 +38,7 @@ export function useHabitsWeekDates() {
     today,
     weekDates,
     weekDateStrings,
-    extendedDateStrings,
+    trackingDateRange,
     canNavigateForward,
     handleNextWeek,
     handlePreviousWeek,

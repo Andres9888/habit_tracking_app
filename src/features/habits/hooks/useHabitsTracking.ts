@@ -7,9 +7,12 @@ import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import { useOptimisticStore } from '../../../lib/optimistic';
 import type { HabitStatus } from '../types';
 
-export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
+export function useHabitsTracking(
+  dateRange: { startDate: string; endDate: string },
+  today: Date
+) {
   const tracking =
-    useQuery(api.habits.getTracking, { dates: extendedDateStrings }) ?? [];
+    useQuery(api.habits.getTracking, dateRange) ?? [];
 
   // Get optimistic state for immediate feedback
   const optimisticStore = useOptimisticStore();

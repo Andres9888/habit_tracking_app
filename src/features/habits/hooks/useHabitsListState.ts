@@ -44,9 +44,9 @@ export function useHabitsListState(): HabitsListState {
   const showWeekCompletionBar = settings?.showWeekCompletionBar ?? true;
 
   const weekDatesState = useHabitsWeekDates();
-  const { today, extendedDateStrings } = weekDatesState;
+  const { today, trackingDateRange } = weekDatesState;
   const { getStreak, getHabitStatus, isCompleted } = useHabitsTracking(
-    extendedDateStrings,
+    trackingDateRange,
     today
   );
 

@@ -375,33 +375,28 @@ describe('Habit Query Filters', () => {
   });
 
   describe('getTracking query contract', () => {
-    it('requires dates array parameter', () => {
+    it('requires startDate and endDate parameters', () => {
       const validArgs = {
-        dates: ['2025-01-01', '2025-01-02', '2025-01-03'],
+        startDate: '2025-01-01',
+        endDate: '2025-01-03',
       };
 
-      expect(validArgs).toHaveProperty('dates');
-      expect(Array.isArray(validArgs.dates)).toBe(true);
+      expect(validArgs).toHaveProperty('startDate');
+      expect(validArgs).toHaveProperty('endDate');
     });
 
-    it('should return empty array for empty dates input', () => {
-      const _emptyDates: string[] = [];
-      const result: any[] = [];
-
-      // Mutation: if (args.dates.length === 0) return [];
-      expect(result).toEqual([]);
-    });
-
-    it('should filter tracking by date range', () => {
-      const requestedDates = ['2025-01-01', '2025-01-02', '2025-01-03'];
+    it('should filter tracking by inclusive date range', () => {
+      const startDate = '2025-01-01';
+      const endDate = '2025-01-03';
       const mockTracking = [
         { completed: true, date: '2025-01-01', habitId: '1' },
         { completed: false, date: '2025-01-02', habitId: '1' },
         { completed: true, date: '2025-01-04', habitId: '1' }, // Outside range
       ];
 
-      const dateSet = new Set(requestedDates);
-      const filteredTracking = mockTracking.filter((t) => dateSet.has(t.date));
+      const filteredTracking = mockTracking.filter(
+        (t) => t.date >= startDate && t.date <= endDate
+      );
 
       expect(filteredTracking).toHaveLength(2);
       expect(

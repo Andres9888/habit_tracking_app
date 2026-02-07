@@ -8,17 +8,17 @@ export function useStatsOverviewData() {
   const today = useMemo(() => startOfDay(new Date()), []);
   const todayString = format(today, 'yyyy-MM-dd');
 
-  const last7Days = useMemo(
-    () =>
-      Array.from({ length: 7 }, (_, i) =>
-        format(subDays(today, i), 'yyyy-MM-dd')
-      ),
-    [today]
+  const range7 = useMemo(
+    () => ({
+      startDate: format(subDays(today, 6), 'yyyy-MM-dd'),
+      endDate: todayString,
+    }),
+    [today, todayString]
   );
 
-  const tracking = useQuery(api.habits.getTracking, { dates: last7Days }) ?? [];
+  const tracking = useQuery(api.habits.getTracking, range7) ?? [];
   const todayTracking =
-    useQuery(api.habits.getTracking, { dates: [todayString] }) ?? [];
+    useQuery(api.habits.getTracking, { startDate: todayString, endDate: todayString }) ?? [];
 
   const todayCompleted = useMemo(
     () => todayTracking.filter((t) => t.completed).length,
