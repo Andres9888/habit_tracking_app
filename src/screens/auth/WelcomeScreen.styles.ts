@@ -41,11 +41,11 @@ export const styles = StyleSheet.create({
   },
   primaryButton: {
     alignItems: 'center',
-    backgroundColor: '#10B981',
+    backgroundColor: '#059669',
     borderRadius: 14,
     elevation: 4,
     paddingVertical: 16,
-    shadowColor: '#10B981',
+    shadowColor: '#059669',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 12,
@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   textLinkAction: {
-    color: '#10B981',
+    color: '#047857',
     fontSize: 15,
     fontWeight: '600',
   },

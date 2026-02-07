@@ -49,7 +49,7 @@ export const statusStyles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   streakText: {
-    fontFamily: 'SourceSans3-Medium',
+    fontFamily: 'System',
     fontSize: 14,
     fontWeight: '500',
     lineHeight: 20,
