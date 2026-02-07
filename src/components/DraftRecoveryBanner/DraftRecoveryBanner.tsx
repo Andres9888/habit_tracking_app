@@ -60,6 +60,7 @@ export function DraftRecoveryBanner({
             accessibilityLabel='Keep recovered draft'
             accessibilityRole='button'
             className='h-7 w-7 items-center justify-center rounded-full'
+            hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
             onPress={handleDismiss}
           >
             <X color={styles.iconColor} size={18} />

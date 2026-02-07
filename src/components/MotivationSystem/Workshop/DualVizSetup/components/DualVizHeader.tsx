@@ -28,7 +28,7 @@ export function DualVizHeader({ hasViz, onHelpPress }: DualVizHeaderProps) {
         <Pressable
           accessibilityLabel='Learn about dual visualization'
           className='h-6 w-6 items-center justify-center rounded-full'
-          hitSlop={8}
+          hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
           onPress={onHelpPress}
         >
           <HelpCircle className='text-stone-400' size={16} />

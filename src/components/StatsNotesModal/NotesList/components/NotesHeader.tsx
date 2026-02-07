@@ -20,6 +20,7 @@ export const NotesHeader: React.FC<NotesHeaderProps> = ({ onAddNote }) => (
       accessibilityRole='button'
       activeOpacity={0.7}
       className='h-9 w-9 items-center justify-center rounded-full bg-stone-900'
+      hitSlop={{ bottom: 6, left: 6, right: 6, top: 6 }}
       onPress={onAddNote}
     >
       <Plus color={colors.text.inverse} size={18} strokeWidth={2.25} />
