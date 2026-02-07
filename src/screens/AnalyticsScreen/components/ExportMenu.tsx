@@ -2,8 +2,9 @@
  * ExportMenu - Modal for selecting data export format
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, Pressable, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../../theme/colors';
 import type { ExportFormat } from '../AnalyticsScreen.types';
 import { styles } from './ExportMenu.styles';
@@ -26,20 +27,18 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
       visible={visible}
       onRequestClose={onClose}
     >
-      <TouchableOpacity
+      <Pressable
         accessibilityLabel='Close export menu'
         accessibilityRole='button'
-        activeOpacity={1}
         style={styles.modalOverlay}
         onPress={onClose}
       >
         <View style={styles.exportMenu}>
           <Text style={styles.exportMenuTitle}>Choose Export Format</Text>
-          <TouchableOpacity
+          <AnimatedPressable
             accessibilityHint='Exports data in spreadsheet format'
             accessibilityLabel='Export as CSV'
             accessibilityRole='button'
-            activeOpacity={0.7}
             style={styles.exportMenuItem}
             onPress={() => onExport('csv')}
           >
@@ -54,12 +53,11 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
                 Spreadsheet format (Excel, Google Sheets)
               </Text>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </AnimatedPressable>
+          <AnimatedPressable
             accessibilityHint='Exports data in developer-friendly format'
             accessibilityLabel='Export as JSON'
             accessibilityRole='button'
-            activeOpacity={0.7}
             style={styles.exportMenuItem}
             onPress={() => onExport('json')}
           >
@@ -74,18 +72,17 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
                 Developer-friendly format
               </Text>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </AnimatedPressable>
+          <AnimatedPressable
             accessibilityLabel='Cancel'
             accessibilityRole='button'
-            activeOpacity={0.7}
             style={styles.exportMenuCancel}
             onPress={onClose}
           >
             <Text style={styles.exportMenuCancelText}>Cancel</Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     </Modal>
   );
 };

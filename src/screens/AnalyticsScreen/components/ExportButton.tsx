@@ -2,8 +2,9 @@
  * ExportButton - Button to trigger data export
  */
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
@@ -14,18 +15,17 @@ interface ExportButtonProps {
 
 export const ExportButton: React.FC<ExportButtonProps> = ({ onPress }) => {
   return (
-    <TouchableOpacity
+    <AnimatedPressable
       accessible
       accessibilityHint='Double tap to export your habit data as CSV or JSON'
       accessibilityLabel='Export Data'
       accessibilityRole='button'
-      activeOpacity={0.8}
       style={styles.exportButton}
       onPress={onPress}
     >
       <Ionicons color={colors.surface} name='download-outline' size={20} />
       <Text style={styles.exportButtonText}>Export Data</Text>
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 };
 

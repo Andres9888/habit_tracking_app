@@ -4,8 +4,9 @@
  */
 
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
@@ -20,17 +21,16 @@ export const PaywallFooter: React.FC<PaywallFooterProps> = ({
   onRestore,
 }) => (
   <View>
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityHint='Opens subscription options'
       accessibilityLabel='Start 7-day free trial'
       accessibilityRole='button'
-      activeOpacity={0.8}
       style={styles.ctaButton}
       onPress={onStartTrial}
     >
       <Text style={styles.ctaButtonText}>Start 7-Day Free Trial</Text>
       <Ionicons color={colors.surface} name='arrow-forward' size={20} />
-    </TouchableOpacity>
+    </AnimatedPressable>
 
     <Text style={styles.finePrint}>
       By starting your trial, you agree to our Terms of Service and Privacy
@@ -38,17 +38,16 @@ export const PaywallFooter: React.FC<PaywallFooterProps> = ({
       trial. Cancel anytime before trial ends to avoid charges.
     </Text>
 
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityLabel='Restore purchases'
       accessibilityRole='button'
-      activeOpacity={0.7}
       style={styles.restoreButton}
       onPress={onRestore}
     >
       <Text style={styles.restoreButtonText}>
         Already premium? Restore purchases
       </Text>
-    </TouchableOpacity>
+    </AnimatedPressable>
   </View>
 );
 

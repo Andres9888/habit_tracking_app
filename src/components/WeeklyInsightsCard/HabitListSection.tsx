@@ -5,8 +5,9 @@
 
 import type { ComponentProps } from 'react';
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import type { HabitChange, HabitChangeType } from './WeeklyInsightsCard.types';
 import { styles } from './WeeklyInsightsCard.styles';
@@ -45,11 +46,10 @@ export function HabitListSection({
   if (habits.length === 0) return null;
 
   return (
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityLabel={`${title}, ${habits.length} habits, ${isExpanded ? 'expanded' : 'collapsed'}`}
       accessibilityRole='button'
       accessibilityState={{ expanded: isExpanded }}
-      activeOpacity={0.7}
       style={styles.section}
       onPress={onToggle}
     >
@@ -83,6 +83,6 @@ export function HabitListSection({
           {children}
         </View>
       )}
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }

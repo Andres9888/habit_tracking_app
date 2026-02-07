@@ -4,9 +4,10 @@
  */
 
 import React from 'react';
-import { View, TouchableOpacity, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import type { PremiumAnalyticsPaywallProps } from './PremiumAnalyticsPaywall.types';
@@ -44,15 +45,14 @@ export default function PremiumAnalyticsPaywall({
       <BlurView intensity={80} style={styles.blurView} tint='dark'>
         <View style={styles.header}>
           {onClose && (
-            <TouchableOpacity
+            <AnimatedPressable
               accessibilityLabel='Close paywall'
               accessibilityRole='button'
-              activeOpacity={0.7}
               style={styles.closeButton}
               onPress={handleClose}
             >
               <Ionicons color={colors.text.primary} name='close' size={24} />
-            </TouchableOpacity>
+            </AnimatedPressable>
           )}
         </View>
 
