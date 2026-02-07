@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { Pressable, ScrollView, Text } from 'react-native';
+import { shadows } from '../../../theme/spacing';
 import { HABIT_CATEGORIES } from '../../../constants/habitEmojis';
 
 interface CategoryChipsProps {
@@ -29,18 +30,14 @@ export const CategoryChips = memo(
             accessibilityState={{ selected: isSelected }}
             style={[
               {
+                ...shadows.subtle,
                 alignItems: 'center',
                 backgroundColor: isSelected ? '#1c1917' : 'white',
                 borderRadius: 9999,
-                elevation: 1,
                 flexDirection: 'row',
                 gap: 4,
                 paddingHorizontal: 12,
                 paddingVertical: 8,
-                shadowColor: '#000',
-                shadowOffset: { height: 1, width: 0 },
-                shadowOpacity: 0.05,
-                shadowRadius: 2,
               },
             ]}
             onPress={() => onCategorySelect(category.id)}

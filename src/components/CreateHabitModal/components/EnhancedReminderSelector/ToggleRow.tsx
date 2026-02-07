@@ -5,6 +5,7 @@
 import { memo } from 'react';
 import { Switch, Text, View } from 'react-native';
 import { Bell } from 'lucide-react-native';
+import { shadows } from '../../../../theme/spacing';
 
 interface ToggleRowProps {
   enabled: boolean;
@@ -15,13 +16,7 @@ function ToggleRowComponent({ enabled, onToggle }: ToggleRowProps) {
   return (
     <View
       className='flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4'
-      style={{
-        elevation: 1,
-        shadowColor: '#000',
-        shadowOffset: { height: 1, width: 0 },
-        shadowOpacity: 0.05,
-        shadowRadius: 2,
-      }}
+      style={shadows.subtle}
     >
       <View className='flex-row items-center gap-3'>
         <View className='h-10 w-10 items-center justify-center rounded-full bg-amber-100'>

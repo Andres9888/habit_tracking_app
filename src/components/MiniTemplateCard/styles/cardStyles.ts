@@ -3,6 +3,7 @@
  */
 
 import type { ViewStyle, TextStyle } from 'react-native';
+import { shadows } from '../../../theme/spacing';
 
 export const cardStyles: Record<string, ViewStyle | TextStyle> = {
   accent: {
@@ -15,8 +16,8 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     width: 4,
   },
   card: {
+    ...shadows.card,
     borderRadius: 16,
-    elevation: 3,
     flexDirection: 'column',
     marginRight: 12,
     minHeight: 150,
@@ -24,10 +25,7 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     paddingHorizontal: 14,
     paddingLeft: 18,
     paddingVertical: 14,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
-    shadowRadius: 12,
     width: 200,
   },
   description: {

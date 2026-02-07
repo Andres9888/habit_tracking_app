@@ -4,20 +4,22 @@
 
 import { StyleSheet } from 'react-native';
 
+import { shadows } from '../../../theme/spacing';
+
 export const footerStyles = StyleSheet.create({
   customizeLink: {
     alignItems: 'center',
     paddingVertical: 12,
   },
-  footer: {
-    gap: 12,
-    paddingHorizontal: 20,
-    paddingTop: 16,
-  },
   customizeLinkText: {
     color: '#6B7280',
     fontSize: 15,
     fontWeight: '600',
+  },
+  footer: {
+    gap: 12,
+    paddingHorizontal: 20,
+    paddingTop: 16,
   },
   footerGradient: {
     paddingTop: 24,
@@ -29,15 +31,12 @@ export const footerStyles = StyleSheet.create({
     right: 0,
   },
   importButton: {
+    ...shadows.modal,
     alignItems: 'center',
     borderRadius: 16,
-    elevation: 4,
     height: 56,
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.15,
-    shadowRadius: 12,
   },
   importButtonText: {
     color: '#FFFFFF',
@@ -45,32 +44,30 @@ export const footerStyles = StyleSheet.create({
     fontWeight: '700',
   },
   successButton: {
+    ...shadows.modal,
     alignItems: 'center',
     backgroundColor: '#22c55e',
     borderRadius: 16,
     flexDirection: 'row',
     gap: 10,
-    elevation: 4,
     height: 56,
     justifyContent: 'center',
     shadowColor: '#15803d',
-    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.3,
-    shadowRadius: 12,
   },
   successButtonGlow: {
     backgroundColor: '#22c55e',
-    bottom: -8,
     borderRadius: 24,
+    bottom: -8,
+    elevation: 8,
     left: -8,
     position: 'absolute',
     right: -8,
-    elevation: 8,
-    top: -8,
     shadowColor: '#22c55e',
     shadowOffset: { height: 0, width: 0 },
     shadowOpacity: 0.6,
     shadowRadius: 20,
+    top: -8,
   },
   successButtonText: {
     color: '#FFFFFF',

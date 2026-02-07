@@ -13,6 +13,7 @@ import { Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { shadows } from '../../theme/spacing';
 import { COLORS } from './constants';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { StrengthChart } from './StrengthChart';
@@ -70,11 +71,9 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
       className='overflow-hidden rounded-2xl bg-white shadow-sm'
       entering={reduceMotion ? undefined : FadeInDown.delay(100).springify()}
       style={{
-        elevation: 2,
+        ...shadows.card,
         shadowColor: COLORS.textPrimary,
-        shadowOffset: { height: 2, width: 0 },
         shadowOpacity: 0.05,
-        shadowRadius: 8,
       }}
     >
       <View className='p-5'>

@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import { View } from 'react-native';
+import { shadows } from '../../theme/spacing';
 import { SkeletonLoader } from './SkeletonLoader';
 import type { ReduceMotionProps } from './types';
 
@@ -11,12 +12,10 @@ export function HabitCardSkeleton({ reduceMotion = false }: ReduceMotionProps) {
     <View
       className='mb-5 overflow-hidden rounded-3xl p-5'
       style={{
+        ...shadows.modal,
         backgroundColor: '#fafaf9',
-        elevation: 4,
         shadowColor: '#44403c',
-        shadowOffset: { height: 6, width: 0 },
         shadowOpacity: 0.08,
-        shadowRadius: 16,
       }}
     >
       <View className='mb-4 flex-row items-center gap-3'>

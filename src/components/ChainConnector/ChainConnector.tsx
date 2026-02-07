@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { shadows } from '../../theme/spacing';
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
 
 /**
@@ -37,21 +38,15 @@ export const ChainConnector: React.FC = () => {
       {/* Chain link icon with white circular background */}
       <View
         style={{
+          ...shadows.subtle,
           alignItems: 'center',
           backgroundColor: 'white',
           borderRadius: 12,
-          elevation: 2,
           height: 24,
           justifyContent: 'center',
-
-          // Ensure icon appears above the line
-          shadowColor: '#000',
-
-          shadowOffset: { height: 1, width: 0 },
           shadowOpacity: 0.1,
-          shadowRadius: 2,
           width: 24,
-          zIndex: 1, // Android shadow
+          zIndex: 1, // Ensure icon appears above the line
         }}
       >
         <ChainLinkIcon color='#57534e' size={16} variant='stroke' />

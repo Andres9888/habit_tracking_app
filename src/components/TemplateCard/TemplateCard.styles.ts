@@ -6,6 +6,8 @@
 
 import { StyleSheet } from 'react-native';
 
+import { shadows } from '../../theme/spacing';
+
 export const styles = StyleSheet.create({
   accentBar: {
     borderBottomLeftRadius: 16,
@@ -17,16 +19,13 @@ export const styles = StyleSheet.create({
     width: 4,
   },
   card: {
+    ...shadows.card,
     backgroundColor: '#fff',
     borderRadius: 16,
-    elevation: 2,
     marginHorizontal: 20,
     marginVertical: 8,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.05,
-    shadowRadius: 8,
   },
   glowOverlay: {
     borderRadius: 16,

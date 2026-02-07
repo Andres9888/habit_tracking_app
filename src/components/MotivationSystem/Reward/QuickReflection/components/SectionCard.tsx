@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { clsx } from 'clsx';
+import { shadows } from '../../../../../theme/spacing';
 
 interface SectionCardProps {
   children: React.ReactNode;
@@ -18,11 +19,9 @@ export function SectionCard({ children, className }: SectionCardProps) {
         className
       )}
       style={{
-        elevation: 2,
+        ...shadows.card,
         shadowColor: '#78716c',
-        shadowOffset: { height: 2, width: 0 },
         shadowOpacity: 0.08,
-        shadowRadius: 4,
       }}
     >
       {children}

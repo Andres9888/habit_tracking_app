@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
+import { shadows } from '../../../../theme/spacing';
 import { SPRING_BUTTON } from '../../../animations';
 
 interface SectionCardProps {
@@ -24,11 +25,8 @@ interface SectionCardProps {
 
 const cardClass = 'rounded-xl border border-stone-200 bg-white p-3';
 const staticShadow = {
-  elevation: 2,
-  shadowColor: '#000',
-  shadowOffset: { height: 2, width: 0 },
+  ...shadows.card,
   shadowOpacity: 0.05,
-  shadowRadius: 8,
 };
 
 export function SectionCard({

@@ -4,6 +4,8 @@
 
 import { StyleSheet } from 'react-native';
 
+import { shadows } from '../../theme/spacing';
+
 export const styles = StyleSheet.create({
   buttonWrapper: {
     overflow: 'visible',
@@ -19,11 +21,8 @@ export const styles = StyleSheet.create({
     zIndex: 100,
   },
   confettiParticle: {
-    elevation: 2,
+    ...shadows.subtle,
     position: 'absolute',
-    shadowColor: '#000',
-    shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.15,
-    shadowRadius: 2,
   },
 });

@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 
+import { shadows } from '../../theme/spacing';
+
 export const styles = StyleSheet.create({
   categoriesContent: {
     gap: 8,
@@ -18,12 +20,9 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   categoryPillActive: {
+    ...shadows.card,
     backgroundColor: '#1c1917',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.15,
-    shadowRadius: 4,
   },
   categoryPillIcon: {
     fontSize: 14,

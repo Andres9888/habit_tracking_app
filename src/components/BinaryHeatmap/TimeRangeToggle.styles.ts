@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 
+import { shadows } from '../../theme/spacing';
 import { COLORS, FOCUS } from './constants';
 
 export const styles = StyleSheet.create({
@@ -16,12 +17,9 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   buttonActive: {
+    ...shadows.subtle,
     backgroundColor: '#ffffff',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
   },
   buttonText: {
     fontSize: 11,

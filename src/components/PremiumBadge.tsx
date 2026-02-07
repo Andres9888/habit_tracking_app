@@ -12,6 +12,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Lock, Flame, Sparkles } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { shadows } from '../theme/spacing';
 
 type PremiumBadgeVariant = 'pro' | 'popular' | 'new';
 
@@ -55,19 +56,16 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
 
 const styles = StyleSheet.create({
   badge: {
+    ...shadows.card,
     alignItems: 'center',
     borderRadius: 6,
-    elevation: 3,
     flexDirection: 'row',
     gap: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
     position: 'absolute',
     right: 12,
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.15,
-    shadowRadius: 3,
     top: 12,
     zIndex: 10,
   },

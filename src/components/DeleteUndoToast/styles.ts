@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 
+import { shadows } from '../../theme/spacing';
+
 export const DISMISS_THRESHOLD = 50;
 
 export const styles = StyleSheet.create({
@@ -54,13 +56,10 @@ export const styles = StyleSheet.create({
     borderColor: '#fecaca', // red-200
     borderRadius: 24,
     borderWidth: 1,
-    elevation: 8,
+    ...shadows.modal,
     maxWidth: 400,
     overflow: 'hidden',
     shadowColor: '#dc2626', // red-600
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
     width: '100%',
   },
   undoButton: {

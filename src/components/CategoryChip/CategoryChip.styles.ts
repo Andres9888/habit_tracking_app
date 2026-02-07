@@ -4,6 +4,8 @@
 
 import { StyleSheet } from 'react-native';
 
+import { shadows } from '../../theme/spacing';
+
 export const styles = StyleSheet.create({
   background: {
     borderRadius: 20,
@@ -14,15 +16,12 @@ export const styles = StyleSheet.create({
     top: 0,
   },
   container: {
-    elevation: 2,
+    ...shadows.subtle,
     marginRight: 10,
     minHeight: 40,
     overflow: 'hidden',
     position: 'relative',
-    shadowColor: '#000',
-    shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.06,
-    shadowRadius: 3,
   },
   content: {
     alignItems: 'center',

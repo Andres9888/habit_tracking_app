@@ -5,19 +5,19 @@
  */
 
 import { StyleSheet } from 'react-native';
+
+import { shadows } from '../../../theme/spacing';
 import { COLORS } from './colors';
 
 export const styles = StyleSheet.create({
   container: {
+    ...shadows.card,
     backgroundColor: COLORS.CARD_BG,
     borderRadius: 16,
-    elevation: 2,
     marginTop: 12,
     padding: 16,
     shadowColor: '#1c1917',
-    shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.05,
-    shadowRadius: 8,
   },
   dayCell: {
     alignItems: 'center',

@@ -7,6 +7,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
+import { shadows } from '../../theme/spacing';
 import { COLORS } from './constants';
 import { StrengthChart } from './StrengthChart';
 import { StrengthHero } from './StrengthHero';
@@ -37,11 +38,9 @@ export function HabitStrengthContent({
       className='overflow-hidden rounded-2xl bg-white shadow-sm'
       entering={FadeInDown.delay(100).springify()}
       style={{
-        elevation: 2,
+        ...shadows.card,
         shadowColor: COLORS.textPrimary,
-        shadowOffset: { height: 2, width: 0 },
         shadowOpacity: 0.05,
-        shadowRadius: 8,
       }}
     >
       <View className='p-4'>

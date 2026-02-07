@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { colors } from '@/theme/colors';
+import { shadows } from '@/theme/spacing';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
@@ -63,12 +64,9 @@ const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
         accessibilityRole='button'
         className='mb-2 mr-2 flex-row items-center rounded-full bg-white px-3 py-2'
         style={{
+          ...shadows.subtle,
           borderColor: '#e7e5e4',
           borderWidth: 1, // stone-200
-          shadowColor: '#000',
-          shadowOffset: { height: 1, width: 0 },
-          shadowOpacity: 0.05,
-          shadowRadius: 2,
         }}
         onPress={handlePress}
         onPressIn={handlePressIn}

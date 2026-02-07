@@ -4,6 +4,8 @@
 
 import { StyleSheet } from 'react-native';
 
+import { shadows } from '../../theme/spacing';
+
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -56,14 +58,10 @@ export const styles = StyleSheet.create({
     borderColor: '#f5f5f4', // stone-100 - matches card borders
     borderRadius: 24, // matches card rounded-3xl
     borderWidth: 1,
-    elevation: 8,
+    ...shadows.modal,
     maxWidth: 400,
     overflow: 'hidden',
-    shadowColor: '#78716c',
-    // stone-500 - warm shadow
-    shadowOffset: { height: 6, width: 0 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
+    shadowColor: '#78716c', // stone-500 - warm shadow
     width: '100%',
   },
   undoButton: {
