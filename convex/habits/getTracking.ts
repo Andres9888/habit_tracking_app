@@ -9,6 +9,11 @@ import { trackingRecordValidator } from './types';
 export const getTracking = query({
   args: { dates: v.array(v.string()) },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
     if (args.dates.length === 0) return [];
 
     const sortedDates = [...args.dates].sort();
@@ -20,6 +25,7 @@ export const getTracking = query({
       .query('tracking')
       .filter((q) =>
         q.and(
+          q.eq(q.field('userId'), identity.subject),
           q.gte(q.field('date'), startDate),
           q.lte(q.field('date'), endDate)
         )
