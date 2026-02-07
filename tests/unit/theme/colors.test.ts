@@ -7,7 +7,7 @@
  * - WCAG 2.1 Level AA color contrast compliance
  */
 
-import { colors, milestoneColors } from '@/theme/colors';
+import { colors, milestoneColors, warmPalette } from '@/theme/colors';
 
 describe('Theme Colors - Phase 1', () => {
   describe('Primary Colors (Growth & Progress)', () => {
@@ -199,6 +199,52 @@ describe('Theme Colors - Phase 1', () => {
       expect(colors).toHaveProperty('light');
       expect(colors).toHaveProperty('dark');
       expect(colors).toHaveProperty('text');
+    });
+
+    it('should export warmPalette separately from colors', () => {
+      // warmPalette is a separate semantic group, not nested in colors
+      expect(warmPalette).toBeDefined();
+      expect(warmPalette.background).toBe('#FAF8F5');
+    });
+  });
+
+  describe('Warm Stone Palette', () => {
+    it('should export warmPalette from theme', () => {
+      expect(warmPalette).toBeDefined();
+    });
+
+    it('should have background (#FAF8F5)', () => {
+      expect(warmPalette.background).toBe('#FAF8F5');
+    });
+
+    it('should have foreground (#2D2A26)', () => {
+      expect(warmPalette.foreground).toBe('#2D2A26');
+    });
+
+    it('should have neutral (#C4BFB7)', () => {
+      expect(warmPalette.neutral).toBe('#C4BFB7');
+    });
+
+    it('should have border (#E5E2DE)', () => {
+      expect(warmPalette.border).toBe('#E5E2DE');
+    });
+
+    it('should have cardBg (#f0eeeb)', () => {
+      expect(warmPalette.cardBg).toBe('#f0eeeb');
+    });
+
+    it('should have all 5 warm palette keys', () => {
+      const keys = Object.keys(warmPalette);
+      expect(keys).toHaveLength(5);
+      expect(keys).toEqual(
+        expect.arrayContaining([
+          'background',
+          'border',
+          'cardBg',
+          'foreground',
+          'neutral',
+        ])
+      );
     });
   });
 

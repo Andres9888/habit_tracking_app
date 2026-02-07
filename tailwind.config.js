@@ -56,7 +56,7 @@ module.exports = {
           DEFAULT: '#FFFFFF',
           foreground: '#1F2937',
         },
-        // Home screen redesign palette
+        // Home screen redesign palette (see src/theme/colors/semantic.ts warmPalette)
         dominant: '#faf9f7',
         'secondary-text': '#1F2937',
         neutral: '#C4BFB7',
