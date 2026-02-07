@@ -4,7 +4,7 @@
  * Manages shared animation values for HabitCard.
  */
 
-import { useState } from 'react';
+import { type MutableRefObject, useEffect, useRef, useState } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
 
 export interface HabitCardValues {
@@ -19,6 +19,7 @@ export interface HabitCardValues {
   setIsToggling: React.Dispatch<React.SetStateAction<boolean>>;
   showConfetti: boolean;
   setShowConfetti: React.Dispatch<React.SetStateAction<boolean>>;
+  isMountedRef: MutableRefObject<boolean>;
 }
 
 export function useHabitCardValues(strength: number): HabitCardValues {
@@ -29,9 +30,18 @@ export function useHabitCardValues(strength: number): HabitCardValues {
   const [xpPosition, setXPPosition] = useState({ x: 0, y: 0 });
   const [isToggling, setIsToggling] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   return {
     cardScale,
+    isMountedRef,
     isToggling,
     setIsToggling,
     setShowConfetti,

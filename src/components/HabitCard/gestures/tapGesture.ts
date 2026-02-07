@@ -3,6 +3,7 @@
  * Handles tap-to-toggle completion with haptic feedback
  */
 
+import type { MutableRefObject } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   withSpring,
@@ -22,6 +23,7 @@ interface TapGestureOptions {
   reduceMotion: boolean;
   cardScale: SharedValue<number>;
   today: string;
+  isMountedRef: MutableRefObject<boolean>;
   onPress?: () => void;
   setIsToggling: (value: boolean) => void;
   toggleCompletionMutation: (args: {
@@ -30,6 +32,14 @@ interface TapGestureOptions {
   }) => Promise<unknown>;
   triggerCompletionCelebration: () => void;
   triggerUncheckAnimation: () => void;
+}
+
+function fireHapticLight() {
+  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+}
+
+function fireHapticMedium() {
+  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
 }
 
 export function createTapGesture(options: TapGestureOptions) {
@@ -41,6 +51,7 @@ export function createTapGesture(options: TapGestureOptions) {
     reduceMotion,
     cardScale,
     today,
+    isMountedRef,
     onPress,
     setIsToggling,
     toggleCompletionMutation,
@@ -52,6 +63,20 @@ export function createTapGesture(options: TapGestureOptions) {
       ? withTiming(v, { duration: 0 })
       : withSpring(v, Springs.button);
 
+  function handleToggleCompletion() {
+    toggleCompletionMutation({ date: today, habitId: id })
+      .catch((error: unknown) => {
+        if (__DEV__) console.error('Toggle completion failed:', error);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          if (isMountedRef.current) {
+            setIsToggling(false);
+          }
+        }, 300);
+      });
+  }
+
   return Gesture.Tap()
     .onBegin(() => {
       cardScale.value = press(0.96);
@@ -62,32 +87,14 @@ export function createTapGesture(options: TapGestureOptions) {
     .onEnd(() => {
       if (!disabled && !isToggling) {
         if (completed) {
-          runOnJS(() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
-              () => {}
-            );
-          })();
+          runOnJS(fireHapticLight)();
           triggerUncheckAnimation();
         } else {
-          runOnJS(() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
-              () => {}
-            );
-          })();
+          runOnJS(fireHapticMedium)();
           triggerCompletionCelebration();
         }
         runOnJS(setIsToggling)(true);
-        runOnJS(async () => {
-          try {
-            await toggleCompletionMutation({ date: today, habitId: id });
-          } catch (error) {
-            if (__DEV__) console.error('Toggle completion failed:', error);
-          } finally {
-            setTimeout(() => {
-              setIsToggling(false);
-            }, 300);
-          }
-        })();
+        runOnJS(handleToggleCompletion)();
         if (onPress) {
           runOnJS(onPress)();
         }

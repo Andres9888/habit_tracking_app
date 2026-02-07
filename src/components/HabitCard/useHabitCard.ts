@@ -73,6 +73,7 @@ export function useHabitCard(props: HabitCardProps) {
     completed: habitState.completed,
     disabled,
     id,
+    isMountedRef: values.isMountedRef,
     isToggling: values.isToggling,
     name,
     onLongPress,

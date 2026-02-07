@@ -19,6 +19,7 @@ export function useHabitCardGestures(options: UseHabitCardGesturesOptions) {
     completed: options.completed,
     disabled: options.disabled,
     id: options.id,
+    isMountedRef: options.isMountedRef,
     isToggling: options.isToggling,
     onPress: options.onPress,
     reduceMotion: options.reduceMotion,

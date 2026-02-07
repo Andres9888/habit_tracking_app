@@ -2,6 +2,7 @@
  * HabitCard Gesture Types
  */
 
+import type { MutableRefObject } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
@@ -15,6 +16,7 @@ export interface UseHabitCardGesturesOptions {
   translateX: SharedValue<number>;
   cardScale: SharedValue<number>;
   today: string;
+  isMountedRef: MutableRefObject<boolean>;
   onPress?: () => void;
   onLongPress?: () => void;
   setIsToggling: (value: boolean) => void;
