@@ -11,8 +11,13 @@ import { getTodayDateKey, maxDateKey } from './utils';
 export const get = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) return null;
+
+    if (habit.userId !== identity.subject) return null;
 
     const tracking = await ctx.db
       .query('tracking')
