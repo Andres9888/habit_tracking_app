@@ -1,5 +1,5 @@
 /** SettingsContent - Stagger animations, stone-100 bg, 12px version */
-import { Activity, BookOpen, Check, Circle } from 'lucide-react-native';
+import { BookOpen, Check, Circle } from 'lucide-react-native';
 import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SettingsRow } from './SettingsRow';
@@ -20,15 +20,6 @@ export function SettingsContent(p: SettingsContentProps) {
       <View className='gap-5 pb-8'>
         <Animated.View entering={anim(0)}>
           <SettingsSection highContrastMode={hc} title='Visual Preferences'>
-            <SettingsRow
-              highContrastMode={hc}
-              icon={<Activity color='#16a34a' size={16} />}
-              iconBackgroundColor='#bbf7d0'
-              label='Daily progress bar'
-              type='toggle'
-              value={p.showWeekCompletionBar}
-              onToggle={(v) => void p.onChangeShowWeekCompletionBar(v)}
-            />
             <SettingsRow
               highContrastMode={hc}
               icon={<Check color='#0284c7' size={16} />}

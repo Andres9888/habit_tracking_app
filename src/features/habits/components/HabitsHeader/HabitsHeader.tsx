@@ -10,7 +10,6 @@ import { IconButtonGroup } from './IconButtonGroup';
 import { ProBadge } from './ProBadge';
 import { useHeaderAnimations } from './useHeaderAnimations';
 import { useHeaderHandlers } from './useHeaderHandlers';
-import { formatTodayDate } from './headerUtils';
 
 const DATE_STYLE = {
   color: '#1c1917',
@@ -19,6 +18,12 @@ const DATE_STYLE = {
 };
 // FIXED: #78716c has 4.5:1+ contrast (was #C4BFB7 at 2.8:1)
 const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
+
+/** Format today's date as "Today · Mon D" per spec */
+const formatTodayDate = (): string => {
+  const d = new Date();
+  return `Today · ${d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
+};
 
 function HabitsHeaderComponent({
   completedToday = 0,
@@ -71,12 +76,6 @@ function HabitsHeaderComponent({
           )}
         </View>
         <View className='flex-row items-center gap-2'>
-          <AddHabitButton
-            animatedStyle={anim.addButtonAnimatedStyle}
-            onPress={h.handleAddHabitPress}
-            onPressIn={h.handleAddHabitPressIn}
-            onPressOut={h.handleAddHabitPressOut}
-          />
           {!isPremiumUser && onUpgradePress && (
             <ProBadge onPress={onUpgradePress} />
           )}

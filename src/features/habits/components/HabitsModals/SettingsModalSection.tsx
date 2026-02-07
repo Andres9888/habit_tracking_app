@@ -23,7 +23,6 @@ export function SettingsModalSection({
       showCharacterScreen={settings?.showCharacterScreen ?? true}
       showHabitStrengthPercentage={showHabitStrengthPercentage}
       showNotesStats={settings?.showNotesStats ?? true}
-      showWeekCompletionBar={settings?.showWeekCompletionBar ?? true}
       visible={showSettings}
       onChangeDayShape={(value) => onSettingsChange({ dayShape: value })}
       onChangeHabitCompletionIcon={(value) =>
@@ -37,9 +36,6 @@ export function SettingsModalSection({
       }
       onChangeShowNotesStats={(value) =>
         onSettingsChange({ showNotesStats: value })
-      }
-      onChangeShowWeekCompletionBar={(value) =>
-        onSettingsChange({ showWeekCompletionBar: value })
       }
       onClose={closeSettings}
       onOpenHapticTest={openHapticTest}

@@ -13,8 +13,6 @@ export interface SettingsModalProps {
   onChangeShowHabitStrengthPercentage?: (
     value: boolean
   ) => void | Promise<void>;
-  showWeekCompletionBar?: boolean;
-  onChangeShowWeekCompletionBar?: (value: boolean) => void | Promise<void>;
   showNotesStats?: boolean;
   onChangeShowNotesStats?: (value: boolean) => void | Promise<void>;
   isHighContrastActive?: boolean;
@@ -39,10 +37,8 @@ export interface SettingsColors {
 export interface SettingsContentProps {
   colors: SettingsColors;
   isHighContrastActive: boolean;
-  showWeekCompletionBar: boolean;
   habitCompletionIcon: 'chain' | 'checkbox';
   dayShape: 'circle' | 'square';
-  onChangeShowWeekCompletionBar: (value: boolean) => void | Promise<void>;
   onChangeHabitCompletionIcon: (
     value: 'chain' | 'checkbox'
   ) => void | Promise<void>;

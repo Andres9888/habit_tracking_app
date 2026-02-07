@@ -29,9 +29,7 @@ export default function SettingsModal({
   isHighContrastActive = false,
   onChangeDayShape = () => {},
   onChangeHabitCompletionIcon = () => {},
-  onChangeShowWeekCompletionBar = () => {},
   onClose,
-  showWeekCompletionBar = true,
   visible,
 }: SettingsModalProps) {
   const { view, setView, handleClose } = useSettingsModalLogic({
@@ -74,10 +72,8 @@ export default function SettingsModal({
           dayShape={dayShape}
           habitCompletionIcon={habitCompletionIcon}
           isHighContrastActive={isHighContrastActive}
-          showWeekCompletionBar={showWeekCompletionBar}
           onChangeDayShape={onChangeDayShape}
           onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
-          onChangeShowWeekCompletionBar={onChangeShowWeekCompletionBar}
           onOpenArchivedHabits={() => setView('archived')}
         />
       </View>
