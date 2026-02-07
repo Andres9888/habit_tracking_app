@@ -52,7 +52,7 @@ export default function SignInScreen() {
               styles.scrollContent,
               {
                 paddingBottom: insets.bottom + 24,
-                paddingTop: insets.top + 40,
+                paddingTop: insets.top + 24,
               },
             ]}
             keyboardShouldPersistTaps='handled'

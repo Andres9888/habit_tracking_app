@@ -65,7 +65,7 @@ export default function SignUpScreen({
       className='flex-1'
       style={{ backgroundColor: colors.light.background }}
     >
-      <View className='flex-1 px-6' style={{ paddingTop: insets.top + 16 }}>
+      <View className='flex-1 px-6' style={{ paddingTop: insets.top + 24 }}>
         <SignUpHeader />
 
         {oauthError && (

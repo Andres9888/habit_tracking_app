@@ -54,7 +54,7 @@ export default function WelcomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.content, { paddingTop: insets.top + 60 }]}>
+      <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
         <View style={styles.heroSection}>
           <Animated.View style={[styles.iconContainer, iconStyle]}>
             <Link color='#1c1917' size={40} strokeWidth={2} />
