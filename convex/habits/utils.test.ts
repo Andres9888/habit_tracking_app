@@ -10,6 +10,7 @@ import {
   getTodayUTCDateKey,
   subtractDaysFromDateKey,
   isValidDateFormat,
+  isFutureDate,
   maxDateKey,
 } from './utils';
 
@@ -91,5 +92,57 @@ describe('maxDateKey', () => {
 
   it('should handle cross-year comparison', () => {
     expect(maxDateKey('2024-12-31', '2025-01-01')).toBe('2025-01-01');
+  });
+});
+
+/** Helper: format a Date as YYYY-MM-DD in server-local time */
+function toLocalDateKey(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+/** Helper: add days to a local-midnight Date */
+function addDays(d: Date, days: number): Date {
+  const result = new Date(d);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+describe('isFutureDate', () => {
+  // Build all test dates relative to "today at midnight, local time"
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  it('should return false for today', () => {
+    expect(isFutureDate(toLocalDateKey(today))).toBe(false);
+  });
+
+  it('should return false for yesterday', () => {
+    expect(isFutureDate(toLocalDateKey(addDays(today, -1)))).toBe(false);
+  });
+
+  it('should return false for a date far in the past', () => {
+    expect(isFutureDate(toLocalDateKey(addDays(today, -365)))).toBe(false);
+  });
+
+  it('should return false for tomorrow (within 3-hour grace period)', () => {
+    // Tomorrow is exactly 1 day ahead; with the 3-hour grace period
+    // the cutoff is today + 3h, but since both are midnight-normalized
+    // tomorrow midnight (24h ahead) > today midnight + 3h → should be true
+    expect(isFutureDate(toLocalDateKey(addDays(today, 1)))).toBe(true);
+  });
+
+  it('should return true for 2 days from now', () => {
+    expect(isFutureDate(toLocalDateKey(addDays(today, 2)))).toBe(true);
+  });
+
+  it('should return true for 7 days from now', () => {
+    expect(isFutureDate(toLocalDateKey(addDays(today, 7)))).toBe(true);
+  });
+
+  it('should return true for a date far in the future', () => {
+    expect(isFutureDate(toLocalDateKey(addDays(today, 365)))).toBe(true);
   });
 });

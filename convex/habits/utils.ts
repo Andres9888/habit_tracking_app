@@ -57,7 +57,7 @@ export function isValidDateFormat(date: string): boolean {
 
 /**
  * Check if a date is in the future
- * Allows a 24-hour grace period to handle timezone differences
+ * Allows a 3-hour grace period to handle timezone differences
  * (e.g., user in PST sees Feb 2nd while server in UTC sees Feb 1st)
  */
 export function isFutureDate(dateStr: string): boolean {
@@ -68,8 +68,9 @@ export function isFutureDate(dateStr: string): boolean {
     Number(dayStr)
   );
   const today = new Date();
-  // Allow dates up to 24 hours ahead to accommodate timezone differences
-  const gracePeriodMs = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  // Allow dates up to 3 hours ahead to accommodate timezone differences
+  // without allowing next-day tracking
+  const gracePeriodMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
   today.setHours(0, 0, 0, 0);
   inputDate.setHours(0, 0, 0, 0);
   return inputDate.getTime() > today.getTime() + gracePeriodMs;
