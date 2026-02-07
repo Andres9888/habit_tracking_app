@@ -6,8 +6,9 @@
  * OPTIMIZED: SF Pro font, deeper shadows, proper contrast
  */
 
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { spacing, borderRadius } from '@/theme/spacing';
+import { fontFamilies } from '@/theme/typography';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 import { statusStyles } from './HabitCard.statusStyles';
 
@@ -56,7 +57,7 @@ const coreStyles = StyleSheet.create({
   // Meta text for habit strength
   habitMeta: {
     color: REDESIGN_COLORS.metaText,
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     letterSpacing: -0.08,
     lineHeight: 18,
@@ -64,7 +65,7 @@ const coreStyles = StyleSheet.create({
   },
   habitName: {
     color: REDESIGN_COLORS.secondaryText,
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     letterSpacing: -0.41,
@@ -74,7 +75,7 @@ const coreStyles = StyleSheet.create({
   // Streak text with proper contrast
   streakText: {
     color: REDESIGN_COLORS.streakText,
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 15,
     fontWeight: '600',
   },

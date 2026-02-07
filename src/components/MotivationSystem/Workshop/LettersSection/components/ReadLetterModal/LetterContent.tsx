@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Calendar, Quote } from 'lucide-react-native';
+import { fontFamilies } from '@/theme/typography';
 import type { LetterData } from '../../LettersSection.types';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
@@ -77,7 +78,7 @@ export function LetterContent({
         <View className='rounded-2xl bg-white p-6 shadow-sm shadow-stone-200/60'>
           <Text
             className='text-base leading-7 text-stone-700'
-            style={{ fontFamily: 'serif' }}
+            style={{ fontFamily: fontFamilies.serif }}
           >
             {letter.content}
           </Text>

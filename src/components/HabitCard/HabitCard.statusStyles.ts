@@ -6,6 +6,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { spacing, borderRadius } from '@/theme/spacing';
+import { fontFamilies } from '@/theme/typography';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 
 export const statusStyles = StyleSheet.create({
@@ -55,7 +56,7 @@ export const statusStyles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   streakText: {
-    fontFamily: 'System',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 14,
     fontWeight: '500',
     lineHeight: 20,

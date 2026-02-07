@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import { colors } from '../../theme/colors';
+import { fontFamilies } from '@/theme/typography';
 import { RetryButton } from './RetryButton';
 
 interface ErrorFallbackProps {
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: colors.error,
-    fontFamily: 'monospace',
+    fontFamily: fontFamilies.monospace,
     fontSize: 12,
     marginTop: 24,
     maxWidth: 300,
