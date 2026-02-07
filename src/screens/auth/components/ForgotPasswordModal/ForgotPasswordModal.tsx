@@ -1,12 +1,10 @@
 /**
- * ForgotPasswordModal Component
- *
- * A modal that allows users to reset their password via email.
- * Integrates with Clerk's password reset API.
+ * ForgotPasswordModal - OPTIMIZED: Entry animations, stagger, polish
  */
 
 import { useCallback } from 'react';
 import { Text, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import Modal from '../../../../components/Modal';
 import { PasswordResetForm } from './PasswordResetForm';
 import { PasswordResetSuccess } from './PasswordResetSuccess';
@@ -50,31 +48,41 @@ export function ForgotPasswordModal({
       onClose={handleClose}
     >
       <View className='gap-4'>
-        {/* Header */}
-        <View className='gap-1'>
-          <Text className='text-2xl font-extrabold tracking-tight text-stone-900'>
+        {/* Header - OPTIMIZED: FadeInDown entry */}
+        <Animated.View
+          className='gap-1'
+          entering={FadeInDown.duration(280).springify().damping(18)}
+        >
+          <Text
+            className='font-bold text-stone-900'
+            style={{ fontSize: 28, letterSpacing: -0.5, lineHeight: 34 }}
+          >
             Reset Password
           </Text>
-          <Text className='text-sm text-stone-500'>
+          <Text className='text-[15px] leading-[20px] text-stone-500'>
             {success
               ? 'Check your email for reset instructions'
-              : "Enter your email address and we'll send you a link to reset your password"}
+              : "Enter your email and we'll send you a reset link"}
           </Text>
-        </View>
+        </Animated.View>
 
-        {/* Content */}
-        {success ? (
-          <PasswordResetSuccess onClose={handleClose} />
-        ) : (
-          <PasswordResetForm
-            email={email}
-            error={error}
-            isLoading={isLoading}
-            onCancel={handleClose}
-            onEmailChange={handleEmailChange}
-            onSubmit={handleResetPassword}
-          />
-        )}
+        {/* Content - OPTIMIZED: FadeInDown with delay */}
+        <Animated.View
+          entering={FadeInDown.duration(280).delay(80).springify().damping(18)}
+        >
+          {success ? (
+            <PasswordResetSuccess onClose={handleClose} />
+          ) : (
+            <PasswordResetForm
+              email={email}
+              error={error}
+              isLoading={isLoading}
+              onCancel={handleClose}
+              onEmailChange={handleEmailChange}
+              onSubmit={handleResetPassword}
+            />
+          )}
+        </Animated.View>
       </View>
     </Modal>
   );
