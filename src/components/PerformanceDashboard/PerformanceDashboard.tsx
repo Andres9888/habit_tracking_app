@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   DashboardFAB,
@@ -15,6 +15,7 @@ import {
 } from './components';
 import { useDashboardData } from './useDashboardData';
 import { getOverallStatus, getPositionStyle } from './utils';
+import { dashboardStyles } from './PerformanceDashboard.styles';
 import type { DashboardConfig } from './types';
 
 interface PerformanceDashboardProps {
@@ -47,9 +48,13 @@ function DashboardContent({ config }: PerformanceDashboardProps) {
   return (
     <SafeAreaView
       pointerEvents='box-none'
-      style={[styles.container, positionStyle, { width: dashboardWidth }]}
+      style={[
+        dashboardStyles.container,
+        positionStyle,
+        { width: dashboardWidth },
+      ]}
     >
-      <View style={styles.dashboard}>
+      <View style={dashboardStyles.dashboard}>
         <DashboardHeader
           isExpanded={state.isExpanded}
           status={overallStatus}
@@ -72,7 +77,7 @@ function ExpandedContent({
   state: ReturnType<typeof useDashboardData>;
 }) {
   return (
-    <View style={styles.content}>
+    <View style={dashboardStyles.content}>
       <TabBar activeTab={state.activeTab} onTabChange={state.setTab} />
       <TabContent
         activeTab={state.activeTab}
@@ -91,7 +96,7 @@ function CollapsedContent({
   state: ReturnType<typeof useDashboardData>;
 }) {
   return (
-    <View style={styles.miniMetrics}>
+    <View style={dashboardStyles.miniMetrics}>
       <MiniMetric label='FPS' value={state.fps.currentFPS.toFixed(0)} />
       <MiniMetric label='MEM' value={state.memory.formattedUsage} />
       <MiniMetric
@@ -101,22 +106,5 @@ function CollapsedContent({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { position: 'absolute', zIndex: 9999 },
-  content: { gap: 8 },
-  dashboard: {
-    backgroundColor: 'rgba(23, 23, 23, 0.95)',
-    borderColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 12,
-    borderWidth: 1,
-    padding: 12,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-  },
-  miniMetrics: { flexDirection: 'row', gap: 8, paddingTop: 4 },
-});
 
 export default PerformanceDashboard;

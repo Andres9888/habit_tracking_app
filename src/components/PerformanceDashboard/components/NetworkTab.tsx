@@ -4,10 +4,11 @@
  */
 
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { StatusIndicator } from './StatusIndicator';
 import { StatRow } from './StatRow';
 import { tabStyles, valueStyles } from './tabStyles';
+import { networkStyles } from './NetworkTab.styles';
 import type { NetworkData } from '../types';
 
 interface NetworkTabProps {
@@ -49,7 +50,7 @@ function RequestsList({
   requests: NetworkData['recentRequests'];
 }) {
   return (
-    <View style={styles.requests}>
+    <View style={networkStyles.requests}>
       <Text style={tabStyles.historyLabel}>Recent Requests</Text>
       <ScrollView nestedScrollEnabled style={tabStyles.scrollView}>
         {requests.length === 0 ? (
@@ -71,17 +72,17 @@ function RequestRow({
   request: NetworkData['recentRequests'][0];
 }) {
   return (
-    <View style={styles.requestRow}>
-      <View style={styles.requestInfo}>
-        <Text style={styles.requestMethod}>{request.method}</Text>
-        <Text numberOfLines={1} style={styles.requestUrl}>
+    <View style={networkStyles.requestRow}>
+      <View style={networkStyles.requestInfo}>
+        <Text style={networkStyles.requestMethod}>{request.method}</Text>
+        <Text numberOfLines={1} style={networkStyles.requestUrl}>
           {getUrlPath(request.url)}
         </Text>
       </View>
       <Text
         style={[
-          styles.requestDuration,
-          request.duration > 200 && styles.slowRequest,
+          networkStyles.requestDuration,
+          request.duration > 200 && networkStyles.slowRequest,
         ]}
       >
         {request.duration.toFixed(0)}ms
@@ -98,28 +99,3 @@ function getUrlPath(url: string): string {
     return url.slice(0, 40);
   }
 }
-
-const styles = StyleSheet.create({
-  requestDuration: {
-    color: 'rgba(255,255,255,0.8)',
-    fontFamily: 'monospace',
-    fontSize: 10,
-  },
-  requestInfo: { flex: 1, flexDirection: 'row', gap: 6 },
-  requestMethod: {
-    color: '#22c55e',
-    fontFamily: 'monospace',
-    fontSize: 10,
-    fontWeight: '600',
-    width: 32,
-  },
-  requestRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-    paddingVertical: 4,
-  },
-  requests: { gap: 4 },
-  requestUrl: { color: 'rgba(255,255,255,0.6)', flex: 1, fontSize: 10 },
-  slowRequest: { color: '#f59e0b' },
-});
