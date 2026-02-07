@@ -58,6 +58,7 @@ export const colors = {
 
   // Primary Colors (Growth & Progress)
   primary: {
+    100: '#D1FAE5', // Very light emerald, muted accent backgrounds
     300: '#86EFAC', // Very light, decorative/confetti
     400: '#34D399', // Lighter, hover states
     500: '#10B981', // Emerald green - main brand color

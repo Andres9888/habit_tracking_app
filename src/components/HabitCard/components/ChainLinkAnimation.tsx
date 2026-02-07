@@ -66,7 +66,7 @@ export function ChainLinkAnimation({
   // Determine icon color - slightly dimmed when pending sync
   const iconColor = hasPendingOfflineOps
     ? theme.custom.colors.gray[100]
-    : '#ffffff';
+    : theme.custom.colors.text.inverse;
 
   return (
     <Animated.View style={animatedStyle}>

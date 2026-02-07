@@ -8,7 +8,7 @@ import { colors } from '../../theme/colors';
 
 export const REDESIGN_COLORS = {
   accent: colors.primary[500],
-  accentMuted: '#D1FAE5',
+  accentMuted: colors.primary[100],
   cardBg: colors.light.surfaceMuted,
   cardSurface: colors.light.card,
   dominant: colors.light.background,

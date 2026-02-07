@@ -21,11 +21,11 @@ export const MILESTONE_BADGES: Record<Milestone, MilestoneBadge> = {
 export const COLORS = {
   bestStreakBg: milestoneColors.amberLight,
 
-  bestStreakText: '#92400e', // amber-800 (no theme token)
+  bestStreakText: milestoneColors.amber800,
 
   milestoneBadgeBgAchieved: milestoneColors.amberLight,
 
-  milestoneBadgeBgUnachieved: '#f5f5f4', // stone-100 (no exact theme token)
+  milestoneBadgeBgUnachieved: milestoneColors.stone100,
 
   milestoneBadgeBorder: milestoneColors.amberBorder,
 
@@ -33,9 +33,9 @@ export const COLORS = {
 
   milestoneLabelUnachieved: milestoneColors.stone,
 
-  streakLabel: '#57534e', // stone-600 (no theme token)
+  streakLabel: milestoneColors.stone600,
 
-  streakNumber: '#1c1917', // stone-900 (no theme token)
+  streakNumber: milestoneColors.stone900,
 
   zeroStreakEmoji: milestoneColors.stone,
 
