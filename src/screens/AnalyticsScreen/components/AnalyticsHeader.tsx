@@ -53,9 +53,9 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: colors.text.primary,
-    fontSize: 28,
-    fontWeight: '700',
-    letterSpacing: 0.36,
-    lineHeight: 34,
+    fontSize: 22,
+    fontWeight: '600',
+    letterSpacing: 0.35,
+    lineHeight: 28,
   },
 });

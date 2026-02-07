@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
     backgroundColor: colors.premium[600],
-    borderRadius: 20,
+    borderRadius: 9999,
     flexDirection: 'row',
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     color: colors.text.secondary,
-    fontSize: 15,
+    fontSize: 17,
     lineHeight: 22,
     marginBottom: spacing.xl,
     textAlign: 'center',

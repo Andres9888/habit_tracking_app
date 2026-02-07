@@ -59,10 +59,10 @@ export function CreateButton({
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
             style={{
-              shadowColor: gradientColors[0],
+              shadowColor: '#1c1917',
               shadowOffset: { height: 4, width: 0 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
+              shadowOpacity: 0.08,
+              shadowRadius: 16,
             }}
           >
             <Check color={colors.text.inverse} size={20} strokeWidth={2.5} />

@@ -22,10 +22,10 @@ export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
           entering={FadeInDown.delay(0).springify().damping(18)}
           style={{
             color: '#1c1917',
-            fontSize: 28,
-            fontWeight: '700',
-            letterSpacing: 0.36,
-            lineHeight: 34,
+            fontSize: 22,
+            fontWeight: '600',
+            letterSpacing: 0.35,
+            lineHeight: 28,
           }}
         >
           Import Habits

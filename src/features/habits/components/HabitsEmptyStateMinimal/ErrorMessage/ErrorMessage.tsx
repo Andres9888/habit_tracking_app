@@ -55,7 +55,7 @@ export function ErrorMessage({
         style={{
           color: ERROR_COLORS.text,
           flex: 1,
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: '500',
           marginHorizontal: 12,
         }}

@@ -23,10 +23,10 @@ function WelcomeHeroComponent({ greeting, period }: WelcomeHeroProps) {
       style={{
         backgroundColor: '#fffbeb',
         elevation: 4,
-        shadowColor: '#f59e0b',
-        shadowOffset: { height: 8, width: 0 },
-        shadowOpacity: 0.15,
-        shadowRadius: 24,
+        shadowColor: '#1c1917',
+        shadowOffset: { height: 4, width: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 16,
       }}
     >
       <Animated.View
@@ -51,7 +51,7 @@ function WelcomeHeroComponent({ greeting, period }: WelcomeHeroProps) {
         👋
       </Animated.Text>
       <View className='items-center gap-2'>
-        <Text className='text-[28px] font-bold tracking-tight text-stone-900'>
+        <Text className='text-[22px] font-semibold tracking-tight text-stone-900'>
           {greeting}!
         </Text>
         <Text className='text-center text-[17px] font-medium leading-[24px] text-stone-700'>
@@ -66,15 +66,15 @@ function WelcomeHeroComponent({ greeting, period }: WelcomeHeroProps) {
         style={[
           streakStyle,
           {
-            elevation: 3,
-            shadowColor: '#f59e0b',
-            shadowOffset: { height: 3, width: 0 },
-            shadowOpacity: 0.18,
-            shadowRadius: 6,
+            elevation: 4,
+            shadowColor: '#1c1917',
+            shadowOffset: { height: 4, width: 0 },
+            shadowOpacity: 0.08,
+            shadowRadius: 16,
           },
         ]}
       >
-        <Text style={{ fontSize: 16 }}>🔥</Text>
+        <Text style={{ fontSize: 17 }}>🔥</Text>
         {/* FIXED: 13px minimum for readability (was 10px) */}
         <Text className='text-[13px] font-semibold text-amber-700'>
           Day 1 begins now

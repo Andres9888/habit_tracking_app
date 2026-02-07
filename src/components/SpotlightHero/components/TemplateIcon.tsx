@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     shadowOffset: { height: 0, width: 0 },
     shadowOpacity: 0.5,
-    shadowRadius: 20,
+    shadowRadius: 16,
     width: 64,
   },
   iconWrapper: {

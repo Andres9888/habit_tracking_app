@@ -38,7 +38,7 @@ export const RewardCelebrationToast = ({
         <Text className='text-[17px] font-bold leading-[24px] text-[#1c1917]'>
           {title}
         </Text>
-        <Text className='mt-2 text-[15px] leading-[20px] text-[#44403c]'>
+        <Text className='mt-2 text-[17px] leading-[22px] text-stone-700'>
           {message}
         </Text>
         <View
@@ -59,7 +59,7 @@ export const RewardCelebrationToast = ({
               onSecondaryAction();
             }}
           >
-            <Text className='text-[15px] font-semibold leading-[20px] text-[#475467]'>
+            <Text className='text-[17px] font-semibold leading-[22px] text-stone-600'>
               Share
             </Text>
           </AnimatedPressable>
@@ -73,7 +73,7 @@ export const RewardCelebrationToast = ({
               onPrimaryAction();
             }}
           >
-            <Text className='text-[15px] font-semibold leading-[20px] text-white'>
+            <Text className='text-[17px] font-semibold leading-[22px] text-white'>
               {premiumCTA.text}
             </Text>
           </AnimatedPressable>
@@ -86,7 +86,7 @@ export const RewardCelebrationToast = ({
             onDismiss();
           }}
         >
-          <Text className='text-[10px] font-medium uppercase leading-[12px] tracking-wider text-[#78716c]'>
+          <Text className='text-[13px] font-medium uppercase leading-[18px] tracking-wider text-stone-500'>
             Not now
           </Text>
         </AnimatedPressable>

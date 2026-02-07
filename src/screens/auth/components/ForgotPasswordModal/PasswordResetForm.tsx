@@ -22,9 +22,9 @@ export function PasswordResetForm({
           className={`rounded-2xl border-2 bg-white ${error ? 'border-red-500' : 'border-stone-200'}`}
           style={{
             shadowColor: error ? '#ef4444' : '#1c1917',
-            shadowOffset: { height: 2, width: 0 },
-            shadowOpacity: 0.04,
-            shadowRadius: 8,
+            shadowOffset: { height: 4, width: 0 },
+            shadowOpacity: 0.08,
+            shadowRadius: 16,
           }}
         >
           <TextInput

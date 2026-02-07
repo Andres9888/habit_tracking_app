@@ -19,17 +19,17 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
       entering={FadeIn.duration(200)}
       exiting={FadeOut.duration(150)}
       style={{
-        shadowColor: '#ef4444',
-        shadowOffset: { height: 2, width: 0 },
+        shadowColor: '#1c1917',
+        shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
-        shadowRadius: 8,
+        shadowRadius: 16,
       }}
     >
       <View className='mt-0.5 h-8 w-8 items-center justify-center rounded-full bg-red-100'>
         <AlertCircle color='#dc2626' size={18} strokeWidth={2.5} />
       </View>
       <View className='flex-1'>
-        <Text className='text-[15px] font-medium leading-[20px] text-red-800'>
+        <Text className='text-[17px] font-medium leading-[22px] text-red-800'>
           {message}
         </Text>
       </View>

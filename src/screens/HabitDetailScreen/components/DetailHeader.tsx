@@ -82,8 +82,8 @@ export function DetailHeader({
             entering={FadeInDown.duration(240).delay(200)}
             style={streakShadow}
           >
-            <Text style={{ fontSize: 16 }}>🔥</Text>
-            <Text className='text-[15px] font-semibold text-emerald-700'>
+            <Text style={{ fontSize: 17 }}>🔥</Text>
+            <Text className='text-[17px] font-semibold text-emerald-700'>
               {habit.currentStreak} day streak
             </Text>
           </Animated.View>

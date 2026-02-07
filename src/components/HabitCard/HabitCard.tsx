@@ -4,9 +4,10 @@
  * HabitCard Component - Display individual habit with tracking and animations
  *
  * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
+ * ACCESSIBILITY: Focus state support added per UI audit (2026-02-07)
  */
 
-import React, { memo } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
@@ -37,6 +38,10 @@ function HabitCardComponent(props: HabitCardProps) {
   } = props;
 
   const habit = useHabitCard(props);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocus = useCallback(() => setIsFocused(true), []);
+  const handleBlur = useCallback(() => setIsFocused(false), []);
 
   return (
     <View style={[styles.container, style]}>
@@ -50,9 +55,11 @@ function HabitCardComponent(props: HabitCardProps) {
       <GestureDetector gesture={habit.composedGesture}>
         <Animated.View
           accessible
-          accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength`}
+          accessibilityHint='Tap to toggle completion. Swipe left for edit and delete options.'
+          accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}. Swipe left for actions.`}
           accessibilityRole='button'
           accessibilityState={{ checked: habit.completed, disabled }}
+          focusable={!disabled}
           style={[
             styles.card,
             {
@@ -60,9 +67,12 @@ function HabitCardComponent(props: HabitCardProps) {
               borderRadius: habit.borderRadius,
             },
             disabled && styles.disabled,
+            isFocused && styles.focused,
             habit.entrance.cardStyle,
             habit.animations.cardAnimatedStyle,
           ]}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
         >
           <StrengthFillBackground
             borderRadius={habit.borderRadius}

@@ -34,7 +34,7 @@ export function StandardMeter({
         shadowColor: percentage === 100 ? colors.glow : 'transparent',
         shadowOffset: { height: 0, width: 0 },
         shadowOpacity: percentage === 100 ? 0.4 : 0,
-        shadowRadius: 12,
+        shadowRadius: 16,
         transform: [{ scale: celebrationScale }],
       }}
     >
@@ -62,7 +62,7 @@ export function StandardMeter({
           className='absolute -bottom-1 -right-1 items-center justify-center rounded-full px-1.5 py-0.5'
           style={{ backgroundColor: colors.fill, minWidth: 28 }}
         >
-          <Text className='text-[10px] font-extrabold text-white'>
+          <Text className='text-[13px] font-bold text-white'>
             {percentage}%
           </Text>
         </View>
@@ -70,7 +70,7 @@ export function StandardMeter({
 
       {/* Text content */}
       <View className='flex-1'>
-        <Text className='text-[15px] font-bold' style={{ color: colors.text }}>
+        <Text className='text-[17px] font-bold' style={{ color: colors.text }}>
           {message.text}
         </Text>
         <Text className='mt-0.5 text-[13px] font-medium text-stone-500'>

@@ -36,10 +36,10 @@ export const SuccessCard = ({
       className='mx-8 items-center rounded-3xl bg-white px-8 py-10'
       style={{
         opacity: cardOpacity,
-        shadowColor: '#000',
-        shadowOffset: { height: 10, width: 0 },
-        shadowOpacity: 0.15,
-        shadowRadius: 20,
+        shadowColor: '#1c1917',
+        shadowOffset: { height: 4, width: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 16,
         transform: [{ scale: cardScale }],
       }}
     >

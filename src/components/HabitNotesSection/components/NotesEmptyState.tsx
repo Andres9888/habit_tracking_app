@@ -44,10 +44,10 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
         style={[
           animatedStyle,
           {
-            shadowColor: '#f59e0b',
+            shadowColor: '#1c1917',
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,
-            shadowRadius: 12,
+            shadowRadius: 16,
           },
         ]}
         onTouchCancel={handlePressOut}
@@ -63,7 +63,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
         </View>
 
         {/* Text */}
-        <Text className='mb-1 text-center text-[15px] text-stone-600'>
+        <Text className='mb-1 text-center text-[17px] text-stone-600'>
           Record insights to learn what works best
         </Text>
 
