@@ -51,8 +51,8 @@ export function SuggestionsSection({
 
 export const suggestionStyles = StyleSheet.create({
   container: {
-    backgroundColor: '#fef3c7',
-    borderColor: '#fcd34d',
+    backgroundColor: colors.warning[100],
+    borderColor: colors.warning[300],
     borderRadius: borderRadius.large,
     borderWidth: 1,
     marginBottom: spacing.md,

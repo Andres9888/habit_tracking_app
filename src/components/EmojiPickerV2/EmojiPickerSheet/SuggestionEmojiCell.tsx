@@ -74,7 +74,7 @@ export const suggestionCellStyles = StyleSheet.create({
     width: 56,
   },
   cellSelected: {
-    backgroundColor: '#dbeafe',
+    backgroundColor: colors.secondary[100],
     borderColor: colors.secondary[500],
     borderWidth: 2,
   },

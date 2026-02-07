@@ -66,6 +66,7 @@ export const colors = {
 
   // Secondary Colors (Trust & Calm)
   secondary: {
+    100: '#dbeafe', // Very light blue, selected state backgrounds
     400: '#60A5FA', // Lighter, info states
     500: '#3B82F6', // Bright blue - science/analytics theme
     600: '#2563EB', // Darker, pressed
@@ -103,6 +104,8 @@ export const colors = {
 
   // Matches primary green
   warning: {
+    100: '#fef3c7', // Very light amber, suggestion backgrounds
+    300: '#fcd34d', // Light amber, suggestion borders
     500: '#F59E0B', // Amber - habits at risk
     700: '#D97706', // Darker for text (better contrast)
   }, // Gray-200

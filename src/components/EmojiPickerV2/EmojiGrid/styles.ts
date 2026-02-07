@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
     minWidth: 44,
   },
   emojiCellSelected: {
-    backgroundColor: '#dbeafe',
+    backgroundColor: colors.secondary[100],
     borderColor: colors.secondary[500],
     borderWidth: 2,
   },
