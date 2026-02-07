@@ -3,15 +3,16 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../theme/colors';
 
 export const headerStyles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-    borderRadius: 20,
-    height: 40,
+    backgroundColor: colors.gray[100],
+    borderRadius: 22,
+    height: 44,
     justifyContent: 'center',
-    width: 40,
+    width: 44,
   },
   header: {
     alignItems: 'center',
@@ -25,10 +26,10 @@ export const headerStyles = StyleSheet.create({
     zIndex: 10,
   },
   headerSpacer: {
-    width: 40,
+    width: 44,
   },
   headerTitle: {
-    color: '#111827',
+    color: colors.gray[900],
     fontSize: 17,
     fontWeight: '700',
     letterSpacing: -0.3,
@@ -36,10 +37,10 @@ export const headerStyles = StyleSheet.create({
   },
   shareButton: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-    borderRadius: 20,
-    height: 40,
+    backgroundColor: colors.gray[100],
+    borderRadius: 22,
+    height: 44,
     justifyContent: 'center',
-    width: 40,
+    width: 44,
   },
 });

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { X } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors } from '../../theme/colors';
 import StatsOverview from './StatsOverview';
 import NotesList from './NotesList';
 
@@ -44,11 +46,10 @@ export default function StatsNotesModal({
               <TouchableOpacity
                 accessibilityLabel='Close stats and notes'
                 accessibilityRole='button'
-                className='h-8 w-8 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
-                hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+                className='h-11 w-11 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
                 onPress={onClose}
               >
-                <Text className='text-lg font-semibold text-stone-500'>✕</Text>
+                <X color={colors.gray[500]} size={24} strokeWidth={2} />
               </TouchableOpacity>
             </View>
 

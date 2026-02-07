@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCallback } from 'react';
 import STRINGS from '../../../../constants/strings';
 import { X } from 'lucide-react-native';
+import { colors } from '../../../../theme/colors';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { useShakeAnimation } from './useShakeAnimation';
 import { DoneButton } from './DoneButton';
@@ -53,7 +54,7 @@ export const ModalHeader = ({
         className='h-11 w-11 items-center justify-center rounded-full'
         onPress={onClose}
       >
-        <X color='#44403c' size={24} strokeWidth={2} />
+        <X color={colors.gray[500]} size={24} strokeWidth={2} />
       </TouchableOpacity>
 
       <View className='flex-1' />
