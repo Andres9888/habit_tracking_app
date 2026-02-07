@@ -20,6 +20,7 @@ export default function HabitEditScreen({
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const state = useHabitEditScreen({ habitId, onClose });
+  // Modal pattern: return null when not visible — the modal simply doesn't mount
   if (!visible || !habitId) return null;
 
   return (

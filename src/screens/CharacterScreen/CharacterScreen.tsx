@@ -11,6 +11,8 @@ import {
 import { MOCK_CHARACTER_DATA } from './constants';
 import type { CharacterScreenProps } from './types';
 
+// Loading state: Currently uses mock data (no async fetch).
+// When connected to real data, add ActivityIndicator centered on colors.light.background.
 export default function CharacterScreen({ onBack }: CharacterScreenProps) {
   const characterData = MOCK_CHARACTER_DATA;
   const insets = useSafeAreaInsets();

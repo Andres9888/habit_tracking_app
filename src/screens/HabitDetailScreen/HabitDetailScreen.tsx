@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
 import {
   DetailHeader,
+  DetailLoadingState,
   HabitDetailContent,
   HabitDetailModals,
 } from './components';
@@ -13,6 +14,12 @@ import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
 import { useNotesHandlers } from './useNotesHandlers';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
+
+const GRADIENT = [
+  colors.light.background,
+  colors.light.gradientMid,
+  colors.light.background,
+] as const;
 
 // eslint-disable-next-line max-lines-per-function
 export default function HabitDetailScreen({
@@ -50,7 +57,19 @@ export default function HabitDetailScreen({
     setIsNotesListOpen: state.setIsNotesListOpen,
   });
 
-  if (!habit) return null;
+  // Loading: modal visible but habit data not yet available
+  if (!habit) {
+    return (
+      <Modal
+        transparent
+        animationType='slide'
+        visible={visible}
+        onRequestClose={onClose}
+      >
+        <DetailLoadingState />
+      </Modal>
+    );
+  }
 
   return (
     <Modal
@@ -65,13 +84,8 @@ export default function HabitDetailScreen({
       >
         <View className='flex-1 bg-black/50'>
           <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
-            {/* OPTIMIZED: Gradient background for depth (Background score +2) */}
             <LinearGradient
-              colors={[
-                colors.light.background,
-                colors.light.gradientMid,
-                colors.light.background,
-              ]}
+              colors={GRADIENT as unknown as string[]}
               locations={[0, 0.5, 1]}
               style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
             >
