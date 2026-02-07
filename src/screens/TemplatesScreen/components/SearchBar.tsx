@@ -2,8 +2,9 @@
  * Search bar component for templates
  */
 
-import { TextInput, TouchableOpacity, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import { Search, X } from 'lucide-react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { styles } from '../../templates/templatesScreenStyles';
 
 interface SearchBarProps {
@@ -31,14 +32,13 @@ export function SearchBar({
         onChangeText={onChangeText}
       />
       {value ? (
-        <TouchableOpacity
+        <AnimatedPressable
           accessibilityLabel='Clear search'
           accessibilityRole='button'
-          activeOpacity={0.7}
           onPress={onClear}
         >
           <X color='#a8a29e' size={18} strokeWidth={2.25} />
-        </TouchableOpacity>
+        </AnimatedPressable>
       ) : null}
     </View>
   );
