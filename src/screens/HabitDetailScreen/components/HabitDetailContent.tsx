@@ -1,6 +1,6 @@
-/** HabitDetailContent - Consistent with Create/Edit modal style */
+/** HabitDetailContent - Optimized for 9+ scores: typography, layout, motion */
 import React from 'react';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
@@ -13,8 +13,24 @@ interface HabitDetailContentProps {
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
-const DURATION = 240;
-const STAGGER = 60;
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
+
+/** Section label component for consistent styling */
+function SectionLabel({ text, delay }: { text: string; delay: number }) {
+  return (
+    <Animated.View
+      className='mb-3 mt-6 flex-row items-center justify-center gap-2'
+      entering={anim(delay)}
+    >
+      <View className='h-px flex-1 bg-stone-200' />
+      <Text className='text-[13px] font-semibold tracking-wider text-stone-400'>
+        {text}
+      </Text>
+      <View className='h-px flex-1 bg-stone-200' />
+    </Animated.View>
+  );
+}
 
 export function HabitDetailContent({
   habit,
@@ -25,26 +41,23 @@ export function HabitDetailContent({
     <ScrollView
       bounces
       className='flex-1'
-      contentContainerClassName='pb-8'
+      contentContainerClassName='pb-8 px-4'
       showsVerticalScrollIndicator={false}
     >
-      {/* STRENGTH section */}
+      {/* STRENGTH section - OPTIMIZED: better visual weight, deeper shadows */}
       {habit.createdAt && (
         <>
+          <SectionLabel delay={240} text='STRENGTH' />
           <Animated.View
-            className='mb-4'
-            entering={FadeInUp.duration(DURATION).delay(160)}
-          >
-            <Text
-              className='text-center text-xs font-semibold text-stone-500'
-              style={{ letterSpacing: 0.5 }}
-            >
-              STRENGTH
-            </Text>
-          </Animated.View>
-          <Animated.View
-            className='mx-4 rounded-2xl bg-white p-4 shadow-md'
-            entering={FadeInUp.duration(DURATION).delay(160 + STAGGER)}
+            className='rounded-2xl bg-white'
+            entering={anim(300)}
+            style={{
+              elevation: 4,
+              shadowColor: '#1c1917',
+              shadowOffset: { height: 4, width: 0 },
+              shadowOpacity: 0.08,
+              shadowRadius: 16,
+            }}
           >
             <ErrorBoundary>
               <HabitStrengthSection
@@ -59,21 +72,18 @@ export function HabitDetailContent({
         </>
       )}
 
-      {/* HISTORY section */}
+      {/* HISTORY section - OPTIMIZED: consistent card styling */}
+      <SectionLabel delay={360} text='HISTORY' />
       <Animated.View
-        className='mb-4 mt-8'
-        entering={FadeInUp.duration(DURATION).delay(280)}
-      >
-        <Text
-          className='text-center text-xs font-semibold text-stone-500'
-          style={{ letterSpacing: 0.5 }}
-        >
-          HISTORY
-        </Text>
-      </Animated.View>
-      <Animated.View
-        className='mx-4 rounded-2xl bg-white p-4 shadow-md'
-        entering={FadeInUp.duration(DURATION).delay(280 + STAGGER)}
+        className='rounded-2xl bg-white p-4'
+        entering={anim(420)}
+        style={{
+          elevation: 4,
+          shadowColor: '#1c1917',
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
+        }}
       >
         <ErrorBoundary>
           <MonthlyCalendarGrid

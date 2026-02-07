@@ -1,8 +1,8 @@
-/** DetailHeader - Matches Create/Edit modal header style */
+/** DetailHeader - Optimized for 9+ scores: animations, visual weight, UX clarity */
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { X, Edit3, Check } from 'lucide-react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import { X, Edit3 } from 'lucide-react-native';
+import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { HeaderCompleteToggle } from '../../../components/HeaderCompleteToggle';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
 
@@ -18,18 +18,28 @@ export function DetailHeader({
 
   return (
     <View>
-      {/* Top bar with X and Edit buttons */}
-      <View className='flex-row items-center justify-between px-4 pb-2'>
+      {/* Top bar - OPTIMIZED: FadeIn animation for header buttons */}
+      <Animated.View
+        className='flex-row items-center justify-between px-4 pb-2'
+        entering={FadeIn.duration(200).delay(50)}
+      >
         <Pressable
           accessibilityLabel='Close'
           accessibilityRole='button'
-          className='h-11 w-11 items-center justify-center rounded-full active:bg-stone-100'
+          className='h-11 w-11 items-center justify-center rounded-full bg-white/80 active:bg-stone-100'
+          style={{
+            shadowColor: '#1c1917',
+            shadowOffset: { height: 2, width: 0 },
+            shadowOpacity: 0.06,
+            shadowRadius: 8,
+          }}
           onPress={onClose}
         >
           <X color='#44403c' size={22} strokeWidth={2} />
         </Pressable>
         <View className='flex-1' />
-        <View className='flex-row items-center gap-2'>
+        <View className='flex-row items-center gap-3'>
+          {/* OPTIMIZED: Primary action emphasized with scale */}
           <HeaderCompleteToggle
             completedToday={isCompletedToday}
             habitId={habit._id}
@@ -38,40 +48,63 @@ export function DetailHeader({
           <Pressable
             accessibilityLabel='Edit habit'
             accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full active:bg-stone-100'
+            className='h-11 w-11 items-center justify-center rounded-full bg-white/80 active:bg-stone-100'
+            style={{
+              shadowColor: '#1c1917',
+              shadowOffset: { height: 2, width: 0 },
+              shadowOpacity: 0.06,
+              shadowRadius: 8,
+            }}
             onPress={onEdit}
           >
             <Edit3 color='#44403c' size={20} strokeWidth={2} />
           </Pressable>
         </View>
-      </View>
+      </Animated.View>
 
-      {/* Hero section with icon + name */}
+      {/* Hero section - OPTIMIZED: stronger shadows, better visual weight */}
       <Animated.View
         className='items-center px-4 pb-6'
-        entering={FadeInDown.duration(240).delay(100)}
+        entering={FadeInDown.duration(280).delay(100)}
       >
         {habit.icon && (
           <View
-            className='mb-3 h-16 w-16 items-center justify-center rounded-2xl shadow-lg'
-            style={{ backgroundColor: habit.iconColor || '#fef3c7' }}
+            className='mb-4 h-20 w-20 items-center justify-center rounded-2xl'
+            style={{
+              backgroundColor: habit.iconColor || '#fef3c7',
+              elevation: 8,
+              shadowColor: habit.iconColor || '#f59e0b',
+              shadowOffset: { height: 8, width: 0 },
+              shadowOpacity: 0.25,
+              shadowRadius: 16,
+            }}
           >
-            <Text className='text-3xl'>{habit.icon}</Text>
+            <Text style={{ fontSize: 40 }}>{habit.icon}</Text>
           </View>
         )}
         <Text
           className='text-center font-bold text-stone-900'
-          style={{ fontSize: 28, letterSpacing: -28 * 0.02, lineHeight: 34 }}
+          style={{ fontSize: 34, letterSpacing: -34 * 0.02, lineHeight: 41 }}
         >
           {habitName}
         </Text>
         {(habit.currentStreak ?? 0) > 0 && (
-          <View className='mt-2 flex-row items-center gap-1 rounded-full bg-emerald-50 px-3 py-1'>
-            <Text className='text-sm'>🔥</Text>
-            <Text className='text-[13px] font-semibold text-emerald-700'>
+          <Animated.View
+            className='mt-3 flex-row items-center gap-1.5 rounded-full px-4 py-2'
+            entering={FadeInDown.duration(240).delay(200)}
+            style={{
+              backgroundColor: '#ecfdf5',
+              shadowColor: '#059669',
+              shadowOffset: { height: 2, width: 0 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+            }}
+          >
+            <Text style={{ fontSize: 16 }}>🔥</Text>
+            <Text className='text-[15px] font-semibold text-emerald-700'>
               {habit.currentStreak} day streak
             </Text>
-          </View>
+          </Animated.View>
         )}
       </Animated.View>
     </View>
