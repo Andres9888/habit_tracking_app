@@ -1,11 +1,21 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 
+/**
+ * List all vision board items for a specific habit
+ * SEC-001: Requires authentication and verifies habit ownership
+ */
 export const listByHabit = query({
   args: {
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit || habit.userId !== identity.subject) return [];
+
     return await ctx.db
       .query('visionBoardItems')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -26,6 +36,10 @@ export const listByHabit = query({
   ),
 });
 
+/**
+ * Create a new vision board item
+ * SEC-001: Requires authentication and verifies habit ownership
+ */
 export const create = mutation({
   args: {
     body: v.optional(v.string()),
@@ -33,6 +47,17 @@ export const create = mutation({
     title: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to create vision board items');
+    }
+
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) throw new Error('Habit not found');
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to add vision board items to this habit');
+    }
+
     const title = args.title.trim();
     const body = args.body?.trim();
 
@@ -56,11 +81,16 @@ export const create = mutation({
       habitId: args.habitId,
       title,
       updatedAt: now,
+      userId: identity.subject,
     });
   },
   returns: v.id('visionBoardItems'),
 });
 
+/**
+ * Update an existing vision board item
+ * SEC-001: Requires authentication and verifies ownership
+ */
 export const update = mutation({
   args: {
     body: v.optional(v.string()),
@@ -68,9 +98,22 @@ export const update = mutation({
     title: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to update vision board items');
+    }
+
     const existing = await ctx.db.get(args.id);
     if (!existing) {
       throw new Error('Vision board item not found');
+    }
+
+    if (existing.userId && existing.userId !== identity.subject) {
+      throw new Error('Not authorized to update this vision board item');
+    }
+    const habit = await ctx.db.get(existing.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to update this vision board item');
     }
 
     const title = args.title?.trim();
@@ -99,14 +142,31 @@ export const update = mutation({
   returns: v.null(),
 });
 
+/**
+ * Remove a vision board item
+ * SEC-001: Requires authentication and verifies ownership
+ */
 export const remove = mutation({
   args: {
     id: v.id('visionBoardItems'),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete vision board items');
+    }
+
     const existing = await ctx.db.get(args.id);
     if (!existing) {
       throw new Error('Vision board item not found');
+    }
+
+    if (existing.userId && existing.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this vision board item');
+    }
+    const habit = await ctx.db.get(existing.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to delete this vision board item');
     }
 
     await ctx.db.delete(args.id);
@@ -114,9 +174,3 @@ export const remove = mutation({
   },
   returns: v.null(),
 });
-
-
-
-
-
-
