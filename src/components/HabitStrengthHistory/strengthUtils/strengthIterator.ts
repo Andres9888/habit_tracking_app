@@ -29,12 +29,13 @@ export function iterateStrengthValues(
   if (!startDate || !endDate) {
     return [];
   }
-  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
     return [];
   }
 
   // Guard against extremely large date ranges or reversed dates
-  const daysDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+  const daysDiff =
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
   if (daysDiff < 0 || daysDiff > 3650) {
     return [];
   }

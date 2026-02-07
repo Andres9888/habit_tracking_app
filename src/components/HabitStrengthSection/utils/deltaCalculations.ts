@@ -22,7 +22,7 @@ export function calculateWeekDelta(
   currentStrength: number
 ): number {
   // Guard against invalid date
-  if (!habitCreatedAt || isNaN(habitCreatedAt.getTime())) {
+  if (!habitCreatedAt || Number.isNaN(habitCreatedAt.getTime())) {
     return Math.round(currentStrength);
   }
 
@@ -58,7 +58,7 @@ export function calculateMonthDelta(
   currentStrength: number
 ): number {
   // Guard against invalid date
-  if (!habitCreatedAt || isNaN(habitCreatedAt.getTime())) {
+  if (!habitCreatedAt || Number.isNaN(habitCreatedAt.getTime())) {
     return Math.round(currentStrength);
   }
 

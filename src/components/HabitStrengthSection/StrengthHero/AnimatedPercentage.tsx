@@ -22,7 +22,8 @@ export function AnimatedPercentage({ animatedValue }: AnimatedPercentageProps) {
     // Use Math.trunc to ensure integer (avoids Reanimated precision errors)
     // Guard against NaN/undefined - default to 0
     const rawValue = animatedValue.value;
-    const value = typeof rawValue === 'number' && !isNaN(rawValue) ? rawValue : 0;
+    const value =
+      typeof rawValue === 'number' && !Number.isNaN(rawValue) ? rawValue : 0;
     const rounded = Math.trunc(value + 0.5);
     runOnJS(setDisplayValue)(rounded);
     return rounded;

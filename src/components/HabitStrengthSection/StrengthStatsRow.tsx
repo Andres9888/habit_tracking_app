@@ -45,11 +45,11 @@ function StatColumn({
   isPositive: boolean;
 }) {
   return (
-    <View className="flex-1 items-center">
+    <View className='flex-1 items-center'>
       {/* Smaller label text for compact layout */}
-      <Text className="text-[10px] text-stone-400">{label}</Text>
+      <Text className='text-[10px] text-stone-400'>{label}</Text>
       <Text
-        className="text-sm font-semibold"
+        className='text-sm font-semibold'
         style={{
           color: isPositive ? COLORS.positive : COLORS.textPrimary,
         }}
@@ -65,10 +65,7 @@ function StatColumn({
  */
 function Divider() {
   return (
-    <View
-      className="h-6 w-px"
-      style={{ backgroundColor: COLORS.border }}
-    />
+    <View className='h-6 w-px' style={{ backgroundColor: COLORS.border }} />
   );
 }
 
@@ -81,35 +78,40 @@ export const StrengthStatsRow = React.memo(function StrengthStatsRow({
   lastWeek,
 }: StrengthStatsRowProps) {
   // Guard against NaN/undefined values - default to 0
-  const safeSinceStart = typeof sinceStart === 'number' && !isNaN(sinceStart) ? sinceStart : 0;
-  const safeLastMonth = typeof lastMonth === 'number' && !isNaN(lastMonth) ? lastMonth : 0;
-  const safeLastWeek = typeof lastWeek === 'number' && !isNaN(lastWeek) ? lastWeek : 0;
+  const safeSinceStart =
+    typeof sinceStart === 'number' && !Number.isNaN(sinceStart)
+      ? sinceStart
+      : 0;
+  const safeLastMonth =
+    typeof lastMonth === 'number' && !Number.isNaN(lastMonth) ? lastMonth : 0;
+  const safeLastWeek =
+    typeof lastWeek === 'number' && !Number.isNaN(lastWeek) ? lastWeek : 0;
 
   return (
     <View
-      className="flex-row items-center justify-between rounded-lg bg-stone-50 px-3 py-2"
       accessibilityLabel={`Statistics: ${safeSinceStart}% since start, ${formatDelta(safeLastMonth)} last month, ${formatDelta(safeLastWeek)} last week`}
+      className='flex-row items-center justify-between rounded-lg bg-stone-50 px-3 py-2'
     >
       <StatColumn
-        label="Since Start"
-        value={`${safeSinceStart}%`}
         isPositive={safeSinceStart > 0}
+        label='Since Start'
+        value={`${safeSinceStart}%`}
       />
 
       <Divider />
 
       <StatColumn
-        label="Last Month"
-        value={formatDelta(safeLastMonth)}
         isPositive={safeLastMonth > 0}
+        label='Last Month'
+        value={formatDelta(safeLastMonth)}
       />
 
       <Divider />
 
       <StatColumn
-        label="Last Week"
-        value={formatDelta(safeLastWeek)}
         isPositive={safeLastWeek > 0}
+        label='Last Week'
+        value={formatDelta(safeLastWeek)}
       />
     </View>
   );

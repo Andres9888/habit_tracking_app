@@ -25,7 +25,8 @@ export function StatusDisplay({
   const colors = STRENGTH_COLORS[safeLabel];
 
   // Guard against NaN/undefined delta - default to 0
-  const safeDelta = typeof delta === 'number' && !isNaN(delta) ? delta : 0;
+  const safeDelta =
+    typeof delta === 'number' && !Number.isNaN(delta) ? delta : 0;
 
   // Format delta for display
   const deltaText = safeDelta >= 0 ? `+${safeDelta}%` : `${safeDelta}%`;

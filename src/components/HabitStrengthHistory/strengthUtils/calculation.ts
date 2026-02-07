@@ -40,7 +40,10 @@ export function calculateStrengthAtDate(
   if (!habitCreatedAt || !targetDate) {
     return 0;
   }
-  if (isNaN(habitCreatedAt.getTime()) || isNaN(targetDate.getTime())) {
+  if (
+    Number.isNaN(habitCreatedAt.getTime()) ||
+    Number.isNaN(targetDate.getTime())
+  ) {
     return 0;
   }
 
@@ -55,7 +58,8 @@ export function calculateStrengthAtDate(
   }
 
   // Guard against extremely large date ranges (prevent infinite loops)
-  const daysDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+  const daysDiff =
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
   if (daysDiff > 3650) {
     return 0;
   }

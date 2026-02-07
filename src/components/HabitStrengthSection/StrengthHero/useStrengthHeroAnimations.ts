@@ -25,7 +25,8 @@ export function useStrengthHeroAnimations(strength: number) {
 
   // Animate ring fill on mount and when strength changes
   // Guard against NaN/undefined and round to integer to avoid Reanimated precision errors
-  const safeStrength = typeof strength === 'number' && !isNaN(strength) ? strength : 0;
+  const safeStrength =
+    typeof strength === 'number' && !Number.isNaN(strength) ? strength : 0;
   const roundedStrength = Math.round(safeStrength);
 
   useEffect(() => {
