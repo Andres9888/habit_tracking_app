@@ -32,7 +32,7 @@ export function catmullRomToBezier(
 /** Safely format a date, returning fallback on error */
 function safeFormat(date: Date, formatStr: string, fallback: string): string {
   try {
-    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+    if (!date || !(date instanceof Date) || Number.isNaN(date.getTime())) {
       return fallback;
     }
     return format(date, formatStr);
@@ -45,19 +45,24 @@ function safeFormat(date: Date, formatStr: string, fallback: string): string {
 export function getXAxisLabelsFromData(data: Array<{ date: Date }>): string[] {
   if (!data || data.length < 2) return ['Start', 'Now'];
   const firstItem = data[0];
-  const lastItem = data[data.length - 1];
+  const lastItem = data.at(-1);
   if (!firstItem || !lastItem) return ['Start', 'Now'];
   const startDate = firstItem.date;
   const endDate = lastItem.date;
   // Guard against invalid dates
-  if (!startDate || !endDate || isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+  if (
+    !startDate ||
+    !endDate ||
+    Number.isNaN(startDate.getTime()) ||
+    Number.isNaN(endDate.getTime())
+  ) {
     return ['Start', 'Now'];
   }
   const daySpan = Math.ceil(
     (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
   );
   // Guard against NaN or negative daySpan
-  if (isNaN(daySpan) || daySpan < 0) return ['Start', 'Now'];
+  if (Number.isNaN(daySpan) || daySpan < 0) return ['Start', 'Now'];
   if (daySpan < 14) {
     return [safeFormat(startDate, 'MMM d', 'Start'), 'Now'];
   }

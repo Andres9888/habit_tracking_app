@@ -22,7 +22,7 @@ export function generateStrengthTimeline(
   sampleSize: number = DEFAULT_MAX_SAMPLE_POINTS
 ): StrengthSnapshot[] {
   // Guard against invalid dates
-  if (!habitCreatedAt || isNaN(habitCreatedAt.getTime())) {
+  if (!habitCreatedAt || Number.isNaN(habitCreatedAt.getTime())) {
     return [];
   }
 

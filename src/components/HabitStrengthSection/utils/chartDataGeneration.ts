@@ -66,7 +66,7 @@ export function generateChartDataFromCompletions(
   const today = startOfDay(new Date());
 
   // Validate parsed date is valid (catches Invalid Date)
-  if (isNaN(earliestDate.getTime())) {
+  if (Number.isNaN(earliestDate.getTime())) {
     return [];
   }
 
@@ -76,7 +76,9 @@ export function generateChartDataFromCompletions(
 
   // Use the later of earliest completion or time range start
   // Convert to timestamps for proper comparison
-  const chartStartDate = new Date(Math.max(timeRangeStart.getTime(), earliestDate.getTime()));
+  const chartStartDate = new Date(
+    Math.max(timeRangeStart.getTime(), earliestDate.getTime())
+  );
 
   // We need to calculate strength from the very beginning to get accurate values
   // even if we only display from chartStartDate

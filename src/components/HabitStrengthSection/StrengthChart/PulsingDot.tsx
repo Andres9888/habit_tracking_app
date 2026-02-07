@@ -34,8 +34,8 @@ export const PulsingDot = React.memo(function PulsingDot({
   animatedDotProps,
 }: PulsingDotProps) {
   // Guard against NaN coordinates - default to 0
-  const safeCx = typeof cx === 'number' && !isNaN(cx) ? cx : 0;
-  const safeCy = typeof cy === 'number' && !isNaN(cy) ? cy : 0;
+  const safeCx = typeof cx === 'number' && !Number.isNaN(cx) ? cx : 0;
+  const safeCy = typeof cy === 'number' && !Number.isNaN(cy) ? cy : 0;
 
   return (
     <>

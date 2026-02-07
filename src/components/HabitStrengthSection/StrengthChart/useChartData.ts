@@ -42,7 +42,9 @@ export function useChartData({
     const mappedPoints = data
       .filter((snapshot): snapshot is StrengthSnapshot => snapshot != null)
       .map((snapshot, index, arr) => ({
-        x: CHART_PADDING_X + (index / Math.max(1, arr.length - 1)) * chartAreaWidth,
+        x:
+          CHART_PADDING_X +
+          (index / Math.max(1, arr.length - 1)) * chartAreaWidth,
         y:
           CHART_PADDING_TOP +
           chartAreaHeight -
@@ -50,7 +52,7 @@ export function useChartData({
       }));
 
     const curvePath = catmullRomToBezier(mappedPoints);
-    const lastPoint = mappedPoints[mappedPoints.length - 1];
+    const lastPoint = mappedPoints.at(-1);
     const firstPoint = mappedPoints[0];
 
     // Safety check - should never happen due to length check above, but prevents crashes

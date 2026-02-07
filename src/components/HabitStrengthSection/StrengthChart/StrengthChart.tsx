@@ -58,11 +58,14 @@ export const StrengthChart = React.memo(function StrengthChart({
     reduceMotion,
   });
 
-  const xAxisLabels = useMemo(() => getXAxisLabelsFromData(safeData), [safeData]);
+  const xAxisLabels = useMemo(
+    () => getXAxisLabelsFromData(safeData),
+    [safeData]
+  );
   const accessibilityLabel = useMemo(() => {
     if (safeData.length < 2) return 'No strength history available';
     const firstData = safeData[0];
-    const lastData = safeData[safeData.length - 1];
+    const lastData = safeData.at(-1);
     if (!firstData || !lastData) return 'No strength history available';
     const startStrength = Math.round(firstData.strength);
     const endStrength = Math.round(lastData.strength);
