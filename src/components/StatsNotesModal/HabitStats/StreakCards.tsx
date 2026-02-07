@@ -27,7 +27,7 @@ export function StreakCards({
           >
             {currentStreak}
           </Text>
-          <Text className='text-xl font-semibold text-stone-400'>
+          <Text className='text-xl font-semibold text-stone-500'>
             {currentStreak === 1 ? 'day' : 'days'}
           </Text>
         </View>
@@ -43,7 +43,7 @@ export function StreakCards({
           >
             {longestStreak}
           </Text>
-          <Text className='text-xl font-semibold text-stone-400'>
+          <Text className='text-xl font-semibold text-stone-500'>
             {longestStreak === 1 ? 'day' : 'days'}
           </Text>
         </View>

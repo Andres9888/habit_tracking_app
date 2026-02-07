@@ -8,7 +8,7 @@ import { colors } from '@/theme/colors';
 
 export const styles = StyleSheet.create({
   arrow: {
-    color: colors.gray[400],
+    color: colors.gray[500],
     marginRight: 2,
   },
   barContainer: {
@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
     opacity: 0.6,
   },
   nextHint: {
-    color: colors.gray[400],
+    color: colors.gray[500],
   },
   nextLevelContainer: {
     alignItems: 'center',

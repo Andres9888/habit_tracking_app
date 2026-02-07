@@ -36,7 +36,7 @@ export const progressStyles = StyleSheet.create({
     fontWeight: '600',
   },
   milestoneName: {
-    color: '#9ca3af', // gray-400
+    color: '#78716c', // gray-500 (WCAG AA compliant)
     fontSize: typography.caption.fontSize,
     marginBottom: 12,
   },
@@ -76,7 +76,7 @@ export const progressStyles = StyleSheet.create({
     marginTop: 6,
   },
   progressLabelText: {
-    color: '#9ca3af', // gray-400
+    color: '#78716c', // gray-500 (WCAG AA compliant)
     fontSize: typography.tabBar.fontSize,
   },
 });

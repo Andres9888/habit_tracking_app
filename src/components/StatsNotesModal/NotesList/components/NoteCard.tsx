@@ -39,7 +39,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
     )}
     <Text className='text-sm leading-5 text-stone-900'>{note.body}</Text>
     <View className='flex-row items-center justify-between'>
-      <Text className='text-xs text-stone-400'>
+      <Text className='text-xs text-stone-500'>
         {note.updatedAt === note.createdAt
           ? `Created ${format(note.createdAt, 'MMM d, h:mm a')}`
           : `Updated ${format(note.updatedAt, 'MMM d, h:mm a')}`}

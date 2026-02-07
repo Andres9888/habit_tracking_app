@@ -30,13 +30,13 @@ export function TrendSection({ trend }: TrendSectionProps) {
 
         <View className='flex-row gap-3'>
           <View className='flex-1 rounded-xl border border-stone-100 bg-white/60 p-4'>
-            <Text className='mb-1 text-xs text-stone-400'>This Month</Text>
+            <Text className='mb-1 text-xs text-stone-500'>This Month</Text>
             <Text className='text-3xl font-bold text-stone-800'>
               {trend.thisMonth}%
             </Text>
           </View>
           <View className='flex-1 rounded-xl border border-stone-100 bg-white/60 p-4'>
-            <Text className='mb-1 text-xs text-stone-400'>Last Month</Text>
+            <Text className='mb-1 text-xs text-stone-500'>Last Month</Text>
             <Text className='text-3xl font-bold text-stone-500'>
               {trend.lastMonth}%
             </Text>

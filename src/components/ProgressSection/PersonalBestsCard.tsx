@@ -44,9 +44,24 @@ import type { PersonalBestsCardProps } from './types';
 // Medal configurations
 const MEDALS = ['🥇', '🥈', '🥉'];
 const MEDAL_COLORS = [
-  { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700', subtext: 'text-amber-500' },
-  { bg: 'bg-stone-50', border: 'border-stone-200', text: 'text-stone-700', subtext: 'text-stone-500' },
-  { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', subtext: 'text-orange-500' },
+  {
+    bg: 'bg-amber-50',
+    border: 'border-amber-200',
+    subtext: 'text-amber-500',
+    text: 'text-amber-700',
+  },
+  {
+    bg: 'bg-stone-50',
+    border: 'border-stone-200',
+    subtext: 'text-stone-500',
+    text: 'text-stone-700',
+  },
+  {
+    bg: 'bg-orange-50',
+    border: 'border-orange-200',
+    subtext: 'text-orange-500',
+    text: 'text-orange-700',
+  },
 ];
 
 export function PersonalBestsCard({
@@ -91,8 +106,8 @@ export function PersonalBestsCard({
   }, [currentStreak, reduceMotion]);
 
   const pulseAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulseScale.value }],
     opacity: pulseOpacity.value,
+    transform: [{ scale: pulseScale.value }],
   }));
 
   const handleWorstDayPress = () => {
@@ -107,43 +122,51 @@ export function PersonalBestsCard({
 
   return (
     <View
-      className="overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50"
-      accessible={true}
+      accessible
       accessibilityLabel={`Personal bests${currentStreak > 0 ? `, current streak ${currentStreak} days` : ''}`}
+      className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'
     >
       {/* Gradient Background */}
-      <View className="absolute inset-0 bg-gradient-to-br from-amber-50/30 via-white to-orange-50/30" />
-      <View className="absolute inset-0 border border-amber-500/20 rounded-2xl" />
+      <View className='absolute inset-0 bg-gradient-to-br from-amber-50/30 via-white to-orange-50/30' />
+      <View className='absolute inset-0 rounded-2xl border border-amber-500/20' />
 
-      <View className="p-4">
+      <View className='p-4'>
         {/* Header */}
-        <View className="mb-3 flex-row items-center gap-2">
-          <View className="h-8 w-8 items-center justify-center rounded-lg bg-amber-100">
-            <Trophy className="text-amber-500" size={16} />
+        <View className='mb-3 flex-row items-center gap-2'>
+          <View className='h-8 w-8 items-center justify-center rounded-lg bg-amber-100'>
+            <Trophy className='text-amber-500' size={16} />
           </View>
-          <Text className="text-base font-semibold text-stone-800">Personal Bests</Text>
+          <Text className='text-base font-semibold text-stone-800'>
+            Personal Bests
+          </Text>
         </View>
 
         {/* Medal row (top 3 streaks) - matches mockup layout */}
         {hasRecords && (
-          <View className="mb-4 flex-row gap-2">
+          <View className='mb-4 flex-row gap-2'>
             {top3Records.map((record, i) => {
               const colors = MEDAL_COLORS[i];
-              const isCurrentRecord = record.isCurrent || (currentStreak > 0 && record.days === currentStreak);
+              const isCurrentRecord =
+                record.isCurrent ||
+                (currentStreak > 0 && record.days === currentStreak);
 
               return (
                 <Animated.View
                   key={`${record.startDate}-${record.days}`}
+                  accessibilityLabel={`${i === 0 ? 'First' : i === 1 ? 'Second' : 'Third'} best streak: ${record.days} days${isCurrentRecord ? ', current streak' : ''}`}
                   className={`flex-1 items-center rounded-xl border p-2.5 ${colors.bg} ${colors.border}`}
                   style={isCurrentRecord ? pulseAnimatedStyle : undefined}
-                  accessibilityLabel={`${i === 0 ? 'First' : i === 1 ? 'Second' : 'Third'} best streak: ${record.days} days${isCurrentRecord ? ', current streak' : ''}`}
                 >
-                  <Text className="mb-0.5 text-base">{MEDALS[i]}</Text>
-                  <Text className={`text-lg font-bold ${colors.text}`}>{record.days}</Text>
+                  <Text className='mb-0.5 text-base'>{MEDALS[i]}</Text>
+                  <Text className={`text-lg font-bold ${colors.text}`}>
+                    {record.days}
+                  </Text>
                   <Text className={`text-[9px] ${colors.subtext}`}>days</Text>
                   {isCurrentRecord && (
-                    <View className="mt-1 rounded-full bg-orange-100 px-1.5 py-0.5">
-                      <Text className="text-[8px] font-semibold text-orange-700">NOW 🔥</Text>
+                    <View className='mt-1 rounded-full bg-orange-100 px-1.5 py-0.5'>
+                      <Text className='text-[8px] font-semibold text-orange-700'>
+                        NOW 🔥
+                      </Text>
                     </View>
                   )}
                 </Animated.View>
@@ -154,13 +177,13 @@ export function PersonalBestsCard({
               Array.from({ length: 3 - top3Records.length }).map((_, i) => (
                 <View
                   key={`empty-${i}`}
-                  className="flex-1 items-center rounded-xl border border-stone-100 bg-stone-50/50 p-2.5"
+                  className='flex-1 items-center rounded-xl border border-stone-100 bg-stone-50/50 p-2.5'
                 >
-                  <Text className="mb-0.5 text-base opacity-30">
+                  <Text className='mb-0.5 text-base opacity-30'>
                     {MEDALS[top3Records.length + i]}
                   </Text>
-                  <Text className="text-lg font-bold text-stone-300">-</Text>
-                  <Text className="text-[9px] text-stone-300">days</Text>
+                  <Text className='text-lg font-bold text-stone-300'>-</Text>
+                  <Text className='text-[9px] text-stone-300'>days</Text>
                 </View>
               ))}
           </View>
@@ -168,37 +191,47 @@ export function PersonalBestsCard({
 
         {/* Best/Worst day cards */}
         {showBestWorst && (
-          <View className="flex-row gap-2">
+          <View className='flex-row gap-2'>
             {/* Best Day */}
             <View
-              className="flex-1 rounded-xl border border-emerald-100 bg-emerald-50 p-3"
               accessibilityLabel={`Best day: ${bestDay.day} with ${bestDay.rate}% success rate`}
+              className='flex-1 rounded-xl border border-emerald-100 bg-emerald-50 p-3'
             >
-              <View className="flex-row items-center gap-1.5 mb-1">
-                <Trophy className="text-emerald-500" size={14} />
-                <Text className="text-xs font-medium text-emerald-600">Best Day</Text>
+              <View className='mb-1 flex-row items-center gap-1.5'>
+                <Trophy className='text-emerald-500' size={14} />
+                <Text className='text-xs font-medium text-emerald-600'>
+                  Best Day
+                </Text>
               </View>
-              <Text className="text-lg font-bold text-emerald-700">{bestDay.day}</Text>
-              <Text className="text-xs text-emerald-600">{bestDay.rate}% success</Text>
+              <Text className='text-lg font-bold text-emerald-700'>
+                {bestDay.day}
+              </Text>
+              <Text className='text-xs text-emerald-600'>
+                {bestDay.rate}% success
+              </Text>
             </View>
 
             {/* Worst Day (tappable) */}
             <Pressable
-              className="flex-1 rounded-xl border border-amber-100 bg-amber-50 p-3 active:bg-amber-100"
-              onPress={handleWorstDayPress}
+              accessibilityHint='Opens tips to improve this day'
               accessibilityLabel={`Focus on ${worstDay.day} with ${worstDay.rate}% success rate. Tap for tips.`}
-              accessibilityRole="button"
-              accessibilityHint="Opens tips to improve this day"
+              accessibilityRole='button'
+              className='flex-1 rounded-xl border border-amber-100 bg-amber-50 p-3 active:bg-amber-100'
+              onPress={handleWorstDayPress}
             >
-              <View className="flex-row items-center justify-between mb-1">
-                <View className="flex-row items-center gap-1.5">
-                  <AlertTriangle className="text-amber-500" size={14} />
-                  <Text className="text-xs font-medium text-amber-600">Focus On</Text>
+              <View className='mb-1 flex-row items-center justify-between'>
+                <View className='flex-row items-center gap-1.5'>
+                  <AlertTriangle className='text-amber-500' size={14} />
+                  <Text className='text-xs font-medium text-amber-600'>
+                    Focus On
+                  </Text>
                 </View>
-                <ChevronRight className="text-amber-400" size={14} />
+                <ChevronRight className='text-amber-400' size={14} />
               </View>
-              <Text className="text-lg font-bold text-amber-700">{worstDay.day}</Text>
-              <Text className="text-xs text-amber-600">
+              <Text className='text-lg font-bold text-amber-700'>
+                {worstDay.day}
+              </Text>
+              <Text className='text-xs text-amber-600'>
                 {worstDay.rate}% • tap for tips
               </Text>
             </Pressable>
@@ -207,8 +240,8 @@ export function PersonalBestsCard({
 
         {/* Empty state */}
         {!hasRecords && currentStreak === 0 && (
-          <View className="items-center py-4">
-            <Text className="text-sm text-stone-400">
+          <View className='items-center py-4'>
+            <Text className='text-sm text-stone-500'>
               Complete 2+ consecutive days to start tracking streaks
             </Text>
           </View>

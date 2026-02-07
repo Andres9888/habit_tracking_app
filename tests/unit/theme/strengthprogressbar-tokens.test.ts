@@ -67,15 +67,15 @@ describe('StrengthProgressBar Token Migration - Phase 2', () => {
   });
 
   describe('styles use theme tokens', () => {
-    it('arrow color uses colors.gray[400]', () => {
+    it('arrow color uses colors.gray[500] (WCAG AA compliant)', () => {
       const arrowStyle = styles.arrow;
-      expect(arrowStyle.color).toBe(colors.gray[400]);
-      expect(arrowStyle.color).toBe('#9CA3AF');
+      expect(arrowStyle.color).toBe(colors.gray[500]);
+      expect(arrowStyle.color).toBe('#78716c');
     });
 
-    it('nextHint color uses colors.gray[400]', () => {
+    it('nextHint color uses colors.gray[500] (WCAG AA compliant)', () => {
       const nextHintStyle = styles.nextHint;
-      expect(nextHintStyle.color).toBe(colors.gray[400]);
+      expect(nextHintStyle.color).toBe(colors.gray[500]);
     });
   });
 

@@ -22,7 +22,7 @@ export function EmptyState() {
       <Text className='mb-1 text-center text-base text-stone-500'>
         All your habits are active and growing.
       </Text>
-      <Text className='mb-6 max-w-xs text-center text-sm text-stone-400'>
+      <Text className='mb-6 max-w-xs text-center text-sm text-stone-500'>
         When you need a break from a habit, swipe left to archive it here for
         safekeeping.
       </Text>
