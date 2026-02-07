@@ -8,13 +8,11 @@
  * - Online/offline detection
  * - Callback registration and invocation
  * - isOnline calculation logic
+ * - Context value memoization stability
  */
 
 import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react-native';
-
-// Import the globally mocked NetInfo from jest.setup.js
-import NetInfo from '@react-native-community/netinfo';
 
 import {
   NetworkStatusProvider,
@@ -24,77 +22,90 @@ import {
   type NetworkStatus,
 } from '../NetworkStatusContext';
 
-// Define NetInfoStateType for use in tests (from the mock)
-const NetInfoStateType = {
-  unknown: 'unknown' as const,
-  none: 'none' as const,
-  cellular: 'cellular' as const,
-  wifi: 'wifi' as const,
-  bluetooth: 'bluetooth' as const,
-  ethernet: 'ethernet' as const,
-  wimax: 'wimax' as const,
-  vpn: 'vpn' as const,
-  other: 'other' as const,
+// --- expo-network mock ---
+
+type NetworkState = {
+  type: string;
+  isConnected: boolean;
+  isInternetReachable: boolean | null;
 };
 
-// Define NetInfoState interface for tests
-interface NetInfoState {
-  isConnected: boolean | null;
-  isInternetReachable: boolean | null;
-  type: string;
-  details: {
-    isConnectionExpensive?: boolean;
-  } | null;
-}
+type Listener = (state: NetworkState) => void;
 
-// Helper to create wrapper with provider
-const createWrapper = (onStatusChange?: (status: NetworkStatus) => void) => {
-  return ({ children }: { children: React.ReactNode }) => (
+let mockGetNetworkState: jest.Mock;
+let mockListeners: Listener[];
+let mockRemoveFns: jest.Mock[];
+
+const NetworkStateType = {
+  UNKNOWN: 'UNKNOWN',
+  NONE: 'NONE',
+  CELLULAR: 'CELLULAR',
+  WIFI: 'WIFI',
+  BLUETOOTH: 'BLUETOOTH',
+  ETHERNET: 'ETHERNET',
+  WIMAX: 'WIMAX',
+  VPN: 'VPN',
+  OTHER: 'OTHER',
+} as const;
+
+jest.mock('expo-network', () => {
+  const actual = {
+    NetworkStateType: {
+      UNKNOWN: 'UNKNOWN',
+      NONE: 'NONE',
+      CELLULAR: 'CELLULAR',
+      WIFI: 'WIFI',
+      BLUETOOTH: 'BLUETOOTH',
+      ETHERNET: 'ETHERNET',
+      WIMAX: 'WIMAX',
+      VPN: 'VPN',
+      OTHER: 'OTHER',
+    },
+    getNetworkStateAsync: (...args: unknown[]) => mockGetNetworkState(...args),
+    addNetworkStateListener: (callback: Listener) => {
+      mockListeners.push(callback);
+      const removeFn = jest.fn(() => {
+        mockListeners = mockListeners.filter((l) => l !== callback);
+      });
+      mockRemoveFns.push(removeFn);
+      return { remove: removeFn };
+    },
+  };
+  return actual;
+});
+
+// --- Helper factories ---
+
+const createNetworkState = (
+  isConnected: boolean,
+  isInternetReachable: boolean | null = null,
+  type: string = NetworkStateType.WIFI
+): NetworkState => ({ type, isConnected, isInternetReachable });
+
+const createWrapper =
+  (onStatusChange?: (status: NetworkStatus) => void) =>
+  ({ children }: { children: React.ReactNode }) => (
     <NetworkStatusProvider onStatusChange={onStatusChange}>
       {children}
     </NetworkStatusProvider>
   );
+
+const simulateNetworkChange = (state: NetworkState) => {
+  mockListeners.forEach((listener) => listener(state));
 };
 
-// Mock NetInfo state factory
-const createNetInfoState = (
-  isConnected: boolean,
-  isInternetReachable: boolean | null = null,
-  type: NetInfoStateType = NetInfoStateType.wifi
-): NetInfoState => ({
-  isConnected,
-  isInternetReachable,
-  type,
-  details: {
-    isConnectionExpensive: type === NetInfoStateType.cellular,
-  },
-} as NetInfoState);
+// --- Tests ---
 
 describe('NetworkStatusContext', () => {
-  let mockNetInfoListeners: ((state: NetInfoState) => void)[] = [];
-
   beforeEach(() => {
-    jest.clearAllMocks();
-    mockNetInfoListeners = [];
-
-    // Default: connected via wifi
-    (NetInfo.fetch as jest.Mock).mockResolvedValue(
-      createNetInfoState(true, true, NetInfoStateType.wifi)
+    mockListeners = [];
+    mockRemoveFns = [];
+    mockGetNetworkState = jest.fn(() =>
+      Promise.resolve(
+        createNetworkState(true, true, NetworkStateType.WIFI)
+      )
     );
-
-    // Capture addEventListener callbacks
-    (NetInfo.addEventListener as jest.Mock).mockImplementation((callback) => {
-      mockNetInfoListeners.push(callback);
-      return () => {
-        mockNetInfoListeners = mockNetInfoListeners.filter((l) => l !== callback);
-      };
-    });
   });
-
-  // Helper to simulate network state change
-  const simulateNetworkChange = (state: NetInfoState) => {
-    mockNetInfoListeners.forEach((listener) => listener(state));
-  };
 
   describe('NetworkStatusProvider', () => {
     it('provides default network status', async () => {
@@ -116,7 +127,7 @@ describe('NetworkStatusContext', () => {
       });
 
       await waitFor(() => {
-        expect(NetInfo.fetch).toHaveBeenCalled();
+        expect(mockGetNetworkState).toHaveBeenCalled();
       });
     });
 
@@ -126,21 +137,38 @@ describe('NetworkStatusContext', () => {
       });
 
       await waitFor(() => {
-        expect(NetInfo.addEventListener).toHaveBeenCalled();
+        expect(mockListeners.length).toBeGreaterThan(0);
       });
     });
 
     it('unsubscribes on unmount', async () => {
-      const unsubscribe = jest.fn();
-      (NetInfo.addEventListener as jest.Mock).mockReturnValue(unsubscribe);
-
       const { unmount } = renderHook(() => useNetworkStatus(), {
         wrapper: createWrapper(),
       });
 
+      await waitFor(() => {
+        expect(mockListeners.length).toBeGreaterThan(0);
+      });
+
       unmount();
 
-      expect(unsubscribe).toHaveBeenCalled();
+      expect(mockRemoveFns[0]).toHaveBeenCalled();
+    });
+
+    it('returns a stable context value reference when state has not changed', async () => {
+      const { result, rerender } = renderHook(() => useNetworkStatus(), {
+        wrapper: createWrapper(),
+      });
+
+      await waitFor(() => {
+        expect(result.current.isChecking).toBe(false);
+      });
+
+      const firstRef = result.current;
+
+      rerender({});
+
+      expect(result.current).toBe(firstRef);
     });
 
     it('calls onStatusChange when status changes', async () => {
@@ -154,18 +182,14 @@ describe('NetworkStatusContext', () => {
         expect(result.current.isChecking).toBe(false);
       });
 
-      // Initial fetch calls onStatusChange
       expect(onStatusChange).toHaveBeenCalled();
     });
   });
 
   describe('useNetworkStatus', () => {
     it('returns default context when used outside provider', () => {
-      // When used outside provider, the hook returns default context values
-      // This allows components to work in test environments without a provider
       const { result } = renderHook(() => useNetworkStatus());
 
-      // Default assumes online (optimistic)
       expect(result.current.isOnline).toBe(true);
       expect(result.current.isChecking).toBe(true);
       expect(typeof result.current.refresh).toBe('function');
@@ -178,7 +202,9 @@ describe('NetworkStatusContext', () => {
 
       await waitFor(() => {
         expect(result.current.status.isConnected).toBe(true);
-        expect(result.current.status.connectionType).toBe(NetInfoStateType.wifi);
+        expect(result.current.status.connectionType).toBe(
+          NetworkStateType.WIFI
+        );
       });
     });
 
@@ -191,9 +217,10 @@ describe('NetworkStatusContext', () => {
         expect(result.current.isChecking).toBe(false);
       });
 
-      // Simulate going offline
       act(() => {
-        simulateNetworkChange(createNetInfoState(false, false, NetInfoStateType.none));
+        simulateNetworkChange(
+          createNetworkState(false, false, NetworkStateType.NONE)
+        );
       });
 
       await waitFor(() => {
@@ -211,21 +238,20 @@ describe('NetworkStatusContext', () => {
         expect(result.current.isChecking).toBe(false);
       });
 
-      // Clear previous calls
-      (NetInfo.fetch as jest.Mock).mockClear();
+      mockGetNetworkState.mockClear();
 
       await act(async () => {
         await result.current.refresh();
       });
 
-      expect(NetInfo.fetch).toHaveBeenCalled();
+      expect(mockGetNetworkState).toHaveBeenCalled();
     });
   });
 
   describe('useIsOnline', () => {
     it('returns true when connected and internet reachable', async () => {
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(true, true)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(true, true)
       );
 
       const { result } = renderHook(() => useIsOnline(), {
@@ -238,8 +264,8 @@ describe('NetworkStatusContext', () => {
     });
 
     it('returns false when disconnected', async () => {
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.NONE)
       );
 
       const { result } = renderHook(() => useIsOnline(), {
@@ -252,9 +278,8 @@ describe('NetworkStatusContext', () => {
     });
 
     it('returns true when connected but internet reachability unknown', async () => {
-      // Some devices don't report internet reachability
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(true, null)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(true, null)
       );
 
       const { result } = renderHook(() => useIsOnline(), {
@@ -267,9 +292,8 @@ describe('NetworkStatusContext', () => {
     });
 
     it('returns false when connected but internet not reachable', async () => {
-      // Connected to WiFi but no internet (captive portal, etc.)
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(true, false)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(true, false)
       );
 
       const { result } = renderHook(() => useIsOnline(), {
@@ -286,9 +310,8 @@ describe('NetworkStatusContext', () => {
     it('registers callback that fires when coming online', async () => {
       const callback = jest.fn();
 
-      // Start offline
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.NONE)
       );
 
       const { result } = renderHook(
@@ -305,9 +328,10 @@ describe('NetworkStatusContext', () => {
 
       expect(callback).not.toHaveBeenCalled();
 
-      // Go online
       act(() => {
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
+        simulateNetworkChange(
+          createNetworkState(true, true, NetworkStateType.WIFI)
+        );
       });
 
       await waitFor(() => {
@@ -318,9 +342,8 @@ describe('NetworkStatusContext', () => {
     it('does not fire callback when already online', async () => {
       const callback = jest.fn();
 
-      // Start online
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(true, true)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(true, true)
       );
 
       renderHook(
@@ -331,9 +354,8 @@ describe('NetworkStatusContext', () => {
         { wrapper: createWrapper() }
       );
 
-      // Wait for initialization
       await waitFor(() => {
-        expect(NetInfo.fetch).toHaveBeenCalled();
+        expect(mockGetNetworkState).toHaveBeenCalled();
       });
 
       // Small delay to ensure no callback
@@ -345,9 +367,8 @@ describe('NetworkStatusContext', () => {
     it('unregisters callback on unmount', async () => {
       const callback = jest.fn();
 
-      // Start offline
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.NONE)
       );
 
       const { unmount, result } = renderHook(
@@ -362,24 +383,22 @@ describe('NetworkStatusContext', () => {
         expect(result.current.isOnline).toBe(false);
       });
 
-      // Unmount before going online
       unmount();
 
-      // Go online after unmount
       act(() => {
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
+        simulateNetworkChange(
+          createNetworkState(true, true, NetworkStateType.WIFI)
+        );
       });
 
-      // Callback should not be called
       expect(callback).not.toHaveBeenCalled();
     });
   });
 
   describe('onOnline/onOffline callbacks', () => {
     it('fires onOnline when transitioning from offline to online', async () => {
-      // Start offline
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.NONE)
       );
 
       const { result } = renderHook(() => useNetworkStatus(), {
@@ -397,25 +416,24 @@ describe('NetworkStatusContext', () => {
         unsubscribe = result.current.onOnline(onlineCallback);
       });
 
-      // Go online
       act(() => {
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
+        simulateNetworkChange(
+          createNetworkState(true, true, NetworkStateType.WIFI)
+        );
       });
 
       await waitFor(() => {
         expect(onlineCallback).toHaveBeenCalled();
       });
 
-      // Cleanup
       act(() => {
         unsubscribe();
       });
     });
 
     it('fires onOffline when transitioning from online to offline', async () => {
-      // Start online
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(true, true, NetInfoStateType.wifi)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(true, true, NetworkStateType.WIFI)
       );
 
       const { result } = renderHook(() => useNetworkStatus(), {
@@ -433,16 +451,16 @@ describe('NetworkStatusContext', () => {
         unsubscribe = result.current.onOffline(offlineCallback);
       });
 
-      // Go offline
       act(() => {
-        simulateNetworkChange(createNetInfoState(false, false, NetInfoStateType.none));
+        simulateNetworkChange(
+          createNetworkState(false, false, NetworkStateType.NONE)
+        );
       });
 
       await waitFor(() => {
         expect(offlineCallback).toHaveBeenCalled();
       });
 
-      // Cleanup
       act(() => {
         unsubscribe();
       });
@@ -464,19 +482,22 @@ describe('NetworkStatusContext', () => {
         unsubscribe = result.current.onOnline(callback);
       });
 
-      // Unsubscribe
       act(() => {
         unsubscribe();
       });
 
       // Start offline first
       act(() => {
-        simulateNetworkChange(createNetInfoState(false, false, NetInfoStateType.none));
+        simulateNetworkChange(
+          createNetworkState(false, false, NetworkStateType.NONE)
+        );
       });
 
       // Then go online - callback should not fire
       act(() => {
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
+        simulateNetworkChange(
+          createNetworkState(true, true, NetworkStateType.WIFI)
+        );
       });
 
       expect(callback).not.toHaveBeenCalled();
@@ -485,8 +506,8 @@ describe('NetworkStatusContext', () => {
 
   describe('Connection Types', () => {
     it('detects wifi connection', async () => {
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(true, true, NetInfoStateType.wifi)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(true, true, NetworkStateType.WIFI)
       );
 
       const { result } = renderHook(() => useNetworkStatus(), {
@@ -494,14 +515,16 @@ describe('NetworkStatusContext', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.status.connectionType).toBe(NetInfoStateType.wifi);
+        expect(result.current.status.connectionType).toBe(
+          NetworkStateType.WIFI
+        );
         expect(result.current.status.isExpensive).toBe(false);
       });
     });
 
     it('detects cellular connection as expensive', async () => {
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(true, true, NetInfoStateType.cellular)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(true, true, NetworkStateType.CELLULAR)
       );
 
       const { result } = renderHook(() => useNetworkStatus(), {
@@ -509,14 +532,16 @@ describe('NetworkStatusContext', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.status.connectionType).toBe(NetInfoStateType.cellular);
+        expect(result.current.status.connectionType).toBe(
+          NetworkStateType.CELLULAR
+        );
         expect(result.current.status.isExpensive).toBe(true);
       });
     });
 
     it('handles no connection', async () => {
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.NONE)
       );
 
       const { result } = renderHook(() => useNetworkStatus(), {
@@ -524,7 +549,9 @@ describe('NetworkStatusContext', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.status.connectionType).toBe(NetInfoStateType.none);
+        expect(result.current.status.connectionType).toBe(
+          NetworkStateType.NONE
+        );
         expect(result.current.isOnline).toBe(false);
       });
     });
@@ -540,24 +567,32 @@ describe('NetworkStatusContext', () => {
         expect(result.current.isChecking).toBe(false);
       });
 
-      // Rapid state changes
       act(() => {
-        simulateNetworkChange(createNetInfoState(false, false, NetInfoStateType.none));
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
-        simulateNetworkChange(createNetInfoState(false, false, NetInfoStateType.none));
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.cellular));
+        simulateNetworkChange(
+          createNetworkState(false, false, NetworkStateType.NONE)
+        );
+        simulateNetworkChange(
+          createNetworkState(true, true, NetworkStateType.WIFI)
+        );
+        simulateNetworkChange(
+          createNetworkState(false, false, NetworkStateType.NONE)
+        );
+        simulateNetworkChange(
+          createNetworkState(true, true, NetworkStateType.CELLULAR)
+        );
       });
 
       await waitFor(() => {
-        expect(result.current.status.connectionType).toBe(NetInfoStateType.cellular);
+        expect(result.current.status.connectionType).toBe(
+          NetworkStateType.CELLULAR
+        );
         expect(result.current.isOnline).toBe(true);
       });
     });
 
     it('handles error in callback gracefully', async () => {
-      // Start offline
-      (NetInfo.fetch as jest.Mock).mockResolvedValue(
-        createNetInfoState(false, false, NetInfoStateType.none)
+      mockGetNetworkState.mockResolvedValue(
+        createNetworkState(false, false, NetworkStateType.NONE)
       );
 
       const { result } = renderHook(() => useNetworkStatus(), {
@@ -578,9 +613,10 @@ describe('NetworkStatusContext', () => {
         result.current.onOnline(successCallback);
       });
 
-      // Go online - error in first callback should not prevent second
       act(() => {
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
+        simulateNetworkChange(
+          createNetworkState(true, true, NetworkStateType.WIFI)
+        );
       });
 
       await waitFor(() => {
