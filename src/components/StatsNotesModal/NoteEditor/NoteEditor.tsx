@@ -5,6 +5,7 @@
  */
 
 import { Text, TextInput, View } from 'react-native';
+import { colors } from '@/theme/colors';
 
 import { HabitSelector } from './HabitSelector';
 import { NoteEditorActions } from './NoteEditorActions';
@@ -54,7 +55,7 @@ export default function NoteEditor({
               accessibilityLabel='Note date'
               className='w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
               placeholder='YYYY-MM-DD'
-              placeholderTextColor='#a8a29e'
+              placeholderTextColor={colors.gray[400]}
               value={date}
               onChangeText={setDate}
             />
@@ -72,7 +73,7 @@ export default function NoteEditor({
           accessibilityLabel='Note body'
           className='min-h-[120px] w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
           placeholder='Write your note here...'
-          placeholderTextColor='#a8a29e'
+          placeholderTextColor={colors.gray[400]}
           textAlignVertical='top'
           value={body}
           onChangeText={setBody}

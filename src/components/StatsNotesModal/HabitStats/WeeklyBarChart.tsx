@@ -5,6 +5,7 @@
 import { format } from 'date-fns';
 import { Text, View } from 'react-native';
 import Svg, { Rect, Text as SvgText } from 'react-native-svg';
+import { colors } from '@/theme/colors';
 import type { ChartDataItem } from './HabitStats.types';
 
 interface WeeklyBarChartProps {
@@ -33,7 +34,7 @@ export function WeeklyBarChart({ data }: WeeklyBarChartProps) {
           return (
             <View key={item.date}>
               <Rect
-                fill={item.completed ? '#48bb78' : '#dde3ed'}
+                fill={item.completed ? colors.primary[400] : colors.gray[200]}
                 height={barHeight}
                 rx={4}
                 width={barWidth}
@@ -41,7 +42,7 @@ export function WeeklyBarChart({ data }: WeeklyBarChartProps) {
                 y={y}
               />
               <SvgText
-                fill='#78716c'
+                fill={colors.gray[500]}
                 fontSize='10'
                 textAnchor='middle'
                 x={x + barWidth / 2}
@@ -55,7 +56,7 @@ export function WeeklyBarChart({ data }: WeeklyBarChartProps) {
       </Svg>
       <Text className='mt-2 text-xs text-stone-500'>
         {format(new Date(data[0].date), 'MMM d')} -{' '}
-        {format(new Date(data[data.length - 1].date), 'MMM d')}
+        {format(new Date(data.at(-1).date), 'MMM d')}
       </Text>
     </View>
   );
