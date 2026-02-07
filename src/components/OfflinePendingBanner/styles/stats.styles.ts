@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../../theme/spacing';
 
 export const statsStyles = StyleSheet.create({
   ageText: {
@@ -39,7 +40,7 @@ export const statsStyles = StyleSheet.create({
   warningContainer: {
     alignItems: 'center',
     backgroundColor: '#FEF3C7',
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     flexDirection: 'row',
     marginTop: 10,
     paddingHorizontal: 10,

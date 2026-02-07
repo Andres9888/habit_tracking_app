@@ -4,10 +4,12 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+
 export const styles = StyleSheet.create({
   actionItem: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 12,
     padding: 12,
@@ -74,7 +76,7 @@ export const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     height: 40,
     justifyContent: 'center',
     width: 40,

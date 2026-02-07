@@ -9,12 +9,17 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 
+import { borderRadius } from '../theme/spacing';
+
 interface NotificationBadgeProps {
   count?: number;
   visible?: boolean;
 }
 
-export function NotificationBadge({ count = 1, visible = true }: NotificationBadgeProps) {
+export function NotificationBadge({
+  count = 1,
+  visible = true,
+}: NotificationBadgeProps) {
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 
@@ -38,8 +43,8 @@ export function NotificationBadge({ count = 1, visible = true }: NotificationBad
   }, [visible, scale, opacity]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
     opacity: opacity.value,
+    transform: [{ scale: scale.value }],
   }));
 
   if (!visible) {
@@ -51,18 +56,18 @@ export function NotificationBadge({ count = 1, visible = true }: NotificationBad
       style={[
         animatedStyle,
         {
-          position: 'absolute',
-          top: -4,
-          right: -4,
-          minWidth: 18,
-          height: 18,
-          borderRadius: 9,
-          backgroundColor: '#ef4444',
-          borderWidth: 2,
-          borderColor: '#faf9f7',
           alignItems: 'center',
+          backgroundColor: '#ef4444',
+          borderColor: '#faf9f7',
+          borderRadius: borderRadius.full,
+          borderWidth: 2,
+          height: 18,
           justifyContent: 'center',
+          minWidth: 18,
           paddingHorizontal: 4,
+          position: 'absolute',
+          right: -4,
+          top: -4,
         },
       ]}
     >

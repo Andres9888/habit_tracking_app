@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
-import { spacing } from '../../../theme/spacing';
+import { spacing, borderRadius } from '../../../theme/spacing';
 import {
   LEVEL_COLORS,
   LEVEL_LABELS,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   legendDot: {
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     height: 12,
     marginRight: spacing.sm,
     width: 12,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   legendItem: {
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: spacing.xs,

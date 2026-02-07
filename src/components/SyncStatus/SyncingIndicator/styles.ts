@@ -6,13 +6,14 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: '#fffbeb', // amber-50 - warm active background
     borderColor: '#fde68a', // amber-200 - soft border
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
@@ -22,7 +23,7 @@ export const styles = StyleSheet.create({
 
   countBadge: {
     backgroundColor: '#f59e0b', // amber-500
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     marginLeft: 2,
     minWidth: 16,
     paddingHorizontal: 4,
@@ -39,7 +40,7 @@ export const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: '#fef3c7', // amber-100
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     height: 20,
     justifyContent: 'center',
     width: 20,

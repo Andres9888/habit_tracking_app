@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../../theme/spacing';
 
 export const shareCardContentStyles = StyleSheet.create({
   cardContainer: {
@@ -62,7 +63,7 @@ export const shareCardContentStyles = StyleSheet.create({
   },
   progressBarBackground: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     height: 12,
     overflow: 'hidden',
   },
@@ -72,7 +73,7 @@ export const shareCardContentStyles = StyleSheet.create({
   },
   progressBarFill: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     height: '100%',
   },
   strengthPercentage: {

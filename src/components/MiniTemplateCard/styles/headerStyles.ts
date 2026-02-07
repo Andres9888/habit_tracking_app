@@ -4,6 +4,8 @@
 
 import type { ViewStyle, TextStyle } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+
 export const headerStyles: Record<string, ViewStyle | TextStyle> = {
   chevronContainer: {
     alignItems: 'center',
@@ -29,7 +31,7 @@ export const headerStyles: Record<string, ViewStyle | TextStyle> = {
   scienceBadge: {
     alignItems: 'center',
     backgroundColor: '#10b981',
-    borderRadius: 9,
+    borderRadius: borderRadius.full,
     bottom: -4,
     height: 18,
     justifyContent: 'center',

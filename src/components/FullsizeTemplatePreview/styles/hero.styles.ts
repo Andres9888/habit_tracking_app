@@ -4,18 +4,12 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+
 export const heroStyles = StyleSheet.create({
-  heroContent: {
-    alignItems: 'center',
-  },
   descriptionSection: {
     paddingHorizontal: 20,
     paddingTop: 20,
-  },
-  heroGradient: {
-    paddingBottom: 28,
-    paddingHorizontal: 20,
-    paddingTop: 16,
   },
   descriptionText: {
     color: '#4B5563',
@@ -23,15 +17,23 @@ export const heroStyles = StyleSheet.create({
     lineHeight: 26,
     textAlign: 'center',
   },
+  heroContent: {
+    alignItems: 'center',
+  },
+  heroGradient: {
+    paddingBottom: 28,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+  },
   iconContainer: {
     alignItems: 'center',
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     height: 96,
     justifyContent: 'center',
     width: 96,
   },
   iconGlow: {
-    borderRadius: 48,
+    borderRadius: borderRadius.full,
     height: 96,
     opacity: 0.3,
     position: 'absolute',
@@ -49,7 +51,7 @@ export const heroStyles = StyleSheet.create({
   },
   metadataPill: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,

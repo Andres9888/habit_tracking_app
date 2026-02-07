@@ -7,13 +7,14 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
     backgroundColor: '#fef3c7', // amber-100 - soft pending indicator
     borderColor: '#fcd34d', // amber-300 - subtle border
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     borderWidth: 1,
     justifyContent: 'center',
   },
@@ -24,7 +25,7 @@ export const styles = StyleSheet.create({
   },
 
   badgeSmall: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 14,
     width: 14,
   },

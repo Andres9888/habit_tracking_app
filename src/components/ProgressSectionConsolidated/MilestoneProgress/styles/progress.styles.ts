@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../../../theme/spacing';
 
 export const progressStyles = StyleSheet.create({
   badgeIcon: {
@@ -8,7 +9,7 @@ export const progressStyles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     borderColor: '#e5e7eb', // gray-200
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     marginTop: 12,
     padding: 12,
@@ -42,7 +43,7 @@ export const progressStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fef3c7', // amber-100
     borderColor: '#fbbf24', // amber-400
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     height: 24,
     justifyContent: 'center',
@@ -58,12 +59,12 @@ export const progressStyles = StyleSheet.create({
   },
   progressBarFill: {
     backgroundColor: '#f59e0b', // amber-500
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: '100%',
   },
   progressBarTrack: {
     backgroundColor: '#e5e7eb', // gray-200
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     flex: 1,
     height: 8,
     overflow: 'hidden',

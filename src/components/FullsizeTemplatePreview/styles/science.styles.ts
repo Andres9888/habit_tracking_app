@@ -4,15 +4,17 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+
 export const scienceStyles = StyleSheet.create({
   researchLinkButton: {
     alignItems: 'center',
+    alignSelf: 'flex-start',
     backgroundColor: '#EFF6FF',
     borderColor: '#BFDBFE',
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
-    alignSelf: 'flex-start',
     gap: 8,
     marginTop: 16,
     paddingHorizontal: 14,
@@ -26,7 +28,7 @@ export const scienceStyles = StyleSheet.create({
   scienceBox: {
     backgroundColor: '#f0fdf4',
     borderColor: '#bbf7d0',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     borderWidth: 2,
     marginHorizontal: 20,
     marginTop: 24,

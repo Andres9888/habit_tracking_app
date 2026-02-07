@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../../theme/spacing';
+import { shadows, borderRadius } from '../../../theme/spacing';
 
 export const footerStyles = StyleSheet.create({
   customizeLink: {
@@ -33,7 +33,7 @@ export const footerStyles = StyleSheet.create({
   importButton: {
     ...shadows.modal,
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     height: 56,
     justifyContent: 'center',
     shadowOpacity: 0.15,
@@ -47,7 +47,7 @@ export const footerStyles = StyleSheet.create({
     ...shadows.modal,
     alignItems: 'center',
     backgroundColor: '#22c55e',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     flexDirection: 'row',
     gap: 10,
     height: 56,
@@ -57,7 +57,7 @@ export const footerStyles = StyleSheet.create({
   },
   successButtonGlow: {
     backgroundColor: '#22c55e',
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     bottom: -8,
     elevation: 8,
     left: -8,

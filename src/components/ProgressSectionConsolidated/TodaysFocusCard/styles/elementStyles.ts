@@ -6,13 +6,13 @@
 
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../../../theme/spacing';
+import { shadows, borderRadius } from '../../../../theme/spacing';
 
 export const elementStyles = StyleSheet.create({
   badgeContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    borderRadius: 28,
+    borderRadius: borderRadius.full,
     height: 56,
     justifyContent: 'center',
     width: 56,
@@ -67,7 +67,7 @@ export const elementStyles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     height: 48,
     justifyContent: 'center',
     width: 48,
@@ -85,7 +85,7 @@ export const elementStyles = StyleSheet.create({
   shareButton: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     height: 40,
     justifyContent: 'center',
     width: 40,

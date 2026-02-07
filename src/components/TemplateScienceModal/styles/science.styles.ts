@@ -3,11 +3,12 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../../theme/spacing';
 
 export const scienceStyles = StyleSheet.create({
   citationDot: {
     backgroundColor: '#10B981',
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 8,
     width: 8,
   },
@@ -34,7 +35,7 @@ export const scienceStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#EFF6FF',
     borderColor: '#BFDBFE',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
@@ -50,7 +51,7 @@ export const scienceStyles = StyleSheet.create({
   whyItWorksContainer: {
     backgroundColor: '#F0FDF4',
     borderColor: '#BBF7D0',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
     padding: 18,
   },

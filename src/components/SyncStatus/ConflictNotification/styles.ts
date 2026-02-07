@@ -8,12 +8,14 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: '#fffbeb', // amber-50 - soft warning background
     borderColor: '#fcd34d', // amber-300 - visible border
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
@@ -30,7 +32,7 @@ export const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: '#fef3c7', // amber-100
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     height: 20,
     justifyContent: 'center',
     width: 20,

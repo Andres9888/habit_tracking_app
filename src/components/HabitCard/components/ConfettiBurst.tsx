@@ -13,6 +13,7 @@ import Animated, {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
+import { borderRadius } from '../../../theme/spacing';
 
 const CONFETTI_COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6'];
 const PARTICLE_COUNT = 8;
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   particle: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 8,
     position: 'absolute',
     width: 8,

@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { borderRadius } from '../../theme/spacing';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 export const CHART_WIDTH = SCREEN_WIDTH - 48;
@@ -22,7 +23,7 @@ export const styles = StyleSheet.create({
     paddingTop: 8,
   },
   legendColor: {
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     height: 12,
     width: 12,
   },

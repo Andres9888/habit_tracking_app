@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../theme/spacing';
+import { borderRadius, shadows } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   container: {
@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: '#fef3c7', // amber-100 - warm and matches swipe
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     height: 36,
     justifyContent: 'center',
     width: 36,
@@ -47,8 +47,8 @@ export const styles = StyleSheet.create({
   },
   progressContainer: {
     backgroundColor: '#fef3c7', // amber-100
-    borderBottomLeftRadius: 22,
-    borderBottomRightRadius: 22,
+    borderBottomLeftRadius: borderRadius.xl,
+    borderBottomRightRadius: borderRadius.xl,
     height: 3,
     overflow: 'hidden',
     width: '100%',
@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
   toast: {
     backgroundColor: '#ffffff', // white - matches habit cards
     borderColor: '#f5f5f4', // stone-100 - matches card borders
-    borderRadius: 24, // matches card rounded-3xl
+    borderRadius: borderRadius.xl, // matches card rounded-3xl
     borderWidth: 1,
     ...shadows.modal,
     maxWidth: 400,
@@ -67,7 +67,7 @@ export const styles = StyleSheet.create({
   undoButton: {
     alignItems: 'center',
     backgroundColor: '#fef3c7', // amber-100
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,

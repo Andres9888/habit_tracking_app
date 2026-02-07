@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../theme/spacing';
+import { borderRadius, shadows } from '../../theme/spacing';
 
 export const DISMISS_THRESHOLD = 50;
 
@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: '#fee2e2', // red-100
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     height: 36,
     justifyContent: 'center',
     width: 36,
@@ -45,8 +45,8 @@ export const styles = StyleSheet.create({
   },
   progressContainer: {
     backgroundColor: '#fee2e2', // red-100
-    borderBottomLeftRadius: 22,
-    borderBottomRightRadius: 22,
+    borderBottomLeftRadius: borderRadius.xl,
+    borderBottomRightRadius: borderRadius.xl,
     height: 3,
     overflow: 'hidden',
     width: '100%',
@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
   toast: {
     backgroundColor: '#ffffff',
     borderColor: '#fecaca', // red-200
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     borderWidth: 1,
     ...shadows.modal,
     maxWidth: 400,
@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
   undoButton: {
     alignItems: 'center',
     backgroundColor: '#fee2e2', // red-100
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,

@@ -3,12 +3,12 @@
  */
 
 import type { ViewStyle, TextStyle } from 'react-native';
-import { shadows } from '../../../theme/spacing';
+import { shadows, borderRadius } from '../../../theme/spacing';
 
 export const cardStyles: Record<string, ViewStyle | TextStyle> = {
   accent: {
-    borderBottomLeftRadius: 16,
-    borderTopLeftRadius: 16,
+    borderBottomLeftRadius: borderRadius.large,
+    borderTopLeftRadius: borderRadius.large,
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -17,7 +17,7 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
   },
   card: {
     ...shadows.card,
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     flexDirection: 'column',
     marginRight: 12,
     minHeight: 150,
@@ -35,7 +35,7 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     marginBottom: 36,
   },
   glowOverlay: {
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     bottom: 0,
     left: 0,
     position: 'absolute',

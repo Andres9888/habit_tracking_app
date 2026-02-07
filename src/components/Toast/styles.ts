@@ -3,11 +3,12 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   actionButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
@@ -36,7 +37,7 @@ export const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 24,
     justifyContent: 'center',
     width: 24,

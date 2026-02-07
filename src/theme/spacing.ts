@@ -117,6 +117,9 @@ export const borderRadius = {
   small: 8,
   // Modals, sheets
   xl: 20, // Circular (avatar, icon buttons) - use 50% in percentage
+
+  // Micro-rounding (progress bars, badges, chips)
+  xs: 4,
 } as const;
 
 /**

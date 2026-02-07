@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+
 export const layoutStyles = StyleSheet.create({
   banner: {
     alignItems: 'center',
@@ -23,7 +25,7 @@ export const layoutStyles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 18,
+    borderRadius: borderRadius.full,
     height: 36,
     justifyContent: 'center',
     marginRight: 12,

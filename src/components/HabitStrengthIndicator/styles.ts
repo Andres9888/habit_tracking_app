@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   // Compact variant (list view)
@@ -27,11 +28,11 @@ export const styles = StyleSheet.create({
 
   // Full variant (detail view)
   fullBar: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: '100%',
   },
   fullBarContainer: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 8,
     overflow: 'hidden',
     width: '100%',

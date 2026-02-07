@@ -4,11 +4,11 @@
 
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../theme/spacing';
+import { borderRadius, shadows } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   background: {
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
   },
   gradient: {
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
     top: 0,
   },
   gradientWrapper: {
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
   },
   iconWrapper: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     height: 24,
     justifyContent: 'center',
     width: 24,

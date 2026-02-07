@@ -4,6 +4,8 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+
 export const headerStyles = StyleSheet.create({
   comparisonText: {
     color: '#78716c', // stone-500
@@ -32,7 +34,7 @@ export const headerStyles = StyleSheet.create({
   },
   perfectBadge: {
     backgroundColor: '#10b981', // emerald-500
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },

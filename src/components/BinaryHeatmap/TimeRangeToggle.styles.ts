@@ -4,13 +4,13 @@
 
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../theme/spacing';
+import { shadows, borderRadius } from '../../theme/spacing';
 import { COLORS, FOCUS } from './constants';
 
 export const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     justifyContent: 'center',
     minWidth: 32,
     paddingHorizontal: 10,
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#f5f5f4',
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     flexDirection: 'row',
     padding: 2,
   },

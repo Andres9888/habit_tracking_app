@@ -1,6 +1,7 @@
 import React from 'react';
 import { Animated, View, Text } from 'react-native';
 import { Archive } from 'lucide-react-native';
+import { borderRadius } from '../../theme/spacing';
 
 interface ArchiveActionProps {
   dragX: Animated.AnimatedInterpolation<number>;
@@ -34,8 +35,8 @@ export function ArchiveAction({ dragX }: ArchiveActionProps) {
         style={{
           alignItems: 'center',
           backgroundColor: '#f59e0b',
-          borderBottomRightRadius: 24,
-          borderTopRightRadius: 24,
+          borderBottomRightRadius: borderRadius.xl,
+          borderTopRightRadius: borderRadius.xl,
           height: '100%',
           justifyContent: 'center',
           width: 100,

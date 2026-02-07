@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
 import { getStrengthEmoji } from './strengthUtils';
+import { borderRadius } from '../../theme/spacing';
 
 interface StrengthProgressBarProps {
   strengthPercent: number;
@@ -59,7 +60,7 @@ export function StrengthProgressBar({
         <View
           style={{
             backgroundColor: '#e5e7eb',
-            borderRadius: 4,
+            borderRadius: borderRadius.xs,
             height: 8,
             marginHorizontal: 8,
             overflow: 'hidden',
@@ -72,7 +73,7 @@ export function StrengthProgressBar({
             style={[
               {
                 backgroundColor: '#65a30d',
-                borderRadius: 4,
+                borderRadius: borderRadius.xs,
                 height: '100%',
               },
               progressAnimatedStyle,

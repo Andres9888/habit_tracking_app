@@ -12,6 +12,7 @@ import {
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
 import { styles } from './Modal.styles';
+import { borderRadius } from '../../theme/spacing';
 
 interface FullScreenContentProps {
   children: React.ReactNode;
@@ -35,8 +36,8 @@ export function FullScreenContent({
           styles.fullScreen,
           {
             backgroundColor: theme.custom.colors.light.background,
-            borderTopLeftRadius: 12,
-            borderTopRightRadius: 12,
+            borderTopLeftRadius: borderRadius.medium,
+            borderTopRightRadius: borderRadius.medium,
           },
           animatedStyle,
           customStyle,

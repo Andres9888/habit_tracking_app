@@ -4,6 +4,8 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+
 export const dayCellStyles = StyleSheet.create({
   dayCellContainer: {
     alignItems: 'center',
@@ -11,7 +13,7 @@ export const dayCellStyles = StyleSheet.create({
   },
   dayCircle: {
     alignItems: 'center',
-    borderRadius: 18,
+    borderRadius: borderRadius.full,
     height: 36,
     justifyContent: 'center',
     width: 36,
