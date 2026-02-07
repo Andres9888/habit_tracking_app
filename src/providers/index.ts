@@ -3,4 +3,4 @@
  */
 
 export { SentryUserSync } from './SentryUserSync';
-export { ConvexClerkProvider } from './ConvexClerkProvider';
+export { ConvexClerkProvider, useConvexAuthReady } from './ConvexClerkProvider';

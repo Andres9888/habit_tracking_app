@@ -34,7 +34,9 @@ export function HabitsAppOverlays({
         habitName={list.archiveUndoHabitName}
         visible={list.archiveUndoVisible}
         onDismiss={list.dismissArchiveUndo}
-        onUndo={list.handleArchiveUndo}
+        onUndo={(): void => {
+          void list.handleArchiveUndo();
+        }}
       />
 
       <RevenueCatPaywall

@@ -31,7 +31,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   };
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onAddNote();
   };
 

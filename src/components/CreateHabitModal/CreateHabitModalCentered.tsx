@@ -1,25 +1,19 @@
 /**
- * CreateHabitModalCentered - Centered layout version of the habit creation modal
+ * CreateHabitModalCentered - Full-screen modal for habit creation
  *
- * Features:
- * - Centered name input with prominent heading "What habit do you want to build?"
- * - "CUSTOMIZE (OPTIONAL)" section with emoji, color, reminder
- * - Smart defaults reduce cognitive load
- * - 2-tap creation flow (name -> create)
- * - Swipe-to-dismiss gesture support
- * - Modal resets on open
+ * Matches HabitEditScreen presentation: transparent modal with dark overlay,
+ * rounded top container, KeyboardAvoidingView, and swipe-to-dismiss.
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { Keyboard, Modal, Pressable, ScrollView } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
 import type { ScrollView as ScrollViewType } from 'react-native';
 
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
-import { CreateHabitFormCentered } from './components/CreateHabitFormCentered';
+import { CreateHabitScrollContent } from './components/CreateHabitScrollContent';
 import { ModalHeader } from './components/ModalHeader';
-import { HABIT_COLORS } from './constants';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { useSwipeDismiss } from './hooks/useSwipeDismiss';
@@ -28,27 +22,11 @@ import type { CreateHabitModalProps } from './types';
 export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, handleCreate } = useCreateHabitModal(props);
-
-  // ScrollView ref for auto-scrolling to reminder section
   const scrollViewRef = useRef<ScrollViewType>(null);
-
-  // Validation error state
   const [showNameError, setShowNameError] = useState(false);
-
-  // Swipe dismissal gesture
   const { animatedStyle, panGesture } = useSwipeDismiss({ onClose });
 
-  // Form callbacks
-  const {
-    handleColorSelect,
-    handleEmojiSelect,
-    handleNameChange,
-    handleReminderTimeChange,
-    handleReminderToggle,
-    handleSave,
-    handleSubmit,
-    handleValidationError,
-  } = useCenteredFormCallbacks({
+  const callbacks = useCenteredFormCallbacks({
     form,
     handleCreate,
     scrollViewRef,
@@ -66,53 +44,38 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
 
   return (
     <Modal
+      transparent
       animationType='slide'
-      presentationStyle='pageSheet'
-      transparent={false}
       visible={visible}
       onRequestClose={onClose}
     >
-      <GestureDetector gesture={panGesture}>
-        <Animated.View className='flex-1 bg-stone-50' style={animatedStyle}>
-          {/* Header */}
-          <ModalHeader
-            habitName={form.habitName}
-            isEditMode={isEditMode}
-            onClose={onClose}
-            onSave={handleSave}
-            onValidationError={handleValidationError}
-          />
-
-          {/* Scrollable Centered Form */}
-          <ScrollView
-            ref={scrollViewRef}
-            className='flex-1'
-            contentContainerStyle={{ paddingBottom: 120 }}
-            keyboardDismissMode='on-drag'
-            keyboardShouldPersistTaps='handled'
-            showsVerticalScrollIndicator={false}
-          >
-            <Pressable onPress={Keyboard.dismiss}>
-              <CreateHabitFormCentered
-                autoFocus
-                colors={HABIT_COLORS}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className='flex-1'
+      >
+        <View className='flex-1 bg-black/50'>
+          <GestureDetector gesture={panGesture}>
+            <Animated.View
+              className='flex-1 overflow-hidden rounded-t-3xl bg-stone-50 shadow-2xl'
+              style={animatedStyle}
+            >
+              <ModalHeader
                 habitName={form.habitName}
-                reminderEnabled={form.remindersEnabled}
-                reminderTime={form.reminderTime}
-                selectedColor={form.selectedColor}
-                selectedEmoji={form.selectedEmoji}
-                showNameError={showNameError}
-                onColorSelect={handleColorSelect}
-                onEmojiSelect={handleEmojiSelect}
-                onHabitNameChange={handleNameChange}
-                onReminderTimeChange={handleReminderTimeChange}
-                onReminderToggle={handleReminderToggle}
-                onSubmit={handleSubmit}
+                isEditMode={isEditMode}
+                onClose={onClose}
+                onSave={callbacks.handleSave}
+                onValidationError={callbacks.handleValidationError}
               />
-            </Pressable>
-          </ScrollView>
-        </Animated.View>
-      </GestureDetector>
+              <CreateHabitScrollContent
+                callbacks={callbacks}
+                form={form}
+                scrollViewRef={scrollViewRef}
+                showNameError={showNameError}
+              />
+            </Animated.View>
+          </GestureDetector>
+        </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

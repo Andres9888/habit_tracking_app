@@ -1,30 +1,37 @@
 /**
  * Convex Clerk Provider
  * Syncs Clerk auth token with Convex client.
+ * Exposes isConvexReady so children know when auth is available.
  */
 
 import { ConvexProvider } from 'convex/react';
 import { useAuth } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
-import { useEffect } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { convexClient } from '../lib/appConfig';
+
+const ConvexAuthContext = createContext({ isConvexReady: false });
+
+export function useConvexAuthReady() {
+  return useContext(ConvexAuthContext).isConvexReady;
+}
 
 export function ConvexClerkProvider({ children }: PropsWithChildren) {
   const { getToken, isSignedIn } = useAuth();
+  const [isConvexReady, setIsConvexReady] = useState(false);
 
   useEffect(() => {
+    if (!isSignedIn) {
+      setIsConvexReady(false);
+      return;
+    }
+
     // Set auth token fetcher for Convex
     convexClient.setAuth(async () => {
-      if (!isSignedIn) {
-        return null;
-      }
-
       try {
-        // Get the Clerk token with 'convex' JWT template
         const token = await getToken({ template: 'convex' });
         return token ?? null;
       } catch {
-        // Fallback to default token if template doesn't exist
         try {
           const defaultToken = await getToken();
           return defaultToken ?? null;
@@ -33,9 +40,17 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
         }
       }
     });
+
+    setIsConvexReady(true);
   }, [getToken, isSignedIn]);
 
-  return <ConvexProvider client={convexClient}>{children}</ConvexProvider>;
+  const value = useMemo(() => ({ isConvexReady }), [isConvexReady]);
+
+  return (
+    <ConvexAuthContext.Provider value={value}>
+      <ConvexProvider client={convexClient}>{children}</ConvexProvider>
+    </ConvexAuthContext.Provider>
+  );
 }
 
 export default ConvexClerkProvider;

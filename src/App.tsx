@@ -13,35 +13,31 @@
 
 import '../global.css';
 
-import { ConvexProvider } from 'convex/react';
 import { ClerkProvider } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { AuthGate } from './components/auth/AuthGate';
 import { PurchasesProvider } from './components/providers/PurchasesProvider';
-import HabitsApp from './features/habits/HabitsApp';
-import { convexClient } from './lib/appConfig';
-import theme from './theme';
-import { initSentry, SentryErrorBoundary } from './lib/sentry';
-import { SentryUserSync, ConvexClerkProvider } from './providers';
 import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
 import { SyncStatusProvider } from './contexts/SyncStatusContext';
+import { initSentry, SentryErrorBoundary } from './lib/sentry';
+import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { OfflineProvider } from './providers/OfflineProvider';
+import theme from './theme';
 
 // Initialize Sentry as early as possible
 initSentry();
-
-const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 function Providers({ children }: PropsWithChildren) {
   return (
     <SentryErrorBoundary>
       <SafeAreaProvider>
         <PaperProvider theme={theme}>
-          <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+          <ClerkProvider
+            publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          >
             <SentryUserSync>
               <ConvexClerkProvider>
                 <NetworkStatusProvider>
@@ -60,35 +56,7 @@ function Providers({ children }: PropsWithChildren) {
   );
 }
 
-function DevProviders({ children }: PropsWithChildren) {
-  return (
-    <SentryErrorBoundary>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaProvider>
-          <PaperProvider theme={theme}>
-            <ConvexProvider client={convexClient}>
-              <NetworkStatusProvider>
-                <OfflineProvider>
-                  <SyncStatusProvider>{children}</SyncStatusProvider>
-                </OfflineProvider>
-              </NetworkStatusProvider>
-            </ConvexProvider>
-          </PaperProvider>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
-    </SentryErrorBoundary>
-  );
-}
-
 export default function App() {
-  if (!CLERK_PUBLISHABLE_KEY) {
-    return (
-      <DevProviders>
-        <HabitsApp />
-      </DevProviders>
-    );
-  }
-
   return (
     <Providers>
       <AuthGate />

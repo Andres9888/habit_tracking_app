@@ -14,13 +14,14 @@ export function useHabitsApp(): UseHabitsAppResult {
   });
 
   // Route notification taps to the activation modal
+  const { openActivationModalById } = modals;
   const notificationHandlers = useMemo(
     () => ({
       onHabitNotificationTap: (habitId: string) => {
-        modals.openActivationModalById(habitId);
+        openActivationModalById(habitId);
       },
     }),
-    [modals.openActivationModalById]
+    [openActivationModalById]
   );
   useNotificationResponse(notificationHandlers);
 

@@ -78,7 +78,7 @@ export function usePressAnimation(
 ): UsePressAnimationReturn {
   const {
     pressScale = 0.96,
-    respectReducedMotion = true,
+    respectReducedMotion: _respectReducedMotion = true,
     springConfig = Springs.button,
     enableHaptics = true,
     hapticStyle = 'light',

@@ -28,10 +28,8 @@ export const useHabitDayToggleAnimations = ({
   // This handles cases where the component renders with a completed state
   // but the animated value was initialized before the final props arrived.
   useLayoutEffect(() => {
-    const targetValue = completed ? 1 : 0;
-    // Only set on initial mount or if somehow out of sync
     if (prevCompletedRef.current === null) {
-      completion.setValue(targetValue);
+      completion.setValue(completed ? 1 : 0);
     }
   }, [completed, completion]);
 
@@ -48,6 +46,8 @@ export const useHabitDayToggleAnimations = ({
     if (prevCompleted === completed) {
       return;
     }
+
+    const targetValue = completed ? 1 : 0;
 
     // Value changed - animate the transition
     const animation = completed
@@ -72,9 +72,29 @@ export const useHabitDayToggleAnimations = ({
           useNativeDriver: true,
         });
 
-    animation.start();
+    let cancelled = false;
+
+    animation.start(({ finished }) => {
+      // If the animation was interrupted by something other than our
+      // cleanup (e.g., a native driver issue), force the final value
+      // so the icon doesn't get stuck invisible
+      if (!finished && !cancelled) {
+        completion.setValue(targetValue);
+      }
+    });
+
+    // Safety net: if the native-driver animation silently fails or the
+    // callback is lost, force the value after the animation should have
+    // completed (300ms > max 220ms animation duration).
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled) {
+        completion.setValue(targetValue);
+      }
+    }, 300);
 
     return () => {
+      cancelled = true;
+      clearTimeout(safetyTimer);
       animation.stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

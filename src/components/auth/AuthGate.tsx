@@ -9,48 +9,32 @@
 
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { api } from '../../../convex/_generated/api';
 import HabitsApp from '../../features/habits/HabitsApp';
+import { useConvexAuthReady } from '../../providers';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
+  const isConvexReady = useConvexAuthReady();
   const getOrCreateUser = useMutation(api.users.getOrCreateUser);
 
-  // Use ref to store mutation to prevent it from triggering useEffect re-runs
+  // Use ref to prevent mutation identity from triggering useEffect re-runs
   const getOrCreateUserRef = useRef(getOrCreateUser);
   getOrCreateUserRef.current = getOrCreateUser;
 
-  // Retry with exponential backoff to handle auth token propagation delay
-  const syncUserWithRetry = useCallback(async (retries = 3, delay = 500) => {
-    for (let i = 0; i < retries; i++) {
-      try {
-        await getOrCreateUserRef.current();
-        return; // Success, exit
-      } catch (error) {
-        const isAuthError =
-          error instanceof Error && error.message.includes('Not authenticated');
-        if (!isAuthError || i === retries - 1) {
-          // Not an auth error, or last retry - log and exit
-          if (__DEV__) console.error('Failed to sync user:', error);
-          return;
-        }
-        // Wait before retry (auth token may be propagating)
-        await new Promise((resolve) => setTimeout(resolve, delay * (i + 1)));
-      }
-    }
-  }, []);
-
-  // Sync user to Convex when signed in
+  // Sync user to Convex when signed in and Convex auth is ready
   useEffect(() => {
-    if (isSignedIn) {
-      syncUserWithRetry();
+    if (isSignedIn && isConvexReady) {
+      getOrCreateUserRef.current().catch((error_: unknown) => {
+        if (__DEV__) console.error('Failed to sync user:', error_);
+      });
     }
-  }, [isSignedIn, syncUserWithRetry]);
+  }, [isSignedIn, isConvexReady]);
 
   // Show loading while Clerk initializes
   if (!isLoaded) {

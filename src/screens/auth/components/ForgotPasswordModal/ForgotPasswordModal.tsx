@@ -39,6 +39,10 @@ export function ForgotPasswordModal({
     [setEmail, clearError]
   );
 
+  const handleSubmit = useCallback(() => {
+    void handleResetPassword();
+  }, [handleResetPassword]);
+
   return (
     <Modal
       disableBackdropClose={isLoading}
@@ -79,7 +83,7 @@ export function ForgotPasswordModal({
               isLoading={isLoading}
               onCancel={handleClose}
               onEmailChange={handleEmailChange}
-              onSubmit={handleResetPassword}
+              onSubmit={handleSubmit}
             />
           )}
         </Animated.View>
