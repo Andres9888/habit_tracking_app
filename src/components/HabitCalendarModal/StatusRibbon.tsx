@@ -34,9 +34,9 @@ export function StatusRibbon({
         className='rounded-3xl bg-white p-5'
         style={{
           shadowColor: '#1c1917',
-          shadowOffset: { width: 0, height: 12 },
+          shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
-          shadowRadius: 24,
+          shadowRadius: 16,
         }}
       >
         <View className='flex-row gap-4'>
@@ -49,12 +49,19 @@ export function StatusRibbon({
           <View className='flex-1'>
             <View className='flex-row items-start justify-between'>
               <View className='flex-1 pr-4'>
-                <Text className='text-xl font-semibold text-stone-900'>{name}</Text>
+                <Text className='text-xl font-semibold text-stone-900'>
+                  {name}
+                </Text>
                 {scheduleLabel ? (
-                  <Text className='mt-1 text-sm text-stone-500'>{scheduleLabel}</Text>
+                  <Text className='mt-1 text-sm text-stone-500'>
+                    {scheduleLabel}
+                  </Text>
                 ) : null}
                 {notes ? (
-                  <Text className='mt-2 text-sm text-stone-500' numberOfLines={2}>
+                  <Text
+                    className='mt-2 text-sm text-stone-500'
+                    numberOfLines={2}
+                  >
                     {notes}
                   </Text>
                 ) : null}

@@ -53,10 +53,10 @@ export function SortBottomSheet({
                 elevation: 20,
                 maxHeight: SCREEN_HEIGHT * 0.85,
                 paddingBottom: insets.bottom + 16,
-                shadowColor: '#000',
-                shadowOffset: { height: -4, width: 0 },
-                shadowOpacity: 0.1,
-                shadowRadius: 20,
+                shadowColor: '#1c1917',
+                shadowOffset: { height: 4, width: 0 },
+                shadowOpacity: 0.08,
+                shadowRadius: 16,
               },
               sheetStyle,
             ]}
@@ -76,7 +76,7 @@ export function SortBottomSheet({
                 className='rounded-lg px-3 py-1.5 active:bg-stone-100'
                 onPress={handleDismiss}
               >
-                <Text className='text-[14px] font-semibold text-amber-600'>
+                <Text className='text-[13px] font-semibold text-amber-600'>
                   Done
                 </Text>
               </Pressable>

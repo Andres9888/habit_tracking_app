@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
     backgroundColor: colors.premium[600],
-    borderRadius: 20,
+    borderRadius: 9999,
     flexDirection: 'row',
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,

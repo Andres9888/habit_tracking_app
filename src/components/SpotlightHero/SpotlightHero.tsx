@@ -72,7 +72,7 @@ export const SpotlightHero: React.FC<SpotlightHeroProps> = ({
 const styles = StyleSheet.create({
   container: {
     ...shadows.floatingActionButton,
-    borderRadius: 20,
+    borderRadius: 16,
     marginBottom: 16,
     marginHorizontal: 20,
     overflow: 'hidden',

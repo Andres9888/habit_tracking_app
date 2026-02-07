@@ -18,7 +18,7 @@ export function HapticTestModalSection({
       <View className='flex-1'>
         <View className='px-4 py-4' style={{ backgroundColor: '#111827' }}>
           <Pressable onPress={closeHapticTest}>
-            <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '700' }}>
+            <Text style={{ color: '#ffffff', fontSize: 17, fontWeight: '600' }}>
               ← Back to App
             </Text>
           </Pressable>
