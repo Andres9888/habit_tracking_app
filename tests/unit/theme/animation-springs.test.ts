@@ -8,12 +8,15 @@ import { springs } from '@/theme/animations';
 import { Springs } from '@/constants/motion';
 
 describe('Canonical spring presets in @/theme/animations', () => {
-  it('has exactly 7 spring presets', () => {
+  it('has exactly 10 spring presets', () => {
     const keys = Object.keys(springs).sort();
     expect(keys).toEqual([
+      'bottomSheet',
       'bouncy',
       'button',
+      'exit',
       'gentle',
+      'gesture',
       'micro',
       'pulse',
       'sheet',

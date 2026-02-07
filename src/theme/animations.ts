@@ -101,14 +101,23 @@ export const easings = {
  * import springs from here (or via @/theme).
  */
 export const springs = {
+  /** Bottom sheet enter/exit - higher damping for stable slide */
+  bottomSheet: { damping: 26, stiffness: 300 },
+
   /** Bouncy - playful feel for celebrations */
   bouncy: { damping: 10, stiffness: 180 },
 
   /** Button press feedback - snappy response */
   button: { damping: 15, stiffness: 300 },
 
+  /** Modal exit - fast dismissal with minimal bounce */
+  exit: { damping: 26, mass: 1, stiffness: 420 },
+
   /** Gentle - smooth with minimal bounce */
   gentle: { damping: 20, stiffness: 100 },
+
+  /** Gesture snap-back - instant response for direct manipulation */
+  gesture: { damping: 20, mass: 1, stiffness: 450 },
 
   /** Subtle micro-interactions */
   micro: { damping: 15, stiffness: 400 },
