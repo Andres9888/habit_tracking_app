@@ -8,10 +8,10 @@ import { spacing } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   skeletonSubtitle: {
-    height: 10,
     backgroundColor: colors.border,
-    width: 60,
     borderRadius: 4,
+    height: 10,
+    width: 60,
   },
   skeletonTitle: {
     backgroundColor: colors.border,
@@ -21,24 +21,24 @@ export const styles = StyleSheet.create({
     width: 80,
   },
   skeletonValue: {
-    height: 28,
     backgroundColor: colors.border,
-    width: 100,
     borderRadius: 4,
+    height: 28,
     marginBottom: spacing.xs,
+    width: 100,
   },
   statCard: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: 16,
     elevation: 3,
     flex: 1,
     margin: spacing.sm,
     minWidth: '45%',
     padding: spacing.lg,
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowColor: '#1c1917',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
   },
   statCardEmoji: {
     fontSize: 24,
