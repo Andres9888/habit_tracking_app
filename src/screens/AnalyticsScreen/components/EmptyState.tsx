@@ -1,67 +1,87 @@
 /**
- * EmptyState - Shown when user has no habits to display analytics for
+ * EmptyState - OPTIMIZED: FadeInUp animation, better visuals, engaging illustration
  */
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
-import { typography } from '../../../theme/typography';
-import { spacing } from '../../../theme/spacing';
+import { View, Text } from 'react-native';
+import { BarChart3, Sparkles } from 'lucide-react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export const EmptyState: React.FC = () => {
   return (
-    <View style={styles.emptyState}>
-      <Text style={styles.emptyStateEmoji}>📊</Text>
-      <Text style={styles.emptyStateTitle}>No Analytics Yet</Text>
-      <Text style={styles.emptyStateMessage}>
-        Create habits and track them for a few days to see your analytics
-        dashboard come to life!
-      </Text>
-      <View style={styles.emptyStateSteps}>
-        <Text style={styles.emptyStateStep}>1️⃣ Go to Home tab</Text>
-        <Text style={styles.emptyStateStep}>2️⃣ Create your first habit</Text>
-        <Text style={styles.emptyStateStep}>3️⃣ Track it daily</Text>
-        <Text style={styles.emptyStateStep}>
-          4️⃣ Come back here to see insights!
-        </Text>
-      </View>
+    <View className='flex-1 items-center justify-center px-6 py-12'>
+      {/* Illustration */}
+      <Animated.View
+        className='mb-6 h-24 w-24 items-center justify-center rounded-3xl bg-violet-50'
+        entering={anim(0)}
+        style={{
+          shadowColor: '#8b5cf6',
+          shadowOffset: { height: 8, width: 0 },
+          shadowOpacity: 0.15,
+          shadowRadius: 20,
+        }}
+      >
+        <BarChart3 color='#8b5cf6' size={48} strokeWidth={1.5} />
+      </Animated.View>
+
+      {/* Title */}
+      <Animated.Text
+        className='mb-2 text-center font-bold text-stone-900'
+        entering={anim(50)}
+        style={{ fontSize: 22, letterSpacing: -0.5 }}
+      >
+        No Analytics Yet
+      </Animated.Text>
+
+      {/* Description */}
+      <Animated.Text
+        className='mb-8 text-center text-[15px] leading-[22px] text-stone-500'
+        entering={anim(100)}
+        style={{ maxWidth: 280 }}
+      >
+        Create habits and track them for a few days to unlock your insights
+        dashboard.
+      </Animated.Text>
+
+      {/* Steps Card */}
+      <Animated.View
+        className='w-full rounded-2xl bg-white p-5'
+        entering={anim(150)}
+        style={{
+          shadowColor: '#1c1917',
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.06,
+          shadowRadius: 16,
+        }}
+      >
+        <View className='mb-3 flex-row items-center gap-2'>
+          <Sparkles color='#f59e0b' size={16} />
+          <Text className='text-[13px] font-semibold text-amber-600'>
+            GET STARTED
+          </Text>
+        </View>
+        <View className='gap-3'>
+          <StepItem number='1' text='Go to Home tab' />
+          <StepItem number='2' text='Create your first habit' />
+          <StepItem number='3' text='Track it daily' />
+          <StepItem number='4' text='Come back to see insights!' />
+        </View>
+      </Animated.View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.xxl,
-  },
-  emptyStateEmoji: {
-    fontSize: 64,
-    marginBottom: spacing.lg,
-  },
-  emptyStateMessage: {
-    ...typography.body,
-    color: colors.text.secondary,
-    marginBottom: spacing.xl,
-    paddingHorizontal: spacing.md,
-    textAlign: 'center',
-  },
-  emptyStateStep: {
-    ...typography.body,
-    color: colors.text.primary,
-    marginBottom: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  emptyStateSteps: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: spacing.lg,
-    width: '100%',
-  },
-  emptyStateTitle: {
-    ...typography.h2,
-    color: colors.text.primary,
-    marginBottom: spacing.sm,
-    textAlign: 'center',
-  },
-});
+function StepItem({ number, text }: { number: string; text: string }) {
+  return (
+    <View className='flex-row items-center gap-3'>
+      <View className='h-7 w-7 items-center justify-center rounded-full bg-stone-100'>
+        <Text className='text-[13px] font-semibold text-stone-600'>
+          {number}
+        </Text>
+      </View>
+      <Text className='text-[15px] text-stone-700'>{text}</Text>
+    </View>
+  );
+}
