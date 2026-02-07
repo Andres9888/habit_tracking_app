@@ -9,6 +9,8 @@
 import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 
+import { colors as themeColors } from '@/theme/colors';
+
 interface SettingsSectionProps {
   title: string;
   children: ReactNode;
@@ -27,9 +29,9 @@ export function SettingsSection({
         title: '#facc15',
       }
     : {
-        background: '#ffffff',
-        border: '#f5f5f4',
-        title: '#78716c', // stone-500
+        background: themeColors.light.card,
+        border: themeColors.gray[100],
+        title: themeColors.gray[500],
       };
 
   return (
