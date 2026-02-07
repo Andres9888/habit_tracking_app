@@ -15,11 +15,11 @@ import { useCalendarHandlers } from './useCalendarHandlers';
 import { useNotesHandlers } from './useNotesHandlers';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
 
-const GRADIENT = [
+const BG = [
   colors.light.background,
   colors.light.gradientMid,
   colors.light.background,
-] as const;
+];
 
 // eslint-disable-next-line max-lines-per-function
 export default function HabitDetailScreen({
@@ -39,7 +39,7 @@ export default function HabitDetailScreen({
     tracking,
     visible,
   });
-  const calendarHandlers = useCalendarHandlers({
+  const cal = useCalendarHandlers({
     habit,
     isTogglingCalendar: state.isTogglingCalendar,
     onArchive,
@@ -49,27 +49,13 @@ export default function HabitDetailScreen({
     setPendingArchive: state.setPendingArchive,
     setPendingDelete: state.setPendingDelete,
   });
-  const notesHandlers = useNotesHandlers({
+  const notes = useNotesHandlers({
     habit,
     onEdit,
     setEditingNoteId: state.setEditingNoteId,
     setIsNotesEditorOpen: state.setIsNotesEditorOpen,
     setIsNotesListOpen: state.setIsNotesListOpen,
   });
-
-  // Loading: modal visible but habit data not yet available
-  if (!habit) {
-    return (
-      <Modal
-        transparent
-        animationType='slide'
-        visible={visible}
-        onRequestClose={onClose}
-      >
-        <DetailLoadingState />
-      </Modal>
-    );
-  }
 
   return (
     <Modal
@@ -78,49 +64,56 @@ export default function HabitDetailScreen({
       visible={visible}
       onRequestClose={onClose}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
-      >
-        <View className='flex-1 bg-black/50'>
-          <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
-            <LinearGradient
-              colors={GRADIENT as unknown as string[]}
-              locations={[0, 0.5, 1]}
-              style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
-            >
-              <DetailHeader
-                habit={habit}
-                isCompletedToday={state.isCompletedToday}
-                onClose={onClose}
-                onEdit={notesHandlers.handleEdit}
-              />
-              <HabitDetailContent
-                completedDates={state.completedDates}
-                habit={habit}
-                onDayPress={calendarHandlers.handleCalendarDayPress}
-              />
-            </LinearGradient>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-      <HabitDetailModals
-        editingNote={state.editingNote}
-        habitId={habit._id}
-        habitName={habit.name}
-        handleCloseNotesEditor={notesHandlers.handleCloseNotesEditor}
-        handleConfirmArchive={calendarHandlers.handleConfirmArchive}
-        handleConfirmDelete={calendarHandlers.handleConfirmDelete}
-        handleUndoArchive={calendarHandlers.handleUndoArchive}
-        handleUndoDelete={calendarHandlers.handleUndoDelete}
-        insets={insets}
-        isNotesEditorOpen={state.isNotesEditorOpen}
-        isNotesListOpen={state.isNotesListOpen}
-        pendingArchive={state.pendingArchive}
-        pendingDelete={state.pendingDelete}
-        setIsNotesListOpen={state.setIsNotesListOpen}
-        setPendingDelete={state.setPendingDelete}
-      />
+      {habit ? (
+        <>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            className='flex-1'
+          >
+            <View className='flex-1 bg-black/50'>
+              <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
+                <LinearGradient
+                  colors={BG}
+                  locations={[0, 0.5, 1]}
+                  style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
+                >
+                  <DetailHeader
+                    habit={habit}
+                    isCompletedToday={state.isCompletedToday}
+                    onClose={onClose}
+                    onEdit={notes.handleEdit}
+                  />
+                  <HabitDetailContent
+                    completedDates={state.completedDates}
+                    habit={habit}
+                    onDayPress={cal.handleCalendarDayPress}
+                  />
+                </LinearGradient>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+          <HabitDetailModals
+            editingNote={state.editingNote}
+            habitId={habit._id}
+            habitName={habit.name}
+            handleCloseNotesEditor={notes.handleCloseNotesEditor}
+            handleConfirmArchive={cal.handleConfirmArchive}
+            handleConfirmDelete={cal.handleConfirmDelete}
+            handleUndoArchive={cal.handleUndoArchive}
+            handleUndoDelete={cal.handleUndoDelete}
+            insets={insets}
+            isNotesEditorOpen={state.isNotesEditorOpen}
+            isNotesListOpen={state.isNotesListOpen}
+            pendingArchive={state.pendingArchive}
+            pendingDelete={state.pendingDelete}
+            setIsNotesListOpen={state.setIsNotesListOpen}
+            setPendingDelete={state.setPendingDelete}
+          />
+        </>
+      ) : (
+        // Loading: modal visible but habit data not yet available
+        <DetailLoadingState />
+      )}
     </Modal>
   );
 }

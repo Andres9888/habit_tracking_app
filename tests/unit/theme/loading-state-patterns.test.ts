@@ -20,13 +20,14 @@ describe('HabitDetailScreen loading state', () => {
     expect(source).toMatch(/DetailLoadingState/);
   });
 
-  it('renders DetailLoadingState when habit is null', () => {
-    expect(source).toMatch(/if\s*\(!habit\)\s*\{[\s\S]*?<DetailLoadingState/);
+  it('renders DetailLoadingState in the else branch (habit falsy)', () => {
+    // Ternary: {habit ? <content> : <DetailLoadingState />}
+    expect(source).toMatch(/\) : \([\s\S]*?<DetailLoadingState/);
   });
 
-  it('wraps loading state in a Modal', () => {
+  it('wraps loading state inside a Modal via ternary', () => {
     expect(source).toMatch(
-      /if\s*\(!habit\)\s*\{[\s\S]*?<Modal[\s\S]*?<DetailLoadingState[\s\S]*?<\/Modal>/
+      /<Modal[\s\S]*?\{habit \?[\s\S]*?<DetailLoadingState[\s\S]*?<\/Modal>/
     );
   });
 
