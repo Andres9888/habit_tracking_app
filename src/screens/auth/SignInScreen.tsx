@@ -15,6 +15,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors } from '../../theme/colors';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
 import { useSignInAnimations } from './useSignInAnimations';
@@ -38,7 +39,10 @@ export default function SignInScreen() {
   return (
     <View style={styles.container}>
       {/* OPTIMIZED: Gradient background for depth */}
-      <LinearGradient colors={['#faf9f7', '#f5f3f0']} style={styles.gradientBg}>
+      <LinearGradient
+        colors={[colors.light.background, colors.light.gradientMid]}
+        style={styles.gradientBg}
+      >
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.flex}

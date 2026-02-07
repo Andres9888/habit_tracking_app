@@ -44,6 +44,7 @@ export const colors = {
   light: {
     background: '#faf9f7', // Warm stone background
     card: '#ffffff', // Pure white cards for contrast
+    gradientMid: '#f5f3f0', // Slightly darker warm stone for depth gradients
     surface: '#ffffff', // White surface for elevated elements
     surfaceMuted: '#fafaf9', // stone-50 for subtle sections
   },

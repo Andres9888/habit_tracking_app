@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors } from '../../theme/colors';
 import {
   DetailHeader,
   HabitDetailContent,
@@ -66,7 +67,11 @@ export default function HabitDetailScreen({
           <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
             {/* OPTIMIZED: Gradient background for depth (Background score +2) */}
             <LinearGradient
-              colors={['#faf9f7', '#f5f3f0', '#faf9f7']}
+              colors={[
+                colors.light.background,
+                colors.light.gradientMid,
+                colors.light.background,
+              ]}
               locations={[0, 0.5, 1]}
               style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
             >

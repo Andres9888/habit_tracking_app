@@ -5,6 +5,7 @@
 
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { colors } from '../../theme/colors';
 
 import { HabitsList } from './components/HabitsList';
 import FloatingActionButton from './components/FloatingActionButton';
@@ -40,7 +41,7 @@ export function HabitsApp() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={{ backgroundColor: '#FAF8F5', flex: 1 }}>
+      <View style={{ backgroundColor: colors.light.background, flex: 1 }}>
         <SyncStatusOverlays reduceMotion={list.reduceMotionPreference} />
 
         <HabitsList

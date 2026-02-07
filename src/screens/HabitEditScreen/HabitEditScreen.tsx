@@ -3,6 +3,7 @@ import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors } from '../../theme/colors';
 import { EditHeader } from './EditHeader';
 import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
@@ -33,7 +34,10 @@ export default function HabitEditScreen({
         className='flex-1'
       >
         <View className='flex-1 bg-black/50'>
-          <View className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'>
+          <View
+            className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
+            style={{ backgroundColor: colors.light.background }}
+          >
             <EditHeader
               canSave={state.habitName.trim().length >= 2}
               paddingTop={Math.max(insets.top + 4, 12)}
