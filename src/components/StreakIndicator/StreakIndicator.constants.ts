@@ -7,46 +7,37 @@
  * - 100 days: 💎 (Diamond) - Legendary
  */
 
+import { colors, milestoneColors } from '../../theme/colors';
 import type { Milestone, MilestoneBadge } from './StreakIndicator.types';
 
 export const MILESTONES: readonly Milestone[] = [7, 30, 100];
 
 export const MILESTONE_BADGES: Record<Milestone, MilestoneBadge> = {
-  7: { color: '#f59e0b', emoji: '⭐', label: '1 Week Strong' }, // amber-500
-  30: { color: '#eab308', emoji: '🏆', label: 'Monthly Champion' }, // yellow-500
-  100: { color: '#8b5cf6', emoji: '💎', label: 'Legendary' }, // violet-500
+  7: { color: milestoneColors.amber, emoji: '⭐', label: '1 Week Strong' },
+  30: { color: milestoneColors.yellow, emoji: '🏆', label: 'Monthly Champion' },
+  100: { color: milestoneColors.violet, emoji: '💎', label: 'Legendary' },
 };
 
 export const COLORS = {
-  // stone-600
-  bestStreakBg: '#fef3c7',
+  bestStreakBg: milestoneColors.amberLight,
 
-  // amber-100
-  bestStreakText: '#92400e',
+  bestStreakText: '#92400e', // amber-800 (no theme token)
 
-  // amber-800
-  milestoneBadgeBgAchieved: '#fef3c7',
+  milestoneBadgeBgAchieved: milestoneColors.amberLight,
 
-  // amber-100
-  milestoneBadgeBgUnachieved: '#f5f5f4',
+  milestoneBadgeBgUnachieved: '#f5f5f4', // stone-100 (no exact theme token)
 
-  // stone-100
-  milestoneBadgeBorder: '#fcd34d',
+  milestoneBadgeBorder: milestoneColors.amberBorder,
 
-  // amber-300
-  milestoneLabelAchieved: '#78350f',
+  milestoneLabelAchieved: milestoneColors.amberDark,
 
-  // amber-900
-  milestoneLabelUnachieved: '#a8a29e',
+  milestoneLabelUnachieved: milestoneColors.stone,
 
-  // stone-500
-  streakNumber: '#1c1917',
+  streakLabel: '#57534e', // stone-600 (no theme token)
 
-  // stone-900
-  streakLabel: '#57534e',
+  streakNumber: '#1c1917', // stone-900 (no theme token)
 
-  zeroStreakEmoji: '#a8a29e',
+  zeroStreakEmoji: milestoneColors.stone,
 
-  // stone-400
-  zeroStreakText: '#78716c', // stone-400
+  zeroStreakText: colors.gray[500],
 } as const;
