@@ -6,6 +6,28 @@ import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { HeaderCompleteToggle } from '../../../components/HeaderCompleteToggle';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
 
+const buttonShadow = {
+  shadowColor: '#1c1917',
+  shadowOffset: { height: 2, width: 0 },
+  shadowOpacity: 0.06,
+  shadowRadius: 8,
+} as const;
+
+const iconShadow = {
+  elevation: 8,
+  shadowOffset: { height: 8, width: 0 },
+  shadowOpacity: 0.25,
+  shadowRadius: 16,
+} as const;
+
+const streakShadow = {
+  backgroundColor: '#ecfdf5',
+  shadowColor: '#059669',
+  shadowOffset: { height: 2, width: 0 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+} as const;
+
 export function DetailHeader({
   habit,
   isCompletedToday,
@@ -18,7 +40,6 @@ export function DetailHeader({
 
   return (
     <View>
-      {/* Top bar - OPTIMIZED: FadeIn animation for header buttons */}
       <Animated.View
         className='flex-row items-center justify-between px-4 pb-2'
         entering={FadeIn.duration(200).delay(50)}
@@ -27,19 +48,13 @@ export function DetailHeader({
           accessibilityLabel='Close'
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-full bg-white/80 active:bg-stone-100'
-          style={{
-            shadowColor: '#1c1917',
-            shadowOffset: { height: 2, width: 0 },
-            shadowOpacity: 0.06,
-            shadowRadius: 8,
-          }}
+          style={buttonShadow}
           onPress={onClose}
         >
-          <X color='#44403c' size={22} strokeWidth={2} />
+          <X color='#44403c' size={24} strokeWidth={2} />
         </Pressable>
         <View className='flex-1' />
         <View className='flex-row items-center gap-3'>
-          {/* OPTIMIZED: Primary action emphasized with scale */}
           <HeaderCompleteToggle
             completedToday={isCompletedToday}
             habitId={habit._id}
@@ -49,20 +64,13 @@ export function DetailHeader({
             accessibilityLabel='Edit habit'
             accessibilityRole='button'
             className='h-11 w-11 items-center justify-center rounded-full bg-white/80 active:bg-stone-100'
-            style={{
-              shadowColor: '#1c1917',
-              shadowOffset: { height: 2, width: 0 },
-              shadowOpacity: 0.06,
-              shadowRadius: 8,
-            }}
+            style={buttonShadow}
             onPress={onEdit}
           >
             <Edit3 color='#44403c' size={20} strokeWidth={2} />
           </Pressable>
         </View>
       </Animated.View>
-
-      {/* Hero section - OPTIMIZED: stronger shadows, better visual weight */}
       <Animated.View
         className='items-center px-4 pb-6'
         entering={FadeInDown.duration(280).delay(100)}
@@ -71,12 +79,9 @@ export function DetailHeader({
           <View
             className='mb-4 h-20 w-20 items-center justify-center rounded-2xl'
             style={{
+              ...iconShadow,
               backgroundColor: habit.iconColor || '#fef3c7',
-              elevation: 8,
               shadowColor: habit.iconColor || '#f59e0b',
-              shadowOffset: { height: 8, width: 0 },
-              shadowOpacity: 0.25,
-              shadowRadius: 16,
             }}
           >
             <Text style={{ fontSize: 40 }}>{habit.icon}</Text>
@@ -92,13 +97,7 @@ export function DetailHeader({
           <Animated.View
             className='mt-3 flex-row items-center gap-1.5 rounded-full px-4 py-2'
             entering={FadeInDown.duration(240).delay(200)}
-            style={{
-              backgroundColor: '#ecfdf5',
-              shadowColor: '#059669',
-              shadowOffset: { height: 2, width: 0 },
-              shadowOpacity: 0.1,
-              shadowRadius: 8,
-            }}
+            style={streakShadow}
           >
             <Text style={{ fontSize: 16 }}>🔥</Text>
             <Text className='text-[15px] font-semibold text-emerald-700'>

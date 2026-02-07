@@ -41,7 +41,7 @@ export function ModalHeader({ insets, onBack, onClose }: ModalHeaderProps) {
           style={shadows.subtle}
           onPress={onClose}
         >
-          <X color='#78716c' size={22} strokeWidth={2} />
+          <X color='#78716c' size={24} strokeWidth={2} />
         </TouchableOpacity>
       </View>
     </BlurView>

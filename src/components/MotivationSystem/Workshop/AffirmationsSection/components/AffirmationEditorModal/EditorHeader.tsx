@@ -35,7 +35,7 @@ export function EditorHeader({ isEditing, onClose }: EditorHeaderProps) {
         style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={onClose}
       >
-        <X className='text-stone-500' size={20} />
+        <X className='text-stone-500' size={24} />
       </Pressable>
     </View>
   );

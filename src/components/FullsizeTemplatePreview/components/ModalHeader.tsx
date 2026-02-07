@@ -45,7 +45,7 @@ export function ModalHeader({
         onPress={onClose}
         {...closeButtonPressHandlers}
       >
-        <X color='#374151' size={22} strokeWidth={2.5} />
+        <X color='#374151' size={24} strokeWidth={2.5} />
       </AnimatedPressable>
     </Animated.View>
   );

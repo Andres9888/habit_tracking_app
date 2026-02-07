@@ -53,7 +53,7 @@ export const ModalHeader = ({
         className='h-11 w-11 items-center justify-center rounded-full'
         onPress={onClose}
       >
-        <X color='#44403c' size={22} strokeWidth={2} />
+        <X color='#44403c' size={24} strokeWidth={2} />
       </TouchableOpacity>
 
       <View className='flex-1' />

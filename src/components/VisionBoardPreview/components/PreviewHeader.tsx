@@ -27,7 +27,7 @@ export function PreviewHeader({
         className='h-10 w-10 items-center justify-center rounded-full bg-white/10 active:bg-white/20'
         onPress={onClose}
       >
-        <X className='text-white' size={22} />
+        <X className='text-white' size={24} />
       </Pressable>
 
       {/* Counter */}

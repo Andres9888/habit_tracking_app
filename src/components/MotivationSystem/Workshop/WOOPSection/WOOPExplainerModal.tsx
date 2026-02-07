@@ -52,7 +52,7 @@ export function WOOPExplainerModal({
               className='h-8 w-8 items-center justify-center rounded-full bg-stone-100'
               onPress={onClose}
             >
-              <X className='text-stone-500' size={16} />
+              <X className='text-stone-500' size={24} />
             </Pressable>
           </View>
 

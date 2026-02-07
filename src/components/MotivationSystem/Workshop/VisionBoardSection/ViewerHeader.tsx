@@ -5,7 +5,11 @@
 
 import React, { useCallback } from 'react';
 import { View, Pressable, ActivityIndicator } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { X, Edit3, Trash2 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
@@ -56,7 +60,7 @@ export function ViewerHeader({
         onPressIn={closeAnim.handlePressIn}
         onPressOut={closeAnim.handlePressOut}
       >
-        <X className='text-white' size={20} />
+        <X className='text-white' size={24} />
       </AnimatedPressable>
       <View className='flex-row gap-2'>
         <AnimatedPressable

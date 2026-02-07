@@ -61,7 +61,7 @@ export function TemplatesModalSection({
               closeScale.value = withSpring(1, { damping: 15, stiffness: 200 });
             }}
           >
-            <X color='#57534e' size={22} />
+            <X color='#57534e' size={24} />
           </AnimatedPressable>
         </View>
       </View>

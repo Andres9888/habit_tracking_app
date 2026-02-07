@@ -34,7 +34,7 @@ export function ModalHeader({ onClose }: ModalHeaderProps) {
         hitSlop={12}
         onPress={onClose}
       >
-        <X className='text-stone-500' size={20} />
+        <X className='text-stone-500' size={24} />
       </Pressable>
     </View>
   );
