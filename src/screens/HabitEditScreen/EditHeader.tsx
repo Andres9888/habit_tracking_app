@@ -32,10 +32,10 @@ export function EditHeader({ paddingTop, onCancel, onSave }: EditHeaderProps) {
       <Pressable
         accessibilityLabel='Save changes'
         accessibilityRole='button'
-        className='rounded-full bg-stone-900 px-4 py-2'
+        className='rounded-full bg-emerald-600 px-5 py-2.5 shadow-md'
         onPress={onSave}
       >
-        <Text className='text-sm font-semibold text-white'>Save</Text>
+        <Text className='text-[15px] font-semibold text-white'>Save</Text>
       </Pressable>
     </View>
   );
