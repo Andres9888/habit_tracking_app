@@ -49,9 +49,17 @@ export function useHabitHandlers({
   const handleDeleteHabit = useCallback(
     async (habitId: Id<'habits'>) => {
       const finalizeDeletion = async () => {
-        await removeHabit({ habitId });
-        setIsHabitDetailOpen(false);
-        setSelectedHabit(null);
+        try {
+          await removeHabit({ habitId });
+        } catch (error) {
+          if (__DEV__) {
+            console.error('Failed to delete habit:', error);
+          }
+          Alert.alert('Error', 'Failed to delete habit. Please try again.');
+        } finally {
+          setIsHabitDetailOpen(false);
+          setSelectedHabit(null);
+        }
       };
 
       if (Platform.OS === 'web') {
