@@ -1,3 +1,6 @@
+/**
+ * Tab Styles - OPTIMIZED: Emerald active state, stronger shadows
+ */
 import { StyleSheet } from 'react-native';
 
 export const tabStyles = StyleSheet.create({
@@ -13,15 +16,15 @@ export const tabStyles = StyleSheet.create({
   },
   tabActive: {
     backgroundColor: '#fff',
-    elevation: 2,
+    elevation: 3,
     shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
+    shadowOffset: { height: 3, width: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
   },
   tabBar: {
-    backgroundColor: '#f5f5f4',
-    borderRadius: 12,
+    backgroundColor: '#f0eeeb',
+    borderRadius: 14,
     flexDirection: 'row',
     marginBottom: 12,
     marginHorizontal: 20,
@@ -31,24 +34,25 @@ export const tabStyles = StyleSheet.create({
   },
   tabCount: {
     color: '#a8a29e',
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '700',
     marginLeft: 6,
   },
+  // OPTIMIZED: Emerald active count
   tabCountActive: {
-    color: '#6366f1',
+    color: '#059669',
   },
   tabIndicator: {
     backgroundColor: '#fff',
     borderRadius: 10,
     bottom: 5,
-    elevation: 2,
+    elevation: 3,
     left: 5,
     position: 'absolute',
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
+    shadowColor: '#059669',
+    shadowOffset: { height: 3, width: 0 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
     top: 5,
   },
   tabText: {
@@ -56,7 +60,8 @@ export const tabStyles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  // OPTIMIZED: Emerald active text
   tabTextActive: {
-    color: '#1c1917',
+    color: '#047857',
   },
 });

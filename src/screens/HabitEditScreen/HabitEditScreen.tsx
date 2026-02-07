@@ -2,15 +2,12 @@
  * HabitEditScreen Component
  *
  * Full-screen modal for editing an existing habit's properties.
- * Allows modification of:
- * - Habit name
- * - Emoji icon and accent color
- * - Archive/delete actions
- *
- * Includes unsaved changes protection and haptic feedback.
+ * OPTIMIZED: Section cards, FadeInDown animations, type scale
  */
 
 import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { EditHeader } from './EditHeader';
 import { NameInputSection } from './NameInputSection';
@@ -19,6 +16,7 @@ import { DangerZone } from './DangerZone';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 export default function HabitEditScreen({
   visible,
   habitId,
@@ -33,7 +31,8 @@ export default function HabitEditScreen({
 
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
-      <View className='flex-1 bg-stone-50'>
+      {/* OPTIMIZED: Gradient background */}
+      <LinearGradient className='flex-1' colors={['#faf9f7', '#f5f3f0']}>
         <EditHeader
           paddingTop={insets.top + 8}
           onCancel={() => {
@@ -51,32 +50,49 @@ export default function HabitEditScreen({
           showsVerticalScrollIndicator={false}
         >
           <Pressable onPress={Keyboard.dismiss}>
-            <View className='flex-1 px-6'>
-              <NameInputSection
-                habitName={state.habitName}
-                onChangeText={state.setHabitName}
-              />
+            <View className='flex-1 gap-4 px-4'>
+              {/* OPTIMIZED: Card wrapper + stagger animation */}
+              <Animated.View
+                className='rounded-2xl bg-white p-4 shadow-md'
+                entering={FadeInDown.delay(0).springify().damping(18)}
+              >
+                <NameInputSection
+                  habitName={state.habitName}
+                  onChangeText={state.setHabitName}
+                />
+              </Animated.View>
 
-              <CustomizeSection
-                habitName={state.habitName}
-                remindersEnabled={state.remindersEnabled}
-                reminderTime={state.reminderTime}
-                selectedColor={state.selectedColor}
-                selectedEmoji={state.selectedEmoji}
-                onColorSelect={state.handleColorSelect}
-                onEmojiSelect={state.handleEmojiSelect}
-                onReminderTimeChange={state.handleReminderTimeChange}
-                onReminderToggle={state.handleReminderToggle}
-              />
+              <Animated.View
+                className='rounded-2xl bg-white p-4 shadow-md'
+                entering={FadeInDown.delay(50).springify().damping(18)}
+              >
+                <CustomizeSection
+                  habitName={state.habitName}
+                  remindersEnabled={state.remindersEnabled}
+                  reminderTime={state.reminderTime}
+                  selectedColor={state.selectedColor}
+                  selectedEmoji={state.selectedEmoji}
+                  onColorSelect={state.handleColorSelect}
+                  onEmojiSelect={state.handleEmojiSelect}
+                  onReminderTimeChange={state.handleReminderTimeChange}
+                  onReminderToggle={state.handleReminderToggle}
+                />
+              </Animated.View>
 
-              <DangerZone
-                onArchive={state.handleArchive}
-                onDelete={state.handleDelete}
-              />
+              {/* OPTIMIZED: DangerZone with red tint */}
+              <Animated.View
+                className='rounded-2xl bg-red-50 p-4 shadow-sm'
+                entering={FadeInDown.delay(100).springify().damping(18)}
+              >
+                <DangerZone
+                  onArchive={state.handleArchive}
+                  onDelete={state.handleDelete}
+                />
+              </Animated.View>
             </View>
           </Pressable>
         </ScrollView>
-      </View>
+      </LinearGradient>
     </Modal>
   );
 }
