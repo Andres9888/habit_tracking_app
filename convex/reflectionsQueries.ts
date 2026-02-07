@@ -7,6 +7,7 @@ import {
 
 /**
  * Reflections queries
+ * SEC-001: All queries require authentication and filter by userId
  */
 
 /** Get a reflection for a specific habit and date */
@@ -16,12 +17,20 @@ export const getByHabitAndDate = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const reflection = await ctx.db
       .query('reflections')
       .withIndex('by_habit_and_date', (q) =>
         q.eq('habitId', args.habitId).eq('date', args.date)
       )
       .first();
+
+    if (!reflection) return null;
+    if (reflection.userId !== identity.subject) return null;
+
+    return reflection;
   },
   returns: nullableReflectionValidator,
 });
@@ -33,16 +42,20 @@ export const listByHabit = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const query = ctx.db
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const q = ctx.db
       .query('reflections')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
       .order('desc');
 
     if (args.limit) {
-      return await query.take(args.limit);
+      return await q.take(args.limit);
     }
 
-    return await query.collect();
+    return await q.collect();
   },
   returns: reflectionsArrayValidator,
 });
@@ -53,8 +66,15 @@ export const listRecent = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
     const limit = args.limit ?? 10;
-    return await ctx.db.query('reflections').order('desc').take(limit);
+    return await ctx.db
+      .query('reflections')
+      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .order('desc')
+      .take(limit);
   },
   returns: reflectionsArrayValidator,
 });
