@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: '#FFFFFF',
-    fontSize: 10,
+    fontSize: 13,
     fontWeight: '700',
     letterSpacing: 1,
   },
@@ -53,9 +53,9 @@ const styles = StyleSheet.create({
   },
   pricingAmount: {
     color: colors.premium[600],
-    fontSize: 42,
+    fontSize: 34,
     fontWeight: '700',
-    lineHeight: 48,
+    lineHeight: 41,
   },
   pricingCard: {
     backgroundColor: colors.surface,
@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
   },
   pricingLabel: {
     color: colors.text.primary,
-    fontSize: 18,
-    fontWeight: '700',
-    lineHeight: 24,
+    fontSize: 17,
+    fontWeight: '600',
+    lineHeight: 22,
     marginBottom: spacing.sm,
     textAlign: 'center',
   },

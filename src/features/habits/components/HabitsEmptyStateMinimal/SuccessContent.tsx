@@ -32,8 +32,8 @@ export function SuccessContent({
       <Text
         style={{
           color: COLORS.stone800,
-          fontSize: 24,
-          fontWeight: '700',
+          fontSize: 22,
+          fontWeight: '600',
           marginBottom: 8,
           textAlign: 'center',
         }}
@@ -90,8 +90,8 @@ export function SuccessContent({
           <Text
             style={{
               color: '#ffffff',
-              fontSize: 15,
-              fontWeight: '700',
+              fontSize: 17,
+              fontWeight: '600',
             }}
           >
             {COPY.addAnother}

@@ -22,8 +22,8 @@ const localStyles = StyleSheet.create({
     paddingVertical: 14,
   },
   timeText: {
-    color: '#374151',
-    fontSize: 16,
+    color: '#1c1917', // stone-900
+    fontSize: 17,
     fontWeight: '600',
   },
 });

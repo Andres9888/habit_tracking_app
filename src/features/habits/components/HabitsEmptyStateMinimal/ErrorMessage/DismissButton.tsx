@@ -27,9 +27,9 @@ export function DismissButton({ onPress }: DismissButtonProps) {
       <Text
         style={{
           color: ERROR_COLORS.dismissText,
-          fontSize: 18,
+          fontSize: 17,
           fontWeight: '500',
-          lineHeight: 20,
+          lineHeight: 22,
         }}
       >
         ✕

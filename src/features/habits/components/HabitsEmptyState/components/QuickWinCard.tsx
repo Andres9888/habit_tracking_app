@@ -51,18 +51,18 @@ export function QuickWinCard({
       className={clsx(BASE_CARD_CLASS)}
       entering={FadeInDown.delay(80).springify().damping(18)}
       style={{
-        elevation: 3,
-        shadowColor: '#78716c',
+        elevation: 4,
+        shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
-        shadowRadius: 12,
+        shadowRadius: 16,
       }}
     >
       <View className='mb-1 gap-2'>
         <Text className='text-[17px] font-semibold leading-[22px] text-stone-800'>
           Tap one you can do now
         </Text>
-        <Text className='text-[15px] leading-[20px] text-stone-600'>
+        <Text className='text-[17px] leading-[22px] text-stone-600'>
           Start small—you can always customize later.
         </Text>
         {!isShuffled && (

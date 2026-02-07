@@ -10,8 +10,8 @@ import type { TemplatePreviewProps } from './types';
 
 const localStyles = StyleSheet.create({
   templateDescription: {
-    color: '#6B7280',
-    fontSize: 15,
+    color: '#78716c', // stone-500
+    fontSize: 17,
     lineHeight: 22,
     textAlign: 'center',
   },

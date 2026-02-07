@@ -86,8 +86,8 @@ const styles = StyleSheet.create({
   },
   importButtonText: {
     color: '#ffffff',
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: 17,
+    fontWeight: '600',
   },
   previewButton: {
     alignItems: 'center',
@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   previewButtonText: {
-    color: '#374151',
-    fontSize: 15,
+    color: '#1c1917',
+    fontSize: 17,
     fontWeight: '600',
   },
 });

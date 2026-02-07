@@ -14,7 +14,7 @@ export function ErrorIcon() {
       style={{
         alignItems: 'center',
         backgroundColor: ERROR_COLORS.iconBackground,
-        borderRadius: 10,
+        borderRadius: 12,
         height: 20,
         justifyContent: 'center',
         width: 20,
@@ -23,9 +23,9 @@ export function ErrorIcon() {
       <Text
         style={{
           color: ERROR_COLORS.iconText,
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: '700',
-          lineHeight: 16,
+          lineHeight: 18,
         }}
       >
         !

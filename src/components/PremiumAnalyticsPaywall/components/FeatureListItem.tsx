@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   featureIcon: {
     alignItems: 'center',
     backgroundColor: colors.background,
-    borderRadius: 8,
+    borderRadius: 12,
     height: 40,
     justifyContent: 'center',
     marginRight: spacing.md,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   featureTitle: {
     color: colors.text.primary,
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
     lineHeight: 22,
     marginBottom: spacing.xxs,

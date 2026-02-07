@@ -29,10 +29,10 @@ export function CustomHabitCard({ onPress }: CustomHabitCardProps) {
         animatedStyle,
         {
           elevation: 4,
-          shadowColor: '#7c3aed',
+          shadowColor: '#1c1917',
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.12,
-          shadowRadius: 12,
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
         },
       ]}
       onPress={() => {
@@ -54,11 +54,11 @@ export function CustomHabitCard({ onPress }: CustomHabitCardProps) {
           glowStyle,
           {
             backgroundColor: '#7c3aed',
-            elevation: 8,
-            shadowColor: '#7c3aed',
-            shadowOffset: { height: 6, width: 0 },
-            shadowOpacity: 0.4,
-            shadowRadius: 12,
+            elevation: 4,
+            shadowColor: '#1c1917',
+            shadowOffset: { height: 4, width: 0 },
+            shadowOpacity: 0.08,
+            shadowRadius: 16,
           },
         ]}
       >
@@ -68,7 +68,7 @@ export function CustomHabitCard({ onPress }: CustomHabitCardProps) {
         <Text className='text-[17px] font-semibold text-stone-800'>
           Build something just for you
         </Text>
-        <Text className='text-[15px] leading-[20px] text-stone-600'>
+        <Text className='text-[17px] leading-[22px] text-stone-600'>
           Name it, schedule it, make it yours.
         </Text>
         <View className='mt-0.5 flex-row items-center gap-2'>
@@ -76,7 +76,7 @@ export function CustomHabitCard({ onPress }: CustomHabitCardProps) {
             Start from scratch →
           </Text>
           <View className='rounded-full bg-violet-100 px-2 py-0.5'>
-            <Text className='text-[10px] font-semibold text-violet-600'>
+            <Text className='text-[13px] font-semibold text-violet-600'>
               ~30s
             </Text>
           </View>

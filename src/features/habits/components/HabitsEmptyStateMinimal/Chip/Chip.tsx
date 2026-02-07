@@ -84,16 +84,17 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
           minHeight: TOUCH_TARGETS.chipHeight,
           paddingHorizontal: 10,
           paddingVertical: 8,
-          shadowColor: '#000000',
-          shadowOffset: { height: 1, width: 0 },
-          shadowRadius: 2,
+          shadowColor: '#1c1917',
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
         },
       ]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <Text style={{ fontSize: 15 }}>{chip.emoji}</Text>
+      <Text style={{ fontSize: 17 }}>{chip.emoji}</Text>
       <Animated.Text style={[textStyle, { fontSize: 13, fontWeight: '600' }]}>
         {chip.label}
       </Animated.Text>

@@ -34,7 +34,7 @@ export function StandardMeter({
         shadowColor: percentage === 100 ? colors.glow : 'transparent',
         shadowOffset: { height: 0, width: 0 },
         shadowOpacity: percentage === 100 ? 0.4 : 0,
-        shadowRadius: 12,
+        shadowRadius: 16,
         transform: [{ scale: celebrationScale }],
       }}
     >

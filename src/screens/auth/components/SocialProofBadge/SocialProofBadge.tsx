@@ -47,24 +47,29 @@ export function SocialProofBadge({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#fffbeb',
+    borderRadius: 9999,
+    flexDirection: 'row',
+    // pill badge
+    gap: 8,
+
     justifyContent: 'center',
-    backgroundColor: '#fffbeb', // amber-50
+
+    // amber-50
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 24,
-    gap: 8,
-  },
-  star: {
-    fontSize: 14,
-  },
-  text: {
-    fontSize: 14,
-    color: '#92400e', // amber-800
   },
   count: {
     fontWeight: '600',
+  },
+  star: {
+    fontSize: 13, // caption scale
+  },
+  text: {
+    // caption scale
+    color: '#92400e',
+    fontSize: 13, // amber-800
   },
 });
 

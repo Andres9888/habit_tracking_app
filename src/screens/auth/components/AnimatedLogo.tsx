@@ -84,13 +84,13 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
         style={[
           animatedStyle,
           {
-            borderRadius: 24,
-            elevation: 8,
+            borderRadius: 16,
+            elevation: 4,
             height: size,
-            shadowColor: '#000',
+            shadowColor: '#1c1917',
             shadowOffset: { height: 4, width: 0 },
-            shadowOpacity: 0.3,
-            shadowRadius: 8,
+            shadowOpacity: 0.08,
+            shadowRadius: 16,
             width: size,
           },
         ]}
@@ -101,7 +101,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
           start={{ x: 0, y: 0 }}
           style={{
             alignItems: 'center',
-            borderRadius: 24,
+            borderRadius: 16,
             height: size,
             justifyContent: 'center',
             width: size,

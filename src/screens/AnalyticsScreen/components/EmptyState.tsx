@@ -18,9 +18,9 @@ export const EmptyState: React.FC = () => {
         entering={anim(0)}
         style={{
           shadowColor: '#8b5cf6',
-          shadowOffset: { height: 8, width: 0 },
-          shadowOpacity: 0.15,
-          shadowRadius: 20,
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
         }}
       >
         <BarChart3 color='#8b5cf6' size={48} strokeWidth={1.5} />
@@ -37,7 +37,7 @@ export const EmptyState: React.FC = () => {
 
       {/* Description */}
       <Animated.Text
-        className='mb-8 text-center text-[15px] leading-[22px] text-stone-500'
+        className='mb-8 text-center text-[17px] leading-[22px] text-stone-500'
         entering={anim(100)}
         style={{ maxWidth: 280 }}
       >
@@ -81,7 +81,7 @@ function StepItem({ number, text }: { number: string; text: string }) {
           {number}
         </Text>
       </View>
-      <Text className='text-[15px] text-stone-700'>{text}</Text>
+      <Text className='text-[17px] text-stone-700'>{text}</Text>
     </View>
   );
 }

@@ -44,8 +44,8 @@ export function SettingsSection({
           elevation: highContrastMode ? 0 : 3,
           shadowColor: highContrastMode ? 'transparent' : '#1c1917',
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: highContrastMode ? 0 : 0.06,
-          shadowRadius: 12,
+          shadowOpacity: highContrastMode ? 0 : 0.08,
+          shadowRadius: 16,
         }}
       >
         {children}

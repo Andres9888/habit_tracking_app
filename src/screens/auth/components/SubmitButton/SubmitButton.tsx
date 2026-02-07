@@ -57,8 +57,8 @@ export function SubmitButton({
         {
           shadowColor: '#1c1917',
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.15,
-          shadowRadius: 12,
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
         },
       ]}
       onPress={onPress}

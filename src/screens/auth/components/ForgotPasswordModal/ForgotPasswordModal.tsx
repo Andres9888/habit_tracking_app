@@ -59,7 +59,7 @@ export function ForgotPasswordModal({
         >
           <Text
             className='font-bold text-stone-900'
-            style={{ fontSize: 28, letterSpacing: -0.5, lineHeight: 34 }}
+            style={{ fontSize: 22, letterSpacing: -0.35, lineHeight: 28 }}
           >
             Reset Password
           </Text>

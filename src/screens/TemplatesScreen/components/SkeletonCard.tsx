@@ -9,18 +9,18 @@ export function SkeletonCard({ index }: { index: number }) {
       className='mx-5 my-2 rounded-2xl bg-white p-5'
       entering={FadeIn.duration(300).delay(d)}
       style={{
-        elevation: 3,
+        elevation: 4,
         shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.06,
-        shadowRadius: 12,
+        shadowOpacity: 0.08,
+        shadowRadius: 16,
       }}
     >
       <View className='flex-row items-center gap-4'>
         <ShimmerBox
           delay={d}
           height={48}
-          style={{ borderRadius: 24 }}
+          style={{ borderRadius: 16 }}
           width={48}
         />
         <View className='flex-1 gap-2'>

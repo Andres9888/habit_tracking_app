@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    borderRadius: 8,
+    borderRadius: 12,
     flexDirection: 'row',
     gap: 6,
     marginTop: 10,

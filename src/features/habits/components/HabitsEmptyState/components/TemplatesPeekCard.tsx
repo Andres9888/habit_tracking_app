@@ -62,7 +62,7 @@ export function TemplatesPeekCard({ onPress }: TemplatesPeekCardProps) {
     >
       <View className='self-start rounded-full bg-emerald-100 px-3 py-1'>
         <View className='flex-row items-center gap-1'>
-          <Text className='text-[11px] font-bold tracking-wide text-emerald-700'>
+          <Text className='text-[13px] font-bold tracking-wide text-emerald-700'>
             ⭐ POPULAR
           </Text>
         </View>
@@ -83,13 +83,13 @@ export function TemplatesPeekCard({ onPress }: TemplatesPeekCardProps) {
         style={{
           backgroundColor: '#10b981',
           elevation: 4,
-          shadowColor: '#10b981',
+          shadowColor: '#1c1917',
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.25,
-          shadowRadius: 8,
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
         }}
       >
-        <Text className='text-center text-[15px] font-bold tracking-wide text-white'>
+        <Text className='text-center text-[17px] font-semibold tracking-wide text-white'>
           Get started →
         </Text>
       </View>

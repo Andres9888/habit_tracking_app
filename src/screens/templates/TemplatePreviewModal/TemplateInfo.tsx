@@ -19,15 +19,15 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   infoPillLabel: {
-    color: '#6B7280',
-    fontSize: 12,
+    color: '#78716c', // stone-500
+    fontSize: 13,
     fontWeight: '600',
     marginBottom: 4,
     textTransform: 'uppercase',
   },
   infoPillValue: {
-    color: '#111827',
-    fontSize: 14,
+    color: '#1c1917', // stone-900
+    fontSize: 17,
     fontWeight: '700',
   },
 });
