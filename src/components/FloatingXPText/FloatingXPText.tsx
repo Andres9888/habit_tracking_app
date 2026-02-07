@@ -67,58 +67,54 @@ export function FloatingXPText({
   }, []);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
     opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
   }));
 
   return (
     <Animated.View
+      pointerEvents='none'
       style={[
         styles.container,
         {
-          position: 'absolute',
           left: startPosition.x,
+          position: 'absolute',
           top: startPosition.y,
         },
         animatedStyle,
       ]}
-      pointerEvents="none"
     >
       {showCoin ? (
         // Coin variant (gold color)
-        <Animated.Text style={styles.coinText}>
-          +{value} 🪙
-        </Animated.Text>
+        <Animated.Text style={styles.coinText}>+{value} 🪙</Animated.Text>
       ) : (
         // XP variant (green gradient - simulate with shadow for now)
-        <Animated.Text style={styles.xpText}>
-          +{value} XP
-        </Animated.Text>
+        <Animated.Text style={styles.xpText}>+{value} XP</Animated.Text>
       )}
     </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
+  coinText: {
+    color: '#F59E0B',
+    fontSize: 18,
+    fontWeight: 'bold', // Amber 500
+    textShadowColor: '#F59E0B',
+    textShadowOffset: { height: 0, width: 0 },
+    textShadowRadius: 8,
+  },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000,
   },
   xpText: {
+    color: '#047857',
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#10B981', // Green 500
+    fontWeight: 'bold', // Green 700 (WCAG AA compliant text)
     textShadowColor: '#10B981',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 8,
-  },
-  coinText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#F59E0B', // Amber 500
-    textShadowColor: '#F59E0B',
-    textShadowOffset: { width: 0, height: 0 },
+    textShadowOffset: { height: 0, width: 0 },
     textShadowRadius: 8,
   },
 });

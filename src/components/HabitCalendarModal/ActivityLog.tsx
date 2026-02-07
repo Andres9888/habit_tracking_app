@@ -72,7 +72,7 @@ export function ActivityLog({ tracking }: ActivityLogProps) {
               )}
               <Text
                 className={`text-sm font-semibold ${
-                  activity.completed ? 'text-emerald-500' : 'text-stone-500'
+                  activity.completed ? 'text-emerald-700' : 'text-stone-500'
                 }`}
               >
                 {formatActivityTime(activity._creationTime)}

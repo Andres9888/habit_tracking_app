@@ -29,7 +29,7 @@ export function StrengthDisplay({
           theme.custom.typography.heading1,
           styles.percentage,
           {
-            color: theme.custom.colors.primary[500],
+            color: theme.custom.colors.primary[700],
             fontFamily: theme.custom.fontFamilies.monospace,
           },
         ]}

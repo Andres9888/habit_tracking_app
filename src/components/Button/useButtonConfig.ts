@@ -61,7 +61,7 @@ export function useButtonConfig(
             borderColor: theme.custom.colors.primary[500],
             borderWidth: 1.5,
           },
-          text: { color: theme.custom.colors.primary[500] },
+          text: { color: theme.custom.colors.primary[700] },
         };
       }
 
@@ -71,7 +71,7 @@ export function useButtonConfig(
             backgroundColor: 'transparent',
             borderWidth: 0,
           },
-          text: { color: theme.custom.colors.primary[500] },
+          text: { color: theme.custom.colors.primary[700] },
         };
       }
 

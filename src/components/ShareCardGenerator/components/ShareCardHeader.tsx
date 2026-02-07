@@ -28,7 +28,7 @@ export function ShareCardHeader({ onClose }: ShareCardHeaderProps) {
         <Text
           style={[
             styles.closeButton,
-            { color: theme.custom.colors.primary[500] },
+            { color: theme.custom.colors.primary[700] },
           ]}
         >
           Done

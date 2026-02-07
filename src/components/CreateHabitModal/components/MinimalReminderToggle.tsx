@@ -55,7 +55,7 @@ export const MinimalReminderToggle = ({
           >
             <Text
               className={`text-xs font-medium ${
-                enabled ? 'text-emerald-500' : 'text-stone-400'
+                enabled ? 'text-emerald-700' : 'text-stone-400'
               }`}
             >
               {enabled ? time : 'Off'}

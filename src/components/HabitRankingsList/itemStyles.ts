@@ -88,7 +88,7 @@ export const itemStyles = StyleSheet.create({
   },
   strengthPercentage: {
     ...typography.h3,
-    color: colors.primary[500],
+    color: colors.primary[700],
     marginBottom: spacing.xs,
   },
 });
