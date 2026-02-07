@@ -64,11 +64,8 @@ export function createSentryReporter(): SentryReporter {
     setUser(user: SentryUser | null): void {
       if (!isSentryInitialized()) return;
       if (user) {
-        Sentry.setUser({
-          email: user.email,
-          id: user.id,
-          username: user.username,
-        });
+        // Only send opaque ID — no email/username (GDPR/CCPA compliance)
+        Sentry.setUser({ id: user.id });
         Sentry.setTag('user_premium', user.isPremium ? 'true' : 'false');
       } else {
         Sentry.setUser(null);

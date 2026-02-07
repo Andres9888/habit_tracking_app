@@ -11,15 +11,8 @@ export function SentryUserSync({ children }: PropsWithChildren) {
   const { user, isSignedIn } = useUser();
 
   // Sync user to Sentry when auth changes
-  useSentryUser(
-    isSignedIn && user
-      ? {
-          email: user.primaryEmailAddress?.emailAddress,
-          id: user.id,
-          username: user.username ?? undefined,
-        }
-      : null
-  );
+  // Only send opaque user ID — no email/username (GDPR/CCPA compliance)
+  useSentryUser(isSignedIn && user ? { id: user.id } : null);
 
   return <>{children}</>;
 }

@@ -23,12 +23,10 @@ export interface SentryConfig {
   tracesSampleRate?: number;
 }
 
-/** User context for Sentry */
+/** User context for Sentry — only opaque ID (no PII per GDPR/CCPA) */
 export interface SentryUser {
-  email?: string;
   id: string;
   isPremium?: boolean;
-  username?: string;
 }
 
 /** Breadcrumb for user actions */
