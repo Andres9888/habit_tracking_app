@@ -67,7 +67,7 @@ export function QuickWinCard({
         </Text>
         {!isShuffled && (
           <View className='mt-1 self-center rounded-full bg-amber-100/80 px-3 py-1.5'>
-            <Text className='text-[10px] font-medium tracking-wide text-amber-700'>
+            <Text className='text-[13px] font-medium text-amber-700'>
               {periodLabel}
             </Text>
           </View>
