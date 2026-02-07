@@ -281,15 +281,20 @@ describe('Theme Colors - Phase 1', () => {
       expect(milestoneColors.stone).toBe('#A8A29E');
     });
 
-    it('should have all 7 milestone color keys', () => {
+    it('should have amberText (#A16207) for text on amber backgrounds', () => {
+      expect(milestoneColors.amberText).toBe('#A16207');
+    });
+
+    it('should have all 8 milestone color keys', () => {
       const keys = Object.keys(milestoneColors);
-      expect(keys).toHaveLength(7);
+      expect(keys).toHaveLength(8);
       expect(keys).toEqual(
         expect.arrayContaining([
           'amber',
           'amberBorder',
           'amberDark',
           'amberLight',
+          'amberText',
           'stone',
           'violet',
           'yellow',

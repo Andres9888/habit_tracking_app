@@ -11,6 +11,7 @@ export const milestoneColors = {
   amberBorder: '#FCD34D',
   amberDark: '#78350F',
   amberLight: '#FEF9C3',
+  amberText: '#A16207',
   stone: '#A8A29E',
   violet: '#8B5CF6',
   yellow: '#EAB308',

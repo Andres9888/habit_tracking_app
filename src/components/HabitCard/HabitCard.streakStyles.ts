@@ -4,6 +4,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
 
 export const streakStyles = StyleSheet.create({
   bestStreakBadge: {
@@ -23,13 +24,13 @@ export const streakStyles = StyleSheet.create({
     fontWeight: '600',
   },
   rippleOverlay: {
+    backgroundColor: colors.primary[500],
+    borderRadius: 20,
     height: 40,
     left: '50%',
-    backgroundColor: '#10B981',
     marginLeft: -20,
-    borderRadius: 20,
-    position: 'absolute',
     marginTop: -20,
+    position: 'absolute',
     top: '50%',
     width: 40,
   },

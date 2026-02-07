@@ -4,6 +4,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 
 export const statusStyles = StyleSheet.create({
@@ -30,7 +31,11 @@ export const statusStyles = StyleSheet.create({
     justifyContent: 'center',
     width: 28,
   },
-  checkmarkText: { color: '#FFFFFF', fontSize: 14, fontWeight: 'bold' },
+  checkmarkText: {
+    color: colors.text.inverse,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
   statusContainer: {
     alignItems: 'center',
     flexDirection: 'row',
