@@ -9,6 +9,9 @@ export type StrengthEmojiAnimatedStyle = AnimatedStyle<{
   transform: { scale: number; rotate: string }[];
 }>;
 
+/** Animated style type for progress bar width */
+export type ProgressAnimatedStyle = AnimatedStyle<{ width: string }>;
+
 export interface DraggableHabitCardProps {
   accentColor: string;
   archiveFlash: Animated.Value;
@@ -47,6 +50,7 @@ export interface DraggableHabitCardProps {
   streak: number;
   strengthEmojiAnimatedStyle: StrengthEmojiAnimatedStyle;
   strengthPercent: number;
+  progressAnimatedStyle: ProgressAnimatedStyle;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
   translateY: Animated.Value;
   weekDateStrings: string[];

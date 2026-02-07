@@ -1,47 +1,25 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-lines-per-function */
-import { useMemo } from 'react';
+/**
+ * HabitsApp - Main habits screen
+ * Orchestrates the habits list, modals, overlays, and floating action button
+ */
+
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { HabitsList } from './components/HabitsList';
-import { HabitsModals } from './components/HabitsModals';
 import FloatingActionButton from './components/FloatingActionButton';
-import WebToaster from './components/WebToaster';
-import { ArchiveUndoToast } from '../../components/ArchiveUndoToast';
-import { RevenueCatPaywall } from '../../components/RevenueCatPaywall';
-import {
-  SyncingIndicator,
-  SyncedToast,
-  useSyncedToast,
-} from '../../components/SyncStatus';
+import { SyncStatusOverlays } from './components/SyncStatusOverlays';
+import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { useNotificationResponse } from '../../hooks/useNotificationResponse';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
-import { useSyncStatus } from '../../contexts/SyncStatusContext';
 
 export function HabitsApp() {
   const { list, modals } = useHabitsApp();
-  const { openCreateHabitScreen, openActivationModalById } = modals;
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
   });
-
-  const { status: syncStatus } = useSyncStatus();
-  const { visible: syncedToastVisible, syncedCount } = useSyncedToast();
-
-  const notificationHandlers = useMemo(
-    () => ({
-      onHabitNotificationTap: (habitId: string) => {
-        openActivationModalById(habitId);
-      },
-    }),
-    [openActivationModalById]
-  );
-
-  useNotificationResponse(notificationHandlers);
 
   const {
     handleCreateHabitRequest,
@@ -55,33 +33,15 @@ export function HabitsApp() {
   } = useHabitsAppHandlers({
     hasReachedHabitLimit: list.hasReachedHabitLimit,
     isPremiumUser: list.isPremiumUser,
-    openCreateHabitScreen,
+    openCreateHabitScreen: modals.openCreateHabitScreen,
     triggerSelection,
     triggerWarning,
   });
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: '#FAF8F5' }}>
-
-        {/* Sync Status Indicators - Global position */}
-        <View className='absolute left-0 right-0 top-20 z-50 flex-row justify-center'>
-          <SyncingIndicator
-            pendingCount={syncStatus.pendingCount}
-            reduceMotion={list.reduceMotionPreference}
-            testID='global-syncing-indicator'
-            visible={syncStatus.isSyncing}
-          />
-        </View>
-
-        <View className='absolute left-0 right-0 top-32 z-50 flex-row justify-center'>
-          <SyncedToast
-            reduceMotion={list.reduceMotionPreference}
-            syncedCount={syncedCount}
-            testID='global-synced-toast'
-            visible={syncedToastVisible}
-          />
-        </View>
+      <View style={{ backgroundColor: '#FAF8F5', flex: 1 }}>
+        <SyncStatusOverlays reduceMotion={list.reduceMotionPreference} />
 
         <HabitsList
           canNavigateForward={list.canNavigateForward}
@@ -109,24 +69,12 @@ export function HabitsApp() {
           </View>
         )}
 
-        <WebToaster />
-        <HabitsModals state={modals} />
-
-        {/* Archive Undo Toast */}
-        <ArchiveUndoToast
-          duration={5000}
-          habitName={list.archiveUndoHabitName}
-          visible={list.archiveUndoVisible}
-          onDismiss={list.dismissArchiveUndo}
-          onUndo={list.handleArchiveUndo}
-        />
-
-        {/* RevenueCat Paywall */}
-        <RevenueCatPaywall
-          visible={paywallVisible}
-          onClose={handlePaywallClose}
-          onPurchaseSuccess={handlePaywallSuccess}
-          onRestoreSuccess={handlePaywallSuccess}
+        <HabitsAppOverlays
+          list={list}
+          modals={modals}
+          paywallVisible={paywallVisible}
+          onPaywallClose={handlePaywallClose}
+          onPaywallSuccess={handlePaywallSuccess}
         />
       </View>
     </GestureHandlerRootView>
