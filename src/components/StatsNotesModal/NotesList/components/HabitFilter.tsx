@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 
 interface Habit {
@@ -28,11 +29,10 @@ export const HabitFilter: React.FC<HabitFilterProps> = ({
       FILTER BY HABIT
     </Text>
     <View className='flex-row flex-wrap gap-2'>
-      <TouchableOpacity
+      <AnimatedPressable
         accessibilityLabel='Show all notes'
         accessibilityRole='button'
         accessibilityState={{ selected: selectedFilter === 'all' }}
-        activeOpacity={0.7}
         className={`rounded-xl px-3 py-2 ${
           selectedFilter === 'all' ? 'bg-stone-900' : 'bg-stone-100'
         }`}
@@ -45,14 +45,13 @@ export const HabitFilter: React.FC<HabitFilterProps> = ({
         >
           All
         </Text>
-      </TouchableOpacity>
+      </AnimatedPressable>
       {habits.map((habit) => (
-        <TouchableOpacity
+        <AnimatedPressable
           key={habit._id}
           accessibilityLabel={`Filter by ${habit.name}`}
           accessibilityRole='button'
           accessibilityState={{ selected: selectedFilter === habit._id }}
-          activeOpacity={0.7}
           className={`rounded-xl px-3 py-2 ${
             selectedFilter === habit._id ? 'bg-stone-900' : 'bg-stone-100'
           }`}
@@ -65,7 +64,7 @@ export const HabitFilter: React.FC<HabitFilterProps> = ({
           >
             {habit.name}
           </Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
       ))}
     </View>
   </View>

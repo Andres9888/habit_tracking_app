@@ -5,8 +5,9 @@
 
 import type { ComponentProps } from 'react';
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import type { HabitChange, HabitChangeType } from './WeeklyInsightsCard.types';
 import { habitItemStyles as styles } from './HabitItem.styles';
@@ -45,11 +46,10 @@ export function HabitItem({ habit, type, onPress }: HabitItemProps) {
   const icon = getChangeIcon(type);
 
   return (
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityHint='Opens habit detail'
       accessibilityLabel={getAccessibilityLabel(habit, type)}
       accessibilityRole='button'
-      activeOpacity={0.7}
       style={styles.habitItem}
       onPress={() => onPress?.(habit.habitId)}
     >
@@ -81,6 +81,6 @@ export function HabitItem({ habit, type, onPress }: HabitItemProps) {
           </Text>
         )}
       </View>
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }

@@ -4,9 +4,10 @@
  */
 
 import React from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { format } from 'date-fns';
 import { Trash2, Edit3 } from 'lucide-react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 
 interface NoteCardProps {
@@ -45,22 +46,22 @@ export const NoteCard: React.FC<NoteCardProps> = ({
           : `Updated ${format(note.updatedAt, 'MMM d, h:mm a')}`}
       </Text>
       <View className='flex-row gap-2'>
-        <TouchableOpacity
+        <AnimatedPressable
           accessibilityLabel='Edit note'
           accessibilityRole='button'
-          activeOpacity={0.7}
           className='rounded-full bg-stone-200 p-2'
           disabled={isDeleting}
+          disableAnimation={isDeleting}
           onPress={onEdit}
         >
           <Edit3 color='#57534e' size={14} strokeWidth={2.25} />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </AnimatedPressable>
+        <AnimatedPressable
           accessibilityLabel='Delete note'
           accessibilityRole='button'
-          activeOpacity={0.7}
           className='rounded-full bg-red-100 p-2'
           disabled={isDeleting}
+          disableAnimation={isDeleting}
           onPress={onDelete}
         >
           {isDeleting ? (
@@ -68,7 +69,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
           ) : (
             <Trash2 color='#ef4444' size={14} strokeWidth={2.25} />
           )}
-        </TouchableOpacity>
+        </AnimatedPressable>
       </View>
     </View>
   </View>

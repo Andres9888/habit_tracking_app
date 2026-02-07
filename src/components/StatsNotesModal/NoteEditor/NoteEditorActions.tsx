@@ -4,7 +4,8 @@
  * Cancel and save/add buttons for the note editor.
  */
 
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 import type { NoteEditorActionsProps } from './types';
 
@@ -17,26 +18,26 @@ export function NoteEditorActions({
 }: NoteEditorActionsProps) {
   return (
     <View className='flex-row items-center justify-end gap-3'>
-      <TouchableOpacity
+      <AnimatedPressable
         accessibilityLabel='Cancel'
         accessibilityRole='button'
-        activeOpacity={0.7}
         className='py-2'
         disabled={isSaving}
+        disableAnimation={isSaving}
         onPress={onCancel}
       >
         <Text className='text-xs font-semibold tracking-[2px] text-stone-500'>
           CANCEL
         </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
+      </AnimatedPressable>
+      <AnimatedPressable
         accessibilityLabel={isEditing ? 'Save note' : 'Add note'}
         accessibilityRole='button'
-        activeOpacity={0.7}
         className={`rounded-3xl border border-stone-900 px-4 py-2.5 ${
           !isValid || isSaving ? 'opacity-40' : ''
         }`}
         disabled={!isValid || isSaving}
+        disableAnimation={!isValid || isSaving}
         onPress={onSave}
       >
         {isSaving ? (
@@ -46,7 +47,7 @@ export function NoteEditorActions({
             {isEditing ? 'SAVE' : 'ADD'}
           </Text>
         )}
-      </TouchableOpacity>
+      </AnimatedPressable>
     </View>
   );
 }
