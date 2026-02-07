@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
+import { colors } from '../../theme/colors';
 
 export const styles = StyleSheet.create({
   container: {
@@ -55,7 +56,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   toast: {
-    backgroundColor: '#ffffff', // white - matches habit cards
+    backgroundColor: colors.light.card, // white - matches habit cards
     borderColor: '#f5f5f4', // stone-100 - matches card borders
     borderRadius: borderRadius.xl, // matches card rounded-3xl
     borderWidth: 1,

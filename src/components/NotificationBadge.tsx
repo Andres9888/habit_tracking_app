@@ -9,6 +9,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 
+import { colors } from '../theme/colors';
 import { borderRadius } from '../theme/spacing';
 import { typography } from '@/theme/typography';
 
@@ -75,7 +76,7 @@ export function NotificationBadge({
       {count > 0 && (
         <Text
           style={{
-            color: '#ffffff',
+            color: colors.text.inverse,
             fontSize: typography.tabBar.fontSize,
             fontWeight: '700',
             lineHeight: 14,

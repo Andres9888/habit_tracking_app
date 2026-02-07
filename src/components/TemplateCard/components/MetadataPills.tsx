@@ -8,6 +8,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
 import { borderRadius, spacing } from '../../../theme/spacing';
+import { colors } from '../../../theme/colors';
 import { formatFrequency } from '../TemplateCard.constants';
 
 interface MetadataPillsProps {
@@ -75,7 +76,7 @@ export function MetadataPills({
 
 export const styles = StyleSheet.create({
   metadataPill: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.light.card,
     borderRadius: borderRadius.full,
     borderWidth: 1,
     paddingHorizontal: spacing.sm,

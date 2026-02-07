@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
+import { colors } from '../../../theme/colors';
 
 export const layoutStyles = StyleSheet.create({
   banner: {
@@ -24,7 +25,7 @@ export const layoutStyles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.light.card,
     borderRadius: borderRadius.full,
     height: 36,
     justifyContent: 'center',

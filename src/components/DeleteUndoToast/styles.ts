@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
+import { colors } from '../../theme/colors';
 
 export const DISMISS_THRESHOLD = 50;
 
@@ -53,7 +54,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   toast: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.light.card,
     borderColor: '#fecaca', // red-200
     borderRadius: borderRadius.xl,
     borderWidth: 1,

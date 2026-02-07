@@ -8,6 +8,7 @@
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
+import { colors } from '../../../theme/colors';
 
 export const styles = StyleSheet.create({
   container: {
@@ -32,7 +33,7 @@ export const styles = StyleSheet.create({
   },
 
   countText: {
-    color: '#ffffff',
+    color: colors.text.inverse,
     fontSize: 10,
     fontWeight: '600',
     textAlign: 'center',

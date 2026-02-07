@@ -1,11 +1,19 @@
 import type { ViewStyle, TextStyle } from 'react-native';
 import { useAppTheme } from '../../theme';
-import type { ButtonSize, ButtonVariant, SizeConfig, VariantStyles } from './types';
+import type {
+  ButtonSize,
+  ButtonVariant,
+  SizeConfig,
+  VariantStyles,
+} from './types';
 
 /**
  * Custom hook for button size and variant configuration
  */
-export function useButtonConfig(size: ButtonSize, variant: ButtonVariant): {
+export function useButtonConfig(
+  size: ButtonSize,
+  variant: ButtonVariant
+): {
   config: SizeConfig;
   variantStyles: VariantStyles;
 } {
@@ -36,16 +44,17 @@ export function useButtonConfig(size: ButtonSize, variant: ButtonVariant): {
 
   const getVariantStyles = (): VariantStyles => {
     switch (variant) {
-      case 'primary':
+      case 'primary': {
         return {
           container: {
             backgroundColor: theme.custom.colors.primary[500],
             borderWidth: 0,
           },
-          text: { color: '#FFFFFF' },
+          text: { color: theme.custom.colors.text.inverse },
         };
+      }
 
-      case 'secondary':
+      case 'secondary': {
         return {
           container: {
             backgroundColor: 'transparent',
@@ -54,8 +63,9 @@ export function useButtonConfig(size: ButtonSize, variant: ButtonVariant): {
           },
           text: { color: theme.custom.colors.primary[500] },
         };
+      }
 
-      case 'ghost':
+      case 'ghost': {
         return {
           container: {
             backgroundColor: 'transparent',
@@ -63,8 +73,9 @@ export function useButtonConfig(size: ButtonSize, variant: ButtonVariant): {
           },
           text: { color: theme.custom.colors.primary[500] },
         };
+      }
 
-      case 'icon':
+      case 'icon': {
         return {
           container: {
             backgroundColor: theme.custom.colors.gray[100],
@@ -76,9 +87,11 @@ export function useButtonConfig(size: ButtonSize, variant: ButtonVariant): {
           },
           text: { color: theme.custom.colors.gray[700] },
         };
+      }
 
-      default:
+      default: {
         return { container: {}, text: {} };
+      }
     }
   };
 

@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
 import { borderRadius } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
 
@@ -31,7 +32,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   icon: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: 'bold',
   },

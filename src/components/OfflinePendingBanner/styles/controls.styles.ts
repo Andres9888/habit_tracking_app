@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 
+import { colors } from '../../../theme/colors';
+
 export const controlsStyles = StyleSheet.create({
   progressBar: {
     backgroundColor: '#0EA5E9',
@@ -27,7 +29,7 @@ export const controlsStyles = StyleSheet.create({
     paddingVertical: 6,
   },
   syncButtonText: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 13,
     fontWeight: '600',
     marginLeft: 4,
