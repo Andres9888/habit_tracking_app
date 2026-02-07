@@ -1,8 +1,9 @@
-import { addDays, eachDayOfInterval, format, startOfDay, subMonths } from 'date-fns';
+import { addDays, eachDayOfInterval, format, subMonths } from 'date-fns';
 import { useCallback, useMemo, useState } from 'react';
+import { useToday } from './useToday';
 
 export function useHabitCalendar() {
-  const today = useMemo(() => startOfDay(new Date()), []);
+  const today = useToday();
   const [weekAnchor, setWeekAnchor] = useState(today);
 
   const weekDates = useMemo(
