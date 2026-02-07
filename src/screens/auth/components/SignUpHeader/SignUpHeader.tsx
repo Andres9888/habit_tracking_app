@@ -1,14 +1,21 @@
 import { Text, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 export function SignUpHeader() {
   return (
-    <View>
-      <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-stone-800'>
+    <View className='mb-8'>
+      <Animated.Text
+        className='mb-2 text-[34px] font-bold tracking-tight text-stone-900'
+        entering={FadeInDown.delay(0).springify().damping(18)}
+      >
         Create account
-      </Text>
-      <Text className='mb-10 text-base text-stone-500'>
+      </Animated.Text>
+      <Animated.Text
+        className='text-[17px] leading-[22px] text-stone-500'
+        entering={FadeInDown.delay(50).springify().damping(18)}
+      >
         Start your habit journey today
-      </Text>
+      </Animated.Text>
     </View>
   );
 }

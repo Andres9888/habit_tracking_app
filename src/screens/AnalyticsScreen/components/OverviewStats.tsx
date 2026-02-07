@@ -1,8 +1,10 @@
 /**
  * OverviewStats - Grid of stat cards showing key metrics
+ * OPTIMIZED: FadeInUp stagger animations
  */
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import { spacing } from '../../../theme/spacing';
 import { StatCard } from './StatCard';
 import type { AnalyticsOverviewStats } from '../AnalyticsScreen.types';
@@ -16,13 +18,15 @@ interface OverviewStatsProps {
 const formatStrengthPercentage = (strength: number) =>
   `${Math.round(strength)}%`;
 
+const anim = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
+
 export const OverviewStats: React.FC<OverviewStatsProps> = ({
   stats,
   isLoading,
   onHabitPress,
 }) => {
   return (
-    <View style={styles.statsGrid}>
+    <Animated.View entering={anim(0)} style={styles.statsGrid}>
       <StatCard
         loading={isLoading}
         title='Total Habits'
@@ -65,7 +69,7 @@ export const OverviewStats: React.FC<OverviewStatsProps> = ({
             : undefined
         }
       />
-    </View>
+    </Animated.View>
   );
 };
 

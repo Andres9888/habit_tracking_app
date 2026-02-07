@@ -48,23 +48,31 @@ export function SubmitButton({
       accessibilityLabel={isLoading ? loadingLabel : label}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
-      className={`mt-4 flex-row items-center justify-center rounded-2xl border border-stone-800 bg-stone-800 py-4 ${
+      className={`mt-4 flex-row items-center justify-center rounded-2xl bg-stone-900 py-4 shadow-lg ${
         isDisabled ? 'opacity-40' : ''
       }`}
       disabled={isDisabled}
-      style={animatedStyle}
+      style={[
+        animatedStyle,
+        {
+          shadowColor: '#1c1917',
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.15,
+          shadowRadius: 12,
+        },
+      ]}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
+      <Text className='text-[17px] font-semibold text-white'>
         {isLoading ? loadingLabel : label}
       </Text>
       <View className='ml-2 w-5 items-center justify-center'>
         {isLoading ? (
           <ActivityIndicator color='#FFFFFF' size='small' />
         ) : (
-          <Text className='text-white'>→</Text>
+          <Text className='text-lg text-white'>→</Text>
         )}
       </View>
     </AnimatedPressable>

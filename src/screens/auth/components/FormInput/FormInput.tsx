@@ -49,13 +49,13 @@ export function FormInput({
         {labelRight}
       </View>
       <Animated.View
-        className={`overflow-hidden rounded-3xl border ${error ? 'border-red-500' : ''}`}
+        className={`overflow-hidden rounded-2xl border bg-white shadow-sm ${error ? 'border-red-500' : 'border-stone-200'}`}
         style={animatedStyle}
       >
         <TextInput
           accessibilityLabel={label}
-          className='px-5 py-3.5 text-base font-medium text-stone-900'
-          placeholderTextColor='#94a3b8'
+          className='px-5 py-4 text-[17px] font-medium leading-[22px] text-stone-900'
+          placeholderTextColor='#a1a1aa'
           onBlur={handleBlurWrapper}
           onFocus={handleFocus}
           {...props}

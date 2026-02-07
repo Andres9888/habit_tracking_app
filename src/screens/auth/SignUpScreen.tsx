@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
 import { View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   AuthDivider,
@@ -67,7 +68,10 @@ export default function SignUpScreen({
           <AuthError message={oauthError} onDismiss={clearError} />
         )}
 
-        <View className='gap-3'>
+        <Animated.View
+          className='gap-3'
+          entering={FadeInUp.delay(100).springify().damping(18)}
+        >
           <SocialSignInButton
             disabled={isAnyLoading}
             isLoading={oauthLoading === 'oauth_apple'}
@@ -80,11 +84,14 @@ export default function SignUpScreen({
             provider='google'
             onPress={signInWithGoogle}
           />
-        </View>
+        </Animated.View>
 
         <AuthDivider />
 
-        <View className='gap-6'>
+        <Animated.View
+          className='gap-6'
+          entering={FadeInUp.delay(150).springify().damping(18)}
+        >
           <FormInput
             autoCapitalize='none'
             autoComplete='email'
@@ -117,7 +124,7 @@ export default function SignUpScreen({
             loadingLabel='Creating account...'
             onPress={handleSignUp}
           />
-        </View>
+        </Animated.View>
 
         {onNavigateToSignIn && (
           <SignInLink
