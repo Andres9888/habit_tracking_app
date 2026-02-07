@@ -32,7 +32,7 @@ export default function HabitEditScreen({
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
       {/* OPTIMIZED: Gradient background */}
-      <LinearGradient className='flex-1' colors={['#faf9f7', '#f5f3f0']}>
+      <LinearGradient colors={['#faf9f7', '#f5f3f0']} style={{ flex: 1 }}>
         <EditHeader
           paddingTop={insets.top + 8}
           onCancel={() => {
