@@ -16,7 +16,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
   // Merge server tracking with optimistic updates
   const { completedDatesByHabit, trackingMap } = useMemo(() => {
-    const byHabit = new Map<string, Set<string>>();
+    const byHabitSets = new Map<string, Set<string>>();
     const byKey = new Map<string, (typeof tracking)[number]>();
 
     // First, process server data
@@ -24,23 +24,29 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       if (!entry) continue;
       byKey.set(`${entry.habitId}-${entry.date}`, entry);
       if (!entry.completed) continue;
-      if (!byHabit.has(entry.habitId)) {
-        byHabit.set(entry.habitId, new Set<string>());
+      if (!byHabitSets.has(entry.habitId)) {
+        byHabitSets.set(entry.habitId, new Set<string>());
       }
-      byHabit.get(entry.habitId)!.add(entry.date);
+      byHabitSets.get(entry.habitId)!.add(entry.date);
     }
 
     // Then, apply optimistic updates
     for (const [key, toCompleted] of optimisticStore.pendingToggles) {
       const [habitId, date] = key.split(':');
-      if (!byHabit.has(habitId)) {
-        byHabit.set(habitId, new Set<string>());
+      if (!byHabitSets.has(habitId)) {
+        byHabitSets.set(habitId, new Set<string>());
       }
       if (toCompleted) {
-        byHabit.get(habitId)!.add(date);
+        byHabitSets.get(habitId)!.add(date);
       } else {
-        byHabit.get(habitId)!.delete(date);
+        byHabitSets.get(habitId)!.delete(date);
       }
+    }
+
+    // Convert Sets to sorted arrays (descending) for streak computation
+    const byHabit = new Map<string, string[]>();
+    for (const [habitId, dateSet] of byHabitSets) {
+      byHabit.set(habitId, Array.from(dateSet).sort().reverse());
     }
 
     return { completedDatesByHabit: byHabit, trackingMap: byKey };

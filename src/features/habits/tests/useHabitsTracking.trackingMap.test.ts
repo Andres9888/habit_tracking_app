@@ -7,6 +7,7 @@
  * @see docs/Code-Audit/CODE-AUDIT-03.md Task 1
  */
 
+import { describe, it, expect, beforeAll } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 

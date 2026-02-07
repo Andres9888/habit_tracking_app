@@ -20,16 +20,20 @@ import type { HabitStatus, HabitTrackingEntry } from '../types';
 export function useHabitTracking(tracking: HabitTrackingEntry[], today: Date) {
   /**
    * Memoized map of completed dates by habit ID
-   * Key: habit ID, Value: Set of date strings (YYYY-MM-DD)
+   * Key: habit ID, Value: sorted descending array of date strings (YYYY-MM-DD)
    */
   const completedDatesByHabit = useMemo(() => {
-    const map = new Map<string, Set<string>>();
+    const sets = new Map<string, Set<string>>();
     for (const entry of tracking) {
       if (!entry?.completed) continue;
-      if (!map.has(entry.habitId)) {
-        map.set(entry.habitId, new Set<string>());
+      if (!sets.has(entry.habitId)) {
+        sets.set(entry.habitId, new Set<string>());
       }
-      map.get(entry.habitId)!.add(entry.date);
+      sets.get(entry.habitId)!.add(entry.date);
+    }
+    const map = new Map<string, string[]>();
+    for (const [habitId, dateSet] of sets) {
+      map.set(habitId, Array.from(dateSet).sort().reverse());
     }
     return map;
   }, [tracking]);

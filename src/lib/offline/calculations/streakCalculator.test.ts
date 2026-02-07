@@ -9,6 +9,8 @@
  * - SC-001: Habit completion with feedback in under 200ms regardless of connectivity
  */
 
+import { describe, it, expect } from 'vitest';
+
 import {
   calculateBestStreakFromDates,
   calculateOfflineStreak,
@@ -376,18 +378,22 @@ describe('streakCalculator', () => {
   describe('computeCurrentStreakFromDates', () => {
     const todayDate = '2026-01-30';
 
-    it('returns 0 for empty set', () => {
-      expect(computeCurrentStreakFromDates(new Set(), todayDate)).toBe(0);
+    /** Helper: build a sorted-descending array */
+    const sortedDesc = (dates: string[]): string[] =>
+      [...dates].sort().reverse();
+
+    it('returns 0 for empty array', () => {
+      expect(computeCurrentStreakFromDates([], todayDate)).toBe(0);
     });
 
-    it('returns 0 for null/undefined set', () => {
+    it('returns 0 for null/undefined array', () => {
       expect(
-        computeCurrentStreakFromDates(null as unknown as Set<string>, todayDate)
+        computeCurrentStreakFromDates(null as unknown as string[], todayDate)
       ).toBe(0);
     });
 
     it('counts streak from most recent completion', () => {
-      const completedDates = new Set([
+      const completedDates = sortedDesc([
         '2026-01-28',
         '2026-01-29',
         '2026-01-30',
@@ -397,7 +403,7 @@ describe('streakCalculator', () => {
     });
 
     it('ignores future dates', () => {
-      const completedDates = new Set([
+      const completedDates = sortedDesc([
         '2026-01-30',
         '2026-01-31', // Future (if today is 1/30)
         '2026-02-01', // Future
@@ -407,7 +413,7 @@ describe('streakCalculator', () => {
     });
 
     it('handles gaps correctly', () => {
-      const completedDates = new Set([
+      const completedDates = sortedDesc([
         '2026-01-25',
         '2026-01-26',
         // Gap on 27
@@ -420,16 +426,17 @@ describe('streakCalculator', () => {
     });
 
     it('respects maxLookbackDays limit', () => {
-      // Create a very long streak
-      const completedDates = new Set<string>();
+      // Create a very long streak as sorted descending array
+      const completedDates: string[] = [];
       const date = new Date('2026-01-30');
       for (let i = 0; i < 50; i++) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        completedDates.add(`${year}-${month}-${day}`);
+        completedDates.push(`${year}-${month}-${day}`);
         date.setDate(date.getDate() - 1);
       }
+      // Already sorted descending (pushed newest first)
 
       // With default limit, should count all
       expect(computeCurrentStreakFromDates(completedDates, todayDate)).toBe(50);
@@ -440,21 +447,21 @@ describe('streakCalculator', () => {
       );
     });
 
-    it('returns 0 when most recent is not within today', () => {
-      const completedDates = new Set([
+    it('returns streak when most recent is old but consecutive', () => {
+      const completedDates = sortedDesc([
         '2026-01-20',
         '2026-01-21',
         '2026-01-22',
       ]);
 
-      // Note: This function counts from most recent <= today backward
+      // Note: This offline function counts from most recent <= today backward
       // If there's a gap from most recent to today, it still counts the streak
-      // This matches src/utils/streak.ts behavior
+      // This matches the offline version's behavior (no daysSinceLastCompletion check)
       expect(computeCurrentStreakFromDates(completedDates, todayDate)).toBe(3);
     });
 
     it('handles single isolated completion', () => {
-      const completedDates = new Set(['2026-01-30']);
+      const completedDates = ['2026-01-30'];
 
       expect(computeCurrentStreakFromDates(completedDates, todayDate)).toBe(1);
     });

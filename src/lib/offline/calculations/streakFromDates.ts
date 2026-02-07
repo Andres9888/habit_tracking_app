@@ -39,31 +39,38 @@ export function calculateBestStreakFromDates(completedDates: string[]): number {
 }
 
 /**
- * Calculate current streak from a set of completed dates
+ * Calculate current streak from a sorted array of completed dates
  * Mirrors src/utils/streak.ts computeCurrentStreakFromDates
  *
- * @param completedDates - Set of completed date strings (YYYY-MM-DD)
+ * @param completedDates - Array of completed date strings (YYYY-MM-DD) sorted descending
  * @param todayDate - Today's date in YYYY-MM-DD format
  * @param maxLookbackDays - Maximum days to look back (safety limit)
  * @returns Current streak count
  */
 export function computeCurrentStreakFromDates(
-  completedDates: Set<string>,
+  completedDates: string[],
   todayDate: string,
   maxLookbackDays: number = 400
 ): number {
-  if (!completedDates || completedDates.size === 0) {
+  if (!completedDates || completedDates.length === 0) {
     return 0;
   }
 
-  const latestCompleted = [...completedDates]
-    .filter((date) => date <= todayDate)
-    .sort()
-    .pop();
+  // Array is sorted descending — scan from front for first date <= today
+  let latestCompleted: string | undefined;
+  for (const date of completedDates) {
+    if (date <= todayDate) {
+      latestCompleted = date;
+      break;
+    }
+  }
 
   if (!latestCompleted) {
     return 0;
   }
+
+  // Build a Set for O(1) lookups during the backward-counting loop
+  const dateSet = new Set(completedDates);
 
   let streak = 0;
   const currentDate = parseDate(latestCompleted);
@@ -74,7 +81,7 @@ export function computeCurrentStreakFromDates(
     const day = String(currentDate.getDate()).padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
 
-    if (completedDates.has(dateString)) {
+    if (dateSet.has(dateString)) {
       streak += 1;
       currentDate.setDate(currentDate.getDate() - 1);
       continue;
