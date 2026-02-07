@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { milestoneColors } from '../../theme/milestone-colors';
 
 export const styles = StyleSheet.create({
   actions: {
@@ -37,7 +38,7 @@ export const styles = StyleSheet.create({
     elevation: 20,
     height: 160,
     position: 'absolute',
-    shadowColor: '#F59E0B',
+    shadowColor: milestoneColors.amber,
     shadowOffset: { height: 0, width: 0 },
     shadowOpacity: 0.8,
     shadowRadius: 40,
