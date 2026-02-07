@@ -8,6 +8,14 @@ import { query } from '../_generated/server';
 export const getStats = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) return null;
+
+    if (habit.userId !== identity.subject) return null;
+
     const tracking = await ctx.db
       .query('tracking')
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
@@ -50,5 +58,8 @@ export const getStats = query({
 
     return { consistency, streak };
   },
-  returns: v.object({ consistency: v.number(), streak: v.number() }),
+  returns: v.union(
+    v.null(),
+    v.object({ consistency: v.number(), streak: v.number() })
+  ),
 });
