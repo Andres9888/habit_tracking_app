@@ -71,7 +71,7 @@ export function SettingsContent(p: SettingsContentProps) {
       </View>
       <View className='items-center pb-8 pt-4'>
         <Text
-          className='text-center text-[12px] leading-[16px]'
+          className='text-center text-[13px] leading-[18px]'
           style={{ color: colors.versionText }}
         >
           Chain Day v1.0.0

@@ -1,7 +1,8 @@
-/** HabitsHeader - Minimal redesign per home-screen-redesign-spec.md */
+/** HabitsHeader - OPTIMIZED: entry animation, contrast fix, clearer UX */
 
 import { View, Text } from 'react-native';
 import { memo } from 'react';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTemplateBadge } from '../../hooks/useTemplateBadge';
 import type { HabitsHeaderProps } from './types';
 import { AddHabitButton } from './AddHabitButton';
@@ -12,11 +13,12 @@ import { useHeaderHandlers } from './useHeaderHandlers';
 import { formatTodayDate } from './headerUtils';
 
 const DATE_STYLE = {
-  color: '#2D2A26',
+  color: '#1c1917',
   fontFamily: 'System',
   letterSpacing: -0.76,
 };
-const STREAK_STYLE = { color: '#C4BFB7', fontFamily: 'System' };
+// FIXED: #78716c has 4.5:1+ contrast (was #C4BFB7 at 2.8:1)
+const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
 
 function HabitsHeaderComponent({
   completedToday = 0,
@@ -45,23 +47,26 @@ function HabitsHeaderComponent({
   });
 
   if (totalHabits === 0 && !forceShow) return null;
-  const pct =
-    totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
   return (
-    <View className='gap-2 px-4'>
+    // OPTIMIZED: FadeInDown entry animation
+    <Animated.View
+      className='gap-2 px-4'
+      entering={FadeInDown.duration(280).springify().damping(18)}
+    >
       <View className='flex-row items-center justify-between'>
         <View className='flex-1 gap-1'>
-          <Text className='text-3xl font-bold' style={DATE_STYLE}>
+          <Text className='text-[28px] font-bold' style={DATE_STYLE}>
             {formatTodayDate()}
           </Text>
           {showCompletionSummary && (
             <Text
-              accessibilityLabel={`${completedToday} completed, ${pct}%`}
-              className='text-base'
+              accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
+              className='text-[15px]'
               style={STREAK_STYLE}
             >
-              🔥 {completedToday} total
+              {/* FIXED: Clearer UX - "X of Y done" instead of "X total" */}✓{' '}
+              {completedToday} of {totalHabits} done
             </Text>
           )}
         </View>
@@ -92,7 +97,7 @@ function HabitsHeaderComponent({
           />
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

@@ -62,7 +62,7 @@ function WelcomeHeroComponent({ greeting, period }: WelcomeHeroProps) {
         </Text>
       </View>
       <Animated.View
-        className='flex-row items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5'
+        className='flex-row items-center gap-1.5 rounded-full bg-white/80 px-4 py-2'
         style={[
           streakStyle,
           {
@@ -74,8 +74,9 @@ function WelcomeHeroComponent({ greeting, period }: WelcomeHeroProps) {
           },
         ]}
       >
-        <Text className='text-base'>🔥</Text>
-        <Text className='text-[10px] font-medium tracking-wide text-amber-700'>
+        <Text style={{ fontSize: 16 }}>🔥</Text>
+        {/* FIXED: 13px minimum for readability (was 10px) */}
+        <Text className='text-[13px] font-semibold text-amber-700'>
           Day 1 begins now
         </Text>
       </Animated.View>
