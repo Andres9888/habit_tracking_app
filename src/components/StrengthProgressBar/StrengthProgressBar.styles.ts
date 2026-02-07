@@ -4,9 +4,11 @@
 
 import { StyleSheet } from 'react-native';
 
+import { colors } from '@/theme/colors';
+
 export const styles = StyleSheet.create({
   arrow: {
-    color: '#9ca3af',
+    color: colors.gray[400],
     marginRight: 2,
   },
   barContainer: {
@@ -44,7 +46,7 @@ export const styles = StyleSheet.create({
     opacity: 0.6,
   },
   nextHint: {
-    color: '#9ca3af',
+    color: colors.gray[400],
   },
   nextLevelContainer: {
     alignItems: 'center',

@@ -86,24 +86,24 @@ describe('Theme Colors - Phase 1', () => {
   });
 
   describe('Habit Strength Level Colors', () => {
-    it('should match UX spec Starting (0-20%): #86EFAC 🌱', () => {
-      expect(colors.strength.starting).toBe('#86EFAC');
+    it('should match Starting (0-20%): #65a30d (lime-600) 🌱', () => {
+      expect(colors.strength.starting).toBe('#65a30d');
     });
 
-    it('should match UX spec Building (20-40%): #10B981 🌿', () => {
-      expect(colors.strength.building).toBe('#10B981');
+    it('should match Building (20-40%): #16a34a (green-600) 🌿', () => {
+      expect(colors.strength.building).toBe('#16a34a');
     });
 
-    it('should match UX spec Developing (40-60%): #059669 🌳', () => {
-      expect(colors.strength.developing).toBe('#059669');
+    it('should match Developing (40-60%): #0d9488 (teal-600) 🌳', () => {
+      expect(colors.strength.developing).toBe('#0d9488');
     });
 
-    it('should match UX spec Strong (60-80%): #047857 💪', () => {
-      expect(colors.strength.strong).toBe('#047857');
+    it('should match Strong (60-80%): #0891b2 (cyan-600) 💪', () => {
+      expect(colors.strength.strong).toBe('#0891b2');
     });
 
-    it('should match UX spec Automatic (80-100%): #065F46 ⚡', () => {
-      expect(colors.strength.automatic).toBe('#065F46');
+    it('should match Automatic (80-100%): #059669 (emerald-600) ⚡', () => {
+      expect(colors.strength.automatic).toBe('#059669');
     });
   });
 

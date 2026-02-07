@@ -71,17 +71,18 @@ export const colors = {
     600: '#2563EB', // Darker, pressed
   },
 
-  // Habit Strength Level Colors (Gradient)
+  // Habit Strength Level Colors (Gradient: lime → green → teal → cyan → emerald)
   strength: {
-    // 60-80% - Dark green
-    automatic: '#065F46',
-    // 0-20% - Light green
-    building: '#10B981',
-    // 20-40% - Brand green
-    developing: '#059669',
-    starting: '#86EFAC',
-    // 40-60% - Medium green
-    strong: '#047857', // 80-100% - Deep forest green
+    automatic: '#059669', // 80-100% - Emerald-600
+    automaticLight: '#d1fae5', // Emerald-100
+    building: '#16a34a', // 20-40% - Green-600
+    buildingLight: '#dcfce7', // Green-100
+    developing: '#0d9488', // 40-60% - Teal-600
+    developingLight: '#ccfbf1', // Teal-100
+    starting: '#65a30d', // 0-20% - Lime-600
+    startingLight: '#ecfccb', // Lime-100
+    strong: '#0891b2', // 60-80% - Cyan-600
+    strongLight: '#cffafe', // Cyan-100
   },
 
   // Semantic Colors
