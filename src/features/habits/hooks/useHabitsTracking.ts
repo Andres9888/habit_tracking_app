@@ -15,32 +15,35 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   const optimisticStore = useOptimisticStore();
 
   // Merge server tracking with optimistic updates
-  const completedDatesByHabit = useMemo(() => {
-    const map = new Map<string, Set<string>>();
+  const { completedDatesByHabit, trackingMap } = useMemo(() => {
+    const byHabit = new Map<string, Set<string>>();
+    const byKey = new Map<string, (typeof tracking)[number]>();
 
     // First, process server data
     for (const entry of tracking) {
-      if (!entry || !entry.completed) continue;
-      if (!map.has(entry.habitId)) {
-        map.set(entry.habitId, new Set<string>());
+      if (!entry) continue;
+      byKey.set(`${entry.habitId}-${entry.date}`, entry);
+      if (!entry.completed) continue;
+      if (!byHabit.has(entry.habitId)) {
+        byHabit.set(entry.habitId, new Set<string>());
       }
-      map.get(entry.habitId)!.add(entry.date);
+      byHabit.get(entry.habitId)!.add(entry.date);
     }
 
     // Then, apply optimistic updates
     for (const [key, toCompleted] of optimisticStore.pendingToggles) {
       const [habitId, date] = key.split(':');
-      if (!map.has(habitId)) {
-        map.set(habitId, new Set<string>());
+      if (!byHabit.has(habitId)) {
+        byHabit.set(habitId, new Set<string>());
       }
       if (toCompleted) {
-        map.get(habitId)!.add(date);
+        byHabit.get(habitId)!.add(date);
       } else {
-        map.get(habitId)!.delete(date);
+        byHabit.get(habitId)!.delete(date);
       }
     }
 
-    return map;
+    return { completedDatesByHabit: byHabit, trackingMap: byKey };
   }, [tracking, optimisticStore.pendingToggles]);
 
   const getStreak = useCallback(
@@ -61,11 +64,8 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
         return pendingToggle ? 'done' : 'missed';
       }
 
-      // Fall back to server state
-      const entry = tracking.find(
-        (item) => item && item.habitId === habitId && item.date === dateString
-      );
-
+      // Fall back to server state (O(1) Map lookup)
+      const entry = trackingMap.get(`${habitId}-${dateString}`);
       if (entry?.completed) {
         return 'done';
       }
@@ -79,7 +79,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       }
       return 'planned';
     },
-    [today, tracking, optimisticStore.pendingToggles]
+    [today, trackingMap, optimisticStore.pendingToggles]
   );
 
   /**
