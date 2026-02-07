@@ -19,6 +19,7 @@ interface CreateButtonProps {
   onPressOut: () => void;
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function CreateButton({
   disabled,
   gradientColors,
@@ -29,7 +30,8 @@ export function CreateButton({
   onPressOut,
 }: CreateButtonProps) {
   return (
-    <View className='rounded-2xl bg-white/95 p-2 shadow-lg shadow-stone-300/40'>
+    // OPTIMIZED: Stronger shadow, larger padding
+    <View className='rounded-2xl bg-white p-2.5 shadow-xl'>
       <Animated.View style={{ opacity: colorOpacity, transform: [{ scale }] }}>
         <Pressable
           accessibilityHint={
@@ -50,13 +52,20 @@ export function CreateButton({
           onPressOut={onPressOut}
         >
           <LinearGradient
-            className='flex-row items-center justify-center rounded-xl py-3.5'
+            // OPTIMIZED: Taller button, 17px text
+            className='flex-row items-center justify-center rounded-xl py-4'
             colors={gradientColors}
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
+            style={{
+              shadowColor: gradientColors[0],
+              shadowOffset: { height: 4, width: 0 },
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+            }}
           >
-            <Check color='#ffffff' size={18} strokeWidth={2.5} />
-            <Text className='ml-2 text-[15px] font-semibold text-white'>
+            <Check color='#ffffff' size={20} strokeWidth={2.5} />
+            <Text className='ml-2 text-[17px] font-semibold text-white'>
               {STRINGS.CREATE_HABIT.createAction}
             </Text>
           </LinearGradient>
