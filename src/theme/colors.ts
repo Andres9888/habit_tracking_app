@@ -129,6 +129,9 @@ export const colors = {
  * ✅ Primary-500 (#10B981) on White: 2.9:1 - Use Primary-700 for text
  */
 
+export { milestoneColors } from './milestone-colors';
+export type { MilestoneColorKey } from './milestone-colors';
+
 export type ColorPalette = typeof colors;
 export type PrimaryColor = keyof typeof colors.primary;
 export type GrayColor = keyof typeof colors.gray;

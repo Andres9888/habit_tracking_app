@@ -28,6 +28,7 @@ export const fontFamilies = {
     display: 'SF Pro Display', // iOS native
     text: 'SF Pro Text', // iOS native
   },
+  serif: 'Georgia', // Used by LettersSection for formal content
   system: '-apple-system', // Fallback to system font
 } as const;
 

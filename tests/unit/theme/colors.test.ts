@@ -7,7 +7,7 @@
  * - WCAG 2.1 Level AA color contrast compliance
  */
 
-import { colors } from '../colors';
+import { colors, milestoneColors } from '@/theme/colors';
 
 describe('Theme Colors - Phase 1', () => {
   describe('Primary Colors (Growth & Progress)', () => {
@@ -199,6 +199,56 @@ describe('Theme Colors - Phase 1', () => {
       expect(colors).toHaveProperty('light');
       expect(colors).toHaveProperty('dark');
       expect(colors).toHaveProperty('text');
+    });
+  });
+
+  describe('Milestone Colors (Badge/Achievement)', () => {
+    it('should export milestoneColors from theme', () => {
+      expect(milestoneColors).toBeDefined();
+    });
+
+    it('should have amber (#F59E0B) for 7-day milestone', () => {
+      expect(milestoneColors.amber).toBe('#F59E0B');
+    });
+
+    it('should have yellow (#EAB308) for 30-day milestone', () => {
+      expect(milestoneColors.yellow).toBe('#EAB308');
+    });
+
+    it('should have violet (#8B5CF6) for 100-day milestone', () => {
+      expect(milestoneColors.violet).toBe('#8B5CF6');
+    });
+
+    it('should have amberLight (#FEF9C3) for badge backgrounds', () => {
+      expect(milestoneColors.amberLight).toBe('#FEF9C3');
+    });
+
+    it('should have amberBorder (#FCD34D) for badge borders', () => {
+      expect(milestoneColors.amberBorder).toBe('#FCD34D');
+    });
+
+    it('should have amberDark (#78350F) for badge text', () => {
+      expect(milestoneColors.amberDark).toBe('#78350F');
+    });
+
+    it('should have stone (#A8A29E) for unachieved state', () => {
+      expect(milestoneColors.stone).toBe('#A8A29E');
+    });
+
+    it('should have all 7 milestone color keys', () => {
+      const keys = Object.keys(milestoneColors);
+      expect(keys).toHaveLength(7);
+      expect(keys).toEqual(
+        expect.arrayContaining([
+          'amber',
+          'amberBorder',
+          'amberDark',
+          'amberLight',
+          'stone',
+          'violet',
+          'yellow',
+        ])
+      );
     });
   });
 });
