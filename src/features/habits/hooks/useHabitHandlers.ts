@@ -34,7 +34,14 @@ export function useHabitHandlers({
 
   const handleArchive = useCallback(
     async (habitId: Id<'habits'>) => {
-      await archiveHabit({ habitId });
+      try {
+        await archiveHabit({ habitId });
+      } catch (error) {
+        if (__DEV__) {
+          console.error('Failed to archive habit:', error);
+        }
+        Alert.alert('Error', 'Failed to archive habit. Please try again.');
+      }
     },
     [archiveHabit]
   );
