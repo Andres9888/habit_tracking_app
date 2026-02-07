@@ -4,10 +4,12 @@
  * Configuration values for confetti and animations
  */
 
+import { colors } from '@/theme/colors';
+
 export const CONFETTI_COLORS = [
   '#f59e0b',
-  '#3b82f6',
-  '#10b981',
+  colors.secondary[500],
+  colors.primary[500],
   '#ec4899',
   '#8b5cf6',
   '#f97316',

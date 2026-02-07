@@ -6,6 +6,7 @@
 
 import { useEffect, useRef } from 'react';
 import { Animated, Text, TextInput, View } from 'react-native';
+import { colors } from '@/theme/colors';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { HeroNameInputProps } from './types';
 import { MAX_LENGTH } from './types';
@@ -68,7 +69,8 @@ export const HeroNameInput = ({
           placeholderTextColor='#a8a29e'
           returnKeyType='done'
           style={{
-            borderColor: value.length > 0 ? '#3b82f6' : '#e7e5e4',
+            borderColor:
+              value.length > 0 ? colors.secondary[500] : colors.border,
             borderWidth: value.length > 0 ? 2 : 1,
           }}
           value={value}

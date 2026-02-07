@@ -3,6 +3,7 @@
  * Data-only file containing static theme configuration
  */
 
+import { colors } from '@/theme/colors';
 import type { CategoryColors } from './CategoryFilters.types';
 
 export const CATEGORY_COLORS: Record<string, CategoryColors> = {
@@ -74,7 +75,7 @@ export const CATEGORY_COLORS: Record<string, CategoryColors> = {
   },
   productivity: {
     bg: '#DBEAFE',
-    bgSelected: '#3B82F6',
+    bgSelected: colors.secondary[500],
     border: '#BFDBFE',
     text: '#2563EB',
   },

@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
+import { colors } from '@/theme/colors';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
@@ -15,12 +16,12 @@ interface SuggestionChipsProps {
 }
 
 const SUGGESTION_CHIPS: SuggestionChip[] = [
-  { name: 'Drink water', emoji: '💧', color: '#3B82F6' },
-  { name: 'Read 10 min', emoji: '📖', color: '#8B5CF6' },
-  { name: 'Meditate', emoji: '🧘', color: '#22C55E' },
-  { name: 'Exercise', emoji: '🏃', color: '#F97316' },
-  { name: 'Journal', emoji: '✍️', color: '#EC4899' },
-  { name: 'Sleep 8h', emoji: '😴', color: '#1E293B' },
+  { color: colors.secondary[500], emoji: '💧', name: 'Drink water' },
+  { color: '#8B5CF6', emoji: '📖', name: 'Read 10 min' },
+  { color: '#22C55E', emoji: '🧘', name: 'Meditate' },
+  { color: '#F97316', emoji: '🏃', name: 'Exercise' },
+  { color: '#EC4899', emoji: '✍️', name: 'Journal' },
+  { color: '#1E293B', emoji: '😴', name: 'Sleep 8h' },
 ];
 
 interface ChipButtonProps {
@@ -43,9 +44,9 @@ const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
 
   const handlePressOut = useCallback(() => {
     Animated.spring(scale, {
-      toValue: 1,
       damping: 12,
       stiffness: 200,
+      toValue: 1,
       useNativeDriver: true,
     }).start();
   }, [scale]);
@@ -59,13 +60,13 @@ const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
     <Animated.View style={{ transform: [{ scale }] }}>
       <Pressable
         accessibilityLabel={`Quick add ${chip.name} habit`}
-        accessibilityRole="button"
-        className="mr-2 mb-2 flex-row items-center rounded-full bg-white px-3 py-2"
+        accessibilityRole='button'
+        className='mb-2 mr-2 flex-row items-center rounded-full bg-white px-3 py-2'
         style={{
-          borderWidth: 1,
-          borderColor: '#e7e5e4', // stone-200
+          borderColor: '#e7e5e4',
+          borderWidth: 1, // stone-200
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 1 },
+          shadowOffset: { height: 1, width: 0 },
           shadowOpacity: 0.05,
           shadowRadius: 2,
         }}
@@ -73,22 +74,25 @@ const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        <Text className="mr-1.5 text-base">{chip.emoji}</Text>
-        <Text className="text-sm font-medium text-stone-700">{chip.name}</Text>
+        <Text className='mr-1.5 text-base'>{chip.emoji}</Text>
+        <Text className='text-sm font-medium text-stone-700'>{chip.name}</Text>
       </Pressable>
     </Animated.View>
   );
 };
 
-export const SuggestionChips = ({ onSelect, visible }: SuggestionChipsProps) => {
+export const SuggestionChips = ({
+  onSelect,
+  visible,
+}: SuggestionChipsProps) => {
   if (!visible) return null;
 
   return (
-    <View className="mb-3">
-      <Text className="mb-2 text-xs font-medium text-stone-500">
+    <View className='mb-3'>
+      <Text className='mb-2 text-xs font-medium text-stone-500'>
         QUICK START
       </Text>
-      <View className="flex-row flex-wrap">
+      <View className='flex-row flex-wrap'>
         {SUGGESTION_CHIPS.map((chip) => (
           <ChipButton
             key={chip.name}

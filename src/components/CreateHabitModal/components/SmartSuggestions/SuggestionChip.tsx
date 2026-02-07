@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
+import { colors } from '@/theme/colors';
 import { Motion } from '../../../../constants/motion';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { SuggestionChipProps } from './types';
@@ -46,7 +47,7 @@ export const SuggestionChip = ({
           isHighlighted ? 'bg-blue-50' : 'bg-white'
         }`}
         style={{
-          borderColor: isHighlighted ? '#3b82f6' : '#e7e5e4',
+          borderColor: isHighlighted ? colors.secondary[500] : colors.border,
           borderWidth: isHighlighted ? 2 : 1,
           shadowColor: '#000',
           shadowOffset: { height: 1, width: 0 },

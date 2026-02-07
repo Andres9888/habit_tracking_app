@@ -1,3 +1,4 @@
+import { colors } from '@/theme/colors';
 import type { Suggestion } from './types';
 
 /**
@@ -113,7 +114,7 @@ export const SUGGESTIONS: Suggestion[] = [
     name: 'Practice gratitude',
   },
   {
-    color: '#3b82f6',
+    color: colors.secondary[500],
     emoji: '🧠',
     keywords: ['learn', 'study', 'knowledge'],
     name: 'Learn something new',
