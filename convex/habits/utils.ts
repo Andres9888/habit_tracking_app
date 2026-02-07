@@ -3,12 +3,31 @@
  * Date handling utilities for habits module
  */
 
-/** Get today's date as YYYY-MM-DD string */
+/** Get today's date as YYYY-MM-DD string (server-local time) */
 export function getTodayDateKey(): string {
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/** Get today's date as YYYY-MM-DD string in UTC */
+export function getTodayUTCDateKey(): string {
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(now.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/** Subtract N days from a YYYY-MM-DD date key, returning a new date key */
+export function subtractDaysFromDateKey(dateKey: string, days: number): string {
+  const [y, m, d] = dateKey.split('-').map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d - days));
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
 

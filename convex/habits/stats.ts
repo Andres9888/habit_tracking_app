@@ -1,9 +1,13 @@
 /**
  * Habit Statistics Query
  * Get streak and consistency stats for a habit
+ *
+ * Uses UTC-based YYYY-MM-DD string comparisons to avoid
+ * timezone mismatches between Date parsing and server local time.
  */
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
+import { getTodayUTCDateKey, subtractDaysFromDateKey } from './utils';
 
 export const getStats = query({
   args: { habitId: v.id('habits') },
@@ -21,39 +25,30 @@ export const getStats = query({
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
 
-    const sortedDates = tracking
-      .filter((t) => t.completed)
-      .map((t) => new Date(t.date).getTime())
-      .sort((a, b) => b - a);
+    const completedDates = new Set(
+      tracking.filter((t) => t.completed).map((t) => t.date)
+    );
 
+    const todayKey = getTodayUTCDateKey();
     let streak = 0;
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
 
-    for (const [i, sortedDate] of sortedDates.entries()) {
-      const expectedDate = new Date(now);
-      expectedDate.setDate(now.getDate() - i);
-      expectedDate.setHours(0, 0, 0, 0);
-      const expectedTime = expectedDate.getTime();
-
-      if (sortedDate === expectedTime) {
+    for (let i = 0; ; i++) {
+      const expectedKey = subtractDaysFromDateKey(todayKey, i);
+      if (completedDates.has(expectedKey)) {
         streak++;
       } else {
         break;
       }
     }
 
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    thirtyDaysAgo.setHours(0, 0, 0, 0);
-    const recentTracking = tracking.filter((t) => {
-      const date = new Date(t.date);
-      return date >= thirtyDaysAgo && t.completed;
-    });
+    const thirtyDaysAgoKey = subtractDaysFromDateKey(todayKey, 30);
+    const recentCount = tracking.filter(
+      (t) => t.completed && t.date > thirtyDaysAgoKey && t.date <= todayKey
+    ).length;
 
     const consistency = Math.max(
       0,
-      Math.min(100, Math.round((recentTracking.length / 30) * 100))
+      Math.min(100, Math.round((recentCount / 30) * 100))
     );
 
     return { consistency, streak };
