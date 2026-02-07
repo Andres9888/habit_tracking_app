@@ -8,6 +8,7 @@ import { Animated, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
 import STRINGS from '../../../../constants/strings';
+import { colors } from '../../../../theme/colors';
 
 interface CreateButtonProps {
   disabled: boolean;
@@ -64,7 +65,7 @@ export function CreateButton({
               shadowRadius: 8,
             }}
           >
-            <Check color='#ffffff' size={20} strokeWidth={2.5} />
+            <Check color={colors.text.inverse} size={20} strokeWidth={2.5} />
             <Text className='ml-2 text-[17px] font-semibold text-white'>
               {STRINGS.CREATE_HABIT.createAction}
             </Text>

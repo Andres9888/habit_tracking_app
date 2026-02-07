@@ -1,5 +1,6 @@
 import { Animated, View, ActivityIndicator } from 'react-native';
 import { Check } from 'lucide-react-native';
+import { colors } from '../../../theme/colors';
 
 interface CheckboxProps {
   isCompleted: boolean;
@@ -48,7 +49,7 @@ export function Checkbox({
           transform: [{ scale: checkScaleAnim }],
         }}
       >
-        <Check color='#ffffff' size={14} strokeWidth={3} />
+        <Check color={colors.text.inverse} size={14} strokeWidth={3} />
       </Animated.View>
     </View>
   );

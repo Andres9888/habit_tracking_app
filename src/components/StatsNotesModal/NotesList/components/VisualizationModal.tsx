@@ -53,7 +53,7 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
             className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
             onPress={onClose}
           >
-            <X color='#57534e' size={22} />
+            <X color='#57534e' size={24} />
           </TouchableOpacity>
         </Animated.View>
 

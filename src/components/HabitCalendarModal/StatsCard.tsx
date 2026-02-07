@@ -37,13 +37,14 @@ export function StatsCard({
             </View>
           )}
           <View className='flex-1'>
-            <Text className='text-2xl font-semibold text-stone-900'>{name}</Text>
-            <Text className='mt-1 text-base text-stone-500'>{scheduleText}</Text>
+            <Text className='text-2xl font-semibold text-stone-900'>
+              {name}
+            </Text>
+            <Text className='mt-1 text-base text-stone-500'>
+              {scheduleText}
+            </Text>
             {habitNotes ? (
-              <Text
-                className='mt-2 text-sm text-stone-500'
-                numberOfLines={2}
-              >
+              <Text className='mt-2 text-sm text-stone-500' numberOfLines={2}>
                 {habitNotes}
               </Text>
             ) : null}
@@ -75,7 +76,7 @@ export function StatsCard({
 
         {/* Completion Percentage */}
         <View className='items-center'>
-          <Text className='text-[30px] font-extrabold text-emerald-500'>
+          <Text className='text-[30px] font-extrabold text-emerald-700'>
             {completionPercentage}%
           </Text>
           <Text className='mt-1 text-center text-sm font-medium leading-5 text-stone-500'>

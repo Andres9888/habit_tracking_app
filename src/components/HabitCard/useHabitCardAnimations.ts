@@ -20,6 +20,7 @@ import {
 interface UseHabitCardAnimationsOptions {
   translateX: SharedValue<number>;
   cardScale: SharedValue<number>;
+  reduceMotion: boolean;
   setShowFloatingXP: (show: boolean) => void;
   setXPPosition: (position: { x: number; y: number }) => void;
   setShowConfetti: (show: boolean) => void;
@@ -28,6 +29,7 @@ interface UseHabitCardAnimationsOptions {
 export function useHabitCardAnimations({
   translateX,
   cardScale,
+  reduceMotion,
   setShowFloatingXP,
   setXPPosition,
   setShowConfetti,
@@ -43,6 +45,7 @@ export function useHabitCardAnimations({
     cardScale,
     checkmarkRotate,
     checkmarkScale,
+    reduceMotion,
     rippleOpacity,
     rippleScale,
     setShowConfetti,
@@ -52,7 +55,8 @@ export function useHabitCardAnimations({
 
   const triggerUncheckAnimation = createUncheckTrigger(
     checkmarkScale,
-    checkmarkRotate
+    checkmarkRotate,
+    reduceMotion
   );
 
   const cardAnimatedStyle = useCardAnimatedStyle(translateX, cardScale);

@@ -1,5 +1,5 @@
 /**
- * Color Palette - Habit Tracking App
+ * Core Color Palette - Habit Tracking App
  * Based on UX Specification Section 5.1
  *
  * All colors match exact hex values from design spec
@@ -23,7 +23,6 @@ export const colors = {
 
   error: '#EF4444',
 
-  // Matches secondary blue
   // Neutral Grays (iOS-inspired)
   gray: {
     50: '#faf9f7', // Background, cards in dark mode
@@ -45,6 +44,7 @@ export const colors = {
   light: {
     background: '#faf9f7', // Warm stone background
     card: '#ffffff', // Pure white cards for contrast
+    gradientMid: '#f5f3f0', // Slightly darker warm stone for depth gradients
     surface: '#ffffff', // White surface for elevated elements
     surfaceMuted: '#fafaf9', // stone-50 for subtle sections
   },
@@ -59,6 +59,8 @@ export const colors = {
 
   // Primary Colors (Growth & Progress)
   primary: {
+    100: '#D1FAE5', // Very light emerald, muted accent backgrounds
+    300: '#86EFAC', // Very light, decorative/confetti
     400: '#34D399', // Lighter, hover states
     500: '#10B981', // Emerald green - main brand color
     600: '#059669', // Darker, pressed states
@@ -67,25 +69,24 @@ export const colors = {
 
   // Secondary Colors (Trust & Calm)
   secondary: {
+    100: '#dbeafe', // Very light blue, selected state backgrounds
     400: '#60A5FA', // Lighter, info states
     500: '#3B82F6', // Bright blue - science/analytics theme
     600: '#2563EB', // Darker, pressed
   },
 
-  // Habit Strength Level Colors (Gradient)
+  // Habit Strength Level Colors (Gradient: lime → green → teal → cyan → emerald)
   strength: {
-    // 60-80% - Dark green 💪
-    automatic: '#065F46',
-
-    // 0-20% - Light green 🌱
-    building: '#10B981',
-
-    // 20-40% - Brand green 🌿
-    developing: '#059669',
-
-    starting: '#86EFAC',
-    // 40-60% - Medium green 🌳
-    strong: '#047857', // 80-100% - Deep forest green ⚡
+    automatic: '#059669', // 80-100% - Emerald-600
+    automaticLight: '#d1fae5', // Emerald-100
+    building: '#16a34a', // 20-40% - Green-600
+    buildingLight: '#dcfce7', // Green-100
+    developing: '#0d9488', // 40-60% - Teal-600
+    developingLight: '#ccfbf1', // Teal-100
+    starting: '#65a30d', // 0-20% - Lime-600
+    startingLight: '#ecfccb', // Lime-100
+    strong: '#0891b2', // 60-80% - Cyan-600
+    strongLight: '#cffafe', // Cyan-100
   },
 
   // Semantic Colors
@@ -97,9 +98,7 @@ export const colors = {
   text: {
     // Gray-400 - Placeholder, disabled text
     inverse: '#FFFFFF',
-
     primary: '#1F2937',
-
     // Gray-800 - Headings and important text
     secondary: '#78716c',
     // Gray-500 - Secondary text, labels
@@ -108,26 +107,12 @@ export const colors = {
 
   // Matches primary green
   warning: {
+    100: '#fef3c7', // Very light amber, suggestion backgrounds
+    300: '#fcd34d', // Light amber, suggestion borders
     500: '#F59E0B', // Amber - habits at risk
     700: '#D97706', // Darker for text (better contrast)
   }, // Gray-200
 } as const;
-
-/**
- * Color Contrast Compliance (WCAG 2.1 Level AA)
- *
- * Text Contrast Minimums:
- * - Normal text (17pt): 4.5:1
- * - Large text (22pt+): 3:1
- * - UI components: 3:1
- *
- * Verified Ratios:
- * ✅ Gray-700 (#374151) on White: 10.8:1
- * ✅ Primary-700 (#047857) on White: Sufficient for text
- * ✅ Gray-600 (#4B5563) on White: 8.3:1
- * ⚠️  Warning-500 (#F59E0B) on White: 2.3:1 - Use Warning-700 for text
- * ✅ Primary-500 (#10B981) on White: 2.9:1 - Use Primary-700 for text
- */
 
 export type ColorPalette = typeof colors;
 export type PrimaryColor = keyof typeof colors.primary;

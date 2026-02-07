@@ -3,11 +3,13 @@
  */
 
 import type { ViewStyle, TextStyle } from 'react-native';
+import { shadows, borderRadius } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 export const cardStyles: Record<string, ViewStyle | TextStyle> = {
   accent: {
-    borderBottomLeftRadius: 16,
-    borderTopLeftRadius: 16,
+    borderBottomLeftRadius: borderRadius.large,
+    borderTopLeftRadius: borderRadius.large,
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -15,8 +17,8 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     width: 4,
   },
   card: {
-    borderRadius: 16,
-    elevation: 3,
+    ...shadows.card,
+    borderRadius: borderRadius.large,
     flexDirection: 'column',
     marginRight: 12,
     minHeight: 150,
@@ -24,10 +26,7 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     paddingHorizontal: 14,
     paddingLeft: 18,
     paddingVertical: 14,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
-    shadowRadius: 12,
     width: 200,
   },
   description: {
@@ -37,7 +36,7 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     marginBottom: 36,
   },
   glowOverlay: {
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -46,7 +45,7 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
   },
   name: {
     color: '#1c1917',
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '700',
     lineHeight: 21,
     marginBottom: 6,

@@ -1,6 +1,7 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { Check } from 'lucide-react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+import { colors } from '../../../theme/colors';
 
 interface ActionButtonsProps {
   habitName: string;
@@ -40,7 +41,7 @@ export function ActionButtons({
             style={successIconStyle}
           >
             <View className='h-5 w-5 items-center justify-center rounded-full bg-emerald-500'>
-              <Check color='#ffffff' size={14} strokeWidth={3} />
+              <Check color={colors.text.inverse} size={14} strokeWidth={3} />
             </View>
             <Text className='text-xs font-bold tracking-wide text-emerald-600'>
               RESTORED!

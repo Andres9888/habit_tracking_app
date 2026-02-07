@@ -4,27 +4,26 @@
 
 import { StyleSheet } from 'react-native';
 
+import { shadows, borderRadius } from '../../theme/spacing';
+import { typography } from '@/theme/typography';
 import { COLORS, FOCUS } from './constants';
 
 export const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     justifyContent: 'center',
     minWidth: 32,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
   buttonActive: {
+    ...shadows.subtle,
     backgroundColor: '#ffffff',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
   },
   buttonText: {
-    fontSize: 11,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: '500',
   },
   buttonTextActive: {
@@ -35,7 +34,7 @@ export const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#f5f5f4',
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     flexDirection: 'row',
     padding: 2,
   },

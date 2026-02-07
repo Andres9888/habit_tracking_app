@@ -2,6 +2,8 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { ChevronLeft, X } from 'lucide-react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+import { shadows } from '../../../theme/spacing';
+import { colors } from '../../../theme/colors';
 
 interface ModalHeaderProps {
   insets: EdgeInsets;
@@ -25,16 +27,10 @@ export function ModalHeader({ insets, onBack, onClose }: ModalHeaderProps) {
           accessibilityLabel='Back to settings'
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-2xl bg-stone-100/80'
-          style={{
-            elevation: 1,
-            shadowColor: '#000',
-            shadowOffset: { height: 1, width: 0 },
-            shadowOpacity: 0.05,
-            shadowRadius: 3,
-          }}
+          style={shadows.subtle}
           onPress={onBack}
         >
-          <ChevronLeft color='#57534e' size={24} strokeWidth={2} />
+          <ChevronLeft color={colors.gray[500]} size={24} strokeWidth={2} />
         </TouchableOpacity>
         <Text className='flex-1 text-center text-xl font-bold text-stone-900'>
           Archived Habits
@@ -43,16 +39,10 @@ export function ModalHeader({ insets, onBack, onClose }: ModalHeaderProps) {
           accessibilityLabel='Close'
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-2xl bg-stone-100/80'
-          style={{
-            elevation: 1,
-            shadowColor: '#000',
-            shadowOffset: { height: 1, width: 0 },
-            shadowOpacity: 0.05,
-            shadowRadius: 3,
-          }}
+          style={shadows.subtle}
           onPress={onClose}
         >
-          <X color='#78716c' size={22} strokeWidth={2} />
+          <X color={colors.gray[500]} size={24} strokeWidth={2} />
         </TouchableOpacity>
       </View>
     </BlurView>

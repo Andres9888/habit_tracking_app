@@ -5,9 +5,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   DetailHeader,
+  DetailLoadingState,
   HabitDetailContent,
   HabitDetailModals,
 } from './components';
+import {
+  DETAIL_BG_GRADIENT,
+  buildModalsProps,
+} from './HabitDetailScreen.constants';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
 import { useNotesHandlers } from './useNotesHandlers';
@@ -24,32 +29,30 @@ export default function HabitDetailScreen({
   visible,
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
-  const state = useHabitDetailScreenState({
+  const s = useHabitDetailScreenState({
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
     habitStrength: habit?.strength ?? 0,
     tracking,
     visible,
   });
-  const calendarHandlers = useCalendarHandlers({
+  const c = useCalendarHandlers({
     habit,
-    isTogglingCalendar: state.isTogglingCalendar,
+    isTogglingCalendar: s.isTogglingCalendar,
     onArchive,
     onClose,
     onDelete,
-    setIsTogglingCalendar: state.setIsTogglingCalendar,
-    setPendingArchive: state.setPendingArchive,
-    setPendingDelete: state.setPendingDelete,
+    setIsTogglingCalendar: s.setIsTogglingCalendar,
+    setPendingArchive: s.setPendingArchive,
+    setPendingDelete: s.setPendingDelete,
   });
-  const notesHandlers = useNotesHandlers({
+  const n = useNotesHandlers({
     habit,
     onEdit,
-    setEditingNoteId: state.setEditingNoteId,
-    setIsNotesEditorOpen: state.setIsNotesEditorOpen,
-    setIsNotesListOpen: state.setIsNotesListOpen,
+    setEditingNoteId: s.setEditingNoteId,
+    setIsNotesEditorOpen: s.setIsNotesEditorOpen,
+    setIsNotesListOpen: s.setIsNotesListOpen,
   });
-
-  if (!habit) return null;
 
   return (
     <Modal
@@ -58,50 +61,43 @@ export default function HabitDetailScreen({
       visible={visible}
       onRequestClose={onClose}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
-      >
-        <View className='flex-1 bg-black/50'>
-          <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
-            {/* OPTIMIZED: Gradient background for depth (Background score +2) */}
-            <LinearGradient
-              colors={['#faf9f7', '#f5f3f0', '#faf9f7']}
-              locations={[0, 0.5, 1]}
-              style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
-            >
-              <DetailHeader
-                habit={habit}
-                isCompletedToday={state.isCompletedToday}
-                onClose={onClose}
-                onEdit={notesHandlers.handleEdit}
-              />
-              <HabitDetailContent
-                completedDates={state.completedDates}
-                habit={habit}
-                onDayPress={calendarHandlers.handleCalendarDayPress}
-              />
-            </LinearGradient>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-      <HabitDetailModals
-        editingNote={state.editingNote}
-        habitId={habit._id}
-        habitName={habit.name}
-        handleCloseNotesEditor={notesHandlers.handleCloseNotesEditor}
-        handleConfirmArchive={calendarHandlers.handleConfirmArchive}
-        handleConfirmDelete={calendarHandlers.handleConfirmDelete}
-        handleUndoArchive={calendarHandlers.handleUndoArchive}
-        handleUndoDelete={calendarHandlers.handleUndoDelete}
-        insets={insets}
-        isNotesEditorOpen={state.isNotesEditorOpen}
-        isNotesListOpen={state.isNotesListOpen}
-        pendingArchive={state.pendingArchive}
-        pendingDelete={state.pendingDelete}
-        setIsNotesListOpen={state.setIsNotesListOpen}
-        setPendingDelete={state.setPendingDelete}
-      />
+      {habit ? (
+        <>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            className='flex-1'
+          >
+            <View className='flex-1 bg-black/50'>
+              <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
+                <LinearGradient
+                  colors={DETAIL_BG_GRADIENT}
+                  locations={[0, 0.5, 1]}
+                  style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
+                >
+                  <DetailHeader
+                    habit={habit}
+                    isCompletedToday={s.isCompletedToday}
+                    onClose={onClose}
+                    onEdit={n.handleEdit}
+                  />
+                  <HabitDetailContent
+                    completedDates={s.completedDates}
+                    habit={habit}
+                    onDayPress={c.handleCalendarDayPress}
+                  />
+                </LinearGradient>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+          <HabitDetailModals
+            habitId={habit._id}
+            habitName={habit.name}
+            {...buildModalsProps(s, c, n, insets)}
+          />
+        </>
+      ) : (
+        <DetailLoadingState />
+      )}
     </Modal>
   );
 }

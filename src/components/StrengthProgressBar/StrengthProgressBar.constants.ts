@@ -2,40 +2,43 @@
  * StrengthProgressBar Constants
  */
 
+import { colors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
+
 import type { LevelConfig, SizeConfig } from './StrengthProgressBar.types';
 
 export const LEVELS: LevelConfig[] = [
   {
-    color: '#65a30d',
-    colorBg: '#ecfccb',
+    color: colors.strength.starting,
+    colorBg: colors.strength.startingLight,
     emoji: '🌱',
     label: 'Starting',
     threshold: 0,
   },
   {
-    color: '#16a34a',
-    colorBg: '#dcfce7',
+    color: colors.strength.building,
+    colorBg: colors.strength.buildingLight,
     emoji: '🌿',
     label: 'Building',
     threshold: 20,
   },
   {
-    color: '#0d9488',
-    colorBg: '#ccfbf1',
+    color: colors.strength.developing,
+    colorBg: colors.strength.developingLight,
     emoji: '🌳',
     label: 'Developing',
     threshold: 40,
   },
   {
-    color: '#0891b2',
-    colorBg: '#cffafe',
+    color: colors.strength.strong,
+    colorBg: colors.strength.strongLight,
     emoji: '💪',
     label: 'Strong',
     threshold: 60,
   },
   {
-    color: '#059669',
-    colorBg: '#d1fae5',
+    color: colors.strength.automatic,
+    colorBg: colors.strength.automaticLight,
     emoji: '⚡',
     label: 'Automatic',
     threshold: 80,
@@ -48,21 +51,21 @@ export const SIZE_CONFIG: Record<'compact' | 'default' | 'large', SizeConfig> =
       barHeight: 4,
       emojiContainerSize: 24,
       emojiSize: 18,
-      fontSize: 11,
+      fontSize: typography.caption.fontSize,
       gap: 6,
     },
     default: {
       barHeight: 6,
       emojiContainerSize: 28,
       emojiSize: 20,
-      fontSize: 12,
+      fontSize: typography.caption.fontSize,
       gap: 8,
     },
     large: {
       barHeight: 8,
       emojiContainerSize: 32,
       emojiSize: 24,
-      fontSize: 14,
+      fontSize: typography.bodySmall.fontSize,
       gap: 8,
     },
   };

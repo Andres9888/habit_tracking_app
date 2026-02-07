@@ -1,5 +1,6 @@
 /** SignInScreen Styles - Type scale: 34/22/17/13, proper contrast, depth */
 import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
 
 export const styles = StyleSheet.create({
   appName: {
@@ -32,7 +33,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 20,
   },
   formSection: { gap: 20 },
-  gradientBg: { backgroundColor: '#faf9f7', flex: 1 },
+  gradientBg: { backgroundColor: colors.light.background, flex: 1 },
   iconContainer: {
     alignItems: 'center',
     backgroundColor: '#059669',

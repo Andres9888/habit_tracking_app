@@ -1,10 +1,13 @@
-import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-
-const SPRING_CONFIG = { damping: 15, stiffness: 150 };
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 /**
  * Custom hook for button press animation
- * Scale down to 0.95 on press (UX spec Section 8.2)
+ * Scale down to 0.96 on press (matches AnimatedPressable)
  */
 export function useButtonAnimation() {
   const scale = useSharedValue(1);
@@ -14,11 +17,11 @@ export function useButtonAnimation() {
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.95, SPRING_CONFIG);
+    scale.value = withSpring(0.96, springs.button);
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, SPRING_CONFIG);
+    scale.value = withSpring(1, springs.button);
   };
 
   return { animatedStyle, handlePressIn, handlePressOut };

@@ -5,7 +5,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
-import { spacing } from '../../theme/spacing';
+import { spacing, shadows } from '../../theme/spacing';
 
 const { width: screenWidth } = Dimensions.get('window');
 export const chartWidth = screenWidth - spacing.xl * 2;
@@ -54,16 +54,13 @@ export const styles = StyleSheet.create({
     color: colors.text.secondary,
   },
   tooltip: {
+    ...shadows.modal,
     backgroundColor: colors.background,
     borderRadius: 8,
-    elevation: 5,
     padding: spacing.sm,
     position: 'absolute',
     right: spacing.md,
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
     top: spacing.md,
   },
   tooltipDate: {
@@ -74,6 +71,6 @@ export const styles = StyleSheet.create({
   tooltipValue: {
     ...typography.bodyBold,
     color: colors.text.primary,
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
   },
 });

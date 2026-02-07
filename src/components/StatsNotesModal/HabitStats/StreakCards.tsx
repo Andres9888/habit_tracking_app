@@ -3,6 +3,7 @@
  */
 
 import { Text, View } from 'react-native';
+import { colors } from '@/theme/colors';
 
 interface StreakCardsProps {
   currentStreak: number;
@@ -20,10 +21,13 @@ export function StreakCards({
           CURRENT STREAK
         </Text>
         <View className='mt-2 flex-row items-baseline gap-2'>
-          <Text className='text-3xl font-bold text-[#48bb78]'>
+          <Text
+            className='text-3xl font-bold'
+            style={{ color: colors.primary[400] }}
+          >
             {currentStreak}
           </Text>
-          <Text className='text-xl font-semibold text-stone-400'>
+          <Text className='text-xl font-semibold text-stone-500'>
             {currentStreak === 1 ? 'day' : 'days'}
           </Text>
         </View>
@@ -33,10 +37,13 @@ export function StreakCards({
           LONGEST STREAK
         </Text>
         <View className='mt-2 flex-row items-baseline gap-2'>
-          <Text className='text-3xl font-bold text-[#48bb78]'>
+          <Text
+            className='text-3xl font-bold'
+            style={{ color: colors.primary[400] }}
+          >
             {longestStreak}
           </Text>
-          <Text className='text-xl font-semibold text-stone-400'>
+          <Text className='text-xl font-semibold text-stone-500'>
             {longestStreak === 1 ? 'day' : 'days'}
           </Text>
         </View>

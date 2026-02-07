@@ -5,6 +5,7 @@
 import { useCallback } from 'react';
 import { Animated, Text, View, Keyboard } from 'react-native';
 import { AnimatedColorButton } from './AnimatedColorButton';
+import { borderRadius } from '../../../theme/spacing';
 
 interface StyleSectionProps {
   colors: readonly string[];
@@ -56,7 +57,7 @@ export const StyleSection = ({
                   backgroundColor: color,
                   borderColor:
                     selectedColor === color ? '#292524' : 'transparent',
-                  borderRadius: 18,
+                  borderRadius: borderRadius.full,
                   borderWidth: selectedColor === color ? 3 : 0,
                   height: 36,
                   justifyContent: 'center',

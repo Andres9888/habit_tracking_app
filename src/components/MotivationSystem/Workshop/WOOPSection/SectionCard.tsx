@@ -14,6 +14,7 @@ import Animated, {
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../animations';
+import { shadows } from '../../../../theme/spacing';
 
 interface SectionCardProps {
   children: React.ReactNode;
@@ -87,11 +88,8 @@ export function SectionCard({
         className
       )}
       style={{
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { height: 2, width: 0 },
+        ...shadows.card,
         shadowOpacity: 0.05,
-        shadowRadius: 8,
       }}
     >
       {children}

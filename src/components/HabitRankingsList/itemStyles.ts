@@ -5,11 +5,11 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
-import { spacing } from '../../theme/spacing';
+import { spacing, borderRadius } from '../../theme/spacing';
 
 export const itemStyles = StyleSheet.create({
   habitEmoji: {
-    fontSize: 20,
+    fontSize: typography.heading2.fontSize,
     marginRight: spacing.xs,
   },
   habitHeader: {
@@ -23,7 +23,7 @@ export const itemStyles = StyleSheet.create({
   habitItem: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: spacing.xs,
@@ -59,12 +59,12 @@ export const itemStyles = StyleSheet.create({
   rankNumber: {
     ...typography.bodyBold,
     color: colors.text.tertiary,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   riskBadge: {
     alignItems: 'center',
     backgroundColor: '#FEE2E2',
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     flexDirection: 'row',
     marginLeft: spacing.xs,
     paddingHorizontal: spacing.xs,
@@ -88,7 +88,7 @@ export const itemStyles = StyleSheet.create({
   },
   strengthPercentage: {
     ...typography.h3,
-    color: colors.primary[500],
+    color: colors.primary[700],
     marginBottom: spacing.xs,
   },
 });

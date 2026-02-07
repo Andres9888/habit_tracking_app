@@ -12,6 +12,8 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Lock, Flame, Sparkles } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { shadows, borderRadius } from '../theme/spacing';
+import { colors } from '../theme/colors';
 
 type PremiumBadgeVariant = 'pro' | 'popular' | 'new';
 
@@ -47,7 +49,7 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
       start={{ x: 0, y: 0 }}
       style={[styles.badge, styles.proBadge, style]}
     >
-      <Lock color='#ffffff' size={12} strokeWidth={2.5} />
+      <Lock color={colors.text.inverse} size={12} strokeWidth={2.5} />
       <Text style={[styles.badgeText, styles.proBadgeText]}>PRO</Text>
     </LinearGradient>
   );
@@ -55,19 +57,16 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
 
 const styles = StyleSheet.create({
   badge: {
+    ...shadows.card,
     alignItems: 'center',
-    borderRadius: 6,
-    elevation: 3,
+    borderRadius: borderRadius.small,
     flexDirection: 'row',
     gap: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
     position: 'absolute',
     right: 12,
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.15,
-    shadowRadius: 3,
     top: 12,
     zIndex: 10,
   },
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
     // Gradient applied via LinearGradient
   },
   proBadgeText: {
-    color: '#ffffff',
+    color: colors.text.inverse,
   },
 });
 

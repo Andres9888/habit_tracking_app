@@ -8,6 +8,7 @@
 
 import { useAnimatedStyle } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useHabitCardEntrance } from './useHabitCardEntrance';
 import { useHabitCardAnimations } from './useHabitCardAnimations';
 import { useHabitCardGestures } from './useHabitCardGestures';
@@ -39,6 +40,7 @@ export function useHabitCard(props: HabitCardProps) {
   } = props;
 
   const theme = useAppTheme();
+  const reduceMotion = useReduceMotion();
   const values = useHabitCardValues(strength);
 
   const habitState = useHabitCardState({
@@ -59,6 +61,7 @@ export function useHabitCard(props: HabitCardProps) {
 
   const animations = useHabitCardAnimations({
     cardScale: values.cardScale,
+    reduceMotion,
     setShowConfetti: values.setShowConfetti,
     setShowFloatingXP: values.setShowFloatingXP,
     setXPPosition: values.setXPPosition,
@@ -74,6 +77,7 @@ export function useHabitCard(props: HabitCardProps) {
     name,
     onLongPress,
     onPress,
+    reduceMotion,
     setIsToggling: values.setIsToggling,
     today: habitState.today,
     toggleCompletionMutation: habitState.toggleCompletionMutation,

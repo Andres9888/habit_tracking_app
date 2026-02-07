@@ -8,6 +8,10 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Sparkles } from 'lucide-react-native';
 import { SuggestionEmojiCell } from './SuggestionEmojiCell';
 
+import { colors } from '../../../theme/colors';
+import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
+
 interface SuggestionsSectionProps {
   habitName: string;
   suggestedEmojis: string[];
@@ -24,12 +28,14 @@ export function SuggestionsSection({
   if (suggestedEmojis.length === 0) return null;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Sparkles color='#f59e0b' size={16} />
-        <Text style={styles.headerText}>Perfect for "{habitName}"</Text>
+    <View style={suggestionStyles.container}>
+      <View style={suggestionStyles.header}>
+        <Sparkles color={colors.warning[500]} size={16} />
+        <Text style={suggestionStyles.headerText}>
+          Perfect for "{habitName}"
+        </Text>
       </View>
-      <View style={styles.grid}>
+      <View style={suggestionStyles.grid}>
         {suggestedEmojis.map((emoji) => (
           <SuggestionEmojiCell
             key={`suggested-${emoji}`}
@@ -43,29 +49,29 @@ export function SuggestionsSection({
   );
 }
 
-const styles = StyleSheet.create({
+export const suggestionStyles = StyleSheet.create({
   container: {
-    backgroundColor: '#fef3c7',
-    borderColor: '#fcd34d',
-    borderRadius: 16,
+    backgroundColor: colors.warning[100],
+    borderColor: colors.warning[300],
+    borderRadius: borderRadius.large,
     borderWidth: 1,
-    marginBottom: 12,
-    marginHorizontal: 20,
-    padding: 16,
+    marginBottom: spacing.md,
+    marginHorizontal: spacing.lg,
+    padding: spacing.base,
   },
   grid: {
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
   },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   headerText: {
-    color: '#b45309',
-    fontSize: 14,
+    color: colors.warning[700],
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
-    marginLeft: 8,
+    marginLeft: spacing.sm,
   },
 });

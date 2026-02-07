@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { colors, milestoneColors } from '../../../theme/colors';
 import { streakStyles } from '../HabitCard.streakStyles';
 
 interface StreakBadgeProps {
@@ -22,7 +23,12 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
 
   return (
     <View style={streakStyles.streakRow}>
-      <View style={[streakStyles.streakBadge, { backgroundColor: '#FEF3C7' }]}>
+      <View
+        style={[
+          streakStyles.streakBadge,
+          { backgroundColor: milestoneColors.amberLight },
+        ]}
+      >
         <Text style={streakStyles.streakFireIcon}>🔥</Text>
         <Text
           style={[
@@ -41,8 +47,13 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
             streakStyles.bestStreakBadge,
             {
               backgroundColor:
-                currentStreak >= bestStreak ? '#FEF9C3' : '#f5f5f4',
-              borderColor: currentStreak >= bestStreak ? '#FACC15' : '#e7e5e4',
+                currentStreak >= bestStreak
+                  ? milestoneColors.amberLight
+                  : colors.gray[100],
+              borderColor:
+                currentStreak >= bestStreak
+                  ? milestoneColors.amberBorder
+                  : colors.border,
             },
           ]}
         >
@@ -51,7 +62,10 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
             style={[
               streakStyles.bestStreakText,
               {
-                color: currentStreak >= bestStreak ? '#A16207' : '#6B7280',
+                color:
+                  currentStreak >= bestStreak
+                    ? milestoneColors.amberText
+                    : colors.gray[500],
               },
             ]}
           >

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import { COLORS, FOCUS } from './constants';
+import { typography } from '@/theme/typography';
 
 const STATS_CONFIG = {
   BADGE_BORDER_RADIUS: 8,
@@ -39,7 +40,7 @@ export const styles = StyleSheet.create({
   } as ViewStyle,
   frequencyText: {
     color: COLORS.TEXT_PRIMARY,
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '600',
   } as TextStyle,
   settingsButton: {
@@ -60,7 +61,7 @@ export const styles = StyleSheet.create({
     paddingVertical: STATS_CONFIG.BADGE_PADDING_Y,
   } as ViewStyle,
   streakText: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '600',
   } as TextStyle,
   webFocus: {

@@ -8,8 +8,7 @@ import {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-
-const SPRING_CONFIG = { damping: 15, stiffness: 200 };
+import { springs } from '@/theme/animations';
 
 interface UseToastButtonAnimationOptions {
   /** Scale factor when pressed (default: 0.92) */
@@ -26,11 +25,11 @@ export function useToastButtonAnimation({
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(pressedScale, SPRING_CONFIG);
+    scale.value = withSpring(pressedScale, springs.button);
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, SPRING_CONFIG);
+    scale.value = withSpring(1, springs.button);
   };
 
   return { animatedStyle, handlePressIn, handlePressOut };

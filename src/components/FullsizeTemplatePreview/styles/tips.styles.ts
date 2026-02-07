@@ -4,10 +4,13 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
+
 export const tipsStyles = StyleSheet.create({
   tipIconContainer: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     height: 24,
     justifyContent: 'center',
     width: 24,
@@ -25,7 +28,7 @@ export const tipsStyles = StyleSheet.create({
   tipsBox: {
     backgroundColor: '#fefce8',
     borderColor: '#fef08a',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     borderWidth: 2,
     marginHorizontal: 20,
     marginTop: 16,
@@ -44,7 +47,7 @@ export const tipsStyles = StyleSheet.create({
   },
   tipsLabel: {
     color: '#854d0e',
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',

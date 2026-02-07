@@ -4,42 +4,31 @@
  */
 
 import { Dimensions } from 'react-native';
-import { Springs } from '../../constants/motion';
+import { springs } from '../../theme/animations';
 
 export const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } =
   Dimensions.get('window');
 
 /**
- * Organic spring config for fullScreen modals - using Springs.sheet as base
+ * Organic spring config for fullScreen modals - using springs.sheet as base
  * with additional precision settings for modal-specific behavior
  */
 export const FULLSCREEN_ORGANIC_SPRING = {
-  ...Springs.sheet,
+  ...springs.sheet,
   overshootClamping: false,
 };
 
 /** Exit spring - slightly faster for dismissal */
-export const EXIT_SPRING_CONFIG = {
-  damping: 26,
-  mass: 1,
-  stiffness: 420,
-};
+export const EXIT_SPRING_CONFIG = springs.exit;
 
 /** Snappy spring for interactive gestures */
-export const GESTURE_SPRING_CONFIG = {
-  damping: 20,
-  mass: 1,
-  stiffness: 450,
-};
+export const GESTURE_SPRING_CONFIG = springs.gesture;
 
 /**
- * Organic spring for bottom sheet - based on Springs.button with adjusted stiffness
+ * Organic spring for bottom sheet
  * No overshootClamping - tiny overshoot gives organic feel
  */
-export const BOTTOM_SHEET_SPRING_CONFIG = {
-  damping: 26,
-  stiffness: 300,
-};
+export const BOTTOM_SHEET_SPRING_CONFIG = springs.bottomSheet;
 
 /** Gesture thresholds for dismissal */
 export const DISMISS_THRESHOLD = 120;

@@ -7,7 +7,7 @@
  * - WCAG 2.1 Level AA color contrast compliance
  */
 
-import { colors } from '../colors';
+import { colors, milestoneColors, warmPalette } from '@/theme/colors';
 
 describe('Theme Colors - Phase 1', () => {
   describe('Primary Colors (Growth & Progress)', () => {
@@ -86,24 +86,24 @@ describe('Theme Colors - Phase 1', () => {
   });
 
   describe('Habit Strength Level Colors', () => {
-    it('should match UX spec Starting (0-20%): #86EFAC 🌱', () => {
-      expect(colors.strength.starting).toBe('#86EFAC');
+    it('should match Starting (0-20%): #65a30d (lime-600) 🌱', () => {
+      expect(colors.strength.starting).toBe('#65a30d');
     });
 
-    it('should match UX spec Building (20-40%): #10B981 🌿', () => {
-      expect(colors.strength.building).toBe('#10B981');
+    it('should match Building (20-40%): #16a34a (green-600) 🌿', () => {
+      expect(colors.strength.building).toBe('#16a34a');
     });
 
-    it('should match UX spec Developing (40-60%): #059669 🌳', () => {
-      expect(colors.strength.developing).toBe('#059669');
+    it('should match Developing (40-60%): #0d9488 (teal-600) 🌳', () => {
+      expect(colors.strength.developing).toBe('#0d9488');
     });
 
-    it('should match UX spec Strong (60-80%): #047857 💪', () => {
-      expect(colors.strength.strong).toBe('#047857');
+    it('should match Strong (60-80%): #0891b2 (cyan-600) 💪', () => {
+      expect(colors.strength.strong).toBe('#0891b2');
     });
 
-    it('should match UX spec Automatic (80-100%): #065F46 ⚡', () => {
-      expect(colors.strength.automatic).toBe('#065F46');
+    it('should match Automatic (80-100%): #059669 (emerald-600) ⚡', () => {
+      expect(colors.strength.automatic).toBe('#059669');
     });
   });
 
@@ -199,6 +199,107 @@ describe('Theme Colors - Phase 1', () => {
       expect(colors).toHaveProperty('light');
       expect(colors).toHaveProperty('dark');
       expect(colors).toHaveProperty('text');
+    });
+
+    it('should export warmPalette separately from colors', () => {
+      // warmPalette is a separate semantic group, not nested in colors
+      expect(warmPalette).toBeDefined();
+      expect(warmPalette.background).toBe('#FAF8F5');
+    });
+  });
+
+  describe('Warm Stone Palette', () => {
+    it('should export warmPalette from theme', () => {
+      expect(warmPalette).toBeDefined();
+    });
+
+    it('should have background (#FAF8F5)', () => {
+      expect(warmPalette.background).toBe('#FAF8F5');
+    });
+
+    it('should have foreground (#2D2A26)', () => {
+      expect(warmPalette.foreground).toBe('#2D2A26');
+    });
+
+    it('should have neutral (#C4BFB7)', () => {
+      expect(warmPalette.neutral).toBe('#C4BFB7');
+    });
+
+    it('should have border (#E5E2DE)', () => {
+      expect(warmPalette.border).toBe('#E5E2DE');
+    });
+
+    it('should have cardBg (#f0eeeb)', () => {
+      expect(warmPalette.cardBg).toBe('#f0eeeb');
+    });
+
+    it('should have all 5 warm palette keys', () => {
+      const keys = Object.keys(warmPalette);
+      expect(keys).toHaveLength(5);
+      expect(keys).toEqual(
+        expect.arrayContaining([
+          'background',
+          'border',
+          'cardBg',
+          'foreground',
+          'neutral',
+        ])
+      );
+    });
+  });
+
+  describe('Milestone Colors (Badge/Achievement)', () => {
+    it('should export milestoneColors from theme', () => {
+      expect(milestoneColors).toBeDefined();
+    });
+
+    it('should have amber (#F59E0B) for 7-day milestone', () => {
+      expect(milestoneColors.amber).toBe('#F59E0B');
+    });
+
+    it('should have yellow (#EAB308) for 30-day milestone', () => {
+      expect(milestoneColors.yellow).toBe('#EAB308');
+    });
+
+    it('should have violet (#8B5CF6) for 100-day milestone', () => {
+      expect(milestoneColors.violet).toBe('#8B5CF6');
+    });
+
+    it('should have amberLight (#FEF9C3) for badge backgrounds', () => {
+      expect(milestoneColors.amberLight).toBe('#FEF9C3');
+    });
+
+    it('should have amberBorder (#FCD34D) for badge borders', () => {
+      expect(milestoneColors.amberBorder).toBe('#FCD34D');
+    });
+
+    it('should have amberDark (#78350F) for badge text', () => {
+      expect(milestoneColors.amberDark).toBe('#78350F');
+    });
+
+    it('should have stone (#A8A29E) for unachieved state', () => {
+      expect(milestoneColors.stone).toBe('#A8A29E');
+    });
+
+    it('should have amberText (#A16207) for text on amber backgrounds', () => {
+      expect(milestoneColors.amberText).toBe('#A16207');
+    });
+
+    it('should have all 8 milestone color keys', () => {
+      const keys = Object.keys(milestoneColors);
+      expect(keys).toHaveLength(8);
+      expect(keys).toEqual(
+        expect.arrayContaining([
+          'amber',
+          'amberBorder',
+          'amberDark',
+          'amberLight',
+          'amberText',
+          'stone',
+          'violet',
+          'yellow',
+        ])
+      );
     });
   });
 });

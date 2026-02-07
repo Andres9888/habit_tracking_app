@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Eye } from 'lucide-react-native';
+import { colors } from '../../../../theme/colors';
 
 interface VisualizationGuideButtonProps {
   onPress: () => void;
@@ -20,7 +21,7 @@ export const VisualizationGuideButton: React.FC<
     className='flex-row items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-600 py-3.5 active:opacity-90'
     onPress={onPress}
   >
-    <Eye color='#ffffff' size={18} />
+    <Eye color={colors.text.inverse} size={18} />
     <Text className='text-sm font-semibold text-white'>
       Visualization Guide
     </Text>

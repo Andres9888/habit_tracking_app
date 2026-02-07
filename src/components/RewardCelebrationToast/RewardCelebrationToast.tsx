@@ -1,4 +1,5 @@
-import { Animated, Pressable, Text, View } from 'react-native';
+import { Animated, Text, View } from 'react-native';
+import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useRewardToastAnimation } from './useRewardToastAnimation';
 import { useRewardToastContent } from './useRewardToastContent';
@@ -49,10 +50,10 @@ export const RewardCelebrationToast = ({
           </Text>
         </View>
         <View className='mt-4 flex-row items-center justify-between gap-3'>
-          <Pressable
+          <AnimatedPressable
             accessibilityHint='Share this streak to motivate friends'
             accessibilityLabel='Share streak'
-            className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-4 py-2.5 active:bg-stone-100'
+            className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-4 py-2.5'
             onPress={() => {
               triggerSelection();
               onSecondaryAction();
@@ -61,11 +62,11 @@ export const RewardCelebrationToast = ({
             <Text className='text-[15px] font-semibold leading-[20px] text-[#475467]'>
               Share
             </Text>
-          </Pressable>
-          <Pressable
+          </AnimatedPressable>
+          <AnimatedPressable
             accessibilityHint={`${premiumCTA.text}: ${premiumCTA.benefit}`}
             accessibilityLabel={premiumCTA.text}
-            className='flex-1 items-center justify-center rounded-full px-4 py-2.5 active:opacity-80'
+            className='flex-1 items-center justify-center rounded-full px-4 py-2.5'
             style={{ backgroundColor: '#7c3aed' }}
             onPress={() => {
               triggerSelection();
@@ -75,11 +76,11 @@ export const RewardCelebrationToast = ({
             <Text className='text-[15px] font-semibold leading-[20px] text-white'>
               {premiumCTA.text}
             </Text>
-          </Pressable>
+          </AnimatedPressable>
         </View>
-        <Pressable
+        <AnimatedPressable
           accessibilityLabel='Dismiss reward toast'
-          className='mt-3 items-center active:opacity-60'
+          className='mt-3 items-center'
           onPress={() => {
             triggerLightImpact();
             onDismiss();
@@ -88,7 +89,7 @@ export const RewardCelebrationToast = ({
           <Text className='text-[10px] font-medium uppercase leading-[12px] tracking-wider text-[#78716c]'>
             Not now
           </Text>
-        </Pressable>
+        </AnimatedPressable>
       </View>
     </AnimatedContainer>
   );

@@ -7,6 +7,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 import { CATEGORY_LABELS } from '../TemplateCard.constants';
 
 interface CategoryBadgeProps {
@@ -48,29 +50,29 @@ export function CategoryBadge({
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   badgeRow: {
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
-    marginLeft: 8,
+    gap: spacing.sm,
+    marginLeft: spacing.sm,
   },
   categoryBadge: {
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    borderRadius: borderRadius.small,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   inlinePremiumBadge: {
     backgroundColor: '#ede9fe',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    borderRadius: borderRadius.small,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   inlinePremiumText: {
     color: '#7c3aed',
-    fontSize: 11,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: '600',
     letterSpacing: 0.5,
     textTransform: 'uppercase',

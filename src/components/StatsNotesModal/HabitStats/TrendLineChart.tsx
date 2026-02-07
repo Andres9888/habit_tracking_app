@@ -5,6 +5,7 @@
 import { format } from 'date-fns';
 import { Text, View } from 'react-native';
 import Svg, { Line, Circle, Text as SvgText } from 'react-native-svg';
+import { colors } from '@/theme/colors';
 import type { ChartDataItem } from './HabitStats.types';
 
 interface TrendLineChartProps {
@@ -32,7 +33,7 @@ export function TrendLineChart({ data }: TrendLineChartProps) {
       <Svg height={CHART_HEIGHT} width={CHART_WIDTH}>
         {/* Grid lines */}
         <Line
-          stroke='#e7e5e4'
+          stroke={colors.border}
           strokeDasharray='4,4'
           strokeWidth='1'
           x1='0'
@@ -43,7 +44,7 @@ export function TrendLineChart({ data }: TrendLineChartProps) {
 
         {/* Line path */}
         <Line
-          stroke='#d6d3d1'
+          stroke={colors.gray[300]}
           strokeWidth='1'
           x1={points[0]?.x ?? 0}
           x2={points.at(-1)?.x ?? 0}
@@ -57,19 +58,25 @@ export function TrendLineChart({ data }: TrendLineChartProps) {
             key={index}
             cx={point.x}
             cy={point.y}
-            fill={point.completed ? '#48bb78' : '#dde3ed'}
+            fill={point.completed ? colors.primary[400] : colors.gray[200]}
             r={POINT_RADIUS}
-            stroke={point.completed ? '#48bb78' : '#a8a29e'}
+            stroke={point.completed ? colors.primary[400] : colors.gray[400]}
             strokeWidth='1.5'
           />
         ))}
 
         {/* Labels */}
-        <SvgText fill='#78716c' fontSize='10' textAnchor='start' x='0' y='15'>
+        <SvgText
+          fill={colors.gray[500]}
+          fontSize='10'
+          textAnchor='start'
+          x='0'
+          y='15'
+        >
           ✓
         </SvgText>
         <SvgText
-          fill='#78716c'
+          fill={colors.gray[500]}
           fontSize='10'
           textAnchor='start'
           x='0'
@@ -80,7 +87,7 @@ export function TrendLineChart({ data }: TrendLineChartProps) {
       </Svg>
       <Text className='mt-2 text-xs text-stone-500'>
         {format(new Date(data[0].date), 'MMM d')} -{' '}
-        {format(new Date(data[data.length - 1].date), 'MMM d')}
+        {format(new Date(data.at(-1).date), 'MMM d')}
       </Text>
     </View>
   );

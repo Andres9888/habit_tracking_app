@@ -1,40 +1,41 @@
 import { StyleSheet } from 'react-native';
 
+import { colors } from '../../theme/colors';
+import { borderRadius, shadows, spacing } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
+
 export const styles = StyleSheet.create({
   categoriesContent: {
-    gap: 8,
-    paddingHorizontal: 20,
+    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
   },
   categoriesScroll: {
     flexGrow: 0,
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   categoryPill: {
     alignItems: 'center',
-    backgroundColor: '#f3f4f6',
-    borderRadius: 9999,
+    backgroundColor: colors.gray[100],
+    borderRadius: borderRadius.full,
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.sm,
   },
   categoryPillActive: {
-    backgroundColor: '#1c1917',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
+    ...shadows.card,
+    backgroundColor: colors.gray[900],
     shadowOpacity: 0.15,
-    shadowRadius: 4,
   },
   categoryPillIcon: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   categoryPillText: {
-    color: '#57534e',
-    fontSize: 14,
+    color: colors.gray[500],
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
-    marginLeft: 4,
+    marginLeft: spacing.xs,
   },
   categoryPillTextActive: {
-    color: '#ffffff',
+    color: colors.text.inverse,
   },
 });

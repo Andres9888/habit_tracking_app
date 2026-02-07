@@ -1,6 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 import { Microscope } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
+import { colors } from '@/theme/colors';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import type { HabitTemplate } from '../../types';
@@ -93,7 +94,7 @@ export const TemplateListItem = ({
           onPressIn={handleSciencePressIn}
           onPressOut={handleSciencePressOut}
         >
-          <Microscope color='#3B82F6' size={18} strokeWidth={2} />
+          <Microscope color={colors.secondary[500]} size={18} strokeWidth={2} />
         </AnimatedPressable>
       </View>
     </Animated.View>

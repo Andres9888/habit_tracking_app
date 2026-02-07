@@ -36,5 +36,3 @@ export function ShimmerBox({
     />
   );
 }
-</Animated.parameter>
-</invoke>

@@ -3,18 +3,21 @@
  * OPTIMIZED: FadeInDown animation, type scale 28/17
  */
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 
 export const AnalyticsHeader: React.FC = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <View
       accessible
       accessibilityLabel='Analytics Screen'
       accessibilityRole='header'
-      style={styles.header}
+      style={[styles.header, { paddingTop: Math.max(insets.top + 8, 16) }]}
     >
       <Animated.Text
         accessibilityLabel='Analytics'
@@ -40,7 +43,6 @@ const styles = StyleSheet.create({
   header: {
     paddingBottom: spacing.md,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
   },
   headerSubtitle: {
     color: colors.text.secondary,

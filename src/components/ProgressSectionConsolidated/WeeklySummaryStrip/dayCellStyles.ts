@@ -4,6 +4,9 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
+
 export const dayCellStyles = StyleSheet.create({
   dayCellContainer: {
     alignItems: 'center',
@@ -11,7 +14,7 @@ export const dayCellStyles = StyleSheet.create({
   },
   dayCircle: {
     alignItems: 'center',
-    borderRadius: 18,
+    borderRadius: borderRadius.full,
     height: 36,
     justifyContent: 'center',
     width: 36,
@@ -24,7 +27,7 @@ export const dayCellStyles = StyleSheet.create({
   },
   dayLabel: {
     color: '#a8a29e', // stone-400
-    fontSize: 11,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: '500',
     marginBottom: 6,
   },

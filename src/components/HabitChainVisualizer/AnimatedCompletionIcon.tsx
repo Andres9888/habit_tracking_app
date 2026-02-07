@@ -6,6 +6,7 @@ import React from 'react';
 import { Animated } from 'react-native';
 import { Check } from 'lucide-react-native';
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
+import { colors } from '../../theme/colors';
 
 interface AnimatedCompletionIconProps {
   completionIcon: 'checkbox' | 'chain';
@@ -31,9 +32,9 @@ export function AnimatedCompletionIcon({
       }}
     >
       {completionIcon === 'checkbox' ? (
-        <Check color='#ffffff' size={20} strokeWidth={2.25} />
+        <Check color={colors.text.inverse} size={20} strokeWidth={2.25} />
       ) : (
-        <ChainLinkIcon color='#ffffff' size={20} variant='stroke' />
+        <ChainLinkIcon color={colors.text.inverse} size={20} variant='stroke' />
       )}
     </Animated.View>
   );

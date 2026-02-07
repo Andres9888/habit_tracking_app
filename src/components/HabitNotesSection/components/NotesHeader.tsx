@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { StickyNote, Plus } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { colors } from '../../../theme/colors';
 
 interface NotesHeaderProps {
   noteCount: number;
@@ -46,7 +47,7 @@ export function NotesHeader({ noteCount, onAddNote }: NotesHeaderProps) {
         onPress={handleAddNote}
       >
         <View className='flex-row items-center gap-1'>
-          <Plus color='#ffffff' size={16} strokeWidth={2} />
+          <Plus color={colors.text.inverse} size={16} strokeWidth={2} />
           <Text className='text-xs font-semibold text-white'>Add</Text>
         </View>
       </Pressable>

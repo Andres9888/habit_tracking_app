@@ -35,7 +35,7 @@ export function NotesEditorModal({
             className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
             onPress={onClose}
           >
-            <X className='text-stone-600' size={22} />
+            <X className='text-stone-600' size={24} />
           </Pressable>
         </View>
         <ScrollView

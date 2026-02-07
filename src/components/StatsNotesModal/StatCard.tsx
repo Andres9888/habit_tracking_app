@@ -25,7 +25,7 @@ export function StatCard({
           {value}
         </Text>
         {suffix && (
-          <Text className='text-xl font-semibold text-stone-400'>{suffix}</Text>
+          <Text className='text-xl font-semibold text-stone-500'>{suffix}</Text>
         )}
       </View>
       <Text className='mt-1 text-sm text-stone-600'>{description}</Text>

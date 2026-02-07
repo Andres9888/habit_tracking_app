@@ -78,7 +78,7 @@ function PresetButtonComponent({
         {preset.time && (
           <Text
             className='mt-0.5 text-xs'
-            style={{ color: isSelected ? '#10B981' : '#a8a29e' }}
+            style={{ color: isSelected ? '#047857' : '#a8a29e' }}
           >
             {preset.time}
           </Text>

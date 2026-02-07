@@ -4,6 +4,10 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius, shadows } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
+import { colors } from '../../theme/colors';
+
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -27,14 +31,14 @@ export const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: '#fef3c7', // amber-100 - warm and matches swipe
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     height: 36,
     justifyContent: 'center',
     width: 36,
   },
   message: {
     flex: 1,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   messageText: {
     color: '#78716c', // stone-500 - warm gray
@@ -45,31 +49,27 @@ export const styles = StyleSheet.create({
   },
   progressContainer: {
     backgroundColor: '#fef3c7', // amber-100
-    borderBottomLeftRadius: 22,
-    borderBottomRightRadius: 22,
+    borderBottomLeftRadius: borderRadius.xl,
+    borderBottomRightRadius: borderRadius.xl,
     height: 3,
     overflow: 'hidden',
     width: '100%',
   },
   toast: {
-    backgroundColor: '#ffffff', // white - matches habit cards
+    backgroundColor: colors.light.card, // white - matches habit cards
     borderColor: '#f5f5f4', // stone-100 - matches card borders
-    borderRadius: 24, // matches card rounded-3xl
+    borderRadius: borderRadius.xl, // matches card rounded-3xl
     borderWidth: 1,
-    elevation: 8,
+    ...shadows.modal,
     maxWidth: 400,
     overflow: 'hidden',
-    shadowColor: '#78716c',
-    // stone-500 - warm shadow
-    shadowOffset: { height: 6, width: 0 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
+    shadowColor: '#78716c', // stone-500 - warm shadow
     width: '100%',
   },
   undoButton: {
     alignItems: 'center',
     backgroundColor: '#fef3c7', // amber-100
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,

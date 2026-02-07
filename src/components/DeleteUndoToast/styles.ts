@@ -1,5 +1,9 @@
 import { StyleSheet } from 'react-native';
 
+import { borderRadius, shadows } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
+import { colors } from '../../theme/colors';
+
 export const DISMISS_THRESHOLD = 50;
 
 export const styles = StyleSheet.create({
@@ -21,7 +25,7 @@ export const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: '#fee2e2', // red-100
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     height: 36,
     justifyContent: 'center',
     width: 36,
@@ -32,7 +36,7 @@ export const styles = StyleSheet.create({
   },
   message: {
     flex: 1,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   messageText: {
     color: '#78716c', // stone-500
@@ -43,30 +47,27 @@ export const styles = StyleSheet.create({
   },
   progressContainer: {
     backgroundColor: '#fee2e2', // red-100
-    borderBottomLeftRadius: 22,
-    borderBottomRightRadius: 22,
+    borderBottomLeftRadius: borderRadius.xl,
+    borderBottomRightRadius: borderRadius.xl,
     height: 3,
     overflow: 'hidden',
     width: '100%',
   },
   toast: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.light.card,
     borderColor: '#fecaca', // red-200
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     borderWidth: 1,
-    elevation: 8,
+    ...shadows.modal,
     maxWidth: 400,
     overflow: 'hidden',
     shadowColor: '#dc2626', // red-600
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
     width: '100%',
   },
   undoButton: {
     alignItems: 'center',
     backgroundColor: '#fee2e2', // red-100
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,

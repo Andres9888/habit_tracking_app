@@ -4,7 +4,11 @@
 
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { HelpCircle, Plus, Pencil } from 'lucide-react-native';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -43,7 +47,7 @@ export function WOOPSectionHeader({
           accessibilityLabel='Learn about WOOP'
           accessibilityRole='button'
           className='h-6 w-6 items-center justify-center rounded-full'
-          hitSlop={8}
+          hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
           style={animatedStyle}
           onPress={onHelpPress}
           onPressIn={handlePressIn}

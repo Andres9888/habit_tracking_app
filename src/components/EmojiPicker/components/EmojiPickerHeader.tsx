@@ -18,7 +18,7 @@ export const EmojiPickerHeader = memo(({ onClose }: EmojiPickerHeaderProps) => (
       className='h-10 w-10 items-center justify-center rounded-full bg-stone-200'
       onPress={onClose}
     >
-      <X color='#1c1917' size={20} strokeWidth={2} />
+      <X color='#1c1917' size={24} strokeWidth={2} />
     </TouchableOpacity>
   </View>
 ));

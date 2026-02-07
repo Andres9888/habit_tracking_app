@@ -2,6 +2,7 @@ import type {
   CalendarColors,
   CompletionStatus,
 } from './CalendarTimeline.types';
+import { shadows } from '../../theme/spacing';
 
 export const DEFAULT_COLORS: CalendarColors = {
   currentDayBackground: '#1c1917', // stone-900 for strong today indicator
@@ -57,9 +58,8 @@ export const FUTURE_DATE_TEXT_COLOR = '#d6d3d1'; // stone-300
 
 /** Container shadow styling */
 export const CONTAINER_SHADOW = {
-  elevation: 1,
+  ...shadows.subtle,
   shadowColor: '#78716c',
-  shadowOffset: { height: 2, width: 0 },
   shadowOpacity: 0.04,
   shadowRadius: 8,
 };

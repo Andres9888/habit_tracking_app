@@ -4,6 +4,9 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
+
 export const styles = StyleSheet.create({
   chevronContainer: {
     alignItems: 'center',
@@ -31,7 +34,7 @@ export const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     borderLeftWidth: 4,
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     flexDirection: 'row',
     gap: 12,
     marginHorizontal: 12,
@@ -43,13 +46,13 @@ export const styles = StyleSheet.create({
   },
   iconBadge: {
     alignItems: 'center',
-    borderRadius: 14,
+    borderRadius: borderRadius.medium,
     height: 48,
     justifyContent: 'center',
     width: 48,
   },
   label: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '700',
   },
   labelContainer: {

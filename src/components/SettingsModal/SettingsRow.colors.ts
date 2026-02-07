@@ -2,6 +2,8 @@
  * Color configurations for SettingsRow component
  */
 
+import { colors } from '@/theme/colors';
+
 export interface SettingsRowColors {
   background: string;
   border: string;
@@ -14,14 +16,14 @@ export interface SettingsRowColors {
 }
 
 export const STANDARD_COLORS: SettingsRowColors = {
-  background: '#ffffff',
-  border: '#f5f5f4',
-  chevron: '#78716c', // stone-500
-  label: '#1c1917', // stone-800
-  switchThumb: '#ffffff',
-  switchTrackFalse: '#d1d5db',
-  switchTrackTrue: '#1c1917', // stone-800
-  value: '#78716c', // stone-500
+  background: colors.light.card,
+  border: colors.gray[100],
+  chevron: colors.gray[500],
+  label: colors.text.primary,
+  switchThumb: colors.text.inverse,
+  switchTrackFalse: colors.gray[300],
+  switchTrackTrue: colors.text.primary,
+  value: colors.gray[500],
 };
 
 export const HIGH_CONTRAST_COLORS: SettingsRowColors = {

@@ -10,6 +10,8 @@ import Animated from 'react-native-reanimated';
 import { Check, Eye } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Button from '../../Button/Button';
+import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 import type { ActionButtonsProps } from './ActionButtons.types';
 
 export function ActionButtons({
@@ -69,26 +71,34 @@ export function ActionButtons({
   );
 }
 
-const styles = StyleSheet.create({
-  buttonRow: { flexDirection: 'row', gap: 10 },
-  importButton: { borderRadius: 12, flex: 1, paddingVertical: 12 },
+export const styles = StyleSheet.create({
+  buttonRow: { flexDirection: 'row', gap: spacing.sm },
+  importButton: {
+    borderRadius: borderRadius.medium,
+    flex: 1,
+    paddingVertical: spacing.md,
+  },
   previewButton: {
     backgroundColor: '#f5f5f4',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: spacing.md,
   },
   previewButtonText: { color: '#57534e' },
   successButton: {
     alignItems: 'center',
     backgroundColor: '#22c55e',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
     justifyContent: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.md,
     width: '100%',
   },
-  successButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  successButtonText: {
+    color: '#fff',
+    fontSize: typography.body.fontSize,
+    fontWeight: '700',
+  },
 });

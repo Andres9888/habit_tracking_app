@@ -2,7 +2,10 @@
  * Styles for ShareCard footer section (science badge, app info)
  */
 
+// Intentional: static color for share card rendering — white text on gradient backgrounds
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
+import { typography } from '../../../theme/typography';
 
 export const shareCardFooterStyles = StyleSheet.create({
   appInfo: {
@@ -10,7 +13,7 @@ export const shareCardFooterStyles = StyleSheet.create({
     gap: 4,
   },
   appName: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: '600',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
@@ -30,13 +33,13 @@ export const shareCardFooterStyles = StyleSheet.create({
     paddingVertical: 10,
   },
   scienceBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 14,
+    color: colors.text.inverse,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
   userName: {
     color: 'rgba(255, 255, 255, 0.9)',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '400',
   },
 });

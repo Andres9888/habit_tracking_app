@@ -7,6 +7,7 @@ import { CardContent } from './CardContent';
 import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
 import { buildCardStyle } from './cardStyles';
 import type { DraggableHabitCardProps } from './DraggableHabitCard.types';
+import { borderRadius } from '../../theme/spacing';
 
 export type { DraggableHabitCardProps } from './DraggableHabitCard.types';
 
@@ -47,8 +48,8 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
               {
                 alignSelf: 'stretch',
                 backgroundColor: borderAccentColor,
-                borderBottomLeftRadius: 24,
-                borderTopLeftRadius: 24,
+                borderBottomLeftRadius: borderRadius.xl,
+                borderTopLeftRadius: borderRadius.xl,
               },
               props.entranceAccentStyle,
             ]}
@@ -61,7 +62,7 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
               pointerEvents='none'
               style={{
                 backgroundColor: 'rgba(245, 158, 11, 0.18)',
-                borderRadius: 24,
+                borderRadius: borderRadius.xl,
                 opacity: props.archiveFlash,
                 ...StyleSheet.absoluteFillObject,
               }}
@@ -70,7 +71,7 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
               pointerEvents='none'
               style={{
                 borderColor: props.accentColor ?? '#a855f7',
-                borderRadius: 24,
+                borderRadius: borderRadius.xl,
                 borderWidth: 2,
                 opacity: props.highlightGlow,
                 ...StyleSheet.absoluteFillObject,

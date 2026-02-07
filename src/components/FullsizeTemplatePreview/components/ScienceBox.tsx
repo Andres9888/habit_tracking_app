@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ExternalLink } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
+import { springs } from '@/theme/animations';
 import { scienceStyles } from '../styles';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
@@ -27,11 +28,11 @@ export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.95, { damping: 15, stiffness: 300 });
+    scale.value = withSpring(0.95, springs.button);
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    scale.value = withSpring(1, springs.button);
   }, [scale]);
 
   const animatedStyle = useAnimatedStyle(() => ({

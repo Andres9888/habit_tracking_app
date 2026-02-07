@@ -1,3 +1,5 @@
+import { colors } from '@/theme/colors';
+
 export interface SuggestionItem {
   emoji: string | null;
   name: string;
@@ -27,7 +29,7 @@ export const SUGGESTIONS: SuggestionItem[] = [
   { color: '#f59e0b', emoji: '📖', name: 'Read 10 minutes' },
   { color: '#f97316', emoji: '📝', name: 'Journal 3 lines' },
   { color: '#ec4899', emoji: '🙏', name: 'Practice gratitude' },
-  { color: '#3b82f6', emoji: '🧠', name: 'Learn something new' },
+  { color: colors.secondary[500], emoji: '🧠', name: 'Learn something new' },
   { color: '#eab308', emoji: '📚', name: 'Study 30 minutes' },
   { color: '#a855f7', emoji: '✍️', name: 'Write 100 words' },
 

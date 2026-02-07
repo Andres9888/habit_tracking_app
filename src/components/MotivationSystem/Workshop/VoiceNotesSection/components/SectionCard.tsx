@@ -3,10 +3,16 @@
  */
 import React, { useCallback } from 'react';
 import { View, Pressable } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, interpolate } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  interpolate,
+} from 'react-native-reanimated';
 import { clsx } from 'clsx';
 import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../../animations';
+import { shadows } from '../../../../../theme/spacing';
 
 interface SectionCardProps {
   children: React.ReactNode;
@@ -64,7 +70,10 @@ export function SectionCard({
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'
           accessibilityState={{ disabled }}
-          className={clsx('rounded-xl border border-stone-200 bg-white p-3', className)}
+          className={clsx(
+            'rounded-xl border border-stone-200 bg-white p-3',
+            className
+          )}
           disabled={disabled}
           onPress={handlePress}
           onPressIn={handlePressIn}
@@ -78,13 +87,13 @@ export function SectionCard({
 
   return (
     <View
-      className={clsx('rounded-xl border border-stone-200 bg-white p-3', className)}
+      className={clsx(
+        'rounded-xl border border-stone-200 bg-white p-3',
+        className
+      )}
       style={{
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        ...shadows.card,
         shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2,
       }}
     >
       {children}

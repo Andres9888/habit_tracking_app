@@ -4,6 +4,7 @@
  */
 
 export { DetailHeader } from './DetailHeader';
+export { DetailLoadingState } from './DetailLoadingState';
 export { HeroSection } from './HeroSection';
 export { NotesEditorModal } from './NotesEditorModal';
 export { NotesListModal } from './NotesListModal';

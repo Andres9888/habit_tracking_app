@@ -41,7 +41,7 @@ export function EditHeader({
           onCancel();
         }}
       >
-        <X color='#44403c' size={22} strokeWidth={2} />
+        <X color='#44403c' size={24} strokeWidth={2} />
       </Pressable>
       <View className='flex-1' />
       <AnimatedPressable

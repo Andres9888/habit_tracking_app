@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
 import { getStrengthEmoji } from './strengthUtils';
+import { borderRadius } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 interface StrengthProgressBarProps {
   strengthPercent: number;
@@ -23,7 +25,7 @@ export function StrengthProgressBar({
       <View className='flex-1 items-center justify-center'>
         <ReAnimated.Text
           style={[
-            { fontSize: 20, textAlign: 'center' },
+            { fontSize: typography.heading2.fontSize, textAlign: 'center' },
 
             strengthEmojiAnimatedStyle as any,
           ]}
@@ -59,7 +61,7 @@ export function StrengthProgressBar({
         <View
           style={{
             backgroundColor: '#e5e7eb',
-            borderRadius: 4,
+            borderRadius: borderRadius.xs,
             height: 8,
             marginHorizontal: 8,
             overflow: 'hidden',
@@ -72,7 +74,7 @@ export function StrengthProgressBar({
             style={[
               {
                 backgroundColor: '#65a30d',
-                borderRadius: 4,
+                borderRadius: borderRadius.xs,
                 height: '100%',
               },
               progressAnimatedStyle,

@@ -1,5 +1,6 @@
 import { Keyboard, Pressable, Switch, Text, View } from 'react-native';
 import { Bell } from 'lucide-react-native';
+import { shadows } from '../../../theme/spacing';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
 interface MinimalReminderToggleProps {
@@ -30,13 +31,7 @@ export const MinimalReminderToggle = ({
   return (
     <View
       className='flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3.5'
-      style={{
-        elevation: 1,
-        shadowColor: '#000',
-        shadowOffset: { height: 1, width: 0 },
-        shadowOpacity: 0.05,
-        shadowRadius: 2,
-      }}
+      style={shadows.subtle}
     >
       {/* Icon + Label Section */}
       <View className='flex-1 flex-row items-center gap-3'>
@@ -60,7 +55,7 @@ export const MinimalReminderToggle = ({
           >
             <Text
               className={`text-xs font-medium ${
-                enabled ? 'text-emerald-500' : 'text-stone-400'
+                enabled ? 'text-emerald-700' : 'text-stone-400'
               }`}
             >
               {enabled ? time : 'Off'}

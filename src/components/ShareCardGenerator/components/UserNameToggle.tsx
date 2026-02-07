@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, Switch } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { colors } from '@/theme/colors';
 import { controlsStyles as styles } from '../styles';
 
 interface UserNameToggleProps {
@@ -45,7 +46,7 @@ export function UserNameToggle({
           )}
         </View>
         <Switch
-          thumbColor='#FFFFFF'
+          thumbColor={colors.text.inverse}
           trackColor={{
             false: theme.custom.colors.gray[300],
             true: theme.custom.colors.primary[500],

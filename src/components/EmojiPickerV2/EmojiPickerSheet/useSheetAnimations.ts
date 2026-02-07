@@ -14,6 +14,7 @@ import Animated, {
   interpolate,
   Extrapolation,
 } from 'react-native-reanimated';
+import { colors } from '../../../theme/colors';
 import { SHEET_HEIGHT } from './EmojiPickerSheet.styles';
 
 export function useSheetAnimations(visible: boolean, onClose: () => void) {
@@ -76,8 +77,9 @@ export function useSheetAnimations(visible: boolean, onClose: () => void) {
   }));
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
-    borderColor: searchFocusAnim.value === 1 ? '#3b82f6' : '#e7e5e4',
-    shadowColor: '#3b82f6',
+    borderColor:
+      searchFocusAnim.value === 1 ? colors.secondary[500] : colors.border,
+    shadowColor: colors.secondary[500],
     shadowOffset: { height: 0, width: 0 },
     shadowOpacity: interpolate(
       searchFocusAnim.value,

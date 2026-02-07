@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { shadows } from '../theme/spacing';
 
 interface CharacterIconProps {
   size?: number;
@@ -15,14 +16,10 @@ export default function CharacterIcon({ size = 36 }: CharacterIconProps) {
   return (
     <View
       style={{
+        ...shadows.card,
         borderRadius: size / 2,
-        elevation: 3,
         height: size,
         overflow: 'hidden',
-        shadowColor: '#000',
-        shadowOffset: { height: 2, width: 0 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
         width: size,
       }}
     >

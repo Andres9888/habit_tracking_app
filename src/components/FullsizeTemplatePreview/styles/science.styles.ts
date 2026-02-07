@@ -4,15 +4,18 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
+
 export const scienceStyles = StyleSheet.create({
   researchLinkButton: {
     alignItems: 'center',
+    alignSelf: 'flex-start',
     backgroundColor: '#EFF6FF',
     borderColor: '#BFDBFE',
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
-    alignSelf: 'flex-start',
     gap: 8,
     marginTop: 16,
     paddingHorizontal: 14,
@@ -20,13 +23,13 @@ export const scienceStyles = StyleSheet.create({
   },
   researchLinkText: {
     color: '#2563EB',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
   scienceBox: {
     backgroundColor: '#f0fdf4',
     borderColor: '#bbf7d0',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     borderWidth: 2,
     marginHorizontal: 20,
     marginTop: 24,
@@ -44,11 +47,11 @@ export const scienceStyles = StyleSheet.create({
     marginBottom: 12,
   },
   scienceIcon: {
-    fontSize: 20,
+    fontSize: typography.heading2.fontSize,
   },
   scienceLabel: {
     color: '#166534',
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',

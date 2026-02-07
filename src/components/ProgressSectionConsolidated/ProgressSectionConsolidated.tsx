@@ -13,6 +13,7 @@ import { View } from 'react-native';
 
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
+import { shadows } from '../../theme/spacing';
 import { ActionableTipCard } from './ActionableTipCard';
 import { MilestoneProgress } from './MilestoneProgress';
 import { StatsGrid } from './StatsGrid';
@@ -59,14 +60,10 @@ export function ProgressSectionConsolidated({
       <View
         className='overflow-hidden rounded-2xl p-4'
         style={{
+          ...shadows.card,
           backgroundColor: '#ffffff',
           borderColor: 'rgba(214, 211, 209, 0.6)', // stone-300/60
           borderWidth: 1,
-          elevation: 2,
-          shadowColor: '#000',
-          shadowOffset: { height: 1, width: 0 },
-          shadowOpacity: 0.1,
-          shadowRadius: 3,
         }}
       >
         {/* Section 1: Stats Grid */}

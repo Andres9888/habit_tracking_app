@@ -23,7 +23,7 @@ export function ModalHeader({ onClose }: ModalHeaderProps) {
         className='h-10 w-10 items-center justify-center rounded-full bg-stone-200/50'
         onPress={onClose}
       >
-        <X className='text-stone-600' size={20} />
+        <X className='text-stone-600' size={24} />
       </Pressable>
     </View>
   );

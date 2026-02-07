@@ -4,6 +4,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
 import { ACTION_WIDTH } from './HabitCard.constants';
 
 export const actionStyles = StyleSheet.create({
@@ -22,7 +23,7 @@ export const actionStyles = StyleSheet.create({
     top: 0,
   },
   actionText: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 15,
     fontWeight: '600',
   },

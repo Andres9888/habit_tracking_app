@@ -27,7 +27,7 @@ export function HabitCardHeader({
         <View className='flex-1'>
           <Text className='text-base font-semibold text-stone-900'>{name}</Text>
           <View className='mt-0.5 flex-row items-center gap-1'>
-            <Text className='text-xs text-stone-400'>
+            <Text className='text-xs text-stone-500'>
               Archived{' '}
               {new Date(archiveDate).toLocaleDateString('en-US', {
                 day: 'numeric',
@@ -35,7 +35,7 @@ export function HabitCardHeader({
               })}
             </Text>
             <Text className='text-stone-300'>•</Text>
-            <Text className='text-xs text-stone-400'>
+            <Text className='text-xs text-stone-500'>
               {getRelativeTime(archiveDate)}
             </Text>
           </View>

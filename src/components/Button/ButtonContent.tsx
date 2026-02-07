@@ -32,7 +32,9 @@ export function ButtonContent({
     return (
       <ActivityIndicator
         color={
-          variant === 'primary' ? '#FFFFFF' : theme.custom.colors.primary[500]
+          variant === 'primary'
+            ? theme.custom.colors.text.inverse
+            : theme.custom.colors.primary[500]
         }
         size='small'
       />

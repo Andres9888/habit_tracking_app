@@ -9,6 +9,7 @@ import { FlaskConical } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { TemplateIcon } from './TemplateIcon';
+import { typography } from '@/theme/typography';
 
 interface TemplateContentProps {
   template: Doc<'templates'>;
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
   },
   description: {
     color: '#374151',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     lineHeight: 20,
     marginTop: 4,
   },
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
   },
   researchText: {
     color: '#166534',
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '600',
   },
   textContent: {
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#111827',
-    fontSize: 20,
+    fontSize: typography.heading2.fontSize,
     fontWeight: '700',
   },
 });

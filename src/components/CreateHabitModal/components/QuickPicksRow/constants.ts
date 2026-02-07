@@ -1,3 +1,4 @@
+import { colors } from '@/theme/colors';
 import type { QuickPickTemplate } from './types';
 
 export const QUICK_PICK_TEMPLATES: QuickPickTemplate[] = [
@@ -9,7 +10,7 @@ export const QUICK_PICK_TEMPLATES: QuickPickTemplate[] = [
     timeOfDay: 'phase1_push',
   },
   {
-    color: '#3B82F6',
+    color: colors.secondary[500],
     emoji: '📖',
     id: 'read',
     name: 'Read', // Blue

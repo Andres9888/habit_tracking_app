@@ -61,7 +61,7 @@ export function QuickStatsStrip({
       <StatCard
         accessibilityHint='Opens success rate details'
         animationKey={animationKey}
-        color='text-emerald-500'
+        color='text-emerald-700'
         delay={STAGGER_DELAY * 2}
         emoji='✓'
         label='success'

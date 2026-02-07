@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -47,11 +48,11 @@ export const styles = StyleSheet.create({
     transform: [{ scale: 0.98 }],
   },
   templateEmoji: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
   },
   templateName: {
     color: '#374151',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
   templateRow: {

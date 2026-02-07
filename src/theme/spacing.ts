@@ -117,6 +117,9 @@ export const borderRadius = {
   small: 8,
   // Modals, sheets
   xl: 20, // Circular (avatar, icon buttons) - use 50% in percentage
+
+  // Micro-rounding (progress bars, badges, chips)
+  xs: 4,
 } as const;
 
 /**
@@ -144,6 +147,13 @@ export const shadows = {
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.12,
     shadowRadius: 16, // Android fallback
+  },
+  subtle: {
+    elevation: 1,
+    shadowColor: '#000000',
+    shadowOffset: { height: 1, width: 0 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3, // Android fallback
   },
 } as const;
 

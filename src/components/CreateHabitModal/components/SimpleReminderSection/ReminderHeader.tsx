@@ -4,6 +4,7 @@
 
 import { Pressable, Switch, Text, View } from 'react-native';
 import { Bell } from 'lucide-react-native';
+import { colors } from '@/theme/colors';
 import { formatReminderTime } from '../../../../utils/notifications';
 
 interface ReminderHeaderProps {
@@ -33,7 +34,7 @@ export function ReminderHeader({
     >
       <View className='flex-row items-center'>
         <View className='mr-3 h-10 w-10 items-center justify-center rounded-xl bg-blue-50'>
-          <Bell color='#3b82f6' size={20} />
+          <Bell color={colors.secondary[500]} size={20} />
         </View>
         <View>
           <Text className='text-base font-semibold text-stone-800'>
@@ -45,9 +46,9 @@ export function ReminderHeader({
         </View>
       </View>
       <Switch
-        ios_backgroundColor='#e7e5e4'
+        ios_backgroundColor={colors.border}
         thumbColor='#ffffff'
-        trackColor={{ false: '#e7e5e4', true: '#3b82f6' }}
+        trackColor={{ false: colors.border, true: colors.secondary[500] }}
         value={remindersEnabled}
         onValueChange={(val) => {
           triggerSelection();

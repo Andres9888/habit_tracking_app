@@ -11,6 +11,7 @@ import { colors } from './colors';
 import { typography, fontFamilies, fontWeights } from './typography';
 import { spacing, borderRadius, shadows, componentSpacing } from './spacing';
 import { durations, easings, springs } from './animations';
+import { iconSizes } from './iconSizes';
 
 /**
  * Custom font configuration for React Native Paper
@@ -134,13 +135,33 @@ export const theme: MD3Theme = {
   colors: {
     ...MD3LightTheme.colors,
 
+    // Backdrop
+    backdrop: 'rgba(0, 0, 0, 0.6)',
+
     // Background & Surface
     background: colors.light.background,
+
+    // Elevation
+    elevation: {
+      level0: colors.light.background,
+      level1: colors.gray[50],
+      level2: colors.gray[100],
+      level3: colors.gray[100],
+      level4: colors.gray[100],
+      level5: colors.gray[100],
+    },
 
     // Error
     error: colors.error,
 
     errorContainer: '#FFEBEE',
+
+    inverseOnSurface: colors.gray[50],
+
+    inversePrimary: colors.primary[400],
+
+    // Inverse
+    inverseSurface: colors.gray[900],
 
     onBackground: colors.gray[900],
 
@@ -154,59 +175,34 @@ export const theme: MD3Theme = {
 
     onSecondary: '#FFFFFF',
 
-    // Inverse
-    inverseSurface: colors.gray[900],
-
     onSecondaryContainer: colors.secondary[600],
-
-    inverseOnSurface: colors.gray[50],
 
     onSurface: colors.gray[900],
 
-    inversePrimary: colors.primary[400],
-
     onSurfaceDisabled: colors.gray[400],
-
-    // Backdrop
-    backdrop: 'rgba(0, 0, 0, 0.6)',
-
-    onTertiary: '#FFFFFF',
-
-    // Elevation
-    elevation: {
-      level0: colors.light.background,
-      level1: colors.gray[50],
-      level2: colors.gray[100],
-      level3: colors.gray[100],
-      level4: colors.gray[100],
-      level5: colors.gray[100],
-    },
-
-    // Primary (Brand Green)
-    primary: colors.primary[500],
 
     onSurfaceVariant: colors.gray[600],
 
-    primaryContainer: colors.primary[400],
+    onTertiary: '#FFFFFF',
 
     onTertiaryContainer: colors.primary[700],
-
-    // Secondary (Science Blue)
-    secondary: colors.secondary[500],
 
     // Outline
     outline: colors.gray[300],
 
-    secondaryContainer: colors.secondary[400],
-
     outlineVariant: colors.gray[200],
 
-    // Tertiary (can be used for accents)
-    tertiary: colors.primary[600],
+    // Primary (Brand Green)
+    primary: colors.primary[500],
+
+    primaryContainer: colors.primary[400],
 
     scrim: '#000000',
 
-    tertiaryContainer: colors.primary[400],
+    // Secondary (Science Blue)
+    secondary: colors.secondary[500],
+
+    secondaryContainer: colors.secondary[400],
 
     // Shadow
     shadow: '#000000',
@@ -216,6 +212,11 @@ export const theme: MD3Theme = {
     surfaceDisabled: colors.gray[200],
 
     surfaceVariant: colors.gray[100],
+
+    // Tertiary (can be used for accents)
+    tertiary: colors.primary[600],
+
+    tertiaryContainer: colors.primary[400],
   },
   fonts: customFonts,
   roundness: borderRadius.medium, // Default: 12pt
@@ -238,6 +239,7 @@ export const extendedTheme = {
     componentSpacing,
     fontFamilies,
     fontWeights,
+    iconSizes,
     shadows,
     spacing,
     typography,
@@ -276,3 +278,4 @@ export { colors } from './colors';
 export { typography } from './typography';
 export { spacing, borderRadius, shadows, componentSpacing } from './spacing';
 export { durations, easings, springs } from './animations';
+export { iconSizes } from './iconSizes';

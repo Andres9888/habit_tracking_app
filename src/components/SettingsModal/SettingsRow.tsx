@@ -15,9 +15,10 @@
  */
 
 import { ReactNode } from 'react';
-import { Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Switch, Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
 
 interface SettingsRowProps {
@@ -124,12 +125,8 @@ export function SettingsRow({
   }
 
   return (
-    <TouchableOpacity
-      accessibilityRole='button'
-      activeOpacity={0.7}
-      onPress={handleNavPress}
-    >
+    <AnimatedPressable accessibilityRole='button' onPress={handleNavPress}>
       {content}
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }

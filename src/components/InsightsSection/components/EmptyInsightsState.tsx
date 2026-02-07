@@ -21,14 +21,14 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
           <View className='h-8 w-8 items-center justify-center rounded-lg bg-violet-100'>
             <BarChart3 className='text-violet-400' size={16} />
           </View>
-          <Text className='text-lg font-bold text-stone-400'>Insights</Text>
+          <Text className='text-lg font-bold text-stone-500'>Insights</Text>
         </View>
         <View className='items-center rounded-xl bg-white/60 py-6'>
           <Calendar className='mb-2 text-stone-300' size={28} />
           <Text className='text-center text-sm text-stone-500'>
             Keep tracking for insights
           </Text>
-          <Text className='mt-1 text-center text-xs text-stone-400'>
+          <Text className='mt-1 text-center text-xs text-stone-500'>
             {daysRemaining} more days needed
           </Text>
         </View>

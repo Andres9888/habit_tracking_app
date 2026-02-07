@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ArrowRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { shadows } from '../../../theme/spacing';
 
 interface ActionButtonsProps {
   iconColor: string;
@@ -69,19 +70,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   importButton: {
+    ...shadows.card,
     alignItems: 'center',
     borderRadius: 12,
-    elevation: 3,
     flex: 1,
     flexDirection: 'row',
     gap: 8,
     justifyContent: 'center',
     paddingHorizontal: 20,
     paddingVertical: 14,
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.15,
-    shadowRadius: 4,
   },
   importButtonDisabled: {
     opacity: 0.5,

@@ -8,6 +8,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 interface PaywallFooterProps {
   onStartTrial: () => void;
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   },
   finePrint: {
     color: colors.text.tertiary,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     lineHeight: 20,
     marginBottom: spacing.lg,
     textAlign: 'center',
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
   },
   restoreButtonText: {
     color: colors.premium[600],
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     lineHeight: 20,
     textAlign: 'center',
   },

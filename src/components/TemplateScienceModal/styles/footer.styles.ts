@@ -4,6 +4,8 @@
 
 import { StyleSheet } from 'react-native';
 
+import { shadows } from '../../../theme/spacing';
+
 export const footerStyles = StyleSheet.create({
   backButton: {
     alignItems: 'center',
@@ -28,10 +30,7 @@ export const footerStyles = StyleSheet.create({
     right: 0,
   },
   useButton: {
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
+    ...shadows.modal,
     shadowOpacity: 0.15,
-    shadowRadius: 12,
   },
 });

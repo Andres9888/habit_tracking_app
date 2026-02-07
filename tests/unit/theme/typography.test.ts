@@ -13,7 +13,7 @@ import {
   fontFamilies,
   fontWeights,
   textStyle,
-} from '../typography';
+} from '@/theme/typography';
 
 describe('Theme Typography - Phase 1', () => {
   describe('Font Families', () => {
@@ -31,6 +31,10 @@ describe('Theme Typography - Phase 1', () => {
 
     it('should have system font fallback', () => {
       expect(fontFamilies.system).toBe('-apple-system');
+    });
+
+    it('should have Georgia serif font for formal content', () => {
+      expect(fontFamilies.serif).toBe('Georgia');
     });
   });
 

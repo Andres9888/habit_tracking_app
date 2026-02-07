@@ -3,11 +3,13 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const scienceStyles = StyleSheet.create({
   citationDot: {
     backgroundColor: '#10B981',
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 8,
     width: 8,
   },
@@ -19,7 +21,7 @@ export const scienceStyles = StyleSheet.create({
   },
   citationLabel: {
     color: '#6B7280',
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
@@ -34,7 +36,7 @@ export const scienceStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#EFF6FF',
     borderColor: '#BFDBFE',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
@@ -44,13 +46,13 @@ export const scienceStyles = StyleSheet.create({
   },
   linkText: {
     color: '#2563EB',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '700',
   },
   whyItWorksContainer: {
     backgroundColor: '#F0FDF4',
     borderColor: '#BBF7D0',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
     padding: 18,
   },

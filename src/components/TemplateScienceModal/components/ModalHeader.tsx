@@ -6,6 +6,7 @@ import React from 'react';
 import { Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { X, Share2 } from 'lucide-react-native';
+import { colors } from '../../../theme/colors';
 import { useAppTheme } from '../../../theme';
 import { headerStyles } from '../styles';
 import type { HeaderProps } from '../TemplateScienceModal.types';
@@ -34,7 +35,7 @@ export const ModalHeader = ({
         onPress={onClose}
         {...pressHandlers}
       >
-        <X color='#374151' size={22} strokeWidth={2.5} />
+        <X color={colors.gray[500]} size={24} strokeWidth={2} />
       </AnimatedPressable>
 
       <Animated.View style={headerTitleAnimatedStyle}>
@@ -57,7 +58,7 @@ export const ModalHeader = ({
         onPress={onShare}
         {...pressHandlers}
       >
-        <Share2 color='#374151' size={20} strokeWidth={2.5} />
+        <Share2 color={colors.gray[500]} size={20} strokeWidth={2} />
       </AnimatedPressable>
     </Animated.View>
   );

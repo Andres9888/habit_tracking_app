@@ -28,7 +28,7 @@ export function ReadLetterHeader({
       <View className='flex-row items-center gap-2'>
         <Animated.View style={envelopeAnimatedStyle}>
           <View className='h-10 w-10 items-center justify-center rounded-xl bg-violet-100'>
-            <MailOpen className='text-violet-600' size={22} />
+            <MailOpen className='text-violet-600' size={24} />
           </View>
         </Animated.View>
         <Text className='text-lg font-bold text-stone-800'>
@@ -45,7 +45,7 @@ export function ReadLetterHeader({
             onClose();
           }}
         >
-          <X className='text-stone-500' size={20} />
+          <X className='text-stone-500' size={24} />
         </Pressable>
       </View>
     </View>

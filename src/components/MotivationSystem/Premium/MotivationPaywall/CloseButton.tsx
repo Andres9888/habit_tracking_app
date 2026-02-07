@@ -20,7 +20,7 @@ export function CloseButton({ onPress }: CloseButtonProps) {
         hitSlop={12}
         onPress={onPress}
       >
-        <X color='#ffffff' size={22} />
+        <X color='#ffffff' size={24} />
       </Pressable>
     </View>
   );

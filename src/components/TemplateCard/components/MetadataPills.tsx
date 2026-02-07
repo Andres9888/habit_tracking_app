@@ -7,6 +7,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { borderRadius, spacing } from '../../../theme/spacing';
+import { colors } from '../../../theme/colors';
 import { formatFrequency } from '../TemplateCard.constants';
 
 interface MetadataPillsProps {
@@ -72,19 +74,19 @@ export function MetadataPills({
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   metadataPill: {
-    backgroundColor: '#ffffff',
-    borderRadius: 999,
+    backgroundColor: colors.light.card,
+    borderRadius: borderRadius.full,
     borderWidth: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   metadataRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
-    marginTop: 10,
+    gap: spacing.sm,
+    marginTop: spacing.sm,
   },
   metadataText: {
     color: '#4b5563',

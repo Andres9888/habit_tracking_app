@@ -6,11 +6,14 @@
 
 import { StyleSheet } from 'react-native';
 
+import { shadows, borderRadius } from '../../../../theme/spacing';
+import { typography } from '@/theme/typography';
+
 export const elementStyles = StyleSheet.create({
   badgeContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    borderRadius: 28,
+    borderRadius: borderRadius.full,
     height: 56,
     justifyContent: 'center',
     width: 56,
@@ -23,7 +26,7 @@ export const elementStyles = StyleSheet.create({
     gap: 2,
   },
   celebrationSubtext: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
   confettiContainer: {
@@ -36,12 +39,9 @@ export const elementStyles = StyleSheet.create({
     zIndex: 100,
   },
   confettiParticle: {
-    elevation: 2,
+    ...shadows.subtle,
     position: 'absolute',
-    shadowColor: '#000',
-    shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.15,
-    shadowRadius: 2,
   },
   dismissButton: {
     alignItems: 'center',
@@ -49,7 +49,7 @@ export const elementStyles = StyleSheet.create({
     paddingTop: 4,
   },
   dismissText: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '500',
   },
   goalLabel: {
@@ -62,31 +62,31 @@ export const elementStyles = StyleSheet.create({
     gap: 4,
   },
   goalValue: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '700',
   },
   iconContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     height: 48,
     justifyContent: 'center',
     width: 48,
   },
   message: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '600',
     marginBottom: 4,
   },
   nextMilestone: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '400',
     opacity: 0.85,
   },
   shareButton: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     height: 40,
     justifyContent: 'center',
     width: 40,

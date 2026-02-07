@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { borderRadius } from '../../../theme/spacing';
 
 interface TemplateIconProps {
   icon: string;
@@ -34,13 +35,13 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     height: 64,
     justifyContent: 'center',
     width: 64,
   },
   iconGlow: {
-    borderRadius: 32,
+    borderRadius: borderRadius.full,
     height: 64,
     opacity: 0.3,
     position: 'absolute',

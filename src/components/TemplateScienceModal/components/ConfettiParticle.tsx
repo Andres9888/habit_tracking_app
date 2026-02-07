@@ -13,6 +13,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import type { ConfettiParticleProps } from '../TemplateScienceModal.types';
+import { borderRadius } from '../../../theme/spacing';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -72,7 +73,7 @@ export const ConfettiParticle = ({
 
 const styles = StyleSheet.create({
   confettiParticle: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 12,
     position: 'absolute',
     width: 12,

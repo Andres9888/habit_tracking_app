@@ -4,12 +4,15 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
+import { spacing, borderRadius } from '@/theme/spacing';
+import { fontFamilies, typography } from '@/theme/typography';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 
 export const statusStyles = StyleSheet.create({
   checkCircle: {
     alignItems: 'center',
-    borderRadius: 14,
+    borderRadius: borderRadius.full,
     borderWidth: 2,
     height: 28,
     justifyContent: 'center',
@@ -25,22 +28,26 @@ export const statusStyles = StyleSheet.create({
   },
   checkmark: {
     alignItems: 'center',
-    borderRadius: 14,
+    borderRadius: borderRadius.full,
     height: 28,
     justifyContent: 'center',
     width: 28,
   },
-  checkmarkText: { color: '#FFFFFF', fontSize: 14, fontWeight: 'bold' },
+  checkmarkText: {
+    color: colors.text.inverse,
+    fontSize: typography.bodySmall.fontSize,
+    fontWeight: 'bold',
+  },
   statusContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
-    marginLeft: 8,
+    gap: spacing.sm,
+    marginLeft: spacing.sm,
   },
   streakBadge: {
-    borderRadius: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    borderRadius: borderRadius.large,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   streakBadgeCompleted: {
     backgroundColor: REDESIGN_COLORS.accentMuted,
@@ -49,8 +56,8 @@ export const statusStyles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   streakText: {
-    fontFamily: 'System',
-    fontSize: 14,
+    fontFamily: fontFamilies.primary.text,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
     lineHeight: 20,
   },
@@ -62,10 +69,10 @@ export const statusStyles = StyleSheet.create({
   },
   warningBadge: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 24,
     justifyContent: 'center',
     width: 24,
   },
-  warningText: { fontSize: 12 },
+  warningText: { fontSize: typography.caption.fontSize },
 });

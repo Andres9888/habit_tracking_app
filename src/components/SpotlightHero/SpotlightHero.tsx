@@ -10,6 +10,7 @@ import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
+import { shadows } from '../../theme/spacing';
 
 import type { SpotlightHeroProps } from './SpotlightHero.types';
 import {
@@ -70,15 +71,12 @@ export const SpotlightHero: React.FC<SpotlightHeroProps> = ({
 
 const styles = StyleSheet.create({
   container: {
+    ...shadows.floatingActionButton,
     borderRadius: 20,
-    elevation: 6,
     marginBottom: 16,
     marginHorizontal: 20,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.12,
-    shadowRadius: 12,
   },
   gradient: {
     overflow: 'hidden',

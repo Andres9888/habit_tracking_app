@@ -12,6 +12,7 @@ import {
   runOnJS,
 } from 'react-native-reanimated';
 
+import { springs } from '../../theme/animations';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { DISMISS_THRESHOLD } from './constants';
 
@@ -41,7 +42,7 @@ export function useToastAnimations({
         haptic.triggerLightImpact();
       }
 
-      translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
+      translateY.value = withSpring(100, springs.snappy);
       opacity.value = withTiming(0, { duration: 200 });
 
       if (onDismissRef.current) {
@@ -55,7 +56,7 @@ export function useToastAnimations({
 
   useEffect(() => {
     if (visible) {
-      translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
+      translateY.value = withSpring(0, springs.snappy);
       opacity.value = withTiming(1, { duration: 200 });
 
       if (duration > 0 && onDismissRef.current) {
@@ -65,7 +66,7 @@ export function useToastAnimations({
         return () => clearTimeout(timer);
       }
     } else {
-      translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
+      translateY.value = withSpring(100, springs.snappy);
       opacity.value = withTiming(0, { duration: 200 });
     }
   }, [visible, duration, translateY, opacity, handleDismiss]);
@@ -86,7 +87,7 @@ export function useToastAnimations({
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
         runOnJS(handleSwipeDismiss)();
       } else {
-        translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
+        translateY.value = withSpring(0, springs.snappy);
         opacity.value = withTiming(1, { duration: 150 });
       }
     });

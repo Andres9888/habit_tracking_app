@@ -9,6 +9,7 @@ import {
   Easing,
 } from 'react-native-reanimated';
 
+import { springs } from '../../theme/animations';
 import { DISMISS_THRESHOLD } from './styles';
 
 interface UseDeleteToastAnimationsOptions {
@@ -18,8 +19,6 @@ interface UseDeleteToastAnimationsOptions {
   onUndo: () => void;
   onDismiss?: () => void;
 }
-
-const SPRING_CONFIG = { damping: 15, stiffness: 150 };
 
 /**
  * Custom hook for DeleteUndoToast animations and gestures
@@ -38,15 +37,15 @@ export function useDeleteToastAnimations({
   // Use refs for callbacks to prevent them from triggering re-renders
   const onConfirmRef = useRef(onConfirm);
   onConfirmRef.current = onConfirm;
-  
+
   const onUndoRef = useRef(onUndo);
   onUndoRef.current = onUndo;
-  
+
   const onDismissRef = useRef(onDismiss);
   onDismissRef.current = onDismiss;
 
   const handleDismiss = useCallback(() => {
-    translateY.value = withSpring(100, SPRING_CONFIG);
+    translateY.value = withSpring(100, springs.snappy);
     opacity.value = withTiming(0, { duration: 200 });
     progressWidth.value = 100;
 
@@ -68,7 +67,7 @@ export function useDeleteToastAnimations({
   useEffect(() => {
     if (visible) {
       progressWidth.value = 100;
-      translateY.value = withSpring(0, SPRING_CONFIG);
+      translateY.value = withSpring(0, springs.snappy);
       opacity.value = withTiming(1, { duration: 200 });
       progressWidth.value = withTiming(0, {
         duration,
@@ -78,7 +77,7 @@ export function useDeleteToastAnimations({
       const timer = setTimeout(handleConfirm, duration);
       return () => clearTimeout(timer);
     } else {
-      translateY.value = withSpring(100, SPRING_CONFIG);
+      translateY.value = withSpring(100, springs.snappy);
       opacity.value = withTiming(0, { duration: 200 });
     }
   }, [visible, duration, handleConfirm, translateY, opacity, progressWidth]);
@@ -95,7 +94,7 @@ export function useDeleteToastAnimations({
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
         runOnJS(handleUndo)();
       } else {
-        translateY.value = withSpring(0, SPRING_CONFIG);
+        translateY.value = withSpring(0, springs.snappy);
         opacity.value = withTiming(1, { duration: 150 });
       }
     });

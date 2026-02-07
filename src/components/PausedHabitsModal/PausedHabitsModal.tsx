@@ -5,7 +5,9 @@
  */
 
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ChevronLeft, X } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors } from '../../theme/colors';
 import { usePausedHabitsModalLogic } from './PausedHabitsModal.hooks';
 
 interface PausedHabitsModalProps {
@@ -25,25 +27,25 @@ export default function PausedHabitsModal({
       {/* Header - dynamic padding for Dynamic Island/notch */}
       <View style={{ paddingTop: insets.top + 8 }}>
         <View className='mb-6 flex-row items-center justify-between'>
-        <TouchableOpacity
-          accessibilityLabel='Back to settings'
-          accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full bg-stone-100'
-          onPress={onBack}
-        >
-          <Text className='text-xl font-semibold text-stone-500'>←</Text>
-        </TouchableOpacity>
-        <Text className='flex-1 text-center text-2xl font-bold tracking-tight text-stone-900'>
-          Paused Habits
-        </Text>
-        <TouchableOpacity
-          accessibilityLabel='Close'
-          accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full bg-stone-100'
-          onPress={onClose}
-        >
-          <Text className='text-lg font-semibold text-stone-500'>✕</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            accessibilityLabel='Back to settings'
+            accessibilityRole='button'
+            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100'
+            onPress={onBack}
+          >
+            <ChevronLeft color={colors.gray[500]} size={24} strokeWidth={2} />
+          </TouchableOpacity>
+          <Text className='flex-1 text-center text-2xl font-bold tracking-tight text-stone-900'>
+            Paused Habits
+          </Text>
+          <TouchableOpacity
+            accessibilityLabel='Close'
+            accessibilityRole='button'
+            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100'
+            onPress={onClose}
+          >
+            <X color={colors.gray[500]} size={24} strokeWidth={2} />
+          </TouchableOpacity>
         </View>
       </View>
 

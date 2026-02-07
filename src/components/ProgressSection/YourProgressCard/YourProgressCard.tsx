@@ -71,6 +71,7 @@ export function YourProgressCard({
             accessibilityLabel='Learn about habit strength'
             accessibilityRole='button'
             className='h-7 w-7 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+            hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
             onPress={handleInfoPress}
           >
             <Info className='text-stone-500' size={16} />

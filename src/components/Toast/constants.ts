@@ -2,34 +2,35 @@
  * Toast Constants
  */
 
+import { colors } from '../../theme/colors';
 import type { ToastVariant, VariantConfig } from './types';
 
 /** Variant configuration (icons, colors) */
 export const VARIANT_CONFIG: Record<ToastVariant, VariantConfig> = {
   error: {
-    backgroundColor: '#EF4444',
+    backgroundColor: colors.error,
     icon: '✕',
-    textColor: '#FFFFFF',
+    textColor: colors.text.inverse,
   },
   info: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: colors.secondary[500],
     icon: 'ℹ',
-    textColor: '#FFFFFF',
+    textColor: colors.text.inverse,
   },
   success: {
-    backgroundColor: '#10B981',
+    backgroundColor: colors.primary[500],
     icon: '✓',
-    textColor: '#FFFFFF',
+    textColor: colors.text.inverse,
   },
   undo: {
-    backgroundColor: '#374151',
+    backgroundColor: colors.gray[700],
     icon: '↶',
-    textColor: '#FFFFFF',
+    textColor: colors.text.inverse,
   },
   warning: {
-    backgroundColor: '#F59E0B',
+    backgroundColor: colors.warning[500],
     icon: '!',
-    textColor: '#FFFFFF',
+    textColor: colors.text.inverse,
   },
 };
 

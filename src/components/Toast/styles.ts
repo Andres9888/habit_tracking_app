@@ -3,11 +3,14 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
+import { borderRadius } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   actionButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 6,
+    borderRadius: borderRadius.small,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
@@ -25,18 +28,18 @@ export const styles = StyleSheet.create({
     width: 24,
   },
   dismissIcon: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: 'bold',
   },
   icon: {
-    color: '#FFFFFF',
-    fontSize: 14,
+    color: colors.text.inverse,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: 'bold',
   },
   iconContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 24,
     justifyContent: 'center',
     width: 24,

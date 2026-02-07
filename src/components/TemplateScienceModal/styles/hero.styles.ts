@@ -4,10 +4,12 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../../theme/spacing';
+
 export const heroStyles = StyleSheet.create({
   categoryBadge: {
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,
@@ -21,7 +23,7 @@ export const heroStyles = StyleSheet.create({
   frequencyPill: {
     alignItems: 'center',
     backgroundColor: '#F3F4F6',
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,
@@ -39,13 +41,13 @@ export const heroStyles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    borderRadius: 28,
+    borderRadius: borderRadius.xl,
     height: 96,
     justifyContent: 'center',
     width: 96,
   },
   iconGlow: {
-    borderRadius: 48,
+    borderRadius: borderRadius.full,
     height: 96,
     opacity: 0.25,
     position: 'absolute',

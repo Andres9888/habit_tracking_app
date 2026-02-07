@@ -3,6 +3,7 @@
 import { View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors } from '../../theme/colors';
 import {
   AuthDivider,
   AuthError,
@@ -60,8 +61,11 @@ export default function SignUpScreen({
   }
 
   return (
-    <View className='flex-1 bg-[#faf9f7]'>
-      <View className='flex-1 px-6' style={{ paddingTop: insets.top + 16 }}>
+    <View
+      className='flex-1'
+      style={{ backgroundColor: colors.light.background }}
+    >
+      <View className='flex-1 px-6' style={{ paddingTop: insets.top + 24 }}>
         <SignUpHeader />
 
         {oauthError && (

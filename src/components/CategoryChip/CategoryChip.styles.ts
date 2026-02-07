@@ -4,9 +4,12 @@
 
 import { StyleSheet } from 'react-native';
 
+import { borderRadius, shadows } from '../../theme/spacing';
+import { typography } from '@/theme/typography';
+
 export const styles = StyleSheet.create({
   background: {
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -14,15 +17,12 @@ export const styles = StyleSheet.create({
     top: 0,
   },
   container: {
-    elevation: 2,
+    ...shadows.subtle,
     marginRight: 10,
     minHeight: 40,
     overflow: 'hidden',
     position: 'relative',
-    shadowColor: '#000',
-    shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.06,
-    shadowRadius: 3,
   },
   content: {
     alignItems: 'center',
@@ -37,11 +37,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   countText: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '700',
   },
   gradient: {
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
     top: 0,
   },
   gradientWrapper: {
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -57,17 +57,17 @@ export const styles = StyleSheet.create({
     top: 0,
   },
   icon: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
   },
   iconWrapper: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     height: 24,
     justifyContent: 'center',
     width: 24,
   },
   label: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
 });

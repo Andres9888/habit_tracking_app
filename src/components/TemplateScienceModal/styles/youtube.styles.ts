@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { typography } from '../../../theme/typography';
 
 export const youtubeStyles = StyleSheet.create({
   youtubeButton: {
@@ -32,7 +33,7 @@ export const youtubeStyles = StyleSheet.create({
   },
   youtubeTitle: {
     color: '#111827',
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '700',
     marginBottom: 2,
   },

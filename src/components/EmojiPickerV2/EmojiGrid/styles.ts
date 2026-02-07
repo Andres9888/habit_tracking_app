@@ -1,32 +1,36 @@
 import { StyleSheet } from 'react-native';
 
+import { colors } from '../../../theme/colors';
+import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
+
 export const styles = StyleSheet.create({
   categoryHeader: {
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
   },
   categoryHeaderText: {
-    color: '#78716c',
-    fontSize: 12,
+    color: colors.gray[500],
+    fontSize: typography.caption.fontSize,
     fontWeight: '600',
     letterSpacing: 0.5,
   },
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.light.surface,
     flex: 1,
   },
   emojiCell: {
     alignItems: 'center',
-    backgroundColor: '#f9fafb',
-    borderRadius: 12,
+    backgroundColor: colors.light.surfaceMuted,
+    borderRadius: borderRadius.medium,
     flex: 1,
     justifyContent: 'center',
     minHeight: 44,
     minWidth: 44,
   },
   emojiCellSelected: {
-    backgroundColor: '#dbeafe',
-    borderColor: '#3b82f6',
+    backgroundColor: colors.secondary[100],
+    borderColor: colors.secondary[500],
     borderWidth: 2,
   },
   emojiCellWrapper: {
@@ -35,8 +39,8 @@ export const styles = StyleSheet.create({
   },
   emojiRow: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 8,
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
   },
   emojiText: {
     fontSize: 28,
@@ -48,19 +52,19 @@ export const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   emptyStateSubtitle: {
-    color: '#a8a29e',
-    fontSize: 14,
-    marginTop: 4,
+    color: colors.gray[400],
+    fontSize: typography.bodySmall.fontSize,
+    marginTop: spacing.xs,
   },
   emptyStateTitle: {
-    color: '#1c1917',
-    fontSize: 16,
+    color: colors.gray[900],
+    fontSize: typography.body.fontSize,
     fontWeight: '500',
-    marginTop: 12,
+    marginTop: spacing.md,
   },
   gridContent: {
-    paddingBottom: 16,
-    paddingHorizontal: 20,
+    paddingBottom: spacing.base,
+    paddingHorizontal: spacing.lg,
   },
   placeholderCell: {
     backgroundColor: 'transparent',

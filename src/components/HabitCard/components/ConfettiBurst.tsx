@@ -1,10 +1,5 @@
-/**
- * ConfettiBurst Component
- * Displays celebratory confetti particles on habit completion
- */
-
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -13,8 +8,16 @@ import Animated, {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
+import { colors } from '../../../theme/colors';
+import { styles } from './ConfettiBurst.styles';
 
-const CONFETTI_COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6'];
+const CONFETTI_COLORS = [
+  colors.primary[500],
+  colors.secondary[500],
+  colors.warning[500],
+  colors.error,
+  colors.premium[500],
+];
 const PARTICLE_COUNT = 8;
 
 interface ConfettiBurstProps {
@@ -96,17 +99,3 @@ export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  particle: {
-    borderRadius: 4,
-    height: 8,
-    position: 'absolute',
-    width: 8,
-  },
-});

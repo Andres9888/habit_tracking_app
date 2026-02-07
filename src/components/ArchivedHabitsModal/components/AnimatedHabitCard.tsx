@@ -6,14 +6,12 @@ import { HabitCardHeader } from './HabitCardHeader';
 import { HabitStatsBadges } from './HabitStatsBadges';
 import { ActionButtons } from './ActionButtons';
 import { StrengthBackground } from './StrengthBackground';
+import { shadows } from '../../../theme/spacing';
 import type { AnimatedHabitCardProps } from '../types';
 
 const CARD_SHADOW = {
-  elevation: 2,
-  shadowColor: '#000',
-  shadowOffset: { height: 2, width: 0 },
+  ...shadows.card,
   shadowOpacity: 0.05,
-  shadowRadius: 8,
 };
 
 export function AnimatedHabitCard({

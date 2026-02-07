@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Link2 } from 'lucide-react-native';
 import Svg, { G, Rect } from 'react-native-svg';
+import { colors } from '../../theme/colors';
 
 interface ChainLinkIconProps {
   color?: string;
@@ -11,7 +12,7 @@ interface ChainLinkIconProps {
 }
 
 export const ChainLinkIcon: React.FC<ChainLinkIconProps> = ({
-  color = '#ffffff',
+  color = colors.text.inverse,
   size = 20,
   variant = 'stroke',
   angleDeg = 0,

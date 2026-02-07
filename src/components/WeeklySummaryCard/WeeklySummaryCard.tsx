@@ -6,6 +6,7 @@
 
 import { View, Pressable, Animated } from 'react-native';
 import { format, parseISO } from 'date-fns';
+import { shadows } from '../../theme/spacing';
 import type { WeeklySummaryCardProps } from './types';
 import { useWeeklySummaryStats } from './useWeeklySummaryStats';
 import { useWeeklySummaryAnimations } from './useWeeklySummaryAnimations';
@@ -53,12 +54,11 @@ export function WeeklySummaryCard({
         accessibilityRole='button'
         className='overflow-hidden rounded-3xl'
         style={{
+          ...shadows.modal,
           backgroundColor: colors.bg,
-          elevation: 4,
           shadowColor: colors.accent,
           shadowOffset: { height: 8, width: 0 },
           shadowOpacity: 0.15,
-          shadowRadius: 16,
         }}
         onPress={onViewDetails}
       >

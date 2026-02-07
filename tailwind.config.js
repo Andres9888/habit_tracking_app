@@ -44,21 +44,21 @@ module.exports = {
           foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
-          DEFAULT: '#E85D3B',
+          DEFAULT: '#10B981',
           foreground: '#FFFFFF',
         },
-        'accent-muted': '#F5DDD6',
+        'accent-muted': '#D1FAE5',
         popover: {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
         },
         card: {
           DEFAULT: '#FFFFFF',
-          foreground: '#2D2A26',
+          foreground: '#1F2937',
         },
-        // Home screen redesign palette
-        dominant: '#FAF8F5',
-        'secondary-text': '#2D2A26',
+        // Home screen redesign palette (see src/theme/colors/semantic.ts warmPalette)
+        dominant: '#faf9f7',
+        'secondary-text': '#1F2937',
         neutral: '#C4BFB7',
       },
       spacing: {
