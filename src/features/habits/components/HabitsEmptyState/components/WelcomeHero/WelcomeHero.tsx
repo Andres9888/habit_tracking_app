@@ -10,6 +10,7 @@ import type { WelcomeHeroProps } from '../../HabitsEmptyState.types';
 import { FloatingParticle } from '../FloatingParticle';
 import { useWelcomeHeroAnimations } from './useWelcomeHeroAnimations';
 
+// eslint-disable-next-line max-lines-per-function
 function WelcomeHeroComponent({ greeting, period }: WelcomeHeroProps) {
   const { waveStyle, streakStyle, glowStyle } = useWelcomeHeroAnimations();
   const periodEmoji = useMemo(() => getPeriodEmoji(period), [period]);
@@ -17,15 +18,15 @@ function WelcomeHeroComponent({ greeting, period }: WelcomeHeroProps) {
 
   return (
     <Animated.View
-      className='relative w-full items-center gap-2.5 overflow-hidden rounded-2xl border border-amber-200 px-5 py-5'
+      className='relative w-full items-center gap-3 overflow-hidden rounded-[20px] border-2 border-amber-400 px-5 py-6'
       entering={FadeInDown.delay(0).springify().damping(18)}
       style={{
         backgroundColor: '#fffbeb',
-        elevation: 2,
+        elevation: 4,
         shadowColor: '#f59e0b',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 12,
+        shadowOffset: { height: 8, width: 0 },
+        shadowOpacity: 0.15,
+        shadowRadius: 24,
       }}
     >
       <Animated.View
@@ -49,11 +50,11 @@ function WelcomeHeroComponent({ greeting, period }: WelcomeHeroProps) {
       <Animated.Text className='text-3xl' style={waveStyle}>
         👋
       </Animated.Text>
-      <View className='items-center gap-1.5'>
-        <Text className='text-[22px] font-semibold tracking-tight text-stone-800'>
+      <View className='items-center gap-2'>
+        <Text className='text-[28px] font-bold tracking-tight text-stone-900'>
           {greeting}!
         </Text>
-        <Text className='text-center text-[15px] font-medium leading-[22px] text-stone-700'>
+        <Text className='text-center text-[17px] font-medium leading-[24px] text-stone-700'>
           Small habits lead to big changes
         </Text>
         <Text className='text-center text-[13px] leading-[18px] text-stone-500'>

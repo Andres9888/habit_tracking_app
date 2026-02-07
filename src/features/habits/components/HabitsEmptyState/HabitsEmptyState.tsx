@@ -5,22 +5,21 @@ import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { getTimeBasedHabits } from './HabitsEmptyState.utils';
 import type { HabitsEmptyStateProps } from './HabitsEmptyState.types';
 import {
-  CompactHelperRow,
   CustomHabitCard,
   LoadingState,
   QuickWinCard,
-  SectionDivider,
-  TemplatesPeekCard,
   WelcomeHero,
 } from './components';
 
+// eslint-disable-next-line max-lines-per-function
 export function HabitsEmptyState({
   isLoading,
   openCreateHabitScreen,
-  openTemplatesScreen,
+  // Removed from UI but kept in props for API compatibility
+  openTemplatesScreen: _openTemplatesScreen,
   onQuickCreateHabit,
   onNeedHelpQuiz,
-  onScheduleReminder,
+  onScheduleReminder: _onScheduleReminder,
 }: HabitsEmptyStateProps) {
   const [creatingHabit, setCreatingHabit] = useState<string | null>(null);
   const [successHabit, setSuccessHabit] = useState<string | null>(null);
@@ -73,7 +72,7 @@ export function HabitsEmptyState({
 
   return (
     <View
-      className='gap-4 bg-transparent py-4'
+      className='gap-5 bg-transparent py-4'
       style={{ alignSelf: 'stretch' }}
     >
       <WelcomeHero
@@ -81,12 +80,7 @@ export function HabitsEmptyState({
         period={timeContext.period}
       />
 
-      {openTemplatesScreen && (
-        <TemplatesPeekCard onPress={openTemplatesScreen} />
-      )}
-
-      {onQuickCreateHabit && <SectionDivider />}
-
+      {/* OPTIMIZED: Reduced to 2 primary paths - QuickWin + Custom */}
       {onQuickCreateHabit && (
         <QuickWinCard
           creatingHabit={creatingHabit}
@@ -101,12 +95,7 @@ export function HabitsEmptyState({
         onPress={openCreateHabitScreen}
       />
 
-      {(onNeedHelpQuiz || onScheduleReminder) && (
-        <CompactHelperRow
-          onNeedHelpQuiz={onNeedHelpQuiz}
-          onScheduleReminder={onScheduleReminder}
-        />
-      )}
+      {/* Templates available via settings/menu - not competing here */}
     </View>
   );
 }

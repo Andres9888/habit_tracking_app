@@ -26,4 +26,5 @@ export const SOCIAL_PROOF = {
     'Upgrading unlocked the structure I needed. I finally track every routine and stay consistent.',
 };
 
-export const ENTRANCE_STAGGER_DELAY = 100;
+// OPTIMIZED: Faster stagger for snappier feel (was 100ms)
+export const ENTRANCE_STAGGER_DELAY = 50;
