@@ -1,24 +1,16 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-lines-per-function */
-
-/**
- * SettingsRow Component
- *
- * A single row in the settings list. Supports multiple types:
- * - toggle: Switch control for boolean settings
- * - navigation: Chevron indicating tappable row
- * - selection: Shows current value with chevron
- * - info: Display-only row without interaction
- *
- * Includes icon, label, and appropriate right-side control.
- * Supports high contrast mode for accessibility.
- */
-
+/** SettingsRow - OPTIMIZED: AnimatedPressable, scale animation, haptics */
 import { ReactNode } from 'react';
-import { Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Switch, Text, View, Pressable } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { getSettingsRowColors } from './SettingsRow.colors';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface SettingsRowProps {
   icon: ReactNode;
@@ -44,28 +36,31 @@ export function SettingsRow({
   highContrastMode = false,
 }: SettingsRowProps) {
   const colors = getSettingsRowColors(highContrastMode);
+  const scale = useSharedValue(1);
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
-  const handleToggle = (newValue: boolean) => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onToggle?.(newValue);
+  const handleToggle = (v: boolean) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onToggle?.(v);
   };
 
   const handleNavPress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress?.();
   };
 
   const content = (
     <View
-      className={`flex-row items-center px-4 py-4 ${showBorder ? 'border-b border-stone-100' : ''}`}
+      className={`flex-row items-center px-4 py-4 ${showBorder ? 'border-b' : ''}`}
       style={{
         backgroundColor: colors.background,
         borderColor: showBorder ? colors.border : undefined,
       }}
     >
-      {/* Icon */}
       <View
-        className='mr-4 size-10 items-center justify-center rounded-xl'
+        className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
         style={{
           backgroundColor: iconBackgroundColor,
           borderColor: highContrastMode ? '#facc15' : 'transparent',
@@ -74,16 +69,12 @@ export function SettingsRow({
       >
         {icon}
       </View>
-
-      {/* Label */}
       <Text
         className='flex-1 text-[17px] font-semibold'
         style={{ color: colors.label }}
       >
         {label}
       </Text>
-
-      {/* Right side content */}
       {type === 'toggle' && (
         <Switch
           accessibilityLabel={label}
@@ -97,7 +88,6 @@ export function SettingsRow({
           onValueChange={handleToggle}
         />
       )}
-
       {type === 'selection' && (
         <View className='flex-row items-center gap-1'>
           <Text
@@ -109,27 +99,27 @@ export function SettingsRow({
           <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
         </View>
       )}
-
       {type === 'navigation' && (
         <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
       )}
-
-      {/* Info type shows nothing on the right - just displays the label */}
     </View>
   );
 
-  // Info and toggle types are not pressable
-  if (type === 'toggle' || type === 'info') {
-    return content;
-  }
+  if (type === 'toggle' || type === 'info') return content;
 
   return (
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityRole='button'
-      activeOpacity={0.7}
+      style={animStyle}
       onPress={handleNavPress}
+      onPressIn={() => {
+        scale.value = withSpring(0.98, { damping: 15 });
+      }}
+      onPressOut={() => {
+        scale.value = withSpring(1, { damping: 15 });
+      }}
     >
       {content}
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }
