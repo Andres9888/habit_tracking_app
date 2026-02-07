@@ -12,6 +12,7 @@ import Animated, {
   type AnimatedStyle,
   type SharedValue,
 } from 'react-native-reanimated';
+import { colors } from '../../../theme/colors';
 import { styles } from './EmojiPickerSheet.styles';
 
 interface SearchBarProps {
@@ -46,12 +47,15 @@ export function SearchBar({
   return (
     <View style={styles.searchContainer}>
       <Animated.View style={[styles.searchBar, animatedStyle]}>
-        <Search color={isSearchFocused ? '#3b82f6' : '#a8a29e'} size={20} />
+        <Search
+          color={isSearchFocused ? colors.secondary[500] : colors.gray[400]}
+          size={20}
+        />
         <TextInput
           accessibilityHint='Type keywords to search for emojis'
           accessibilityLabel='Search emojis'
           placeholder='Search or type habit name...'
-          placeholderTextColor='#a8a29e'
+          placeholderTextColor={colors.gray[400]}
           returnKeyType='search'
           style={styles.searchInput}
           value={value}
@@ -66,7 +70,7 @@ export function SearchBar({
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             onPress={onClear}
           >
-            <X color='#9ca3af' size={18} />
+            <X color={colors.gray[400]} size={18} />
           </Pressable>
         )}
       </Animated.View>

@@ -4,6 +4,9 @@
 
 import { StyleSheet, Dimensions } from 'react-native';
 
+import { colors } from '../../../theme/colors';
+import { borderRadius, shadows, spacing } from '../../../theme/spacing';
+
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 export const SHEET_HEIGHT = SCREEN_HEIGHT * 0.7;
 
@@ -17,64 +20,64 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   handle: {
-    backgroundColor: '#d1d5db',
+    backgroundColor: colors.gray[300],
     borderRadius: 2,
     height: 4,
     width: 40,
   },
   handleContainer: {
     alignItems: 'center',
-    paddingBottom: 8,
-    paddingTop: 12,
+    paddingBottom: spacing.sm,
+    paddingTop: spacing.md,
   },
   noIconButton: {
     alignItems: 'center',
-    backgroundColor: '#f3f4f6',
-    borderRadius: 12,
+    backgroundColor: colors.gray[100],
+    borderRadius: borderRadius.medium,
     height: 48,
     justifyContent: 'center',
     width: '100%',
   },
   noIconContainer: {
-    borderTopColor: '#f3f4f6',
+    borderTopColor: colors.gray[100],
     borderTopWidth: 1,
-    paddingBottom: 24,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingBottom: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
   },
   noIconText: {
-    color: '#78716c',
+    color: colors.gray[500],
     fontSize: 14,
     fontWeight: '500',
   },
   searchBar: {
     alignItems: 'center',
-    backgroundColor: '#f9fafb',
-    borderColor: '#e7e5e4',
-    borderRadius: 16,
+    backgroundColor: colors.light.surfaceMuted,
+    borderColor: colors.border,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
     flexDirection: 'row',
     height: 48,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.base,
   },
   searchContainer: {
-    marginBottom: 12,
-    marginHorizontal: 20,
+    marginBottom: spacing.md,
+    marginHorizontal: spacing.lg,
   },
   searchInput: {
-    color: '#1c1917',
+    color: colors.gray[900],
     flex: 1,
     fontSize: 16,
-    marginLeft: 8,
+    marginLeft: spacing.sm,
   },
   sheet: {
-    backgroundColor: '#ffffff',
-    borderTopLeftRadius: 32,
-    height: SHEET_HEIGHT,
-    borderTopRightRadius: 32,
-    shadowColor: '#000',
-    shadowOffset: { height: -4, width: 0 },
+    ...shadows.modal,
+    backgroundColor: colors.light.surface,
+    borderTopLeftRadius: borderRadius.xl,
+    borderTopRightRadius: borderRadius.xl,
     elevation: 20,
+    height: SHEET_HEIGHT,
+    shadowOffset: { height: -4, width: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 20,
   },

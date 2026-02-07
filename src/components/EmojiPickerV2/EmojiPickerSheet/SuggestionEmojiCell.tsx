@@ -12,6 +12,9 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 
+import { colors } from '../../../theme/colors';
+import { borderRadius } from '../../../theme/spacing';
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface SuggestionEmojiCellProps {
@@ -44,12 +47,16 @@ export const SuggestionEmojiCell = memo(
         accessibilityLabel={`Suggested emoji ${emoji}`}
         accessibilityRole='button'
         accessibilityState={{ selected: isSelected }}
-        style={[styles.cell, isSelected && styles.cellSelected, animatedStyle]}
+        style={[
+          suggestionCellStyles.cell,
+          isSelected && suggestionCellStyles.cellSelected,
+          animatedStyle,
+        ]}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        <Text style={styles.emojiText}>{emoji}</Text>
+        <Text style={suggestionCellStyles.emojiText}>{emoji}</Text>
       </AnimatedPressable>
     );
   }
@@ -57,18 +64,18 @@ export const SuggestionEmojiCell = memo(
 
 SuggestionEmojiCell.displayName = 'SuggestionEmojiCell';
 
-const styles = StyleSheet.create({
+export const suggestionCellStyles = StyleSheet.create({
   cell: {
     alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
+    backgroundColor: colors.light.surface,
+    borderRadius: borderRadius.large,
     height: 56,
     justifyContent: 'center',
     width: 56,
   },
   cellSelected: {
     backgroundColor: '#dbeafe',
-    borderColor: '#3b82f6',
+    borderColor: colors.secondary[500],
     borderWidth: 2,
   },
   emojiText: {

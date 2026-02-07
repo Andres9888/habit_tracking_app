@@ -1,39 +1,40 @@
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../theme/spacing';
+import { colors } from '../../theme/colors';
+import { borderRadius, shadows, spacing } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   categoriesContent: {
-    gap: 8,
-    paddingHorizontal: 20,
+    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
   },
   categoriesScroll: {
     flexGrow: 0,
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   categoryPill: {
     alignItems: 'center',
-    backgroundColor: '#f3f4f6',
-    borderRadius: 9999,
+    backgroundColor: colors.gray[100],
+    borderRadius: borderRadius.full,
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.sm,
   },
   categoryPillActive: {
     ...shadows.card,
-    backgroundColor: '#1c1917',
+    backgroundColor: colors.gray[900],
     shadowOpacity: 0.15,
   },
   categoryPillIcon: {
     fontSize: 14,
   },
   categoryPillText: {
-    color: '#57534e',
+    color: colors.gray[500],
     fontSize: 14,
     fontWeight: '500',
-    marginLeft: 4,
+    marginLeft: spacing.xs,
   },
   categoryPillTextActive: {
-    color: '#ffffff',
+    color: colors.text.inverse,
   },
 });
