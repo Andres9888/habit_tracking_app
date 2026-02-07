@@ -1,7 +1,5 @@
 /**
- * TemplateCard Styles
- *
- * StyleSheet definitions for the main TemplateCard component
+ * TemplateCard Styles - OPTIMIZED: Deeper shadows, better elevation
  */
 
 import { StyleSheet } from 'react-native';
@@ -19,14 +17,15 @@ export const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     borderRadius: 16,
-    elevation: 2,
+    elevation: 4,
     marginHorizontal: 20,
     marginVertical: 8,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
+    // OPTIMIZED: Deeper shadow for better depth perception
+    shadowColor: '#1c1917',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
   },
   glowOverlay: {
     borderRadius: 16,

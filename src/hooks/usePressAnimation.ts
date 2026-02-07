@@ -1,7 +1,7 @@
 /**
- * Reusable Press Animation Hook
+ * Reusable Press Animation Hook - OPTIMIZED: Added haptic feedback
  *
- * Provides smooth scale animation for pressable components.
+ * Provides smooth scale animation + haptics for pressable components.
  * Respects reduced motion preferences.
  */
 
@@ -11,6 +11,8 @@ import {
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
+import { Platform } from 'react-native';
 import { Springs } from '../constants/motion';
 
 export interface PressAnimationConfig {
@@ -28,6 +30,16 @@ export interface PressAnimationConfig {
    * Custom spring configuration (optional)
    */
   springConfig?: typeof Springs.button;
+
+  /**
+   * Enable haptic feedback on press (default: true)
+   */
+  enableHaptics?: boolean;
+
+  /**
+   * Haptic feedback style (default: 'light')
+   */
+  hapticStyle?: 'light' | 'medium' | 'heavy' | 'selection';
 }
 
 export interface PressAnimationHandlers {
@@ -52,6 +64,15 @@ export interface UsePressAnimationReturn {
   scale: ReturnType<typeof useSharedValue<number>>;
 }
 
+const HAPTIC_MAP = {
+  heavy: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
+  light: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+  medium: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
+  selection: () => Haptics.selectionAsync(),
+};
+
+const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
+
 export function usePressAnimation(
   config: PressAnimationConfig = {}
 ): UsePressAnimationReturn {
@@ -59,20 +80,31 @@ export function usePressAnimation(
     pressScale = 0.96,
     respectReducedMotion = true,
     springConfig = Springs.button,
+    enableHaptics = true,
+    hapticStyle = 'light',
   } = config;
 
   const scale = useSharedValue(1);
+
+  const triggerHaptic = useCallback(() => {
+    if (enableHaptics && isHapticsSupported) {
+      HAPTIC_MAP[hapticStyle]().catch(() => {
+        // Silently fail - haptics are non-critical
+      });
+    }
+  }, [enableHaptics, hapticStyle]);
 
   const pressHandlers = useCallback(
     (): PressAnimationHandlers => ({
       onPressIn: () => {
         scale.value = withSpring(pressScale, springConfig);
+        triggerHaptic();
       },
       onPressOut: () => {
         scale.value = withSpring(1, springConfig);
       },
     }),
-    [pressScale, springConfig, scale]
+    [pressScale, springConfig, scale, triggerHaptic]
   )();
 
   const animatedStyle = useAnimatedStyle(() => ({

@@ -1,31 +1,52 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+/** PasswordResetSuccess - OPTIMIZED: FadeIn animation, better styling */
+import { Text, Pressable, View } from 'react-native';
+import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
+import { Check } from 'lucide-react-native';
 import type { PasswordResetSuccessProps } from './types';
 
 export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
   return (
-    <View className='gap-4 py-4'>
-      <View className='items-center justify-center rounded-2xl bg-green-50 p-6'>
-        <Text className='text-5xl'>✓</Text>
-        <Text className='mt-2 text-center text-base font-semibold text-green-900'>
-          Email Sent Successfully
-        </Text>
-        <Text className='mt-1 text-center text-sm text-green-700'>
-          Please check your inbox for password reset instructions.
-        </Text>
-      </View>
-
-      <TouchableOpacity
-        accessibilityHint='Closes this dialog and returns to sign in'
-        accessibilityLabel='Close modal'
-        accessibilityRole='button'
-        activeOpacity={0.8}
-        className='items-center rounded-3xl border border-stone-900 bg-stone-900 py-4'
-        onPress={onClose}
+    <View className='gap-4 py-2'>
+      <Animated.View
+        className='items-center justify-center rounded-2xl bg-emerald-50 p-6'
+        entering={FadeIn.duration(300)}
+        style={{
+          shadowColor: '#059669',
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.1,
+          shadowRadius: 12,
+        }}
       >
-        <Text className='text-[15px] font-semibold tracking-[3px] text-white'>
-          CLOSE
+        <View className='mb-3 h-16 w-16 items-center justify-center rounded-full bg-emerald-500'>
+          <Check color='#ffffff' size={32} strokeWidth={3} />
+        </View>
+        <Text className='text-center text-[17px] font-semibold text-emerald-900'>
+          Email Sent!
         </Text>
-      </TouchableOpacity>
+        <Text className='mt-1 text-center text-[15px] leading-[20px] text-emerald-700'>
+          Check your inbox for password reset instructions.
+        </Text>
+      </Animated.View>
+
+      <Animated.View
+        entering={FadeInUp.duration(280).delay(100).springify().damping(18)}
+      >
+        <Pressable
+          accessibilityHint='Closes this dialog and returns to sign in'
+          accessibilityLabel='Close modal'
+          accessibilityRole='button'
+          className='items-center rounded-2xl bg-stone-900 py-4 active:bg-stone-800'
+          style={{
+            shadowColor: '#1c1917',
+            shadowOffset: { height: 4, width: 0 },
+            shadowOpacity: 0.15,
+            shadowRadius: 12,
+          }}
+          onPress={onClose}
+        >
+          <Text className='text-[17px] font-semibold text-white'>Done</Text>
+        </Pressable>
+      </Animated.View>
     </View>
   );
 }
