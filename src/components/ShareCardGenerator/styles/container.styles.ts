@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { typography } from '../../../theme/typography';
 
 export const containerStyles = StyleSheet.create({
   closeButton: {
@@ -39,7 +40,7 @@ export const containerStyles = StyleSheet.create({
     paddingVertical: 24,
   },
   title: {
-    fontSize: 20,
+    fontSize: typography.heading2.fontSize,
     fontWeight: '600',
   },
 });

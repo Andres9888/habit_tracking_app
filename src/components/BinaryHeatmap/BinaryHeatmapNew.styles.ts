@@ -11,6 +11,7 @@ import {
   DAY_LABEL_WIDTH,
   MONTH_LABEL,
 } from './constants';
+import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   cell: {
@@ -56,7 +57,7 @@ export const styles = StyleSheet.create({
   },
   headerTitle: {
     color: COLORS.TEXT_PRIMARY,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
   monthLabel: {

@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 export const styles = StyleSheet.create({
   actionItem: {
@@ -62,7 +63,7 @@ export const styles = StyleSheet.create({
   },
   headerSubtitle: {
     color: '#78716c',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     marginTop: 4,
   },
   headerTextContainer: {

@@ -3,6 +3,7 @@
  */
 
 import { colors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
 
 import type { LevelConfig, SizeConfig } from './StrengthProgressBar.types';
 
@@ -50,21 +51,21 @@ export const SIZE_CONFIG: Record<'compact' | 'default' | 'large', SizeConfig> =
       barHeight: 4,
       emojiContainerSize: 24,
       emojiSize: 18,
-      fontSize: 11,
+      fontSize: typography.caption.fontSize,
       gap: 6,
     },
     default: {
       barHeight: 6,
       emojiContainerSize: 28,
       emojiSize: 20,
-      fontSize: 12,
+      fontSize: typography.caption.fontSize,
       gap: 8,
     },
     large: {
       barHeight: 8,
       emojiContainerSize: 32,
       emojiSize: 24,
-      fontSize: 14,
+      fontSize: typography.bodySmall.fontSize,
       gap: 8,
     },
   };

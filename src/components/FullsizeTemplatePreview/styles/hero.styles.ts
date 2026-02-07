@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 export const heroStyles = StyleSheet.create({
   descriptionSection: {
@@ -13,7 +14,7 @@ export const heroStyles = StyleSheet.create({
   },
   descriptionText: {
     color: '#4B5563',
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     lineHeight: 26,
     textAlign: 'center',
   },

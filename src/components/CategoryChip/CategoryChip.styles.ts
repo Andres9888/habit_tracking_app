@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   background: {
@@ -36,7 +37,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   countText: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '700',
   },
   gradient: {
@@ -56,7 +57,7 @@ export const styles = StyleSheet.create({
     top: 0,
   },
   icon: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
   },
   iconWrapper: {
     alignItems: 'center',
@@ -66,7 +67,7 @@ export const styles = StyleSheet.create({
     width: 24,
   },
   label: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
 });

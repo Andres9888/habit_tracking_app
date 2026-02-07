@@ -7,6 +7,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows, borderRadius } from '../../../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const elementStyles = StyleSheet.create({
   badgeContainer: {
@@ -25,7 +26,7 @@ export const elementStyles = StyleSheet.create({
     gap: 2,
   },
   celebrationSubtext: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
   confettiContainer: {
@@ -48,7 +49,7 @@ export const elementStyles = StyleSheet.create({
     paddingTop: 4,
   },
   dismissText: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '500',
   },
   goalLabel: {
@@ -61,7 +62,7 @@ export const elementStyles = StyleSheet.create({
     gap: 4,
   },
   goalValue: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '700',
   },
   iconContainer: {
@@ -73,12 +74,12 @@ export const elementStyles = StyleSheet.create({
     width: 48,
   },
   message: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '600',
     marginBottom: 4,
   },
   nextMilestone: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '400',
     opacity: 0.85,
   },

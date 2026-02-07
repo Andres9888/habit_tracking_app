@@ -13,6 +13,7 @@ import Animated, {
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { colors } from '../../theme/colors';
+import { typography } from '../../theme/typography';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -62,7 +63,11 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
       onPressOut={handlePressOut}
     >
       <Text
-        style={{ color: colors.text.inverse, fontSize: 16, fontWeight: '600' }}
+        style={{
+          color: colors.text.inverse,
+          fontSize: typography.body.fontSize,
+          fontWeight: '600',
+        }}
       >
         Try Again
       </Text>

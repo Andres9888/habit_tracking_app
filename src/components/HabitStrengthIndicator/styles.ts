@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   // Compact variant (list view)
@@ -23,7 +24,7 @@ export const styles = StyleSheet.create({
     gap: 6,
   },
   compactEmoji: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
   },
 
   // Full variant (detail view)

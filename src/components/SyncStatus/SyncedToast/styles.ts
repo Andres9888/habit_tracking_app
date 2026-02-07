@@ -8,6 +8,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -24,7 +25,7 @@ export const styles = StyleSheet.create({
 
   countText: {
     color: '#166534', // green-800
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '500',
   },
 
@@ -39,7 +40,7 @@ export const styles = StyleSheet.create({
 
   text: {
     color: '#166534', // green-800
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '500',
     letterSpacing: 0.2,
   },

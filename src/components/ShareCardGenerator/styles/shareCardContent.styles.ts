@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 export const shareCardContentStyles = StyleSheet.create({
   cardContainer: {
@@ -52,7 +53,7 @@ export const shareCardContentStyles = StyleSheet.create({
   },
   personalMessage: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: typography.heading2.fontSize,
     fontStyle: 'italic',
     marginTop: 32,
     paddingHorizontal: 24,

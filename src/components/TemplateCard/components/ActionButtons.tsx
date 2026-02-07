@@ -11,6 +11,7 @@ import { Check, Eye } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Button from '../../Button/Button';
 import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 import type { ActionButtonsProps } from './ActionButtons.types';
 
 export function ActionButtons({
@@ -95,5 +96,9 @@ export const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     width: '100%',
   },
-  successButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  successButtonText: {
+    color: '#fff',
+    fontSize: typography.body.fontSize,
+    fontWeight: '700',
+  },
 });

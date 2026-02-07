@@ -71,6 +71,6 @@ export const styles = StyleSheet.create({
   tooltipValue: {
     ...typography.bodyBold,
     color: colors.text.primary,
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
   },
 });

@@ -8,6 +8,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
 import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 import { CATEGORY_LABELS } from '../TemplateCard.constants';
 
 interface CategoryBadgeProps {
@@ -71,7 +72,7 @@ export const styles = StyleSheet.create({
   },
   inlinePremiumText: {
     color: '#7c3aed',
-    fontSize: 11,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: '600',
     letterSpacing: 0.5,
     textTransform: 'uppercase',

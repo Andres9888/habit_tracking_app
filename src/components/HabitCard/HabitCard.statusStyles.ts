@@ -6,7 +6,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { spacing, borderRadius } from '@/theme/spacing';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, typography } from '@/theme/typography';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 
 export const statusStyles = StyleSheet.create({
@@ -35,7 +35,7 @@ export const statusStyles = StyleSheet.create({
   },
   checkmarkText: {
     color: colors.text.inverse,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: 'bold',
   },
   statusContainer: {
@@ -57,7 +57,7 @@ export const statusStyles = StyleSheet.create({
   },
   streakText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
     lineHeight: 20,
   },
@@ -74,5 +74,5 @@ export const statusStyles = StyleSheet.create({
     justifyContent: 'center',
     width: 24,
   },
-  warningText: { fontSize: 12 },
+  warningText: { fontSize: typography.caption.fontSize },
 });

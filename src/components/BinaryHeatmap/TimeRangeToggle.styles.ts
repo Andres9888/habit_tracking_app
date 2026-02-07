@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows, borderRadius } from '../../theme/spacing';
+import { typography } from '@/theme/typography';
 import { COLORS, FOCUS } from './constants';
 
 export const styles = StyleSheet.create({
@@ -22,7 +23,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.1,
   },
   buttonText: {
-    fontSize: 11,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: '500',
   },
   buttonTextActive: {

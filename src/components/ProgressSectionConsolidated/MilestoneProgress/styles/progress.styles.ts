@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const progressStyles = StyleSheet.create({
   badgeIcon: {
@@ -36,7 +37,7 @@ export const progressStyles = StyleSheet.create({
   },
   milestoneName: {
     color: '#9ca3af', // gray-400
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     marginBottom: 12,
   },
   progressBadge: {
@@ -51,7 +52,7 @@ export const progressStyles = StyleSheet.create({
     width: 24,
   },
   progressBadgeText: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
   },
   progressBarContainer: {
     alignItems: 'center',
@@ -76,6 +77,6 @@ export const progressStyles = StyleSheet.create({
   },
   progressLabelText: {
     color: '#9ca3af', // gray-400
-    fontSize: 11,
+    fontSize: typography.tabBar.fontSize,
   },
 });

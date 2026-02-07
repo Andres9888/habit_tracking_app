@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { typography } from '../../../theme/typography';
 
 export const shareCardFooterStyles = StyleSheet.create({
   appInfo: {
@@ -31,12 +32,12 @@ export const shareCardFooterStyles = StyleSheet.create({
   },
   scienceBadgeText: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
   userName: {
     color: 'rgba(255, 255, 255, 0.9)',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '400',
   },
 });

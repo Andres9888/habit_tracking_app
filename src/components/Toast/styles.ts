@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   actionButton: {
@@ -26,12 +27,12 @@ export const styles = StyleSheet.create({
     width: 24,
   },
   dismissIcon: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: 'bold',
   },
   icon: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: 'bold',
   },
   iconContainer: {

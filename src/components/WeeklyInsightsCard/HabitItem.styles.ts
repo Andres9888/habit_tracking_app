@@ -10,7 +10,7 @@ import { spacing } from '../../theme/spacing';
 export const habitItemStyles = StyleSheet.create({
   changePercentage: {
     ...typography.bodyBold,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     marginLeft: spacing.xs,
   },
   habitEmoji: {

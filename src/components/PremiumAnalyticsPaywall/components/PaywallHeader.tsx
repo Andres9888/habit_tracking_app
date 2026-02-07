@@ -8,6 +8,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const PaywallHeader: React.FC = () => (
   <>
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: colors.surface,
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.5,
     lineHeight: 16,
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.text.primary,
-    fontSize: 20,
+    fontSize: typography.heading2.fontSize,
     fontWeight: '600',
     lineHeight: 28,
     marginBottom: spacing.xs,

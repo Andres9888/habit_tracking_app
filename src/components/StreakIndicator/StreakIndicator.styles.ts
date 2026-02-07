@@ -3,21 +3,36 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
+  bestStreakContainer: {
+    borderRadius: 8,
+    marginBottom: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+
+  bestStreakText: {
+    fontSize: typography.bodySmall.fontSize,
+    fontWeight: '600',
+  },
   // Compact View Styles
   compactContainer: {
     alignItems: 'center',
     flexDirection: 'row',
   },
+
   compactContent: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 4,
   },
+
   fireEmoji: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
   },
+
   // Full View Styles
   fullContainer: {
     padding: 16,
@@ -27,22 +42,10 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
 
-  bestStreakContainer: {
-    borderRadius: 8,
-    marginBottom: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-
   fullStreakInfo: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 8,
-  },
-
-  bestStreakText: {
-    fontSize: 14,
-    fontWeight: '600',
   },
   fullTextContainer: {
     flex: 1,
@@ -55,36 +58,21 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
-  milestoneEmoji: {
-    fontSize: 14,
-    marginLeft: -2,
-  },
   milestoneBadgeEmoji: {
-    fontSize: 16,
-  },
-  zeroStreakContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 4,
+    fontSize: typography.body.fontSize,
   },
   milestoneBadgeLabel: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '600',
-  },
-  zeroStreakText: {
-    fontSize: 13,
-    fontStyle: 'italic',
   },
   milestoneBadgeLarge: {
     fontSize: 24,
     marginLeft: -4,
   },
-
-  streakNumber: {
-    fontSize: 15,
-    fontWeight: '600',
+  milestoneEmoji: {
+    fontSize: typography.bodySmall.fontSize,
+    marginLeft: -2,
   },
-
   // Milestones Legend Styles
   milestonesLegend: {
     flexDirection: 'row',
@@ -93,13 +81,29 @@ export const styles = StyleSheet.create({
   },
 
   streakLabel: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     marginTop: 2,
+  },
+
+  streakNumber: {
+    fontSize: 15,
+    fontWeight: '600',
   },
 
   streakNumberLarge: {
     fontSize: 32,
     fontWeight: 'bold',
     lineHeight: 36,
+  },
+
+  zeroStreakContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
+  },
+
+  zeroStreakText: {
+    fontSize: 13,
+    fontStyle: 'italic',
   },
 });

@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   categoriesContent: {
@@ -26,11 +27,11 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.15,
   },
   categoryPillIcon: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   categoryPillText: {
     color: colors.gray[500],
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
     marginLeft: spacing.xs,
   },

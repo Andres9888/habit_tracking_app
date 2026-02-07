@@ -8,6 +8,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
 import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 interface ScienceBoxProps {
   scientificReference: string;
@@ -54,7 +55,7 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   scienceIcon: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   scienceText: {
     color: '#166534',

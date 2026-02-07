@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 export const DISMISS_THRESHOLD = 50;
 
@@ -34,7 +35,7 @@ export const styles = StyleSheet.create({
   },
   message: {
     flex: 1,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   messageText: {
     color: '#78716c', // stone-500

@@ -7,7 +7,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import { colors } from '../../theme/colors';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, typography } from '@/theme/typography';
 import { RetryButton } from './RetryButton';
 
 interface ErrorFallbackProps {
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   description: {
     color: colors.text.secondary,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     marginBottom: 24,
     textAlign: 'center',
   },
@@ -66,14 +66,14 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: colors.error,
     fontFamily: fontFamilies.monospace,
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     marginTop: 24,
     maxWidth: 300,
     textAlign: 'left',
   },
   headline: {
     color: colors.text.primary,
-    fontSize: 20,
+    fontSize: typography.heading2.fontSize,
     fontWeight: '600',
     marginBottom: 8,
     textAlign: 'center',

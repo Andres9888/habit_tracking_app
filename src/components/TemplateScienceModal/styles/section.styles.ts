@@ -5,11 +5,12 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 export const sectionStyles = StyleSheet.create({
   descriptionText: {
     color: '#4B5563',
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     lineHeight: 26,
   },
   sectionCard: {

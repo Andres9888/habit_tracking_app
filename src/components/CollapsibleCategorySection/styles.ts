@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   chevronContainer: {
@@ -51,7 +52,7 @@ export const styles = StyleSheet.create({
     width: 48,
   },
   label: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '700',
   },
   labelContainer: {

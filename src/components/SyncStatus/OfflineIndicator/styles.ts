@@ -6,6 +6,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -31,7 +32,7 @@ export const styles = StyleSheet.create({
 
   text: {
     color: '#78716c', // stone-500 - muted text
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '500',
     letterSpacing: 0.2,
   },

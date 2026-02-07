@@ -6,6 +6,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 
 import { colors } from '../../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 export const SHEET_HEIGHT = SCREEN_HEIGHT * 0.7;
@@ -47,7 +48,7 @@ export const styles = StyleSheet.create({
   },
   noIconText: {
     color: colors.gray[500],
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
   searchBar: {
@@ -67,7 +68,7 @@ export const styles = StyleSheet.create({
   searchInput: {
     color: colors.gray[900],
     flex: 1,
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     marginLeft: spacing.sm,
   },
   sheet: {

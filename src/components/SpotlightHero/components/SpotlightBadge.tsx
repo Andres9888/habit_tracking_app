@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Sparkles } from 'lucide-react-native';
+import { typography } from '@/theme/typography';
 
 export const SpotlightBadge: React.FC = () => (
   <View style={styles.badge}>
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: '#ffffff',
-    fontSize: 11,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: '700',
     letterSpacing: 1,
   },

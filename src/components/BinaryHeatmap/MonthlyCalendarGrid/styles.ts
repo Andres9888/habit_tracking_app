@@ -7,6 +7,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 import { COLORS } from './colors';
 
 export const styles = StyleSheet.create({
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
     width: 36,
   },
   dayText: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
   dayWrapper: {
@@ -49,7 +50,7 @@ export const styles = StyleSheet.create({
   },
   headerText: {
     color: COLORS.TEXT_SECONDARY,
-    fontSize: 11,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: '500',
   },
   monthButton: {

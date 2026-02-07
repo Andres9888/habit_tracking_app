@@ -2,6 +2,7 @@ import React from 'react';
 import { Animated, View, Text } from 'react-native';
 import { Archive } from 'lucide-react-native';
 import { borderRadius } from '../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 interface ArchiveActionProps {
   dragX: Animated.AnimatedInterpolation<number>;
@@ -54,7 +55,7 @@ export function ArchiveAction({ dragX }: ArchiveActionProps) {
           <Text
             style={{
               color: 'white',
-              fontSize: 11,
+              fontSize: typography.tabBar.fontSize,
               fontWeight: '600',
               letterSpacing: 0.2,
               marginTop: 4,

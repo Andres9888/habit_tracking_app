@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -18,7 +19,7 @@ export const styles = StyleSheet.create({
     marginBottom: 6,
   },
   habitName: {
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '500',
     marginBottom: 2,
   },
@@ -29,14 +30,14 @@ export const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   interventionText: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '500',
   },
   prediction: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   title: {
     fontSize: 18,
@@ -48,7 +49,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   viewAllText: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
 });

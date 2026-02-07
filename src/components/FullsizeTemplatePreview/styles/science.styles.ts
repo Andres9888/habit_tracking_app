@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const scienceStyles = StyleSheet.create({
   researchLinkButton: {
@@ -22,7 +23,7 @@ export const scienceStyles = StyleSheet.create({
   },
   researchLinkText: {
     color: '#2563EB',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
   scienceBox: {
@@ -46,11 +47,11 @@ export const scienceStyles = StyleSheet.create({
     marginBottom: 12,
   },
   scienceIcon: {
-    fontSize: 20,
+    fontSize: typography.heading2.fontSize,
   },
   scienceLabel: {
     color: '#166534',
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',

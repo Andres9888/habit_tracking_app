@@ -8,6 +8,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 import type { FeatureItem } from '../PremiumAnalyticsPaywall.types';
 
 interface FeatureListItemProps {
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
   },
   featureDescription: {
     color: colors.text.secondary,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     lineHeight: 20,
   },
   featureIcon: {

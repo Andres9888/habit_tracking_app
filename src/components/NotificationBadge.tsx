@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { borderRadius } from '../theme/spacing';
+import { typography } from '@/theme/typography';
 
 interface NotificationBadgeProps {
   count?: number;
@@ -75,7 +76,7 @@ export function NotificationBadge({
         <Text
           style={{
             color: '#ffffff',
-            fontSize: 11,
+            fontSize: typography.tabBar.fontSize,
             fontWeight: '700',
             lineHeight: 14,
           }}

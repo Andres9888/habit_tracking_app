@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '../../../theme/colors';
 import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   categoryHeader: {
@@ -10,7 +11,7 @@ export const styles = StyleSheet.create({
   },
   categoryHeaderText: {
     color: colors.gray[500],
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '600',
     letterSpacing: 0.5,
   },
@@ -52,12 +53,12 @@ export const styles = StyleSheet.create({
   },
   emptyStateSubtitle: {
     color: colors.gray[400],
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     marginTop: spacing.xs,
   },
   emptyStateTitle: {
     color: colors.gray[900],
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '500',
     marginTop: spacing.md,
   },

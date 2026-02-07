@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Pressable, ScrollView, Text } from 'react-native';
 import { shadows } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 import { HABIT_CATEGORIES } from '../../../constants/habitEmojis';
 
 interface CategoryChipsProps {
@@ -42,12 +43,14 @@ export const CategoryChips = memo(
             ]}
             onPress={() => onCategorySelect(category.id)}
           >
-            <Text style={{ fontSize: 14 }}>{category.icon}</Text>
+            <Text style={{ fontSize: typography.bodySmall.fontSize }}>
+              {category.icon}
+            </Text>
             <Text
               style={[
                 {
                   color: isSelected ? 'white' : '#1c1917',
-                  fontSize: 14,
+                  fontSize: typography.bodySmall.fontSize,
                   fontWeight: '500',
                 },
               ]}

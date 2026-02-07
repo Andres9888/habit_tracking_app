@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const scienceStyles = StyleSheet.create({
   citationDot: {
@@ -20,7 +21,7 @@ export const scienceStyles = StyleSheet.create({
   },
   citationLabel: {
     color: '#6B7280',
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
@@ -45,7 +46,7 @@ export const scienceStyles = StyleSheet.create({
   },
   linkText: {
     color: '#2563EB',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '700',
   },
   whyItWorksContainer: {

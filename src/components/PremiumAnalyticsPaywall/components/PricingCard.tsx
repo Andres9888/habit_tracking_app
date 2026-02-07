@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 export const PricingCard: React.FC = () => (
   <View style={styles.pricingCard}>
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
   },
   pricingPeriod: {
     color: colors.text.secondary,
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     lineHeight: 24,
   },
   pricingRow: {
@@ -91,14 +92,14 @@ const styles = StyleSheet.create({
   },
   savingsText: {
     color: colors.text.secondary,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
     lineHeight: 20,
     textAlign: 'center',
   },
   thenPricing: {
     color: colors.text.secondary,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     lineHeight: 20,
     marginBottom: spacing.sm,
     textAlign: 'center',

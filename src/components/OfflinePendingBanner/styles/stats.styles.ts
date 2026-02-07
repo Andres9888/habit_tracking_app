@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const statsStyles = StyleSheet.create({
   ageText: {
     color: '#71717A',
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     marginTop: 10,
   },
   statsContainer: {
@@ -20,7 +21,7 @@ export const statsStyles = StyleSheet.create({
   },
   statsHeader: {
     color: '#52525B',
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     fontWeight: '600',
     letterSpacing: 0.5,
     marginBottom: 8,
@@ -35,7 +36,7 @@ export const statsStyles = StyleSheet.create({
   },
   statsText: {
     color: '#3F3F46',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   warningContainer: {
     alignItems: 'center',

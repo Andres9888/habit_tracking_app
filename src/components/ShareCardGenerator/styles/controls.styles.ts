@@ -3,11 +3,17 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { typography } from '@/theme/typography';
 
 export const controlsStyles = StyleSheet.create({
+  characterCount: {
+    fontSize: typography.caption.fontSize,
+    marginTop: 4,
+    textAlign: 'right',
+  },
   gradientButton: {
-    borderRadius: 12,
     borderColor: 'transparent',
+    borderRadius: 12,
     borderWidth: 2,
     height: 56,
     overflow: 'hidden',
@@ -16,20 +22,12 @@ export const controlsStyles = StyleSheet.create({
   gradientButtonInner: {
     flex: 1,
   },
-  characterCount: {
-    fontSize: 12,
-    marginTop: 4,
-    textAlign: 'right',
-  },
   gradientButtons: {
     flexDirection: 'row',
     gap: 12,
   },
   gradientButtonSelected: {
     borderColor: '#10B981',
-  },
-  optionGroup: {
-    marginBottom: 24,
   },
   messageInput: {
     borderRadius: 8,
@@ -38,6 +36,9 @@ export const controlsStyles = StyleSheet.create({
     minHeight: 80,
     padding: 12,
     textAlignVertical: 'top',
+  },
+  optionGroup: {
+    marginBottom: 24,
   },
   optionLabel: {
     fontSize: 15,
@@ -59,7 +60,7 @@ export const controlsStyles = StyleSheet.create({
   },
   platformButtonText: {
     color: '#4B5563',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
     textTransform: 'capitalize',
   },

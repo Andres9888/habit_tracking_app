@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
+import { typography } from '@/theme/typography';
 
 export const headerStyles = StyleSheet.create({
   comparisonText: {
@@ -29,7 +30,7 @@ export const headerStyles = StyleSheet.create({
   },
   headerTitle: {
     color: '#1c1917', // stone-900
-    fontSize: 16,
+    fontSize: typography.body.fontSize,
     fontWeight: '600',
   },
   perfectBadge: {
@@ -40,7 +41,7 @@ export const headerStyles = StyleSheet.create({
   },
   perfectBadgeText: {
     color: '#ffffff',
-    fontSize: 11,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: '600',
   },
   sparkleContainer: {
@@ -49,7 +50,7 @@ export const headerStyles = StyleSheet.create({
     top: -4,
   },
   sparkleEmoji: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
   },
   titleContainer: {
     position: 'relative',
