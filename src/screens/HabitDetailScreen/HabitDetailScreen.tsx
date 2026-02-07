@@ -3,23 +3,20 @@ import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../../theme/colors';
 import {
   DetailHeader,
   DetailLoadingState,
   HabitDetailContent,
   HabitDetailModals,
 } from './components';
+import {
+  DETAIL_BG_GRADIENT,
+  buildModalsProps,
+} from './HabitDetailScreen.constants';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
 import { useNotesHandlers } from './useNotesHandlers';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
-
-const BG = [
-  colors.light.background,
-  colors.light.gradientMid,
-  colors.light.background,
-];
 
 // eslint-disable-next-line max-lines-per-function
 export default function HabitDetailScreen({
@@ -32,29 +29,29 @@ export default function HabitDetailScreen({
   visible,
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
-  const state = useHabitDetailScreenState({
+  const s = useHabitDetailScreenState({
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
     habitStrength: habit?.strength ?? 0,
     tracking,
     visible,
   });
-  const cal = useCalendarHandlers({
+  const c = useCalendarHandlers({
     habit,
-    isTogglingCalendar: state.isTogglingCalendar,
+    isTogglingCalendar: s.isTogglingCalendar,
     onArchive,
     onClose,
     onDelete,
-    setIsTogglingCalendar: state.setIsTogglingCalendar,
-    setPendingArchive: state.setPendingArchive,
-    setPendingDelete: state.setPendingDelete,
+    setIsTogglingCalendar: s.setIsTogglingCalendar,
+    setPendingArchive: s.setPendingArchive,
+    setPendingDelete: s.setPendingDelete,
   });
-  const notes = useNotesHandlers({
+  const n = useNotesHandlers({
     habit,
     onEdit,
-    setEditingNoteId: state.setEditingNoteId,
-    setIsNotesEditorOpen: state.setIsNotesEditorOpen,
-    setIsNotesListOpen: state.setIsNotesListOpen,
+    setEditingNoteId: s.setEditingNoteId,
+    setIsNotesEditorOpen: s.setIsNotesEditorOpen,
+    setIsNotesListOpen: s.setIsNotesListOpen,
   });
 
   return (
@@ -73,45 +70,32 @@ export default function HabitDetailScreen({
             <View className='flex-1 bg-black/50'>
               <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
                 <LinearGradient
-                  colors={BG}
+                  colors={DETAIL_BG_GRADIENT}
                   locations={[0, 0.5, 1]}
                   style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
                 >
                   <DetailHeader
                     habit={habit}
-                    isCompletedToday={state.isCompletedToday}
+                    isCompletedToday={s.isCompletedToday}
                     onClose={onClose}
-                    onEdit={notes.handleEdit}
+                    onEdit={n.handleEdit}
                   />
                   <HabitDetailContent
-                    completedDates={state.completedDates}
+                    completedDates={s.completedDates}
                     habit={habit}
-                    onDayPress={cal.handleCalendarDayPress}
+                    onDayPress={c.handleCalendarDayPress}
                   />
                 </LinearGradient>
               </View>
             </View>
           </KeyboardAvoidingView>
           <HabitDetailModals
-            editingNote={state.editingNote}
             habitId={habit._id}
             habitName={habit.name}
-            handleCloseNotesEditor={notes.handleCloseNotesEditor}
-            handleConfirmArchive={cal.handleConfirmArchive}
-            handleConfirmDelete={cal.handleConfirmDelete}
-            handleUndoArchive={cal.handleUndoArchive}
-            handleUndoDelete={cal.handleUndoDelete}
-            insets={insets}
-            isNotesEditorOpen={state.isNotesEditorOpen}
-            isNotesListOpen={state.isNotesListOpen}
-            pendingArchive={state.pendingArchive}
-            pendingDelete={state.pendingDelete}
-            setIsNotesListOpen={state.setIsNotesListOpen}
-            setPendingDelete={state.setPendingDelete}
+            {...buildModalsProps(s, c, n, insets)}
           />
         </>
       ) : (
-        // Loading: modal visible but habit data not yet available
         <DetailLoadingState />
       )}
     </Modal>
