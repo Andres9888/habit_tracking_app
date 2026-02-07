@@ -4,10 +4,11 @@
  */
 
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { StatusIndicator } from './StatusIndicator';
 import { StatRow } from './StatRow';
 import { tabStyles, valueStyles } from './tabStyles';
+import { rendersStyles } from './RendersTab.styles';
 import type { RenderData, RenderTiming } from '../types';
 
 interface RendersTabProps {
@@ -59,13 +60,13 @@ function ComponentsList({
   slow?: boolean;
 }) {
   return (
-    <View style={styles.list}>
-      <Text style={[tabStyles.historyLabel, slow && styles.slowLabel]}>
+    <View style={rendersStyles.list}>
+      <Text style={[tabStyles.historyLabel, slow && rendersStyles.slowLabel]}>
         {label}
       </Text>
       <ScrollView
         nestedScrollEnabled
-        style={[tabStyles.scrollView, styles.scrollView]}
+        style={[tabStyles.scrollView, rendersStyles.scrollView]}
       >
         {components.length === 0 ? (
           <Text style={tabStyles.emptyText}>No renders tracked yet</Text>
@@ -80,43 +81,21 @@ function ComponentsList({
 function ComponentRow({ component }: { component: RenderTiming }) {
   const isSlow = component.averageRenderTime > 16;
   return (
-    <View style={styles.compRow}>
-      <Text numberOfLines={1} style={styles.compName}>
+    <View style={rendersStyles.compRow}>
+      <Text numberOfLines={1} style={rendersStyles.compName}>
         {component.componentName}
       </Text>
-      <View style={styles.compStats}>
-        <Text style={styles.compRenders}>{component.renderCount}x</Text>
-        <Text style={[styles.compDuration, isSlow && styles.slowDuration]}>
+      <View style={rendersStyles.compStats}>
+        <Text style={rendersStyles.compRenders}>{component.renderCount}x</Text>
+        <Text
+          style={[
+            rendersStyles.compDuration,
+            isSlow && rendersStyles.slowDuration,
+          ]}
+        >
           {component.averageRenderTime.toFixed(1)}ms
         </Text>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  compDuration: {
-    color: '#22c55e',
-    fontFamily: 'monospace',
-    fontSize: 10,
-    width: 45,
-  },
-  compName: { color: 'rgba(255,255,255,0.8)', flex: 1, fontSize: 10 },
-  compRenders: {
-    color: 'rgba(255,255,255,0.5)',
-    fontFamily: 'monospace',
-    fontSize: 10,
-    width: 30,
-  },
-  compRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-    paddingVertical: 3,
-  },
-  compStats: { flexDirection: 'row', gap: 8 },
-  list: { gap: 4 },
-  scrollView: { maxHeight: 70 },
-  slowDuration: { color: '#f59e0b' },
-  slowLabel: { color: '#f59e0b', fontWeight: '600' },
-});

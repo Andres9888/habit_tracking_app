@@ -8,12 +8,7 @@ import {
   type CircuitBreaker,
 } from '../circuitBreaker';
 import { calculateDelay, DEFAULT_RETRY_STRATEGY } from '../retryStrategy';
-import type {
-  RetryStrategy,
-  SyncEvent,
-  SyncEventType,
-  SyncStatus,
-} from '../types';
+import type { RetryStrategy, SyncEventType, SyncStatus } from '../types';
 import type {
   OfflineSyncManagerConfig,
   SyncItem,
@@ -24,6 +19,7 @@ import type {
 } from './types';
 import { processItem } from './processItem';
 import { processBatch as processBatchFn } from './processBatch';
+import { emitSyncEvent } from './emitSyncEvent';
 
 export class OfflineSyncManager {
   private circuitBreaker: CircuitBreaker;
@@ -39,8 +35,8 @@ export class OfflineSyncManager {
       ...DEFAULT_CIRCUIT_CONFIG,
       ...config.circuitBreaker,
     });
-    this.circuitBreaker.subscribe((status) => {
-      switch (status.state) {
+    this.circuitBreaker.subscribe(({ state }) => {
+      switch (state) {
         case 'open': {
           this.emit('circuit:open');
           break;
@@ -137,13 +133,6 @@ export class OfflineSyncManager {
   }
 
   private emit(type: SyncEventType, data?: Record<string, unknown>): void {
-    const event: SyncEvent = { data, timestamp: Date.now(), type };
-    for (const l of this.listeners) {
-      try {
-        l(event);
-      } catch {
-        /* ignore */
-      }
-    }
+    emitSyncEvent(this.listeners, type, data);
   }
 }

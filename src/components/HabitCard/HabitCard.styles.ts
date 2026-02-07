@@ -6,19 +6,13 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { REDESIGN_COLORS } from './HabitCard.colors';
+import { statusStyles } from './HabitCard.statusStyles';
 
 export { actionStyles } from './HabitCard.actionStyles';
+export { REDESIGN_COLORS } from './HabitCard.colors';
 
-export const REDESIGN_COLORS = {
-  accent: '#E85D3B',
-  accentMuted: '#F5DDD6',
-  cardSurface: '#FFFFFF',
-  dominant: '#FAF8F5',
-  neutral: '#C4BFB7',
-  secondaryText: '#2D2A26',
-} as const;
-
-export const styles = StyleSheet.create({
+const coreStyles = StyleSheet.create({
   accentBar: { bottom: 0, left: 0, position: 'absolute', top: 0 },
   bottomRow: {
     alignItems: 'center',
@@ -40,30 +34,6 @@ export const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 4,
   },
-  checkCircle: {
-    alignItems: 'center',
-    borderRadius: 14,
-    borderWidth: 2,
-    height: 28,
-    justifyContent: 'center',
-    width: 28,
-  },
-  checkCircleCompleted: {
-    backgroundColor: REDESIGN_COLORS.accent,
-    borderColor: REDESIGN_COLORS.accent,
-  },
-  checkCircleUnchecked: {
-    backgroundColor: 'transparent',
-    borderColor: REDESIGN_COLORS.neutral,
-  },
-  checkmark: {
-    alignItems: 'center',
-    borderRadius: 14,
-    height: 28,
-    justifyContent: 'center',
-    width: 28,
-  },
-  checkmarkText: { color: '#FFFFFF', fontSize: 14, fontWeight: 'bold' },
   completedText: { opacity: 0.7 },
   container: { height: 72, marginVertical: 6, position: 'relative' },
   content: { flex: 1, justifyContent: 'center', padding: 16 },
@@ -83,46 +53,11 @@ export const styles = StyleSheet.create({
   },
   icon: { fontSize: 24 },
   strengthFill: { bottom: 0, left: 0, position: 'absolute', top: 0 },
-  statusContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-    marginLeft: 8,
-  },
-  streakBadge: {
-    borderRadius: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  streakBadgeCompleted: {
-    backgroundColor: REDESIGN_COLORS.accentMuted,
-  },
-  streakBadgeUnchecked: {
-    backgroundColor: 'transparent',
-  },
-  streakText: {
-    fontFamily: 'SourceSans3-Medium',
-    fontSize: 14,
-    fontWeight: '500',
-    lineHeight: 20,
-  },
-  streakTextCompleted: {
-    color: REDESIGN_COLORS.accent,
-  },
-  streakTextUnchecked: {
-    color: REDESIGN_COLORS.neutral,
-  },
   topRow: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  warningBadge: {
-    alignItems: 'center',
-    borderRadius: 12,
-    height: 24,
-    justifyContent: 'center',
-    width: 24,
-  },
-  warningText: { fontSize: 12 },
 });
+
+export const styles = { ...coreStyles, ...statusStyles };

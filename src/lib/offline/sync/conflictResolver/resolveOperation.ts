@@ -18,6 +18,10 @@ import type {
   ConflictResolverConfig,
   ServerCompletionState,
 } from './types';
+import {
+  checkWithTimeout,
+  emitConflictEvents,
+} from './resolveOperation.helpers';
 
 /** Default configuration for conflict resolver */
 export const DEFAULT_CONFLICT_RESOLVER_CONFIG: Required<ConflictResolverConfig> =
@@ -75,7 +79,14 @@ export async function resolveOperation(
     const { resolution, reason } = resolveConflict(payload, serverState);
 
     if (toCompleted === serverCompleted && onEvent) {
-      emitEvents(operation.id, habitId, date, resolution, reason, onEvent);
+      emitConflictEvents(
+        operation.id,
+        habitId,
+        date,
+        resolution,
+        reason,
+        onEvent
+      );
     }
 
     return buildResolutionResult(
@@ -105,50 +116,4 @@ export async function resolveOperation(
       `Server check failed: ${msg} - proceeding with sync`
     );
   }
-}
-
-async function checkWithTimeout(
-  check: CompletionStateChecker,
-  habitId: any,
-  date: string,
-  timeout: number
-): Promise<boolean | null> {
-  return Promise.race([
-    check(habitId, date),
-    new Promise<null>((_, reject) =>
-      setTimeout(
-        () => reject(new Error('Server state check timed out')),
-        timeout
-      )
-    ),
-  ]);
-}
-
-function emitEvents(
-  opId: string,
-  habitId: any,
-  date: string,
-  resolution: any,
-  reason: string,
-  onEvent: ConflictEventListener
-): void {
-  onEvent(
-    createConflictEvent('conflict:detected', {
-      date,
-      habitId,
-      operationId: opId,
-      reason,
-      resolution,
-    })
-  );
-  if (resolution === 'skip')
-    onEvent(
-      createConflictEvent('conflict:skip_sync', {
-        date,
-        habitId,
-        operationId: opId,
-        reason,
-        resolution,
-      })
-    );
 }
