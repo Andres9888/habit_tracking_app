@@ -4,10 +4,11 @@
  */
 
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import { Link } from 'lucide-react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import {
   AuthDivider,
   AuthError,
@@ -82,28 +83,29 @@ export default function WelcomeScreen() {
             onPress={signInWithGoogle}
           />
           <AuthDivider />
-          <TouchableOpacity
+          <AnimatedPressable
             accessibilityLabel='Get started with Chain Day'
             accessibilityRole='button'
             accessibilityState={{ disabled: !!isLoading }}
-            activeOpacity={0.8}
             disabled={!!isLoading}
+            disableAnimation={!!isLoading}
             style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
             onPress={() => setMode('signup')}
           >
             <Text style={styles.primaryButtonText}>Get Started</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </AnimatedPressable>
+          <AnimatedPressable
             accessibilityLabel='Sign in to existing account'
             accessibilityRole='link'
             accessibilityState={{ disabled: !!isLoading }}
             disabled={!!isLoading}
+            disableAnimation={!!isLoading}
             style={styles.textLink}
             onPress={() => setMode('signin')}
           >
             <Text style={styles.textLinkLabel}>Already have an account?</Text>
             <Text style={styles.textLinkAction}> Sign in</Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </Animated.View>
       </View>
     </View>

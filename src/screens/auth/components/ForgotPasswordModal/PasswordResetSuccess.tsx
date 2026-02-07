@@ -1,7 +1,8 @@
 /** PasswordResetSuccess - OPTIMIZED: FadeIn animation, better styling */
-import { Text, Pressable, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import type { PasswordResetSuccessProps } from './types';
 
 export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
@@ -31,7 +32,7 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
       <Animated.View
         entering={FadeInUp.duration(280).delay(100).springify().damping(18)}
       >
-        <Pressable
+        <AnimatedPressable
           accessibilityHint='Closes this dialog and returns to sign in'
           accessibilityLabel='Close modal'
           accessibilityRole='button'
@@ -45,7 +46,7 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
           onPress={onClose}
         >
           <Text className='text-[17px] font-semibold text-white'>Done</Text>
-        </Pressable>
+        </AnimatedPressable>
       </Animated.View>
     </View>
   );

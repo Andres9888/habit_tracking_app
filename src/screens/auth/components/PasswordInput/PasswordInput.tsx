@@ -2,9 +2,10 @@
  * PasswordInput - Secure text input with visibility toggle
  */
 import { forwardRef, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Eye, EyeOff, Lock } from 'lucide-react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { usePasswordInputAnimations } from './usePasswordInputAnimations';
 import type { PasswordInputProps } from './types';
 
@@ -58,12 +59,11 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
             {...props}
           />
 
-          <TouchableOpacity
+          <AnimatedPressable
             accessible
             accessibilityHint='Toggle password visibility'
             accessibilityLabel={isSecure ? 'Show password' : 'Hide password'}
             accessibilityRole='button'
-            activeOpacity={0.7}
             className='min-h-[44px] min-w-[44px] items-center justify-center pr-2'
             hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
             testID='password-visibility-toggle'
@@ -84,7 +84,7 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
                 testID='eye-off-icon'
               />
             )}
-          </TouchableOpacity>
+          </AnimatedPressable>
         </Animated.View>
 
         {error && (

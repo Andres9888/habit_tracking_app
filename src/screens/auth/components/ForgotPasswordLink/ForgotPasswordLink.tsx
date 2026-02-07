@@ -1,4 +1,5 @@
-import { Text, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface ForgotPasswordLinkProps {
   onPress: () => void;
@@ -6,14 +7,13 @@ interface ForgotPasswordLinkProps {
 
 export function ForgotPasswordLink({ onPress }: ForgotPasswordLinkProps) {
   return (
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityLabel='Forgot password?'
       accessibilityRole='button'
-      activeOpacity={0.7}
       hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
       onPress={onPress}
     >
       <Text className='text-sm font-medium text-emerald-600'>Forgot?</Text>
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }
