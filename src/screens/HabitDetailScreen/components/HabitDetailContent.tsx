@@ -1,10 +1,6 @@
-/**
- * HabitDetailContent - Scrollable content area for habit detail screen
- * OPTIMIZED: Card wrappers with shadows, FadeInUp animations
- */
-
+/** HabitDetailContent - Consistent with Create/Edit modal style */
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
@@ -17,6 +13,9 @@ interface HabitDetailContentProps {
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
+const DURATION = 240;
+const STAGGER = 60;
+
 export function HabitDetailContent({
   habit,
   completedDates,
@@ -26,28 +25,55 @@ export function HabitDetailContent({
     <ScrollView
       bounces
       className='flex-1'
-      contentContainerClassName='p-4 pb-8 gap-4'
+      contentContainerClassName='pb-8'
       showsVerticalScrollIndicator={false}
     >
+      {/* STRENGTH section */}
       {habit.createdAt && (
-        <Animated.View
-          className='rounded-2xl bg-white p-4 shadow-md'
-          entering={FadeInUp.delay(0).springify().damping(18)}
-        >
-          <ErrorBoundary>
-            <HabitStrengthSection
-              completedDates={completedDates}
-              habitColor={habit.iconColor}
-              habitCreatedAt={habit.createdAt}
-              habitId={habit._id}
-              habitStrength={habit.strength}
-            />
-          </ErrorBoundary>
-        </Animated.View>
+        <>
+          <Animated.View
+            className='mb-4'
+            entering={FadeInUp.duration(DURATION).delay(160)}
+          >
+            <Text
+              className='text-center text-xs font-semibold text-stone-500'
+              style={{ letterSpacing: 0.5 }}
+            >
+              STRENGTH
+            </Text>
+          </Animated.View>
+          <Animated.View
+            className='mx-4 rounded-2xl bg-white p-4 shadow-md'
+            entering={FadeInUp.duration(DURATION).delay(160 + STAGGER)}
+          >
+            <ErrorBoundary>
+              <HabitStrengthSection
+                completedDates={completedDates}
+                habitColor={habit.iconColor}
+                habitCreatedAt={habit.createdAt}
+                habitId={habit._id}
+                habitStrength={habit.strength}
+              />
+            </ErrorBoundary>
+          </Animated.View>
+        </>
       )}
+
+      {/* HISTORY section */}
       <Animated.View
-        className='rounded-2xl bg-white p-4 shadow-md'
-        entering={FadeInUp.delay(50).springify().damping(18)}
+        className='mb-4 mt-8'
+        entering={FadeInUp.duration(DURATION).delay(280)}
+      >
+        <Text
+          className='text-center text-xs font-semibold text-stone-500'
+          style={{ letterSpacing: 0.5 }}
+        >
+          HISTORY
+        </Text>
+      </Animated.View>
+      <Animated.View
+        className='mx-4 rounded-2xl bg-white p-4 shadow-md'
+        entering={FadeInUp.duration(DURATION).delay(280 + STAGGER)}
       >
         <ErrorBoundary>
           <MonthlyCalendarGrid

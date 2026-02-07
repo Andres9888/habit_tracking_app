@@ -1,9 +1,7 @@
-/** HabitDetailScreen - Calendar-focused Habit Detail Page */
-
+/** HabitDetailScreen - Bottom sheet style matching Create/Edit modals */
 import React from 'react';
-import { View } from 'react-native';
+import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Modal } from '../../components/Modal';
 import {
   DetailHeader,
   HabitDetailContent,
@@ -14,6 +12,7 @@ import { useCalendarHandlers } from './useCalendarHandlers';
 import { useNotesHandlers } from './useNotesHandlers';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
 
+// eslint-disable-next-line max-lines-per-function
 export default function HabitDetailScreen({
   habit,
   onArchive,
@@ -53,28 +52,34 @@ export default function HabitDetailScreen({
 
   return (
     <Modal
-      disableGestureClose
-      disableBackdropClose={false}
-      variant='fullScreen'
+      transparent
+      animationType='slide'
       visible={visible}
-      onClose={onClose}
+      onRequestClose={onClose}
     >
-      <View
-        className='flex-1 bg-gradient-to-b from-stone-50 via-amber-50/30 to-stone-100'
-        style={{ paddingTop: insets.top || 44 }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className='flex-1'
       >
-        <DetailHeader
-          habit={habit}
-          isCompletedToday={state.isCompletedToday}
-          onClose={onClose}
-          onEdit={notesHandlers.handleEdit}
-        />
-        <HabitDetailContent
-          completedDates={state.completedDates}
-          habit={habit}
-          onDayPress={calendarHandlers.handleCalendarDayPress}
-        />
-      </View>
+        <View className='flex-1 bg-black/50'>
+          <View
+            className='flex-1 overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'
+            style={{ paddingTop: Math.max(insets.top + 4, 12) }}
+          >
+            <DetailHeader
+              habit={habit}
+              isCompletedToday={state.isCompletedToday}
+              onClose={onClose}
+              onEdit={notesHandlers.handleEdit}
+            />
+            <HabitDetailContent
+              completedDates={state.completedDates}
+              habit={habit}
+              onDayPress={calendarHandlers.handleCalendarDayPress}
+            />
+          </View>
+        </View>
+      </KeyboardAvoidingView>
       <HabitDetailModals
         editingNote={state.editingNote}
         habitId={habit._id}
