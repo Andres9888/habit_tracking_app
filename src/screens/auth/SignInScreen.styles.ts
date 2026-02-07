@@ -1,82 +1,73 @@
-/**
- * SignInScreen Styles
- *
- * Stylesheet for the sign-in screen layout and typography.
- */
-
+/** SignInScreen Styles - Type scale: 34/22/17/13, proper contrast, depth */
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   appName: {
     color: '#1c1917',
-    fontSize: 24,
+    fontSize: 34,
     fontWeight: '700',
-    letterSpacing: -0.5,
+    letterSpacing: -1,
     textAlign: 'center',
   },
-  authContent: {
-    gap: 24,
-  },
-  brandSection: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  container: {
-    backgroundColor: '#faf9f7',
-    flex: 1,
-  },
-  flex: {
-    flex: 1,
-  },
-  footer: {
-    marginTop: 32,
-    paddingHorizontal: 16,
-  },
+  authContent: { gap: 24 },
+  brandSection: { alignItems: 'center', marginBottom: 40 },
+  container: { flex: 1 },
+  flex: { flex: 1 },
+  footer: { marginTop: 32, paddingHorizontal: 16 },
+  footerLink: { color: '#047857', textDecorationLine: 'underline' },
   footerText: {
-    color: '#a8a29e',
+    color: '#78716c',
     fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',
   },
-  formSection: {
-    gap: 20,
+  formCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    elevation: 4,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.06,
+    shadowRadius: 20,
   },
+  formSection: { gap: 20 },
+  gradientBg: { backgroundColor: '#faf9f7', flex: 1 },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4',
-    borderRadius: 20,
-    height: 80,
+    backgroundColor: '#10B981',
+    borderRadius: 24,
+    elevation: 8,
+    height: 88,
     justifyContent: 'center',
-    marginBottom: 16,
-    width: 80,
+    marginBottom: 20,
+    shadowColor: '#10B981',
+    shadowOffset: { height: 8, width: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 24,
+    width: 88,
   },
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: 24,
-  },
-  socialButtons: {
-    gap: 12,
-  },
+  inputFocused: { borderColor: '#047857', borderWidth: 2 },
+  scrollContent: { flexGrow: 1, paddingHorizontal: 24 },
+  socialButtons: { gap: 12 },
   tagline: {
-    color: '#78716c',
-    fontSize: 14,
-    marginTop: 4,
+    color: '#57534e',
+    fontSize: 17,
+    marginTop: 6,
     textAlign: 'center',
   },
-  welcomeSection: {
-    marginBottom: 32,
-  },
+  welcomeSection: { marginBottom: 32 },
   welcomeSubtitle: {
     color: '#57534e',
-    fontSize: 16,
+    fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
     textAlign: 'center',
   },
   welcomeTitle: {
     color: '#1c1917',
-    fontSize: 28,
-    fontWeight: '700',
+    fontSize: 22,
+    fontWeight: '600',
     marginBottom: 8,
     textAlign: 'center',
   },

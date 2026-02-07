@@ -62,25 +62,24 @@ export function HabitsApp() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: '#FAF8F5' }}>
-
-        {/* Sync Status Indicators - Global position */}
-        <View className='absolute left-0 right-0 top-20 z-50 flex-row justify-center'>
-          <SyncingIndicator
-            pendingCount={syncStatus.pendingCount}
-            reduceMotion={list.reduceMotionPreference}
-            testID='global-syncing-indicator'
-            visible={syncStatus.isSyncing}
-          />
-        </View>
-
-        <View className='absolute left-0 right-0 top-32 z-50 flex-row justify-center'>
-          <SyncedToast
-            reduceMotion={list.reduceMotionPreference}
-            syncedCount={syncedCount}
-            testID='global-synced-toast'
-            visible={syncedToastVisible}
-          />
+      <View style={{ backgroundColor: '#FAF8F5', flex: 1 }}>
+        {/* OPTIMIZED: Unified sync status - single indicator position */}
+        <View className='absolute left-0 right-0 top-24 z-50 flex-row justify-center'>
+          {syncStatus.isSyncing ? (
+            <SyncingIndicator
+              pendingCount={syncStatus.pendingCount}
+              reduceMotion={list.reduceMotionPreference}
+              testID='global-syncing-indicator'
+              visible={syncStatus.isSyncing}
+            />
+          ) : (
+            <SyncedToast
+              reduceMotion={list.reduceMotionPreference}
+              syncedCount={syncedCount}
+              testID='global-synced-toast'
+              visible={syncedToastVisible}
+            />
+          )}
         </View>
 
         <HabitsList
