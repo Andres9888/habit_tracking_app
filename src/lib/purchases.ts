@@ -37,36 +37,40 @@ function isExpoGo(): boolean {
  */
 export async function initializePurchases(userId?: string): Promise<void> {
   if (isInitialized) {
-    console.log('[Purchases] Already initialized, skipping');
+    if (__DEV__) console.log('[Purchases] Already initialized, skipping');
     return;
   }
 
   // Skip on web - RevenueCat doesn't support web
   if (Platform.OS === 'web') {
-    console.log('[Purchases] Web platform not supported, skipping');
+    if (__DEV__) console.log('[Purchases] Web platform not supported, skipping');
     return;
   }
 
   // Skip in Expo Go - native stores unavailable
   if (isExpoGo()) {
-    console.log('[Purchases] Expo Go detected - native stores unavailable, skipping');
-    console.log('[Purchases] Use a development build to test purchases');
+    if (__DEV__) {
+      console.log('[Purchases] Expo Go detected - native stores unavailable, skipping');
+      console.log('[Purchases] Use a development build to test purchases');
+    }
     return;
   }
 
   // Log environment for debugging
-  console.log('[Purchases] Environment:', Constants.executionEnvironment);
+  if (__DEV__) console.log('[Purchases] Environment:', Constants.executionEnvironment);
 
   const apiKey = Platform.OS === 'ios' ? API_KEYS.ios : API_KEYS.android;
 
   // Debug: Log API key info (first/last 4 chars only for security)
-  console.log('[Purchases] === CONFIGURATION DEBUG ===');
-  console.log('[Purchases] Platform:', Platform.OS);
-  console.log('[Purchases] API Key configured:', apiKey ? `${apiKey.slice(0, 4)}...${apiKey.slice(-4)}` : 'MISSING');
-  console.log('[Purchases] User ID:', userId || 'anonymous');
+  if (__DEV__) {
+    console.log('[Purchases] === CONFIGURATION DEBUG ===');
+    console.log('[Purchases] Platform:', Platform.OS);
+    console.log('[Purchases] API Key configured:', apiKey ? `${apiKey.slice(0, 4)}...${apiKey.slice(-4)}` : 'MISSING');
+    console.log('[Purchases] User ID:', userId || 'anonymous');
+  }
 
   if (!apiKey) {
-    console.warn('[Purchases] No API key configured for platform:', Platform.OS);
+    if (__DEV__) console.warn('[Purchases] No API key configured for platform:', Platform.OS);
     return;
   }
 
@@ -82,18 +86,20 @@ export async function initializePurchases(userId?: string): Promise<void> {
     });
 
     isInitialized = true;
-    console.log('[Purchases] SDK initialized successfully');
+    if (__DEV__) console.log('[Purchases] SDK initialized successfully');
 
     // Debug: Fetch and log app info
-    try {
-      const appUserID = await Purchases.getAppUserID();
-      console.log('[Purchases] App User ID after init:', appUserID);
-    } catch (e) {
-      console.log('[Purchases] Could not get App User ID:', e);
+    if (__DEV__) {
+      try {
+        const appUserID = await Purchases.getAppUserID();
+        console.log('[Purchases] App User ID after init:', appUserID);
+      } catch (e) {
+        console.log('[Purchases] Could not get App User ID:', e);
+      }
     }
 
     if (userId) {
-      console.log('[Purchases] User identified:', userId);
+      if (__DEV__) console.log('[Purchases] User identified:', userId);
     }
   } catch (error) {
     console.error('[Purchases] Failed to initialize:', error);
@@ -109,13 +115,13 @@ export async function initializePurchases(userId?: string): Promise<void> {
 export async function identifyUser(userId: string): Promise<void> {
   if (Platform.OS === 'web') return;
   if (!isInitialized) {
-    console.warn('[Purchases] SDK not initialized, skipping identify');
+    if (__DEV__) console.warn('[Purchases] SDK not initialized, skipping identify');
     return;
   }
 
   try {
     await Purchases.logIn(userId);
-    console.log('[Purchases] User logged in:', userId);
+    if (__DEV__) console.log('[Purchases] User logged in:', userId);
   } catch (error) {
     console.error('[Purchases] Failed to identify user:', error);
   }
@@ -127,13 +133,13 @@ export async function identifyUser(userId: string): Promise<void> {
 export async function logoutPurchases(): Promise<void> {
   if (Platform.OS === 'web') return;
   if (!isInitialized) {
-    console.log('[Purchases] SDK not initialized, skipping logout');
+    if (__DEV__) console.log('[Purchases] SDK not initialized, skipping logout');
     return;
   }
 
   try {
     await Purchases.logOut();
-    console.log('[Purchases] User logged out');
+    if (__DEV__) console.log('[Purchases] User logged out');
   } catch (error) {
     console.error('[Purchases] Failed to logout:', error);
   }
