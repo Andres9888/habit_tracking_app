@@ -7,6 +7,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { spacing } from '../../../theme/spacing';
 import { ActionButtons } from './ActionButtons';
 import { CategoryBadge } from './CategoryBadge';
 import { MetadataPills } from './MetadataPills';
@@ -83,10 +84,10 @@ export function TemplateCardContent({
   );
 }
 
-const styles = StyleSheet.create({
-  content: { padding: 16, paddingLeft: 16 },
-  descriptionText: { color: '#4b5563', lineHeight: 20, marginTop: 10 },
-  footer: { marginTop: 16 },
-  header: { alignItems: 'center', flexDirection: 'row', gap: 8 },
-  nameText: { color: '#1c1917', fontWeight: '700', marginTop: 14 },
+export const styles = StyleSheet.create({
+  content: { padding: spacing.base, paddingLeft: spacing.base },
+  descriptionText: { color: '#4b5563', lineHeight: 20, marginTop: spacing.sm },
+  footer: { marginTop: spacing.base },
+  header: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
+  nameText: { color: '#1c1917', fontWeight: '700', marginTop: spacing.md },
 });

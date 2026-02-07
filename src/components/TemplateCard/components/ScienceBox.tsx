@@ -7,6 +7,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { borderRadius, spacing } from '../../../theme/spacing';
 
 interface ScienceBoxProps {
   scientificReference: string;
@@ -31,21 +32,21 @@ export function ScienceBox({ scientificReference }: ScienceBoxProps) {
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   scienceBox: {
     backgroundColor: '#f0fdf4',
     borderColor: '#bbf7d0',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 2,
-    gap: 8,
-    marginTop: 14,
-    padding: 12,
+    gap: spacing.sm,
+    marginTop: spacing.md,
+    padding: spacing.md,
   },
   scienceHeader: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 6,
-    marginBottom: 6,
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
   },
   scienceHeaderText: {
     color: '#166534',
