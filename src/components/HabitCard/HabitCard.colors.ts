@@ -1,27 +1,19 @@
 /**
  * HabitCard Color Constants
- * Implements home-screen-redesign-spec.md color palette
- * OPTIMIZED: Stronger border, proper text contrast
+ * Implements theme color palette
+ * Maps semantic card colors to canonical theme tokens
  */
 
+import { colors } from '../../theme/colors';
+
 export const REDESIGN_COLORS = {
-  accent: '#E85D3B',
-  accentMuted: '#F5DDD6',
-  // Secondary info text
-  cardBg: '#f0eeeb',
-
-  cardSurface: '#FFFFFF',
-
-  dominant: '#FAF8F5',
-
-  // High contrast green for streaks
-  metaText: '#6B7280',
-
-  neutral: '#E5E2DE',
-
-  // FIXED: Stronger border (was #C4BFB7)
-  secondaryText: '#1c1917',
-  // FIXED: Proper contrast (was #2D2A26)
-  // New colors for optimized UI
-  streakText: '#047857', // Background layer for card container
+  accent: colors.primary[500],
+  accentMuted: '#D1FAE5',
+  cardBg: colors.light.surfaceMuted,
+  cardSurface: colors.light.card,
+  dominant: colors.light.background,
+  metaText: colors.gray[500],
+  neutral: colors.gray[200],
+  secondaryText: colors.text.primary,
+  streakText: colors.primary[700],
 } as const;
