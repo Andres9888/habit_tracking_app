@@ -1,7 +1,9 @@
 /** EditHeader - X button left, Save button right (like Create modal) */
 import { View, Pressable, Text, Keyboard } from 'react-native';
 import { X } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
 import Animated, {
+  FadeInDown,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -27,19 +29,28 @@ export function EditHeader({
     transform: [{ scale: scale.value }],
   }));
 
+  const handleCancel = () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Keyboard.dismiss();
+    onCancel();
+  };
+
+  const handleSave = () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    onSave();
+  };
+
   return (
-    <View
+    <Animated.View
       className='flex-row items-center justify-between px-4 pb-2'
+      entering={FadeInDown.delay(0).springify().damping(18)}
       style={{ paddingTop }}
     >
       <Pressable
         accessibilityLabel='Cancel'
         accessibilityRole='button'
         className='h-11 w-11 items-center justify-center rounded-full active:bg-stone-100'
-        onPress={() => {
-          Keyboard.dismiss();
-          onCancel();
-        }}
+        onPress={handleCancel}
       >
         <X color='#44403c' size={24} strokeWidth={2} />
       </Pressable>
@@ -47,10 +58,10 @@ export function EditHeader({
       <AnimatedPressable
         accessibilityLabel='Save changes'
         accessibilityRole='button'
-        className={`rounded-full px-5 py-2.5 ${canSave ? 'bg-emerald-600' : 'bg-stone-300'}`}
+        className={`rounded-xl px-5 py-2.5 ${canSave ? 'bg-[#059669]' : 'bg-stone-300'}`}
         disabled={!canSave}
         style={animatedStyle}
-        onPress={onSave}
+        onPress={handleSave}
         onPressIn={() => {
           scale.value = withSpring(0.95, { damping: 15 });
         }}
@@ -59,11 +70,12 @@ export function EditHeader({
         }}
       >
         <Text
-          className={`text-[15px] font-semibold ${canSave ? 'text-white' : 'text-stone-500'}`}
+          className={`font-semibold ${canSave ? 'text-white' : 'text-stone-500'}`}
+          style={{ fontSize: 17, letterSpacing: -0.41 }}
         >
           Save
         </Text>
       </AnimatedPressable>
-    </View>
+    </Animated.View>
   );
 }
