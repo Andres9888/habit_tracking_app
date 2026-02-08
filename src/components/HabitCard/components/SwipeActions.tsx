@@ -4,10 +4,11 @@
  */
 
 import React from 'react';
-import { Pressable, Text } from 'react-native';
+import { Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { withSpring, type SharedValue } from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { actionStyles } from '../HabitCard.actionStyles';
 
 interface SwipeActionsProps {
@@ -31,7 +32,7 @@ export function SwipeActions({
     <Animated.View
       style={[actionStyles.actionsContainer, actionsAnimatedStyle]}
     >
-      <Pressable
+      <AnimatedPressable
         accessibilityLabel={`Edit ${name}`}
         accessibilityRole='button'
         className='active:opacity-80'
@@ -45,9 +46,9 @@ export function SwipeActions({
         }}
       >
         <Text style={actionStyles.actionText}>Edit</Text>
-      </Pressable>
+      </AnimatedPressable>
 
-      <Pressable
+      <AnimatedPressable
         accessibilityLabel={`Delete ${name}`}
         accessibilityRole='button'
         className='active:opacity-80'
@@ -61,7 +62,7 @@ export function SwipeActions({
         }}
       >
         <Text style={actionStyles.actionText}>Delete</Text>
-      </Pressable>
+      </AnimatedPressable>
     </Animated.View>
   );
 }

@@ -31,7 +31,7 @@ export function BuildingHistoryState({ height }: EmptyStateProps) {
       accessible
       accessibilityLabel='Strength timeline chart - Building history'
       className='items-center justify-center rounded-xl bg-stone-50 p-4'
-      entering={FadeIn.duration(400)}
+      entering={FadeIn.duration(280).springify().damping(18)}
       style={{ height }}
     >
       <Text className='text-center text-sm text-stone-500'>

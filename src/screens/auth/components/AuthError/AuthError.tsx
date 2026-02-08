@@ -37,10 +37,10 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
         accessibilityHint='Removes the error message from the screen'
         accessibilityLabel='Dismiss error'
         accessibilityRole='button'
-        className='h-8 w-8 items-center justify-center rounded-full active:bg-red-100'
+        className='h-11 w-11 items-center justify-center rounded-full active:bg-red-100'
         onPress={handleDismiss}
       >
-        <X color='#dc2626' size={18} strokeWidth={2} />
+        <X color='#dc2626' size={20} strokeWidth={2} />
       </Pressable>
     </Animated.View>
   );

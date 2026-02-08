@@ -15,7 +15,7 @@ export const HeroTitle = ({
 }: HeroTitleProps) => (
   <Animated.View
     className='mb-6 px-4'
-    entering={FadeInDown.duration(240).delay(100)}
+    entering={FadeInDown.duration(280).delay(100).springify().damping(18)}
   >
     <Text
       accessibilityRole='header'

@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import {
   Eye,
@@ -14,6 +14,7 @@ import {
   ChevronUp,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import type { VisualizationGuideProps } from './VisualizationGuide.types';
 import { VISUALIZATION_TECHNIQUES } from './visualizationTechniques';
 import { GuideHeader } from './GuideHeader';
@@ -44,7 +45,7 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
           <VisualizationCard key={technique.id} technique={technique} />
         ))}
         {VISUALIZATION_TECHNIQUES.length > 2 && (
-          <Pressable
+          <AnimatedPressable
             accessibilityLabel={
               showAllTechniques
                 ? 'Show less techniques'
@@ -64,7 +65,7 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
             ) : (
               <ChevronDown className='text-violet-600' size={16} />
             )}
-          </Pressable>
+          </AnimatedPressable>
         )}
       </View>
       <Animated.View

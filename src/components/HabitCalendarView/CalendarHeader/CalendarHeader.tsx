@@ -36,19 +36,19 @@ export function CalendarHeader({
         <Pressable
           accessibilityLabel='View previous month'
           accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full'
+          className='h-11 w-11 items-center justify-center rounded-full'
           onPress={onPrevious}
         >
-          <ChevronLeft color='#78716c' size={20} />
+          <ChevronLeft color='#57534e' size={22} />
         </Pressable>
 
         <Pressable
           accessibilityLabel='View next month'
           accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full'
+          className='h-11 w-11 items-center justify-center rounded-full'
           onPress={onNext}
         >
-          <ChevronRight color='#78716c' size={20} />
+          <ChevronRight color='#57534e' size={22} />
         </Pressable>
       </View>
     </View>

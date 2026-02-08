@@ -30,11 +30,10 @@ export function ModalHeader({ onClose }: ModalHeaderProps) {
       <Pressable
         accessibilityLabel='Close'
         accessibilityRole='button'
-        className='h-8 w-8 items-center justify-center rounded-full bg-stone-100'
-        hitSlop={12}
+        className='h-11 w-11 items-center justify-center rounded-full bg-stone-100'
         onPress={onClose}
       >
-        <X className='text-stone-500' size={24} />
+        <X className='text-stone-600' size={24} />
       </Pressable>
     </View>
   );

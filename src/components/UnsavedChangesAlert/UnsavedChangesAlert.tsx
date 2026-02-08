@@ -49,7 +49,7 @@ export function UnsavedChangesAlert({
       <View className='items-center'>
         <Animated.View
           className={`mb-4 rounded-full ${styles.iconBg} p-3`}
-          entering={FadeIn.delay(100).duration(200)}
+          entering={FadeIn.delay(100).duration(280).springify().damping(18)}
         >
           <AlertTriangle color={styles.iconColor} size={28} />
         </Animated.View>

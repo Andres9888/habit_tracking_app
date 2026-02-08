@@ -29,10 +29,11 @@ export function ExplainerHeader({ onClose }: ExplainerHeaderProps) {
       </View>
       <Pressable
         accessibilityLabel='Close'
-        className='h-8 w-8 items-center justify-center rounded-full bg-stone-100'
+        accessibilityRole='button'
+        className='h-11 w-11 items-center justify-center rounded-full bg-stone-100'
         onPress={onClose}
       >
-        <X className='text-stone-500' size={24} />
+        <X className='text-stone-600' size={24} />
       </Pressable>
     </View>
   );

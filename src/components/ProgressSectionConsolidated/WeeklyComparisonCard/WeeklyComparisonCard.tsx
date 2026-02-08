@@ -52,7 +52,7 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='summary'
       className='rounded-2xl border border-stone-200 bg-white p-4'
-      entering={FadeInDown.duration(300).delay(100)}
+      entering={FadeInDown.duration(280).delay(100).springify().damping(18)}
     >
       {/* Header */}
       <View className='mb-3 flex-row items-center justify-between'>

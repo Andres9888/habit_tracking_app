@@ -63,8 +63,8 @@ export function CollapsibleCategorySection({
 
       {isExpanded && (
         <Animated.View
-          entering={FadeIn.duration(150)}
-          exiting={FadeOut.duration(100)}
+          entering={FadeIn.duration(280).springify().damping(18)}
+          exiting={FadeOut.duration(200)}
           style={styles.content}
         >
           <TemplatesList

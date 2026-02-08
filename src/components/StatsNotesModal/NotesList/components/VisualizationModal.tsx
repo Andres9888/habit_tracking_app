@@ -4,10 +4,11 @@
  */
 
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
+import { View, Text, Modal, ScrollView } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Eye, X } from 'lucide-react-native';
+import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import { VisualizationGuide } from '../../../NotesSection/VisualizationGuide';
 
 interface VisualizationModalProps {
@@ -31,7 +32,7 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
       <View className='flex-1 bg-gradient-to-b from-violet-50 via-white to-stone-50'>
         <Animated.View
           className='flex-row items-center justify-between border-b border-stone-100 bg-white/95 px-5 pb-4'
-          entering={FadeIn.delay(100)}
+          entering={FadeIn.delay(100).duration(280).springify().damping(18)}
           style={{ paddingTop: insets.top + 8 }}
         >
           <View className='flex-row items-center gap-3'>
@@ -47,14 +48,14 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
               </Text>
             </View>
           </View>
-          <TouchableOpacity
+          <AnimatedPressable
             accessibilityLabel='Close visualization guide'
             accessibilityRole='button'
             className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
             onPress={onClose}
           >
             <X color='#57534e' size={24} />
-          </TouchableOpacity>
+          </AnimatedPressable>
         </Animated.View>
 
         <ScrollView

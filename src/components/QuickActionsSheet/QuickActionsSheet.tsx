@@ -58,7 +58,7 @@ export const QuickActionsSheet = ({
     >
       <Animated.View
         className='absolute inset-0 bg-black/50'
-        entering={FadeIn.duration(200)}
+        entering={FadeIn.duration(280).springify().damping(18)}
         exiting={FadeOut.duration(200)}
       >
         <Pressable
