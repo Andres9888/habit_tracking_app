@@ -38,8 +38,8 @@ export function EmojiGrid({
         {suggestedEmojis.slice(0, 5).map((emoji) => (
           <Animated.View
             key={emoji}
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(150)}
+            entering={FadeIn.duration(280).springify().damping(18)}
+            exiting={FadeOut.duration(200)}
             layout={layoutTransition}
           >
             <EmojiChip
@@ -60,8 +60,8 @@ export function EmojiGrid({
         {suggestedEmojis.slice(5, 9).map((emoji) => (
           <Animated.View
             key={emoji}
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(150)}
+            entering={FadeIn.duration(280).springify().damping(18)}
+            exiting={FadeOut.duration(200)}
             layout={layoutTransition}
           >
             <EmojiChip

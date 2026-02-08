@@ -36,7 +36,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   };
 
   return (
-    <Animated.View entering={FadeIn.duration(250)}>
+    <Animated.View entering={FadeIn.duration(280).springify().damping(18)}>
       <AnimatedPressable
         accessibilityLabel='Add your first note'
         accessibilityRole='button'

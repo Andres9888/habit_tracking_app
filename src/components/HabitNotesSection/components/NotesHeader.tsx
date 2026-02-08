@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { StickyNote, Plus } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../../../theme/colors';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
 
 interface NotesHeaderProps {
   noteCount: number;
@@ -40,7 +41,7 @@ export function NotesHeader({ noteCount, onAddNote }: NotesHeaderProps) {
           </Text>
         </View>
       </View>
-      <Pressable
+      <AnimatedPressable
         accessibilityLabel='Add note'
         accessibilityRole='button'
         className='rounded-full bg-amber-500 px-4 py-2 active:bg-amber-600'
@@ -50,7 +51,7 @@ export function NotesHeader({ noteCount, onAddNote }: NotesHeaderProps) {
           <Plus color={colors.text.inverse} size={16} strokeWidth={2} />
           <Text className='text-xs font-semibold text-white'>Add</Text>
         </View>
-      </Pressable>
+      </AnimatedPressable>
     </View>
   );
 }

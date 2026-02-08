@@ -3,10 +3,11 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { Brain, ChevronDown, ChevronUp } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { TechniqueApproach } from './TechniqueApproach';
 import type { VisualizationCardProps } from './VisualizationGuide.types';
 
@@ -23,7 +24,7 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
       className='overflow-hidden rounded-2xl border border-stone-100 bg-white/90'
       entering={FadeInDown.delay(100).springify()}
     >
-      <Pressable
+      <AnimatedPressable
         accessibilityLabel={`${expanded ? 'Collapse' : 'Expand'} ${technique.good.title} technique`}
         accessibilityRole='button'
         className='flex-row items-center gap-3 p-4 active:bg-stone-50'
@@ -45,7 +46,7 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
         ) : (
           <ChevronDown className='text-stone-400' size={20} />
         )}
-      </Pressable>
+      </AnimatedPressable>
       {expanded && (
         <Animated.View
           className='border-t border-stone-100 bg-stone-50/50 px-4 pb-4'

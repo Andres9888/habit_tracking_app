@@ -39,7 +39,7 @@ export function AffirmationItemActions({
           }
           accessibilityRole='button'
           className={clsx(
-            'h-8 w-8 items-center justify-center rounded-full',
+            'h-11 w-11 items-center justify-center rounded-full',
             hasSchedule ? 'bg-emerald-100' : 'bg-white'
           )}
           style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
@@ -49,35 +49,35 @@ export function AffirmationItemActions({
           }}
         >
           {hasSchedule ? (
-            <Bell className='text-emerald-600' size={14} />
+            <Bell className='text-emerald-600' size={18} />
           ) : (
-            <BellOff className='text-stone-400' size={14} />
+            <BellOff className='text-stone-500' size={18} />
           )}
         </Pressable>
       )}
       <Pressable
         accessibilityLabel='Edit affirmation'
         accessibilityRole='button'
-        className='h-8 w-8 items-center justify-center rounded-full bg-white'
+        className='h-11 w-11 items-center justify-center rounded-full bg-white'
         style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           onEdit();
         }}
       >
-        <Edit2 className='text-stone-400' size={14} />
+        <Edit2 className='text-stone-500' size={18} />
       </Pressable>
       <Pressable
         accessibilityLabel='Delete affirmation'
         accessibilityRole='button'
-        className='h-8 w-8 items-center justify-center rounded-full bg-white'
+        className='h-11 w-11 items-center justify-center rounded-full bg-white'
         style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           onDelete();
         }}
       >
-        <Trash2 className='text-rose-400' size={14} />
+        <Trash2 className='text-rose-500' size={18} />
       </Pressable>
     </View>
   );

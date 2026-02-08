@@ -4,9 +4,10 @@
  */
 
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { Plus } from 'lucide-react-native';
 import { colors } from '../../../../theme/colors';
+import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 
 interface NotesHeaderProps {
   onAddNote: () => void;
@@ -15,15 +16,14 @@ interface NotesHeaderProps {
 export const NotesHeader: React.FC<NotesHeaderProps> = ({ onAddNote }) => (
   <View className='flex-row items-center justify-between'>
     <Text className='text-lg font-semibold text-stone-900'>Notes</Text>
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityLabel='Add new note'
       accessibilityRole='button'
-      activeOpacity={0.7}
       className='h-9 w-9 items-center justify-center rounded-full bg-stone-900'
       hitSlop={{ bottom: 6, left: 6, right: 6, top: 6 }}
       onPress={onAddNote}
     >
       <Plus color={colors.text.inverse} size={18} strokeWidth={2.25} />
-    </TouchableOpacity>
+    </AnimatedPressable>
   </View>
 );

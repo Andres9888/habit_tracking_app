@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, ScrollView, Text, View } from 'react-native';
 import { X } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
+import { AnimatedPressable } from '../ui/AnimatedPressable';
 import StatsOverview from './StatsOverview';
 import NotesList from './NotesList';
 
@@ -27,14 +28,13 @@ export default function StatsNotesModal({
       visible={visible}
       onRequestClose={onClose}
     >
-      <TouchableOpacity
-        activeOpacity={1}
+      <AnimatedPressable
         className='flex-1 bg-black/50'
         onPress={onClose}
       >
         <View className='flex-1 p-5' style={{ paddingTop: insets.top + 8 }}>
-          <TouchableOpacity
-            activeOpacity={1}
+          <AnimatedPressable
+            disableAnimation
             className='android:elevation-5 flex-1 rounded-[20px] bg-white shadow-lg'
             onPress={(e) => e.stopPropagation()}
           >
@@ -43,19 +43,19 @@ export default function StatsNotesModal({
               <Text className='text-2xl font-bold tracking-tight text-stone-900'>
                 Stats & Notes
               </Text>
-              <TouchableOpacity
+              <AnimatedPressable
                 accessibilityLabel='Close stats and notes'
                 accessibilityRole='button'
                 className='h-11 w-11 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
                 onPress={onClose}
               >
                 <X color={colors.gray[500]} size={24} strokeWidth={2} />
-              </TouchableOpacity>
+              </AnimatedPressable>
             </View>
 
             {/* Tabs */}
             <View className='flex-row border-b border-stone-200'>
-              <TouchableOpacity
+              <AnimatedPressable
                 accessibilityLabel='Stats tab'
                 accessibilityRole='tab'
                 accessibilityState={{ selected: activeTab === 'stats' }}
@@ -71,8 +71,8 @@ export default function StatsNotesModal({
                 >
                   Stats
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </AnimatedPressable>
+              <AnimatedPressable
                 accessibilityLabel='Notes tab'
                 accessibilityRole='tab'
                 accessibilityState={{ selected: activeTab === 'notes' }}
@@ -88,16 +88,16 @@ export default function StatsNotesModal({
                 >
                   Notes
                 </Text>
-              </TouchableOpacity>
+              </AnimatedPressable>
             </View>
 
             {/* Content */}
             <ScrollView className='flex-1 p-5'>
               {activeTab === 'stats' ? <StatsOverview /> : <NotesList />}
             </ScrollView>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </View>
-      </TouchableOpacity>
+      </AnimatedPressable>
     </Modal>
   );
 }

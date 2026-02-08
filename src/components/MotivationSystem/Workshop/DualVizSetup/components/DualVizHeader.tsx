@@ -27,11 +27,11 @@ export function DualVizHeader({ hasViz, onHelpPress }: DualVizHeaderProps) {
       <View className='flex-row items-center gap-2'>
         <Pressable
           accessibilityLabel='Learn about dual visualization'
-          className='h-6 w-6 items-center justify-center rounded-full'
-          hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
+          accessibilityRole='button'
+          className='h-11 w-11 items-center justify-center rounded-full'
           onPress={onHelpPress}
         >
-          <HelpCircle className='text-stone-400' size={16} />
+          <HelpCircle className='text-stone-500' size={18} />
         </Pressable>
         {hasViz ? (
           <Pencil className='text-stone-400' size={14} />

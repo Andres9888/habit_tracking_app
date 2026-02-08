@@ -18,7 +18,7 @@ export function TemplatesLoadingState() {
           Science-backed habits to get you started
         </Text>
       </View>
-      <Animated.View className='mx-5 mb-4' entering={FadeIn.duration(300)}>
+      <Animated.View className='mx-5 mb-4' entering={FadeIn.duration(280).springify().damping(18)}>
         <ShimmerBox height={48} style={{ borderRadius: 24 }} width='100%' />
       </Animated.View>
       {[0, 1, 2, 3].map((i) => (

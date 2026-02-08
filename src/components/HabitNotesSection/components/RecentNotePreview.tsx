@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { format } from 'date-fns';
 import { Edit3 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 interface RecentNotePreviewProps {
@@ -17,7 +18,7 @@ export function RecentNotePreview({ note, onEdit }: RecentNotePreviewProps) {
   };
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel={`Most recent note: ${note.body.slice(0, 50)}`}
       accessibilityRole='button'
       className='rounded-xl border border-stone-100 bg-stone-50/50 p-4 active:bg-stone-100'
@@ -32,6 +33,6 @@ export function RecentNotePreview({ note, onEdit }: RecentNotePreviewProps) {
       <Text className='text-sm leading-5 text-stone-700' numberOfLines={3}>
         {note.body}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

@@ -1,13 +1,18 @@
 /**
  * EmptyVizState - Shown when no visualization data is available
+ * Standardized: FadeInUp animation, proper typography
  */
 
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
 import { clsx } from 'clsx';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import type { VizType } from './types';
+
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 interface EmptyVizStateProps {
   type: VizType;
@@ -19,10 +24,10 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
 
   if (compact) {
     return (
-      <View className='items-center justify-center py-4'>
+      <Animated.View className='items-center justify-center py-4' entering={anim(0)}>
         <Text
           className={clsx(
-            'text-center text-sm italic',
+            'text-center text-[13px] italic',
             isSuccess ? 'text-emerald-500' : 'text-rose-500'
           )}
         >
@@ -30,12 +35,12 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
             ? 'Set up success visualization in the Motivation tab'
             : 'Set up failure visualization in the Motivation tab'}
         </Text>
-      </View>
+      </Animated.View>
     );
   }
 
   return (
-    <View className='items-center justify-center py-6'>
+    <Animated.View className='items-center justify-center py-6' entering={anim(0)}>
       <View
         className={clsx(
           'mb-3 h-12 w-12 items-center justify-center rounded-full',
@@ -43,17 +48,17 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         )}
       >
         {isSuccess ? (
-          <Sparkles className='text-emerald-500' size={24} />
+          <Sparkles color='#10b981' size={24} strokeWidth={1.5} />
         ) : (
-          <AlertTriangle className='text-rose-500' size={24} />
+          <AlertTriangle color='#f43f5e' size={24} strokeWidth={1.5} />
         )}
       </View>
-      <Text className='mb-1 text-center text-sm font-medium text-stone-600'>
-        No visualization set up yet
+      <Text className='mb-1 text-center text-[17px] font-semibold text-stone-700'>
+        No Visualization Set Up Yet
       </Text>
-      <Text className='text-center text-xs text-stone-500'>
+      <Text className='text-center text-[13px] text-stone-500'>
         Add it in the Motivation tab to see it here
       </Text>
-    </View>
+    </Animated.View>
   );
 }

@@ -35,7 +35,7 @@ export function StrengthCard({
       accessibilityLabel={`${timeLabel}: ${Math.round(strength)}% strength, ${labelText}`}
       accessibilityRole='none'
       className={`flex-1 items-center rounded-xl p-3 ${containerClass}`}
-      entering={FadeIn.delay(animationDelay).duration(400)}
+      entering={FadeIn.delay(animationDelay).duration(280).springify().damping(18)}
     >
       <ProgressRing
         ringColor={colors.ring}

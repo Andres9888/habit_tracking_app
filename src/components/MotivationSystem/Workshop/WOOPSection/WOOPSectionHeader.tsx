@@ -46,14 +46,13 @@ export function WOOPSectionHeader({
         <AnimatedPressable
           accessibilityLabel='Learn about WOOP'
           accessibilityRole='button'
-          className='h-6 w-6 items-center justify-center rounded-full'
-          hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
+          className='h-11 w-11 items-center justify-center rounded-full'
           style={animatedStyle}
           onPress={onHelpPress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >
-          <HelpCircle className='text-stone-400' size={16} />
+          <HelpCircle className='text-stone-500' size={18} />
         </AnimatedPressable>
         {hasWoop ? (
           <Pencil className='text-stone-400' size={14} />

@@ -60,10 +60,10 @@ export function MotivationCheck({
           <Pressable
             accessibilityLabel='Learn about motivation check'
             accessibilityRole='button'
-            className='h-8 w-8 items-center justify-center rounded-lg'
+            className='h-11 w-11 items-center justify-center rounded-lg'
             onPress={onExplainerPress}
           >
-            <HelpCircle className='text-violet-400' size={18} />
+            <HelpCircle className='text-violet-500' size={20} />
           </Pressable>
         )}
       </View>

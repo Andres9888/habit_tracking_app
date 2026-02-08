@@ -43,13 +43,13 @@ export function UnlockDurationPicker({
             <View className='flex-row items-center gap-3'>
               <View
                 className={clsx(
-                  'h-8 w-8 items-center justify-center rounded-full',
+                  'h-10 w-10 items-center justify-center rounded-full',
                   isSelected ? 'bg-violet-500' : 'bg-stone-100'
                 )}
               >
                 <Clock
-                  className={isSelected ? 'text-white' : 'text-stone-400'}
-                  size={16}
+                  className={isSelected ? 'text-white' : 'text-stone-500'}
+                  size={18}
                 />
               </View>
               <View>

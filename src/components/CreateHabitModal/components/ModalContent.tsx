@@ -14,7 +14,7 @@ import { HABIT_COLORS } from '../constants';
 import type { ModalContentProps } from './ModalContent.types';
 
 const STAGGER = 60;
-const DURATION = 240;
+const DURATION = 280;
 
 export function ModalContent({
   isEditMode,
@@ -46,11 +46,11 @@ export function ModalContent({
       showsVerticalScrollIndicator={false}
       onScroll={onScroll}
     >
-      <Animated.View entering={FadeInDown.duration(DURATION).delay(100)}>
+      <Animated.View entering={FadeInDown.duration(DURATION).delay(100).springify().damping(18)}>
         <HeroTitle />
       </Animated.View>
 
-      <Animated.View entering={FadeInUp.duration(DURATION).delay(160)}>
+      <Animated.View entering={FadeInUp.duration(DURATION).delay(160).springify().damping(18)}>
         <HabitNameField
           autoFocus={visible && !isEditMode}
           error={habitNameError}
@@ -62,7 +62,7 @@ export function ModalContent({
 
       <Animated.View
         className='mb-4 mt-8'
-        entering={FadeInUp.duration(DURATION).delay(220)}
+        entering={FadeInUp.duration(DURATION).delay(220).springify().damping(18)}
       >
         <Text
           className='text-center text-xs font-semibold text-stone-500'
@@ -73,7 +73,7 @@ export function ModalContent({
       </Animated.View>
 
       <Animated.View
-        entering={FadeInUp.duration(DURATION).delay(220 + STAGGER)}
+        entering={FadeInUp.duration(DURATION).delay(220 + STAGGER).springify().damping(18)}
       >
         <EmojiPicker
           habitName={habitName}
@@ -83,7 +83,7 @@ export function ModalContent({
       </Animated.View>
 
       <Animated.View
-        entering={FadeInUp.duration(DURATION).delay(220 + STAGGER * 2)}
+        entering={FadeInUp.duration(DURATION).delay(220 + STAGGER * 2).springify().damping(18)}
       >
         <ColorPickerSection
           hideLabel
@@ -95,7 +95,7 @@ export function ModalContent({
       </Animated.View>
 
       <Animated.View
-        entering={FadeInUp.duration(DURATION).delay(220 + STAGGER * 3)}
+        entering={FadeInUp.duration(DURATION).delay(220 + STAGGER * 3).springify().damping(18)}
       >
         <EnhancedReminderSelector
           showNextReminder

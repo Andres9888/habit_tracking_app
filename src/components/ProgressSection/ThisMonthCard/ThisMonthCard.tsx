@@ -72,7 +72,7 @@ export function ThisMonthCard({
         {/* Bar Chart */}
         <Animated.View
           className='mb-4 flex-row items-end justify-between px-1'
-          entering={FadeIn.delay(100)}
+          entering={FadeIn.delay(100).duration(280).springify().damping(18)}
         >
           {dayStats.map((day, index) => (
             <DayBar
