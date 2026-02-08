@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated, {
   FadeInDown,
   useAnimatedStyle,
@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
 import { ALL_HABITS, BASE_CARD_CLASS } from '../HabitsEmptyState.constants';
 import { getPeriodLabel } from '../HabitsEmptyState.utils';
@@ -86,7 +87,7 @@ export function QuickWinCard({
           />
         ))}
       </View>
-      <Pressable
+      <AnimatedPressable
         accessibilityLabel='Show different habit suggestions'
         className='mt-3 self-center rounded-full px-4 py-1.5 active:bg-amber-100/60'
         onPress={shuffleSuggestions}
@@ -97,7 +98,7 @@ export function QuickWinCard({
         >
           Show me different ideas ↻
         </Animated.Text>
-      </Pressable>
+      </AnimatedPressable>
     </Animated.View>
   );
 }

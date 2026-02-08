@@ -1,8 +1,10 @@
 import { Check } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
+
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface SortOptionRowProps {
   /**
@@ -36,8 +38,8 @@ interface SortOptionRowProps {
  *
  * Design specs:
  * - Icon container: 40x40, rounded-xl, gradient background
- * - Title: 15px, font-medium
- * - Description: 12px, text-stone-500
+ * - Title: 17px, font-medium
+ * - Description: 13px, text-stone-500
  * - Selected state: bg-amber-50, border-amber-100, checkmark icon
  */
 export function SortOptionRow({
@@ -54,7 +56,7 @@ export function SortOptionRow({
   };
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel={`${title}. ${description}`}
       accessibilityRole='radio'
       accessibilityState={{ checked: selected }}
@@ -75,7 +77,7 @@ export function SortOptionRow({
 
       {/* Text content */}
       <View className='flex-1'>
-        <Text className='text-[15px] font-medium text-stone-800'>{title}</Text>
+        <Text className='text-[17px] font-medium text-stone-800'>{title}</Text>
         <Text className='text-[13px] font-normal text-stone-500'>
           {description}
         </Text>
@@ -87,7 +89,7 @@ export function SortOptionRow({
           <Check color='#ffffff' size={14} strokeWidth={2.5} />
         </View>
       )}
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 

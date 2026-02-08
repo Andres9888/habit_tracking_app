@@ -37,7 +37,11 @@ export function VoiceNotesList({
           Your Recordings ({voiceNotes.length})
         </Text>
         {hasMore && (
-          <Pressable onPress={onViewAllNotes}>
+          <Pressable
+            accessibilityLabel='View all recordings'
+            accessibilityRole='button'
+            onPress={onViewAllNotes}
+          >
             <Text className='text-xs font-medium text-teal-600'>View All</Text>
           </Pressable>
         )}

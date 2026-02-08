@@ -4,7 +4,8 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { Animated, Easing, Pressable, Text, View } from 'react-native';
+import { Animated, Easing, Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface LockedHabitCardProps {
   onUpgradePress: () => void;
@@ -46,7 +47,7 @@ export function LockedHabitCard({
       style={{ opacity, transform: [{ scale }] }}
     >
       <View className='items-center gap-2'>
-        <Text className='text-[24px]'>✨</Text>
+        <Text className='text-[22px]'>✨</Text>
         <View className='gap-1'>
           <Text className='text-center text-[17px] font-semibold text-stone-800'>
             Ready to unlock more?
@@ -57,17 +58,16 @@ export function LockedHabitCard({
           </Text>
         </View>
       </View>
-      <Pressable
+      <AnimatedPressable
         accessibilityLabel='Upgrade to unlock unlimited habits'
         accessibilityRole='button'
         className='items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 shadow-[0px_8px_16px_rgba(109,40,217,0.2)]'
-        style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
         onPress={onUpgradePress}
       >
-        <Text className='text-[15px] font-semibold text-white'>
+        <Text className='text-[17px] font-semibold text-white'>
           Start Free Trial
         </Text>
-      </Pressable>
+      </AnimatedPressable>
     </Animated.View>
   );
 }

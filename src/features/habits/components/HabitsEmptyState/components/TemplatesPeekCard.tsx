@@ -42,7 +42,7 @@ export function TemplatesPeekCard({ onPress }: TemplatesPeekCardProps) {
           elevation: 4,
           shadowColor: '#10b981',
           shadowOffset: { height: 6, width: 0 },
-          shadowOpacity: 0.15,
+          shadowOpacity: 0.08,
           shadowRadius: 16,
         },
       ]}

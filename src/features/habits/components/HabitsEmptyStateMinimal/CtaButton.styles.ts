@@ -20,14 +20,14 @@ export function getCtaButtonStyle(isDisabled: boolean): ViewStyle {
     // Shadow for depth
     shadowColor: '#047857',
     shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
     width: '100%',
   };
 }
 
 export const ctaTextStyle = {
   color: '#ffffff',
-  fontSize: 15,
+  fontSize: 17,
   fontWeight: '600' as const,
 };

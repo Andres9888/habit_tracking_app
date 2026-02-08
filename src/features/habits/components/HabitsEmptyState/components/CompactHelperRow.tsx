@@ -1,6 +1,7 @@
-import { Pressable, Text } from 'react-native';
+import { Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
 import type { CompactHelperRowProps } from '../HabitsEmptyState.types';
 
@@ -16,7 +17,7 @@ export function CompactHelperRow({
       entering={FadeInDown.delay(400).springify().damping(18)}
     >
       {onNeedHelpQuiz && (
-        <Pressable
+        <AnimatedPressable
           accessibilityLabel='Open habit quiz'
           className='rounded-lg px-3 py-1.5 active:bg-stone-200/60'
           onPress={() => {
@@ -27,10 +28,10 @@ export function CompactHelperRow({
           <Text className='text-[13px] font-semibold text-stone-600'>
             Need help? Take quiz →
           </Text>
-        </Pressable>
+        </AnimatedPressable>
       )}
       {onScheduleReminder && (
-        <Pressable
+        <AnimatedPressable
           accessibilityHint='Schedules a reminder notification to revisit habit setup later'
           accessibilityLabel='Remind me later'
           className='rounded-lg px-3 py-1.5 active:bg-stone-200/60'
@@ -42,7 +43,7 @@ export function CompactHelperRow({
           <Text className='text-[13px] font-medium text-stone-500'>
             Remind me later
           </Text>
-        </Pressable>
+        </AnimatedPressable>
       )}
     </Animated.View>
   );

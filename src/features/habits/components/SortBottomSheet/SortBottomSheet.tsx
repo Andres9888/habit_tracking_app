@@ -1,8 +1,9 @@
-import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { Modal, ScrollView, Text, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import type { HabitSortMode } from '../../types';
 import { SCREEN_HEIGHT, SORT_OPTIONS } from './constants';
 import { QuickPickChips } from './QuickPickChips';
@@ -37,13 +38,13 @@ export function SortBottomSheet({
       onRequestClose={onClose}
     >
       <View className='flex-1 justify-end'>
-        <Pressable
+        <AnimatedPressable
           accessible={false}
           className='absolute inset-0'
           onPress={handleDismiss}
         >
           <Animated.View className='flex-1 bg-black' style={backdropStyle} />
-        </Pressable>
+        </AnimatedPressable>
 
         <GestureDetector gesture={panGesture}>
           <Animated.View
@@ -69,7 +70,7 @@ export function SortBottomSheet({
               <Text className='text-[17px] font-bold text-stone-900'>
                 Sort Habits
               </Text>
-              <Pressable
+              <AnimatedPressable
                 accessibilityHint='Close sort options'
                 accessibilityLabel='Done'
                 accessibilityRole='button'
@@ -79,7 +80,7 @@ export function SortBottomSheet({
                 <Text className='text-[13px] font-semibold text-amber-600'>
                   Done
                 </Text>
-              </Pressable>
+              </AnimatedPressable>
             </View>
 
             <QuickPickChips sortMode={sortMode} onSelect={handleSelectSort} />

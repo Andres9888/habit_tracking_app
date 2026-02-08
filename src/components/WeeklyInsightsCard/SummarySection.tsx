@@ -28,6 +28,9 @@ export function SummarySection({
 
   return (
     <TouchableOpacity
+      accessibilityLabel={`This week's summary. ${isExpanded ? 'Collapse' : 'Expand'} to see details.`}
+      accessibilityRole='button'
+      accessibilityState={{ expanded: isExpanded }}
       activeOpacity={0.7}
       style={styles.section}
       onPress={onToggle}
