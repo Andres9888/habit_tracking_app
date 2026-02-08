@@ -19,7 +19,7 @@ export function useMonetizationAnimations({
   hasReachedHabitLimit,
   reduceMotion,
 }: UseMonetizationAnimationsOptions) {
-  const progress = useRef(new Animated.Value(0)).current;
+  const progressScaleX = useRef(new Animated.Value(0)).current;
   const ctaPulse = useRef(new Animated.Value(1)).current;
   const shimmer = useRef(new Animated.Value(0.4)).current;
   const [trackWidth, setTrackWidth] = useState(0);
@@ -32,20 +32,20 @@ export function useMonetizationAnimations({
 
   useEffect(() => {
     if (reduceMotion) {
-      progress.setValue(trackWidth * usageRatio);
+      progressScaleX.setValue(usageRatio);
       return;
     }
-    const handle = Animated.timing(progress, {
+    const handle = Animated.timing(progressScaleX, {
       duration: 420,
       easing: Easing.out(Easing.cubic),
-      toValue: trackWidth * usageRatio,
-      useNativeDriver: false,
+      toValue: usageRatio,
+      useNativeDriver: true,
     });
     handle.start();
     return () => {
       handle.stop();
     };
-  }, [progress, trackWidth, usageRatio, reduceMotion]);
+  }, [progressScaleX, usageRatio, reduceMotion]);
 
   useEffect(() => {
     if (reduceMotion || !hasReachedHabitLimit) {
@@ -105,5 +105,5 @@ export function useMonetizationAnimations({
     []
   );
 
-  return { ctaPulse, handleTrackLayout, progress, shimmer, trackWidth };
+  return { ctaPulse, handleTrackLayout, progressScaleX, shimmer, trackWidth };
 }

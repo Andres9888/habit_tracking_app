@@ -2,11 +2,10 @@ import { useRef, useEffect } from 'react';
 import { Animated, Easing } from 'react-native';
 
 interface AnimationValues {
-  progressAnim: Animated.Value;
+  progressScaleX: Animated.AnimatedInterpolation<number>;
   celebrationScale: Animated.Value;
   glowOpacity: Animated.Value;
   flameScale: Animated.Value;
-  progressWidth: Animated.AnimatedInterpolation<string | number>;
 }
 
 export function useAnimations(
@@ -25,19 +24,20 @@ export function useAnimations(
       return;
     }
 
-    Animated.spring(progressAnim, {
+    const anim = Animated.spring(progressAnim, {
       friction: 8,
       tension: 40,
       toValue: percentage,
-      useNativeDriver: false,
-    }).start();
+      useNativeDriver: true,
+    });
+    anim.start();
+    return () => anim.stop();
   }, [percentage, reduceMotion, progressAnim]);
 
   // Celebration animation at 100%
   useEffect(() => {
     if (percentage === 100 && !reduceMotion) {
-      // Pulse celebration
-      Animated.loop(
+      const celebrationLoop = Animated.loop(
         Animated.sequence([
           Animated.timing(celebrationScale, {
             duration: 1200,
@@ -52,10 +52,9 @@ export function useAnimations(
             useNativeDriver: true,
           }),
         ])
-      ).start();
+      );
 
-      // Glow animation
-      Animated.loop(
+      const glowLoop = Animated.loop(
         Animated.sequence([
           Animated.timing(glowOpacity, {
             duration: 1500,
@@ -70,10 +69,9 @@ export function useAnimations(
             useNativeDriver: true,
           }),
         ])
-      ).start();
+      );
 
-      // Flame bounce
-      Animated.loop(
+      const flameLoop = Animated.loop(
         Animated.sequence([
           Animated.timing(flameScale, {
             duration: 600,
@@ -88,7 +86,17 @@ export function useAnimations(
             useNativeDriver: true,
           }),
         ])
-      ).start();
+      );
+
+      celebrationLoop.start();
+      glowLoop.start();
+      flameLoop.start();
+
+      return () => {
+        celebrationLoop.stop();
+        glowLoop.stop();
+        flameLoop.stop();
+      };
     } else {
       celebrationScale.setValue(1);
       glowOpacity.setValue(0);
@@ -96,16 +104,17 @@ export function useAnimations(
     }
   }, [percentage, reduceMotion, celebrationScale, glowOpacity, flameScale]);
 
-  const progressWidth = progressAnim.interpolate({
+  // Map 0-100 percentage to 0-1 scaleX (native driver compatible)
+  const progressScaleX = progressAnim.interpolate({
     inputRange: [0, 100],
-    outputRange: ['0%', '100%'],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
   });
 
   return {
     celebrationScale,
     flameScale,
     glowOpacity,
-    progressAnim,
-    progressWidth,
+    progressScaleX,
   };
 }

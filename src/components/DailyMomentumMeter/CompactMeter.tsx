@@ -5,13 +5,13 @@ import type { ProgressColors } from './types';
 interface CompactMeterProps {
   percentage: number;
   colors: ProgressColors;
-  progressWidth: Animated.AnimatedInterpolation<string | number>;
+  progressScaleX: Animated.AnimatedInterpolation<number>;
 }
 
 export function CompactMeter({
   percentage,
   colors,
-  progressWidth,
+  progressScaleX,
 }: CompactMeterProps) {
   return (
     <View className='flex-row items-center gap-2'>
@@ -23,7 +23,9 @@ export function CompactMeter({
           className='h-full rounded-full'
           style={{
             backgroundColor: colors.fill,
-            width: progressWidth,
+            transform: [{ scaleX: progressScaleX }],
+            transformOrigin: 'left center',
+            width: '100%',
           }}
         />
       </View>

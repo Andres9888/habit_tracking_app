@@ -16,7 +16,7 @@ export function MonetizationHero({
   onUpgradePress,
   reduceMotion = false,
 }: MonetizationHeroProps) {
-  const { progress, ctaPulse, shimmer, trackWidth, handleTrackLayout } =
+  const { progressScaleX, ctaPulse, shimmer, trackWidth, handleTrackLayout } =
     useMonetizationAnimations({
       freeHabitLimit,
       habitSlotsUsed,
@@ -92,7 +92,11 @@ export function MonetizationHero({
         >
           <Animated.View
             className='h-2 rounded-full bg-[#fbbf24]'
-            style={{ maxWidth: trackWidth, width: progress }}
+            style={{
+              transform: [{ scaleX: progressScaleX }],
+              transformOrigin: 'left center',
+              width: '100%',
+            }}
           />
         </View>
         <Text className='text-[13px] font-medium text-[#fbbf24]'>

@@ -11,7 +11,7 @@ interface StandardMeterProps {
   celebrationScale: Animated.Value;
   glowOpacity: Animated.Value;
   flameScale: Animated.Value;
-  progressWidth: Animated.AnimatedInterpolation<string | number>;
+  progressScaleX: Animated.AnimatedInterpolation<number>;
 }
 
 export function StandardMeter({
@@ -23,7 +23,7 @@ export function StandardMeter({
   celebrationScale,
   glowOpacity,
   flameScale,
-  progressWidth,
+  progressScaleX,
 }: StandardMeterProps) {
   return (
     <Animated.View
@@ -83,7 +83,12 @@ export function StandardMeter({
           >
             <Animated.View
               className='h-full rounded-full'
-              style={{ backgroundColor: colors.fill, width: progressWidth }}
+              style={{
+                backgroundColor: colors.fill,
+                transform: [{ scaleX: progressScaleX }],
+                transformOrigin: 'left center',
+                width: '100%',
+              }}
             />
           </View>
         </View>

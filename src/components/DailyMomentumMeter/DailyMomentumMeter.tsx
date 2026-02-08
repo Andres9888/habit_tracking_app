@@ -21,7 +21,7 @@ export function DailyMomentumMeter({
   const percentage =
     totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
-  const { celebrationScale, flameScale, glowOpacity, progressWidth } =
+  const { celebrationScale, flameScale, glowOpacity, progressScaleX } =
     useAnimations(percentage, reduceMotion);
 
   const colors = getProgressColors(percentage);
@@ -32,7 +32,7 @@ export function DailyMomentumMeter({
       <CompactMeter
         colors={colors}
         percentage={percentage}
-        progressWidth={progressWidth}
+        progressScaleX={progressScaleX}
       />
     );
   }
@@ -46,7 +46,7 @@ export function DailyMomentumMeter({
       glowOpacity={glowOpacity}
       message={message}
       percentage={percentage}
-      progressWidth={progressWidth}
+      progressScaleX={progressScaleX}
       totalHabits={totalHabits}
     />
   );
