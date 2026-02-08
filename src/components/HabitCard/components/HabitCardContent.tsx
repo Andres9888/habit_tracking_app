@@ -29,9 +29,9 @@ interface HabitCardContentProps {
   completed: boolean;
   atRisk: boolean;
   theme: AppTheme;
-  entranceContentStyle: AnimatedStyle<object>;
-  checkmarkAnimatedStyle: AnimatedStyle<object>;
-  rippleAnimatedStyle: AnimatedStyle<object>;
+  entranceContentStyle: AnimatedStyle;
+  checkmarkAnimatedStyle: AnimatedStyle;
+  rippleAnimatedStyle: AnimatedStyle;
   /** Type of completion icon to display - T014 */
   completionIcon?: CompletionIconType;
   /** Whether there are pending offline operations - T014 */

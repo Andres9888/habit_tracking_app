@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AccessibilityInfo, InteractionManager } from 'react-native';
-import type { ColorPickerValue } from 'reanimated-color-picker';
-
 import {
   getLastCustomColor,
   saveLastCustomColor,
@@ -58,14 +56,14 @@ export function useColorPickerSheet({
   const throttledSetColor = useThrottle(updateColor, 100);
 
   const handleColorChange = useCallback(
-    (color: ColorPickerValue) => {
+    (color: { hex: string }) => {
       throttledSetColor(color.hex);
     },
     [throttledSetColor]
   );
 
   const handleColorComplete = useCallback(
-    (color: ColorPickerValue) => {
+    (color: { hex: string }) => {
       setCurrentColor(color.hex);
       triggerLightImpact();
       const colorName = getColorName(color.hex);

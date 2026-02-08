@@ -10,6 +10,17 @@
  */
 
 export * from './Workshop';
-export * from './Activation';
+export {
+  ActivationModal,
+  type ActivationModalProps,
+  type ActivationHabitData,
+  MotivationCheck,
+  shouldShowFailureViz,
+  type MotivationCheckProps,
+  type MotivationLevel,
+  ContextAwareViz,
+  type ContextAwareVizProps,
+  type VisualizationData as ActivationVisualizationData,
+} from './Activation';
 export * from './Rescue';
 export * from './Reward';

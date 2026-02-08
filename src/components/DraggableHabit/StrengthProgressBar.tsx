@@ -11,7 +11,7 @@ interface StrengthProgressBarProps {
     opacity: number;
     transform: { scale: number; rotate: string }[];
   }>;
-  progressAnimatedStyle: AnimatedStyle<{ width: string }>;
+  progressAnimatedStyle: AnimatedStyle;
 }
 
 export function StrengthProgressBar({

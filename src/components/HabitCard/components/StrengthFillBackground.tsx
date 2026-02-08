@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from '../HabitCard.styles';
 
 interface StrengthFillBackgroundProps {
-  strengthFillStyle: AnimatedStyle<{ width: string }>;
+  strengthFillStyle: AnimatedStyle;
   strengthColor: string;
   borderRadius: number;
 }

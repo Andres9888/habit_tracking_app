@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-import type { AnimatedStyleProp } from 'react-native-reanimated';
-import type { ViewStyle } from 'react-native';
+import type { AnimatedStyle } from 'react-native-reanimated';
 
 import { MEDALS, MEDAL_COLORS } from './PersonalBestsCard.constants';
 import type { StreakRecord } from './types';
@@ -10,7 +9,7 @@ import type { StreakRecord } from './types';
 interface MedalRowProps {
   records: StreakRecord[];
   currentStreak: number;
-  pulseAnimatedStyle: AnimatedStyleProp<ViewStyle>;
+  pulseAnimatedStyle: AnimatedStyle;
 }
 
 export function MedalRow({
