@@ -2,7 +2,8 @@
  * StatCard - Displays a single statistic with optional emoji and interaction
  */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import type { StatCardProps } from '../AnalyticsScreen.types';
 import { styles } from './StatCard.styles';
 
@@ -53,16 +54,15 @@ export const StatCard: React.FC<StatCardProps> = ({
 
   if (onPress && !loading) {
     return (
-      <TouchableOpacity
+      <AnimatedPressable
         accessible
         accessibilityHint='Double tap to view habit details'
         accessibilityLabel={accessibilityLabel}
         accessibilityRole='button'
-        activeOpacity={0.7}
         onPress={onPress}
       >
         {content}
-      </TouchableOpacity>
+      </AnimatedPressable>
     );
   }
 

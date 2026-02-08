@@ -4,8 +4,9 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import type { WeeklyInsightsCardProps } from './WeeklyInsightsCard.types';
 import { styles } from './WeeklyInsightsCard.styles';
@@ -81,14 +82,10 @@ export default function WeeklyInsightsCard({
         <SuggestedActions />
       </HabitListSection>
 
-      <TouchableOpacity
-        activeOpacity={0.7}
-        style={styles.archiveButton}
-        onPress={onArchivePress}
-      >
+      <AnimatedPressable style={styles.archiveButton} onPress={onArchivePress}>
         <Ionicons color={colors.text.secondary} name='archive' size={20} />
         <Text style={styles.archiveButtonText}>View Past Reports</Text>
-      </TouchableOpacity>
+      </AnimatedPressable>
 
       <Text style={styles.generatedDate}>
         Generated {new Date(insights.generatedAt).toLocaleDateString()}

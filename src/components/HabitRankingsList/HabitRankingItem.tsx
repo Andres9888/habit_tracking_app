@@ -4,8 +4,9 @@
  */
 
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import HabitStrengthIndicator from '../HabitStrengthIndicator/HabitStrengthIndicator';
 import { colors } from '../../theme/colors';
 import { itemStyles as styles } from './itemStyles';
@@ -25,11 +26,10 @@ export function HabitRankingItem({
   onPress,
 }: HabitRankingItemProps) {
   return (
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityHint='Opens habit detail'
       accessibilityLabel={`${item.emoji} ${item.name}, rank ${rank}, ${Math.round(item.strength)}% strength, ${item.currentStreak} day streak${item.isAtRisk ? ', at risk' : ''}`}
       accessibilityRole='button'
-      activeOpacity={0.7}
       style={styles.habitItem}
       onPress={onPress}
     >
@@ -79,6 +79,6 @@ export function HabitRankingItem({
           variant='compact'
         />
       </View>
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }

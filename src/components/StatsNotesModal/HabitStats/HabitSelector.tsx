@@ -2,7 +2,8 @@
  * Habit selector component for HabitStats
  */
 
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { HabitItem } from './HabitStats.types';
 
@@ -28,12 +29,11 @@ export function HabitSelector({
         showsHorizontalScrollIndicator={false}
       >
         {habits.map((habit) => (
-          <TouchableOpacity
+          <AnimatedPressable
             key={habit._id}
             accessibilityLabel={`View stats for ${habit.name}`}
             accessibilityRole='button'
             accessibilityState={{ selected: selectedHabitId === habit._id }}
-            activeOpacity={0.7}
             className={`rounded-xl px-4 py-2 ${
               selectedHabitId === habit._id ? 'bg-stone-900' : 'bg-stone-100'
             }`}
@@ -46,7 +46,7 @@ export function HabitSelector({
             >
               {habit.name}
             </Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         ))}
       </ScrollView>
     </View>

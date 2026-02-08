@@ -1,5 +1,6 @@
 import { memo } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface NoIconButtonProps {
   isSelected: boolean;
@@ -9,7 +10,7 @@ interface NoIconButtonProps {
 export const NoIconButton = memo(
   ({ isSelected, onPress }: NoIconButtonProps) => (
     <View className='border-t border-stone-200 bg-white px-4 py-3'>
-      <TouchableOpacity
+      <AnimatedPressable
         accessibilityLabel='Select no icon for this habit'
         accessibilityRole='button'
         className={`flex-row items-center justify-center rounded-xl py-3 ${
@@ -24,7 +25,7 @@ export const NoIconButton = memo(
         >
           No Icon
         </Text>
-      </TouchableOpacity>
+      </AnimatedPressable>
     </View>
   )
 );

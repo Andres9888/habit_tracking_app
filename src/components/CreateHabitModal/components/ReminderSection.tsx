@@ -1,4 +1,5 @@
-import { Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Switch, Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { formatReminderTime } from '../../../utils/notifications';
 
@@ -34,10 +35,10 @@ export const ReminderSection = ({
         </View>
 
         {/* Label and time - tappable when enabled */}
-        <TouchableOpacity
+        <AnimatedPressable
           className='flex-1'
           disabled={!remindersEnabled}
-          activeOpacity={remindersEnabled ? 0.7 : 1}
+          disableAnimation={!remindersEnabled}
           accessibilityRole='button'
           accessibilityLabel={`Reminder time: ${formatReminderTime(reminderTime)}. Tap to change.`}
           accessibilityState={{ disabled: !remindersEnabled }}
@@ -55,7 +56,7 @@ export const ReminderSection = ({
           >
             {formatReminderTime(reminderTime)}
           </Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         {/* Toggle switch on right */}
         <Switch

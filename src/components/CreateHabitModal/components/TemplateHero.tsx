@@ -1,5 +1,6 @@
-import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Text, View } from 'react-native';
 import { BookOpen, ChevronRight } from 'lucide-react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import STRINGS from '../../../constants/strings';
 
 interface TemplateHeroProps {
@@ -22,10 +23,9 @@ export const TemplateHero = ({
     : STRINGS.CREATE_HABIT.templateHeroSubtitle;
 
   return (
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityLabel={label}
       accessibilityRole='button'
-      activeOpacity={0.92}
       className='mb-6 mt-2 flex-row items-center rounded-3xl bg-[#E8EDFF] px-[18px] py-4 shadow-lg shadow-black/10'
       style={{ elevation: 3 }}
       onPress={onPress}
@@ -47,6 +47,6 @@ export const TemplateHero = ({
       <Animated.View style={{ transform: [{ rotate: chevronRotation }] }}>
         <ChevronRight color='#111827' size={18} strokeWidth={2.5} />
       </Animated.View>
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 };

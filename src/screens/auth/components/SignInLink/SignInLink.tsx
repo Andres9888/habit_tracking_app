@@ -1,4 +1,5 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface SignInLinkProps {
   disabled?: boolean;
@@ -14,16 +15,16 @@ export function SignInLink({
   return (
     <View className={`flex-row items-center justify-center ${className}`}>
       <Text className='text-sm text-stone-500'>Already have an account? </Text>
-      <TouchableOpacity
+      <AnimatedPressable
         accessibilityLabel='Sign in to existing account'
         accessibilityRole='link'
         accessibilityState={{ disabled }}
-        activeOpacity={0.7}
         disabled={disabled}
+        disableAnimation={disabled}
         onPress={onPress}
       >
         <Text className='text-sm font-semibold text-emerald-700'>Sign in</Text>
-      </TouchableOpacity>
+      </AnimatedPressable>
     </View>
   );
 }

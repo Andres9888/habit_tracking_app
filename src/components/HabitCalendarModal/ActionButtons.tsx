@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface ActionButtonsProps {
   isTodayCompleted: boolean;
@@ -11,16 +12,16 @@ export function ActionButtons({ isTodayCompleted, onMarkToday, onEdit }: ActionB
 
   return (
     <View className='mt-4 flex-row gap-3'>
-      <TouchableOpacity
+      <AnimatedPressable
         accessibilityLabel={
           isTodayCompleted ? 'Today already completed' : 'Mark this habit as done today'
         }
         accessibilityRole='button'
-        activeOpacity={0.8}
         className={`flex-1 rounded-2xl px-4 py-3 ${
           isTodayCompleted ? 'bg-stone-200' : 'bg-blue-500'
         }`}
         disabled={isTodayCompleted}
+        disableAnimation={isTodayCompleted}
         onPress={onMarkToday}
       >
         <Text
@@ -30,17 +31,16 @@ export function ActionButtons({ isTodayCompleted, onMarkToday, onEdit }: ActionB
         >
           {markTodayLabel}
         </Text>
-      </TouchableOpacity>
+      </AnimatedPressable>
 
-      <Pressable
+      <AnimatedPressable
         accessibilityLabel='Edit habit'
         accessibilityRole='button'
         className='w-[110px] items-center justify-center rounded-2xl border border-stone-200 px-3'
-        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={onEdit}
       >
         <Text className='text-sm font-semibold text-stone-700'>Edit habit</Text>
-      </Pressable>
+      </AnimatedPressable>
     </View>
   );
 }

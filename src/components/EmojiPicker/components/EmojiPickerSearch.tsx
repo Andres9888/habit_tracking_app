@@ -1,6 +1,7 @@
 import { memo } from 'react';
-import { TextInput, TouchableOpacity, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import { Search, X } from 'lucide-react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface EmojiPickerSearchProps {
   searchQuery: string;
@@ -24,13 +25,13 @@ export const EmojiPickerSearch = memo(
           onChangeText={onChangeText}
         />
         {searchQuery.length > 0 && (
-          <TouchableOpacity
+          <AnimatedPressable
             accessibilityLabel='Clear search'
             accessibilityRole='button'
             onPress={onClear}
           >
             <X color='#78716c' size={18} />
-          </TouchableOpacity>
+          </AnimatedPressable>
         )}
       </View>
     </View>

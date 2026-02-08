@@ -1,9 +1,9 @@
 /**
  * Save button with validation shake animation
  */
-import { Animated, Text, TouchableOpacity } from 'react-native';
+import { Animated, Text } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import STRINGS from '../../../../constants/strings';
-import { useButtonScale } from './useButtonScale';
 
 interface SaveButtonProps {
   isEditMode: boolean;
@@ -20,15 +20,13 @@ export const SaveButton = ({
   onInvalidSave,
   shakeValue,
 }: SaveButtonProps) => {
-  const { scale, handlePressIn, handlePressOut } = useButtonScale();
-
   return (
     <Animated.View
       style={{
-        transform: [{ scale }, { translateX: shakeValue }],
+        transform: [{ translateX: shakeValue }],
       }}
     >
-      <TouchableOpacity
+      <AnimatedPressable
         accessibilityHint={canSave ? '' : 'Enter a habit name first'}
         accessibilityLabel={
           isEditMode ? 'Save habit changes' : STRINGS.CREATE_HABIT.createAction
@@ -38,14 +36,13 @@ export const SaveButton = ({
         className={`h-11 items-center justify-center rounded-full px-6 ${
           canSave ? 'bg-stone-800' : 'bg-stone-400'
         }`}
+        disableAnimation={!canSave}
         onPress={canSave ? onSave : onInvalidSave}
-        onPressIn={canSave ? handlePressIn : undefined}
-        onPressOut={canSave ? handlePressOut : undefined}
       >
         <Text className='text-sm font-semibold text-white'>
           {STRINGS.CREATE_HABIT.save}
         </Text>
-      </TouchableOpacity>
+      </AnimatedPressable>
     </Animated.View>
   );
 };

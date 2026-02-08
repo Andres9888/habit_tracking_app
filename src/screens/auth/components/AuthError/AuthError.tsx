@@ -1,16 +1,11 @@
 /** AuthError - OPTIMIZED: FadeIn animation, better styling, haptics */
-import { Text, Pressable, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { AlertCircle, X } from 'lucide-react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { AuthErrorProps } from './types';
 
 export function AuthError({ message, onDismiss }: AuthErrorProps) {
-  const handleDismiss = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onDismiss();
-  };
-
   return (
     <Animated.View
       accessibilityLiveRegion='assertive'
@@ -33,15 +28,15 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
           {message}
         </Text>
       </View>
-      <Pressable
+      <AnimatedPressable
         accessibilityHint='Removes the error message from the screen'
         accessibilityLabel='Dismiss error'
         accessibilityRole='button'
         className='h-8 w-8 items-center justify-center rounded-full active:bg-red-100'
-        onPress={handleDismiss}
+        onPress={onDismiss}
       >
         <X color='#dc2626' size={18} strokeWidth={2} />
-      </Pressable>
+      </AnimatedPressable>
     </Animated.View>
   );
 }

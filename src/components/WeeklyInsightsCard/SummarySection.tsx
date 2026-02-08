@@ -4,8 +4,9 @@
  */
 
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import type { WeeklyInsights } from './WeeklyInsightsCard.types';
 import { styles } from './WeeklyInsightsCard.styles';
@@ -27,11 +28,7 @@ export function SummarySection({
   const changeIcon = isPositive ? 'trending-up' : 'trending-down';
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      style={styles.section}
-      onPress={onToggle}
-    >
+    <AnimatedPressable style={styles.section} onPress={onToggle}>
       <View style={styles.sectionHeader}>
         <View style={styles.sectionHeaderLeft}>
           <Ionicons color={colors.primary[500]} name='calendar' size={20} />
@@ -70,6 +67,6 @@ export function SummarySection({
           </View>
         </View>
       )}
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }
