@@ -54,7 +54,7 @@ export const useModalHandlers = ({
         title: `${template.name} - Habit Template`,
       });
     } catch (error) {
-      console.error('Error sharing template:', error);
+      if (__DEV__) console.error('Error sharing template:', error);
     }
   }, [template]);
 

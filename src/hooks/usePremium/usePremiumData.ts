@@ -64,7 +64,7 @@ export function usePremiumData(): PremiumData {
           setPackages(offeringsResult.current?.availablePackages ?? null);
         }
       } catch (error_) {
-        console.error('[usePremium] Failed to fetch data:', error_);
+        if (__DEV__) console.error('[usePremium] Failed to fetch data:', error_);
         if (isMounted) {
           setError('Failed to load subscription info');
         }

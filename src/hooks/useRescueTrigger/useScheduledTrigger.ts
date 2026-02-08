@@ -37,14 +37,14 @@ export function useScheduledTrigger({
 
       const inQuiet = checkQuietHours();
       if (inQuiet) {
-        console.warn('[useRescueTrigger] In quiet hours, skipping trigger');
+        if (__DEV__) console.warn('[useRescueTrigger] In quiet hours, skipping trigger');
         return;
       }
 
       if (hours <= hoursBeforeEnd && hours > 0) {
         const habit = findHabitNeedingRescue(true);
         if (habit && !habitNeedingRescue) {
-          console.warn(
+          if (__DEV__) console.warn(
             `[useRescueTrigger] Scheduled trigger for habit: ${habit.name}`
           );
           triggerRescue(habit.id, 'scheduled');

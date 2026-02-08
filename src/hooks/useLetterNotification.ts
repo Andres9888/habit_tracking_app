@@ -111,30 +111,14 @@ export function useLetterNotification({
           unlockAt,
         });
 
-        if (notificationId) {
-          console.log(
-            '[useLetterNotification] Letter created with notification:',
-            {
-              letterId,
-              notificationId,
-              unlockAt: new Date(unlockAt).toISOString(),
-            }
-          );
-        } else {
-          // Letter was created but notification failed - still successful
-          console.warn(
-            '[useLetterNotification] Letter created but notification scheduling failed:',
-            letterId
-          );
+        if (!notificationId && __DEV__) {
+          console.warn('[useLetterNotification] Notification scheduling failed:', letterId);
         }
 
         onSuccess?.(letterId);
         return letterId;
       } catch (error) {
-        console.error(
-          '[useLetterNotification] Failed to create letter:',
-          error
-        );
+        if (__DEV__) console.error('[useLetterNotification] Failed to create letter:', error);
         onError?.(error instanceof Error ? error : new Error(String(error)));
         return null;
       }

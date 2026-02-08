@@ -27,10 +27,10 @@ export function useVoiceNotesSection({
   const recording = useAudioRecording({
     maxDurationSeconds: MAX_RECORDING_DURATION,
     warningThresholdSeconds: 30,
-    onError: (error) => console.error('Recording error:', error),
+    onError: (error) => { if (__DEV__) console.error('Recording error:', error); },
     onMaxDurationReached: () => recording.stopRecording(),
     onPermissionDenied: (canAskAgain) => {
-      console.log('Microphone permission denied, canAskAgain:', canAskAgain);
+      if (__DEV__) console.log('Microphone permission denied, canAskAgain:', canAskAgain);
     },
     onRecordingComplete: async (uri, durationSeconds) => {
       const shouldMarkAsDay1 = isDay1Recording || voiceNoteCount === 0;
@@ -44,7 +44,7 @@ export function useVoiceNotesSection({
     },
     onWarningThresholdReached: (secondsRemaining) => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-      console.log(`Recording warning: ${secondsRemaining}s remaining`);
+      // warning threshold reached
     },
   });
 

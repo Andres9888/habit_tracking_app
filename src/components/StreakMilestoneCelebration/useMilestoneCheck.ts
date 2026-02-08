@@ -52,7 +52,7 @@ export function useMilestoneCheck({
         }
       } catch (error) {
         if (__DEV__) {
-          console.warn('Failed to load shown milestones:', error);
+          if (__DEV__) console.warn('Failed to load shown milestones:', error);
         }
       }
     }
@@ -116,7 +116,7 @@ export function useMilestoneCheck({
       );
     } catch (error) {
       if (__DEV__) {
-        console.warn('Failed to save shown milestone:', error);
+        if (__DEV__) console.warn('Failed to save shown milestone:', error);
       }
     }
   }, [milestone, shownMilestones, habitId]);
@@ -165,7 +165,7 @@ export async function checkAndTriggerMilestone(
     return crossedMilestone;
   } catch (error) {
     if (__DEV__) {
-      console.warn('Milestone check failed:', error);
+      if (__DEV__) console.warn('Milestone check failed:', error);
     }
     return null;
   }
@@ -191,7 +191,7 @@ export async function persistMilestoneShown(
     }
   } catch (error) {
     if (__DEV__) {
-      console.warn('Failed to persist milestone:', error);
+      if (__DEV__) console.warn('Failed to persist milestone:', error);
     }
   }
 }

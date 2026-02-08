@@ -58,7 +58,7 @@ export class StateReconciler {
 
   reconcile(operations: ProcessedOperation[]): ReconciliationResult {
     if (this.state.isReconciling) {
-      console.warn('Reconciliation already in progress, skipping');
+      if (__DEV__) console.warn('Reconciliation already in progress, skipping');
       return createEmptyReconciliationResult();
     }
     return executeReconcile(

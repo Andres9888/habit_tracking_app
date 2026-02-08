@@ -45,13 +45,7 @@ export function useHabitStateSync(
 
     // Only sync if meaningful values changed
     if (idChanged || prevStreakChanged || prevStrengthChanged) {
-      if (debugLabel && (streakChanged || strengthChanged)) {
-        console.log(`🔄 Syncing ${debugLabel}:`, {
-          habitName: updated.name,
-          streakChanged,
-          strengthChanged,
-        });
-      }
+
 
       // Update tracking ref before calling setHabit to prevent re-sync
       prevValuesRef.current = {

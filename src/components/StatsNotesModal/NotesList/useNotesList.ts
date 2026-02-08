@@ -61,7 +61,7 @@ export function useNotesList(initialHabitId?: Id<'habits'>) {
     try {
       await deleteNote({ noteId });
     } catch (error) {
-      console.error('Failed to delete note:', error);
+      if (__DEV__) console.error('Failed to delete note:', error);
     } finally {
       setDeletingNoteId(null);
     }
