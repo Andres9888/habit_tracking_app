@@ -37,8 +37,8 @@ export const styles = StyleSheet.create({
     padding: spacing.lg,
     shadowColor: '#1c1917',
     shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
   },
   statCardEmoji: {
     fontSize: 24,
