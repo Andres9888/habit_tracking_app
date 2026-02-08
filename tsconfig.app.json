@@ -36,8 +36,6 @@
     "src/**/__tests__/**",
     "src/**/tests/**",
     "src/components/CalendarTimeline/CalendarTimelineDebug.tsx",
-    "src/components/CalendarTimeline/CalendarTimelineWithEdgeFade.tsx",
-    "src/components/CalendarTimeline/CalendarTimelineWithPulse.tsx",
     "src/screens/auth 2/**",
     "src/screens/examples/**",
     "src/screens/examples 2/**"
