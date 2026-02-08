@@ -53,8 +53,8 @@ export function runHighlightAnimation(
   ]).start();
 }
 
-export function runIconPulseLoop(iconPulse: Animated.Value) {
-  Animated.loop(
+export function runIconPulseLoop(iconPulse: Animated.Value): Animated.CompositeAnimation {
+  const loop = Animated.loop(
     Animated.sequence([
       Animated.timing(iconPulse, {
         duration: 1000,
@@ -69,5 +69,7 @@ export function runIconPulseLoop(iconPulse: Animated.Value) {
         useNativeDriver: true,
       }),
     ])
-  ).start();
+  );
+  loop.start();
+  return loop;
 }

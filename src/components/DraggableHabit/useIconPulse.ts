@@ -14,7 +14,8 @@ export function useIconPulse(
 ) {
   useEffect(() => {
     if (isWeekComplete && !reduceMotionPreference) {
-      runIconPulseLoop(iconPulse);
+      const loop = runIconPulseLoop(iconPulse);
+      return () => loop.stop();
     } else {
       iconPulse.setValue(1);
     }
