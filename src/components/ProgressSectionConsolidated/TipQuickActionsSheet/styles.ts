@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   actionLabel: {
     color: '#1c1917',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
   },
   actionsList: {
@@ -72,7 +72,7 @@ export const styles = StyleSheet.create({
   },
   headerTitle: {
     color: '#1c1917',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
   },
   iconContainer: {

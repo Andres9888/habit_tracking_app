@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
     minHeight: 40,
     overflow: 'hidden',
     position: 'relative',
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.08,
   },
   content: {
     alignItems: 'center',

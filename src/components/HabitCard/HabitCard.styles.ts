@@ -37,7 +37,7 @@ const coreStyles = StyleSheet.create({
     shadowColor: '#2D2A26',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
-    shadowRadius: 12,
+    shadowRadius: 16,
   },
   // Card container background for depth
   cardsContainer: {
@@ -56,8 +56,8 @@ const coreStyles = StyleSheet.create({
     borderWidth: 2,
     shadowColor: '#047857',
     shadowOffset: { height: 0, width: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
   },
   habitInfo: {
     alignItems: 'center',
@@ -87,7 +87,7 @@ const coreStyles = StyleSheet.create({
   streakText: {
     color: REDESIGN_COLORS.streakText,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
   },
   strengthFill: { bottom: 0, left: 0, position: 'absolute', top: 0 },

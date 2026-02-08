@@ -41,7 +41,7 @@ export const elementStyles = StyleSheet.create({
   confettiParticle: {
     ...shadows.subtle,
     position: 'absolute',
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.08,
   },
   dismissButton: {
     alignItems: 'center',

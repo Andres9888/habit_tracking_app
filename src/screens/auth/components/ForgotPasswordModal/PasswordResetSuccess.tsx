@@ -9,7 +9,7 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
     <View className='gap-4 py-2'>
       <Animated.View
         className='items-center justify-center rounded-2xl bg-emerald-50 p-6'
-        entering={FadeIn.duration(300)}
+        entering={FadeIn.duration(280).springify().damping(18)}
         style={{
           shadowColor: '#1c1917',
           shadowOffset: { height: 4, width: 0 },

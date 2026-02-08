@@ -49,7 +49,7 @@ export const itemStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   rankBadge: {
-    fontSize: 24,
+    fontSize: 22,
   },
   rankContainer: {
     alignItems: 'center',
@@ -73,7 +73,7 @@ export const itemStyles = StyleSheet.create({
   riskText: {
     ...typography.caption,
     color: colors.error,
-    fontSize: 10,
+    fontSize: 13,
     marginLeft: 2,
   },
   statItem: {

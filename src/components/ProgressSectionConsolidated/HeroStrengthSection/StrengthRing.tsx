@@ -41,9 +41,9 @@ export function StrengthRing({
         elevation: 4,
         height: RING_SIZE,
         shadowColor: currentLevelColor,
-        shadowOffset: { height: 0, width: 0 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
+        shadowOffset: { height: 4, width: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 16,
         width: RING_SIZE,
       }}
     >

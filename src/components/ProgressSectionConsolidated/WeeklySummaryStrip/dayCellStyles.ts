@@ -21,9 +21,9 @@ export const dayCellStyles = StyleSheet.create({
   },
   dayCircleRing: {
     elevation: 4,
-    shadowOffset: { height: 0, width: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
   },
   dayLabel: {
     color: '#a8a29e', // stone-400

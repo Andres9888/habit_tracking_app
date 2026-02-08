@@ -22,7 +22,7 @@ export function DetailHeader({
     <View>
       <Animated.View
         className='flex-row items-center justify-between px-4 pb-2'
-        entering={FadeIn.duration(200).delay(50)}
+        entering={FadeIn.duration(280).delay(50).springify().damping(18)}
       >
         <HeaderButton
           icon={<X color='#57534e' size={22} strokeWidth={2.5} />}
@@ -68,7 +68,7 @@ export function DetailHeader({
         {(habit.currentStreak ?? 0) > 0 && (
           <Animated.View
             className='mt-3 flex-row items-center gap-1.5 rounded-full px-4 py-2'
-            entering={FadeInDown.duration(240)
+            entering={FadeInDown.duration(280)
               .delay(200)
               .springify()
               .damping(18)}

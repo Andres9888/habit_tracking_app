@@ -20,8 +20,18 @@ export function HeatmapCell({ day, onPress }: HeatmapCellProps) {
     }
   };
 
+  const completionLabel = day.completionRate > 0
+    ? `${Math.round(day.completionRate)}% completion`
+    : 'No completions';
+  const dateLabel = day.date ? day.date : 'Empty cell';
+  const accessibilityLabel = day.date
+    ? `${dateLabel}, ${completionLabel}`
+    : undefined;
+
   return (
     <TouchableOpacity
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole={day.date ? 'button' : 'none'}
       activeOpacity={0.7}
       disabled={!day.date}
       style={[

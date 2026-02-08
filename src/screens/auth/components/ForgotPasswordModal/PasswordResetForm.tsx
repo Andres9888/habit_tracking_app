@@ -50,7 +50,7 @@ export function PasswordResetForm({
             accessibilityLiveRegion='polite'
             accessibilityRole='alert'
             className='text-[13px] font-medium text-red-600'
-            entering={FadeIn.duration(200)}
+            entering={FadeIn.duration(280).springify().damping(18)}
           >
             {error}
           </Animated.Text>

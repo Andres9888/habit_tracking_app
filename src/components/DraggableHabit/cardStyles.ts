@@ -34,7 +34,7 @@ export function buildCardStyle({
     shadowColor: isWeekComplete ? '#10b981' : '#78716c',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: isWeekComplete ? 0.12 : 0.06,
-    shadowRadius: 12,
+    shadowRadius: 16,
     transform: [{ translateY }, { scale: cardScale }],
   };
 }

@@ -24,7 +24,7 @@ export const actionStyles = StyleSheet.create({
   },
   actionText: {
     color: colors.text.inverse,
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
   },
 });
