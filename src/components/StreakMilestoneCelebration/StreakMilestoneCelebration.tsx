@@ -2,23 +2,13 @@
  * StreakMilestoneCelebration Component
  * Full-screen celebration modal for streak milestones (7, 30, 100 days)
  *
- * Features:
- * - Confetti animation on mount
- * - Animated badge with milestone emoji
- * - Haptic feedback (success pattern)
- * - Share card for social sharing
- * - Accessibility: VoiceOver announcements, reduce motion support
- *
- * Design System:
- * - Typography: 34/22/17/13 scale
- * - Border radius: 16px cards, 12px buttons
- * - Shadows: 4px offset, 16px blur, 0.08 opacity
- * - Animation: springify().damping(18), 280ms, 60ms stagger
+ * Orchestrates animated badge, content, and action buttons.
+ * See BadgeSection, ContentSection, ActionButtons for sub-components.
  */
 
-import React, { useEffect, useCallback } from 'react';
-import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
-import Animated, {
+import React, { useEffect } from 'react';
+import { View, AccessibilityInfo } from 'react-native';
+import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
@@ -27,23 +17,17 @@ import Animated, {
   withSequence,
   Easing,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { Platform } from 'react-native';
 import { Modal } from '../Modal';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { ConfettiAnimation } from './ConfettiAnimation';
+import { BadgeSection } from './BadgeSection';
+import { ContentSection } from './ContentSection';
+import { ActionButtons } from './ActionButtons';
 import { ANIMATION_TIMING } from './constants';
 import { styles } from './styles';
 import type { StreakMilestoneCelebrationProps } from './types';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-// Spring config per design system: damping(18)
-const SPRING_CONFIG = {
-  damping: 18,
-  stiffness: 180,
-  mass: 1,
-};
+const SPRING_CONFIG = { damping: 18, stiffness: 180, mass: 1 };
 
 export function StreakMilestoneCelebration({
   visible,
@@ -56,7 +40,6 @@ export function StreakMilestoneCelebration({
 }: StreakMilestoneCelebrationProps) {
   const reduceMotion = useReduceMotion();
 
-  // Animation values
   const badgeScale = useSharedValue(0);
   const badgeRotate = useSharedValue(-15);
   const titleOpacity = useSharedValue(0);
@@ -67,11 +50,9 @@ export function StreakMilestoneCelebration({
   const continueButtonOpacity = useSharedValue(0);
   const continueButtonTranslateY = useSharedValue(20);
 
-  // Run entrance animation
   useEffect(() => {
     if (visible) {
       if (reduceMotion) {
-        // Instant appearance for reduce motion
         badgeScale.value = 1;
         badgeRotate.value = 0;
         titleOpacity.value = 1;
@@ -82,67 +63,32 @@ export function StreakMilestoneCelebration({
         continueButtonOpacity.value = 1;
         continueButtonTranslateY.value = 0;
       } else {
-        // Badge bounce entrance
         badgeScale.value = withSequence(
           withSpring(1.2, SPRING_CONFIG),
-          withDelay(
-            ANIMATION_TIMING.BADGE_SETTLE_DELAY,
-            withSpring(1, SPRING_CONFIG)
-          )
+          withDelay(ANIMATION_TIMING.BADGE_SETTLE_DELAY, withSpring(1, SPRING_CONFIG))
         );
         badgeRotate.value = withSpring(0, SPRING_CONFIG);
-
-        // Title fade in
         titleOpacity.value = withDelay(
           ANIMATION_TIMING.TITLE_DELAY,
-          withTiming(1, {
-            duration: ANIMATION_TIMING.CONTENT_FADE_DURATION,
-            easing: Easing.out(Easing.cubic),
-          })
+          withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION, easing: Easing.out(Easing.cubic) })
         );
-        titleTranslateY.value = withDelay(
-          ANIMATION_TIMING.TITLE_DELAY,
-          withSpring(0, SPRING_CONFIG)
-        );
-
-        // Content fade in
+        titleTranslateY.value = withDelay(ANIMATION_TIMING.TITLE_DELAY, withSpring(0, SPRING_CONFIG));
         contentOpacity.value = withDelay(
           ANIMATION_TIMING.TITLE_DELAY + 100,
-          withTiming(1, {
-            duration: ANIMATION_TIMING.CONTENT_FADE_DURATION,
-            easing: Easing.out(Easing.cubic),
-          })
+          withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION, easing: Easing.out(Easing.cubic) })
         );
-
-        // Buttons stagger (60ms apart per design system)
         const buttonBaseDelay = ANIMATION_TIMING.TITLE_DELAY + 200;
-        shareButtonOpacity.value = withDelay(
-          buttonBaseDelay,
-          withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION })
-        );
-        shareButtonTranslateY.value = withDelay(
-          buttonBaseDelay,
-          withSpring(0, SPRING_CONFIG)
-        );
-
-        continueButtonOpacity.value = withDelay(
-          buttonBaseDelay + ANIMATION_TIMING.BUTTON_STAGGER,
-          withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION })
-        );
-        continueButtonTranslateY.value = withDelay(
-          buttonBaseDelay + ANIMATION_TIMING.BUTTON_STAGGER,
-          withSpring(0, SPRING_CONFIG)
-        );
+        shareButtonOpacity.value = withDelay(buttonBaseDelay, withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION }));
+        shareButtonTranslateY.value = withDelay(buttonBaseDelay, withSpring(0, SPRING_CONFIG));
+        continueButtonOpacity.value = withDelay(buttonBaseDelay + ANIMATION_TIMING.BUTTON_STAGGER, withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION }));
+        continueButtonTranslateY.value = withDelay(buttonBaseDelay + ANIMATION_TIMING.BUTTON_STAGGER, withSpring(0, SPRING_CONFIG));
       }
-
-      // VoiceOver announcement
       AccessibilityInfo.announceForAccessibility(
         `Congratulations! ${milestone.title} You've maintained a ${streakDays} day streak for ${habitName}!`
       );
     }
   }, [visible, reduceMotion, milestone, streakDays, habitName]);
 
-  // Reset animation values on close
   useEffect(() => {
     if (!visible) {
       badgeScale.value = 0;
@@ -157,127 +103,46 @@ export function StreakMilestoneCelebration({
     }
   }, [visible]);
 
-  // Animated styles
   const badgeAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { scale: badgeScale.value },
-      { rotate: `${badgeRotate.value}deg` },
-    ],
+    transform: [{ scale: badgeScale.value }, { rotate: `${badgeRotate.value}deg` }],
   }));
-
   const titleAnimatedStyle = useAnimatedStyle(() => ({
     opacity: titleOpacity.value,
     transform: [{ translateY: titleTranslateY.value }],
   }));
-
-  const contentAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: contentOpacity.value,
-  }));
-
+  const contentAnimatedStyle = useAnimatedStyle(() => ({ opacity: contentOpacity.value }));
   const shareButtonAnimatedStyle = useAnimatedStyle(() => ({
     opacity: shareButtonOpacity.value,
     transform: [{ translateY: shareButtonTranslateY.value }],
   }));
-
   const continueButtonAnimatedStyle = useAnimatedStyle(() => ({
     opacity: continueButtonOpacity.value,
     transform: [{ translateY: continueButtonTranslateY.value }],
   }));
 
-  // Handle share button press
-  const handleShare = useCallback(() => {
-    if (Platform.OS === 'ios' || Platform.OS === 'android') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-    }
-    onShare?.();
-  }, [onShare]);
-
-  // Handle continue button press
-  const handleContinue = useCallback(() => {
-    if (Platform.OS === 'ios' || Platform.OS === 'android') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-    }
-    onClose();
-  }, [onClose]);
-
   return (
     <>
-      <Modal
-        backdropOpacity={0.7}
-        style={styles.modalContent}
-        variant="fullScreen"
-        visible={visible}
-        onClose={onClose}
-      >
+      <Modal backdropOpacity={0.7} style={styles.modalContent} variant="fullScreen" visible={visible} onClose={onClose}>
         <View style={styles.container}>
           <View style={styles.card}>
-            {/* Animated Badge */}
-            <Animated.View
-              style={[
-                styles.emojiBadge,
-                { backgroundColor: milestone.color },
-                badgeAnimatedStyle,
-              ]}
-              accessible
-              accessibilityLabel={`${milestone.emoji} ${milestone.title}`}
-              accessibilityRole="image"
-            >
-              <Text style={styles.emoji}>{milestone.emoji}</Text>
-            </Animated.View>
-
-            {/* Title */}
-            <Animated.Text style={[styles.title, titleAnimatedStyle]}>
-              {milestone.title}
-            </Animated.Text>
-
-            {/* Content */}
-            <Animated.View style={contentAnimatedStyle}>
-              {/* Streak Count */}
-              <View style={styles.streakBadge}>
-                <Text style={[styles.streakCount, { color: milestone.color }]}>
-                  {streakDays}
-                </Text>
-                <Text style={styles.streakLabel}>day streak</Text>
-              </View>
-
-              {/* Habit Info */}
-              <View style={styles.habitRow}>
-                <Text style={styles.habitEmoji}>{habitEmoji}</Text>
-                <Text style={styles.habitName} numberOfLines={1}>
-                  {habitName}
-                </Text>
-              </View>
-            </Animated.View>
-
-            {/* Actions */}
-            <View style={styles.actionsContainer}>
-              {onShare && (
-                <AnimatedPressable
-                  style={[styles.primaryButton, shareButtonAnimatedStyle]}
-                  onPress={handleShare}
-                  accessible
-                  accessibilityLabel="Share your achievement"
-                  accessibilityRole="button"
-                >
-                  <Text style={styles.primaryButtonText}>Share 🎉</Text>
-                </AnimatedPressable>
-              )}
-
-              <AnimatedPressable
-                style={[styles.secondaryButton, continueButtonAnimatedStyle]}
-                onPress={handleContinue}
-                accessible
-                accessibilityLabel="Continue"
-                accessibilityRole="button"
-              >
-                <Text style={styles.secondaryButtonText}>Continue</Text>
-              </AnimatedPressable>
-            </View>
+            <BadgeSection milestone={milestone} animatedStyle={badgeAnimatedStyle} />
+            <ContentSection
+              milestone={milestone}
+              streakDays={streakDays}
+              habitName={habitName}
+              habitEmoji={habitEmoji}
+              titleAnimatedStyle={titleAnimatedStyle}
+              contentAnimatedStyle={contentAnimatedStyle}
+            />
+            <ActionButtons
+              onShare={onShare}
+              onClose={onClose}
+              shareButtonAnimatedStyle={shareButtonAnimatedStyle}
+              continueButtonAnimatedStyle={continueButtonAnimatedStyle}
+            />
           </View>
         </View>
       </Modal>
-
-      {/* Confetti Animation */}
       <ConfettiAnimation active={visible} />
     </>
   );
