@@ -12,6 +12,7 @@ import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
+import { CompletionToast } from '../CompletionToast';
 import { useHabitCard } from './useHabitCard';
 import { styles } from './HabitCard.styles';
 import type { HabitCardProps } from './HabitCard.types';
@@ -118,6 +119,13 @@ function HabitCardComponent(props: HabitCardProps) {
       <ConfettiBurst
         active={habit.showConfetti}
         onComplete={() => habit.setShowConfetti(false)}
+      />
+      <CompletionToast
+        habitName={name}
+        icon={icon}
+        streak={habit.currentStreak + 1}
+        visible={habit.showCompletionToast}
+        onDismiss={() => habit.setShowCompletionToast(false)}
       />
     </View>
   );
