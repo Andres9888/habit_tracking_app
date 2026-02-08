@@ -27,7 +27,7 @@ export function useHabitCalendarModal({
   const [showEditScreen, setShowEditScreen] = useState(false);
   const [calendarView, setCalendarView] = useState<CalendarView>('month');
 
-  const todayDateString = format(new Date(), 'yyyy-MM-dd');
+  const todayDateString = useMemo(() => format(new Date(), 'yyyy-MM-dd'), []);
   const habitId = habit?._id ?? null;
 
   const habitTrackingEntries = useMemo(

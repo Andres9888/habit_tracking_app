@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { subMonths } from 'date-fns';
 import { View } from 'react-native';
 import { MonthLabels } from './MonthLabels';
@@ -10,7 +11,7 @@ export default function HeatmapCalendar({
   tracking,
   monthsToShow = 6,
 }: HeatmapCalendarProps) {
-  const today = new Date();
+  const today = useMemo(() => new Date(), []);
 
   const months = Array.from({ length: monthsToShow }, (_, i) =>
     subMonths(today, monthsToShow - 1 - i)
