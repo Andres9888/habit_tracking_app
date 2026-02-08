@@ -115,10 +115,13 @@ export function buildModalsStateReturnValue(
     openHabitCalendar: h.openHabitCalendar,
 
     openHabitDetail: h.openHabitDetail,
-    openHapticTest: () => {
-      v.setIsSettingsOpen(false);
-      v.setShowHapticTest(true);
-    },
+    // Dev-only: HapticTest diagnostic tool is gated behind __DEV__
+    openHapticTest: __DEV__
+      ? () => {
+          v.setIsSettingsOpen(false);
+          v.setShowHapticTest(true);
+        }
+      : () => {},
     openPauseModal: h.openPauseModal,
     openQuickActions: h.openQuickActions,
     // Inline open handlers

@@ -38,7 +38,7 @@ export function SettingsModalSection({
         onSettingsChange({ showNotesStats: value })
       }
       onClose={closeSettings}
-      onOpenHapticTest={openHapticTest}
+      onOpenHapticTest={__DEV__ ? openHapticTest : undefined}
     />
   );
 }
