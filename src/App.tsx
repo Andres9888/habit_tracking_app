@@ -20,6 +20,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
 import { PurchasesProvider } from './components/providers/PurchasesProvider';
+import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration';
 import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
 import { SyncStatusProvider } from './contexts/SyncStatusContext';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
@@ -43,7 +44,11 @@ function Providers({ children }: PropsWithChildren) {
                 <NetworkStatusProvider>
                   <OfflineProvider>
                     <SyncStatusProvider>
-                      <PurchasesProvider>{children}</PurchasesProvider>
+                      <PurchasesProvider>
+                        <StreakMilestoneProvider>
+                          {children}
+                        </StreakMilestoneProvider>
+                      </PurchasesProvider>
                     </SyncStatusProvider>
                   </OfflineProvider>
                 </NetworkStatusProvider>

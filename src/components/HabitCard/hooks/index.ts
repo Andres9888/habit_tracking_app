@@ -6,6 +6,7 @@
 
 export { useOfflineHabitState } from './useOfflineHabitState';
 export { useHabitCardState } from './useHabitCardState';
+export { useStreakMilestoneIntegration } from './useStreakMilestoneIntegration';
 export type {
   UseOfflineHabitStateOptions,
   UseOfflineHabitStateReturn,
