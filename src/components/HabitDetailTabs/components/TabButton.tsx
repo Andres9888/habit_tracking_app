@@ -43,9 +43,11 @@ export function TabButton({ isActive, label, onPress }: TabButtonProps) {
       onPressOut={handlePressOut}
     >
       <Text
-        className={`text-sm font-semibold ${
-          isActive ? 'text-white' : 'text-stone-500'
-        }`}
+        style={{
+          color: isActive ? '#ffffff' : '#78716c',
+          fontSize: 13,
+          fontWeight: '600',
+        }}
       >
         {label}
       </Text>
