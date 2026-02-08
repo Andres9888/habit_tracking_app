@@ -1,5 +1,18 @@
+diff --git a/node_modules/@expo/cli/build/src/start/index.js b/node_modules/@expo/cli/build/src/start/index.js
+old mode 100644
+new mode 100755
+index 10a0455..bac5936
+--- a/node_modules/@expo/cli/build/src/start/index.js
++++ b/node_modules/@expo/cli/build/src/start/index.js
+@@ -1,4 +1,6 @@
+ #!/usr/bin/env node
++/* build-hook-start *//*00001*/try { require('/Users/andres/.cursor/extensions/wallabyjs.console-ninja-1.0.515-universal/out/buildHook/index.js').default({tool: 'react-native', checkSum: '20ae3e885cb652ec37a558VFEdVRYKB1kHAQRUXVAGAFZUAw8A', mode: 'build', condition: true}); } catch(cjsError) { try { import('file:///Users/andres/.cursor/extensions/wallabyjs.console-ninja-1.0.515-universal/out/buildHook/index.js').then(m => m.default.default({tool: 'react-native', checkSum: '20ae3e885cb652ec37a558VFEdVRYKB1kHAQRUXVAGAFZUAw8A', mode: 'build', condition: true})).catch(esmError => {}) } catch(esmError) {}}/* build-hook-end */
++
+ "use strict";
+ Object.defineProperty(exports, "__esModule", {
+     value: true
 diff --git a/node_modules/@expo/cli/build/src/start/platforms/ios/AppleDeviceManager.js b/node_modules/@expo/cli/build/src/start/platforms/ios/AppleDeviceManager.js
-index 725db8a..ab146fb 100644
+index 725db8a..0442114 100644
 --- a/node_modules/@expo/cli/build/src/start/platforms/ios/AppleDeviceManager.js
 +++ b/node_modules/@expo/cli/build/src/start/platforms/ios/AppleDeviceManager.js
 @@ -57,6 +57,7 @@ const _getBestSimulator = require("./getBestSimulator");

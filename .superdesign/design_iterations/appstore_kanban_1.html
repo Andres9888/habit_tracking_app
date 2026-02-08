@@ -1,0 +1,2388 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Habits — App Store Submission Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Inter', sans-serif !important;
+        background: #0a0a0b !important;
+        color: #e4e4e7 !important;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: 'Inter', sans-serif !important;
+        color: #fafafa !important;
+      }
+      code,
+      .mono {
+        font-family: 'JetBrains Mono', monospace !important;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #27272a;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3f3f46;
+      }
+
+      .kanban-col {
+        min-height: 400px;
+      }
+      .task-card {
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease,
+          border-color 0.15s ease;
+      }
+      .task-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      }
+      .tab-btn {
+        transition: all 0.2s ease;
+      }
+      .tab-btn.active {
+        background: #18181b;
+        color: #fafafa;
+        border-color: #3f3f46;
+      }
+      .progress-fill {
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .cal-day {
+        transition: all 0.15s ease;
+      }
+      .cal-day:hover {
+        background: #1c1c1f !important;
+      }
+      .cal-day.today {
+        border: 2px solid #a78bfa !important;
+      }
+      .filter-chip {
+        transition: all 0.15s ease;
+        cursor: pointer;
+        user-select: none;
+      }
+      .filter-chip:hover {
+        opacity: 0.85;
+      }
+
+      .badge-critical {
+        background: #7f1d1d;
+        color: #fca5a5;
+        border: 1px solid #991b1b;
+      }
+      .badge-high {
+        background: #78350f;
+        color: #fbbf24;
+        border: 1px solid #92400e;
+      }
+      .badge-medium {
+        background: #1e3a5f;
+        color: #93c5fd;
+        border: 1px solid #1e40af;
+      }
+      .badge-low {
+        background: #14332a;
+        color: #6ee7b7;
+        border: 1px solid #065f46;
+      }
+
+      .cat-security {
+        border-left: 3px solid #ef4444;
+      }
+      .cat-bugs {
+        border-left: 3px solid #f59e0b;
+      }
+      .cat-performance {
+        border-left: 3px solid #8b5cf6;
+      }
+      .cat-appstore {
+        border-left: 3px solid #3b82f6;
+      }
+      .cat-revenue {
+        border-left: 3px solid #10b981;
+      }
+      .cat-legal {
+        border-left: 3px solid #ec4899;
+      }
+      .cat-testing {
+        border-left: 3px solid #06b6d4;
+      }
+      .cat-cleanup {
+        border-left: 3px solid #6b7280;
+      }
+
+      .cat-dot-security {
+        background: #ef4444;
+      }
+      .cat-dot-bugs {
+        background: #f59e0b;
+      }
+      .cat-dot-performance {
+        background: #8b5cf6;
+      }
+      .cat-dot-appstore {
+        background: #3b82f6;
+      }
+      .cat-dot-revenue {
+        background: #10b981;
+      }
+      .cat-dot-legal {
+        background: #ec4899;
+      }
+      .cat-dot-testing {
+        background: #06b6d4;
+      }
+      .cat-dot-cleanup {
+        background: #6b7280;
+      }
+
+      .milestone-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .milestone-line {
+        width: 2px;
+        background: #27272a;
+        flex-shrink: 0;
+      }
+
+      .view-panel {
+        display: none;
+        animation: fadeIn 0.2s ease;
+      }
+      .view-panel.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Accomplishment glow */
+      .cal-done {
+        position: relative;
+      }
+      .cal-done::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: 8px;
+        background: linear-gradient(
+          135deg,
+          rgba(52, 211, 153, 0.15),
+          rgba(167, 139, 250, 0.15)
+        );
+        z-index: -1;
+        pointer-events: none;
+      }
+      .score-ring {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .streak-badge {
+        background: linear-gradient(135deg, #f59e0b, #ef4444);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      @keyframes celebratePulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+      .celebrate {
+        animation: celebratePulse 2s ease-in-out infinite;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+      .modal-overlay.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .modal-content {
+        background: #18181b;
+        border: 1px solid #27272a;
+        border-radius: 12px;
+        max-width: 520px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        padding: 24px;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <header
+      class="sticky top-0 z-50 border-b border-zinc-800"
+      style="background: rgba(10, 10, 11, 0.85); backdrop-filter: blur(12px)"
+    >
+      <div class="mx-auto max-w-[1440px] px-4 py-4 sm:px-6">
+        <div class="mb-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div
+              class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500"
+            >
+              <span class="text-sm font-bold text-white">DH</span>
+            </div>
+            <div>
+              <h1 class="text-lg font-bold tracking-tight">
+                App Store Submission
+              </h1>
+              <p class="mono text-xs text-zinc-500">
+                Daily Habits &middot; Target: iOS App Store
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="mono text-xs text-zinc-500" id="dateDisplay"></span>
+            <div
+              class="h-2 w-2 animate-pulse rounded-full bg-emerald-500"
+            ></div>
+          </div>
+        </div>
+        <div class="mb-3 flex items-center gap-3">
+          <div class="h-2 flex-1 overflow-hidden rounded-full bg-zinc-800">
+            <div
+              class="progress-fill h-full rounded-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500"
+              id="progressBar"
+              style="width: 0%"
+            ></div>
+          </div>
+          <span class="mono text-sm font-semibold" id="progressText">0%</span>
+          <span class="text-xs text-zinc-500" id="progressCount">0/0</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-1">
+          <button
+            class="tab-btn active rounded-lg border border-transparent px-4 py-1.5 text-sm font-medium text-zinc-400"
+            data-view="kanban"
+          >
+            <span class="flex items-center gap-1.5"
+              ><i data-lucide="columns-3" class="h-4 w-4"></i> Board</span
+            >
+          </button>
+          <button
+            class="tab-btn rounded-lg border border-transparent px-4 py-1.5 text-sm font-medium text-zinc-400"
+            data-view="calendar"
+          >
+            <span class="flex items-center gap-1.5"
+              ><i data-lucide="calendar" class="h-4 w-4"></i> Calendar</span
+            >
+          </button>
+          <button
+            class="tab-btn rounded-lg border border-transparent px-4 py-1.5 text-sm font-medium text-zinc-400"
+            data-view="stats"
+          >
+            <span class="flex items-center gap-1.5"
+              ><i data-lucide="bar-chart-3" class="h-4 w-4"></i> Stats</span
+            >
+          </button>
+          <div class="flex-1"></div>
+          <div
+            class="flex flex-wrap items-center gap-1.5"
+            id="filterChips"
+          ></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-[1440px] px-4 py-6 sm:px-6">
+      <div id="view-kanban" class="view-panel active">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div id="col-blocked" class="kanban-col"></div>
+          <div id="col-todo" class="kanban-col"></div>
+          <div id="col-inprogress" class="kanban-col"></div>
+          <div id="col-done" class="kanban-col"></div>
+        </div>
+      </div>
+      <div id="view-calendar" class="view-panel">
+        <!-- Streak + motivation banner -->
+        <div id="motivationBanner" class="mb-4"></div>
+        <!-- Today's wins panel -->
+        <div id="todayWins" class="mb-6"></div>
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div class="lg:col-span-2" id="calendarGrid"></div>
+          <div id="milestoneTimeline"></div>
+        </div>
+      </div>
+      <div id="view-stats" class="view-panel">
+        <div id="statsGrid"></div>
+      </div>
+    </main>
+
+    <div class="modal-overlay" id="taskModal">
+      <div class="modal-content" id="taskModalContent"></div>
+    </div>
+
+    <script>
+      // All data is static/hardcoded - no user input flows into rendering.
+      // DOM construction uses string templates with trusted constant data only.
+
+      const CATEGORIES = {
+        security: { label: 'Security', icon: 'shield', color: '#ef4444' },
+        bugs: { label: 'Bugs', icon: 'bug', color: '#f59e0b' },
+        performance: { label: 'Performance', icon: 'zap', color: '#8b5cf6' },
+        appstore: { label: 'App Store', icon: 'smartphone', color: '#3b82f6' },
+        revenue: { label: 'Revenue', icon: 'credit-card', color: '#10b981' },
+        legal: { label: 'Legal', icon: 'file-text', color: '#ec4899' },
+        testing: { label: 'Testing', icon: 'test-tube', color: '#06b6d4' },
+        cleanup: { label: 'Cleanup', icon: 'trash-2', color: '#6b7280' },
+      };
+
+      const TASKS = [
+        // SECURITY (Audit Phase 01) — ALL 10 COMPLETED
+        {
+          id: 'sec-1',
+          title: 'Fix lettersQueries.ts auth (6 queries)',
+          desc: 'Added auth to all 6 queries. Removed insecure client-supplied userId arg in getUpcomingUnlocks. 27 tests.',
+          cat: 'security',
+          priority: 'critical',
+          status: 'done',
+          file: 'convex/lettersQueries.ts',
+          phase: 'Phase 1',
+          doneDate: '2026-02-08',
+          doneNote: '27 tests, removed IDOR in getUpcomingUnlocks',
+        },
+        {
+          id: 'sec-2',
+          title: 'Fix affirmations.ts auth',
+          desc: 'Added auth + habit ownership verification before query. 8 tests.',
+          cat: 'security',
+          priority: 'critical',
+          status: 'done',
+          file: 'convex/affirmations.ts',
+          phase: 'Phase 1',
+          doneDate: '2026-02-08',
+          doneNote: '8 tests, defense-in-depth ownership',
+        },
+        {
+          id: 'sec-3',
+          title: 'Fix analyticsOverview.ts auth',
+          desc: 'Added auth + DB-level userId index filter. No other users habits/streaks/strength returned.',
+          cat: 'security',
+          priority: 'critical',
+          status: 'done',
+          file: 'convex/analyticsOverview.ts',
+          phase: 'Phase 1',
+          doneDate: '2026-02-08',
+          doneNote: '8 tests, used by_userId index',
+        },
+        {
+          id: 'sec-4',
+          title: 'Fix visionBoard.ts auth (4 endpoints)',
+          desc: 'Added auth to all 4 endpoints. create now sets userId. update/remove use dual ownership verification. 22 tests.',
+          cat: 'security',
+          priority: 'critical',
+          status: 'done',
+          file: 'convex/visionBoard.ts',
+          phase: 'Phase 1',
+          doneDate: '2026-02-08',
+          doneNote: '22 tests, fixed data integrity (userId on create)',
+        },
+        {
+          id: 'sec-5',
+          title: 'Remove debug endpoints',
+          desc: 'Deleted debugHabitStrength.ts, diagnose.ts, quickFix.ts. No client references. 7 regression guard tests.',
+          cat: 'security',
+          priority: 'critical',
+          status: 'done',
+          file: 'convex/debug*.ts (deleted)',
+          phase: 'Phase 1',
+          doneDate: '2026-02-08',
+          doneNote: 'Deleted 3 dangerous files, 7 regression guards',
+        },
+        {
+          id: 'sec-done-1',
+          title: 'Fix getTracking.ts auth',
+          desc: 'Added auth + userId filter to DB query. 7 tests.',
+          cat: 'security',
+          priority: 'critical',
+          status: 'done',
+          file: 'convex/habits/getTracking.ts',
+          phase: 'Phase 1',
+          doneDate: '2026-02-07',
+          doneNote: '7 tests',
+        },
+        {
+          id: 'sec-done-2',
+          title: 'Fix get.ts auth',
+          desc: 'Added auth + ownership verification. 7 tests.',
+          cat: 'security',
+          priority: 'critical',
+          status: 'done',
+          file: 'convex/habits/get.ts',
+          phase: 'Phase 1',
+          doneDate: '2026-02-07',
+          doneNote: '7 tests',
+        },
+        {
+          id: 'sec-done-3',
+          title: 'Fix stats.ts auth',
+          desc: 'Added auth + ownership check before computing. 8 tests.',
+          cat: 'security',
+          priority: 'critical',
+          status: 'done',
+          file: 'convex/habits/stats.ts',
+          phase: 'Phase 1',
+          doneDate: '2026-02-07',
+          doneNote: '8 tests',
+        },
+        {
+          id: 'sec-done-4',
+          title: 'Fix notesQueries.ts auth (3 queries)',
+          desc: 'Added auth to list/search/get. DB-level userId filter. 15 tests.',
+          cat: 'security',
+          priority: 'critical',
+          status: 'done',
+          file: 'convex/notesQueries.ts',
+          phase: 'Phase 1',
+          doneDate: '2026-02-07',
+          doneNote: '15 tests',
+        },
+        {
+          id: 'sec-done-5',
+          title: 'Fix reflectionsQueries.ts auth (3 queries)',
+          desc: 'Added auth to all 3 queries with userId filter. 16 tests.',
+          cat: 'security',
+          priority: 'critical',
+          status: 'done',
+          file: 'convex/reflectionsQueries.ts',
+          phase: 'Phase 1',
+          doneDate: '2026-02-07',
+          doneNote: '16 tests',
+        },
+
+        // BUGS (Audit Phase 02)
+        {
+          id: 'bug-1',
+          title: 'Fix timezone bug in streak calc',
+          desc: 'stats.ts mixes UTC and local time for streak comparison',
+          cat: 'bugs',
+          priority: 'high',
+          status: 'todo',
+          file: 'convex/habits/stats.ts',
+          phase: 'Phase 2',
+        },
+        {
+          id: 'bug-2',
+          title: 'Fix stale today cache',
+          desc: 'useHabitCalendar.ts caches today forever, breaks after midnight',
+          cat: 'bugs',
+          priority: 'high',
+          status: 'todo',
+          file: 'src/features/habits/hooks/useHabitCalendar.ts',
+          phase: 'Phase 2',
+        },
+        {
+          id: 'bug-3',
+          title: 'Fix 24h future date grace period',
+          desc: 'isFutureDate allows toggling tomorrow. Reduce to 3h.',
+          cat: 'bugs',
+          priority: 'high',
+          status: 'todo',
+          file: 'convex/habits/utils.ts',
+          phase: 'Phase 2',
+        },
+        {
+          id: 'bug-4',
+          title: 'Fix streak not validated as current',
+          desc: 'computeCurrentStreakFromDates returns stale streak if broken days ago',
+          cat: 'bugs',
+          priority: 'medium',
+          status: 'todo',
+          file: 'src/utils/streak.ts',
+          phase: 'Phase 2',
+        },
+        {
+          id: 'bug-5',
+          title: 'Fix optimistic state race condition',
+          desc: 'Hardcoded setTimeout delays cause visual flicker',
+          cat: 'bugs',
+          priority: 'medium',
+          status: 'todo',
+          file: 'src/lib/optimistic/store/stateManagement.ts',
+          phase: 'Phase 2',
+        },
+
+        // PERFORMANCE (Audit Phase 03)
+        {
+          id: 'perf-1',
+          title: 'Replace O(n) scan in getHabitStatus',
+          desc: 'Build Map lookup instead of tracking.find() per habit per date',
+          cat: 'performance',
+          priority: 'high',
+          status: 'todo',
+          file: 'src/features/habits/hooks/useHabitsTracking.ts',
+          phase: 'Phase 3',
+        },
+        {
+          id: 'perf-2',
+          title: 'Pre-sort streak dates',
+          desc: 'Avoid O(n log n) sort per habit per render in computeCurrentStreakFromDates',
+          cat: 'performance',
+          priority: 'high',
+          status: 'todo',
+          file: 'src/utils/streak.ts',
+          phase: 'Phase 3',
+        },
+        {
+          id: 'perf-3',
+          title: 'Memoize NetworkStatusProvider value',
+          desc: 'Context value created inline without useMemo, causes cascading re-renders',
+          cat: 'performance',
+          priority: 'high',
+          status: 'todo',
+          file: 'src/contexts/NetworkStatusContext/NetworkStatusProvider.tsx',
+          phase: 'Phase 3',
+        },
+        {
+          id: 'perf-4',
+          title: 'Memoize useHabitCalendarModal',
+          desc: 'bestStreak + completionPercentage recomputed every render without useMemo',
+          cat: 'performance',
+          priority: 'high',
+          status: 'todo',
+          file: 'src/components/HabitCalendarModal/useHabitCalendarModal.ts',
+          phase: 'Phase 3',
+        },
+        {
+          id: 'perf-5',
+          title: 'Refactor getTracking to date range',
+          desc: 'Send startDate/endDate instead of 365 date strings',
+          cat: 'performance',
+          priority: 'high',
+          status: 'todo',
+          file: 'convex/habits/getTracking.ts',
+          phase: 'Phase 3',
+        },
+
+        // APP STORE
+        {
+          id: 'as-1',
+          title: 'Create proper splash screen',
+          desc: 'Current splash.png is 1x1px placeholder. Need 2048x2048 or auto-gen from icon.',
+          cat: 'appstore',
+          priority: 'critical',
+          status: 'todo',
+          file: 'assets/splash.png',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'as-2',
+          title: 'Capture App Store screenshots',
+          desc: 'Need 3-10 screenshots: 1290x2796 (6.7"), 1242x2688 (6.5")',
+          cat: 'appstore',
+          priority: 'high',
+          status: 'todo',
+          file: 'App Store Connect',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'as-3',
+          title: 'Add notification permission description',
+          desc: 'Missing NSUserNotificationsUsageDescription in Info.plist',
+          cat: 'appstore',
+          priority: 'high',
+          status: 'todo',
+          file: 'ios/DailyHabits/Info.plist',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'as-4',
+          title: 'Set up App Store Connect listing',
+          desc: 'App name, subtitle, description, keywords, category, age rating, pricing',
+          cat: 'appstore',
+          priority: 'high',
+          status: 'todo',
+          file: 'App Store Connect',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'as-5',
+          title: 'Change aps-environment to production',
+          desc: 'Entitlements currently set to development',
+          cat: 'appstore',
+          priority: 'high',
+          status: 'todo',
+          file: 'ios/DailyHabits/DailyHabits.entitlements',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'as-6',
+          title: 'Remove NSAllowsLocalNetworking',
+          desc: 'Debug networking flag should be removed for production',
+          cat: 'appstore',
+          priority: 'medium',
+          status: 'todo',
+          file: 'ios/DailyHabits/Info.plist',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'as-7',
+          title: 'Upload app icon 1024x1024',
+          desc: 'Upload to App Store Connect (no transparency, no rounded corners)',
+          cat: 'appstore',
+          priority: 'medium',
+          status: 'done',
+          file: 'assets/icon.png',
+          phase: 'Phase 4',
+        },
+
+        // REVENUE / REVENUECAT
+        {
+          id: 'rev-1',
+          title: 'Fix hardcoded $6.99 pricing',
+          desc: 'Replace with dynamic priceString from usePremium() hook',
+          cat: 'revenue',
+          priority: 'critical',
+          status: 'todo',
+          file: 'PricingCard.tsx, CTAFooter.tsx',
+          phase: 'Phase 1',
+        },
+        {
+          id: 'rev-2',
+          title: 'Implement Restore Purchases',
+          desc: 'Connect button to usePremium().restorePurchases() with loading/success/error',
+          cat: 'revenue',
+          priority: 'critical',
+          status: 'todo',
+          file: 'PremiumBenefitsModal.tsx',
+          phase: 'Phase 1',
+        },
+        {
+          id: 'rev-3',
+          title: 'Improve subscription terms visibility',
+          desc: 'Increase font size, contrast, add renewal price after trial',
+          cat: 'revenue',
+          priority: 'high',
+          status: 'todo',
+          file: 'PricingCard.tsx',
+          phase: 'Phase 1',
+        },
+        {
+          id: 'rev-4',
+          title: 'Create subscription product in ASC',
+          desc: 'Subscription group, Monthly product ID: premium_monthly, $6.99, 7-day trial',
+          cat: 'revenue',
+          priority: 'high',
+          status: 'blocked',
+          file: 'App Store Connect',
+          phase: 'Phase 4',
+          blocker: 'Needs Apple Developer account + Paid Apps agreement',
+        },
+        {
+          id: 'rev-5',
+          title: 'Configure RevenueCat dashboard',
+          desc: 'Project, iOS app, entitlement (premium), products, offerings',
+          cat: 'revenue',
+          priority: 'high',
+          status: 'blocked',
+          file: 'RevenueCat Dashboard',
+          phase: 'Phase 4',
+          blocker: 'Needs ASC subscription product first',
+        },
+        {
+          id: 'rev-6',
+          title: 'Test sandbox purchase flow',
+          desc: 'Create sandbox tester, complete purchase, verify premium unlocks + webhook',
+          cat: 'revenue',
+          priority: 'critical',
+          status: 'blocked',
+          file: 'Physical device',
+          phase: 'Phase 5',
+          blocker: 'Needs TestFlight build + RevenueCat configured',
+        },
+
+        // LEGAL
+        {
+          id: 'leg-1',
+          title: 'Write and host Privacy Policy',
+          desc: 'Cover data collection, Convex, Clerk, Sentry, RevenueCat, retention, contact',
+          cat: 'legal',
+          priority: 'critical',
+          status: 'todo',
+          file: 'External URL',
+          phase: 'Phase 1',
+        },
+        {
+          id: 'leg-2',
+          title: 'Write and host Terms of Service',
+          desc: 'Subscription terms, refund policy, usage restrictions',
+          cat: 'legal',
+          priority: 'high',
+          status: 'todo',
+          file: 'External URL',
+          phase: 'Phase 1',
+        },
+        {
+          id: 'leg-3',
+          title: 'Add Privacy Policy link in app',
+          desc: 'Settings screen entry linking to hosted privacy policy',
+          cat: 'legal',
+          priority: 'high',
+          status: 'blocked',
+          file: 'Settings screen',
+          phase: 'Phase 2',
+          blocker: 'Needs Privacy Policy URL first',
+        },
+        {
+          id: 'leg-4',
+          title: 'Add Terms of Service link in app',
+          desc: 'Settings screen entry linking to hosted ToS',
+          cat: 'legal',
+          priority: 'high',
+          status: 'blocked',
+          file: 'Settings screen',
+          phase: 'Phase 2',
+          blocker: 'Needs ToS URL first',
+        },
+        {
+          id: 'leg-5',
+          title: 'Create demo reviewer account',
+          desc: 'Apple review team login credentials documented in App Review notes',
+          cat: 'legal',
+          priority: 'medium',
+          status: 'todo',
+          file: 'Clerk Dashboard',
+          phase: 'Phase 5',
+        },
+
+        // TESTING
+        {
+          id: 'test-1',
+          title: 'Run full test suite',
+          desc: 'npm test - verify no regressions',
+          cat: 'testing',
+          priority: 'high',
+          status: 'todo',
+          file: 'package.json',
+          phase: 'Phase 3',
+        },
+        {
+          id: 'test-2',
+          title: 'Manual smoke test all features',
+          desc: 'Create/complete/edit/delete habit, view stats, notifications',
+          cat: 'testing',
+          priority: 'high',
+          status: 'todo',
+          file: 'Physical device',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'test-3',
+          title: 'Test on real iOS device',
+          desc: 'Not just simulator - test on physical iPhone',
+          cat: 'testing',
+          priority: 'high',
+          status: 'todo',
+          file: 'Physical device',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'test-4',
+          title: 'Production build (iOS)',
+          desc: 'eas build --platform ios --profile production',
+          cat: 'testing',
+          priority: 'high',
+          status: 'todo',
+          file: 'EAS Build',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'test-5',
+          title: 'Upload to TestFlight',
+          desc: 'Submit build via EAS, wait for processing',
+          cat: 'testing',
+          priority: 'high',
+          status: 'blocked',
+          file: 'TestFlight',
+          phase: 'Phase 5',
+          blocker: 'Needs production build first',
+        },
+        {
+          id: 'test-6',
+          title: 'Test offline behavior',
+          desc: 'Complete habits offline, reconnect, verify sync',
+          cat: 'testing',
+          priority: 'medium',
+          status: 'todo',
+          file: 'Physical device',
+          phase: 'Phase 5',
+        },
+        {
+          id: 'test-7',
+          title: 'Test notifications',
+          desc: 'Schedule reminder, verify arrival, test deep link on tap',
+          cat: 'testing',
+          priority: 'medium',
+          status: 'todo',
+          file: 'Physical device',
+          phase: 'Phase 5',
+        },
+
+        // CLEANUP (Audit Phase 04-06)
+        {
+          id: 'clean-1',
+          title: 'Guard console.log in purchases.ts',
+          desc: 'Wrap 15+ log calls in __DEV__ blocks, especially user IDs',
+          cat: 'cleanup',
+          priority: 'medium',
+          status: 'todo',
+          file: 'src/lib/purchases.ts',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'clean-2',
+          title: 'Remove PII from Sentry',
+          desc: 'Stop sending user email to Sentry, keep hashed ID only',
+          cat: 'cleanup',
+          priority: 'medium',
+          status: 'todo',
+          file: 'src/providers/SentryUserSync.tsx',
+          phase: 'Phase 4',
+        },
+        {
+          id: 'clean-3',
+          title: 'Delete orphaned BinaryHeatmap files',
+          desc: 'gridGeneration.ts, gridStats.ts, formatters.ts, accessibility.ts, animationUtils.ts',
+          cat: 'cleanup',
+          priority: 'low',
+          status: 'todo',
+          file: 'src/components/BinaryHeatmap/',
+          phase: 'Phase 6',
+        },
+        {
+          id: 'clean-4',
+          title: 'Delete dead CalendarTimeline variants',
+          desc: 'CalendarTimelineWithPulse.tsx + CalendarTimelineWithEdgeFade.tsx (519 lines)',
+          cat: 'cleanup',
+          priority: 'low',
+          status: 'todo',
+          file: 'src/components/CalendarTimeline/',
+          phase: 'Phase 6',
+        },
+        {
+          id: 'clean-5',
+          title: 'Remove stale eslint-disable comments',
+          desc: '6 files with disables that are no longer needed after decomposition',
+          cat: 'cleanup',
+          priority: 'low',
+          status: 'todo',
+          file: 'Various',
+          phase: 'Phase 6',
+        },
+        {
+          id: 'clean-6',
+          title: 'Gate HapticTest behind __DEV__',
+          desc: 'Diagnostic component (262 lines) wired into production modal system',
+          cat: 'cleanup',
+          priority: 'low',
+          status: 'todo',
+          file: 'src/components/HapticTest.tsx',
+          phase: 'Phase 6',
+        },
+      ];
+
+      const MILESTONES = [
+        {
+          date: '2026-02-08',
+          label: 'Security auth fixes complete',
+          cat: 'security',
+          done: true,
+        },
+        {
+          date: '2026-02-11',
+          label: 'Privacy Policy and ToS hosted',
+          cat: 'legal',
+          done: false,
+        },
+        {
+          date: '2026-02-12',
+          label: 'Bug fixes + RevenueCat fixes done',
+          cat: 'bugs',
+          done: false,
+        },
+        {
+          date: '2026-02-13',
+          label: 'Performance optimizations done',
+          cat: 'performance',
+          done: false,
+        },
+        {
+          date: '2026-02-14',
+          label: 'Production build + TestFlight',
+          cat: 'testing',
+          done: false,
+        },
+        {
+          date: '2026-02-17',
+          label: 'Sandbox purchase testing',
+          cat: 'revenue',
+          done: false,
+        },
+        {
+          date: '2026-02-18',
+          label: 'Device testing complete',
+          cat: 'testing',
+          done: false,
+        },
+        {
+          date: '2026-02-19',
+          label: 'Screenshots and assets ready',
+          cat: 'appstore',
+          done: false,
+        },
+        {
+          date: '2026-02-20',
+          label: 'App Store listing complete',
+          cat: 'appstore',
+          done: false,
+        },
+        {
+          date: '2026-02-21',
+          label: 'Submit for review',
+          cat: 'appstore',
+          done: false,
+        },
+      ];
+
+      // Completed work log — what was actually accomplished each day
+      var COMPLETED_LOG = {
+        '2026-02-07': {
+          tasks: [
+            'sec-done-1',
+            'sec-done-2',
+            'sec-done-3',
+            'sec-done-4',
+            'sec-done-5',
+          ],
+          summary:
+            'Secured 5 Convex endpoints (getTracking, get, stats, notes, reflections)',
+          metrics: { testsAdded: 53, filesSecured: 5, criticalFixed: 5 },
+        },
+        '2026-02-08': {
+          tasks: ['sec-1', 'sec-2', 'sec-3', 'sec-4', 'sec-5'],
+          summary:
+            'Completed ALL security auth fixes! Letters, affirmations, analytics, vision board secured. Debug endpoints deleted.',
+          metrics: {
+            testsAdded: 72,
+            filesSecured: 5,
+            criticalFixed: 5,
+            filesDeleted: 3,
+          },
+        },
+      };
+
+      // Motivational messages based on completion count
+      var MOTIVATION = [
+        {
+          min: 0,
+          msg: 'Every journey starts with a first step',
+          emoji: '\uD83C\uDFAF',
+        },
+        { min: 1, msg: 'You showed up. That matters.', emoji: '\uD83D\uDCAA' },
+        { min: 2, msg: 'Building momentum!', emoji: '\uD83D\uDE80' },
+        { min: 3, msg: 'Crushing it today', emoji: '\uD83D\uDD25' },
+        { min: 5, msg: 'Absolute machine', emoji: '\u26A1' },
+        { min: 8, msg: 'Legendary productivity', emoji: '\uD83D\uDC51' },
+      ];
+
+      function getMotivation(count) {
+        var msg = MOTIVATION[0];
+        for (var i = MOTIVATION.length - 1; i >= 0; i--) {
+          if (count >= MOTIVATION[i].min) {
+            msg = MOTIVATION[i];
+            break;
+          }
+        }
+        return msg;
+      }
+
+      function getDayScore(dateStr) {
+        var log = COMPLETED_LOG[dateStr];
+        if (!log) return 0;
+        return log.tasks.length;
+      }
+
+      function getStreak() {
+        var today = new Date('2026-02-08');
+        var streak = 0;
+        for (var i = 0; i < 30; i++) {
+          var d = new Date(today);
+          d.setDate(d.getDate() - i);
+          var ds =
+            d.getFullYear() +
+            '-' +
+            String(d.getMonth() + 1).padStart(2, '0') +
+            '-' +
+            String(d.getDate()).padStart(2, '0');
+          if (COMPLETED_LOG[ds] && COMPLETED_LOG[ds].tasks.length > 0) {
+            streak++;
+          } else if (i > 0) {
+            break;
+          }
+        }
+        return streak;
+      }
+
+      const CALENDAR_PLAN = {
+        '2026-02-09': ['sec-1', 'sec-2', 'sec-3'],
+        '2026-02-10': ['sec-4', 'sec-5', 'rev-1', 'rev-2'],
+        '2026-02-11': ['leg-1', 'leg-2', 'rev-3'],
+        '2026-02-12': ['bug-1', 'bug-2', 'bug-3', 'bug-4', 'bug-5'],
+        '2026-02-13': ['perf-1', 'perf-2', 'perf-3', 'perf-4', 'perf-5'],
+        '2026-02-14': ['as-1', 'as-3', 'as-5', 'test-1', 'test-4'],
+        '2026-02-15': ['clean-1', 'clean-2', 'as-6'],
+        '2026-02-16': ['leg-3', 'leg-4', 'test-2'],
+        '2026-02-17': ['test-3', 'test-5', 'rev-6'],
+        '2026-02-18': ['test-6', 'test-7', 'rev-4', 'rev-5'],
+        '2026-02-19': ['as-2', 'as-4', 'leg-5'],
+        '2026-02-20': ['clean-3', 'clean-4', 'clean-5', 'clean-6'],
+        '2026-02-21': [],
+      };
+
+      let activeView = 'kanban';
+      let activeFilter = null;
+
+      function getTasksByStatus(status) {
+        return TASKS.filter(function (t) {
+          return (
+            t.status === status &&
+            (activeFilter === null || t.cat === activeFilter)
+          );
+        });
+      }
+      function getPriorityOrder(p) {
+        var map = { critical: 0, high: 1, medium: 2, low: 3 };
+        return map[p] !== undefined ? map[p] : 4;
+      }
+      function getPriorityLabel(p) {
+        var map = {
+          critical: 'CRITICAL',
+          high: 'HIGH',
+          medium: 'MED',
+          low: 'LOW',
+        };
+        return map[p] || p;
+      }
+      function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function renderCard(task) {
+        var catInfo = CATEGORIES[task.cat];
+        var isDone = task.status === 'done';
+        var card = document.createElement('div');
+        card.className =
+          'task-card cat-' +
+          task.cat +
+          ' bg-zinc-900 rounded-lg p-3 mb-2 border border-zinc-800 hover:border-zinc-600 cursor-pointer' +
+          (isDone ? ' opacity-60' : '');
+        card.setAttribute('data-task-id', task.id);
+        card.addEventListener('click', function () {
+          showTaskDetail(task.id);
+        });
+
+        var badgeRow = document.createElement('div');
+        badgeRow.className = 'flex items-center justify-between mb-1.5';
+
+        var badge = document.createElement('span');
+        badge.className =
+          'badge-' +
+          task.priority +
+          ' text-[10px] font-semibold mono px-1.5 py-0.5 rounded';
+        badge.textContent = getPriorityLabel(task.priority);
+        badgeRow.appendChild(badge);
+
+        if (task.blocker) {
+          var blockerSpan = document.createElement('span');
+          blockerSpan.className = 'text-[10px] text-red-400';
+          blockerSpan.textContent = '\u26A0 blocked';
+          badgeRow.appendChild(blockerSpan);
+        }
+        card.appendChild(badgeRow);
+
+        var title = document.createElement('h4');
+        title.className =
+          'text-sm font-medium leading-snug mb-1' +
+          (isDone ? ' line-through text-zinc-500' : '');
+        title.textContent = task.title;
+        card.appendChild(title);
+
+        var fileP = document.createElement('p');
+        fileP.className = 'text-xs text-zinc-500 mono truncate mb-2';
+        fileP.textContent = task.file;
+        card.appendChild(fileP);
+
+        var tagRow = document.createElement('div');
+        tagRow.className = 'flex items-center gap-1.5';
+
+        var catTag = document.createElement('span');
+        catTag.className =
+          'flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full';
+        catTag.style.background = catInfo.color + '22';
+        catTag.style.color = catInfo.color;
+        var dot = document.createElement('span');
+        dot.className = 'w-1.5 h-1.5 rounded-full';
+        dot.style.background = catInfo.color;
+        catTag.appendChild(dot);
+        catTag.appendChild(document.createTextNode(' ' + catInfo.label));
+        tagRow.appendChild(catTag);
+
+        var phaseTag = document.createElement('span');
+        phaseTag.className = 'text-[10px] text-zinc-600 mono';
+        phaseTag.textContent = task.phase;
+        tagRow.appendChild(phaseTag);
+
+        card.appendChild(tagRow);
+        return card;
+      }
+
+      function renderKanban() {
+        var columns = [
+          {
+            id: 'blocked',
+            label: 'Blocked',
+            color: '#ef4444',
+            tasks: getTasksByStatus('blocked'),
+          },
+          {
+            id: 'todo',
+            label: 'To Do',
+            color: '#a1a1aa',
+            tasks: getTasksByStatus('todo'),
+          },
+          {
+            id: 'inprogress',
+            label: 'In Progress',
+            color: '#a78bfa',
+            tasks: getTasksByStatus('inprogress'),
+          },
+          {
+            id: 'done',
+            label: 'Done',
+            color: '#34d399',
+            tasks: getTasksByStatus('done'),
+          },
+        ];
+
+        columns.forEach(function (col) {
+          var sorted = col.tasks.sort(function (a, b) {
+            return getPriorityOrder(a.priority) - getPriorityOrder(b.priority);
+          });
+          var el = document.getElementById('col-' + col.id);
+          el.textContent = '';
+
+          var header = document.createElement('div');
+          header.className = 'flex items-center gap-2 mb-3 px-1';
+          var headerDot = document.createElement('span');
+          headerDot.className = 'w-2 h-2 rounded-full';
+          headerDot.style.background = col.color;
+          header.appendChild(headerDot);
+          var headerTitle = document.createElement('h3');
+          headerTitle.className = 'text-sm font-semibold';
+          headerTitle.textContent = col.label;
+          header.appendChild(headerTitle);
+          var headerCount = document.createElement('span');
+          headerCount.className = 'text-xs text-zinc-500 mono';
+          headerCount.textContent = sorted.length;
+          header.appendChild(headerCount);
+          el.appendChild(header);
+
+          var container = document.createElement('div');
+          container.className = 'space-y-0';
+          sorted.forEach(function (task) {
+            container.appendChild(renderCard(task));
+          });
+          el.appendChild(container);
+        });
+      }
+
+      function formatDate(dateStr) {
+        var d = new Date(dateStr + 'T12:00:00');
+        return d.toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+        });
+      }
+
+      function renderMotivationBanner() {
+        var banner = document.getElementById('motivationBanner');
+        banner.textContent = '';
+        var streak = getStreak();
+        var todayLog = COMPLETED_LOG['2026-02-08'];
+        var todayCount = todayLog ? todayLog.tasks.length : 0;
+        var mot = getMotivation(todayCount);
+        var totalDone = TASKS.filter(function (t) {
+          return t.status === 'done';
+        }).length;
+        var totalTests = 0;
+        Object.values(COMPLETED_LOG).forEach(function (log) {
+          if (log.metrics && log.metrics.testsAdded)
+            totalTests += log.metrics.testsAdded;
+        });
+
+        var wrap = document.createElement('div');
+        wrap.className =
+          'bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-800 border border-zinc-800 rounded-xl p-5';
+
+        var topRow = document.createElement('div');
+        topRow.className = 'flex items-center justify-between flex-wrap gap-4';
+
+        // Streak
+        var streakBox = document.createElement('div');
+        streakBox.className = 'flex items-center gap-3';
+        var fireEmoji = document.createElement('span');
+        fireEmoji.className = 'text-2xl';
+        fireEmoji.textContent = streak >= 2 ? '\uD83D\uDD25' : '\u2B50';
+        streakBox.appendChild(fireEmoji);
+        var streakText = document.createElement('div');
+        var streakNum = document.createElement('div');
+        streakNum.className = 'text-2xl font-bold streak-badge';
+        streakNum.textContent = streak + '-day streak';
+        streakText.appendChild(streakNum);
+        var streakSub = document.createElement('div');
+        streakSub.className = 'text-xs text-zinc-500';
+        streakSub.textContent = mot.emoji + ' ' + mot.msg;
+        streakText.appendChild(streakSub);
+        streakBox.appendChild(streakText);
+        topRow.appendChild(streakBox);
+
+        // Quick stats
+        var statsRow = document.createElement('div');
+        statsRow.className = 'flex items-center gap-6';
+
+        var stat1 = document.createElement('div');
+        stat1.className = 'text-center';
+        var s1num = document.createElement('div');
+        s1num.className = 'text-xl font-bold text-emerald-400';
+        s1num.textContent = totalDone;
+        stat1.appendChild(s1num);
+        var s1lbl = document.createElement('div');
+        s1lbl.className = 'text-[10px] text-zinc-500 uppercase';
+        s1lbl.textContent = 'Tasks done';
+        stat1.appendChild(s1lbl);
+        statsRow.appendChild(stat1);
+
+        var stat2 = document.createElement('div');
+        stat2.className = 'text-center';
+        var s2num = document.createElement('div');
+        s2num.className = 'text-xl font-bold text-violet-400';
+        s2num.textContent = totalTests;
+        stat2.appendChild(s2num);
+        var s2lbl = document.createElement('div');
+        s2lbl.className = 'text-[10px] text-zinc-500 uppercase';
+        s2lbl.textContent = 'Tests added';
+        stat2.appendChild(s2lbl);
+        statsRow.appendChild(stat2);
+
+        var stat3 = document.createElement('div');
+        stat3.className = 'text-center';
+        var s3num = document.createElement('div');
+        s3num.className = 'text-xl font-bold text-pink-400';
+        s3num.textContent = '10/10';
+        stat3.appendChild(s3num);
+        var s3lbl = document.createElement('div');
+        s3lbl.className = 'text-[10px] text-zinc-500 uppercase';
+        s3lbl.textContent = 'Security';
+        stat3.appendChild(s3lbl);
+        statsRow.appendChild(stat3);
+
+        topRow.appendChild(statsRow);
+        wrap.appendChild(topRow);
+        banner.appendChild(wrap);
+      }
+
+      function renderTodayWins() {
+        var container = document.getElementById('todayWins');
+        container.textContent = '';
+
+        // Show the most recent day with completions
+        var todayStr = '2026-02-08';
+        var log = COMPLETED_LOG[todayStr];
+        if (!log) return;
+
+        var wrap = document.createElement('div');
+        wrap.className =
+          'bg-zinc-900 border border-emerald-900/30 rounded-xl p-5 celebrate';
+
+        var header = document.createElement('div');
+        header.className = 'flex items-center justify-between mb-3';
+        var titleWrap = document.createElement('div');
+        titleWrap.className = 'flex items-center gap-2';
+        var checkIcon = document.createElement('span');
+        checkIcon.className = 'text-emerald-400 text-lg';
+        checkIcon.textContent = '\u2713';
+        titleWrap.appendChild(checkIcon);
+        var title = document.createElement('h3');
+        title.className =
+          'text-sm font-bold uppercase tracking-wider text-emerald-400';
+        title.textContent = "Today's Wins";
+        titleWrap.appendChild(title);
+        header.appendChild(titleWrap);
+
+        var countBadge = document.createElement('span');
+        countBadge.className =
+          'text-xs mono px-2 py-1 rounded-full bg-emerald-900/30 text-emerald-400 border border-emerald-800/30';
+        countBadge.textContent = log.tasks.length + ' completed';
+        header.appendChild(countBadge);
+        wrap.appendChild(header);
+
+        // Summary quote
+        var summaryEl = document.createElement('p');
+        summaryEl.className = 'text-sm text-zinc-300 mb-4 leading-relaxed';
+        summaryEl.textContent = log.summary;
+        wrap.appendChild(summaryEl);
+
+        // Metrics pills
+        if (log.metrics) {
+          var metricsRow = document.createElement('div');
+          metricsRow.className = 'flex flex-wrap gap-2 mb-3';
+          var metricData = [];
+          if (log.metrics.testsAdded)
+            metricData.push({
+              label: 'tests written',
+              value: log.metrics.testsAdded,
+              color: '#a78bfa',
+            });
+          if (log.metrics.filesSecured)
+            metricData.push({
+              label: 'files secured',
+              value: log.metrics.filesSecured,
+              color: '#34d399',
+            });
+          if (log.metrics.criticalFixed)
+            metricData.push({
+              label: 'critical fixes',
+              value: log.metrics.criticalFixed,
+              color: '#ef4444',
+            });
+          if (log.metrics.filesDeleted)
+            metricData.push({
+              label: 'debug files deleted',
+              value: log.metrics.filesDeleted,
+              color: '#f59e0b',
+            });
+
+          metricData.forEach(function (m) {
+            var pill = document.createElement('span');
+            pill.className = 'text-[11px] px-2.5 py-1 rounded-full font-medium';
+            pill.style.background = m.color + '18';
+            pill.style.color = m.color;
+            pill.textContent = m.value + ' ' + m.label;
+            metricsRow.appendChild(pill);
+          });
+          wrap.appendChild(metricsRow);
+        }
+
+        // Task list (compact)
+        var taskList = document.createElement('div');
+        taskList.className = 'space-y-1.5';
+        log.tasks.forEach(function (tid) {
+          var task = TASKS.find(function (t) {
+            return t.id === tid;
+          });
+          if (!task) return;
+          var catInfo = CATEGORIES[task.cat];
+          var row = document.createElement('div');
+          row.className =
+            'flex items-center gap-2 text-xs cursor-pointer hover:bg-zinc-800/50 rounded px-2 py-1 -mx-2';
+          row.addEventListener('click', function () {
+            showTaskDetail(task.id);
+          });
+          var check = document.createElement('span');
+          check.className = 'text-emerald-500';
+          check.textContent = '\u2713';
+          row.appendChild(check);
+          var taskTitle = document.createElement('span');
+          taskTitle.className = 'text-zinc-300 flex-1';
+          taskTitle.textContent = task.title;
+          row.appendChild(taskTitle);
+          if (task.doneNote) {
+            var noteTag = document.createElement('span');
+            noteTag.className =
+              'text-[10px] text-zinc-500 mono hidden sm:inline';
+            noteTag.textContent = task.doneNote;
+            row.appendChild(noteTag);
+          }
+          taskList.appendChild(row);
+        });
+        wrap.appendChild(taskList);
+        container.appendChild(wrap);
+      }
+
+      function renderCalendar() {
+        renderMotivationBanner();
+        renderTodayWins();
+
+        var grid = document.getElementById('calendarGrid');
+        grid.textContent = '';
+        var today = new Date('2026-02-08');
+        var year = 2026,
+          month = 1;
+        var firstDay = new Date(year, month, 1);
+        var lastDay = new Date(year, month + 1, 0);
+        var startDow = firstDay.getDay();
+        if (startDow === 0) startDow = 7;
+
+        var wrapper = document.createElement('div');
+        wrapper.className = 'bg-zinc-900 border border-zinc-800 rounded-xl p-4';
+
+        var headerRow = document.createElement('div');
+        headerRow.className = 'flex items-center justify-between mb-4';
+        var monthTitle = document.createElement('h3');
+        monthTitle.className = 'text-lg font-bold';
+        monthTitle.textContent = 'February 2026';
+        headerRow.appendChild(monthTitle);
+        var sprintLabel = document.createElement('span');
+        sprintLabel.className = 'text-xs text-zinc-500 mono';
+        sprintLabel.textContent = 'Sprint: Feb 8 \u2192 Feb 21';
+        headerRow.appendChild(sprintLabel);
+        wrapper.appendChild(headerRow);
+
+        var dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        var dayHeader = document.createElement('div');
+        dayHeader.className = 'grid grid-cols-7 gap-1 mb-2';
+        dayNames.forEach(function (d) {
+          var cell = document.createElement('div');
+          cell.className = 'text-center text-xs text-zinc-500 font-medium py-1';
+          cell.textContent = d;
+          dayHeader.appendChild(cell);
+        });
+        wrapper.appendChild(dayHeader);
+
+        var calGrid = document.createElement('div');
+        calGrid.className = 'grid grid-cols-7 gap-1';
+
+        for (var i = 1; i < startDow; i++) {
+          var empty = document.createElement('div');
+          empty.className = 'cal-day rounded-lg p-2 min-h-[90px]';
+          calGrid.appendChild(empty);
+        }
+
+        for (var d = 1; d <= lastDay.getDate(); d++) {
+          var dateStr = '2026-02-' + String(d).padStart(2, '0');
+          var isToday = d === today.getDate();
+          var plannedIds = CALENDAR_PLAN[dateStr] || [];
+          var plannedTasks = plannedIds
+            .map(function (id) {
+              return TASKS.find(function (t) {
+                return t.id === id;
+              });
+            })
+            .filter(Boolean);
+          var isPast = d < today.getDate();
+          var isFuture = d > 21;
+          var hasTasks = plannedTasks.length > 0;
+
+          // Check completion log for this day
+          var dayLog = COMPLETED_LOG[dateStr];
+          var doneCount = dayLog ? dayLog.tasks.length : 0;
+          var hasDone = doneCount > 0;
+
+          // Collect tasks completed on this day (from task doneDate field)
+          var doneTasks = TASKS.filter(function (t) {
+            return t.doneDate === dateStr;
+          });
+          if (doneTasks.length > doneCount) doneCount = doneTasks.length;
+          hasDone = doneCount > 0;
+
+          var cats = [];
+          var allDayTasks = plannedTasks.concat(doneTasks);
+          allDayTasks.forEach(function (t) {
+            if (cats.indexOf(t.cat) === -1) cats.push(t.cat);
+          });
+
+          var cell = document.createElement('div');
+          cell.className =
+            'cal-day rounded-lg p-1.5 min-h-[90px]' +
+            (isToday ? ' today bg-zinc-800/50' : ' bg-zinc-900') +
+            (isPast && !hasDone ? ' opacity-40' : '') +
+            (isFuture ? ' opacity-30' : '') +
+            (hasDone ? ' cal-done' : '');
+
+          if (hasTasks || hasDone) {
+            (function (ds) {
+              cell.style.cursor = 'pointer';
+              cell.addEventListener('click', function () {
+                showDayDetail(ds);
+              });
+            })(dateStr);
+          }
+
+          // Header: day number + score ring
+          var cellHeader = document.createElement('div');
+          cellHeader.className = 'flex items-center justify-between mb-1';
+          var dayNum = document.createElement('span');
+          dayNum.className =
+            'text-xs font-semibold ' +
+            (isToday
+              ? 'text-violet-400'
+              : hasDone
+                ? 'text-emerald-400'
+                : 'text-zinc-400');
+          dayNum.textContent = d;
+          cellHeader.appendChild(dayNum);
+
+          if (hasDone) {
+            var scoreRing = document.createElement('div');
+            scoreRing.className = 'score-ring';
+            scoreRing.style.background =
+              doneCount >= 5
+                ? 'linear-gradient(135deg, #34d399, #a78bfa)'
+                : doneCount >= 3
+                  ? 'rgba(52,211,153,0.2)'
+                  : 'rgba(52,211,153,0.1)';
+            scoreRing.style.color = doneCount >= 5 ? '#fff' : '#34d399';
+            scoreRing.textContent = doneCount;
+            cellHeader.appendChild(scoreRing);
+          } else if (hasTasks && !isPast) {
+            var countSpan = document.createElement('span');
+            countSpan.className = 'text-[10px] mono text-zinc-600';
+            countSpan.textContent = plannedTasks.length;
+            cellHeader.appendChild(countSpan);
+          }
+          cell.appendChild(cellHeader);
+
+          // Category dots
+          var dotsRow = document.createElement('div');
+          dotsRow.className = 'flex flex-wrap gap-0.5';
+          cats.slice(0, 5).forEach(function (c) {
+            var catDot = document.createElement('span');
+            catDot.className = 'w-2 h-2 rounded-full cat-dot-' + c;
+            dotsRow.appendChild(catDot);
+          });
+          cell.appendChild(dotsRow);
+
+          // Preview text: show accomplishment for done days, plan for future
+          if (hasDone && dayLog && dayLog.summary) {
+            var preview = document.createElement('div');
+            preview.className =
+              'mt-1 text-[9px] text-emerald-400/70 leading-tight truncate';
+            preview.textContent = '\u2713 ' + doneCount + ' done';
+            cell.appendChild(preview);
+          } else if (hasTasks && !isPast) {
+            var preview2 = document.createElement('div');
+            preview2.className =
+              'mt-1 text-[9px] text-zinc-500 leading-tight truncate';
+            preview2.textContent = plannedTasks[0].title;
+            cell.appendChild(preview2);
+          }
+
+          calGrid.appendChild(cell);
+        }
+
+        wrapper.appendChild(calGrid);
+        grid.appendChild(wrapper);
+
+        // Milestones
+        var timeline = document.getElementById('milestoneTimeline');
+        timeline.textContent = '';
+        var tlWrapper = document.createElement('div');
+        tlWrapper.className =
+          'bg-zinc-900 border border-zinc-800 rounded-xl p-4';
+        var tlTitle = document.createElement('h3');
+        tlTitle.className = 'text-lg font-bold mb-4';
+        tlTitle.textContent = 'Milestones';
+        tlWrapper.appendChild(tlTitle);
+
+        var tlList = document.createElement('div');
+        tlList.className = 'space-y-0';
+        MILESTONES.forEach(function (m, idx) {
+          var catInfo = CATEGORIES[m.cat];
+          var isPastM = new Date(m.date) < today;
+          var row = document.createElement('div');
+          row.className =
+            'flex items-start gap-3' + (isPastM ? ' opacity-40' : '');
+
+          var dotCol = document.createElement('div');
+          dotCol.className = 'flex flex-col items-center';
+          var mDot = document.createElement('div');
+          mDot.className = 'milestone-dot border-2';
+          mDot.style.borderColor = catInfo.color;
+          if (m.done) mDot.style.background = catInfo.color;
+          dotCol.appendChild(mDot);
+          if (idx < MILESTONES.length - 1) {
+            var mLine = document.createElement('div');
+            mLine.className = 'milestone-line h-8';
+            dotCol.appendChild(mLine);
+          }
+          row.appendChild(dotCol);
+
+          var textCol = document.createElement('div');
+          textCol.className = 'pb-4';
+          var mLabel = document.createElement('p');
+          mLabel.className = 'text-sm font-medium leading-tight';
+          mLabel.textContent = m.label;
+          textCol.appendChild(mLabel);
+          var mDate = document.createElement('span');
+          mDate.className = 'text-[11px] mono text-zinc-500';
+          mDate.textContent = formatDate(m.date);
+          textCol.appendChild(mDate);
+          row.appendChild(textCol);
+
+          tlList.appendChild(row);
+        });
+        tlWrapper.appendChild(tlList);
+        timeline.appendChild(tlWrapper);
+      }
+
+      function renderStats() {
+        var grid = document.getElementById('statsGrid');
+        grid.textContent = '';
+
+        var catStats = {};
+        Object.keys(CATEGORIES).forEach(function (cat) {
+          var all = TASKS.filter(function (t) {
+            return t.cat === cat;
+          });
+          var done = all.filter(function (t) {
+            return t.status === 'done';
+          });
+          catStats[cat] = {
+            total: all.length,
+            done: done.length,
+            pct: all.length ? Math.round((done.length / all.length) * 100) : 0,
+          };
+        });
+
+        var totalAll = TASKS.length;
+        var totalDone = TASKS.filter(function (t) {
+          return t.status === 'done';
+        }).length;
+        var totalPct = Math.round((totalDone / totalAll) * 100);
+
+        var priorities = ['critical', 'high', 'medium', 'low'];
+        var priColors = {
+          critical: '#ef4444',
+          high: '#fbbf24',
+          medium: '#60a5fa',
+          low: '#6ee7b7',
+        };
+
+        // Build stats with DOM methods
+        var topGrid = document.createElement('div');
+        topGrid.className =
+          'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6';
+
+        // Overall card
+        var overallCard = document.createElement('div');
+        overallCard.className =
+          'bg-zinc-900 border border-zinc-800 rounded-xl p-5 col-span-1 md:col-span-2 xl:col-span-1';
+
+        var overallTitle = document.createElement('h3');
+        overallTitle.className =
+          'text-sm font-semibold text-zinc-400 mb-3 uppercase tracking-wider';
+        overallTitle.textContent = 'Overall Progress';
+        overallCard.appendChild(overallTitle);
+
+        var pctDisplay = document.createElement('div');
+        pctDisplay.className = 'text-4xl font-bold mb-2';
+        pctDisplay.textContent = totalPct + '%';
+        overallCard.appendChild(pctDisplay);
+
+        var countDisplay = document.createElement('div');
+        countDisplay.className = 'text-sm text-zinc-500 mono mb-3';
+        countDisplay.textContent =
+          totalDone + ' of ' + totalAll + ' tasks done';
+        overallCard.appendChild(countDisplay);
+
+        var barOuter = document.createElement('div');
+        barOuter.className = 'h-3 bg-zinc-800 rounded-full overflow-hidden';
+        var barInner = document.createElement('div');
+        barInner.className =
+          'h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 progress-fill';
+        barInner.style.width = totalPct + '%';
+        barOuter.appendChild(barInner);
+        overallCard.appendChild(barOuter);
+
+        var statusGrid = document.createElement('div');
+        statusGrid.className = 'grid grid-cols-4 gap-2 mt-4';
+        var statuses = [
+          {
+            label: 'Blocked',
+            color: 'text-red-400',
+            count: TASKS.filter(function (t) {
+              return t.status === 'blocked';
+            }).length,
+          },
+          {
+            label: 'To Do',
+            color: 'text-zinc-400',
+            count: TASKS.filter(function (t) {
+              return t.status === 'todo';
+            }).length,
+          },
+          {
+            label: 'Active',
+            color: 'text-violet-400',
+            count: TASKS.filter(function (t) {
+              return t.status === 'inprogress';
+            }).length,
+          },
+          { label: 'Done', color: 'text-emerald-400', count: totalDone },
+        ];
+        statuses.forEach(function (s) {
+          var cell = document.createElement('div');
+          cell.className = 'text-center';
+          var num = document.createElement('div');
+          num.className = 'text-lg font-bold ' + s.color;
+          num.textContent = s.count;
+          cell.appendChild(num);
+          var lbl = document.createElement('div');
+          lbl.className = 'text-[10px] text-zinc-500';
+          lbl.textContent = s.label;
+          cell.appendChild(lbl);
+          statusGrid.appendChild(cell);
+        });
+        overallCard.appendChild(statusGrid);
+        topGrid.appendChild(overallCard);
+
+        // By Category card
+        var catCard = document.createElement('div');
+        catCard.className = 'bg-zinc-900 border border-zinc-800 rounded-xl p-5';
+        var catTitle = document.createElement('h3');
+        catTitle.className =
+          'text-sm font-semibold text-zinc-400 mb-3 uppercase tracking-wider';
+        catTitle.textContent = 'By Category';
+        catCard.appendChild(catTitle);
+
+        var catList = document.createElement('div');
+        catList.className = 'space-y-3';
+        Object.keys(catStats).forEach(function (cat) {
+          var s = catStats[cat];
+          var catInfo = CATEGORIES[cat];
+          var row = document.createElement('div');
+          var rowHeader = document.createElement('div');
+          rowHeader.className = 'flex items-center justify-between mb-1';
+          var nameSpan = document.createElement('span');
+          nameSpan.className = 'flex items-center gap-1.5 text-xs font-medium';
+          var cDot = document.createElement('span');
+          cDot.className = 'w-2 h-2 rounded-full';
+          cDot.style.background = catInfo.color;
+          nameSpan.appendChild(cDot);
+          nameSpan.appendChild(document.createTextNode(' ' + catInfo.label));
+          rowHeader.appendChild(nameSpan);
+          var countSpan = document.createElement('span');
+          countSpan.className = 'text-[11px] mono text-zinc-500';
+          countSpan.textContent = s.done + '/' + s.total;
+          rowHeader.appendChild(countSpan);
+          row.appendChild(rowHeader);
+
+          var bar = document.createElement('div');
+          bar.className = 'h-1.5 bg-zinc-800 rounded-full overflow-hidden';
+          var fill = document.createElement('div');
+          fill.className = 'h-full rounded-full';
+          fill.style.width = s.pct + '%';
+          fill.style.background = catInfo.color;
+          bar.appendChild(fill);
+          row.appendChild(bar);
+          catList.appendChild(row);
+        });
+        catCard.appendChild(catList);
+        topGrid.appendChild(catCard);
+
+        // By Priority card
+        var priCard = document.createElement('div');
+        priCard.className = 'bg-zinc-900 border border-zinc-800 rounded-xl p-5';
+        var priTitle = document.createElement('h3');
+        priTitle.className =
+          'text-sm font-semibold text-zinc-400 mb-3 uppercase tracking-wider';
+        priTitle.textContent = 'By Priority';
+        priCard.appendChild(priTitle);
+
+        var priList = document.createElement('div');
+        priList.className = 'space-y-3';
+        priorities.forEach(function (p) {
+          var all = TASKS.filter(function (t) {
+            return t.priority === p;
+          });
+          var done = all.filter(function (t) {
+            return t.status === 'done';
+          });
+          var pct = all.length
+            ? Math.round((done.length / all.length) * 100)
+            : 0;
+          var row = document.createElement('div');
+          var rowHeader = document.createElement('div');
+          rowHeader.className = 'flex items-center justify-between mb-1';
+          var badge = document.createElement('span');
+          badge.className =
+            'text-xs font-medium uppercase mono badge-' +
+            p +
+            ' px-1.5 py-0.5 rounded';
+          badge.textContent = p;
+          rowHeader.appendChild(badge);
+          var cnt = document.createElement('span');
+          cnt.className = 'text-[11px] mono text-zinc-500';
+          cnt.textContent = done.length + '/' + all.length;
+          rowHeader.appendChild(cnt);
+          row.appendChild(rowHeader);
+
+          var bar = document.createElement('div');
+          bar.className = 'h-1.5 bg-zinc-800 rounded-full overflow-hidden';
+          var fill = document.createElement('div');
+          fill.className = 'h-full rounded-full';
+          fill.style.width = pct + '%';
+          fill.style.background = priColors[p];
+          bar.appendChild(fill);
+          row.appendChild(bar);
+          priList.appendChild(row);
+        });
+        priCard.appendChild(priList);
+        topGrid.appendChild(priCard);
+
+        grid.appendChild(topGrid);
+
+        // Blockers section
+        var blockers = TASKS.filter(function (t) {
+          return t.status === 'blocked';
+        });
+        if (blockers.length > 0) {
+          var blockerSection = document.createElement('div');
+          blockerSection.className =
+            'bg-zinc-900 border border-zinc-800 rounded-xl p-5';
+          var blockerTitle = document.createElement('h3');
+          blockerTitle.className =
+            'text-sm font-semibold text-zinc-400 mb-3 uppercase tracking-wider';
+          blockerTitle.textContent = 'Current Blockers';
+          blockerSection.appendChild(blockerTitle);
+
+          var blockerGrid = document.createElement('div');
+          blockerGrid.className =
+            'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3';
+          blockers.forEach(function (t) {
+            var bCard = document.createElement('div');
+            bCard.className =
+              'bg-zinc-800/50 border border-red-900/30 rounded-lg p-3';
+            var bTitle = document.createElement('h4');
+            bTitle.className = 'text-sm font-medium mb-1';
+            bTitle.textContent = t.title;
+            bCard.appendChild(bTitle);
+            var bReason = document.createElement('p');
+            bReason.className = 'text-xs text-red-400 mb-1';
+            bReason.textContent = '\u26A0 ' + (t.blocker || 'Unknown blocker');
+            bCard.appendChild(bReason);
+            var bCat = document.createElement('span');
+            bCat.className = 'text-[10px] text-zinc-500 mono';
+            bCat.textContent = CATEGORIES[t.cat].label;
+            bCard.appendChild(bCat);
+            blockerGrid.appendChild(bCard);
+          });
+          blockerSection.appendChild(blockerGrid);
+          grid.appendChild(blockerSection);
+        }
+      }
+
+      function showTaskDetail(taskId) {
+        var task = TASKS.find(function (t) {
+          return t.id === taskId;
+        });
+        if (!task) return;
+        var catInfo = CATEGORIES[task.cat];
+        var mc = document.getElementById('taskModalContent');
+        mc.textContent = '';
+
+        var topRow = document.createElement('div');
+        topRow.className = 'flex items-center justify-between mb-4';
+        var badges = document.createElement('div');
+        badges.className = 'flex items-center gap-2';
+        var priBadge = document.createElement('span');
+        priBadge.className =
+          'badge-' +
+          task.priority +
+          ' text-xs font-semibold mono px-2 py-1 rounded';
+        priBadge.textContent = getPriorityLabel(task.priority);
+        badges.appendChild(priBadge);
+        var catBadge = document.createElement('span');
+        catBadge.className =
+          'flex items-center gap-1 text-xs px-2 py-1 rounded-full';
+        catBadge.style.background = catInfo.color + '22';
+        catBadge.style.color = catInfo.color;
+        catBadge.textContent = catInfo.label;
+        badges.appendChild(catBadge);
+        topRow.appendChild(badges);
+
+        var closeBtn = document.createElement('button');
+        closeBtn.className = 'text-zinc-500 hover:text-zinc-300 p-1 text-lg';
+        closeBtn.textContent = '\u2715';
+        closeBtn.addEventListener('click', closeModal);
+        topRow.appendChild(closeBtn);
+        mc.appendChild(topRow);
+
+        var titleEl = document.createElement('h2');
+        titleEl.className = 'text-lg font-bold mb-2';
+        titleEl.textContent = task.title;
+        mc.appendChild(titleEl);
+
+        var descEl = document.createElement('p');
+        descEl.className = 'text-sm text-zinc-400 mb-4 leading-relaxed';
+        descEl.textContent = task.desc;
+        mc.appendChild(descEl);
+
+        var details = document.createElement('div');
+        details.className = 'space-y-2 text-xs';
+
+        var fileRow = document.createElement('div');
+        fileRow.className = 'flex items-center gap-2 text-zinc-500';
+        fileRow.textContent = '\uD83D\uDCC1 ' + task.file;
+        details.appendChild(fileRow);
+
+        var phaseRow = document.createElement('div');
+        phaseRow.className = 'flex items-center gap-2 text-zinc-500';
+        phaseRow.textContent = '\uD83D\uDCCB ' + task.phase;
+        details.appendChild(phaseRow);
+
+        var statusRow = document.createElement('div');
+        statusRow.className = 'flex items-center gap-2';
+        var statusColor =
+          task.status === 'done'
+            ? 'text-emerald-400'
+            : task.status === 'blocked'
+              ? 'text-red-400'
+              : 'text-zinc-400';
+        var statusIcon =
+          task.status === 'done'
+            ? '\u2713'
+            : task.status === 'blocked'
+              ? '\u26A0'
+              : '\u25CB';
+        statusRow.className += ' ' + statusColor;
+        statusRow.textContent =
+          statusIcon +
+          ' ' +
+          task.status.charAt(0).toUpperCase() +
+          task.status.slice(1);
+        details.appendChild(statusRow);
+
+        if (task.blocker) {
+          var blockerBox = document.createElement('div');
+          blockerBox.className =
+            'mt-3 p-3 bg-red-900/20 border border-red-900/30 rounded-lg';
+          var blockerLabel = document.createElement('div');
+          blockerLabel.className = 'text-red-400 text-xs font-medium mb-1';
+          blockerLabel.textContent = '\u26A0 Blocker';
+          blockerBox.appendChild(blockerLabel);
+          var blockerDesc = document.createElement('p');
+          blockerDesc.className = 'text-xs text-red-300/80';
+          blockerDesc.textContent = task.blocker;
+          blockerBox.appendChild(blockerDesc);
+          details.appendChild(blockerBox);
+        }
+
+        mc.appendChild(details);
+        document.getElementById('taskModal').classList.add('show');
+      }
+
+      function showDayDetail(dateStr) {
+        var plannedIds = CALENDAR_PLAN[dateStr] || [];
+        var plannedTasks = plannedIds
+          .map(function (id) {
+            return TASKS.find(function (t) {
+              return t.id === id;
+            });
+          })
+          .filter(Boolean);
+        var dateLabel = formatDate(dateStr);
+        var milestone = MILESTONES.find(function (m) {
+          return m.date === dateStr;
+        });
+        var dayLog = COMPLETED_LOG[dateStr];
+        var doneTasks = TASKS.filter(function (t) {
+          return t.doneDate === dateStr;
+        });
+        var hasDone =
+          doneTasks.length > 0 || (dayLog && dayLog.tasks.length > 0);
+
+        var mc = document.getElementById('taskModalContent');
+        mc.textContent = '';
+
+        var topRow = document.createElement('div');
+        topRow.className = 'flex items-center justify-between mb-4';
+        var dayTitle = document.createElement('h2');
+        dayTitle.className = 'text-lg font-bold';
+        dayTitle.textContent = dateLabel;
+        topRow.appendChild(dayTitle);
+        var closeBtn = document.createElement('button');
+        closeBtn.className = 'text-zinc-500 hover:text-zinc-300 p-1 text-lg';
+        closeBtn.textContent = '\u2715';
+        closeBtn.addEventListener('click', closeModal);
+        topRow.appendChild(closeBtn);
+        mc.appendChild(topRow);
+
+        if (milestone) {
+          var msBox = document.createElement('div');
+          msBox.className =
+            'mb-4 p-3 rounded-lg ' +
+            (milestone.done
+              ? 'bg-emerald-900/20 border border-emerald-800/30'
+              : 'bg-violet-900/20 border border-violet-800/30');
+          var msLabel = document.createElement('div');
+          msLabel.className =
+            'text-xs font-medium ' +
+            (milestone.done ? 'text-emerald-400' : 'text-violet-400');
+          msLabel.textContent = milestone.done
+            ? '\u2713 Milestone Complete'
+            : 'Milestone';
+          msBox.appendChild(msLabel);
+          var msText = document.createElement('div');
+          msText.className = 'text-sm font-medium';
+          msText.textContent = milestone.label;
+          msBox.appendChild(msText);
+          mc.appendChild(msBox);
+        }
+
+        // Accomplishment summary for days with completions
+        if (hasDone && dayLog) {
+          var winsBox = document.createElement('div');
+          winsBox.className =
+            'mb-4 p-4 bg-emerald-900/10 border border-emerald-800/20 rounded-lg';
+          var winsTitle = document.createElement('div');
+          winsTitle.className = 'flex items-center gap-2 mb-2';
+          var winsIcon = document.createElement('span');
+          winsIcon.className = 'text-emerald-400';
+          winsIcon.textContent = '\u2713';
+          winsTitle.appendChild(winsIcon);
+          var winsLabel = document.createElement('span');
+          winsLabel.className = 'text-sm font-bold text-emerald-400';
+          winsLabel.textContent =
+            doneTasks.length +
+            ' task' +
+            (doneTasks.length !== 1 ? 's' : '') +
+            ' completed';
+          winsTitle.appendChild(winsLabel);
+          winsBox.appendChild(winsTitle);
+
+          var winsSummary = document.createElement('p');
+          winsSummary.className = 'text-sm text-zinc-300 mb-3 leading-relaxed';
+          winsSummary.textContent = dayLog.summary;
+          winsBox.appendChild(winsSummary);
+
+          if (dayLog.metrics) {
+            var metricsRow = document.createElement('div');
+            metricsRow.className = 'flex flex-wrap gap-2';
+            var metricData = [];
+            if (dayLog.metrics.testsAdded)
+              metricData.push({
+                label: 'tests',
+                value: dayLog.metrics.testsAdded,
+                color: '#a78bfa',
+              });
+            if (dayLog.metrics.filesSecured)
+              metricData.push({
+                label: 'files secured',
+                value: dayLog.metrics.filesSecured,
+                color: '#34d399',
+              });
+            if (dayLog.metrics.criticalFixed)
+              metricData.push({
+                label: 'critical',
+                value: dayLog.metrics.criticalFixed,
+                color: '#ef4444',
+              });
+            if (dayLog.metrics.filesDeleted)
+              metricData.push({
+                label: 'deleted',
+                value: dayLog.metrics.filesDeleted,
+                color: '#f59e0b',
+              });
+            metricData.forEach(function (m) {
+              var pill = document.createElement('span');
+              pill.className =
+                'text-[11px] px-2 py-0.5 rounded-full font-medium';
+              pill.style.background = m.color + '18';
+              pill.style.color = m.color;
+              pill.textContent = m.value + ' ' + m.label;
+              metricsRow.appendChild(pill);
+            });
+            winsBox.appendChild(metricsRow);
+          }
+          mc.appendChild(winsBox);
+        }
+
+        // Completed tasks section
+        if (doneTasks.length > 0) {
+          var doneSection = document.createElement('div');
+          doneSection.className = 'mb-4';
+          var doneHeader = document.createElement('div');
+          doneHeader.className =
+            'text-xs text-emerald-400 font-semibold uppercase tracking-wider mb-2';
+          doneHeader.textContent = 'Completed';
+          doneSection.appendChild(doneHeader);
+
+          doneTasks.forEach(function (t) {
+            var catInfo = CATEGORIES[t.cat];
+            var tCard = document.createElement('div');
+            tCard.className =
+              'cat-' +
+              t.cat +
+              ' bg-emerald-900/10 rounded-lg p-3 border border-emerald-800/20 mb-2 cursor-pointer hover:border-emerald-700/40';
+            tCard.addEventListener('click', function () {
+              closeModal();
+              setTimeout(function () {
+                showTaskDetail(t.id);
+              }, 200);
+            });
+            var tRow = document.createElement('div');
+            tRow.className = 'flex items-center gap-2 mb-1';
+            var tCheck = document.createElement('span');
+            tCheck.className = 'text-emerald-400 text-sm';
+            tCheck.textContent = '\u2713';
+            tRow.appendChild(tCheck);
+            var tTitle = document.createElement('h4');
+            tTitle.className = 'text-sm font-medium text-zinc-300 flex-1';
+            tTitle.textContent = t.title;
+            tRow.appendChild(tTitle);
+            tCard.appendChild(tRow);
+            if (t.doneNote) {
+              var tNote = document.createElement('p');
+              tNote.className = 'text-[11px] text-zinc-500 mono ml-5';
+              tNote.textContent = t.doneNote;
+              tCard.appendChild(tNote);
+            }
+            doneSection.appendChild(tCard);
+          });
+          mc.appendChild(doneSection);
+        }
+
+        // Planned tasks section (for future days)
+        if (plannedTasks.length > 0) {
+          var planSection = document.createElement('div');
+          if (doneTasks.length > 0) {
+            var planHeader = document.createElement('div');
+            planHeader.className =
+              'text-xs text-zinc-500 font-semibold uppercase tracking-wider mb-2';
+            planHeader.textContent = 'Planned';
+            planSection.appendChild(planHeader);
+          } else {
+            var countLabel = document.createElement('div');
+            countLabel.className = 'text-xs text-zinc-500 mb-3';
+            countLabel.textContent =
+              plannedTasks.length +
+              ' task' +
+              (plannedTasks.length !== 1 ? 's' : '') +
+              ' planned';
+            planSection.appendChild(countLabel);
+          }
+
+          plannedTasks.forEach(function (t) {
+            var catInfo = CATEGORIES[t.cat];
+            var tCard = document.createElement('div');
+            tCard.className =
+              'cat-' +
+              t.cat +
+              ' bg-zinc-800/50 rounded-lg p-3 border border-zinc-700/50 cursor-pointer hover:border-zinc-600 mb-2';
+            tCard.addEventListener('click', function () {
+              closeModal();
+              setTimeout(function () {
+                showTaskDetail(t.id);
+              }, 200);
+            });
+            var tBadges = document.createElement('div');
+            tBadges.className = 'flex items-center gap-2 mb-1';
+            var tPri = document.createElement('span');
+            tPri.className =
+              'badge-' +
+              t.priority +
+              ' text-[10px] font-semibold mono px-1.5 py-0.5 rounded';
+            tPri.textContent = getPriorityLabel(t.priority);
+            tBadges.appendChild(tPri);
+            var tCat = document.createElement('span');
+            tCat.className = 'text-[10px] px-1.5 py-0.5 rounded-full';
+            tCat.style.background = catInfo.color + '22';
+            tCat.style.color = catInfo.color;
+            tCat.textContent = catInfo.label;
+            tBadges.appendChild(tCat);
+            if (t.status === 'done') {
+              var doneLabel = document.createElement('span');
+              doneLabel.className = 'text-[10px] text-emerald-400';
+              doneLabel.textContent = '\u2713 Done';
+              tBadges.appendChild(doneLabel);
+            }
+            tCard.appendChild(tBadges);
+            var tTitle = document.createElement('h4');
+            tTitle.className =
+              'text-sm font-medium' +
+              (t.status === 'done' ? ' line-through text-zinc-500' : '');
+            tTitle.textContent = t.title;
+            tCard.appendChild(tTitle);
+            var tFile = document.createElement('p');
+            tFile.className = 'text-xs text-zinc-500 mono mt-0.5';
+            tFile.textContent = t.file;
+            tCard.appendChild(tFile);
+            planSection.appendChild(tCard);
+          });
+          mc.appendChild(planSection);
+        }
+
+        document.getElementById('taskModal').classList.add('show');
+      }
+
+      function closeModal() {
+        document.getElementById('taskModal').classList.remove('show');
+      }
+
+      document
+        .getElementById('taskModal')
+        .addEventListener('click', function (e) {
+          if (e.target === e.currentTarget) closeModal();
+        });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeModal();
+      });
+
+      function renderFilterChips() {
+        var container = document.getElementById('filterChips');
+        container.textContent = '';
+
+        var allBtn = document.createElement('button');
+        allBtn.className =
+          'filter-chip text-[11px] px-2 py-1 rounded-full border ' +
+          (activeFilter === null
+            ? 'border-zinc-500 text-zinc-200 bg-zinc-800'
+            : 'border-zinc-700 text-zinc-500');
+        allBtn.textContent = 'All';
+        allBtn.addEventListener('click', function () {
+          setFilter(null);
+        });
+        container.appendChild(allBtn);
+
+        Object.keys(CATEGORIES).forEach(function (key) {
+          var cat = CATEGORIES[key];
+          var btn = document.createElement('button');
+          btn.className =
+            'filter-chip text-[11px] px-2 py-1 rounded-full border ' +
+            (activeFilter === key
+              ? 'text-zinc-200 bg-zinc-800'
+              : 'text-zinc-500');
+          btn.style.borderColor = activeFilter === key ? cat.color : '#3f3f46';
+          var dot = document.createElement('span');
+          dot.className = 'inline-block w-1.5 h-1.5 rounded-full mr-1';
+          dot.style.background = cat.color;
+          btn.appendChild(dot);
+          btn.appendChild(document.createTextNode(cat.label));
+          btn.addEventListener('click', function () {
+            setFilter(key);
+          });
+          container.appendChild(btn);
+        });
+      }
+
+      function setFilter(cat) {
+        activeFilter = cat;
+        renderFilterChips();
+        renderKanban();
+      }
+
+      document.querySelectorAll('.tab-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.tab-btn').forEach(function (b) {
+            b.classList.remove('active');
+          });
+          btn.classList.add('active');
+          var view = btn.getAttribute('data-view');
+          activeView = view;
+          document.querySelectorAll('.view-panel').forEach(function (p) {
+            p.classList.remove('active');
+          });
+          document.getElementById('view-' + view).classList.add('active');
+        });
+      });
+
+      function updateProgress() {
+        var total = TASKS.length;
+        var done = TASKS.filter(function (t) {
+          return t.status === 'done';
+        }).length;
+        var pct = Math.round((done / total) * 100);
+        document.getElementById('progressBar').style.width = pct + '%';
+        document.getElementById('progressText').textContent = pct + '%';
+        document.getElementById('progressCount').textContent =
+          done + '/' + total + ' tasks';
+      }
+
+      function updateDateDisplay() {
+        var now = new Date();
+        document.getElementById('dateDisplay').textContent =
+          now.toLocaleDateString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          });
+      }
+
+      function init() {
+        updateDateDisplay();
+        renderFilterChips();
+        renderKanban();
+        renderCalendar();
+        renderStats();
+        updateProgress();
+        lucide.createIcons();
+      }
+
+      document.addEventListener('DOMContentLoaded', init);
+    </script>
+  </body>
+</html>
