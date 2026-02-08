@@ -70,10 +70,12 @@ export function useNotificationResponse(handlers: NotificationResponseHandler) {
           typeof habitId === 'string' &&
           habitId.length > 0
         ) {
-          console.log('[useNotificationResponse] Letter notification tapped:', {
-            habitId,
-            letterId,
-          });
+          if (__DEV__) {
+            console.log('[useNotificationResponse] Letter notification tapped:', {
+              habitId,
+              letterId,
+            });
+          }
           handlersRef.current.onLetterNotificationTap?.(letterId, habitId);
         }
         return;
@@ -84,10 +86,12 @@ export function useNotificationResponse(handlers: NotificationResponseHandler) {
         const habitId = data.habitId;
 
         if (typeof habitId === 'string' && habitId.length > 0) {
-          console.log(
-            '[useNotificationResponse] Habit notification tapped:',
-            habitId
-          );
+          if (__DEV__) {
+            console.log(
+              '[useNotificationResponse] Habit notification tapped:',
+              habitId
+            );
+          }
           handlersRef.current.onHabitNotificationTap(habitId);
         }
       }
