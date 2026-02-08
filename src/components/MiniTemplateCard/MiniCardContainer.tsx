@@ -35,48 +35,50 @@ export function MiniCardContainer({
   onImport,
 }: MiniCardContainerProps) {
   return (
-    <AnimatedPressable
-      accessible
-      accessibilityLabel={`${name} template`}
-      accessibilityRole='button'
-      style={[
-        styles.card,
-        { backgroundColor: `${iconColor}08` },
-        animatedCardStyle,
-      ]}
-      onPress={onPress}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-    >
-      <Animated.View
-        pointerEvents='none'
+    <View>
+      <AnimatedPressable
+        accessible
+        accessibilityLabel={`${name} template`}
+        accessibilityRole='button'
         style={[
-          styles.glowOverlay,
-          { backgroundColor: SUCCESS_COLOR },
-          glowStyle,
+          styles.card,
+          { backgroundColor: `${iconColor}08` },
+          animatedCardStyle,
         ]}
-      />
-      <View
-        style={[
-          styles.accent,
-          { backgroundColor: isImported ? SUCCESS_COLOR : iconColor },
-        ]}
-      />
-      <CardHeader
-        chevronStyle={chevronStyle}
-        hasResearch={hasResearch}
-        icon={icon}
-        iconColor={iconColor}
-        scienceBadgeStyle={scienceBadgeStyle}
-      />
-      <Text numberOfLines={1} style={styles.name}>
-        {name}
-      </Text>
-      {description && (
-        <Text numberOfLines={2} style={styles.description}>
-          {description}
+        onPress={onPress}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+      >
+        <Animated.View
+          pointerEvents='none'
+          style={[
+            styles.glowOverlay,
+            { backgroundColor: SUCCESS_COLOR },
+            glowStyle,
+          ]}
+        />
+        <View
+          style={[
+            styles.accent,
+            { backgroundColor: isImported ? SUCCESS_COLOR : iconColor },
+          ]}
+        />
+        <CardHeader
+          chevronStyle={chevronStyle}
+          hasResearch={hasResearch}
+          icon={icon}
+          iconColor={iconColor}
+          scienceBadgeStyle={scienceBadgeStyle}
+        />
+        <Text numberOfLines={1} style={styles.name}>
+          {name}
         </Text>
-      )}
+        {description && (
+          <Text numberOfLines={2} style={styles.description}>
+            {description}
+          </Text>
+        )}
+      </AnimatedPressable>
       {onImport && (
         <ImportButton
           checkmarkStyle={checkmarkStyle}
@@ -88,6 +90,6 @@ export function MiniCardContainer({
           onImport={onImport}
         />
       )}
-    </AnimatedPressable>
+    </View>
   );
 }

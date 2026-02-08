@@ -25,6 +25,7 @@ interface BrowseCategoriesTabProps {
   ) => Promise<void>;
   handleTemplatePreview: (template: Doc<'templates'>) => void;
   handleToggleCategory: (categoryId: string) => void;
+  importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
   scienceCountsByCategory: Record<string, number>;
   scrollViewRef: React.RefObject<ScrollView>;
@@ -38,6 +39,7 @@ export function BrowseCategoriesTab({
   handleTemplateImport,
   handleTemplatePreview,
   handleToggleCategory,
+  importedTemplateIds,
   importingTemplateId,
   scienceCountsByCategory,
   scrollViewRef,
@@ -64,6 +66,7 @@ export function BrowseCategoriesTab({
                   key={category.id}
                   categoryId={category.id}
                   icon={category.icon}
+                  importedTemplateIds={importedTemplateIds}
                   importingTemplateId={importingTemplateId}
                   isExpanded={expandedCategories.has(category.id)}
                   label={category.label}

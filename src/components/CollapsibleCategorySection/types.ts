@@ -21,6 +21,8 @@ export interface CollapsibleCategorySectionProps {
   onToggle: () => void;
   /** Template tap callback */
   onTemplatePress: (template: Doc<'templates'>) => void;
+  /** Set of already-imported template IDs */
+  importedTemplateIds?: Set<string>;
   /** Import template callback */
   onImport: (template: Doc<'templates'>) => void;
   /** Currently importing template ID */

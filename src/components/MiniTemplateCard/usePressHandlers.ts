@@ -54,6 +54,12 @@ export function createImportHandler(
   onImport: (() => void) | undefined
 ) {
   return () => {
+    if (__DEV__)
+      console.warn('[IMPORT] createImportHandler fired', {
+        hasOnImport: !!onImport,
+        isImported,
+        isImporting,
+      });
     if (isImporting || isImported || !onImport) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     onImport();

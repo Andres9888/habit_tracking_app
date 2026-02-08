@@ -37,19 +37,18 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
 
   const handleDirectImport = useCallback(
     async (id: Id<'templates'>) => {
+      if (__DEV__) console.warn('[IMPORT] handleDirectImport called', id);
       try {
         o.setImportingTemplateId(id);
-        const res = await o.importTemplate({
-          customizations: undefined,
-          templateId: id,
-        });
+        const res = await o.importTemplate({ templateId: id });
+        if (__DEV__) console.warn('[IMPORT] direct import result', res);
         if (res.success) {
           o.setImportedTemplateIds((p) => new Set(p).add(id));
           showSuccess();
           setTimeout(() => o.setShowFullsizePreview(false), 1000);
         }
-      } catch (error) {
-        if (__DEV__) console.error('Failed to import:', error);
+      } catch (error_) {
+        if (__DEV__) console.error('[IMPORT] Failed to import:', error_);
         showError();
       } finally {
         o.setImportingTemplateId(null);
@@ -67,19 +66,20 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
 
   const handleTemplateImport = useCallback(
     async (id: Id<'templates'>, c?: TemplateCustomizations) => {
+      if (__DEV__) console.warn('[IMPORT] handleTemplateImport called', id, c);
       try {
         o.setImportingTemplateId(id);
-        const res = await o.importTemplate({
-          customizations: c,
-          templateId: id,
-        });
+        const args = { ...(c ? { customizations: c } : {}), templateId: id };
+        if (__DEV__) console.warn('[IMPORT] calling mutation with', args);
+        const res = await o.importTemplate(args);
+        if (__DEV__) console.warn('[IMPORT] mutation result', res);
         if (res.success) {
           o.setImportedTemplateIds((p) => new Set(p).add(id));
           showSuccess();
           o.setShowCustomizeModal(false);
         }
-      } catch (error) {
-        if (__DEV__) console.error('Failed to import:', error);
+      } catch (error_) {
+        if (__DEV__) console.error('[IMPORT] Failed to import:', error_);
         showError();
       } finally {
         o.setImportingTemplateId(null);

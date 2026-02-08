@@ -23,19 +23,21 @@ const FREQUENCY_LABELS: Record<string, string> = {
 };
 
 interface TemplatesListProps {
-  templates: Doc<'templates'>[];
+  importedTemplateIds?: Set<string>;
   importingTemplateId?: string | null;
   reducedMotion: boolean;
-  onTemplatePress: (template: Doc<'templates'>) => void;
+  templates: Doc<'templates'>[];
   onImport: (template: Doc<'templates'>) => void;
+  onTemplatePress: (template: Doc<'templates'>) => void;
 }
 
 export function TemplatesList({
-  templates,
+  importedTemplateIds,
   importingTemplateId,
   reducedMotion,
-  onTemplatePress,
+  templates,
   onImport,
+  onTemplatePress,
 }: TemplatesListProps) {
   return (
     <ScrollView
@@ -71,11 +73,14 @@ export function TemplatesList({
               hasResearch={Boolean(template.scientificLink)}
               icon={template.icon || '📝'}
               iconColor={template.iconColor}
+              isImported={importedTemplateIds?.has(template._id)}
               isImporting={importingTemplateId === template._id}
               name={template.name || 'Untitled'}
               scientificReference={template.scientificReference}
               subtitle={
-                FREQUENCY_LABELS[template.frequency] || template.frequency || 'daily'
+                FREQUENCY_LABELS[template.frequency] ||
+                template.frequency ||
+                'daily'
               }
               onImport={() => onImport(template)}
               onPress={() => onTemplatePress(template)}

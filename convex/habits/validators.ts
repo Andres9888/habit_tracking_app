@@ -53,7 +53,17 @@ export const fullHabitValidator = v.object({
   totalCompletions: v.optional(v.number()),
   totalMisses: v.optional(v.number()),
   userId: v.optional(v.string()),
+  vizFailureBody: v.optional(v.string()),
+  vizFailureEmotion: v.optional(v.string()),
+  vizFailureMind: v.optional(v.string()),
+  vizSuccessBody: v.optional(v.string()),
+  vizSuccessEmotion: v.optional(v.string()),
+  vizSuccessMind: v.optional(v.string()),
   why: v.optional(v.string()),
+  woopObstacle: v.optional(v.string()),
+  woopOutcome: v.optional(v.string()),
+  woopPlan: v.optional(v.string()),
+  woopWish: v.optional(v.string()),
 });
 
 /** Tracking record validator */

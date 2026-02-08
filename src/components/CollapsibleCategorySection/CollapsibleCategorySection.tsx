@@ -30,6 +30,7 @@ export function CollapsibleCategorySection({
   onToggle,
   onTemplatePress,
   onImport,
+  importedTemplateIds,
   importingTemplateId,
 }: CollapsibleCategorySectionProps) {
   const colors = CATEGORY_COLORS[categoryId] || DEFAULT_CATEGORY_COLORS;
@@ -68,6 +69,7 @@ export function CollapsibleCategorySection({
           style={styles.content}
         >
           <TemplatesList
+            importedTemplateIds={importedTemplateIds}
             importingTemplateId={importingTemplateId}
             reducedMotion={reducedMotion}
             templates={templates}

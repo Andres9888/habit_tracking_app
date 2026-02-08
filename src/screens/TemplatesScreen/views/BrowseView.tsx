@@ -42,6 +42,7 @@ export function BrowseView(p: BrowseViewProps) {
           handleTemplateImport={h.handleTemplateImport}
           handleTemplatePreview={h.handleTemplatePreview}
           handleToggleCategory={h.handleToggleCategory}
+          importedTemplateIds={p.importedTemplateIds}
           importingTemplateId={p.importingTemplateId}
           scienceCountsByCategory={p.scienceCountsByCategory}
           scrollViewRef={p.scrollViewRef}
@@ -79,7 +80,9 @@ export function BrowseView(p: BrowseViewProps) {
       <Toast
         duration={3000}
         message={p.toastMessage ?? ''}
-        variant={(p.toastMessage ?? '').includes('Failed') ? 'error' : 'success'}
+        variant={
+          (p.toastMessage ?? '').includes('Failed') ? 'error' : 'success'
+        }
         visible={p.showToast}
         onDismiss={() => p.setShowToast(false)}
       />
