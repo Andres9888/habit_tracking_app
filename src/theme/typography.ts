@@ -33,15 +33,17 @@ export const fontFamilies = {
 } as const;
 
 /**
- * Font Weights
- * Using iOS standard weight names and numeric values
+ * Font Weights - iOS standard weight names and numeric values
+ * Typed to match React Native Paper's Font['fontWeight'] (string literals only)
  */
+export type FontWeight = 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900';
+
 export const fontWeights = {
   bold: '700' as const,
   medium: '500' as const,
   regular: '400' as const,
   semibold: '600' as const,
-};
+} satisfies Record<string, FontWeight>;
 
 /**
  * Type Scale
