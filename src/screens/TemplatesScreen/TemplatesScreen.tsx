@@ -3,12 +3,13 @@
  * Browse and import science-backed habit templates
  */
 
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesLoadingState } from './components/TemplatesLoadingState';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { BrowseView, CategorySearchView } from './views';
 
-export default function TemplatesScreen() {
+function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();
   const { data, state, handlers, filteredTemplates, getCategoryLabel } = props;
 
@@ -89,5 +90,13 @@ export default function TemplatesScreen() {
       onCloseSortOptions={() => state.setShowSortOptions(false)}
       onTabPress={props.handleTabPress}
     />
+  );
+}
+
+export default function TemplatesScreen() {
+  return (
+    <ErrorBoundary>
+      <TemplatesScreenContent />
+    </ErrorBoundary>
   );
 }
