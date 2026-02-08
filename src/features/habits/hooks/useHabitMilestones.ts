@@ -40,7 +40,7 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
   }, [habits, isLoading]);
 
   useEffect(() => {
-    if (milestone) {
+    if (milestone && __DEV__) {
       console.log('🎉 MILESTONE DETECTED!', {
         level: milestone.level,
         strength: `${milestone.strength}%`,
