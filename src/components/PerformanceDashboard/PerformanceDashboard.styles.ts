@@ -13,7 +13,7 @@ export const dashboardStyles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     padding: 12,
-    shadowColor: '#000',
+    shadowColor: '#1c1917',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 8,

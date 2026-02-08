@@ -128,32 +128,32 @@ export const borderRadius = {
  */
 export const shadows = {
   card: {
-    elevation: 2,
-    shadowColor: '#000000',
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8, // Android fallback
+    elevation: 3,
+    shadowColor: '#1c1917',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
   },
   floatingActionButton: {
     elevation: 6,
-    shadowColor: '#000000',
+    shadowColor: '#1c1917',
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
-    shadowRadius: 12, // Android fallback
+    shadowRadius: 16,
   },
   modal: {
     elevation: 4,
-    shadowColor: '#000000',
+    shadowColor: '#1c1917',
     shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16, // Android fallback
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
   },
   subtle: {
     elevation: 1,
-    shadowColor: '#000000',
+    shadowColor: '#1c1917',
     shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.05,
-    shadowRadius: 3, // Android fallback
+    shadowRadius: 4,
   },
 } as const;
 

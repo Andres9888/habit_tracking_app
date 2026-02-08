@@ -42,7 +42,7 @@ function ReminderOptionButtonComponent({
             borderColor: isSelected ? '#10B981' : '#e7e5e4',
             borderWidth: isSelected ? 2 : 1,
             elevation: isSelected ? 2 : 0,
-            shadowColor: '#000',
+            shadowColor: '#1c1917',
             shadowOffset: { height: isSelected ? 2 : 0, width: 0 },
             shadowOpacity: isSelected ? 0.1 : 0,
             shadowRadius: isSelected ? 3 : 0,

@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: 20,
+    borderRadius: 16,
     height: 40,
     justifyContent: 'center',
     width: 40,

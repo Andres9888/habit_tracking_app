@@ -37,7 +37,7 @@ export function AddHabitButton({
           start={{ x: 0, y: 0 }}
           style={{
             elevation: 4,
-            shadowColor: '#000',
+            shadowColor: '#1c1917',
             shadowOffset: { height: 2, width: 0 },
             shadowOpacity: 0.15,
             shadowRadius: 6,

@@ -24,7 +24,7 @@ export const sortStyles = StyleSheet.create({
     minWidth: 140,
     overflow: 'hidden',
     position: 'absolute',
-    shadowColor: '#000',
+    shadowColor: '#1c1917',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 12,

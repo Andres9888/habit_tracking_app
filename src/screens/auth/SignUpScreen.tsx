@@ -95,13 +95,13 @@ export default function SignUpScreen({
               entering={FadeInUp.delay(100).springify().damping(18)}
               style={{
                 backgroundColor: '#ffffff',
-                borderRadius: 20,
+                borderRadius: 16,
                 elevation: 4,
                 padding: 24,
-                shadowColor: '#000',
+                shadowColor: '#1c1917',
                 shadowOffset: { height: 4, width: 0 },
-                shadowOpacity: 0.06,
-                shadowRadius: 20,
+                shadowOpacity: 0.08,
+                shadowRadius: 16,
               }}
             >
               <View className='gap-3'>

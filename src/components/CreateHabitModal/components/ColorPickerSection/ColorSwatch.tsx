@@ -24,7 +24,7 @@ const getSwatchStyle = (color: string, isSelected: boolean) => ({
   borderRadius: 999,
   elevation: isSelected ? 3 : 1,
   height: SWATCH_SIZE,
-  shadowColor: '#000',
+  shadowColor: '#1c1917',
   shadowOffset: { height: 1, width: 0 },
   shadowOpacity: isSelected ? 0.15 : 0.08,
   shadowRadius: isSelected ? 4 : 2,

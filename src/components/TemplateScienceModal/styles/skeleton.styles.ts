@@ -8,7 +8,7 @@ export const skeletonStyles = StyleSheet.create({
   skeletonCard: {
     backgroundColor: '#FFFFFF',
     borderColor: '#e7e5e4',
-    borderRadius: 20,
+    borderRadius: 16,
     borderWidth: 1,
     marginBottom: 16,
     marginHorizontal: 20,

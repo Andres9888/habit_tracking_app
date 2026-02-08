@@ -72,7 +72,7 @@ export function SectionCard({
 
   if (onPress) {
     return (
-      <Animated.View style={[animatedStyle, { shadowColor: '#000' }]}>
+      <Animated.View style={[animatedStyle, { shadowColor: '#1c1917' }]}>
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'

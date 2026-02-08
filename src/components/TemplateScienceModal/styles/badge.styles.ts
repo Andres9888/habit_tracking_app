@@ -21,7 +21,7 @@ export const badgeStyles = StyleSheet.create({
   readingTimePill: {
     alignItems: 'center',
     backgroundColor: '#F3F4F6',
-    borderRadius: 20,
+    borderRadius: 16,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,

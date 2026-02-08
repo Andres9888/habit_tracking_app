@@ -8,7 +8,7 @@ import { spacing } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: '#faf9f7',
     flex: 1,
   },
   contentContainer: {

@@ -21,7 +21,7 @@ export const categoryStyles = StyleSheet.create({
     marginRight: 8,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    shadowColor: '#000',
+    shadowColor: '#1c1917',
     shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.05,
     shadowRadius: 2,

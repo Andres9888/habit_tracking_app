@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
   templateChip: {
     alignItems: 'center',
     backgroundColor: '#f3f4f6',
-    borderRadius: 20,
+    borderRadius: 16,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,

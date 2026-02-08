@@ -41,7 +41,7 @@ export function StatusIndicator({
 
 const styles = StyleSheet.create({
   indicator: {
-    shadowColor: '#000',
+    shadowColor: '#1c1917',
     shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 2,

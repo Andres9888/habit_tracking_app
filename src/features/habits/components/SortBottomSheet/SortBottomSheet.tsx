@@ -76,7 +76,7 @@ export function SortBottomSheet({
                 className='rounded-lg px-3 py-1.5 active:bg-stone-100'
                 onPress={handleDismiss}
               >
-                <Text className='text-[13px] font-semibold text-amber-600'>
+                <Text className='text-[13px] font-semibold text-emerald-700'>
                   Done
                 </Text>
               </Pressable>
