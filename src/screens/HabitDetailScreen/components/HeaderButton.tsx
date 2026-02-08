@@ -1,0 +1,48 @@
+/** HeaderButton - Animated button with scale + haptic feedback */
+import React from 'react';
+import { Pressable } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
+import { buttonShadow } from './DetailHeader.constants';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+interface HeaderButtonProps {
+  onPress: () => void;
+  icon: React.ReactNode;
+  label: string;
+}
+
+export function HeaderButton({ onPress, icon, label }: HeaderButtonProps) {
+  const scale = useSharedValue(1);
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePress = () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onPress();
+  };
+
+  return (
+    <AnimatedPressable
+      accessibilityLabel={label}
+      accessibilityRole='button'
+      className='h-11 w-11 items-center justify-center rounded-full bg-white/90 active:bg-stone-100'
+      style={[buttonShadow, animStyle]}
+      onPress={handlePress}
+      onPressIn={() => {
+        scale.value = withSpring(0.92, { damping: 15 });
+      }}
+      onPressOut={() => {
+        scale.value = withSpring(1, { damping: 15 });
+      }}
+    >
+      {icon}
+    </AnimatedPressable>
+  );
+}
