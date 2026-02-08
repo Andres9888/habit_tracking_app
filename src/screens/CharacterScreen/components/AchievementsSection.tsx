@@ -1,4 +1,5 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AchievementCard } from './AchievementCard';
 import type { Achievement } from '../types';
 
@@ -6,14 +7,27 @@ interface AchievementsSectionProps {
   achievements: Achievement[];
 }
 
-export function AchievementsSection({ achievements }: AchievementsSectionProps) {
+const STAGGER_DELAY = 60;
+const BASE_DELAY = 660;
+
+export function AchievementsSection({
+  achievements,
+}: AchievementsSectionProps) {
   return (
     <View className='mb-8 flex-col gap-3'>
-      <Text className='px-1 text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
+      <Animated.Text
+        className='px-1 font-semibold text-[#1c1917]'
+        entering={FadeInDown.delay(BASE_DELAY).springify().damping(18)}
+        style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22 }}
+      >
         Recent Achievements
-      </Text>
-      {achievements.map((achievement) => (
-        <AchievementCard key={achievement.id} achievement={achievement} />
+      </Animated.Text>
+      {achievements.map((achievement, index) => (
+        <AchievementCard
+          key={achievement.id}
+          achievement={achievement}
+          delay={BASE_DELAY + STAGGER_DELAY * (index + 1)}
+        />
       ))}
     </View>
   );
