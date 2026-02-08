@@ -29,7 +29,7 @@ export function getNextWeekConnection(
     const nextDateString = format(nextDate, 'yyyy-MM-dd');
     return getHabitStatus(habitId, nextDateString) === 'done';
   } catch (error) {
-    console.warn('Error calculating next date status', error);
+    if (__DEV__) console.warn('Error calculating next date status', error);
     return false;
   }
 }

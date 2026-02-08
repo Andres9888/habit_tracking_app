@@ -23,7 +23,7 @@ export class RenderTracker {
   endRender(componentName: string): number {
     const startTime = this.renderStack.get(componentName);
     if (startTime === undefined) {
-      console.warn(`No start time for component: ${componentName}`);
+      if (__DEV__) console.warn(`No start time for component: ${componentName}`);
       return 0;
     }
     const duration = now() - startTime;

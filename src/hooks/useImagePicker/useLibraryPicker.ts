@@ -55,7 +55,7 @@ export function useLibraryPicker({
           error instanceof Error ? error.message : 'Failed to pick image';
         setError(msg);
         setIsLoading(false);
-        console.error('Image picker error:', error);
+        if (__DEV__) console.error('Image picker error:', error);
         return null;
       }
     },

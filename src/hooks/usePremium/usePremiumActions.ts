@@ -49,7 +49,7 @@ export function usePremiumActions({
         const purchaseError = error_ as PurchasesError;
         if (purchaseError.userCancelled) return false;
 
-        console.error('[usePremium] Purchase failed:', purchaseError);
+        if (__DEV__) console.error('[usePremium] Purchase failed:', purchaseError);
         setError(purchaseError.message || 'Purchase failed');
         return false;
       }
@@ -70,7 +70,7 @@ export function usePremiumActions({
 
       return info.entitlements.active[PREMIUM_ENTITLEMENT_ID] !== undefined;
     } catch (error_) {
-      console.error('[usePremium] Restore failed:', error_);
+      if (__DEV__) console.error('[usePremium] Restore failed:', error_);
       setError('Failed to restore purchases');
       return false;
     }
@@ -83,7 +83,7 @@ export function usePremiumActions({
       const info = await Purchases.getCustomerInfo();
       setCustomerInfo(info);
     } catch (error_) {
-      console.error('[usePremium] Refresh failed:', error_);
+      if (__DEV__) console.error('[usePremium] Refresh failed:', error_);
     }
   }, [setCustomerInfo]);
 

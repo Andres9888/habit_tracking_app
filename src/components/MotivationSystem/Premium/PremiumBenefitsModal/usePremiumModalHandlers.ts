@@ -57,7 +57,7 @@ export function usePremiumModalHandlers(
       }
     } catch (error_) {
       triggerError();
-      console.error('[PremiumBenefitsModal] Restore error:', error_);
+      if (__DEV__) console.error('[PremiumBenefitsModal] Restore error:', error_);
       Alert.alert(
         'Restore Failed',
         'There was a problem restoring your purchases. Please try again or contact support if the issue persists.',

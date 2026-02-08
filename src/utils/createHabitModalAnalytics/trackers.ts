@@ -14,7 +14,7 @@ class ConsoleAnalyticsTracker implements AnalyticsTracker {
   track(event: CreateHabitModalEvent): void {
     if (!this.enabled) return;
 
-    console.log('[Analytics] Create Habit Modal V11:', {
+    if (__DEV__) console.log('[Analytics] Create Habit Modal V11:', {
       timestamp: new Date().toISOString(),
       type: event.type,
       ...event,
@@ -57,7 +57,7 @@ export function trackEvent(event: CreateHabitModalEvent): void {
   } catch (error) {
     // Silently fail - don't let analytics errors break the app
     if (__DEV__) {
-      console.error('[Analytics] Error tracking event:', error);
+      if (__DEV__) console.error('[Analytics] Error tracking event:', error);
     }
   }
 }
