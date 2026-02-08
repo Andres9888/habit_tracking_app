@@ -34,7 +34,11 @@ export function LettersList({
           Your Letters ({letters.length})
         </Text>
         {hasMore && (
-          <Pressable onPress={onViewAllLetters}>
+          <Pressable
+            accessibilityLabel='View all letters'
+            accessibilityRole='button'
+            onPress={onViewAllLetters}
+          >
             <Text className='text-xs font-medium text-violet-600'>
               View All
             </Text>

@@ -22,6 +22,7 @@ export function useHabitCard(props: HabitCardProps) {
   const {
     id,
     name,
+    icon = '📝',
     color,
     strength,
     currentStreak: currentStreakProp = 0,
@@ -50,6 +51,15 @@ export function useHabitCard(props: HabitCardProps) {
     id,
     offlineSyncEnabled,
     serverTracking,
+  });
+
+  // Integrate streak milestone celebrations
+  useStreakMilestoneIntegration({
+    habitId: id,
+    habitName: name,
+    habitEmoji: icon,
+    currentStreak: habitState.currentStreak,
+    isCompleted: habitState.completed,
   });
 
   const entrance = useHabitCardEntrance({

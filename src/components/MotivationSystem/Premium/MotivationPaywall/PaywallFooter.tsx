@@ -20,7 +20,10 @@ export function PaywallFooter({
     <>
       {showRestorePurchases && (
         <Pressable
-          className='py-2'
+          accessibilityLabel='Restore purchases'
+          accessibilityRole='button'
+          accessibilityState={{ disabled: isProcessing }}
+          className='py-3'
           disabled={isProcessing}
           onPress={onRestorePurchases}
         >

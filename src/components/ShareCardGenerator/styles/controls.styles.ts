@@ -33,7 +33,7 @@ export const controlsStyles = StyleSheet.create({
   messageInput: {
     borderRadius: 8,
     borderWidth: 1,
-    fontSize: 15,
+    fontSize: 17,
     minHeight: 80,
     padding: 12,
     textAlignVertical: 'top',
@@ -42,7 +42,7 @@ export const controlsStyles = StyleSheet.create({
     marginBottom: 24,
   },
   optionLabel: {
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
     marginBottom: 12,
   },
