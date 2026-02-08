@@ -12,6 +12,8 @@ interface PerformanceWithMemory extends Performance {
   };
 }
 
+export const MAX_SNAPSHOTS = 100;
+
 export class MemoryMonitor {
   private snapshots: MemorySnapshot[] = [];
   private intervalId: ReturnType<typeof setInterval> | null = null;
@@ -34,6 +36,7 @@ export class MemoryMonitor {
       timestamp,
     };
     this.snapshots.push(snapshot);
+    if (this.snapshots.length > MAX_SNAPSHOTS) this.snapshots.shift();
     return snapshot;
   }
 
