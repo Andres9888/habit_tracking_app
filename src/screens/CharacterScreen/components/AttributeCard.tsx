@@ -10,13 +10,20 @@ export function AttributeCard({
   maxValue,
   gradientColors,
   bgGradient,
-}: AttributeCardProps) {
+  delay = 0,
+}: AttributeCardProps & { delay?: number }) {
   const percentage = (value / maxValue) * 100;
 
   return (
     <Animated.View
       className='overflow-hidden rounded-3xl border border-stone-100 bg-white'
-      entering={FadeInDown.duration(400)}
+      entering={FadeInDown.delay(delay).springify().damping(18)}
+      style={{
+        shadowColor: '#1c1917',
+        shadowOffset: { height: 4, width: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 16,
+      }}
     >
       <View className='relative h-[110px]'>
         <View

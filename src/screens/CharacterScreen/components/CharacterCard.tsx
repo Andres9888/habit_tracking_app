@@ -16,7 +16,13 @@ export function CharacterCard({ data }: CharacterCardProps) {
   return (
     <Animated.View
       className='mb-6 overflow-hidden rounded-3xl border border-stone-100 bg-white'
-      entering={FadeInDown.duration(300)}
+      entering={FadeInDown.delay(60).springify().damping(18)}
+      style={{
+        shadowColor: '#1c1917',
+        shadowOffset: { height: 4, width: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 16,
+      }}
     >
       <View className='flex-col gap-6 px-6 py-6'>
         <View className='flex-row items-center justify-between'>
