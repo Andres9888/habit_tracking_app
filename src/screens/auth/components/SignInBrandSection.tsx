@@ -6,12 +6,13 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { Link } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
+import type { AnimatedStyle } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 import { styles } from '../SignInScreen.styles';
 
 interface SignInBrandSectionProps {
-  logoStyle: AnimatedStyleProp<ViewStyle>;
-  headerStyle: AnimatedStyleProp<ViewStyle>;
+  logoStyle: AnimatedStyle<ViewStyle>;
+  headerStyle: AnimatedStyle<ViewStyle>;
 }
 
 export function SignInBrandSection({

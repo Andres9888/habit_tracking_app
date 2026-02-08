@@ -2,10 +2,11 @@
  * SignInFormSection Types
  */
 
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
+import type { AnimatedStyle } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 
 export interface SignInFormSectionProps {
-  contentStyle: AnimatedStyleProp<ViewStyle>;
+  contentStyle: AnimatedStyle<ViewStyle>;
   emailAddress: string;
   setEmailAddress: (value: string) => void;
   emailError: string | null;

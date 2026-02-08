@@ -14,7 +14,7 @@ interface HabitData {
   dayPhase: string | null;
   fullHabitName: string;
   hasReminders: boolean;
-  reminderSound?: string;
+  reminderSound?: string | null;
   reminderTime: Date;
   selectedColor: string;
   selectedEmoji: string | null;

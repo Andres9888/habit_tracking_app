@@ -130,5 +130,5 @@ export function buildModalsStateReturnValue(
 
     setShowHabitStrengthPercentage: () => {},
     toggleHabit: extra.handleToggleHabit,
-  } as HabitsModalsState;
+  } as unknown as HabitsModalsState;
 }

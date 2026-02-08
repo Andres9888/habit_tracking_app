@@ -1,10 +1,11 @@
 import { useCallback } from 'react';
+import type { ReminderOption } from '../components/ReminderSelector';
 
 interface FormState {
   setHabitName: (name: string) => void;
   setSelectedEmoji: (emoji: string | null) => void;
   setSelectedColor: (color: string) => void;
-  setReminderOption: (option: string) => void;
+  setReminderOption: (option: ReminderOption) => void;
   setReminderTime: (time: Date) => void;
   reminderTime: Date;
   reminderOption: string;

@@ -1,5 +1,5 @@
 import type { Id } from '../../../../convex/_generated/dataModel';
-import type { Habit } from '../types';
+import type { Habit, ShareCardData } from '../types';
 
 export interface HandlersReturn {
   closeCreateHabit: () => void;
@@ -8,12 +8,12 @@ export interface HandlersReturn {
   closeQuickActions: () => void;
   confirmPause: () => Promise<void>;
   closeVisualizationExercise: () => void;
-  onSettingsChange: (u: unknown) => Promise<void>;
+  onSettingsChange: (u: Record<string, unknown>) => Promise<void>;
   onDeleteHabit: (id: Id<'habits'>) => Promise<void>;
   openEditHabit: (h: Habit | null) => void;
   closeActivationModal: () => void;
   openHabitCalendar: (h: Habit) => void;
-  onShareMilestone: (d: unknown) => void;
+  onShareMilestone: (d: ShareCardData) => void;
   openHabitDetail: (h: Habit, t?: 'progress' | 'motivation' | 'manage') => void;
   openActivationModal: (h: Habit) => void;
   openPauseModal: (id: Id<'habits'>) => void;

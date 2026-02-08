@@ -56,14 +56,34 @@ export function useHabitsModalsState({
     getTodayMidnight()
   );
 
+  // Wrap toggle mutation as plain async function
+  const wrappedToggleHabit = useCallback(
+    async (args: { habitId: Id<'habits'>; date: string }) => { await toggleHabit(args); },
+    [toggleHabit]
+  );
+
   // Wrap toggle mutation with optimistic update + offline queue support (T011)
   const optimisticToggleHabit = useOptimisticToggleMutation(
-    toggleHabit,
+    wrappedToggleHabit,
     isCompleted,
     { isOnline }
   );
 
   useSyncAllHabitStates(habits, selection);
+
+  // Wrap mutations as plain async functions to match handler type signatures
+  const wrappedPauseHabit = useCallback(
+    async (args: { habitId: Id<'habits'> }) => { await pauseHabit(args); },
+    [pauseHabit]
+  );
+  const wrappedRemoveHabit = useCallback(
+    async (args: { habitId: Id<'habits'> }) => { await removeHabit(args); },
+    [removeHabit]
+  );
+  const wrappedUpdateSettings = useCallback(
+    async (s: Parameters<typeof updateSettings>[0]) => { await updateSettings(s); },
+    [updateSettings]
+  );
 
   const handlers = useHabitsModalsHandlers(
     buildModalsSettersArg(visibility, selection),
@@ -71,15 +91,15 @@ export function useHabitsModalsState({
       clearMilestone,
       habits,
       habitToPause: selection.habitToPause,
-      pauseHabit,
-      removeHabit,
+      pauseHabit: wrappedPauseHabit,
+      removeHabit: wrappedRemoveHabit,
       settings,
-      updateSettings,
+      updateSettings: wrappedUpdateSettings,
     }
   );
 
   const handleArchive = useCallback(
-    async (habitId: Id<'habits'>) => archiveHabit({ habitId }),
+    async (habitId: Id<'habits'>) => { await archiveHabit({ habitId }); },
     [archiveHabit]
   );
 

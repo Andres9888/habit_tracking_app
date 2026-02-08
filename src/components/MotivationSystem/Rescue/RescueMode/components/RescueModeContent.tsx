@@ -57,8 +57,8 @@ export function RescueModeContent({
           reduceMotion={reduceMotion}
           visible={visible}
           voiceNote={habit.day1VoiceNote!}
-          onVoiceNotePlayFinish={onVoiceNotePlayFinish}
-          onVoiceNotePlayStart={onVoiceNotePlayStart}
+          onVoiceNotePlayFinish={onVoiceNotePlayFinish ?? (() => {})}
+          onVoiceNotePlayStart={onVoiceNotePlayStart ?? (() => {})}
         />
       )}
       {hasPreviousStreakNotes && (
@@ -68,8 +68,8 @@ export function RescueModeContent({
           reduceMotion={reduceMotion}
           visible={visible}
           voiceNotes={habit.previousStreakVoiceNotes!}
-          onVoiceNotePlayFinish={onVoiceNotePlayFinish}
-          onVoiceNotePlayStart={onVoiceNotePlayStart}
+          onVoiceNotePlayFinish={onVoiceNotePlayFinish ?? (() => {})}
+          onVoiceNotePlayStart={onVoiceNotePlayStart ?? (() => {})}
         />
       )}
       <FailureVizSection
