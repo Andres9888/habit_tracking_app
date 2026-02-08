@@ -26,16 +26,19 @@ export function NotesEditorModal({
     <RNModal animationType='slide' visible={isOpen} onRequestClose={onClose}>
       <View className='flex-1 bg-white' style={{ paddingTop: insets.top + 16 }}>
         <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
-          <Text className='text-lg font-bold text-stone-900'>
+          <Text
+            className='font-bold text-stone-900'
+            style={{ fontSize: 22, letterSpacing: -0.35 }}
+          >
             {editingNote ? 'Edit Note' : 'New Note'}
           </Text>
           <Pressable
             accessibilityLabel='Close note editor'
             accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
             onPress={onClose}
           >
-            <X className='text-stone-600' size={24} />
+            <X color='#57534e' size={24} />
           </Pressable>
         </View>
         <ScrollView

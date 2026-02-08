@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Text, View } from 'react-native';
-import { FormInput } from '../FormInput';
-import { SubmitButton } from '../SubmitButton';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { VerificationForm } from './VerificationForm';
 
 interface VerificationViewProps {
   emailAddress: string;
@@ -9,41 +10,43 @@ interface VerificationViewProps {
   onVerify: (code: string) => Promise<void>;
 }
 
+const anim = (d: number) =>
+  FadeInDown.duration(280).delay(d).springify().damping(18);
+
 export function VerificationView({
   emailAddress,
   isLoading,
   onVerify,
 }: VerificationViewProps) {
   const [code, setCode] = useState('');
+  const insets = useSafeAreaInsets();
 
   return (
-    <View className='flex-1 bg-white'>
-      <View className='pt-15 flex-1 px-6'>
-        <Text className='mb-2 text-[32px] font-extrabold tracking-tight text-stone-900'>
-          Verify Email
-        </Text>
-        <Text className='mb-10 text-base text-stone-500'>
-          We've sent a verification code to {emailAddress}
-        </Text>
-
-        <View className='gap-6'>
-          <FormInput
-            keyboardType='number-pad'
-            label='Verification code'
-            maxLength={6}
-            placeholder='Enter 6-digit code'
-            value={code}
-            onChangeText={setCode}
-          />
-
-          <SubmitButton
-            disabled={code.length !== 6}
+    <View className='flex-1' style={{ backgroundColor: '#faf9f7' }}>
+      <View className='flex-1 px-6' style={{ paddingTop: insets.top + 24 }}>
+        <Animated.View entering={anim(0)}>
+          <Text
+            className='mb-2 font-extrabold text-stone-900'
+            style={{ fontSize: 34, letterSpacing: -1 }}
+          >
+            Verify Email
+          </Text>
+        </Animated.View>
+        <Animated.Text
+          className='mb-10 text-stone-500'
+          entering={anim(60)}
+          style={{ fontSize: 17 }}
+        >
+          We sent a verification code to {emailAddress}
+        </Animated.Text>
+        <Animated.View entering={anim(120)}>
+          <VerificationForm
+            code={code}
             isLoading={isLoading}
-            label='Verify email'
-            loadingLabel='Verifying...'
-            onPress={() => onVerify(code)}
+            onChangeCode={setCode}
+            onVerify={onVerify}
           />
-        </View>
+        </Animated.View>
       </View>
     </View>
   );
