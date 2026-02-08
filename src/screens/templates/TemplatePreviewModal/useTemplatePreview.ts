@@ -49,10 +49,12 @@ export function useTemplatePreview({
     if (customColor !== template.iconColor) {
       customizations.iconColor = customColor;
     }
-    customizations.reminderTime = reminderTime.toISOString();
+    if (showTimePicker) {
+      customizations.reminderTime = reminderTime.toISOString();
+    }
 
     onImport(template._id, customizations);
-  }, [template, customName, customColor, reminderTime, onImport]);
+  }, [template, customName, customColor, reminderTime, showTimePicker, onImport]);
 
   const handleClose = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

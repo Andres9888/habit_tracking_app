@@ -31,9 +31,16 @@ export const importTemplate = mutation({
       throw new Error('Template not found');
     }
 
-    // Get max order to place new habit at the end
-    const allHabits = await ctx.db.query('habits').collect();
-    const maxOrder = allHabits.reduce((max, h) => Math.max(max, h.order ?? 0), 0);
+    // Get max order to place new habit at the end (filtered by current user)
+    const userHabits = await ctx.db
+      .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', userId))
+      .collect();
+    let maxOrder = 0;
+    for (const h of userHabits) {
+      const order = h.order ?? 0;
+      if (order > maxOrder) maxOrder = order;
+    }
 
     // Create habit from template
     const habitId = await ctx.db.insert('habits', {
@@ -65,6 +72,7 @@ export const importTemplate = mutation({
       habitId,
       importedAt: Date.now(),
       templateId: args.templateId,
+      userId,
     });
 
     return { habitId, success: true };
