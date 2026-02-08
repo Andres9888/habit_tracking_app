@@ -13,7 +13,7 @@ import { useHabitCardEntrance } from './useHabitCardEntrance';
 import { useHabitCardAnimations } from './useHabitCardAnimations';
 import { useHabitCardGestures } from './useHabitCardGestures';
 import { useHabitCardEffects } from './useHabitCardEffects';
-import { useHabitCardState } from './hooks';
+import { useHabitCardState, useStreakMilestoneIntegration } from './hooks';
 import { useHabitCardValues } from './useHabitCardValues';
 import { getStrengthColor, getBackgroundColor } from './HabitCard.utils';
 import type { HabitCardProps } from './HabitCard.types';
