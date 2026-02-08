@@ -34,9 +34,14 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f5f5f4',
     borderRadius: 16,
+    elevation: 4,
     height: 80,
     justifyContent: 'center',
     marginBottom: 8,
+    shadowColor: '#1c1917',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
     width: 80,
   },
   primaryButton: {
@@ -48,7 +53,7 @@ export const styles = StyleSheet.create({
     shadowColor: '#059669',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.2,
-    shadowRadius: 12,
+    shadowRadius: 16,
   },
   primaryButtonText: {
     color: '#ffffff',
@@ -76,7 +81,7 @@ export const styles = StyleSheet.create({
   },
   title: {
     color: '#1c1917',
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,
     textAlign: 'center',

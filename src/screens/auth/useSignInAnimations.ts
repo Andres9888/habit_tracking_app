@@ -3,6 +3,7 @@
  *
  * Manages entrance animations for the sign-in screen:
  * logo scale/fade, header slide, and content slide.
+ * Spring config: damping(18), 60ms stagger
  */
 
 import { useEffect } from 'react';
@@ -14,6 +15,9 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
+const SPRING_CONFIG = { damping: 18, stiffness: 120 };
+const STAGGER = 60;
+
 export function useSignInAnimations() {
   const logoScale = useSharedValue(0.5);
   const logoOpacity = useSharedValue(0);
@@ -24,19 +28,16 @@ export function useSignInAnimations() {
 
   useEffect(() => {
     // Logo entrance
-    logoScale.value = withDelay(
-      50,
-      withSpring(1, { damping: 12, stiffness: 100 })
-    );
-    logoOpacity.value = withDelay(50, withTiming(1, { duration: 400 }));
+    logoScale.value = withSpring(1, SPRING_CONFIG);
+    logoOpacity.value = withTiming(1, { duration: 280 });
 
-    // Header entrance
-    headerOpacity.value = withDelay(200, withTiming(1, { duration: 500 }));
-    headerTranslateY.value = withDelay(200, withSpring(0, { damping: 15 }));
+    // Header entrance (60ms stagger)
+    headerOpacity.value = withDelay(STAGGER, withTiming(1, { duration: 280 }));
+    headerTranslateY.value = withDelay(STAGGER, withSpring(0, SPRING_CONFIG));
 
-    // Content entrance
-    contentOpacity.value = withDelay(400, withTiming(1, { duration: 500 }));
-    contentTranslateY.value = withDelay(400, withSpring(0, { damping: 15 }));
+    // Content entrance (120ms stagger)
+    contentOpacity.value = withDelay(STAGGER * 2, withTiming(1, { duration: 280 }));
+    contentTranslateY.value = withDelay(STAGGER * 2, withSpring(0, SPRING_CONFIG));
   }, [
     contentOpacity,
     contentTranslateY,

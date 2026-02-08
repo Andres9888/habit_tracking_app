@@ -1,5 +1,6 @@
 /**
  * useWelcomeAnimations - Entrance animations for WelcomeScreen
+ * Uses consistent spring config: damping(18) with 60ms stagger
  */
 
 import { useEffect } from 'react';
@@ -8,8 +9,10 @@ import {
   useAnimatedStyle,
   withDelay,
   withSpring,
-  withTiming,
 } from 'react-native-reanimated';
+
+const SPRING_CONFIG = { damping: 18, stiffness: 120 };
+const STAGGER = 60;
 
 export function useWelcomeAnimations() {
   const iconScale = useSharedValue(0.8);
@@ -17,23 +20,30 @@ export function useWelcomeAnimations() {
   const titleOpacity = useSharedValue(0);
   const titleTranslateY = useSharedValue(15);
   const subtitleOpacity = useSharedValue(0);
+  const subtitleTranslateY = useSharedValue(15);
   const buttonsOpacity = useSharedValue(0);
   const buttonsTranslateY = useSharedValue(15);
 
   useEffect(() => {
-    iconOpacity.value = withDelay(100, withSpring(1));
-    iconScale.value = withDelay(100, withSpring(1));
-    titleOpacity.value = withDelay(250, withSpring(1));
-    titleTranslateY.value = withDelay(250, withSpring(0));
-    subtitleOpacity.value = withDelay(350, withSpring(1));
-    buttonsOpacity.value = withDelay(450, withTiming(1, { duration: 300 }));
-    buttonsTranslateY.value = withDelay(450, withSpring(0));
+    // Stagger: 0, 60, 120, 180ms
+    iconOpacity.value = withSpring(1, SPRING_CONFIG);
+    iconScale.value = withSpring(1, SPRING_CONFIG);
+
+    titleOpacity.value = withDelay(STAGGER, withSpring(1, SPRING_CONFIG));
+    titleTranslateY.value = withDelay(STAGGER, withSpring(0, SPRING_CONFIG));
+
+    subtitleOpacity.value = withDelay(STAGGER * 2, withSpring(1, SPRING_CONFIG));
+    subtitleTranslateY.value = withDelay(STAGGER * 2, withSpring(0, SPRING_CONFIG));
+
+    buttonsOpacity.value = withDelay(STAGGER * 3, withSpring(1, SPRING_CONFIG));
+    buttonsTranslateY.value = withDelay(STAGGER * 3, withSpring(0, SPRING_CONFIG));
   }, [
     buttonsOpacity,
     buttonsTranslateY,
     iconOpacity,
     iconScale,
     subtitleOpacity,
+    subtitleTranslateY,
     titleOpacity,
     titleTranslateY,
   ]);
@@ -50,6 +60,7 @@ export function useWelcomeAnimations() {
 
   const subtitleStyle = useAnimatedStyle(() => ({
     opacity: subtitleOpacity.value,
+    transform: [{ translateY: subtitleTranslateY.value }],
   }));
 
   const buttonsStyle = useAnimatedStyle(() => ({
