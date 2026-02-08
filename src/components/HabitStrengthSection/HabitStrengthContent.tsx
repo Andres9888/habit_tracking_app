@@ -36,7 +36,7 @@ export function HabitStrengthContent({
   return (
     <Animated.View
       className='overflow-hidden rounded-2xl bg-white shadow-sm'
-      entering={FadeInDown.delay(100).springify()}
+      entering={FadeInDown.delay(100).springify().damping(18)}
       style={{
         ...shadows.card,
         shadowColor: COLORS.textPrimary,

@@ -36,7 +36,7 @@ export const controlsStyles = StyleSheet.create({
   },
   title: {
     color: '#27272A',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
   },
 });

@@ -44,7 +44,7 @@ export function ConsistencyIndexCard({
       accessibilityLabel={`Consistency Index: ${overall} percent overall`}
       accessibilityRole='summary'
       className='rounded-2xl border border-stone-200 bg-white p-4 shadow-sm'
-      entering={FadeInDown.delay(150).springify()}
+      entering={FadeInDown.delay(150).springify().damping(18)}
     >
       {/* Header */}
       <View className='mb-3 flex-row items-center justify-between'>

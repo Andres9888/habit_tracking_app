@@ -21,7 +21,7 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
   return (
     <Animated.View
       className='overflow-hidden rounded-2xl border border-stone-100 bg-white/90'
-      entering={FadeInDown.delay(100).springify()}
+      entering={FadeInDown.delay(100).springify().damping(18)}
     >
       <Pressable
         accessibilityLabel={`${expanded ? 'Collapse' : 'Expand'} ${technique.good.title} technique`}

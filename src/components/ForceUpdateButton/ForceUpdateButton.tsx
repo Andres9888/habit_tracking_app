@@ -44,7 +44,10 @@ export function ForceUpdateButton({
   return (
     <View className='mt-2 gap-2'>
       <Pressable
-        className={`rounded-lg px-4 py-2 ${
+        accessibilityLabel='Force update habit strength'
+        accessibilityRole='button'
+        accessibilityState={{ disabled: loading }}
+        className={`rounded-lg px-4 py-3 ${
           loading ? 'bg-stone-400' : 'bg-green-600'
         }`}
         disabled={loading}

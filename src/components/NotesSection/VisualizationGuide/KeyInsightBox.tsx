@@ -11,7 +11,7 @@ export function KeyInsightBox() {
   return (
     <Animated.View
       className='flex-row items-start gap-3 rounded-2xl border border-amber-200/50 bg-gradient-to-r from-amber-50 to-yellow-50 p-4'
-      entering={FadeInDown.delay(100).springify()}
+      entering={FadeInDown.delay(100).springify().damping(18)}
     >
       <View className='h-10 w-10 items-center justify-center rounded-xl bg-amber-100'>
         <Zap className='text-amber-600' size={20} />

@@ -40,7 +40,7 @@ export function ProgressSection({
   return (
     <Animated.View
       className='gap-4'
-      entering={FadeInDown.delay(100).springify()}
+      entering={FadeInDown.delay(100).springify().damping(18)}
     >
       <YourProgressCard
         actionableTip={actionableTip}

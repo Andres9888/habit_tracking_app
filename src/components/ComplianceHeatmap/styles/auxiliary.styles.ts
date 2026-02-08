@@ -49,7 +49,7 @@ export const auxiliaryStyles = StyleSheet.create({
   legendLabel: {
     ...typography.caption,
     color: colors.text.tertiary,
-    fontSize: 10,
+    fontSize: 13,
     marginHorizontal: spacing.xs,
   },
   summary: {
@@ -59,6 +59,6 @@ export const auxiliaryStyles = StyleSheet.create({
   summaryText: {
     ...typography.caption,
     color: colors.text.tertiary,
-    fontSize: 10,
+    fontSize: 13,
   },
 });
