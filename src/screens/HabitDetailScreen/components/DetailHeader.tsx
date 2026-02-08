@@ -1,15 +1,12 @@
-/** DetailHeader - Optimized for 9+ scores: animations, visual weight, UX clarity */
+/** DetailHeader - Optimized: AnimatedPressable, fixed letter spacing, unified shadows */
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { X, Edit3 } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { HeaderCompleteToggle } from '../../../components/HeaderCompleteToggle';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
-import {
-  buttonShadow,
-  iconShadow,
-  streakShadow,
-} from './DetailHeader.constants';
+import { iconShadow, streakShadow } from './DetailHeader.constants';
+import { HeaderButton } from './HeaderButton';
 
 export function DetailHeader({
   habit,
@@ -27,15 +24,11 @@ export function DetailHeader({
         className='flex-row items-center justify-between px-4 pb-2'
         entering={FadeIn.duration(200).delay(50)}
       >
-        <Pressable
-          accessibilityLabel='Close'
-          accessibilityRole='button'
-          className='h-11 w-11 items-center justify-center rounded-full bg-white/80 active:bg-stone-100'
-          style={buttonShadow}
+        <HeaderButton
+          icon={<X color='#57534e' size={22} strokeWidth={2.5} />}
+          label='Close'
           onPress={onClose}
-        >
-          <X color='#44403c' size={24} strokeWidth={2} />
-        </Pressable>
+        />
         <View className='flex-1' />
         <View className='flex-row items-center gap-3'>
           <HeaderCompleteToggle
@@ -43,20 +36,16 @@ export function DetailHeader({
             habitId={habit._id}
             habitName={habit.name}
           />
-          <Pressable
-            accessibilityLabel='Edit habit'
-            accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full bg-white/80 active:bg-stone-100'
-            style={buttonShadow}
+          <HeaderButton
+            icon={<Edit3 color='#57534e' size={20} strokeWidth={2.5} />}
+            label='Edit habit'
             onPress={onEdit}
-          >
-            <Edit3 color='#44403c' size={20} strokeWidth={2} />
-          </Pressable>
+          />
         </View>
       </Animated.View>
       <Animated.View
         className='items-center px-4 pb-6'
-        entering={FadeInDown.duration(280).delay(100)}
+        entering={FadeInDown.duration(280).delay(100).springify().damping(18)}
       >
         {habit.icon && (
           <View
@@ -72,14 +61,17 @@ export function DetailHeader({
         )}
         <Text
           className='text-center font-bold text-stone-900'
-          style={{ fontSize: 34, letterSpacing: -34 * 0.02, lineHeight: 41 }}
+          style={{ fontSize: 34, letterSpacing: -0.5, lineHeight: 41 }}
         >
           {habitName}
         </Text>
         {(habit.currentStreak ?? 0) > 0 && (
           <Animated.View
             className='mt-3 flex-row items-center gap-1.5 rounded-full px-4 py-2'
-            entering={FadeInDown.duration(240).delay(200)}
+            entering={FadeInDown.duration(240)
+              .delay(200)
+              .springify()
+              .damping(18)}
             style={streakShadow}
           >
             <Text style={{ fontSize: 17 }}>🔥</Text>
