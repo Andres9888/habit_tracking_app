@@ -34,17 +34,35 @@ export const MonthNavigation = memo(function MonthNavigation({
   onPreviousMonth,
   onNextMonth,
 }: MonthNavigationProps) {
+  const monthLabel = safeFormat(currentMonth, 'MMMM yyyy', 'Month');
+
   return (
     <View style={styles.navigation}>
-      <Pressable style={styles.monthButton}>
+      <Pressable
+        accessibilityLabel={`Current month: ${monthLabel}`}
+        accessibilityRole='text'
+        style={styles.monthButton}
+      >
         <Calendar color={COLORS.TEXT_SECONDARY} size={16} />
         <Text style={styles.monthText}>{safeFormat(currentMonth, 'MMM yyyy', 'Month')}</Text>
       </Pressable>
       <View style={styles.navButtons}>
-        <Pressable style={styles.navButton} onPress={onPreviousMonth}>
+        <Pressable
+          accessibilityLabel='Previous month'
+          accessibilityRole='button'
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          style={styles.navButton}
+          onPress={onPreviousMonth}
+        >
           <ChevronLeft color={COLORS.TEXT_SECONDARY} size={20} />
         </Pressable>
-        <Pressable style={styles.navButton} onPress={onNextMonth}>
+        <Pressable
+          accessibilityLabel='Next month'
+          accessibilityRole='button'
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          style={styles.navButton}
+          onPress={onNextMonth}
+        >
           <ChevronRight color={COLORS.TEXT_SECONDARY} size={20} />
         </Pressable>
       </View>

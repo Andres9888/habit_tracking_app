@@ -82,6 +82,8 @@ export default function WeeklyInsightsCard({
       </HabitListSection>
 
       <TouchableOpacity
+        accessibilityLabel='View past reports'
+        accessibilityRole='button'
         activeOpacity={0.7}
         style={styles.archiveButton}
         onPress={onArchivePress}

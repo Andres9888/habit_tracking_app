@@ -28,7 +28,7 @@ export const scienceStyles = StyleSheet.create({
   },
   citationText: {
     color: '#374151',
-    fontSize: 15,
+    fontSize: 17,
     fontStyle: 'italic',
     lineHeight: 24,
   },
@@ -57,7 +57,7 @@ export const scienceStyles = StyleSheet.create({
     padding: 18,
   },
   whyItWorksEmoji: {
-    fontSize: 18,
+    fontSize: 17,
   },
   whyItWorksHeader: {
     alignItems: 'center',
@@ -67,12 +67,12 @@ export const scienceStyles = StyleSheet.create({
   },
   whyItWorksText: {
     color: '#166534',
-    fontSize: 15,
+    fontSize: 17,
     lineHeight: 24,
   },
   whyItWorksTitle: {
     color: '#15803D',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '700',
   },
 });

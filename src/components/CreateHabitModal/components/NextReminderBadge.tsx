@@ -85,8 +85,8 @@ export const NextReminderBadge = ({
     <Animated.View
       accessibilityLabel={`Next reminder: ${text}`}
       accessibilityRole='text'
-      entering={FadeIn.duration(200).delay(100)}
-      exiting={FadeOut.duration(150)}
+      entering={FadeIn.duration(280).delay(100).springify().damping(18)}
+      exiting={FadeOut.duration(200)}
       testID='next-reminder-badge'
     >
       <View className='flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5'>

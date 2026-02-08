@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
 
   countText: {
     color: colors.text.inverse,
-    fontSize: 10,
+    fontSize: 13,
     fontWeight: '600',
     textAlign: 'center',
   },

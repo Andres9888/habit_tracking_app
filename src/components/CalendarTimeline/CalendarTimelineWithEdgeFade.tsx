@@ -102,10 +102,10 @@ const CalendarTimelineWithEdgeFade: React.FC<CalendarTimelineProps> = ({
             end={{ x: 1, y: 0 }}
             style={{
               flex: 1,
-              shadowColor: '#000',
-              shadowOffset: { width: 2, height: 0 },
-              shadowOpacity: 0.05,
-              shadowRadius: 4,
+              shadowColor: '#1c1917',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.08,
+              shadowRadius: 16,
             }}
           />
         </View>
@@ -160,10 +160,10 @@ const CalendarTimelineWithEdgeFade: React.FC<CalendarTimelineProps> = ({
               end={{ x: 1, y: 0 }}
               style={{
                 flex: 1,
-                shadowColor: '#000',
-                shadowOffset: { width: -2, height: 0 },
-                shadowOpacity: 0.05,
-                shadowRadius: 4,
+                shadowColor: '#1c1917',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.08,
+                shadowRadius: 16,
               }}
             />
           </View>

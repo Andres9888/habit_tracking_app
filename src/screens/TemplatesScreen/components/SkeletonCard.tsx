@@ -7,7 +7,7 @@ export function SkeletonCard({ index }: { index: number }) {
   return (
     <Animated.View
       className='mx-5 my-2 rounded-2xl bg-white p-5'
-      entering={FadeIn.duration(300).delay(d)}
+      entering={FadeIn.duration(280).delay(d).springify().damping(18)}
       style={{
         elevation: 4,
         shadowColor: '#1c1917',

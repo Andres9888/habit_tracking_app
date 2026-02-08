@@ -20,7 +20,7 @@ export function NameInputSection({
       {/* Hero Title - 34px bold centered like Create modal */}
       <Animated.View
         className='mb-6'
-        entering={FadeInDown.duration(240).delay(100)}
+        entering={FadeInDown.duration(280).delay(100).springify().damping(18)}
       >
         <Text
           accessibilityRole='header'
@@ -36,7 +36,7 @@ export function NameInputSection({
       </Animated.View>
 
       {/* Name Input */}
-      <Animated.View entering={FadeInUp.duration(240).delay(160)}>
+      <Animated.View entering={FadeInUp.duration(280).delay(160).springify().damping(18)}>
         <TextInput
           accessibilityLabel='Habit name'
           className='w-full rounded-2xl border-2 border-stone-200 bg-white px-5 py-4 text-center text-[22px] font-medium text-stone-900'

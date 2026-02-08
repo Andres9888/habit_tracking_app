@@ -59,7 +59,7 @@ export function FilterControls({
       </Pressable>
       {showSortOptions && (
         <Animated.View
-          entering={FadeIn.duration(150)}
+          entering={FadeIn.duration(280).springify().damping(18)}
           style={styles.sortDropdown}
         >
           {SORT_OPTIONS.map((opt) => {

@@ -61,23 +61,23 @@ export const CONTAINER_SHADOW = {
   ...shadows.subtle,
   shadowColor: '#78716c',
   shadowOpacity: 0.04,
-  shadowRadius: 8,
+  shadowRadius: 16,
 };
 
 /** Today cell shadow styling */
 export const TODAY_SHADOW = {
   elevation: 2,
   shadowColor: '#f59e0b',
-  shadowOffset: { height: 2, width: 0 },
-  shadowOpacity: 0.2,
-  shadowRadius: 4,
+  shadowOffset: { height: 4, width: 0 },
+  shadowOpacity: 0.08,
+  shadowRadius: 16,
 };
 
 /** Glow effect for complete status dots */
 export const COMPLETE_DOT_GLOW = {
   elevation: 2,
   shadowColor: '#10b981',
-  shadowOffset: { height: 0, width: 0 },
-  shadowOpacity: 0.5,
-  shadowRadius: 4,
+  shadowOffset: { height: 4, width: 0 },
+  shadowOpacity: 0.08,
+  shadowRadius: 16,
 };

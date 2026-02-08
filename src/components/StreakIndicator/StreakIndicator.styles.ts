@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   milestoneBadgeLarge: {
-    fontSize: 24,
+    fontSize: 22,
     marginLeft: -4,
   },
   milestoneEmoji: {
@@ -86,7 +86,7 @@ export const styles = StyleSheet.create({
   },
 
   streakNumber: {
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
   },
 

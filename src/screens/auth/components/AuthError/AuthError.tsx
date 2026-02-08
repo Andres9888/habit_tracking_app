@@ -16,8 +16,8 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
       accessibilityLiveRegion='assertive'
       accessibilityRole='alert'
       className='mb-4 flex-row items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4'
-      entering={FadeIn.duration(200)}
-      exiting={FadeOut.duration(150)}
+      entering={FadeIn.duration(280).springify().damping(18)}
+      exiting={FadeOut.duration(200)}
       style={{
         shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },

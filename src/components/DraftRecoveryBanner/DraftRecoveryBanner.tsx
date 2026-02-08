@@ -30,8 +30,8 @@ export function DraftRecoveryBanner({
   return (
     <Animated.View
       className={`mx-4 mb-3 rounded-xl border ${styles.border} ${styles.bg} p-3`}
-      entering={FadeIn.duration(200)}
-      exiting={FadeOut.duration(150)}
+      entering={FadeIn.duration(280).springify().damping(18)}
+      exiting={FadeOut.duration(200)}
     >
       <View className='flex-row items-center gap-3'>
         <View className={`rounded-lg ${styles.iconBg} p-2`}>

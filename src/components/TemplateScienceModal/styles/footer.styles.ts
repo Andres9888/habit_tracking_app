@@ -13,7 +13,7 @@ export const footerStyles = StyleSheet.create({
   },
   backButtonText: {
     color: '#6B7280',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
   },
   footer: {
@@ -31,6 +31,6 @@ export const footerStyles = StyleSheet.create({
   },
   useButton: {
     ...shadows.modal,
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.08,
   },
 });

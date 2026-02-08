@@ -33,7 +33,7 @@ export function StandardMeter({
         elevation: percentage === 100 ? 4 : 0,
         shadowColor: percentage === 100 ? colors.glow : 'transparent',
         shadowOffset: { height: 0, width: 0 },
-        shadowOpacity: percentage === 100 ? 0.4 : 0,
+        shadowOpacity: percentage === 100 ? 0.08 : 0,
         shadowRadius: 16,
         transform: [{ scale: celebrationScale }],
       }}

@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   categoryPillActive: {
     ...shadows.card,
     backgroundColor: colors.gray[900],
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.08,
   },
   categoryPillIcon: {
     fontSize: typography.bodySmall.fontSize,

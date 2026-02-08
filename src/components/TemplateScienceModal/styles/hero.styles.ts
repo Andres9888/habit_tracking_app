@@ -52,8 +52,8 @@ export const heroStyles = StyleSheet.create({
     opacity: 0.25,
     position: 'absolute',
     shadowOffset: { height: 0, width: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 24,
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
     width: 96,
   },
   iconText: {

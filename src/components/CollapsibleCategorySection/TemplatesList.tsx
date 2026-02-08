@@ -57,8 +57,8 @@ export function TemplatesList({
         );
 
         // Simplified animations to avoid potential crash issues
-        const enteringAnimation = FadeIn.delay(staggerDelay).duration(200);
-        const exitingAnimation = FadeOut.duration(100);
+        const enteringAnimation = FadeIn.delay(staggerDelay).duration(280).springify().damping(18);
+        const exitingAnimation = FadeOut.duration(200);
 
         return (
           <Animated.View
