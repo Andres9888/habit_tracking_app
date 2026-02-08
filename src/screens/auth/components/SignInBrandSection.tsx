@@ -22,7 +22,7 @@ export function SignInBrandSection({
     <>
       <View style={styles.brandSection}>
         <Animated.View style={[styles.iconContainer, logoStyle]}>
-          <Link color='#1F2937' size={40} strokeWidth={2} />
+          <Link color='#ffffff' size={40} strokeWidth={2} />
         </Animated.View>
         <Animated.View style={headerStyle}>
           <Text style={styles.appName}>Chain Day</Text>
