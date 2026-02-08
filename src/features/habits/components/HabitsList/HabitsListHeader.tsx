@@ -2,10 +2,17 @@
  * HabitsListHeader - Redesigned per home-screen-redesign-spec.md
  */
 
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
+
 import { Animated, View } from 'react-native';
 import { HabitsHeader } from '../HabitsHeader';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
 import { OfflineIndicator } from '../../../../components/SyncStatus';
+import {
+  TrialCountdownBanner,
+  useTrialCountdown,
+} from '../../../../components/TrialCountdownBanner';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
@@ -18,6 +25,9 @@ export function HabitsListHeader(
     justCreatedHabitId: props.justCreatedHabitId,
     weekDateStrings: props.weekDateStrings,
   });
+
+  // Trial countdown banner
+  const { shouldShowBanner, daysRemaining } = useTrialCountdown();
 
   return (
     <View className='gap-4 pb-4 pt-14'>
@@ -65,6 +75,14 @@ export function HabitsListHeader(
             onPreviousWeek={props.onPreviousWeek}
           />
         </Animated.View>
+      )}
+
+      {/* Trial Countdown Banner */}
+      {shouldShowBanner && daysRemaining !== null && (
+        <TrialCountdownBanner
+          daysRemaining={daysRemaining}
+          onUpgrade={onUpgradePress}
+        />
       )}
     </View>
   );
