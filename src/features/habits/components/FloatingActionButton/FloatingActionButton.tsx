@@ -42,7 +42,7 @@ export function FloatingActionButton({
       accessibilityHint='Open create habit modal'
       accessibilityLabel='Add habit'
       accessibilityRole='button'
-      className='h-14 w-14 items-center justify-center rounded-full bg-[#1c1917] shadow-lg'
+      className='h-14 w-14 items-center justify-center rounded-full bg-[#059669] shadow-lg'
       style={animatedStyle}
       onPress={handlePress}
     >

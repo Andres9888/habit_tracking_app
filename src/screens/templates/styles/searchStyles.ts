@@ -5,7 +5,7 @@ export const searchStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     borderColor: '#e7e5e4',
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 1.5,
     flexDirection: 'row',
     gap: 10,

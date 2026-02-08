@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
   primaryButton: {
     alignItems: 'center',
     backgroundColor: '#059669',
-    borderRadius: 14,
+    borderRadius: 12,
     elevation: 4,
     paddingVertical: 16,
     shadowColor: '#059669',

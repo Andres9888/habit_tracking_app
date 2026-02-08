@@ -43,7 +43,7 @@ export const categoryStyles = StyleSheet.create({
   },
   categoryHeaderIcon: {
     alignItems: 'center',
-    borderRadius: 14,
+    borderRadius: 12,
     height: 48,
     justifyContent: 'center',
     width: 48,

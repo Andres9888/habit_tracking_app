@@ -1,7 +1,7 @@
 /**
  * HabitCard Core Styles
  * Implements home-screen-redesign-spec.md:
- * - Height: 76px | Border-radius: 14px
+ * - MinHeight: 76px | Border-radius: 16px (cards)
  * - Card surface: #FFFFFF | Border: 1px #E5E2DE
  * OPTIMIZED: SF Pro font, deeper shadows, proper contrast
  *
@@ -28,7 +28,7 @@ const coreStyles = StyleSheet.create({
   card: {
     backgroundColor: REDESIGN_COLORS.cardSurface,
     borderColor: REDESIGN_COLORS.neutral,
-    borderRadius: borderRadius.medium,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
     elevation: 3,
     flex: 1,
@@ -47,7 +47,7 @@ const coreStyles = StyleSheet.create({
     padding: spacing.md,
   },
   completedText: { opacity: 0.7 },
-  container: { height: 76, marginVertical: spacing.xs, position: 'relative' },
+  container: { minHeight: 76, marginVertical: spacing.xs, position: 'relative' },
   content: { flex: 1, justifyContent: 'center', padding: spacing.base },
   disabled: { opacity: 0.5 },
   // ACCESSIBILITY: Visible focus state for keyboard navigation (WCAG 2.4.7)

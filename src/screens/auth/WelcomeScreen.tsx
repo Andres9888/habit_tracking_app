@@ -84,7 +84,7 @@ export default function WelcomeScreen() {
           />
           <AuthDivider />
           <AnimatedPressable
-            accessibilityLabel='Get started with Chain Day'
+            accessibilityLabel='Create free account with Chain Day'
             accessibilityRole='button'
             accessibilityState={{ disabled: !!isLoading }}
             disabled={!!isLoading}
@@ -92,7 +92,7 @@ export default function WelcomeScreen() {
             style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
             onPress={() => setMode('signup')}
           >
-            <Text style={styles.primaryButtonText}>Get Started</Text>
+            <Text style={styles.primaryButtonText}>Create Free Account</Text>
           </AnimatedPressable>
           <AnimatedPressable
             accessibilityLabel='Sign in to existing account'
