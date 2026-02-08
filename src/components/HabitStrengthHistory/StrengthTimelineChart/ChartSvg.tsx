@@ -18,8 +18,8 @@ interface ChartSvgProps {
   areaPath: string;
   linePath: string;
   lastPoint: ChartPoint | null;
-  animatedLineProps: { strokeDashoffset: number };
-  pulsingRingProps: { opacity: number; r: number };
+  animatedLineProps: Partial<{ strokeDashoffset: number }>;
+  pulsingRingProps: Partial<{ opacity: number; r: number }>;
 }
 
 export function ChartSvg({

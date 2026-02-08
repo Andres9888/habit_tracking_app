@@ -19,7 +19,7 @@ export function StreakSection({
       <StreakAtRiskHeader
         hoursRemaining={habit.hoursRemaining}
         reduceMotion={reduceMotion}
-        streak={habit.currentStreak}
+        streak={habit.currentStreak ?? 0}
       />
     </AnimatedContent>
   );

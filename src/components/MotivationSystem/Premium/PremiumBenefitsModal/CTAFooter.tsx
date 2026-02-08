@@ -10,11 +10,14 @@ import Animated from 'react-native-reanimated';
 
 interface CTAFooterProps {
   onStartTrial: () => void;
-  onRestorePurchases: () => void;
+  onRestorePurchases: () => Promise<void>;
   buttonAnimatedStyle: object;
   onPressIn: () => void;
   onPressOut: () => void;
   reduceMotion: boolean;
+  isLoadingPrice?: boolean;
+  isRestoring?: boolean;
+  priceString?: string | null;
 }
 
 export function CTAFooter({

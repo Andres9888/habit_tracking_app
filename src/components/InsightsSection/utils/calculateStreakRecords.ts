@@ -64,7 +64,7 @@ export function calculateStreakRecords(
   // Handle final streak
   if (streakDays >= MIN_STREAK_DAYS) {
     const today = getTodayString();
-    const lastDate = completedDates.at(-1);
+    const lastDate = completedDates.at(-1)!;
     const daysSince = differenceInDays(today, lastDate);
     const isCurrent = daysSince <= 1 && currentStreak > 0;
     streaks.push(createRecord(streakDays, streakStart, lastDate, isCurrent));

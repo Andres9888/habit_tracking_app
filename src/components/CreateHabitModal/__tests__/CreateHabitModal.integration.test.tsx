@@ -503,6 +503,7 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
         iconColor: '#22C55E',
         frequency: 'daily' as const,
         completions: [],
+        createdAt: Date.now(),
       };
 
       const { queryByText } = render(

@@ -44,7 +44,7 @@ export function GridLines({ dimensions }: { dimensions: ChartDimensions }) {
 interface AnimatedLinePathProps {
   linePath: string;
   chartColor: string;
-  animatedLineProps: { strokeDashoffset: number };
+  animatedLineProps: Partial<{ strokeDashoffset: number }>;
 }
 
 export function AnimatedLinePath({
@@ -70,7 +70,7 @@ export function AnimatedLinePath({
 interface CurrentPositionDotProps {
   lastPoint: ChartPoint;
   chartColor: string;
-  pulsingRingProps: { opacity: number; r: number };
+  pulsingRingProps: Partial<{ opacity: number; r: number }>;
 }
 
 export function CurrentPositionDot({
