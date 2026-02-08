@@ -12,12 +12,14 @@ import {
 import * as Haptics from 'expo-haptics';
 
 interface UseHeaderAnimationsParams {
+  categoryId: string;
   isExpanded: boolean;
   reducedMotion: boolean;
-  onToggle: () => void;
+  onToggle: (categoryId: string) => void;
 }
 
 export function useHeaderAnimations({
+  categoryId,
   isExpanded,
   reducedMotion,
   onToggle,
@@ -72,7 +74,7 @@ export function useHeaderAnimations({
       );
     }
 
-    onToggle();
+    onToggle(categoryId);
   };
 
   return {

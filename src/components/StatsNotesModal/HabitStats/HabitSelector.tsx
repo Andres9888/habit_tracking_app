@@ -2,9 +2,41 @@
  * Habit selector component for HabitStats
  */
 
+import { useCallback } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { HabitItem } from './HabitStats.types';
+
+interface HabitSelectorItemProps {
+  habit: HabitItem;
+  isSelected: boolean;
+  onSelect: (id: Id<'habits'>) => void;
+}
+
+function HabitSelectorItem({ habit, isSelected, onSelect }: HabitSelectorItemProps) {
+  const handlePress = useCallback(() => onSelect(habit._id), [onSelect, habit._id]);
+
+  return (
+    <TouchableOpacity
+      accessibilityLabel={`View stats for ${habit.name}`}
+      accessibilityRole='button'
+      accessibilityState={{ selected: isSelected }}
+      activeOpacity={0.7}
+      className={`rounded-xl px-4 py-2 ${
+        isSelected ? 'bg-stone-900' : 'bg-stone-100'
+      }`}
+      onPress={handlePress}
+    >
+      <Text
+        className={`text-sm font-medium ${
+          isSelected ? 'text-white' : 'text-stone-700'
+        }`}
+      >
+        {habit.name}
+      </Text>
+    </TouchableOpacity>
+  );
+}
 
 interface HabitSelectorProps {
   habits: HabitItem[];
@@ -28,25 +60,12 @@ export function HabitSelector({
         showsHorizontalScrollIndicator={false}
       >
         {habits.map((habit) => (
-          <TouchableOpacity
+          <HabitSelectorItem
             key={habit._id}
-            accessibilityLabel={`View stats for ${habit.name}`}
-            accessibilityRole='button'
-            accessibilityState={{ selected: selectedHabitId === habit._id }}
-            activeOpacity={0.7}
-            className={`rounded-xl px-4 py-2 ${
-              selectedHabitId === habit._id ? 'bg-stone-900' : 'bg-stone-100'
-            }`}
-            onPress={() => onSelect(habit._id)}
-          >
-            <Text
-              className={`text-sm font-medium ${
-                selectedHabitId === habit._id ? 'text-white' : 'text-stone-700'
-              }`}
-            >
-              {habit.name}
-            </Text>
-          </TouchableOpacity>
+            habit={habit}
+            isSelected={selectedHabitId === habit._id}
+            onSelect={onSelect}
+          />
         ))}
       </ScrollView>
     </View>

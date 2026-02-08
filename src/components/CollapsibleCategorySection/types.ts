@@ -17,8 +17,8 @@ export interface CollapsibleCategorySectionProps {
   scienceCount?: number;
   /** Is section expanded */
   isExpanded: boolean;
-  /** Toggle expand callback */
-  onToggle: () => void;
+  /** Toggle expand callback — receives categoryId so parent can use a single stable callback */
+  onToggle: (categoryId: string) => void;
   /** Template tap callback */
   onTemplatePress: (template: Doc<'templates'>) => void;
   /** Import template callback */

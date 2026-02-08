@@ -2,6 +2,7 @@
  * Browse mode - Categories tab content
  */
 
+import { useCallback } from 'react';
 import { ScrollView, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
@@ -43,6 +44,11 @@ export function BrowseCategoriesTab({
   scrollViewRef,
   templatesByCategory,
 }: BrowseCategoriesTabProps) {
+  const handleImport = useCallback(
+    (template: Doc<'templates'>) => handleTemplateImport(template._id),
+    [handleTemplateImport]
+  );
+
   return (
     <Animated.View style={[{ flex: 1 }, contentAnimatedStyle]}>
       <ScrollView
@@ -69,9 +75,9 @@ export function BrowseCategoriesTab({
                   label={category.label}
                   scienceCount={scienceCountsByCategory[category.id] || 0}
                   templates={templates}
-                  onImport={(template) => handleTemplateImport(template._id)}
+                  onImport={handleImport}
                   onTemplatePress={handleTemplatePreview}
-                  onToggle={() => handleToggleCategory(category.id)}
+                  onToggle={handleToggleCategory}
                 />
               );
             })}

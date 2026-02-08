@@ -42,7 +42,7 @@ export function CollapsibleCategorySection({
     handleHeaderPressOut,
     headerAnimatedStyle,
     iconAnimatedStyle,
-  } = useHeaderAnimations({ isExpanded, onToggle, reducedMotion });
+  } = useHeaderAnimations({ categoryId, isExpanded, onToggle, reducedMotion });
 
   return (
     <AnimatedView style={styles.container}>

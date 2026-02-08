@@ -3,7 +3,7 @@
  * Individual habit item in the rankings list
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import HabitStrengthIndicator from '../HabitStrengthIndicator/HabitStrengthIndicator';
@@ -15,7 +15,7 @@ interface HabitRankingItemProps {
   item: HabitRanking;
   rank: number;
   rankBadge: RankBadge | null;
-  onPress: () => void;
+  onPress: (habitId: string) => void;
 }
 
 export function HabitRankingItem({
@@ -24,6 +24,8 @@ export function HabitRankingItem({
   rankBadge,
   onPress,
 }: HabitRankingItemProps) {
+  const handlePress = useCallback(() => onPress(item.id), [onPress, item.id]);
+
   return (
     <TouchableOpacity
       accessibilityHint='Opens habit detail'
@@ -31,7 +33,7 @@ export function HabitRankingItem({
       accessibilityRole='button'
       activeOpacity={0.7}
       style={styles.habitItem}
-      onPress={onPress}
+      onPress={handlePress}
     >
       <View style={styles.habitItemLeft}>
         <View style={styles.rankContainer}>
