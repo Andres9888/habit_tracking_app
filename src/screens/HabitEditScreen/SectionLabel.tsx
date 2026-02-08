@@ -17,11 +17,11 @@ export function SectionLabel({
   return (
     <Animated.View
       className='mb-4 mt-8'
-      entering={FadeInUp.duration(240).delay(delay)}
+      entering={FadeInUp.delay(delay).springify().damping(18)}
     >
       <Text
-        className={`text-center text-xs font-semibold ${color}`}
-        style={{ letterSpacing: 0.5 }}
+        className={`text-center font-semibold ${color}`}
+        style={{ fontSize: 13, letterSpacing: 0.5, lineHeight: 18 }}
       >
         {text}
       </Text>

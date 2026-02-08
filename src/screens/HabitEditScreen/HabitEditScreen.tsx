@@ -65,7 +65,7 @@ export default function HabitEditScreen({
                 <SectionLabel delay={220} text='CUSTOMIZE' />
                 <Animated.View
                   className='px-4'
-                  entering={FadeInUp.duration(240).delay(280)}
+                  entering={FadeInUp.delay(280).springify().damping(18)}
                 >
                   <CustomizeSection
                     habitName={state.habitName}
@@ -82,7 +82,7 @@ export default function HabitEditScreen({
                 <SectionLabel delay={340} text='DANGER ZONE' variant='danger' />
                 <Animated.View
                   className='mx-4 rounded-2xl bg-red-50/50 p-4'
-                  entering={FadeInUp.duration(240).delay(400)}
+                  entering={FadeInUp.delay(400).springify().damping(18)}
                 >
                   <DangerZone
                     onArchive={state.handleArchive}

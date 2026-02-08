@@ -7,7 +7,7 @@
  * - Reminder scheduling
  */
 
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
@@ -38,13 +38,6 @@ export function CustomizeSection({
 }: CustomizeSectionProps) {
   return (
     <View className='flex-1'>
-      <Text
-        className='mb-4 text-center text-xs font-semibold text-stone-500'
-        style={{ letterSpacing: 0.5 }}
-      >
-        CUSTOMIZE
-      </Text>
-
       <EmojiPicker
         hideLabel
         habitName={habitName}
