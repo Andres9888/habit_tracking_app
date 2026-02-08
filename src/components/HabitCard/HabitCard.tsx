@@ -1,5 +1,4 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-lines-per-function */
+/* eslint-disable max-lines -- 104 lines after decomposition; close to 100-line limit */
 /**
  * HabitCard Component - Display individual habit with tracking and animations
  *

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import { useSignUp } from '@clerk/clerk-expo';
 import { useState } from 'react';
 import { Alert } from 'react-native';

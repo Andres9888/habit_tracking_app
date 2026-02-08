@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines -- 102 lines after decomposition; close to 100-line limit */
 import React, { useCallback, memo } from 'react';
 import { View } from 'react-native';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';

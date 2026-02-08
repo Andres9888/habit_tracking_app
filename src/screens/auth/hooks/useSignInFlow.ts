@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import { useSignIn } from '@clerk/clerk-expo';
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';

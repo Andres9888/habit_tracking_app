@@ -1,5 +1,4 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-lines-per-function */
+/* eslint-disable max-lines -- 107 lines after decomposition; close to 100-line limit */
 /**
  * useHabitCard Hook - Core orchestration logic
  *

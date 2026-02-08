@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines -- 101 lines after decomposition; close to 100-line limit */
 import React, { memo } from 'react';
 import { useHabitCardEntrance } from '../HabitCard/useHabitCardEntrance';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
