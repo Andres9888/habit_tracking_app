@@ -27,7 +27,6 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
         <Text style={styles.sectionTitle}>Weekly Insights</Text>
         <WeeklyInsightsCard
           insights={weeklyInsights ?? null}
-          onArchivePress={() => console.log('Open archive')}
           onHabitPress={onHabitPress}
         />
       </View>

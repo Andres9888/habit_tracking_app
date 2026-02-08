@@ -41,9 +41,8 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     refreshTimeoutRef.current = setTimeout(() => setRefreshing(false), 1000);
   }, []);
 
-  const handleHabitPress = useCallback((habitId: string) => {
-    console.log('Navigate to habit detail:', habitId);
-  }, []);
+  // No-op until habit detail navigation is implemented
+  const handleHabitPress = useCallback((_habitId: string) => {}, []);
 
   const handleExportPress = useCallback(() => {
     if (!isPremiumUser) {

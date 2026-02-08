@@ -43,7 +43,6 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
         <View accessible accessibilityLabel={strengthAccessibilityLabel}>
           <StrengthDistributionChart
             data={strengthDistribution ?? null}
-            onSegmentPress={(level) => console.log('Filter by level:', level)}
           />
         </View>
       </View>
@@ -52,7 +51,6 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
         <Text style={styles.sectionTitle}>30-Day Trend</Text>
         <TrendLineChart
           data={trendData ?? null}
-          onDataPointPress={(point) => console.log('Selected point:', point)}
         />
       </View>
 
@@ -60,7 +58,6 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
         <Text style={styles.sectionTitle}>Compliance Heatmap</Text>
         <ComplianceHeatmap
           data={complianceData ?? null}
-          onDayPress={(day) => console.log('Selected day:', day)}
         />
       </View>
     </>
