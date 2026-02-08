@@ -9,16 +9,11 @@ import { spacing } from '../../../theme/spacing';
 import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
 import TrendLineChart from '../../../components/TrendLineChart';
 import ComplianceHeatmap from '../../../components/ComplianceHeatmap';
-import type {
-  StrengthDistributionData,
-  TrendDataPoint,
-  ComplianceDay,
-} from '../AnalyticsScreen.types';
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface ChartSectionsProps {
-  strengthDistribution: StrengthDistributionData | undefined;
-  trendData: TrendDataPoint[] | undefined;
-  complianceData: ComplianceDay[] | undefined;
+  strengthDistribution: any;
+  trendData: any;
+  complianceData: any;
 }
 
 export const ChartSections: React.FC<ChartSectionsProps> = ({

@@ -7,7 +7,7 @@
 import { Doc, Id } from '../_generated/dataModel';
 
 type ImageWithUrl = Omit<Doc<'visionBoardImages'>, 'imageUrl'> & {
-  imageUrl: string | undefined;
+  imageUrl: string | null;
 };
 
 /**
@@ -22,7 +22,7 @@ export async function resolveImageUrls(
       const url = await ctx.storage.getUrl(image.storageId);
       return {
         ...image,
-        imageUrl: url ?? undefined,
+        imageUrl: url ?? null,
       };
     })
   );
@@ -38,6 +38,6 @@ export async function resolveImageUrl(
   const url = await ctx.storage.getUrl(image.storageId);
   return {
     ...image,
-    imageUrl: url ?? undefined,
+    imageUrl: url ?? null,
   };
 }

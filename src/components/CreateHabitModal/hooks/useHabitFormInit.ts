@@ -6,8 +6,9 @@ import { useEffect } from 'react';
 import { DEFAULT_COLOR } from '../constants';
 import type { HabitDoc } from '../types';
 import { parseReminderTime } from '../utils';
-import { getPhaseFromPreferredTime } from '../../../constants/hubermanPhases';
+import { getPhaseFromPreferredTime, type HubermanPhase } from '../../../constants/hubermanPhases';
 import { getReminderOptionFromTime } from './reminderUtils';
+import type { ReminderOption } from '../components/ReminderSelector';
 
 interface FormSetters {
   setHabitName: (name: string) => void;
@@ -17,8 +18,8 @@ interface FormSetters {
   setReminderTime: (time: Date) => void;
   setReminderSound: (sound: string) => void;
   setFrequency: (freq: string) => void;
-  setDayPhase: (phase: string | null) => void;
-  setReminderOptionState: (option: string) => void;
+  setDayPhase: (phase: HubermanPhase | null) => void;
+  setReminderOptionState: (option: ReminderOption) => void;
 }
 
 interface UseHabitFormInitOptions {

@@ -6,7 +6,8 @@ import React from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import type { AnimatedStyleProp, ViewStyle } from 'react-native-reanimated';
+import type { AnimatedStyle } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 import { colors } from '@/theme/colors';
 import { styles } from './StrengthProgressBar.styles';
 import { DIVIDER_POSITIONS } from './StrengthProgressBar.constants';
@@ -15,7 +16,7 @@ import { useGlowPulse } from './useGlowPulse';
 interface GradientBarProps {
   barHeight: number;
   gradientColors: [string, string, string];
-  progressAnimatedStyle: AnimatedStyleProp<ViewStyle>;
+  progressAnimatedStyle: AnimatedStyle<ViewStyle>;
   showDividers: boolean;
 }
 

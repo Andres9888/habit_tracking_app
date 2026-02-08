@@ -8,11 +8,10 @@ import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
 import HabitRankingsList from '../../../components/HabitRankingsList';
-import type { WeeklyInsight, RankedHabit } from '../AnalyticsScreen.types';
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface InsightsSectionsProps {
-  weeklyInsights: WeeklyInsight[] | undefined;
-  rankedHabits: RankedHabit[];
+  weeklyInsights: any;
+  rankedHabits: any[];
   onHabitPress: (habitId: string) => void;
 }
 

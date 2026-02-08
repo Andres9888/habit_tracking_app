@@ -4,7 +4,8 @@ import Animated from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from './MilestoneProgress.styles';
 import { MILESTONES } from '../MilestoneProgressTypes';
-import type { AnimatedStyle, ViewStyle } from 'react-native-reanimated';
+import type { AnimatedStyle } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 
 interface NoStreakStateProps {
   accessibilityLabel: string;

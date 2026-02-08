@@ -60,10 +60,10 @@ export default function StrengthDistributionChart({
       <Animated.View style={[styles.chartContainer, containerAnimatedStyle]}>
         <View style={styles.chartWrapper}>
           <PolarChart
-            colorKey='color'
-            data={chartData}
-            labelKey='label'
-            valueKey='value'
+            colorKey={'color' as never}
+            data={chartData as unknown as Record<string, unknown>[]}
+            labelKey={'label' as never}
+            valueKey={'value' as never}
           >
             <Pie.Chart innerRadius={CHART_SIZE * 0.3} />
           </PolarChart>

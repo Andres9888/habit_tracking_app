@@ -3,6 +3,8 @@
  */
 
 import { useCallback } from 'react';
+import type { HubermanPhase } from '../../../constants/hubermanPhases';
+import type { ReminderOption } from '../components/ReminderSelector';
 import { DEFAULT_COLOR } from '../constants';
 import { parseReminderTime } from '../utils';
 import { getSmartReminderDefault } from '../../../utils/reminderDefaults';
@@ -19,8 +21,8 @@ interface ResetFormSetters {
   setShowTimePicker: (show: boolean) => void;
   setReminderSound: (sound: string) => void;
   setFrequency: (freq: string) => void;
-  setDayPhase: (phase: string | null) => void;
-  setReminderOptionState: (option: string) => void;
+  setDayPhase: (phase: HubermanPhase | null) => void;
+  setReminderOptionState: (option: ReminderOption) => void;
 }
 
 export const useHabitFormReset = (setters: ResetFormSetters) => {

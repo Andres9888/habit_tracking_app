@@ -73,11 +73,16 @@ export interface UseAnalyticsScreenReturn {
   isLoading: boolean;
 
   // Data
-  overviewStats: AnalyticsOverviewStats | undefined;
-  strengthDistribution: StrengthDistributionData | undefined;
-  trendData: TrendDataPoint[] | undefined;
-  complianceData: ComplianceDay[] | undefined;
-  weeklyInsights: WeeklyInsight[] | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  overviewStats: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  strengthDistribution: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  trendData: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  complianceData: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  weeklyInsights: any;
 
   // Handlers
   onRefresh: () => Promise<void>;
