@@ -93,8 +93,8 @@ export async function initializePurchases(userId?: string): Promise<void> {
       try {
         const appUserID = await Purchases.getAppUserID();
         console.log('[Purchases] App User ID after init:', appUserID);
-      } catch (e) {
-        console.log('[Purchases] Could not get App User ID:', e);
+      } catch (error_) {
+        console.log('[Purchases] Could not get App User ID:', error_);
       }
     }
 

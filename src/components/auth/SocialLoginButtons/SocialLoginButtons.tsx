@@ -37,9 +37,9 @@ export function SocialLoginButtons() {
       if (createdSessionId && setActive) {
         await setActive({ session: createdSessionId });
       }
-    } catch (error: any) {
-      if (__DEV__) console.error('Google OAuth error:', error);
-      const errorMessage = getErrorMessage(error);
+    } catch (error_: unknown) {
+      if (__DEV__) console.error('Google OAuth error:', error_);
+      const errorMessage = getErrorMessage(error_);
       if (errorMessage) {
         Alert.alert('Sign In Failed', errorMessage);
       }
@@ -58,9 +58,9 @@ export function SocialLoginButtons() {
       if (createdSessionId && setActive) {
         await setActive({ session: createdSessionId });
       }
-    } catch (error: any) {
-      if (__DEV__) console.error('Apple OAuth error:', error);
-      const errorMessage = getErrorMessage(error);
+    } catch (error_: unknown) {
+      if (__DEV__) console.error('Apple OAuth error:', error_);
+      const errorMessage = getErrorMessage(error_);
       if (errorMessage) {
         Alert.alert('Sign In Failed', errorMessage);
       }

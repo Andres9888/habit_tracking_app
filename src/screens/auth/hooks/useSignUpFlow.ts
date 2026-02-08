@@ -47,9 +47,10 @@ export function useSignUpFlow() {
       });
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
       setPendingVerification(true);
-    } catch (error: any) {
-      if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', error.errors?.[0]?.message || 'Failed to sign up');
+    } catch (error_: unknown) {
+      if (__DEV__) console.error(JSON.stringify(error_, null, 2));
+      const clerkError = error_ as { errors?: { message?: string }[] };
+      Alert.alert('Error', clerkError.errors?.[0]?.message || 'Failed to sign up');
     } finally {
       setIsLoading(false);
     }
@@ -68,11 +69,12 @@ export function useSignUpFlow() {
         if (__DEV__) console.error(JSON.stringify(attempt, null, 2));
         Alert.alert('Error', 'Verification incomplete. Please try again.');
       }
-    } catch (error: any) {
-      if (__DEV__) console.error(JSON.stringify(error, null, 2));
+    } catch (error_: unknown) {
+      if (__DEV__) console.error(JSON.stringify(error_, null, 2));
+      const clerkError = error_ as { errors?: { message?: string }[] };
       Alert.alert(
         'Error',
-        error.errors?.[0]?.message || 'Failed to verify email'
+        clerkError.errors?.[0]?.message || 'Failed to verify email'
       );
     } finally {
       setIsLoading(false);

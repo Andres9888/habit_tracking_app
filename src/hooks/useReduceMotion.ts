@@ -11,7 +11,7 @@ const isNativePlatform = Platform.OS === 'ios' || Platform.OS === 'android';
 let AccessibilityInfo: any;
 try {
   AccessibilityInfo = require('react-native').AccessibilityInfo;
-} catch (e) {
+} catch {
   // AccessibilityInfo not available in this environment
   AccessibilityInfo = null;
 }
