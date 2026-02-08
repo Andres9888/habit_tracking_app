@@ -44,7 +44,7 @@ const ColorButtonComponent = ({
   const selectedShadowStyle = isSelected
     ? {
         elevation: 6,
-        shadowColor: '#000000',
+        shadowColor: '#1c1917',
         shadowOffset: { height: 2, width: 0 },
         shadowOpacity: 0.3,
         shadowRadius: 4,

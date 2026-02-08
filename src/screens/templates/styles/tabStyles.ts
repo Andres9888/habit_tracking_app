@@ -17,7 +17,7 @@ export const tabStyles = StyleSheet.create({
   tabActive: {
     backgroundColor: '#fff',
     elevation: 3,
-    shadowColor: '#000',
+    shadowColor: '#1c1917',
     shadowOffset: { height: 3, width: 0 },
     shadowOpacity: 0.1,
     shadowRadius: 8,

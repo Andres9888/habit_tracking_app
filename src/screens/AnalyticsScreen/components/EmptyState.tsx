@@ -52,7 +52,7 @@ export const EmptyState: React.FC = () => {
         style={{
           shadowColor: '#1c1917',
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.06,
+          shadowOpacity: 0.08,
           shadowRadius: 16,
         }}
       >

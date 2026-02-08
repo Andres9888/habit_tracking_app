@@ -63,7 +63,7 @@ export function ForgotPasswordModal({
           >
             Reset Password
           </Text>
-          <Text className='text-[15px] leading-[20px] text-stone-500'>
+          <Text className='text-[17px] leading-[22px] text-stone-500'>
             {success
               ? 'Check your email for reset instructions'
               : "Enter your email and we'll send you a reset link"}

@@ -8,13 +8,13 @@ export const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
     backgroundColor: '#F3F4F6',
-    borderRadius: 20,
+    borderRadius: 16,
     height: 40,
     justifyContent: 'center',
     width: 40,
   },
   colorOption: {
-    borderRadius: 20,
+    borderRadius: 16,
     height: 44,
     width: 44,
   },
@@ -61,7 +61,7 @@ export const styles = StyleSheet.create({
   },
   importButton: {
     elevation: 4,
-    shadowColor: '#000',
+    shadowColor: '#1c1917',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 12,

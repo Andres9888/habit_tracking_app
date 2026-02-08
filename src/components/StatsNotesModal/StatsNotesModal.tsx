@@ -36,7 +36,7 @@ export default function StatsNotesModal({
       <Pressable className='flex-1 bg-black/50' onPress={onClose}>
         <View className='flex-1 p-5' style={{ paddingTop: insets.top + 8 }}>
           <Pressable
-            className='flex-1 overflow-hidden rounded-[20px] bg-white'
+            className='flex-1 overflow-hidden rounded-2xl bg-white'
             style={cardShadow}
             onPress={(e) => e.stopPropagation()}
           >

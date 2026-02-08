@@ -10,7 +10,7 @@ export function TemplatesLoadingState() {
       <View className='px-5 pb-4 pt-6'>
         <Text
           className='font-semibold text-stone-900'
-          style={{ fontSize: 22, letterSpacing: 0.35 }}
+          style={{ fontSize: 22, letterSpacing: -0.35 }}
         >
           Import Habits
         </Text>

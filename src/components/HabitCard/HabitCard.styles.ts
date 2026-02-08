@@ -34,10 +34,10 @@ const coreStyles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     overflow: 'hidden',
-    shadowColor: '#2D2A26',
+    shadowColor: '#1c1917',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
-    shadowRadius: 12,
+    shadowRadius: 16,
   },
   // Card container background for depth
   cardsContainer: {

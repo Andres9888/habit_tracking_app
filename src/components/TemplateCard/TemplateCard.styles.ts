@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: spacing.lg,
     marginVertical: spacing.sm,
     overflow: 'hidden',
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.08,
   },
   glowOverlay: {
     borderRadius: borderRadius.large,

@@ -18,7 +18,7 @@ function WelcomeHeroComponent({ greeting, period }: WelcomeHeroProps) {
 
   return (
     <Animated.View
-      className='relative w-full items-center gap-3 overflow-hidden rounded-[20px] border-2 border-amber-400 px-5 py-6'
+      className='relative w-full items-center gap-3 overflow-hidden rounded-2xl border-2 border-amber-400 px-5 py-6'
       entering={FadeInDown.delay(0).springify().damping(18)}
       style={{
         backgroundColor: '#fffbeb',
