@@ -15,7 +15,7 @@ export function GuideHeader({ habitName }: GuideHeaderProps) {
   return (
     <Animated.View
       className='overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700 p-5'
-      entering={FadeInDown.delay(50).springify()}
+      entering={FadeInDown.delay(50).springify().damping(18)}
     >
       <View className='flex-row items-start gap-3'>
         <View className='h-12 w-12 items-center justify-center rounded-2xl bg-white/20'>

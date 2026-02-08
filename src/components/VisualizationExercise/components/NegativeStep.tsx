@@ -25,7 +25,7 @@ export function NegativeStep({
   onValueChange,
 }: VisualizationInputStepProps) {
   return (
-    <Animated.View className='flex-1 gap-5' entering={FadeInDown.springify()}>
+    <Animated.View className='flex-1 gap-5' entering={FadeInDown.springify().damping(18)}>
       <View className='items-center gap-3'>
         <View className='h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-400 to-red-500'>
           <CloudRain className='text-white' size={32} />

@@ -69,7 +69,7 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
       </View>
       <Animated.View
         className='gap-3'
-        entering={FadeInDown.delay(200).springify()}
+        entering={FadeInDown.delay(200).springify().damping(18)}
       >
         <Text className='text-sm font-semibold uppercase tracking-widest text-stone-500'>
           Quick Practice
