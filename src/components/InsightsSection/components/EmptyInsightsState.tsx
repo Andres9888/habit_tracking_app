@@ -13,7 +13,7 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
   return (
     <Animated.View
       className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'
-      entering={FadeInDown.delay(100).springify()}
+      entering={FadeInDown.delay(100).springify().damping(18)}
     >
       <View className='absolute inset-0 bg-gradient-to-br from-violet-50/30 via-white to-blue-50/30' />
       <View className='p-5'>

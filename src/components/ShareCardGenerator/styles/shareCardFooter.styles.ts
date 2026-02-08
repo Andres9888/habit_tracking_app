@@ -14,7 +14,7 @@ export const shareCardFooterStyles = StyleSheet.create({
   },
   appName: {
     color: colors.text.inverse,
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '600',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { height: 1, width: 0 },
