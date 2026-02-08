@@ -1,6 +1,6 @@
 /**
  * PremiumAnalyticsPaywall Component
- * Premium subscription paywall with feature list and pricing
+ * Premium subscription paywall with monthly/annual pricing
  */
 
 import React from 'react';
@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { usePurchaseFlow } from './usePurchaseFlow';
 import type { PremiumAnalyticsPaywallProps } from './PremiumAnalyticsPaywall.types';
 import { PREMIUM_FEATURES } from './PremiumAnalyticsPaywall.constants';
 import {
@@ -24,20 +25,29 @@ export default function PremiumAnalyticsPaywall({
   onStartTrial,
   onClose,
 }: PremiumAnalyticsPaywallProps) {
-  const { triggerSelection, triggerLightImpact } = useHapticFeedback({});
+  const { triggerLightImpact } = useHapticFeedback({});
 
-  const handleStartTrial = () => {
-    triggerSelection();
-    onStartTrial?.();
-  };
+  const {
+    monthlyPackage,
+    annualPackage,
+    selectedPackage,
+    setSelectedPackage,
+    handlePurchase,
+    handleRestore,
+    isProcessing,
+  } = usePurchaseFlow({ onClose, onSuccess: onStartTrial });
 
-  const handleRestore = () => {
-    triggerLightImpact();
-  };
-
-  const handleClose = () => {
+  const handleClosePress = () => {
     triggerLightImpact();
     onClose?.();
+  };
+
+  const handlePurchasePress = () => {
+    void handlePurchase();
+  };
+
+  const handleRestorePress = () => {
+    void handleRestore();
   };
 
   return (
@@ -48,8 +58,10 @@ export default function PremiumAnalyticsPaywall({
             <AnimatedPressable
               accessibilityLabel='Close paywall'
               accessibilityRole='button'
+              activeOpacity={0.7}
+              disabled={isProcessing}
               style={styles.closeButton}
-              onPress={handleClose}
+              onPress={handleClosePress}
             >
               <Ionicons color={colors.text.primary} name='close' size={24} />
             </AnimatedPressable>
@@ -68,10 +80,15 @@ export default function PremiumAnalyticsPaywall({
             ))}
           </View>
 
-          <PricingCard />
+          <PricingCard
+            annualPackage={annualPackage}
+            monthlyPackage={monthlyPackage}
+            onPackageChange={setSelectedPackage}
+          />
           <PaywallFooter
-            onRestore={handleRestore}
-            onStartTrial={handleStartTrial}
+            isProcessing={isProcessing}
+            onRestore={handleRestorePress}
+            onStartTrial={handlePurchasePress}
           />
         </ScrollView>
       </BlurView>

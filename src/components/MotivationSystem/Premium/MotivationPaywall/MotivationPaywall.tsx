@@ -1,10 +1,6 @@
 /**
  * MotivationPaywall Component
- *
- * Full-screen paywall specifically for Motivation System features.
- * Combines the feature lock UI, benefits modal, and actual purchase flow.
- *
- * @see motivation-system-spec.md - Premium Gating UX section
+ * Full-screen paywall with monthly/annual pricing
  */
 
 import React from 'react';
@@ -18,6 +14,7 @@ import { PricingCard } from './PricingCard';
 import { CTAButton } from './CTAButton';
 import { PaywallFooter } from './PaywallFooter';
 import { usePaywallHandlers } from './usePaywallHandlers';
+import { usePurchaseHandlers } from './usePurchaseHandlers';
 import type { MotivationPaywallProps } from './types';
 
 export function MotivationPaywall({
@@ -30,11 +27,34 @@ export function MotivationPaywall({
   testID,
 }: MotivationPaywallProps) {
   const {
+    monthlyPackage,
+    annualPackage,
+    selectedPackage,
+    setSelectedPackage,
+    wrappedOnStartTrial,
+    wrappedRestorePurchases,
+  } = usePurchaseHandlers({ onRestorePurchases, onStartTrial });
+
+  const {
     isProcessing,
     handleClose,
     handleStartTrial,
     handleRestorePurchases,
-  } = usePaywallHandlers({ onClose, onRestorePurchases, onStartTrial });
+  } = usePaywallHandlers({
+    onClose,
+    onRestorePurchases: wrappedRestorePurchases,
+    onStartTrial: wrappedOnStartTrial,
+  });
+
+  const handleStartTrialWrapper = () => {
+    void handleStartTrial();
+  };
+
+  const handleRestoreWrapper = () => {
+    if (handleRestorePurchases) {
+      void handleRestorePurchases();
+    }
+  };
 
   return (
     <Modal
@@ -59,19 +79,23 @@ export function MotivationPaywall({
               triggeredByFeature={triggeredByFeature}
             />
             <SocialProof />
-            <PricingCard />
+            <PricingCard
+              annualPackage={annualPackage}
+              monthlyPackage={monthlyPackage}
+              onPackageChange={setSelectedPackage}
+            />
             <View className='mb-4'>
               <CTAButton
                 isProcessing={isProcessing}
                 reduceMotion={reduceMotion}
                 visible={visible}
-                onPress={handleStartTrial}
+                onPress={handleStartTrialWrapper}
               />
             </View>
             <PaywallFooter
               isProcessing={isProcessing}
-              showRestorePurchases={!!onRestorePurchases}
-              onRestorePurchases={handleRestorePurchases}
+              showRestorePurchases
+              onRestorePurchases={handleRestoreWrapper}
             />
           </ScrollView>
         </View>
