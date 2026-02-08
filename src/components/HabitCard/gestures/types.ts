@@ -17,6 +17,7 @@ export interface UseHabitCardGesturesOptions {
   cardScale: SharedValue<number>;
   today: string;
   isMountedRef: MutableRefObject<boolean>;
+  toggleTimeoutRef: MutableRefObject<ReturnType<typeof setTimeout> | null>;
   onPress?: () => void;
   onLongPress?: () => void;
   setIsToggling: (value: boolean) => void;

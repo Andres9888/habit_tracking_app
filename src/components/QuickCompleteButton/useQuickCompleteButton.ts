@@ -4,7 +4,7 @@ import { getTodayString } from '../../utils/getLocalDateString';
  * Manages state and animations for the QuickCompleteButton
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   useSharedValue,
   withSequence,
@@ -35,6 +35,9 @@ export function useQuickCompleteButton({
   const [showConfetti, setShowConfetti] = useState(false);
   const reduceMotion = useReduceMotion();
 
+  const confettiTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const toggleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const buttonScale = useSharedValue(1);
   const checkScale = useSharedValue(completedToday ? 1 : 0);
   const checkRotation = useSharedValue(completedToday ? 0 : -90);
@@ -54,6 +57,13 @@ export function useQuickCompleteButton({
     checkScale.value = completedToday ? 1 : 0;
     checkRotation.value = completedToday ? 0 : -90;
   }, [completedToday]);
+
+  useEffect(() => {
+    return () => {
+      if (confettiTimeoutRef.current) clearTimeout(confettiTimeoutRef.current);
+      if (toggleTimeoutRef.current) clearTimeout(toggleTimeoutRef.current);
+    };
+  }, []);
 
   const handlePress = async () => {
     if (isToggling) return;
@@ -87,7 +97,7 @@ export function useQuickCompleteButton({
       });
       if (!reduceMotion) {
         setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 700);
+        confettiTimeoutRef.current = setTimeout(() => setShowConfetti(false), 700);
       }
       onComplete?.();
     }
@@ -100,7 +110,7 @@ export function useQuickCompleteButton({
       checkRotation.value = wasCompleted ? 0 : -90;
       if (__DEV__) console.error('Failed to toggle completion:', error);
     } finally {
-      setTimeout(() => setIsToggling(false), 300);
+      toggleTimeoutRef.current = setTimeout(() => setIsToggling(false), 300);
     }
   };
 

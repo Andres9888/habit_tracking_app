@@ -20,6 +20,7 @@ export interface HabitCardValues {
   showConfetti: boolean;
   setShowConfetti: React.Dispatch<React.SetStateAction<boolean>>;
   isMountedRef: MutableRefObject<boolean>;
+  toggleTimeoutRef: MutableRefObject<ReturnType<typeof setTimeout> | null>;
 }
 
 export function useHabitCardValues(strength: number): HabitCardValues {
@@ -31,11 +32,13 @@ export function useHabitCardValues(strength: number): HabitCardValues {
   const [isToggling, setIsToggling] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const isMountedRef = useRef(true);
+  const toggleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
+      if (toggleTimeoutRef.current) clearTimeout(toggleTimeoutRef.current);
     };
   }, []);
 
@@ -50,6 +53,7 @@ export function useHabitCardValues(strength: number): HabitCardValues {
     showConfetti,
     showFloatingXP,
     strengthFillWidth,
+    toggleTimeoutRef,
     translateX,
     xpPosition,
   };

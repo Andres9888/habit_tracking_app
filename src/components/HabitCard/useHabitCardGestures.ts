@@ -26,6 +26,7 @@ export function useHabitCardGestures(options: UseHabitCardGesturesOptions) {
     setIsToggling: options.setIsToggling,
     today: options.today,
     toggleCompletionMutation: options.toggleCompletionMutation,
+    toggleTimeoutRef: options.toggleTimeoutRef,
     triggerCompletionCelebration: options.triggerCompletionCelebration,
     triggerUncheckAnimation: options.triggerUncheckAnimation,
   });

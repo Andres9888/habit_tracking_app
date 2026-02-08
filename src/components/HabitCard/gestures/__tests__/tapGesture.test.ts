@@ -1,5 +1,5 @@
 /**
- * tapGesture - Source verification tests for runOnJS fix
+ * tapGesture - Source verification tests for runOnJS fix and setTimeout cleanup
  *
  * Verifies that:
  * - Anonymous async function is replaced with named handleToggleCompletion
@@ -8,6 +8,7 @@
  * - runOnJS is called with named function references
  * - useHabitCardValues creates and returns isMountedRef
  * - Gesture types include isMountedRef
+ * - toggleTimeoutRef is threaded through for setTimeout cleanup
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
@@ -146,6 +147,70 @@ describe('useHabitCardGestures - isMountedRef threading', () => {
   it('should pass isMountedRef to createTapGesture', () => {
     expect(gesturesHookSource).toContain(
       'isMountedRef: options.isMountedRef'
+    );
+  });
+});
+
+describe('tapGesture - toggleTimeoutRef for setTimeout cleanup', () => {
+  it('should accept toggleTimeoutRef in TapGestureOptions', () => {
+    expect(tapSource).toContain(
+      'toggleTimeoutRef: MutableRefObject<ReturnType<typeof setTimeout> | null>'
+    );
+  });
+
+  it('should destructure toggleTimeoutRef from options', () => {
+    expect(tapSource).toMatch(/toggleTimeoutRef,?\s*\n/);
+  });
+
+  it('should store setTimeout ID in toggleTimeoutRef.current', () => {
+    expect(tapSource).toContain('toggleTimeoutRef.current = setTimeout');
+  });
+
+  it('should NOT have bare setTimeout without ref storage', () => {
+    // All setTimeout() calls (not type refs) should assign to a ref
+    const lines = tapSource.split('\n');
+    const setTimeoutCallLines = lines.filter(
+      (l) => l.includes('setTimeout(') && !l.trim().startsWith('//')
+    );
+    expect(setTimeoutCallLines.length).toBeGreaterThan(0);
+    for (const line of setTimeoutCallLines) {
+      expect(line).toContain('toggleTimeoutRef.current');
+    }
+  });
+});
+
+describe('useHabitCardValues - toggleTimeoutRef creation', () => {
+  it('should create toggleTimeoutRef with useRef', () => {
+    expect(valuesSource).toContain('const toggleTimeoutRef = useRef');
+  });
+
+  it('should include toggleTimeoutRef in HabitCardValues interface', () => {
+    expect(valuesSource).toContain('toggleTimeoutRef: MutableRefObject');
+  });
+
+  it('should clear toggleTimeoutRef on unmount', () => {
+    expect(valuesSource).toContain('clearTimeout(toggleTimeoutRef.current)');
+  });
+
+  it('should return toggleTimeoutRef from the hook', () => {
+    const returnMatch = valuesSource.match(/return \{[\s\S]*?\};/);
+    expect(returnMatch).not.toBeNull();
+    expect(returnMatch![0]).toContain('toggleTimeoutRef');
+  });
+});
+
+describe('UseHabitCardGesturesOptions - toggleTimeoutRef type', () => {
+  it('should include toggleTimeoutRef in gesture options type', () => {
+    expect(typesSource).toContain(
+      'toggleTimeoutRef: MutableRefObject<ReturnType<typeof setTimeout> | null>'
+    );
+  });
+});
+
+describe('useHabitCardGestures - toggleTimeoutRef threading', () => {
+  it('should pass toggleTimeoutRef to createTapGesture', () => {
+    expect(gesturesHookSource).toContain(
+      'toggleTimeoutRef: options.toggleTimeoutRef'
     );
   });
 });

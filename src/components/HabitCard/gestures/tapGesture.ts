@@ -24,6 +24,7 @@ interface TapGestureOptions {
   cardScale: SharedValue<number>;
   today: string;
   isMountedRef: MutableRefObject<boolean>;
+  toggleTimeoutRef: MutableRefObject<ReturnType<typeof setTimeout> | null>;
   onPress?: () => void;
   setIsToggling: (value: boolean) => void;
   toggleCompletionMutation: (args: {
@@ -52,6 +53,7 @@ export function createTapGesture(options: TapGestureOptions) {
     cardScale,
     today,
     isMountedRef,
+    toggleTimeoutRef,
     onPress,
     setIsToggling,
     toggleCompletionMutation,
@@ -69,7 +71,7 @@ export function createTapGesture(options: TapGestureOptions) {
         if (__DEV__) console.error('Toggle completion failed:', error);
       })
       .finally(() => {
-        setTimeout(() => {
+        toggleTimeoutRef.current = setTimeout(() => {
           if (isMountedRef.current) {
             setIsToggling(false);
           }

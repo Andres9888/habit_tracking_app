@@ -75,6 +75,7 @@ export function useHabitCard(props: HabitCardProps) {
     id,
     isMountedRef: values.isMountedRef,
     isToggling: values.isToggling,
+    toggleTimeoutRef: values.toggleTimeoutRef,
     name,
     onLongPress,
     onPress,

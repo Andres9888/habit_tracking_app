@@ -1,7 +1,7 @@
 /**
  * Business logic hooks for AnalyticsScreen
  */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Alert } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
@@ -27,11 +27,18 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const weeklyInsights = useQuery(api.analytics.getWeeklyInsights);
 
   const isLoading = !overviewStats;
+  const refreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (refreshTimeoutRef.current) clearTimeout(refreshTimeoutRef.current);
+    };
+  }, []);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     // Convex queries automatically refresh
-    setTimeout(() => setRefreshing(false), 1000);
+    refreshTimeoutRef.current = setTimeout(() => setRefreshing(false), 1000);
   }, []);
 
   const handleHabitPress = useCallback((habitId: string) => {
