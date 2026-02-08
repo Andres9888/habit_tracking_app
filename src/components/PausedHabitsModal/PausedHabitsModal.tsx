@@ -1,19 +1,21 @@
 /**
- * PausedHabitsModal Component
- * Shows list of paused habits with ability to resume them
- * Similar structure to ArchivedHabitsModal
+ * PausedHabitsModal - OPTIMIZED: Design system typography, animations, shadows
  */
-
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { ChevronLeft, X } from 'lucide-react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
 import { usePausedHabitsModalLogic } from './PausedHabitsModal.hooks';
+import { PausedHabitCard } from './PausedHabitCard';
+import { PausedEmptyState } from './PausedEmptyState';
 
 interface PausedHabitsModalProps {
   onClose: () => void;
   onBack: () => void;
 }
+
+const anim = FadeInDown.duration(280).springify().damping(18);
 
 export default function PausedHabitsModal({
   onClose,
@@ -23,84 +25,56 @@ export default function PausedHabitsModal({
   const { pausedHabits, handleResume } = usePausedHabitsModalLogic();
 
   return (
-    <>
-      {/* Header - dynamic padding for Dynamic Island/notch */}
+    <View className='flex-1' style={{ backgroundColor: '#faf9f7' }}>
       <View style={{ paddingTop: insets.top + 8 }}>
-        <View className='mb-6 flex-row items-center justify-between'>
-          <TouchableOpacity
+        <Animated.View
+          className='mb-6 flex-row items-center justify-between px-4'
+          entering={anim}
+        >
+          <Pressable
             accessibilityLabel='Back to settings'
             accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100'
+            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
             onPress={onBack}
           >
             <ChevronLeft color={colors.gray[500]} size={24} strokeWidth={2} />
-          </TouchableOpacity>
-          <Text className='flex-1 text-center text-2xl font-bold tracking-tight text-stone-900'>
+          </Pressable>
+          <Text
+            className='flex-1 text-center font-bold text-stone-900'
+            style={{ fontSize: 22 }}
+          >
             Paused Habits
           </Text>
-          <TouchableOpacity
+          <Pressable
             accessibilityLabel='Close'
             accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100'
+            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
             onPress={onClose}
           >
             <X color={colors.gray[500]} size={24} strokeWidth={2} />
-          </TouchableOpacity>
-        </View>
+          </Pressable>
+        </Animated.View>
       </View>
-
-      <ScrollView className='p-5'>
+      <ScrollView
+        className='flex-1 px-4'
+        contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
+        showsVerticalScrollIndicator={false}
+      >
         {pausedHabits.length === 0 ? (
-          <View className='items-center gap-3 py-12'>
-            <Text className='text-5xl'>⏸️</Text>
-            <Text className='text-lg font-semibold text-stone-900'>
-              No paused habits
-            </Text>
-            <Text className='text-sm text-stone-500'>
-              Paused habits will appear here
-            </Text>
-          </View>
+          <PausedEmptyState />
         ) : (
           <View className='gap-3'>
-            {pausedHabits.map((habit) => (
-              <View
+            {pausedHabits.map((habit, i) => (
+              <PausedHabitCard
                 key={habit._id}
-                className='gap-3 rounded-2xl border border-stone-200 bg-stone-50 p-4'
-              >
-                <View className='gap-1'>
-                  <Text className='text-base font-semibold text-stone-900'>
-                    {habit.name}
-                  </Text>
-                  <Text className='text-xs text-stone-500'>
-                    Paused{' '}
-                    {new Date(
-                      habit.pausedAt || habit._creationTime
-                    ).toLocaleDateString()}
-                  </Text>
-                  {habit.strengthAtPause !== undefined && (
-                    <Text className='text-xs text-stone-600'>
-                      Strength preserved:{' '}
-                      {Math.round(habit.strengthAtPause * 100)}%
-                    </Text>
-                  )}
-                </View>
-                <View className='flex-row gap-2'>
-                  <TouchableOpacity
-                    accessibilityLabel={`Resume ${habit.name}`}
-                    accessibilityRole='button'
-                    className='flex-1 items-center rounded-xl border border-blue-500 py-3'
-                    onPress={() => handleResume(habit._id, habit.name)}
-                  >
-                    <Text className='text-xs font-bold tracking-[2px] text-blue-500'>
-                      RESUME
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+                habit={habit}
+                index={i}
+                onResume={handleResume}
+              />
             ))}
           </View>
         )}
       </ScrollView>
-    </>
+    </View>
   );
 }

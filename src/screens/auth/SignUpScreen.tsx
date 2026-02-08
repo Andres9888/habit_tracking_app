@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import { View } from 'react-native';
+import { ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
@@ -61,83 +62,115 @@ export default function SignUpScreen({
   }
 
   return (
-    <View
-      className='flex-1'
-      style={{ backgroundColor: colors.light.background }}
-    >
-      <View className='flex-1 px-6' style={{ paddingTop: insets.top + 24 }}>
-        <SignUpHeader />
-
-        {oauthError && (
-          <AuthError message={oauthError} onDismiss={clearError} />
-        )}
-
-        <Animated.View
-          className='gap-3'
-          entering={FadeInUp.delay(100).springify().damping(18)}
+    <View className='flex-1'>
+      <LinearGradient
+        colors={[
+          colors.light.background,
+          colors.light.gradientMid ?? '#f5f5f0',
+        ]}
+        style={{ flex: 1 }}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
         >
-          <SocialSignInButton
-            disabled={isAnyLoading}
-            isLoading={oauthLoading === 'oauth_apple'}
-            provider='apple'
-            onPress={signInWithApple}
-          />
-          <SocialSignInButton
-            disabled={isAnyLoading}
-            isLoading={oauthLoading === 'oauth_google'}
-            provider='google'
-            onPress={signInWithGoogle}
-          />
-        </Animated.View>
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingBottom: insets.bottom + 24,
+              paddingHorizontal: 24,
+              paddingTop: insets.top + 24,
+            }}
+            keyboardShouldPersistTaps='handled'
+            showsVerticalScrollIndicator={false}
+          >
+            <SignUpHeader />
 
-        <AuthDivider />
+            {oauthError && (
+              <AuthError message={oauthError} onDismiss={clearError} />
+            )}
 
-        <Animated.View
-          className='gap-6'
-          entering={FadeInUp.delay(150).springify().damping(18)}
-        >
-          <FormInput
-            autoCapitalize='none'
-            autoComplete='email'
-            editable={!isAnyLoading}
-            error={emailError}
-            keyboardType='email-address'
-            label='Email'
-            placeholder='Enter your email'
-            value={emailAddress}
-            onBlur={onEmailBlur}
-            onChangeText={setEmailAddress}
-          />
-          <FormInput
-            secureTextEntry
-            autoComplete='password-new'
-            editable={!isAnyLoading}
-            error={passwordError}
-            label='Password'
-            placeholder='Create a password'
-            value={password}
-            onBlur={onPasswordBlur}
-            onChangeText={setPassword}
-          />
-          <SubmitButton
-            disabled={
-              !emailAddress || !password || isAnyLoading || !isFormValid
-            }
-            isLoading={isLoading}
-            label='Create account'
-            loadingLabel='Creating account...'
-            onPress={handleSignUp}
-          />
-        </Animated.View>
+            {/* OPTIMIZED: Form card with depth matching SignIn */}
+            <Animated.View
+              entering={FadeInUp.delay(100).springify().damping(18)}
+              style={{
+                backgroundColor: '#ffffff',
+                borderRadius: 20,
+                elevation: 4,
+                padding: 24,
+                shadowColor: '#000',
+                shadowOffset: { height: 4, width: 0 },
+                shadowOpacity: 0.06,
+                shadowRadius: 20,
+              }}
+            >
+              <View className='gap-3'>
+                <SocialSignInButton
+                  disabled={isAnyLoading}
+                  isLoading={oauthLoading === 'oauth_apple'}
+                  provider='apple'
+                  onPress={signInWithApple}
+                />
+                <SocialSignInButton
+                  disabled={isAnyLoading}
+                  isLoading={oauthLoading === 'oauth_google'}
+                  provider='google'
+                  onPress={signInWithGoogle}
+                />
+              </View>
 
-        {onNavigateToSignIn && (
-          <SignInLink
-            className='mt-6'
-            disabled={isAnyLoading}
-            onPress={onNavigateToSignIn}
-          />
-        )}
-      </View>
+              <AuthDivider />
+
+              <View className='gap-6'>
+                <FormInput
+                  autoCapitalize='none'
+                  autoComplete='email'
+                  editable={!isAnyLoading}
+                  error={emailError}
+                  keyboardType='email-address'
+                  label='Email'
+                  placeholder='Enter your email'
+                  value={emailAddress}
+                  onBlur={onEmailBlur}
+                  onChangeText={setEmailAddress}
+                />
+                <FormInput
+                  secureTextEntry
+                  autoComplete='password-new'
+                  editable={!isAnyLoading}
+                  error={passwordError}
+                  label='Password'
+                  placeholder='Create a password'
+                  value={password}
+                  onBlur={onPasswordBlur}
+                  onChangeText={setPassword}
+                />
+                <SubmitButton
+                  disabled={
+                    !emailAddress || !password || isAnyLoading || !isFormValid
+                  }
+                  isLoading={isLoading}
+                  label='Create account'
+                  loadingLabel='Creating account...'
+                  onPress={handleSignUp}
+                />
+              </View>
+            </Animated.View>
+
+            {onNavigateToSignIn && (
+              <Animated.View
+                entering={FadeInUp.delay(200).springify().damping(18)}
+              >
+                <SignInLink
+                  className='mt-6'
+                  disabled={isAnyLoading}
+                  onPress={onNavigateToSignIn}
+                />
+              </Animated.View>
+            )}
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </LinearGradient>
     </View>
   );
 }
