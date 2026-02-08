@@ -26,7 +26,7 @@ export const previewStyles = StyleSheet.create({
   previewScienceBox: {
     alignItems: 'flex-start',
     borderColor: '#bbf7d0',
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
@@ -59,7 +59,7 @@ export const previewStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FEF2F2',
     borderColor: '#FECACA',
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 14,

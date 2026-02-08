@@ -1,7 +1,9 @@
 /**
  * Template card wrapper for FlatList rendering
+ * QW-9: Adds visual loading feedback (opacity + spinner) during import
  */
 
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import TemplateCard from '../../../components/TemplateCard';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 
@@ -18,23 +20,48 @@ export function TemplateListCard({
   onImport,
   onPreview,
 }: TemplateListCardProps) {
+  const isImporting = importingTemplateId === item._id;
+
   return (
-    <TemplateCard
-      category={item.category}
-      description={item.description}
-      frequency={item.frequency}
-      icon={item.icon}
-      iconColor={item.iconColor}
-      id={item._id}
-      isImporting={importingTemplateId === item._id}
-      isPremium={item.category === 'andrew_huberman'}
-      name={item.name}
-      popularityScore={item.popularityScore}
-      scientificLink={item.scientificLink}
-      scientificReference={item.scientificReference}
-      youtubeLink={item.youtubeLink}
-      onImport={() => onImport(item._id)}
-      onPreview={() => onPreview(item)}
-    />
+    <View style={isImporting ? loadingStyles.importing : undefined}>
+      <TemplateCard
+        category={item.category}
+        description={item.description}
+        frequency={item.frequency}
+        icon={item.icon}
+        iconColor={item.iconColor}
+        id={item._id}
+        isImporting={isImporting}
+        isPremium={item.category === 'andrew_huberman'}
+        name={item.name}
+        popularityScore={item.popularityScore}
+        scientificLink={item.scientificLink}
+        scientificReference={item.scientificReference}
+        youtubeLink={item.youtubeLink}
+        onImport={() => onImport(item._id)}
+        onPreview={() => onPreview(item)}
+      />
+      {isImporting && (
+        <View style={loadingStyles.overlay}>
+          <ActivityIndicator color="#059669" size="small" />
+        </View>
+      )}
+    </View>
   );
 }
+
+const loadingStyles = StyleSheet.create({
+  importing: {
+    opacity: 0.6,
+    position: 'relative',
+  },
+  overlay: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
+});

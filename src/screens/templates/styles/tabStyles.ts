@@ -24,7 +24,7 @@ export const tabStyles = StyleSheet.create({
   },
   tabBar: {
     backgroundColor: '#f0eeeb',
-    borderRadius: 14,
+    borderRadius: 12,
     flexDirection: 'row',
     marginBottom: 12,
     marginHorizontal: 20,
