@@ -9,21 +9,39 @@ import { spacing } from '../../../theme/spacing';
 import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
 import TrendLineChart from '../../../components/TrendLineChart';
 import ComplianceHeatmap from '../../../components/ComplianceHeatmap';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+import { ChartLoadingSkeleton } from './ChartLoadingSkeleton';
+import type {
+  StrengthDistributionData,
+  TrendDataPoint,
+  ComplianceDay,
+} from '../AnalyticsScreen.types';
+
 interface ChartSectionsProps {
-  strengthDistribution: any;
-  trendData: any;
-  complianceData: any;
+  strengthDistribution: StrengthDistributionData | undefined;
+  trendData: TrendDataPoint[] | undefined;
+  complianceData: ComplianceDay[] | undefined;
+  isLoading?: boolean;
 }
 
 export const ChartSections: React.FC<ChartSectionsProps> = ({
   strengthDistribution,
   trendData,
   complianceData,
+  isLoading = false,
 }) => {
   const strengthAccessibilityLabel = strengthDistribution
     ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
     : 'Loading chart';
+
+  if (isLoading) {
+    return (
+      <>
+        <ChartLoadingSkeleton />
+        <ChartLoadingSkeleton />
+        <ChartLoadingSkeleton />
+      </>
+    );
+  }
 
   return (
     <>
@@ -38,7 +56,7 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
         <View accessible accessibilityLabel={strengthAccessibilityLabel}>
           <StrengthDistributionChart
             data={strengthDistribution ?? null}
-            onSegmentPress={() => { /* TODO */ }}
+            onSegmentPress={(level) => console.log('Filter by level:', level)}
           />
         </View>
       </View>
@@ -47,7 +65,7 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
         <Text style={styles.sectionTitle}>30-Day Trend</Text>
         <TrendLineChart
           data={trendData ?? null}
-          onDataPointPress={() => { /* TODO */ }}
+          onDataPointPress={(point) => console.log('Selected point:', point)}
         />
       </View>
 
@@ -55,7 +73,7 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
         <Text style={styles.sectionTitle}>Compliance Heatmap</Text>
         <ComplianceHeatmap
           data={complianceData ?? null}
-          onDayPress={() => { /* TODO */ }}
+          onDayPress={(day) => console.log('Selected day:', day)}
         />
       </View>
     </>
