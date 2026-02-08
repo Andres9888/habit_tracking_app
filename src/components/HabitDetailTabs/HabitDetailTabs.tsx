@@ -80,8 +80,17 @@ export function HabitDetailTabs({
     >
       <View className='relative rounded-xl bg-stone-100 p-1'>
         <Animated.View
-          className='absolute bottom-1 top-1 rounded-lg bg-violet-600 shadow-sm'
-          style={pillStyle}
+          className='absolute bottom-1 top-1 rounded-lg shadow-sm'
+          style={[
+            pillStyle,
+            {
+              backgroundColor: '#059669',
+              shadowColor: '#059669',
+              shadowOffset: { height: 3, width: 0 },
+              shadowOpacity: 0.15,
+              shadowRadius: 8,
+            },
+          ]}
         />
         <View className='flex-row' style={{ gap: TAB_GAP }}>
           {TABS.map((tab) => (

@@ -57,7 +57,7 @@ export const tabStyles = StyleSheet.create({
   },
   tabText: {
     color: '#78716c',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '600',
   },
   // OPTIMIZED: Emerald active text
