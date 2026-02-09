@@ -5,9 +5,9 @@
 import { useCallback } from 'react';
 
 interface UseSeedHandlersOptions {
-  seedAdditionalTemplates: (args: Record<string, never>) => Promise<void>;
-  seedNewScienceTemplates: (args: Record<string, never>) => Promise<void>;
-  seedTemplates: (args: Record<string, never>) => Promise<void>;
+  seedAdditionalTemplates: (args: Record<string, never>) => Promise<unknown>;
+  seedNewScienceTemplates: (args: Record<string, never>) => Promise<unknown>;
+  seedTemplates: (args: Record<string, never>) => Promise<unknown>;
   setIsSeeding: React.Dispatch<React.SetStateAction<boolean>>;
   setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
   setToastMessage: React.Dispatch<React.SetStateAction<string>>;

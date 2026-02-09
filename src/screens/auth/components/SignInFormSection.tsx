@@ -60,7 +60,7 @@ export function SignInFormSection(props: SignInFormSectionProps) {
           autoCapitalize='none'
           autoComplete='email'
           editable={!isAnyLoading}
-          error={emailError}
+          error={emailError ?? undefined}
           keyboardType='email-address'
           label='Email'
           placeholder='your@email.com'

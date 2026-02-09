@@ -38,7 +38,7 @@ export function FormInput({
   const handleBlurWrapper = (
     e: NativeSyntheticEvent<TextInputFocusEventData>
   ) => {
-    handleBlurAnimation(e);
+    handleBlurAnimation();
     onBlur?.(e);
   };
 

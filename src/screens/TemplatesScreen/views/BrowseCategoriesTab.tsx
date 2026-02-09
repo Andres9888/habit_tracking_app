@@ -28,7 +28,7 @@ interface BrowseCategoriesTabProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
   scienceCountsByCategory: Record<string, number>;
-  scrollViewRef: React.RefObject<ScrollView>;
+  scrollViewRef: React.RefObject<ScrollView | null>;
   templatesByCategory: Map<string, Doc<'templates'>[]>;
 }
 

@@ -7,10 +7,10 @@ import type { EdgeInsets } from 'react-native-safe-area-context';
 import { NotesListModal } from './NotesListModal';
 import { NotesEditorModal } from './NotesEditorModal';
 import { UndoToasts } from './UndoToasts';
-import type { Doc } from '../../../../convex/_generated/dataModel';
+import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitDetailModalsProps {
-  habitId: string;
+  habitId: Id<'habits'>;
   habitName: string;
   insets: EdgeInsets;
   isNotesListOpen: boolean;

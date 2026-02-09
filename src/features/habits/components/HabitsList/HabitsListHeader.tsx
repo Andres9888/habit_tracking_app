@@ -2,7 +2,6 @@
  * HabitsListHeader - Redesigned per home-screen-redesign-spec.md
  */
 
-/* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
 
 import { Animated, View } from 'react-native';
@@ -81,7 +80,7 @@ export function HabitsListHeader(
       {shouldShowBanner && daysRemaining !== null && (
         <TrialCountdownBanner
           daysRemaining={daysRemaining}
-          onUpgrade={onUpgradePress}
+          onUpgrade={props.onUpgradePress}
         />
       )}
     </View>
