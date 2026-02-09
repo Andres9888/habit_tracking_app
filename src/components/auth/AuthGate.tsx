@@ -3,6 +3,7 @@
  *
  * Authentication boundary that controls app access.
  * Shows WelcomeScreen for unauthenticated users,
+ * OnboardingScreen for first-time users after sign-up,
  * HabitsApp for authenticated users.
  * Syncs user to Convex database on sign-in.
  */
@@ -16,18 +17,21 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { api } from '../../../convex/_generated/api';
 import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
+import { OnboardingScreen } from '../../screens/onboarding';
+import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();
   const getOrCreateUser = useMutation(api.users.getOrCreateUser);
+  const { complete: onboardingComplete, markComplete } = useOnboardingStatus(
+    isSignedIn ?? false
+  );
 
-  // Use ref to prevent mutation identity from triggering useEffect re-runs
   const getOrCreateUserRef = useRef(getOrCreateUser);
   getOrCreateUserRef.current = getOrCreateUser;
 
-  // Sync user to Convex when signed in and Convex auth is ready
   useEffect(() => {
     if (isSignedIn && isConvexReady) {
       getOrCreateUserRef.current().catch((error_: unknown) => {
@@ -36,8 +40,7 @@ export function AuthGate() {
     }
   }, [isSignedIn, isConvexReady]);
 
-  // Show loading while Clerk initializes
-  if (!isLoaded) {
+  if (!isLoaded || (isSignedIn && onboardingComplete === null)) {
     return (
       <View className='flex-1 items-center justify-center bg-white dark:bg-stone-900'>
         <ActivityIndicator size='large' />
@@ -45,7 +48,6 @@ export function AuthGate() {
     );
   }
 
-  // Show welcome/auth screens if not signed in
   if (!isSignedIn) {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -54,7 +56,14 @@ export function AuthGate() {
     );
   }
 
-  // Show main app - let HabitsApp handle its own loading states
+  if (!onboardingComplete) {
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <OnboardingScreen onComplete={markComplete} />
+      </GestureHandlerRootView>
+    );
+  }
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <HabitsApp />
