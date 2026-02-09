@@ -10,7 +10,7 @@ import {
   DEFAULT_CATEGORY_COLORS,
 } from '../../templates/constants';
 import { styles } from '../../templates/templatesScreenStyles';
-import type { Category, CategoryDoc, ViewMode } from '../TemplatesScreen.types';
+import type { CategoryDoc, ViewMode } from '../TemplatesScreen.types';
 
 interface CategoryHeaderProps {
   categories: CategoryDoc[] | undefined;

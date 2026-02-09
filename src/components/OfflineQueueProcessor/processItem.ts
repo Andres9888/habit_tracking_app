@@ -6,7 +6,7 @@ import type {
   ReflectionPayload,
 } from '../../hooks/useOfflineQueue';
 
-interface Mutations {
+export interface Mutations {
   upsertReflection: (args: {
     habitId: never;
     date: string;

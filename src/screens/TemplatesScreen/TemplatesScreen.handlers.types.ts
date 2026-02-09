@@ -8,14 +8,14 @@ import type { Category, SortOption } from '../templates/constants';
 import type { TemplateCustomizations, ViewMode } from './TemplatesScreen.types';
 
 export interface UseTemplateHandlersOptions {
-  flatListRef: React.RefObject<FlatList<Doc<'templates'>>>;
+  flatListRef: React.RefObject<FlatList<Doc<'templates'>> | null>;
   importTemplate: (args: {
     templateId: Id<'templates'>;
     customizations?: TemplateCustomizations;
   }) => Promise<{ success: boolean }>;
-  seedAdditionalTemplates: (args: Record<string, never>) => Promise<void>;
-  seedNewScienceTemplates: (args: Record<string, never>) => Promise<void>;
-  seedTemplates: (args: Record<string, never>) => Promise<void>;
+  seedAdditionalTemplates: (args?: Record<string, never>) => Promise<unknown>;
+  seedNewScienceTemplates: (args?: Record<string, never>) => Promise<unknown>;
+  seedTemplates: (args?: Record<string, never>) => Promise<unknown>;
   setExpandedCategories: React.Dispatch<React.SetStateAction<Set<string>>>;
   setImportedTemplateIds: React.Dispatch<React.SetStateAction<Set<string>>>;
   setImportingTemplateId: React.Dispatch<

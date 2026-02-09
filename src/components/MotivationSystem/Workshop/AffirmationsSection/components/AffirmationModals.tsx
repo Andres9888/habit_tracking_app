@@ -5,11 +5,11 @@
 
 import React from 'react';
 import { AffirmationScheduleModal } from '../../AffirmationScheduleModal';
-import type { AffirmationScheduleData } from '../../AffirmationScheduleModal/types';
 import type {
   AffirmationData,
   AffirmationType,
 } from '../AffirmationsSection.types';
+import type { AffirmationScheduleData } from '../../AffirmationScheduleModal/types';
 import { AffirmationEditorModal } from './AffirmationEditorModal';
 
 interface AffirmationModalsProps {

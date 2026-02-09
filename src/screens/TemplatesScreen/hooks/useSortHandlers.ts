@@ -8,7 +8,7 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { SortOption } from '../../templates/constants';
 
 interface UseSortHandlersOptions {
-  flatListRef: React.RefObject<FlatList<Doc<'templates'>>>;
+  flatListRef: React.RefObject<FlatList<Doc<'templates'>> | null>;
   setShowSortOptions: React.Dispatch<React.SetStateAction<boolean>>;
   setSortOption: React.Dispatch<React.SetStateAction<SortOption>>;
 }

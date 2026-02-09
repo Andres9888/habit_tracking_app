@@ -44,7 +44,7 @@ export interface BrowseViewProps {
   previewTemplate: Doc<'templates'> | null;
   researchOnly: boolean;
   scienceCountsByCategory: Record<string, number>;
-  scrollViewRef: React.RefObject<ScrollView>;
+  scrollViewRef: React.RefObject<ScrollView | null>;
   searchQuery: string;
   setResearchOnly: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;

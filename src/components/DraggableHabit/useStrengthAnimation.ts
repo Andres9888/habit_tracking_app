@@ -89,7 +89,7 @@ export function useStrengthAnimation(
       { scale: strengthEmojiScale.value },
       { rotate: `${Math.round(strengthEmojiRotation.value)}deg` },
     ],
-  })) as StrengthEmojiAnimatedStyle;
+  })) as unknown as StrengthEmojiAnimatedStyle;
 
   const progressAnimatedStyle = useAnimatedStyle(() => ({
     width: `${progressWidth.value}%`,

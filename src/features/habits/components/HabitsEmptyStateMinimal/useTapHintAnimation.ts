@@ -27,8 +27,8 @@ export function useTapHintAnimation({
   shouldReduceMotion,
   autoTransition,
 }: UseTapHintAnimationParams) {
-  const tapHintOpacity = useSharedValue(0);
-  const tapHintScale = useSharedValue(TAP_HINT_PULSE.minScale);
+  const tapHintOpacity = useSharedValue<number>(0);
+  const tapHintScale = useSharedValue<number>(TAP_HINT_PULSE.minScale);
 
   useEffect(() => {
     if (!autoTransition) return;

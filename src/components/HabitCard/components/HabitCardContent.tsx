@@ -30,7 +30,9 @@ interface HabitCardContentProps {
   atRisk: boolean;
   theme: AppTheme;
   entranceContentStyle: AnimatedStyle;
-  checkmarkAnimatedStyle: AnimatedStyle;
+  checkmarkAnimatedStyle: AnimatedStyle<{
+    transform: ({ scale: number } | { rotate: string })[];
+  }>;
   rippleAnimatedStyle: AnimatedStyle;
   /** Type of completion icon to display - T014 */
   completionIcon?: CompletionIconType;

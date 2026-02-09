@@ -16,7 +16,6 @@ class ConsoleAnalyticsTracker implements AnalyticsTracker {
 
     if (__DEV__) console.log('[Analytics] Create Habit Modal V11:', {
       timestamp: new Date().toISOString(),
-      type: event.type,
       ...event,
     });
   }

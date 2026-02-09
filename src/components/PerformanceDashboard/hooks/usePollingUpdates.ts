@@ -5,6 +5,7 @@
 
 import { useEffect } from 'react';
 import type {
+  NetworkTiming,
   PerformanceThresholds,
   RenderTiming,
 } from '../../../lib/performance';
@@ -19,7 +20,7 @@ interface PollingUpdatesOptions {
     errorRate: number;
     p95Latency: number;
   };
-  getReport: () => { networkTimings: unknown[]; renderTimings: RenderTiming[] };
+  getReport: () => { networkTimings: NetworkTiming[]; renderTimings: RenderTiming[] };
   getSlowComponents: (threshold?: number) => RenderTiming[];
   historyLimit: number;
   isVisible: boolean;

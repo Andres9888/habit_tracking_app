@@ -42,7 +42,7 @@ export function HabitsEmptyStateMinimal({
     return (
       <SuccessState
         autoTransition={!!onSuccessTransitionComplete}
-        habitEmoji={flow.successEmoji}
+        habitEmoji={flow.successEmoji ?? undefined}
         habitName={flow.successHabitName}
         onAddAnother={flow.handleAddAnother}
         onTransitionComplete={onSuccessTransitionComplete}
