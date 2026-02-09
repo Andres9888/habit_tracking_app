@@ -59,14 +59,14 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   buttonSkeleton: {
-    backgroundColor: colors.neutral[200],
+    backgroundColor: colors.gray[200],
     borderRadius: 8,
     flex: 1,
     height: 40,
   },
   cardSkeleton: {
-    backgroundColor: colors.neutral[50],
-    borderColor: colors.neutral[200],
+    backgroundColor: colors.gray[50],
+    borderColor: colors.gray[200],
     borderRadius: 12,
     borderWidth: 1,
     marginBottom: spacing.md,
@@ -76,13 +76,13 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   dateSkeleton: {
-    backgroundColor: colors.neutral[200],
+    backgroundColor: colors.gray[200],
     borderRadius: 4,
     height: 12,
     width: 80,
   },
   emojiCircle: {
-    backgroundColor: colors.neutral[200],
+    backgroundColor: colors.gray[200],
     borderRadius: 24,
     height: 48,
     width: 48,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   nameSkeleton: {
-    backgroundColor: colors.neutral[200],
+    backgroundColor: colors.gray[200],
     borderRadius: 4,
     height: 16,
     marginBottom: spacing.xs,
