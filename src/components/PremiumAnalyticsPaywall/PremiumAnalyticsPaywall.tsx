@@ -50,6 +50,11 @@ export default function PremiumAnalyticsPaywall({
     void handleRestore();
   };
 
+  // Build dynamic price label for fine print
+  const priceLabel = selectedPackage
+    ? `${selectedPackage.product.priceString}/${String(selectedPackage.packageType) === 'ANNUAL' ? 'year' : 'month'}`
+    : undefined;
+
   return (
     <View style={styles.container}>
       <BlurView intensity={80} style={styles.blurView} tint='dark'>
@@ -86,6 +91,7 @@ export default function PremiumAnalyticsPaywall({
           />
           <PaywallFooter
             isProcessing={isProcessing}
+            priceLabel={priceLabel}
             onRestore={handleRestorePress}
             onStartTrial={handlePurchasePress}
           />

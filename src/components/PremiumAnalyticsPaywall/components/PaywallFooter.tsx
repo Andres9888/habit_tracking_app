@@ -15,12 +15,15 @@ interface PaywallFooterProps {
   onStartTrial: () => void;
   onRestore: () => void;
   isProcessing?: boolean;
+  /** Dynamic price string for fine print (e.g. "$6.99/month") */
+  priceLabel?: string;
 }
 
 export const PaywallFooter: React.FC<PaywallFooterProps> = ({
   onStartTrial,
   onRestore,
   isProcessing = false,
+  priceLabel,
 }) => (
   <View>
     <AnimatedPressable
@@ -41,8 +44,9 @@ export const PaywallFooter: React.FC<PaywallFooterProps> = ({
 
     <Text style={styles.finePrint}>
       By starting your trial, you agree to our Terms of Service and Privacy
-      Policy. Subscription auto-renews at $9.99/month after your 7-day free
-      trial. Cancel anytime before trial ends to avoid charges.
+      Policy. Subscription auto-renews at{' '}
+      {priceLabel ?? '$6.99/month'} after your 7-day free trial. Cancel anytime
+      before trial ends to avoid charges.
     </Text>
 
     <AnimatedPressable

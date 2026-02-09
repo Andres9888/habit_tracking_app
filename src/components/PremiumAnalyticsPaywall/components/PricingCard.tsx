@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import type { PurchasesPackage } from 'react-native-purchases';
 import { styles } from './PricingCard.styles';
@@ -34,12 +34,23 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     );
   };
 
+  const isLoading = !monthlyPackage && !annualPackage;
+
   const monthlyCost = monthlyPackage?.product.price ?? 6.99;
   const annualCost = annualPackage?.product.price ?? 44.99;
   const monthlyEq = annualCost / 12;
   const savings = Math.round(((monthlyCost - monthlyEq) / monthlyCost) * 100);
 
   const isMonthly = plan === 'monthly';
+
+  if (isLoading) {
+    return (
+      <View style={[styles.container, { alignItems: 'center', justifyContent: 'center', minHeight: 180 }]}>
+        <ActivityIndicator color="#6d28d9" size="large" />
+        <Text style={[styles.planPeriod, { marginTop: 12 }]}>Loading pricing…</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

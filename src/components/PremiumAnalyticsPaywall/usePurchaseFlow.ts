@@ -2,7 +2,7 @@
  * Purchase flow logic for PremiumAnalyticsPaywall
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
 import type { PurchasesPackage } from 'react-native-purchases';
 import { usePremium } from '../../hooks/usePremium';
@@ -28,6 +28,13 @@ export function usePurchaseFlow({
   const [selectedPackage, setSelectedPackage] =
     useState<PurchasesPackage | null>(annualPackage);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Sync selectedPackage when packages load asynchronously
+  useEffect(() => {
+    if (!selectedPackage && annualPackage) {
+      setSelectedPackage(annualPackage);
+    }
+  }, [annualPackage, selectedPackage]);
 
   const handlePurchase = useCallback(async () => {
     if (isProcessing || !selectedPackage) return;
