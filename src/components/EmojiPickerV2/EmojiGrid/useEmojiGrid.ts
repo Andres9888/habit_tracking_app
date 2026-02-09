@@ -7,19 +7,33 @@ import { EMOJIS_PER_ROW } from './types';
  * Custom hook for EmojiGrid logic
  * Handles emoji grouping and FlatList optimizations
  */
-export function useEmojiGrid(emojis: string[]) {
+export function useEmojiGrid(emojis: string[], selectedEmoji?: string | null) {
   const flatListRef = useRef<FlatList>(null);
+
+  // Inject selected emoji into the middle if not already in the list
+  const emojisWithSelection = useMemo(() => {
+    if (!selectedEmoji || emojis.includes(selectedEmoji)) return emojis;
+    const midIndex = Math.floor(emojis.length / 2);
+    return [
+      ...emojis.slice(0, midIndex),
+      selectedEmoji,
+      ...emojis.slice(midIndex),
+    ];
+  }, [emojis, selectedEmoji]);
 
   // Group emojis into rows
   const emojiRows = useMemo(() => {
     const rows: string[][] = [];
-    for (let i = 0; i < emojis.length; i += EMOJIS_PER_ROW) {
-      rows.push(emojis.slice(i, i + EMOJIS_PER_ROW));
+    for (let i = 0; i < emojisWithSelection.length; i += EMOJIS_PER_ROW) {
+      rows.push(emojisWithSelection.slice(i, i + EMOJIS_PER_ROW));
     }
     return rows;
-  }, [emojis]);
+  }, [emojisWithSelection]);
 
-  const keyExtractor = useCallback((_: string[], index: number) => `emoji-row-${index}`, []);
+  const keyExtractor = useCallback(
+    (_: string[], index: number) => `emoji-row-${index}`,
+    []
+  );
 
   const getItemLayout = useCallback(
     (_: ArrayLike<string[]> | null | undefined, index: number) => ({

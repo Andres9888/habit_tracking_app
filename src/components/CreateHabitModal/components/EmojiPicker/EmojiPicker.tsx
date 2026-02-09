@@ -28,7 +28,10 @@ function EmojiPickerComponent({
   const { triggerSelection } = useHapticFeedback();
   const reduceMotion = useReduceMotion();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { suggestedEmojis, debouncedHabitName } = useSuggestedEmojis(habitName);
+  const { suggestedEmojis, debouncedHabitName } = useSuggestedEmojis(
+    habitName,
+    selectedEmoji
+  );
 
   const handleEmojiSelect = useCallback(
     (emoji: string) => {

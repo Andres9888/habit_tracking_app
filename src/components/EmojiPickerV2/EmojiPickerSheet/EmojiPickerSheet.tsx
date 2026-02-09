@@ -3,16 +3,16 @@
  * Main orchestrator for the emoji picker bottom sheet
  */
 
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 import { Modal, View, Pressable, StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import { addRecentEmoji } from '../../../utils/recentEmojis';
 import type { EmojiPickerSheetProps } from './EmojiPickerSheet.types';
 import { styles } from './EmojiPickerSheet.styles';
 import { useEmojiPickerState } from './useEmojiPickerState';
 import { useSheetAnimations } from './useSheetAnimations';
+import { useSheetHandlers } from './useSheetHandlers';
 import { SheetContent } from './SheetContent';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
@@ -27,36 +27,12 @@ export const EmojiPickerSheet = memo(
   }: EmojiPickerSheetProps) => {
     const state = useEmojiPickerState(visible, habitName);
     const animations = useSheetAnimations(visible, onClose);
-
-    const handleSearchFocus = useCallback(
-      (focused: boolean) => {
-        state.setIsSearchFocused(focused);
-        if (focused) {
-          animations.expandSheet();
-        } else {
-          animations.collapseSheet();
-        }
-      },
-      [
-        state.setIsSearchFocused,
-        animations.expandSheet,
-        animations.collapseSheet,
-      ]
+    const handlers = useSheetHandlers(
+      onSelect,
+      state.setIsSearchFocused,
+      animations
     );
-
-    const handleEmojiSelect = useCallback(
-      async (emoji: string) => {
-        await addRecentEmoji(emoji);
-        onSelect(emoji);
-        animations.closeSheet();
-      },
-      [onSelect, animations.closeSheet]
-    );
-
-    const handleNoIcon = useCallback(() => {
-      onSelect(null);
-      animations.closeSheet();
-    }, [onSelect, animations.closeSheet]);
+    const displayedSelectedEmoji = handlers.pendingEmoji ?? selectedEmoji;
 
     return (
       <Modal
@@ -99,12 +75,12 @@ export const EmojiPickerSheet = memo(
                 searchFocusAnim={animations.searchFocusAnim}
                 searchQuery={state.searchQuery}
                 selectedCategory={state.selectedCategory}
-                selectedEmoji={selectedEmoji}
-                setIsSearchFocused={handleSearchFocus}
+                selectedEmoji={displayedSelectedEmoji}
+                setIsSearchFocused={handlers.handleSearchFocus}
                 setSearchQuery={state.setSearchQuery}
                 suggestedEmojis={state.suggestedEmojis}
-                onEmojiSelect={handleEmojiSelect}
-                onNoIcon={handleNoIcon}
+                onEmojiSelect={handlers.handleEmojiSelect}
+                onNoIcon={handlers.handleNoIcon}
               />
             </Animated.View>
           </GestureDetector>

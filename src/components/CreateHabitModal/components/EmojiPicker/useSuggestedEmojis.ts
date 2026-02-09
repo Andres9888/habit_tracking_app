@@ -7,40 +7,45 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { suggestEmojisForHabitName } from '../../../../utils/emojiKeywords';
 import { DEFAULT_EMOJIS, SUGGESTION_DEBOUNCE_MS } from './constants';
 
-export function useSuggestedEmojis(habitName: string | undefined) {
+export function useSuggestedEmojis(
+  habitName: string | undefined,
+  selectedEmoji?: string | null
+) {
   const [debouncedHabitName, setDebouncedHabitName] = useState(habitName || '');
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Debounce habit name changes to prevent jittery suggestion updates
   useEffect(() => {
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
-
+    if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
     debounceTimeoutRef.current = setTimeout(() => {
       setDebouncedHabitName(habitName || '');
     }, SUGGESTION_DEBOUNCE_MS);
-
     return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
+      if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
     };
   }, [habitName]);
 
-  // Compute suggested emojis (9 for 5-4 triangle layout)
   const suggestedEmojis = useMemo(() => {
-    if (!debouncedHabitName.trim()) {
-      return DEFAULT_EMOJIS;
+    let emojis: string[];
+    if (debouncedHabitName.trim()) {
+      const suggestions = suggestEmojisForHabitName(debouncedHabitName, 9);
+      if (suggestions.length < 9) {
+        const remaining = DEFAULT_EMOJIS.filter(
+          (e) => !suggestions.includes(e)
+        );
+        emojis = [...suggestions, ...remaining].slice(0, 9);
+      } else {
+        emojis = suggestions;
+      }
+    } else {
+      emojis = [...DEFAULT_EMOJIS];
     }
-    const suggestions = suggestEmojisForHabitName(debouncedHabitName, 9);
-    // If we have fewer than 9 suggestions, pad with defaults
-    if (suggestions.length < 9) {
-      const remaining = DEFAULT_EMOJIS.filter((e) => !suggestions.includes(e));
-      return [...suggestions, ...remaining].slice(0, 9);
+    // Inject selected emoji into middle of first row (index 2 in 5-4 triangle)
+    if (selectedEmoji && !emojis.includes(selectedEmoji)) {
+      const firstRowMiddle = 2;
+      emojis[firstRowMiddle] = selectedEmoji;
     }
-    return suggestions;
-  }, [debouncedHabitName]);
+    return emojis;
+  }, [debouncedHabitName, selectedEmoji]);
 
   return { debouncedHabitName, suggestedEmojis };
 }

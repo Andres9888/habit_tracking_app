@@ -18,12 +18,23 @@ import { useEmojiGrid } from './useEmojiGrid';
  * - Optional category header
  */
 export const EmojiGrid = memo(
-  ({ emojis, selectedEmoji, onEmojiSelect, categoryName, showCategoryHeader = true }: EmojiGridProps) => {
-    const { flatListRef, emojiRows, keyExtractor, getItemLayout } = useEmojiGrid(emojis);
+  ({
+    emojis,
+    selectedEmoji,
+    onEmojiSelect,
+    categoryName,
+    showCategoryHeader = true,
+  }: EmojiGridProps) => {
+    const { flatListRef, emojiRows, keyExtractor, getItemLayout } =
+      useEmojiGrid(emojis, selectedEmoji);
 
     const renderRow = useCallback(
       ({ item }: ListRenderItemInfo<string[]>) => (
-        <EmojiRow emojis={item} selectedEmoji={selectedEmoji} onEmojiSelect={onEmojiSelect} />
+        <EmojiRow
+          emojis={item}
+          selectedEmoji={selectedEmoji}
+          onEmojiSelect={onEmojiSelect}
+        />
       ),
       [selectedEmoji, onEmojiSelect]
     );
@@ -42,17 +53,17 @@ export const EmojiGrid = memo(
 
         <FlatList
           ref={flatListRef}
-          data={emojiRows}
-          keyExtractor={keyExtractor}
-          renderItem={renderRow}
-          contentContainerStyle={styles.gridContent}
-          showsVerticalScrollIndicator
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          windowSize={5}
           removeClippedSubviews
+          showsVerticalScrollIndicator
+          contentContainerStyle={styles.gridContent}
+          data={emojiRows}
           getItemLayout={getItemLayout}
+          initialNumToRender={10}
+          keyExtractor={keyExtractor}
           maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
+          maxToRenderPerBatch={10}
+          renderItem={renderRow}
+          windowSize={5}
         />
       </View>
     );
