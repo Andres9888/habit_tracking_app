@@ -10,7 +10,7 @@ import type { Category, SortOption } from '../../templates/constants';
 import type { ViewMode } from '../TemplatesScreen.types';
 
 interface UseNavigationHandlersOptions {
-  flatListRef: React.RefObject<FlatList<Doc<'templates'>>>;
+  flatListRef: React.RefObject<FlatList<Doc<'templates'>> | null>;
   setExpandedCategories: React.Dispatch<React.SetStateAction<Set<string>>>;
   setResearchOnly: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;

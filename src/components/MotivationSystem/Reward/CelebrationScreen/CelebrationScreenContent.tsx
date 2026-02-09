@@ -73,7 +73,7 @@ export function CelebrationScreenContent({
         localNote={localNote}
         reduceMotion={reduceMotion}
         visible={visible}
-        onReflectionSubmit={onReflectionSubmit}
+        onReflectionSubmit={onReflectionSubmit ?? (() => {})}
       />
       <AnimatedSection
         index={idx++}

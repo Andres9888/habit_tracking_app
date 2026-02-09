@@ -24,9 +24,8 @@ class ConsoleTimeBasedChipAnalyticsTracker implements TimeBasedChipAnalyticsTrac
 
     // eslint-disable-next-line no-console
     console.log('[Analytics] Time-Based Chips:', {
-      timestamp: new Date(event.timestamp).toISOString(),
-      type: event.type,
       ...event,
+      timestamp: new Date(event.timestamp).toISOString(),
     });
   }
 }

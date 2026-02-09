@@ -22,7 +22,7 @@ interface StatusIndicatorProps {
   completed: boolean;
   atRisk: boolean;
   checkmarkAnimatedStyle: AnimatedStyle<{
-    transform: { scale: number; rotate: string }[];
+    transform: ({ scale: number } | { rotate: string })[];
   }>;
   /** Type of completion icon to display */
   completionIcon?: CompletionIconType;

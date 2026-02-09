@@ -34,7 +34,7 @@ export interface PreviewContentProps {
   confettiRef: React.RefObject<any>;
   createPressHandlers: (
     scale: SharedValue<number>,
-    minScale: number
+    scaleValue?: number
   ) => PressHandlers;
   customizeButtonScale: SharedValue<number>;
   handlers: PreviewContentHandlers;

@@ -20,7 +20,7 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
   const isDisabled = disabled || isLoading;
 
   const { animatedStyle, handlePressIn, handlePressOut, shimmerAnimatedStyle } =
-    useCtaButtonAnimations({ disabled, isLoading });
+    useCtaButtonAnimations({ disabled: !!disabled, isLoading: !!isLoading });
 
   const handlePress = useCallback(() => {
     if (disabled || isLoading) return;
@@ -36,7 +36,7 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
       accessibilityRole='button'
       accessibilityState={{ disabled: isDisabled }}
       disabled={isDisabled}
-      style={[animatedStyle, getCtaButtonStyle(isDisabled)]}
+      style={[animatedStyle, getCtaButtonStyle(!!isDisabled)]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

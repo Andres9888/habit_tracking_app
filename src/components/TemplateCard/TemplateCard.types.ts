@@ -102,7 +102,7 @@ export type TemplateCardRenderProps = Pick<
   shadowStyle: any;
   checkmarkStyle: any;
   handleCardPress: () => void;
-  handleImportPress: () => void;
+  handleImportPress: (e?: any) => void;
   handlePressIn: () => void;
   handlePressOut: () => void;
 };

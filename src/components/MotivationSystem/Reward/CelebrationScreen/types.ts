@@ -72,3 +72,6 @@ export type {
   CapturePromptButtonProps,
   DoneButtonProps,
 } from './components/types';
+
+// Re-export EmojiType
+export type { EmojiType } from '../QuickReflection';

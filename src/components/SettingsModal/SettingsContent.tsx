@@ -57,7 +57,7 @@ export function SettingsContent(p: SettingsContentProps) {
           </SettingsSection>
         </Animated.View>
         <Animated.View entering={anim(100)}>
-          <AccountSection colors={colors} isHighContrastActive={hc} />
+          <AccountSection isHighContrastActive={hc} />
         </Animated.View>
       </View>
       <View className='items-center pb-8 pt-4'>

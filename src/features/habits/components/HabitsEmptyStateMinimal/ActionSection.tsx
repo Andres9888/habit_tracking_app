@@ -54,8 +54,8 @@ export function ActionSection({
       >
         <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>
           <InlineHint
-            onBrowseTemplates={onBrowseTemplates}
-            onCreateCustom={onCreateCustom}
+            onBrowseTemplates={onBrowseTemplates ?? (() => {})}
+            onCreateCustom={onCreateCustom ?? (() => {})}
           />
         </AnimatedEntrance>
       </Animated.View>

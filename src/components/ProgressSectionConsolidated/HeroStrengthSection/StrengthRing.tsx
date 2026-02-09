@@ -23,7 +23,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 interface StrengthRingProps {
   currentLevelColor: string;
   currentLevelEmoji: string;
-  animatedCircleProps: { strokeDashoffset: number };
+  animatedCircleProps: Partial<{ strokeDashoffset: number }>;
   emojiAnimatedStyle: object;
   animatedStrength: SharedValue<number>;
 }

@@ -40,7 +40,11 @@ export const PerformanceContext = createContext<PerformanceContextValue>({
   measure: noopReturn(null),
   onFrameData: () => noop,
   saveBaseline: () => ({
+    averageFPS: 0,
+    averageFrameTime: 0,
     memoryMetrics: { averageUsage: 0, leakIndicator: false, peakUsage: 0 },
+    memoryUsage: 0,
+    networkLatency: 0,
     networkMetrics: { averageLatency: 0, errorRate: 0, p95Latency: 0 },
     runtimeMetrics: { averageFPS: 0, jankPercentage: 0, p95FrameTime: 0 },
     startupMetrics: {},

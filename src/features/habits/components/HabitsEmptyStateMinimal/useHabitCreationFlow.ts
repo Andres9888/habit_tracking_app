@@ -5,7 +5,7 @@ import { useChipSelection } from './useChipSelection';
 
 interface UseHabitCreationFlowParams {
   onQuickCreateHabit: (habitName: string) => Promise<void>;
-  inputRef: React.RefObject<TextInput>;
+  inputRef: React.RefObject<TextInput | null>;
 }
 
 export function useHabitCreationFlow({

@@ -65,7 +65,7 @@ export function useErrorAnimations({
     });
 
     const segmentDuration = shakeDuration / (shakeOscillations * 2);
-    const shakeSequence = [];
+    const shakeSequence: number[] = [];
     for (let i = 0; i < shakeOscillations; i++) {
       shakeSequence.push(
         withTiming(shakeDistance, { duration: segmentDuration }),

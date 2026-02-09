@@ -23,11 +23,11 @@ interface UseSuccessEntranceAnimationParams {
 export function useSuccessEntranceAnimation({
   shouldReduceMotion,
 }: UseSuccessEntranceAnimationParams) {
-  const iconScale = useSharedValue(
+  const iconScale = useSharedValue<number>(
     shouldReduceMotion ? POP_ANIMATION.finalScale : POP_ANIMATION.initialScale
   );
-  const contentOpacity = useSharedValue(shouldReduceMotion ? 1 : 0);
-  const contentTranslateY = useSharedValue(shouldReduceMotion ? 0 : 20);
+  const contentOpacity = useSharedValue<number>(shouldReduceMotion ? 1 : 0);
+  const contentTranslateY = useSharedValue<number>(shouldReduceMotion ? 0 : 20);
 
   useEffect(() => {
     if (shouldReduceMotion) {

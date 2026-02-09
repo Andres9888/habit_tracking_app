@@ -43,7 +43,7 @@ export function HeroIcon({
   emojiSize = DEFAULT_EMOJI_SIZE,
 }: HeroIconProps) {
   const shouldReduceMotion = useReducedMotion();
-  const scale = useSharedValue(BREATHING_ANIMATION.minScale);
+  const scale = useSharedValue<number>(BREATHING_ANIMATION.minScale);
 
   useEffect(() => {
     if (!animate || shouldReduceMotion) {

@@ -5,7 +5,7 @@ import type { Id } from '../../../convex/_generated/dataModel';
 
 interface PausedHabitCardProps {
   habit: {
-    _id: string;
+    _id: Id<'habits'>;
     _creationTime: number;
     name: string;
     pausedAt?: number;

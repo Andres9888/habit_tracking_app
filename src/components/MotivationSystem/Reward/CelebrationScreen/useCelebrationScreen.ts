@@ -28,7 +28,17 @@ export function useCelebrationScreen({
   onClose,
   onRecordVoice,
   onWriteLetter,
-}: UseCelebrationScreenParams) {
+}: UseCelebrationScreenParams): {
+  handleDone: () => void;
+  handleEmojiSelect: (emoji: EmojiType) => void;
+  handleNoteChange: (note: string) => void;
+  handleRecordVoice: () => void;
+  handleWriteLetter: () => void;
+  hasStats: boolean;
+  hasStreak: boolean;
+  localEmoji: EmojiType | undefined;
+  localNote: string;
+} {
   const [localEmoji, setLocalEmoji] = useState<EmojiType | undefined>(
     selectedEmoji
   );
