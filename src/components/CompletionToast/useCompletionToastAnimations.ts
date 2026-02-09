@@ -31,28 +31,28 @@ export function useCompletionToastAnimations(
   onDismissRef.current = onDismiss;
 
   const handleDismiss = useCallback(() => {
-    translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
-    opacity.value = withTiming(0, { duration: 200 });
-    scale.value = withTiming(0.9, { duration: 200 });
-    if (onDismissRef.current) setTimeout(() => onDismissRef.current?.(), 250);
+    translateY.value = withSpring(100, { damping: 18, stiffness: 150 });
+    opacity.value = withTiming(0, { duration: 280 });
+    scale.value = withTiming(0.9, { duration: 280 });
+    if (onDismissRef.current) setTimeout(() => onDismissRef.current?.(), 300);
   }, [translateY, opacity, scale]);
 
   useEffect(() => {
     if (visible) {
-      translateY.value = withSpring(0, { damping: 12, stiffness: 180 });
-      opacity.value = withTiming(1, { duration: 200 });
+      translateY.value = withSpring(0, { damping: 18, stiffness: 180 });
+      opacity.value = withTiming(1, { duration: 280 });
       scale.value = withSequence(
-        withSpring(1.02, { damping: 10, stiffness: 200 }),
-        withSpring(1, { damping: 15, stiffness: 150 })
+        withSpring(1.02, { damping: 18, stiffness: 200 }),
+        withSpring(1, { damping: 18, stiffness: 150 })
       );
       if (duration > 0 && onDismissRef.current) {
         const timer = setTimeout(handleDismiss, duration);
         return () => clearTimeout(timer);
       }
     } else {
-      translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
-      opacity.value = withTiming(0, { duration: 200 });
-      scale.value = withTiming(0.9, { duration: 200 });
+      translateY.value = withSpring(100, { damping: 18, stiffness: 150 });
+      opacity.value = withTiming(0, { duration: 280 });
+      scale.value = withTiming(0.9, { duration: 280 });
     }
   }, [visible, duration, translateY, opacity, scale, handleDismiss]);
 
@@ -67,8 +67,8 @@ export function useCompletionToastAnimations(
       if (e.translationY > DISMISS_THRESHOLD || e.velocityY > 500) {
         runOnJS(handleDismiss)();
       } else {
-        translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
-        opacity.value = withTiming(1, { duration: 150 });
+        translateY.value = withSpring(0, { damping: 18, stiffness: 150 });
+        opacity.value = withTiming(1, { duration: 280 });
       }
     });
 
