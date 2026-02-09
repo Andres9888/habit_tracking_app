@@ -4,13 +4,10 @@ import type { Id } from '../../../convex/_generated/dataModel';
 import type { CardColors, Habit, HabitStatus } from './types';
 
 /** Animated style type for strength emoji */
-export type StrengthEmojiAnimatedStyle = AnimatedStyle<{
-  opacity: number;
-  transform: { scale: number; rotate: string }[];
-}>;
+export type StrengthEmojiAnimatedStyle = AnimatedStyle;
 
 /** Animated style type for progress bar width */
-export type ProgressAnimatedStyle = AnimatedStyle<{ width: string }>;
+export type ProgressAnimatedStyle = AnimatedStyle;
 
 export interface DraggableHabitCardProps {
   accentColor: string;

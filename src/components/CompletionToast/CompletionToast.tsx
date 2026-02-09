@@ -3,7 +3,7 @@
  * Celebratory feedback toast shown after completing a habit
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
@@ -30,8 +30,15 @@ export function CompletionToast(props: CompletionToastProps) {
   } = props;
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
-  const { triggerLightImpact } = useHapticFeedback({});
+  const { triggerLightImpact, triggerSuccess } = useHapticFeedback({});
   const streakMessage = getStreakMessage(streak);
+
+  // Haptic feedback when toast appears
+  useEffect(() => {
+    if (visible) {
+      triggerSuccess();
+    }
+  }, [visible, triggerSuccess]);
 
   const { animatedStyle, handleDismiss, panGesture } =
     useCompletionToastAnimations({
