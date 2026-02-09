@@ -46,6 +46,14 @@ export {
   scheduleAffirmationDelivery,
 } from './affirmations';
 
+// Re-export streak-at-risk notifications
+export {
+  cancelAllStreakAtRiskNotifications,
+  cancelStreakAtRiskNotification,
+  scheduleStreakAtRiskNotification,
+} from './streakAtRisk';
+export type { ScheduleStreakAtRiskParams } from './streakAtRisk';
+
 // Re-export types
 export type {
   ScheduleHabitReminderParams,
