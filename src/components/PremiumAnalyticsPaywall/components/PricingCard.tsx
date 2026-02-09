@@ -49,7 +49,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
       <View style={styles.plansContainer}>
         <AnimatedPressable
-          activeOpacity={0.7}
           style={[styles.planOption, isMonthly && styles.planOptionSelected]}
           onPress={() => handleSelect('monthly')}
         >
@@ -61,7 +60,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         </AnimatedPressable>
 
         <AnimatedPressable
-          activeOpacity={0.7}
           style={[styles.planOption, !isMonthly && styles.planOptionSelected]}
           onPress={() => handleSelect('annual')}
         >

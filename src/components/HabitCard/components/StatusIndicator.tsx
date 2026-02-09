@@ -71,7 +71,7 @@ export function StatusIndicator({
         style={[
           styles.checkmark,
           { backgroundColor: theme.custom.colors.primary[500] },
-          checkmarkAnimatedStyle,
+          checkmarkAnimatedStyle as any,
         ]}
       >
         <Text style={styles.checkmarkText}>✓</Text>

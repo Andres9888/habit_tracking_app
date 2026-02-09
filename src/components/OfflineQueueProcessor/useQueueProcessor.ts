@@ -30,7 +30,7 @@ export function useQueueProcessor(
   const upsertReflection = useMutation(api.reflections.upsert);
   const createLetter = useMutation(api.letters.create);
   const createAffirmation = useMutation(api.affirmations.create);
-  const updateHabit = useMutation(api.habits.updateHabit);
+  const updateHabit = useMutation(api.habits.update);
 
   const [processingState, setProcessingState] = useState<ProcessingState>(
     INITIAL_PROCESSING_STATE

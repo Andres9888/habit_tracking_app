@@ -19,8 +19,11 @@ export function usePurchaseFlow({
 }: UsePurchaseFlowParams = {}) {
   const { triggerSelection, triggerLightImpact, triggerSuccess } =
     useHapticFeedback({});
-  const { monthlyPackage, annualPackage, purchasePackage, restorePurchases } =
+  const { monthlyPackage, packages, purchasePackage, restorePurchases } =
     usePremium();
+
+  const annualPackage =
+    packages?.find((p) => p.packageType === 'ANNUAL') ?? null;
 
   const [selectedPackage, setSelectedPackage] =
     useState<PurchasesPackage | null>(annualPackage);

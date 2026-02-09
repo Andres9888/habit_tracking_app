@@ -1,6 +1,7 @@
 /** PausedHabitCard - Individual paused habit with resume action */
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import type { Id } from '../../../convex/_generated/dataModel';
 
 interface PausedHabitCardProps {
   habit: {
@@ -11,7 +12,7 @@ interface PausedHabitCardProps {
     strengthAtPause?: number;
   };
   index: number;
-  onResume: (id: string, name: string) => void;
+  onResume: (id: Id<'habits'>, name: string) => Promise<void>;
 }
 
 export function PausedHabitCard({

@@ -2,9 +2,10 @@
  * Types for PreviewContent
  */
 
-import type { ViewStyle, GestureResponderHandlers } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
 import type { Template } from '../../../types/template';
+import type { PressHandlers } from '../FullsizeTemplatePreview.types';
 
 export interface PreviewContentAnimatedStyles {
   contentStyle: ViewStyle;
@@ -34,7 +35,7 @@ export interface PreviewContentProps {
   createPressHandlers: (
     scale: SharedValue<number>,
     minScale: number
-  ) => GestureResponderHandlers;
+  ) => PressHandlers;
   customizeButtonScale: SharedValue<number>;
   handlers: PreviewContentHandlers;
   iconColor: string;

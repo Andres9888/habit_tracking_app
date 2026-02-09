@@ -16,7 +16,7 @@ import {
 
 interface UseProgressSectionDataArgs {
   tracking: Tracking[];
-  habitCreatedAt: string | Date;
+  habitCreatedAt?: number;
 }
 
 export function useProgressSectionData({

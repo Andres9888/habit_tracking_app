@@ -2,14 +2,14 @@
  * Types for CelebrationScreenContent
  */
 
-import type { CelebrationScreenContentProps } from './types';
+import type { CelebrationScreenContentProps, EmojiType } from './types';
 
 export interface CelebrationScreenContentPropsExtended extends CelebrationScreenContentProps {
   hasStreak: boolean;
   hasStats: boolean;
   localNote: string;
-  localEmoji: string | null;
-  handleEmojiSelect: (emoji: string) => void;
+  localEmoji: EmojiType | undefined;
+  handleEmojiSelect: (emoji: EmojiType) => void;
   handleNoteChange: (note: string) => void;
   handleRecordVoice: () => void;
   handleWriteLetter: () => void;

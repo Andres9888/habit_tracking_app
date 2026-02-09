@@ -10,6 +10,10 @@ import {
 
 import { getStrengthLabel } from './strengthUtils';
 import { runLevelUpAnimation, runSubtlePulse } from './animationHelpers';
+import type {
+  ProgressAnimatedStyle,
+  StrengthEmojiAnimatedStyle,
+} from './DraggableHabitCard.types';
 
 export function useStrengthAnimation(
   strengthPercent: number,
@@ -85,11 +89,11 @@ export function useStrengthAnimation(
       { scale: strengthEmojiScale.value },
       { rotate: `${Math.round(strengthEmojiRotation.value)}deg` },
     ],
-  }));
+  })) as StrengthEmojiAnimatedStyle;
 
   const progressAnimatedStyle = useAnimatedStyle(() => ({
     width: `${progressWidth.value}%`,
-  }));
+  })) as ProgressAnimatedStyle;
 
   return { progressAnimatedStyle, strengthEmojiAnimatedStyle };
 }
