@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   chartBar: {
-    backgroundColor: colors.neutral[200],
+    backgroundColor: colors.border,
     borderRadius: 4,
     flex: 1,
   },
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   titleSkeleton: {
-    backgroundColor: colors.neutral[200],
+    backgroundColor: colors.border,
     borderRadius: 4,
     height: 20,
     width: 180,

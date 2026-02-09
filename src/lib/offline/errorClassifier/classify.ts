@@ -19,7 +19,7 @@ import {
  * Extract HTTP status code from error if available
  */
 function extractStatusCode(error: Error): number | undefined {
-  const errorAny = error as Record<string, unknown>;
+  const errorAny = error as unknown as Record<string, unknown>;
   if (typeof errorAny.status === 'number') return errorAny.status;
   if (typeof errorAny.statusCode === 'number') return errorAny.statusCode;
   if (typeof errorAny.code === 'number') return errorAny.code;

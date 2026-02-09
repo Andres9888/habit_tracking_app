@@ -37,6 +37,8 @@ export async function processQueueUntilEmpty(
     // Merge results
     totalResult = {
       allSucceeded: totalResult.allSucceeded && batchResult.allSucceeded,
+      conflictSkipped:
+        (totalResult.conflictSkipped ?? 0) + (batchResult.conflictSkipped ?? 0),
       failed: totalResult.failed + batchResult.failed,
       hasMore: batchResult.hasMore,
       results: [...totalResult.results, ...batchResult.results],
