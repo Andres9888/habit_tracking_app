@@ -65,7 +65,7 @@ export function useCreateHabitHandlers() {
       notes: habitToEdit.notes ?? '',
       preferredTime: dayPhase ?? undefined,
       remindersEnabled: finalHasReminders,
-      reminderSound: finalHasReminders ? reminderSound : undefined,
+      reminderSound: finalHasReminders ? (reminderSound ?? undefined) : undefined,
       reminderTime: finalHasReminders
         ? formatReminderTime(reminderTime)
         : undefined,
@@ -88,7 +88,7 @@ export function useCreateHabitHandlers() {
       notes: '',
       preferredTime: dayPhase ?? undefined,
       remindersEnabled: hasReminders,
-      reminderSound: hasReminders ? reminderSound : undefined,
+      reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
       reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
     });
 

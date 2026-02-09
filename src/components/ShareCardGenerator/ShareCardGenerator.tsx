@@ -65,7 +65,7 @@ export function ShareCardGenerator({
             showUserName={showUserName}
             strengthPercentage={data.strengthPercentage}
             userName={data.userName}
-            viewShotRef={viewShotRef}
+            viewShotRef={viewShotRef as any}
           />
         </View>
 

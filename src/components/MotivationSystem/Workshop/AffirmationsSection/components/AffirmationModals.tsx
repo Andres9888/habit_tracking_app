@@ -5,10 +5,10 @@
 
 import React from 'react';
 import { AffirmationScheduleModal } from '../../AffirmationScheduleModal';
+import type { AffirmationScheduleData } from '../../AffirmationScheduleModal/types';
 import type {
   AffirmationData,
   AffirmationType,
-  AffirmationScheduleConfig,
 } from '../AffirmationsSection.types';
 import { AffirmationEditorModal } from './AffirmationEditorModal';
 
@@ -25,7 +25,7 @@ interface AffirmationModalsProps {
   schedulingAffirmation: AffirmationData | null;
   isScheduleSaving: boolean;
   onCloseScheduleModal: () => void;
-  onSaveSchedule: (schedule: AffirmationScheduleConfig) => Promise<void>;
+  onSaveSchedule: (schedule: AffirmationScheduleData) => Promise<void>;
   onCancelSchedule: () => Promise<void>;
 }
 

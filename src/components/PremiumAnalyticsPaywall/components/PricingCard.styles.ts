@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
     position: 'relative',
   },
   planOptionSelected: {
-    backgroundColor: colors.premium[50],
+    backgroundColor: '#F3E8FF', // Light purple/violet background
     borderColor: colors.premium[600],
     borderWidth: 2,
   },

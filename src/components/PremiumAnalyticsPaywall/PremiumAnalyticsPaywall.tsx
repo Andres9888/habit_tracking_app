@@ -58,7 +58,6 @@ export default function PremiumAnalyticsPaywall({
             <AnimatedPressable
               accessibilityLabel='Close paywall'
               accessibilityRole='button'
-              activeOpacity={0.7}
               disabled={isProcessing}
               style={styles.closeButton}
               onPress={handleClosePress}

@@ -15,8 +15,11 @@ export function usePurchaseHandlers({
   onStartTrial,
   onRestorePurchases,
 }: UsePurchaseHandlersParams = {}) {
-  const { monthlyPackage, annualPackage, purchasePackage, restorePurchases } =
+  const { monthlyPackage, packages, purchasePackage, restorePurchases } =
     usePremium();
+
+  const annualPackage =
+    packages?.find((p) => p.packageType === 'ANNUAL') ?? null;
 
   const [selectedPackage, setSelectedPackage] =
     useState<PurchasesPackage | null>(null);

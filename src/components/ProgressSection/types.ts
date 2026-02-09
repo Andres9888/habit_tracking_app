@@ -6,6 +6,9 @@
 
 import type { HabitTrackingEntry } from '../../features/habits/types';
 
+/** Re-export as Tracking for compatibility */
+export type Tracking = HabitTrackingEntry;
+
 /**
  * Statistics for a specific day of the week
  */

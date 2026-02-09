@@ -2,7 +2,13 @@
  * Type definitions for ConsistencyIndexCard
  */
 
-import type { ConsistencyIndexResult } from '../../CalendarHeatmap/utils';
+/** Consistency index calculation result */
+export interface ConsistencyIndexResult {
+  overall: number;
+  day30: number;
+  day60: number;
+  day90: number;
+}
 
 export interface ConsistencyIndexCardProps {
   /** Consistency index data */

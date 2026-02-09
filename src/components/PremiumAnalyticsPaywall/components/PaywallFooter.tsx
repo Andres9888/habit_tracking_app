@@ -27,7 +27,6 @@ export const PaywallFooter: React.FC<PaywallFooterProps> = ({
       accessibilityHint='Opens subscription options'
       accessibilityLabel='Start 7-day free trial'
       accessibilityRole='button'
-      activeOpacity={0.8}
       disabled={isProcessing}
       style={[styles.ctaButton, isProcessing && styles.ctaButtonDisabled]}
       onPress={onStartTrial}

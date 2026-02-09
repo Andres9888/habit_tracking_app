@@ -99,7 +99,7 @@ function HabitCardComponent(props: HabitCardProps) {
             completed={habit.completed}
             completionIcon={completionIcon}
             currentStreak={habit.currentStreak}
-            entranceContentStyle={habit.entrance.contentStyle}
+            entranceContentStyle={habit.entrance.contentStyle as any}
             hasPendingOfflineOps={habit.hasPendingOfflineOps}
             icon={icon}
             name={name}
