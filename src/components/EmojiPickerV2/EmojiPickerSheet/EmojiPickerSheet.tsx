@@ -4,7 +4,8 @@
  */
 
 import React, { memo, useCallback } from 'react';
-import { Modal, View, Pressable } from 'react-native';
+import { Modal, View, Pressable, StyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { addRecentEmoji } from '../../../utils/recentEmojis';
@@ -13,6 +14,8 @@ import { styles } from './EmojiPickerSheet.styles';
 import { useEmojiPickerState } from './useEmojiPickerState';
 import { useSheetAnimations } from './useSheetAnimations';
 import { SheetContent } from './SheetContent';
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export const EmojiPickerSheet = memo(
   ({
@@ -24,6 +27,22 @@ export const EmojiPickerSheet = memo(
   }: EmojiPickerSheetProps) => {
     const state = useEmojiPickerState(visible, habitName);
     const animations = useSheetAnimations(visible, onClose);
+
+    const handleSearchFocus = useCallback(
+      (focused: boolean) => {
+        state.setIsSearchFocused(focused);
+        if (focused) {
+          animations.expandSheet();
+        } else {
+          animations.collapseSheet();
+        }
+      },
+      [
+        state.setIsSearchFocused,
+        animations.expandSheet,
+        animations.collapseSheet,
+      ]
+    );
 
     const handleEmojiSelect = useCallback(
       async (emoji: string) => {
@@ -51,11 +70,16 @@ export const EmojiPickerSheet = memo(
           <Pressable
             accessibilityLabel='Close emoji picker'
             accessibilityRole='button'
-            style={{ ...styles.backdrop, position: 'absolute' }}
+            style={StyleSheet.absoluteFill}
             onPress={animations.closeSheet}
           >
-            <Animated.View
-              style={[styles.backdrop, animations.backdropAnimatedStyle]}
+            <AnimatedBlurView
+              intensity={20}
+              style={[
+                StyleSheet.absoluteFill,
+                animations.backdropAnimatedStyle,
+              ]}
+              tint='dark'
             />
           </Pressable>
 
@@ -76,7 +100,7 @@ export const EmojiPickerSheet = memo(
                 searchQuery={state.searchQuery}
                 selectedCategory={state.selectedCategory}
                 selectedEmoji={selectedEmoji}
-                setIsSearchFocused={state.setIsSearchFocused}
+                setIsSearchFocused={handleSearchFocus}
                 setSearchQuery={state.setSearchQuery}
                 suggestedEmojis={state.suggestedEmojis}
                 onEmojiSelect={handleEmojiSelect}

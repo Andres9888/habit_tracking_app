@@ -5,48 +5,64 @@
 
 import { useEffect, useCallback } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
-import Animated, {
+import {
   useSharedValue,
-  useAnimatedStyle,
   withSpring,
   withTiming,
   runOnJS,
-  interpolate,
-  Extrapolation,
 } from 'react-native-reanimated';
-import { colors } from '../../../theme/colors';
-import { SHEET_HEIGHT } from './EmojiPickerSheet.styles';
+import {
+  SHEET_HEIGHT_COLLAPSED,
+  SHEET_HEIGHT_EXPANDED,
+} from './EmojiPickerSheet.styles';
+import { useSheetStyles } from './useSheetStyles';
+
+const SPRING_CONFIG = { damping: 20, stiffness: 200 };
+const DISMISS_THRESHOLD = 0.25;
+const DISMISS_VELOCITY = 500;
 
 export function useSheetAnimations(visible: boolean, onClose: () => void) {
-  const translateY = useSharedValue(SHEET_HEIGHT);
+  const translateY = useSharedValue(SHEET_HEIGHT_EXPANDED);
   const backdropOpacity = useSharedValue(0);
   const context = useSharedValue({ y: 0 });
   const searchFocusAnim = useSharedValue(0);
+  const sheetHeight = useSharedValue(SHEET_HEIGHT_COLLAPSED);
 
-  // Sheet open/close animations
+  const animatedStyles = useSheetStyles(
+    translateY,
+    backdropOpacity,
+    searchFocusAnim
+  );
+
   useEffect(() => {
     if (visible) {
-      translateY.value = withSpring(0, { damping: 20, stiffness: 200 });
+      sheetHeight.value = SHEET_HEIGHT_COLLAPSED;
+      const offset = SHEET_HEIGHT_EXPANDED - SHEET_HEIGHT_COLLAPSED;
+      translateY.value = withSpring(offset, SPRING_CONFIG);
       backdropOpacity.value = withTiming(1, { duration: 300 });
     } else {
-      translateY.value = withSpring(SHEET_HEIGHT, {
-        damping: 20,
-        stiffness: 200,
-      });
+      translateY.value = withSpring(SHEET_HEIGHT_EXPANDED, SPRING_CONFIG);
       backdropOpacity.value = withTiming(0, { duration: 300 });
     }
   }, [visible]);
 
   const closeSheet = useCallback(() => {
-    translateY.value = withSpring(SHEET_HEIGHT, {
-      damping: 20,
-      stiffness: 200,
-    });
+    translateY.value = withSpring(SHEET_HEIGHT_EXPANDED, SPRING_CONFIG);
     backdropOpacity.value = withTiming(0, { duration: 200 });
     setTimeout(onClose, 200);
   }, [onClose]);
 
-  // Gesture handler for drag dismissal
+  const expandSheet = useCallback(() => {
+    sheetHeight.value = SHEET_HEIGHT_EXPANDED;
+    translateY.value = withSpring(0, SPRING_CONFIG);
+  }, []);
+
+  const collapseSheet = useCallback(() => {
+    sheetHeight.value = SHEET_HEIGHT_COLLAPSED;
+    const offset = SHEET_HEIGHT_EXPANDED - SHEET_HEIGHT_COLLAPSED;
+    translateY.value = withSpring(offset, SPRING_CONFIG);
+  }, []);
+
   const gesture = Gesture.Pan()
     .onStart(() => {
       context.value = { y: translateY.value };
@@ -56,51 +72,21 @@ export function useSheetAnimations(visible: boolean, onClose: () => void) {
     })
     .onEnd((event) => {
       const velocityY = Math.round(event.velocityY);
-      if (translateY.value > SHEET_HEIGHT * 0.25 || velocityY > 500) {
+      const threshold = SHEET_HEIGHT_EXPANDED * DISMISS_THRESHOLD;
+      if (translateY.value > threshold || velocityY > DISMISS_VELOCITY) {
         runOnJS(closeSheet)();
       } else {
-        translateY.value = withSpring(0, { damping: 20, stiffness: 200 });
+        const offset = SHEET_HEIGHT_EXPANDED - sheetHeight.value;
+        translateY.value = withSpring(offset, SPRING_CONFIG);
       }
     });
 
-  const sheetAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
-  }));
-
-  const backdropAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
-      backdropOpacity.value,
-      [0, 1],
-      [0, 0.4],
-      Extrapolation.CLAMP
-    ),
-  }));
-
-  const searchBarAnimatedStyle = useAnimatedStyle(() => ({
-    borderColor:
-      searchFocusAnim.value === 1 ? colors.secondary[500] : colors.border,
-    shadowColor: colors.secondary[500],
-    shadowOffset: { height: 0, width: 0 },
-    shadowOpacity: interpolate(
-      searchFocusAnim.value,
-      [0, 1],
-      [0, 0.2],
-      Extrapolation.CLAMP
-    ),
-    shadowRadius: interpolate(
-      searchFocusAnim.value,
-      [0, 1],
-      [0, 6],
-      Extrapolation.CLAMP
-    ),
-  }));
-
   return {
-    backdropAnimatedStyle,
+    ...animatedStyles,
     closeSheet,
+    collapseSheet,
+    expandSheet,
     gesture,
-    searchBarAnimatedStyle,
     searchFocusAnim,
-    sheetAnimatedStyle,
   };
 }

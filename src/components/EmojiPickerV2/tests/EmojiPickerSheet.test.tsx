@@ -14,6 +14,15 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View } from 'react-native';
 
+// Mock expo-blur
+jest.mock('expo-blur', () => {
+  const RealView = jest.requireActual('react-native').View;
+  return {
+    BlurView: ({ children, ...props }: any) =>
+      jest.requireActual('react').createElement(RealView, props, children),
+  };
+});
+
 // Mock gesture handler with Gesture API
 jest.mock('react-native-gesture-handler', () => {
   const RealReact = jest.requireActual('react');
@@ -23,9 +32,15 @@ jest.mock('react-native-gesture-handler', () => {
     GestureDetector: ({ children }: { children: React.ReactNode }) => children,
     Gesture: {
       Pan: () => ({
-        onStart: function() { return this; },
-        onUpdate: function() { return this; },
-        onEnd: function() { return this; },
+        onStart: function () {
+          return this;
+        },
+        onUpdate: function () {
+          return this;
+        },
+        onEnd: function () {
+          return this;
+        },
       }),
     },
     GestureHandlerRootView: RealView,
@@ -66,7 +81,8 @@ jest.mock('react-native-reanimated', () => {
     withTiming: (toValue: number) => toValue,
     withSequence: (..._animations: unknown[]) => 0,
     runOnJS: (fn: () => void) => fn,
-    interpolate: (value: number, inputRange: number[], outputRange: number[]) => outputRange[0],
+    interpolate: (value: number, inputRange: number[], outputRange: number[]) =>
+      outputRange[0],
     Extrapolation: { CLAMP: 'clamp' },
   };
 });
@@ -108,8 +124,12 @@ describe('EmojiPickerSheet - V2 Bottom Sheet', () => {
     });
 
     it('should render search bar with correct placeholder', () => {
-      const { getByPlaceholderText } = render(<EmojiPickerSheet {...defaultProps} />);
-      expect(getByPlaceholderText('Search or type habit name...')).toBeDefined();
+      const { getByPlaceholderText } = render(
+        <EmojiPickerSheet {...defaultProps} />
+      );
+      expect(
+        getByPlaceholderText('Search or type habit name...')
+      ).toBeDefined();
     });
   });
 
@@ -155,7 +175,9 @@ describe('EmojiPickerSheet - V2 Bottom Sheet', () => {
       );
 
       expect(getByLabelText('Search emojis')).toBeDefined();
-      expect(getByPlaceholderText('Search or type habit name...')).toBeDefined();
+      expect(
+        getByPlaceholderText('Search or type habit name...')
+      ).toBeDefined();
     });
 
     it('should show clear button when search has text', async () => {
@@ -196,7 +218,7 @@ describe('EmojiPickerSheet - V2 Bottom Sheet', () => {
 
     it('should not display AI suggestions when habit name is empty', () => {
       const { queryByText } = render(
-        <EmojiPickerSheet {...defaultProps} habitName="" />
+        <EmojiPickerSheet {...defaultProps} habitName='' />
       );
       expect(queryByText(/Perfect for/)).toBeNull();
     });
@@ -242,7 +264,7 @@ describe('EmojiPickerSheet - V2 Bottom Sheet', () => {
 
     it('should show selection state on selected emoji', () => {
       const { getByLabelText } = render(
-        <EmojiPickerSheet {...defaultProps} selectedEmoji="💪" />
+        <EmojiPickerSheet {...defaultProps} selectedEmoji='💪' />
       );
       // The selected emoji should be findable
       expect(getByLabelText('Select 💪 emoji')).toBeDefined();

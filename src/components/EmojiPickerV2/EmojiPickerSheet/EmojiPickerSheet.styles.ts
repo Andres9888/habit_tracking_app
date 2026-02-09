@@ -9,13 +9,10 @@ import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-export const SHEET_HEIGHT = SCREEN_HEIGHT * 0.7;
+export const SHEET_HEIGHT_COLLAPSED = SCREEN_HEIGHT * 0.6;
+export const SHEET_HEIGHT_EXPANDED = SCREEN_HEIGHT * 0.8;
 
 export const styles = StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#000000',
-  },
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
@@ -77,7 +74,7 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: borderRadius.xl,
     borderTopRightRadius: borderRadius.xl,
     elevation: 20,
-    height: SHEET_HEIGHT,
+    height: SHEET_HEIGHT_EXPANDED,
     shadowOffset: { height: -4, width: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 20,
