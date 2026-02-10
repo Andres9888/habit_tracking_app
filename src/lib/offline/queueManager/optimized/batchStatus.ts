@@ -4,11 +4,8 @@
  * @see docs/offline-habit-sync.md FR-011 (handle 500+ operations)
  */
 
-import type {
-  OfflineOperation,
-  OfflineQueueState,
-  QueueEvent,
-} from '../../queue';
+import type { OfflineQueueState, QueueEvent } from '../../queue';
+import type { ErrorCategory } from '../../types';
 import { calculateStats } from '../helpers';
 import type { BatchStatusResult } from './types';
 
@@ -29,7 +26,7 @@ export function createMarkFailedBatch(
   return function markFailedBatch(
     operationIds: string[],
     error: string,
-    category?: string
+    category?: ErrorCategory
   ): BatchStatusResult {
     if (operationIds.length === 0) {
       return { failed: [], notFound: [], succeeded: [] };
