@@ -11,11 +11,7 @@ import {
 } from '../../../components/SyncStatus';
 import { useSyncStatus } from '../../../contexts/SyncStatusContext';
 
-interface SyncStatusOverlaysProps {
-  reduceMotion: boolean;
-}
-
-export function SyncStatusOverlays({ reduceMotion }: SyncStatusOverlaysProps) {
+export function SyncStatusOverlays() {
   const { status: syncStatus } = useSyncStatus();
   const { visible: syncedToastVisible, syncedCount } = useSyncedToast();
 
@@ -24,7 +20,6 @@ export function SyncStatusOverlays({ reduceMotion }: SyncStatusOverlaysProps) {
       <View className='absolute left-0 right-0 top-20 z-50 flex-row justify-center'>
         <SyncingIndicator
           pendingCount={syncStatus.pendingCount}
-          reduceMotion={reduceMotion}
           testID='global-syncing-indicator'
           visible={syncStatus.isSyncing}
         />
@@ -32,7 +27,6 @@ export function SyncStatusOverlays({ reduceMotion }: SyncStatusOverlaysProps) {
 
       <View className='absolute left-0 right-0 top-32 z-50 flex-row justify-center'>
         <SyncedToast
-          reduceMotion={reduceMotion}
           syncedCount={syncedCount}
           testID='global-synced-toast'
           visible={syncedToastVisible}
