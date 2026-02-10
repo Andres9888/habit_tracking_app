@@ -43,9 +43,9 @@ export function RevenueCatPaywall({
               app to subscribe.
             </Text>
             <Pressable
-              accessibilityLabel="Close"
-              accessibilityRole="button"
-              className="rounded-xl bg-amber-500 px-6 py-3"
+              accessibilityLabel='Close'
+              accessibilityRole='button'
+              className='rounded-xl bg-amber-500 px-6 py-3'
               style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
               onPress={onClose}
             >
@@ -93,17 +93,17 @@ export function RevenueCatPaywall({
         }}
         onPurchaseError={({ error }) => {
           if (__DEV__)
-            if (__DEV__) console.error('[RevenueCatPaywall] Purchase error:', error);
+            console.error('[RevenueCatPaywall] Purchase error:', error);
         }}
         onRestoreCompleted={({ customerInfo }) => {
           if (__DEV__)
-            if (__DEV__) console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
+            console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
           onRestoreSuccess?.();
           onClose();
         }}
         onRestoreError={({ error }) => {
           if (__DEV__)
-            if (__DEV__) console.error('[RevenueCatPaywall] Restore error:', error);
+            console.error('[RevenueCatPaywall] Restore error:', error);
         }}
       />
     </Modal>
