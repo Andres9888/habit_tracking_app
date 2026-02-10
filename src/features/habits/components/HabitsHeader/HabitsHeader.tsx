@@ -4,6 +4,7 @@ import { View, Text } from 'react-native';
 import { memo } from 'react';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTemplateBadge } from '../../hooks/useTemplateBadge';
+import { DailyProgressRing } from '../../../../components/DailyProgressRing';
 import type { HabitsHeaderProps } from './types';
 import { IconButtonGroup } from './IconButtonGroup';
 import { ProBadge } from './ProBadge';
@@ -88,19 +89,22 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
   return (
     <Animated.View className='gap-2 px-4' entering={ENTERING}>
       <View className='flex-row items-center justify-between'>
-        <View className='flex-1 gap-1'>
-          <Text className='text-[28px] font-bold' style={DATE_STYLE}>
-            {formatTodayDate()}
-          </Text>
-          {showCompletionSummary && (
-            <Text
-              accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
-              className='text-[15px]'
-              style={STREAK_STYLE}
-            >
-              ✓ {completedToday} of {totalHabits} done
+        <View className='flex-row items-center gap-3 flex-1'>
+          <DailyProgressRing completed={completedToday} total={totalHabits} />
+          <View className='flex-1 gap-1'>
+            <Text className='text-[22px] font-bold' style={DATE_STYLE}>
+              {formatTodayDate()}
             </Text>
-          )}
+            {showCompletionSummary && (
+              <Text
+                accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
+                className='text-[13px]'
+                style={STREAK_STYLE}
+              >
+                {completedToday} of {totalHabits} done
+              </Text>
+            )}
+          </View>
         </View>
         {rightSection}
       </View>
