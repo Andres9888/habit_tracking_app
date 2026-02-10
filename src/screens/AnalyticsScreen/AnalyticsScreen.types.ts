@@ -37,23 +37,10 @@ export interface RankedHabit {
   rank: number;
 }
 
-export interface StrengthDistributionData {
-  automatic: { count: number; percentage: number };
-  strong: { count: number; percentage: number };
-  developing: { count: number; percentage: number };
-  building: { count: number; percentage: number };
-  starting: { count: number; percentage: number };
-}
-
-export interface TrendDataPoint {
-  date: string;
-  value: number;
-}
-
-export interface ComplianceDay {
-  date: string;
-  compliance: number;
-}
+// Re-export canonical chart types to avoid drift
+export type { StrengthDistributionData } from '../../components/StrengthDistributionChart/StrengthDistributionChart.types';
+export type { TrendData as TrendDataPoint } from '../../components/TrendLineChart/types';
+export type { HeatmapData as ComplianceDay } from '../../components/ComplianceHeatmap/ComplianceHeatmap.types';
 
 export interface WeeklyInsight {
   id: string;
@@ -73,15 +60,15 @@ export interface UseAnalyticsScreenReturn {
   isLoading: boolean;
 
   // Data
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   overviewStats: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   strengthDistribution: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   trendData: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   complianceData: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   weeklyInsights: any;
 
   // Handlers

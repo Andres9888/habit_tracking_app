@@ -7,19 +7,17 @@ import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
+import type { StrengthDistributionData } from '../../../components/StrengthDistributionChart/StrengthDistributionChart.types';
 import TrendLineChart from '../../../components/TrendLineChart';
+import type { TrendData } from '../../../components/TrendLineChart/types';
 import ComplianceHeatmap from '../../../components/ComplianceHeatmap';
+import type { HeatmapData } from '../../../components/ComplianceHeatmap/ComplianceHeatmap.types';
 import { ChartLoadingSkeleton } from './ChartLoadingSkeleton';
-import type {
-  StrengthDistributionData,
-  TrendDataPoint,
-  ComplianceDay,
-} from '../AnalyticsScreen.types';
 
 interface ChartSectionsProps {
   strengthDistribution: StrengthDistributionData | undefined;
-  trendData: TrendDataPoint[] | undefined;
-  complianceData: ComplianceDay[] | undefined;
+  trendData: TrendData[] | undefined;
+  complianceData: HeatmapData[] | undefined;
   isLoading?: boolean;
 }
 
