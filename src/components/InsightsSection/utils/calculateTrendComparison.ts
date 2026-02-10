@@ -1,3 +1,4 @@
+import { getLocalDateString } from '@/utils/getLocalDateString';
 /**
  * Calculates trend comparison between current and previous month
  */
@@ -31,7 +32,7 @@ export function calculateTrendComparison(
   const current = new Date(thisMonthStart);
   while (current <= today) {
     thisMonthTotal++;
-    if (completedDates.has(current.toISOString().split('T')[0])) {
+    if (completedDates.has(getLocalDateString(current))) {
       thisMonthCompleted++;
     }
     current.setDate(current.getDate() + 1);
@@ -41,7 +42,7 @@ export function calculateTrendComparison(
   const lastCurrent = new Date(lastMonthStart);
   while (lastCurrent <= lastMonthEnd) {
     lastMonthTotal++;
-    if (completedDates.has(lastCurrent.toISOString().split('T')[0])) {
+    if (completedDates.has(getLocalDateString(lastCurrent))) {
       lastMonthCompleted++;
     }
     lastCurrent.setDate(lastCurrent.getDate() + 1);

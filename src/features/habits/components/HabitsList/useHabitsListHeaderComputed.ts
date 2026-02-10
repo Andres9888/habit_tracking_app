@@ -1,3 +1,4 @@
+import { getLocalDateString } from '@/utils/getLocalDateString';
 /**
  * useHabitsListHeaderComputed Hook
  *
@@ -41,7 +42,7 @@ export function useHabitsListHeaderComputed({
   const isOnline = useIsOnline();
   const isOffline = !isOnline;
 
-  const todayString = new Date().toISOString().split('T')[0];
+  const todayString = getLocalDateString();
   const totalHabits = habits.length;
 
   const completedToday = useMemo(
