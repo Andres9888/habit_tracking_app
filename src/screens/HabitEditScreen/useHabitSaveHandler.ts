@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Alert } from 'react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
@@ -31,9 +31,13 @@ export function useHabitSaveHandler({
   onSuccess,
 }: UseSaveHandlerProps) {
   const updateHabit = useMutation(api.habits.update);
+  const [isSaving, setIsSaving] = useState(false);
+  const isSavingRef = useRef(false);
 
   const handleSave = useCallback(async () => {
-    if (!habitId || !habitName.trim()) return;
+    if (!habitId || !habitName.trim() || isSavingRef.current) return;
+    isSavingRef.current = true;
+    setIsSaving(true);
 
     const trimmedName = habitName.trim();
     const fullName = selectedEmoji
@@ -84,6 +88,9 @@ export function useHabitSaveHandler({
     } catch (error) {
       if (__DEV__) console.error('Failed to save habit:', error);
       showSaveError();
+    } finally {
+      isSavingRef.current = false;
+      setIsSaving(false);
     }
   }, [
     habitId,
@@ -96,5 +103,5 @@ export function useHabitSaveHandler({
     onSuccess,
   ]);
 
-  return { handleSave };
+  return { handleSave, isSaving };
 }
