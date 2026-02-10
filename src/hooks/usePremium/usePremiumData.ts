@@ -8,7 +8,11 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { isPurchasesAvailable, Purchases } from '../../lib/purchases';
-import type { PurchasesPackage, CustomerInfo } from 'react-native-purchases';
+import type {
+  PurchasesPackage,
+  CustomerInfo,
+  CustomerInfoUpdateListener,
+} from 'react-native-purchases';
 
 const MAX_RETRIES = 10;
 const RETRY_DELAY_MS = 500;
@@ -29,7 +33,7 @@ export function usePremiumData(): PremiumData {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingOfferings, setIsLoadingOfferings] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const listenerRef = useRef<{ remove: () => void } | null>(null);
+  const listenerRef = useRef<CustomerInfoUpdateListener | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -64,7 +68,8 @@ export function usePremiumData(): PremiumData {
           setPackages(offeringsResult.current?.availablePackages ?? null);
         }
       } catch (error_) {
-        if (__DEV__) console.error('[usePremium] Failed to fetch data:', error_);
+        if (__DEV__)
+          console.error('[usePremium] Failed to fetch data:', error_);
         if (isMounted) {
           setError('Failed to load subscription info');
         }
@@ -79,12 +84,11 @@ export function usePremiumData(): PremiumData {
     function setupListener() {
       if (isPurchasesAvailable() && !listenerRef.current) {
         try {
-          const result = Purchases.addCustomerInfoUpdateListener(
-            (info: CustomerInfo) => {
-              if (isMounted) setCustomerInfo(info);
-            }
-          );
-          listenerRef.current = result as unknown as { remove: () => void } | null;
+          const listener: CustomerInfoUpdateListener = (info: CustomerInfo) => {
+            if (isMounted) setCustomerInfo(info);
+          };
+          Purchases.addCustomerInfoUpdateListener(listener);
+          listenerRef.current = listener;
         } catch {
           // Listener setup is best-effort
         }
@@ -97,8 +101,10 @@ export function usePremiumData(): PremiumData {
 
     return () => {
       isMounted = false;
-      listenerRef.current?.remove();
-      listenerRef.current = null;
+      if (listenerRef.current) {
+        Purchases.removeCustomerInfoUpdateListener(listenerRef.current);
+        listenerRef.current = null;
+      }
     };
   }, []);
 
