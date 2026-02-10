@@ -96,9 +96,10 @@ export async function processQueue(
     if (stopOnFirstFailure && !result.success) break;
   }
 
-  // Safe: pendingOperations is guaranteed non-empty (early return above)
   const lastOp = pendingOperations[pendingOperations.length - 1];
-  onProgress?.(pendingOperations.length, pendingOperations.length, lastOp);
+  if (lastOp) {
+    onProgress?.(pendingOperations.length, pendingOperations.length, lastOp);
+  }
 
   const totalPendingCount = allOperations.filter(
     (op) => op.status === 'pending'
