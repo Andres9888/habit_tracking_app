@@ -119,10 +119,10 @@ describe('HabitCard Toggle and Haptic Integration', () => {
   });
 
   describe('query integration', () => {
-    it('should call getCompletionStatus query with correct arguments', () => {
+    it('should use completedProp from parent bulk query instead of per-card query', () => {
       const mockMutation = jest.fn();
       mockUseMutation.mockReturnValue(mockMutation);
-      mockUseQuery.mockReturnValue(false); // Not completed
+      mockUseQuery.mockReturnValue(false);
 
       render(
         <HabitCard
@@ -133,10 +133,12 @@ describe('HabitCard Toggle and Haptic Integration', () => {
         />
       );
 
-      expect(mockUseQuery).toHaveBeenCalledWith(expect.anything(), {
-        date: today,
-        habitId: mockHabitId,
-      });
+      // Should NOT call useQuery with getCompletionStatus args (per-card query removed)
+      // The parent provides completion status via the `completed` prop from bulk tracking query
+      const completionStatusCalls = mockUseQuery.mock.calls.filter(
+        (call: any[]) => call[1]?.habitId === mockHabitId && call[1]?.date
+      );
+      expect(completionStatusCalls).toHaveLength(0);
     });
 
     it('should use query result for haptic intensity decision', () => {

@@ -9,7 +9,7 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
  * @see docs/offline-habit-sync.md T013 - Offline state integration
  */
 
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { useOfflineHabitState } from './useOfflineHabitState';
 import type { HabitCardProps } from '../HabitCard.types';
@@ -37,6 +37,10 @@ export interface HabitCardStateReturn {
 
 /**
  * Hook to manage habit completion and streak state
+ *
+ * Uses the completedProp from the parent's bulk tracking query
+ * instead of per-card individual queries, reducing Convex
+ * subscriptions from N (one per habit) to 1 (bulk).
  */
 export function useHabitCardState(
   options: UseHabitCardStateOptions
@@ -51,11 +55,10 @@ export function useHabitCardState(
   } = options;
 
   const today = getLocalDateString();
-  const completedQuery = useQuery(api.tracking.getCompletionStatus, {
-    date: today,
-    habitId: id,
-  });
-  const serverCompleted = completedQuery ?? completedProp;
+  // Use the parent-provided completion status from the bulk tracking query
+  // instead of creating a per-card Convex subscription (getCompletionStatus).
+  // This reduces WebSocket subscriptions from N to 0 for completion checks.
+  const serverCompleted = completedProp;
   const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
 
   // Optimistic local state for instant visual feedback
