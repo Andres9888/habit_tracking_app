@@ -38,7 +38,7 @@ export function usePurchaseHandlers({
     }
 
     if (!selectedPackage) {
-      console.warn('[usePurchaseHandlers] No package selected');
+      if (__DEV__) console.warn('[usePurchaseHandlers] No package selected');
       return false;
     }
     return purchasePackage(selectedPackage);

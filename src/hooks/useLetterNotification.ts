@@ -112,7 +112,7 @@ export function useLetterNotification({
         });
 
         if (!notificationId && __DEV__) {
-          console.warn('[useLetterNotification] Notification scheduling failed:', letterId);
+          if (__DEV__) console.warn('[useLetterNotification] Notification scheduling failed:', letterId);
         }
 
         onSuccess?.(letterId);

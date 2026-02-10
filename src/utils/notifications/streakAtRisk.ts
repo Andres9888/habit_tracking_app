@@ -115,6 +115,6 @@ export async function cancelAllStreakAtRiskNotifications(): Promise<void> {
     );
   } catch (error) {
     if (__DEV__)
-      console.warn('cancelAllStreakAtRiskNotifications failed', error);
+      if (__DEV__) console.warn('cancelAllStreakAtRiskNotifications failed', error);
   }
 }
