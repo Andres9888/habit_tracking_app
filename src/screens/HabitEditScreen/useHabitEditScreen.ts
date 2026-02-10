@@ -37,7 +37,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     }
   }, [habit]);
 
-  const { handleSave } = useHabitSaveHandler({
+  const { handleSave, isSaving } = useHabitSaveHandler({
     habitId,
     habitName,
     selectedEmoji,
@@ -87,6 +87,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     handleReminderToggle,
     handleReminderTimeChange,
     handleSave,
+    isSaving,
     handleDelete,
     handleArchive,
     triggerSelection,

@@ -1,5 +1,5 @@
 /** EditHeader - X button left, Save button right (like Create modal) */
-import { View, Pressable, Text, Keyboard } from 'react-native';
+import { View, Pressable, Text, Keyboard, ActivityIndicator } from 'react-native';
 import { X } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, {
@@ -12,6 +12,7 @@ import Animated, {
 interface EditHeaderProps {
   paddingTop: number;
   canSave?: boolean;
+  isSaving?: boolean;
   onCancel: () => void;
   onSave: () => void;
 }
@@ -21,6 +22,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export function EditHeader({
   paddingTop,
   canSave = true,
+  isSaving = false,
   onCancel,
   onSave,
 }: EditHeaderProps) {
@@ -56,10 +58,11 @@ export function EditHeader({
       </Pressable>
       <View className='flex-1' />
       <AnimatedPressable
-        accessibilityLabel='Save changes'
+        accessibilityLabel={isSaving ? 'Saving changes' : 'Save changes'}
         accessibilityRole='button'
-        className={`rounded-xl px-5 py-2.5 ${canSave ? 'bg-[#059669]' : 'bg-stone-300'}`}
-        disabled={!canSave}
+        accessibilityState={{ busy: isSaving, disabled: !canSave || isSaving }}
+        className={`flex-row items-center gap-2 rounded-xl px-5 py-2.5 ${canSave && !isSaving ? 'bg-[#059669]' : 'bg-stone-300'}`}
+        disabled={!canSave || isSaving}
         style={animatedStyle}
         onPress={handleSave}
         onPressIn={() => {
@@ -69,11 +72,12 @@ export function EditHeader({
           scale.value = withSpring(1, { damping: 15 });
         }}
       >
+        {isSaving && <ActivityIndicator color='#ffffff' size='small' />}
         <Text
-          className={`font-semibold ${canSave ? 'text-white' : 'text-stone-500'}`}
+          className={`font-semibold ${canSave && !isSaving ? 'text-white' : 'text-stone-500'}`}
           style={{ fontSize: 17, letterSpacing: -0.41 }}
         >
-          Save
+          {isSaving ? 'Saving…' : 'Save'}
         </Text>
       </AnimatedPressable>
     </Animated.View>
