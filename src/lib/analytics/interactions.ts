@@ -8,7 +8,7 @@ export const logInteraction = (eventName: string, payload: InteractionPayload = 
   if (__DEV__) {
     const timestamp = new Date().toISOString();
     // eslint-disable-next-line no-console
-    console.log(`[interaction:${eventName}]`, { payload, timestamp });
+    if (__DEV__) console.log(`[interaction:${eventName}]`, { payload, timestamp });
   }
 };
 

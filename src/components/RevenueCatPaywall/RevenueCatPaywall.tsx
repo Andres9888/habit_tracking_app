@@ -93,17 +93,17 @@ export function RevenueCatPaywall({
         }}
         onPurchaseError={({ error }) => {
           if (__DEV__)
-            console.error('[RevenueCatPaywall] Purchase error:', error);
+            if (__DEV__) console.error('[RevenueCatPaywall] Purchase error:', error);
         }}
         onRestoreCompleted={({ customerInfo }) => {
           if (__DEV__)
-            console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
+            if (__DEV__) console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
           onRestoreSuccess?.();
           onClose();
         }}
         onRestoreError={({ error }) => {
           if (__DEV__)
-            console.error('[RevenueCatPaywall] Restore error:', error);
+            if (__DEV__) console.error('[RevenueCatPaywall] Restore error:', error);
         }}
       />
     </Modal>

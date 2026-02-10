@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     if (__DEV__) {
-      console.error('[ErrorBoundary] Caught error:', error);
+      if (__DEV__) console.error('[ErrorBoundary] Caught error:', error);
       console.error(
         '[ErrorBoundary] Component stack:',
         errorInfo.componentStack
