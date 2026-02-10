@@ -2,6 +2,7 @@
  * HabitsList Types
  */
 
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import type { HabitsListState } from '../../hooks/useHabitsApp';
 import type { HabitsModalsState } from '../../hooks/types';
 
@@ -17,4 +18,18 @@ export interface HabitsListProps {
   weekDates: Date[];
   onNextWeek: () => void;
   onPreviousWeek: () => void;
+}
+
+export interface UseHabitsListHandlersOptions {
+  list: HabitsListProps['list'];
+  onSettingsChange: HabitsListProps['modals']['onSettingsChange'];
+  onCreateHabitRequest: HabitsListProps['onCreateHabitRequest'];
+  state: {
+    justCreatedHabitId: Id<'habits'> | null;
+    setJustCreatedHabitId: (id: Id<'habits'> | null) => void;
+    setIsInSuccessCelebration: (value: boolean) => void;
+    shouldTriggerHabitEntrance: boolean;
+    isInSuccessCelebration: boolean;
+    setShouldTriggerHabitEntrance: (value: boolean) => void;
+  };
 }

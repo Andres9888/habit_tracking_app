@@ -13,6 +13,7 @@ import {
 import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { Springs } from '../../../constants/motion';
+import { showSyncError } from '../../../utils/errorAlerts';
 
 interface TapGestureOptions {
   id: Id<'habits'>;
@@ -82,6 +83,7 @@ export function createTapGesture(options: TapGestureOptions) {
             await toggleCompletionMutation({ date: today, habitId: id });
           } catch (error) {
             if (__DEV__) console.error('Toggle completion failed:', error);
+            showSyncError();
           } finally {
             setTimeout(() => {
               setIsToggling(false);
