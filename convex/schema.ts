@@ -431,7 +431,9 @@ const applicationTables = {
     date: v.string(),
     habitId: v.id('habits'),
     userId: v.optional(v.string()),
-  }).index('by_habit_and_date', ['habitId', 'date']),
+  })
+    .index('by_habit_and_date', ['habitId', 'date'])
+    .index('by_user_and_date', ['userId', 'date']),
 
   // Users table for Clerk authentication integration
   // Note: Fields are optional for backwards compatibility with existing anonymous users
