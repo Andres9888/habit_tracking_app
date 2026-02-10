@@ -9,6 +9,7 @@ import {
   formatReminderTime,
   scheduleHabitReminder,
 } from '../../utils/notifications';
+import { showSaveError } from '../../utils/errorAlerts';
 
 interface UseSaveHandlerProps {
   habitId: Id<'habits'> | null;
@@ -35,49 +36,65 @@ export function useHabitSaveHandler({
     if (!habitId || !habitName.trim()) return;
 
     const trimmedName = habitName.trim();
-    const fullName = selectedEmoji ? `${selectedEmoji} ${trimmedName}` : trimmedName;
+    const fullName = selectedEmoji
+      ? `${selectedEmoji} ${trimmedName}`
+      : trimmedName;
     const reminderTimeString = formatReminderTime(reminderTime);
 
     let enableReminders = remindersEnabled;
 
-    if (remindersEnabled) {
-      const hasPermission = await ensureNotificationPermissions();
-      enableReminders = hasPermission;
+    try {
+      if (remindersEnabled) {
+        const hasPermission = await ensureNotificationPermissions();
+        enableReminders = hasPermission;
 
-      if (hasPermission) {
-        const scheduled = await scheduleHabitReminder({
-          body: 'Time to check in on your habit progress!',
-          habitId: String(habitId),
-          reminderTime,
-          skipPermissionCheck: true,
-          title: fullName,
-        });
-        enableReminders = scheduled;
-      }
+        if (hasPermission) {
+          const scheduled = await scheduleHabitReminder({
+            body: 'Time to check in on your habit progress!',
+            habitId: String(habitId),
+            reminderTime,
+            skipPermissionCheck: true,
+            title: fullName,
+          });
+          enableReminders = scheduled;
+        }
 
-      if (!enableReminders) {
+        if (!enableReminders) {
+          await cancelHabitReminder(String(habitId));
+          Alert.alert(
+            'Notifications Disabled',
+            'Enable notifications in your device settings to receive habit reminders.'
+          );
+        }
+      } else {
         await cancelHabitReminder(String(habitId));
-        Alert.alert(
-          'Notifications Disabled',
-          'Enable notifications in your device settings to receive habit reminders.'
-        );
       }
-    } else {
-      await cancelHabitReminder(String(habitId));
+
+      await updateHabit({
+        habitId,
+        icon: selectedEmoji ?? undefined,
+        iconColor: selectedColor,
+        name: fullName,
+        remindersEnabled: enableReminders,
+        reminderSound: enableReminders ? 'default' : undefined,
+        reminderTime: enableReminders ? reminderTimeString : undefined,
+      });
+
+      onSuccess();
+    } catch (error) {
+      if (__DEV__) console.error('Failed to save habit:', error);
+      showSaveError();
     }
-
-    await updateHabit({
-      habitId,
-      icon: selectedEmoji ?? undefined,
-      iconColor: selectedColor,
-      name: fullName,
-      remindersEnabled: enableReminders,
-      reminderSound: enableReminders ? 'default' : undefined,
-      reminderTime: enableReminders ? reminderTimeString : undefined,
-    });
-
-    onSuccess();
-  }, [habitId, habitName, selectedEmoji, selectedColor, remindersEnabled, reminderTime, updateHabit, onSuccess]);
+  }, [
+    habitId,
+    habitName,
+    selectedEmoji,
+    selectedColor,
+    remindersEnabled,
+    reminderTime,
+    updateHabit,
+    onSuccess,
+  ]);
 
   return { handleSave };
 }

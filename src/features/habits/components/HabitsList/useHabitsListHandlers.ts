@@ -1,28 +1,11 @@
-/**
- * HabitsList Handlers Hook - Event handlers and callbacks
- */
-
+/** HabitsList Handlers Hook - Event handlers and callbacks */
 import { useCallback } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
-import type { Id } from '../../../../../convex/_generated/dataModel';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { showCreateError } from '../../../../utils/errorAlerts';
 import { useHabitsListEffects } from './useHabitsListEffects';
-import type { HabitsListProps } from './HabitsList.types';
-
-export interface UseHabitsListHandlersOptions {
-  list: HabitsListProps['list'];
-  onSettingsChange: HabitsListProps['modals']['onSettingsChange'];
-  onCreateHabitRequest: HabitsListProps['onCreateHabitRequest'];
-  state: {
-    justCreatedHabitId: Id<'habits'> | null;
-    setJustCreatedHabitId: (id: Id<'habits'> | null) => void;
-    setIsInSuccessCelebration: (value: boolean) => void;
-    shouldTriggerHabitEntrance: boolean;
-    isInSuccessCelebration: boolean;
-    setShouldTriggerHabitEntrance: (value: boolean) => void;
-  };
-}
+import type { UseHabitsListHandlersOptions } from './HabitsList.types';
 
 export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
   const { list, onSettingsChange, onCreateHabitRequest, state } = options;
@@ -74,6 +57,7 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
         }
       } catch (error) {
         if (__DEV__) console.error('Failed to create habit:', error);
+        showCreateError();
       }
     },
     [
