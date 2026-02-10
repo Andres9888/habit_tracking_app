@@ -1,3 +1,4 @@
+import { getLocalDateString } from '@/utils/getLocalDateString';
 /**
  * useProgressSectionData Hook
  *
@@ -78,7 +79,7 @@ export function useProgressSectionData({
     const current = new Date(thisMonthStart);
     while (current <= today) {
       totalDays++;
-      if (completedDates.has(current.toISOString().split('T')[0])) {
+      if (completedDates.has(getLocalDateString(current))) {
         completedDays++;
       }
       current.setDate(current.getDate() + 1);

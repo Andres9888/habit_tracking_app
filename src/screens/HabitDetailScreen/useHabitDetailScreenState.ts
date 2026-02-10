@@ -1,3 +1,4 @@
+import { getLocalDateString } from '@/utils/getLocalDateString';
 /**
  * useHabitDetailScreenState - State management for the habit detail screen
  */
@@ -40,7 +41,7 @@ export const useHabitDetailScreenState = ({
     useQuery(api.notes.search, visible && habitId ? { habitId } : 'skip') ?? [];
 
   // Today's date
-  const today = useMemo(() => new Date().toISOString().split('T')[0], []);
+  const today = useMemo(() => getLocalDateString(), []);
 
   // Create a stable string key for completed dates to prevent unnecessary re-renders
   // when tracking array reference changes but content is the same

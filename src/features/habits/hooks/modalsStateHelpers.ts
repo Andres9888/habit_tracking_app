@@ -1,3 +1,4 @@
+import { getLocalDateString } from '@/utils/getLocalDateString';
 /**
  * Helper utilities for useHabitsModalsState
  */
@@ -10,7 +11,7 @@ export function generateDateStrings(days: number): string[] {
   return Array.from({ length: days }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() - i);
-    return date.toISOString().split('T')[0];
+    return getLocalDateString(date);
   });
 }
 

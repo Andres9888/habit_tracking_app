@@ -1,3 +1,4 @@
+import { getLocalDateString } from '@/utils/getLocalDateString';
 /**
  * useHabitCardState Hook
  *
@@ -47,7 +48,7 @@ export function useHabitCardState(
     offlineSyncEnabled,
   } = options;
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = getLocalDateString();
   const completedQuery = useQuery(api.tracking.getCompletionStatus, {
     date: today,
     habitId: id,

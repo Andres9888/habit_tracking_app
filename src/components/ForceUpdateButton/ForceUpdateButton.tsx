@@ -1,3 +1,4 @@
+import { getLocalDateString } from '@/utils/getLocalDateString';
 import React, { useState } from 'react';
 import { Pressable, Text, View, ActivityIndicator } from 'react-native';
 import { useMutation } from 'convex/react';
@@ -19,7 +20,7 @@ export function ForceUpdateButton({
     setResult(null);
 
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateString();
       const response = await updateStrength({
         behaviorPerformed: true,
         date: today,
