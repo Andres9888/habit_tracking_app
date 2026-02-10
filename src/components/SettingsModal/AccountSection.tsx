@@ -61,7 +61,14 @@ export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
   }, []);
 
   const handleShare = useCallback(() => {
-    void Share.share({ message: 'Building habits with Chain Day!' });
+    void Share.share({
+      message: Platform.select({
+        default: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${APP_STORE_URL}`,
+        ios: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${APP_STORE_URL}`,
+      }),
+      title: 'Chain Day — Build Better Habits',
+      url: Platform.OS === 'ios' ? APP_STORE_URL : undefined,
+    });
   }, []);
 
   const openUrl = useCallback(
