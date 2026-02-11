@@ -16,7 +16,7 @@ export interface DayHabitsBottomSheetProps {
   /** Get completion status for a habit on a specific date */
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
   /** Toggle habit completion for a specific date */
-  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<void>;
+  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<unknown>;
   /** Whether to reduce motion for animations */
   reduceMotion?: boolean;
 }

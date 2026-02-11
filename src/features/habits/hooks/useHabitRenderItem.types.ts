@@ -19,7 +19,7 @@ export interface UseHabitRenderItemArgs {
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
   showConnectors?: boolean;
-  showHabitStrengthPercentage: boolean;
+  showHabitStrengthPercentage?: boolean;
   toggleHabit: (args: {
     habitId: Id<'habits'>;
     date: string;

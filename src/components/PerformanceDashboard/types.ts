@@ -12,6 +12,7 @@ import type {
 } from '../../lib/performance';
 
 // Re-export types used by components
+export type { NetworkTiming, MemorySnapshot, FrameTimingData, PerformanceThresholds };
 
 /** Dashboard tab identifiers */
 export type DashboardTab =

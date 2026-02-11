@@ -79,11 +79,12 @@ export function usePremiumData(): PremiumData {
     function setupListener() {
       if (isPurchasesAvailable() && !listenerRef.current) {
         try {
-          listenerRef.current = Purchases.addCustomerInfoUpdateListener(
+          const result = Purchases.addCustomerInfoUpdateListener(
             (info: CustomerInfo) => {
               if (isMounted) setCustomerInfo(info);
             }
           );
+          listenerRef.current = result as unknown as { remove: () => void } | null;
         } catch {
           // Listener setup is best-effort
         }

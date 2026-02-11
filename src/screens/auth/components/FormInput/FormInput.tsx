@@ -3,8 +3,6 @@ import {
   Text,
   TextInput,
   View,
-  type NativeSyntheticEvent,
-  type TextInputFocusEventData,
 } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -35,9 +33,7 @@ export function FormInput({
    * Wraps the blur handler to trigger both animation and parent onBlur
    * @param e - Native focus event from TextInput
    */
-  const handleBlurWrapper = (
-    e: NativeSyntheticEvent<TextInputFocusEventData>
-  ) => {
+  const handleBlurWrapper = (e: Parameters<NonNullable<TextInputProps['onBlur']>>[0]) => {
     handleBlurAnimation();
     onBlur?.(e);
   };

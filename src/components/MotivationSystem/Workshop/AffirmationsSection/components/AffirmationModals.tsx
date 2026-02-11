@@ -9,7 +9,7 @@ import type {
   AffirmationData,
   AffirmationType,
 } from '../AffirmationsSection.types';
-import type { AffirmationScheduleData } from '../../AffirmationScheduleModal/types';
+import type { AffirmationScheduleConfig } from '../AffirmationsSection.types';
 import { AffirmationEditorModal } from './AffirmationEditorModal';
 
 interface AffirmationModalsProps {
@@ -25,7 +25,7 @@ interface AffirmationModalsProps {
   schedulingAffirmation: AffirmationData | null;
   isScheduleSaving: boolean;
   onCloseScheduleModal: () => void;
-  onSaveSchedule: (schedule: AffirmationScheduleData) => Promise<void>;
+  onSaveSchedule: (schedule: AffirmationScheduleConfig) => Promise<void>;
   onCancelSchedule: () => Promise<void>;
 }
 
@@ -69,7 +69,7 @@ export function AffirmationModals({
           visible={isScheduleModalOpen}
           onCancel={onCancelSchedule}
           onClose={onCloseScheduleModal}
-          onSave={onSaveSchedule}
+          onSave={onSaveSchedule as (schedule: any) => Promise<void>}
         />
       )}
     </>

@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import type { ShareCardData } from '../../types';
 import type { HabitsModalsState } from '../../hooks/useHabitsApp';
 
@@ -49,8 +50,8 @@ export interface CalendarAndDetailModalsProps {
   openEditHabit: HabitsModalsState['openEditHabit'];
   openPauseModal: HabitsModalsState['openPauseModal'];
   openHabitCalendar: HabitsModalsState['openHabitCalendar'];
-  handleArchive: (habitId: string) => void;
-  onDeleteHabit: (habitId: string) => void;
+  handleArchive: (habitId: Id<'habits'>) => void | Promise<void>;
+  onDeleteHabit: (habitId: Id<'habits'>) => void | Promise<void>;
 }
 
 /** Props for ShareCard and PauseModal components */
@@ -82,7 +83,7 @@ export interface QuickActionsSectionProps {
   openHabitCalendar: HabitsModalsState['openHabitCalendar'];
   openEditHabit: HabitsModalsState['openEditHabit'];
   openPauseModal: HabitsModalsState['openPauseModal'];
-  onDeleteHabit: (habitId: string) => void;
+  onDeleteHabit: (habitId: Id<'habits'>) => void | Promise<void>;
 }
 
 /** Props for the VisualizationModalSection component */

@@ -17,7 +17,7 @@ interface BuildReturnValueParams {
   showPermissionAlert: () => void;
   startRecording: () => Promise<void>;
   status: RecordingStatus;
-  stopRecording: () => Promise<void>;
+  stopRecording: () => Promise<string | null>;
 }
 
 export function buildReturnValue({
