@@ -114,4 +114,4 @@ export const DEFAULT_DASHBOARD_CONFIG: Required<DashboardConfig> = {
   updateInterval: 1000,
 };
 
-export { type RenderTiming } from '../../lib/performance';
+export { type NetworkTiming, type RenderTiming } from '../../lib/performance';

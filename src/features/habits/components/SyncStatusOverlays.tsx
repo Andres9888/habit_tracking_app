@@ -11,11 +11,7 @@ import {
 } from '../../../components/SyncStatus';
 import { useSyncStatus } from '../../../contexts/SyncStatusContext';
 
-interface SyncStatusOverlaysProps {
-  reduceMotion: boolean;
-}
-
-export function SyncStatusOverlays({ reduceMotion }: SyncStatusOverlaysProps) {
+export function SyncStatusOverlays() {
   const { status: syncStatus } = useSyncStatus();
   const { visible: syncedToastVisible, syncedCount } = useSyncedToast();
 

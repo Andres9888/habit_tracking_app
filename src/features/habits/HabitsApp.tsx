@@ -42,7 +42,7 @@ export function HabitsApp() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ backgroundColor: colors.light.background, flex: 1 }}>
-        <SyncStatusOverlays reduceMotion={list.reduceMotionPreference} />
+        <SyncStatusOverlays />
 
         <HabitsList
           canNavigateForward={list.canNavigateForward}
