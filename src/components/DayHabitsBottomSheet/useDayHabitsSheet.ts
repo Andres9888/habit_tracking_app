@@ -8,7 +8,7 @@ import type { DateInfo, SheetState } from './types';
 interface UseDayHabitsSheetOptions {
   date: Date | null;
   onClose: () => void;
-  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<void>;
+  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<unknown>;
 }
 
 interface UseDayHabitsSheetReturn extends SheetState {

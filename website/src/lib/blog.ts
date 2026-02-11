@@ -27,43 +27,44 @@ export function getAllPosts(): BlogPostMeta[] {
 
   const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith('.md'));
 
-  const posts = files
-    .map((filename) => {
-      const filePath = path.join(BLOG_DIR, filename);
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
-      const { data, content } = matter(fileContent);
+  const posts: BlogPostMeta[] = [];
 
-      // Skip drafts - only show published posts
-      if (data.status && data.status !== 'published') {
-        return null;
-      }
+  for (const filename of files) {
+    const filePath = path.join(BLOG_DIR, filename);
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const { data, content } = matter(fileContent);
 
-      const slug = filename.replace(/\.md$/, '');
-      const stats = readingTime(content);
+    // Skip drafts - only show published posts
+    if (data.status && data.status !== 'published') {
+      continue;
+    }
 
-      // Generate excerpt from first paragraph
-      const excerpt =
-        data.meta_description ||
-        content
-          .replace(/^#.*$/gm, '')
-          .replace(/\n+/g, ' ')
-          .trim()
-          .slice(0, 160) + '...';
+    const slug = filename.replace(/\.md$/, '');
+    const stats = readingTime(content);
 
-      return {
-        slug,
-        title: data.title || slug,
-        date: data.date ? String(data.date) : new Date().toISOString(),
-        pillar: data.pillar,
-        status: data.status,
-        tags: data.tags || [],
-        excerpt,
-        readingTime: stats.text,
-        meta_description: data.meta_description,
-      };
-    })
-    .filter((post): post is BlogPostMeta => post !== null)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    // Generate excerpt from first paragraph
+    const excerpt: string =
+      data.meta_description ||
+      content
+        .replace(/^#.*$/gm, '')
+        .replace(/\n+/g, ' ')
+        .trim()
+        .slice(0, 160) + '...';
+
+    posts.push({
+      slug,
+      title: data.title || slug,
+      date: data.date ? String(data.date) : new Date().toISOString(),
+      pillar: data.pillar,
+      status: data.status,
+      tags: data.tags || [],
+      excerpt,
+      readingTime: stats.text,
+      meta_description: data.meta_description,
+    });
+  }
+
+  posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return posts;
 }

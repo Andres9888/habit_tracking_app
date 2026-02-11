@@ -54,16 +54,17 @@ export function HabitsListContent({
         })}
         ListFooterComponent={renderHabitsListFooter({ list, onUpgradeIntent })}
         ListHeaderComponent={renderHabitsListHeader({ handlers, props, state })}
-        renderItem={(p) =>
-          renderHabitRow({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        renderItem={function renderHabitItem(p: any) {
+          return renderHabitRow({
             habitRowOpacity: state.habitRowOpacity,
             habitRowTranslateY: state.habitRowTranslateY,
             item: p.item,
             justCreatedHabitId: state.justCreatedHabitId,
             renderItem,
             renderParams: p,
-          })
-        }
+          });
+        }}
         showsVerticalScrollIndicator={false}
         onDragBegin={handlers.handleDragBegin}
         onDragEnd={list.handleDragEnd}

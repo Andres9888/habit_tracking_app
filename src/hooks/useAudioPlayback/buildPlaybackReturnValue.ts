@@ -2,7 +2,7 @@
  * buildPlaybackReturnValue - Assembles the return value for useAudioPlayback
  */
 
-import type { PlaybackStatus, UseAudioPlaybackReturn } from './types';
+import type { PlaybackSpeed, PlaybackStatus, UseAudioPlaybackReturn } from './types';
 import { formatDuration } from './formatUtils';
 
 interface BuildPlaybackReturnValueParams {
@@ -18,7 +18,7 @@ interface BuildPlaybackReturnValueParams {
   seekForward: (seconds?: number) => Promise<void>;
   seekToProgress: (progress: number) => Promise<void>;
   seekToSeconds: (seconds: number) => Promise<void>;
-  setSpeed: (rate: number) => Promise<void>;
+  setSpeed: (speed: PlaybackSpeed) => Promise<void>;
   toggleMute: () => Promise<void>;
 }
 

@@ -3,10 +3,11 @@
  */
 
 import { useCallback } from 'react';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitSortMode } from '../types';
 import { optimisticStore } from '../../../lib/optimistic';
 
-type ReorderMutation = (args: { habitIds: string[] }) => Promise<void>;
+type ReorderMutation = (args: { habitIds: Id<'habits'>[] }) => Promise<unknown>;
 
 export function useOptimisticDragEnd(
   habitSortMode: HabitSortMode,

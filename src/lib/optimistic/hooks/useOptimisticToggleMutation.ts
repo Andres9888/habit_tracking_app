@@ -41,7 +41,7 @@ export function useOptimisticToggleMutation(
   serverMutation: (args: {
     habitId: Id<'habits'>;
     date: string;
-  }) => Promise<void>,
+  }) => Promise<unknown>,
   getCurrentStatus: (habitId: Id<'habits'>, date: string) => boolean,
   options?: OptimisticToggleOptions
 ) {

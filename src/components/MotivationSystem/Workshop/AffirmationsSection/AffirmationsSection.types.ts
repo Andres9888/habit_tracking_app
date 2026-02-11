@@ -24,7 +24,7 @@ export interface AffirmationData {
 }
 
 export interface AffirmationScheduleConfig {
-  scheduledTime: string;
+  scheduledTime?: string;
   frequency: AffirmationFrequency;
   daysOfWeek?: number[];
   isScheduleEnabled: boolean;

@@ -32,6 +32,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
       const index = getIndex?.() ?? 0;
       const renderData = getHabitRenderData(item, index, args);
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (
         <HabitRenderContent
           celebrationsEnabled={celebrationsEnabled}
@@ -51,7 +52,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           notifyWeekCompletion={notifyWeekCompletion}
           reduceMotionPreference={reduceMotionPreference}
           showConnectors={showConnectors}
-          showHabitStrengthPercentage={showHabitStrengthPercentage}
+          showHabitStrengthPercentage={Boolean(showHabitStrengthPercentage) as boolean}
           streak={renderData.streak}
           toggleHabit={toggleHabit}
           triggerEntrance={renderData.triggerEntrance}

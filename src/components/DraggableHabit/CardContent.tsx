@@ -36,7 +36,7 @@ export function CardContent(props: CardContentProps) {
         {props.showHabitStrengthPercentage ? (
           <StrengthProgressBar
             progressAnimatedStyle={props.progressAnimatedStyle as any}
-            strengthEmojiAnimatedStyle={props.strengthEmojiAnimatedStyle}
+            strengthEmojiAnimatedStyle={props.strengthEmojiAnimatedStyle as any}
             strengthPercent={props.strengthPercent}
           />
         ) : (

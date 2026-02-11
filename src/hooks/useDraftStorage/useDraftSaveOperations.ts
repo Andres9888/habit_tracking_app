@@ -6,10 +6,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { saveDraft } from './storage';
 import type { DraftContentType } from './types';
-import type { Id } from '../../../convex/_generated/dataModel';
 
 interface UseDraftSaveOperationsParams {
-  habitId: Id<'habits'>;
+  habitId: string;
   contentType: DraftContentType;
   debounceMs: number;
   enabled: boolean;

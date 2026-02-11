@@ -3,7 +3,7 @@
  */
 
 import type { AnimatedStyle } from 'react-native-reanimated';
-import type { ScrollView } from 'react-native';
+import type { LayoutChangeEvent, ScrollView } from 'react-native';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import type { SortOption } from '../../templates/constants';
 import type {
@@ -58,7 +58,7 @@ export interface BrowseViewProps {
   showToast: boolean;
   sortOption: SortOption;
   tabIndicator: {
-    handleTabBarLayout: (e: unknown) => void;
+    handleTabBarLayout: (e: LayoutChangeEvent) => void;
     tabIndicatorStyle: AnimatedStyle;
   };
   templatesByCategory: Map<string, Doc<'templates'>[]>;
