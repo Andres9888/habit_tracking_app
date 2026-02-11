@@ -21,7 +21,7 @@ export {
 } from './helpers';
 
 // Streak helpers
-export { getStreaksForHabit } from './streakHelpers';
+export { getStreaksForHabit, getStreaksForHabitsBatch } from './streakHelpers';
 
 // Weekly insight helpers
 export {
