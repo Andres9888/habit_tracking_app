@@ -2,6 +2,7 @@
 import { useCallback } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { showCreateError } from '../../../../utils/errorAlerts';
 import { useHabitsListEffects } from './useHabitsListEffects';
