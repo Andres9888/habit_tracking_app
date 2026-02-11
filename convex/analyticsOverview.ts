@@ -5,7 +5,10 @@
  */
 
 import { query } from './_generated/server';
-import { calculateHabitStrength, getStreaksForHabit } from './analytics/index';
+import {
+  calculateHabitStrength,
+  getStreaksForHabitsBatch,
+} from './analytics/index';
 
 /**
  * Get overview statistics for the analytics dashboard
@@ -26,22 +29,28 @@ export const getOverviewStats = query({
       };
     }
 
-    // Calculate strengths with streaks
-    const habitsWithStrength = await Promise.all(
-      activeHabits.map(async (habit) => {
-        const streaks = await getStreaksForHabit(ctx, habit._id, 'anonymous');
-        const strength = calculateHabitStrength(
-          habit,
-          streaks.currentStreak / 66
-        );
-        return {
-          ...habit,
-          currentStreak: streaks.currentStreak,
-          longestStreak: streaks.longestStreak,
-          strength,
-        };
-      })
+    // Calculate strengths with streaks — single batch query instead of N queries
+    const streaksMap = await getStreaksForHabitsBatch(
+      ctx,
+      activeHabits.map((h) => h._id)
     );
+
+    const habitsWithStrength = activeHabits.map((habit) => {
+      const streaks = streaksMap.get(habit._id) ?? {
+        currentStreak: 0,
+        longestStreak: 0,
+      };
+      const strength = calculateHabitStrength(
+        habit,
+        streaks.currentStreak / 66
+      );
+      return {
+        ...habit,
+        currentStreak: streaks.currentStreak,
+        longestStreak: streaks.longestStreak,
+        strength,
+      };
+    });
 
     habitsWithStrength.sort((a, b) => b.strength - a.strength);
 

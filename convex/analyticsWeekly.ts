@@ -7,7 +7,7 @@
 import { v } from 'convex/values';
 import { query, internalMutation } from './_generated/server';
 import { Doc } from './_generated/dataModel';
-import { getStreaksForHabit } from './analytics/index';
+import { getStreaksForHabitsBatch } from './analytics/index';
 import {
   calculateHabitChanges,
   categorizeHabitChanges,
@@ -16,6 +16,10 @@ import {
 
 /**
  * Get weekly insights
+ *
+ * PERF: Previously had an N+1 query pattern — one tracking query per habit
+ * AND one streak query per habit. Now uses a single user-level tracking
+ * query + batch streak computation.
  */
 export const getWeeklyInsights = query({
   args: {},
@@ -28,29 +32,36 @@ export const getWeeklyInsights = query({
     const twoWeeksAgo = new Date();
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
-    // Get all trackings for these habits
-    const trackings: Doc<'tracking'>[] = [];
-    for (const habit of activeHabits) {
-      const habitTrackings = await ctx.db
+    // Single query: fetch ALL tracking records for the user
+    const identity = await ctx.auth.getUserIdentity();
+    let trackings: Doc<'tracking'>[] = [];
+    if (identity) {
+      trackings = await ctx.db
         .query('tracking')
-        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
+        .withIndex('by_user_and_date', (q: any) =>
+          q.eq('userId', identity.subject)
+        )
         .collect();
-      trackings.push(...habitTrackings);
     }
 
-    // Calculate changes for each habit
-    const habitChanges = await Promise.all(
-      activeHabits.map(async (habit) => {
-        const streaks = await getStreaksForHabit(ctx, habit._id, 'anonymous');
-        return calculateHabitChanges(
-          habit,
-          trackings,
-          oneWeekAgo,
-          twoWeeksAgo,
-          streaks.currentStreak
-        );
-      })
-    );
+    // Batch streak computation — single pass over tracking data
+    const habitIds = activeHabits.map((h) => h._id);
+    const streaksMap = await getStreaksForHabitsBatch(ctx, habitIds);
+
+    // Calculate changes for each habit (pure computation, no DB calls)
+    const habitChanges = activeHabits.map((habit) => {
+      const streaks = streaksMap.get(habit._id) ?? {
+        currentStreak: 0,
+        longestStreak: 0,
+      };
+      return calculateHabitChanges(
+        habit,
+        trackings,
+        oneWeekAgo,
+        twoWeeksAgo,
+        streaks.currentStreak
+      );
+    });
 
     const categories = categorizeHabitChanges(habitChanges);
     const totals = calculateWeekOverWeekChange(habitChanges);
