@@ -884,7 +884,7 @@ describe('Motivation System Accessibility Audit', () => {
   describe('8. Premium Feature Accessibility', () => {
     it('PremiumBenefitsModal has accessible close button', () => {
       const { getByLabelText } = render(
-        <PremiumBenefitsModal
+        <PremiumBenefitsModal variant="benefits"
           visible={true}
           onClose={jest.fn()}
           onStartTrial={jest.fn()}
@@ -896,7 +896,7 @@ describe('Motivation System Accessibility Audit', () => {
 
     it('PremiumBenefitsModal CTA has accessible label and hint', () => {
       const { getByLabelText } = render(
-        <PremiumBenefitsModal
+        <PremiumBenefitsModal variant="benefits"
           visible={true}
           onClose={jest.fn()}
           onStartTrial={jest.fn()}

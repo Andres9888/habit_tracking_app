@@ -1,31 +1,31 @@
 /**
- * Header component for PremiumBenefitsModal
+ * Benefits variant header component
  */
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Crown, X } from 'lucide-react-native';
+import type { VariantConfig } from './PremiumPaywall.types';
 
-interface ModalHeaderProps {
+interface BenefitsHeaderProps {
+  config: VariantConfig;
   onClose: () => void;
 }
 
-export function ModalHeader({ onClose }: ModalHeaderProps) {
+export function BenefitsHeader({ config, onClose }: BenefitsHeaderProps) {
   return (
     <View className='flex-row items-center justify-between border-b border-stone-200 bg-white px-4 pb-3 pt-4'>
       <View className='flex-row items-center gap-2'>
         <LinearGradient
           className='h-8 w-8 items-center justify-center rounded-full'
-          colors={['#8b5cf6', '#7c3aed']}
+          colors={[config.gradientColors[0], config.gradientColors[1]]}
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
         >
           <Crown color='#ffffff' size={16} />
         </LinearGradient>
-        <Text className='text-lg font-bold text-stone-800'>
-          Premium Features
-        </Text>
+        <Text className='text-lg font-bold text-stone-800'>Premium Features</Text>
       </View>
       <Pressable
         accessibilityLabel='Close'
