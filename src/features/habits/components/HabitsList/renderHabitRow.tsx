@@ -10,8 +10,8 @@ interface RenderHabitRowOptions {
   justCreatedHabitId: string | null;
   habitRowOpacity: Animated.Value;
   habitRowTranslateY: Animated.Value;
-  renderItem: (p: unknown) => React.ReactNode;
-  renderParams: unknown;
+  renderItem: (p: any) => React.ReactNode;
+  renderParams: any;
 }
 
 export function renderHabitRow(opts: RenderHabitRowOptions) {

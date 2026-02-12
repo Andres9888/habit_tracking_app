@@ -24,10 +24,12 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         habitToEdit={state.habitToEdit}
         showCreateHabit={state.showCreateHabit}
       />
-      <HapticTestModalSection
-        closeHapticTest={state.closeHapticTest}
-        showHapticTest={state.showHapticTest}
-      />
+      {__DEV__ && (
+        <HapticTestModalSection
+          closeHapticTest={state.closeHapticTest}
+          showHapticTest={state.showHapticTest}
+        />
+      )}
       <CalendarAndDetailModals {...getCalendarAndDetailProps(state)} />
       <ShareAndPauseModals {...getShareAndPauseProps(state)} />
       <TemplatesModalSection

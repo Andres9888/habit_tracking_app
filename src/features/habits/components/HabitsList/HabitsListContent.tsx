@@ -54,8 +54,7 @@ export function HabitsListContent({
         })}
         ListFooterComponent={renderHabitsListFooter({ list, onUpgradeIntent })}
         ListHeaderComponent={renderHabitsListHeader({ handlers, props, state })}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        renderItem={function renderHabitItem(p: any) {
+        renderItem={function renderHabitItem(p) {
           return renderHabitRow({
             habitRowOpacity: state.habitRowOpacity,
             habitRowTranslateY: state.habitRowTranslateY,
