@@ -16,12 +16,24 @@ export const getCharacterStats = query({
   args: {},
   handler: async (ctx) => {
     try {
+      const identity = await ctx.auth.getUserIdentity();
+      if (!identity) return DEFAULT_CHARACTER_STATS;
+      const userId = identity.subject;
+
       const habits = await ctx.db
         .query('habits')
-        .filter((q) => q.neq(q.field('archived'), true))
+        .filter((q) =>
+          q.and(
+            q.eq(q.field('userId'), userId),
+            q.neq(q.field('archived'), true)
+          )
+        )
         .collect();
 
-      const allTracking = await ctx.db.query('tracking').collect();
+      const allTracking = await ctx.db
+        .query('tracking')
+        .filter((q) => q.eq(q.field('userId'), userId))
+        .collect();
 
       const { habitStreaks, maxStreak } = calculateHabitStreaks(
         habits,

@@ -22,7 +22,10 @@ export const create = mutation({
     const validated = validateHabitFields(args);
 
     // Get all existing habits for this user to determine next order value
-    const allHabits = await ctx.db.query('habits').collect();
+    const allHabits = await ctx.db
+      .query('habits')
+      .filter((q) => q.eq(q.field('userId'), userId))
+      .collect();
     const maxOrder = findMaxOrder(allHabits);
 
     return await ctx.db.insert('habits', {
@@ -36,7 +39,6 @@ export const create = mutation({
       iconColor: validated.iconColor,
       lastCompletedDate: undefined,
       name: validated.name,
-      userId,
       notes: validated.notes,
       order: maxOrder + 1,
       preferredTime: validated.preferredTime,
@@ -46,6 +48,7 @@ export const create = mutation({
       strength: 0,
       strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),
+      userId,
     });
   },
   returns: v.id('habits'),
