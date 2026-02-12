@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react-native';
 import { Animated, Pressable } from 'react-native';
+import { useFocusRing } from '../../../../utils/accessibility';
 import { useFABAnimations } from './useFABAnimations';
 import { useFABHandlers } from './useFABHandlers';
 import type { FloatingActionButtonProps } from './types';
@@ -15,6 +16,7 @@ export function FloatingActionButton({
     celebrationsEnabled,
     reduceMotionPreference
   );
+  const { focusStyle, focusHandlers } = useFocusRing();
 
   const { handlePress } = useFABHandlers({
     celebrationsEnabled,
@@ -43,7 +45,8 @@ export function FloatingActionButton({
       accessibilityLabel='Add habit'
       accessibilityRole='button'
       className='h-14 w-14 items-center justify-center rounded-full bg-[#059669] shadow-lg'
-      style={animatedStyle}
+      {...focusHandlers}
+      style={[animatedStyle, focusStyle]}
       onPress={handlePress}
     >
       <Animated.View

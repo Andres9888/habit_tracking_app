@@ -7,12 +7,13 @@
  * ACCESSIBILITY: Focus state support added per UI audit (2026-02-07)
  */
 
-import React, { memo, useState, useCallback } from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import { CompletionToast } from '../CompletionToast';
+import { useFocusRing } from '../../utils/accessibility';
 import { useHabitCard } from './useHabitCard';
 import { styles } from './HabitCard.styles';
 import type { HabitCardProps } from './HabitCard.types';
@@ -39,10 +40,7 @@ function HabitCardComponent(props: HabitCardProps) {
   } = props;
 
   const habit = useHabitCard(props);
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleFocus = useCallback(() => setIsFocused(true), []);
-  const handleBlur = useCallback(() => setIsFocused(false), []);
+  const { focusStyle, focusHandlers } = useFocusRing({ disabled });
 
   return (
     <View style={[styles.container, style]}>
@@ -60,7 +58,6 @@ function HabitCardComponent(props: HabitCardProps) {
           accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}. Swipe left for actions.`}
           accessibilityRole='button'
           accessibilityState={{ checked: habit.completed, disabled }}
-          focusable={!disabled}
           style={[
             styles.card,
             {
@@ -68,12 +65,11 @@ function HabitCardComponent(props: HabitCardProps) {
               borderRadius: habit.borderRadius,
             },
             disabled && styles.disabled,
-            isFocused && styles.focused,
             habit.entrance.cardStyle,
             habit.animations.cardAnimatedStyle,
+            focusStyle,
           ]}
-          onBlur={handleBlur}
-          onFocus={handleFocus}
+          {...focusHandlers}
         >
           <StrengthFillBackground
             borderRadius={habit.borderRadius}
