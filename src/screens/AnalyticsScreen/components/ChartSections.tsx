@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   sectionTitle: {
-    ...typography.h3,
+    ...typography.heading3,
     color: colors.text.primary,
     marginBottom: spacing.md,
   },

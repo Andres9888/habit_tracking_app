@@ -27,7 +27,7 @@ export const auxiliaryStyles = StyleSheet.create({
     textAlign: 'center',
   },
   emptyText: {
-    ...typography.h3,
+    ...typography.heading3,
     color: colors.text.secondary,
     marginBottom: spacing.xs,
   },

@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   headerTitle: {
-    ...typography.h1,
+    ...typography.heading1,
     color: colors.text.primary,
   },
   section: {
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   sectionTitle: {
-    ...typography.h3,
+    ...typography.heading3,
     color: colors.text.primary,
     marginBottom: spacing.md,
   },

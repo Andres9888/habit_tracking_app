@@ -87,7 +87,7 @@ export const itemStyles = StyleSheet.create({
     marginLeft: spacing.xs,
   },
   strengthPercentage: {
-    ...typography.h3,
+    ...typography.heading3,
     color: colors.primary[700],
     marginBottom: spacing.xs,
   },
