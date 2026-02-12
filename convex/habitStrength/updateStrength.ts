@@ -15,9 +15,22 @@ export const updateHabitStrength = mutation({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error(
+        'Unauthenticated: Must be logged in to update habit strength'
+      );
+    }
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) {
       throw new Error('Habit not found');
+    }
+
+    // SEC-001: Ownership verification
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to update this habit');
     }
 
     if (!/^\d{4}-\d{2}-\d{2}$/.test(args.date)) {
@@ -25,6 +38,7 @@ export const updateHabitStrength = mutation({
     }
 
     const previousStrength = habit.strength ?? 0;
+    const userId = identity.subject;
 
     // Update tracking record
     const trackingForDay = await ctx.db
@@ -38,6 +52,7 @@ export const updateHabitStrength = mutation({
       if (trackingForDay.completed !== args.behaviorPerformed) {
         await ctx.db.patch(trackingForDay._id, {
           completed: args.behaviorPerformed,
+          ...(trackingForDay.userId ? {} : { userId }),
         });
       }
     } else {
@@ -45,6 +60,7 @@ export const updateHabitStrength = mutation({
         completed: args.behaviorPerformed,
         date: args.date,
         habitId: args.habitId,
+        userId,
       });
     }
 

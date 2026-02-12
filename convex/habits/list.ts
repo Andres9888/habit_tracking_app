@@ -16,16 +16,14 @@ export const list = query({
       return [];
     }
 
-    const habits = await ctx.db
+    const habitsForUser = await ctx.db
       .query('habits')
-      .filter((q) =>
-        q.and(
-          q.neq(q.field('archived'), true),
-          q.neq(q.field('paused'), true),
-          q.eq(q.field('userId'), identity.subject)
-        )
-      )
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .collect();
+
+    const habits = habitsForUser.filter(
+      (habit) => habit.archived !== true && habit.paused !== true
+    );
 
     // Sort by order field (ascending), use _creationTime as fallback
     const sortedHabits = habits.sort((a, b) => {

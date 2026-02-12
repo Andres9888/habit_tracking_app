@@ -15,7 +15,9 @@ export const toggleCompletion = mutation({
     // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new Error('Unauthenticated: Must be logged in to toggle completion');
+      throw new Error(
+        'Unauthenticated: Must be logged in to toggle completion'
+      );
     }
 
     if (!DATE_FORMAT_REGEX.test(args.date)) {
@@ -48,6 +50,7 @@ export const toggleCompletion = mutation({
         completed: true,
         date: args.date,
         habitId: args.habitId,
+        userId: identity.subject,
       });
       newCompletionState = true;
     }
