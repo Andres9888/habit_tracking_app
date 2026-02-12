@@ -160,7 +160,7 @@ describe('StatsNotesModal Token Migration - Phase 2', () => {
     });
 
     it('gray[400] is placeholder gray', () => {
-      expect(colors.gray[400]).toBe('#9CA3AF');
+      expect(colors.gray[400]).toBe('#6B7280');
     });
 
     it('gray[500] is stone-500 secondary text', () => {

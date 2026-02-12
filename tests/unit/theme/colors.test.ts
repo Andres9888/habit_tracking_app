@@ -70,7 +70,7 @@ describe('Theme Colors - Phase 1', () => {
       100: '#F3F4F6',
       200: '#E5E7EB',
       300: '#D1D5DB',
-      400: '#9CA3AF',
+      400: '#6B7280',
       500: '#6B7280',
       600: '#4B5563',
       700: '#374151',
@@ -142,8 +142,8 @@ describe('Theme Colors - Phase 1', () => {
       expect(colors.text.secondary).toBe('#6B7280');
     });
 
-    it('should match UX spec Text Tertiary (#9CA3AF)', () => {
-      expect(colors.text.tertiary).toBe('#9CA3AF');
+    it('should match UX spec Text Tertiary (#6B7280)', () => {
+      expect(colors.text.tertiary).toBe('#6B7280');
     });
 
     it('should match UX spec Text Inverse (#FFFFFF)', () => {

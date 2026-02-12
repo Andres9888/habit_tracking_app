@@ -92,7 +92,7 @@ export const TemplatesLinkSection = ({
           </View>
 
           {/* Chevron */}
-          <ChevronRight color='#9CA3AF' size={20} strokeWidth={2} />
+          <ChevronRight color='#6B7280' size={20} strokeWidth={2} />
         </Animated.View>
       </Pressable>
     </View>
