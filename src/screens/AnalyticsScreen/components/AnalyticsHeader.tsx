@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: colors.text.primary,
-    fontSize: 22,
-    fontWeight: '600',
+    fontSize: 28,
+    fontWeight: '700',
     letterSpacing: 0.35,
     lineHeight: 28,
   },

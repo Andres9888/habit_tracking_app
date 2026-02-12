@@ -3,7 +3,6 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { colors } from '../../theme/colors';
 import { spacing } from '../../theme/spacing';
 import { screenWidth, screenHeight } from './PremiumAnalyticsPaywall.constants';
 
@@ -14,7 +13,7 @@ export const styles = StyleSheet.create({
   },
   closeButton: {
     alignItems: 'center',
-    backgroundColor: colors.surface,
+    backgroundColor: 'rgba(255,255,255,0.9)',
     borderRadius: 16,
     height: 40,
     justifyContent: 'center',
