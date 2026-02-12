@@ -5,7 +5,7 @@
  * - Card surface: #FFFFFF | Border: 1px #E5E2DE
  * OPTIMIZED: SF Pro font, deeper shadows, proper contrast
  *
- * ACCESSIBILITY: Focus styles added per UI audit (2026-02-07)
+ * ACCESSIBILITY: Uses shared focus ring system (src/utils/accessibility/focusRing.ts)
  */
 
 import { StyleSheet } from 'react-native';
@@ -47,18 +47,13 @@ const coreStyles = StyleSheet.create({
     padding: spacing.md,
   },
   completedText: { opacity: 0.7 },
-  container: { minHeight: 76, marginVertical: spacing.xs, position: 'relative' },
+  container: {
+    marginVertical: spacing.xs,
+    minHeight: 76,
+    position: 'relative',
+  },
   content: { flex: 1, justifyContent: 'center', padding: spacing.base },
   disabled: { opacity: 0.5 },
-  // ACCESSIBILITY: Visible focus state for keyboard navigation (WCAG 2.4.7)
-  focused: {
-    borderColor: '#047857',
-    borderWidth: 2,
-    shadowColor: '#047857',
-    shadowOffset: { height: 0, width: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
   habitInfo: {
     alignItems: 'center',
     flex: 1,

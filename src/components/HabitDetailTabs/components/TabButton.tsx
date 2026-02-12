@@ -11,6 +11,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { useFocusRing } from '../../../utils/accessibility';
 
 import type { TabButtonProps } from '../HabitDetailTabs.types';
 
@@ -18,6 +19,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function TabButton({ isActive, label, onPress }: TabButtonProps) {
   const scale = useSharedValue(1);
+  const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -37,7 +39,8 @@ export function TabButton({ isActive, label, onPress }: TabButtonProps) {
       accessibilityRole='tab'
       accessibilityState={{ selected: isActive }}
       className='z-10 flex-1 items-center justify-center py-2.5'
-      style={animatedStyle}
+      {...focusHandlers}
+      style={[animatedStyle, focusStyle]}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

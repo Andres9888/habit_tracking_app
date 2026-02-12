@@ -10,6 +10,7 @@
 import { Pressable, type ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
+import { useFocusRing } from '../../utils/accessibility';
 import { ButtonContent } from './ButtonContent';
 import { styles } from './styles';
 import type { ButtonProps } from './types';
@@ -35,6 +36,10 @@ export function Button({
   const theme = useAppTheme();
   const { animatedStyle, handlePressIn, handlePressOut } = useButtonAnimation();
   const { config, variantStyles } = useButtonConfig(size, variant);
+  const { focusStyle, focusHandlers } = useFocusRing({
+    compact: size === 'small' || variant === 'icon',
+    disabled: disabled || loading,
+  });
 
   const disabledStyles: ViewStyle = disabled || loading ? { opacity: 0.5 } : {};
 
@@ -44,6 +49,7 @@ export function Button({
       accessibilityRole='button'
       accessibilityState={{ disabled: disabled || loading }}
       disabled={disabled || loading}
+      {...focusHandlers}
       style={[
         animatedStyle,
         styles.base,
@@ -59,6 +65,7 @@ export function Button({
         disabledStyles,
         fullWidth && styles.fullWidth,
         variant !== 'icon' && theme.custom.shadows.card,
+        focusStyle,
         style,
       ]}
       onPress={disabled || loading ? undefined : onPress}
