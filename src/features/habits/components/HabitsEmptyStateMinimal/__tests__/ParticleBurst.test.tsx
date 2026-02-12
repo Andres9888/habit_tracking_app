@@ -174,7 +174,7 @@ describe('ParticleBurst', () => {
     });
 
     it('should have correct default duration', () => {
-      expect(PARTICLE_BURST.duration).toBe(800);
+      expect(PARTICLE_BURST.duration).toBe(500);
     });
 
     it('should have correct default distance', () => {

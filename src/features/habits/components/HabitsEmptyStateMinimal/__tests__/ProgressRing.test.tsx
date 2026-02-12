@@ -276,7 +276,7 @@ describe('ProgressRing', () => {
 
   describe('Animation Constants', () => {
     it('should have correct default duration', () => {
-      expect(PROGRESS_RING.duration).toBe(1800);
+      expect(PROGRESS_RING.duration).toBe(600);
     });
 
     it('should have correct default size', () => {

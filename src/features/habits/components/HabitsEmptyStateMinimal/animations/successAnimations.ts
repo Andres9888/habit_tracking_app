@@ -9,7 +9,7 @@
  */
 export const CONFETTI_CONFIG = {
   colors: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#FCD34D', '#F59E0B'],
-  duration: 1500,
+  duration: 900,
   particleCount: 20,
 } as const;
 
@@ -19,7 +19,7 @@ export const CONFETTI_CONFIG = {
  */
 export const PROGRESS_RING = {
   circumference: 339.292,
-  duration: 1800,
+  duration: 600,
   // matches auto-transition delay
   size: 120,
   strokeWidth: 4, // 2 * PI * 54 (radius)
@@ -33,7 +33,7 @@ export const PARTICLE_BURST = {
   colors: ['#10B981', '#FBBF24', '#8B5CF6', '#EC4899', '#3B82F6'],
   count: 8,
   distance: 60,
-  duration: 800,
+  duration: 500,
   staggerDelay: 25,
 } as const;
 
@@ -57,16 +57,16 @@ export const EXIT_TRANSITION = {
   // Content fade out (faster than icon)
   content: {
     delay: 0,
-    duration: 250,
+    duration: 180,
   },
 
   // Total duration of exit animation
-  duration: 500,
+  duration: 350,
 
   // Icon morph animation
   icon: {
     // Shrink
-    duration: 400,
+    duration: 280,
 
     // Move upward
     scale: 0.4,
@@ -74,5 +74,5 @@ export const EXIT_TRANSITION = {
   },
 
   // Delay before triggering list transition
-  onCompleteDelay: 300,
+  onCompleteDelay: 150,
 } as const;
