@@ -26,7 +26,7 @@ export const colors = {
   // Neutral Grays (iOS-inspired)
   gray: {
     50: '#faf9f7', // Background, cards in dark mode
-    100: '#faf9f7', // Card backgrounds
+    100: '#f5f5f4', // Card backgrounds
     200: '#E5E7EB', // Borders, dividers
     300: '#D1D5DB', // Disabled elements
     400: '#9CA3AF', // Placeholder text

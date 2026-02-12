@@ -17,12 +17,12 @@ export interface SettingsRowColors {
 
 export const STANDARD_COLORS: SettingsRowColors = {
   background: colors.light.card,
-  border: colors.gray[100],
+  border: colors.gray[200],
   chevron: colors.gray[500],
   label: colors.text.primary,
   switchThumb: colors.text.inverse,
   switchTrackFalse: colors.gray[300],
-  switchTrackTrue: colors.text.primary,
+  switchTrackTrue: colors.primary[500],
   value: colors.gray[500],
 };
 

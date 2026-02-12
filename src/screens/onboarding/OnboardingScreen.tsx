@@ -7,8 +7,11 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Haptics from 'expo-haptics';
+import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   Pressable,
@@ -29,6 +32,7 @@ import Animated, {
   interpolate,
   runOnJS,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
@@ -191,18 +195,29 @@ interface OnboardingScreenProps {
 
 export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
+  const insets = useSafeAreaInsets();
 
   const handleComplete = useCallback(async () => {
-    await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
-    onComplete();
-  }, [onComplete]);
+    if (isLoading) return;
+    setIsLoading(true);
+    void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
+    try {
+      await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
+      onComplete();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [onComplete, isLoading]);
 
   const handleSkip = useCallback(() => {
-    handleComplete();
+    void Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    void handleComplete();
   }, [handleComplete]);
 
   const handleNext = useCallback(() => {
+    void Haptics.impactAsync(ImpactFeedbackStyle.Light);
     if (currentIndex < PAGES.length - 1) {
       flatListRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
     }
@@ -246,8 +261,16 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   return (
     <View style={styles.container}>
       {/* Skip button */}
-      <Animated.View entering={FadeIn.delay(600)} style={styles.skipContainer}>
-        <Pressable onPress={handleSkip} hitSlop={16}>
+      <Animated.View
+        entering={FadeIn.delay(600)}
+        style={[styles.skipContainer, { top: insets.top + 12 }]}
+      >
+        <Pressable
+          onPress={handleSkip}
+          hitSlop={16}
+          accessibilityRole="button"
+          accessibilityLabel="Skip onboarding"
+        >
           <Text style={styles.skipText}>Skip</Text>
         </Pressable>
       </Animated.View>
@@ -278,14 +301,26 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         {isLastPage ? (
           <Animated.View entering={FadeInDown.springify().damping(18)}>
             <Pressable
-              style={styles.ctaButton}
-              onPress={handleComplete}
+              style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
+              onPress={() => void handleComplete()}
+              disabled={isLoading}
+              accessibilityRole="button"
+              accessibilityLabel="Get started building your first habit"
             >
-              <Text style={styles.ctaText}>Let's Build Your First Habit →</Text>
+              {isLoading ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.ctaText}>Let's Build Your First Habit →</Text>
+              )}
             </Pressable>
           </Animated.View>
         ) : (
-          <Pressable style={styles.nextButton} onPress={handleNext}>
+          <Pressable
+            style={styles.nextButton}
+            onPress={handleNext}
+            accessibilityRole="button"
+            accessibilityLabel="Next onboarding page"
+          >
             <Text style={styles.nextText}>Next</Text>
           </Pressable>
         )}
@@ -299,11 +334,10 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#faf9f7',
   },
   skipContainer: {
     position: 'absolute',
-    top: 60,
     right: 24,
     zIndex: 10,
   },
@@ -380,6 +414,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 16,
     elevation: 4,
+  },
+  ctaButtonDisabled: {
+    opacity: 0.7,
   },
   ctaText: {
     fontSize: 17,
