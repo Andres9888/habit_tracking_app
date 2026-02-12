@@ -104,7 +104,7 @@ export const COLORS = {
   TEXT_SECONDARY: '#78716c',
 
   // stone-500
-  TEXT_TERTIARY: '#9ca3af',
+  TEXT_TERTIARY: '#6B7280',
   // stone-50
   /** Today cell ring color (will use habit color at runtime) */
   TODAY_RING_WIDTH: 2, // gray-400

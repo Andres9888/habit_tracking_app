@@ -29,7 +29,7 @@ export const colors = {
     100: '#f5f5f4', // Card backgrounds
     200: '#E5E7EB', // Borders, dividers
     300: '#D1D5DB', // Disabled elements
-    400: '#9CA3AF', // Placeholder text
+    400: '#6B7280', // Placeholder text (WCAG AA compliant)
     500: '#78716c', // Secondary text (stone-500)
     600: '#4B5563', // Body text
     700: '#374151', // Headings
@@ -102,7 +102,7 @@ export const colors = {
     // Gray-800 - Headings and important text
     secondary: '#78716c',
     // Gray-500 - Secondary text, labels
-    tertiary: '#9CA3AF', // White text on dark backgrounds
+    tertiary: '#6B7280', // White text on dark backgrounds
   },
 
   // Matches primary green

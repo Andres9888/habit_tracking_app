@@ -25,7 +25,7 @@ export const NoStreakState = React.memo(function NoStreakState({
     >
       <View style={styles.noStreakContainer}>
         <Ionicons
-          color='#9ca3af'
+          color='#6B7280'
           name='arrow-forward-circle-outline'
           size={24}
           style={styles.noStreakIcon}
