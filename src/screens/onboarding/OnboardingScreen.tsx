@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
   },
   strengthLabel: {
     fontSize: 13,
-    color: '#9CA3AF',
+    color: '#6B7280',
     fontWeight: '500',
   },
   strengthLabelActive: {

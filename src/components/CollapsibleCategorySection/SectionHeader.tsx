@@ -93,7 +93,7 @@ export function SectionHeader({
 
         <Animated.View style={[styles.chevronContainer, chevronAnimatedStyle]}>
           <ChevronDown
-            color={isExpanded ? colors.bgSelected : '#9ca3af'}
+            color={isExpanded ? colors.bgSelected : '#6B7280'}
             size={20}
             strokeWidth={2.5}
           />
