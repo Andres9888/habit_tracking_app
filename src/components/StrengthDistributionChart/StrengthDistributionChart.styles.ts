@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
   centerLabelText: {
     ...typography.bodySmall,
     color: colors.text.secondary,
-    marginTop: spacing.xxs,
+    marginTop: spacing.xs,
   },
   centerLabelValue: {
     ...typography.h1,

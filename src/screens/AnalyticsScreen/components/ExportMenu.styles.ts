@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
   exportMenuItemDescription: {
     ...typography.caption,
     color: colors.text.secondary,
-    marginTop: spacing.xxs,
+    marginTop: spacing.xs,
   },
   exportMenuItemTitle: {
     ...typography.bodyBold,

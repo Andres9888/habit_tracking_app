@@ -34,12 +34,6 @@ export const spacing = {
   xl: 32,
 
   xs: 4,
-
-  // Screen margins, major sections
-  xxl: 48,
-
-  // Tight spacing, icon padding
-  xxs: 4, // Page sections
 } as const;
 
 /**
@@ -142,11 +136,11 @@ export const shadows = {
     shadowRadius: 16,
   },
   modal: {
-    elevation: 4,
+    elevation: 6,
     shadowColor: '#1c1917',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    shadowOffset: { height: 8, width: 0 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
   },
   subtle: {
     elevation: 1,

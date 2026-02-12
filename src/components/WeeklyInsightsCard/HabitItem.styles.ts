@@ -40,7 +40,7 @@ export const habitItemStyles = StyleSheet.create({
   habitName: {
     ...typography.body,
     color: colors.text.primary,
-    marginBottom: spacing.xxs,
+    marginBottom: spacing.xs,
   },
   habitStats: {
     ...typography.caption,

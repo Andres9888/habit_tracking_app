@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
   tooltipDate: {
     ...typography.caption,
     color: colors.text.secondary,
-    marginBottom: spacing.xxs,
+    marginBottom: spacing.xs,
   },
   tooltipValue: {
     ...typography.bodyBold,
