@@ -32,7 +32,7 @@ export function TemplatesPeekCard({ onPress }: TemplatesPeekCardProps) {
   return (
     <AnimatedPressable
       accessibilityHint='Preview expert-designed habit journeys'
-      accessibilityLabel='Browse templates'
+      accessibilityLabel='Import habits'
       accessibilityRole='button'
       className={clsx(BASE_CARD_CLASS, 'gap-4')}
       entering={FadeInDown.delay(80).springify().damping(18)}

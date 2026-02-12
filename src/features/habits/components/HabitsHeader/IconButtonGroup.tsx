@@ -47,8 +47,8 @@ export function IconButtonGroup({
       <Animated.View style={templatesAnimatedStyle}>
         <View style={{ position: 'relative' }}>
           <Pressable
-            accessibilityHint='Opens screen with pre-made habit templates'
-            accessibilityLabel='Browse templates'
+            accessibilityHint='Browse habit templates to add'
+            accessibilityLabel='Browse habit templates'
             accessibilityRole='button'
             className='h-11 w-11 items-center justify-center rounded-full bg-violet-50'
             style={({ pressed }) => ({
