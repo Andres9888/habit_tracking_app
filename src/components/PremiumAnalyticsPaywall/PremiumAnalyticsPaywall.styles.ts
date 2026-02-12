@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   content: {
-    paddingBottom: spacing.xxl,
+    paddingBottom: spacing['2xl'],
     paddingHorizontal: spacing.lg,
   },
   featuresList: {

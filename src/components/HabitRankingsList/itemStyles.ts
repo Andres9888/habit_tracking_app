@@ -84,7 +84,7 @@ export const itemStyles = StyleSheet.create({
   statText: {
     ...typography.caption,
     color: colors.text.tertiary,
-    marginLeft: spacing.xxs,
+    marginLeft: spacing.xs,
   },
   strengthPercentage: {
     ...typography.h3,

@@ -62,6 +62,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '600',
     lineHeight: 22,
-    marginBottom: spacing.xxs,
+    marginBottom: spacing.xs,
   },
 });
