@@ -5,8 +5,7 @@ import { DATE_FORMAT_REGEX } from './helpers';
 /**
  * Get completion status for a habit on a specific date.
  *
- * Returns true if a tracking record exists (habit is completed),
- * false if no record exists (habit is not completed).
+ * Returns true only if a tracking record exists AND completed is true.
  */
 export const getCompletionStatus = query({
   args: {
@@ -14,8 +13,27 @@ export const getCompletionStatus = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error(
+        'Unauthenticated: Must be logged in to check completion status'
+      );
+    }
+
     if (!DATE_FORMAT_REGEX.test(args.date)) {
       throw new Error('Invalid date format. Expected YYYY-MM-DD');
+    }
+
+    // SEC-001: Ownership verification
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+    if (habit.userId !== identity.subject) {
+      throw new Error(
+        'Not authorized to view completion status for this habit'
+      );
     }
 
     const existingRecord = await ctx.db
@@ -25,7 +43,7 @@ export const getCompletionStatus = query({
       )
       .unique();
 
-    return existingRecord !== null;
+    return existingRecord?.completed ?? false;
   },
   returns: v.boolean(),
 });

@@ -15,14 +15,14 @@ import { internal } from '../_generated/api';
 import { verifyRevenueCatSignature } from './revenuecatSignature';
 
 // RevenueCat webhook event types we handle
-const GRANT_EVENTS = [
+const GRANT_EVENTS = new Set([
   'INITIAL_PURCHASE',
   'RENEWAL',
   'PRODUCT_CHANGE',
   'UNCANCELLATION',
-];
-const REVOKE_EVENTS = ['CANCELLATION', 'EXPIRATION'];
-const BILLING_EVENTS = ['BILLING_ISSUE'];
+]);
+const REVOKE_EVENTS = new Set(['CANCELLATION', 'EXPIRATION']);
+const BILLING_EVENTS = new Set(['BILLING_ISSUE']);
 
 /**
  * Main webhook handler for RevenueCat events
@@ -52,22 +52,22 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     console.log('[RevenueCat] Processing event:', eventType, 'for:', appUserId);
 
     // Route to appropriate handler based on event type
-    if (GRANT_EVENTS.includes(eventType)) {
+    if (GRANT_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.grantPremium, {
         clerkId: appUserId,
-        revenueCatId: event.app_user_id,
-        productId: event.product_id,
-        expiresAt: event.expiration_at_ms,
-        trialEndsAt: event.trial_end_at_ms,
-        isTrialing: event.is_trial_period === true,
         eventType,
+        expiresAt: event.expiration_at_ms,
+        isTrialing: event.is_trial_period === true,
+        productId: event.product_id,
+        revenueCatId: event.app_user_id,
+        trialEndsAt: event.trial_end_at_ms,
       });
-    } else if (REVOKE_EVENTS.includes(eventType)) {
+    } else if (REVOKE_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.revokePremium, {
         clerkId: appUserId,
         eventType,
       });
-    } else if (BILLING_EVENTS.includes(eventType)) {
+    } else if (BILLING_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.setBillingIssue, {
         clerkId: appUserId,
       });
@@ -78,15 +78,15 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
 
     // Always return 200 to acknowledge receipt
     return new Response(JSON.stringify({ received: true }), {
-      status: 200,
       headers: { 'Content-Type': 'application/json' },
+      status: 200,
     });
   } catch (error) {
     console.error('[RevenueCat] Webhook error:', error);
-    // Return 200 to prevent retries for malformed requests
+    // Return 500 so RevenueCat retries failed events
     return new Response(JSON.stringify({ error: 'Processing error' }), {
-      status: 200,
       headers: { 'Content-Type': 'application/json' },
+      status: 500,
     });
   }
 });

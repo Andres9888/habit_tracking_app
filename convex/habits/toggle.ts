@@ -84,15 +84,11 @@ export const recalculateStreakAndStrength = internalMutation({
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
 
-    let maxTrackingDateKey = '';
+    let maxTrackingDateKey = args.date;
     for (const record of allTracking) {
-      maxTrackingDateKey = maxTrackingDateKey
-        ? maxDateKey(maxTrackingDateKey, record.date)
-        : record.date;
+      maxTrackingDateKey = maxDateKey(maxTrackingDateKey, record.date);
     }
-    const evaluationDateKey = maxTrackingDateKey
-      ? maxDateKey(getTodayDateKey(), maxTrackingDateKey)
-      : getTodayDateKey();
+    const evaluationDateKey = maxDateKey(getTodayDateKey(), maxTrackingDateKey);
 
     const snapshot = calculateMomentumStrengthSnapshot({
       habitCreatedAt: habit.createdAt,

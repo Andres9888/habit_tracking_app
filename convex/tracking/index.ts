@@ -8,5 +8,5 @@ export {
   maxDateKey,
 } from './helpers';
 export { getCompletionStatus } from './getCompletionStatus';
-export { toggleCompletion } from './toggleCompletion';
+// toggleCompletion removed — use convex/habits/toggle.ts (api.habits.toggleHabit) instead
 export { updateHabitStrength } from './strengthUpdater';
