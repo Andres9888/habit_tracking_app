@@ -61,7 +61,7 @@ export const toggleHabit = mutation({
     await ctx.scheduler.runAfter(
       0,
       internal.habits.toggle.recalculateStreakAndStrength,
-      { habitId: args.habitId }
+      { date: args.date, habitId: args.habitId }
     );
 
     return null;
@@ -74,7 +74,7 @@ export const toggleHabit = mutation({
  * Scheduled asynchronously after toggle to keep the user-facing mutation fast.
  */
 export const recalculateStreakAndStrength = internalMutation({
-  args: { habitId: v.id('habits') },
+  args: { date: v.string(), habitId: v.id('habits') },
   handler: async (ctx, args) => {
     const habit = await ctx.db.get(args.habitId);
     if (!habit) return;
