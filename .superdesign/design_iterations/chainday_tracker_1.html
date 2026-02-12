@@ -860,6 +860,28 @@
         align-items: center;
         gap: 8px;
       }
+      .section-collapse-btn {
+        background: none;
+        border: none;
+        color: var(--fg-dim);
+        cursor: pointer;
+        font-size: 12px;
+        padding: 2px 4px;
+        transition: transform 0.2s;
+        margin-left: auto;
+      }
+      .section-body {
+        transition:
+          max-height 0.3s ease,
+          opacity 0.2s ease;
+        overflow: hidden;
+      }
+      .section-body.collapsed {
+        max-height: 0 !important;
+        opacity: 0;
+        margin: 0;
+        padding: 0;
+      }
       .today-greeting {
         font-size: 22px;
         font-weight: 700;
@@ -3653,6 +3675,12 @@
           description:
             'Peterson: inauthenticity splits your psyche and makes you sick',
         },
+        {
+          id: 'sp-isolation',
+          title: 'No meaningful social contact today',
+          description:
+            'Anderson: 2 weeks isolation increases tachykinins → aggression, fear, paranoia',
+        },
       ];
 
       // =========================================
@@ -3916,6 +3944,33 @@
         var div = document.createElement('div');
         div.textContent = str;
         return div.textContent;
+      }
+
+      // Collapsible section helper
+      var sectionCollapseState = JSON.parse(
+        localStorage.getItem('telos-collapse') || '{}'
+      );
+      function makeCollapsible(titleEl, bodyEl, sectionId) {
+        var isCollapsed = sectionCollapseState[sectionId] || false;
+        var btn = document.createElement('button');
+        btn.className = 'section-collapse-btn';
+        btn.textContent = isCollapsed ? '\u25b6' : '\u25bc';
+        btn.title = isCollapsed ? 'Expand' : 'Collapse';
+        btn.onclick = function (e) {
+          e.stopPropagation();
+          isCollapsed = !isCollapsed;
+          sectionCollapseState[sectionId] = isCollapsed;
+          localStorage.setItem(
+            'telos-collapse',
+            JSON.stringify(sectionCollapseState)
+          );
+          btn.textContent = isCollapsed ? '\u25b6' : '\u25bc';
+          btn.title = isCollapsed ? 'Expand' : 'Collapse';
+          if (isCollapsed) bodyEl.classList.add('collapsed');
+          else bodyEl.classList.remove('collapsed');
+        };
+        titleEl.appendChild(btn);
+        if (isCollapsed) bodyEl.classList.add('collapsed');
       }
 
       var DEV_CATS = [
@@ -6448,18 +6503,30 @@
             ok: '',
           };
 
-          var gRow = el('div', {
-            className: 'flex items-center gap-2',
-            style: 'padding:3px 0;border-bottom:1px solid var(--bg-muted)',
+          // Progress: count tasks in this goal's category
+          var catTasks = tasks.filter(function (t) {
+            return t.category === g.category;
           });
-          gRow.appendChild(
+          var catDone = catTasks.filter(function (t) {
+            return t.status === 'done';
+          }).length;
+          var catPct =
+            catTasks.length > 0
+              ? Math.round((catDone / catTasks.length) * 100)
+              : 0;
+
+          var gRow = el('div', {
+            style: 'padding:4px 0;border-bottom:1px solid var(--bg-muted)',
+          });
+          var gTopRow = el('div', { className: 'flex items-center gap-2' });
+          gTopRow.appendChild(
             el('i', {
               'data-lucide': g.icon,
               className: 'w-3 h-3',
               style: 'color:' + urgColors[urgency],
             })
           );
-          gRow.appendChild(
+          gTopRow.appendChild(
             el(
               'span',
               { className: 'text-[11px] flex-1', style: 'color:var(--fg)' },
@@ -6467,7 +6534,7 @@
             )
           );
           if (urgLabels[urgency]) {
-            gRow.appendChild(
+            gTopRow.appendChild(
               el(
                 'span',
                 {
@@ -6486,7 +6553,7 @@
             daysLeft <= 0
               ? Math.abs(daysLeft) + 'd overdue'
               : daysLeft + 'd left';
-          gRow.appendChild(
+          gTopRow.appendChild(
             el(
               'span',
               {
@@ -6499,6 +6566,47 @@
               daysText
             )
           );
+          gRow.appendChild(gTopRow);
+
+          // Progress bar
+          if (catTasks.length > 0) {
+            var gProgRow = el('div', {
+              className: 'flex items-center gap-2',
+              style: 'margin-top:2px;padding-left:20px',
+            });
+            var gBarOuter = el('div', {
+              style:
+                'flex:1;height:4px;border-radius:2px;background:var(--bg-muted);overflow:hidden',
+            });
+            var gBarColor =
+              catPct >= 100
+                ? '#22c55e'
+                : catPct >= 50
+                  ? '#3b82f6'
+                  : urgColors[urgency];
+            var gBarInner = el('div', {
+              style:
+                'height:100%;border-radius:2px;width:' +
+                catPct +
+                '%;background:' +
+                gBarColor +
+                ';transition:width 0.5s',
+            });
+            gBarOuter.appendChild(gBarInner);
+            gProgRow.appendChild(gBarOuter);
+            gProgRow.appendChild(
+              el(
+                'span',
+                {
+                  className: 'text-[9px] font-mono',
+                  style: 'color:var(--fg-dim);min-width:44px;text-align:right',
+                },
+                catDone + '/' + catTasks.length + ' ' + catPct + '%'
+              )
+            );
+            gRow.appendChild(gProgRow);
+          }
+
           goalSection.appendChild(gRow);
         });
 
@@ -6682,6 +6790,31 @@
           {
             text: "You're not behind on hours. You need more reps per session. Density of iteration beats duration.",
             src: 'Huberman Lab — Skill Acquisition',
+          },
+          // Dr. David Anderson — Biology of Aggression, Mating & Arousal (Huberman Lab #89)
+          {
+            text: 'Your conscious feelings are just the tip of the iceberg. The real emotional machinery operates below awareness. Notice behavioral changes as signals.',
+            src: 'Dr. David Anderson — Caltech',
+          },
+          {
+            text: 'Two weeks of social isolation is enough to change your brain chemistry. Prioritize social connection as brain maintenance, not luxury.',
+            src: 'Dr. David Anderson — Tachykinin Research',
+          },
+          {
+            text: 'Aggression is self-reinforcing. Every argument you win physically strengthens the circuits that make future aggression more likely. Choose your battles.',
+            src: 'Dr. David Anderson — Caltech',
+          },
+          {
+            text: 'Emotions are a volume dial, not a light switch. Catch a destructive state at 2/10 and intervene before it reaches 8/10.',
+            src: 'Dr. David Anderson — Line Attractor Model',
+          },
+          {
+            text: 'Fear and aggression are neural neighbors. When you feel angry, ask: is this actually fear wearing a mask?',
+            src: 'Dr. David Anderson — Huberman Lab #89',
+          },
+          {
+            text: 'The body knows before you do. Gut tension, chest tightness, flushing — these are the earliest signals of emotional states. Train body awareness.',
+            src: 'Dr. David Anderson — Somatic Markers',
           },
         ];
         var dayOfYear = Math.floor(
@@ -6973,6 +7106,7 @@
         );
         mrHeader.appendChild(mrTitle);
         mrSection.appendChild(mrHeader);
+        var mrBody = el('div', { className: 'section-body' });
 
         // Wake-up checklist
         var wakeLabel = el(
@@ -6983,7 +7117,7 @@
           },
           'On Waking'
         );
-        mrSection.appendChild(wakeLabel);
+        mrBody.appendChild(wakeLabel);
 
         MORNING_ITEMS.filter(function (m) {
           return m.phase === 'wake';
@@ -7028,7 +7162,7 @@
             renderToday();
             lucide.createIcons();
           };
-          mrSection.appendChild(row);
+          mrBody.appendChild(row);
         });
 
         // Gratitude section (3-2-1)
@@ -7041,7 +7175,7 @@
           },
           '3-2-1 Gratitude'
         );
-        mrSection.appendChild(gratLabel);
+        mrBody.appendChild(gratLabel);
 
         MORNING_ITEMS.filter(function (m) {
           return m.phase === 'gratitude';
@@ -7098,7 +7232,7 @@
             };
             row.appendChild(input);
           }
-          mrSection.appendChild(row);
+          mrBody.appendChild(row);
         });
 
         // Daily intention
@@ -7111,7 +7245,7 @@
           },
           'Daily Intention'
         );
-        mrSection.appendChild(intLabel);
+        mrBody.appendChild(intLabel);
 
         MORNING_ITEMS.filter(function (m) {
           return m.phase === 'intention';
@@ -7168,7 +7302,7 @@
             };
             row.appendChild(input);
           }
-          mrSection.appendChild(row);
+          mrBody.appendChild(row);
         });
 
         // Morning completion status
@@ -7195,10 +7329,239 @@
             },
             '\u2728 Morning routine complete. You are ready.'
           );
-          mrSection.appendChild(doneMsg);
+          mrBody.appendChild(doneMsg);
         }
 
+        mrSection.appendChild(mrBody);
+        makeCollapsible(mrTitle, mrBody, 'morning-routine');
         container.appendChild(mrSection);
+
+        // --- MOOD & ENERGY TRACKER ---
+        var moodLog = JSON.parse(localStorage.getItem('telos-mood') || '{}');
+        var todayMood = moodLog[key] || {};
+        var MOOD_LEVELS = [
+          { val: 1, emoji: '\ud83d\ude29', label: 'Awful' },
+          { val: 2, emoji: '\ud83d\ude1e', label: 'Low' },
+          { val: 3, emoji: '\ud83d\ude10', label: 'Okay' },
+          { val: 4, emoji: '\ud83d\ude0a', label: 'Good' },
+          { val: 5, emoji: '\ud83d\udd25', label: 'Great' },
+        ];
+        var ENERGY_LEVELS = [
+          { val: 1, emoji: '\ud83e\udeb6', label: 'Dead' },
+          { val: 2, emoji: '\ud83d\ude34', label: 'Low' },
+          { val: 3, emoji: '\u26a1', label: 'Steady' },
+          { val: 4, emoji: '\ud83d\udcaa', label: 'Strong' },
+          { val: 5, emoji: '\ud83d\ude80', label: 'Peak' },
+        ];
+
+        var meSection = el('div', {
+          className: 'today-section',
+          style:
+            'border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;background:var(--bg-card)',
+        });
+        var meHeader = el('div', { className: 'flex items-center gap-2 mb-2' });
+        meHeader.appendChild(
+          el('i', {
+            'data-lucide': 'heart-pulse',
+            className: 'w-4 h-4',
+            style: 'color:#ec4899',
+          })
+        );
+        var meTitleEl = el('div', { className: 'flex items-center gap-2' });
+        meTitleEl.appendChild(
+          el(
+            'span',
+            { className: 'text-sm font-semibold', style: 'color:#ec4899' },
+            'Mood & Energy'
+          )
+        );
+        if (todayMood.mood && todayMood.energy) {
+          var moodObj = MOOD_LEVELS.find(function (m) {
+            return m.val === todayMood.mood;
+          });
+          var energyObj = ENERGY_LEVELS.find(function (e) {
+            return e.val === todayMood.energy;
+          });
+          meTitleEl.appendChild(
+            el(
+              'span',
+              { className: 'text-[10px]', style: 'color:var(--fg-dim)' },
+              (moodObj ? moodObj.emoji : '') +
+                ' ' +
+                (energyObj ? energyObj.emoji : '')
+            )
+          );
+        }
+        meHeader.appendChild(meTitleEl);
+        meSection.appendChild(meHeader);
+        var meBody = el('div', { className: 'section-body' });
+
+        // Mood row
+        var moodRow = el('div', { style: 'margin-bottom:8px' });
+        moodRow.appendChild(
+          el(
+            'div',
+            {
+              className: 'text-[9px] font-bold uppercase tracking-wider mb-1',
+              style: 'color:var(--fg-dim)',
+            },
+            'Mood'
+          )
+        );
+        var moodBtns = el('div', { className: 'flex gap-2' });
+        MOOD_LEVELS.forEach(function (level) {
+          var isActive = todayMood.mood === level.val;
+          var btn = el('button', {
+            style:
+              'display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 8px;border-radius:6px;border:2px solid ' +
+              (isActive ? '#ec4899' : 'var(--border)') +
+              ';background:' +
+              (isActive ? 'rgba(236,72,153,0.1)' : 'var(--bg-muted)') +
+              ';cursor:pointer;transition:all 0.2s;flex:1',
+          });
+          btn.appendChild(el('span', { style: 'font-size:16px' }, level.emoji));
+          btn.appendChild(
+            el(
+              'span',
+              {
+                className: 'text-[8px]',
+                style: 'color:' + (isActive ? '#ec4899' : 'var(--fg-dim)'),
+              },
+              level.label
+            )
+          );
+          btn.onclick = function () {
+            todayMood.mood = level.val;
+            moodLog[key] = todayMood;
+            localStorage.setItem('telos-mood', JSON.stringify(moodLog));
+            renderToday();
+            lucide.createIcons();
+          };
+          moodBtns.appendChild(btn);
+        });
+        moodRow.appendChild(moodBtns);
+        meBody.appendChild(moodRow);
+
+        // Energy row
+        var energyRow = el('div', { style: 'margin-bottom:8px' });
+        energyRow.appendChild(
+          el(
+            'div',
+            {
+              className: 'text-[9px] font-bold uppercase tracking-wider mb-1',
+              style: 'color:var(--fg-dim)',
+            },
+            'Energy'
+          )
+        );
+        var energyBtns = el('div', { className: 'flex gap-2' });
+        ENERGY_LEVELS.forEach(function (level) {
+          var isActive = todayMood.energy === level.val;
+          var btn = el('button', {
+            style:
+              'display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 8px;border-radius:6px;border:2px solid ' +
+              (isActive ? '#f59e0b' : 'var(--border)') +
+              ';background:' +
+              (isActive ? 'rgba(245,158,11,0.1)' : 'var(--bg-muted)') +
+              ';cursor:pointer;transition:all 0.2s;flex:1',
+          });
+          btn.appendChild(el('span', { style: 'font-size:16px' }, level.emoji));
+          btn.appendChild(
+            el(
+              'span',
+              {
+                className: 'text-[8px]',
+                style: 'color:' + (isActive ? '#f59e0b' : 'var(--fg-dim)'),
+              },
+              level.label
+            )
+          );
+          btn.onclick = function () {
+            todayMood.energy = level.val;
+            moodLog[key] = todayMood;
+            localStorage.setItem('telos-mood', JSON.stringify(moodLog));
+            renderToday();
+            lucide.createIcons();
+          };
+          energyBtns.appendChild(btn);
+        });
+        energyRow.appendChild(energyBtns);
+        meBody.appendChild(energyRow);
+
+        // 7-day sparkline
+        var sparkRow = el('div', {
+          className: 'flex items-center gap-2',
+          style: 'padding-top:4px',
+        });
+        sparkRow.appendChild(
+          el(
+            'span',
+            { className: 'text-[9px]', style: 'color:var(--fg-dim)' },
+            '7-day:'
+          )
+        );
+        var sparkDots = el('div', {
+          className: 'flex gap-1 items-end',
+          style: 'flex:1;height:20px',
+        });
+        for (var sd = 6; sd >= 0; sd--) {
+          var sparkDate = new Date();
+          sparkDate.setDate(sparkDate.getDate() - sd);
+          var sparkKey =
+            sparkDate.getFullYear() +
+            '-' +
+            String(sparkDate.getMonth() + 1).padStart(2, '0') +
+            '-' +
+            String(sparkDate.getDate()).padStart(2, '0');
+          var dayData = moodLog[sparkKey] || {};
+          var moodH = dayData.mood ? (dayData.mood / 5) * 18 : 2;
+          var energyH = dayData.energy ? (dayData.energy / 5) * 18 : 2;
+          var dayCol = el('div', {
+            className: 'flex gap-px',
+            style: 'align-items:flex-end',
+          });
+          dayCol.appendChild(
+            el('div', {
+              style:
+                'width:4px;height:' +
+                moodH +
+                'px;border-radius:1px;background:' +
+                (dayData.mood ? '#ec4899' : 'var(--border)'),
+              title: sparkKey + ' mood: ' + (dayData.mood || '-'),
+            })
+          );
+          dayCol.appendChild(
+            el('div', {
+              style:
+                'width:4px;height:' +
+                energyH +
+                'px;border-radius:1px;background:' +
+                (dayData.energy ? '#f59e0b' : 'var(--border)'),
+              title: sparkKey + ' energy: ' + (dayData.energy || '-'),
+            })
+          );
+          sparkDots.appendChild(dayCol);
+        }
+        sparkRow.appendChild(sparkDots);
+        sparkRow.appendChild(
+          el(
+            'span',
+            { className: 'text-[8px]', style: 'color:#ec4899' },
+            'mood'
+          )
+        );
+        sparkRow.appendChild(
+          el(
+            'span',
+            { className: 'text-[8px]', style: 'color:#f59e0b' },
+            'energy'
+          )
+        );
+        meBody.appendChild(sparkRow);
+
+        meSection.appendChild(meBody);
+        makeCollapsible(meTitleEl, meBody, 'mood-energy');
+        container.appendChild(meSection);
 
         // --- 5 NON-NEGOTIABLES ---
         var nnSection = el('div', { className: 'today-section' });
@@ -7213,6 +7576,7 @@
           el('span', {}, '5 Non-Negotiables (' + todayScore + '/5)')
         );
         nnSection.appendChild(nnTitle);
+        var nnBody = el('div', { className: 'section-body' });
 
         NON_NEGOTIABLES.forEach(function (nn) {
           var row = el('div', { className: 'commitment-row' });
@@ -7296,9 +7660,176 @@
               catLabel(nn.category)
             )
           );
-          nnSection.appendChild(row);
+          nnBody.appendChild(row);
         });
+        nnSection.appendChild(nnBody);
+        makeCollapsible(nnTitle, nnBody, 'non-negotiables');
         container.appendChild(nnSection);
+
+        // --- DAILY HABITS TRACKER ---
+        var habitLog = JSON.parse(localStorage.getItem('telos-habits') || '{}');
+        var todayHabits = habitLog[key] || {};
+        var habitsDone = HABITS.filter(function (h) {
+          return todayHabits[h.id];
+        }).length;
+
+        var habSection = el('div', {
+          className: 'today-section',
+          style:
+            'border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;background:var(--bg-card)',
+        });
+        var habHeader = el('div', {
+          className: 'flex items-center justify-between mb-2',
+        });
+        var habTitle = el('div', { className: 'flex items-center gap-2' });
+        habTitle.appendChild(
+          el('i', {
+            'data-lucide': 'repeat',
+            className: 'w-4 h-4',
+            style: 'color:#3b82f6',
+          })
+        );
+        habTitle.appendChild(
+          el(
+            'span',
+            { className: 'text-sm font-semibold', style: 'color:#3b82f6' },
+            'Daily Habits'
+          )
+        );
+        habTitle.appendChild(
+          el(
+            'span',
+            { className: 'text-[10px]', style: 'color:var(--fg-dim)' },
+            '(' + habitsDone + '/' + HABITS.length + ')'
+          )
+        );
+        habHeader.appendChild(habTitle);
+
+        // Habits progress bar
+        var habBarOuter = el('div', {
+          style:
+            'width:80px;height:6px;border-radius:3px;background:var(--bg-muted);overflow:hidden',
+        });
+        var habPct =
+          HABITS.length > 0
+            ? Math.round((habitsDone / HABITS.length) * 100)
+            : 0;
+        var habBarInner = el('div', {
+          style:
+            'height:100%;border-radius:3px;width:' +
+            habPct +
+            '%;background:#3b82f6;transition:width 0.3s',
+        });
+        habBarOuter.appendChild(habBarInner);
+        habHeader.appendChild(habBarOuter);
+        habSection.appendChild(habHeader);
+        var habBody = el('div', { className: 'section-body' });
+
+        // Habit grid (compact 2-column layout)
+        var habGrid = el('div', {
+          style: 'display:grid;grid-template-columns:1fr 1fr;gap:4px 12px',
+        });
+        HABITS.forEach(function (hab) {
+          var checked = todayHabits[hab.id] || false;
+          var row = el('div', {
+            className: 'flex items-center gap-2',
+            style: 'padding:4px 0;cursor:pointer',
+          });
+          var cb = el('div', {
+            style:
+              'width:14px;height:14px;border-radius:3px;border:2px solid ' +
+              (checked ? '#3b82f6' : 'var(--border)') +
+              ';background:' +
+              (checked ? '#3b82f6' : 'transparent') +
+              ';display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s',
+          });
+          if (checked) {
+            cb.textContent = '\u2713';
+            cb.style.color = 'white';
+            cb.style.fontSize = '9px';
+            cb.style.fontWeight = 'bold';
+          }
+          row.appendChild(cb);
+          row.appendChild(
+            el('i', {
+              'data-lucide': hab.icon,
+              className: 'w-3 h-3',
+              style: 'color:' + (checked ? 'var(--fg-dim)' : 'var(--fg-muted)'),
+            })
+          );
+          row.appendChild(
+            el(
+              'span',
+              {
+                className: 'text-[11px]',
+                style:
+                  'color:' +
+                  (checked ? 'var(--fg-dim)' : 'var(--fg)') +
+                  ';' +
+                  (checked ? 'text-decoration:line-through' : ''),
+              },
+              hab.title
+            )
+          );
+
+          // Streak calculation
+          var habStreak = 0;
+          var sd = new Date();
+          sd.setDate(sd.getDate() - 1);
+          while (true) {
+            var sk =
+              sd.getFullYear() +
+              '-' +
+              String(sd.getMonth() + 1).padStart(2, '0') +
+              '-' +
+              String(sd.getDate()).padStart(2, '0');
+            if ((habitLog[sk] || {})[hab.id]) {
+              habStreak++;
+              sd.setDate(sd.getDate() - 1);
+            } else break;
+          }
+          if (checked) habStreak++;
+          if (habStreak > 0) {
+            row.appendChild(
+              el(
+                'span',
+                {
+                  className: 'text-[9px] ml-auto',
+                  style: 'color:#f59e0b;font-weight:600;flex-shrink:0',
+                },
+                habStreak + '\ud83d\udd25'
+              )
+            );
+          }
+
+          row.onclick = function () {
+            todayHabits[hab.id] = !todayHabits[hab.id];
+            habitLog[key] = todayHabits;
+            localStorage.setItem('telos-habits', JSON.stringify(habitLog));
+            renderToday();
+            lucide.createIcons();
+          };
+          habGrid.appendChild(row);
+        });
+        habBody.appendChild(habGrid);
+
+        // Completion message
+        if (habitsDone >= HABITS.length) {
+          habBody.appendChild(
+            el(
+              'div',
+              {
+                className: 'text-[11px] mt-2 text-center',
+                style:
+                  'color:#3b82f6;font-weight:600;padding:4px;border-radius:4px;background:rgba(59,130,246,0.1)',
+              },
+              '\u2728 All habits done today. Compound interest on your future self.'
+            )
+          );
+        }
+        habSection.appendChild(habBody);
+        makeCollapsible(habTitle, habBody, 'daily-habits');
+        container.appendChild(habSection);
 
         // --- SPIRAL PREVENTION CHECK-IN ---
         var spiralToday = spiralLog[key] || {};
@@ -7334,10 +7865,15 @@
           el(
             'span',
             {},
-            'Spiral Check-in (' + precursorCount + '/4 precursors)'
+            'Spiral Check-in (' +
+              precursorCount +
+              '/' +
+              SPIRAL_PRECURSORS.length +
+              ' precursors)'
           )
         );
         spiralSection.appendChild(spiralTitle);
+        var spiralBody = el('div', { className: 'section-body' });
 
         SPIRAL_PRECURSORS.forEach(function (sp) {
           var row = el('div', { className: 'commitment-row' });
@@ -7375,7 +7911,7 @@
               )
             );
           row.appendChild(info);
-          spiralSection.appendChild(row);
+          spiralBody.appendChild(row);
         });
 
         // Show protocol if 2+ precursors
@@ -7408,8 +7944,10 @@
               )
             );
           });
-          spiralSection.appendChild(protocol);
+          spiralBody.appendChild(protocol);
         }
+        spiralSection.appendChild(spiralBody);
+        makeCollapsible(spiralTitle, spiralBody, 'spiral-checkin');
         container.appendChild(spiralSection);
 
         // --- FOCUS 3 ---
@@ -7731,7 +8269,8 @@
           );
           batchTitle.appendChild(el('span', {}, 'Batch These Together'));
           batchSection.appendChild(batchTitle);
-          batchSection.appendChild(
+          var batchBody = el('div', { className: 'section-body' });
+          batchBody.appendChild(
             el(
               'div',
               {
@@ -7806,7 +8345,9 @@
               );
             batchGrid.appendChild(card);
           });
-          batchSection.appendChild(batchGrid);
+          batchBody.appendChild(batchGrid);
+          batchSection.appendChild(batchBody);
+          makeCollapsible(batchTitle, batchBody, 'smart-batches');
           container.appendChild(batchSection);
         }
 
@@ -7870,6 +8411,7 @@
         };
         hpTitle.appendChild(clearAllBtn);
         hpSection.appendChild(hpTitle);
+        var hpBody = el('div', { className: 'section-body' });
 
         var hourGrid = el('div', { className: 'hour-grid' });
         var todaySched = daySchedule[key] || {};
@@ -8074,7 +8616,9 @@
             hourGrid.appendChild(row);
           })(h);
         }
-        hpSection.appendChild(hourGrid);
+        hpBody.appendChild(hourGrid);
+        hpSection.appendChild(hpBody);
+        makeCollapsible(hpTitle, hpBody, 'day-planner');
         container.appendChild(hpSection);
 
         // --- DEEP WORK CONSOLIDATION TIMER ---
@@ -8106,6 +8650,7 @@
           )
         );
         dwSection.appendChild(dwHeader);
+        var dwBody = el('div', { className: 'section-body' });
 
         var timerState = JSON.parse(
           localStorage.getItem('telos-timer') || '{}'
@@ -8160,7 +8705,7 @@
               'Close eyes. No phone. Let your brain replay.'
             )
           );
-          dwSection.appendChild(timerRow);
+          dwBody.appendChild(timerRow);
         } else {
           var elapsed = Math.floor((Date.now() - timerStart) / 1000);
           var totalSec = timerDuration * 60;
@@ -8205,7 +8750,7 @@
               )
             );
           }
-          dwSection.appendChild(timerDisplay);
+          dwBody.appendChild(timerDisplay);
 
           // Progress bar
           var tBarOuter = el('div', {
@@ -8221,7 +8766,7 @@
               ';transition:width 1s',
           });
           tBarOuter.appendChild(tBarInner);
-          dwSection.appendChild(tBarOuter);
+          dwBody.appendChild(tBarOuter);
 
           var timerBtns = el('div', { className: 'flex gap-2 justify-center' });
           if (done) {
@@ -8256,14 +8801,36 @@
               lucide.createIcons();
             };
             timerBtns.appendChild(cancelBtn);
-            // Auto-refresh every second while timer is active
-            setTimeout(function () {
-              renderToday();
-              lucide.createIcons();
+            // Efficient timer update — only update display elements, not full re-render
+            var timerDisplayRef = timerDisplay;
+            var tBarInnerRef = tBarInner;
+            var timerInterval = setInterval(function () {
+              var ts = JSON.parse(localStorage.getItem('telos-timer') || '{}');
+              if (!ts.active) {
+                clearInterval(timerInterval);
+                return;
+              }
+              var el2 = Math.floor((Date.now() - ts.start) / 1000);
+              var tot2 = ts.duration * 60;
+              var rem2 = Math.max(0, tot2 - el2);
+              var pct2 = Math.min(100, Math.round((el2 / tot2) * 100));
+              if (rem2 <= 0) {
+                clearInterval(timerInterval);
+                renderToday();
+                lucide.createIcons();
+                return;
+              }
+              var m2 = Math.floor(rem2 / 60);
+              var s2 = rem2 % 60;
+              timerDisplayRef.firstChild.textContent =
+                m2 + ':' + String(s2).padStart(2, '0');
+              tBarInnerRef.style.width = pct2 + '%';
             }, 1000);
           }
-          dwSection.appendChild(timerBtns);
+          dwBody.appendChild(timerBtns);
         }
+        dwSection.appendChild(dwBody);
+        makeCollapsible(dwHeader, dwBody, 'consolidation-timer');
         container.appendChild(dwSection);
 
         // --- EVENING ROUTINE ---
@@ -8372,6 +8939,7 @@
           )
         );
         evSection.appendChild(evHeader);
+        var evBody = el('div', { className: 'section-body' });
 
         // Wind-down checklist
         var evLabel = el(
@@ -8382,7 +8950,7 @@
           },
           'Wind Down'
         );
-        evSection.appendChild(evLabel);
+        evBody.appendChild(evLabel);
 
         EVENING_ITEMS.filter(function (m) {
           return m.phase === 'routine';
@@ -8427,7 +8995,7 @@
             renderToday();
             lucide.createIcons();
           };
-          evSection.appendChild(row);
+          evBody.appendChild(row);
         });
 
         // Evening reflection
@@ -8440,7 +9008,7 @@
           },
           'Evening Reflection'
         );
-        evSection.appendChild(refLabel);
+        evBody.appendChild(refLabel);
 
         EVENING_ITEMS.filter(function (m) {
           return m.phase === 'reflection';
@@ -8497,7 +9065,7 @@
             };
             row.appendChild(input);
           }
-          evSection.appendChild(row);
+          evBody.appendChild(row);
         });
 
         // Tomorrow's priority
@@ -8510,7 +9078,7 @@
           },
           "Tomorrow's Priority"
         );
-        evSection.appendChild(tmrLabel);
+        evBody.appendChild(tmrLabel);
 
         EVENING_ITEMS.filter(function (m) {
           return m.phase === 'plan';
@@ -8567,7 +9135,7 @@
             };
             row.appendChild(input);
           }
-          evSection.appendChild(row);
+          evBody.appendChild(row);
         });
 
         // Evening completion status
@@ -8594,9 +9162,11 @@
             },
             '\ud83c\udf19 Day complete. Sleep well. Tomorrow is already planned.'
           );
-          evSection.appendChild(evDoneMsg);
+          evBody.appendChild(evDoneMsg);
         }
 
+        evSection.appendChild(evBody);
+        makeCollapsible(evHeader, evBody, 'evening-routine');
         container.appendChild(evSection);
 
         // --- WEEKLY REVIEW (show only on Sundays or when requested) ---
