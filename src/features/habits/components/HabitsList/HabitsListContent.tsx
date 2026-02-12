@@ -3,7 +3,9 @@
  */
 
 import { View } from 'react-native';
-import DraggableFlatList from 'react-native-draggable-flatlist';
+import DraggableFlatList, {
+  type RenderItemParams,
+} from 'react-native-draggable-flatlist';
 import { HabitsListModals } from './HabitsListModals';
 import {
   renderHabitsListHeader,
@@ -11,6 +13,7 @@ import {
   renderHabitsListEmpty,
   renderHabitRow,
 } from './HabitsListRenders';
+import type { Habit } from '../../types';
 import type { HabitsListProps } from './HabitsList.types';
 
 export interface HabitsListContentProps {
@@ -37,7 +40,7 @@ export function HabitsListContent({
 
   return (
     <View className='flex-1 bg-transparent'>
-      <DraggableFlatList
+      <DraggableFlatList<Habit>
         activationDistance={handlers.isReorderingEnabled ? 12 : 9999}
         contentContainerStyle={{
           paddingBottom: list.contentPadding.paddingBottom,
@@ -54,8 +57,7 @@ export function HabitsListContent({
         })}
         ListFooterComponent={renderHabitsListFooter({ list, onUpgradeIntent })}
         ListHeaderComponent={renderHabitsListHeader({ handlers, props, state })}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        renderItem={function renderHabitItem(p: any) {
+        renderItem={function renderHabitItem(p: RenderItemParams<Habit>) {
           return renderHabitRow({
             habitRowOpacity: state.habitRowOpacity,
             habitRowTranslateY: state.habitRowTranslateY,
