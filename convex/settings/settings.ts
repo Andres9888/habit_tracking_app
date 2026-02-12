@@ -59,6 +59,11 @@ export const get = query({
       showWeekCompletionBar:
         settings?.showWeekCompletionBar ??
         DEFAULT_SETTINGS.showWeekCompletionBar,
+      streakRemindersEnabled:
+        settings?.streakRemindersEnabled ??
+        DEFAULT_SETTINGS.streakRemindersEnabled,
+      streakReminderTime:
+        settings?.streakReminderTime ?? DEFAULT_SETTINGS.streakReminderTime,
       useDyslexicFont:
         settings?.useDyslexicFont ?? DEFAULT_SETTINGS.useDyslexicFont,
     };

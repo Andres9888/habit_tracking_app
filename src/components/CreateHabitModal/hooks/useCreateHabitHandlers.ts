@@ -7,6 +7,7 @@
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { formatReminderTime } from '../../../utils/notifications';
+import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStreakReminderSettings';
 import { cancelReminder, scheduleReminder } from './useHabitReminders';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
@@ -91,6 +92,9 @@ export function useCreateHabitHandlers() {
       reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
       reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
     });
+
+    // Mark first habit creation for deferred notification permission request
+    void markFirstHabitCreated();
 
     if (hasReminders && habitId) {
       await scheduleReminder({
