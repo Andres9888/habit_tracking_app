@@ -55,8 +55,9 @@ export function InlineHint({
   onBrowseTemplates,
   onCreateCustom,
 }: InlineHintProps) {
-  if (compact)
+  if (compact) {
     return <InlineHintCompact onBrowseTemplates={onBrowseTemplates} />;
+  }
 
   return (
     <View style={{ alignItems: 'center', marginTop: 16, width: '100%' }}>
