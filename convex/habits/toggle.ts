@@ -3,7 +3,8 @@
  * Mark a habit as completed/uncompleted for a given date
  */
 import { v } from 'convex/values';
-import { mutation } from '../_generated/server';
+import { internal } from '../_generated/api';
+import { internalMutation, mutation } from '../_generated/server';
 import { calculateMomentumStrengthSnapshot } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
 import {
@@ -53,37 +54,59 @@ export const toggleHabit = mutation({
           completed: true,
           date: args.date,
           habitId: args.habitId,
+          userId: identity.subject,
         }));
 
-    // Update habit strength and streak based on full tracking history
-    // (habit already fetched for ownership check above)
+    // Defer heavy streak/strength recalculation to keep the toggle fast
+    await ctx.scheduler.runAfter(
+      0,
+      internal.habits.toggle.recalculateStreakAndStrength,
+      { habitId: args.habitId }
+    );
+
+    return null;
+  },
+  returns: v.null(),
+});
+
+/**
+ * Internal mutation: recalculate streak & strength for a habit.
+ * Scheduled asynchronously after toggle to keep the user-facing mutation fast.
+ */
+export const recalculateStreakAndStrength = internalMutation({
+  args: { habitId: v.id('habits') },
+  handler: async (ctx, args) => {
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) return;
+
     const allTracking = await ctx.db
-        .query('tracking')
-        .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
-        .collect();
+      .query('tracking')
+      .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
+      .collect();
 
-      let maxTrackingDateKey = args.date;
-      for (const record of allTracking) {
-        maxTrackingDateKey = maxDateKey(maxTrackingDateKey, record.date);
-      }
-      const evaluationDateKey = maxDateKey(
-        getTodayDateKey(),
-        maxTrackingDateKey
-      );
+    let maxTrackingDateKey = '';
+    for (const record of allTracking) {
+      maxTrackingDateKey = maxTrackingDateKey
+        ? maxDateKey(maxTrackingDateKey, record.date)
+        : record.date;
+    }
+    const evaluationDateKey = maxTrackingDateKey
+      ? maxDateKey(getTodayDateKey(), maxTrackingDateKey)
+      : getTodayDateKey();
 
-      const snapshot = calculateMomentumStrengthSnapshot({
-        habitCreatedAt: habit.createdAt,
-        throughDate: evaluationDateKey,
-        tracking: allTracking.map((r) => ({
-          completed: r.completed,
-          date: r.date,
-        })),
-      });
+    const snapshot = calculateMomentumStrengthSnapshot({
+      habitCreatedAt: habit.createdAt,
+      throughDate: evaluationDateKey,
+      tracking: allTracking.map((r) => ({
+        completed: r.completed,
+        date: r.date,
+      })),
+    });
 
-      const streakData = calculateStreakFromHistory(
-        allTracking.map((t) => ({ completed: t.completed, date: t.date })),
-        evaluationDateKey
-      );
+    const streakData = calculateStreakFromHistory(
+      allTracking.map((t) => ({ completed: t.completed, date: t.date })),
+      evaluationDateKey
+    );
 
     await ctx.db.patch(args.habitId, {
       bestStreak: streakData.bestStreak,
@@ -93,8 +116,5 @@ export const toggleHabit = mutation({
       strengthLevel: snapshot.strengthLevel,
       strengthUpdatedAt: Date.now(),
     });
-
-    return null;
   },
-  returns: v.null(),
 });
