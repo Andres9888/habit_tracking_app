@@ -168,13 +168,11 @@ describe('InlineHint', () => {
     it('should use violet theme consistently for all template UI', () => {
       const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
 
-      // Browse templates button
       const browseStyle = UNSAFE_getByProps({
         accessibilityLabel: 'Browse templates',
       }).props.style({ pressed: false });
       expect(browseStyle.backgroundColor).toBe('#7c3aed');
 
-      // Create your own button border
       const createStyle = UNSAFE_getByProps({
         accessibilityLabel: 'Create your own',
       }).props.style({ pressed: false });
