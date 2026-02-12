@@ -4,27 +4,20 @@
  */
 
 import { Gesture } from 'react-native-gesture-handler';
-import {
-  withSpring,
-  withTiming,
-  runOnJS,
-  type SharedValue,
-} from 'react-native-reanimated';
+import { withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../../convex/_generated/dataModel';
-import { Springs } from '../../../constants/motion';
 import { showSyncError } from '../../../utils/errorAlerts';
 
 interface TapGestureOptions {
   id: Id<'habits'>;
   completed: boolean;
   disabled: boolean;
-  isToggling: boolean;
   reduceMotion: boolean;
   cardScale: SharedValue<number>;
   today: string;
   onPress?: () => void;
-  setIsToggling: (value: boolean) => void;
+  toggleOptimistic: () => void;
   toggleCompletionMutation: (args: {
     date: string;
     habitId: Id<'habits'>;
@@ -38,61 +31,71 @@ export function createTapGesture(options: TapGestureOptions) {
     id,
     completed,
     disabled,
-    isToggling,
     reduceMotion,
     cardScale,
     today,
     onPress,
-    setIsToggling,
+    toggleOptimistic,
     toggleCompletionMutation,
     triggerCompletionCelebration,
     triggerUncheckAnimation,
   } = options;
-  const press = (v: number) =>
-    reduceMotion
-      ? withTiming(v, { duration: 0 })
-      : withSpring(v, Springs.button);
 
   return Gesture.Tap()
     .onBegin(() => {
-      cardScale.value = press(0.96);
+      if (disabled) return;
+
+      // Instant haptic feedback on touch
+      if (completed) {
+        runOnJS(() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
+            () => {}
+          );
+        })();
+      } else {
+        runOnJS(() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
+            () => {}
+          );
+        })();
+      }
+
+      // Crisp press scale
+      cardScale.value = reduceMotion
+        ? withTiming(0.96, { duration: 0 })
+        : withTiming(0.96, { duration: 40 });
     })
     .onFinalize(() => {
-      cardScale.value = press(1);
+      cardScale.value = reduceMotion
+        ? withTiming(1, { duration: 0 })
+        : withTiming(1, { duration: 80 });
     })
     .onEnd(() => {
-      if (!disabled && !isToggling) {
-        if (completed) {
-          runOnJS(() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
-              () => {}
-            );
-          })();
-          triggerUncheckAnimation();
-        } else {
-          runOnJS(() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
-              () => {}
-            );
-          })();
-          triggerCompletionCelebration();
+      if (disabled) return;
+
+      // Optimistic UI update — instant visual toggle
+      runOnJS(toggleOptimistic)();
+
+      if (completed) {
+        triggerUncheckAnimation();
+      } else {
+        triggerCompletionCelebration();
+      }
+
+      // Fire mutation in background
+      runOnJS(async () => {
+        try {
+          await toggleCompletionMutation({ date: today, habitId: id });
+        } catch (error) {
+          if (__DEV__) console.error('Toggle completion failed:', error);
+          showSyncError();
+          // Revert optimistic state on error
+          runOnJS(toggleOptimistic)();
         }
-        runOnJS(setIsToggling)(true);
-        runOnJS(async () => {
-          try {
-            await toggleCompletionMutation({ date: today, habitId: id });
-          } catch (error) {
-            if (__DEV__) console.error('Toggle completion failed:', error);
-            showSyncError();
-          } finally {
-            setTimeout(() => {
-              setIsToggling(false);
-            }, 300);
-          }
-        })();
-        if (onPress) {
-          runOnJS(onPress)();
-        }
+      })();
+
+      if (onPress) {
+        runOnJS(onPress)();
       }
     });
 }

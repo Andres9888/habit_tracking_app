@@ -56,10 +56,10 @@ export function useHabitCard(props: HabitCardProps) {
 
   // Integrate streak milestone celebrations
   useStreakMilestoneIntegration({
+    currentStreak: habitState.currentStreak,
+    habitEmoji: icon,
     habitId: id,
     habitName: name,
-    habitEmoji: icon,
-    currentStreak: habitState.currentStreak,
     isCompleted: habitState.completed,
   });
 
@@ -89,14 +89,13 @@ export function useHabitCard(props: HabitCardProps) {
     completed: habitState.completed,
     disabled,
     id,
-    isToggling: values.isToggling,
     name,
     onLongPress,
     onPress,
     reduceMotion,
-    setIsToggling: values.setIsToggling,
     today: habitState.today,
     toggleCompletionMutation: habitState.toggleCompletionMutation,
+    toggleOptimistic: habitState.toggleOptimistic,
     translateX: values.translateX,
     triggerCompletionCelebration: () => {
       animations.triggerCompletionCelebration();

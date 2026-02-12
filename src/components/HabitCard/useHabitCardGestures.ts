@@ -19,12 +19,11 @@ export function useHabitCardGestures(options: UseHabitCardGesturesOptions) {
     completed: options.completed,
     disabled: options.disabled,
     id: options.id,
-    isToggling: options.isToggling,
     onPress: options.onPress,
     reduceMotion: options.reduceMotion,
-    setIsToggling: options.setIsToggling,
     today: options.today,
     toggleCompletionMutation: options.toggleCompletionMutation,
+    toggleOptimistic: options.toggleOptimistic,
     triggerCompletionCelebration: options.triggerCompletionCelebration,
     triggerUncheckAnimation: options.triggerUncheckAnimation,
   });

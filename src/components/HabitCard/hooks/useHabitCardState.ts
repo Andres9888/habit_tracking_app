@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getLocalDateString } from '@/utils/getLocalDateString';
 /**
  * useHabitCardState Hook
@@ -31,6 +32,7 @@ export interface HabitCardStateReturn {
   toggleCompletionMutation: ReturnType<
     typeof useMutation<typeof api.habits.toggleHabit>
   >;
+  toggleOptimistic: () => void;
 }
 
 /**
@@ -56,6 +58,25 @@ export function useHabitCardState(
   const serverCompleted = completedQuery ?? completedProp;
   const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
 
+  // Optimistic local state for instant visual feedback
+  const [optimisticCompleted, setOptimisticCompleted] = useState<
+    boolean | null
+  >(null);
+  const prevServerCompleted = useRef(serverCompleted);
+
+  // Reset optimistic state when server catches up
+  useEffect(() => {
+    if (prevServerCompleted.current !== serverCompleted) {
+      prevServerCompleted.current = serverCompleted;
+      setOptimisticCompleted(null);
+    }
+  }, [serverCompleted]);
+
+  const toggleOptimistic = useCallback(() => {
+    const current = optimisticCompleted ?? serverCompleted;
+    setOptimisticCompleted(!current);
+  }, [optimisticCompleted, serverCompleted]);
+
   // Get offline-aware state when offline sync is enabled (T013)
   const offlineState = useOfflineHabitState({
     habitId: id,
@@ -70,9 +91,11 @@ export function useHabitCardState(
   });
 
   // Use offline-aware state when enabled, otherwise use server state
-  const completed = offlineSyncEnabled
+  // Optimistic state takes priority for instant feedback
+  const resolvedServerCompleted = offlineSyncEnabled
     ? offlineState.completed
     : serverCompleted;
+  const completed = optimisticCompleted ?? resolvedServerCompleted;
   const currentStreak = offlineSyncEnabled
     ? offlineState.currentStreak
     : currentStreakProp;
@@ -90,5 +113,6 @@ export function useHabitCardState(
     hasPendingOfflineOps,
     today,
     toggleCompletionMutation,
+    toggleOptimistic,
   };
 }

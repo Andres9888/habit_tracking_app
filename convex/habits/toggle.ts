@@ -3,7 +3,8 @@
  * Mark a habit as completed/uncompleted for a given date
  */
 import { v } from 'convex/values';
-import { mutation } from '../_generated/server';
+import { internal } from '../_generated/api';
+import { internalMutation, mutation } from '../_generated/server';
 import { calculateMomentumStrengthSnapshot } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
 import {
@@ -56,8 +57,28 @@ export const toggleHabit = mutation({
           userId: identity.subject,
         }));
 
-    // Update habit strength and streak based on full tracking history
-    // (habit already fetched for ownership check above)
+    // Defer heavy streak/strength recalculation to keep the toggle fast
+    await ctx.scheduler.runAfter(
+      0,
+      internal.habits.toggle.recalculateStreakAndStrength,
+      { habitId: args.habitId }
+    );
+
+    return null;
+  },
+  returns: v.null(),
+});
+
+/**
+ * Internal mutation: recalculate streak & strength for a habit.
+ * Scheduled asynchronously after toggle to keep the user-facing mutation fast.
+ */
+export const recalculateStreakAndStrength = internalMutation({
+  args: { habitId: v.id('habits') },
+  handler: async (ctx, args) => {
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) return;
+
     const allTracking = await ctx.db
       .query('tracking')
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
@@ -91,8 +112,5 @@ export const toggleHabit = mutation({
       strengthLevel: snapshot.strengthLevel,
       strengthUpdatedAt: Date.now(),
     });
-
-    return null;
   },
-  returns: v.null(),
 });
