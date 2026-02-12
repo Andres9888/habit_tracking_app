@@ -45,6 +45,7 @@ export const updateHabitStrength = mutation({
         completed: args.behaviorPerformed,
         date: args.date,
         habitId: args.habitId,
+        userId: habit.userId,
       });
     }
 

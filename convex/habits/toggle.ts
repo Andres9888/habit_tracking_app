@@ -53,37 +53,35 @@ export const toggleHabit = mutation({
           completed: true,
           date: args.date,
           habitId: args.habitId,
+          userId: identity.subject,
         }));
 
     // Update habit strength and streak based on full tracking history
     // (habit already fetched for ownership check above)
     const allTracking = await ctx.db
-        .query('tracking')
-        .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
-        .collect();
+      .query('tracking')
+      .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
+      .collect();
 
-      let maxTrackingDateKey = args.date;
-      for (const record of allTracking) {
-        maxTrackingDateKey = maxDateKey(maxTrackingDateKey, record.date);
-      }
-      const evaluationDateKey = maxDateKey(
-        getTodayDateKey(),
-        maxTrackingDateKey
-      );
+    let maxTrackingDateKey = args.date;
+    for (const record of allTracking) {
+      maxTrackingDateKey = maxDateKey(maxTrackingDateKey, record.date);
+    }
+    const evaluationDateKey = maxDateKey(getTodayDateKey(), maxTrackingDateKey);
 
-      const snapshot = calculateMomentumStrengthSnapshot({
-        habitCreatedAt: habit.createdAt,
-        throughDate: evaluationDateKey,
-        tracking: allTracking.map((r) => ({
-          completed: r.completed,
-          date: r.date,
-        })),
-      });
+    const snapshot = calculateMomentumStrengthSnapshot({
+      habitCreatedAt: habit.createdAt,
+      throughDate: evaluationDateKey,
+      tracking: allTracking.map((r) => ({
+        completed: r.completed,
+        date: r.date,
+      })),
+    });
 
-      const streakData = calculateStreakFromHistory(
-        allTracking.map((t) => ({ completed: t.completed, date: t.date })),
-        evaluationDateKey
-      );
+    const streakData = calculateStreakFromHistory(
+      allTracking.map((t) => ({ completed: t.completed, date: t.date })),
+      evaluationDateKey
+    );
 
     await ctx.db.patch(args.habitId, {
       bestStreak: streakData.bestStreak,
