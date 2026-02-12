@@ -28,7 +28,7 @@ export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
             lineHeight: 28,
           }}
         >
-          Import Habits
+          Browse Templates
         </Animated.Text>
         <Animated.Text
           entering={FadeInDown.delay(50).springify().damping(18)}
