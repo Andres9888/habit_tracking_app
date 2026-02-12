@@ -12,7 +12,7 @@ export function TemplatesLoadingState() {
           className='font-semibold text-stone-900'
           style={{ fontSize: 22, letterSpacing: -0.35 }}
         >
-          Import Habits
+          Browse Templates
         </Text>
         <Text className='mt-1 text-[17px] text-stone-500'>
           Science-backed habits to get you started

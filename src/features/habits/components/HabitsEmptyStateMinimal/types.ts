@@ -108,6 +108,8 @@ export interface SecondaryLinksProps {
  * InlineHint component props
  */
 export interface InlineHintProps {
+  /** Whether to show compact layout (keyboard visible) */
+  compact?: boolean;
   /** Callback to open templates screen */
   onBrowseTemplates: () => void;
   /** Callback to open create habit modal */
