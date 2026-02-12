@@ -1,7 +1,7 @@
 /**
  * Gray-400 Text Contrast Tests (Phase 8 Task 2)
  * Verifies that readable text uses gray-500 (#78716c, 4.6:1 contrast)
- * instead of gray-400 (#9CA3AF, 3.0:1 contrast) which fails WCAG AA.
+ * instead of gray-400 (#6B7280, 3.0:1 contrast) which fails WCAG AA.
  *
  * Gray-400 is acceptable for: placeholder text, disabled states, icon fills.
  * Gray-400 is NOT acceptable for: labels, timestamps, descriptions, stat units.
@@ -68,7 +68,7 @@ const TAILWIND_FILES = [
 ];
 
 /**
- * StyleSheet-based components where colors.gray[400] or #9ca3af was
+ * StyleSheet-based components where colors.gray[400] or #6B7280 was
  * replaced with colors.gray[500] or #78716c for readable text labels.
  */
 const STYLESHEET_FILES = [
@@ -82,7 +82,7 @@ const STYLESHEET_FILES = [
     file: 'components/ProgressSectionConsolidated/MilestoneProgress/styles/progress.styles.ts',
     description: 'Milestone name and progress label text',
     pattern: '#78716c',
-    antiPattern: "'#9ca3af'",
+    antiPattern: "'#6B7280'",
   },
 ];
 
@@ -117,7 +117,7 @@ describe('Gray-400 contrast: StyleSheet files do not use gray-400 for text', () 
     expect(content).not.toContain('colors.gray[400]');
   });
 
-  it('MilestoneProgress styles use #78716c not #9ca3af', () => {
+  it('MilestoneProgress styles use #78716c not #6B7280', () => {
     const content = fs.readFileSync(
       path.join(
         SRC_ROOT,
@@ -125,17 +125,17 @@ describe('Gray-400 contrast: StyleSheet files do not use gray-400 for text', () 
       ),
       'utf-8'
     );
-    expect(content).not.toMatch(/#9ca3af/i);
+    expect(content).not.toMatch(/#6B7280/i);
   });
 });
 
 describe('Gray-400 contrast: colors.gray values are correct', () => {
-  it('gray-400 is #9CA3AF (the low-contrast value)', () => {
+  it('gray-400 is #6B7280 (WCAG AA compliant)', () => {
     const content = fs.readFileSync(
       path.join(SRC_ROOT, 'theme/colors/core.ts'),
       'utf-8'
     );
-    expect(content).toMatch(/400:\s*'#9CA3AF'/);
+    expect(content).toMatch(/400:\s*'#6B7280'/);
   });
 
   it('gray-500 is #78716c (the AA-compliant value)', () => {

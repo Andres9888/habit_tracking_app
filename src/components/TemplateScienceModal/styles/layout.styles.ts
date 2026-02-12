@@ -34,7 +34,7 @@ export const layoutStyles = StyleSheet.create({
     zIndex: 100,
   },
   dismissPill: {
-    backgroundColor: '#9CA3AF',
+    backgroundColor: '#6B7280',
     borderRadius: 3,
     height: 5,
     marginBottom: 8,

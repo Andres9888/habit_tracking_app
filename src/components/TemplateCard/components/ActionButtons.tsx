@@ -60,7 +60,7 @@ export function ActionButtons({
         size='medium'
         style={[
           styles.importButton,
-          { backgroundColor: isLocked ? '#9ca3af' : iconColor },
+          { backgroundColor: isLocked ? '#6B7280' : iconColor },
         ]}
         variant='primary'
         onPress={onImportPress}

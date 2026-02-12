@@ -12,11 +12,11 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingBottom: spacing.xxl,
+    paddingBottom: spacing['2xl'],
   },
   exportButton: {
-    backgroundColor: colors.primary[500],
     alignItems: 'center',
+    backgroundColor: colors.primary[500],
     borderRadius: 12,
     flexDirection: 'row',
     justifyContent: 'center',

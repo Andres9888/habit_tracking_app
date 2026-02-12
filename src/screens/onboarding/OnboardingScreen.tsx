@@ -1,10 +1,10 @@
 /**
- * OnboardingScreen
- *
+ * Onboarding Screen Component
  * 3-screen carousel shown once after first sign-up.
  * Screens: Chain visualization, Strength meter, Templates grid.
  * Sets AsyncStorage flag to prevent re-showing.
  */
+/* eslint-disable max-lines, max-lines-per-function */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
@@ -42,7 +42,15 @@ const SPRING_CONFIG = { damping: 18, stiffness: 120 };
 // ─── Chain Visualization ─────────────────────────────────────────────
 
 function ChainLink({ delay, index }: { delay: number; index: number }) {
-  const colors = ['#059669', '#047857', '#10B981', '#047857', '#059669', '#10B981', '#047857'];
+  const colors = [
+    '#059669',
+    '#047857',
+    '#10B981',
+    '#047857',
+    '#059669',
+    '#10B981',
+    '#047857',
+  ];
   return (
     <Animated.View
       entering={FadeInDown.delay(delay).springify().damping(18)}
@@ -87,13 +95,18 @@ function StrengthMeter() {
             style={[
               styles.strengthBar,
               {
-                width: `${20 + i * 20}%`,
                 backgroundColor: interpolateColor(i / 4),
                 opacity: 0.15 + i * 0.2125,
+                width: `${20 + i * 20}%`,
               },
             ]}
           />
-          <Text style={[styles.strengthLabel, i === 4 && styles.strengthLabelActive]}>
+          <Text
+            style={[
+              styles.strengthLabel,
+              i === 4 && styles.strengthLabelActive,
+            ]}
+          >
             {stage}
           </Text>
         </Animated.View>
@@ -112,9 +125,18 @@ function interpolateColor(t: number): string {
 // ─── Template Grid ───────────────────────────────────────────────────
 
 const TEMPLATE_ICONS = [
-  '🧘', '💧', '📖', '🏃',
-  '😴', '🥗', '✍️', '🧠',
-  '💊', '🎯', '🌅', '🏋️',
+  '🧘',
+  '💧',
+  '📖',
+  '🏃',
+  '😴',
+  '🥗',
+  '✍️',
+  '🧠',
+  '💊',
+  '🎯',
+  '🌅',
+  '🏋️',
 ];
 
 function TemplateGrid() {
@@ -147,21 +169,21 @@ interface PageData {
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    title: "Don't Break the Chain",
     subtitle: 'Complete your habits daily to build unbreakable chains',
+    title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
   {
     id: 'strength',
-    title: 'Science-Backed Strength',
     subtitle:
       'Your habits get stronger over time — backed by behavioral science research',
+    title: 'Science-Backed Strength',
     Visual: StrengthMeter,
   },
   {
     id: 'templates',
-    title: '200+ Templates to Start',
     subtitle: 'Choose from science-backed habit templates or create your own',
+    title: '200+ Templates to Start',
     Visual: TemplateGrid,
   },
 ];
@@ -219,7 +241,10 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const handleNext = useCallback(() => {
     void Haptics.impactAsync(ImpactFeedbackStyle.Light);
     if (currentIndex < PAGES.length - 1) {
-      flatListRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
+      flatListRef.current?.scrollToIndex({
+        animated: true,
+        index: currentIndex + 1,
+      });
     }
   }, [currentIndex]);
 
@@ -231,7 +256,9 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
     }
   ).current;
 
-  const viewabilityConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+  const viewabilityConfig = useRef({
+    viewAreaCoveragePercentThreshold: 50,
+  }).current;
 
   const isLastPage = currentIndex === PAGES.length - 1;
 
@@ -266,10 +293,10 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         style={[styles.skipContainer, { top: insets.top + 12 }]}
       >
         <Pressable
-          onPress={handleSkip}
+          accessibilityLabel='Skip onboarding'
+          accessibilityRole='button'
           hitSlop={16}
-          accessibilityRole="button"
-          accessibilityLabel="Skip onboarding"
+          onPress={handleSkip}
         >
           <Text style={styles.skipText}>Skip</Text>
         </Pressable>
@@ -278,20 +305,20 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
       {/* Pages */}
       <FlatList
         ref={flatListRef}
-        data={PAGES}
-        renderItem={renderPage}
-        keyExtractor={(item) => item.id}
         horizontal
         pagingEnabled
-        showsHorizontalScrollIndicator={false}
         bounces={false}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
+        data={PAGES}
         getItemLayout={(_, index) => ({
+          index,
           length: SCREEN_WIDTH,
           offset: SCREEN_WIDTH * index,
-          index,
         })}
+        keyExtractor={(item) => item.id}
+        renderItem={renderPage}
+        showsHorizontalScrollIndicator={false}
+        viewabilityConfig={viewabilityConfig}
+        onViewableItemsChanged={onViewableItemsChanged}
       />
 
       {/* Bottom section */}
@@ -301,25 +328,27 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         {isLastPage ? (
           <Animated.View entering={FadeInDown.springify().damping(18)}>
             <Pressable
+              accessibilityLabel='Get started building your first habit'
+              accessibilityRole='button'
+              disabled={isLoading}
               style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
               onPress={() => void handleComplete()}
-              disabled={isLoading}
-              accessibilityRole="button"
-              accessibilityLabel="Get started building your first habit"
             >
               {isLoading ? (
-                <ActivityIndicator color="#FFFFFF" />
+                <ActivityIndicator color='#FFFFFF' />
               ) : (
-                <Text style={styles.ctaText}>Let's Build Your First Habit →</Text>
+                <Text style={styles.ctaText}>
+                  Let's Build Your First Habit →
+                </Text>
               )}
             </Pressable>
           </Animated.View>
         ) : (
           <Pressable
+            accessibilityLabel='Next onboarding page'
+            accessibilityRole='button'
             style={styles.nextButton}
             onPress={handleNext}
-            accessibilityRole="button"
-            accessibilityLabel="Next onboarding page"
           >
             <Text style={styles.nextText}>Next</Text>
           </Pressable>
@@ -332,39 +361,112 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
 // ─── Styles ──────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#faf9f7',
+  bottomContainer: {
+    alignItems: 'center',
+    gap: 24,
+    paddingBottom: 60,
+    paddingHorizontal: 32,
   },
+  container: {
+    backgroundColor: '#faf9f7',
+    flex: 1,
+  },
+  dot: {
+    borderRadius: 4,
+    height: 8,
+  },
+  ctaButton: {
+    backgroundColor: '#059669',
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    elevation: 4,
+    shadowRadius: 16,
+  },
+  dotsContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  ctaButtonDisabled: {
+    opacity: 0.7,
+  },
+  page: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+  },
+  // Chain styles
+  chainContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: -4,
+  },
+
   skipContainer: {
     position: 'absolute',
     right: 24,
     zIndex: 10,
   },
+
+  chainLink: {
+    borderRadius: 18,
+    height: 52,
+    alignItems: 'center',
+    width: 36,
+    justifyContent: 'center',
+    marginHorizontal: -2,
+  },
+
   skipText: {
-    fontSize: 17,
     color: '#6B7280',
+    fontSize: 17,
     fontWeight: '500',
   },
-  page: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 32,
+
+  chainLinkInner: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    height: 36,
+    width: 20,
   },
+
+  title: {
+    fontSize: 34,
+    color: '#047857',
+    fontWeight: '700',
+    marginBottom: 12,
+    textAlign: 'center',
+    letterSpacing: -0.5,
+  },
+
+  ctaText: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '600',
+  },
+
   visualContainer: {
     height: 280,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 40,
   },
-  title: {
-    fontSize: 34,
-    fontWeight: '700',
-    color: '#047857',
-    textAlign: 'center',
-    marginBottom: 12,
-    letterSpacing: -0.5,
+
+  nextButton: {
+    backgroundColor: '#059669',
+    borderRadius: 12,
+    paddingHorizontal: 48,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    elevation: 4,
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
   },
   subtitle: {
     fontSize: 17,
@@ -373,124 +475,61 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     paddingHorizontal: 16,
   },
-  bottomContainer: {
-    paddingBottom: 60,
-    paddingHorizontal: 32,
-    alignItems: 'center',
-    gap: 24,
-  },
-  dotsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  dot: {
-    height: 8,
-    borderRadius: 4,
-  },
-  nextButton: {
-    backgroundColor: '#059669',
-    paddingVertical: 16,
-    paddingHorizontal: 48,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
-  },
   nextText: {
+    color: '#FFFFFF',
     fontSize: 17,
     fontWeight: '600',
-    color: '#FFFFFF',
   },
-  ctaButton: {
+
+  strengthBar: {
     backgroundColor: '#059669',
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
-  },
-  ctaButtonDisabled: {
-    opacity: 0.7,
-  },
-  ctaText: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  // Chain styles
-  chainContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: -4,
-  },
-  chainLink: {
-    width: 36,
-    height: 52,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: -2,
-  },
-  chainLinkInner: {
-    width: 20,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    height: 32,
   },
   // Strength styles
   strengthContainer: {
-    width: '100%',
     gap: 12,
     paddingHorizontal: 16,
-  },
-  strengthRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  strengthBar: {
-    height: 32,
-    borderRadius: 8,
-    backgroundColor: '#059669',
+    width: '100%',
   },
   strengthLabel: {
+    color: '#6B7280',
     fontSize: 13,
-    color: '#9CA3AF',
     fontWeight: '500',
   },
   strengthLabelActive: {
     color: '#047857',
     fontWeight: '700',
   },
+  strengthRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
+
+  templateEmoji: {
+    fontSize: 28,
+  },
   // Template styles
   templateGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
     gap: 16,
+    justifyContent: 'center',
     width: 280,
   },
   templateItem: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: '#F0FDF4',
-    justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    backgroundColor: '#F0FDF4',
+    borderRadius: 16,
     elevation: 2,
-  },
-  templateEmoji: {
-    fontSize: 28,
+    height: 56,
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    width: 56,
+    shadowRadius: 16,
   },
 });
 

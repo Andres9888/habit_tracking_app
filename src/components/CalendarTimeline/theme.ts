@@ -38,7 +38,7 @@ const STANDARD_COLORS: CalendarTimelineColors = {
   dayText: '#1a1a1a',
   icon: '#1a1a1a',
   primaryText: '#1a1a1a',
-  secondaryText: '#9ca3af',
+  secondaryText: '#6B7280',
 };
 
 /**

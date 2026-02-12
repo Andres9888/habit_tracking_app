@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /** SettingsRow - OPTIMIZED: AnimatedPressable, scale animation, haptics */
 import { ReactNode } from 'react';
 import { Switch, Text, View } from 'react-native';
@@ -5,6 +6,7 @@ import { ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
+import { useFocusRing } from '../../utils/accessibility';
 
 interface SettingsRowProps {
   icon: ReactNode;
@@ -30,6 +32,7 @@ export function SettingsRow({
   highContrastMode = false,
 }: SettingsRowProps) {
   const colors = getSettingsRowColors(highContrastMode);
+  const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
   const handleToggle = (v: boolean) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -98,7 +101,13 @@ export function SettingsRow({
   if (type === 'toggle' || type === 'info') return content;
 
   return (
-    <AnimatedPressable accessibilityRole='button' onPress={handleNavPress}>
+    <AnimatedPressable
+      accessibilityLabel={label}
+      accessibilityRole='button'
+      style={focusStyle}
+      onPress={handleNavPress}
+      {...focusHandlers}
+    >
       {content}
     </AnimatedPressable>
   );

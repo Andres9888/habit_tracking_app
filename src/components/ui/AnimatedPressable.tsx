@@ -12,6 +12,7 @@ import {
   usePressAnimation,
   type PressAnimationConfig,
 } from '../../hooks/usePressAnimation';
+import { useFocusRing } from '../../utils/accessibility';
 
 const AnimatedPressableBase = Animated.createAnimatedComponent(Pressable);
 
@@ -25,6 +26,11 @@ export interface AnimatedPressableProps extends PressableProps {
    * Whether to disable the press animation (default: false)
    */
   disableAnimation?: boolean;
+
+  /**
+   * Whether to disable the focus ring (default: false)
+   */
+  disableFocusRing?: boolean;
 }
 
 /**
@@ -50,6 +56,7 @@ export interface AnimatedPressableProps extends PressableProps {
 export function AnimatedPressable({
   animationConfig,
   disableAnimation = false,
+  disableFocusRing = false,
   children,
   style,
   onPressIn,
@@ -57,6 +64,10 @@ export function AnimatedPressable({
   ...pressableProps
 }: AnimatedPressableProps) {
   const { animatedStyle, pressHandlers } = usePressAnimation(animationConfig);
+  const { focusStyle, focusHandlers } = useFocusRing({
+    compact: true,
+    disabled: disableFocusRing || !!pressableProps.disabled,
+  });
 
   const handlePressIn = React.useCallback(
     (event: any) => {
@@ -81,7 +92,8 @@ export function AnimatedPressable({
   return (
     <AnimatedPressableBase
       {...pressableProps}
-      style={[style, !disableAnimation && animatedStyle]}
+      {...(disableFocusRing ? {} : focusHandlers)}
+      style={[style, !disableAnimation && animatedStyle, focusStyle]}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
