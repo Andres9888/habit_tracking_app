@@ -45,25 +45,33 @@ export function useHabitsListHeaderComputed({
   const todayString = getLocalDateString();
   const totalHabits = habits.length;
 
-  const completedToday = useMemo(
-    () =>
-      habits.filter((h) => getHabitStatus(h._id, todayString) === 'done')
-        .length,
-    [habits, getHabitStatus, todayString]
-  );
-
-  const completionByDay = useMemo(() => {
+  const { completedToday, completionByDay } = useMemo(() => {
     const result: Record<string, DayCompletionStatus> = {};
+
+    // Initialize counters once so we can update with a single habits pass per date.
     for (const dateString of weekDateStrings) {
       result[dateString] = {
-        completed: habits.filter(
-          (h) => getHabitStatus(h._id, dateString) === 'done'
-        ).length,
+        completed: 0,
         total: totalHabits,
       };
     }
-    return result;
-  }, [habits, weekDateStrings, getHabitStatus, totalHabits]);
+
+    let todayCompleted = 0;
+
+    for (const habit of habits) {
+      if (getHabitStatus(habit._id, todayString) === 'done') {
+        todayCompleted += 1;
+      }
+
+      for (const dateString of weekDateStrings) {
+        if (getHabitStatus(habit._id, dateString) === 'done') {
+          result[dateString].completed += 1;
+        }
+      }
+    }
+
+    return { completedToday: todayCompleted, completionByDay: result };
+  }, [habits, weekDateStrings, getHabitStatus, todayString, totalHabits]);
 
   const shouldShowTimeline = totalHabits > 0 || justCreatedHabitId !== null;
 
