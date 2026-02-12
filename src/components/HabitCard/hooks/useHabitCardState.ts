@@ -29,7 +29,7 @@ export interface HabitCardStateReturn {
   hasPendingOfflineOps: boolean;
   today: string;
   toggleCompletionMutation: ReturnType<
-    typeof useMutation<typeof api.tracking.toggleCompletion>
+    typeof useMutation<typeof api.habits.toggleHabit>
   >;
 }
 
@@ -54,7 +54,7 @@ export function useHabitCardState(
     habitId: id,
   });
   const serverCompleted = completedQuery ?? completedProp;
-  const toggleCompletionMutation = useMutation(api.tracking.toggleCompletion);
+  const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
 
   // Get offline-aware state when offline sync is enabled (T013)
   const offlineState = useOfflineHabitState({

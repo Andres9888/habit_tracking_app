@@ -97,11 +97,11 @@ export const restore = mutation({
     // SEC-004: Associate restored habit with authenticated user
     const habitId = await ctx.db.insert('habits', {
       ...args.habitData,
-      userId: identity.subject,
       order: maxOrder + 1,
       strength: 0,
       strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),
+      userId: identity.subject,
     });
 
     // Recreate all tracking data
@@ -110,6 +110,7 @@ export const restore = mutation({
         completed: trackingEntry.completed,
         date: trackingEntry.date,
         habitId,
+        userId: identity.subject,
       });
     }
 
