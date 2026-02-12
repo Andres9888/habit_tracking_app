@@ -5,7 +5,6 @@ import { memo } from 'react';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTemplateBadge } from '../../hooks/useTemplateBadge';
 import type { HabitsHeaderProps } from './types';
-import { AddHabitButton } from './AddHabitButton';
 import { IconButtonGroup } from './IconButtonGroup';
 import { ProBadge } from './ProBadge';
 import { useHeaderAnimations } from './useHeaderAnimations';
@@ -16,49 +15,78 @@ const DATE_STYLE = {
   fontFamily: 'System',
   letterSpacing: -0.76,
 };
-// FIXED: #78716c has 4.5:1+ contrast (was #C4BFB7 at 2.8:1)
 const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
+const ENTERING = FadeInDown.duration(280).springify().damping(18);
 
-/** Format today's date as "Today · Mon D" per spec */
 const formatTodayDate = (): string => {
   const d = new Date();
   return `Today · ${d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
 };
 
-function HabitsHeaderComponent({
-  completedToday = 0,
-  forceShow = false,
-  isPremiumUser = false,
-  openCreateHabitScreen,
-  openSettings,
-  openSortSheet,
-  openTemplatesScreen,
-  onUpgradePress,
-  showCompletionSummary = true,
-  totalHabits = 0,
-}: HabitsHeaderProps) {
+// eslint-disable-next-line max-lines-per-function
+function HabitsHeaderComponent(props: HabitsHeaderProps) {
+  const {
+    completedToday = 0,
+    forceShow = false,
+    isPremiumUser = false,
+    onUpgradePress,
+    showCompletionSummary = true,
+    totalHabits = 0,
+  } = props;
   const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });
   const anim = useHeaderAnimations();
   const h = useHeaderHandlers({
     addButtonScale: anim.addButtonScale,
     dismissBadge,
-    openCreateHabitScreen,
-    openSettings,
-    openSortSheet,
-    openTemplatesScreen,
+    openCreateHabitScreen: props.openCreateHabitScreen,
+    openSettings: props.openSettings,
+    openSortSheet: props.openSortSheet,
+    openTemplatesScreen: props.openTemplatesScreen,
     settingsButtonScale: anim.settingsButtonScale,
     sortButtonScale: anim.sortButtonScale,
     templatesButtonScale: anim.templatesButtonScale,
   });
 
-  if (totalHabits === 0 && !forceShow) return null;
+  const iconGroup = (
+    <IconButtonGroup
+      settingsAnimatedStyle={anim.settingsButtonAnimatedStyle}
+      showBadge={showBadge}
+      sortAnimatedStyle={anim.sortButtonAnimatedStyle}
+      templatesAnimatedStyle={anim.templatesButtonAnimatedStyle}
+      onSettingsPress={h.handleSettingsPress}
+      onSettingsPressIn={h.handleSettingsPressIn}
+      onSettingsPressOut={h.handleSettingsPressOut}
+      onSortPress={h.handleSortPress}
+      onSortPressIn={h.handleSortPressIn}
+      onSortPressOut={h.handleSortPressOut}
+      onTemplatesPress={h.handleTemplatesPress}
+      onTemplatesPressIn={h.handleTemplatesPressIn}
+      onTemplatesPressOut={h.handleTemplatesPressOut}
+    />
+  );
+
+  const rightSection = (
+    <View className='flex-row items-center gap-2'>
+      {!isPremiumUser && onUpgradePress && (
+        <ProBadge onPress={onUpgradePress} />
+      )}
+      {iconGroup}
+    </View>
+  );
+
+  // Empty state: show minimal header with icon group (templates accessible)
+  if (totalHabits === 0 && !forceShow) {
+    return (
+      <Animated.View className='gap-2 px-4' entering={ENTERING}>
+        <View className='flex-row items-center justify-end'>
+          {rightSection}
+        </View>
+      </Animated.View>
+    );
+  }
 
   return (
-    // OPTIMIZED: FadeInDown entry animation
-    <Animated.View
-      className='gap-2 px-4'
-      entering={FadeInDown.duration(280).springify().damping(18)}
-    >
+    <Animated.View className='gap-2 px-4' entering={ENTERING}>
       <View className='flex-row items-center justify-between'>
         <View className='flex-1 gap-1'>
           <Text className='text-[28px] font-bold' style={DATE_STYLE}>
@@ -70,31 +98,11 @@ function HabitsHeaderComponent({
               className='text-[15px]'
               style={STREAK_STYLE}
             >
-              {/* FIXED: Clearer UX - "X of Y done" instead of "X total" */}✓{' '}
-              {completedToday} of {totalHabits} done
+              ✓ {completedToday} of {totalHabits} done
             </Text>
           )}
         </View>
-        <View className='flex-row items-center gap-2'>
-          {!isPremiumUser && onUpgradePress && (
-            <ProBadge onPress={onUpgradePress} />
-          )}
-          <IconButtonGroup
-            settingsAnimatedStyle={anim.settingsButtonAnimatedStyle}
-            showBadge={showBadge}
-            sortAnimatedStyle={anim.sortButtonAnimatedStyle}
-            templatesAnimatedStyle={anim.templatesButtonAnimatedStyle}
-            onSettingsPress={h.handleSettingsPress}
-            onSettingsPressIn={h.handleSettingsPressIn}
-            onSettingsPressOut={h.handleSettingsPressOut}
-            onSortPress={h.handleSortPress}
-            onSortPressIn={h.handleSortPressIn}
-            onSortPressOut={h.handleSortPressOut}
-            onTemplatesPress={h.handleTemplatesPress}
-            onTemplatesPressIn={h.handleTemplatesPressIn}
-            onTemplatesPressOut={h.handleTemplatesPressOut}
-          />
-        </View>
+        {rightSection}
       </View>
     </Animated.View>
   );
