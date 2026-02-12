@@ -5,7 +5,7 @@
 import React from 'react';
 import { ScrollView, RefreshControl, Modal } from 'react-native';
 import { colors } from '../../theme/colors';
-import PremiumAnalyticsPaywall from '../../components/PremiumAnalyticsPaywall';
+import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 import { styles } from './AnalyticsScreen.styles';
 import {
@@ -43,7 +43,8 @@ export default function AnalyticsScreen() {
   if (!isPremiumUser && showPaywall) {
     return (
       <Modal visible animationType='slide' presentationStyle='fullScreen'>
-        <PremiumAnalyticsPaywall
+        <PremiumPaywall
+          variant="analytics"
           onClose={() => setShowPaywall(false)}
           onStartTrial={handleStartTrial}
         />

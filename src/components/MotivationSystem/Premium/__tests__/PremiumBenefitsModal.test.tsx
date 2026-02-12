@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { PremiumBenefitsModal } from '../PremiumBenefitsModal';
+import { PremiumBenefitsModal } from '..';
 
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => ({

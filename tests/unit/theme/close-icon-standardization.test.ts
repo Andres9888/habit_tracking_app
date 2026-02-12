@@ -18,10 +18,10 @@ const CLOSE_BUTTON_FILES = [
   'components/ArchivedHabitsModal/components/ModalHeader.tsx',
   'components/StatsNotesModal/NotesList/components/VisualizationModal.tsx',
   'components/VisionBoardPreview/components/PreviewHeader.tsx',
-  'components/MotivationSystem/Premium/MotivationPaywall/CloseButton.tsx',
+  // Consolidated into PremiumPaywall — close buttons are inline in variant components
   // Components with X close buttons (previously size={20})
   'components/QuickActionsSheet/SheetHeader.tsx',
-  'components/MotivationSystem/Premium/PremiumBenefitsModal/ModalHeader.tsx',
+  // Consolidated into PremiumPaywall — close buttons are inline in variant components
   'components/MotivationSystem/Reward/CelebrationScreen/components/ModalHeader.tsx',
   'components/MotivationSystem/Activation/ActivationModal/ActivationModalHeader.tsx',
   'components/MotivationSystem/Rescue/RescueMode/components/RescueModeHeader.tsx',
