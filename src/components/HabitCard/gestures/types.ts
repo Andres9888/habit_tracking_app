@@ -10,14 +10,13 @@ export interface UseHabitCardGesturesOptions {
   name: string;
   completed: boolean;
   disabled: boolean;
-  isToggling: boolean;
   reduceMotion: boolean;
   translateX: SharedValue<number>;
   cardScale: SharedValue<number>;
   today: string;
   onPress?: () => void;
   onLongPress?: () => void;
-  setIsToggling: (value: boolean) => void;
+  toggleOptimistic: () => void;
   toggleCompletionMutation: (args: {
     date: string;
     habitId: Id<'habits'>;

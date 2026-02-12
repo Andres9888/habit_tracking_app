@@ -7,7 +7,6 @@
  */
 
 import { withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 interface CelebrationOptions {
   cardScale: SharedValue<number>;
@@ -35,8 +34,7 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
 
   return () => {
     'worklet';
-    // Light haptic feedback
-    runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
+    // Haptic feedback is handled by tapGesture onBegin
 
     if (reduceMotion) {
       // Instant state change — no spring/timing animations
@@ -75,7 +73,7 @@ export function createUncheckTrigger(
 ) {
   return () => {
     'worklet';
-    runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Soft);
+    // Haptic feedback is handled by tapGesture onBegin
 
     checkmarkScale.value = reduceMotion
       ? 1

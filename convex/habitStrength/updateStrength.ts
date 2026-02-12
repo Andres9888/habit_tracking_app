@@ -1,13 +1,9 @@
-/**
- * Update Habit Strength Mutation
- * @deprecated Use tracking.toggleCompletion instead
- */
+// Update Habit Strength Mutation - @deprecated Use tracking.toggleCompletion instead
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
 import { calculateNewStrength } from './momentum';
 import { getStrengthLevel } from './strengthLevel';
 import { predictCompletionProbability } from './legacyFormula';
-
 export const updateHabitStrength = mutation({
   args: {
     behaviorPerformed: v.boolean(),
@@ -22,24 +18,19 @@ export const updateHabitStrength = mutation({
         'Unauthenticated: Must be logged in to update habit strength'
       );
     }
-
     const habit = await ctx.db.get(args.habitId);
     if (!habit) {
       throw new Error('Habit not found');
     }
-
     // SEC-001: Ownership verification
     if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to update this habit');
     }
-
     if (!/^\d{4}-\d{2}-\d{2}$/.test(args.date)) {
       throw new Error('Invalid date format; expected YYYY-MM-DD');
     }
-
     const previousStrength = habit.strength ?? 0;
     const userId = identity.subject;
-
     // Update tracking record
     const trackingForDay = await ctx.db
       .query('tracking')
@@ -47,7 +38,6 @@ export const updateHabitStrength = mutation({
         q.eq('habitId', args.habitId).eq('date', args.date)
       )
       .unique();
-
     if (trackingForDay) {
       if (trackingForDay.completed !== args.behaviorPerformed) {
         await ctx.db.patch(trackingForDay._id, {
@@ -60,20 +50,17 @@ export const updateHabitStrength = mutation({
         completed: args.behaviorPerformed,
         date: args.date,
         habitId: args.habitId,
-        userId,
+        userId: habit.userId,
       });
     }
-
     // Calculate completionsLast7Days for streak shield
     const toggleDate = new Date(args.date);
     const sevenDaysAgo = new Date(toggleDate);
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
     const allTracking = await ctx.db
       .query('tracking')
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
-
     let completionsLast7Days = 0;
     for (const record of allTracking) {
       const recordDate = new Date(record.date);
@@ -85,22 +72,18 @@ export const updateHabitStrength = mutation({
         completionsLast7Days++;
       }
     }
-
     const newStrength =
       calculateNewStrength(
         previousStrength * 100,
         args.behaviorPerformed,
         completionsLast7Days
       ) / 100;
-
     const strengthLevel = getStrengthLevel(newStrength);
-
     await ctx.db.patch(args.habitId, {
       strength: newStrength,
       strengthLevel,
       strengthUpdatedAt: Date.now(),
     });
-
     return {
       baseline: 0,
       compliance: 0,
@@ -111,13 +94,4 @@ export const updateHabitStrength = mutation({
       strengthLevel,
     };
   },
-  returns: v.object({
-    baseline: v.number(),
-    compliance: v.number(),
-    daysSinceCreation: v.number(),
-    newStrength: v.number(),
-    predictionProbability: v.number(),
-    previousStrength: v.number(),
-    strengthLevel: v.string(),
-  }),
 });
