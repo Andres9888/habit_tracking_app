@@ -21,6 +21,10 @@ import {
   type StreakMilestone,
 } from './constants';
 import { persistMilestoneShown } from './useMilestoneCheck';
+import {
+  maybeRequestReview,
+  incrementCompletionCount,
+} from '../../utils/storeReview';
 import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
 
 interface CelebrationData {
@@ -84,6 +88,9 @@ export function StreakMilestoneProvider({
       previousStreak: number,
       currentStreak: number
     ) => {
+      // Track completion for store review eligibility
+      void incrementCompletionCount();
+
       const milestone = checkStreakMilestoneCrossed(previousStreak, currentStreak);
 
       if (milestone) {
@@ -102,7 +109,15 @@ export function StreakMilestoneProvider({
   const handleClose = useCallback(() => {
     if (celebrationData) {
       // Persist that this milestone was shown
-      persistMilestoneShown(celebrationData.habitId, celebrationData.milestone.days);
+      persistMilestoneShown(
+        celebrationData.habitId,
+        celebrationData.milestone.days,
+      );
+      // After celebration dismissal, maybe prompt for App Store review
+      // Small delay so the modal finishes closing before the system dialog appears
+      setTimeout(() => {
+        void maybeRequestReview(celebrationData.milestone.days);
+      }, 500);
     }
     setCelebrationData(null);
   }, [celebrationData]);
