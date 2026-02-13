@@ -4,7 +4,11 @@
  * @see docs/offline-habit-sync.md FR-011 (handle 500+ operations)
  */
 
-import type { OfflineQueueState, QueueEvent } from '../../queue';
+import type {
+  OfflineOperation,
+  OfflineQueueState,
+  QueueEvent,
+} from '../../queue';
 import type { ErrorCategory } from '../../types';
 import { calculateStats } from '../helpers';
 import type { BatchStatusResult } from './types';
@@ -41,7 +45,7 @@ export function createMarkFailedBatch(
     };
 
     const now = Date.now();
-    const newOperations = state.operations.map((op) => {
+    const newOperations: OfflineOperation<'toggleCompletion'>[] = state.operations.map((op) => {
       if (idsToUpdate.has(op.id)) {
         result.succeeded.push(op.id);
         idsToUpdate.delete(op.id);

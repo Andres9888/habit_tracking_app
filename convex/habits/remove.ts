@@ -90,8 +90,12 @@ export const restore = mutation({
       throw new Error('Unauthenticated: Must be logged in to restore habits');
     }
 
-    const allHabits = await ctx.db.query('habits').collect();
-    const maxOrder = findMaxOrder(allHabits);
+    // Issue 7: Scope to authenticated user using index instead of reading ALL habits
+    const userHabits = await ctx.db
+      .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
+      .collect();
+    const maxOrder = findMaxOrder(userHabits);
 
     // Recreate the habit with proper order and initialize strength
     // SEC-004: Associate restored habit with authenticated user

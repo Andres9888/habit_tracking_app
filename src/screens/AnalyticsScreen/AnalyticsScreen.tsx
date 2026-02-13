@@ -3,9 +3,9 @@
  * Shows habit statistics, charts, and insights
  */
 import React from 'react';
-import { ScrollView, RefreshControl, Modal } from 'react-native';
+import { ScrollView, RefreshControl } from 'react-native';
 import { colors } from '../../theme/colors';
-import PremiumAnalyticsPaywall from '../../components/PremiumAnalyticsPaywall';
+import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 import { styles } from './AnalyticsScreen.styles';
 import {
@@ -18,7 +18,7 @@ import {
   ExportMenu,
 } from './components';
 
-export default function AnalyticsScreen() {
+export default function AnalyticsScreen() { // eslint-disable-line max-lines-per-function
   const {
     refreshing,
     showPaywall,
@@ -42,12 +42,12 @@ export default function AnalyticsScreen() {
   // Show paywall modal if not premium user
   if (!isPremiumUser && showPaywall) {
     return (
-      <Modal visible animationType='slide' presentationStyle='fullScreen'>
-        <PremiumAnalyticsPaywall
-          onClose={() => setShowPaywall(false)}
-          onStartTrial={handleStartTrial}
-        />
-      </Modal>
+      <PremiumPaywall
+        variant="analytics"
+        visible
+        onClose={() => setShowPaywall(false)}
+        onStartTrial={handleStartTrial}
+      />
     );
   }
 
@@ -61,7 +61,7 @@ export default function AnalyticsScreen() {
           colors={[colors.primary[500]]}
           refreshing={refreshing}
           tintColor={colors.primary[500]}
-          onRefresh={onRefresh}
+          onRefresh={() => void onRefresh()}
         />
       }
       style={styles.container}
@@ -89,12 +89,12 @@ export default function AnalyticsScreen() {
         onHabitPress={handleHabitPress}
       />
 
-      <ExportButton onPress={handleExportPress} />
+      <ExportButton onPress={() => void handleExportPress()} />
 
       <ExportMenu
         visible={showExportMenu}
         onClose={() => setShowExportMenu(false)}
-        onExport={handleExport}
+        onExport={() => void handleExport()}
       />
     </ScrollView>
   );

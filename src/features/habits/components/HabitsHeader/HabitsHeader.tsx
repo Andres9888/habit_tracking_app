@@ -4,6 +4,7 @@ import { View, Text } from 'react-native';
 import { memo } from 'react';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTemplateBadge } from '../../hooks/useTemplateBadge';
+import { DailyProgressRing } from '../../../../components/DailyProgressRing';
 import type { HabitsHeaderProps } from './types';
 import { AddHabitButton } from './AddHabitButton';
 import { IconButtonGroup } from './IconButtonGroup';
@@ -60,20 +61,22 @@ function HabitsHeaderComponent({
       entering={FadeInDown.duration(280).springify().damping(18)}
     >
       <View className='flex-row items-center justify-between'>
-        <View className='flex-1 gap-1'>
-          <Text className='text-[28px] font-bold' style={DATE_STYLE}>
-            {formatTodayDate()}
-          </Text>
-          {showCompletionSummary && (
-            <Text
-              accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
-              className='text-[15px]'
-              style={STREAK_STYLE}
-            >
-              {/* FIXED: Clearer UX - "X of Y done" instead of "X total" */}✓{' '}
-              {completedToday} of {totalHabits} done
+        <View className='flex-row items-center gap-3 flex-1'>
+          <DailyProgressRing completed={completedToday} total={totalHabits} />
+          <View className='flex-1 gap-1'>
+            <Text className='text-[22px] font-bold' style={DATE_STYLE}>
+              {formatTodayDate()}
             </Text>
-          )}
+            {showCompletionSummary && (
+              <Text
+                accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
+                className='text-[13px]'
+                style={STREAK_STYLE}
+              >
+                {completedToday} of {totalHabits} done
+              </Text>
+            )}
+          </View>
         </View>
         <View className='flex-row items-center gap-2'>
           {!isPremiumUser && onUpgradePress && (

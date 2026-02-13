@@ -32,7 +32,6 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
       const index = getIndex?.() ?? 0;
       const renderData = getHabitRenderData(item, index, args);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (
         <HabitRenderContent
           celebrationsEnabled={celebrationsEnabled}
@@ -44,7 +43,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           handleArchive={handleArchive}
           handleHabitPress={handleHabitPress}
           highlightHabitId={highlightHabitId}
-          isActive={isActive}
+          isActive={Boolean(isActive)}
           isConnectedToNextWeek={renderData.isConnectedToNextWeek}
           isConnectedToPreviousWeek={renderData.isConnectedToPreviousWeek}
           isReorderingEnabled={isReorderingEnabled}
@@ -52,10 +51,10 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           notifyWeekCompletion={notifyWeekCompletion}
           reduceMotionPreference={reduceMotionPreference}
           showConnectors={showConnectors}
-          showHabitStrengthPercentage={Boolean(showHabitStrengthPercentage) as boolean}
+          showHabitStrengthPercentage={Boolean(showHabitStrengthPercentage)}
           streak={renderData.streak}
           toggleHabit={toggleHabit}
-          triggerEntrance={renderData.triggerEntrance}
+          triggerEntrance={Boolean(renderData.triggerEntrance)}
           weekDateStrings={weekDateStrings}
           weekStatus={renderData.weekStatus}
           onHabitEntranceComplete={onHabitEntranceComplete}

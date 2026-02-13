@@ -23,7 +23,8 @@ export function useHabitsAppHandlers({
   const handleUpgradeIntent = useCallback(() => {
     logInteraction('premium_home_cta_view', { source: 'home_hero' });
     triggerSelection();
-    setUpgradePromptVisible(true);
+    // Go directly to paywall — skip intermediate prompt to reduce conversion friction
+    setPaywallVisible(true);
   }, [triggerSelection]);
 
   const handleUpgradeDismiss = useCallback(() => {

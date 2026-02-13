@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   statCardValue: {
-    ...typography.h2,
+    ...typography.heading2,
     color: colors.text.primary,
   },
   statCardValueRow: {

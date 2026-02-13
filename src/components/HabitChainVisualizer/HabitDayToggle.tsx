@@ -32,7 +32,7 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     useHabitDayToggleHandlers({ buttonScale, completed, onPress });
 
   const isCircle = shape === 'circle';
-  const borderRadius = isCircle ? 20 : 9;
+  const borderRadius = isCircle ? 22 : 10;
   const backgroundColor = getBackgroundColor(
     completed,
     accentColor,
@@ -55,7 +55,7 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
         accessibilityRole='button'
         accessibilityState={{ disabled }}
         className={clsx(
-          'h-9 w-9 items-center justify-center',
+          'h-11 w-11 items-center justify-center',
           !completed && 'border-2'
         )}
         disabled={disabled}

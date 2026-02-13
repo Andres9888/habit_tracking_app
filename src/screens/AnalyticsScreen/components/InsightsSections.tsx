@@ -8,7 +8,7 @@ import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
 import HabitRankingsList from '../../../components/HabitRankingsList';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 interface InsightsSectionsProps {
   weeklyInsights: any;
   rankedHabits: any[];
@@ -26,7 +26,9 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
         <Text style={styles.sectionTitle}>Weekly Insights</Text>
         <WeeklyInsightsCard
           insights={weeklyInsights ?? null}
-          onArchivePress={() => { /* TODO */ }}
+          onArchivePress={() => {
+            /* TODO */
+          }}
           onHabitPress={onHabitPress}
         />
       </View>
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   sectionTitle: {
-    ...typography.h3,
+    ...typography.heading3,
     color: colors.text.primary,
     marginBottom: spacing.md,
   },

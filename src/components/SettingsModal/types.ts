@@ -21,6 +21,13 @@ export interface SettingsModalProps {
   onClose: () => void;
   showCharacterScreen?: boolean;
   visible: boolean;
+  // Streak reminders
+  streakRemindersEnabled?: boolean;
+  streakReminderTime?: string;
+  isPremium?: boolean;
+  onToggleStreakReminders?: (value: boolean) => void | Promise<void>;
+  onChangeStreakReminderTime?: (time: string) => void | Promise<void>;
+  onPremiumUpsell?: () => void;
 }
 
 export interface SettingsColors {
@@ -44,4 +51,11 @@ export interface SettingsContentProps {
   ) => void | Promise<void>;
   onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
   onOpenArchivedHabits: () => void;
+  // Streak reminders
+  streakRemindersEnabled: boolean;
+  streakReminderTime: string;
+  isPremium: boolean;
+  onToggleStreakReminders: (value: boolean) => void | Promise<void>;
+  onChangeStreakReminderTime: (time: string) => void | Promise<void>;
+  onPremiumUpsell?: () => void;
 }

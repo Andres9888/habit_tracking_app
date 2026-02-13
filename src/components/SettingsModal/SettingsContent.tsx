@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
+import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
 import type { SettingsContentProps } from './types';
 
@@ -44,6 +45,17 @@ export function SettingsContent(p: SettingsContentProps) {
           </SettingsSection>
         </Animated.View>
         <Animated.View entering={anim(50)}>
+          <StreakRemindersSection
+            highContrastMode={hc}
+            enabled={p.streakRemindersEnabled}
+            reminderTime={p.streakReminderTime}
+            isPremium={p.isPremium}
+            onToggle={p.onToggleStreakReminders}
+            onChangeTime={p.onChangeStreakReminderTime}
+            onPremiumUpsell={p.onPremiumUpsell}
+          />
+        </Animated.View>
+        <Animated.View entering={anim(100)}>
           <SettingsSection highContrastMode={hc} title='Habit Management'>
             <SettingsRow
               highContrastMode={hc}
@@ -56,7 +68,7 @@ export function SettingsContent(p: SettingsContentProps) {
             />
           </SettingsSection>
         </Animated.View>
-        <Animated.View entering={anim(100)}>
+        <Animated.View entering={anim(150)}>
           <AccountSection isHighContrastActive={hc} />
         </Animated.View>
       </View>

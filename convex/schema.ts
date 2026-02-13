@@ -503,6 +503,10 @@ const applicationTables = {
 
     showWeekCompletionBar: v.optional(v.boolean()),
     sortHabitsAlphabetically: v.optional(v.boolean()),
+    // Streak reminder notifications
+    streakRemindersEnabled: v.optional(v.boolean()),
+    // "20:00" (24h format) — default 8 PM
+    streakReminderTime: v.optional(v.string()),
     textSize: v.optional(v.string()),
     // Backwards compatibility
     useDyslexicFont: v.optional(v.boolean()),

@@ -2,7 +2,11 @@
  * buildPlaybackReturnValue - Assembles the return value for useAudioPlayback
  */
 
-import type { PlaybackSpeed, PlaybackStatus, UseAudioPlaybackReturn } from './types';
+import type {
+  PlaybackSpeed,
+  PlaybackStatus,
+  UseAudioPlaybackReturn,
+} from './types';
 import { formatDuration } from './formatUtils';
 
 interface BuildPlaybackReturnValueParams {

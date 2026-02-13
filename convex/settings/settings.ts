@@ -21,10 +21,7 @@ export const get = query({
         .filter((q) => q.eq(q.field('userId'), identity.subject))
         .first();
     }
-    // Fallback for anonymous users or if no user-specific settings exist
-    if (!settings) {
-      settings = await ctx.db.query('userSettings').first();
-    }
+    // SEC-001: No fallback — return defaults if no user-specific settings exist
 
     return {
       appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
@@ -59,6 +56,11 @@ export const get = query({
       showWeekCompletionBar:
         settings?.showWeekCompletionBar ??
         DEFAULT_SETTINGS.showWeekCompletionBar,
+      streakRemindersEnabled:
+        settings?.streakRemindersEnabled ??
+        DEFAULT_SETTINGS.streakRemindersEnabled,
+      streakReminderTime:
+        settings?.streakReminderTime ?? DEFAULT_SETTINGS.streakReminderTime,
       useDyslexicFont:
         settings?.useDyslexicFont ?? DEFAULT_SETTINGS.useDyslexicFont,
     };

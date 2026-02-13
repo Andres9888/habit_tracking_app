@@ -37,5 +37,7 @@ export const DEFAULT_SETTINGS = {
   showNotesStats: true,
   showStreaks: true,
   showWeekCompletionBar: false,
+  streakRemindersEnabled: false,
+  streakReminderTime: '20:00',
   useDyslexicFont: false,
 };

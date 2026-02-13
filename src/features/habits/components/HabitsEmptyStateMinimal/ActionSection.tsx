@@ -12,7 +12,7 @@ interface ActionSectionProps {
   errorMessage: string | null;
   isKeyboardVisible: boolean;
   secondaryLinksAnimatedStyle: AnimatedStyle;
-  onCreateHabit: () => void;
+  onCreateHabit: () => void | Promise<void>;
   onDismissError: () => void;
   onBrowseTemplates?: () => void;
   onCreateCustom?: () => void;

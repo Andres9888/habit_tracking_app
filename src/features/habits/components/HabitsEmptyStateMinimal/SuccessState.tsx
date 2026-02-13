@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function */
+
 /**
  * SuccessState - Post-creation celebration screen
  *
@@ -26,6 +28,7 @@ export function SuccessState({
   habitName,
   habitEmoji,
   onAddAnother,
+  onBrowseTemplates,
   onTransitionComplete,
   autoTransition = true,
 }: SuccessStateProps) {
@@ -96,6 +99,7 @@ export function SuccessState({
           habitName={habitName}
           tapHintStyle={tapHintStyle}
           onAddAnother={onAddAnother}
+          onBrowseTemplates={onBrowseTemplates}
         />
       </Animated.View>
     </Pressable>

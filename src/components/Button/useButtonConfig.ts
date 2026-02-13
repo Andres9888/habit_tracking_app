@@ -34,7 +34,7 @@ export function useButtonConfig(
     },
     small: {
       fontSize: 15,
-      height: 32,
+      height: 44,
       iconSize: 16,
       paddingHorizontal: theme.custom.spacing.base,
     },

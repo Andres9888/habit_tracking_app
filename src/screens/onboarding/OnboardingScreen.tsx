@@ -24,20 +24,11 @@ import Animated, {
   FadeIn,
   FadeInDown,
   FadeInUp,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withSpring,
-  withTiming,
-  interpolate,
-  runOnJS,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
-
-const SPRING_CONFIG = { damping: 18, stiffness: 120 };
 
 // ─── Chain Visualization ─────────────────────────────────────────────
 
@@ -116,7 +107,6 @@ function StrengthMeter() {
 }
 
 function interpolateColor(t: number): string {
-  // Green gradient from light to deep
   if (t < 0.5) return '#10B981';
   if (t < 0.75) return '#059669';
   return '#047857';
@@ -293,10 +283,11 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         style={[styles.skipContainer, { top: insets.top + 12 }]}
       >
         <Pressable
-          accessibilityLabel='Skip onboarding'
-          accessibilityRole='button'
-          hitSlop={16}
           onPress={handleSkip}
+          hitSlop={24}
+          style={styles.skipButton}
+          accessibilityRole="button"
+          accessibilityLabel="Skip onboarding"
         >
           <Text style={styles.skipText}>Skip</Text>
         </Pressable>
@@ -367,32 +358,72 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
     paddingHorizontal: 32,
   },
+  chainContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: -4,
+  },
+  chainLink: {
+    alignItems: 'center',
+    borderRadius: 18,
+    height: 52,
+    justifyContent: 'center',
+    marginHorizontal: -2,
+    width: 36,
+  },
+  chainLinkInner: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    height: 36,
+    width: 20,
+  },
   container: {
     backgroundColor: '#faf9f7',
     flex: 1,
   },
+  ctaButton: {
+    backgroundColor: '#059669',
+    borderRadius: 12,
+    elevation: 4,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+  },
+  ctaButtonDisabled: {
+    opacity: 0.7,
+  },
+  ctaText: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '600',
+  },
   dot: {
     borderRadius: 4,
     height: 8,
-  },
-  ctaButton: {
-    backgroundColor: '#059669',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    elevation: 4,
-    shadowRadius: 16,
   },
   dotsContainer: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 8,
   },
-  ctaButtonDisabled: {
-    opacity: 0.7,
+  nextButton: {
+    backgroundColor: '#059669',
+    borderRadius: 12,
+    elevation: 4,
+    paddingHorizontal: 48,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+  },
+  nextText: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '600',
   },
   page: {
     alignItems: 'center',
@@ -400,100 +431,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 32,
   },
-  // Chain styles
-  chainContainer: {
+  skipButton: {
     alignItems: 'center',
-    flexDirection: 'row',
-    gap: -4,
+    justifyContent: 'center',
+    minHeight: 44,
+    minWidth: 44,
   },
-
   skipContainer: {
     position: 'absolute',
     right: 24,
     zIndex: 10,
   },
-
-  chainLink: {
-    borderRadius: 18,
-    height: 52,
-    alignItems: 'center',
-    width: 36,
-    justifyContent: 'center',
-    marginHorizontal: -2,
-  },
-
   skipText: {
     color: '#6B7280',
     fontSize: 17,
     fontWeight: '500',
   },
-
-  chainLinkInner: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    height: 36,
-    width: 20,
-  },
-
-  title: {
-    fontSize: 34,
-    color: '#047857',
-    fontWeight: '700',
-    marginBottom: 12,
-    textAlign: 'center',
-    letterSpacing: -0.5,
-  },
-
-  ctaText: {
-    color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '600',
-  },
-
-  visualContainer: {
-    height: 280,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-
-  nextButton: {
-    backgroundColor: '#059669',
-    borderRadius: 12,
-    paddingHorizontal: 48,
-    paddingVertical: 16,
-    shadowColor: '#000',
-    elevation: 4,
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-  },
-  subtitle: {
-    fontSize: 17,
-    color: '#6B7280',
-    textAlign: 'center',
-    lineHeight: 24,
-    paddingHorizontal: 16,
-  },
-  nextText: {
-    color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '600',
-  },
-
   strengthBar: {
     backgroundColor: '#059669',
     borderRadius: 8,
     height: 32,
   },
-  // Strength styles
   strengthContainer: {
     gap: 12,
     paddingHorizontal: 16,
     width: '100%',
   },
   strengthLabel: {
-    color: '#6B7280',
+    color: '#9CA3AF',
     fontSize: 13,
     fontWeight: '500',
   },
@@ -506,11 +471,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
   },
-
+  subtitle: {
+    color: '#6B7280',
+    fontSize: 17,
+    lineHeight: 24,
+    paddingHorizontal: 16,
+    textAlign: 'center',
+  },
   templateEmoji: {
     fontSize: 28,
   },
-  // Template styles
   templateGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -526,10 +496,24 @@ const styles = StyleSheet.create({
     height: 56,
     justifyContent: 'center',
     shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
-    width: 56,
     shadowRadius: 16,
+    width: 56,
+  },
+  title: {
+    color: '#047857',
+    fontSize: 34,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  visualContainer: {
+    alignItems: 'center',
+    height: 280,
+    justifyContent: 'center',
+    marginBottom: 40,
   },
 });
 

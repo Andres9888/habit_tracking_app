@@ -32,7 +32,7 @@ export const summaryStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   summaryValue: {
-    ...typography.h3,
+    ...typography.heading3,
     marginLeft: spacing.xs,
   },
   summaryValueContainer: {

@@ -11,7 +11,7 @@
  * - Handles all edge cases (loading, errors, restore)
  */
 
-import { Platform, Modal, View, Text, Pressable } from 'react-native';
+import { Platform, Modal, View, Text, Pressable, Alert } from 'react-native';
 import RevenueCatUI from 'react-native-purchases-ui';
 import type { RevenueCatPaywallProps } from './types';
 
@@ -43,9 +43,9 @@ export function RevenueCatPaywall({
               app to subscribe.
             </Text>
             <Pressable
-              accessibilityLabel="Close"
-              accessibilityRole="button"
-              className="rounded-xl bg-amber-500 px-6 py-3"
+              accessibilityLabel='Close'
+              accessibilityRole='button'
+              className='rounded-xl bg-amber-500 px-6 py-3'
               style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
               onPress={onClose}
             >
@@ -93,17 +93,19 @@ export function RevenueCatPaywall({
         }}
         onPurchaseError={({ error }) => {
           if (__DEV__)
-            if (__DEV__) console.error('[RevenueCatPaywall] Purchase error:', error);
+            console.error('[RevenueCatPaywall] Purchase error:', error);
+          Alert.alert('Purchase failed', 'Please try again.');
         }}
         onRestoreCompleted={({ customerInfo }) => {
           if (__DEV__)
-            if (__DEV__) console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
+            console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
           onRestoreSuccess?.();
           onClose();
         }}
         onRestoreError={({ error }) => {
           if (__DEV__)
-            if (__DEV__) console.error('[RevenueCatPaywall] Restore error:', error);
+            console.error('[RevenueCatPaywall] Restore error:', error);
+          Alert.alert('Restore failed', 'Please try again.');
         }}
       />
     </Modal>

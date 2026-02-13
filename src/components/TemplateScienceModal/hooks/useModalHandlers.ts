@@ -50,7 +50,7 @@ export const useModalHandlers = ({
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     try {
       await Share.share({
-        message: `Check out this habit template: "${template.name}"\n\n${template.description}\n\n🔬 Scientific backing: ${template.scientificReference}`,
+        message: `Check out this habit template: "${template.name}"\n\n${template.description}\n\n🔬 Scientific backing: ${template.scientificReference}\n\nBuild this habit with Chain Day: https://apps.apple.com/app/chain-day`,
         title: `${template.name} - Habit Template`,
       });
     } catch (error) {
