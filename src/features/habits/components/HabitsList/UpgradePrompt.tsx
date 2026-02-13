@@ -21,8 +21,8 @@ export function UpgradePrompt({
 
   return (
     <Animated.View
-      entering={FadeIn.duration(280)}
       className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
+      entering={FadeIn.duration(280)}
     >
       <Pressable
         accessibilityLabel='Close upgrade prompt'
@@ -31,8 +31,8 @@ export function UpgradePrompt({
         onPress={onClose}
       />
       <Animated.View
-        entering={SlideInDown.duration(280).damping(18)}
         className='w-full rounded-t-3xl bg-gradient-to-b from-white to-amber-50/30 px-6 py-8'
+        entering={SlideInDown.duration(280).damping(18)}
       >
         <View className='gap-4'>
           <View className='items-center pb-2'>

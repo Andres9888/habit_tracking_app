@@ -30,7 +30,9 @@ export function BenefitsCTAFooter({
         <Text className='text-2xl font-bold text-stone-800'>
           {handlers.priceLabel ?? '$6.99/month'}
         </Text>
-        <Text className='text-sm text-stone-500'>7-day free trial • Cancel anytime</Text>
+        <Text className='text-sm text-stone-500'>
+          7-day free trial • Cancel anytime
+        </Text>
       </View>
       <Pressable
         accessibilityHint='Opens subscription options'
@@ -41,15 +43,19 @@ export function BenefitsCTAFooter({
         onPressIn={handlers.handleButtonPressIn}
         onPressOut={handlers.handleButtonPressOut}
       >
-        <Animated.View style={reduceMotion ? undefined : handlers.buttonAnimatedStyle}>
+        <Animated.View
+          style={reduceMotion ? undefined : handlers.buttonAnimatedStyle}
+        >
           <LinearGradient
             className='flex-row items-center justify-center gap-2 rounded-xl py-4'
             colors={[config.gradientColors[0], config.gradientColors[1]]}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
-            style={!handlers.priceLabel ? { opacity: 0.5 } : undefined}
+            style={handlers.priceLabel ? undefined : { opacity: 0.5 }}
           >
-            <Text className='text-base font-semibold text-white'>{config.ctaText}</Text>
+            <Text className='text-base font-semibold text-white'>
+              {config.ctaText}
+            </Text>
             <ChevronRight color='#ffffff' size={18} />
           </LinearGradient>
         </Animated.View>
