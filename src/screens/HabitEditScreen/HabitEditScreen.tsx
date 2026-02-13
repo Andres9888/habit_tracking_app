@@ -41,6 +41,7 @@ export default function HabitEditScreen({
           >
             <EditHeader
               canSave={state.habitName.trim().length >= 2}
+              isSaving={state.isSaving}
               paddingTop={Math.max(insets.top + 4, 12)}
               onCancel={() => {
                 state.triggerSelection();
