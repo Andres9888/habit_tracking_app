@@ -22,7 +22,6 @@ export const get = query({
         .first();
     }
     // SEC-001: No fallback — return defaults if no user-specific settings exist
-    // (previous fallback leaked other users' settings including premium status)
 
     return {
       appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
