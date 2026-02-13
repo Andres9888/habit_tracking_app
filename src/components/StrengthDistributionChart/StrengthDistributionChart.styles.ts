@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   centerLabelValue: {
-    ...typography.h1,
+    ...typography.heading1,
     color: colors.text.primary,
     fontSize: 32,
   },
@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   emptyText: {
-    ...typography.h3,
+    ...typography.heading3,
     color: colors.text.secondary,
     marginBottom: spacing.xs,
   },

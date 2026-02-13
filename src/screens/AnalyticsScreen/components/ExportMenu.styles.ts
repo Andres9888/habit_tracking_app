@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
     color: colors.text.primary,
   },
   exportMenuTitle: {
-    ...typography.h3,
+    ...typography.heading3,
     color: colors.text.primary,
     marginBottom: spacing.md,
     textAlign: 'center',

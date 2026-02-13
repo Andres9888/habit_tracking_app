@@ -24,20 +24,11 @@ import Animated, {
   FadeIn,
   FadeInDown,
   FadeInUp,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withSpring,
-  withTiming,
-  interpolate,
-  runOnJS,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
-
-const SPRING_CONFIG = { damping: 18, stiffness: 120 };
 
 // ─── Chain Visualization ─────────────────────────────────────────────
 
@@ -103,7 +94,6 @@ function StrengthMeter() {
 }
 
 function interpolateColor(t: number): string {
-  // Green gradient from light to deep
   if (t < 0.5) return '#10B981';
   if (t < 0.75) return '#059669';
   return '#047857';
@@ -332,9 +322,84 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
 // ─── Styles ──────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
+  bottomContainer: {
+    alignItems: 'center',
+    gap: 24,
+    paddingBottom: 60,
+    paddingHorizontal: 32,
+  },
+  chainContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: -4,
+  },
+  chainLink: {
+    alignItems: 'center',
+    borderRadius: 18,
+    height: 52,
+    justifyContent: 'center',
+    marginHorizontal: -2,
+    width: 36,
+  },
+  chainLinkInner: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    height: 36,
+    width: 20,
+  },
   container: {
-    flex: 1,
     backgroundColor: '#faf9f7',
+    flex: 1,
+  },
+  ctaButton: {
+    backgroundColor: '#059669',
+    borderRadius: 12,
+    elevation: 4,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+  },
+  ctaButtonDisabled: {
+    opacity: 0.7,
+  },
+  ctaText: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  dot: {
+    borderRadius: 4,
+    height: 8,
+  },
+  dotsContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  nextButton: {
+    backgroundColor: '#059669',
+    borderRadius: 12,
+    elevation: 4,
+    paddingHorizontal: 48,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+  },
+  nextText: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  page: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 32,
   },
   skipContainer: {
     position: 'absolute',
@@ -342,155 +407,77 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   skipText: {
-    fontSize: 17,
     color: '#6B7280',
+    fontSize: 17,
     fontWeight: '500',
   },
-  page: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 32,
-  },
-  visualContainer: {
-    height: 280,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  title: {
-    fontSize: 34,
-    fontWeight: '700',
-    color: '#047857',
-    textAlign: 'center',
-    marginBottom: 12,
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 17,
-    color: '#6B7280',
-    textAlign: 'center',
-    lineHeight: 24,
-    paddingHorizontal: 16,
-  },
-  bottomContainer: {
-    paddingBottom: 60,
-    paddingHorizontal: 32,
-    alignItems: 'center',
-    gap: 24,
-  },
-  dotsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  dot: {
-    height: 8,
-    borderRadius: 4,
-  },
-  nextButton: {
-    backgroundColor: '#059669',
-    paddingVertical: 16,
-    paddingHorizontal: 48,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
-  },
-  nextText: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  ctaButton: {
-    backgroundColor: '#059669',
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
-  },
-  ctaButtonDisabled: {
-    opacity: 0.7,
-  },
-  ctaText: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  // Chain styles
-  chainContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: -4,
-  },
-  chainLink: {
-    width: 36,
-    height: 52,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: -2,
-  },
-  chainLinkInner: {
-    width: 20,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: '#FFFFFF',
-  },
-  // Strength styles
-  strengthContainer: {
-    width: '100%',
-    gap: 12,
-    paddingHorizontal: 16,
-  },
-  strengthRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
   strengthBar: {
-    height: 32,
-    borderRadius: 8,
     backgroundColor: '#059669',
+    borderRadius: 8,
+    height: 32,
+  },
+  strengthContainer: {
+    gap: 12,
+    paddingHorizontal: 16,
+    width: '100%',
   },
   strengthLabel: {
+    color: '#9CA3AF',
     fontSize: 13,
-    color: '#6B7280',
     fontWeight: '500',
   },
   strengthLabelActive: {
     color: '#047857',
     fontWeight: '700',
   },
-  // Template styles
+  strengthRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  subtitle: {
+    color: '#6B7280',
+    fontSize: 17,
+    lineHeight: 24,
+    paddingHorizontal: 16,
+    textAlign: 'center',
+  },
+  templateEmoji: {
+    fontSize: 28,
+  },
   templateGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
     gap: 16,
+    justifyContent: 'center',
     width: 280,
   },
   templateItem: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: '#F0FDF4',
-    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F0FDF4',
+    borderRadius: 16,
+    elevation: 2,
+    height: 56,
+    justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
-    elevation: 2,
+    width: 56,
   },
-  templateEmoji: {
-    fontSize: 28,
+  title: {
+    color: '#047857',
+    fontSize: 34,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  visualContainer: {
+    alignItems: 'center',
+    height: 280,
+    justifyContent: 'center',
+    marginBottom: 40,
   },
 });
 
