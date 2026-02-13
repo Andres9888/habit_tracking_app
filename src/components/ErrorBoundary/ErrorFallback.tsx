@@ -66,7 +66,7 @@ export function ErrorFallback({
 
       <Text style={styles.description}>
         {showLogout
-          ? 'Multiple retries haven't fixed the issue. Signing out and back in often resolves persistent errors.'
+          ? "Multiple retries haven't fixed the issue. Signing out and back in often resolves persistent errors."
           : "Something unexpected happened, but don't worry — nothing was lost."}
       </Text>
 
