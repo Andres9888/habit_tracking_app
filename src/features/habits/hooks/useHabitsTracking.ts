@@ -63,11 +63,9 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
   const getHabitStatus = useCallback(
     (habitId: string, dateString: string): HabitStatus => {
-      // Use the pre-built Map (O(1)) instead of tracking.find() (O(N))
+      // Use the pre-built map (includes optimistic merges) for O(1) lookup
       const completedDates = completedDatesByHabit.get(habitId);
-      const isDone = completedDates?.has(dateString) ?? false;
-
-      if (isDone) {
+      if (completedDates?.has(dateString)) {
         return 'done';
       }
 
