@@ -31,6 +31,12 @@ export default function SettingsModal({
   onChangeHabitCompletionIcon = () => {},
   onClose,
   visible,
+  streakRemindersEnabled = false,
+  streakReminderTime = '20:00',
+  isPremium = false,
+  onToggleStreakReminders = () => {},
+  onChangeStreakReminderTime = () => {},
+  onPremiumUpsell,
 }: SettingsModalProps) {
   const { view, setView, handleClose } = useSettingsModalLogic({
     onClose,
@@ -72,9 +78,15 @@ export default function SettingsModal({
           dayShape={dayShape}
           habitCompletionIcon={habitCompletionIcon}
           isHighContrastActive={isHighContrastActive}
+          isPremium={isPremium}
+          streakRemindersEnabled={streakRemindersEnabled}
+          streakReminderTime={streakReminderTime}
           onChangeDayShape={onChangeDayShape}
           onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
+          onChangeStreakReminderTime={onChangeStreakReminderTime}
           onOpenArchivedHabits={() => setView('archived')}
+          onPremiumUpsell={onPremiumUpsell}
+          onToggleStreakReminders={onToggleStreakReminders}
         />
       </View>
     </Modal>

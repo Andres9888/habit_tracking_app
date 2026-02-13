@@ -31,6 +31,8 @@ export const settingsReturnValidator = v.object({
   showNotesStats: v.boolean(),
   showStreaks: v.boolean(),
   showWeekCompletionBar: v.boolean(),
+  streakRemindersEnabled: v.boolean(),
+  streakReminderTime: v.string(),
   useDyslexicFont: v.boolean(),
 });
 
@@ -71,5 +73,7 @@ export const updateArgsValidator = {
   showNotesStats: v.optional(v.boolean()),
   showStreaks: v.boolean(),
   showWeekCompletionBar: v.optional(v.boolean()),
+  streakRemindersEnabled: v.optional(v.boolean()),
+  streakReminderTime: v.optional(v.string()),
   useDyslexicFont: v.optional(v.boolean()),
 };

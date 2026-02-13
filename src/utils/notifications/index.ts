@@ -54,6 +54,14 @@ export {
 } from './streakAtRisk';
 export type { ScheduleStreakAtRiskParams } from './streakAtRisk';
 
+// Re-export streak freeze notifications (premium)
+export {
+  cancelAllStreakFreezeNotifications,
+  cancelStreakFreezeNotification,
+  scheduleStreakFreezeNotification,
+} from './streakFreeze';
+export type { ScheduleStreakFreezeParams } from './streakFreeze';
+
 // Re-export types
 export type {
   ScheduleHabitReminderParams,
