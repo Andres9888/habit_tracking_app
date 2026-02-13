@@ -18,14 +18,32 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const [showPaywall, setShowPaywall] = useState(!isPremiumUser);
   const [showExportMenu, setShowExportMenu] = useState(false);
 
-  // Fetch analytics data from Convex
-  const overviewStats = useQuery(api.analytics.getOverviewStats);
-  const strengthDistribution = useQuery(api.analytics.getStrengthDistribution);
-  const trendData = useQuery(api.analytics.get30DayTrend);
-  const complianceData = useQuery(api.analytics.getComplianceData);
-  const weeklyInsights = useQuery(api.analytics.getWeeklyInsights);
+  // Skip all analytics queries when the paywall is shown — avoids 5 unnecessary
+  // Convex subscriptions for free users, reducing backend load and speeding up
+  // the screen transition.
+  const shouldFetch = isPremiumUser || !showPaywall;
+  const overviewStats = useQuery(
+    api.analytics.getOverviewStats,
+    shouldFetch ? undefined : 'skip'
+  );
+  const strengthDistribution = useQuery(
+    api.analytics.getStrengthDistribution,
+    shouldFetch ? undefined : 'skip'
+  );
+  const trendData = useQuery(
+    api.analytics.get30DayTrend,
+    shouldFetch ? undefined : 'skip'
+  );
+  const complianceData = useQuery(
+    api.analytics.getComplianceData,
+    shouldFetch ? undefined : 'skip'
+  );
+  const weeklyInsights = useQuery(
+    api.analytics.getWeeklyInsights,
+    shouldFetch ? undefined : 'skip'
+  );
 
-  const isLoading = !overviewStats;
+  const isLoading = shouldFetch && !overviewStats;
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
