@@ -44,9 +44,9 @@ export function useSuccessEntranceAnimation({
       withSpring(POP_ANIMATION.finalScale, SPRING_CONFIGS.successPop)
     );
 
-    contentOpacity.value = withDelay(200, withTiming(1, { duration: 300 }));
+    contentOpacity.value = withDelay(120, withTiming(1, { duration: 200 }));
     contentTranslateY.value = withDelay(
-      200,
+      120,
       withSpring(0, SPRING_CONFIGS.entrance)
     );
   }, [contentOpacity, contentTranslateY, iconScale, shouldReduceMotion]);
