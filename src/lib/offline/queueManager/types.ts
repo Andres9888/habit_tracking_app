@@ -13,6 +13,7 @@ import type {
   QueueOperationResult,
   ToggleCompletionPayload,
 } from '../queue';
+import type { ErrorCategory } from '../types';
 import type { BatchStatusResult } from './optimized';
 
 /**
@@ -72,7 +73,7 @@ export interface OfflineQueueManagerAPI {
   markFailedBatch(
     operationIds: string[],
     error: string,
-    category?: string
+    category?: ErrorCategory
   ): BatchStatusResult;
   /** Mark multiple operations as syncing in a single update */
   markSyncingBatch(operationIds: string[]): BatchStatusResult;
