@@ -4,14 +4,16 @@
 
 import React from 'react';
 import { Animated } from 'react-native';
+import type { RenderItemParams } from 'react-native-draggable-flatlist';
+import type { Habit } from '../../types';
 
 interface RenderHabitRowOptions {
-  item: { _id?: string };
+  item: Habit;
   justCreatedHabitId: string | null;
   habitRowOpacity: Animated.Value;
   habitRowTranslateY: Animated.Value;
-  renderItem: (p: unknown) => React.ReactNode;
-  renderParams: unknown;
+  renderItem: (p: RenderItemParams<Habit>) => React.ReactNode;
+  renderParams: RenderItemParams<Habit>;
 }
 
 export function renderHabitRow(opts: RenderHabitRowOptions) {
