@@ -1,2 +1,1 @@
-export { DailyProgressRing } from './DailyProgressRing';
-export default DailyProgressRing;
+export { default, DailyProgressRing } from './DailyProgressRing';
