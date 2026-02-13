@@ -6,6 +6,7 @@ import { Alert } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { exportData, prepareExportData } from '../../utils/exportData';
+import { usePremium } from '../../hooks/usePremium/usePremium';
 import type {
   ExportFormat,
   UseAnalyticsScreenReturn,
@@ -13,11 +14,9 @@ import type {
 
 export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const [refreshing, setRefreshing] = useState(false);
-  const [showPaywall, setShowPaywall] = useState(false);
+  const { isPremium: isPremiumUser } = usePremium();
+  const [showPaywall, setShowPaywall] = useState(!isPremiumUser);
   const [showExportMenu, setShowExportMenu] = useState(false);
-
-  // TODO: Replace with actual premium status check
-  const isPremiumUser = true;
 
   // Fetch analytics data from Convex
   const overviewStats = useQuery(api.analytics.getOverviewStats);
@@ -73,11 +72,6 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
 
   const handleStartTrial = useCallback(() => {
     setShowPaywall(false);
-    Alert.alert(
-      'Start Trial',
-      'This would open the subscription flow with RevenueCat/StoreKit integration',
-      [{ text: 'OK' }]
-    );
   }, []);
 
   return {
