@@ -36,6 +36,7 @@ export function BenefitsCTAFooter({
         accessibilityHint='Opens subscription options'
         accessibilityLabel={config.ctaText}
         accessibilityRole='button'
+        disabled={!handlers.priceLabel}
         onPress={onStartTrial}
         onPressIn={handlers.handleButtonPressIn}
         onPressOut={handlers.handleButtonPressOut}
@@ -46,12 +47,18 @@ export function BenefitsCTAFooter({
             colors={[config.gradientColors[0], config.gradientColors[1]]}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
+            style={!handlers.priceLabel ? { opacity: 0.5 } : undefined}
           >
             <Text className='text-base font-semibold text-white'>{config.ctaText}</Text>
             <ChevronRight color='#ffffff' size={18} />
           </LinearGradient>
         </Animated.View>
       </Pressable>
+      {handlers.priceLabel && (
+        <Text className='mt-2 text-center text-xs text-stone-500'>
+          then {handlers.priceLabel} after trial
+        </Text>
+      )}
       <Pressable className='mt-2 py-2' onPress={onRestore}>
         <Text className='text-center text-xs text-violet-600'>
           Already premium? Restore purchases

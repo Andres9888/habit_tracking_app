@@ -4,6 +4,7 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
+import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 
 interface UpgradePromptProps {
   onClose: () => void;
@@ -19,14 +20,20 @@ export function UpgradePrompt({
   if (!visible) return null;
 
   return (
-    <View className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'>
+    <Animated.View
+      entering={FadeIn.duration(280)}
+      className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
+    >
       <Pressable
         accessibilityLabel='Close upgrade prompt'
         accessibilityRole='button'
         className='absolute inset-0'
         onPress={onClose}
       />
-      <View className='w-full rounded-t-3xl bg-gradient-to-b from-white to-amber-50/30 px-6 py-8'>
+      <Animated.View
+        entering={SlideInDown.duration(280).damping(18)}
+        className='w-full rounded-t-3xl bg-gradient-to-b from-white to-amber-50/30 px-6 py-8'
+      >
         <View className='gap-4'>
           <View className='items-center pb-2'>
             <Text className='text-[32px]'>🚀</Text>
@@ -55,18 +62,18 @@ export function UpgradePrompt({
             </Text>
           </Pressable>
           <Pressable
-            accessibilityLabel='Dismiss and stay on free plan'
+            accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
             className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             onPress={onClose}
           >
-            <Text className='text-[13px] font-normal text-stone-400'>
-              Not now, stay limited
+            <Text className='text-[15px] font-normal text-stone-600'>
+              Maybe later
             </Text>
           </Pressable>
         </View>
-      </View>
-    </View>
+      </Animated.View>
+    </Animated.View>
   );
 }
