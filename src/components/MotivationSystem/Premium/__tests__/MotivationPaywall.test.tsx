@@ -5,8 +5,8 @@
 import React from 'react';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { Alert } from 'react-native';
-import { MotivationPaywall } from '../MotivationPaywall';
-import { PremiumBenefitsModal } from '../PremiumBenefitsModal';
+import { PremiumPaywall as MotivationPaywall } from '../../../PremiumPaywall';
+import { PremiumPaywall as PremiumBenefitsModal } from '../../../PremiumPaywall';
 
 // Mock expo-blur
 jest.mock('expo-blur', () => ({
@@ -72,7 +72,7 @@ describe('MotivationPaywall', () => {
 
   it('renders when visible', () => {
     const { getByText } = render(
-      <MotivationPaywall
+      <MotivationPaywall variant="motivation"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -84,7 +84,7 @@ describe('MotivationPaywall', () => {
 
   it('does not render when not visible', () => {
     const { queryByText } = render(
-      <MotivationPaywall
+      <MotivationPaywall variant="motivation"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible={false}
@@ -97,7 +97,7 @@ describe('MotivationPaywall', () => {
 
   it('shows all premium features', () => {
     const { getByText } = render(
-      <MotivationPaywall
+      <MotivationPaywall variant="motivation"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -114,7 +114,7 @@ describe('MotivationPaywall', () => {
 
   it('shows pricing information', () => {
     const { getByText } = render(
-      <MotivationPaywall
+      <MotivationPaywall variant="motivation"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -132,7 +132,7 @@ describe('MotivationPaywall', () => {
 
   it('calls onClose when close button is pressed', () => {
     const { getByLabelText } = render(
-      <MotivationPaywall
+      <MotivationPaywall variant="motivation"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -145,7 +145,7 @@ describe('MotivationPaywall', () => {
 
   it('calls onStartTrial when CTA is pressed', async () => {
     const { getByText } = render(
-      <MotivationPaywall
+      <MotivationPaywall variant="motivation"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -165,7 +165,7 @@ describe('MotivationPaywall', () => {
     mockOnStartTrial.mockResolvedValue(true);
 
     const { getByText } = render(
-      <MotivationPaywall
+      <MotivationPaywall variant="motivation"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -185,7 +185,7 @@ describe('MotivationPaywall', () => {
     mockOnStartTrial.mockRejectedValue(new Error('Purchase failed'));
 
     const { getByText } = render(
-      <MotivationPaywall
+      <MotivationPaywall variant="motivation"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -207,7 +207,7 @@ describe('MotivationPaywall', () => {
 
   it('highlights triggered feature', () => {
     const { getByText, getAllByText } = render(
-      <MotivationPaywall
+      <MotivationPaywall variant="motivation"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         triggeredByFeature='voiceNotes'
@@ -222,7 +222,7 @@ describe('MotivationPaywall', () => {
   describe('Restore purchases', () => {
     it('shows restore option when callback provided', () => {
       const { getByText } = render(
-        <MotivationPaywall
+        <MotivationPaywall variant="motivation"
           onClose={mockOnClose}
           onRestorePurchases={mockOnRestorePurchases}
           onStartTrial={mockOnStartTrial}
@@ -235,7 +235,7 @@ describe('MotivationPaywall', () => {
 
     it('calls onRestorePurchases when tapped', async () => {
       const { getByText } = render(
-        <MotivationPaywall
+        <MotivationPaywall variant="motivation"
           onClose={mockOnClose}
           onRestorePurchases={mockOnRestorePurchases}
           onStartTrial={mockOnStartTrial}
@@ -256,7 +256,7 @@ describe('MotivationPaywall', () => {
       mockOnRestorePurchases.mockResolvedValue(false);
 
       const { getByText } = render(
-        <MotivationPaywall
+        <MotivationPaywall variant="motivation"
           onClose={mockOnClose}
           onRestorePurchases={mockOnRestorePurchases}
           onStartTrial={mockOnStartTrial}
@@ -281,7 +281,7 @@ describe('MotivationPaywall', () => {
   describe('Accessibility', () => {
     it('has accessible CTA button', () => {
       const { getByLabelText } = render(
-        <MotivationPaywall
+        <MotivationPaywall variant="motivation"
           onClose={mockOnClose}
           onStartTrial={mockOnStartTrial}
           visible
@@ -293,7 +293,7 @@ describe('MotivationPaywall', () => {
 
     it('respects reduceMotion prop', () => {
       const { getByText } = render(
-        <MotivationPaywall
+        <MotivationPaywall variant="motivation"
           onClose={mockOnClose}
           onStartTrial={mockOnStartTrial}
           reduceMotion
@@ -316,7 +316,7 @@ describe('PremiumBenefitsModal', () => {
 
   it('renders when visible', () => {
     const { getByText } = render(
-      <PremiumBenefitsModal
+      <PremiumBenefitsModal variant="benefits"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -329,7 +329,7 @@ describe('PremiumBenefitsModal', () => {
 
   it('shows all feature details with science facts', () => {
     const { getByText } = render(
-      <PremiumBenefitsModal
+      <PremiumBenefitsModal variant="benefits"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -344,7 +344,7 @@ describe('PremiumBenefitsModal', () => {
 
   it('shows free vs premium comparison', () => {
     const { getByText, getAllByText } = render(
-      <PremiumBenefitsModal
+      <PremiumBenefitsModal variant="benefits"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -357,7 +357,7 @@ describe('PremiumBenefitsModal', () => {
 
   it('highlights triggered feature with badge', () => {
     const { getByText } = render(
-      <PremiumBenefitsModal
+      <PremiumBenefitsModal variant="benefits"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         triggeredByFeature='voiceNotes'
@@ -370,7 +370,7 @@ describe('PremiumBenefitsModal', () => {
 
   it('calls onClose when close button is pressed', () => {
     const { getByLabelText } = render(
-      <PremiumBenefitsModal
+      <PremiumBenefitsModal variant="benefits"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -383,7 +383,7 @@ describe('PremiumBenefitsModal', () => {
 
   it('calls onStartTrial when CTA is pressed', () => {
     const { getByText } = render(
-      <PremiumBenefitsModal
+      <PremiumBenefitsModal variant="benefits"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -396,7 +396,7 @@ describe('PremiumBenefitsModal', () => {
 
   it('shows pricing', () => {
     const { getByText } = render(
-      <PremiumBenefitsModal
+      <PremiumBenefitsModal variant="benefits"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
@@ -409,7 +409,7 @@ describe('PremiumBenefitsModal', () => {
 
   it('shows social proof', () => {
     const { getByText } = render(
-      <PremiumBenefitsModal
+      <PremiumBenefitsModal variant="benefits"
         onClose={mockOnClose}
         onStartTrial={mockOnStartTrial}
         visible
