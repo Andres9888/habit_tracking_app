@@ -3,7 +3,7 @@
  * Notes grouped by date with cards
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text } from 'react-native';
 import { format } from 'date-fns';
 import type { Id } from '../../../../../convex/_generated/dataModel';
@@ -41,30 +41,36 @@ export const NotesGrouped: React.FC<NotesGroupedProps> = ({
   deletingNoteId,
   onEdit,
   onDelete,
-}) => (
-  <View className='gap-6'>
-    {groupedNotes.map(({ date, notes }) => (
-      <View key={date} className='gap-3'>
-        <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
-          {format(new Date(date), 'MMM d, yyyy')}
-        </Text>
-        {notes.map((note) => {
-          const linkedHabit = note.habitId
-            ? habits.find((h) => h._id === note.habitId)
-            : null;
+}) => {
+  const habitNameById = useMemo(() => {
+    return new Map(habits.map((habit) => [habit._id, habit.name]));
+  }, [habits]);
 
-          return (
-            <NoteCard
-              key={note._id}
-              habitName={linkedHabit?.name}
-              isDeleting={deletingNoteId === note._id}
-              note={note}
-              onDelete={() => onDelete(note._id)}
-              onEdit={() => onEdit(note._id)}
-            />
-          );
-        })}
-      </View>
-    ))}
-  </View>
-);
+  return (
+    <View className='gap-6'>
+      {groupedNotes.map(({ date, notes }) => (
+        <View key={date} className='gap-3'>
+          <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
+            {format(new Date(date), 'MMM d, yyyy')}
+          </Text>
+          {notes.map((note) => {
+            const habitName = note.habitId
+              ? habitNameById.get(note.habitId)
+              : undefined;
+
+            return (
+              <NoteCard
+                key={note._id}
+                habitName={habitName}
+                isDeleting={deletingNoteId === note._id}
+                note={note}
+                onDelete={() => onDelete(note._id)}
+                onEdit={() => onEdit(note._id)}
+              />
+            );
+          })}
+        </View>
+      ))}
+    </View>
+  );
+};
