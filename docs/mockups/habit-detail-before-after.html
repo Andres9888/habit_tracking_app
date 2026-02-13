@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Detail Screen - Before/After</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, sans-serif;
+        background: linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      .subtitle {
+        text-align: center;
+        color: #78716c;
+        font-size: 17px;
+        margin-bottom: 32px;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .panel {
+        background: #faf9f7;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid #e7e5e4;
+      }
+
+      .panel-label {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
+        padding: 6px 12px;
+        border-radius: 16px;
+        margin-bottom: 16px;
+        display: block;
+      }
+      .before .panel-label {
+        background: #fecaca;
+        color: #dc2626;
+      }
+      .after .panel-label {
+        background: #bbf7d0;
+        color: #16a34a;
+      }
+
+      /* Phone mockup */
+      .phone {
+        background: linear-gradient(
+          180deg,
+          #faf9f7 0%,
+          #f5f3f0 50%,
+          #faf9f7 100%
+        );
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Header bar */
+      .header-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+      }
+
+      .header-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        transition: transform 0.15s ease;
+      }
+      .header-btn:hover {
+        transform: scale(0.95);
+      }
+
+      .before .header-btn {
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+      .after .header-btn {
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+      }
+
+      .header-right {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .complete-btn {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .complete-btn.done {
+        background: #d1fae5;
+        color: #047857;
+      }
+      .complete-btn.pending {
+        background: #fff;
+        color: #57534e;
+        border: 1px solid #e7e5e4;
+      }
+
+      /* Hero section */
+      .hero {
+        text-align: center;
+        padding: 0 16px 24px;
+      }
+
+      .habit-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        margin: 0 auto 16px;
+      }
+      .before .habit-icon {
+        background: #fef3c7;
+        box-shadow: 0 8px 16px rgba(245, 158, 11, 0.25);
+      }
+      .after .habit-icon {
+        background: #fef3c7;
+        box-shadow: 0 6px 16px rgba(245, 158, 11, 0.15);
+      }
+
+      .habit-name {
+        font-weight: 700;
+        color: #1c1917;
+      }
+      .before .habit-name {
+        font-size: 34px;
+        letter-spacing: -0.68px; /* -34 * 0.02 */
+      }
+      .after .habit-name {
+        font-size: 34px;
+        letter-spacing: -0.5px;
+      }
+
+      .streak-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        margin-top: 12px;
+        font-size: 17px;
+        font-weight: 600;
+        background: #ecfdf5;
+        color: #047857;
+        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.1);
+      }
+
+      /* Content sections */
+      .content {
+        padding: 0 16px 24px;
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 24px 0 12px;
+      }
+      .section-label .line {
+        flex: 1;
+        height: 1px;
+        background: #d6d3d1;
+      }
+      .section-label span {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: #a1a1aa;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        min-height: 100px;
+      }
+      .before .card {
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+      }
+      .after .card {
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+      }
+
+      .card-placeholder {
+        color: #a1a1aa;
+        font-size: 13px;
+        text-align: center;
+        padding: 20px;
+      }
+
+      /* Annotations */
+      .annotation {
+        background: #fef3c7;
+        color: #92400e;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 4px;
+        display: inline-block;
+        margin-top: 8px;
+      }
+      .annotation.fix {
+        background: #bbf7d0;
+        color: #166534;
+      }
+
+      /* Summary table */
+      .summary {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        margin-top: 24px;
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+      }
+      .summary h3 {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .summary table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .summary th,
+      .summary td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #f5f5f4;
+      }
+      .summary th {
+        font-size: 13px;
+        color: #78716c;
+        font-weight: 600;
+      }
+      .summary td {
+        font-size: 17px;
+      }
+      .summary .before-val {
+        color: #dc2626;
+      }
+      .summary .after-val {
+        color: #16a34a;
+      }
+
+      @media (max-width: 700px) {
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔍 Habit Detail Screen Polish</h1>
+      <p class="subtitle">
+        AnimatedPressable buttons • Fixed letter spacing • Unified shadows
+      </p>
+
+      <div class="comparison">
+        <!-- Before -->
+        <div class="panel before">
+          <span class="panel-label">❌ Before</span>
+          <div class="phone">
+            <div class="header-bar">
+              <div class="header-btn">✕</div>
+              <div class="header-right">
+                <div class="complete-btn done">✓ Done</div>
+                <div class="header-btn">✎</div>
+              </div>
+            </div>
+            <div class="hero">
+              <div class="habit-icon">🧘</div>
+              <div class="habit-name">Morning Meditation</div>
+              <div class="streak-badge">🔥 7 day streak</div>
+            </div>
+            <div class="content">
+              <div class="section-label">
+                <div class="line"></div>
+                <span>STRENGTH</span>
+                <div class="line"></div>
+              </div>
+              <div class="card">
+                <div class="card-placeholder">[Strength Section]</div>
+              </div>
+              <div class="section-label">
+                <div class="line"></div>
+                <span>HISTORY</span>
+                <div class="line"></div>
+              </div>
+              <div class="card">
+                <div class="card-placeholder">[Calendar Grid]</div>
+              </div>
+            </div>
+          </div>
+          <div style="padding: 12px">
+            <span class="annotation">Shadow radius: 8px</span>
+            <span class="annotation">Letter spacing: -0.68px</span>
+            <span class="annotation">No press animation</span>
+          </div>
+        </div>
+
+        <!-- After -->
+        <div class="panel after">
+          <span class="panel-label">✅ After</span>
+          <div class="phone">
+            <div class="header-bar">
+              <div class="header-btn">✕</div>
+              <div class="header-right">
+                <div class="complete-btn done">✓ Done</div>
+                <div class="header-btn">✎</div>
+              </div>
+            </div>
+            <div class="hero">
+              <div class="habit-icon">🧘</div>
+              <div class="habit-name">Morning Meditation</div>
+              <div class="streak-badge">🔥 7 day streak</div>
+            </div>
+            <div class="content">
+              <div class="section-label">
+                <div class="line"></div>
+                <span>STRENGTH</span>
+                <div class="line"></div>
+              </div>
+              <div class="card">
+                <div class="card-placeholder">[Strength Section]</div>
+              </div>
+              <div class="section-label">
+                <div class="line"></div>
+                <span>HISTORY</span>
+                <div class="line"></div>
+              </div>
+              <div class="card">
+                <div class="card-placeholder">[Calendar Grid]</div>
+              </div>
+            </div>
+          </div>
+          <div style="padding: 12px">
+            <span class="annotation fix">Shadow radius: 16px ✓</span>
+            <span class="annotation fix">Letter spacing: -0.5px ✓</span>
+            <span class="annotation fix">Scale + haptic on press ✓</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary">
+        <h3>📋 Changes Summary</h3>
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Before</th>
+            <th>After</th>
+          </tr>
+          <tr>
+            <td>Button shadow radius</td>
+            <td class="before-val">8px</td>
+            <td class="after-val">16px</td>
+          </tr>
+          <tr>
+            <td>Button shadow offset</td>
+            <td class="before-val">2px</td>
+            <td class="after-val">4px</td>
+          </tr>
+          <tr>
+            <td>Icon shadow opacity</td>
+            <td class="before-val">0.25</td>
+            <td class="after-val">0.15</td>
+          </tr>
+          <tr>
+            <td>Title letter spacing</td>
+            <td class="before-val">-0.68px</td>
+            <td class="after-val">-0.5px</td>
+          </tr>
+          <tr>
+            <td>Button press animation</td>
+            <td class="before-val">None</td>
+            <td class="after-val">Scale 0.92 + haptic</td>
+          </tr>
+          <tr>
+            <td>Icon color</td>
+            <td class="before-val">#44403c</td>
+            <td class="after-val">#57534e (stone-600)</td>
+          </tr>
+          <tr>
+            <td>Entry animation</td>
+            <td class="before-val">FadeInDown</td>
+            <td class="after-val">FadeInDown.springify().damping(18)</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

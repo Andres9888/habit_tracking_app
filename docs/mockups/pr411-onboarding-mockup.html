@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PR #411 — Onboarding Flow Mockup</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          'SF Pro Display',
+          sans-serif;
+        background: #f0eeeb;
+        min-height: 100vh;
+        padding: 48px 24px;
+        color: #1c1917;
+      }
+      h1 {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .subtitle {
+        text-align: center;
+        font-size: 15px;
+        color: #78716c;
+        margin-bottom: 40px;
+      }
+      .screens {
+        display: flex;
+        justify-content: center;
+        gap: 36px;
+        flex-wrap: wrap;
+      }
+      .column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .screen-label {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 16px;
+        padding: 4px 14px;
+        border-radius: 20px;
+        background: #e0e7ff;
+        color: #3730a3;
+      }
+
+      .phone {
+        width: 390px;
+        height: 844px;
+        background: #fafaf9;
+        border-radius: 52px;
+        position: relative;
+        overflow: hidden;
+        box-shadow:
+          0 25px 60px rgba(28, 25, 23, 0.18),
+          0 0 0 4px #292524,
+          0 0 0 6px #44403c;
+      }
+      .notch {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 160px;
+        height: 34px;
+        background: #292524;
+        border-radius: 0 0 24px 24px;
+        z-index: 10;
+      }
+      .notch::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #1c1917;
+        border: 2px solid #3f3f46;
+      }
+      .status-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 54px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 0 32px 8px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 5;
+      }
+
+      .onboard {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        padding: 80px 32px 60px;
+      }
+      .onboard-visual {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      }
+      .onboard-text {
+        margin-bottom: 24px;
+      }
+      .onboard-text h2 {
+        font-size: 34px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.15;
+      }
+      .onboard-text p {
+        font-size: 17px;
+        color: #78716c;
+        line-height: 1.5;
+      }
+
+      /* Dots */
+      .dots {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 32px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #d6d3d1;
+      }
+      .dot.active {
+        background: #059669;
+        width: 24px;
+        border-radius: 4px;
+      }
+
+      /* Skip / Next */
+      .nav-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+      .skip-btn {
+        font-size: 17px;
+        color: #a8a29e;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+      }
+      .next-btn {
+        font-size: 17px;
+        font-weight: 600;
+        color: #059669;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      /* CTA */
+      .cta-btn {
+        width: 100%;
+        padding: 18px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #fff;
+        background: #059669;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+        margin-bottom: 8px;
+      }
+
+      /* === Screen 1: Chain links === */
+      .chain-vis {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+      .chain-link {
+        width: 56px;
+        height: 40px;
+        border: 5px solid #059669;
+        border-radius: 20px;
+        position: relative;
+      }
+      .chain-link:not(:first-child) {
+        margin-top: -14px;
+      }
+      .chain-link.filled {
+        background: #059669;
+      }
+      .chain-link.dim {
+        border-color: #d6d3d1;
+      }
+      .chain-row {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .day-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #78716c;
+        width: 32px;
+        text-align: right;
+      }
+      .chain-cell {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .chain-cell.done {
+        background: #059669;
+        color: #fff;
+      }
+      .chain-cell.today {
+        background: #ecfdf5;
+        color: #059669;
+        border: 2px dashed #059669;
+      }
+      .chain-cell.future {
+        background: #f5f5f4;
+        color: #d6d3d1;
+      }
+
+      /* === Screen 2: Strength meter === */
+      .meter {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .meter-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .meter-label {
+        font-size: 13px;
+        font-weight: 600;
+        width: 90px;
+        text-align: right;
+        color: #57534e;
+      }
+      .meter-bar-bg {
+        flex: 1;
+        height: 20px;
+        background: #e7e5e4;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+      }
+      .meter-bar {
+        height: 100%;
+        border-radius: 10px;
+      }
+      .meter-bar.s1 {
+        width: 20%;
+        background: #d6d3d1;
+      }
+      .meter-bar.s2 {
+        width: 40%;
+        background: #a8a29e;
+      }
+      .meter-bar.s3 {
+        width: 60%;
+        background: #34d399;
+      }
+      .meter-bar.s4 {
+        width: 80%;
+        background: #059669;
+      }
+      .meter-bar.s5 {
+        width: 100%;
+        background: linear-gradient(90deg, #059669, #047857);
+      }
+      .meter-days {
+        font-size: 11px;
+        color: #a8a29e;
+        width: 50px;
+      }
+
+      /* === Screen 3: Template grid === */
+      .template-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        width: 100%;
+      }
+      .template-tile {
+        aspect-ratio: 1;
+        background: #fff;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+      }
+
+      @media (max-width: 1300px) {
+        .screens {
+          gap: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>PR #411 — Onboarding Flow</h1>
+    <p class="subtitle">3-screen onboarding experience for new users</p>
+
+    <div class="screens">
+      <!-- ========== SCREEN 1 ========== -->
+      <div class="column">
+        <div class="screen-label">Screen 1 of 3</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status-bar"><span>9:41</span><span>⚡</span></div>
+          <div class="onboard">
+            <div class="onboard-visual">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 6px;
+                "
+              >
+                <!-- Calendar-style chain -->
+                <div
+                  style="
+                    font-size: 13px;
+                    font-weight: 700;
+                    color: #a8a29e;
+                    margin-bottom: 8px;
+                    letter-spacing: 1px;
+                  "
+                >
+                  YOUR CHAIN
+                </div>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: repeat(7, 36px);
+                    gap: 6px;
+                  "
+                >
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell done">✓</div>
+                  <div class="chain-cell today">?</div>
+                  <div class="chain-cell future"></div>
+                </div>
+                <div style="margin-top: 12px; font-size: 40px">🔗</div>
+                <div
+                  style="
+                    font-size: 13px;
+                    font-weight: 700;
+                    color: #059669;
+                    margin-top: 4px;
+                  "
+                >
+                  12 Day Streak!
+                </div>
+              </div>
+            </div>
+            <div class="onboard-text">
+              <h2>Don't Break<br />the Chain</h2>
+              <p>Complete your habits daily to build unbreakable chains</p>
+            </div>
+            <div class="dots">
+              <div class="dot active"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+            <div class="nav-row">
+              <button class="skip-btn">Skip</button>
+              <button class="next-btn">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== SCREEN 2 ========== -->
+      <div class="column">
+        <div class="screen-label">Screen 2 of 3</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status-bar"><span>9:41</span><span>⚡</span></div>
+          <div class="onboard">
+            <div class="onboard-visual">
+              <div class="meter">
+                <div class="meter-row">
+                  <div class="meter-label">Starting</div>
+                  <div class="meter-bar-bg">
+                    <div class="meter-bar s1"></div>
+                  </div>
+                  <div class="meter-days">Day 1-7</div>
+                </div>
+                <div class="meter-row">
+                  <div class="meter-label">Building</div>
+                  <div class="meter-bar-bg">
+                    <div class="meter-bar s2"></div>
+                  </div>
+                  <div class="meter-days">Day 8-21</div>
+                </div>
+                <div class="meter-row">
+                  <div class="meter-label">Developing</div>
+                  <div class="meter-bar-bg">
+                    <div class="meter-bar s3"></div>
+                  </div>
+                  <div class="meter-days">Day 22-45</div>
+                </div>
+                <div class="meter-row">
+                  <div class="meter-label">Strong</div>
+                  <div class="meter-bar-bg">
+                    <div class="meter-bar s4"></div>
+                  </div>
+                  <div class="meter-days">Day 46-90</div>
+                </div>
+                <div class="meter-row">
+                  <div
+                    class="meter-label"
+                    style="color: #047857; font-weight: 700"
+                  >
+                    Automatic
+                  </div>
+                  <div class="meter-bar-bg">
+                    <div class="meter-bar s5"></div>
+                  </div>
+                  <div
+                    class="meter-days"
+                    style="color: #047857; font-weight: 600"
+                  >
+                    90+ 🏆
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="onboard-text">
+              <h2>Science-Backed<br />Strength</h2>
+              <p>
+                Your habits get stronger over time — watch them grow from
+                fragile to automatic
+              </p>
+            </div>
+            <div class="dots">
+              <div class="dot"></div>
+              <div class="dot active"></div>
+              <div class="dot"></div>
+            </div>
+            <div class="nav-row">
+              <button class="skip-btn">Skip</button>
+              <button class="next-btn">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== SCREEN 3 ========== -->
+      <div class="column">
+        <div class="screen-label">Screen 3 of 3</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status-bar"><span>9:41</span><span>⚡</span></div>
+          <div class="onboard">
+            <div class="onboard-visual">
+              <div class="template-grid">
+                <div class="template-tile">🏃‍♂️</div>
+                <div class="template-tile">🧘‍♀️</div>
+                <div class="template-tile">📚</div>
+                <div class="template-tile">💪</div>
+                <div class="template-tile">🧠</div>
+                <div class="template-tile">💤</div>
+                <div class="template-tile">💧</div>
+                <div class="template-tile">🥗</div>
+                <div class="template-tile">✍️</div>
+                <div class="template-tile">🎵</div>
+                <div class="template-tile">🌅</div>
+                <div class="template-tile">🙏</div>
+              </div>
+            </div>
+            <div class="onboard-text">
+              <h2>200+ Templates<br />to Start</h2>
+              <p>
+                Choose from science-backed habit templates or create your own
+              </p>
+            </div>
+            <div class="dots">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot active"></div>
+            </div>
+            <button class="cta-btn">Let's Build Your First Habit →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="
+        text-align: center;
+        padding: 40px 24px 24px;
+        font-size: 13px;
+        color: #a8a29e;
+      "
+    >
+      Chain Day — PR #411 Onboarding Mockup · Generated Feb 8, 2026
+    </div>
+  </body>
+</html>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day — Design Mockups</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #fafaf9;
+        color: #1c1917;
+        padding: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .subtitle {
+        color: #78716c;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+      .section {
+        margin-bottom: 2rem;
+      }
+      .section h2 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #047857;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 1rem;
+      }
+      .card {
+        background: white;
+        border: 1px solid #e7e5e4;
+        border-radius: 12px;
+        padding: 1.25rem;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.15s ease;
+        display: block;
+      }
+      .card:hover {
+        border-color: #059669;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.1);
+        transform: translateY(-2px);
+      }
+      .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+      .card-desc {
+        font-size: 0.875rem;
+        color: #78716c;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+      }
+      .badge-new {
+        background: #d1fae5;
+        color: #047857;
+      }
+      .badge-pr {
+        background: #ede9fe;
+        color: #6d28d9;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔗 Chain Day</h1>
+    <p class="subtitle">Design mockups & before/after comparisons</p>
+
+    <div class="section">
+      <h2>🔴 Latest — Multi-Model UI Audit Fixes</h2>
+      <div class="card-grid">
+        <a class="card" href="mockups/touch-targets-mockup.html">
+          <div class="card-title">
+            Touch Targets 44pt <span class="badge badge-pr">PR #474</span>
+          </div>
+          <div class="card-desc">
+            Day toggles, buttons, chips, skip button — all brought to 44pt
+            minimum
+          </div>
+        </a>
+        <a class="card" href="mockups/paywall-ux-mockup.html">
+          <div class="card-title">
+            Paywall UX & Trust <span class="badge badge-pr">PR #475</span>
+          </div>
+          <div class="card-desc">
+            Price visibility, dark pattern removal, entrance animation, error
+            handling
+          </div>
+        </a>
+        <a class="card" href="mockups/loading-error-mockup.html">
+          <div class="card-title">
+            Branded Loading & Error States
+            <span class="badge badge-pr">PR #476</span>
+          </div>
+          <div class="card-desc">
+            Replaces bare spinner with branded screen, improves error recovery
+            UX
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🎨 Design Audits</h2>
+      <div class="card-grid">
+        <a class="card" href="mockups/full-audit-v2.html">
+          <div class="card-title">Full UI Audit v2</div>
+          <div class="card-desc">
+            Comprehensive before/after across all major screens
+          </div>
+        </a>
+        <a class="card" href="mockups/full-audit-opus.html">
+          <div class="card-title">Full UI Audit (Opus)</div>
+          <div class="card-desc">
+            Opus model deep-dive audit with visual comparisons
+          </div>
+        </a>
+        <a class="card" href="mockups/screens-before-after.html">
+          <div class="card-title">Screens Before/After</div>
+          <div class="card-desc">
+            Side-by-side comparison of major screen redesigns
+          </div>
+        </a>
+        <a class="card" href="mockups/screens-round2.html">
+          <div class="card-title">Screens Round 2</div>
+          <div class="card-desc">Second iteration design improvements</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📱 Feature Mockups</h2>
+      <div class="card-grid">
+        <a class="card" href="mockups/empty-state-mockup.html">
+          <div class="card-title">Empty State & Templates</div>
+          <div class="card-desc">
+            New user experience with template discoverability
+          </div>
+        </a>
+        <a class="card" href="mockups/habit-detail-before-after.html">
+          <div class="card-title">Habit Detail Screen</div>
+          <div class="card-desc">Before/after of the habit detail view</div>
+        </a>
+        <a class="card" href="mockups/milestone-celebrations-mockup.html">
+          <div class="card-title">Milestone Celebrations</div>
+          <div class="card-desc">Streak milestone celebration animations</div>
+        </a>
+        <a class="card" href="mockups/loading-template-mockup.html">
+          <div class="card-title">Loading & Template States</div>
+          <div class="card-desc">Skeleton loading and template browsing UX</div>
+        </a>
+        <a class="card" href="mockups/pr411-onboarding-mockup.html">
+          <div class="card-title">Onboarding Redesign</div>
+          <div class="card-desc">PR #411 onboarding flow improvements</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔧 PR-Specific Mockups</h2>
+      <div class="card-grid">
+        <a class="card" href="mockups/pr468-mockup.html">
+          <div class="card-title">PR #468 — Empty State Cleanup</div>
+          <div class="card-desc">Dead code removal and templates nudge</div>
+        </a>
+        <a class="card" href="mockups/pr410-before-after.html">
+          <div class="card-title">PR #410</div>
+          <div class="card-desc">Before/after comparison</div>
+        </a>
+        <a class="card" href="mockups/pr392-before-after.html">
+          <div class="card-title">PR #392</div>
+          <div class="card-desc">Before/after comparison</div>
+        </a>
+        <a class="card" href="mockups/mockup-before-after.html">
+          <div class="card-title">General Mockup</div>
+          <div class="card-desc">Miscellaneous before/after designs</div>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

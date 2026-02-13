@@ -1,0 +1,1249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day - 3 Screens Before/After</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+        background: #0a0a0a;
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      h1 {
+        color: #fff;
+        text-align: center;
+        font-size: 32px;
+        margin-bottom: 40px;
+        font-weight: 700;
+      }
+
+      .screen-section {
+        margin-bottom: 80px;
+      }
+
+      .screen-title {
+        color: #10b981;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .comparison {
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .phone {
+        width: 320px;
+        height: 693px;
+        border-radius: 40px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        border: 3px solid #333;
+      }
+
+      .column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .label {
+        color: #fff;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      .score {
+        font-size: 20px;
+        font-weight: 700;
+        margin-left: 8px;
+      }
+      .score.low {
+        color: #f59e0b;
+      }
+      .score.high {
+        color: #10b981;
+      }
+
+      .notes {
+        margin-top: 16px;
+        color: #6b7280;
+        font-size: 11px;
+        max-width: 280px;
+        text-align: center;
+        line-height: 1.5;
+      }
+      .notes strong {
+        color: #f59e0b;
+      }
+      .notes.after strong {
+        color: #10b981;
+      }
+
+      /* ==================== AUTH SCREEN ==================== */
+      .auth-before {
+        background: #faf9f7;
+        padding: 60px 24px 24px;
+        height: 100%;
+      }
+
+      .auth-before .brand {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .auth-before .logo-box {
+        width: 80px;
+        height: 80px;
+        background: #f5f5f4;
+        border-radius: 20px;
+        margin: 0 auto 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+      }
+
+      .auth-before .app-name {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1c1917;
+        letter-spacing: -0.5px;
+      }
+
+      .auth-before .tagline {
+        font-size: 14px;
+        color: #78716c;
+        margin-top: 4px;
+      }
+
+      .auth-before .welcome {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .auth-before .welcome h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+        margin-bottom: 8px;
+      }
+
+      .auth-before .welcome p {
+        font-size: 16px;
+        color: #57534e;
+        line-height: 1.5;
+      }
+
+      .auth-before .form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .auth-before input {
+        width: 100%;
+        padding: 16px;
+        border: 1px solid #e7e5e4;
+        border-radius: 12px;
+        font-size: 16px;
+        background: #fff;
+      }
+
+      .auth-before .btn-primary {
+        background: #10b981;
+        color: white;
+        padding: 16px;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 600;
+        text-align: center;
+        margin-top: 8px;
+      }
+
+      .auth-before .divider {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 20px 0;
+        color: #a8a29e;
+        font-size: 13px;
+      }
+
+      .auth-before .divider::before,
+      .auth-before .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #e7e5e4;
+      }
+
+      .auth-before .social-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .auth-before .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px;
+        border: 1px solid #e7e5e4;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #1c1917;
+        background: #fff;
+      }
+
+      .auth-before .footer {
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+        right: 24px;
+        text-align: center;
+        font-size: 13px;
+        color: #a8a29e; /* TOO LIGHT */
+      }
+
+      /* AUTH AFTER */
+      .auth-after {
+        background: linear-gradient(180deg, #faf9f7 0%, #f5f3f0 100%);
+        padding: 60px 24px 24px;
+        height: 100%;
+      }
+
+      .auth-after .brand {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeSlideIn 0.4s ease-out;
+      }
+
+      @keyframes fadeSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .auth-after .logo-box {
+        width: 88px;
+        height: 88px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 24px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+      }
+
+      .auth-after .app-name {
+        font-size: 34px; /* PROPER H1 */
+        font-weight: 700;
+        color: #1c1917;
+        letter-spacing: -1px;
+      }
+
+      .auth-after .tagline {
+        font-size: 17px; /* BODY SIZE */
+        color: #57534e;
+        margin-top: 6px;
+      }
+
+      .auth-after .form-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        animation: fadeSlideIn 0.5s ease-out 0.1s backwards;
+      }
+
+      .auth-after .form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .auth-after input {
+        width: 100%;
+        padding: 16px;
+        border: 2px solid #e7e5e4;
+        border-radius: 12px;
+        font-size: 17px;
+        background: #faf9f7;
+        transition: border-color 0.2s;
+      }
+
+      .auth-after input:focus {
+        border-color: #047857;
+        outline: none;
+      }
+
+      .auth-after .btn-primary {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 16px;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 600;
+        text-align: center;
+        margin-top: 8px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+
+      .auth-after .divider {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 20px 0;
+        color: #78716c;
+        font-size: 13px;
+      }
+
+      .auth-after .divider::before,
+      .auth-after .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #d6d3d1;
+      }
+
+      .auth-after .social-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .auth-after .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px;
+        border: 1px solid #d6d3d1;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #1c1917;
+        background: #fff;
+      }
+
+      .auth-after .footer {
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+        right: 24px;
+        text-align: center;
+        font-size: 13px;
+        color: #78716c; /* PROPER CONTRAST */
+        animation: fadeSlideIn 0.5s ease-out 0.2s backwards;
+      }
+
+      .auth-after .footer a {
+        color: #047857;
+        text-decoration: underline;
+      }
+
+      /* ==================== EMPTY HABITS ==================== */
+      .empty-before {
+        background: #faf9f7;
+        padding: 60px 16px 24px;
+        height: 100%;
+        overflow-y: auto;
+      }
+
+      .empty-before .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .empty-before .header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+      }
+
+      .empty-before .hero {
+        background: #fffbeb;
+        border: 1px solid #fde68a; /* WEAK */
+        border-radius: 16px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 16px;
+        position: relative;
+      }
+
+      .empty-before .hero .wave {
+        font-size: 28px;
+      }
+
+      .empty-before .hero h2 {
+        font-size: 22px; /* SHOULD BE 28 */
+        font-weight: 600;
+        color: #44403c;
+        margin: 12px 0 4px;
+      }
+
+      .empty-before .hero p {
+        font-size: 15px;
+        color: #57534e;
+      }
+
+      .empty-before .hero .caption {
+        font-size: 13px;
+        color: #78716c;
+        margin-top: 4px;
+      }
+
+      .empty-before .templates-card {
+        background: #fff;
+        border: 1px solid #e7e5e4;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      .empty-before .section-title {
+        font-size: 17px;
+        font-weight: 600;
+        color: #44403c;
+        margin-bottom: 8px;
+      }
+
+      .empty-before .quickwin-card {
+        background: #fff;
+        border: 1px solid #e7e5e4;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      .empty-before .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .empty-before .chip {
+        background: #f5f5f4;
+        border-radius: 20px;
+        padding: 10px 14px;
+        font-size: 14px;
+        color: #44403c;
+      }
+
+      .empty-before .custom-card {
+        background: #fff;
+        border: 1px solid #e7e5e4;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      .empty-before .helper-row {
+        display: flex;
+        gap: 12px;
+      }
+
+      .empty-before .helper-btn {
+        flex: 1;
+        background: #f5f5f4;
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+        font-size: 13px;
+        color: #57534e;
+      }
+
+      /* EMPTY AFTER */
+      .empty-after {
+        background: linear-gradient(180deg, #faf9f7 0%, #f5f3f0 100%);
+        padding: 60px 16px 24px;
+        height: 100%;
+        overflow-y: auto;
+      }
+
+      .empty-after .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .empty-after .header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+      }
+
+      .empty-after .hero {
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        border: 2px solid #f59e0b; /* STRONG */
+        border-radius: 20px;
+        padding: 24px 20px;
+        text-align: center;
+        margin-bottom: 24px;
+        position: relative;
+        box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15);
+        animation: fadeSlideIn 0.4s ease-out;
+      }
+
+      .empty-after .hero .particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .empty-after .hero .particle {
+        position: absolute;
+        font-size: 16px;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.7;
+        }
+        50% {
+          transform: translateY(-8px);
+          opacity: 1;
+        }
+      }
+
+      .empty-after .hero .wave {
+        font-size: 32px;
+      }
+
+      .empty-after .hero h2 {
+        font-size: 28px; /* PROPER H1 */
+        font-weight: 700;
+        color: #1c1917;
+        margin: 12px 0 6px;
+      }
+
+      .empty-after .hero p {
+        font-size: 17px;
+        color: #44403c;
+        font-weight: 500;
+      }
+
+      .empty-after .hero .caption {
+        font-size: 13px;
+        color: #78716c;
+        margin-top: 6px;
+      }
+
+      .empty-after .hero .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 8px 14px;
+        border-radius: 20px;
+        margin-top: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #b45309;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .empty-after .quickwin-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 24px; /* MORE GAP */
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        animation: fadeSlideIn 0.4s ease-out 0.1s backwards;
+      }
+
+      .empty-after .section-title {
+        font-size: 20px; /* BUMPED */
+        font-weight: 600;
+        color: #1c1917;
+        margin-bottom: 6px;
+      }
+
+      .empty-after .section-desc {
+        font-size: 15px;
+        color: #57534e;
+        margin-bottom: 16px;
+      }
+
+      .empty-after .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .empty-after .chip {
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        border: 1px solid #10b981;
+        border-radius: 24px;
+        padding: 12px 16px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #047857;
+      }
+
+      .empty-after .custom-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        animation: fadeSlideIn 0.4s ease-out 0.2s backwards;
+      }
+
+      .empty-after .custom-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 12px;
+      }
+
+      /* NO HELPER ROW - REDUCED CTAs */
+
+      /* ==================== HABIT HOME ==================== */
+      .home-before {
+        background: #faf9f7;
+        height: 100%;
+      }
+
+      .home-before .header {
+        padding: 56px 20px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .home-before .header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+      }
+
+      .home-before .week-nav {
+        display: flex;
+        gap: 4px;
+        padding: 0 16px;
+        margin-bottom: 16px;
+      }
+
+      .home-before .day {
+        flex: 1;
+        text-align: center;
+        padding: 10px 4px;
+        font-size: 11px;
+        color: #9ca3af;
+      }
+
+      .home-before .day span {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+
+      .home-before .day.active {
+        color: #10b981; /* LOW CONTRAST */
+      }
+
+      .home-before .day.active span {
+        background: #10b981;
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 4px auto 0;
+      }
+
+      .home-before .cards {
+        padding: 0 16px;
+      }
+
+      .home-before .habit-card {
+        background: #ffffff;
+        border: 1px solid #c4bfb7; /* WEAK */
+        border-radius: 12px;
+        height: 72px;
+        margin-bottom: 12px;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 2px 4px rgba(45, 42, 38, 0.04); /* TOO SUBTLE */
+      }
+
+      .home-before .habit-icon {
+        font-size: 24px;
+      }
+
+      .home-before .habit-name {
+        font-family: 'Plus Jakarta Sans', sans-serif; /* WRONG FONT */
+        font-size: 22px;
+        font-weight: 600;
+        color: #78716c;
+        letter-spacing: -0.5px;
+      }
+
+      .home-before .habit-streak {
+        margin-left: auto;
+        font-size: 14px;
+        color: #10b981; /* LOW CONTRAST */
+      }
+
+      .home-before .fab {
+        position: absolute;
+        bottom: 28px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        background: #10b981;
+        border-radius: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 28px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+      }
+
+      /* HOME AFTER */
+      .home-after {
+        background: linear-gradient(180deg, #faf9f7 0%, #f5f3f0 100%);
+        height: 100%;
+      }
+
+      .home-after .header {
+        padding: 56px 20px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .home-after .header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+      }
+
+      .home-after .sync-indicator {
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(4, 120, 87, 0.1);
+        color: #047857;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .home-after .sync-dot {
+        width: 6px;
+        height: 6px;
+        background: #047857;
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      .home-after .week-nav {
+        display: flex;
+        gap: 4px;
+        padding: 0 16px;
+        margin-bottom: 16px;
+      }
+
+      .home-after .day {
+        flex: 1;
+        text-align: center;
+        padding: 10px 4px;
+        font-size: 11px;
+        color: #6b7280;
+      }
+
+      .home-after .day span {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+
+      .home-after .day.active {
+        color: #047857; /* GOOD CONTRAST */
+      }
+
+      .home-after .day.active span {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 4px auto 0;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+      }
+
+      .home-after .cards-bg {
+        background: #f0eeeb;
+        margin: 0 12px;
+        border-radius: 20px;
+        padding: 12px;
+      }
+
+      .home-after .habit-card {
+        background: #ffffff;
+        border: 1px solid #e5e2de; /* STRONGER */
+        border-radius: 14px;
+        height: 76px;
+        margin-bottom: 10px;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 4px 12px rgba(45, 42, 38, 0.08); /* DEEPER */
+        animation: cardSlideIn 0.3s ease-out backwards;
+      }
+
+      .home-after .habit-card:nth-child(1) {
+        animation-delay: 0ms;
+      }
+      .home-after .habit-card:nth-child(2) {
+        animation-delay: 50ms;
+      }
+      .home-after .habit-card:nth-child(3) {
+        animation-delay: 100ms;
+      }
+
+      @keyframes cardSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .home-after .habit-icon {
+        font-size: 26px;
+      }
+
+      .home-after .habit-info {
+        flex: 1;
+      }
+
+      .home-after .habit-name {
+        font-family: -apple-system, 'SF Pro Text', sans-serif; /* CORRECT */
+        font-size: 17px;
+        font-weight: 600;
+        color: #1c1917;
+        letter-spacing: -0.4px;
+      }
+
+      .home-after .habit-meta {
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 2px;
+      }
+
+      .home-after .habit-streak {
+        font-size: 15px;
+        font-weight: 600;
+        color: #047857; /* GOOD CONTRAST */
+      }
+
+      .home-after .fab {
+        position: absolute;
+        bottom: 28px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 28px;
+        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Chain Day — Before / After</h1>
+
+    <!-- AUTH SCREEN -->
+    <div class="screen-section">
+      <div class="screen-title">1. Auth Screen</div>
+      <div class="comparison">
+        <div class="column">
+          <div class="label">Before <span class="score low">6.8</span></div>
+          <div class="phone">
+            <div class="auth-before">
+              <div class="brand">
+                <div class="logo-box">🔗</div>
+                <div class="app-name">Chain Day</div>
+                <div class="tagline">Don't break the chain</div>
+              </div>
+              <div class="welcome">
+                <h2>Welcome back</h2>
+                <p>Sign in to continue your streak</p>
+              </div>
+              <div class="form">
+                <input type="email" placeholder="Email" />
+                <input type="password" placeholder="Password" />
+                <div class="btn-primary">Sign In</div>
+              </div>
+              <div class="divider">or continue with</div>
+              <div class="social-btns">
+                <div class="social-btn">🍎 Continue with Apple</div>
+                <div class="social-btn">G Continue with Google</div>
+              </div>
+              <div class="footer">
+                By continuing, you agree to our Terms & Privacy Policy
+              </div>
+            </div>
+          </div>
+          <div class="notes">
+            <strong>Issues:</strong> Flat bg, scattered type scale, low contrast
+            footer, no depth
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="label">After <span class="score high">9.2</span></div>
+          <div class="phone">
+            <div class="auth-after">
+              <div class="brand">
+                <div class="logo-box">🔗</div>
+                <div class="app-name">Chain Day</div>
+                <div class="tagline">Don't break the chain</div>
+              </div>
+              <div class="form-card">
+                <div class="form">
+                  <input type="email" placeholder="Email" />
+                  <input type="password" placeholder="Password" />
+                  <div class="btn-primary">Sign In</div>
+                </div>
+                <div class="divider">or continue with</div>
+                <div class="social-btns">
+                  <div class="social-btn">🍎 Continue with Apple</div>
+                  <div class="social-btn">G Continue with Google</div>
+                </div>
+              </div>
+              <div class="footer">
+                By continuing, you agree to our <a>Terms</a> & <a>Privacy</a>
+              </div>
+            </div>
+          </div>
+          <div class="notes after">
+            <strong>Fixes:</strong> Gradient bg, form card depth, 34/17/13
+            scale, stagger animation
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMPTY HABITS SCREEN -->
+    <div class="screen-section">
+      <div class="screen-title">2. Empty Habits</div>
+      <div class="comparison">
+        <div class="column">
+          <div class="label">Before <span class="score low">7.5</span></div>
+          <div class="phone">
+            <div class="empty-before">
+              <div class="header">
+                <h1>Today</h1>
+                <span style="font-size: 20px">⚙️</span>
+              </div>
+              <div class="hero">
+                <div class="wave">👋</div>
+                <h2>Good morning!</h2>
+                <p>Small habits lead to big changes</p>
+                <div class="caption">
+                  Your first streak starts with one tap ☀️
+                </div>
+              </div>
+              <div class="templates-card">
+                <div class="section-title">📋 Browse Templates</div>
+                <p style="font-size: 14px; color: #78716c">
+                  Explore habit packs →
+                </p>
+              </div>
+              <div class="quickwin-card">
+                <div class="section-title">Tap one you can do now</div>
+                <p style="font-size: 14px; color: #78716c">
+                  Start small—customize later
+                </p>
+                <div class="chips">
+                  <div class="chip">☀️ Morning stretch</div>
+                  <div class="chip">💧 Drink water</div>
+                  <div class="chip">📖 Read 5 min</div>
+                  <div class="chip">🧘 Breathe</div>
+                </div>
+              </div>
+              <div class="custom-card">
+                <div class="section-title">✨ Create your own</div>
+              </div>
+              <div class="helper-row">
+                <div class="helper-btn">🤔 Need help?</div>
+                <div class="helper-btn">⏰ Set reminder</div>
+              </div>
+            </div>
+          </div>
+          <div class="notes">
+            <strong>Issues:</strong> Too many CTAs, weak border, H2 too small,
+            mixed accents
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="label">After <span class="score high">9.3</span></div>
+          <div class="phone">
+            <div class="empty-after">
+              <div class="header">
+                <h1>Today</h1>
+                <span style="font-size: 20px">⚙️</span>
+              </div>
+              <div class="hero">
+                <div class="particles">
+                  <span
+                    class="particle"
+                    style="left: 16px; top: 16px; animation-delay: 0s"
+                    >✨</span
+                  >
+                  <span
+                    class="particle"
+                    style="right: 20px; top: 24px; animation-delay: 0.4s"
+                    >🌟</span
+                  >
+                  <span
+                    class="particle"
+                    style="left: 28px; bottom: 20px; animation-delay: 0.8s"
+                    >💫</span
+                  >
+                  <span
+                    class="particle"
+                    style="right: 16px; bottom: 28px; animation-delay: 0.2s"
+                    >🌱</span
+                  >
+                </div>
+                <div class="wave">👋</div>
+                <h2>Good morning!</h2>
+                <p>Small habits lead to big changes</p>
+                <div class="caption">
+                  Your first streak starts with one tap ☀️
+                </div>
+                <div class="badge">🔥 Day 1 begins now</div>
+              </div>
+              <div class="quickwin-card">
+                <div class="section-title">Tap one you can do now</div>
+                <div class="section-desc">
+                  Start small—you can customize later
+                </div>
+                <div class="chips">
+                  <div class="chip">☀️ Morning stretch</div>
+                  <div class="chip">💧 Drink water</div>
+                  <div class="chip">📖 Read 5 min</div>
+                  <div class="chip">🧘 Breathe</div>
+                </div>
+              </div>
+              <div class="custom-card">
+                <div class="section-title">Or create your own</div>
+                <div class="section-desc">
+                  Build a habit that fits your life
+                </div>
+                <div class="custom-btn">✨ Create Custom Habit</div>
+              </div>
+            </div>
+          </div>
+          <div class="notes after">
+            <strong>Fixes:</strong> 2 paths only, H1 28px, emerald chips,
+            stronger border, no helper row
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HABIT HOME SCREEN -->
+    <div class="screen-section">
+      <div class="screen-title">3. Habit Home</div>
+      <div class="comparison">
+        <div class="column">
+          <div class="label">Before <span class="score low">7.2</span></div>
+          <div class="phone">
+            <div class="home-before">
+              <div class="header">
+                <h1>Today</h1>
+                <span style="font-size: 20px">⚙️</span>
+              </div>
+              <div class="week-nav">
+                <div class="day">Mon<span>3</span></div>
+                <div class="day">Tue<span>4</span></div>
+                <div class="day">Wed<span>5</span></div>
+                <div class="day active">Thu<span>6</span></div>
+                <div class="day">Fri<span>7</span></div>
+                <div class="day">Sat<span>8</span></div>
+                <div class="day">Sun<span>9</span></div>
+              </div>
+              <div class="cards">
+                <div class="habit-card">
+                  <span class="habit-icon">🏃</span>
+                  <span class="habit-name">Morning Run</span>
+                  <span class="habit-streak">🔗 12</span>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-icon">📚</span>
+                  <span class="habit-name">Read 30min</span>
+                  <span class="habit-streak">🔗 8</span>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-icon">🧘</span>
+                  <span class="habit-name">Meditate</span>
+                  <span class="habit-streak">🔗 5</span>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-icon">💧</span>
+                  <span class="habit-name">Drink Water</span>
+                  <span class="habit-streak">🔗 21</span>
+                </div>
+              </div>
+              <div class="fab">+</div>
+            </div>
+          </div>
+          <div class="notes">
+            <strong>Issues:</strong> Plus Jakarta font, flat cards, low
+            contrast, no entry animation
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="label">After <span class="score high">9.4</span></div>
+          <div class="phone">
+            <div class="home-after">
+              <div class="sync-indicator">
+                <span class="sync-dot"></span>
+                Synced
+              </div>
+              <div class="header">
+                <h1>Today</h1>
+                <span style="font-size: 20px">⚙️</span>
+              </div>
+              <div class="week-nav">
+                <div class="day">Mon<span>3</span></div>
+                <div class="day">Tue<span>4</span></div>
+                <div class="day">Wed<span>5</span></div>
+                <div class="day active">Thu<span>6</span></div>
+                <div class="day">Fri<span>7</span></div>
+                <div class="day">Sat<span>8</span></div>
+                <div class="day">Sun<span>9</span></div>
+              </div>
+              <div class="cards-bg">
+                <div class="habit-card">
+                  <span class="habit-icon">🏃</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning Run</div>
+                    <div class="habit-meta">Building • 45%</div>
+                  </div>
+                  <span class="habit-streak">🔗 12</span>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-icon">📚</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 30min</div>
+                    <div class="habit-meta">Developing • 32%</div>
+                  </div>
+                  <span class="habit-streak">🔗 8</span>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-icon">🧘</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Meditate</div>
+                    <div class="habit-meta">Starting • 18%</div>
+                  </div>
+                  <span class="habit-streak">🔗 5</span>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-icon">💧</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Drink Water</div>
+                    <div class="habit-meta">Strong • 72%</div>
+                  </div>
+                  <span class="habit-streak">🔗 21</span>
+                </div>
+              </div>
+              <div class="fab">+</div>
+            </div>
+          </div>
+          <div class="notes after">
+            <strong>Fixes:</strong> SF Pro, card bg layer, deeper shadows,
+            stagger animation, unified sync
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
