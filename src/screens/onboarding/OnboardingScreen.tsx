@@ -257,7 +257,8 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
       >
         <Pressable
           onPress={handleSkip}
-          hitSlop={16}
+          hitSlop={24}
+          style={styles.skipButton}
           accessibilityRole="button"
           accessibilityLabel="Skip onboarding"
         >
@@ -400,6 +401,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 32,
+  },
+  skipButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 44,
+    minWidth: 44,
   },
   skipContainer: {
     position: 'absolute',

@@ -21,7 +21,7 @@ export function BlurOverlayActions({ config, handlers, onStartTrial, onRestore }
         <Pressable
           accessibilityLabel={config.ctaText}
           accessibilityRole='button'
-          disabled={handlers.isProcessing}
+          disabled={handlers.isProcessing || !handlers.priceLabel}
           onPress={onStartTrial}
         >
           <LinearGradient
@@ -29,6 +29,7 @@ export function BlurOverlayActions({ config, handlers, onStartTrial, onRestore }
             colors={[config.gradientColors[0], config.gradientColors[1]]}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
+            style={!handlers.priceLabel ? { opacity: 0.5 } : undefined}
           >
             <Text className='text-base font-semibold text-white'>
               {handlers.isProcessing ? 'Processing...' : config.ctaText}
@@ -38,8 +39,8 @@ export function BlurOverlayActions({ config, handlers, onStartTrial, onRestore }
       </View>
       <View className='items-center'>
         {handlers.priceLabel && (
-          <Text className='mb-2 text-xs text-white/50'>
-            {handlers.priceLabel} • Cancel anytime
+          <Text className='mb-2 text-xs text-white/70'>
+            then {handlers.priceLabel} after trial • Cancel anytime
           </Text>
         )}
         <Pressable disabled={handlers.isProcessing} onPress={onRestore}>
