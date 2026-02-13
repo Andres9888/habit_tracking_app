@@ -11,9 +11,14 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   // Use startDate/endDate range instead of sending all 365 date strings
   // This reduces the Convex query argument payload from ~4KB to ~50 bytes
   const startDate = extendedDateStrings[0];
-  const endDate = extendedDateStrings[extendedDateStrings.length - 1];
+  const endDate = extendedDateStrings.at(-1);
   const tracking =
-    useQuery(api.habits.getTracking, startDate && endDate ? { startDate, endDate } : { dates: extendedDateStrings }) ?? [];
+    useQuery(
+      api.habits.getTracking,
+      startDate && endDate
+        ? { endDate, startDate }
+        : { dates: extendedDateStrings }
+    ) ?? [];
 
   // Get optimistic state for immediate feedback
   const optimisticStore = useOptimisticStore();
@@ -58,19 +63,11 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
   const getHabitStatus = useCallback(
     (habitId: string, dateString: string): HabitStatus => {
-      // Check optimistic state first for immediate feedback
-      const optimisticKey = `${habitId}:${dateString}`;
-      const pendingToggle = optimisticStore.pendingToggles.get(optimisticKey);
-      if (pendingToggle !== undefined) {
-        return pendingToggle ? 'done' : 'missed';
-      }
+      // Use the pre-built Map (O(1)) instead of tracking.find() (O(N))
+      const completedDates = completedDatesByHabit.get(habitId);
+      const isDone = completedDates?.has(dateString) ?? false;
 
-      // Fall back to server state
-      const entry = tracking.find(
-        (item) => item && item.habitId === habitId && item.date === dateString
-      );
-
-      if (entry?.completed) {
+      if (isDone) {
         return 'done';
       }
 
@@ -83,7 +80,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       }
       return 'planned';
     },
-    [today, tracking, optimisticStore.pendingToggles]
+    [today, completedDatesByHabit]
   );
 
   /**
