@@ -7,6 +7,7 @@
 
 import { v } from 'convex/values';
 import { internalMutation, query } from './_generated/server';
+import type { MutationCtx } from './_generated/server';
 
 /**
  * Get subscription by Clerk ID
@@ -14,6 +15,12 @@ import { internalMutation, query } from './_generated/server';
 export const getByClerkId = query({
   args: { clerkId: v.string() },
   handler: async (ctx, { clerkId }) => {
+    // SEC: Auth check — only allow users to query their own subscription
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity || identity.subject !== clerkId) {
+      throw new Error('Unauthorized: can only query your own subscription');
+    }
+
     return await ctx.db
       .query('subscriptions')
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', clerkId))
@@ -167,25 +174,14 @@ export const setBillingIssue = internalMutation({
  * This is the fast-path used by the UI
  */
 async function updateUserSettingsPremium(
-  ctx: { db: any },
+  ctx: MutationCtx,
   clerkId: string,
   hasPremium: boolean
 ) {
-  // Find user by clerkId
-  const user = await ctx.db
-    .query('users')
-    .withIndex('by_clerk_id', (q: any) => q.eq('clerkId', clerkId))
-    .first();
-
-  if (!user) {
-    console.log('[subscriptions] User not found for clerkId:', clerkId);
-    return;
-  }
-
-  // Find their settings
+  // Find their settings directly by clerkId (userId stores Clerk subject ID)
   const settings = await ctx.db
     .query('userSettings')
-    .filter((q: any) => q.eq(q.field('userId'), user._id.toString()))
+    .filter((q) => q.eq(q.field('userId'), clerkId))
     .first();
 
   if (settings) {
@@ -193,10 +189,10 @@ async function updateUserSettingsPremium(
     console.log(
       '[subscriptions] Updated hasPremium:',
       hasPremium,
-      'for user:',
+      'for clerkId:',
       clerkId
     );
   } else {
-    console.log('[subscriptions] No settings found for user:', clerkId);
+    console.log('[subscriptions] No settings found for clerkId:', clerkId);
   }
 }
