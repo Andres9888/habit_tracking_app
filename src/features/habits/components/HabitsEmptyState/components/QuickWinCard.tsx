@@ -15,6 +15,7 @@ import { ALL_HABITS, BASE_CARD_CLASS } from '../HabitsEmptyState.constants';
 import { getPeriodLabel } from '../HabitsEmptyState.utils';
 import type { QuickWinCardProps } from '../HabitsEmptyState.types';
 import { QuickStartButton } from './QuickStartButton';
+import { MAX_SUGGESTIONS, pickRandomHabits } from './randomSuggestions';
 
 export function QuickWinCard({
   creatingHabit,
@@ -38,8 +39,7 @@ export function QuickWinCard({
       withTiming(0.85, { duration: 100 }),
       withSpring(1, { damping: 12 })
     );
-    const shuffled = [...ALL_HABITS].sort(() => Math.random() - 0.5);
-    setSuggestions(shuffled.slice(0, 4));
+    setSuggestions(pickRandomHabits(ALL_HABITS, MAX_SUGGESTIONS));
     setShuffleCount((c) => c + 1);
     setIsShuffled(true);
   };
@@ -76,7 +76,7 @@ export function QuickWinCard({
       <View className='mt-4 flex-row flex-wrap justify-between gap-y-3'>
         {suggestions.map((habit, index) => (
           <QuickStartButton
-            key={`${shuffleCount}-${index}`}
+            key={habit.fullName}
             containerStyle={{ width: '48%' }}
             habit={habit}
             index={shuffleCount === 0 ? index : 0}
