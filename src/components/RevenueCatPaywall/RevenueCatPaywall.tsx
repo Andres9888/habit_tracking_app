@@ -94,7 +94,7 @@ export function RevenueCatPaywall({
         onPurchaseError={({ error }) => {
           if (__DEV__)
             console.error('[RevenueCatPaywall] Purchase error:', error);
-          Alert.alert('Purchase failed', 'Please try again.');
+          Alert.alert('Purchase Failed', 'Your payment couldn\u2019t be processed. Please check your payment method and try again.');
         }}
         onRestoreCompleted={({ customerInfo }) => {
           if (__DEV__)
@@ -105,7 +105,7 @@ export function RevenueCatPaywall({
         onRestoreError={({ error }) => {
           if (__DEV__)
             console.error('[RevenueCatPaywall] Restore error:', error);
-          Alert.alert('Restore failed', 'Please try again.');
+          Alert.alert('Restore Failed', 'We couldn\u2019t find your previous purchases. Please try again or contact support.');
         }}
       />
     </Modal>

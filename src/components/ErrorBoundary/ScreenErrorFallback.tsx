@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface ScreenErrorFallbackProps {
   screenName: string;
@@ -19,6 +19,80 @@ export function ScreenErrorFallback({
   onRetry,
   onGoBack,
 }: ScreenErrorFallbackProps) {
+  const colors = useThemeColors();
+
+  const styles = StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      backgroundColor: colors.background,
+      flex: 1,
+      justifyContent: 'center',
+      paddingHorizontal: 24,
+    },
+    emoji: {
+      fontSize: 64,
+      marginBottom: 16,
+    },
+    errorDetails: {
+      backgroundColor: colors.card,
+      borderRadius: 8,
+      marginTop: 24,
+      padding: 12,
+      width: '100%',
+    },
+    errorStack: {
+      color: colors.text.tertiary,
+      fontFamily: 'Courier',
+      fontSize: 10,
+      marginTop: 8,
+    },
+    errorText: {
+      color: colors.text.secondary,
+      fontSize: 13,
+      fontFamily: 'Courier',
+    },
+    primaryButton: {
+      alignItems: 'center',
+      backgroundColor: colors.primary[500],
+      borderRadius: 12,
+      marginTop: 24,
+      paddingHorizontal: 32,
+      paddingVertical: 14,
+      shadowColor: colors.primary[500],
+      shadowOffset: { height: 4, width: 0 },
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
+    },
+    primaryButtonText: {
+      color: colors.text.inverse,
+      fontSize: 17,
+      fontWeight: '600',
+    },
+    secondaryButton: {
+      alignItems: 'center',
+      marginTop: 12,
+      paddingVertical: 12,
+    },
+    secondaryButtonText: {
+      color: colors.text.secondary,
+      fontSize: 17,
+      fontWeight: '500',
+    },
+    subtitle: {
+      color: colors.text.secondary,
+      fontSize: 15,
+      lineHeight: 22,
+      marginTop: 8,
+      textAlign: 'center',
+    },
+    title: {
+      color: colors.text.primary,
+      fontSize: 22,
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+  });
+
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>😕</Text>
@@ -56,75 +130,3 @@ export function ScreenErrorFallback({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: colors.light.background,
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  emoji: {
-    fontSize: 64,
-    marginBottom: 16,
-  },
-  errorDetails: {
-    backgroundColor: colors.light.card,
-    borderRadius: 8,
-    marginTop: 24,
-    padding: 12,
-    width: '100%',
-  },
-  errorStack: {
-    color: colors.text.tertiary,
-    fontFamily: 'Courier',
-    fontSize: 10,
-    marginTop: 8,
-  },
-  errorText: {
-    color: colors.text.secondary,
-    fontSize: 13,
-    fontFamily: 'Courier',
-  },
-  primaryButton: {
-    alignItems: 'center',
-    backgroundColor: colors.primary[500],
-    borderRadius: 12,
-    marginTop: 24,
-    paddingHorizontal: 32,
-    paddingVertical: 14,
-    shadowColor: colors.primary[500],
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-  },
-  primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '600',
-  },
-  secondaryButton: {
-    alignItems: 'center',
-    marginTop: 12,
-    paddingVertical: 12,
-  },
-  secondaryButtonText: {
-    color: colors.text.secondary,
-    fontSize: 17,
-    fontWeight: '500',
-  },
-  subtitle: {
-    color: colors.text.secondary,
-    fontSize: 15,
-    lineHeight: 22,
-    marginTop: 8,
-    textAlign: 'center',
-  },
-  title: {
-    color: colors.text.primary,
-    fontSize: 22,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-});
