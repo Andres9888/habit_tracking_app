@@ -28,14 +28,14 @@ export const ModalHeader = ({
   return (
     <Animated.View style={[headerStyles.header, headerAnimatedStyle]}>
       <AnimatedPressable
-        accessibilityHint='Double tap to close this modal'
-        accessibilityLabel='Close habit details'
+        accessibilityHint='Share this template with others'
+        accessibilityLabel='Share template'
         accessibilityRole='button'
-        style={[headerStyles.closeButton, closeButtonAnimatedStyle]}
-        onPress={onClose}
+        style={[headerStyles.shareButton, shareButtonAnimatedStyle]}
+        onPress={onShare}
         {...pressHandlers}
       >
-        <X color={colors.gray[500]} size={24} strokeWidth={2} />
+        <Share2 color={colors.gray[500]} size={20} strokeWidth={2} />
       </AnimatedPressable>
 
       <Animated.View style={headerTitleAnimatedStyle}>
@@ -51,14 +51,14 @@ export const ModalHeader = ({
       </Animated.View>
 
       <AnimatedPressable
-        accessibilityHint='Share this template with others'
-        accessibilityLabel='Share template'
+        accessibilityHint='Double tap to close this modal'
+        accessibilityLabel='Close habit details'
         accessibilityRole='button'
-        style={[headerStyles.shareButton, shareButtonAnimatedStyle]}
-        onPress={onShare}
+        style={[headerStyles.closeButton, closeButtonAnimatedStyle]}
+        onPress={onClose}
         {...pressHandlers}
       >
-        <Share2 color={colors.gray[500]} size={20} strokeWidth={2} />
+        <X color={colors.gray[500]} size={24} strokeWidth={2} />
       </AnimatedPressable>
     </Animated.View>
   );
