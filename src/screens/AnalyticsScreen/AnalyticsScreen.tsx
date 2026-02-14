@@ -7,6 +7,7 @@ import { ScrollView, RefreshControl } from 'react-native';
 import { colors } from '../../theme/colors';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
+import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 import { styles } from './AnalyticsScreen.styles';
 import {
@@ -19,7 +20,7 @@ import {
   ExportMenu,
 } from './components';
 
-export default function AnalyticsScreen() {
+function AnalyticsScreenContent() {
   const {
     refreshing,
     showPaywall,
@@ -102,5 +103,21 @@ export default function AnalyticsScreen() {
         onExport={(format) => void handleExport(format)}
       />
     </ScrollView>
+  );
+}
+
+export default function AnalyticsScreen() {
+  return (
+    <ErrorBoundary
+      fallback={
+        <ScreenErrorFallback
+          screenName="Analytics"
+          error={null}
+          onRetry={() => {}}
+        />
+      }
+    >
+      <AnalyticsScreenContent />
+    </ErrorBoundary>
   );
 }
