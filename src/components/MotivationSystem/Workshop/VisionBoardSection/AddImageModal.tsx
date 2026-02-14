@@ -7,6 +7,7 @@ import { View, Text, Pressable, Modal } from 'react-native';
 import { Image as ImageIcon, ImagePlus, Camera, X } from 'lucide-react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { ImageSourceOption } from './ImageSourceOption';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface AddImageModalProps {
   visible: boolean;

@@ -8,6 +8,7 @@ import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { DragHandle, EmptyState, HabitList, SheetHeader } from './components';
 import { getSheetContainerStyle } from './styles';
 import type { DayHabitsBottomSheetProps } from './types';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useDayHabitsSheet } from './useDayHabitsSheet';
 import { useSheetAnimations } from './useSheetAnimations';
 
@@ -80,7 +81,7 @@ export function DayHabitsBottomSheet({
         <GestureDetector gesture={panGesture}>
           <Animated.View
             className='rounded-t-3xl'
-            style={[getSheetContainerStyle(insets.bottom), sheetStyle, { backgroundColor: colors.surface }]}
+            style={[getSheetContainerStyle(insets.bottom), { backgroundColor: colors.surface }, sheetStyle]}
           >
             <DragHandle />
 

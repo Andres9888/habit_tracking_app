@@ -15,6 +15,7 @@ import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { CreateHabitScrollContent } from './components/CreateHabitScrollContent';
 import { ModalHeader } from './components/ModalHeader';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { useSwipeDismiss } from './hooks/useSwipeDismiss';
@@ -27,6 +28,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const [showNameError, setShowNameError] = useState(false);
   const { colors } = useThemeColors();
   const { animatedStyle, panGesture } = useSwipeDismiss({ onClose });
+  const { colors } = useThemeColors();
 
   const callbacks = useCenteredFormCallbacks({
     form,
@@ -59,7 +61,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
           <GestureDetector gesture={panGesture}>
             <Animated.View
               className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
-              style={[animatedStyle, { backgroundColor: colors.background }]}
+              style={[animatedStyle, { backgroundColor: colors.surface }]}
             >
               <ModalHeader
                 habitName={form.habitName}
