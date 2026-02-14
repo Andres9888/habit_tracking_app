@@ -96,6 +96,14 @@ export const colors = {
     strongLight: '#cffafe',
   },
 
+  // Legacy text aliases used across app styles
+  text: {
+    primary: '#2D2A26',
+    secondary: '#524D47',
+    tertiary: '#6B6560',
+    inverse: '#FAF8F5',
+  },
+
   success: '#22c55e',
 
   surface: '#EDEAE5',
