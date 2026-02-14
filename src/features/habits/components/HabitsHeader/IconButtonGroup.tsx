@@ -2,6 +2,7 @@ import { ArrowUpDown, BookOpen, Settings } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { NotificationBadge } from '../../../../components/NotificationBadge';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { ViewStyle } from 'react-native';
 
 interface IconButtonGroupProps {
@@ -41,8 +42,13 @@ export function IconButtonGroup({
   onSettingsPressIn,
   onSettingsPressOut,
 }: IconButtonGroupProps) {
+  const { isDark } = useThemeColors();
+  const iconColor = isDark ? '#D1D5DB' : '#44403c';
+  const dividerBg = isDark ? '#374151' : undefined;
   return (
-    <View className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'>
+    <View className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'
+      style={isDark ? { borderColor: '#374151', backgroundColor: 'rgba(31,41,55,0.8)' } : undefined}
+    >
       {/* Templates Button - highlighted with subtle purple bg */}
       <Animated.View style={templatesAnimatedStyle}>
         <View style={{ position: 'relative' }}>
@@ -60,13 +66,13 @@ export function IconButtonGroup({
             onPressIn={onTemplatesPressIn}
             onPressOut={onTemplatesPressOut}
           >
-            <BookOpen color='#7c3aed' size={18} strokeWidth={2.25} />
+            <BookOpen color={isDark ? '#a78bfa' : '#7c3aed'} size={18} strokeWidth={2.25} />
           </Pressable>
           <NotificationBadge count={1} visible={showBadge} />
         </View>
       </Animated.View>
 
-      <View className='mx-0.5 h-4 w-px bg-stone-200' />
+      <View className='mx-0.5 h-4 w-px bg-stone-200' style={dividerBg ? { backgroundColor: dividerBg } : undefined} />
 
       {/* Sort Button */}
       <Animated.View style={sortAnimatedStyle}>
@@ -82,11 +88,11 @@ export function IconButtonGroup({
           onPressIn={onSortPressIn}
           onPressOut={onSortPressOut}
         >
-          <ArrowUpDown color='#44403c' size={18} strokeWidth={2.25} />
+          <ArrowUpDown color={iconColor} size={18} strokeWidth={2.25} />
         </Pressable>
       </Animated.View>
 
-      <View className='mx-0.5 h-4 w-px bg-stone-200' />
+      <View className='mx-0.5 h-4 w-px bg-stone-200' style={dividerBg ? { backgroundColor: dividerBg } : undefined} />
 
       {/* Settings Button */}
       <Animated.View style={settingsAnimatedStyle}>
@@ -101,7 +107,7 @@ export function IconButtonGroup({
           onPressIn={onSettingsPressIn}
           onPressOut={onSettingsPressOut}
         >
-          <Settings color='#44403c' size={18} strokeWidth={2.25} />
+          <Settings color={iconColor} size={18} strokeWidth={2.25} />
         </Pressable>
       </Animated.View>
     </View>
