@@ -16,9 +16,7 @@ card: {
     backgroundColor: colors.light.card,
     borderRadius: borderRadius.large,
     maxWidth: 340,
-    padding: spacing.xl,
-    width: '100%',
-    ...shadows.modal,
+    ...shadows.alert,
   },
 
   
@@ -198,6 +196,21 @@ title: {
 
 // Achievement card styles for shareable card
 export const achievementCardStyles = StyleSheet.create({
+<<<<<<< HEAD
+  container: {
+    width: 320,
+    borderRadius: borderRadius.large,
+    overflow: 'hidden',
+    ...shadows.alert,
+  },
+
+  gradient: {
+    padding: spacing.xl,
+    alignItems: 'center',
+  },
+
+=======
+>>>>>>> origin/main
   badge: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
