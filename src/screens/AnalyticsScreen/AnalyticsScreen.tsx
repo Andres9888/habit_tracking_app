@@ -33,6 +33,7 @@ function AnalyticsScreenContent() {
     trendData,
     complianceData,
     weeklyInsights,
+    habitInsights,
     onRefresh,
     handleHabitPress,
     handleExportPress,
@@ -104,7 +105,10 @@ function AnalyticsScreenContent() {
         <InsightsSections
           rankedHabits={overviewStats?.rankedHabits || []}
           weeklyInsights={weeklyInsights}
+          habitInsights={habitInsights}
           onHabitPress={handleHabitPress}
+          isPremiumUser={isPremiumUser}
+          onUnlockInsights={() => setShowPaywall(true)}
         />
       </Animated.View>
 

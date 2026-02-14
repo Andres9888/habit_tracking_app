@@ -24,6 +24,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const trendData = useQuery(api.analytics.get30DayTrend);
   const complianceData = useQuery(api.analytics.getComplianceData);
   const weeklyInsights = useQuery(api.analytics.getWeeklyInsights);
+  const habitInsights = useQuery(api.habitInsights.getHabitInsights);
 
   const isLoading = !overviewStats;
 
@@ -92,5 +93,6 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     strengthDistribution,
     trendData,
     weeklyInsights,
+    habitInsights,
   };
 };

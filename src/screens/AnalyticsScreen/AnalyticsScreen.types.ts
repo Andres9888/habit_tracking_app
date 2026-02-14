@@ -6,12 +6,14 @@ import type { StrengthDistributionData } from '../../components/StrengthDistribu
 import type { TrendData } from '../../components/TrendLineChart/types';
 import type { HeatmapData } from '../../components/ComplianceHeatmap/ComplianceHeatmap.types';
 import type { WeeklyInsights } from '../../components/WeeklyInsightsCard';
+import type { HabitInsightsResult } from '../../components/HabitInsightsCard';
 
 // Re-export canonical chart types for consumers
 export type { StrengthDistributionData };
 export type { TrendData as TrendDataPoint };
 export type { HeatmapData as ComplianceDay };
 export type { WeeklyInsights };
+export type { HabitInsightsResult };
 
 export interface StatCardProps {
   title: string;
@@ -67,6 +69,7 @@ export interface UseAnalyticsScreenReturn {
   trendData: TrendData[] | undefined;
   complianceData: HeatmapData[] | undefined;
   weeklyInsights: WeeklyInsights | undefined;
+  habitInsights: HabitInsightsResult | undefined;
 
   // Handlers
   onRefresh: () => Promise<void>;
