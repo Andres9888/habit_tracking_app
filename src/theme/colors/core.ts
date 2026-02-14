@@ -98,6 +98,14 @@ export const colors = {
 
   success: '#22c55e',
 
+  // Text Colors (semantic hierarchy)
+  text: {
+    inverse: '#FFFFFF',    // Text on dark/colored backgrounds
+    primary: '#2D2A26',    // Headings, primary content (= gray.800)
+    secondary: '#6B6560',  // Body text, descriptions (= gray.500)
+    tertiary: '#9C958D',   // Captions, placeholders (= gray.400)
+  },
+
   surface: '#EDEAE5',
 
   warning: '#D97706',
