@@ -19,6 +19,7 @@ import { useRewardToast } from './useRewardToast';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
+import { useFirstUsageDate } from '../../../hooks/useFirstUsageDate';
 import type { HabitsListState } from './types';
 
 const FREE_HABIT_LIMIT = 3;
@@ -26,6 +27,7 @@ const FREE_HABIT_LIMIT = 3;
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
   const isOnline = useIsOnline();
+  const { daysSinceFirstUsage } = useFirstUsageDate();
   const toggleHabitMutation = useMutation(api.habits.toggleHabit);
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
@@ -63,7 +65,9 @@ export function useHabitsListState(): HabitsListState {
     ? habits.length
     : Math.min(habits.length, FREE_HABIT_LIMIT);
   const hasReachedHabitLimit =
-    !isPremiumUser && habits.length >= FREE_HABIT_LIMIT;
+    !isPremiumUser &&
+    habits.length >= FREE_HABIT_LIMIT &&
+    daysSinceFirstUsage >= 3;
 
   const openCreateHabitScreen = useCallback(() => {
     // Handled by parent component

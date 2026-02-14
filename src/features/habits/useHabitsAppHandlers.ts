@@ -51,8 +51,8 @@ export function useHabitsAppHandlers({
     if (!isPremiumUser && hasReachedHabitLimit) {
       triggerWarning();
       Alert.alert(
-        '🎉 Great progress!',
-        "You've built 3 solid habits! Ready to track more? Upgrade to premium for unlimited habits and advanced insights.",
+        "You're building great habits! 🎉",
+        'Unlock unlimited habits and insights with Premium.',
         [
           { style: 'cancel', text: 'Keep 3 Free' },
           {
