@@ -6,6 +6,8 @@ import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import type { Habit } from '../../../features/habits/types';
+import { ContributionGrid } from './ContributionGrid';
+import { StreakStatsCard } from './StreakStatsCard';
 
 interface HabitDetailContentProps {
   habit: Habit;
@@ -15,6 +17,14 @@ interface HabitDetailContentProps {
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
+
+const cardShadow = {
+  elevation: 4,
+  shadowColor: '#1c1917',
+  shadowOffset: { height: 4, width: 0 },
+  shadowOpacity: 0.08,
+  shadowRadius: 16,
+};
 
 /** Section label component for consistent styling */
 function SectionLabel({ text, delay }: { text: string; delay: number }) {
@@ -44,20 +54,31 @@ export function HabitDetailContent({
       contentContainerClassName='pb-8 px-4'
       showsVerticalScrollIndicator={false}
     >
-      {/* STRENGTH section - OPTIMIZED: better visual weight, deeper shadows */}
+      {/* STREAKS section - trend arrows + best streak stat */}
+      <SectionLabel delay={180} text='STREAKS' />
+      <Animated.View
+        className='rounded-2xl bg-white'
+        entering={anim(220)}
+        style={cardShadow}
+      >
+        <ErrorBoundary>
+          <StreakStatsCard
+            completedDates={completedDates}
+            currentStreak={habit.currentStreak ?? 0}
+            bestStreak={habit.bestStreak ?? 0}
+            habitColor={habit.iconColor ?? '#047857'}
+          />
+        </ErrorBoundary>
+      </Animated.View>
+
+      {/* STRENGTH section */}
       {habit.createdAt && (
         <>
-          <SectionLabel delay={240} text='STRENGTH' />
+          <SectionLabel delay={280} text='STRENGTH' />
           <Animated.View
             className='rounded-2xl bg-white'
-            entering={anim(300)}
-            style={{
-              elevation: 4,
-              shadowColor: '#1c1917',
-              shadowOffset: { height: 4, width: 0 },
-              shadowOpacity: 0.08,
-              shadowRadius: 16,
-            }}
+            entering={anim(320)}
+            style={cardShadow}
           >
             <ErrorBoundary>
               <HabitStrengthSection
@@ -72,18 +93,27 @@ export function HabitDetailContent({
         </>
       )}
 
-      {/* HISTORY section - OPTIMIZED: consistent card styling */}
-      <SectionLabel delay={360} text='HISTORY' />
+      {/* CONTRIBUTIONS section - GitHub-style heatmap */}
+      <SectionLabel delay={380} text='CONTRIBUTIONS' />
       <Animated.View
         className='rounded-2xl bg-white p-4'
         entering={anim(420)}
-        style={{
-          elevation: 4,
-          shadowColor: '#1c1917',
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
-        }}
+        style={cardShadow}
+      >
+        <ErrorBoundary>
+          <ContributionGrid
+            completedDates={completedDates}
+            habitColor={habit.iconColor ?? '#047857'}
+          />
+        </ErrorBoundary>
+      </Animated.View>
+
+      {/* HISTORY section - monthly calendar */}
+      <SectionLabel delay={480} text='HISTORY' />
+      <Animated.View
+        className='rounded-2xl bg-white p-4'
+        entering={anim(520)}
+        style={cardShadow}
       >
         <ErrorBoundary>
           <MonthlyCalendarGrid
