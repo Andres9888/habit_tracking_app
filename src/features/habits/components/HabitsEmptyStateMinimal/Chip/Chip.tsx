@@ -69,6 +69,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
 
   return (
     <AnimatedPressable
+      accessibilityHint={`Select ${chip.fullName} habit category`}
       accessibilityLabel={`Select ${chip.fullName}`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}

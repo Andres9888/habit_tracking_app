@@ -70,6 +70,7 @@ export function LockedHabitCard({
 
   return (
     <Pressable
+      accessibilityHint='Tap to start your free trial'
       accessibilityLabel='Upgrade to unlock unlimited habits'
       accessibilityRole='button'
       onPress={onUpgradePress}

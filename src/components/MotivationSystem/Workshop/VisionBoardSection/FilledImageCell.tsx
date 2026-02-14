@@ -49,6 +49,7 @@ export function FilledImageCell({
       >
         {image.imageUrl ? (
           <Image
+            accessibilityLabel={image.caption || `Vision board image ${index + 1}`}
             accessibilityIgnoresInvertColors
             resizeMode='cover'
             source={{ uri: image.imageUrl }}

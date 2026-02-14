@@ -50,6 +50,7 @@ export function MonetizationHero({
       </View>
       <View className='flex-row items-center gap-3'>
         <AnimatedPressable
+          accessibilityHint='Start your 7-day free trial'
           accessibilityLabel='Upgrade to premium for unlimited habits'
           accessibilityRole='button'
           className='flex-1 items-center rounded-full bg-[#6d28d9] px-5 py-3'

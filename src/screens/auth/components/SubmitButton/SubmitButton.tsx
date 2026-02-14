@@ -45,6 +45,7 @@ export function SubmitButton({
 
   return (
     <AnimatedPressable
+      accessibilityHint='Double tap to submit this form'
       accessibilityLabel={isLoading ? loadingLabel : label}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}

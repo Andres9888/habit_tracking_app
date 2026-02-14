@@ -11,6 +11,7 @@ interface DayCellProps {
 export function DayCell({ date, isToday, hasCompletion, onToggle }: DayCellProps) {
   return (
     <Pressable
+      accessibilityHint={`Double tap to toggle completion for ${format(date, 'MMMM d')}`}
       accessibilityLabel={`${format(date, 'MMMM d')}${hasCompletion ? ', completed' : ''}`}
       accessibilityRole='button'
       accessibilityState={{ checked: hasCompletion }}
