@@ -1,9 +1,6 @@
-import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { ActivityIndicator, Text } from 'react-native';
 
-import { usePressAnimation } from './usePressAnimation';
-
-const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
 
 interface OAuthButtonProps {
   onPress: () => void;
@@ -26,20 +23,15 @@ export function OAuthButton({
   accessibilityLabel,
   accessibilityHint,
 }: OAuthButtonProps) {
-  const { animatedStyle, handlePressIn, handlePressOut } = usePressAnimation();
-
   return (
-    <AnimatedTouchable
+    <AnimatedPressable
       accessible
       accessibilityHint={accessibilityHint}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='button'
       className='flex-row items-center justify-center gap-3 rounded-3xl border border-stone-200 bg-white py-[14px]'
       disabled={disabled}
-      style={animatedStyle}
       onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
     >
       {loading ? (
         <ActivityIndicator color={loadingColor} size='small' />
@@ -52,6 +44,6 @@ export function OAuthButton({
       >
         CONTINUE WITH {providerName}
       </Text>
-    </AnimatedTouchable>
+    </AnimatedPressable>
   );
 }

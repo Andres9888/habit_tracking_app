@@ -1,4 +1,5 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { colors } from '@/theme/colors';
 import type { HubermanPhase } from '../../../constants/hubermanPhases';
 import { HUBERMAN_PHASES } from '../../../constants/hubermanPhases';
@@ -17,7 +18,7 @@ export const PhaseOption = ({
   const phase = HUBERMAN_PHASES[phaseId];
 
   return (
-    <TouchableOpacity
+    <AnimatedPressable
       accessibilityLabel={`Select ${phase.label}`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
@@ -53,6 +54,6 @@ export const PhaseOption = ({
           <Text className='text-xs text-white'>✓</Text>
         </View>
       )}
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 };

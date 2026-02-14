@@ -1,4 +1,5 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
 
 interface StatsSummaryBarProps {
   habitCount: number;
@@ -17,14 +18,14 @@ export function StatsSummaryBar({ habitCount, onDeleteAll }: StatsSummaryBarProp
         </Text>
       </View>
       {habitCount > 1 && onDeleteAll && (
-        <TouchableOpacity
+        <AnimatedPressable
           accessibilityLabel='Delete all archived habits'
           accessibilityRole='button'
           className='rounded-lg bg-red-50 px-3 py-1.5'
           onPress={onDeleteAll}
         >
           <Text className='text-xs font-semibold text-red-500'>Delete All</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
       )}
     </View>
   );

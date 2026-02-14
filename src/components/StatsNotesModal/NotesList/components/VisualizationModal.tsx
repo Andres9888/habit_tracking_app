@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
+import { View, Text, Modal, ScrollView } from 'react-native';
+import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -58,14 +59,14 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
               </Text>
             </View>
           </View>
-          <TouchableOpacity
+          <AnimatedPressable
             accessibilityLabel='Close visualization guide'
             accessibilityRole='button'
             className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
             onPress={onClose}
           >
             <X color='#57534e' size={24} />
-          </TouchableOpacity>
+          </AnimatedPressable>
         </Animated.View>
 
         <ScrollView

@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
+import { AnimatedPressable } from '../ui/AnimatedPressable';
 import type { HeatmapData } from './ComplianceHeatmap.types';
 import { LEVEL_COLORS } from './ComplianceHeatmap.constants';
 import { styles } from './ComplianceHeatmap.styles';
@@ -21,8 +22,7 @@ export function HeatmapCell({ day, onPress }: HeatmapCellProps) {
   };
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
+    <AnimatedPressable
       disabled={!day.date}
       style={[
         styles.cell,
@@ -35,6 +35,6 @@ export function HeatmapCell({ day, onPress }: HeatmapCellProps) {
       {day.completionRate > 0 && (
         <Text style={styles.cellText}>{Math.round(day.completionRate)}</Text>
       )}
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }

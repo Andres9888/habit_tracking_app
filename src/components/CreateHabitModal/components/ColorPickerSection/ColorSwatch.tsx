@@ -4,7 +4,8 @@
  */
 
 import { useCallback, useRef } from 'react';
-import { Animated, TouchableOpacity, View } from 'react-native';
+import { Animated, View } from 'react-native';
+import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import { Motion } from '../../../../constants/motion';
 
 interface ColorSwatchProps {
@@ -90,11 +91,10 @@ export const ColorSwatch = ({
               padding: isSelected ? 3 : 0,
             }}
           >
-            <TouchableOpacity
+            <AnimatedPressable
               accessibilityLabel={`${colorName} color${isSelected ? ', selected' : ''}`}
               accessibilityRole='button'
               accessibilityState={{ selected: isSelected }}
-              activeOpacity={0.8}
               style={getSwatchStyle(color, isSelected)}
               testID={`color-swatch-${color.replace('#', '')}`}
               onPress={onPress}

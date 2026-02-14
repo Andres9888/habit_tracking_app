@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react-native';
+import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import { memo, useCallback, useRef } from 'react';
-import { Animated, Keyboard, TouchableOpacity, View } from 'react-native';
+import { Animated, Keyboard, View } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { Motion } from '../../../../constants/motion';
 import type { CustomColorButtonProps } from './types';
@@ -48,7 +49,7 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
       }}
     >
       <Animated.View style={{ transform: [{ scale }] }}>
-        <TouchableOpacity
+        <AnimatedPressable
           accessibilityLabel='Choose custom color'
           accessibilityRole='button'
           style={{
@@ -67,7 +68,7 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
           onPressOut={handlePressOut}
         >
           <Plus color='#a8a29e' size={20} />
-        </TouchableOpacity>
+        </AnimatedPressable>
       </Animated.View>
     </View>
   );

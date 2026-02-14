@@ -4,7 +4,8 @@
  */
 
 import React, { useCallback } from 'react';
-import { Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Text, View, ViewStyle } from 'react-native';
+import { AnimatedPressable } from './ui/AnimatedPressable';
 import { clsx } from 'clsx';
 
 import { useHapticFeedback } from '../hooks/useHapticFeedback';
@@ -59,12 +60,11 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
   }, [onPress, triggerLightImpact]);
 
   return (
-    <TouchableOpacity
+    <AnimatedPressable
       ref={ref}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='checkbox'
       accessibilityState={{ checked: isActive, disabled }}
-      activeOpacity={0.7}
       className='self-start'
       disabled={disabled}
       style={style}
@@ -86,7 +86,7 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
           </Text>
         )}
       </View>
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 });
 
