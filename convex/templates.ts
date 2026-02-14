@@ -25,8 +25,10 @@ export {
   getById,
   getPopular,
   getTemplateCount,
+  getUsageCounts,
   getUsageStats,
   list,
+  listPremium,
   listTemplateNames,
 } from './templates/queries';
 
@@ -36,6 +38,7 @@ export {
 export { importTemplate } from './templates/importTemplate';
 export { clearTemplates, dedupeTemplates } from './templates/clearAndDedupe';
 export { updateYoutubeLinks } from './templates/updateLinks';
+export { seedPremiumTemplates } from './templates/seedPremiumTemplates';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Seed mutation exports (data-heavy)

@@ -84,6 +84,42 @@ export const getTemplateCount = query({
 });
 
 /**
+ * Query: List premium templates only
+ */
+export const listPremium = query({
+  args: {
+    category: v.optional(categoryValidator),
+  },
+  handler: async (ctx, args) => {
+    const allTemplates = args.category
+      ? await ctx.db
+          .query('templates')
+          .withIndex('by_category', (q) => q.eq('category', args.category!))
+          .order('desc')
+          .collect()
+      : await ctx.db.query('templates').order('desc').collect();
+
+    return allTemplates.filter((t) => t.isPremium === true);
+  },
+});
+
+/**
+ * Query: Get usage counts for all templates (popularity counter)
+ */
+export const getUsageCounts = query({
+  args: {},
+  handler: async (ctx) => {
+    const allUsage = await ctx.db.query('templateUsage').collect();
+    const counts: Record<string, number> = {};
+    for (const usage of allUsage) {
+      const key = usage.templateId as string;
+      counts[key] = (counts[key] || 0) + 1;
+    }
+    return counts;
+  },
+});
+
+/**
  * Query: List all template names (for debugging)
  */
 export const listTemplateNames = query({

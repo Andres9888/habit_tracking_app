@@ -58,6 +58,9 @@ export interface TemplateCardProps {
   /** Popularity score (optional) */
   popularityScore?: number;
 
+  /** Real usage count (how many users imported this template) */
+  usageCount?: number;
+
   /** Optional scientific link */
   scientificLink?: string;
 
@@ -92,6 +95,7 @@ export type TemplateCardRenderProps = Pick<
   | 'scientificReference'
   | 'showPreviewCTA'
   | 'style'
+  | 'usageCount'
   | 'youtubeLink'
 > & {
   reducedMotion: boolean;

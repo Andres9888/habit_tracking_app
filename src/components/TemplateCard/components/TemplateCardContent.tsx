@@ -33,6 +33,7 @@ export function TemplateCardContent({
   scientificLink,
   scientificReference,
   showPreviewCTA,
+  usageCount,
   youtubeLink,
 }: TemplateCardContentProps) {
   const theme = useAppTheme();
@@ -58,6 +59,7 @@ export function TemplateCardContent({
         iconColor={iconColor}
         popularityScore={popularityScore}
         scientificLink={scientificLink}
+        usageCount={usageCount}
         youtubeLink={youtubeLink}
       />
       <Text

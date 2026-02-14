@@ -402,6 +402,9 @@ const applicationTables = {
 
     name: v.string(),
 
+    // Premium-only template flag
+    isPremium: v.optional(v.boolean()),
+
     // Optional link to research
     popularityScore: v.optional(v.number()),
 

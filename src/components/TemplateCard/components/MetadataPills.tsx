@@ -16,6 +16,7 @@ interface MetadataPillsProps {
   iconColor: string;
   popularityScore?: number;
   scientificLink?: string;
+  usageCount?: number;
   youtubeLink?: string;
 }
 
@@ -24,6 +25,7 @@ export function MetadataPills({
   iconColor,
   popularityScore,
   scientificLink,
+  usageCount,
   youtubeLink,
 }: MetadataPillsProps) {
   const theme = useAppTheme();
@@ -33,7 +35,8 @@ export function MetadataPills({
     formattedFrequency ||
     scientificLink ||
     youtubeLink ||
-    typeof popularityScore === 'number';
+    typeof popularityScore === 'number' ||
+    typeof usageCount === 'number';
 
   if (!hasMetadata) return null;
 
@@ -66,7 +69,15 @@ export function MetadataPills({
       {typeof popularityScore === 'number' && (
         <View style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}>
           <Text style={[theme.custom.typography.caption, styles.metadataText]}>
-            {popularityScore >= 90 ? 'Popular' : '⭐ Trusted'}
+            {popularityScore >= 90 ? '🔥 Popular' : '⭐ Trusted'}
+          </Text>
+        </View>
+      )}
+
+      {typeof usageCount === 'number' && usageCount > 0 && (
+        <View style={[styles.metadataPill, { borderColor: `${iconColor}30` }]}>
+          <Text style={[theme.custom.typography.caption, styles.metadataText]}>
+            👥 {usageCount.toLocaleString()} {usageCount === 1 ? 'user' : 'users'}
           </Text>
         </View>
       )}

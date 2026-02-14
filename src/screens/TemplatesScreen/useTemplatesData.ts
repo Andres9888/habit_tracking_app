@@ -8,6 +8,7 @@ import { api } from '../../../convex/_generated/api';
 export function useTemplatesData() {
   const allTemplates = useQuery(api.templates.list, {});
   const categories = useQuery(api.categories.list, {});
+  const usageCounts = useQuery(api.templates.getUsageCounts, {});
   const isLoading = allTemplates === undefined || categories === undefined;
 
   const importTemplate = useMutation(api.templates.importTemplate);
@@ -18,15 +19,26 @@ export function useTemplatesData() {
   const seedNewScienceTemplates = useMutation(
     api.templates.seedNewScienceTemplates
   );
+  const seedPremiumTemplates = useMutation(
+    api.templates.seedPremiumTemplates
+  );
+
+  // Separate premium and free templates
+  const premiumTemplates = allTemplates?.filter((t) => t.isPremium) ?? [];
+  const freeTemplates = allTemplates?.filter((t) => !t.isPremium) ?? [];
 
   return {
     allTemplates,
     categories,
+    freeTemplates,
     importTemplate,
     isLoading,
+    premiumTemplates,
     seedAdditionalTemplates,
     seedNewScienceTemplates,
+    seedPremiumTemplates,
     seedTemplates,
+    usageCounts: usageCounts ?? {},
   };
 }
 

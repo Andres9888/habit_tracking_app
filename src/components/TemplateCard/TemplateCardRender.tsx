@@ -33,6 +33,7 @@ export function TemplateCardRender({
   shadowStyle,
   showPreviewCTA,
   style,
+  usageCount,
   youtubeLink,
 }: TemplateCardRenderProps) {
   return (
@@ -70,6 +71,7 @@ export function TemplateCardRender({
           scientificLink={scientificLink}
           scientificReference={scientificReference}
           showPreviewCTA={showPreviewCTA ?? false}
+          usageCount={usageCount}
           youtubeLink={youtubeLink}
           onImportPress={handleImportPress}
           onPreview={onPreview}

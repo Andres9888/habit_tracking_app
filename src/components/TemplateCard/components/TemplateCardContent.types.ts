@@ -20,5 +20,6 @@ export interface TemplateCardContentProps {
   scientificLink?: string;
   scientificReference: string;
   showPreviewCTA: boolean;
+  usageCount?: number;
   youtubeLink?: string;
 }
