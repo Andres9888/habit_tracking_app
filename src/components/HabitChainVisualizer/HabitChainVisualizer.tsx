@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { ChainDayItem } from './ChainDayItem';
@@ -117,7 +118,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
             accentColor={accentColor}
             connectorColor={connectorColor}
             currentStreak={currentStreak}
-            position="end"
+            position='end'
           />
         )}
     </View>

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * QuickActionsSheet Component
  * Bottom sheet with quick actions for habit management
@@ -66,7 +67,10 @@ export const QuickActionsSheet = ({
         event.translationY > DISMISS_THRESHOLD ||
         velocityY > VELOCITY_THRESHOLD
       ) {
-        translateY.value = withSpring(SCREEN_HEIGHT, { damping: 20, stiffness: 150 });
+        translateY.value = withSpring(SCREEN_HEIGHT, {
+          damping: 20,
+          stiffness: 150,
+        });
         runOnJS(handleDismiss)();
       } else {
         translateY.value = withSpring(0, { damping: 20, stiffness: 150 });

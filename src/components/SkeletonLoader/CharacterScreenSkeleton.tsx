@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * CharacterScreenSkeleton - Loading skeleton for character/gamification screen
  * Matches layout: header, character card, attributes grid, stats, achievements

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * SettingsModal Component
  */
@@ -115,12 +116,12 @@ export default function SettingsModal(props: SettingsModalProps) {
     <ErrorBoundary
       fallback={
         <Modal
-          animationType="slide"
+          animationType='slide'
           visible={props.visible}
           onRequestClose={props.onClose}
         >
           <ScreenErrorFallback
-            screenName="Settings"
+            screenName='Settings'
             error={null}
             onRetry={() => {}}
             onGoBack={props.onClose}

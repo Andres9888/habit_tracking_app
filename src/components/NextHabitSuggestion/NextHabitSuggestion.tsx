@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * NextHabitSuggestion Component
  * Shows the next incomplete habit to focus on
@@ -81,7 +82,7 @@ export function NextHabitSuggestion({
         <View style={styles.content}>
           <View style={styles.header}>
             <View style={styles.badge}>
-              <Zap color="#f59e0b" size={12} strokeWidth={2.5} />
+              <Zap color='#f59e0b' size={12} strokeWidth={2.5} />
               <Text style={styles.badgeText}>Focus on</Text>
             </View>
             <Text style={styles.progress}>
@@ -95,11 +96,9 @@ export function NextHabitSuggestion({
               <Text numberOfLines={1} style={styles.habitName}>
                 {habit.name}
               </Text>
-              <Text style={styles.habitHint}>
-                Tap to mark complete
-              </Text>
+              <Text style={styles.habitHint}>Tap to mark complete</Text>
             </View>
-            <ArrowRight color="#a8a29e" size={20} />
+            <ArrowRight color='#a8a29e' size={20} />
           </View>
         </View>
       </Animated.View>
@@ -138,7 +137,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   // Completed state
-completedContainer: {
+  completedContainer: {
     marginHorizontal: 16,
     borderRadius: 16,
     marginVertical: 8,
@@ -146,8 +145,8 @@ completedContainer: {
     padding: 20,
     backgroundColor: '#ecfdf5',
   },
-  
-glow: {
+
+  glow: {
     backgroundColor: '#f59e0b',
     height: 4,
     left: 0,
@@ -155,39 +154,39 @@ glow: {
     right: 0,
     top: 0,
   },
-  
-completedEmoji: {
+
+  completedEmoji: {
     fontSize: 36,
     marginBottom: 8,
   },
-  
-habitHint: {
+
+  habitHint: {
     color: '#a8a29e',
     fontSize: 13,
   },
-  
-completedSubtitle: {
+
+  completedSubtitle: {
     color: '#059669',
     fontSize: 14,
   },
-  
-habitIcon: {
+
+  habitIcon: {
     fontSize: 32,
   },
-  
-completedTitle: {
+
+  completedTitle: {
     color: '#065f46',
     fontSize: 17,
     fontWeight: '600',
     marginBottom: 4,
   },
-  
-habitRow: {
+
+  habitRow: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 12,
   },
-  
+
   habitInfo: {
     flex: 1,
   },

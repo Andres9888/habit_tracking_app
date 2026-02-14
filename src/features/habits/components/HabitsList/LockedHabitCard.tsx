@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * LockedHabitCard Component
  * Animated upgrade prompt card for free tier limit

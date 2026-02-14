@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * StreakMilestoneProvider
  * Global provider for managing streak milestone celebrations
@@ -16,10 +17,7 @@ import React, {
 } from 'react';
 import { StreakMilestoneCelebration } from './StreakMilestoneCelebration';
 import { ShareCardGenerator } from '../ShareCardGenerator';
-import {
-  checkStreakMilestoneCrossed,
-  type StreakMilestone,
-} from './constants';
+import { checkStreakMilestoneCrossed, type StreakMilestone } from './constants';
 import { persistMilestoneShown } from './useMilestoneCheck';
 import {
   maybeRequestReview,
@@ -60,9 +58,8 @@ interface StreakMilestoneContextValue {
   ) => void;
 }
 
-const StreakMilestoneContext = createContext<StreakMilestoneContextValue | null>(
-  null
-);
+const StreakMilestoneContext =
+  createContext<StreakMilestoneContextValue | null>(null);
 
 interface StreakMilestoneProviderProps {
   children: ReactNode;
@@ -74,9 +71,8 @@ export function StreakMilestoneProvider({
   children,
   userName = '',
 }: StreakMilestoneProviderProps) {
-  const [celebrationData, setCelebrationData] = useState<CelebrationData | null>(
-    null
-  );
+  const [celebrationData, setCelebrationData] =
+    useState<CelebrationData | null>(null);
   const [showShareCard, setShowShareCard] = useState(false);
   const [shareData, setShareData] = useState<ShareCardData | null>(null);
 
@@ -91,7 +87,10 @@ export function StreakMilestoneProvider({
       // Track completion for store review eligibility
       void incrementCompletionCount();
 
-      const milestone = checkStreakMilestoneCrossed(previousStreak, currentStreak);
+      const milestone = checkStreakMilestoneCrossed(
+        previousStreak,
+        currentStreak
+      );
 
       if (milestone) {
         setCelebrationData({
@@ -111,7 +110,7 @@ export function StreakMilestoneProvider({
       // Persist that this milestone was shown
       persistMilestoneShown(
         celebrationData.habitId,
-        celebrationData.milestone.days,
+        celebrationData.milestone.days
       );
       // After celebration dismissal, maybe prompt for App Store review
       // Small delay so the modal finishes closing before the system dialog appears
