@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
 import STRINGS from '../../../../constants/strings';
 import { colors } from '../../../../theme/colors';
+import { shadows } from '../../../../theme/spacing';
 
 interface CreateButtonProps {
   disabled: boolean;
@@ -59,10 +60,7 @@ export function CreateButton({
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
             style={{
-              shadowColor: '#1c1917',
-              shadowOffset: { height: 4, width: 0 },
-              shadowOpacity: 0.08,
-              shadowRadius: 16,
+              ...shadows.floatingActionButton,
             }}
           >
             <Check color={colors.text.inverse} size={20} strokeWidth={2.5} />

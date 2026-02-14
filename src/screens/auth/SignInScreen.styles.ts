@@ -1,6 +1,7 @@
 /** SignInScreen Styles - Type scale: 34/22/17/13, proper contrast, depth */
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { shadows } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   appName: {
@@ -27,10 +28,7 @@ export const styles = StyleSheet.create({
     borderRadius: 16,
     elevation: 4,
     padding: 24,
-    shadowColor: '#1c1917',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    ...shadows.floatingActionButton,
   },
   formSection: { gap: 20 },
   gradientBg: { backgroundColor: colors.light.background, flex: 1 },
@@ -42,10 +40,7 @@ export const styles = StyleSheet.create({
     height: 88,
     justifyContent: 'center',
     marginBottom: 20,
-    shadowColor: '#1c1917',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    ...shadows.floatingActionButton,
     width: 88,
   },
   inputFocused: { borderColor: '#047857', borderWidth: 2 },

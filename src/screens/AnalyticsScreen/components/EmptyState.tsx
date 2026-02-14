@@ -5,6 +5,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { BarChart3, Sparkles } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { shadows } from '../../../theme/spacing';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -50,10 +51,7 @@ export const EmptyState: React.FC = () => {
         className='w-full rounded-2xl bg-white p-5'
         entering={anim(150)}
         style={{
-          shadowColor: '#1c1917',
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
+          ...shadows.floatingActionButton,
         }}
       >
         <View className='mb-3 flex-row items-center gap-2'>

@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import { StreakBadge } from './StreakBadge';
 import { ActionButtons } from './ActionButtons';
+import { shadows } from '../../theme/spacing';
 
 interface StatusRibbonProps {
   emoji: string;
@@ -33,10 +34,7 @@ export function StatusRibbon({
       <View
         className='rounded-3xl bg-white p-5'
         style={{
-          shadowColor: '#1c1917',
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
+          ...shadows.floatingActionButton,
         }}
       >
         <View className='flex-row gap-4'>

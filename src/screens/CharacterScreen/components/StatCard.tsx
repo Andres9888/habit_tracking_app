@@ -1,6 +1,7 @@
 import { Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { StatCardProps } from '../types';
+import { shadows } from '../../../theme/spacing';
 
 export function StatCard({
   emoji,
@@ -13,10 +14,7 @@ export function StatCard({
       className='flex-1 flex-col items-center gap-1 rounded-2xl border border-stone-100 bg-white px-4 py-4'
       entering={FadeInDown.delay(delay).springify().damping(18)}
       style={{
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
+        ...shadows.floatingActionButton,
       }}
     >
       <Text className='text-2xl leading-8'>{emoji}</Text>

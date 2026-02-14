@@ -3,6 +3,7 @@
  */
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
+import { shadows } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 
@@ -35,10 +36,7 @@ export const styles = StyleSheet.create({
     margin: spacing.sm,
     minWidth: '45%',
     padding: spacing.lg,
-    shadowColor: '#1c1917',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    ...shadows.floatingActionButton,
   },
   statCardEmoji: {
     fontSize: 22,

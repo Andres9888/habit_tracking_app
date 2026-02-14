@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { AttributeCardProps } from '../types';
+import { shadows } from '../../../theme/spacing';
 
 export function AttributeCard({
   icon,
@@ -19,10 +20,7 @@ export function AttributeCard({
       className='overflow-hidden rounded-3xl border border-stone-100 bg-white'
       entering={FadeInDown.delay(delay).springify().damping(18)}
       style={{
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
+        ...shadows.floatingActionButton,
       }}
     >
       <View className='relative h-[110px]'>

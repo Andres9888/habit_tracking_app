@@ -9,6 +9,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { shadows } from '../../../theme/spacing';
 
 interface NotesEmptyStateProps {
   onAddNote: () => void;
@@ -44,10 +45,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
         style={[
           animatedStyle,
           {
-            shadowColor: '#1c1917',
-            shadowOffset: { height: 4, width: 0 },
-            shadowOpacity: 0.08,
-            shadowRadius: 16,
+            ...shadows.floatingActionButton,
           },
         ]}
         onTouchCancel={handlePressOut}

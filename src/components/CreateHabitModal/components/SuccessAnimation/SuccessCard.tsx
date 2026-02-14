@@ -5,6 +5,7 @@
  */
 
 import { Animated, Pressable, Text, View } from 'react-native';
+import { shadows } from '../../../../theme/spacing';
 
 interface SuccessCardProps {
   cardOpacity: Animated.Value;
@@ -36,10 +37,7 @@ export const SuccessCard = ({
       className='mx-8 items-center rounded-3xl bg-white px-8 py-10'
       style={{
         opacity: cardOpacity,
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
+        ...shadows.floatingActionButton,
         transform: [{ scale: cardScale }],
       }}
     >

@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import StatsOverview from './StatsOverview';
 import NotesList from './NotesList';
 import { StatsNotesHeader } from './StatsNotesHeader';
+import { shadows } from '../../theme/spacing';
 
 interface StatsNotesModalProps {
   visible: boolean;
@@ -13,10 +14,7 @@ interface StatsNotesModalProps {
 
 const cardShadow = {
   elevation: 5,
-  shadowColor: '#1c1917',
-  shadowOffset: { height: 4, width: 0 },
-  shadowOpacity: 0.08,
-  shadowRadius: 16,
+  ...shadows.floatingActionButton,
 };
 
 export default function StatsNotesModal({

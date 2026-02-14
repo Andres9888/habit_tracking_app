@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
+import { shadows } from '../../theme/spacing';
 import {
   AuthDivider,
   AuthError,
@@ -98,10 +99,7 @@ export default function SignUpScreen({
                 borderRadius: 16,
                 elevation: 4,
                 padding: 24,
-                shadowColor: '#1c1917',
-                shadowOffset: { height: 4, width: 0 },
-                shadowOpacity: 0.08,
-                shadowRadius: 16,
+                ...shadows.floatingActionButton,
               }}
             >
               <View className='gap-3'>

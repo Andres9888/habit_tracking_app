@@ -2,6 +2,7 @@
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { shadows } from '../../theme/spacing';
 
 interface PausedHabitCardProps {
   habit: {
@@ -29,10 +30,7 @@ export function PausedHabitCard({
         .damping(18)}
       style={{
         elevation: 4,
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
+        ...shadows.floatingActionButton,
       }}
     >
       <View className='gap-1'>

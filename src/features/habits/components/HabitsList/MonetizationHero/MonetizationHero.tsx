@@ -6,6 +6,7 @@
 import { Animated, Pressable, Text, View } from 'react-native';
 import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
+import { shadows } from '../../../../../theme/spacing';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -30,10 +31,7 @@ export function MonetizationHero({
       style={{
         backgroundColor: '#1c1917',
         elevation: 4,
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
+        ...shadows.floatingActionButton,
       }}
     >
       <View className='gap-2'>

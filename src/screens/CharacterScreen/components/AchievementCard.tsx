@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Achievement } from '../types';
+import { shadows } from '../../../theme/spacing';
 
 interface AchievementCardProps {
   achievement: Achievement;
@@ -17,10 +18,7 @@ export function AchievementCard({
       className='flex-row items-center gap-4 rounded-3xl border border-stone-100 bg-white px-6 py-6'
       entering={FadeInDown.delay(delay).springify().damping(18)}
       style={{
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
+        ...shadows.floatingActionButton,
       }}
     >
       <View className='h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm'>
