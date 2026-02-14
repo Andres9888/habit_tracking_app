@@ -41,8 +41,8 @@ export function ReadLetterModal({
     >
       <View className='flex-1'>
         <LinearGradient
-          colors={['#f5f3ff', '#ffffff']}
           className='absolute inset-0'
+          colors={['#f5f3ff', '#ffffff']}
         />
         <ReadLetterHeader
           envelopeAnimatedStyle={hook.envelopeAnimatedStyle}

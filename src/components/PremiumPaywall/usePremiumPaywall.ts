@@ -70,7 +70,7 @@ export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePur
     } finally {
       setIsProcessing(false);
     }
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+     
   }, [isProcessing, variant, selectedPackage, purchasePackage, onStartTrial, onClose, triggerSelection, triggerSuccess]);
 
   const { handleRestorePurchases } = useRestorePurchases({ onClose, onRestorePurchases });

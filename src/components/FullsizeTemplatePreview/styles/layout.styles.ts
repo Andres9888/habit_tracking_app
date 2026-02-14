@@ -38,8 +38,8 @@ export const layoutStyles = StyleSheet.create({
     zIndex: 10,
   },
   successGlowOverlay: {
-    bottom: 0,
     borderRadius: 12,
+    bottom: 0,
     left: 0,
     position: 'absolute',
     right: 0,

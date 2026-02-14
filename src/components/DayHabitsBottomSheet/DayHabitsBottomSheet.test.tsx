@@ -50,6 +50,7 @@ describe('DayHabitsBottomSheet', () => {
     {
       _id: 'habit1' as Id<'habits'>,
       _creationTime: Date.now(),
+      createdAt: Date.now(),
       name: 'Morning Routine',
       emoji: '🌅',
       notes: '',
@@ -61,6 +62,7 @@ describe('DayHabitsBottomSheet', () => {
     {
       _id: 'habit2' as Id<'habits'>,
       _creationTime: Date.now(),
+      createdAt: Date.now(),
       name: 'Exercise',
       emoji: '🏃',
       notes: '',
@@ -72,6 +74,7 @@ describe('DayHabitsBottomSheet', () => {
     {
       _id: 'habit3' as Id<'habits'>,
       _creationTime: Date.now(),
+      createdAt: Date.now(),
       name: 'Read 30 mins',
       emoji: '📚',
       notes: '',
@@ -363,7 +366,7 @@ describe('DayHabitsBottomSheet', () => {
           ...mockHabits[0],
           emoji: undefined,
         },
-      ] as Habit[];
+      ] as unknown as Habit[];
 
       const { getByText } = render(
         <DayHabitsBottomSheet {...defaultProps} habits={habitsWithoutEmoji} />

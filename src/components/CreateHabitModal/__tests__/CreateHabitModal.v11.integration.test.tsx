@@ -157,7 +157,7 @@ jest
   .spyOn(AccessibilityInfo, 'announceForAccessibility')
   .mockImplementation(jest.fn());
 
-import CreateHabitModal from '../CreateHabitModal';
+import CreateHabitModal from '../CreateHabitModalCentered';
 
 describe('CreateHabitModal V11 Integration Tests', () => {
   const mockOnClose = jest.fn();

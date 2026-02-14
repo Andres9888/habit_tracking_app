@@ -8,7 +8,7 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
 import { useMemo } from 'react';
 
 // Tracking data passed in - may be Convex docs or minimal records
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type TrackingRecord = any;
 import {
   calculateCurrentStreak,

@@ -13,9 +13,8 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { useMutation } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import { useQuickCompleteAnimations } from './useQuickCompleteAnimations';
 import type { QuickCompleteButtonProps } from './QuickCompleteButton.types';
 
@@ -46,7 +45,7 @@ export function useQuickCompleteButton({
       checkScale,
     });
 
-  const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
+  const toggleCompletionMutation = useToggleHabitWithTimezone();
   const today = getTodayString();
 
   useEffect(() => {

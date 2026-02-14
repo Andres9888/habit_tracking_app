@@ -64,7 +64,7 @@ export function UpgradePrompt({
           >
             <LinearGradient
               className='absolute inset-0 rounded-full'
-              colors={['#059669', '#047857']}
+              colors={['#7c3aed', '#4f46e5']}
               end={{ x: 1, y: 0 }}
               start={{ x: 0, y: 0 }}
             />

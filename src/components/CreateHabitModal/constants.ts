@@ -33,18 +33,18 @@ export const HABIT_COLORS = [
  * Maps hex values to descriptive names
  */
 export const COLOR_NAMES: Record<string, string> = {
-  '#EF4444': 'Red',
-  '#F97316': 'Orange',
-  '#FBBF24': 'Amber',
-  '#84CC16': 'Lime',
-  '#10B981': 'Emerald',
-  '#14B8A6': 'Teal',
   '#06B6D4': 'Cyan',
   '#3B82F6': 'Blue',
   '#8B5CF6': 'Violet',
-  '#A855F7': 'Purple',
-  '#EC4899': 'Pink',
+  '#10B981': 'Emerald',
+  '#14B8A6': 'Teal',
+  '#84CC16': 'Lime',
   '#78716C': 'Stone',
+  '#A855F7': 'Purple',
+  '#EF4444': 'Red',
+  '#EC4899': 'Pink',
+  '#F97316': 'Orange',
+  '#FBBF24': 'Amber',
 } as const;
 
 /**

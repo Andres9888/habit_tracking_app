@@ -11,10 +11,10 @@ export function QuickTip({ title, description, icon }: QuickTipProps) {
   return (
     <View className='flex-row items-start gap-3 rounded-xl p-3'>
       <LinearGradient
-        colors={['#fffbeb', '#ffedd5']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
         className='absolute inset-0 rounded-xl'
+        colors={['#fffbeb', '#ffedd5']}
+        end={{ x: 1, y: 0 }}
+        start={{ x: 0, y: 0 }}
       />
       <View className='h-8 w-8 items-center justify-center rounded-lg bg-amber-100'>
         {icon}

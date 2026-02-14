@@ -34,7 +34,7 @@ export function initSentryWithConfig(config: SentryConfig): boolean {
     Sentry.init({
       attachStacktrace: true,
       beforeBreadcrumb,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       beforeSend: createBeforeSend(config) as any,
       debug: config.debug,
       dsn: config.dsn,

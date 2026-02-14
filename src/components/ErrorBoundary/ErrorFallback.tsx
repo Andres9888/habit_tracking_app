@@ -11,9 +11,6 @@ import { styles } from './errorFallbackStyles';
 const SUPPORT_EMAIL = 'support@chainday.app';
 const MAX_RETRIES = 3;
 
-const SUPPORT_EMAIL = 'support@chainday.app';
-const MAX_RETRIES_BEFORE_LOGOUT = 3;
-
 interface ErrorFallbackProps {
   error: Error | null;
   onRetry: () => void;
