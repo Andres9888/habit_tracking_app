@@ -11,6 +11,9 @@ export { HabitCardSkeleton } from './HabitCardSkeleton';
 export { CalendarTimelineSkeleton } from './CalendarTimelineSkeleton';
 export { MomentumMeterSkeleton } from './MomentumMeterSkeleton';
 export { HabitsPageSkeleton } from './HabitsPageSkeleton';
+export { AnalyticsScreenSkeleton } from './AnalyticsScreenSkeleton';
+export { HabitDetailSkeleton } from './HabitDetailSkeleton';
+export { SettingsModalSkeleton } from './SettingsModalSkeleton';
 export type {
   SkeletonLoaderProps,
   ReduceMotionProps,
