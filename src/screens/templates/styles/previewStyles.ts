@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../theme/colors';
 
 export const previewStyles = StyleSheet.create({
   previewActions: {
     marginTop: 32,
   },
   previewCategory: {
-    color: '#78716c',
+    color: colors.gray[500],
     marginTop: 6,
   },
   previewHeader: {
@@ -25,7 +26,7 @@ export const previewStyles = StyleSheet.create({
   },
   previewScienceBox: {
     alignItems: 'flex-start',
-    borderColor: '#bbf7d0',
+    borderColor: colors.primary[100],
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: 'row',

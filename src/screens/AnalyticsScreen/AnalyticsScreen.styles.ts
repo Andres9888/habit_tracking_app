@@ -8,6 +8,10 @@ import { spacing } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   container: {
+<<<<<<< HEAD
+=======
+    backgroundColor: colors.light.surfaceMuted,
+>>>>>>> 18d9d6cc (ui: replace hardcoded colors with theme tokens in templates & analytics screens)
     flex: 1,
   },
   contentContainer: {

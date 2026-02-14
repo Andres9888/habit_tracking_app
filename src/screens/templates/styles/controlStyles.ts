@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../theme/colors';
 
 export const controlStyles = StyleSheet.create({
   controlButton: {
     alignItems: 'center',
-    borderColor: '#e7e5e4',
+    borderColor: colors.border,
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -12,11 +13,11 @@ export const controlStyles = StyleSheet.create({
     paddingVertical: 10,
   },
   controlButtonActive: {
-    backgroundColor: '#111827',
-    borderColor: '#111827',
+    backgroundColor: colors.gray[800],
+    borderColor: colors.gray[800],
   },
   controlButtonText: {
-    color: '#1c1917',
+    color: colors.gray[900],
     fontSize: 13,
     fontWeight: '600',
   },

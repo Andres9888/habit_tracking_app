@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../theme/colors';
 
 export const searchStyles = StyleSheet.create({
   searchBar: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#e7e5e4',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: 12,
     borderWidth: 1.5,
     flexDirection: 'row',

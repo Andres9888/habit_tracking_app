@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../theme/colors';
 
 export const formStyles = StyleSheet.create({
   charCount: {
-    color: '#a8a29e',
+    color: colors.gray[400],
     fontSize: 13,
     marginTop: 4,
     textAlign: 'right',
@@ -18,11 +19,11 @@ export const formStyles = StyleSheet.create({
     width: 44,
   },
   colorSwatchActive: {
-    borderColor: '#111827',
+    borderColor: colors.gray[800],
     borderWidth: 3,
   },
   inputLabel: {
-    color: '#475467',
+    color: colors.gray[600],
     fontSize: 13,
     fontWeight: '600',
     marginTop: 16,
@@ -32,8 +33,8 @@ export const formStyles = StyleSheet.create({
     position: 'relative',
   },
   nameInput: {
-    backgroundColor: '#fff',
-    borderColor: '#e7e5e4',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: 12,
     borderWidth: 1,
     fontSize: 17,
@@ -41,15 +42,15 @@ export const formStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   reminderChip: {
-    borderColor: '#e7e5e4',
+    borderColor: colors.border,
     borderRadius: 999,
     borderWidth: 1,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   reminderChipActive: {
-    backgroundColor: '#111827',
-    borderColor: '#111827',
+    backgroundColor: colors.gray[800],
+    borderColor: colors.gray[800],
   },
   reminderChipText: {
     fontSize: 13,

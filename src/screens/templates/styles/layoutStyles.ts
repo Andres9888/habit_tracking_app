@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../theme/colors';
 
 export const layoutStyles = StyleSheet.create({
   container: {
-    backgroundColor: '#FAF8F5',
+    backgroundColor: colors.light.surfaceMuted,
     flex: 1,
   },
   emptyStateWrapper: {
@@ -27,7 +28,7 @@ export const layoutStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   sectionDivider: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: colors.gray[200],
     height: 1,
     marginVertical: 20,
   },

@@ -15,8 +15,8 @@ export const sortStyles = StyleSheet.create({
     zIndex: 100,
   },
   sortDropdown: {
-    backgroundColor: '#ffffff',
-    borderColor: '#e7e5e4',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: 12,
     borderWidth: 1,
     elevation: 8,
@@ -25,7 +25,7 @@ export const sortStyles = StyleSheet.create({
     minWidth: 140,
     overflow: 'hidden',
     position: 'absolute',
-    shadowColor: '#1c1917',
+    shadowColor: colors.gray[900],
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 12,
@@ -41,11 +41,16 @@ export const sortStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   sortDropdownOptionSelected: {
-    backgroundColor: '#f0fdf4',
+    backgroundColor: colors.primary[100],
   },
   sortDropdownOptionText: {
+<<<<<<< HEAD
     color: '#374151',
     fontSize: 17,
+=======
+    color: colors.gray[700],
+    fontSize: 15,
+>>>>>>> 18d9d6cc (ui: replace hardcoded colors with theme tokens in templates & analytics screens)
     fontWeight: '500',
   },
   sortDropdownOptionTextSelected: {

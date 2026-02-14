@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../theme/colors';
 
 export const categoryStyles = StyleSheet.create({
   categoriesContainer: {
@@ -21,7 +22,7 @@ export const categoryStyles = StyleSheet.create({
     marginRight: 8,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    shadowColor: '#1c1917',
+    shadowColor: colors.gray[900],
     shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.05,
     shadowRadius: 2,

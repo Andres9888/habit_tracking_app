@@ -4,7 +4,11 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+<<<<<<< HEAD
 import { useThemeColors } from '../../../theme/ThemeContext';
+=======
+import { colors } from '../../../theme/colors';
+>>>>>>> 18d9d6cc (ui: replace hardcoded colors with theme tokens in templates & analytics screens)
 import type { TemplateInfoProps } from './types';
 
 const localStyles = StyleSheet.create({
@@ -14,17 +18,29 @@ const localStyles = StyleSheet.create({
     marginTop: 8,
   },
   infoPill: {
+<<<<<<< HEAD
+=======
+    backgroundColor: colors.gray[50],
+>>>>>>> 18d9d6cc (ui: replace hardcoded colors with theme tokens in templates & analytics screens)
     borderRadius: 12,
     flex: 1,
     padding: 12,
   },
   infoPillLabel: {
+<<<<<<< HEAD
+=======
+    color: colors.gray[500],
+>>>>>>> 18d9d6cc (ui: replace hardcoded colors with theme tokens in templates & analytics screens)
     fontSize: 13,
     fontWeight: '600',
     marginBottom: 4,
     textTransform: 'uppercase',
   },
   infoPillValue: {
+<<<<<<< HEAD
+=======
+    color: colors.gray[900],
+>>>>>>> 18d9d6cc (ui: replace hardcoded colors with theme tokens in templates & analytics screens)
     fontSize: 17,
     fontWeight: '700',
   },

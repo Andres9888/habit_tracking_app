@@ -4,10 +4,15 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../theme/colors';
 
 export const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
+<<<<<<< HEAD
+=======
+    backgroundColor: colors.gray[50],
+>>>>>>> 18d9d6cc (ui: replace hardcoded colors with theme tokens in templates & analytics screens)
     borderRadius: 16,
     height: 44,
     justifyContent: 'center',
@@ -24,6 +29,10 @@ export const styles = StyleSheet.create({
     gap: 12,
   },
   container: {
+<<<<<<< HEAD
+=======
+    backgroundColor: colors.light.surfaceMuted,
+>>>>>>> 18d9d6cc (ui: replace hardcoded colors with theme tokens in templates & analytics screens)
     flex: 1,
   },
   content: {
@@ -42,6 +51,10 @@ export const styles = StyleSheet.create({
     zIndex: 10,
   },
   headerTitle: {
+<<<<<<< HEAD
+=======
+    color: colors.gray[800],
+>>>>>>> 18d9d6cc (ui: replace hardcoded colors with theme tokens in templates & analytics screens)
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.5,
@@ -59,7 +72,7 @@ export const styles = StyleSheet.create({
   },
   importButton: {
     elevation: 4,
-    shadowColor: '#1c1917',
+    shadowColor: colors.gray[900],
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 12,
@@ -72,6 +85,10 @@ export const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   label: {
+<<<<<<< HEAD
+=======
+    color: colors.gray[700],
+>>>>>>> 18d9d6cc (ui: replace hardcoded colors with theme tokens in templates & analytics screens)
     fontSize: 13,
     fontWeight: '600',
     marginBottom: 8,
