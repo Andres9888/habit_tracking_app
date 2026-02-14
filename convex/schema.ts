@@ -433,6 +433,7 @@ const applicationTables = {
     userId: v.optional(v.string()),
   })
     .index('by_habit_and_date', ['habitId', 'date'])
+    .index('by_user', ['userId']) // PERF: Added for general user tracking queries
     .index('by_user_and_date', ['userId', 'date']),
 
   // Users table for Clerk authentication integration
