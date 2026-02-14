@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { clsx } from 'clsx';
@@ -28,8 +29,7 @@ export const ActionItem = ({
       accessibilityState={{ disabled }}
       className={clsx(
         'flex-row items-center gap-3 rounded-xl px-4 py-3.5 active:opacity-80',
-        highlighted &&
-          'border-2 border-violet-300 bg-gradient-to-r from-violet-50 to-indigo-50',
+        highlighted && 'border-2 border-violet-300',
         destructive && 'bg-red-50',
         !highlighted && !destructive && 'bg-stone-50',
         disabled && 'opacity-50'
@@ -37,14 +37,29 @@ export const ActionItem = ({
       disabled={disabled}
       onPress={handlePress}
     >
+      {highlighted && (
+        <LinearGradient
+          colors={['#f5f3ff', '#e0e7ff']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          className='absolute inset-0 rounded-xl'
+        />
+      )}
       <View
         className={clsx(
           'h-10 w-10 items-center justify-center rounded-xl',
-          highlighted && 'bg-gradient-to-br from-violet-500 to-indigo-600',
           destructive && 'bg-red-100',
           !highlighted && !destructive && 'bg-stone-100'
         )}
       >
+        {highlighted && (
+          <LinearGradient
+            colors={['#7c3aed', '#4f46e5']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            className='absolute inset-0 rounded-xl'
+          />
+        )}
         {icon}
       </View>
 

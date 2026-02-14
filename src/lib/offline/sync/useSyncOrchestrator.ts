@@ -6,8 +6,7 @@
 
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useNetworkStatus } from '../../../contexts/NetworkStatusContext';
-import { useMutation } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
+import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { getOfflineQueueManager } from '../queueManager';
 import { getSyncOrchestrator } from './singleton';
 import type { SyncOrchestratorState, SyncProgressCallback } from './types';
@@ -21,7 +20,7 @@ export function useSyncOrchestrator(
 ): UseSyncOrchestratorReturn {
   const { config, autoStart = true, onSyncComplete, onSyncError } = options;
   const { isOnline, onOnline } = useNetworkStatus();
-  const toggleMutation = useMutation(api.habits.toggleHabit);
+  const toggleMutation = useToggleHabitWithTimezone();
 
   const orchestratorRef = useRef(getSyncOrchestrator(config));
   const orchestrator = orchestratorRef.current;

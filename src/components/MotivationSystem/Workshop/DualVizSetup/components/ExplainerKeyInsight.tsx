@@ -5,10 +5,17 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export function ExplainerKeyInsight() {
   return (
-    <View className='mb-4 rounded-xl bg-gradient-to-r from-rose-50 to-amber-50 p-3'>
+    <View className='mb-4 rounded-xl p-3'>
+      <LinearGradient
+        colors={['#fff1f2', '#fffbeb']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        className='absolute inset-0 rounded-xl'
+      />
       <Text className='text-sm font-semibold text-rose-800'>
         Fear moves you 2x better
       </Text>

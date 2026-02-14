@@ -5,10 +5,9 @@
 
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
-import { useMutation } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
 import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import type { Habit } from './HabitDetailScreen.types';
 
 interface UseCalendarHandlersProps {
@@ -32,7 +31,7 @@ export const useCalendarHandlers = ({
   setPendingArchive,
   setPendingDelete,
 }: UseCalendarHandlersProps) => {
-  const toggleHabitMutation = useMutation(api.habits.toggleHabit);
+  const toggleHabitMutation = useToggleHabitWithTimezone();
 
   const handleCalendarDayPress = useCallback(
     (date: string, wasCompleted: boolean): void => {

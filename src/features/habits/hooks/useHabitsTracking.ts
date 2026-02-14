@@ -20,7 +20,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       ? { endDate, startDate }
       : { dates: extendedDateStrings };
   }, [extendedDateStrings]);
-
+  
   const tracking = useQuery(api.habits.getTracking, queryArgs) ?? [];
 
   // Get optimistic state for immediate feedback

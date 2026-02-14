@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Target, Save } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
@@ -22,7 +23,13 @@ export function SummaryStep({
     <Animated.View className='flex-1 gap-5' entering={FadeInDown.springify().damping(18)}>
       {/* Header */}
       <View className='items-center gap-3'>
-        <View className='h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600'>
+        <View className='h-16 w-16 items-center justify-center rounded-2xl'>
+          <LinearGradient
+            colors={['#7c3aed', '#4f46e5']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            className='absolute inset-0 rounded-2xl'
+          />
           <Target className='text-white' size={32} />
         </View>
         <Text className='text-xl font-bold text-stone-900'>
@@ -58,12 +65,18 @@ export function SummaryStep({
         <Pressable
           accessibilityLabel='Save visualization'
           accessibilityRole='button'
-          className='flex-1 flex-row items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 py-3.5 active:opacity-90'
+          className='flex-1 flex-row items-center justify-center gap-2 rounded-xl py-3.5 active:opacity-90'
           onPress={() => {
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             onSave();
           }}
         >
+          <LinearGradient
+            colors={['#7c3aed', '#4f46e5']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            className='absolute inset-0 rounded-xl'
+          />
           <Save className='text-white' size={18} />
           <Text className='text-sm font-semibold text-white'>Save</Text>
         </Pressable>

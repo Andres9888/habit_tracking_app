@@ -6,10 +6,10 @@ import { v } from 'convex/values';
 import { query } from '../_generated/server';
 import { calculateMomentumStrengthSnapshot } from '../habitStrength';
 import { fullHabitValidator } from './types';
-import { getTodayDateKey, maxDateKey } from './utils';
+import { getTodayForTimezone, maxDateKey } from './utils';
 
 export const get = query({
-  args: { habitId: v.id('habits') },
+  args: { habitId: v.id('habits'), timezone: v.optional(v.string()) },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return null;
@@ -23,7 +23,7 @@ export const get = query({
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
       .collect();
 
-    const todayDateKey = getTodayDateKey();
+    const todayDateKey = getTodayForTimezone(args.timezone);
     let maxTrackingDateKey = todayDateKey;
     for (const record of tracking) {
       maxTrackingDateKey = maxDateKey(maxTrackingDateKey, record.date);
