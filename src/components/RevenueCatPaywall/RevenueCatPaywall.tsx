@@ -13,6 +13,7 @@
 
 import { Platform, Modal, View, Text, Pressable, Alert } from 'react-native';
 import RevenueCatUI from 'react-native-purchases-ui';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { RevenueCatPaywallProps } from './types';
 
 /**
@@ -27,18 +28,20 @@ export function RevenueCatPaywall({
   onPurchaseSuccess,
   onRestoreSuccess,
 }: RevenueCatPaywallProps) {
+  const { colors } = useThemeColors();
+
   // Web fallback - RevenueCat UI doesn't work on web
   if (Platform.OS === 'web') {
     if (!visible) return null;
 
     return (
-      <Modal transparent animationType='fade' visible={visible}>
+      <Modal transparent animationType='fade' visible={visible} onRequestClose={onClose}>
         <View className='flex-1 items-center justify-center bg-black/50'>
-          <View className='mx-6 rounded-2xl bg-white p-6'>
-            <Text className='mb-2 text-center text-lg font-semibold text-stone-900'>
+          <View className='mx-6 rounded-2xl p-6' style={{ backgroundColor: colors.surface }}>
+            <Text className='mb-2 text-center text-lg font-semibold' style={{ color: colors.text.primary }}>
               Premium Subscription
             </Text>
-            <Text className='mb-4 text-center text-stone-600'>
+            <Text className='mb-4 text-center' style={{ color: colors.text.secondary }}>
               In-app purchases are not available on web. Please use the mobile
               app to subscribe.
             </Text>
