@@ -26,7 +26,6 @@ export function useVoiceNotesSection({
 
   const recording = useAudioRecording({
     maxDurationSeconds: MAX_RECORDING_DURATION,
-    warningThresholdSeconds: 30,
     onError: (error) => { if (__DEV__) console.error('Recording error:', error); },
     onMaxDurationReached: () => recording.stopRecording(),
     onPermissionDenied: (canAskAgain) => {
@@ -46,6 +45,7 @@ export function useVoiceNotesSection({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
       // warning threshold reached
     },
+    warningThresholdSeconds: 30,
   });
 
   const handleStartRecording = useCallback(() => {
@@ -69,8 +69,8 @@ export function useVoiceNotesSection({
   return {
     ...recording,
     canRecord,
+    handleSectionPress,
     handleStartRecording,
     handleStopRecording,
-    handleSectionPress,
   };
 }

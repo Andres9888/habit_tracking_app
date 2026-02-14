@@ -41,8 +41,8 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
         style={{ paddingTop: insets.top }}
       >
         <LinearGradient
-          colors={['#ecfdf5', '#fafaf9']}
           className='absolute inset-0'
+          colors={['#ecfdf5', '#fafaf9']}
         />
         <ModalHeader onClose={onClose} />
         <CelebrationScreenContent

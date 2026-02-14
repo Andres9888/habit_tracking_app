@@ -18,10 +18,10 @@ export function ExplainerHeader({ onClose }: ExplainerHeaderProps) {
       <View className='flex-row items-center gap-2'>
         <View className='h-10 w-10 items-center justify-center rounded-xl'>
           <LinearGradient
-            colors={['#d1fae5', '#ffe4e6']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
             className='absolute inset-0 rounded-xl'
+            colors={['#d1fae5', '#ffe4e6']}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0 }}
           />
           <Eye className='text-stone-700' size={20} />
         </View>

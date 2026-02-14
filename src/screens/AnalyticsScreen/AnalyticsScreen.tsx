@@ -20,7 +20,7 @@ import {
 } from './components';
 
 export default function AnalyticsScreen() {
-  // eslint-disable-line max-lines-per-function
+   
   const {
     refreshing,
     showPaywall,

@@ -67,10 +67,10 @@ export function CardLock({
         style={reduceMotion ? undefined : animatedStyle}
       >
         <LinearGradient
-          colors={['#f5f3ff', '#ffffff']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
           className='absolute inset-0'
+          colors={['#f5f3ff', '#ffffff']}
+          end={{ x: 1, y: 1 }}
+          start={{ x: 0, y: 0 }}
         />
         <LinearGradient
           className='flex-row items-center gap-3 px-4 py-3'

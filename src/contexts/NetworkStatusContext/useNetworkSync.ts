@@ -12,7 +12,7 @@
 
 import { useEffect, useCallback, useMemo, useRef, useState } from 'react';
 import { useNetworkStatus } from './hooks';
-import { useSyncOrchestrator } from '../../lib/offline/sync';
+import { useSyncOrchestrator } from '../../lib/offline/sync/useSyncOrchestrator';
 import { getOfflineQueueManager } from '../../lib/offline/queueManager';
 import type {
   UseNetworkSyncOptions,

@@ -13,6 +13,7 @@ import Animated, {
   type SharedValue,
 } from 'react-native-reanimated';
 import type { AppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { StrengthProgressBar } from '../../StrengthProgressBar/StrengthProgressBar';
 import { PendingSyncBadge } from '../../SyncStatus';
 import { styles } from '../HabitCard.styles';
@@ -61,6 +62,7 @@ export function HabitCardContent({
   chainScale,
   chainRotate,
 }: HabitCardContentProps) {
+  const { colors: themeColors } = useThemeColors();
   return (
     <Animated.View style={[styles.content, entranceContentStyle]}>
       <View style={styles.topRow}>
@@ -70,7 +72,7 @@ export function HabitCardContent({
             numberOfLines={1}
             style={[
               theme.custom.typography.heading3,
-              { color: theme.custom.colors.gray[900] },
+              { color: themeColors.text.primary },
               completed && styles.completedText,
             ]}
           >

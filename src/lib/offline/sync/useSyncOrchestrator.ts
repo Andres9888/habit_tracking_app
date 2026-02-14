@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { useNetworkStatus } from '../../../contexts/NetworkStatusContext';
+import { useNetworkStatus } from '../../../contexts/NetworkStatusContext/hooks';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { getOfflineQueueManager } from '../queueManager';
 import { getSyncOrchestrator } from './singleton';

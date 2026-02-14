@@ -255,6 +255,9 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
     textAlign: 'center',
   },
+  authContent: {
+    gap: 24,
+  },
   brandSection: {
     alignItems: 'center',
     marginBottom: 32,
@@ -263,24 +266,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafaf9',
     flex: 1,
   },
-  authContent: {
-    gap: 24,
-  },
   flex: {
     flex: 1,
-  },
-  formSection: {
-    gap: 20,
-  },
-  logoContainer: {
-    marginBottom: 16,
   },
   footer: {
     marginTop: 32,
     paddingHorizontal: 16,
-  },
-  logoEmoji: {
-    fontSize: 40,
   },
   footerText: {
     color: '#a8a29e',
@@ -288,17 +279,26 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     textAlign: 'center',
   },
+  formSection: {
+    gap: 20,
+  },
+  logoContainer: {
+    marginBottom: 16,
+  },
+  logoEmoji: {
+    fontSize: 40,
+  },
   logoGradient: {
     alignItems: 'center',
-    height: 80,
     borderRadius: 24,
-    width: 80,
+    elevation: 8,
+    height: 80,
     justifyContent: 'center',
     shadowColor: '#22c55e',
-    elevation: 8,
     shadowOffset: { height: 8, width: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 16,
+    width: 80,
   },
   scrollContent: {
     flexGrow: 1,
