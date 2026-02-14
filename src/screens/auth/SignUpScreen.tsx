@@ -81,6 +81,7 @@ export default function SignUpScreen({
               paddingHorizontal: 24,
               paddingTop: insets.top + 24,
             }}
+            keyboardDismissMode='on-drag'
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
           >

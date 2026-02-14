@@ -41,6 +41,8 @@ export function NotesListModal({
             padding: 20,
             paddingBottom: insets.bottom + 20,
           }}
+          keyboardDismissMode='on-drag'
+          keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >
           <NotesList hideHabitFilter initialHabitId={habitId} />

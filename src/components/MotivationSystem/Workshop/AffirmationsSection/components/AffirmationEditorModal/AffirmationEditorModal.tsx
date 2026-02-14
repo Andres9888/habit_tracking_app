@@ -73,6 +73,7 @@ export function AffirmationEditorModal({
         <ScrollView
           className='flex-1'
           contentContainerClassName='p-4 pb-8'
+          keyboardDismissMode='on-drag'
           keyboardShouldPersistTaps='handled'
         >
           <ScienceCallout />

@@ -45,7 +45,7 @@ export default function StatsNotesModal({
               onClose={onClose}
               onTabChange={setActiveTab}
             />
-            <ScrollView className='flex-1 p-5'>
+            <ScrollView className='flex-1 p-5' keyboardDismissMode='on-drag' keyboardShouldPersistTaps='handled'>
               {activeTab === 'stats' ? <StatsOverview /> : <NotesList />}
             </ScrollView>
           </Pressable>

@@ -52,6 +52,8 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
       <FlatList
         contentContainerStyle={styles.allTemplatesList}
         data={p.filteredTemplates}
+        keyboardDismissMode='on-drag'
+        keyboardShouldPersistTaps='handled'
         initialNumToRender={5}
         keyExtractor={(item) => item._id}
         maxToRenderPerBatch={5}

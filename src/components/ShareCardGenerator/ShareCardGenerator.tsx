@@ -70,6 +70,8 @@ export function ShareCardGenerator({
         </View>
 
         <ScrollView
+          keyboardDismissMode='on-drag'
+          keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
           style={containerStyles.customizationSection}
         >

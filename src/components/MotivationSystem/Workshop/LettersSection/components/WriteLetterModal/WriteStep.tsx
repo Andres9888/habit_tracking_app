@@ -30,6 +30,7 @@ export function WriteStep({
     <ScrollView
       className='flex-1'
       contentContainerClassName='p-4 pb-8'
+      keyboardDismissMode='on-drag'
       keyboardShouldPersistTaps='handled'
     >
       {/* Science callout */}

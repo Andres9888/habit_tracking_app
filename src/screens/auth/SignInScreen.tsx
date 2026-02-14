@@ -140,6 +140,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
             styles.scrollContent,
             { paddingBottom: insets.bottom + 24, paddingTop: insets.top + 40 },
           ]}
+          keyboardDismissMode='on-drag'
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >

@@ -51,6 +51,8 @@ export function BrowseCategoriesTab({
         ref={scrollViewRef}
         directionalLockEnabled
         nestedScrollEnabled
+        keyboardDismissMode='on-drag'
+        keyboardShouldPersistTaps='handled'
         contentContainerStyle={styles.browseContent}
         showsVerticalScrollIndicator={false}
       >
