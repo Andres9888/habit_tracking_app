@@ -51,12 +51,26 @@ export function TemplatesList(props: TemplatesListProps) {
     [importingTemplateId, onImport, onPreview]
   );
 
+  // Fixed height for getItemLayout optimization
+  const ITEM_HEIGHT = 88;
+
+  const getItemLayout = useCallback(
+    (_: any, index: number) => ({
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index,
+    }),
+    []
+  );
+
   return (
     <View style={styles.listWrapper}>
       <FlatList
         ref={flatListRef}
         contentContainerStyle={styles.listContent}
         data={filteredTemplates}
+        getItemLayout={getItemLayout}
+        initialNumToRender={8}
         keyExtractor={(item) => item._id}
         ListEmptyComponent={
           <TemplatesListEmpty
@@ -64,9 +78,12 @@ export function TemplatesList(props: TemplatesListProps) {
             onResetFilters={onResetFilters}
           />
         }
+        maxToRenderPerBatch={8}
+        removeClippedSubviews
         renderItem={renderItem}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
+        windowSize={5}
         onContentSizeChange={scrollShadows.handleContentSizeChange}
         onLayout={scrollShadows.handleLayout}
         onScroll={scrollShadows.handleScroll}
