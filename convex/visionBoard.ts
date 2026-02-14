@@ -1,5 +1,19 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import {
+  validateLongText,
+  validateShortText,
+  requireValid,
+  containsDangerousPatterns,
+  MAX_LONG_TEXT_LENGTH,
+  MAX_SHORT_TEXT_LENGTH,
+} from './lib/inputValidation';
+
+/** Maximum length for vision board titles */
+const MAX_VISION_BOARD_TITLE_LENGTH = 60;
+
+/** Maximum length for vision board body text */
+const MAX_VISION_BOARD_BODY_LENGTH = 600;
 
 export const listByHabit = query({
   args: {
@@ -33,28 +47,32 @@ export const create = mutation({
     title: v.string(),
   },
   handler: async (ctx, args) => {
-    const title = args.title.trim();
-    const body = args.body?.trim();
-
-    if (!title) {
+    // SEC-003: Input validation - title (short text with XSS protection)
+    const titleResult = validateShortText(
+      args.title,
+      MAX_VISION_BOARD_TITLE_LENGTH,
+      'Title'
+    );
+    const title = requireValid(titleResult, args.title);
+    if (!title || !title.trim()) {
       throw new Error('Title is required');
     }
 
-    if (title.length > 60) {
-      throw new Error('Title cannot exceed 60 characters');
-    }
-
-    if (body && body.length > 600) {
-      throw new Error('Body cannot exceed 600 characters');
-    }
+    // SEC-003: Input validation - body (long text with XSS protection)
+    const bodyResult = validateLongText(
+      args.body,
+      MAX_VISION_BOARD_BODY_LENGTH,
+      'Body'
+    );
+    const body = requireValid(bodyResult, args.body);
 
     const now = Date.now();
 
     return await ctx.db.insert('visionBoardItems', {
-      body: body || undefined,
+      body: body?.trim() || undefined,
       createdAt: now,
       habitId: args.habitId,
-      title,
+      title: title.trim(),
       updatedAt: now,
     });
   },
@@ -73,24 +91,34 @@ export const update = mutation({
       throw new Error('Vision board item not found');
     }
 
-    const title = args.title?.trim();
-    const body = args.body?.trim();
-
-    if (title !== undefined && !title) {
-      throw new Error('Title is required');
+    // SEC-003: Input validation - title (short text with XSS protection)
+    let title: string | undefined;
+    if (args.title !== undefined) {
+      const titleResult = validateShortText(
+        args.title,
+        MAX_VISION_BOARD_TITLE_LENGTH,
+        'Title'
+      );
+      title = requireValid(titleResult, args.title);
+      if (title !== undefined && !title.trim()) {
+        throw new Error('Title cannot be empty');
+      }
     }
 
-    if (title !== undefined && title.length > 60) {
-      throw new Error('Title cannot exceed 60 characters');
-    }
-
-    if (body && body.length > 600) {
-      throw new Error('Body cannot exceed 600 characters');
+    // SEC-003: Input validation - body (long text with XSS protection)
+    let body: string | undefined;
+    if (args.body !== undefined) {
+      const bodyResult = validateLongText(
+        args.body,
+        MAX_VISION_BOARD_BODY_LENGTH,
+        'Body'
+      );
+      body = requireValid(bodyResult, args.body);
     }
 
     await ctx.db.patch(args.id, {
-      body: body || undefined,
-      title: title || undefined,
+      body: body?.trim() || undefined,
+      title: title?.trim() || undefined,
       updatedAt: Date.now(),
     });
 
