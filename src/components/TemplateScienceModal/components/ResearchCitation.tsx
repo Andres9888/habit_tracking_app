@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { View, Text, Pressable, type ViewStyle } from 'react-native';
-import Animated, { type AnimatedStyleProp } from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ExternalLink } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { scienceStyles } from '../styles';
@@ -21,7 +21,7 @@ interface ResearchCitationProps {
   baseColor: string;
   scientificReference: string;
   scientificLink?: string;
-  linkButtonAnimatedStyle: AnimatedStyleProp<ViewStyle>;
+  linkButtonAnimatedStyle: AnimatedStyle<ViewStyle>;
   onLinkPress?: () => void;
   pressHandlers: PressHandlers;
 }

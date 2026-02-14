@@ -2,12 +2,12 @@
  * TemplateCardContent Types
  */
 
-import type { ViewStyle } from 'react-native';
-import type { AnimatedStyleProp } from 'react-native-reanimated';
+import type { GestureResponderEvent, ViewStyle } from 'react-native';
+import type { AnimatedStyle } from 'react-native-reanimated';
 
 export interface TemplateCardContentProps {
   category?: string;
-  checkmarkStyle: AnimatedStyleProp<ViewStyle>;
+  checkmarkStyle: AnimatedStyle<ViewStyle>;
   description: string;
   frequency?: string;
   icon: string;
@@ -17,7 +17,7 @@ export interface TemplateCardContentProps {
   isLocked: boolean;
   isPremium: boolean;
   name: string;
-  onImportPress: (e: unknown) => void;
+  onImportPress: (e: GestureResponderEvent) => void;
   onPreview?: () => void;
   popularityScore?: number;
   scientificLink?: string;

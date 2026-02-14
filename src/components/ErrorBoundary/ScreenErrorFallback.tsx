@@ -50,7 +50,7 @@ export function ScreenErrorFallback({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: colors.background.primary,
+    backgroundColor: colors.light.background,
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   errorDetails: {
-    backgroundColor: colors.background.secondary,
+    backgroundColor: colors.light.card,
     borderRadius: 8,
     marginTop: 24,
     padding: 12,

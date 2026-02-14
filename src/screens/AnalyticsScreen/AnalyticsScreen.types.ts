@@ -2,6 +2,17 @@
  * Type definitions for AnalyticsScreen
  */
 
+import type { StrengthDistributionData } from '../../components/StrengthDistributionChart/StrengthDistributionChart.types';
+import type { TrendData } from '../../components/TrendLineChart/types';
+import type { HeatmapData } from '../../components/ComplianceHeatmap/ComplianceHeatmap.types';
+import type { WeeklyInsights } from '../../components/WeeklyInsightsCard';
+
+// Re-export canonical chart types for consumers
+export type { StrengthDistributionData };
+export type { TrendData as TrendDataPoint };
+export type { HeatmapData as ComplianceDay };
+export type { WeeklyInsights };
+
 export interface StatCardProps {
   title: string;
   value: string | number;
@@ -34,19 +45,10 @@ export interface RankedHabit {
   name: string;
   emoji?: string;
   strength: number;
-  rank: number;
-}
-
-// Re-export canonical chart types to avoid drift
-export type { StrengthDistributionData } from '../../components/StrengthDistributionChart/StrengthDistributionChart.types';
-export type { TrendData as TrendDataPoint } from '../../components/TrendLineChart/types';
-export type { HeatmapData as ComplianceDay } from '../../components/ComplianceHeatmap/ComplianceHeatmap.types';
-
-export interface WeeklyInsight {
-  id: string;
-  type: string;
-  message: string;
-  habitId?: string;
+  rank?: number;
+  currentStreak?: number;
+  longestStreak?: number;
+  isAtRisk?: boolean;
 }
 
 export type ExportFormat = 'csv' | 'json';
@@ -60,16 +62,11 @@ export interface UseAnalyticsScreenReturn {
   isLoading: boolean;
 
   // Data
-
-  overviewStats: AnalyticsOverviewStats | null;
-
-  strengthDistribution: StrengthDistributionData[];
-
-  trendData: TrendDataPoint[];
-
-  complianceData: ComplianceDay[];
-
-  weeklyInsights: WeeklyInsight[];
+  overviewStats: AnalyticsOverviewStats | undefined;
+  strengthDistribution: StrengthDistributionData | undefined;
+  trendData: TrendData[] | undefined;
+  complianceData: HeatmapData[] | undefined;
+  weeklyInsights: WeeklyInsights | undefined;
 
   // Handlers
   onRefresh: () => Promise<void>;
