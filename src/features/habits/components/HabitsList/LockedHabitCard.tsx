@@ -6,6 +6,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface LockedHabitCardProps {
   onUpgradePress: () => void;
@@ -16,6 +17,7 @@ export function LockedHabitCard({
   onUpgradePress,
   reduceMotion = false,
 }: LockedHabitCardProps) {
+  const { colors } = useThemeColors();
   const entranceScale = useRef(new Animated.Value(0.94)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const pressScale = useRef(new Animated.Value(1)).current;
@@ -77,36 +79,58 @@ export function LockedHabitCard({
       onPressOut={handlePressOut}
     >
       <Animated.View
-        className='gap-4 rounded-3xl border border-dashed border-violet-200 p-5'
+        className='gap-4 rounded-3xl border border-dashed p-5'
         style={{
+          borderColor: colors.premium[400] + '66',
           opacity,
           transform: [{ scale: entranceScale }, { scale: pressScale }],
         }}
       >
         <LinearGradient
           className='absolute inset-0 rounded-3xl'
-          colors={['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
+          colors={[
+            colors.premium[400] + 'CC',
+            colors.streak[100] + '66',
+          ]}
         />
         <View className='items-center gap-2'>
           <Text className='text-[24px]'>✨</Text>
           <View className='gap-1'>
-            <Text className='text-center text-[17px] font-semibold text-stone-800'>
+            <Text
+              className='text-center text-[17px] font-semibold'
+              style={{ color: colors.gray[800] }}
+            >
               Ready to unlock more?
             </Text>
-            <Text className='text-center text-[13px] font-normal leading-[18px] text-stone-500'>
+            <Text
+              className='text-center text-[13px] font-normal leading-[18px]'
+              style={{ color: colors.gray[500] }}
+            >
               Start a 7-day free trial to track unlimited habits and get
               AI-powered insights. No credit card required.
             </Text>
           </View>
         </View>
-        <View className='items-center rounded-full px-5 py-3 shadow-[0px_8px_16px_rgba(109,40,217,0.2)]'>
+        <View
+          className='items-center rounded-full px-5 py-3'
+          style={{
+            elevation: 4,
+            shadowColor: colors.premium[600],
+            shadowOffset: { height: 8, width: 0 },
+            shadowOpacity: 0.2,
+            shadowRadius: 16,
+          }}
+        >
           <LinearGradient
             className='absolute inset-0 rounded-full'
-            colors={['#7c3aed', '#4f46e5']}
+            colors={[colors.premium[500], colors.secondary[600]]}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
           />
-          <Text className='text-[15px] font-semibold text-white'>
+          <Text
+            className='text-[15px] font-semibold'
+            style={{ color: colors.white }}
+          >
             Start Free Trial
           </Text>
         </View>

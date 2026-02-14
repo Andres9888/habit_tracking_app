@@ -4,6 +4,7 @@
  */
 
 import { Animated, Pressable, Text, View } from 'react-native';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
 
@@ -16,6 +17,7 @@ export function MonetizationHero({
   onUpgradePress,
   reduceMotion = false,
 }: MonetizationHeroProps) {
+  const { colors } = useThemeColors();
   const { progress, ctaPulse, shimmer, trackWidth, handleTrackLayout } =
     useMonetizationAnimations({
       freeHabitLimit,
@@ -28,22 +30,31 @@ export function MonetizationHero({
     <View
       className='overflow-hidden rounded-3xl p-6'
       style={{
-        backgroundColor: '#1c1917',
+        backgroundColor: colors.gray[900],
         elevation: 4,
-        shadowColor: '#1c1917',
+        shadowColor: colors.gray[900],
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 16,
       }}
     >
       <View className='gap-2'>
-        <Text className='text-[13px] font-medium uppercase tracking-[4px] text-[#a5b4fc]'>
+        <Text
+          className='text-[13px] font-medium uppercase tracking-[4px]'
+          style={{ color: colors.secondary[100] + 'E6' }}
+        >
           ✨ Try Premium Free
         </Text>
-        <Text className='text-[22px] font-semibold leading-[28px] tracking-tight text-white'>
+        <Text
+          className='text-[22px] font-semibold leading-[28px] tracking-tight'
+          style={{ color: colors.white }}
+        >
           Ready for unlimited habits?
         </Text>
-        <Text className='text-[17px] font-normal leading-[22px] text-[#cbd5f5]'>
+        <Text
+          className='text-[17px] font-normal leading-[22px]'
+          style={{ color: colors.secondary[100] + 'F0' }}
+        >
           Start a 7-day free trial to track every area of your life, get smart
           reminders, and unlock AI-powered insights.
         </Text>
@@ -52,11 +63,12 @@ export function MonetizationHero({
         <AnimatedPressable
           accessibilityLabel='Upgrade to premium for unlimited habits'
           accessibilityRole='button'
-          className='flex-1 items-center rounded-full bg-[#6d28d9] px-5 py-3'
+          className='flex-1 items-center rounded-full px-5 py-3'
           style={({ pressed }: { pressed: boolean }) => ({
+            backgroundColor: colors.premium[600],
             elevation: 6,
             opacity: pressed ? 0.8 : 1,
-            shadowColor: '#312e81',
+            shadowColor: colors.premium[700],
             shadowOffset: { height: 8, width: 0 },
             shadowOpacity: 0.32,
             shadowRadius: 16,
@@ -64,14 +76,23 @@ export function MonetizationHero({
           })}
           onPress={onUpgradePress}
         >
-          <Text className='text-[17px] font-semibold leading-[22px] tracking-wide text-white'>
+          <Text
+            className='text-[17px] font-semibold leading-[22px] tracking-wide'
+            style={{ color: colors.white }}
+          >
             Start Free Trial →
           </Text>
         </AnimatedPressable>
-        <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>
+        <View
+          className='flex-1 rounded-full border px-4 py-3'
+          style={{ borderColor: colors.white + '38' }}
+        >
           <Animated.Text
-            className='text-center text-[13px] font-semibold text-[#cbd5f5]'
-            style={{ opacity: shimmer }}
+            className='text-center text-[13px] font-semibold'
+            style={{
+              color: colors.secondary[100] + 'F0',
+              opacity: shimmer,
+            }}
           >
             Keep 3 habits free
           </Animated.Text>
@@ -79,23 +100,37 @@ export function MonetizationHero({
       </View>
       <View className='gap-2 pt-2'>
         <View className='flex-row items-center justify-between'>
-          <Text className='text-[13px] font-medium uppercase tracking-[1px] text-[#a8a29e]'>
+          <Text
+            className='text-[13px] font-medium uppercase tracking-[1px]'
+            style={{ color: colors.gray[400] }}
+          >
             Habit slots used
           </Text>
-          <Text className='text-[13px] font-bold tabular-nums text-white'>
+          <Text
+            className='text-[13px] font-bold tabular-nums'
+            style={{ color: colors.white }}
+          >
             {habitSlotsUsed}/{freeHabitLimit}
           </Text>
         </View>
         <View
-          className='bg-white/12 h-2 w-full overflow-hidden rounded-full'
+          className='h-2 w-full overflow-hidden rounded-full'
           onLayout={handleTrackLayout}
+          style={{ backgroundColor: colors.white + '1F' }}
         >
           <Animated.View
-            className='h-2 rounded-full bg-[#fbbf24]'
-            style={{ maxWidth: trackWidth, width: progress }}
+            className='h-2 rounded-full'
+            style={{
+              backgroundColor: colors.streak[500],
+              maxWidth: trackWidth,
+              width: progress,
+            }}
           />
         </View>
-        <Text className='text-[13px] font-medium text-[#fbbf24]'>
+        <Text
+          className='text-[13px] font-medium'
+          style={{ color: colors.streak[500] }}
+        >
           {hasReachedHabitLimit
             ? "You're making great progress! Upgrade to track every area of your life."
             : `${freeHabitLimit - habitSlotsUsed} free ${freeHabitLimit - habitSlotsUsed === 1 ? 'slot' : 'slots'} remaining. Premium unlocks unlimited habits.`}
