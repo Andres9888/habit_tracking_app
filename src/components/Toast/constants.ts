@@ -18,7 +18,7 @@ export const VARIANT_CONFIG: Record<ToastVariant, VariantConfig> = {
     textColor: colors.text.inverse,
   },
   success: {
-    backgroundColor: colors.primary[500],
+    backgroundColor: colors.success,
     icon: '✓',
     textColor: colors.text.inverse,
   },

@@ -1,6 +1,13 @@
 /**
  * Semantic Color Tokens
  * Extended color groups for specific UI contexts
+ *
+ * Color Role Separation (avoid "green means everything"):
+ * - Primary/CTA: Emerald (#059669/#10B981) — brand buttons, main actions
+ * - Success: Green-500 (#22c55e) — checkmarks, completions, positive states
+ * - Streak/Progress: Amber/Gold (#F59E0B) — chains, streaks, momentum
+ * - Strength: Uses its own gradient scale (lime → teal → cyan) in core.ts
+ * - Info: Blue (#3B82F6) — informational states
  */
 
 /**
