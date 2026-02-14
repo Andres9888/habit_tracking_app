@@ -7,6 +7,7 @@
 import { Animated, View } from 'react-native';
 import { HabitsHeader } from '../HabitsHeader';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
+import { HabitStatsWidget } from '../../../../components/HabitStatsWidget';
 import { OfflineIndicator } from '../../../../components/SyncStatus';
 import {
   TrialCountdownBanner,
@@ -36,6 +37,20 @@ export function HabitsListHeader(
           visible={computed.isOffline}
         />
       </View>
+      
+      {/* Habit Stats Widget */}
+      {computed.totalHabits > 0 && (
+        <HabitStatsWidget
+          completedToday={computed.completedToday}
+          getHabitStatus={props.getHabitStatus}
+          getStreak={props.getStreak}
+          habits={props.habits}
+          reduceMotion={props.reduceMotionPreference}
+          totalHabits={computed.totalHabits}
+          weekDateStrings={props.weekDateStrings}
+        />
+      )}
+      
       <Animated.View
         style={{
           opacity: props.headerOpacity,

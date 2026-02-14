@@ -18,6 +18,7 @@ export interface HabitsListHeaderProps {
   calendarOpacity: Animated.Value;
   calendarTranslateY: Animated.Value;
   getHabitStatus: (habitId: string, dateString: string) => string;
+  getStreak: (habitId: string) => number;
   onAddHabitPress: () => void;
   onDayPress: (date: Date) => void;
   onNextWeek: () => void;
