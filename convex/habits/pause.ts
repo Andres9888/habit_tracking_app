@@ -90,7 +90,12 @@ export const listPaused = query({
     return await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-      .filter((q) => q.eq(q.field('paused'), true))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field('paused'), true),
+          q.neq(q.field('deleted'), true)
+        )
+      )
       .order('desc')
       .collect();
   },

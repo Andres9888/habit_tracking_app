@@ -59,6 +59,7 @@ export interface SettingsContentProps {
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
   showGradientFill: boolean;
+  onOpenRecentlyDeleted: () => void;
   // Streak reminders
   streakRemindersEnabled: boolean;
   streakReminderTime: string;

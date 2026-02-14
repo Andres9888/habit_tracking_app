@@ -8,9 +8,12 @@ import {
   Droplets,
   Monitor,
   Sun,
+  Trash2,
 } from 'lucide-react-native';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useQuery } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { StreakRemindersSection } from './StreakRemindersSection';
@@ -33,7 +36,8 @@ const DARK_MODE_OPTIONS: Array<{
 export function SettingsContent(p: SettingsContentProps) {
   const { colors, isHighContrastActive: hc } = p;
   const { colors: themeColors, isDark } = useThemeColors();
-
+  const deletedHabits = useQuery(api.habits.listDeleted);
+  const deletedCount = deletedHabits?.length ?? 0;
   return (
     <ScrollView
       className='flex-1 px-4'
@@ -149,9 +153,26 @@ export function SettingsContent(p: SettingsContentProps) {
               iconBackgroundColor='#e7e5e4'
               badge={p.archivedHabitsCount}
               label='Archived Habits'
-              showBorder={false}
               type='navigation'
               onPress={p.onOpenArchivedHabits}
+            />
+            <SettingsRow
+              highContrastMode={hc}
+              icon={<Trash2 color='#dc2626' size={16} />}
+              iconBackgroundColor='#fecaca'
+              label='Recently Deleted'
+              showBorder={false}
+              type='navigation'
+              rightContent={
+                deletedCount > 0 ? (
+                  <View className='mr-1 rounded-full bg-red-100 px-2 py-0.5'>
+                    <Text className='text-xs font-semibold text-red-600'>
+                      {deletedCount}
+                    </Text>
+                  </View>
+                ) : undefined
+              }
+              onPress={p.onOpenRecentlyDeleted}
             />
           </SettingsSection>
         </Animated.View>

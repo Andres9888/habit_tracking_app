@@ -20,6 +20,7 @@ interface SettingsRowProps {
   onToggle?: (value: boolean) => void;
   showBorder?: boolean;
   highContrastMode?: boolean;
+  rightContent?: ReactNode;
 }
 
 export function SettingsRow({
@@ -33,6 +34,7 @@ export function SettingsRow({
   onToggle,
   showBorder = true,
   highContrastMode = false,
+  rightContent,
 }: SettingsRowProps) {
   const { isDark } = useThemeColors();
   const colors = getSettingsRowColors(highContrastMode, isDark);
@@ -105,6 +107,7 @@ export function SettingsRow({
               </Text>
             </View>
           )}
+          {rightContent}
           <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
         </View>
       )}

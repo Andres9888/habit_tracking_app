@@ -110,6 +110,10 @@ const applicationTables = {
 
     archivedAt: v.optional(v.number()),
 
+    // Soft delete fields (30-day retention before permanent deletion)
+    deleted: v.optional(v.boolean()),
+    deletedAt: v.optional(v.number()),
+
     bestStreak: v.optional(v.number()),
 
     // ISO date string (YYYY-MM-DD)

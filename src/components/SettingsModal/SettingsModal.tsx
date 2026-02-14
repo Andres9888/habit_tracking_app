@@ -10,6 +10,7 @@ import { api } from '../../../convex/_generated/api';
 import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
 import { SettingsModalSkeleton } from '../SkeletonLoader';
+import RecentlyDeletedModal from '../RecentlyDeletedModal/RecentlyDeletedModal';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
 import { SettingsHeader } from './SettingsHeader';
@@ -68,6 +69,21 @@ function SettingsModalContent({
     );
   }
 
+  if (view === 'deleted') {
+    return (
+      <Modal
+        animationType='slide'
+        visible={visible}
+        onRequestClose={handleClose}
+      >
+        <RecentlyDeletedModal
+          onBack={() => setView('settings')}
+          onClose={handleClose}
+        />
+      </Modal>
+    );
+  }
+
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={handleClose}>
       <View
@@ -100,6 +116,7 @@ function SettingsModalContent({
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               archivedHabitsCount={archivedHabitsCount}
               onOpenArchivedHabits={() => setView('archived')}
+              onOpenRecentlyDeleted={() => setView('deleted')}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
             />

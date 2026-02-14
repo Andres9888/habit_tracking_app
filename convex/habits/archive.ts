@@ -57,7 +57,12 @@ export const listArchived = query({
     return await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
-      .filter((q) => q.eq(q.field('archived'), true))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field('archived'), true),
+          q.neq(q.field('deleted'), true)
+        )
+      )
       .collect();
   },
   returns: v.array(fullHabitValidator),
