@@ -3,7 +3,7 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
-import Animated, {
+import {
   Easing,
   runOnJS,
   useAnimatedStyle,

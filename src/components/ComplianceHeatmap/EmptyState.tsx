@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { Grid3X3 } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
