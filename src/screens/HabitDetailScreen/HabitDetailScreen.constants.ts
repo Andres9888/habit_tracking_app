@@ -11,7 +11,7 @@ export const DETAIL_BG_GRADIENT = [
 
 /** Assemble props for HabitDetailModals from hook return values */
 export function buildModalsProps(
-  s: {
+  screenState: {
     editingNote: Doc<'notes'> | null | undefined;
     isNotesEditorOpen: boolean;
     isNotesListOpen: boolean;
@@ -20,28 +20,28 @@ export function buildModalsProps(
     setIsNotesListOpen: (v: boolean) => void;
     setPendingDelete: (v: boolean) => void;
   },
-  c: {
+  calendarHandlers: {
     handleConfirmArchive: () => void;
     handleConfirmDelete: () => void;
     handleUndoArchive: () => void;
     handleUndoDelete: () => void;
   },
-  n: { handleCloseNotesEditor: () => void },
+  notesHandlers: { handleCloseNotesEditor: () => void },
   insets: EdgeInsets
 ) {
   return {
-    editingNote: s.editingNote,
-    handleCloseNotesEditor: n.handleCloseNotesEditor,
-    handleConfirmArchive: c.handleConfirmArchive,
-    handleConfirmDelete: c.handleConfirmDelete,
-    handleUndoArchive: c.handleUndoArchive,
-    handleUndoDelete: c.handleUndoDelete,
+    editingNote: screenState.editingNote,
+    handleCloseNotesEditor: notesHandlers.handleCloseNotesEditor,
+    handleConfirmArchive: calendarHandlers.handleConfirmArchive,
+    handleConfirmDelete: calendarHandlers.handleConfirmDelete,
+    handleUndoArchive: calendarHandlers.handleUndoArchive,
+    handleUndoDelete: calendarHandlers.handleUndoDelete,
     insets,
-    isNotesEditorOpen: s.isNotesEditorOpen,
-    isNotesListOpen: s.isNotesListOpen,
-    pendingArchive: s.pendingArchive,
-    pendingDelete: s.pendingDelete,
-    setIsNotesListOpen: s.setIsNotesListOpen,
-    setPendingDelete: s.setPendingDelete,
+    isNotesEditorOpen: screenState.isNotesEditorOpen,
+    isNotesListOpen: screenState.isNotesListOpen,
+    pendingArchive: screenState.pendingArchive,
+    pendingDelete: screenState.pendingDelete,
+    setIsNotesListOpen: screenState.setIsNotesListOpen,
+    setPendingDelete: screenState.setPendingDelete,
   };
 }
