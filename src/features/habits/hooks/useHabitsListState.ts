@@ -20,6 +20,7 @@ import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useFirstUsageDate } from '../../../hooks/useFirstUsageDate';
+import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import type { HabitsListState } from './types';
 
 const FREE_HABIT_LIMIT = 3;
@@ -28,7 +29,7 @@ export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
   const isOnline = useIsOnline();
   const { daysSinceFirstUsage } = useFirstUsageDate();
-  const toggleHabitMutation = useMutation(api.habits.toggleHabit);
+  const toggleHabitMutation = useToggleHabitWithTimezone();
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
   const habitsQuery = useQuery(api.habits.list);

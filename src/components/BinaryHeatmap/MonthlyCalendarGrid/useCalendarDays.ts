@@ -49,7 +49,7 @@ export function useCalendarDays({
 
   const days = useMemo(() => {
     // Guard against invalid currentMonth
-    if (!currentMonth || isNaN(currentMonth.getTime())) {
+    if (!currentMonth || Number.isNaN(currentMonth.getTime())) {
       return [];
     }
     const monthStart = startOfMonth(currentMonth);

@@ -26,6 +26,7 @@ import { SyncStatusProvider } from './contexts/SyncStatusContext';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { OfflineProvider } from './providers/OfflineProvider';
+import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
 
 // Initialize Sentry as early as possible
@@ -41,17 +42,19 @@ function Providers({ children }: PropsWithChildren) {
           >
             <SentryUserSync>
               <ConvexClerkProvider>
-                <NetworkStatusProvider>
-                  <OfflineProvider>
-                    <SyncStatusProvider>
-                      <PurchasesProvider>
-                        <StreakMilestoneProvider>
-                          {children}
-                        </StreakMilestoneProvider>
-                      </PurchasesProvider>
-                    </SyncStatusProvider>
-                  </OfflineProvider>
-                </NetworkStatusProvider>
+                <ThemeColorProvider>
+                  <NetworkStatusProvider>
+                    <OfflineProvider>
+                      <SyncStatusProvider>
+                        <PurchasesProvider>
+                          <StreakMilestoneProvider>
+                            {children}
+                          </StreakMilestoneProvider>
+                        </PurchasesProvider>
+                      </SyncStatusProvider>
+                    </OfflineProvider>
+                  </NetworkStatusProvider>
+                </ThemeColorProvider>
               </ConvexClerkProvider>
             </SentryUserSync>
           </ClerkProvider>

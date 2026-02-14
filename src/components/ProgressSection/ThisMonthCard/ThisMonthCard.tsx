@@ -46,10 +46,10 @@ export function ThisMonthCard({
     >
       {/* Gradient Background */}
       <LinearGradient
-        colors={['rgba(245, 243, 255, 0.3)', '#ffffff', 'rgba(239, 246, 255, 0.3)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
         className='absolute inset-0'
+        colors={['rgba(245, 243, 255, 0.3)', '#ffffff', 'rgba(239, 246, 255, 0.3)']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
       />
       <View className='absolute inset-0 rounded-2xl border border-violet-500/20' />
 

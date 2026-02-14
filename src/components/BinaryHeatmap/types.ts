@@ -110,6 +110,12 @@ export interface BinaryHeatmapProps {
 
   /** Callback when a day cell is tapped */
   onDayPress?: (date: string, completed: boolean) => void;
+
+  /** Optional externally-controlled time range (legacy test compatibility) */
+  timeRange?: TimeRange;
+
+  /** Optional callback for time range changes (legacy test compatibility) */
+  onTimeRangeChange?: (range: TimeRange) => void;
 }
 
 /**

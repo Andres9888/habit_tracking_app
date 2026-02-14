@@ -68,10 +68,10 @@ export function useStreakAccordionState({
   );
 
   return {
+    accessibilityLabel,
     chevronAnimatedStyle,
     contentAnimatedStyle,
     handleContentLayout,
-    accessibilityLabel,
     handleToggle,
     hasContentMeasured,
     hasRecords,

@@ -35,7 +35,7 @@ export function useCelebrationHaptics({
     if (!shouldVibrate) return;
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } catch {}
+    } catch { /* Haptics may fail silently */ }
   }, [shouldVibrate]);
 
   // First habit of the day - medium tap with success
@@ -45,7 +45,7 @@ export function useCelebrationHaptics({
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       await wait(100);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    } catch {}
+    } catch { /* Haptics may fail silently */ }
   }, [shouldVibrate]);
 
   // All habits complete - celebration pattern
@@ -60,7 +60,7 @@ export function useCelebrationHaptics({
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
       await wait(150);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    } catch {}
+    } catch { /* Haptics may fail silently */ }
   }, [shouldVibrate]);
 
   // Streak milestone (7, 14, 21, 30+ days) - special pattern
@@ -89,7 +89,7 @@ export function useCelebrationHaptics({
         await wait(100);
         await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
-    } catch {}
+    } catch { /* Haptics may fail silently */ }
   }, [shouldVibrate]);
 
   // Undo action - warning tap
@@ -97,13 +97,13 @@ export function useCelebrationHaptics({
     if (!shouldVibrate) return;
     try {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    } catch {}
+    } catch { /* Haptics may fail silently */ }
   }, [shouldVibrate]);
 
   return useMemo(() => ({
+    triggerAllComplete,
     triggerCompletion,
     triggerFirstCompletion,
-    triggerAllComplete,
     triggerStreakMilestone,
     triggerUndo,
   }), [

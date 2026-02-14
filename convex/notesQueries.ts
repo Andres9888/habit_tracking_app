@@ -1,6 +1,6 @@
 import { v } from 'convex/values';
 import { query } from './_generated/server';
-import { notesArrayValidator, nullableNoteValidator } from './notes';
+import { notesArrayValidator, nullableNoteValidator } from './notes/types';
 
 /**
  * Notes queries - list, search, get

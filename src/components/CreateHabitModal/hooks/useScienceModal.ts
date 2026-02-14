@@ -22,7 +22,7 @@ export const useScienceModal = ({ onSelectTemplate }: UseScienceModalOptions) =>
     setVisible(false);
   }, [template, onSelectTemplate]);
 
-  return { isVisible, template, open, close, useTemplate };
+  return { close, isVisible, open, template, useTemplate };
 };
 
 /** Type for the return value of useScienceModal */

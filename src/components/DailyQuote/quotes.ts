@@ -10,127 +10,127 @@ export interface QuoteData {
 
 export const QUOTES: QuoteData[] = [
   {
-    text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
-    author: "Aristotle"
+    author: "Aristotle",
+    text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit."
   },
   {
-    text: "The secret of your future is hidden in your daily routine.",
-    author: "Mike Murdock"
+    author: "Mike Murdock",
+    text: "The secret of your future is hidden in your daily routine."
   },
   {
-    text: "Small daily improvements over time lead to stunning results.",
-    author: "Robin Sharma"
+    author: "Robin Sharma",
+    text: "Small daily improvements over time lead to stunning results."
   },
   {
-    text: "Success is the sum of small efforts repeated day in and day out.",
-    author: "Robert Collier"
+    author: "Robert Collier",
+    text: "Success is the sum of small efforts repeated day in and day out."
   },
   {
-    text: "You'll never change your life until you change something you do daily.",
-    author: "John C. Maxwell"
+    author: "John C. Maxwell",
+    text: "You'll never change your life until you change something you do daily."
   },
   {
-    text: "Motivation is what gets you started. Habit is what keeps you going.",
-    author: "Jim Ryun"
+    author: "Jim Ryun",
+    text: "Motivation is what gets you started. Habit is what keeps you going."
   },
   {
-    text: "The chains of habit are too weak to be felt until they are too strong to be broken.",
-    author: "Samuel Johnson"
+    author: "Samuel Johnson",
+    text: "The chains of habit are too weak to be felt until they are too strong to be broken."
   },
   {
-    text: "First we make our habits, then our habits make us.",
-    author: "Charles C. Noble"
+    author: "Charles C. Noble",
+    text: "First we make our habits, then our habits make us."
   },
   {
-    text: "Habits are the compound interest of self-improvement.",
-    author: "James Clear"
+    author: "James Clear",
+    text: "Habits are the compound interest of self-improvement."
   },
   {
-    text: "Every action you take is a vote for the type of person you wish to become.",
-    author: "James Clear"
+    author: "James Clear",
+    text: "Every action you take is a vote for the type of person you wish to become."
   },
   {
-    text: "It's not what we do once in a while that shapes our lives. It's what we do consistently.",
-    author: "Tony Robbins"
+    author: "Tony Robbins",
+    text: "It's not what we do once in a while that shapes our lives. It's what we do consistently."
   },
   {
-    text: "The only way to do great work is to love what you do.",
-    author: "Steve Jobs"
+    author: "Steve Jobs",
+    text: "The only way to do great work is to love what you do."
   },
   {
-    text: "Don't watch the clock; do what it does. Keep going.",
-    author: "Sam Levenson"
+    author: "Sam Levenson",
+    text: "Don't watch the clock; do what it does. Keep going."
   },
   {
-    text: "A journey of a thousand miles begins with a single step.",
-    author: "Lao Tzu"
+    author: "Lao Tzu",
+    text: "A journey of a thousand miles begins with a single step."
   },
   {
-    text: "Progress, not perfection.",
-    author: "Unknown"
+    author: "Unknown",
+    text: "Progress, not perfection."
   },
   {
-    text: "Start where you are. Use what you have. Do what you can.",
-    author: "Arthur Ashe"
+    author: "Arthur Ashe",
+    text: "Start where you are. Use what you have. Do what you can."
   },
   {
-    text: "The best time to plant a tree was 20 years ago. The second best time is now.",
-    author: "Chinese Proverb"
+    author: "Chinese Proverb",
+    text: "The best time to plant a tree was 20 years ago. The second best time is now."
   },
   {
-    text: "Discipline is choosing between what you want now and what you want most.",
-    author: "Abraham Lincoln"
+    author: "Abraham Lincoln",
+    text: "Discipline is choosing between what you want now and what you want most."
   },
   {
-    text: "Your habits will determine your future.",
-    author: "Jack Canfield"
+    author: "Jack Canfield",
+    text: "Your habits will determine your future."
   },
   {
-    text: "Be patient with yourself. Self-growth is tender; it's holy ground.",
-    author: "Stephen Covey"
+    author: "Stephen Covey",
+    text: "Be patient with yourself. Self-growth is tender; it's holy ground."
   },
   {
-    text: "Rome wasn't built in a day, but they were laying bricks every hour.",
-    author: "John Heywood"
+    author: "John Heywood",
+    text: "Rome wasn't built in a day, but they were laying bricks every hour."
   },
   {
-    text: "The difference between who you are and who you want to be is what you do.",
-    author: "Unknown"
+    author: "Unknown",
+    text: "The difference between who you are and who you want to be is what you do."
   },
   {
-    text: "Consistency is what transforms average into excellence.",
-    author: "Unknown"
+    author: "Unknown",
+    text: "Consistency is what transforms average into excellence."
   },
   {
-    text: "One day or day one. You decide.",
-    author: "Unknown"
+    author: "Unknown",
+    text: "One day or day one. You decide."
   },
   {
-    text: "Fall seven times, stand up eight.",
-    author: "Japanese Proverb"
+    author: "Japanese Proverb",
+    text: "Fall seven times, stand up eight."
   },
   {
-    text: "What you do every day matters more than what you do once in a while.",
-    author: "Gretchen Rubin"
+    author: "Gretchen Rubin",
+    text: "What you do every day matters more than what you do once in a while."
   },
   {
-    text: "Winners are not people who never fail, but people who never quit.",
-    author: "Unknown"
+    author: "Unknown",
+    text: "Winners are not people who never fail, but people who never quit."
   },
   {
-    text: "The habit of persistence is the habit of victory.",
-    author: "Herbert Kaufman"
+    author: "Herbert Kaufman",
+    text: "The habit of persistence is the habit of victory."
   },
   {
-    text: "It does not matter how slowly you go as long as you do not stop.",
-    author: "Confucius"
+    author: "Confucius",
+    text: "It does not matter how slowly you go as long as you do not stop."
   },
   {
-    text: "Your future is created by what you do today, not tomorrow.",
-    author: "Robert Kiyosaki"
+    author: "Robert Kiyosaki",
+    text: "Your future is created by what you do today, not tomorrow."
   },
   {
-    text: "Building good habits is the best investment you can make.",
-    author: "Unknown"
+    author: "Unknown",
+    text: "Building good habits is the best investment you can make."
   }
 ];

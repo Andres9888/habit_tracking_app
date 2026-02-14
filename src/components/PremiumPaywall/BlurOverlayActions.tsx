@@ -29,7 +29,7 @@ export function BlurOverlayActions({ config, handlers, onStartTrial, onRestore }
             colors={[config.gradientColors[0], config.gradientColors[1]]}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
-            style={!handlers.priceLabel ? { opacity: 0.5 } : undefined}
+            style={handlers.priceLabel ? undefined : { opacity: 0.5 }}
           >
             <Text className='text-base font-semibold text-white'>
               {handlers.isProcessing ? 'Processing...' : config.ctaText}

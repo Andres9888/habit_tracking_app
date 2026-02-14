@@ -10,6 +10,28 @@ export function getTodayDateKey(): string {
   const day = String(now.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
+/**
+ * Get today's date as YYYY-MM-DD string in the user's timezone.
+ * Falls back to UTC if timezone is invalid or not provided.
+ */
+export function getTodayForTimezone(timezone?: string): string {
+  if (!timezone) return getTodayDateKey();
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(new Date());
+    const year = parts.find((p) => p.type === 'year')?.value ?? '';
+    const month = parts.find((p) => p.type === 'month')?.value ?? '';
+    const day = parts.find((p) => p.type === 'day')?.value ?? '';
+    return `${year}-${month}-${day}`;
+  } catch {
+    return getTodayDateKey();
+  }
+}
+
 
 /** Return the greater of two date keys */
 export function maxDateKey(a: string, b: string): string {
