@@ -1,9 +1,10 @@
 /**
  * MonetizationHero Component
- * Premium upgrade card with animated progress and CTA
+ * Premium upgrade card with animated progress and CTA — dark mode aware
  */
 
 import { Animated, Pressable, Text, View } from 'react-native';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
 
@@ -16,6 +17,7 @@ export function MonetizationHero({
   onUpgradePress,
   reduceMotion = false,
 }: MonetizationHeroProps) {
+  const { isDark } = useThemeColors();
   const { progress, ctaPulse, shimmer, trackWidth, handleTrackLayout } =
     useMonetizationAnimations({
       freeHabitLimit,
@@ -24,13 +26,20 @@ export function MonetizationHero({
       reduceMotion,
     });
 
+  // The hero is intentionally dark-themed (dark card on light bg, stays dark on dark bg)
+  // Adjust border/shadow for dark mode context
+  const containerBg = isDark ? '#0f172a' : '#1c1917';
+  const shadowColor = isDark ? '#000000' : '#1c1917';
+
   return (
     <View
       className='overflow-hidden rounded-3xl p-6'
       style={{
-        backgroundColor: '#1c1917',
+        backgroundColor: containerBg,
+        borderColor: isDark ? 'rgba(99, 102, 241, 0.2)' : 'transparent',
+        borderWidth: isDark ? 1 : 0,
         elevation: 4,
-        shadowColor: '#1c1917',
+        shadowColor,
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 16,
@@ -68,7 +77,10 @@ export function MonetizationHero({
             Start Free Trial →
           </Text>
         </AnimatedPressable>
-        <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>
+        <View
+          className='flex-1 rounded-full border px-4 py-3'
+          style={{ borderColor: 'rgba(255, 255, 255, 0.14)' }}
+        >
           <Animated.Text
             className='text-center text-[13px] font-semibold text-[#cbd5f5]'
             style={{ opacity: shimmer }}
@@ -87,7 +99,8 @@ export function MonetizationHero({
           </Text>
         </View>
         <View
-          className='bg-white/12 h-2 w-full overflow-hidden rounded-full'
+          className='h-2 w-full overflow-hidden rounded-full'
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.12)' }}
           onLayout={handleTrackLayout}
         >
           <Animated.View

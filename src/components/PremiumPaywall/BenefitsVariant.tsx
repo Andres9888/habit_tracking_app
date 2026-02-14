@@ -1,9 +1,10 @@
 /**
- * Benefits variant: page-sheet modal with rich feature cards
+ * Benefits variant: page-sheet modal with rich feature cards — dark mode aware
  */
 
 import React from 'react';
 import { View, ScrollView, Modal } from 'react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { SocialProofSection } from './SocialProofSection';
 import { BenefitsHeader } from './BenefitsHeader';
 import { BenefitsHero } from './BenefitsHero';
@@ -30,6 +31,8 @@ export function BenefitsVariant({
   testID,
   visible,
 }: BenefitsVariantProps) {
+  const { colors, isDark } = useThemeColors();
+
   const sortedFeatures = [...MOTIVATION_FEATURES].sort((a, b) => {
     if (a.id === triggeredByFeature) return -1;
     if (b.id === triggeredByFeature) return 1;
@@ -48,7 +51,7 @@ export function BenefitsVariant({
       visible={visible}
       onRequestClose={handlers.handleClose}
     >
-      <View className='flex-1 bg-stone-50'>
+      <View className='flex-1' style={{ backgroundColor: isDark ? colors.background : '#fafaf9' }}>
         <BenefitsHeader config={config} onClose={handlers.handleClose} />
         <BenefitsHero config={config} />
         <ScrollView
@@ -63,7 +66,7 @@ export function BenefitsVariant({
               isHighlighted={feature.id === triggeredByFeature}
             />
           ))}
-          {config.showSocialProof && <SocialProofSection />}
+          {config.showSocialProof && <SocialProofSection dark={isDark} />}
         </ScrollView>
         <BenefitsCTAFooter
           config={config}
