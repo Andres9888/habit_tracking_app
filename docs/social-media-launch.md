@@ -28,7 +28,7 @@ Don't break the chain. Start yours today.
 
 I tried every habit app out there. They all felt like spreadsheets.
 
-I wanted to *see* my progress. To feel the momentum of a growing chain. To understand which habits were actually sticking.
+I wanted to _see_ my progress. To feel the momentum of a growing chain. To understand which habits were actually sticking.
 
 So I built Chain Day.
 
@@ -64,7 +64,7 @@ link in bio 🔗✨
 
 after 8 months of building in my spare time, Chain Day is finally live.
 
-i started this project because i was frustrated. every habit tracker felt the same — boring lists, endless checkboxes, zero personality. i wanted something that made me *want* to keep my streaks alive.
+i started this project because i was frustrated. every habit tracker felt the same — boring lists, endless checkboxes, zero personality. i wanted something that made me _want_ to keep my streaks alive.
 
 so i built the thing i wished existed:
 
@@ -92,7 +92,7 @@ every great habit started with a single day 📅
 
 the idea for Chain Day came from a simple realization: we don't build habits in isolation. each day is connected to the one before and the one after.
 
-when you can *see* those connections — actually watch your chain grow link by link — something clicks in your brain.
+when you can _see_ those connections — actually watch your chain grow link by link — something clicks in your brain.
 
 "i don't want to break this."
 
@@ -155,7 +155,7 @@ Long-time lurker here. I wanted to share something I've been working on for the 
 **The backstory:**
 Like many of you, I've tried a lot of habit trackers. They all worked fine — checkboxes, streaks, reminders — but something always felt missing. I'd hit a 30-day streak and feel... nothing. Just a number.
 
-What I wanted was *visibility*. To see my progress as a story, not a spreadsheet.
+What I wanted was _visibility_. To see my progress as a story, not a spreadsheet.
 
 So I built Chain Day.
 
@@ -170,6 +170,7 @@ So I built Chain Day.
 4. **Minimal design** — No bloat, no gamification that feels manipulative. Just clean, focused habit tracking.
 
 **The tech:**
+
 - React Native with Expo
 - Convex for the backend
 - Available on iOS (Android coming)
@@ -207,6 +208,7 @@ That insight became Chain Day.
 3. **Time-based suggestions** — The app suggests habits based on time of day. Morning habits in the morning, evening habits in the evening. Small friction reduction that actually helps.
 
 **Results:**
+
 - Daily meditation: 73 days (longest ever)
 - Morning movement: 52 days
 - Reading before bed: 41 days
@@ -246,7 +248,7 @@ Free to start. iOS only (for now).
 
 Most habit trackers are glorified checklists. Chain Day is different.
 
-We believe your habits tell a story. Each day is connected to the one before and the one after. When you can *see* those connections — watch your chains grow link by link — something changes.
+We believe your habits tell a story. Each day is connected to the one before and the one after. When you can _see_ those connections — watch your chains grow link by link — something changes.
 
 Suddenly, "don't break the chain" isn't just a saying. It's visible. Tangible. Real.
 
@@ -261,9 +263,10 @@ Suddenly, "don't break the chain" isn't just a saying. It's visible. Tangible. R
 🎨 **Intentional Design** — Clean, minimal, focused. No gamification manipulation, no bloat.
 
 **Perfect for:**
+
 - People building daily routines (meditation, exercise, reading)
 - Those who've tried other apps but lost motivation
-- Anyone who wants to *see* their progress, not just count it
+- Anyone who wants to _see_ their progress, not just count it
 
 Free to start. Premium unlocks unlimited habits and advanced insights.
 

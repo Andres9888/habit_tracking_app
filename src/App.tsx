@@ -24,6 +24,7 @@ import { PurchasesProvider } from './components/providers/PurchasesProvider';
 import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration';
 import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
 import { SyncStatusProvider } from './contexts/SyncStatusContext';
+import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { OfflineProvider } from './providers/OfflineProvider';
@@ -36,6 +37,13 @@ import { loadABAssignments } from './lib/analytics/abTestFlags';
 // Initialize Sentry as early as possible
 initSentry();
 
+const clerkKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+if (!clerkKey) {
+  throw new Error(
+    'EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is required. Add it to .env.local'
+  );
+}
+
 // Initialize conversion tracking and A/B test assignments
 startNewSession();
 void loadABAssignments();
@@ -45,9 +53,7 @@ function Providers({ children }: PropsWithChildren) {
     <SentryErrorBoundary>
       <SafeAreaProvider>
         <PaperProvider theme={theme}>
-          <ClerkProvider
-            publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
-          >
+          <ClerkProvider publishableKey={clerkKey} tokenCache={tokenCache}>
             <SentryUserSync>
               <ConvexClerkProvider>
                 <ThemeColorProvider>

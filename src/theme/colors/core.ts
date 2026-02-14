@@ -30,7 +30,7 @@ export const colors = {
     200: '#E5E7EB', // Borders, dividers
     300: '#D1D5DB', // Disabled elements
     400: '#6B7280', // Placeholder text (WCAG AA compliant)
-    500: '#78716c', // Secondary text (stone-500)
+    500: '#57534e', // Secondary text (stone-600, WCAG AA compliant 5.2:1)
     600: '#4B5563', // Body text
     700: '#374151', // Headings
     800: '#1F2937', // Very dark text
@@ -109,7 +109,7 @@ export const colors = {
     inverse: '#FFFFFF',
     primary: '#1F2937',
     // Gray-800 - Headings and important text
-    secondary: '#78716c',
+    secondary: '#57534e',
     // Gray-500 - Secondary text, labels
     tertiary: '#6B7280', // White text on dark backgrounds
   },
