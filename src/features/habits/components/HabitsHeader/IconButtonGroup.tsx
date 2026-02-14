@@ -97,6 +97,7 @@ export function IconButtonGroup({
       {/* Settings Button */}
       <Animated.View style={settingsAnimatedStyle}>
         <Pressable
+          accessibilityHint='Open app settings'
           accessibilityLabel='Open settings'
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-full'

@@ -26,6 +26,7 @@ export function UpgradePrompt({
       entering={FadeIn.duration(280)}
     >
       <Pressable
+        accessibilityHint='Tap outside to dismiss'
         accessibilityLabel='Close upgrade prompt'
         accessibilityRole='button'
         className='absolute inset-0'
@@ -56,6 +57,7 @@ export function UpgradePrompt({
             </Text>
           </View>
           <Pressable
+            accessibilityHint='Start your 7-day free trial'
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
             className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
@@ -73,6 +75,7 @@ export function UpgradePrompt({
             </Text>
           </Pressable>
           <Pressable
+            accessibilityHint='Dismiss this upgrade prompt'
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
             className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'

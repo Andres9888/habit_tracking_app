@@ -84,6 +84,7 @@ export default function WelcomeScreen() {
           />
           <AuthDivider />
           <AnimatedPressable
+            accessibilityHint='Create a new Chain Day account'
             accessibilityLabel='Create free account with Chain Day'
             accessibilityRole='button'
             accessibilityState={{ disabled: !!isLoading }}
@@ -95,6 +96,7 @@ export default function WelcomeScreen() {
             <Text style={styles.primaryButtonText}>Create Free Account</Text>
           </AnimatedPressable>
           <AnimatedPressable
+            accessibilityHint='Navigate to sign in screen'
             accessibilityLabel='Sign in to existing account'
             accessibilityRole='link'
             accessibilityState={{ disabled: !!isLoading }}

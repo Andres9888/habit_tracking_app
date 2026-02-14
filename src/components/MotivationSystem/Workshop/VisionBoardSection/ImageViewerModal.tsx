@@ -54,6 +54,7 @@ export function ImageViewerModal({
         <View className='flex-1 items-center justify-center'>
           {image.imageUrl && (
             <Image
+              accessibilityLabel='Full size vision board image'
               accessibilityIgnoresInvertColors
               resizeMode='contain'
               source={{ uri: image.imageUrl }}

@@ -65,6 +65,10 @@ export function SettingsContent(p: SettingsContentProps) {
                   return (
                     <Pressable
                       key={key}
+                      accessibilityHint={`Set appearance to ${label} mode`}
+                      accessibilityLabel={`${label} appearance`}
+                      accessibilityRole='radio'
+                      accessibilityState={{ selected }}
                       className='flex-1 flex-row items-center justify-center gap-1.5 rounded-lg px-2 py-2'
                       style={{
                         backgroundColor: selected
