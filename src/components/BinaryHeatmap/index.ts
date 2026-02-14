@@ -15,6 +15,7 @@ export { MonthLabelsRow } from './MonthLabelsRow';
 export { HeatmapTooltip } from './HeatmapTooltip';
 export { StatsRow } from './StatsRow';
 export { MonthlyCalendarGrid } from './MonthlyCalendarGrid';
+export { StreakCalendar } from './StreakCalendar';
 
 // Type exports
 export type {
@@ -32,6 +33,7 @@ export type {
   HeatmapTooltipProps,
   StatsRowProps,
 } from './types';
+export type { StreakCalendarProps } from './StreakCalendar';
 
 // Constants exports
 export {

@@ -84,6 +84,7 @@ function HabitDetailScreenContent({
                   <HabitDetailContent
                     completedDates={screenState.completedDates}
                     habit={habit}
+                    notes={screenState.habitNotes}
                     onDayPress={calendarHandlers.handleCalendarDayPress}
                   />
                 </LinearGradient>

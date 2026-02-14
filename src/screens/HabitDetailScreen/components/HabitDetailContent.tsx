@@ -2,15 +2,17 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
+import { MonthlyCalendarGrid, StreakCalendar } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import type { Habit } from '../../../features/habits/types';
+import type { Doc } from '../../../convex/_generated/dataModel';
 
 interface HabitDetailContentProps {
   habit: Habit;
   completedDates: Set<string>;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
+  notes?: Doc<'notes'>[];
 }
 
 const anim = (delay: number) =>
@@ -36,6 +38,7 @@ export function HabitDetailContent({
   habit,
   completedDates,
   onDayPress,
+  notes = [],
 }: HabitDetailContentProps) {
   return (
     <ScrollView
@@ -72,11 +75,35 @@ export function HabitDetailContent({
         </>
       )}
 
-      {/* HISTORY section - OPTIMIZED: consistent card styling */}
-      <SectionLabel delay={360} text='HISTORY' />
+      {/* STREAK CALENDAR section - Month-view calendar showing completions */}
+      <SectionLabel delay={360} text='STREAK CALENDAR' />
       <Animated.View
         className='rounded-2xl bg-white p-4'
         entering={anim(420)}
+        style={{
+          elevation: 4,
+          shadowColor: '#1c1917',
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
+        }}
+      >
+        <ErrorBoundary>
+          <StreakCalendar
+            completedDates={completedDates}
+            habitColor={habit.iconColor ?? '#047857'}
+            habitCreatedAt={habit.createdAt}
+            habitId={habit._id}
+            notes={notes}
+          />
+        </ErrorBoundary>
+      </Animated.View>
+
+      {/* HISTORY section - OPTIMIZED: consistent card styling */}
+      <SectionLabel delay={480} text='HISTORY' />
+      <Animated.View
+        className='rounded-2xl bg-white p-4'
+        entering={anim(540)}
         style={{
           elevation: 4,
           shadowColor: '#1c1917',
