@@ -100,6 +100,14 @@ export const colors = {
 
   surface: '#EDEAE5',
 
+  // Text Colors (semantic hierarchy)
+  text: {
+    inverse: '#FFFFFF', // White text on dark backgrounds
+    primary: '#2D2A26', // Main body text (gray.800)
+    secondary: '#6B6560', // Secondary/caption text (gray.500, 5.1:1 contrast)
+    tertiary: '#9C958D', // Placeholder/disabled text (gray.400)
+  },
+
   warning: '#D97706',
   warningLight: '#FEF3CD',
 } as const;
