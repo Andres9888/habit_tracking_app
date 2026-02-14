@@ -9,6 +9,7 @@ import { Platform, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface StreakRemindersSectionProps {
   highContrastMode: boolean;
@@ -49,6 +50,7 @@ export function StreakRemindersSection({
   onChangeTime,
   onPremiumUpsell,
 }: StreakRemindersSectionProps) {
+  const { colors: themeColors } = useThemeColors();
   const [showTimePicker, setShowTimePicker] = useState(false);
 
   const handleTimeChange = (_event: unknown, selectedDate?: Date) => {
@@ -109,7 +111,7 @@ export function StreakRemindersSection({
         <View style={{ paddingBottom: 12, paddingHorizontal: 16 }}>
           <Text
             style={{
-              color: '#78716c',
+              color: themeColors.text.tertiary,
               fontSize: 13,
               lineHeight: 18,
             }}

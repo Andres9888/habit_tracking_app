@@ -159,12 +159,18 @@ export function SettingsContent(p: SettingsContentProps) {
           <AccountSection isHighContrastActive={hc} />
         </Animated.View>
       </View>
-      <View className='items-center pb-8 pt-4'>
+      <View className='items-center pb-8 pt-6'>
         <Text
-          className='text-center text-[13px] leading-[18px]'
-          style={{ color: colors.versionText }}
+          className='text-[13px] font-medium'
+          style={{ color: themeColors.text.tertiary, letterSpacing: 0.3 }}
         >
-          Chain Day v1.0.0
+          Chain Day
+        </Text>
+        <Text
+          className='mt-0.5 text-[11px]'
+          style={{ color: themeColors.text.tertiary, opacity: 0.6 }}
+        >
+          v1.0.0
         </Text>
       </View>
     </ScrollView>

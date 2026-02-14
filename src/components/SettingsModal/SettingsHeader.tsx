@@ -1,4 +1,4 @@
-/** SettingsHeader - OPTIMIZED: FadeInDown, AnimatedPressable, X button */
+/** SettingsHeader - Theme-aware close button, spring press, FadeInDown */
 import { X } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 import Animated, {
@@ -8,9 +8,10 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsColors } from './types';
 
-const AnimatedPressable = Animated.createAnimatedComponent(View);
+const AnimatedView = Animated.createAnimatedComponent(View);
 
 interface SettingsHeaderProps {
   colors: SettingsColors;
@@ -23,6 +24,7 @@ export function SettingsHeader({
   paddingTop,
   onClose,
 }: SettingsHeaderProps) {
+  const { colors: themeColors } = useThemeColors();
   const scale = useSharedValue(1);
   const animStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -35,7 +37,7 @@ export function SettingsHeader({
 
   return (
     <Animated.View
-      className='bg-background px-5 pb-4'
+      className='px-5 pb-4'
       entering={FadeInDown.duration(280).springify().damping(18)}
       style={{ backgroundColor: colors.background, paddingTop }}
     >
@@ -47,11 +49,14 @@ export function SettingsHeader({
         >
           Settings
         </Text>
-        <AnimatedPressable
+        <AnimatedView
           accessibilityLabel='Close settings'
           accessibilityRole='button'
-          className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
-          style={animStyle}
+          className='h-10 w-10 items-center justify-center rounded-full'
+          style={[
+            animStyle,
+            { backgroundColor: themeColors.surface },
+          ]}
           onTouchCancel={() => {
             scale.value = withSpring(1, { damping: 15 });
           }}
@@ -63,8 +68,8 @@ export function SettingsHeader({
             scale.value = withSpring(0.9, { damping: 15 });
           }}
         >
-          <X color={colors.icon} size={20} strokeWidth={2.5} />
-        </AnimatedPressable>
+          <X color={themeColors.text.secondary} size={20} strokeWidth={2.5} />
+        </AnimatedView>
       </View>
     </Animated.View>
   );
