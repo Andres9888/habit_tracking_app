@@ -43,6 +43,8 @@ export interface HabitsListState {
   archiveUndoVisible: boolean;
   archiveUndoHabitName: string;
   handleHabitPress: (habit: Habit) => void;
+  handlePause: (habitId: Id<'habits'>, pausedUntil?: number) => Promise<void>;
+  handleResume: (habitId: Id<'habits'>) => Promise<void>;
   handleNextWeek: () => void;
   handlePreviousWeek: () => void;
   openCreateHabitScreen: () => void;

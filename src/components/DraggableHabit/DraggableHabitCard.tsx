@@ -1,7 +1,8 @@
 import React from 'react';
-import { Animated, Pressable, StyleSheet } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated from 'react-native-reanimated';
+import { Play } from 'lucide-react-native';
 import { ArchiveAction } from './ArchiveAction';
 import { CardContent } from './CardContent';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
@@ -27,13 +28,23 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
     translateY: props.translateY,
   });
 
+  // Dimmed appearance for paused habits
+  const isPaused = props.habit.paused === true;
+  const cardOpacity = isPaused ? 0.6 : 1;
+
+  const handleResumePress = () => {
+    if (props.onResume) {
+      props.onResume(props.habit._id);
+    }
+  };
+
   const habitCard = (
     <ReAnimated.View style={props.entranceCardStyle}>
       <Pressable
-        accessibilityHint='Tap to view habit details, long press for quick actions'
-        accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
+        accessibilityHint={isPaused ? 'Tap Resume to continue this habit' : 'Tap to view habit details, long press for quick actions'}
+        accessibilityLabel={`${props.habit.name}, ${props.streak} day streak${isPaused ? ', paused' : ''}`}
         accessibilityRole='button'
-        style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
+        style={({ pressed }) => ({ opacity: (pressed ? 0.92 : 1) * cardOpacity })}
         onLongPress={props.handleLongPress}
         onPress={() => props.onPress?.(props.habit)}
         onPressIn={props.handlePressIn}
@@ -47,7 +58,7 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
             style={[
               {
                 alignSelf: 'stretch',
-                backgroundColor: borderAccentColor,
+                backgroundColor: isPaused ? '#d1d5db' : borderAccentColor,
                 borderBottomLeftRadius: borderRadius.xl,
                 borderTopLeftRadius: borderRadius.xl,
               },
@@ -91,6 +102,19 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
           </ReAnimated.View>
         </Animated.View>
       </Pressable>
+      {/* Resume Button for Paused Habits */}
+      {isPaused && props.onResume && (
+        <Pressable
+          className='mt-2 flex-row items-center justify-center rounded-full bg-green-500 py-2'
+          onPress={handleResumePress}
+          accessibilityHint='Resume this habit'
+          accessibilityLabel={`Resume ${props.habit.name}`}
+          accessibilityRole='button'
+        >
+          <Play size={16} color='#ffffff' fill='#ffffff' />
+          <Text className='ml-1 text-[14px] font-semibold text-white'>Resume</Text>
+        </Pressable>
+      )}
     </ReAnimated.View>
   );
 

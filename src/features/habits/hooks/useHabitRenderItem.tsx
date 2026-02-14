@@ -16,6 +16,8 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
     entranceVariant = 'widthExpansion',
     handleArchive,
     handleHabitPress,
+    handlePause,
+    handleResume,
     highlightHabitId,
     isReorderingEnabled,
     notifyWeekCompletion,
@@ -42,6 +44,8 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           entranceVariant={entranceVariant}
           handleArchive={handleArchive}
           handleHabitPress={handleHabitPress}
+          handlePause={handlePause}
+          handleResume={handleResume}
           highlightHabitId={highlightHabitId}
           isActive={Boolean(isActive)}
           isConnectedToNextWeek={renderData.isConnectedToNextWeek}

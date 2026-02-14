@@ -176,6 +176,9 @@ const applicationTables = {
 
     pausedAt: v.optional(v.number()),
 
+    // Optional: until when the habit is paused (timestamp)
+    pausedUntil: v.optional(v.number()),
+
     // Behavior Prediction - Predicted probability of next completion
     predictedCompletionProb: v.optional(v.number()),
 

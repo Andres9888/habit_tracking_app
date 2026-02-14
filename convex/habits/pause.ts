@@ -9,6 +9,7 @@ import { fullHabitValidator } from './types';
 export const pause = mutation({
   args: {
     habitId: v.id('habits'),
+    pausedUntil: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     // SEC-001: Authentication check
@@ -32,6 +33,7 @@ export const pause = mutation({
       accessibilityAtPause: habit.accessibility,
       paused: true,
       pausedAt: Date.now(),
+      pausedUntil: args.pausedUntil,
       strengthAtPause: habit.strength,
     });
 

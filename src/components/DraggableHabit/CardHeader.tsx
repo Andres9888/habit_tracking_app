@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, View, Text } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
+import { ChevronRight, Pause } from 'lucide-react-native';
 import { PhaseTag } from '../PhaseTag';
 import { getIconBackground } from './colorUtils';
 import type { CardColors, Habit } from './types';
@@ -43,6 +43,8 @@ export function CardHeader({
   const showBestStreak =
     bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage;
 
+  const isPaused = habit.paused === true;
+
   return (
     <View className='relative mb-3 flex-row items-center justify-between px-3'>
       <View className='flex-1 items-center'>
@@ -65,12 +67,25 @@ export function CardHeader({
             className='shrink text-[17px] font-bold leading-[22px]'
             ellipsizeMode='tail'
             numberOfLines={1}
-            style={{ color: colors.primaryText, letterSpacing: -0.3 }}
+            style={{ 
+              color: isPaused ? colors.secondaryText : colors.primaryText, 
+              letterSpacing: -0.3,
+              opacity: isPaused ? 0.6 : 1,
+            }}
           >
             {name || habit.name}
           </Text>
-          {habit.preferredTime && (
-            <PhaseTag compact preferredTime={habit.preferredTime} />
+          {isPaused ? (
+            <View 
+              className='flex-row items-center gap-1 rounded-full bg-gray-200 px-2 py-0.5'
+            >
+              <Pause size={10} color='#6b7280' />
+              <Text className='text-[10px] font-medium text-gray-500'>Paused</Text>
+            </View>
+          ) : (
+            habit.preferredTime && (
+              <PhaseTag compact preferredTime={habit.preferredTime} />
+            )
           )}
           <View className='ml-auto'>
             <ChevronRight
@@ -80,7 +95,7 @@ export function CardHeader({
             />
           </View>
         </View>
-        {showBestStreak && (
+        {showBestStreak && !isPaused && (
           <Text
             className='mt-0.5 text-[13px] font-medium'
             style={{ color: '#a8a29e' }}
@@ -88,7 +103,27 @@ export function CardHeader({
             Best: {bestStreak} days
           </Text>
         )}
+        {isPaused && (
+          <Text
+            className='mt-0.5 text-[13px] font-medium'
+            style={{ color: '#9ca3af' }}
+          >
+            Paused {habit.pausedAt ? formatPauseDate(habit.pausedAt) : ''}
+          </Text>
+        )}
       </View>
     </View>
   );
+}
+
+function formatPauseDate(timestamp: number): string {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffTime = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 0) return 'today';
+  if (diffDays === 1) return 'yesterday';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  return date.toLocaleDateString();
 }

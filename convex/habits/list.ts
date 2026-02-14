@@ -1,6 +1,7 @@
 /**
  * List Habits Query
- * Fetch all active habits for the authenticated user
+ * Fetch all active habits for the authenticated user, including paused habits
+ * Paused habits are included but marked - UI should handle them differently
  */
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
@@ -20,13 +21,17 @@ export const list = query({
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .collect();
 
-    // Filter out archived and paused habits in JS after index narrowing
-    const activeHabits = habits.filter(
-      (h) => h.archived !== true && h.paused !== true
-    );
+    // Filter out only archived habits - include paused habits in the list
+    // UI will handle paused habits with dimmed appearance and "Paused" badge
+    const activeHabits = habits.filter((h) => h.archived !== true);
 
     // Sort by order field (ascending), use _creationTime as fallback
+    // Paused habits go to the end
     const sortedHabits = activeHabits.sort((a, b) => {
+      // Paused habits always go after active habits
+      if (a.paused && !b.paused) return 1;
+      if (!a.paused && b.paused) return -1;
+      
       const aOrder = a.order ?? Infinity;
       const bOrder = b.order ?? Infinity;
       if (aOrder !== bOrder) return aOrder - bOrder;

@@ -25,7 +25,9 @@ function DraggableHabit(props: DraggableHabitProps) {
     onArchive,
     onEntranceComplete,
     onLongPress,
+    onPause,
     onPress,
+    onResume,
     onWeekComplete,
     previousStreak,
     reduceMotionPreference,
@@ -99,6 +101,11 @@ function DraggableHabit(props: DraggableHabitProps) {
       isConnectedToNextWeek={isConnectedToNextWeek}
       isConnectedToPreviousWeek={isConnectedToPreviousWeek}
       isDark={isDark}
+      onArchive={onArchive}
+      onPause={onPause}
+      onPress={onPress}
+      onResume={onResume}
+      onWeekComplete={onWeekComplete}
       progressAnimatedStyle={progressAnimatedStyle}
       reduceMotionPreference={reduceMotionPreference}
       showConnectors={showConnectors}
@@ -110,9 +117,6 @@ function DraggableHabit(props: DraggableHabitProps) {
       toggleHabit={toggleHabit}
       weekDateStrings={weekDateStrings}
       weekStatus={weekStatus}
-      onArchive={onArchive}
-      onPress={onPress}
-      onWeekComplete={onWeekComplete}
     />
   );
 }

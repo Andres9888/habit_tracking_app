@@ -25,6 +25,8 @@ type HabitRenderContentProps = {
   | 'entranceVariant'
   | 'handleArchive'
   | 'handleHabitPress'
+  | 'handlePause'
+  | 'handleResume'
   | 'highlightHabitId'
   | 'isReorderingEnabled'
   | 'notifyWeekCompletion'
@@ -51,6 +53,8 @@ function HabitRenderContentComponent({
   entranceVariant,
   handleArchive,
   handleHabitPress,
+  handlePause,
+  handleResume,
   highlightHabitId,
   isReorderingEnabled,
   notifyWeekCompletion,
@@ -99,7 +103,9 @@ function HabitRenderContentComponent({
           onArchive={handleArchive}
           onEntranceComplete={handleEntranceComplete}
           onLongPress={handleLongPress}
+          onPause={handlePause}
           onPress={handleHabitPress}
+          onResume={handleResume}
           onWeekComplete={handleWeekComplete}
         />
       </View>

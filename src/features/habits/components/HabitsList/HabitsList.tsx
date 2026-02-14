@@ -44,6 +44,8 @@ export function HabitsList(props: HabitsListProps) {
     getStreak: list.getStreak,
     handleArchive: list.handleArchive,
     handleHabitPress: list.handleHabitPress,
+    handlePause: list.handlePause,
+    handleResume: list.handleResume,
     highlightHabitId: state.justCreatedHabitId,
     isReorderingEnabled: handlers.isReorderingEnabled,
     notifyWeekCompletion: list.notifyWeekCompletion,

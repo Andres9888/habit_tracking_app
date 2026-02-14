@@ -29,6 +29,8 @@ export function useHabitsListState(): HabitsListState {
   const isOnline = useIsOnline();
   const toggleHabitMutation = useToggleHabitWithTimezone();
   const reorderHabits = useMutation(api.habits.reorderHabits);
+  const pauseHabitMutation = useMutation(api.habits.pause);
+  const resumeHabitMutation = useMutation(api.habits.resume);
 
   const habitsQuery = useQuery(api.habits.list);
   const habitsFromQuery = habitsQuery ?? [];
@@ -80,6 +82,20 @@ export function useHabitsListState(): HabitsListState {
     // Handled by parent component
   }, []);
 
+  const handlePause = useCallback(
+    async (habitId: Id<'habits'>, pausedUntil?: number) => {
+      await pauseHabitMutation({ habitId, pausedUntil });
+    },
+    [pauseHabitMutation]
+  );
+
+  const handleResume = useCallback(
+    async (habitId: Id<'habits'>) => {
+      await resumeHabitMutation({ habitId });
+    },
+    [resumeHabitMutation]
+  );
+
   // Wrap toggle mutation with optimistic update for immediate feedback
   // Pass isOnline for offline queue integration (T011)
   const toggleHabit = useOptimisticToggleMutation(
@@ -111,7 +127,9 @@ export function useHabitsListState(): HabitsListState {
     handleDragEnd,
     handleHabitPress,
     handleNextWeek: weekDatesState.handleNextWeek,
+    handlePause,
     handlePreviousWeek: weekDatesState.handlePreviousWeek,
+    handleResume,
     isPremiumUser,
     openCreateHabitScreen,
     reduceMotionPreference,

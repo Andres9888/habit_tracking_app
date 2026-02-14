@@ -14,6 +14,8 @@ export interface UseHabitRenderItemArgs {
   getStreak: (habitId: string) => number;
   handleArchive: (habitId: Id<'habits'>) => Promise<void> | void;
   handleHabitPress: (habit: Habit) => void;
+  handlePause?: (habitId: Id<'habits'>) => Promise<void> | void;
+  handleResume?: (habitId: Id<'habits'>) => Promise<void> | void;
   highlightHabitId?: Id<'habits'> | null;
   isReorderingEnabled: boolean;
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
