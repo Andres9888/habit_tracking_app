@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from 'convex/react';
 import { Alert } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { useToast } from '../Toast';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 
@@ -13,6 +14,7 @@ export const useArchivedHabitsModalLogic = () => {
   const unarchiveHabit = useMutation(api.habits.unarchive);
   const removeHabit = useMutation(api.habits.remove);
   const deleteAllArchivedMutation = useMutation(api.habits.deleteAllArchived);
+  const toast = useToast();
 
   const handleRestore = async (
     habitId: Id<'habits'>,
@@ -28,10 +30,7 @@ export const useArchivedHabitsModalLogic = () => {
     } catch (error) {
       if (__DEV__) console.error('Failed to restore habit:', error);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      Alert.alert(
-        'Error',
-        `Failed to restore "${habitName}". Please try again.`
-      );
+      toast.error('Restore Failed', `Failed to restore "${habitName}". Please try again.`);
       return false;
     }
   };
@@ -57,10 +56,7 @@ export const useArchivedHabitsModalLogic = () => {
             } catch (error) {
               if (__DEV__) console.error('Failed to delete habit:', error);
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-              Alert.alert(
-                'Error',
-                `Failed to delete "${habitName}". Please try again.`
-              );
+              toast.error('Delete Failed', `Failed to delete "${habitName}". Please try again.`);
             }
           },
           style: 'destructive',

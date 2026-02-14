@@ -11,7 +11,8 @@
  * - Handles all edge cases (loading, errors, restore)
  */
 
-import { Platform, Modal, View, Text, Pressable, Alert } from 'react-native';
+import { Platform, Modal, View, Text, Pressable } from 'react-native';
+import { useToast } from '../Toast';
 import RevenueCatUI from 'react-native-purchases-ui';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { RevenueCatPaywallProps } from './types';
@@ -28,8 +29,12 @@ export function RevenueCatPaywall({
   onPurchaseSuccess,
   onRestoreSuccess,
 }: RevenueCatPaywallProps) {
+<<<<<<< HEAD
   const { colors } = useThemeColors();
 
+=======
+  const toast = useToast();
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
   // Web fallback - RevenueCat UI doesn't work on web
   if (Platform.OS === 'web') {
     if (!visible) return null;
@@ -99,7 +104,11 @@ export function RevenueCatPaywall({
         onPurchaseError={({ error }) => {
           if (__DEV__)
             console.error('[RevenueCatPaywall] Purchase error:', error);
+<<<<<<< HEAD
           Alert.alert('Purchase Failed', 'Your payment couldn\u2019t be processed. Please check your payment method and try again.');
+=======
+          toast.error('Purchase Failed', 'Please try again.');
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
         }}
         onRestoreCompleted={({ customerInfo }) => {
           if (__DEV__)
@@ -110,7 +119,11 @@ export function RevenueCatPaywall({
         onRestoreError={({ error }) => {
           if (__DEV__)
             console.error('[RevenueCatPaywall] Restore error:', error);
+<<<<<<< HEAD
           Alert.alert('Restore Failed', 'We couldn\u2019t find your previous purchases. Please try again or contact support.');
+=======
+          toast.error('Restore Failed', 'Please try again.');
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
         }}
       />
     </Modal>

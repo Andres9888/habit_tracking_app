@@ -5,6 +5,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
+import { useToast } from '../Toast';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { PremiumStatus } from './sections/PremiumStatus';
@@ -30,6 +31,7 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const userEmail = user?.primaryEmailAddress?.emailAddress;
+  const toast = useToast();
 
   const handleDeleteAccount = useCallback(() => {
     Alert.alert(
@@ -64,7 +66,11 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
         onPress: () => {
           setIsSigningOut(true);
           void signOut()
+<<<<<<< HEAD
             .catch(() => Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_OUT_FAILED))
+=======
+            .catch(() => toast.error('Sign Out Failed', 'Please try again.'))
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
             .finally(() => setIsSigningOut(false));
         },
         style: 'destructive',

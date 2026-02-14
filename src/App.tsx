@@ -23,6 +23,15 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
+<<<<<<< HEAD
+=======
+import { PurchasesProvider } from './components/providers/PurchasesProvider';
+import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration';
+import { ToastProvider } from './components/Toast';
+import { ToastContainer } from './components/Toast';
+import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
+import { SyncStatusProvider } from './contexts/SyncStatusContext';
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
 import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
@@ -98,9 +107,26 @@ function CoreProviders({ children }: PropsWithChildren) {
             <SentryUserSync>
               <ConvexClerkProvider>
                 <ThemeColorProvider>
+<<<<<<< HEAD
                   <LazyProviders>
                     {children}
                   </LazyProviders>
+=======
+                  <NetworkStatusProvider>
+                    <OfflineProvider>
+                      <SyncStatusProvider>
+                        <PurchasesProvider>
+                          <StreakMilestoneProvider>
+                            <ToastProvider>
+                              {children}
+                              <ToastContainer />
+                            </ToastProvider>
+                          </StreakMilestoneProvider>
+                        </PurchasesProvider>
+                      </SyncStatusProvider>
+                    </OfflineProvider>
+                  </NetworkStatusProvider>
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
                 </ThemeColorProvider>
               </ConvexClerkProvider>
             </SentryUserSync>

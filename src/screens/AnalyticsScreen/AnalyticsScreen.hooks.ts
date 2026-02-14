@@ -1,8 +1,13 @@
 /**
  * Business logic hooks for AnalyticsScreen
  */
+<<<<<<< HEAD
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Alert } from 'react-native';
+=======
+import { useState, useCallback } from 'react';
+import { useToast } from '../../components/Toast';
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { exportData, prepareExportData } from '../../utils/exportData';
@@ -30,6 +35,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const weeklyInsightsRaw = useQuery(api.analytics.getWeeklyInsights);
   const weeklyInsights = (weeklyInsightsRaw && 'weekOverWeekChange' in weeklyInsightsRaw ? weeklyInsightsRaw : undefined) as import('../../components/WeeklyInsightsCard').WeeklyInsights | undefined;
 
+  const toast = useToast();
   const isLoading = !overviewStats;
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -87,18 +93,10 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
         const exportDataObj = await prepareExportData([], [], overviewStats);
         await exportData(exportDataObj, format);
 
-        Alert.alert(
-          'Success',
-          `Data exported successfully as ${format.toUpperCase()}`,
-          [{ text: 'OK' }]
-        );
+        toast.success('Export Complete', `Data exported as ${format.toUpperCase()}`);
       } catch (error) {
         if (__DEV__) console.error('Export error:', error);
-        Alert.alert(
-          'Export Failed',
-          error instanceof Error ? error.message : 'Unable to export data',
-          [{ text: 'OK' }]
-        );
+        toast.error('Export Failed', error instanceof Error ? error.message : 'Unable to export data');
       }
     },
     [overviewStats]

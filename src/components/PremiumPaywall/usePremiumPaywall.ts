@@ -5,8 +5,13 @@
  */
 
 import { useCallback, useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { Alert } from 'react-native';
 import { useSharedValue, useAnimatedStyle, withTiming, type AnimatedStyle } from 'react-native-reanimated';
+=======
+import { useToast } from '../Toast';
+import { useSharedValue, useAnimatedStyle, withTiming, type AnimatedStyleProp } from 'react-native-reanimated';
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
 import type { ViewStyle } from 'react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { usePremium } from '../../hooks/usePremium';
@@ -38,6 +43,7 @@ export interface PremiumPaywallHandlers {
 }
 
 export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePurchases }: Params) {
+  const toast = useToast();
   const { triggerSelection, triggerLightImpact, triggerSuccess } = useHapticFeedback({});
   const { monthlyPackage, packages, priceString, isLoadingOfferings, purchasePackage } =
     usePremium();
@@ -84,11 +90,15 @@ export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePur
         }
       }
     } catch {
+<<<<<<< HEAD
       Alert.alert(
         'Premium Activation Failed',
         'We couldn\u2019t activate your premium subscription. Please check your payment method and try again.',
         [{ text: 'OK' }]
       );
+=======
+      toast.error('Something Went Wrong', 'Please try again.');
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
     } finally {
       setIsProcessing(false);
     }

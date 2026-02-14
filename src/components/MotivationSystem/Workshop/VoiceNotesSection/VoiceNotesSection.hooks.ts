@@ -3,8 +3,8 @@
  */
 
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { useToast } from '../../../../components/Toast';
 import { useAudioRecording } from '../../../../hooks/useAudioRecording';
 import { MAX_RECORDING_DURATION, FREE_TIER_MAX_NOTES } from './VoiceNotesSection.constants';
 
@@ -23,6 +23,7 @@ export function useVoiceNotesSection({
 }: UseVoiceNotesSectionOptions) {
   const [isDay1Recording, setIsDay1Recording] = useState(false);
   const canRecord = isPremium || voiceNoteCount < FREE_TIER_MAX_NOTES;
+  const toast = useToast();
 
   const recording = useAudioRecording({
     maxDurationSeconds: MAX_RECORDING_DURATION,
@@ -38,7 +39,7 @@ export function useVoiceNotesSection({
         recording.reset();
         setIsDay1Recording(false);
       } catch {
-        Alert.alert('Error', 'Failed to save recording. Please try again.');
+        toast.error('Recording Failed', 'Failed to save recording. Please try again.');
       }
     },
     onWarningThresholdReached: (secondsRemaining) => {

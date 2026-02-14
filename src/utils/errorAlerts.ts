@@ -1,18 +1,33 @@
 /**
  * User-facing error alerts for failed mutations.
+<<<<<<< HEAD
  * Keeps mutation handlers lean while providing consistent UX feedback.
  *
  * All alerts now accept an optional `onRetry` callback so users can
  * recover from transient failures without navigating away.
+=======
+ * Now uses the toast notification system for consistent UX.
+ *
+ * These are standalone functions that use the imperative toast API
+ * for use outside of React components (or when you don't have hook access).
+ * For components, prefer `useToast()` directly.
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
  */
 import { Alert } from 'react-native';
 import { ERROR_MESSAGES } from '../constants/errorMessages';
 
 /**
+<<<<<<< HEAD
  * Show an alert for save failures.
  * @param onRetry - Optional callback to retry the failed action
  */
 export function showSaveError(onRetry?: () => void) {
+=======
+ * @deprecated Use `useToast().error()` inside components instead.
+ * Kept as fallback for non-component contexts.
+ */
+export function showSaveError() {
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
   Alert.alert(
     'Save Failed',
     ERROR_MESSAGES.DATA_OPS.SAVE_FAILED,
@@ -23,10 +38,17 @@ export function showSaveError(onRetry?: () => void) {
 }
 
 /**
+<<<<<<< HEAD
  * Show an alert for habit creation failures.
  * @param onRetry - Optional callback to retry the failed action
  */
 export function showCreateError(onRetry?: () => void) {
+=======
+ * @deprecated Use `useToast().error()` inside components instead.
+ * Kept as fallback for non-component contexts.
+ */
+export function showCreateError() {
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
   Alert.alert(
     "Couldn't Create Habit",
     ERROR_MESSAGES.DATA_OPS.CREATE_HABIT_FAILED,
@@ -37,10 +59,17 @@ export function showCreateError(onRetry?: () => void) {
 }
 
 /**
+<<<<<<< HEAD
  * Show an alert for sync failures (offline mode).
  * @param onRetry - Optional callback to retry immediately
  */
 export function showSyncError(onRetry?: () => void) {
+=======
+ * @deprecated Use `useToast().error()` inside components instead.
+ * Kept as fallback for non-component contexts.
+ */
+export function showSyncError() {
+>>>>>>> b9378cd5 (feat(ui): add app-wide toast notification system)
   Alert.alert(
     'Sync Failed',
     ERROR_MESSAGES.SYNC.FAILED,

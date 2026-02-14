@@ -3,7 +3,7 @@
  */
 
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
+import { useToast } from '../Toast';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { usePremium } from '../../hooks/usePremium';
 
@@ -16,6 +16,7 @@ export function useRestorePurchases({ onClose, onRestorePurchases }: UseRestoreP
   const { triggerLightImpact, triggerSuccess, triggerError } = useHapticFeedback({});
   const { restorePurchases: defaultRestore } = usePremium();
   const [isRestoring, setIsRestoring] = useState(false);
+  const toast = useToast();
 
   const handleRestorePurchases = useCallback(async () => {
     if (isRestoring) return;
@@ -28,17 +29,14 @@ export function useRestorePurchases({ onClose, onRestorePurchases }: UseRestoreP
       const success = await restoreFn();
       if (success) {
         triggerSuccess();
-        Alert.alert('✓ Purchases Restored', 'Your premium subscription has been restored!', [
-          { onPress: () => onClose(), text: 'Great!' },
-        ]);
+        toast.success('Purchases Restored', 'Your premium subscription has been restored!');
+        onClose();
       } else {
-        Alert.alert('No Purchases Found', "We couldn't find any previous purchases.", [
-          { text: 'OK' },
-        ]);
+        toast.info('No Purchases Found', "We couldn't find any previous purchases.");
       }
     } catch {
       triggerError?.();
-      Alert.alert('Restore Failed', 'Please try again or contact support.', [{ text: 'OK' }]);
+      toast.error('Restore Failed', 'Please try again or contact support.');
     } finally {
       setIsRestoring(false);
     }
