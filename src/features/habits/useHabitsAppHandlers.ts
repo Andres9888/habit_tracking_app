@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import { logInteraction } from '../../lib/analytics/interactions';
+import { getSentryReporter } from '../../lib/sentry';
 
 interface UseHabitsAppHandlersParams {
   openCreateHabitScreen: () => void;
@@ -19,13 +20,19 @@ export function useHabitsAppHandlers({
 }: UseHabitsAppHandlersParams) {
   const [upgradePromptVisible, setUpgradePromptVisible] = useState(false);
   const [paywallVisible, setPaywallVisible] = useState(false);
+  const reporter = getSentryReporter();
 
   const handleUpgradeIntent = useCallback(() => {
     logInteraction('premium_home_cta_view', { source: 'home_hero' });
+    reporter.addBreadcrumb({
+      category: 'paywall',
+      message: 'Paywall viewed',
+      data: { source: 'home_hero' },
+    });
     triggerSelection();
     // Go directly to paywall — skip intermediate prompt to reduce conversion friction
     setPaywallVisible(true);
-  }, [triggerSelection]);
+  }, [triggerSelection, reporter]);
 
   const handleUpgradeDismiss = useCallback(() => {
     setUpgradePromptVisible(false);
@@ -33,10 +40,15 @@ export function useHabitsAppHandlers({
 
   const handleUpgradeConfirm = useCallback(() => {
     logInteraction('premium_upgrade_cta', { source: 'home_prompt' });
+    reporter.addBreadcrumb({
+      category: 'paywall',
+      message: 'Paywall viewed',
+      data: { source: 'home_prompt' },
+    });
     triggerSelection();
     setUpgradePromptVisible(false);
     setPaywallVisible(true);
-  }, [triggerSelection]);
+  }, [triggerSelection, reporter]);
 
   const handlePaywallClose = useCallback(() => {
     setPaywallVisible(false);
@@ -44,8 +56,13 @@ export function useHabitsAppHandlers({
 
   const handlePaywallSuccess = useCallback(() => {
     logInteraction('premium_purchase_success', { source: 'home_prompt' });
+    reporter.addBreadcrumb({
+      category: 'purchase',
+      message: 'Premium purchase completed',
+      data: { source: 'home_prompt' },
+    });
     setPaywallVisible(false);
-  }, []);
+  }, [reporter]);
 
   const handleCreateHabitRequest = useCallback(() => {
     if (!isPremiumUser && hasReachedHabitLimit) {

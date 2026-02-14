@@ -24,6 +24,7 @@ import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration
 import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
 import { SyncStatusProvider } from './contexts/SyncStatusContext';
 import { tokenCache } from './lib/appConfig';
+import * as Sentry from '@sentry/react-native';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { OfflineProvider } from './providers/OfflineProvider';
@@ -70,10 +71,12 @@ function Providers({ children }: PropsWithChildren) {
   );
 }
 
-export default function App() {
+function App() {
   return (
     <Providers>
       <AuthGate />
     </Providers>
   );
 }
+
+export default Sentry.wrap(App);

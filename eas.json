@@ -13,12 +13,16 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+        "SENTRY_ORG": "__YOUR_SENTRY_ORG__",
+        "SENTRY_PROJECT": "__YOUR_SENTRY_PROJECT__",
+        "SENTRY_AUTH_TOKEN": "__YOUR_SENTRY_AUTH_TOKEN__"
       }
     },
     "production": {
       "env": {
-        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+        "SENTRY_ORG": "__YOUR_SENTRY_ORG__",
+        "SENTRY_PROJECT": "__YOUR_SENTRY_PROJECT__",
+        "SENTRY_AUTH_TOKEN": "__YOUR_SENTRY_AUTH_TOKEN__"
       }
     }
   },
