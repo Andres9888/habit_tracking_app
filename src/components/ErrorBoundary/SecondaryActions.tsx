@@ -16,11 +16,21 @@ export function SecondaryActions({
   return (
     <View style={styles.actions}>
       {onOpenSettings && (
-        <Pressable style={styles.link} onPress={onOpenSettings}>
+        <Pressable
+          accessibilityLabel='Open app settings'
+          accessibilityRole='link'
+          style={styles.link}
+          onPress={onOpenSettings}
+        >
           <Text style={styles.linkText}>Go to Settings</Text>
         </Pressable>
       )}
-      <Pressable style={styles.link} onPress={onContactSupport}>
+      <Pressable
+        accessibilityLabel='Contact support via email'
+        accessibilityRole='link'
+        style={styles.link}
+        onPress={onContactSupport}
+      >
         <Text style={styles.linkText}>Contact Support</Text>
       </Pressable>
     </View>
