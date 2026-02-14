@@ -1,6 +1,11 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { View, Text, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
+import { spacing, borderRadius } from '../../theme/spacing';
+import { fontFamilies } from '../../theme/typography';
+import { durations } from '../../theme/animations';
 import { useStreakChainLogic } from './StreakChain.hooks';
 import type { DayStatus, StreakChainProps } from './StreakChain.types';
 
@@ -8,14 +13,13 @@ import type { DayStatus, StreakChainProps } from './StreakChain.types';
 export type { DayStatus, StreakChainProps } from './StreakChain.types';
 
 /**
- * StreakChain renders a compact chain visualization similar to the provided design.
+ * StreakChain renders a compact chain visualization.
  * - Left: label (e.g., "Reading Chain")
  * - Right: rounded pill with streak days
- * - Below: row of circles with link icon, connected by short bars
+ * - Below: row of circles connected by short bars
  *
- * Design language:
- * - Typography and colors align with existing app styles (#1c1917 titles, #78716c secondary, #e7e5e4 borders)
- * - Primary color uses #3B82F6 (blue)
+ * Now uses design system tokens for colors, typography, and spacing.
+ * Supports dark mode via ThemeContext.
  */
 export default function StreakChain({
   label,
@@ -26,60 +30,155 @@ export default function StreakChain({
     statuses,
     size
   );
+  const { colors, isDark } = useThemeColors();
+
+  // Derive colors from theme
+  const doneCircleBg = colors.primary[500];
+  const doneCircleIcon = isDark ? colors.gray[900] : '#FFFFFF';
+  const pendingCircleBg = colors.gray[200];
+  const pendingCircleIcon = colors.gray[400];
+  const activeConnector = colors.primary[300];
+  const inactiveConnector = colors.gray[200];
+  const pillBg = isDark ? colors.primary[100] : colors.primary[100];
+  const pillText = colors.primary[700];
 
   return (
-    <View className='pb-3 pt-1'>
-      <View className='mb-2 flex-row items-center justify-between'>
-        <Text className='text-base font-bold tracking-tight text-stone-900'>
+    <View style={localStyles.container}>
+      {/* Header row */}
+      <View style={localStyles.headerRow}>
+        <Text
+          style={[
+            localStyles.label,
+            { color: colors.text.primary },
+          ]}
+        >
           {label}
         </Text>
         <View
           accessibilityLabel={`${streakDays} days`}
-          className='rounded-full bg-indigo-50 px-2.5 py-1'
+          style={[
+            localStyles.pill,
+            { backgroundColor: pillBg },
+          ]}
         >
-          <Text className='text-xs font-semibold text-stone-900'>
-            {streakDays} days
+          <Ionicons
+            color={pillText}
+            name="flame-outline"
+            size={12}
+            style={localStyles.pillIcon}
+          />
+          <Text
+            style={[
+              localStyles.pillText,
+              { color: pillText },
+            ]}
+          >
+            {streakDays} {streakDays === 1 ? 'day' : 'days'}
           </Text>
         </View>
       </View>
 
-      <View className='flex-row items-center'>
+      {/* Chain row */}
+      <View style={localStyles.chainRow}>
         {statuses.map((status, idx) => {
           const isDone = status === 'done';
-          const isFuture = status === 'planned'; // treat planned as future/disabled
+          const isFuture = status === 'planned';
           const connectorActive = idx < statuses.length - 1 && isDone;
 
           return (
-            <View key={idx} className='flex-row items-center'>
+            <Animated.View
+              key={idx}
+              entering={FadeIn.delay(idx * durations.stagger).duration(durations.enter)}
+              style={localStyles.chainLink}
+            >
               <View
-                className='items-center justify-center'
-                style={{
-                  backgroundColor: isDone ? '#3B82F6' : '#E5E7EB',
-                  borderRadius: circleSize / 2,
-                  height: circleSize,
-                  opacity: isFuture ? 0.5 : 1,
-                  width: circleSize,
-                }}
+                style={[
+                  localStyles.circle,
+                  {
+                    backgroundColor: isDone ? doneCircleBg : pendingCircleBg,
+                    borderRadius: circleSize / 2,
+                    height: circleSize,
+                    opacity: isFuture ? 0.45 : 1,
+                    width: circleSize,
+                  },
+                ]}
               >
-                <Feather
-                  color={isDone ? '#FFFFFF' : '#64748B'}
-                  name='link-2'
+                <Ionicons
+                  color={isDone ? doneCircleIcon : pendingCircleIcon}
+                  name={isDone ? 'link' : 'ellipse-outline'}
                   size={iconSize}
                 />
               </View>
 
               {idx < statuses.length - 1 && (
                 <View
-                  className='mx-1.5 h-0.5 w-[18px] rounded-sm'
-                  style={{
-                    backgroundColor: connectorActive ? '#93C5FD' : '#E5E7EB',
-                  }}
+                  style={[
+                    localStyles.connector,
+                    {
+                      backgroundColor: connectorActive
+                        ? activeConnector
+                        : inactiveConnector,
+                    },
+                  ]}
                 />
               )}
-            </View>
+            </Animated.View>
           );
         })}
       </View>
     </View>
   );
 }
+
+const localStyles = StyleSheet.create({
+  chainLink: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  chainRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  circle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  connector: {
+    borderRadius: borderRadius.xs,
+    height: 2,
+    marginHorizontal: spacing.xs + 2, // 6px
+    width: 18,
+  },
+  container: {
+    paddingBottom: spacing.md,
+    paddingTop: spacing.xs,
+  },
+  headerRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: spacing.sm,
+  },
+  label: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: -0.3,
+    lineHeight: 22,
+  },
+  pill: {
+    alignItems: 'center',
+    borderRadius: borderRadius.full,
+    flexDirection: 'row',
+    paddingHorizontal: spacing.sm + 2, // 10px
+    paddingVertical: spacing.xs,
+  },
+  pillIcon: {
+    marginRight: 3,
+  },
+  pillText: {
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: -0.1,
+  },
+});

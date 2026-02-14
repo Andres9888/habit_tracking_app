@@ -1,10 +1,10 @@
 /**
  * DayCircle Component
- * Individual day indicator in the 7-day streak chain
+ * Individual day indicator in the 7-day streak chain — theme-aware
  */
 
 import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -16,7 +16,9 @@ import Animated, {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
-import { Check, Zap } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useThemeColors } from '../../theme/ThemeContext';
+import { colors as palette } from '../../theme/colors';
 import type { DayCircleProps } from './types';
 
 export function DayCircle({
@@ -26,6 +28,7 @@ export function DayCircle({
   label,
   todayCompleted,
 }: DayCircleProps) {
+  const { colors, isDark } = useThemeColors();
   const scale = useSharedValue(0);
   const opacity = useSharedValue(0);
   const pulse = useSharedValue(1);
@@ -66,30 +69,60 @@ export function DayCircle({
     ],
   }));
 
-  const circleClass = completed
-    ? 'bg-emerald-500'
+  // Circle colors
+  const circleBg = completed
+    ? palette.primary[500]
     : isToday
-      ? 'border-2 border-amber-400 bg-amber-50'
-      : 'bg-stone-100';
+      ? isDark ? 'rgba(217, 119, 6, 0.15)' : palette.streak[100]
+      : isDark ? colors.gray[200] : colors.gray[50];
 
+  const circleBorder = isToday && !completed
+    ? palette.streak[500]
+    : undefined;
+
+  // Label colors
   const labelColor = isToday
-    ? 'text-amber-600'
+    ? palette.streak[600]
     : completed
-      ? 'text-emerald-600'
-      : 'text-stone-400';
+      ? palette.primary[600]
+      : colors.text.tertiary;
 
   return (
-    <Animated.View className='flex-1 items-center' style={animatedStyle}>
+    <Animated.View style={[localStyles.wrapper, animatedStyle]}>
       <View
-        className={`mb-1.5 h-10 w-10 items-center justify-center rounded-full ${circleClass}`}
+        style={[
+          localStyles.circle,
+          { backgroundColor: circleBg },
+          circleBorder ? { borderColor: circleBorder, borderWidth: 2 } : undefined,
+        ]}
       >
         {completed ? (
-          <Check className='text-white' size={20} strokeWidth={3} />
+          <Ionicons color="#FFFFFF" name="checkmark" size={20} />
         ) : isToday ? (
-          <Zap className='text-amber-500' fill='#f59e0b' size={18} />
+          <Ionicons color={palette.streak[500]} name="flash" size={18} />
         ) : null}
       </View>
-      <Text className={`text-[10px] font-medium ${labelColor}`}>{label}</Text>
+      <Text style={[localStyles.label, { color: labelColor }]}>{label}</Text>
     </Animated.View>
   );
 }
+
+const localStyles = StyleSheet.create({
+  circle: {
+    alignItems: 'center',
+    borderRadius: 20,
+    height: 40,
+    justifyContent: 'center',
+    marginBottom: 6,
+    width: 40,
+  },
+  label: {
+    fontSize: 10,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  wrapper: {
+    alignItems: 'center',
+    flex: 1,
+  },
+});

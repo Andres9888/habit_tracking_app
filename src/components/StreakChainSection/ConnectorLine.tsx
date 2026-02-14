@@ -1,9 +1,10 @@
 /**
  * ConnectorLine Component
- * Animated connector between day circles in the streak chain
+ * Animated connector between day circles in the streak chain — theme-aware
  */
 
 import React, { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -11,9 +12,13 @@ import Animated, {
   withSpring,
   cancelAnimation,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
+import { colors as palette } from '../../theme/colors';
+import { borderRadius } from '../../theme/spacing';
 import type { ConnectorLineProps } from './types';
 
 export function ConnectorLine({ active, index }: ConnectorLineProps) {
+  const { colors } = useThemeColors();
   const scaleX = useSharedValue(0);
 
   useEffect(() => {
@@ -28,10 +33,26 @@ export function ConnectorLine({ active, index }: ConnectorLineProps) {
     transform: [{ scaleX: scaleX.value }],
   }));
 
+  const lineColor = active ? palette.primary[300] : colors.gray[200];
+
   return (
     <Animated.View
-      className={`absolute top-5 h-1.5 rounded-full ${active ? 'bg-emerald-300' : 'bg-stone-200'}`}
-      style={[{ left: '55%', right: '-55%' }, animatedStyle]}
+      style={[
+        localStyles.line,
+        { backgroundColor: lineColor },
+        animatedStyle,
+      ]}
     />
   );
 }
+
+const localStyles = StyleSheet.create({
+  line: {
+    borderRadius: borderRadius.full,
+    height: 6,
+    left: '55%',
+    position: 'absolute',
+    right: '-55%',
+    top: 20,
+  },
+});

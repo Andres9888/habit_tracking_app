@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { spacing } from '../../theme/spacing';
 import { DayCircle } from './DayCircle';
 import { ConnectorLine } from './ConnectorLine';
 
@@ -20,9 +21,9 @@ export function ChainRow({
   todayCompleted,
 }: ChainRowProps) {
   return (
-    <View className='mb-4 flex-row items-start'>
+    <View style={localStyles.row}>
       {chainData.map((day, idx) => (
-        <View key={idx} className='relative flex-1'>
+        <View key={idx} style={localStyles.dayWrapper}>
           {idx < chainData.length - 1 && (
             <ConnectorLine
               active={day.completed && chainData[idx + 1].completed}
@@ -41,3 +42,15 @@ export function ChainRow({
     </View>
   );
 }
+
+const localStyles = StyleSheet.create({
+  dayWrapper: {
+    flex: 1,
+    position: 'relative',
+  },
+  row: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    marginBottom: spacing.base,
+  },
+});
