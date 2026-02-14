@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 /** SettingsContent - Stagger animations, stone-100 bg, 12px version */
 import {
+  BarChart3,
   Moon,
   BookOpen,
   Check,
@@ -143,6 +144,14 @@ export function SettingsContent(p: SettingsContentProps) {
         </Animated.View>
         <Animated.View entering={anim(100)}>
           <SettingsSection highContrastMode={hc} title='Habit Management'>
+            <SettingsRow
+              highContrastMode={hc}
+              icon={<BarChart3 color='#059669' size={16} />}
+              iconBackgroundColor='#d1fae5'
+              label='Weekly Summary'
+              type='navigation'
+              onPress={p.onOpenWeeklySummary}
+            />
             <SettingsRow
               highContrastMode={hc}
               icon={<BookOpen color='#78716c' size={16} />}

@@ -7,6 +7,7 @@ import { Modal, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
+import { WeeklySummaryScreen } from '../../screens/WeeklySummaryScreen';
 import { SettingsModalSkeleton } from '../SkeletonLoader';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
@@ -64,6 +65,18 @@ function SettingsModalContent({
     );
   }
 
+  if (view === 'weeklySummary') {
+    return (
+      <Modal
+        animationType='slide'
+        visible={visible}
+        onRequestClose={handleClose}
+      >
+        <WeeklySummaryScreen onBack={() => setView('settings')} />
+      </Modal>
+    );
+  }
+
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={handleClose}>
       <View
@@ -95,6 +108,7 @@ function SettingsModalContent({
               onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
+              onOpenWeeklySummary={() => setView('weeklySummary')}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
             />
