@@ -13,13 +13,12 @@ export function generateXAxisLabels(
   dimensions: ChartDimensions
 ): XAxisLabel[] {
   const { paddingLeft, chartWidth } = dimensions;
-  const labels: XAxisLabel[] = [];
-
-  // Always show Start and Now
-  labels.push(
+  const labels: XAxisLabel[] = [ 
     { text: 'Start', x: paddingLeft },
     { text: 'Now', x: paddingLeft + chartWidth }
-  );
+  ];
+
+  // Always show Start and Now
 
   // Add intermediate labels based on duration
   if (historyDays >= 365) {

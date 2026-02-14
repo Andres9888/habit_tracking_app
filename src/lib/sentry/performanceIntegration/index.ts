@@ -32,6 +32,7 @@ export function reportPerformanceSummary(report: PerformanceReport): void {
 
 /** Create a callback for PerformanceProvider's onPerformanceIssue */
 export function createSentryIssueHandler(): (issue: PerformanceIssue) => void {
+  // eslint-disable-next-line unicorn/consistent-function-scoping -- factory pattern
   return (issue: PerformanceIssue) => {
     const reporter = getSentryReporter();
     reporter.capturePerformanceIssue(issue);

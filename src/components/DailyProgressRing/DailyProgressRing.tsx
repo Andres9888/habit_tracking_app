@@ -54,7 +54,7 @@ function DailyProgressRingComponent({
   return (
     <Animated.View entering={FadeIn.duration(280).springify().damping(18)}>
       <View
-        style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}
+        style={{ alignItems: 'center', height: size, justifyContent: 'center', width: size }}
       >
         <Svg
           height={size}
@@ -76,9 +76,9 @@ function DailyProgressRingComponent({
             cx={size / 2}
             cy={size / 2}
             fill="none"
+            origin={`${size / 2}, ${size / 2}`}
             r={radius}
             rotation="-90"
-            origin={`${size / 2}, ${size / 2}`}
             stroke="#059669"
             strokeDasharray={circumference}
             strokeLinecap="round"
@@ -87,10 +87,10 @@ function DailyProgressRingComponent({
         </Svg>
         <Text
           style={{
+            color: '#047857',
             fontFamily: FONT_FAMILY,
             fontSize: 13,
             fontWeight: '700',
-            color: '#047857',
             letterSpacing: -0.3,
           }}
         >

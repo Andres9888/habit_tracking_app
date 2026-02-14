@@ -23,10 +23,10 @@ export const VisualizationGuideButton: React.FC<
     onPress={onPress}
   >
     <LinearGradient
-      colors={['#7c3aed', '#4f46e5']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
       className='absolute inset-0 rounded-2xl'
+      colors={['#7c3aed', '#4f46e5']}
+      end={{ x: 1, y: 0 }}
+      start={{ x: 0, y: 0 }}
     />
     <Eye color={colors.text.inverse} size={18} />
     <Text className='text-sm font-semibold text-white'>

@@ -11,7 +11,7 @@ import { useCallback, useMemo } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
-import { getUserTimezone } from '../../../utils/timezone';
+import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 
 export interface UseHabitMutationsResult {
   toggleHabit: ReturnType<typeof useMutation<typeof api.habits.toggleHabit>>;
@@ -46,7 +46,7 @@ export interface UseHabitMutationsResult {
  */
 export function useHabitMutations(): UseHabitMutationsResult {
   const isOnline = useIsOnline();
-  const rawToggleHabit = useMutation(api.habits.toggleHabit);
+  const toggleHabit = useToggleHabitWithTimezone();
   const archiveHabit = useMutation(api.habits.archive);
   const pauseHabit = useMutation(api.habits.pause);
   const removeHabit = useMutation(api.habits.remove);

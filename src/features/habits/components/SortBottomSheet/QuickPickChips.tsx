@@ -1,4 +1,5 @@
-import { Pressable, ScrollView, Text } from 'react-native';
+import { Platform, Pressable, ScrollView, Text } from 'react-native';
+import * as Haptics from 'expo-haptics';
 
 import type { HabitSortMode } from '../../types';
 import { QUICK_PICK_OPTIONS } from './constants';
@@ -28,7 +29,12 @@ export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
               isSelected ? 'bg-stone-800' : 'bg-stone-100 active:bg-stone-200'
             }`}
             style={{ minHeight: 44 }}
-            onPress={() => onSelect(option.value)}
+            onPress={() => {
+              if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+              }
+              onSelect(option.value);
+            }}
           >
             <option.Icon
               color={isSelected ? '#ffffff' : '#44403c'}

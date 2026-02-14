@@ -11,9 +11,8 @@ import {
   withSpring,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { useMutation } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 interface UseHeaderToggleProps {
@@ -36,7 +35,7 @@ export function useHeaderToggle({
 
   const buttonScale = useSharedValue(1);
 
-  const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
+  const toggleCompletionMutation = useToggleHabitWithTimezone();
   const today = getTodayString();
 
   // Sync local state with prop - always trust the source of truth

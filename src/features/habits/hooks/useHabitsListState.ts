@@ -20,6 +20,7 @@ import { useRewardToast } from './useRewardToast';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
+import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import type { HabitsListState } from './types';
 
 const FREE_HABIT_LIMIT = 3;

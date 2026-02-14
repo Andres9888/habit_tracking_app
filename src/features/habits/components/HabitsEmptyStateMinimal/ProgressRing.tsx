@@ -94,14 +94,14 @@ export function ProgressRing({
   });
 
   return (
-    <View style={[styles.container, { width: size, height: size }]}>
-      <Svg width={size} height={size}>
+    <View style={[styles.container, { height: size, width: size }]}>
+      <Svg height={size} width={size}>
         {/* Background circle (gray track) */}
         <Circle
           cx={center}
           cy={center}
-          r={radius}
           fill="none"
+          r={radius}
           stroke={COLORS.stone200}
           strokeWidth={strokeWidth}
         />
@@ -111,16 +111,16 @@ export function ProgressRing({
           animatedProps={animatedProps}
           cx={center}
           cy={center}
-          r={radius}
           fill="none"
+          origin={`${center}, ${center}`}
+          r={radius}
           stroke={COLORS.emerald500}
-          strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={circumference}
+          strokeWidth={strokeWidth}
           strokeLinecap="round"
           // Rotate to start at 12 o'clock (-90 degrees)
           rotation="-90"
-          origin={`${center}, ${center}`}
         />
       </Svg>
     </View>
@@ -129,8 +129,8 @@ export function ProgressRing({
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'absolute',
   },
 });

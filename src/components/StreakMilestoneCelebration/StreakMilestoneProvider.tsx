@@ -95,10 +95,10 @@ export function StreakMilestoneProvider({
 
       if (milestone) {
         setCelebrationData({
-          milestone,
+          habitEmoji,
           habitId,
           habitName,
-          habitEmoji,
+          milestone,
           streakDays: currentStreak,
         });
       }
@@ -165,12 +165,12 @@ export function StreakMilestoneProvider({
       {/* Celebration Modal */}
       {celebrationData && (
         <StreakMilestoneCelebration
+          habitEmoji={celebrationData.habitEmoji}
+          habitName={celebrationData.habitName}
+          milestone={celebrationData.milestone}
+          streakDays={celebrationData.streakDays}
           visible={!!celebrationData}
           onClose={handleClose}
-          milestone={celebrationData.milestone}
-          habitName={celebrationData.habitName}
-          streakDays={celebrationData.streakDays}
-          habitEmoji={celebrationData.habitEmoji}
           onShare={handleShare}
         />
       )}
@@ -178,9 +178,9 @@ export function StreakMilestoneProvider({
       {/* Share Card Generator */}
       {shareData && (
         <ShareCardGenerator
+          data={shareData}
           visible={showShareCard}
           onClose={handleShareClose}
-          data={shareData}
         />
       )}
     </StreakMilestoneContext.Provider>
