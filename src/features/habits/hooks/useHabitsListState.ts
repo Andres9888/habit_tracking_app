@@ -19,6 +19,7 @@ import { useRewardToast } from './useRewardToast';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
+import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import type { HabitsListState } from './types';
 
 const FREE_HABIT_LIMIT = 3;
@@ -26,7 +27,7 @@ const FREE_HABIT_LIMIT = 3;
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
   const isOnline = useIsOnline();
-  const toggleHabitMutation = useMutation(api.habits.toggleHabit);
+  const toggleHabitMutation = useToggleHabitWithTimezone();
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
   const habitsQuery = useQuery(api.habits.list);

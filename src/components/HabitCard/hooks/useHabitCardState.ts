@@ -11,6 +11,7 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
 
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { useOfflineHabitState } from './useOfflineHabitState';
 import type { HabitCardProps } from '../HabitCard.types';
 
@@ -59,7 +60,7 @@ export function useHabitCardState(
   // instead of creating a per-card Convex subscription (getCompletionStatus).
   // This reduces WebSocket subscriptions from N to 0 for completion checks.
   const serverCompleted = completedProp;
-  const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
+  const toggleCompletionMutation = useToggleHabitWithTimezone();
 
   // Optimistic local state for instant visual feedback
   const [optimisticCompleted, setOptimisticCompleted] = useState<
