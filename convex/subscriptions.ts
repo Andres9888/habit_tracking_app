@@ -3,6 +3,9 @@ import { v } from 'convex/values';
 import { internalMutation, query } from './_generated/server';
 import { updateUserSettingsPremium } from './subscriptions/helpers';
 
+// Export premium checking utilities
+export { hasPremiumAccess, requirePremium, canAddVoiceNote, canAddVisionBoardImage, FREE_TIER_LIMITS } from './subscriptions/premiumCheck';
+
 /** Get subscription by Clerk ID */
 export const getByClerkId = query({
   args: { clerkId: v.string() },
@@ -30,7 +33,15 @@ export const getCurrentUserSubscription = query({
   },
 });
 
-/** Grant premium access (INITIAL_PURCHASE, RENEWAL, PRODUCT_CHANGE) */
+/**
+ * Grant premium access (INITIAL_PURCHASE, RENEWAL, PRODUCT_CHANGE)
+ *
+ * SEC-002: Server-side premium validation
+ * SEC-005: Premium feature gating - updates userSettings.hasPremium which gates:
+ *   - Voice notes: unlimited (vs 1 free per habit)
+ *   - Vision board: unlimited (vs 4 free per habit)
+ *   - Other premium features as defined in FREE_TIER_LIMITS
+ */
 export const grantPremium = internalMutation({
   args: {
     clerkId: v.string(),
@@ -82,7 +93,14 @@ export const grantPremium = internalMutation({
   },
 });
 
-/** Revoke premium access (CANCELLATION, EXPIRATION) */
+/**
+ * Revoke premium access (CANCELLATION, EXPIRATION)
+ *
+ * SEC-002: Server-side premium validation
+ * Updates userSettings.hasPremium which affects:
+ *   - Voice notes: limited to 1 per habit
+ *   - Vision board: limited to 4 per habit
+ */
 export const revokePremium = internalMutation({
   args: { clerkId: v.string(), eventType: v.string() },
   handler: async (ctx, { clerkId, eventType }) => {
