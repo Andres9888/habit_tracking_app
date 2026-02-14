@@ -24,6 +24,9 @@ export default tseslint.config(
       '**/*.test.tsx',
       'docs/HabitHome-FigmaCode/**',
       'e2e/**',
+      '.next/**',
+      'website/**',
+      'vite.config.ts',
     ],
   },
   {
