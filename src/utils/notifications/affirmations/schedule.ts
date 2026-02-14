@@ -77,13 +77,15 @@ export async function scheduleAffirmationDelivery({
       );
     }
 
-    // eslint-disable-next-line no-console
-    console.info('scheduleAffirmationDelivery success', {
-      affirmationId,
-      frequency,
-      notificationId,
-      scheduledTime,
-    });
+    if (__DEV__) {
+      // eslint-disable-next-line no-console
+      console.info('scheduleAffirmationDelivery success', {
+        affirmationId,
+        frequency,
+        notificationId,
+        scheduledTime,
+      });
+    }
 
     return notificationId;
   } catch (error) {

@@ -71,12 +71,14 @@ export async function scheduleLetterUnlockNotification({
       },
     });
 
-    // eslint-disable-next-line no-console
-    console.info('scheduleLetterUnlockNotification success', {
-      letterId,
-      notificationId,
-      unlockAt: new Date(unlockAt).toISOString(),
-    });
+    if (__DEV__) {
+      // eslint-disable-next-line no-console
+      console.info('scheduleLetterUnlockNotification success', {
+        letterId,
+        notificationId,
+        unlockAt: new Date(unlockAt).toISOString(),
+      });
+    }
 
     return notificationId;
   } catch (error) {

@@ -28,7 +28,7 @@ export async function cancelAffirmationDelivery(
       )
     );
 
-    if (toCancel.length > 0) {
+    if (__DEV__ && toCancel.length > 0) {
       // eslint-disable-next-line no-console
       console.info('cancelAffirmationDelivery: cancelled', {
         affirmationId,
@@ -66,7 +66,7 @@ export async function cancelAllAffirmationDeliveriesForHabit(
       )
     );
 
-    if (toCancel.length > 0) {
+    if (__DEV__ && toCancel.length > 0) {
       // eslint-disable-next-line no-console
       console.info('cancelAllAffirmationDeliveriesForHabit: cancelled', {
         count: toCancel.length,
