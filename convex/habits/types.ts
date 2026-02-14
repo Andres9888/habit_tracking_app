@@ -7,6 +7,24 @@ import { v } from 'convex/values';
 // Re-export validators for convenience
 export { fullHabitValidator, trackingRecordValidator } from './validators';
 
+/** Data export type for CSV export */
+export interface DataExport {
+  habitName: string;
+  date: string;
+  completed: boolean;
+  streak: number;
+  notes: string;
+}
+
+/** Validator for data export records */
+export const dataExportValidator = v.object({
+  habitName: v.string(),
+  date: v.string(),
+  completed: v.boolean(),
+  streak: v.number(),
+  notes: v.string(),
+});
+
 /** Create habit args validator */
 export const createHabitArgs = {
   cueAfterBehavior: v.optional(v.string()),

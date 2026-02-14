@@ -1,6 +1,7 @@
 import SettingsModal from '../../../../components/SettingsModal';
 import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders';
 import { usePremium } from '../../../../hooks/usePremium';
+import { useHabitExport } from '../../../../hooks/useHabitExport';
 import type { SettingsModalSectionProps } from './HabitsModals.types';
 
 /**
@@ -18,6 +19,7 @@ export function SettingsModalSection({
 }: SettingsModalSectionProps) {
   const streakReminders = useStreakReminderSettings();
   const { isPremium } = usePremium();
+  const { exportToCSV, isExporting } = useHabitExport();
 
   return (
     <SettingsModal
@@ -49,6 +51,8 @@ export function SettingsModalSection({
       onClose={closeSettings}
       onOpenHapticTest={openHapticTest}
       onToggleStreakReminders={streakReminders.setEnabled}
+      onExportHabitData={exportToCSV}
+      isExporting={isExporting}
     />
   );
 }

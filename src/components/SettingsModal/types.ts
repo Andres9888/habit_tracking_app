@@ -28,6 +28,8 @@ export interface SettingsModalProps {
   onToggleStreakReminders?: (value: boolean) => void | Promise<void>;
   onChangeStreakReminderTime?: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
+  onExportHabitData?: () => void;
+  isExporting?: boolean;
   isLoading?: boolean;
 }
 
@@ -66,4 +68,7 @@ export interface SettingsContentProps {
   onToggleStreakReminders: (value: boolean) => void | Promise<void>;
   onChangeStreakReminderTime: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
+  // Data export
+  onExportHabitData?: () => void;
+  isExporting?: boolean;
 }

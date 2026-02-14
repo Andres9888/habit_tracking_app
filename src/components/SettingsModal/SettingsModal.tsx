@@ -32,6 +32,8 @@ function SettingsModalContent({
   onToggleStreakReminders = () => {},
   onChangeStreakReminderTime = () => {},
   onPremiumUpsell,
+  onExportHabitData,
+  isExporting = false,
 }: SettingsModalProps) {
   const {
     darkModePreference,
@@ -102,6 +104,8 @@ function SettingsModalContent({
               onOpenArchivedHabits={() => setView('archived')}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
+              onExportHabitData={onExportHabitData}
+              isExporting={isExporting}
             />
           </>
         )}

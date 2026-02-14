@@ -5,6 +5,7 @@ import {
   BookOpen,
   Check,
   Circle,
+  Download,
   Droplets,
   Monitor,
   Sun,
@@ -149,10 +150,21 @@ export function SettingsContent(p: SettingsContentProps) {
               iconBackgroundColor='#e7e5e4'
               badge={p.archivedHabitsCount}
               label='Archived Habits'
-              showBorder={false}
               type='navigation'
               onPress={p.onOpenArchivedHabits}
             />
+            {p.isPremium && (
+              <SettingsRow
+                highContrastMode={hc}
+                icon={<Download color='#0891b2' size={16} />}
+                iconBackgroundColor='#cffafe'
+                label='Export Completion History'
+                showBorder={false}
+                type='selection'
+                value={p.isExporting ? 'Exporting...' : 'CSV'}
+                onPress={p.onExportHabitData}
+              />
+            )}
           </SettingsSection>
         </Animated.View>
         <Animated.View entering={anim(150)}>

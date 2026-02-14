@@ -39,4 +39,5 @@ export { list } from './habits/list';
 export { listArchived } from './habits/archive';
 export { listPaused } from './habits/pause';
 export { getTracking } from './habits/getTracking';
+export { getHabitCompletionHistory } from './habits/exportData';
 export { getStats } from './habits/stats';
