@@ -138,6 +138,16 @@ describe('useOfflineQueue', () => {
       expect(result).toEqual(['id1', 'id2', 'id3']);
     });
 
+    it('filters non-string values from stored index', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(['id1', 2, null, 'id3', { id: 'x' }])
+      );
+
+      const result = await loadQueueIndex();
+
+      expect(result).toEqual(['id1', 'id3']);
+    });
+
     it('handles invalid JSON gracefully', async () => {
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue('invalid json');
 
@@ -173,7 +183,9 @@ describe('useOfflineQueue', () => {
       const result = await loadQueueItem('test-id');
 
       expect(result).toBeNull();
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith('offline-queue:test-id');
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith(
+        'offline-queue:test-id'
+      );
     });
 
     it('returns parsed item', async () => {
@@ -184,7 +196,9 @@ describe('useOfflineQueue', () => {
         queuedAt: 1703849283947,
         retryCount: 0,
       };
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(item));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(item)
+      );
 
       const result = await loadQueueItem('test-id');
 
@@ -193,6 +207,32 @@ describe('useOfflineQueue', () => {
 
     it('handles invalid JSON gracefully', async () => {
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue('invalid');
+
+      const result = await loadQueueItem('test-id');
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null for invalid item shape', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify({ id: 'test-id', queuedAt: 1703849283947 })
+      );
+
+      const result = await loadQueueItem('test-id');
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null for invalid item type field', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify({
+          id: 'test-id',
+          type: 'unknown-type',
+          payload: {},
+          queuedAt: 1703849283947,
+          retryCount: 0,
+        })
+      );
 
       const result = await loadQueueItem('test-id');
 
@@ -223,11 +263,15 @@ describe('useOfflineQueue', () => {
     it('removes item from AsyncStorage', async () => {
       await removeQueueItem('test-id');
 
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith('offline-queue:test-id');
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        'offline-queue:test-id'
+      );
     });
 
     it('does not throw on removal error', async () => {
-      (AsyncStorage.removeItem as jest.Mock).mockRejectedValue(new Error('Error'));
+      (AsyncStorage.removeItem as jest.Mock).mockRejectedValue(
+        new Error('Error')
+      );
 
       // Should not throw
       await removeQueueItem('test-id');
@@ -285,13 +329,15 @@ describe('useOfflineQueue', () => {
     it('skips items that fail to load', async () => {
       (AsyncStorage.getItem as jest.Mock)
         .mockResolvedValueOnce(JSON.stringify(['id1', 'id2']))
-        .mockResolvedValueOnce(JSON.stringify({
-          id: 'id1',
-          type: 'reflection',
-          payload: {},
-          queuedAt: 1000,
-          retryCount: 0,
-        }))
+        .mockResolvedValueOnce(
+          JSON.stringify({
+            id: 'id1',
+            type: 'reflection',
+            payload: {},
+            queuedAt: 1000,
+            retryCount: 0,
+          })
+        )
         .mockResolvedValueOnce(null); // id2 fails to load
 
       const result = await loadAllQueueItems();
@@ -414,7 +460,9 @@ describe('useOfflineQueue', () => {
 
     describe('enqueue', () => {
       it('adds item to queue', async () => {
-        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify([]));
+        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+          JSON.stringify([])
+        );
 
         const { result } = renderHook(() => useOfflineQueue());
 
@@ -446,7 +494,9 @@ describe('useOfflineQueue', () => {
       it('throws when queue is full', async () => {
         // Create a queue at max capacity (50 items)
         const ids = Array.from({ length: 50 }, (_, i) => `id${i}`);
-        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(ids));
+        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+          JSON.stringify(ids)
+        );
 
         const { result } = renderHook(() =>
           useOfflineQueue({ maxQueueSize: 50 })
@@ -457,17 +507,21 @@ describe('useOfflineQueue', () => {
         });
 
         await expect(
-          result.current.enqueue('reflection', { habitId: 'h1', date: 'd1', emoji: 'happy' })
+          result.current.enqueue('reflection', {
+            habitId: 'h1',
+            date: 'd1',
+            emoji: 'happy',
+          })
         ).rejects.toThrow('Queue is full');
       });
 
       it('calls onQueueChange callback', async () => {
         const onQueueChange = jest.fn();
-        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify([]));
-
-        const { result } = renderHook(() =>
-          useOfflineQueue({ onQueueChange })
+        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+          JSON.stringify([])
         );
+
+        const { result } = renderHook(() => useOfflineQueue({ onQueueChange }));
 
         await waitFor(() => {
           expect(result.current.isLoading).toBe(false);
@@ -511,7 +565,9 @@ describe('useOfflineQueue', () => {
 
         expect(result.current.queueCount).toBe(0);
         expect(result.current.hasQueuedItems).toBe(false);
-        expect(AsyncStorage.removeItem).toHaveBeenCalledWith('offline-queue:id1');
+        expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+          'offline-queue:id1'
+        );
       });
 
       it('calls onItemProcessed callback', async () => {
@@ -607,10 +663,7 @@ describe('useOfflineQueue', () => {
           await result.current.markFailed('id1', 'Final failure');
         });
 
-        expect(onItemFailed).toHaveBeenCalledWith(
-          item,
-          expect.any(Error)
-        );
+        expect(onItemFailed).toHaveBeenCalledWith(item, expect.any(Error));
       });
     });
 
@@ -676,8 +729,20 @@ describe('useOfflineQueue', () => {
     describe('clearQueue', () => {
       it('removes all items from queue', async () => {
         const items: QueuedSubmission[] = [
-          { id: 'id1', type: 'reflection', payload: {}, queuedAt: 1000, retryCount: 0 },
-          { id: 'id2', type: 'letter', payload: {}, queuedAt: 2000, retryCount: 0 },
+          {
+            id: 'id1',
+            type: 'reflection',
+            payload: {},
+            queuedAt: 1000,
+            retryCount: 0,
+          },
+          {
+            id: 'id2',
+            type: 'letter',
+            payload: {},
+            queuedAt: 2000,
+            retryCount: 0,
+          },
         ];
 
         (AsyncStorage.getItem as jest.Mock)
@@ -697,8 +762,12 @@ describe('useOfflineQueue', () => {
         });
 
         expect(result.current.queueCount).toBe(0);
-        expect(AsyncStorage.removeItem).toHaveBeenCalledWith('offline-queue:id1');
-        expect(AsyncStorage.removeItem).toHaveBeenCalledWith('offline-queue:id2');
+        expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+          'offline-queue:id1'
+        );
+        expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+          'offline-queue:id2'
+        );
         expect(AsyncStorage.setItem).toHaveBeenCalledWith(
           'offline-queue-index',
           JSON.stringify([])
@@ -758,9 +827,27 @@ describe('useOfflineQueue', () => {
     describe('getStats', () => {
       it('returns queue statistics', async () => {
         const items: QueuedSubmission[] = [
-          { id: 'id1', type: 'reflection', payload: {}, queuedAt: 1000, retryCount: 0 },
-          { id: 'id2', type: 'reflection', payload: {}, queuedAt: 2000, retryCount: 1 },
-          { id: 'id3', type: 'letter', payload: {}, queuedAt: 3000, retryCount: 0 },
+          {
+            id: 'id1',
+            type: 'reflection',
+            payload: {},
+            queuedAt: 1000,
+            retryCount: 0,
+          },
+          {
+            id: 'id2',
+            type: 'reflection',
+            payload: {},
+            queuedAt: 2000,
+            retryCount: 1,
+          },
+          {
+            id: 'id3',
+            type: 'letter',
+            payload: {},
+            queuedAt: 3000,
+            retryCount: 0,
+          },
         ];
 
         (AsyncStorage.getItem as jest.Mock)

@@ -5,14 +5,56 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { QUEUE_INDEX_KEY } from './constants';
 import { getItemKey } from './utils';
-import type { QueuedSubmission } from './types';
+import type { OfflineSubmissionType, QueuedSubmission } from './types';
+
+const SUBMISSION_TYPES = new Set<OfflineSubmissionType>([
+  'reflection',
+  'letter',
+  'voiceNote',
+  'visionBoardImage',
+  'affirmation',
+  'habitUpdate',
+]);
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isValidSubmissionType(value: unknown): value is OfflineSubmissionType {
+  return (
+    typeof value === 'string' &&
+    SUBMISSION_TYPES.has(value as OfflineSubmissionType)
+  );
+}
+
+function isValidQueuedSubmission(value: unknown): value is QueuedSubmission {
+  if (!isObject(value)) return false;
+
+  return (
+    typeof value.id === 'string' &&
+    isValidSubmissionType(value.type) &&
+    'payload' in value &&
+    typeof value.queuedAt === 'number' &&
+    Number.isFinite(value.queuedAt) &&
+    typeof value.retryCount === 'number' &&
+    Number.isFinite(value.retryCount)
+  );
+}
 
 /** Load the queue index from storage */
 export async function loadQueueIndex(): Promise<string[]> {
   try {
     const raw = await AsyncStorage.getItem(QUEUE_INDEX_KEY);
     if (!raw) return [];
-    return JSON.parse(raw) as string[];
+
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) {
+      if (__DEV__)
+        console.warn('Queue index is not an array, resetting to empty');
+      return [];
+    }
+
+    return parsed.filter((id): id is string => typeof id === 'string');
   } catch (error) {
     if (__DEV__) console.warn('Failed to load queue index:', error);
     return [];
@@ -37,7 +79,14 @@ export async function loadQueueItem(
     const key = getItemKey(id);
     const raw = await AsyncStorage.getItem(key);
     if (!raw) return null;
-    return JSON.parse(raw) as QueuedSubmission;
+
+    const parsed = JSON.parse(raw) as unknown;
+    if (!isValidQueuedSubmission(parsed)) {
+      if (__DEV__) console.warn(`Queue item ${id} has invalid shape, skipping`);
+      return null;
+    }
+
+    return parsed;
   } catch (error) {
     if (__DEV__) console.warn(`Failed to load queue item ${id}:`, error);
     return null;
