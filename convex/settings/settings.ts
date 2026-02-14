@@ -3,6 +3,7 @@
  */
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
+import { RATE_LIMITS, rateLimit } from '../lib/rateLimiter';
 import { normalizeDarkMode, normalizeHabitSortMode } from './normalizers';
 import { DEFAULT_SETTINGS } from './types';
 import { settingsReturnValidator, updateArgsValidator } from './validators';
@@ -78,6 +79,9 @@ export const update = mutation({
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to update settings');
     }
+
+    // SEC-004: Rate limiting
+    await rateLimit(ctx.db, identity.subject, RATE_LIMITS.settingsUpdate);
 
     // SEC-001: Find existing settings for this user
     const existing = await ctx.db

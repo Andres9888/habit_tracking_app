@@ -593,4 +593,12 @@ const applicationTables = {
 
 export default defineSchema({
   ...applicationTables,
+
+  // SEC-004: Rate limiting buckets (token-bucket per user per action)
+  rateLimits: defineTable({
+    userId: v.string(),
+    action: v.string(),
+    tokens: v.number(),
+    lastRefill: v.number(),
+  }).index('by_user_action', ['userId', 'action']),
 });

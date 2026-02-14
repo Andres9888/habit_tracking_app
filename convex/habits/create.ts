@@ -4,6 +4,7 @@
  */
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
+import { MAX_HABITS_PER_USER, RATE_LIMITS, rateLimit } from '../lib/rateLimiter';
 import { createHabitArgs } from './types';
 import { findMaxOrder } from './utils';
 import { validateHabitFields } from './validation';
@@ -18,6 +19,9 @@ export const create = mutation({
     }
     const userId = identity.subject;
 
+    // SEC-004: Rate limiting
+    await rateLimit(ctx.db, userId, RATE_LIMITS.habitCreate);
+
     // SEC-003: Input validation
     const validated = validateHabitFields(args);
 
@@ -26,6 +30,15 @@ export const create = mutation({
       .query('habits')
       .filter((q) => q.eq(q.field('userId'), userId))
       .collect();
+
+    // SEC-004: Hard limit on habits per user
+    if (allHabits.length >= MAX_HABITS_PER_USER) {
+      throw new Error(
+        `Habit limit reached: you can have at most ${MAX_HABITS_PER_USER} habits. ` +
+        'Please delete some habits before creating new ones.'
+      );
+    }
+
     const maxOrder = findMaxOrder(allHabits);
 
     return await ctx.db.insert('habits', {

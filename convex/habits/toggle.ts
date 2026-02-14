@@ -5,6 +5,7 @@
 import { v } from 'convex/values';
 import { internal } from '../_generated/api';
 import { internalMutation, mutation } from '../_generated/server';
+import { RATE_LIMITS, rateLimit } from '../lib/rateLimiter';
 import { calculateMomentumStrengthSnapshot } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
 import { getTodayForTimezone, isFutureDate, isValidDateFormat, maxDateKey } from './utils';
@@ -14,6 +15,10 @@ export const toggleHabit = mutation({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error('Unauthenticated: Must be logged in to toggle habits');
+
+    // SEC-004: Rate limiting (100/min)
+    await rateLimit(ctx.db, identity.subject, RATE_LIMITS.habitToggle);
+
     if (!isValidDateFormat(args.date)) throw new Error('Invalid date format; expected YYYY-MM-DD');
     if (isFutureDate(args.date)) throw new Error('Cannot track habits for future dates');
 
