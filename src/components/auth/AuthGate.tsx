@@ -10,7 +10,8 @@
 
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { View, Text, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { api } from '../../../convex/_generated/api';
@@ -20,7 +21,6 @@ import { useConvexAuthReady } from '../../providers';
 import { OnboardingScreen } from '../../screens/onboarding';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
-import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 
 const LOADING_TIMEOUT_MS = 10_000;
 

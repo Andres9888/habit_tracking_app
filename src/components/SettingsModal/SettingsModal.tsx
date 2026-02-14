@@ -34,6 +34,7 @@ export default function SettingsModal({
   streakRemindersEnabled = false,
   streakReminderTime = '20:00',
   isPremium = false,
+  isLoading = false,
   onToggleStreakReminders = () => {},
   onChangeStreakReminderTime = () => {},
   onPremiumUpsell,
@@ -68,26 +69,32 @@ export default function SettingsModal({
         className='flex-1 bg-background'
         style={{ backgroundColor: colors.background }}
       >
-        <SettingsHeader
-          colors={colors}
-          paddingTop={insets.top + 8}
-          onClose={handleClose}
-        />
-        <SettingsContent
-          colors={colors}
-          dayShape={dayShape}
-          habitCompletionIcon={habitCompletionIcon}
-          isHighContrastActive={isHighContrastActive}
-          isPremium={isPremium}
-          streakRemindersEnabled={streakRemindersEnabled}
-          streakReminderTime={streakReminderTime}
-          onChangeDayShape={onChangeDayShape}
-          onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
-          onChangeStreakReminderTime={onChangeStreakReminderTime}
-          onOpenArchivedHabits={() => setView('archived')}
-          onPremiumUpsell={onPremiumUpsell}
-          onToggleStreakReminders={onToggleStreakReminders}
-        />
+        {isLoading ? (
+          <SettingsModalSkeleton />
+        ) : (
+          <>
+            <SettingsHeader
+              colors={colors}
+              paddingTop={insets.top + 8}
+              onClose={handleClose}
+            />
+            <SettingsContent
+              colors={colors}
+              dayShape={dayShape}
+              habitCompletionIcon={habitCompletionIcon}
+              isHighContrastActive={isHighContrastActive}
+              isPremium={isPremium}
+              streakRemindersEnabled={streakRemindersEnabled}
+              streakReminderTime={streakReminderTime}
+              onChangeDayShape={onChangeDayShape}
+              onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
+              onChangeStreakReminderTime={onChangeStreakReminderTime}
+              onOpenArchivedHabits={() => setView('archived')}
+              onPremiumUpsell={onPremiumUpsell}
+              onToggleStreakReminders={onToggleStreakReminders}
+            />
+          </>
+        )}
       </View>
     </Modal>
   );
