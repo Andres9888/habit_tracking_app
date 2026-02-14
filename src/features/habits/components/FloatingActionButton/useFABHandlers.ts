@@ -2,6 +2,16 @@ import { useCallback } from 'react';
 import { Animated, Easing } from 'react-native';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
+const INITIAL_RIPPLE_OPACITY = 0.26;
+const INITIAL_RIPPLE_SCALE = 0.6;
+const PRESS_IN_DURATION_MS = 110;
+const PRESS_OUT_DURATION_MS = 160;
+const RIPPLE_ANIMATION_DURATION_MS = 320;
+const PRESSED_SCALE = 0.94;
+const FINAL_SCALE = 1;
+const EXPANDED_RIPPLE_SCALE = 1.8;
+const HIDDEN_RIPPLE_OPACITY = 0;
+
 interface UseFABHandlersProps {
   openCreateHabitScreen: () => void;
   celebrationsEnabled: boolean;
@@ -36,34 +46,34 @@ export function useFABHandlers({
       triggerSelection();
     }
 
-    rippleOpacity.setValue(0.26);
-    rippleScale.setValue(0.6);
+    rippleOpacity.setValue(INITIAL_RIPPLE_OPACITY);
+    rippleScale.setValue(INITIAL_RIPPLE_SCALE);
 
     Animated.parallel([
       Animated.sequence([
         Animated.timing(pressScale, {
-          duration: 110,
+          duration: PRESS_IN_DURATION_MS,
           easing: Easing.out(Easing.quad),
-          toValue: 0.94,
+          toValue: PRESSED_SCALE,
           useNativeDriver: true,
         }),
         Animated.timing(pressScale, {
-          duration: 160,
+          duration: PRESS_OUT_DURATION_MS,
           easing: Easing.out(Easing.ease),
-          toValue: 1,
+          toValue: FINAL_SCALE,
           useNativeDriver: true,
         }),
       ]),
       Animated.timing(rippleScale, {
-        duration: 320,
+        duration: RIPPLE_ANIMATION_DURATION_MS,
         easing: Easing.out(Easing.cubic),
-        toValue: 1.8,
+        toValue: EXPANDED_RIPPLE_SCALE,
         useNativeDriver: true,
       }),
       Animated.timing(rippleOpacity, {
-        duration: 320,
+        duration: RIPPLE_ANIMATION_DURATION_MS,
         easing: Easing.out(Easing.ease),
-        toValue: 0,
+        toValue: HIDDEN_RIPPLE_OPACITY,
         useNativeDriver: true,
       }),
     ]).start();

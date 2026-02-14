@@ -6,6 +6,14 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
+const ENTRANCE_ANIMATION_DURATION_MS = 350;
+const INITIAL_TRANSLATE_Y = 20;
+const STAGGER_DELAY_MS = 100;
+const POST_ANIMATION_CALLBACK_DELAY_MS = 200;
+const INITIAL_OPACITY = 0;
+const FINAL_OPACITY = 1;
+const FINAL_TRANSLATE_Y = 0;
+
 interface UseHabitsListAnimationsOptions {
   headerOpacity: Animated.Value;
   headerTranslateY: Animated.Value;
@@ -51,42 +59,54 @@ export function useHabitsListAnimations(
   const handleSuccessTransitionComplete = useCallback(() => {
     setIsInSuccessCelebration(false);
     const config = {
-      duration: 350,
+      duration: ENTRANCE_ANIMATION_DURATION_MS,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     };
 
-    headerOpacity.setValue(0);
-    headerTranslateY.setValue(20);
-    calendarOpacity.setValue(0);
-    calendarTranslateY.setValue(20);
-    habitRowOpacity.setValue(0);
-    habitRowTranslateY.setValue(20);
+    headerOpacity.setValue(INITIAL_OPACITY);
+    headerTranslateY.setValue(INITIAL_TRANSLATE_Y);
+    calendarOpacity.setValue(INITIAL_OPACITY);
+    calendarTranslateY.setValue(INITIAL_TRANSLATE_Y);
+    habitRowOpacity.setValue(INITIAL_OPACITY);
+    habitRowTranslateY.setValue(INITIAL_TRANSLATE_Y);
 
     // Clear any existing timeout
     if (animationTimeoutRef.current) {
       clearTimeout(animationTimeoutRef.current);
     }
 
-    animationRef.current = Animated.stagger(100, [
+    animationRef.current = Animated.stagger(STAGGER_DELAY_MS, [
       Animated.parallel([
-        Animated.timing(headerOpacity, { ...config, toValue: 1 }),
-        Animated.timing(headerTranslateY, { ...config, toValue: 0 }),
+        Animated.timing(headerOpacity, { ...config, toValue: FINAL_OPACITY }),
+        Animated.timing(headerTranslateY, {
+          ...config,
+          toValue: FINAL_TRANSLATE_Y,
+        }),
       ]),
       Animated.parallel([
-        Animated.timing(calendarOpacity, { ...config, toValue: 1 }),
-        Animated.timing(calendarTranslateY, { ...config, toValue: 0 }),
+        Animated.timing(calendarOpacity, {
+          ...config,
+          toValue: FINAL_OPACITY,
+        }),
+        Animated.timing(calendarTranslateY, {
+          ...config,
+          toValue: FINAL_TRANSLATE_Y,
+        }),
       ]),
       Animated.parallel([
-        Animated.timing(habitRowOpacity, { ...config, toValue: 1 }),
-        Animated.timing(habitRowTranslateY, { ...config, toValue: 0 }),
+        Animated.timing(habitRowOpacity, { ...config, toValue: FINAL_OPACITY }),
+        Animated.timing(habitRowTranslateY, {
+          ...config,
+          toValue: FINAL_TRANSLATE_Y,
+        }),
       ]),
     ]);
 
     animationRef.current.start(() => {
       animationTimeoutRef.current = setTimeout(
         () => setShouldTriggerHabitEntrance(true),
-        200
+        POST_ANIMATION_CALLBACK_DELAY_MS
       );
     });
   }, [

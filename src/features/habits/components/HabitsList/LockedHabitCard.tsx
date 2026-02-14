@@ -7,6 +7,14 @@ import { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
+const INITIAL_CARD_SCALE = 0.94;
+const VISIBLE_OPACITY = 1;
+const HIDDEN_OPACITY = 0;
+const SPRING_DAMPING = 12;
+const SPRING_STIFFNESS = 140;
+const CARD_FADE_IN_DURATION_MS = 260;
+const BUTTON_PRESSED_OPACITY = 0.8;
+
 interface LockedHabitCardProps {
   onUpgradePress: () => void;
   reduceMotion?: boolean;
@@ -16,26 +24,26 @@ export function LockedHabitCard({
   onUpgradePress,
   reduceMotion = false,
 }: LockedHabitCardProps) {
-  const scale = useRef(new Animated.Value(0.94)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(INITIAL_CARD_SCALE)).current;
+  const opacity = useRef(new Animated.Value(HIDDEN_OPACITY)).current;
 
   useEffect(() => {
     if (reduceMotion) {
-      scale.setValue(1);
-      opacity.setValue(1);
+      scale.setValue(VISIBLE_OPACITY);
+      opacity.setValue(VISIBLE_OPACITY);
       return;
     }
     Animated.parallel([
       Animated.spring(scale, {
-        damping: 12,
-        stiffness: 140,
-        toValue: 1,
+        damping: SPRING_DAMPING,
+        stiffness: SPRING_STIFFNESS,
+        toValue: VISIBLE_OPACITY,
         useNativeDriver: true,
       }),
       Animated.timing(opacity, {
-        duration: 260,
+        duration: CARD_FADE_IN_DURATION_MS,
         easing: Easing.out(Easing.cubic),
-        toValue: 1,
+        toValue: VISIBLE_OPACITY,
         useNativeDriver: true,
       }),
     ]).start();
@@ -66,7 +74,9 @@ export function LockedHabitCard({
         accessibilityLabel='Upgrade to unlock unlimited habits'
         accessibilityRole='button'
         className='items-center rounded-full px-5 py-3 shadow-[0px_8px_16px_rgba(109,40,217,0.2)]'
-        style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
+        style={({ pressed }) => ({
+          opacity: pressed ? BUTTON_PRESSED_OPACITY : VISIBLE_OPACITY,
+        })}
         onPress={onUpgradePress}
       >
         <LinearGradient
