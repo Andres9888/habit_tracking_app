@@ -51,7 +51,7 @@ export const create = mutation({
     const now = Date.now();
 
     return await ctx.db.insert('visionBoardItems', {
-      body: body ? body : undefined,
+      body: body || undefined,
       createdAt: now,
       habitId: args.habitId,
       title,
@@ -89,8 +89,8 @@ export const update = mutation({
     }
 
     await ctx.db.patch(args.id, {
-      body: body ? body : undefined,
-      title: title === undefined ? undefined : title,
+      body: body || undefined,
+      title: title || undefined,
       updatedAt: Date.now(),
     });
 
@@ -114,9 +114,3 @@ export const remove = mutation({
   },
   returns: v.null(),
 });
-
-
-
-
-
-

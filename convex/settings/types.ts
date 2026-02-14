@@ -33,6 +33,7 @@ export const DEFAULT_SETTINGS = {
   showCharacterScreen: true,
   showConsistency: true,
   showEmojis: true,
+  showGradientFill: true,
   showMotivationalMessages: true,
   showNotesStats: true,
   showStreaks: true,

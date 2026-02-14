@@ -10,15 +10,18 @@ import type { HabitStatus } from '../types';
 export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   // Use startDate/endDate range instead of sending all 365 date strings
   // This reduces the Convex query argument payload from ~4KB to ~50 bytes
-  const startDate = extendedDateStrings[0];
-  const endDate = extendedDateStrings.at(-1);
-  const tracking =
-    useQuery(
-      api.habits.getTracking,
-      startDate && endDate
-        ? { endDate, startDate }
-        : { dates: extendedDateStrings }
-    ) ?? [];
+  // Sort to handle arrays in either chronological or reverse order
+  const queryArgs = useMemo(() => {
+    const first = extendedDateStrings[0];
+    const last = extendedDateStrings.at(-1);
+    const startDate = first && last && first < last ? first : last;
+    const endDate = first && last && first < last ? last : first;
+    return startDate && endDate
+      ? { endDate, startDate }
+      : { dates: extendedDateStrings };
+  }, [extendedDateStrings]);
+
+  const tracking = useQuery(api.habits.getTracking, queryArgs) ?? [];
 
   // Get optimistic state for immediate feedback
   const optimisticStore = useOptimisticStore();
@@ -33,7 +36,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       if (!map.has(entry.habitId)) {
         map.set(entry.habitId, new Set<string>());
       }
-      map.get(entry.habitId)!.add(entry.date);
+      map.get(entry.habitId)?.add(entry.date);
     }
 
     // Then, apply optimistic updates
@@ -43,9 +46,9 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
         map.set(habitId, new Set<string>());
       }
       if (toCompleted) {
-        map.get(habitId)!.add(date);
+        map.get(habitId)?.add(date);
       } else {
-        map.get(habitId)!.delete(date);
+        map.get(habitId)?.delete(date);
       }
     }
 

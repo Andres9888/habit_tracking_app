@@ -14,6 +14,9 @@ const INITIAL_OPACITY = 0;
 const FINAL_OPACITY = 1;
 const FINAL_TRANSLATE_Y = 0;
 
+/**
+ * Animated values and state setters used by the HabitsList entrance sequence.
+ */
 interface UseHabitsListAnimationsOptions {
   headerOpacity: Animated.Value;
   headerTranslateY: Animated.Value;
@@ -25,6 +28,12 @@ interface UseHabitsListAnimationsOptions {
   setShouldTriggerHabitEntrance: (value: boolean) => void;
 }
 
+/**
+ * Encapsulates the success-to-list transition animation choreography.
+ *
+ * Resets header, calendar, and row animated values, then plays a staggered
+ * sequence and re-enables habit entrance behavior when complete.
+ */
 export function useHabitsListAnimations(
   options: UseHabitsListAnimationsOptions
 ) {

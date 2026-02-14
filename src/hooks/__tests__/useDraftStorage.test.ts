@@ -151,6 +151,40 @@ describe('useDraftStorage', () => {
       expect(result).toBeNull();
     });
 
+    it('returns null and removes malformed draft payloads', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify({
+          content: 123,
+          timestamp: 'yesterday',
+          version: 1,
+        })
+      );
+
+      const result = await getDraft('habit-123', 'why');
+
+      expect(result).toBeNull();
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        'draft:habit-123:why'
+      );
+    });
+
+    it('returns null and removes unsupported draft versions', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify({
+          content: 'Old schema',
+          timestamp: Date.now(),
+          version: 2,
+        })
+      );
+
+      const result = await getDraft('habit-123', 'why');
+
+      expect(result).toBeNull();
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        'draft:habit-123:why'
+      );
+    });
+
     it('handles AsyncStorage errors gracefully', async () => {
       (AsyncStorage.getItem as jest.Mock).mockRejectedValue(
         new Error('Storage error')

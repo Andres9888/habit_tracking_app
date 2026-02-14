@@ -76,7 +76,7 @@ function HabitCardComponent(props: HabitCardProps) {
           {...focusHandlers}
         >
           <StrengthFillBackground
-            borderRadius={habit.borderRadius}
+            isDark={habit.isDark}
             strengthColor={habit.strengthColor}
             strengthFillStyle={habit.strengthFillStyle}
           />

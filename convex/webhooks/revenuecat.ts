@@ -42,7 +42,8 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     const payload = JSON.parse(body);
     const event = payload.event;
     const eventType = event?.type;
-    const appUserId = payload.app_user_id; // This is the Clerk user ID
+    // app_user_id is nested inside the event object, NOT at the payload root
+    const appUserId: string | undefined = event?.app_user_id;
 
     if (!eventType || !appUserId) {
       console.error('[RevenueCat] Missing event type or app_user_id');
@@ -57,9 +58,9 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
         clerkId: appUserId,
         eventType,
         expiresAt: event.expiration_at_ms,
-        isTrialing: event.is_trial_period === true,
+        isTrialing: event.period_type === 'TRIAL',
         productId: event.product_id,
-        revenueCatId: event.app_user_id,
+        revenueCatId: event.original_app_user_id,
         trialEndsAt: event.trial_end_at_ms,
       });
     } else if (REVOKE_EVENTS.has(eventType)) {
@@ -77,16 +78,22 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     }
 
     // Always return 200 to acknowledge receipt
-    return new Response(JSON.stringify({ received: true }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 200,
-    });
+    return Response.json(
+      { received: true },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+      }
+    );
   } catch (error) {
     console.error('[RevenueCat] Webhook error:', error);
     // Return 500 so RevenueCat retries failed events
-    return new Response(JSON.stringify({ error: 'Processing error' }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 500,
-    });
+    return Response.json(
+      { error: 'Processing error' },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 500,
+      }
+    );
   }
 });

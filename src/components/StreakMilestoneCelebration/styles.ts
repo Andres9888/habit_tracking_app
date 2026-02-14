@@ -196,21 +196,6 @@ title: {
 
 // Achievement card styles for shareable card
 export const achievementCardStyles = StyleSheet.create({
-<<<<<<< HEAD
-  container: {
-    width: 320,
-    borderRadius: borderRadius.large,
-    overflow: 'hidden',
-    ...shadows.alert,
-  },
-
-  gradient: {
-    padding: spacing.xl,
-    alignItems: 'center',
-  },
-
-=======
->>>>>>> origin/main
   badge: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
