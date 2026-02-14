@@ -17,6 +17,9 @@ export interface Habit {
   userId?: string;
   archived?: boolean;
   archivedAt?: number;
+  paused?: boolean;
+  pausedAt?: number;
+  resumedAt?: number;
   strength?: number;
   strengthLevel?: string;
   strengthUpdatedAt?: number;
@@ -35,10 +38,13 @@ export interface DraggableHabitProps {
   isConnectedToNextWeek?: boolean;
   isConnectedToPreviousWeek?: boolean;
   isJustCreated?: boolean;
+  isPaused?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
   onEntranceComplete?: () => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
+  onPause?: (habitId: Id<'habits'>) => void;
   onPress?: (habit: Habit) => void;
+  onResume?: (habitId: Id<'habits'>) => void;
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
   previousStreak?: number;
   reduceMotionPreference: boolean;

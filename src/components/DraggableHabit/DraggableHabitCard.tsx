@@ -1,8 +1,10 @@
 import React from 'react';
-import { Animated, Pressable, StyleSheet } from 'react-native';
+import { Animated, Pressable, StyleSheet, View, Text } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated from 'react-native-reanimated';
+import { Play } from 'lucide-react-native';
 import { ArchiveAction } from './ArchiveAction';
+import { PauseAction } from './PauseAction';
 import { CardContent } from './CardContent';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
 import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
@@ -27,13 +29,18 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
     translateY: props.translateY,
   });
 
+  // Dimmed style for paused habits
+  const pausedOpacity = props.isPaused ? 0.6 : 1;
+
   const habitCard = (
     <ReAnimated.View style={props.entranceCardStyle}>
       <Pressable
         accessibilityHint='Tap to view habit details, long press for quick actions'
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
-        style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
+        style={({ pressed }) => ({ 
+          opacity: pressed ? 0.92 * pausedOpacity : pausedOpacity 
+        })}
         onLongPress={props.handleLongPress}
         onPress={() => props.onPress?.(props.habit)}
         onPressIn={props.handlePressIn}
@@ -41,7 +48,7 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
       >
         <Animated.View
           className='flex-row overflow-hidden rounded-3xl'
-          style={cardStyle}
+          style={[cardStyle, props.isPaused && { opacity: pausedOpacity }]}
         >
           <ReAnimated.View
             style={[
@@ -91,16 +98,54 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
           </ReAnimated.View>
         </Animated.View>
       </Pressable>
+      
+      {/* Resume button for paused habits */}
+      {props.isPaused && props.onResume && (
+        <Pressable
+          className='mt-2 flex-row items-center justify-center rounded-full py-2'
+          style={{ backgroundColor: '#10b981' }}
+          onPress={() => props.onResume?.(props.habit._id)}
+        >
+          <Play color='white' size={16} fill='white' />
+          <Text className='ml-1 text-sm font-semibold text-white'>
+            Resume Habit
+          </Text>
+        </Pressable>
+      )}
     </ReAnimated.View>
   );
 
-  if (!props.onArchive) return habitCard;
+  if (!props.onArchive && !props.onPause) return habitCard;
 
+  // If only archive is available, use archive action
+  if (props.onArchive && !props.onPause) {
+    return (
+      <Swipeable
+        friction={2}
+        overshootRight={false}
+        renderRightActions={(_, dragX) => <ArchiveAction dragX={dragX} />}
+        rightThreshold={40}
+        onSwipeableOpen={props.handleSwipeableOpen}
+      >
+        {habitCard}
+      </Swipeable>
+    );
+  }
+
+  // If pause is available (and possibly archive), show both actions
+  // We'll use a different approach - swipe left for pause, swipe right for archive
   return (
     <Swipeable
       friction={2}
       overshootRight={false}
-      renderRightActions={(_, dragX) => <ArchiveAction dragX={dragX} />}
+      renderRightActions={(_, dragX) => (
+        <PauseAction
+          dragX={dragX}
+          isPaused={props.isPaused ?? false}
+          onPause={() => props.onPause?.(props.habit._id)}
+          onResume={() => props.onResume?.(props.habit._id)}
+        />
+      )}
       rightThreshold={40}
       onSwipeableOpen={props.handleSwipeableOpen}
     >

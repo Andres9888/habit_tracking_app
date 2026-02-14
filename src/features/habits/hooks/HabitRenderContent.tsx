@@ -17,6 +17,8 @@ type HabitRenderContentProps = {
   isConnectedToPreviousWeek: boolean;
   drag?: () => void;
   showHabitStrengthPercentage: boolean;
+  handlePause?: (habitId: string) => void;
+  handleResume?: (habitId: string) => void;
 } & Pick<
   UseHabitRenderItemArgs,
   | 'celebrationsEnabled'
@@ -51,6 +53,8 @@ function HabitRenderContentComponent({
   entranceVariant,
   handleArchive,
   handleHabitPress,
+  handlePause,
+  handleResume,
   highlightHabitId,
   isReorderingEnabled,
   notifyWeekCompletion,
@@ -88,6 +92,7 @@ function HabitRenderContentComponent({
           isConnectedToNextWeek={isConnectedToNextWeek}
           isConnectedToPreviousWeek={isConnectedToPreviousWeek}
           isJustCreated={highlightHabitId === item._id}
+          isPaused={item.paused ?? false}
           reduceMotionPreference={reduceMotionPreference}
           showConnectors={showConnectors}
           showHabitStrengthPercentage={showHabitStrengthPercentage ?? false}
@@ -99,7 +104,9 @@ function HabitRenderContentComponent({
           onArchive={handleArchive}
           onEntranceComplete={handleEntranceComplete}
           onLongPress={handleLongPress}
+          onPause={handlePause}
           onPress={handleHabitPress}
+          onResume={handleResume}
           onWeekComplete={handleWeekComplete}
         />
       </View>
