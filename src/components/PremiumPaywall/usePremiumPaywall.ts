@@ -6,11 +6,13 @@
 
 import { useCallback, useState, useEffect } from 'react';
 import { Alert } from 'react-native';
-import { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import { useSharedValue, useAnimatedStyle, withTiming, type AnimatedStyleProp } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { usePremium } from '../../hooks/usePremium';
 import { useRestorePurchases } from './useRestorePurchases';
 import type { PaywallVariant } from './PremiumPaywall.types';
+import type { PurchasesPackage } from 'react-native-purchases';
 
 interface Params {
   variant: PaywallVariant;
@@ -19,13 +21,29 @@ interface Params {
   onRestorePurchases?: () => Promise<boolean>;
 }
 
+export interface PremiumPaywallHandlers {
+  annualPackage: PurchasesPackage | null;
+  buttonAnimatedStyle: AnimatedStyleProp<ViewStyle>;
+  handleButtonPressIn: () => void;
+  handleButtonPressOut: () => void;
+  handleClose: () => void;
+  handleRestorePurchases: () => Promise<void>;
+  handleStartTrial: () => Promise<void>;
+  isLoadingOfferings: boolean;
+  isProcessing: boolean;
+  monthlyPackage: PurchasesPackage | null;
+  priceLabel: string | undefined;
+  selectedPackage: PurchasesPackage | null;
+  setSelectedPackage: (pkg: PurchasesPackage | null) => void;
+}
+
 export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePurchases }: Params) {
   const { triggerSelection, triggerLightImpact, triggerSuccess } = useHapticFeedback({});
   const { monthlyPackage, packages, priceString, isLoadingOfferings, purchasePackage } =
     usePremium();
 
   const annualPackage = packages?.find((p) => p.packageType === 'ANNUAL') ?? null;
-  const [selectedPackage, setSelectedPackage] = useState<any>(null);
+  const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const buttonScale = useSharedValue(1);
 

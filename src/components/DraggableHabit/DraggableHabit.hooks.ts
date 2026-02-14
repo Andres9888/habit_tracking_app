@@ -18,7 +18,7 @@ interface Habit {
   icon?: string;
   iconColor?: string;
   name: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // Premium accent colors - deeper, more sophisticated tones

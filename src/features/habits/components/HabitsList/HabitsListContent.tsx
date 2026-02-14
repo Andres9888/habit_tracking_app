@@ -1,6 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import DraggableFlatList from 'react-native-draggable-flatlist';
+import DraggableFlatList, {
+  type RenderItemParams,
+} from 'react-native-draggable-flatlist';
 import {
   renderHabitsListHeader,
   renderHabitsListFooter,
@@ -52,7 +54,7 @@ export function HabitsListContent({
   );
 
   const renderHabitItem = useCallback(
-    (p: any) =>
+    (p: RenderItemParams<Habit>) =>
       renderHabitRow({
         habitRowOpacity: state.habitRowOpacity,
         habitRowTranslateY: state.habitRowTranslateY,

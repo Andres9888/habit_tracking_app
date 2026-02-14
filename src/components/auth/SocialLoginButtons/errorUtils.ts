@@ -1,11 +1,20 @@
+interface ClerkError {
+  errors?: Array<{
+    code?: string;
+    message?: string;
+  }>;
+  message?: string;
+}
+
 /**
  * Converts OAuth errors into user-friendly messages
  * @param err - The error object from OAuth flow
  * @returns User-friendly error message or null if error should be ignored
  */
-export const getErrorMessage = (err: any): string | null => {
-  const errorCode = err.errors?.[0]?.code;
-  const errorMessage = err.errors?.[0]?.message;
+export const getErrorMessage = (err: unknown): string | null => {
+  const clerkError = err as ClerkError;
+  const errorCode = clerkError.errors?.[0]?.code;
+  const errorMessage = clerkError.errors?.[0]?.message;
 
   if (errorCode === 'session_exists') {
     return 'You are already signed in. Please sign out and try again.';
@@ -19,7 +28,7 @@ export const getErrorMessage = (err: any): string | null => {
   ) {
     return null;
   }
-  if (err.message?.includes('network')) {
+  if (clerkError.message?.includes('network')) {
     return 'Network error. Please check your connection and try again.';
   }
 

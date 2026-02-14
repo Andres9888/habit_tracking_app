@@ -8,10 +8,11 @@ import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
 import HabitRankingsList from '../../../components/HabitRankingsList';
+import { WeeklyInsight, RankedHabit } from '../AnalyticsScreen.types';
 
 interface InsightsSectionsProps {
-  weeklyInsights: any;
-  rankedHabits: any[];
+  weeklyInsights: WeeklyInsight[];
+  rankedHabits: RankedHabit[];
   onHabitPress: (habitId: string) => void;
 }
 

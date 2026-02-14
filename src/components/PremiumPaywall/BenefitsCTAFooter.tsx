@@ -8,10 +8,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
 import type { VariantConfig } from './PremiumPaywall.types';
+import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 
 interface BenefitsCTAFooterProps {
   config: VariantConfig;
-  handlers: any;
+  handlers: PremiumPaywallHandlers;
   reduceMotion: boolean;
   onStartTrial: () => void;
   onRestore: () => void;

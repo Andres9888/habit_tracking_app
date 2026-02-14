@@ -2,9 +2,7 @@ import React from "react";
 import { View, ViewProps } from "react-native";
 import clsx from "clsx";
 
-export interface CardProps extends ViewProps {
-  style?: any;
-}
+export interface CardProps extends ViewProps {}
 
 export function Card({
   style,

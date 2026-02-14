@@ -7,8 +7,16 @@ interface UseReduceMotionOptions {
 
 const isNativePlatform = Platform.OS === 'ios' || Platform.OS === 'android';
 
+interface AccessibilityInfoType {
+  isReduceMotionEnabled: () => Promise<boolean | null>;
+  addEventListener: (
+    eventName: string,
+    handler: (enabled: boolean | null) => void
+  ) => { remove: () => void };
+}
+
 // Lazy import AccessibilityInfo only when available
-let AccessibilityInfo: any;
+let AccessibilityInfo: AccessibilityInfoType | null;
 try {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   AccessibilityInfo = require('react-native').AccessibilityInfo;
