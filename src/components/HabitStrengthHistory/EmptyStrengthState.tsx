@@ -39,7 +39,7 @@ export function EmptyStrengthState({
       testID='habit-strength-history-empty'
     >
       <View className='flex-row items-center justify-between'>
-        <Text className='text-base font-semibold text-stone-700'>
+        <Text className='text-base font-semibold text-stone-700 dark:text-stone-200'>
           Strength History
         </Text>
         <Pressable
@@ -54,14 +54,14 @@ export function EmptyStrengthState({
         </Pressable>
       </View>
 
-      <View className='items-center justify-center rounded-xl bg-stone-50 px-6 py-8'>
-        <View className='mb-3 h-12 w-12 items-center justify-center rounded-full bg-amber-100'>
+      <View className='items-center justify-center rounded-2xl bg-stone-50 px-6 py-8 dark:bg-stone-800'>
+        <View className='mb-3 h-12 w-12 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-900/30'>
           <Zap color='#d97706' size={24} />
         </View>
-        <Text className='mb-1 text-center text-base font-semibold text-stone-700'>
+        <Text className='mb-1 text-center text-base font-semibold text-stone-700 dark:text-stone-200'>
           Ready to Build Strength
         </Text>
-        <Text className='text-center text-sm text-stone-500'>{message}</Text>
+        <Text className='text-center text-sm text-stone-400 dark:text-stone-500'>{message}</Text>
       </View>
     </Animated.View>
   );
