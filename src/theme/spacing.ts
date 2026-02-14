@@ -121,6 +121,15 @@ export const borderRadius = {
  * React Native shadow properties
  */
 export const shadows = {
+  /** Level 0 – subtle elements (chips, badges) */
+  subtle: {
+    elevation: 1,
+    shadowColor: '#1c1917',
+    shadowOffset: { height: 1, width: 0 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+  },
+  /** Level 1 – cards */
   card: {
     elevation: 3,
     shadowColor: '#1c1917',
@@ -128,26 +137,29 @@ export const shadows = {
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
+  /** Level 2 – raised cards, FAB */
   floatingActionButton: {
     elevation: 6,
     shadowColor: '#1c1917',
     shadowOffset: { height: 6, width: 0 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
+    shadowOpacity: 0.10,
+    shadowRadius: 20,
   },
+  /** Level 3 – modals, bottom sheets */
   modal: {
-    elevation: 6,
+    elevation: 8,
     shadowColor: '#1c1917',
     shadowOffset: { height: 8, width: 0 },
     shadowOpacity: 0.12,
     shadowRadius: 24,
   },
-  subtle: {
-    elevation: 1,
+  /** Level 4 – alerts, overlays (highest elevation) */
+  alert: {
+    elevation: 12,
     shadowColor: '#1c1917',
-    shadowOffset: { height: 1, width: 0 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowOffset: { height: 12, width: 0 },
+    shadowOpacity: 0.16,
+    shadowRadius: 32,
   },
 } as const;
 

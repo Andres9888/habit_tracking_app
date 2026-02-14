@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     maxWidth: 340,
-    ...shadows.modal,
+    ...shadows.alert,
   },
 
   // Emoji badge
@@ -145,7 +145,7 @@ export const achievementCardStyles = StyleSheet.create({
     width: 320,
     borderRadius: borderRadius.large,
     overflow: 'hidden',
-    ...shadows.modal,
+    ...shadows.alert,
   },
 
   gradient: {
