@@ -1,7 +1,14 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
-export const useTemplateAnimation = () => {
+export const useTemplateAnimation = (): {
+  anim: Animated.Value;
+  animateClose: (onFinished?: () => void) => void;
+  animateOpen: () => void;
+  chevronRotation: Animated.AnimatedInterpolation;
+  resetAnimation: () => void;
+  translateY: Animated.AnimatedInterpolation;
+} => {
   const anim = useRef(new Animated.Value(0)).current;
 
   const chevronRotation = useMemo(
@@ -32,22 +39,32 @@ export const useTemplateAnimation = () => {
     }).start();
   }, [anim]);
 
-  const animateClose = useCallback((onFinished?: () => void) => {
-    anim.stopAnimation();
-    Animated.timing(anim, {
-      duration: 180,
-      easing: Easing.out(Easing.ease),
-      toValue: 0,
-      useNativeDriver: true,
-    }).start(({ finished }) => {
-      if (finished) onFinished?.();
-    });
-  }, [anim]);
+  const animateClose = useCallback(
+    (onFinished?: () => void) => {
+      anim.stopAnimation();
+      Animated.timing(anim, {
+        duration: 180,
+        easing: Easing.out(Easing.ease),
+        toValue: 0,
+        useNativeDriver: true,
+      }).start(({ finished }) => {
+        if (finished) onFinished?.();
+      });
+    },
+    [anim]
+  );
 
   const resetAnimation = useCallback(() => {
     anim.stopAnimation();
     anim.setValue(0);
   }, [anim]);
 
-  return { anim, animateClose, animateOpen, chevronRotation, resetAnimation, translateY };
+  return {
+    anim,
+    animateClose,
+    animateOpen,
+    chevronRotation,
+    resetAnimation,
+    translateY,
+  };
 };

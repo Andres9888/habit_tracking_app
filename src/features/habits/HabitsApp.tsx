@@ -5,6 +5,7 @@
 
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import type { ReactElement } from 'react';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 
@@ -16,7 +17,7 @@ import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 
-export function HabitsApp() {
+export function HabitsApp(): ReactElement {
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
   const { triggerSelection, triggerWarning } = useHapticFeedback({

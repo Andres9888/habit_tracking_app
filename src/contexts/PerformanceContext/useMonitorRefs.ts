@@ -1,7 +1,7 @@
 /**
  * Monitor Refs Hook - Creates refs for performance monitor instances.
  */
-import { useRef } from 'react';
+import { useRef, type MutableRefObject } from 'react';
 import {
   FrameMonitor,
   MemoryMonitor,
@@ -14,7 +14,17 @@ import type { FrameTimingData } from '../../lib/performance';
 const generateSessionId = () =>
   `perf_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 
-export function useMonitorRefs() {
+export interface MonitorRefsReturn {
+  frameCallbacksRef: MutableRefObject<Set<(data: FrameTimingData) => void>>;
+  frameMonitorRef: MutableRefObject<FrameMonitor | null>;
+  memoryMonitorRef: MutableRefObject<MemoryMonitor>;
+  networkMonitorRef: MutableRefObject<NetworkMonitor>;
+  renderTrackerRef: MutableRefObject<RenderTracker>;
+  sessionIdRef: MutableRefObject<string>;
+  timerRef: MutableRefObject<PerformanceTimer>;
+}
+
+export function useMonitorRefs(): MonitorRefsReturn {
   const sessionIdRef = useRef(generateSessionId());
   const timerRef = useRef(new PerformanceTimer());
   const frameMonitorRef = useRef<FrameMonitor | null>(null);

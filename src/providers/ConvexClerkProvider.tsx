@@ -6,17 +6,19 @@
 
 import { ConvexProvider } from 'convex/react';
 import { useAuth } from '@clerk/clerk-expo';
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren, ReactElement } from 'react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { convexClient } from '../lib/appConfig';
 
 const ConvexAuthContext = createContext({ isConvexReady: false });
 
-export function useConvexAuthReady() {
+export function useConvexAuthReady(): boolean {
   return useContext(ConvexAuthContext).isConvexReady;
 }
 
-export function ConvexClerkProvider({ children }: PropsWithChildren) {
+export function ConvexClerkProvider({
+  children,
+}: PropsWithChildren): ReactElement {
   const { getToken, isSignedIn } = useAuth();
   const [isConvexReady, setIsConvexReady] = useState(false);
 

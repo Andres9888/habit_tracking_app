@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import type { KeyboardEvent } from 'react-native';
 import { Keyboard } from 'react-native';
 
-export const useKeyboardState = () => {
+export const useKeyboardState = (): {
+  isKeyboardVisible: boolean;
+  keyboardHeight: number;
+} => {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 

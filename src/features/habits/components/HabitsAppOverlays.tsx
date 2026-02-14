@@ -3,6 +3,7 @@
  * Groups modals, toasts, and paywall into a single render unit
  */
 
+import type { ReactElement } from 'react';
 import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
 import { RevenueCatPaywall } from '../../../components/RevenueCatPaywall';
 import { HabitsModals } from './HabitsModals';
@@ -23,7 +24,7 @@ export function HabitsAppOverlays({
   paywallVisible,
   onPaywallClose,
   onPaywallSuccess,
-}: HabitsAppOverlaysProps) {
+}: HabitsAppOverlaysProps): ReactElement {
   return (
     <>
       <WebToaster />

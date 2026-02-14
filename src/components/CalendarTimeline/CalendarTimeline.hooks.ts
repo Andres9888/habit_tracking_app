@@ -1,7 +1,10 @@
 /**
  * Custom hook for CalendarTimeline component logic
  */
-export const useCalendarTimelineLogic = () => {
+export const useCalendarTimelineLogic = (): {
+  isFuture: (date: Date) => boolean;
+  isToday: (date: Date) => boolean;
+} => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 

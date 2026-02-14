@@ -1,7 +1,18 @@
 import { useCallback, useRef, useState } from 'react';
-import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import type {
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from 'react-native';
 
-export const useTemplateScrollIndicators = () => {
+export const useTemplateScrollIndicators = (): {
+  handleContentSizeChange: (width: number, height: number) => void;
+  handleLayout: (event: LayoutChangeEvent) => void;
+  handleScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  resetIndicators: () => void;
+  showBottomShadow: boolean;
+  showTopShadow: boolean;
+} => {
   const scrollOffset = useRef(0);
   const metrics = useRef({ contentHeight: 0, layoutHeight: 0 });
   const [showTopShadow, setShowTopShadow] = useState(false);

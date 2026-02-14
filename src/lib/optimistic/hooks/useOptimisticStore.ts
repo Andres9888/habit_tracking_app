@@ -5,7 +5,9 @@
 import { useSyncExternalStore } from 'react';
 import { optimisticStore } from '../store';
 
-export function useOptimisticStore() {
+export function useOptimisticStore(): ReturnType<
+  typeof optimisticStore.getSnapshot
+> {
   return useSyncExternalStore(
     (onStoreChange) => optimisticStore.subscribe(onStoreChange),
     () => optimisticStore.getSnapshot(),

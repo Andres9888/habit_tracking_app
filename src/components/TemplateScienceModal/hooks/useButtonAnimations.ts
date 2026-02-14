@@ -10,7 +10,19 @@ import {
 } from 'react-native-reanimated';
 import type { PressHandlers } from '../TemplateScienceModal.types';
 
-export const useButtonAnimations = () => {
+export const useButtonAnimations = (): {
+  createPressHandlers: (
+    scaleValue: SharedValue<number>,
+    scale?: number
+  ) => PressHandlers;
+  scaleValues: {
+    backButton: SharedValue<number>;
+    closeButton: SharedValue<number>;
+    linkButton: SharedValue<number>;
+    shareButton: SharedValue<number>;
+    youtubeButton: SharedValue<number>;
+  };
+} => {
   const closeButtonScale = useSharedValue(1);
   const linkButtonScale = useSharedValue(1);
   const youtubeButtonScale = useSharedValue(1);
