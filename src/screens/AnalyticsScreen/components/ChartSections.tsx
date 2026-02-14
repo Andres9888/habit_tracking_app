@@ -1,9 +1,10 @@
 /**
  * ChartSections - Analytics chart components (Strength, Trend, Heatmap)
+ * Theme-aware for dark mode support.
  */
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
@@ -27,6 +28,8 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
   complianceData,
   isLoading = false,
 }) => {
+  const { colors } = useThemeColors();
+
   const strengthAccessibilityLabel = strengthDistribution
     ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
     : 'Loading chart';
@@ -41,13 +44,15 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
     );
   }
 
+  const sectionTitleStyle = [styles.sectionTitle, { color: colors.text.primary }];
+
   return (
     <>
       <View accessible accessibilityRole='none' style={styles.section}>
         <Text
           accessibilityLabel='Strength Distribution Chart'
           accessibilityRole='header'
-          style={styles.sectionTitle}
+          style={sectionTitleStyle}
         >
           Strength Distribution
         </Text>
@@ -60,12 +65,12 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>30-Day Trend</Text>
+        <Text style={sectionTitleStyle}>30-Day Trend</Text>
         <TrendLineChart data={trendData ?? null} onDataPointPress={undefined} />
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Compliance Heatmap</Text>
+        <Text style={sectionTitleStyle}>Compliance Heatmap</Text>
         <ComplianceHeatmap
           data={complianceData ?? null}
           onDayPress={undefined}
@@ -82,7 +87,6 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...typography.heading3,
-    color: colors.text.primary,
     marginBottom: spacing.md,
   },
 });

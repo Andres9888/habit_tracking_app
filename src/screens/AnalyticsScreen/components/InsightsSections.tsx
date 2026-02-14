@@ -1,9 +1,10 @@
 /**
  * InsightsSections - Weekly insights and habit rankings sections
+ * Theme-aware for dark mode support.
  */
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
@@ -22,10 +23,14 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
   rankedHabits,
   onHabitPress,
 }) => {
+  const { colors } = useThemeColors();
+
+  const sectionTitleStyle = [styles.sectionTitle, { color: colors.text.primary }];
+
   return (
     <>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Weekly Insights</Text>
+        <Text style={sectionTitleStyle}>Weekly Insights</Text>
         <WeeklyInsightsCard
           insights={weeklyInsights ?? null}
           onArchivePress={() => {
@@ -36,7 +41,7 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Habit Rankings</Text>
+        <Text style={sectionTitleStyle}>Habit Rankings</Text>
         <HabitRankingsList
           habits={rankedHabits.map((h) => ({
             id: h.id,
@@ -61,7 +66,6 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...typography.heading3,
-    color: colors.text.primary,
     marginBottom: spacing.md,
   },
 });

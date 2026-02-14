@@ -1,16 +1,16 @@
 /**
  * AnalyticsScreen - Main analytics dashboard screen
  * Shows habit statistics, charts, and insights
+ * Uses theme-aware colors for dark mode support.
  */
 import React from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
-import { styles } from './AnalyticsScreen.styles';
 import {
   AnalyticsHeader,
   EmptyState,
@@ -22,6 +22,7 @@ import {
 } from './components';
 
 function AnalyticsScreenContent() {
+  const { colors } = useThemeColors();
   const {
     refreshing,
     showPaywall,
@@ -62,7 +63,7 @@ function AnalyticsScreenContent() {
 
   return (
     <ScrollView
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={{ paddingBottom: 32 }}
       refreshControl={
         <RefreshControl
           colors={[colors.primary[500]]}
@@ -71,7 +72,7 @@ function AnalyticsScreenContent() {
           onRefresh={() => void onRefresh()}
         />
       }
-      style={styles.container}
+      style={{ flex: 1, backgroundColor: colors.background }}
     >
       <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
         <AnalyticsHeader />
