@@ -108,15 +108,11 @@ export interface SecondaryLinksProps {
  * InlineHint component props
  */
 export interface InlineHintProps {
-  /** Whether to show compact layout (keyboard visible) */
-  compact?: boolean;
   /** Callback to open templates screen */
   onBrowseTemplates: () => void;
   /** Callback to open create habit modal */
   onCreateCustom: () => void;
 }
-
-/**
 
 /**
  * SuccessState component props
@@ -128,8 +124,6 @@ export interface SuccessStateProps {
   habitEmoji?: string;
   /** Callback to add another habit (resets to initial state) */
   onAddAnother: () => void;
-  /** Callback to open the templates screen */
-  onBrowseTemplates?: () => void;
   /** Callback when exit transition completes (for transitioning to list) */
   onTransitionComplete?: () => void;
   /** Whether to auto-transition to list after celebration (default: true) */

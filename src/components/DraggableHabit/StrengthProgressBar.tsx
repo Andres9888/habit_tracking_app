@@ -54,7 +54,7 @@ export function StrengthProgressBar({
           justifyContent: 'center',
           left: '20%',
           position: 'absolute',
-          right: '20%',
+          right: '22%',
           top: 0,
         }}
       >

@@ -23,7 +23,7 @@ export function StreakCards({
         <View className='mt-2 flex-row items-baseline gap-2'>
           <Text
             className='text-3xl font-bold'
-            style={{ color: colors.primary[400] }}
+            style={{ color: colors.streak[500] }}
           >
             {currentStreak}
           </Text>
@@ -39,7 +39,7 @@ export function StreakCards({
         <View className='mt-2 flex-row items-baseline gap-2'>
           <Text
             className='text-3xl font-bold'
-            style={{ color: colors.primary[400] }}
+            style={{ color: colors.streak[500] }}
           >
             {longestStreak}
           </Text>

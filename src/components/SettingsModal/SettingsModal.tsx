@@ -30,7 +30,15 @@ export default function SettingsModal({
   onChangeStreakReminderTime = () => {},
   onPremiumUpsell,
 }: SettingsModalProps) {
-  const { view, setView, handleClose } = useSettingsModalLogic({
+  const {
+    darkModePreference,
+    setDarkModePreference,
+    showGradientFill,
+    setShowGradientFill,
+    view,
+    setView,
+    handleClose,
+  } = useSettingsModalLogic({
     onClose,
     visible,
   });
@@ -72,14 +80,18 @@ export default function SettingsModal({
             />
             <SettingsContent
               colors={colors}
+              darkModePreference={darkModePreference}
               dayShape={dayShape}
               habitCompletionIcon={habitCompletionIcon}
               isHighContrastActive={isHighContrastActive}
               isPremium={isPremium}
+              showGradientFill={showGradientFill}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
+              onChangeDarkModePreference={setDarkModePreference}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
+              onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
               onPremiumUpsell={onPremiumUpsell}

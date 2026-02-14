@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
     borderColor: '#f5f5f4', // stone-100 - matches card borders
     borderRadius: borderRadius.xl, // matches card rounded-3xl
     borderWidth: 1,
-    ...shadows.modal,
+    ...shadows.alert,
     maxWidth: 400,
     overflow: 'hidden',
     shadowColor: '#78716c', // stone-500 - warm shadow

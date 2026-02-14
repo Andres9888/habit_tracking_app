@@ -20,6 +20,7 @@ import { styles } from './HabitCard.styles';
 import type { HabitCardProps } from './HabitCard.types';
 import {
   SwipeActions,
+  SwipeGripLines,
   StrengthFillBackground,
   HabitCardContent,
   ConfettiBurst,
@@ -75,7 +76,7 @@ function HabitCardComponent(props: HabitCardProps) {
           {...focusHandlers}
         >
           <StrengthFillBackground
-            borderRadius={habit.borderRadius}
+            isDark={habit.isDark}
             strengthColor={habit.strengthColor}
             strengthFillStyle={habit.strengthFillStyle}
           />
@@ -106,6 +107,7 @@ function HabitCardComponent(props: HabitCardProps) {
             strength={strength}
             theme={habit.theme}
           />
+          <SwipeGripLines />
         </Animated.View>
       </GestureDetector>
       {habit.showFloatingXP && (

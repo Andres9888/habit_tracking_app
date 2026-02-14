@@ -24,7 +24,6 @@ import {
 } from './components';
 
 export default function AnalyticsScreen() {
-   
   const {
     refreshing,
     showPaywall,

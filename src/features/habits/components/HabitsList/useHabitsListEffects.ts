@@ -5,6 +5,12 @@
 import { useEffect } from 'react';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 
+/** Duration to highlight a newly created habit before clearing */
+const NEW_HABIT_HIGHLIGHT_MS = 3000;
+
+/** Brief delay before triggering entrance animation to allow layout */
+const ENTRANCE_ANIMATION_DELAY_MS = 50;
+
 interface UseHabitsListEffectsOptions {
   justCreatedHabitId: Id<'habits'> | null;
   setJustCreatedHabitId: (id: Id<'habits'> | null) => void;
@@ -24,12 +30,14 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
     habitsLength,
   } = options;
 
+  // Clear "just created" highlight after a delay
   useEffect(() => {
     if (!justCreatedHabitId) return;
-    const t = setTimeout(() => setJustCreatedHabitId(null), 3000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setJustCreatedHabitId(null), NEW_HABIT_HIGHLIGHT_MS);
+    return () => clearTimeout(timer);
   }, [justCreatedHabitId, setJustCreatedHabitId]);
 
+  // Trigger entrance animation after layout settles
   useEffect(() => {
     if (
       shouldTriggerHabitEntrance ||
@@ -37,8 +45,8 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
       habitsLength === 0
     )
       return;
-    const t = setTimeout(() => setShouldTriggerHabitEntrance(true), 50);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setShouldTriggerHabitEntrance(true), ENTRANCE_ANIMATION_DELAY_MS);
+    return () => clearTimeout(timer);
   }, [
     habitsLength,
     isInSuccessCelebration,

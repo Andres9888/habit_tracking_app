@@ -5,7 +5,7 @@
  * FIFO processing, event emission, and error handling.
  */
 
-import { SyncOrchestrator } from '../syncOrchestrator';
+import { SyncOrchestrator } from '../SyncOrchestrator';
 import type { OfflineQueueManagerAPI } from '../../queueManager';
 import { OfflineSyncManager } from '../../syncManager';
 import type { OfflineQueueState, OfflineOperation } from '../../queue';

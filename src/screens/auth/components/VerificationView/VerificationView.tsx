@@ -22,7 +22,7 @@ export function VerificationView({
   const insets = useSafeAreaInsets();
 
   return (
-    <View className='flex-1' style={{ backgroundColor: '#faf9f7' }}>
+    <View className='flex-1' style={{ backgroundColor: '#FAF8F5' }}>
       <View className='flex-1 px-6' style={{ paddingTop: insets.top + 24 }}>
         <Animated.View entering={anim(0)}>
           <Text
@@ -33,7 +33,7 @@ export function VerificationView({
           </Text>
         </Animated.View>
         <Animated.Text
-          className='mb-10 text-stone-500'
+          className='mb-10 text-stone-600'
           entering={anim(60)}
           style={{ fontSize: 17 }}
         >
