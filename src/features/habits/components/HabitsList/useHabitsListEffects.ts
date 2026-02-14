@@ -11,6 +11,9 @@ const NEW_HABIT_HIGHLIGHT_MS = 3000;
 /** Brief delay before triggering entrance animation to allow layout */
 const ENTRANCE_ANIMATION_DELAY_MS = 50;
 
+/**
+ * Inputs required to manage HabitsList lifecycle side effects.
+ */
 interface UseHabitsListEffectsOptions {
   justCreatedHabitId: Id<'habits'> | null;
   setJustCreatedHabitId: (id: Id<'habits'> | null) => void;
@@ -20,6 +23,11 @@ interface UseHabitsListEffectsOptions {
   habitsLength: number;
 }
 
+/**
+ * Runs non-visual HabitsList effects:
+ * - clears transient "just created" highlight state
+ * - triggers initial row entrance animation once layout settles
+ */
 export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
   const {
     justCreatedHabitId,
