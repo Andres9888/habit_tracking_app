@@ -24,7 +24,7 @@ export function NotesEditorModal({
 }: NotesEditorModalProps) {
   return (
     <RNModal animationType='slide' visible={isOpen} onRequestClose={onClose}>
-      <View className='flex-1' style={{ backgroundColor: '#faf9f7', paddingTop: insets.top + 16 }}>
+      <View className='flex-1' style={{ backgroundColor: '#FAF8F5', paddingTop: insets.top + 16 }}>
         <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
           <Text
             className='font-bold text-stone-900'

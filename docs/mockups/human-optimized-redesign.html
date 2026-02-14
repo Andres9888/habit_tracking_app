@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chain Day — Human-Optimized Frontend Redesign</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1B4332;
+    --sage: #74A68D;
+    --amber: #E8A838;
+    --parchment: #F6F2EC;
+    --parchment-dark: #EDE8E0;
+    --cream: #FFFFFF;
+    --stone-200: #E2DDD6;
+    --stone-500: #8A847C;
+    --ink: #2C2C2C;
+    --clay: #C4442A;
+    --plum: #6B3FA0;
+    --card-shadow: 0 2px 12px rgba(28,25,23,0.06);
+    --modal-shadow: 0 8px 32px rgba(28,25,23,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #1a1a1a;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-header {
+    text-align: center;
+    padding: 60px 20px 40px;
+    color: #fff;
+  }
+  .page-header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px;
+    font-weight: 500;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .page-header p {
+    color: #999;
+    font-size: 16px;
+  }
+
+  .comparison {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    padding: 0 40px 80px;
+    flex-wrap: wrap;
+  }
+
+  .phone-frame {
+    width: 375px;
+    min-height: 700px;
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .label {
+    text-align: center;
+    color: #777;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    text-align: center;
+    padding: 60px 20px 30px;
+    color: #fff;
+  }
+  .section-title h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    font-weight: 500;
+  }
+
+  /* ===== BEFORE (Current) ===== */
+  .before {
+    background: #faf9f7;
+  }
+  .before .status-bar {
+    height: 54px;
+    padding: 14px 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .before .screen-header {
+    padding: 8px 20px 12px;
+  }
+  .before .screen-header h1 {
+    font-family: -apple-system, 'SF Pro Display', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1F2937;
+  }
+  .before .week-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 20px;
+    gap: 4px;
+  }
+  .before .day-pill {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    border-radius: 12px;
+    font-size: 12px;
+    color: #6B7280;
+  }
+  .before .day-pill.today {
+    background: #D1FAE5;
+    color: #047857;
+    font-weight: 600;
+  }
+  .before .day-pill .num { font-size: 16px; font-weight: 600; display: block; margin-top: 2px; }
+  .before .habit-card {
+    margin: 6px 16px;
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 16px rgba(28,25,23,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .before .habit-card .accent-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #10B981;
+  }
+  .before .habit-card .emoji { font-size: 26px; margin-left: 8px; }
+  .before .habit-card .info { flex: 1; }
+  .before .habit-card .name {
+    font-family: -apple-system, 'SF Pro Text', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #1F2937;
+  }
+  .before .habit-card .meta {
+    font-size: 13px;
+    color: #78716c;
+    margin-top: 2px;
+  }
+  .before .habit-card .streak {
+    font-size: 15px;
+    font-weight: 600;
+    color: #10B981;
+  }
+  .before .checkbox {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #D1D5DB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .before .checkbox.checked {
+    background: #10B981;
+    border-color: #10B981;
+    color: #fff;
+    font-size: 14px;
+  }
+  .before .fab {
+    position: absolute;
+    bottom: 100px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    background: #059669;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 28px;
+    box-shadow: 0 6px 16px rgba(5,150,105,0.3);
+  }
+  .before .tab-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 83px;
+    background: #fff;
+    border-top: 1px solid #E5E7EB;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding-top: 8px;
+  }
+  .before .tab-item {
+    text-align: center;
+    font-size: 10px;
+    color: #6B7280;
+  }
+  .before .tab-item.active { color: #059669; }
+  .before .tab-icon { font-size: 22px; margin-bottom: 2px; }
+
+  /* ===== AFTER (Redesign) ===== */
+  .after {
+    background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-dark) 100%);
+  }
+  .after .status-bar {
+    height: 54px;
+    padding: 14px 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .after .screen-header {
+    padding: 8px 20px 4px;
+  }
+  .after .screen-header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--forest);
+    letter-spacing: -0.5px;
+  }
+  .after .screen-header .subtitle {
+    font-size: 14px;
+    color: var(--stone-500);
+    margin-top: 2px;
+  }
+  .after .week-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 20px;
+    gap: 4px;
+  }
+  .after .day-pill {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--stone-500);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .after .day-pill.today {
+    background: var(--forest);
+    color: #fff;
+  }
+  .after .day-pill .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 500;
+    display: block;
+    margin-top: 3px;
+  }
+  .after .cards-tray {
+    background: var(--parchment-dark);
+    border-radius: 24px;
+    margin: 4px 12px;
+    padding: 12px;
+  }
+  .after .habit-card {
+    margin-bottom: 10px;
+    background: var(--cream);
+    border: 1px solid var(--stone-200);
+    border-radius: 20px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.1s ease-out;
+  }
+  .after .habit-card:last-child { margin-bottom: 0; }
+  .after .habit-card .accent-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+  }
+  .after .habit-card .emoji { font-size: 26px; margin-left: 8px; }
+  .after .habit-card .info { flex: 1; }
+  .after .habit-card .name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.4px;
+  }
+  .after .habit-card .meta {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--stone-500);
+    margin-top: 3px;
+    letter-spacing: 0.3px;
+  }
+  .after .habit-card .streak {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--sage);
+    margin-left: auto;
+    margin-right: 8px;
+  }
+  .after .checkbox {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--stone-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .after .checkbox.checked {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: #fff;
+    font-size: 14px;
+  }
+  .after .habit-card.completed .name { opacity: 0.65; }
+  .after .habit-card.completed .accent-bar { opacity: 1; }
+
+  .after .fab {
+    position: absolute;
+    bottom: 100px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    background: var(--forest);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 28px;
+    box-shadow: 0 4px 16px rgba(27,67,50,0.25);
+  }
+  .after .tab-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 83px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--stone-200);
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding-top: 8px;
+  }
+  .after .tab-item {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--stone-500);
+    letter-spacing: 0.3px;
+  }
+  .after .tab-item.active { color: var(--forest); }
+  .after .tab-icon { font-size: 22px; margin-bottom: 2px; }
+
+  /* ===== PAYWALL BEFORE ===== */
+  .paywall-before {
+    background: linear-gradient(180deg, #faf9f7 0%, #f0fdf4 50%, #faf9f7 100%);
+    padding: 54px 20px 40px;
+  }
+  .paywall-before .close-btn {
+    text-align: right;
+    font-size: 20px;
+    color: #6B7280;
+    margin-bottom: 20px;
+  }
+  .paywall-before .hero-emoji { font-size: 64px; text-align: center; margin-bottom: 16px; }
+  .paywall-before h2 {
+    font-family: -apple-system, sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    color: #1F2937;
+    margin-bottom: 8px;
+  }
+  .paywall-before .hero-sub {
+    text-align: center;
+    font-size: 16px;
+    color: #6B7280;
+    margin-bottom: 32px;
+  }
+  .paywall-before .feature-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+  }
+  .paywall-before .feature-icon { font-size: 24px; }
+  .paywall-before .feature-title { font-weight: 600; font-size: 15px; color: #1F2937; }
+  .paywall-before .feature-desc { font-size: 13px; color: #6B7280; margin-top: 2px; }
+  .paywall-before .price-tag {
+    text-align: center;
+    margin: 24px 0 16px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #047857;
+  }
+  .paywall-before .price-sub {
+    text-align: center;
+    font-size: 13px;
+    color: #6B7280;
+    margin-bottom: 24px;
+  }
+  .paywall-before .cta-btn {
+    width: 100%;
+    padding: 16px;
+    background: #059669;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .paywall-before .restore {
+    text-align: center;
+    font-size: 14px;
+    color: #6B7280;
+    text-decoration: underline;
+  }
+
+  /* ===== PAYWALL AFTER ===== */
+  .paywall-after {
+    background: linear-gradient(180deg, var(--parchment) 0%, #EDE8E0 100%);
+    padding: 54px 20px 40px;
+    position: relative;
+  }
+  .paywall-after .close-btn {
+    position: absolute;
+    top: 58px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--stone-500);
+  }
+  .paywall-after .hero-area {
+    text-align: center;
+    padding: 20px 0 32px;
+  }
+  .paywall-after .hero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--amber) 0%, #D4952E 100%);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .paywall-after .hero-area h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--forest);
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .paywall-after .hero-sub {
+    font-size: 15px;
+    color: var(--stone-500);
+    line-height: 1.5;
+  }
+  .paywall-after .social-proof {
+    text-align: center;
+    font-size: 13px;
+    color: var(--sage);
+    font-weight: 500;
+    margin-bottom: 28px;
+  }
+  .paywall-after .feature-item {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .paywall-after .feature-icon-wrap {
+    width: 44px;
+    height: 44px;
+    background: rgba(116,166,141,0.12);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .paywall-after .feature-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.2px;
+  }
+  .paywall-after .pricing-card {
+    background: var(--cream);
+    border: 2px solid var(--forest);
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    margin: 28px 0 24px;
+    box-shadow: var(--card-shadow);
+  }
+  .paywall-after .price-amount {
+    font-family: 'Instrument Serif', serif;
+    font-size: 36px;
+    color: var(--forest);
+    font-weight: 500;
+  }
+  .paywall-after .price-period {
+    font-size: 15px;
+    color: var(--stone-500);
+    margin-top: 2px;
+  }
+  .paywall-after .price-trial {
+    font-size: 13px;
+    color: var(--sage);
+    font-weight: 500;
+    margin-top: 8px;
+  }
+  .paywall-after .cta-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--forest);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    text-align: center;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 16px rgba(27,67,50,0.2);
+  }
+  .paywall-after .restore {
+    text-align: center;
+    font-size: 13px;
+    color: var(--stone-500);
+    font-weight: 500;
+  }
+
+  @media (max-width: 850px) {
+    .comparison { flex-direction: column; align-items: center; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Chain Day — Frontend Redesign</h1>
+  <p>Human-Optimized Frontend Specification • Before → After</p>
+</div>
+
+<!-- ===== HOME SCREEN ===== -->
+<div class="section-title"><h2>Home Screen</h2></div>
+<div class="comparison">
+  <div>
+    <div class="label">Before</div>
+    <div class="phone-frame before">
+      <div class="status-bar"><span>9:41</span><span>⚡️📶</span></div>
+      <div class="screen-header"><h1>My Habits</h1></div>
+      <div class="week-nav">
+        <div class="day-pill"><span>Mon</span><span class="num">10</span></div>
+        <div class="day-pill"><span>Tue</span><span class="num">11</span></div>
+        <div class="day-pill"><span>Wed</span><span class="num">12</span></div>
+        <div class="day-pill today"><span>Thu</span><span class="num">13</span></div>
+        <div class="day-pill"><span>Fri</span><span class="num">14</span></div>
+        <div class="day-pill"><span>Sat</span><span class="num">15</span></div>
+        <div class="day-pill"><span>Sun</span><span class="num">16</span></div>
+      </div>
+      <div class="habit-card">
+        <div class="accent-bar"></div>
+        <div class="emoji">🧘</div>
+        <div class="info">
+          <div class="name">Morning Meditation</div>
+          <div class="meta">🔥 12 day streak · Building</div>
+        </div>
+        <div class="checkbox checked">✓</div>
+      </div>
+      <div class="habit-card">
+        <div class="accent-bar" style="background:#16a34a"></div>
+        <div class="emoji">📚</div>
+        <div class="info">
+          <div class="name">Read 30 Minutes</div>
+          <div class="meta">🔥 5 day streak · Starting</div>
+        </div>
+        <div class="checkbox"></div>
+      </div>
+      <div class="habit-card">
+        <div class="accent-bar" style="background:#0d9488"></div>
+        <div class="emoji">💪</div>
+        <div class="info">
+          <div class="name">Exercise</div>
+          <div class="meta">🔥 28 day streak · Developing</div>
+        </div>
+        <div class="checkbox"></div>
+      </div>
+      <div class="habit-card">
+        <div class="accent-bar" style="background:#0891b2"></div>
+        <div class="emoji">💧</div>
+        <div class="info">
+          <div class="name">Drink 8 Glasses Water</div>
+          <div class="meta">🔥 45 day streak · Strong</div>
+        </div>
+        <div class="checkbox checked">✓</div>
+      </div>
+      <div class="fab">+</div>
+      <div class="tab-bar">
+        <div class="tab-item active"><div class="tab-icon">🏠</div>Habits</div>
+        <div class="tab-item"><div class="tab-icon">📊</div>Analytics</div>
+        <div class="tab-item"><div class="tab-icon">⚙️</div>Settings</div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="label">After</div>
+    <div class="phone-frame after">
+      <div class="status-bar"><span>9:41</span><span>⚡️📶</span></div>
+      <div class="screen-header">
+        <h1>My Habits</h1>
+        <div class="subtitle">Thursday, Feb 13 · 2 of 4 complete</div>
+      </div>
+      <div class="week-nav">
+        <div class="day-pill"><span>Mon</span><span class="num">10</span></div>
+        <div class="day-pill"><span>Tue</span><span class="num">11</span></div>
+        <div class="day-pill"><span>Wed</span><span class="num">12</span></div>
+        <div class="day-pill today"><span>Thu</span><span class="num">13</span></div>
+        <div class="day-pill"><span>Fri</span><span class="num">14</span></div>
+        <div class="day-pill"><span>Sat</span><span class="num">15</span></div>
+        <div class="day-pill"><span>Sun</span><span class="num">16</span></div>
+      </div>
+      <div class="cards-tray">
+        <div class="habit-card completed">
+          <div class="accent-bar" style="background:var(--sage)"></div>
+          <div class="emoji">🧘</div>
+          <div class="info">
+            <div class="name">Morning Meditation</div>
+            <div class="meta">12 days · Building</div>
+          </div>
+          <div class="streak">12🔥</div>
+          <div class="checkbox checked">✓</div>
+        </div>
+        <div class="habit-card">
+          <div class="accent-bar" style="background:#B8D4C8"></div>
+          <div class="emoji">📚</div>
+          <div class="info">
+            <div class="name">Read 30 Minutes</div>
+            <div class="meta">5 days · Starting</div>
+          </div>
+          <div class="streak" style="color:var(--stone-500)">5</div>
+          <div class="checkbox"></div>
+        </div>
+        <div class="habit-card">
+          <div class="accent-bar" style="background:var(--sage)"></div>
+          <div class="emoji">💪</div>
+          <div class="info">
+            <div class="name">Exercise</div>
+            <div class="meta">28 days · Developing</div>
+          </div>
+          <div class="streak">28🔥</div>
+          <div class="checkbox"></div>
+        </div>
+        <div class="habit-card completed">
+          <div class="accent-bar" style="background:var(--forest)"></div>
+          <div class="emoji">💧</div>
+          <div class="info">
+            <div class="name">Drink 8 Glasses</div>
+            <div class="meta">45 days · Strong</div>
+          </div>
+          <div class="streak">45🔥</div>
+          <div class="checkbox checked">✓</div>
+        </div>
+      </div>
+      <div class="fab">+</div>
+      <div class="tab-bar">
+        <div class="tab-item active"><div class="tab-icon">🏠</div>Habits</div>
+        <div class="tab-item"><div class="tab-icon">📊</div>Analytics</div>
+        <div class="tab-item"><div class="tab-icon">⚙️</div>Settings</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAYWALL ===== -->
+<div class="section-title"><h2>Paywall Screen</h2></div>
+<div class="comparison">
+  <div>
+    <div class="label">Before</div>
+    <div class="phone-frame">
+      <div class="paywall-before">
+        <div class="close-btn">✕</div>
+        <div class="hero-emoji">⭐️</div>
+        <h2>Unlock Premium</h2>
+        <div class="hero-sub">Get the most out of Chain Day with advanced features</div>
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div>
+            <div class="feature-title">Advanced Analytics</div>
+            <div class="feature-desc">Deep insights into your habit patterns and trends</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <div>
+            <div class="feature-title">Unlimited Habits</div>
+            <div class="feature-desc">Track as many habits as you want, no limits</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🏆</div>
+          <div>
+            <div class="feature-title">Milestone Celebrations</div>
+            <div class="feature-desc">Beautiful animations when you hit your goals</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">☁️</div>
+          <div>
+            <div class="feature-title">Cloud Backup</div>
+            <div class="feature-desc">Never lose your data with automatic sync</div>
+          </div>
+        </div>
+        <div class="price-tag">$1.99/month</div>
+        <div class="price-sub">7-day free trial included</div>
+        <div class="cta-btn">Start Free Trial</div>
+        <div class="restore">Restore Purchases</div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="label">After</div>
+    <div class="phone-frame">
+      <div class="paywall-after">
+        <div class="close-btn">✕</div>
+        <div class="hero-area">
+          <div class="hero-badge">✦ Premium</div>
+          <h2>Build habits that<br>actually stick</h2>
+          <div class="hero-sub">Unlock the full power of Chain Day<br>with insights and unlimited tracking.</div>
+        </div>
+        <div class="social-proof">✦ Join 12,000+ users building better habits</div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">📊</div>
+          <div class="feature-text">Deep analytics & trend insights</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">♾️</div>
+          <div class="feature-text">Unlimited habits, no caps</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">☁️</div>
+          <div class="feature-text">Automatic cloud backup & sync</div>
+        </div>
+        <div class="pricing-card">
+          <div class="price-amount">$1.99</div>
+          <div class="price-period">per month</div>
+          <div class="price-trial">Includes 7-day free trial</div>
+        </div>
+        <div class="cta-btn">Start Free Trial</div>
+        <div class="restore">Restore Purchases</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:40px 20px 80px;color:#555;font-size:13px;">
+  Generated by human-optimized-frontend skill · Chain Day · February 2026
+</div>
+
+</body>
+</html>

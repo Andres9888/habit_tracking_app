@@ -52,7 +52,7 @@ export function StatusIndicator({
         <View
           style={[
             styles.checkmark,
-            { backgroundColor: theme.custom.colors.primary[500] },
+            { backgroundColor: theme.custom.colors.success },
           ]}
         >
           <ChainLinkAnimation
@@ -70,7 +70,7 @@ export function StatusIndicator({
       <Animated.View
         style={[
           styles.checkmark,
-          { backgroundColor: theme.custom.colors.primary[500] },
+          { backgroundColor: theme.custom.colors.success },
           checkmarkAnimatedStyle as any,
         ]}
       >

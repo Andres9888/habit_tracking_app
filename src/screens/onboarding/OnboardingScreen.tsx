@@ -41,7 +41,7 @@ function ChainLink({ delay, index }: { delay: number; index: number }) {
         styles.chainLink,
         {
           backgroundColor: colors[index % colors.length],
-          transform: [{ rotate: index % 2 === 0 ? '0deg' : '0deg' }],
+          transform: [{ rotate: '0deg' }], // Uniform rotation (placeholder for future alternating style)
         },
       ]}
     >
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
     width: 20,
   },
   container: {
-    backgroundColor: '#faf9f7',
+    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   ctaButton: {
