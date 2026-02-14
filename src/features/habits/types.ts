@@ -19,9 +19,14 @@ export type HabitSortMode =
 
 export type ShareCardData = {
   habitName: string;
-  milestoneLevel: MilestoneAchievement['level'];
-  strengthPercentage: number;
   userName?: string;
+  // Streak milestone sharing (new)
+  streakCount?: number;
+  milestoneDays?: 7 | 30 | 100;
+  motivationalMessage?: string;
+  // Legacy strength-level sharing (backward compatibility)
+  milestoneLevel?: MilestoneAchievement['level'];
+  strengthPercentage?: number;
 };
 
 export interface RewardToastData {

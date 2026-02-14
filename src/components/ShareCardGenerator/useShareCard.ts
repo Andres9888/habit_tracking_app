@@ -3,53 +3,61 @@
  * Manages state and sharing logic for ShareCardGenerator
  */
 
-import { useState, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import { Alert, Share } from 'react-native';
 import ViewShot from 'react-native-view-shot';
-import * as Sharing from 'expo-sharing';
-import type {
-  SharePlatform,
-  ShareCardData,
-  MilestoneLevel,
-} from './ShareCardGenerator.types';
+import type { SharePlatform, ShareCardData } from './ShareCardGenerator.types';
 import {
   SHARE_FORMATS,
-  MILESTONE_CONFIG,
   GRADIENT_PRESETS,
   DEFAULT_PLATFORM,
   APP_STORE_LINK,
+  STREAK_MILESTONE_CONFIG,
+  MILESTONE_CONFIG,
 } from './ShareCardGenerator.constants';
+
+const FALLBACK_MESSAGE = 'Show up today, and future-you will thank you.';
 
 export function useShareCard(data: ShareCardData) {
   const viewShotRef = useRef<ViewShot>(null);
 
   const [selectedGradient, setSelectedGradient] = useState(0);
-  const [personalMessage, setPersonalMessage] = useState('');
   const [showUserName, setShowUserName] = useState(true);
   const [selectedPlatform, setSelectedPlatform] =
     useState<SharePlatform>(DEFAULT_PLATFORM);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const milestoneConfig = MILESTONE_CONFIG[data.milestoneLevel];
+  const streakCount = data.streakCount ?? 0;
+  const milestoneDays = (data.milestoneDays ?? 7) as 7 | 30 | 100;
+
+  const milestoneConfig = useMemo(() => {
+    if (data.milestoneLevel) {
+      return MILESTONE_CONFIG[data.milestoneLevel];
+    }
+
+    return STREAK_MILESTONE_CONFIG[milestoneDays];
+  }, [data.milestoneLevel, milestoneDays]);
+
+  const motivationalMessage =
+    data.motivationalMessage ??
+    ('message' in milestoneConfig ? milestoneConfig.message : FALLBACK_MESSAGE);
+
   const format = SHARE_FORMATS[selectedPlatform];
-  const gradient = GRADIENT_PRESETS[selectedGradient];
+  const defaultGradientIndex = milestoneDays === 100 ? 2 : milestoneDays === 30 ? 1 : 0;
+  const gradient = GRADIENT_PRESETS[selectedGradient] ?? GRADIENT_PRESETS[defaultGradientIndex];
 
   const getPlatformCaption = (platform: SharePlatform): string => {
-    const baseMessage = `Just reached ${milestoneConfig.label} level (${data.strengthPercentage}%) with my ${data.habitName} habit!`;
+    const baseMessage = `I just hit a ${streakCount}-day ${data.habitName} streak on Chain Day 🔗`;
 
     switch (platform) {
       case 'instagram-story':
-      case 'instagram-feed': {
-        return `${baseMessage}\n\nBuilding better habits with science-backed tracking\n\n#HabitTracking #AtomicHabits #BehaviorChange #SelfImprovement #Productivity\n\n${APP_STORE_LINK}`;
-      }
-      case 'twitter': {
-        return `${baseMessage}\n\nTracking habits with science ${APP_STORE_LINK}\n\n#HabitTracking #Productivity`;
-      }
-      case 'facebook': {
-        return `${baseMessage}\n\nI've been using this amazing habit tracking app that uses real behavioral science to help build lasting habits. Check it out!\n\n${APP_STORE_LINK}`;
-      }
-      default: {
-        return baseMessage;
-      }
+        return `${baseMessage}\n\n${motivationalMessage}\n\n#ChainDay #HabitTracking #Consistency\n${APP_STORE_LINK}`;
+      case 'twitter':
+        return `${baseMessage}. ${motivationalMessage} ${APP_STORE_LINK} #ChainDay #HabitStreak`;
+      case 'whatsapp':
+        return `${baseMessage}\n${motivationalMessage}\n\nBuild your streak with me: ${APP_STORE_LINK}`;
+      default:
+        return `${baseMessage}\n\n${APP_STORE_LINK}`;
     }
   };
 
@@ -59,21 +67,16 @@ export function useShareCard(data: ShareCardData) {
     try {
       setIsGenerating(true);
       const uri = await viewShotRef.current.capture();
-      const isSharingAvailable = await Sharing.isAvailableAsync();
+      const message = getPlatformCaption(selectedPlatform);
 
-      if (isSharingAvailable) {
-        await Sharing.shareAsync(uri, {
-          dialogTitle: `Share your ${milestoneConfig.label} achievement!`,
-          mimeType: 'image/png',
-          UTI: 'public.png',
-        });
-      } else {
-        if (__DEV__) console.warn('Sharing is not available on this device');
-        alert('Sharing is not available. Please save the image manually.');
-      }
+      await Share.share({
+        message,
+        title: `Share your ${milestoneConfig.label} achievement`,
+        url: uri,
+      });
     } catch (error) {
       if (__DEV__) console.error('Error sharing card:', error);
-      alert('Failed to share card. Please try again.');
+      Alert.alert('Share failed', 'Could not generate share card. Please try again.');
     } finally {
       setIsGenerating(false);
     }
@@ -85,14 +88,14 @@ export function useShareCard(data: ShareCardData) {
     handleShare,
     isGenerating,
     milestoneConfig,
-    personalMessage,
+    motivationalMessage,
     selectedGradient,
     selectedPlatform,
-    setPersonalMessage,
     setSelectedGradient,
     setSelectedPlatform,
     setShowUserName,
     showUserName,
+    streakCount,
     viewShotRef,
   };
 }

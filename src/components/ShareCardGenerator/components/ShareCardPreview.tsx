@@ -1,8 +1,3 @@
-/**
- * ShareCardPreview Component
- * Renders a scaled-down preview of the ShareCard for display
- */
-
 import React, { RefObject } from 'react';
 import { View, Dimensions } from 'react-native';
 import ViewShot from 'react-native-view-shot';
@@ -17,8 +12,8 @@ interface ShareCardPreviewProps {
   habitName: string;
   emoji: string;
   milestoneLabel: string;
-  strengthPercentage: number;
-  personalMessage?: string;
+  streakCount: number;
+  motivationalMessage: string;
   showUserName: boolean;
   userName?: string;
   format: ShareFormat;
@@ -30,8 +25,8 @@ export function ShareCardPreview({
   habitName,
   emoji,
   milestoneLabel,
-  strengthPercentage,
-  personalMessage,
+  streakCount,
+  motivationalMessage,
   showUserName,
   userName,
   format,
@@ -63,9 +58,9 @@ export function ShareCardPreview({
           gradient={gradient}
           habitName={habitName}
           milestoneLabel={milestoneLabel}
-          personalMessage={personalMessage}
+          motivationalMessage={motivationalMessage}
           showUserName={showUserName}
-          strengthPercentage={strengthPercentage}
+          streakCount={streakCount}
           userName={userName}
         />
       </View>

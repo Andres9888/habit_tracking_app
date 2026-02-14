@@ -1,8 +1,3 @@
-/**
- * ShareCard Component
- * The card that gets captured and shared as an image
- */
-
 import React, { forwardRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -16,8 +11,8 @@ interface ShareCardProps {
   habitName: string;
   emoji: string;
   milestoneLabel: string;
-  strengthPercentage: number;
-  personalMessage?: string;
+  streakCount: number;
+  motivationalMessage: string;
   showUserName: boolean;
   userName?: string;
   format: ShareFormat;
@@ -64,8 +59,8 @@ export const ShareCard = forwardRef<ViewShot, ShareCardProps>((props, ref) => {
           <ShareCardInfo
             habitName={props.habitName}
             milestoneLabel={props.milestoneLabel}
-            personalMessage={props.personalMessage}
-            strengthPercentage={props.strengthPercentage}
+            motivationalMessage={props.motivationalMessage}
+            streakCount={props.streakCount}
           />
 
           <ShareCardFooter showUserName={showUserName} userName={userName} />

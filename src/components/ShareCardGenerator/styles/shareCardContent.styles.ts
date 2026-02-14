@@ -1,11 +1,5 @@
-/**
- * Styles for ShareCard content sections (emoji, info, progress)
- */
-
-// Intentional: static color for share card rendering — white text/fills on gradient backgrounds
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
-import { borderRadius } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 
 export const shareCardContentStyles = StyleSheet.create({
@@ -53,38 +47,23 @@ export const shareCardContentStyles = StyleSheet.create({
     gap: 16,
     marginBottom: 16,
   },
+  streakCount: {
+    color: colors.text.inverse,
+    fontSize: 56,
+    fontWeight: '800',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { height: 2, width: 0 },
+    textShadowRadius: 4,
+  },
   personalMessage: {
     color: colors.text.inverse,
     fontSize: typography.heading2.fontSize,
     fontStyle: 'italic',
-    marginTop: 32,
+    marginTop: 28,
     paddingHorizontal: 24,
     textAlign: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { height: 1, width: 0 },
     textShadowRadius: 2,
-  },
-  progressBarBackground: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: borderRadius.small,
-    height: 12,
-    overflow: 'hidden',
-  },
-  progressBarContainer: {
-    marginTop: 24,
-    width: '100%',
-  },
-  progressBarFill: {
-    backgroundColor: colors.text.inverse,
-    borderRadius: borderRadius.small,
-    height: '100%',
-  },
-  strengthPercentage: {
-    color: colors.text.inverse,
-    fontSize: 48,
-    fontWeight: '800',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { height: 2, width: 0 },
-    textShadowRadius: 4,
   },
 });

@@ -1,16 +1,3 @@
-/**
- * ShareCardGenerator Component
- * Based on UX Specification Flow 5 (lines 560-661)
- *
- * Features:
- * - Gradient backgrounds using brand colors
- * - Platform-specific formats (Instagram Story/Feed, Twitter, Facebook)
- * - Customization options (background color, personal message, user name toggle)
- * - Native share sheet integration
- *
- * Usage: Triggered from Milestone Celebration modal
- */
-
 import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { Modal } from '../Modal';
@@ -22,7 +9,6 @@ import {
   ShareCardHeader,
   PlatformSelector,
   GradientSelector,
-  PersonalMessageInput,
   UserNameToggle,
 } from './components';
 import type { ShareCardGeneratorProps } from './ShareCardGenerator.types';
@@ -36,14 +22,14 @@ export function ShareCardGenerator({
     viewShotRef,
     selectedGradient,
     setSelectedGradient,
-    personalMessage,
-    setPersonalMessage,
     showUserName,
     setShowUserName,
     selectedPlatform,
     setSelectedPlatform,
     isGenerating,
     milestoneConfig,
+    motivationalMessage,
+    streakCount,
     format,
     gradient,
     handleShare,
@@ -61,9 +47,9 @@ export function ShareCardGenerator({
             gradient={gradient}
             habitName={data.habitName}
             milestoneLabel={milestoneConfig.label}
-            personalMessage={personalMessage}
+            motivationalMessage={motivationalMessage}
             showUserName={showUserName}
-            strengthPercentage={data.strengthPercentage}
+            streakCount={streakCount}
             userName={data.userName}
             viewShotRef={viewShotRef as any}
           />
@@ -81,11 +67,6 @@ export function ShareCardGenerator({
           <GradientSelector
             selectedGradient={selectedGradient}
             onSelectGradient={setSelectedGradient}
-          />
-
-          <PersonalMessageInput
-            value={personalMessage}
-            onChangeText={setPersonalMessage}
           />
 
           <UserNameToggle

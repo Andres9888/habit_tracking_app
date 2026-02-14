@@ -1,9 +1,6 @@
 /**
  * StreakMilestoneProvider
  * Global provider for managing streak milestone celebrations
- *
- * Exposes a trigger function that can be called from anywhere
- * when a habit completion might cross a milestone threshold
  */
 
 import React, {
@@ -25,7 +22,6 @@ import {
   maybeRequestReview,
   incrementCompletionCount,
 } from '../../utils/storeReview';
-import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
 
 interface CelebrationData {
   milestone: StreakMilestone;
@@ -37,20 +33,13 @@ interface CelebrationData {
 
 interface ShareCardData {
   habitName: string;
-  milestoneLevel: MilestoneLevel;
-  strengthPercentage: number;
+  streakCount: number;
+  milestoneDays: 7 | 30 | 100;
+  motivationalMessage: string;
   userName: string;
 }
 
 interface StreakMilestoneContextValue {
-  /**
-   * Check if a streak crosses a milestone and trigger celebration if so
-   * @param habitId - Unique habit identifier
-   * @param habitName - Display name of the habit
-   * @param habitEmoji - Emoji icon for the habit
-   * @param previousStreak - Streak before completion
-   * @param currentStreak - Streak after completion
-   */
   checkAndCelebrate: (
     habitId: string,
     habitName: string,
@@ -66,9 +55,14 @@ const StreakMilestoneContext = createContext<StreakMilestoneContextValue | null>
 
 interface StreakMilestoneProviderProps {
   children: ReactNode;
-  /** User name for share cards */
   userName?: string;
 }
+
+const MILESTONE_MESSAGES: Record<7 | 30 | 100, string> = {
+  7: '7 days strong. Small daily wins build unstoppable momentum.',
+  30: '30-day streak unlocked. Your consistency is becoming your identity.',
+  100: '100 days in a row. This is elite follow-through.',
+};
 
 export function StreakMilestoneProvider({
   children,
@@ -88,7 +82,6 @@ export function StreakMilestoneProvider({
       previousStreak: number,
       currentStreak: number
     ) => {
-      // Track completion for store review eligibility
       void incrementCompletionCount();
 
       const milestone = checkStreakMilestoneCrossed(previousStreak, currentStreak);
@@ -108,13 +101,10 @@ export function StreakMilestoneProvider({
 
   const handleClose = useCallback(() => {
     if (celebrationData) {
-      // Persist that this milestone was shown
       persistMilestoneShown(
         celebrationData.habitId,
         celebrationData.milestone.days,
       );
-      // After celebration dismissal, maybe prompt for App Store review
-      // Small delay so the modal finishes closing before the system dialog appears
       setTimeout(() => {
         void maybeRequestReview(celebrationData.milestone.days);
       }, 500);
@@ -124,20 +114,13 @@ export function StreakMilestoneProvider({
 
   const handleShare = useCallback(() => {
     if (celebrationData) {
-      // Map streak milestone to strength level for share card
-      const milestoneLevel: MilestoneLevel =
-        celebrationData.milestone.days >= 100
-          ? 'automatic'
-          : celebrationData.milestone.days >= 30
-            ? 'strong'
-            : 'developing';
+      const milestoneDays = celebrationData.milestone.days as 7 | 30 | 100;
 
       setShareData({
         habitName: celebrationData.habitName,
-        milestoneLevel,
-        strengthPercentage: Math.round(
-          (celebrationData.streakDays / celebrationData.milestone.days) * 100
-        ),
+        milestoneDays,
+        motivationalMessage: MILESTONE_MESSAGES[milestoneDays],
+        streakCount: celebrationData.streakDays,
         userName,
       });
       setShowShareCard(true);
@@ -147,7 +130,6 @@ export function StreakMilestoneProvider({
   const handleShareClose = useCallback(() => {
     setShowShareCard(false);
     setShareData(null);
-    // Also close the celebration modal
     handleClose();
   }, [handleClose]);
 
@@ -162,7 +144,6 @@ export function StreakMilestoneProvider({
     <StreakMilestoneContext.Provider value={contextValue}>
       {children}
 
-      {/* Celebration Modal */}
       {celebrationData && (
         <StreakMilestoneCelebration
           habitEmoji={celebrationData.habitEmoji}
@@ -175,7 +156,6 @@ export function StreakMilestoneProvider({
         />
       )}
 
-      {/* Share Card Generator */}
       {shareData && (
         <ShareCardGenerator
           data={shareData}
@@ -187,9 +167,6 @@ export function StreakMilestoneProvider({
   );
 }
 
-/**
- * Hook to access streak milestone celebration trigger
- */
 export function useStreakMilestone(): StreakMilestoneContextValue {
   const context = useContext(StreakMilestoneContext);
 

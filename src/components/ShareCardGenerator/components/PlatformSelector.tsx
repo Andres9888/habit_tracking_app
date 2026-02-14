@@ -1,8 +1,3 @@
-/**
- * PlatformSelector Component
- * Allows selecting the target social media platform
- */
-
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useAppTheme } from '../../../theme';
@@ -14,6 +9,12 @@ interface PlatformSelectorProps {
   selectedPlatform: SharePlatform;
   onSelectPlatform: (platform: SharePlatform) => void;
 }
+
+const PLATFORM_LABELS: Record<SharePlatform, string> = {
+  'instagram-story': 'Instagram Stories',
+  twitter: 'Twitter / X',
+  whatsapp: 'WhatsApp',
+};
 
 export function PlatformSelector({
   selectedPlatform,
@@ -32,7 +33,7 @@ export function PlatformSelector({
         {(Object.keys(SHARE_FORMATS) as SharePlatform[]).map((platform) => (
           <Pressable
             key={platform}
-            accessibilityLabel={`${platform.replace('-', ' ')} platform`}
+            accessibilityLabel={`${PLATFORM_LABELS[platform]} platform`}
             accessibilityRole='button'
             accessibilityState={{ selected: selectedPlatform === platform }}
             style={[
@@ -50,7 +51,7 @@ export function PlatformSelector({
                   styles.platformButtonTextActive,
               ]}
             >
-              {platform.replace('-', ' ')}
+              {PLATFORM_LABELS[platform]}
             </Text>
           </Pressable>
         ))}

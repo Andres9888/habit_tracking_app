@@ -2,11 +2,7 @@
  * Type definitions for ShareCardGenerator component
  */
 
-export type SharePlatform =
-  | 'instagram-story'
-  | 'instagram-feed'
-  | 'twitter'
-  | 'facebook';
+export type SharePlatform = 'instagram-story' | 'twitter' | 'whatsapp';
 
 export interface ShareFormat {
   width: number;
@@ -34,8 +30,13 @@ export interface GradientPreset {
 
 export interface ShareCardData {
   habitName: string;
-  milestoneLevel: MilestoneLevel;
-  strengthPercentage: number;
+  /** New streak-sharing fields */
+  streakCount?: number;
+  milestoneDays?: 7 | 30 | 100;
+  motivationalMessage?: string;
+  /** Backward-compatible fields from legacy strength sharing */
+  milestoneLevel?: MilestoneLevel;
+  strengthPercentage?: number;
   userName?: string;
 }
 
@@ -57,7 +58,8 @@ export interface ShareCardContentProps {
   habitName: string;
   emoji: string;
   milestoneLabel: string;
-  strengthPercentage: number;
+  streakCount: number;
+  motivationalMessage: string;
   personalMessage?: string;
   showUserName: boolean;
   userName?: string;
