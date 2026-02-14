@@ -56,10 +56,11 @@ export function BenefitsVariant({
           contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
         >
-          {sortedFeatures.map((feature) => (
+          {sortedFeatures.map((feature, index) => (
             <BenefitsFeatureCard
               key={feature.id}
               feature={feature}
+              index={index}
               isHighlighted={feature.id === triggeredByFeature}
             />
           ))}
