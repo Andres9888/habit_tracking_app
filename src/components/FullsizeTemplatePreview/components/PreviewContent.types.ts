@@ -11,7 +11,6 @@ export interface PreviewContentAnimatedStyles {
   contentStyle: ViewStyle;
   successGlowStyle: ViewStyle;
   closeButtonAnimatedOpacityStyle: ViewStyle;
-  closeButtonStyle: ViewStyle;
   iconAnimatedStyle: ViewStyle;
   iconGlowStyle: ViewStyle;
   checkmarkAnimatedStyle: ViewStyle;
@@ -30,7 +29,6 @@ export interface PreviewContentHandlers {
 
 export interface PreviewContentProps {
   animatedStyles: PreviewContentAnimatedStyles;
-  closeButtonScale: SharedValue<number>;
   confettiRef: React.RefObject<any>;
   createPressHandlers: (
     scale: SharedValue<number>,
