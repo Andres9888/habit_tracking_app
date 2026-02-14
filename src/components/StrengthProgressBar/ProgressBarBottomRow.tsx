@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { styles } from './StrengthProgressBar.styles';
 import type { LevelConfig, SizeConfig } from './StrengthProgressBar.types';
 
@@ -25,6 +26,8 @@ export const ProgressBarBottomRow: React.FC<ProgressBarBottomRowProps> = ({
   pointsToNext,
   config,
 }) => {
+  const { colors: themeColors } = useThemeColors();
+
   if (!showLabel && !(showNextLevel && nextLevel)) return null;
 
   return (
@@ -40,7 +43,15 @@ export const ProgressBarBottomRow: React.FC<ProgressBarBottomRowProps> = ({
         </Text>
       )}
       {showNextLevel && nextLevel && (
-        <Text style={[styles.nextHint, { fontSize: config.fontSize * 0.85 }]}>
+        <Text
+          style={[
+            styles.nextHint,
+            {
+              color: themeColors.text.tertiary,
+              fontSize: config.fontSize * 0.85,
+            },
+          ]}
+        >
           {pointsToNext}% to {nextLevel.label}
         </Text>
       )}

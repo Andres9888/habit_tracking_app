@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { styles } from './StrengthProgressBar.styles';
 import type { ProgressBarRowProps } from './ProgressBarRow.types';
 import { getGradientColors } from './ProgressBarRow.helpers';
@@ -23,6 +24,7 @@ export function ProgressBarRow({
   showPercentage,
   strengthLabel,
 }: ProgressBarRowProps) {
+  const { colors: themeColors } = useThemeColors();
   return (
     <View style={[styles.topRow, { gap: config.gap }]}>
       {showEmoji && (
@@ -67,7 +69,14 @@ export function ProgressBarRow({
 
       {showNextLevel && nextLevel && (
         <View style={styles.nextLevelContainer}>
-          <Text style={[styles.arrow, { fontSize: config.fontSize }]}>→</Text>
+          <Text
+            style={[
+              styles.arrow,
+              { color: themeColors.text.tertiary, fontSize: config.fontSize },
+            ]}
+          >
+            →
+          </Text>
           <Text
             style={[styles.nextEmoji, { fontSize: config.emojiSize * 0.85 }]}
           >

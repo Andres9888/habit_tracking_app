@@ -6,7 +6,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useAppTheme } from '../../../theme';
-import { colors, milestoneColors } from '../../../theme/colors';
+import { milestoneColors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { streakStyles } from '../HabitCard.streakStyles';
 
 interface StreakBadgeProps {
@@ -16,24 +17,33 @@ interface StreakBadgeProps {
 
 export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
   const theme = useAppTheme();
+  const { colors: themeColors, isDark } = useThemeColors();
 
   if (currentStreak <= 0) {
     return null;
   }
+
+  const isRecord = currentStreak >= bestStreak;
 
   return (
     <View style={streakStyles.streakRow}>
       <View
         style={[
           streakStyles.streakBadge,
-          { backgroundColor: milestoneColors.amberLight },
+          {
+            backgroundColor: isDark
+              ? 'rgba(245, 158, 11, 0.15)'
+              : milestoneColors.amberLight,
+          },
         ]}
       >
         <Text style={streakStyles.streakFireIcon}>🔥</Text>
         <Text
           style={[
             streakStyles.streakText,
-            { color: theme.custom.colors.warning[700] },
+            {
+              color: isDark ? '#FCD34D' : theme.custom.colors.warning[700],
+            },
           ]}
         >
           {currentStreak} Day{currentStreak === 1 ? '' : 's'} Streak
@@ -46,14 +56,16 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
           style={[
             streakStyles.bestStreakBadge,
             {
-              backgroundColor:
-                currentStreak >= bestStreak
-                  ? milestoneColors.amberLight
-                  : colors.gray[100],
-              borderColor:
-                currentStreak >= bestStreak
-                  ? milestoneColors.amberBorder
-                  : colors.border,
+              backgroundColor: isRecord
+                ? isDark
+                  ? 'rgba(245, 158, 11, 0.15)'
+                  : milestoneColors.amberLight
+                : themeColors.gray[100],
+              borderColor: isRecord
+                ? isDark
+                  ? '#92400E'
+                  : milestoneColors.amberBorder
+                : themeColors.border,
             },
           ]}
         >
@@ -62,16 +74,15 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
             style={[
               streakStyles.bestStreakText,
               {
-                color:
-                  currentStreak >= bestStreak
-                    ? milestoneColors.amberText
-                    : colors.gray[500],
+                color: isRecord
+                  ? isDark
+                    ? '#FCD34D'
+                    : milestoneColors.amberText
+                  : themeColors.gray[500],
               },
             ]}
           >
-            {currentStreak >= bestStreak
-              ? 'New Record!'
-              : `Best: ${bestStreak}`}
+            {isRecord ? 'New Record!' : `Best: ${bestStreak}`}
           </Text>
         </View>
       )}

@@ -12,16 +12,11 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { api } from '../../../convex/_generated/api';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
@@ -31,15 +26,8 @@ import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 
 const LOADING_TIMEOUT_MS = 10_000;
 
-function ChainIcon() {
-  return (
-    <View style={loadingStyles.iconContainer}>
-      <Text style={loadingStyles.iconText}>🔗</Text>
-    </View>
-  );
-}
-
 function BrandedLoadingScreen() {
+  const { colors: themeColors, isDark } = useThemeColors();
   const [timedOut, setTimedOut] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -61,27 +49,71 @@ function BrandedLoadingScreen() {
   }, []);
 
   return (
-    <View style={loadingStyles.container}>
+    <View
+      style={[
+        loadingStyles.container,
+        { backgroundColor: themeColors.background },
+      ]}
+    >
       <View style={loadingStyles.content}>
-        <ChainIcon />
-        <Text style={loadingStyles.appName}>Chain Day</Text>
+        <View
+          style={[
+            loadingStyles.iconContainer,
+            { backgroundColor: themeColors.primary[100] },
+          ]}
+        >
+          <Text style={loadingStyles.iconText}>🔗</Text>
+        </View>
+        <Text
+          style={[loadingStyles.appName, { color: themeColors.primary[700] }]}
+        >
+          Chain Day
+        </Text>
 
         {timedOut ? (
-          <View style={loadingStyles.errorCard}>
-            <Text style={loadingStyles.errorTitle}>
+          <View
+            style={[
+              loadingStyles.errorCard,
+              {
+                backgroundColor: themeColors.card,
+                borderColor: themeColors.border,
+              },
+            ]}
+          >
+            <Text
+              style={[
+                loadingStyles.errorTitle,
+                { color: themeColors.text.primary },
+              ]}
+            >
               Taking longer than expected
             </Text>
-            <Text style={loadingStyles.errorDescription}>
+            <Text
+              style={[
+                loadingStyles.errorDescription,
+                { color: themeColors.text.secondary },
+              ]}
+            >
               We're having trouble connecting. Check your internet connection
               and try again.
             </Text>
             <Pressable
               accessibilityLabel='Try Again'
               accessibilityRole='button'
-              style={loadingStyles.retryButton}
+              style={[
+                loadingStyles.retryButton,
+                { backgroundColor: themeColors.primary[600] },
+              ]}
               onPress={handleRetry}
             >
-              <Text style={loadingStyles.retryButtonText}>Try Again</Text>
+              <Text
+                style={[
+                  loadingStyles.retryButtonText,
+                  { color: themeColors.text.inverse },
+                ]}
+              >
+                Try Again
+              </Text>
             </Pressable>
           </View>
         ) : (
@@ -102,15 +134,18 @@ function BrandedLoadingScreen() {
 
 const loadingStyles = StyleSheet.create({
   appName: {
-    color: colors.primary[700],
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: 0.5,
     marginBottom: 32,
   },
+  cardsPreview: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
   container: {
     alignItems: 'center',
-    backgroundColor: colors.light.background,
     flex: 1,
     justifyContent: 'center',
   },
@@ -119,8 +154,8 @@ const loadingStyles = StyleSheet.create({
   },
   errorCard: {
     alignItems: 'center',
-    backgroundColor: colors.light.card,
-    borderColor: colors.border,
+    backgroundColor: undefined,
+    borderColor: undefined,
     borderRadius: 16,
     borderWidth: 1,
     marginHorizontal: 24,
@@ -132,14 +167,12 @@ const loadingStyles = StyleSheet.create({
     shadowRadius: 16,
   },
   errorDescription: {
-    color: colors.text.secondary,
     fontSize: 13,
     lineHeight: 20,
     marginBottom: 20,
     textAlign: 'center',
   },
   errorTitle: {
-    color: colors.text.primary,
     fontSize: 17,
     fontWeight: '600',
     marginBottom: 8,
@@ -147,7 +180,6 @@ const loadingStyles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: colors.primary[100],
     borderRadius: 24,
     height: 64,
     justifyContent: 'center',
@@ -158,20 +190,13 @@ const loadingStyles = StyleSheet.create({
     fontSize: 28,
   },
   retryButton: {
-    backgroundColor: colors.primary[600],
     borderRadius: 12,
     paddingHorizontal: 32,
     paddingVertical: 12,
   },
   retryButtonText: {
-    color: colors.text.inverse,
     fontSize: 17,
     fontWeight: '600',
-  },
-  cardsPreview: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 24,
   },
   shimmerContainer: {
     marginTop: 12,

@@ -8,7 +8,7 @@ import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
-import { colors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { styles } from './StrengthProgressBar.styles';
 import { DIVIDER_POSITIONS } from './StrengthProgressBar.constants';
 import { useGlowPulse } from './useGlowPulse';
@@ -27,13 +27,14 @@ export function GradientBar({
   showDividers,
 }: GradientBarProps) {
   const glowStyle = useGlowPulse();
+  const { colors: themeColors } = useThemeColors();
 
   return (
     <View
       style={[
         styles.barContainer,
         {
-          backgroundColor: colors.gray[200],
+          backgroundColor: themeColors.gray[200],
           borderRadius: barHeight / 2,
           height: barHeight,
         },
@@ -55,7 +56,7 @@ export function GradientBar({
         <Animated.View
           style={[
             {
-              backgroundColor: colors.text.inverse,
+              backgroundColor: themeColors.text.inverse,
               borderRadius: barHeight,
               height: barHeight * 1.5,
               position: 'absolute',
