@@ -13,6 +13,7 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitData {
   dayPhase: string | null;
+  difficulty: 'easy' | 'medium' | 'hard';
   fullHabitName: string;
   hasReminders: boolean;
   reminderSound?: string | null;
@@ -24,6 +25,7 @@ interface HabitData {
 interface EditHabitData extends HabitData {
   habitToEdit: {
     _id: Id<'habits'>;
+    difficulty?: 'easy' | 'medium' | 'hard';
     notes?: string;
   };
 }
@@ -33,6 +35,7 @@ export function useCreateHabitHandlers() {
   const updateHabit = useMutation(api.habits.update);
 
   async function handleEdit({
+    difficulty,
     habitToEdit,
     hasReminders,
     fullHabitName,
@@ -59,6 +62,7 @@ export function useCreateHabitHandlers() {
     }
 
     await updateHabit({
+      difficulty,
       habitId: habitToEdit._id,
       icon: selectedEmoji ?? undefined,
       iconColor: selectedColor,
@@ -74,6 +78,7 @@ export function useCreateHabitHandlers() {
   }
 
   async function handleCreate({
+    difficulty,
     hasReminders,
     fullHabitName,
     reminderTime,
@@ -83,6 +88,7 @@ export function useCreateHabitHandlers() {
     reminderSound,
   }: HabitData): Promise<void> {
     const habitId = await createHabit({
+      difficulty,
       icon: selectedEmoji ?? undefined,
       iconColor: selectedColor,
       name: fullHabitName,

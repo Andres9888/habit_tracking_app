@@ -7,6 +7,7 @@
 import { query } from './_generated/server';
 import {
   calculateHabitStrength,
+  getDifficultyWeighting,
   getStreaksForHabitsBatch,
 } from './analytics/index';
 
@@ -44,11 +45,13 @@ export const getOverviewStats = query({
         habit,
         streaks.currentStreak / 66
       );
+      const difficultyWeight = getDifficultyWeighting(habit.difficulty);
+      const weightedStrength = Math.min(1, strength * difficultyWeight);
       return {
         ...habit,
         currentStreak: streaks.currentStreak,
         longestStreak: streaks.longestStreak,
-        strength,
+        strength: weightedStrength,
       };
     });
 

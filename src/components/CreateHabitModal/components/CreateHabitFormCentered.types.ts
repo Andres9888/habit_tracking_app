@@ -2,8 +2,12 @@
  * Types for CreateHabitFormCentered
  */
 
+import type { HabitDifficulty } from '../hooks/useHabitFormState';
+
 export interface CreateHabitFormCenteredProps {
+  difficulty: HabitDifficulty;
   habitName: string;
+  onDifficultyChange: (difficulty: HabitDifficulty) => void;
   onHabitNameChange: (value: string) => void;
   selectedEmoji: string | null;
   onEmojiSelect: (emoji: string | null) => void;

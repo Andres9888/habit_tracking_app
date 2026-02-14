@@ -31,6 +31,7 @@ export type { HabitCardProps } from './HabitCard.types';
 function HabitCardComponent(props: HabitCardProps) {
   const {
     name,
+    difficulty,
     icon = '📝',
     strength,
     atRisk = false,
@@ -99,6 +100,7 @@ function HabitCardComponent(props: HabitCardProps) {
             completed={habit.completed}
             completionIcon={completionIcon}
             currentStreak={habit.currentStreak}
+            difficulty={difficulty}
             entranceContentStyle={habit.entrance.contentStyle as any}
             hasPendingOfflineOps={habit.hasPendingOfflineOps}
             icon={icon}

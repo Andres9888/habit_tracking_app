@@ -15,6 +15,8 @@ import { getReminderOptionFromTime } from './reminderUtils';
 
 const DEFAULT_SOUND = 'Default';
 
+export type HabitDifficulty = 'easy' | 'medium' | 'hard';
+
 interface UseHabitFormStateOptions {
   habitToEdit?: HabitDoc | null;
 }
@@ -43,6 +45,9 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
   const [reminderSound, setReminderSound] = useState(
     habitToEdit?.reminderSound ?? DEFAULT_SOUND
   );
+  const [difficulty, setDifficulty] = useState<HabitDifficulty>(
+    habitToEdit?.difficulty ?? 'medium'
+  );
   const [frequency, setFrequency] = useState<string>(
     habitToEdit?.frequency ?? ''
   );
@@ -58,6 +63,7 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
 
   return {
     dayPhase,
+    difficulty,
     frequency,
     habitName,
     isColorPickerVisible,
@@ -70,6 +76,7 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     selectedEmoji,
     setColorPickerVisible,
     setDayPhase,
+    setDifficulty,
     setFrequency,
     setHabitName,
     setReminderOptionState,

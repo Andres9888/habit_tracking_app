@@ -53,6 +53,7 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
 
   const habitData = useHabitData({
     dayPhase: form.dayPhase,
+    difficulty: form.difficulty,
     fullHabitName: form.fullHabitName,
     reminderSound: form.reminderSound,
     reminderTime: form.reminderTime,
@@ -75,13 +76,14 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     const { hasReminders } = await checkReminderPermissions(
       form.remindersEnabled
     );
-    const data = { ...habitData, hasReminders };
+    const data = { ...habitData, difficulty: form.difficulty, hasReminders };
 
     await (isEditMode && habitToEdit
       ? handleEdit({ ...data, habitToEdit })
       : createNewHabit(data));
     cleanup();
   }, [
+    form.difficulty,
     form.habitName,
     form.fullHabitName,
     form.remindersEnabled,

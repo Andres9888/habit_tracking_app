@@ -7,6 +7,8 @@ import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { useHabitSaveHandler } from './useHabitSaveHandler';
 import { useHabitActions } from './useHabitActions';
 
+export type HabitDifficulty = 'easy' | 'medium' | 'hard';
+
 interface UseHabitEditScreenProps {
   habitId: Id<'habits'> | null;
   onClose: () => void;
@@ -22,6 +24,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
+  const [difficulty, setDifficulty] = useState<HabitDifficulty>('medium');
 
   useEffect(() => {
     if (habit) {
@@ -34,12 +37,14 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
       setSelectedColor(habit.iconColor || '#DBEAFE');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
+      setDifficulty(habit.difficulty || 'medium');
     }
   }, [habit]);
 
   const { handleSave, isSaving } = useHabitSaveHandler({
     habitId,
     habitName,
+    difficulty,
     onSuccess: () => {
       triggerSuccess();
       onClose();
@@ -76,6 +81,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
   }, []);
 
   return {
+    difficulty,
     habitName,
     handleColorSelect,
     handleDelete,
@@ -87,6 +93,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     handleSave,
     selectedEmoji,
     isSaving,
+    setDifficulty,
     setHabitName,
     reminderTime,
     selectedColor,

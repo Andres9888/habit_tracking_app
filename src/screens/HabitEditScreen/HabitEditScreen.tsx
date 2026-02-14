@@ -69,12 +69,14 @@ export default function HabitEditScreen({
                   entering={FadeInUp.delay(280).springify().damping(18)}
                 >
                   <CustomizeSection
+                    difficulty={state.difficulty}
                     habitName={state.habitName}
                     remindersEnabled={state.remindersEnabled}
                     reminderTime={state.reminderTime}
                     selectedColor={state.selectedColor}
                     selectedEmoji={state.selectedEmoji}
                     onColorSelect={state.handleColorSelect}
+                    onDifficultyChange={state.setDifficulty}
                     onEmojiSelect={state.handleEmojiSelect}
                     onReminderTimeChange={state.handleReminderTimeChange}
                     onReminderToggle={state.handleReminderToggle}

@@ -35,6 +35,7 @@ export const create = mutation({
       cueLocation: validated.cueLocation,
       cueTime: validated.cueTime,
       currentStreak: 0,
+      difficulty: args.difficulty || 'medium',
       icon: validated.icon,
       iconColor: validated.iconColor,
       lastCompletedDate: undefined,

@@ -21,6 +21,12 @@ import { streakStyles } from '../HabitCard.streakStyles';
 import { StatusIndicator, type CompletionIconType } from './StatusIndicator';
 import { StreakBadge } from './StreakBadge';
 
+const DIFFICULTY_CONFIG = {
+  easy: { color: '#22C55E', label: 'E' },
+  medium: { color: '#F59E0B', label: 'M' },
+  hard: { color: '#EF4444', label: 'H' },
+};
+
 interface HabitCardContentProps {
   name: string;
   icon: string;
@@ -43,6 +49,8 @@ interface HabitCardContentProps {
   chainScale?: SharedValue<number>;
   /** Animated rotation for chain link animation - T014 */
   chainRotate?: SharedValue<number>;
+  /** Habit difficulty badge */
+  difficulty?: 'easy' | 'medium' | 'hard';
 }
 
 export function HabitCardContent({
@@ -61,6 +69,7 @@ export function HabitCardContent({
   hasPendingOfflineOps = false,
   chainScale,
   chainRotate,
+  difficulty,
 }: HabitCardContentProps) {
   const { colors: themeColors } = useThemeColors();
   return (
@@ -98,6 +107,32 @@ export function HabitCardContent({
       </View>
 
       <StreakBadge bestStreak={bestStreak} currentStreak={currentStreak} />
+      {difficulty && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            backgroundColor: DIFFICULTY_CONFIG[difficulty].color,
+            borderRadius: 12,
+            width: 24,
+            height: 24,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{
+              color: '#FFFFFF',
+              fontSize: 10,
+              fontWeight: '700',
+              textAlign: 'center',
+            }}
+          >
+            {DIFFICULTY_CONFIG[difficulty].label}
+          </Text>
+        </View>
+      )}
       <Animated.View
         pointerEvents='none'
         style={[streakStyles.rippleOverlay, rippleAnimatedStyle]}

@@ -18,6 +18,7 @@ export {
   getDateString,
   getDaysAgo,
   getCompletionLevel,
+  getDifficultyWeighting,
 } from './helpers';
 
 // Streak helpers

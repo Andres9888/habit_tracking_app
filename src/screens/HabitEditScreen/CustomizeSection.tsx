@@ -5,20 +5,25 @@
  * - Emoji icon picker
  * - Accent color selection
  * - Reminder scheduling
+ * - Difficulty selector
  */
 
 import { View } from 'react-native';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
+import { DifficultySelector } from '../../components/DifficultySelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
+import type { HabitDifficulty } from './useHabitEditScreen';
 
 interface CustomizeSectionProps {
+  difficulty: HabitDifficulty;
   habitName: string;
   selectedEmoji: string | null;
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
+  onDifficultyChange: (difficulty: HabitDifficulty) => void;
   onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
@@ -26,11 +31,13 @@ interface CustomizeSectionProps {
 }
 
 export function CustomizeSection({
+  difficulty,
   habitName,
   selectedEmoji,
   selectedColor,
   remindersEnabled,
   reminderTime,
+  onDifficultyChange,
   onEmojiSelect,
   onColorSelect,
   onReminderToggle,
@@ -50,6 +57,11 @@ export function CustomizeSection({
         colors={HABIT_COLORS}
         selectedColor={selectedColor}
         onSelectColor={onColorSelect}
+      />
+
+      <DifficultySelector
+        difficulty={difficulty}
+        onChange={onDifficultyChange}
       />
 
       <EnhancedReminderSelector

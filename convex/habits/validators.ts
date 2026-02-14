@@ -19,6 +19,7 @@ export const fullHabitValidator = v.object({
   bestStreak: v.optional(v.number()),
   consecutiveDays: v.optional(v.number()),
   createdAt: v.number(),
+  difficulty: v.optional(v.union(v.literal("easy"), v.literal("medium"), v.literal("hard"))),
   cueAfterBehavior: v.optional(v.string()),
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),

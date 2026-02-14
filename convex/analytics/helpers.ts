@@ -49,3 +49,20 @@ export function getCompletionLevel(
   if (completionRate > 0) return 'low';
   return 'none';
 }
+
+/**
+ * Get difficulty weighting factor for streak scoring
+ * Easy: 1.0x, Medium: 1.3x, Hard: 1.6x
+ * Higher difficulty multiplies strength for analytics rankings
+ */
+export function getDifficultyWeighting(difficulty?: string): number {
+  switch (difficulty) {
+    case 'easy':
+      return 1.0;
+    case 'hard':
+      return 1.6;
+    case 'medium':
+    default:
+      return 1.3;
+  }
+}

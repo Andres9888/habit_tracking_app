@@ -14,6 +14,7 @@ import { showSaveError } from '../../utils/errorAlerts';
 interface UseSaveHandlerProps {
   habitId: Id<'habits'> | null;
   habitName: string;
+  difficulty: 'easy' | 'medium' | 'hard';
   selectedEmoji: string | null;
   selectedColor: string;
   remindersEnabled: boolean;
@@ -24,6 +25,7 @@ interface UseSaveHandlerProps {
 export function useHabitSaveHandler({
   habitId,
   habitName,
+  difficulty,
   selectedEmoji,
   selectedColor,
   remindersEnabled,
@@ -74,6 +76,7 @@ export function useHabitSaveHandler({
       }
 
       await updateHabit({
+        difficulty,
         habitId,
         icon: selectedEmoji ?? undefined,
         iconColor: selectedColor,
@@ -91,6 +94,7 @@ export function useHabitSaveHandler({
       setIsSaving(false);
     }
   }, [
+    difficulty,
     isSaving,
     habitId,
     habitName,

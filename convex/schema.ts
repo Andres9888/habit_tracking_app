@@ -115,6 +115,10 @@ const applicationTables = {
     // ISO date string (YYYY-MM-DD)
     consecutiveDays: v.optional(v.number()),
 
+    // Difficulty level affects streak scoring weight in analytics
+    // "easy", "medium", "hard" - defaults to "medium"
+    difficulty: v.optional(v.union(v.literal("easy"), v.literal("medium"), v.literal("hard"))),
+
     createdAt: v.number(),
 
     // Cue - Implementation Intention (Gollwitzer, 1999: 2-3x follow-through)

@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
+import { DifficultySelector } from '../../DifficultySelector';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
 import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.types';
 
@@ -10,7 +11,9 @@ import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.typ
  * Follows "identity before behavior" in habit formation psychology.
  */
 const CreateHabitFormCenteredComponent = ({
+  difficulty,
   habitName,
+  onDifficultyChange,
   onHabitNameChange,
   selectedEmoji,
   onEmojiSelect,
@@ -86,6 +89,12 @@ const CreateHabitFormCenteredComponent = ({
           colors={colors}
           selectedColor={selectedColor}
           onSelectColor={onColorSelect}
+        />
+
+        {/* Difficulty selector */}
+        <DifficultySelector
+          difficulty={difficulty}
+          onChange={onDifficultyChange}
         />
 
         {/* Reminder selector with presets and custom time */}

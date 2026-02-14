@@ -36,6 +36,9 @@ export interface HabitCardProps {
   /** Best streak (Story 1.4) */
   bestStreak?: number;
 
+  /** Habit difficulty (affects streak scoring weight in analytics) */
+  difficulty?: 'easy' | 'medium' | 'hard';
+
   /** Is completed today */
   completed?: boolean;
 
