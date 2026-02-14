@@ -56,6 +56,7 @@ export function CategorySearchView(p: CategorySearchViewProps) {
         filteredTemplates={templates}
         hasActiveFilters={p.hasActiveFilters}
         importingTemplateId={p.importingTemplateId}
+        isPremiumUser={p.isPremiumUser}
         selectedCategory={p.selectedCategory}
         onImport={h.handleTemplateImport}
         onPreview={h.handleTemplatePreview}

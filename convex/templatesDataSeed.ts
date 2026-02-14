@@ -34,6 +34,7 @@ type TemplateInsert = {
   scientificReference: string;
   tips?: string[];
   youtubeLink?: string;
+  isPremium?: boolean;
 };
 
 const _insertTemplateIfMissing = async (
@@ -5003,6 +5004,258 @@ export const seedUniqueTemplates = mutation({
       popularityScore: 82,
       scientificReference:
         'Fernandes et al. (2014) - Financial literacy, financial education, and downstream financial behaviors',
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // 🌟 PREMIUM TEMPLATES - Habit Templates Gallery
+    // ═══════════════════════════════════════════════════════════════
+
+    // Health & Fitness Premium Templates
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Complete blood work analysis quarterly. Track key biomarkers like cholesterol, vitamin D, and HbA1c for optimal health insights.',
+      frequency: 'quarterly',
+      icon: '🩸',
+      iconColor: '#EF4444',
+      name: 'Quarterly Blood Work',
+      popularityScore: 92,
+      scientificReference:
+        'Harvard Health - The importance of regular health screenings',
+      isPremium: true,
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Track HRV (Heart Rate Variability) daily using wearable devices. HRV is the gold standard for measuring autonomic nervous system balance.',
+      frequency: 'daily',
+      icon: '💓',
+      iconColor: '#EC4899',
+      name: 'Daily HRV Tracking',
+      popularityScore: 88,
+      scientificReference:
+        'Task Force of the European Society of Cardiology - Heart rate variability standards',
+      isPremium: true,
+    });
+
+    // Productivity Premium Templates
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Weekly strategic review using the Eisenhower Matrix. Prioritize tasks by urgency and importance for maximum impact.',
+      frequency: 'weekly',
+      icon: '🎯',
+      iconColor: '#8B5CF6',
+      name: 'Eisenhower Matrix Review',
+      popularityScore: 90,
+      scientificReference:
+        'Eisenhower (1954) - The Eisenhower Decision Matrix',
+      isPremium: true,
+    });
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Monthly systems audit - review and optimize your workflows. Identify bottlenecks and automate repetitive tasks.',
+      frequency: 'monthly',
+      icon: '⚙️',
+      iconColor: '#6366F1',
+      name: 'Systems Audit',
+      popularityScore: 85,
+      scientificReference:
+        ' systems thinking approach to productivity',
+      isPremium: true,
+    });
+
+    // Mindfulness Premium Templates
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        ' Loving-kindness meditation (Metta) extending compassion to self and others. Proven to increase positive emotions and social connection.',
+      frequency: 'daily',
+      icon: '💕',
+      iconColor: '#F43F5E',
+      name: 'Loving-Kindness Meditation',
+      popularityScore: 87,
+      scientificReference:
+        'Fredrickson et al. (2008) - Open hearts build lives: Positive emotions and coronary heart disease',
+      isPremium: true,
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Body scan meditation from head to toe. Releases physical tension and increases body awareness for better stress management.',
+      frequency: 'daily',
+      icon: '🧘',
+      iconColor: '#14B8A6',
+      name: 'Body Scan Meditation',
+      popularityScore: 86,
+      scientificReference:
+        'Kabat-Zinn (1990) - Full Catastrophe Living: Using the Wisdom of Your Body',
+      isPremium: true,
+    });
+
+    // Fitness Premium Templates
+    await insertWithTracking({
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Track your readiness score using training load metrics. Optimize recovery to prevent overtraining and maximize gains.',
+      frequency: 'daily',
+      icon: '📈',
+      iconColor: '#10B981',
+      name: 'Training Readiness Score',
+      popularityScore: 89,
+      scientificReference:
+        'Foster et al. (2021) - Monitoring training load and recovery in athletes',
+      isPremium: true,
+    });
+
+    await insertWithTracking({
+      category: 'recovery',
+      createdAt: now,
+      description:
+        'Weekly stretching routine focusing on mobility. Improves flexibility, reduces injury risk, and enhances athletic performance.',
+      frequency: 'weekly',
+      icon: '🤸',
+      iconColor: '#F97316',
+      name: 'Weekly Mobility Flow',
+      popularityScore: 84,
+      scientificReference:
+        'Page (2012) - Current concepts in muscle stretching for exercise and rehabilitation',
+      isPremium: true,
+    });
+
+    // Learning Premium Templates
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Spaced repetition review using Anki or similar. Retain information 3x more effectively than cramming.',
+      frequency: 'daily',
+      icon: '🧠',
+      iconColor: '#3B82F6',
+      name: 'Spaced Repetition Session',
+      popularityScore: 91,
+      scientificReference:
+        'Bahrick et al. (1993) - Maintenance of knowledge: Questions about memory',
+      isPremium: true,
+    });
+
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Weekly learning review - consolidate notes and create connections. Transform passive reading into active knowledge retention.',
+      frequency: 'weekly',
+      icon: '📚',
+      iconColor: '#8B5CF6',
+      name: 'Weekly Knowledge Integration',
+      popularityScore: 88,
+      scientificReference:
+        'Cicerone (2019) - The Learning Brain: Memory and Brain Development in Children',
+      isPremium: true,
+    });
+
+    // Longevity Premium Templates
+    await insertWithTracking({
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'Track and optimize your 7 longevity biomarkers quarterly. Monitor metrics that predict lifespan and healthspan.',
+      frequency: 'quarterly',
+      icon: '⏱️',
+      iconColor: '#0EA5E9',
+      name: 'Longevity Biomarker Check',
+      popularityScore: 93,
+      scientificReference:
+        'López-Otín et al. (2013) - The hallmarks of aging',
+      isPremium: true,
+    });
+
+    await insertWithTracking({
+      category: 'longevity',
+      createdAt: now,
+      description:
+        'Daily supplements protocol tracking with reminders. Consistency is key for supplements that support cellular health.',
+      frequency: 'daily',
+      icon: '💊',
+      iconColor: '#22C55E',
+      name: 'Supplement Protocol',
+      popularityScore: 86,
+      scientificReference:
+        'Prasad et al. (2014) - Vitamin supplementation in disease prevention',
+      isPremium: true,
+    });
+
+    // Mental Health Premium Templates
+    await insertWithTracking({
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'Monthly therapy or coaching session. Professional support accelerates growth and provides tools for challenges.',
+      frequency: 'monthly',
+      icon: '🗣️',
+      iconColor: '#A855F7',
+      name: 'Monthly Therapy Check-In',
+      popularityScore: 90,
+      scientificReference:
+        'Wampold (2015) - How important are the common factors in psychotherapy?',
+      isPremium: true,
+    });
+
+    await insertWithTracking({
+      category: 'mental_health',
+      createdAt: now,
+      description:
+        'Weekly social connection score tracking. Measure and improve your meaningful relationships for better mental health.',
+      frequency: 'weekly',
+      icon: '🤝',
+      iconColor: '#F59E0B',
+      name: 'Social Connection Score',
+      popularityScore: 85,
+      scientificReference:
+        'Holt-Lunstad et al. (2010) - Social relationships and mortality risk',
+      isPremium: true,
+    });
+
+    // Sleep Premium Templates
+    await insertWithTracking({
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Sleep architecture tracking with sleep stages analysis. Understand your REM, deep, and light sleep patterns.',
+      frequency: 'daily',
+      icon: '🌙',
+      iconColor: '#6366F1',
+      name: 'Sleep Architecture Analysis',
+      popularityScore: 89,
+      scientificReference:
+        'Carskadon & Dement (2011) - Normal human sleep: An overview',
+      isPremium: true,
+    });
+
+    await insertWithTracking({
+      category: 'sleep',
+      createdAt: now,
+      description:
+        'Monthly sleep efficiency audit. Identify patterns and optimize your sleep environment for maximum restoration.',
+      frequency: 'monthly',
+      icon: '🔍',
+      iconColor: '#14B8A6',
+      name: 'Sleep Efficiency Audit',
+      popularityScore: 87,
+      scientificReference:
+        'Morin (2010) - Chronic insomnia: Prevention and treatment',
+      isPremium: true,
     });
 
     return {

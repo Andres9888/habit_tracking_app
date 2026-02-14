@@ -27,6 +27,8 @@ export interface CollapsibleCategorySectionProps {
   onImport: (template: Doc<'templates'>) => void;
   /** Currently importing template ID */
   importingTemplateId?: string | null;
+  /** Is user a premium subscriber */
+  isPremiumUser?: boolean;
 }
 
 export interface CategoryColors {

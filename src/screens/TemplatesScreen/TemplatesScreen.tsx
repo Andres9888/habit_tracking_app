@@ -11,7 +11,7 @@ import { BrowseView, CategorySearchView } from './views';
 
 function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();
-  const { data, state, handlers, filteredTemplates, getCategoryLabel } = props;
+  const { data, state, handlers, filteredTemplates, getCategoryLabel, isPremiumUser } = props;
 
   if (data.isLoading) return <TemplatesLoadingState />;
   if (!data.allTemplates?.length) {
@@ -37,6 +37,7 @@ function TemplatesScreenContent() {
         hasActiveFilters={state.hasActiveFilters}
         importedTemplateIds={state.importedTemplateIds}
         importingTemplateId={state.importingTemplateId}
+        isPremiumUser={isPremiumUser}
         previewTemplate={state.previewTemplate}
         researchOnly={state.researchOnly}
         searchQuery={state.searchQuery}
@@ -67,6 +68,7 @@ function TemplatesScreenContent() {
       handlers={handlers}
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
+      isPremiumUser={isPremiumUser}
       previewTemplate={state.previewTemplate}
       researchOnly={state.researchOnly}
       scienceCountsByCategory={props.scienceCountsByCategory}

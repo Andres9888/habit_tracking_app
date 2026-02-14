@@ -5,13 +5,14 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { ChevronRight, FlaskConical } from 'lucide-react-native';
+import { ChevronRight, FlaskConical, Lock } from 'lucide-react-native';
 import { styles } from './MiniTemplateCard.styles';
 
 interface CardHeaderProps {
   icon: string;
   iconColor: string;
   hasResearch?: boolean;
+  isPremium?: boolean;
   chevronStyle: object;
   scienceBadgeStyle: object;
 }
@@ -20,6 +21,7 @@ export function CardHeader({
   icon,
   iconColor,
   hasResearch,
+  isPremium,
   chevronStyle,
   scienceBadgeStyle,
 }: CardHeaderProps) {
@@ -38,6 +40,11 @@ export function CardHeader({
           >
             <FlaskConical color='#fff' size={10} strokeWidth={2.5} />
           </Animated.View>
+        )}
+        {isPremium && (
+          <View style={styles.premiumBadge}>
+            <Lock color='#fff' size={8} strokeWidth={3} />
+          </View>
         )}
       </View>
       <Animated.View

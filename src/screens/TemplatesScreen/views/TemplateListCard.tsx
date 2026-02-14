@@ -10,6 +10,7 @@ import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 interface TemplateListCardProps {
   item: Doc<'templates'>;
   importingTemplateId: Id<'templates'> | null;
+  isPremiumUser: boolean;
   onImport: (templateId: Id<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
 }
@@ -17,6 +18,7 @@ interface TemplateListCardProps {
 export function TemplateListCard({
   item,
   importingTemplateId,
+  isPremiumUser,
   onImport,
   onPreview,
 }: TemplateListCardProps) {
@@ -28,11 +30,12 @@ export function TemplateListCard({
         category={item.category}
         description={item.description}
         frequency={item.frequency}
+        hasAccess={isPremiumUser || !item.isPremium}
         icon={item.icon}
         iconColor={item.iconColor}
         id={item._id}
         isImporting={isImporting}
-        isPremium={item.category === 'andrew_huberman'}
+        isPremium={item.isPremium}
         name={item.name}
         popularityScore={item.popularityScore}
         scientificLink={item.scientificLink}

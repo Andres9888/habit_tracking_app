@@ -28,6 +28,17 @@ export const headerStyles: Record<string, ViewStyle | TextStyle> = {
   iconWrapper: {
     position: 'relative',
   },
+  premiumBadge: {
+    alignItems: 'center',
+    backgroundColor: '#7c3aed',
+    borderRadius: borderRadius.full,
+    bottom: -4,
+    height: 18,
+    justifyContent: 'center',
+    position: 'absolute',
+    left: -4,
+    width: 18,
+  },
   scienceBadge: {
     alignItems: 'center',
     backgroundColor: '#10b981',

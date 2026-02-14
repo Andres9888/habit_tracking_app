@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Lock } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
@@ -43,6 +44,7 @@ export function CategoryBadge({
 
       {isPremium && (
         <View style={styles.inlinePremiumBadge}>
+          <Lock color='#7c3aed' size={10} strokeWidth={3} />
           <Text style={styles.inlinePremiumText}>Premium</Text>
         </View>
       )}
@@ -65,8 +67,11 @@ export const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   inlinePremiumBadge: {
+    alignItems: 'center',
     backgroundColor: '#ede9fe',
     borderRadius: borderRadius.small,
+    flexDirection: 'row',
+    gap: 4,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
   },

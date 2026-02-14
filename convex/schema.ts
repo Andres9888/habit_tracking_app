@@ -416,6 +416,9 @@ const applicationTables = {
 
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),
+
+    // Premium templates require subscription
+    isPremium: v.optional(v.boolean()),
   }).index('by_category', ['category']),
 
   // Track template usage analytics

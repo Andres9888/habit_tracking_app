@@ -29,6 +29,7 @@ export function MiniTemplateCard(props: MiniTemplateCardProps) {
     iconColor: iconColorProp,
     isImported,
     isImporting,
+    isPremium,
     name = 'Untitled',
     onImport,
     onPress,
@@ -79,6 +80,7 @@ export function MiniTemplateCard(props: MiniTemplateCardProps) {
       importButtonStyle={importButtonStyle}
       isImported={isImported}
       isImporting={isImporting}
+      isPremium={isPremium}
       name={name}
       scienceBadgeStyle={scienceBadgeStyle}
       onImport={onImport ? handleImport : undefined}

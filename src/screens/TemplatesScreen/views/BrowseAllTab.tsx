@@ -21,6 +21,7 @@ interface BrowseAllTabProps {
   ) => Promise<void>;
   handleTemplatePreview: (template: Doc<'templates'>) => void;
   importingTemplateId: Id<'templates'> | null;
+  isPremiumUser: boolean;
   onCloseSortOptions: () => void;
   researchOnly: boolean;
   setResearchOnly: React.Dispatch<React.SetStateAction<boolean>>;
@@ -58,10 +59,12 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
             category={t.category}
             description={t.description}
             frequency={t.frequency}
+            hasAccess={p.isPremiumUser || !t.isPremium}
             icon={t.icon}
             iconColor={t.iconColor}
             id={t._id}
             isImporting={p.importingTemplateId === t._id}
+            isPremium={t.isPremium}
             name={t.name}
             popularityScore={t.popularityScore}
             scientificLink={t.scientificLink}

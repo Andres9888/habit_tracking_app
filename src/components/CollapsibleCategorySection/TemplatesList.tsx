@@ -25,6 +25,7 @@ const FREQUENCY_LABELS: Record<string, string> = {
 interface TemplatesListProps {
   importedTemplateIds?: Set<string>;
   importingTemplateId?: string | null;
+  isPremiumUser: boolean;
   reducedMotion: boolean;
   templates: Doc<'templates'>[];
   onImport: (template: Doc<'templates'>) => void;
@@ -34,6 +35,7 @@ interface TemplatesListProps {
 export function TemplatesList({
   importedTemplateIds,
   importingTemplateId,
+  isPremiumUser,
   reducedMotion,
   templates,
   onImport,
@@ -75,6 +77,7 @@ export function TemplatesList({
               iconColor={template.iconColor}
               isImported={importedTemplateIds?.has(template._id)}
               isImporting={importingTemplateId === template._id}
+              isPremium={template.isPremium}
               name={template.name || 'Untitled'}
               scientificReference={template.scientificReference}
               subtitle={

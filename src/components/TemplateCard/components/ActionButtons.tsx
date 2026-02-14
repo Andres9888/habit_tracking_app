@@ -7,7 +7,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, type GestureResponderEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Check, Eye } from 'lucide-react-native';
+import { Check, Eye, Lock } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Button from '../../Button/Button';
 import { borderRadius, spacing } from '../../../theme/spacing';
@@ -65,7 +65,14 @@ export function ActionButtons({
         variant='primary'
         onPress={onImportPress}
       >
-        {isLocked ? 'Unlock with Pro' : 'Import Habit'}
+        {isLocked ? (
+          <View style={styles.lockedButtonContent}>
+            <Lock color='#fff' size={16} strokeWidth={3} />
+            <Text style={styles.lockedButtonText}>Unlock with Pro</Text>
+          </View>
+        ) : (
+          'Import Habit'
+        )}
       </Button>
     </View>
   );
@@ -77,6 +84,16 @@ export const styles = StyleSheet.create({
     borderRadius: borderRadius.medium,
     flex: 1,
     paddingVertical: spacing.md,
+  },
+  lockedButtonContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.xs,
+  },
+  lockedButtonText: {
+    color: '#fff',
+    fontSize: typography.body.fontSize,
+    fontWeight: '700',
   },
   previewButton: {
     backgroundColor: '#f5f5f4',

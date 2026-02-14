@@ -32,6 +32,7 @@ export interface CategorySearchViewProps {
   hasActiveFilters: boolean;
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
+  isPremiumUser: boolean;
   previewTemplate: Doc<'templates'> | null;
   researchOnly: boolean;
   searchQuery: string;

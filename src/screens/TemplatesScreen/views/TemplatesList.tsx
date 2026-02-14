@@ -16,6 +16,7 @@ interface TemplatesListProps {
   filteredTemplates: Doc<'templates'>[];
   hasActiveFilters: boolean;
   importingTemplateId: Id<'templates'> | null;
+  isPremiumUser: boolean;
   selectedCategory: string;
   onImport: (templateId: Id<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
@@ -28,6 +29,7 @@ export function TemplatesList(props: TemplatesListProps) {
     filteredTemplates,
     hasActiveFilters,
     importingTemplateId,
+    isPremiumUser,
     selectedCategory,
     onImport,
     onPreview,
@@ -43,12 +45,13 @@ export function TemplatesList(props: TemplatesListProps) {
     ({ item }: { item: Doc<'templates'> }) => (
       <TemplateListCard
         importingTemplateId={importingTemplateId}
+        isPremiumUser={isPremiumUser}
         item={item}
         onImport={onImport}
         onPreview={onPreview}
       />
     ),
-    [importingTemplateId, onImport, onPreview]
+    [importingTemplateId, isPremiumUser, onImport, onPreview]
   );
 
   return (

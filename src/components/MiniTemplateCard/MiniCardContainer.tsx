@@ -23,6 +23,7 @@ export function MiniCardContainer({
   hasResearch,
   isImporting,
   isImported,
+  isPremium,
   animatedCardStyle,
   glowStyle,
   chevronStyle,
@@ -68,6 +69,7 @@ export function MiniCardContainer({
           hasResearch={hasResearch}
           icon={icon}
           iconColor={iconColor}
+          isPremium={isPremium}
           scienceBadgeStyle={scienceBadgeStyle}
         />
         <Text numberOfLines={1} style={styles.name}>

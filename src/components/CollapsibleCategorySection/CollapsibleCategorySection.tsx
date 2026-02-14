@@ -32,6 +32,7 @@ export function CollapsibleCategorySection({
   onImport,
   importedTemplateIds,
   importingTemplateId,
+  isPremiumUser = false,
 }: CollapsibleCategorySectionProps) {
   const colors = CATEGORY_COLORS[categoryId] || DEFAULT_CATEGORY_COLORS;
   const reducedMotion = useReduceMotion();
@@ -71,6 +72,7 @@ export function CollapsibleCategorySection({
           <TemplatesList
             importedTemplateIds={importedTemplateIds}
             importingTemplateId={importingTemplateId}
+            isPremiumUser={isPremiumUser}
             reducedMotion={reducedMotion}
             templates={templates}
             onImport={onImport}

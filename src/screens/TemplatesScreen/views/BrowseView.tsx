@@ -44,6 +44,7 @@ export function BrowseView(p: BrowseViewProps) {
           handleToggleCategory={h.handleToggleCategory}
           importedTemplateIds={p.importedTemplateIds}
           importingTemplateId={p.importingTemplateId}
+          isPremiumUser={p.isPremiumUser}
           scienceCountsByCategory={p.scienceCountsByCategory}
           scrollViewRef={p.scrollViewRef}
           templatesByCategory={p.templatesByCategory}
@@ -57,6 +58,7 @@ export function BrowseView(p: BrowseViewProps) {
           handleTemplateImport={h.handleTemplateImport}
           handleTemplatePreview={h.handleTemplatePreview}
           importingTemplateId={p.importingTemplateId}
+          isPremiumUser={p.isPremiumUser}
           researchOnly={p.researchOnly}
           setResearchOnly={p.setResearchOnly}
           setShowSortOptions={p.setShowSortOptions}
