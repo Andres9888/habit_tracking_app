@@ -15,7 +15,7 @@ export function PasswordResetForm({
   return (
     <View className='gap-4'>
       <View className='gap-2'>
-        <Text className='text-[13px] font-semibold text-stone-500'>
+        <Text className='text-[13px] font-semibold text-stone-600'>
           Email address
         </Text>
         <View

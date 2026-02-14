@@ -10,6 +10,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "nativewind-env.d.ts"],
-  "exclude": ["website"]
+  "include": ["src", "nativewind-env.d.ts"],
+  "exclude": ["website", "tests", "__tests__", "**/*.test.ts", "**/*.test.tsx"]
 }

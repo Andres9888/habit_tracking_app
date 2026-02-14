@@ -33,7 +33,7 @@ export function VerificationView({
           </Text>
         </Animated.View>
         <Animated.Text
-          className='mb-10 text-stone-500'
+          className='mb-10 text-stone-600'
           entering={anim(60)}
           style={{ fontSize: 17 }}
         >

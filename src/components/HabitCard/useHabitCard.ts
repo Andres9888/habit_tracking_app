@@ -43,7 +43,7 @@ export function useHabitCard(props: HabitCardProps) {
   } = props;
 
   const theme = useAppTheme();
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const values = useHabitCardValues(strength);
 
@@ -121,7 +121,12 @@ export function useHabitCard(props: HabitCardProps) {
   return {
     accentColor: color || theme.custom.colors.primary[500],
     animations,
-    backgroundColor: getBackgroundColor(habitState.completed, atRisk, theme, themeColors.card),
+    backgroundColor: getBackgroundColor(
+      habitState.completed,
+      atRisk,
+      theme,
+      themeColors.card
+    ),
     bestStreak: habitState.bestStreak,
     borderRadius: theme.custom.borderRadius.large,
     completed: habitState.completed,
@@ -129,6 +134,7 @@ export function useHabitCard(props: HabitCardProps) {
     currentStreak: habitState.currentStreak,
     entrance,
     hasPendingOfflineOps: habitState.hasPendingOfflineOps,
+    isDark,
     setShowCompletionToast: values.setShowCompletionToast,
     setShowConfetti: values.setShowConfetti,
     setShowFloatingXP: values.setShowFloatingXP,

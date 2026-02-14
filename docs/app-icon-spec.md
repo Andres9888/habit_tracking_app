@@ -7,11 +7,13 @@ The Chain Day app icon features a **chain link** design that symbolizes habit st
 ## Visual Design
 
 ### Main Elements
+
 - **Two interlocking chain links** in a simplified, geometric style
 - Links are oriented diagonally for visual interest and balance
 - Clean lines with consistent stroke weight for clarity at small sizes
 
 ### Color Palette
+
 - **Primary Color**: Emerald Green `#059669`
   - Used for the chain links themselves
   - Represents growth, health, and positive habits
@@ -20,6 +22,7 @@ The Chain Day app icon features a **chain link** design that symbolizes habit st
   - Clean, professional appearance across all contexts
 
 ### Dimensions & Scale
+
 - **Icon Size**: 1024×1024px (required by iOS App Store)
 - **Safe Area**: Maintain 10% padding from edges to account for iOS rounded corners
 - **Stroke Weight**: 80-100px for optimal visibility when scaled down
@@ -28,6 +31,7 @@ The Chain Day app icon features a **chain link** design that symbolizes habit st
 ## Technical Requirements
 
 ### File Formats
+
 - **Source**: SVG (vector, scalable)
 - **Production**: PNG at 1024×1024px (iOS requirement)
 - **Adaptive Icon**: 432×432px foreground PNG with transparency (Android)
@@ -35,11 +39,13 @@ The Chain Day app icon features a **chain link** design that symbolizes habit st
 ### Platform-Specific Considerations
 
 #### iOS
+
 - iOS automatically applies rounded corners (varies by device)
 - Icon should work well with corner radius applied
 - Avoid placing critical elements in corners
 
 #### Android (Adaptive Icon)
+
 - Foreground layer: Chain links on transparent background
 - Background layer: Solid white `#FFFFFF`
 - System applies shape mask (circle, squircle, rounded square)

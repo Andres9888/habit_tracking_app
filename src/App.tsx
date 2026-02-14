@@ -23,6 +23,7 @@ import { PurchasesProvider } from './components/providers/PurchasesProvider';
 import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration';
 import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
 import { SyncStatusProvider } from './contexts/SyncStatusContext';
+import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { OfflineProvider } from './providers/OfflineProvider';
@@ -32,14 +33,19 @@ import theme from './theme';
 // Initialize Sentry as early as possible
 initSentry();
 
+const clerkKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+if (!clerkKey) {
+  throw new Error(
+    'EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is required. Add it to .env.local'
+  );
+}
+
 function Providers({ children }: PropsWithChildren) {
   return (
     <SentryErrorBoundary>
       <SafeAreaProvider>
         <PaperProvider theme={theme}>
-          <ClerkProvider
-            publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
-          >
+          <ClerkProvider publishableKey={clerkKey} tokenCache={tokenCache}>
             <SentryUserSync>
               <ConvexClerkProvider>
                 <ThemeColorProvider>

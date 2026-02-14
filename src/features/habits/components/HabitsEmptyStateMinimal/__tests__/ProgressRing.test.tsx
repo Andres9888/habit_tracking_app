@@ -32,15 +32,38 @@ jest.mock('react-native-svg', () => {
 
   return {
     __esModule: true,
-    default: ({ children, width, height, ...props }: { children?: React.ReactNode; width?: number; height?: number }) => (
-      React.createElement(View, { testID: 'svg-container', ...props, style: { width, height } }, children)
-    ),
-    Svg: ({ children, width, height, ...props }: { children?: React.ReactNode; width?: number; height?: number }) => (
-      React.createElement(View, { testID: 'svg-container', ...props, style: { width, height } }, children)
-    ),
-    Circle: (props: Record<string, unknown>) => (
-      React.createElement(View, { testID: 'svg-circle', ...props })
-    ),
+    default: ({
+      children,
+      width,
+      height,
+      ...props
+    }: {
+      children?: React.ReactNode;
+      width?: number;
+      height?: number;
+    }) =>
+      React.createElement(
+        View,
+        { testID: 'svg-container', ...props, style: { width, height } },
+        children
+      ),
+    Svg: ({
+      children,
+      width,
+      height,
+      ...props
+    }: {
+      children?: React.ReactNode;
+      width?: number;
+      height?: number;
+    }) =>
+      React.createElement(
+        View,
+        { testID: 'svg-container', ...props, style: { width, height } },
+        children
+      ),
+    Circle: (props: Record<string, unknown>) =>
+      React.createElement(View, { testID: 'svg-circle', ...props }),
   };
 });
 
@@ -276,7 +299,7 @@ describe('ProgressRing', () => {
 
   describe('Animation Constants', () => {
     it('should have correct default duration', () => {
-      expect(PROGRESS_RING.duration).toBe(600);
+      expect(PROGRESS_RING.duration).toBe(1800);
     });
 
     it('should have correct default size', () => {

@@ -11,7 +11,7 @@ export function SignUpHeader() {
         Create account
       </Animated.Text>
       <Animated.Text
-        className='text-[17px] leading-[22px] text-stone-500'
+        className='text-[17px] leading-[22px] text-stone-600'
         entering={FadeInDown.delay(50).springify().damping(18)}
       >
         Start your habit journey today

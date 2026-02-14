@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P1 Fix #7 — Templates in Empty State</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          sans-serif;
+        background: #1a1a2e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 40px 20px;
+        color: #fff;
+      }
+      .label {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #10b981;
+        margin-bottom: 8px;
+      }
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: -0.02em;
+      }
+      .subtitle {
+        font-size: 15px;
+        color: #9ca3af;
+        margin-bottom: 40px;
+        max-width: 600px;
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      .phone-pair {
+        display: flex;
+        gap: 60px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .phone-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .phone-label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #6b7280;
+        padding: 4px 12px;
+        border: 1px solid #374151;
+        border-radius: 20px;
+      }
+      .phone-label.bad {
+        color: #ef4444;
+        border-color: #7f1d1d;
+      }
+      .phone-label.good {
+        color: #10b981;
+        border-color: #064e3b;
+      }
+
+      .phone {
+        width: 375px;
+        height: 780px;
+        background: #faf8f5;
+        border-radius: 40px;
+        border: 6px solid #2d2a26;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      }
+      .status-bar {
+        height: 50px;
+        background: #faf8f5;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 6px;
+      }
+      .notch {
+        width: 120px;
+        height: 28px;
+        background: #2d2a26;
+        border-radius: 0 0 16px 16px;
+      }
+      .screen-content {
+        padding: 16px;
+        height: calc(100% - 50px);
+        overflow-y: auto;
+        position: relative;
+      }
+
+      /* Welcome hero */
+      .welcome-hero {
+        background: #fffbeb;
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 16px;
+        border: 1px solid #fde68a;
+      }
+      .welcome-emoji {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+      .welcome-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -0.02em;
+      }
+      .welcome-sub {
+        font-size: 14px;
+        color: #78716c;
+        margin-top: 4px;
+      }
+
+      /* Quick win card */
+      .quick-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 4px rgba(28, 25, 23, 0.08);
+      }
+      .quick-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .quick-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .quick-badge {
+        font-size: 11px;
+        color: #10b981;
+        font-weight: 600;
+        background: #ecfdf5;
+        padding: 2px 8px;
+        border-radius: 6px;
+      }
+      .quick-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .quick-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #faf8f5;
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          background 0.15s;
+      }
+      .quick-item:hover {
+        transform: scale(1.01);
+        background: #f0fdf4;
+      }
+      .quick-item-emoji {
+        font-size: 18px;
+      }
+      .quick-item-name {
+        font-size: 15px;
+        font-weight: 500;
+        color: #2d2a26;
+        flex: 1;
+      }
+      .quick-item-plus {
+        color: #10b981;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      /* Custom habit card */
+      .custom-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 4px rgba(28, 25, 23, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: transform 0.15s;
+      }
+      .custom-card:hover {
+        transform: scale(1.01);
+      }
+      .custom-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #f5f3f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+      .custom-info {
+        flex: 1;
+      }
+      .custom-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .custom-sub {
+        font-size: 12px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+      .custom-arrow {
+        color: #d1d5db;
+        font-size: 18px;
+      }
+
+      /* ===== NEW: Templates peek card ===== */
+      .templates-peek {
+        background: linear-gradient(135deg, #ecfdf5 0%, #dbeafe 100%);
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        border: 1px solid #d1fae5;
+        cursor: pointer;
+        transition: transform 0.15s;
+        position: relative;
+      }
+      .templates-peek:hover {
+        transform: scale(1.01);
+      }
+
+      .templates-peek-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .templates-peek-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #2d2a26;
+      }
+      .templates-peek-count {
+        font-size: 12px;
+        color: #10b981;
+        font-weight: 600;
+      }
+
+      .templates-emoji-grid {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+        overflow: hidden;
+      }
+      .template-chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #fff;
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #2d2a26;
+        white-space: nowrap;
+        flex-shrink: 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+      .template-chip-emoji {
+        font-size: 16px;
+      }
+
+      .templates-peek-cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #059669;
+        padding: 10px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.7);
+        transition: background 0.15s;
+      }
+      .templates-peek-cta:hover {
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      /* Shuffle */
+      .shuffle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 13px;
+        color: #78716c;
+        font-weight: 500;
+        padding: 8px;
+        cursor: pointer;
+      }
+
+      .annotation {
+        position: absolute;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px dashed;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 10;
+      }
+      .annotation.bad {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+        border-color: #ef4444;
+      }
+      .annotation.good {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+        border-color: #10b981;
+      }
+
+      .missing-box {
+        border: 2px dashed #ef4444;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 12px;
+        text-align: center;
+        color: #ef4444;
+        font-size: 14px;
+        font-weight: 500;
+        background: rgba(239, 68, 68, 0.04);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">P1 Fix #7</div>
+    <div class="title">Templates in Empty State</div>
+    <div class="subtitle">
+      The empty state currently hides the templates path — openTemplatesScreen
+      prop exists but isn't rendered. Add a "Browse 200+ Templates" peek card
+      between QuickWinCard and CustomHabitCard.
+    </div>
+
+    <div class="phone-pair">
+      <!-- BEFORE -->
+      <div class="phone-col">
+        <div class="phone-label bad">Before — No Templates Access</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div class="welcome-hero">
+              <div class="welcome-emoji">👋</div>
+              <div class="welcome-title">Good morning!</div>
+              <div class="welcome-sub">Day 1 begins now 🔥</div>
+            </div>
+
+            <div class="quick-card">
+              <div class="quick-header">
+                <div class="quick-title">🌅 Morning picks</div>
+                <div class="quick-badge">Tap to start</div>
+              </div>
+              <div class="quick-grid">
+                <div class="quick-item">
+                  <span class="quick-item-emoji">💪</span>
+                  <span class="quick-item-name">Morning Boost</span>
+                  <span class="quick-item-plus">+</span>
+                </div>
+                <div class="quick-item">
+                  <span class="quick-item-emoji">🧘</span>
+                  <span class="quick-item-name">Morning Meditation</span>
+                  <span class="quick-item-plus">+</span>
+                </div>
+                <div class="quick-item">
+                  <span class="quick-item-emoji">💧</span>
+                  <span class="quick-item-name">Drink Water</span>
+                  <span class="quick-item-plus">+</span>
+                </div>
+                <div class="quick-item">
+                  <span class="quick-item-emoji">🍋</span>
+                  <span class="quick-item-name">Healthy Breakfast</span>
+                  <span class="quick-item-plus">+</span>
+                </div>
+              </div>
+              <div class="shuffle-btn">Show me different ideas ↻</div>
+            </div>
+
+            <!-- Missing templates -->
+            <div class="missing-box" style="position: relative">
+              No templates path here
+              <div class="annotation bad" style="top: -20px; right: 0">
+                openTemplatesScreen = unused prop
+              </div>
+            </div>
+
+            <div class="custom-card">
+              <div class="custom-icon">✏️</div>
+              <div class="custom-info">
+                <div class="custom-title">Build something just for you</div>
+                <div class="custom-sub">Create a custom habit · ~30s</div>
+              </div>
+              <span class="custom-arrow">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="phone-col">
+        <div class="phone-label good">After — Templates Peek Card</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div class="welcome-hero">
+              <div class="welcome-emoji">👋</div>
+              <div class="welcome-title">Good morning!</div>
+              <div class="welcome-sub">Day 1 begins now 🔥</div>
+            </div>
+
+            <div class="quick-card">
+              <div class="quick-header">
+                <div class="quick-title">🌅 Morning picks</div>
+                <div class="quick-badge">Tap to start</div>
+              </div>
+              <div class="quick-grid">
+                <div class="quick-item">
+                  <span class="quick-item-emoji">💪</span>
+                  <span class="quick-item-name">Morning Boost</span>
+                  <span class="quick-item-plus">+</span>
+                </div>
+                <div class="quick-item">
+                  <span class="quick-item-emoji">🧘</span>
+                  <span class="quick-item-name">Morning Meditation</span>
+                  <span class="quick-item-plus">+</span>
+                </div>
+                <div class="quick-item">
+                  <span class="quick-item-emoji">💧</span>
+                  <span class="quick-item-name">Drink Water</span>
+                  <span class="quick-item-plus">+</span>
+                </div>
+              </div>
+              <div class="shuffle-btn">Show me different ideas ↻</div>
+            </div>
+
+            <!-- NEW: Templates peek card -->
+            <div class="templates-peek" style="position: relative">
+              <div class="templates-peek-header">
+                <div class="templates-peek-title">Or browse templates</div>
+                <div class="templates-peek-count">200+ options</div>
+              </div>
+              <div class="templates-emoji-grid">
+                <div class="template-chip">
+                  <span class="template-chip-emoji">🏃</span> Running
+                </div>
+                <div class="template-chip">
+                  <span class="template-chip-emoji">📖</span> Reading
+                </div>
+                <div class="template-chip">
+                  <span class="template-chip-emoji">💤</span> Sleep
+                </div>
+                <div class="template-chip">
+                  <span class="template-chip-emoji">🥗</span> Nutrition
+                </div>
+              </div>
+              <div class="templates-peek-cta">Browse All Templates →</div>
+              <div class="annotation good" style="top: -20px; right: 0">
+                New: surfaces openTemplatesScreen
+              </div>
+            </div>
+
+            <div class="custom-card">
+              <div class="custom-icon">✏️</div>
+              <div class="custom-info">
+                <div class="custom-title">Build something just for you</div>
+                <div class="custom-sub">Create a custom habit · ~30s</div>
+              </div>
+              <span class="custom-arrow">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
