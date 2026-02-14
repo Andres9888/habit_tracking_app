@@ -50,7 +50,7 @@ export async function verifyRevenueCatSignature(
     const key = await crypto.subtle.importKey(
       'raw',
       keyData,
-      { name: 'HMAC', hash: 'SHA-256' },
+      { hash: 'SHA-256', name: 'HMAC' },
       false,
       ['sign']
     );
@@ -59,7 +59,7 @@ export async function verifyRevenueCatSignature(
     const signatureBytes = await crypto.subtle.sign('HMAC', key, data);
 
     // Convert to hex string
-    const computedSignature = Array.from(new Uint8Array(signatureBytes))
+    const computedSignature = [...new Uint8Array(signatureBytes)]
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('');
 
@@ -81,7 +81,7 @@ function timingSafeEqual(a: string, b: string): boolean {
 
   let result = 0;
   for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    result |= (a.codePointAt(i) || 0) ^ (b.codePointAt(i) || 0);
   }
   return result === 0;
 }
