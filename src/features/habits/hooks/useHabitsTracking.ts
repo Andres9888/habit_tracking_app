@@ -10,15 +10,18 @@ import type { HabitStatus } from '../types';
 export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   // Use startDate/endDate range instead of sending all 365 date strings
   // This reduces the Convex query argument payload from ~4KB to ~50 bytes
-  const startDate = extendedDateStrings[0];
-  const endDate = extendedDateStrings.at(-1);
-  const tracking =
-    useQuery(
-      api.habits.getTracking,
-      startDate && endDate
-        ? { endDate, startDate }
-        : { dates: extendedDateStrings }
-    ) ?? [];
+  // Sort to handle arrays in either chronological or reverse order
+  const queryArgs = useMemo(() => {
+    const first = extendedDateStrings[0];
+    const last = extendedDateStrings.at(-1);
+    const startDate = first && last && first < last ? first : last;
+    const endDate = first && last && first < last ? last : first;
+    return startDate && endDate
+      ? { endDate, startDate }
+      : { dates: extendedDateStrings };
+  }, [extendedDateStrings]);
+  
+  const tracking = useQuery(api.habits.getTracking, queryArgs) ?? [];
 
   // Get optimistic state for immediate feedback
   const optimisticStore = useOptimisticStore();

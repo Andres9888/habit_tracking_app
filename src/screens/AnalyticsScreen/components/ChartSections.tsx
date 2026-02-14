@@ -54,24 +54,21 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
         <View accessible accessibilityLabel={strengthAccessibilityLabel}>
           <StrengthDistributionChart
             data={strengthDistribution ?? null}
-            onSegmentPress={(_level) => { /* TODO: wire up filter by level */ }}
+            onSegmentPress={undefined}
           />
         </View>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>30-Day Trend</Text>
-        <TrendLineChart
-          data={trendData ?? null}
-          onDataPointPress={(_point) => { /* TODO: wire up data point selection */ }}
-        />
+        <TrendLineChart data={trendData ?? null} onDataPointPress={undefined} />
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Compliance Heatmap</Text>
         <ComplianceHeatmap
           data={complianceData ?? null}
-          onDayPress={(_day) => { /* TODO: wire up day selection */ }}
+          onDayPress={undefined}
         />
       </View>
     </>

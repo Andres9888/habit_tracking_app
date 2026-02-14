@@ -168,7 +168,6 @@ const loadingStyles = StyleSheet.create({
     marginTop: 8,
   },
 });
-
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();

@@ -14,6 +14,14 @@ import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const ENTERING = FadeInDown.duration(280).springify().damping(18);
 
+// FIXED: #78716c has 4.5:1+ contrast (was #C4BFB7 at 2.8:1)
+const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
+const DATE_STYLE = {
+  fontFamily: 'System',
+  letterSpacing: -0.76,
+};
+
+/** Format today's date as "Today · Mon D" per spec */
 const formatTodayDate = (): string => {
   const now = new Date();
   return `Today · ${now.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
@@ -25,6 +33,10 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
     completedToday = 0,
     forceShow = false,
     isPremiumUser = false,
+    openCreateHabitScreen,
+    openSettings,
+    openSortSheet,
+    openTemplatesScreen,
     onUpgradePress,
     showCompletionSummary = true,
     totalHabits = 0,
@@ -35,10 +47,10 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
   const handlers = useHeaderHandlers({
     addButtonScale: anim.addButtonScale,
     dismissBadge,
-    openCreateHabitScreen: props.openCreateHabitScreen,
-    openSettings: props.openSettings,
-    openSortSheet: props.openSortSheet,
-    openTemplatesScreen: props.openTemplatesScreen,
+    openCreateHabitScreen,
+    openSettings,
+    openSortSheet,
+    openTemplatesScreen,
     settingsButtonScale: anim.settingsButtonScale,
     sortButtonScale: anim.sortButtonScale,
     templatesButtonScale: anim.templatesButtonScale,
@@ -83,19 +95,26 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
   }
 
   return (
-    <Animated.View className='gap-2 px-4' entering={ENTERING}>
+    // OPTIMIZED: FadeInDown entry animation
+    <Animated.View
+      className='gap-2 px-4'
+      entering={ENTERING}
+    >
       <View className='flex-row items-center justify-between'>
         <View className='flex-row items-center gap-3 flex-1'>
           <DailyProgressRing completed={completedToday} total={totalHabits} />
           <View className='flex-1 gap-1'>
-            <Text className='text-[22px] font-bold' style={{ color: themeColors.text.primary, fontFamily: 'System', letterSpacing: -0.76 }}>
+            <Text
+              className='text-[22px] font-bold'
+              style={[{ color: themeColors.text.primary }, DATE_STYLE]}
+            >
               {formatTodayDate()}
             </Text>
             {showCompletionSummary && (
               <Text
                 accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
                 className='text-[13px]'
-                style={{ color: themeColors.text.secondary, fontFamily: 'System' }}
+                style={[{ color: themeColors.text.secondary }, STREAK_STYLE]}
               >
                 {completedToday} of {totalHabits} done
               </Text>
