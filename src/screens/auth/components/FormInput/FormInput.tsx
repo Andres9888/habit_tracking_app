@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { useFormInputAnimations } from './useFormInputAnimations';
 
 interface FormInputProps extends TextInputProps {
@@ -19,11 +20,12 @@ export function FormInput({
   onBlur,
   ...props
 }: FormInputProps) {
+  const { colors, isDark } = useThemeColors();
   const {
     animatedStyle,
     handleFocus,
     handleBlur: handleBlurAnimation,
-  } = useFormInputAnimations();
+  } = useFormInputAnimations({ isDark });
 
   /**
    * Wraps the blur handler to trigger both animation and parent onBlur
@@ -39,17 +41,23 @@ export function FormInput({
   return (
     <View className='gap-2'>
       <View className='flex-row items-center justify-between'>
-        <Text className='text-sm font-medium text-stone-600'>{label}</Text>
+        <Text
+          className='text-sm font-medium'
+          style={{ color: colors.text.secondary }}
+        >
+          {label}
+        </Text>
         {labelRight}
       </View>
       <Animated.View
-        className={`overflow-hidden rounded-2xl border bg-white shadow-sm ${error ? 'border-red-500' : 'border-stone-200'}`}
+        className={`overflow-hidden rounded-2xl border shadow-sm ${error ? 'border-red-500' : ''}`}
         style={animatedStyle}
       >
         <TextInput
           accessibilityLabel={label}
-          className='px-5 py-4 text-[17px] font-medium leading-[22px] text-stone-900'
-          placeholderTextColor='#a1a1aa'
+          className='px-5 py-4 text-[17px] font-medium leading-[22px]'
+          placeholderTextColor={isDark ? '#6B7280' : '#a1a1aa'}
+          style={{ color: colors.text.primary }}
           onBlur={handleBlurWrapper}
           onFocus={handleFocus}
           {...props}

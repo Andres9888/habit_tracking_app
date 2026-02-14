@@ -7,16 +7,25 @@ import {
   interpolateColor,
 } from 'react-native-reanimated';
 
-// Emerald-500 for focus state (brand color)
+// Focus accent
 const EMERALD_500 = '#10b981';
-// Stone-200 for default border
+const EMERALD_DARK = '#34D399';
+
+// Light mode
 const STONE_200 = '#e7e5e4';
-// Stone-50/50 for default background (semi-transparent)
 const STONE_50_BG = 'rgba(250, 250, 249, 0.5)';
-// White for focused background
 const WHITE_BG = '#ffffff';
 
-export function useFormInputAnimations() {
+// Dark mode
+const DARK_BORDER = '#374151';
+const DARK_BG = '#1F2937';
+const DARK_BG_FOCUS = '#111827';
+
+interface UseFormInputAnimationsOptions {
+  isDark?: boolean;
+}
+
+export function useFormInputAnimations({ isDark = false }: UseFormInputAnimationsOptions = {}) {
   const [isFocused, setIsFocused] = useState(false);
   const focusProgress = useSharedValue(0);
 
@@ -36,25 +45,30 @@ export function useFormInputAnimations() {
     });
   }, [focusProgress]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      focusProgress.value,
-      [0, 1],
-      [STONE_50_BG, WHITE_BG]
-    ),
-    borderColor: interpolateColor(
-      focusProgress.value,
-      [0, 1],
-      [STONE_200, EMERALD_500]
-    ),
+  const animatedStyle = useAnimatedStyle(() => {
+    const bgFrom = isDark ? DARK_BG : STONE_50_BG;
+    const bgTo = isDark ? DARK_BG_FOCUS : WHITE_BG;
+    const borderFrom = isDark ? DARK_BORDER : STONE_200;
+    const borderTo = isDark ? EMERALD_DARK : EMERALD_500;
 
-    elevation: focusProgress.value * 2,
-    // Subtle shadow on focus
-    shadowColor: EMERALD_500,
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: focusProgress.value * 0.15,
-    shadowRadius: focusProgress.value * 4,
-  }));
+    return {
+      backgroundColor: interpolateColor(
+        focusProgress.value,
+        [0, 1],
+        [bgFrom, bgTo]
+      ),
+      borderColor: interpolateColor(
+        focusProgress.value,
+        [0, 1],
+        [borderFrom, borderTo]
+      ),
+      elevation: focusProgress.value * 2,
+      shadowColor: borderTo,
+      shadowOffset: { height: 2, width: 0 },
+      shadowOpacity: focusProgress.value * 0.15,
+      shadowRadius: focusProgress.value * 4,
+    };
+  });
 
   return {
     animatedStyle,

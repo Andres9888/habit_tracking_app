@@ -1,11 +1,13 @@
 /**
  * PersonalMessageInput Component
- * Text input for adding a personal message to the share card
+ * Text input for adding a personal message to the share card.
+ * Dark mode aware via ThemedTextInput.
  */
 
 import React from 'react';
-import { View, Text, TextInput } from 'react-native';
-import { useAppTheme } from '../../../theme';
+import { View, Text } from 'react-native';
+import { ThemedTextInput } from '@/components/ui/ThemedTextInput';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { controlsStyles as styles } from '../styles';
 import { MESSAGE_MAX_LENGTH } from '../ShareCardGenerator.constants';
 
@@ -18,36 +20,28 @@ export function PersonalMessageInput({
   value,
   onChangeText,
 }: PersonalMessageInputProps) {
-  const theme = useAppTheme();
+  const { colors } = useThemeColors();
 
   return (
     <View style={styles.optionGroup}>
       <Text
-        style={[styles.optionLabel, { color: theme.custom.colors.gray[700] }]}
+        style={[styles.optionLabel, { color: colors.text.secondary }]}
       >
         Personal Message (Optional)
       </Text>
-      <TextInput
+      <ThemedTextInput
         multiline
         accessibilityLabel='Personal message, optional'
         maxLength={MESSAGE_MAX_LENGTH}
         placeholder='Add a personal touch...'
-        placeholderTextColor={theme.custom.colors.gray[400]}
-        style={[
-          styles.messageInput,
-          {
-            backgroundColor: theme.custom.colors.gray[50],
-            borderColor: theme.custom.colors.gray[200],
-            color: theme.custom.colors.gray[900],
-          },
-        ]}
+        style={{ minHeight: 80, textAlignVertical: 'top' }}
         value={value}
         onChangeText={onChangeText}
       />
       <Text
         style={[
           styles.characterCount,
-          { color: theme.custom.colors.gray[500] },
+          { color: colors.text.tertiary },
         ]}
       >
         {value.length}/{MESSAGE_MAX_LENGTH}

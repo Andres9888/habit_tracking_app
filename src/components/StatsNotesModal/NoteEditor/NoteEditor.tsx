@@ -2,10 +2,12 @@
  * NoteEditor Component
  *
  * Form for creating and editing notes with optional habit linking.
+ * Dark mode aware via ThemedTextInput.
  */
 
-import { Text, TextInput, View } from 'react-native';
-import { colors } from '@/theme/colors';
+import { Text, View } from 'react-native';
+import { ThemedTextInput } from '@/components/ui/ThemedTextInput';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HabitSelector } from './HabitSelector';
 import { NoteEditorActions } from './NoteEditorActions';
@@ -20,6 +22,7 @@ export default function NoteEditor({
   onCancel,
   onSave,
 }: NoteEditorProps) {
+  const { colors } = useThemeColors();
   const {
     body,
     setBody,
@@ -45,17 +48,18 @@ export default function NoteEditor({
   return (
     <View className='gap-4'>
       <View className='gap-2'>
-        <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
+        <Text
+          className='text-xs font-semibold uppercase tracking-[2px]'
+          style={{ color: colors.text.secondary }}
+        >
           {isEditing ? 'EDIT NOTE' : 'NEW NOTE'}
         </Text>
 
         {!isEditing && (
           <>
-            <TextInput
+            <ThemedTextInput
               accessibilityLabel='Note date'
-              className='w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
               placeholder='YYYY-MM-DD'
-              placeholderTextColor={colors.gray[400]}
               value={date}
               onChangeText={setDate}
             />
@@ -68,28 +72,31 @@ export default function NoteEditor({
           </>
         )}
 
-        <TextInput
+        <ThemedTextInput
           multiline
           accessibilityLabel='Note body'
-          className='min-h-[120px] w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
           placeholder='Write your note here...'
-          placeholderTextColor={colors.gray[400]}
-          textAlignVertical='top'
+          style={{ minHeight: 120, textAlignVertical: 'top' }}
           value={body}
           onChangeText={setBody}
         />
 
         <View className='flex-row justify-between'>
           <Text
-            className={`text-xs ${
-              characterCount > 1000 ? 'text-red-500' : 'text-stone-500'
-            }`}
+            className='text-xs'
+            style={{
+              color: characterCount > 1000 ? '#EF4444' : colors.text.secondary,
+            }}
           >
             {characterCount} / 1000 characters
           </Text>
         </View>
 
-        {error ? <Text className='text-sm text-red-500'>{error}</Text> : null}
+        {error ? (
+          <Text className='text-sm' style={{ color: '#EF4444' }}>
+            {error}
+          </Text>
+        ) : null}
       </View>
 
       <NoteEditorActions

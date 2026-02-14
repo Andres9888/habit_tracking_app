@@ -1,10 +1,13 @@
 /**
  * NameInputSection - Matches Create modal style
  * 34px hero title, centered input with subtle border
+ * Dark mode aware via ThemedTextInput.
  */
 
-import { View, Text, TextInput, Keyboard } from 'react-native';
+import { View, Text, Keyboard } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { ThemedTextInput } from '@/components/ui/ThemedTextInput';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface NameInputSectionProps {
   habitName: string;
@@ -15,6 +18,8 @@ export function NameInputSection({
   habitName,
   onChangeText,
 }: NameInputSectionProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='px-4'>
       {/* Hero Title - 34px bold centered like Create modal */}
@@ -24,11 +29,12 @@ export function NameInputSection({
       >
         <Text
           accessibilityRole='header'
-          className='text-center font-bold text-stone-900'
+          className='text-center font-bold'
           style={{
             fontSize: 34,
             letterSpacing: -34 * 0.02,
             lineHeight: 34 * 1.2,
+            color: colors.text.primary,
           }}
         >
           Edit your habit
@@ -37,19 +43,25 @@ export function NameInputSection({
 
       {/* Name Input */}
       <Animated.View entering={FadeInUp.duration(240).delay(160)}>
-        <TextInput
+        <ThemedTextInput
           accessibilityLabel='Habit name'
-          className='w-full rounded-2xl border-2 border-stone-200 bg-white px-5 py-4 text-center text-[22px] font-medium text-stone-900'
           maxLength={50}
           placeholder='e.g., Read for 20 minutes'
-          placeholderTextColor='#a1a1aa'
           returnKeyType='done'
-          style={{ lineHeight: 28 }}
+          style={{
+            textAlign: 'center',
+            fontSize: 22,
+            fontWeight: '500',
+            lineHeight: 28,
+          }}
           value={habitName}
           onChangeText={onChangeText}
           onSubmitEditing={Keyboard.dismiss}
         />
-        <Text className='mt-2 text-center text-[13px] text-stone-400'>
+        <Text
+          className='mt-2 text-center text-[13px]'
+          style={{ color: colors.text.tertiary }}
+        >
           {habitName.length}/50 characters
         </Text>
       </Animated.View>

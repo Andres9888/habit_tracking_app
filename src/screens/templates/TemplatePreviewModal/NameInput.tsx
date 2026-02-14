@@ -1,10 +1,12 @@
 /**
  * Name input section for habit customization
+ * Dark mode aware via ThemedTextInput.
  */
 
 import React from 'react';
-import { View, Text, TextInput } from 'react-native';
-import { useAppTheme } from '../../../theme';
+import { View, Text } from 'react-native';
+import { ThemedTextInput } from '@/components/ui/ThemedTextInput';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { styles } from './styles';
 import type { NameInputProps } from './types';
 
@@ -13,31 +15,22 @@ export function NameInput({
   disabled,
   onChangeName,
 }: NameInputProps) {
-  const theme = useAppTheme();
+  const { colors } = useThemeColors();
 
   return (
     <View style={styles.section}>
       <Text
         style={[
           styles.label,
-          { fontFamily: theme.custom.fontFamilies.primary.text },
+          { color: colors.text.secondary },
         ]}
       >
         Habit Name
       </Text>
-      <TextInput
+      <ThemedTextInput
         accessibilityLabel='Habit name'
         editable={!disabled}
         placeholder='Enter habit name'
-        placeholderTextColor='#a8a29e'
-        style={[
-          styles.input,
-          {
-            backgroundColor: theme.custom.colors.light.background,
-            borderColor: theme.custom.colors.gray[200],
-            fontFamily: theme.custom.fontFamilies.primary.text,
-          },
-        ]}
         value={customName}
         onChangeText={onChangeName}
       />
