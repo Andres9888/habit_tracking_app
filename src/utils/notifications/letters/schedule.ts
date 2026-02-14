@@ -10,6 +10,7 @@ import { ensureNotificationPermissions } from '../permissions';
 import type { ScheduleLetterUnlockParams } from '../types';
 
 import { cancelLetterUnlockNotification } from './cancel';
+import { logLetterNotificationError } from './logError';
 
 /**
  * Schedule a notification for when a letter unlocks
@@ -79,9 +80,8 @@ export async function scheduleLetterUnlockNotification({
     });
 
     return notificationId;
-  } catch (error) {
-    if (__DEV__) console.error('scheduleLetterUnlockNotification failed', {
-      error,
+  } catch (error: unknown) {
+    logLetterNotificationError('scheduleLetterUnlockNotification', error, {
       letterId,
     });
     return null;

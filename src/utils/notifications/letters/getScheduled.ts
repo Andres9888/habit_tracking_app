@@ -3,6 +3,8 @@ import * as Notifications from 'expo-notifications';
 import { NOTIFICATION_TYPE_LETTER_UNLOCK } from '../constants';
 import type { ScheduledLetterNotification } from '../types';
 
+import { logLetterNotificationError } from './logError';
+
 /**
  * Get all scheduled letter unlock notifications
  * Useful for debugging or displaying scheduled notifications to the user
@@ -39,8 +41,8 @@ export async function getScheduledLetterUnlockNotifications(): Promise<
           scheduledTime,
         };
       });
-  } catch (error) {
-    if (__DEV__) console.error('getScheduledLetterUnlockNotifications failed', error);
+  } catch (error: unknown) {
+    logLetterNotificationError('getScheduledLetterUnlockNotifications', error);
     return [];
   }
 }

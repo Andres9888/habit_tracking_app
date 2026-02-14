@@ -2,6 +2,8 @@ import * as Notifications from 'expo-notifications';
 
 import { NOTIFICATION_TYPE_LETTER_UNLOCK } from '../constants';
 
+import { logLetterNotificationError } from './logError';
+
 /**
  * Cancel a scheduled letter unlock notification
  *
@@ -35,7 +37,9 @@ export async function cancelLetterUnlockNotification(
         letterId,
       });
     }
-  } catch (error) {
-    if (__DEV__) console.warn('cancelLetterUnlockNotification failed', { error, letterId });
+  } catch (error: unknown) {
+    logLetterNotificationError('cancelLetterUnlockNotification', error, {
+      letterId,
+    });
   }
 }
