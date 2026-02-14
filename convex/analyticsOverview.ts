@@ -16,7 +16,23 @@ import {
 export const getOverviewStats = query({
   args: {},
   handler: async (ctx) => {
-    const habits = await ctx.db.query('habits').collect();
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return {
+        averageStrength: 0,
+        rankedHabits: [],
+        strongestHabit: null,
+        totalHabits: 0,
+        weakestHabit: null,
+      };
+    }
+
+    // SEC-001: Filter by authenticated user to prevent data leakage
+    const habits = await ctx.db
+      .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
+      .collect();
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
     if (activeHabits.length === 0) {

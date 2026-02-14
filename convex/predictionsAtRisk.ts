@@ -16,10 +16,18 @@ export const getHabitsAtRisk = query({
     threshold: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
     const threshold = args.threshold ?? 0.4;
 
+    // SEC-001: Filter by authenticated user to prevent data leakage
     const habits = await ctx.db
       .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .filter((q) => q.eq(q.field('archived'), false))
       .collect();
 
@@ -57,9 +65,20 @@ export const getHabitPrediction = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return null;
+    }
+
     const habit = await ctx.db.get(args.habitId);
 
     if (!habit || habit.archived) {
+      return null;
+    }
+
+    // SEC-001: Ownership verification - only allow viewing own habit predictions
+    if (habit.userId !== identity.subject) {
       return null;
     }
 

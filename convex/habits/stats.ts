@@ -8,6 +8,21 @@ import { query } from '../_generated/server';
 export const getStats = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return { streak: 0, consistency: 0 };
+    }
+
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      return { streak: 0, consistency: 0 };
+    }
+
+    // SEC-001: Ownership verification - only allow viewing own habit stats
+    if (habit.userId !== identity.subject) {
+      return { streak: 0, consistency: 0 };
+    }
+
     const tracking = await ctx.db
       .query('tracking')
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
