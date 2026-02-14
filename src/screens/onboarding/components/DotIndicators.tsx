@@ -1,8 +1,42 @@
 import { StyleSheet, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
+
+import { useThemeColors } from '../../../theme/ThemeContext';
+
+const SPRING_CONFIG = { damping: 18, stiffness: 200 };
 
 interface DotIndicatorsProps {
   count: number;
   currentIndex: number;
+}
+
+function AnimatedDot({
+  index,
+  currentIndex,
+}: {
+  index: number;
+  currentIndex: number;
+}) {
+  const { colors } = useThemeColors();
+  const isActive = index === currentIndex;
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    width: withSpring(isActive ? 24 : 8, SPRING_CONFIG),
+    backgroundColor: isActive ? colors.primary[600] : colors.gray[300],
+    opacity: withSpring(isActive ? 1 : 0.5, SPRING_CONFIG),
+  }));
+
+  return (
+    <Animated.View
+      accessibilityLabel={`Page ${index + 1}${isActive ? ', current' : ''}`}
+      accessibilityRole='tab'
+      accessibilityState={{ selected: isActive }}
+      style={[styles.dot, animatedStyle]}
+    />
+  );
 }
 
 export function DotIndicators({ count, currentIndex }: DotIndicatorsProps) {
@@ -14,19 +48,7 @@ export function DotIndicators({ count, currentIndex }: DotIndicatorsProps) {
       style={styles.container}
     >
       {Array.from({ length: count }, (_, i) => (
-        <View
-          key={i}
-          accessibilityLabel={`Page ${i + 1}${i === currentIndex ? ', current' : ''}`}
-          accessibilityRole='tab'
-          accessibilityState={{ selected: i === currentIndex }}
-          style={[
-            styles.dot,
-            {
-              backgroundColor: i === currentIndex ? '#059669' : '#D1D5DB',
-              width: i === currentIndex ? 24 : 8,
-            },
-          ]}
-        />
+        <AnimatedDot key={i} currentIndex={currentIndex} index={i} />
       ))}
     </View>
   );

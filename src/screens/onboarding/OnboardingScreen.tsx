@@ -3,10 +3,12 @@
  * 3-screen carousel shown once after first sign-up.
  * Screens: Chain visualization, Strength meter, Templates grid.
  * Sets AsyncStorage flag to prevent re-showing.
+ *
+ * Polish: dark mode, animated dot indicators, smooth spring transitions,
+ * compelling copy, progress text, skip option, leads to first habit creation.
  */
-/* eslint-disable max-lines, max-lines-per-function */
 
-import { useThemeColors } from '../../theme/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
@@ -24,12 +26,19 @@ import Animated, {
   FadeIn,
   FadeInDown,
   FadeInUp,
+  useAnimatedStyle,
   useReducedMotion,
+  withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useThemeColors } from '../../theme/ThemeContext';
+import type { SemanticColors } from '../../theme/darkColors';
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
+
+const SPRING_CONFIG = { damping: 18, stiffness: 200 };
 
 // ─── Chain Visualization ─────────────────────────────────────────────
 
@@ -37,12 +46,14 @@ function ChainLink({
   delay,
   index,
   reduceMotion,
+  colors,
 }: {
   delay: number;
   index: number;
   reduceMotion: boolean;
+  colors: SemanticColors;
 }) {
-  const chainColors = [
+  const linkColors = [
     colors.primary[600],
     colors.primary[700],
     colors.primary[400],
@@ -60,23 +71,32 @@ function ChainLink({
       }
       style={[
         styles.chainLink,
-        {
-          backgroundColor: chainColors[index % chainColors.length],
-          transform: [{ rotate: '0deg' }], // Uniform rotation (placeholder for future alternating style)
-        },
+        { backgroundColor: linkColors[index % linkColors.length] },
       ]}
     >
-      <View style={styles.chainLinkInner} />
+      <View
+        style={[
+          styles.chainLinkInner,
+          { backgroundColor: colors.background },
+        ]}
+      />
     </Animated.View>
   );
 }
 
-function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
+function ChainVisualization({
+  reduceMotion,
+  colors,
+}: {
+  reduceMotion: boolean;
+  colors: SemanticColors;
+}) {
   return (
     <View style={styles.chainContainer}>
       {[0, 1, 2, 3, 4, 5, 6].map((i) => (
         <ChainLink
           key={i}
+          colors={colors}
           delay={400 + i * 120}
           index={i}
           reduceMotion={reduceMotion}
@@ -88,7 +108,13 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
 
 // ─── Strength Meter ──────────────────────────────────────────────────
 
-function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
+function StrengthMeter({
+  reduceMotion,
+  colors,
+}: {
+  reduceMotion: boolean;
+  colors: SemanticColors;
+}) {
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
   return (
     <View style={styles.strengthContainer}>
@@ -108,8 +134,8 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
             style={[
               styles.strengthBar,
               {
-                backgroundColor: interpolateColor(i / 4),
-                opacity: 0.15 + i * 0.2125,
+                backgroundColor: interpolateColor(i / 4, colors),
+                opacity: 0.2 + i * 0.2,
                 width: `${20 + i * 20}%`,
               },
             ]}
@@ -117,7 +143,8 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
           <Text
             style={[
               styles.strengthLabel,
-              i === 4 && styles.strengthLabelActive,
+              { color: colors.text.secondary },
+              i === 4 && { color: colors.primary[600], fontWeight: '700' },
             ]}
           >
             {stage}
@@ -128,7 +155,7 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-function interpolateColor(t: number): string {
+function interpolateColor(t: number, colors: SemanticColors): string {
   if (t < 0.5) return colors.primary[400];
   if (t < 0.75) return colors.primary[600];
   return colors.primary[700];
@@ -151,7 +178,13 @@ const TEMPLATE_ICONS = [
   '🏋️',
 ];
 
-function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
+function TemplateGrid({
+  reduceMotion,
+  colors,
+}: {
+  reduceMotion: boolean;
+  colors: SemanticColors;
+}) {
   return (
     <View style={styles.templateGrid}>
       {TEMPLATE_ICONS.map((emoji, i) => (
@@ -164,7 +197,10 @@ function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
                   .springify()
                   .damping(18)
           }
-          style={styles.templateItem}
+          style={[
+            styles.templateItem,
+            { backgroundColor: colors.primary[100] },
+          ]}
         >
           <Text style={styles.templateEmoji}>{emoji}</Text>
         </Animated.View>
@@ -179,35 +215,72 @@ interface PageData {
   id: string;
   title: string;
   subtitle: string;
-  Visual: (props: { reduceMotion: boolean }) => React.JSX.Element;
+  Visual: (props: {
+    reduceMotion: boolean;
+    colors: SemanticColors;
+  }) => React.JSX.Element;
 }
 
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    subtitle: 'Complete your habits daily to build unbreakable chains',
+    subtitle:
+      'Every day you show up, your chain grows stronger. Miss a day and you start over. Simple — but powerful.',
     title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
   {
     id: 'strength',
     subtitle:
-      'Your habits get stronger over time — backed by behavioral science research',
-    title: 'Science-Backed Strength',
+      'Habits start fragile. After 21 days they become routine. After 66 days? Automatic. We track every stage.',
+    title: 'Watch Habits Get Stronger',
     Visual: StrengthMeter,
   },
   {
     id: 'templates',
-    subtitle: 'Choose from science-backed habit templates or create your own',
-    title: '200+ Templates to Start',
+    subtitle:
+      'Pick from 200+ science-backed templates or create your own. Most people start with just one.',
+    title: 'Start Small, Win Big',
     Visual: TemplateGrid,
   },
 ];
 
-// ─── Dot Indicators ──────────────────────────────────────────────────
+// ─── Animated Dot Indicator ──────────────────────────────────────────
 
-function DotIndicators({ currentIndex }: { currentIndex: number }) {
-  const { colors } = useThemeColors();
+function AnimatedDot({
+  index,
+  currentIndex,
+  colors,
+}: {
+  index: number;
+  currentIndex: number;
+  colors: SemanticColors;
+}) {
+  const isActive = index === currentIndex;
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    width: withSpring(isActive ? 24 : 8, SPRING_CONFIG),
+    backgroundColor: isActive ? colors.primary[600] : colors.gray[300],
+    opacity: withSpring(isActive ? 1 : 0.5, SPRING_CONFIG),
+  }));
+
+  return (
+    <Animated.View
+      accessibilityLabel={`Page ${index + 1}${isActive ? ', current' : ''}`}
+      accessibilityRole='tab'
+      accessibilityState={{ selected: isActive }}
+      style={[styles.dot, animatedStyle]}
+    />
+  );
+}
+
+function DotIndicators({
+  currentIndex,
+  colors,
+}: {
+  currentIndex: number;
+  colors: SemanticColors;
+}) {
   return (
     <View
       accessible
@@ -216,18 +289,11 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
       style={styles.dotsContainer}
     >
       {PAGES.map((_, i) => (
-        <Animated.View
+        <AnimatedDot
           key={i}
-          accessibilityLabel={`Page ${i + 1}${i === currentIndex ? ', current' : ''}`}
-          accessibilityRole='tab'
-          accessibilityState={{ selected: i === currentIndex }}
-          style={[
-            styles.dot,
-            {
-              backgroundColor: i === currentIndex ? colors.primary[600] : colors.gray[300],
-              width: i === currentIndex ? 24 : 8,
-            },
-          ]}
+          colors={colors}
+          currentIndex={currentIndex}
+          index={i}
         />
       ))}
     </View>
@@ -241,12 +307,12 @@ interface OnboardingScreenProps {
 }
 
 export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
-  const { colors } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
   const shouldReduceMotion = useReducedMotion();
+  const { colors, isDark } = useThemeColors();
 
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
@@ -293,7 +359,10 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
     ({ item }: { item: PageData }) => (
       <View style={[styles.page, { width: SCREEN_WIDTH }]}>
         <View style={styles.visualContainer}>
-          <item.Visual reduceMotion={!!shouldReduceMotion} />
+          <item.Visual
+            colors={colors}
+            reduceMotion={!!shouldReduceMotion}
+          />
         </View>
         <Animated.Text
           entering={
@@ -301,7 +370,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
               ? undefined
               : FadeInUp.delay(200).springify().damping(18)
           }
-          style={styles.title}
+          style={[styles.title, { color: colors.text.primary }]}
         >
           {item.title}
         </Animated.Text>
@@ -311,17 +380,17 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
               ? undefined
               : FadeInUp.delay(350).springify().damping(18)
           }
-          style={styles.subtitle}
+          style={[styles.subtitle, { color: colors.text.secondary }]}
         >
           {item.subtitle}
         </Animated.Text>
       </View>
     ),
-    [shouldReduceMotion]
+    [shouldReduceMotion, colors]
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Skip button */}
       <Animated.View
         entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
@@ -334,8 +403,20 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
           style={styles.skipButton}
           onPress={handleSkip}
         >
-          <Text style={styles.skipText}>Skip</Text>
+          <Text style={[styles.skipText, { color: colors.text.tertiary }]}>
+            Skip
+          </Text>
         </Pressable>
+      </Animated.View>
+
+      {/* Step counter */}
+      <Animated.View
+        entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
+        style={[styles.stepContainer, { top: insets.top + 18 }]}
+      >
+        <Text style={[styles.stepText, { color: colors.text.tertiary }]}>
+          {currentIndex + 1} of {PAGES.length}
+        </Text>
       </Animated.View>
 
       {/* Pages */}
@@ -358,8 +439,13 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
       />
 
       {/* Bottom section */}
-      <View style={styles.bottomContainer}>
-        <DotIndicators currentIndex={currentIndex} />
+      <View
+        style={[
+          styles.bottomContainer,
+          { paddingBottom: Math.max(insets.bottom, 24) + 24 },
+        ]}
+      >
+        <DotIndicators colors={colors} currentIndex={currentIndex} />
 
         {isLastPage ? (
           <Animated.View
@@ -373,14 +459,20 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
               accessibilityLabel='Get started building your first habit'
               accessibilityRole='button'
               disabled={isLoading}
-              style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
+              style={[
+                styles.ctaButton,
+                { backgroundColor: colors.primary[600] },
+                isLoading && styles.ctaButtonDisabled,
+              ]}
               onPress={() => void handleComplete()}
             >
               {isLoading ? (
-                <ActivityIndicator color='#FFFFFF' />
+                <ActivityIndicator color={colors.text.inverse} />
               ) : (
-                <Text style={styles.ctaText}>
-                  Let's Build Your First Habit →
+                <Text
+                  style={[styles.ctaText, { color: colors.text.inverse }]}
+                >
+                  Create Your First Habit →
                 </Text>
               )}
             </Pressable>
@@ -389,10 +481,15 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
           <Pressable
             accessibilityLabel='Next onboarding page'
             accessibilityRole='button'
-            style={styles.nextButton}
+            style={[
+              styles.nextButton,
+              { backgroundColor: colors.primary[600] },
+            ]}
             onPress={handleNext}
           >
-            <Text style={styles.nextText}>Next</Text>
+            <Text style={[styles.nextText, { color: colors.text.inverse }]}>
+              Next
+            </Text>
           </Pressable>
         )}
       </View>
@@ -406,7 +503,6 @@ const styles = StyleSheet.create({
   bottomContainer: {
     alignItems: 'center',
     gap: 24,
-    paddingBottom: 60,
     paddingHorizontal: 32,
   },
   chainContainer: {
@@ -423,31 +519,27 @@ const styles = StyleSheet.create({
     width: 36,
   },
   chainLinkInner: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     height: 36,
     width: 20,
   },
   container: {
-    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   ctaButton: {
-    backgroundColor: '#059669',
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 32,
     paddingVertical: 16,
     shadowColor: '#000',
     shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.12,
     shadowRadius: 16,
   },
   ctaButtonDisabled: {
     opacity: 0.7,
   },
   ctaText: {
-    color: '#FFFFFF',
     fontSize: 17,
     fontWeight: '600',
   },
@@ -461,18 +553,16 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   nextButton: {
-    backgroundColor: '#059669',
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 48,
     paddingVertical: 16,
     shadowColor: '#000',
     shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.12,
     shadowRadius: 16,
   },
   nextText: {
-    color: '#FFFFFF',
     fontSize: 17,
     fontWeight: '600',
   },
@@ -494,12 +584,22 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   skipText: {
-    color: '#6B7280',
     fontSize: 17,
     fontWeight: '500',
   },
+  stepContainer: {
+    alignItems: 'center',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    zIndex: 10,
+  },
+  stepText: {
+    fontSize: 13,
+    fontWeight: '500',
+    letterSpacing: 0.5,
+  },
   strengthBar: {
-    backgroundColor: '#059669',
     borderRadius: 8,
     height: 32,
   },
@@ -509,13 +609,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   strengthLabel: {
-    color: '#57534e',
     fontSize: 13,
     fontWeight: '500',
-  },
-  strengthLabelActive: {
-    color: '#047857',
-    fontWeight: '700',
   },
   strengthRow: {
     alignItems: 'center',
@@ -523,7 +618,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   subtitle: {
-    color: '#6B7280',
     fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
@@ -541,7 +635,6 @@ const styles = StyleSheet.create({
   },
   templateItem: {
     alignItems: 'center',
-    backgroundColor: '#F0FDF4',
     borderRadius: 16,
     elevation: 2,
     height: 56,
@@ -553,7 +646,6 @@ const styles = StyleSheet.create({
     width: 56,
   },
   title: {
-    color: '#047857',
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,
