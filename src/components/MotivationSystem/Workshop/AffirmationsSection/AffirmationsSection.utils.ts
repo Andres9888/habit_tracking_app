@@ -13,12 +13,12 @@ import type {
  */
 export function formatTimeForDisplay(time?: string): string {
   if (!time) return '';
-  const [hours = 0, minutes = 0] = time.split(':').map(Number);
-  const safeHours = Number.isNaN(hours) ? 0 : hours;
-  const safeMinutes = Number.isNaN(minutes) ? 0 : minutes;
-  const period = safeHours >= 12 ? 'PM' : 'AM';
-  const displayHours = safeHours % 12 || 12;
-  return `${displayHours}:${safeMinutes.toString().padStart(2, '0')} ${period}`;
+  const [rawHours, rawMinutes] = time.split(':').map(Number);
+  const hours = Number.isFinite(rawHours) ? rawHours : 0;
+  const minutes = Number.isFinite(rawMinutes) ? rawMinutes : 0;
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const displayHours = hours % 12 || 12;
+  return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
 }
 
 /**
