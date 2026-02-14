@@ -466,9 +466,9 @@ const applicationTables = {
 
     celebrationsEnabled: v.optional(v.boolean()),
 
-    // Completion sound settings (Premium feature)
+    // Completion sounds (premium feature)
     completionSoundEnabled: v.optional(v.boolean()),
-    completionSoundType: v.optional(
+    completionSoundSelected: v.optional(
       v.union(v.literal('chime'), v.literal('pop'), v.literal('success'))
     ),
 

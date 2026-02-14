@@ -32,6 +32,11 @@ export interface SettingsModalProps {
   onChangeStreakReminderTime?: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
   isLoading?: boolean;
+  // Completion sounds (premium feature)
+  completionSoundEnabled?: boolean;
+  completionSoundSelected?: 'chime' | 'pop' | 'success';
+  onToggleCompletionSound?: (value: boolean) => void | Promise<void>;
+  onChangeCompletionSound?: (value: 'chime' | 'pop' | 'success') => void | Promise<void>;
 }
 
 export interface SettingsColors {
@@ -70,4 +75,9 @@ export interface SettingsContentProps {
   onToggleStreakReminders: (value: boolean) => void | Promise<void>;
   onChangeStreakReminderTime: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
+  // Completion sounds (premium feature)
+  completionSoundEnabled: boolean;
+  completionSoundSelected: 'chime' | 'pop' | 'success';
+  onToggleCompletionSound: (value: boolean) => void | Promise<void>;
+  onChangeCompletionSound: (value: 'chime' | 'pop' | 'success') => void | Promise<void>;
 }

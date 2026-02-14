@@ -6,6 +6,7 @@ import { usePremium } from '../../../../hooks/usePremium';
 import { SortBottomSheet } from '../SortBottomSheet';
 import type { HabitSortMode } from '../../types';
 import type { SettingsModalSectionProps } from './HabitsModals.types';
+import type { CompletionSound } from '../../types';
 
 /**
  * Settings modal section - handles app settings + sort sheet
@@ -32,49 +33,43 @@ export function SettingsModalSection({
   );
 
   return (
-    <>
-      <SettingsModal
-        celebrationsEnabled={celebrationsEnabled}
-        completionSoundEnabled={settings?.completionSoundEnabled ?? false}
-        dayShape={settings?.dayShape ?? 'square'}
-        habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
-        isHighContrastActive={settings?.highContrastMode ?? false}
-        isPremium={isPremium}
-        showCharacterScreen={settings?.showCharacterScreen ?? true}
-        showHabitStrengthPercentage={showHabitStrengthPercentage}
-        showNotesStats={settings?.showNotesStats ?? true}
-        streakRemindersEnabled={streakReminders.enabled}
-        streakReminderTime={streakReminders.reminderTime}
-        visible={showSettings}
-        onChangeCompletionSoundEnabled={(value) =>
-          onSettingsChange({ completionSoundEnabled: value })
-        }
-        onChangeDayShape={(value) => onSettingsChange({ dayShape: value })}
-        onChangeHabitCompletionIcon={(value) =>
-          onSettingsChange({ habitCompletionIcon: value })
-        }
-        onChangeShowCharacterScreen={(value) =>
-          onSettingsChange({ showCharacterScreen: value })
-        }
-        onChangeShowHabitStrengthPercentage={(value) =>
-          setShowHabitStrengthPercentage(value)
-        }
-        onChangeShowNotesStats={(value) =>
-          onSettingsChange({ showNotesStats: value })
-        }
-        onChangeStreakReminderTime={streakReminders.setReminderTime}
-        onClose={closeSettings}
-        onOpenHapticTest={openHapticTest}
-        onOpenSortSheet={openSortSheet}
-        onToggleStreakReminders={streakReminders.setEnabled}
-      />
-      <SortBottomSheet
-        reduceMotion={reduceMotionPreference}
-        sortMode={settings?.habitSortMode ?? 'manual'}
-        visible={showSortSheet}
-        onClose={closeSortSheet}
-        onSelectSortMode={handleSelectSortMode}
-      />
-    </>
+    <SettingsModal
+      celebrationsEnabled={celebrationsEnabled}
+      dayShape={settings?.dayShape ?? 'square'}
+      habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
+      isHighContrastActive={settings?.highContrastMode ?? false}
+      isPremium={isPremium}
+      showCharacterScreen={settings?.showCharacterScreen ?? true}
+      showHabitStrengthPercentage={showHabitStrengthPercentage}
+      showNotesStats={settings?.showNotesStats ?? true}
+      streakRemindersEnabled={streakReminders.enabled}
+      streakReminderTime={streakReminders.reminderTime}
+      visible={showSettings}
+      completionSoundEnabled={settings?.completionSoundEnabled ?? false}
+      completionSoundSelected={settings?.completionSoundSelected ?? 'chime'}
+      onChangeDayShape={(value) => onSettingsChange({ dayShape: value })}
+      onChangeHabitCompletionIcon={(value) =>
+        onSettingsChange({ habitCompletionIcon: value })
+      }
+      onChangeShowCharacterScreen={(value) =>
+        onSettingsChange({ showCharacterScreen: value })
+      }
+      onChangeShowHabitStrengthPercentage={(value) =>
+        setShowHabitStrengthPercentage(value)
+      }
+      onChangeShowNotesStats={(value) =>
+        onSettingsChange({ showNotesStats: value })
+      }
+      onChangeStreakReminderTime={streakReminders.setReminderTime}
+      onClose={closeSettings}
+      onOpenHapticTest={openHapticTest}
+      onToggleStreakReminders={streakReminders.setEnabled}
+      onToggleCompletionSound={(value) =>
+        onSettingsChange({ completionSoundEnabled: value })
+      }
+      onChangeCompletionSound={(value) =>
+        onSettingsChange({ completionSoundSelected: value as CompletionSound })
+      }
+    />
   );
 }

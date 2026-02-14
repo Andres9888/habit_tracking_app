@@ -30,11 +30,13 @@ export const get = query({
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
       celebrationsEnabled:
         settings?.celebrationsEnabled ?? DEFAULT_SETTINGS.celebrationsEnabled,
+      // Completion sounds (premium feature)
       completionSoundEnabled:
         settings?.completionSoundEnabled ??
         DEFAULT_SETTINGS.completionSoundEnabled,
-      completionSoundType:
-        settings?.completionSoundType ?? DEFAULT_SETTINGS.completionSoundType,
+      completionSoundSelected:
+        settings?.completionSoundSelected ??
+        DEFAULT_SETTINGS.completionSoundSelected,
       darkMode: normalizeDarkMode(settings?.darkMode),
       dayShape: settings?.dayShape ?? DEFAULT_SETTINGS.dayShape,
       habitCompletionIcon:

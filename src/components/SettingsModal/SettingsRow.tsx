@@ -2,7 +2,7 @@
 /** SettingsRow - OPTIMIZED: AnimatedPressable, scale animation, haptics */
 import { ReactNode } from 'react';
 import { Switch, Text, View } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
+import { ChevronRight, Lock } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
@@ -13,7 +13,7 @@ interface SettingsRowProps {
   icon: ReactNode;
   iconBackgroundColor: string;
   label: string;
-  type: 'toggle' | 'navigation' | 'selection' | 'info';
+  type: 'toggle' | 'navigation' | 'selection' | 'info' | 'premium';
   value?: boolean | string;
   badge?: number;
   onPress?: () => void;
@@ -130,10 +130,19 @@ export function SettingsRow({
           <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
         </View>
       )}
+      {type === 'premium' && (
+        <View className='flex-row items-center gap-2'>
+          <Lock color='#8b5cf6' size={14} />
+          <Text className='text-[15px] font-medium text-purple-600'>
+            Upgrade
+          </Text>
+          <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
+        </View>
+      )}
     </View>
   );
 
-  if (type === 'toggle' || type === 'info') return content;
+  if (type === 'toggle' || type === 'info' || type === 'premium') return content;
 
   return (
     <AnimatedPressable

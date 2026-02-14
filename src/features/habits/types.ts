@@ -62,7 +62,8 @@ export interface RewardToastData {
   streak: number;
 }
 
-/** Full user-facing settings document (mirrors Convex `settings` table). */
+export type CompletionSound = 'chime' | 'pop' | 'success';
+
 export interface HabitSettings {
   appIcon: string;
   catTheme: boolean;
@@ -84,6 +85,9 @@ export interface HabitSettings {
   showStreaks: boolean;
   showWeekCompletionBar: boolean;
   useDyslexicFont: boolean;
+  // Completion sounds (premium feature)
+  completionSoundEnabled: boolean;
+  completionSoundSelected: CompletionSound;
 }
 
 /** Alias kept for call-sites that update settings (same shape). */

@@ -19,6 +19,7 @@ import { useHabitsArchive } from './useHabitsArchive';
 import { useRewardToast } from './useRewardToast';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
+import { useCompletionSound } from './useCompletionSound';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { useCompletionSound } from '../../../hooks/useCompletionSound';
@@ -103,36 +104,18 @@ export function useHabitsListState(): HabitsListState {
 
   // Wrap toggle mutation with optimistic update for immediate feedback
   // Pass isOnline for offline queue integration (T011)
-  const baseToggleHabit = useOptimisticToggleMutation(
+  const optimisticToggleHabit = useOptimisticToggleMutation(
     toggleHabitMutation,
     isCompleted,
     { isOnline }
   );
 
-  // Wrap toggleHabit to also play completion sound
-  const toggleHabit = useCallback(
-    async (args: { habitId: Habit['_id']; date: string }) => {
-      // Check if this will mark as completed (not already completed)
-      const currentlyCompleted = isCompleted(args.habitId, args.date);
-
-      // Call the original toggle function
-      const result = await baseToggleHabit(args);
-
-      // Play sound if marking as complete (not uncompleting)
-      if (!currentlyCompleted) {
-        playCompletionSound();
-      }
-
-      return result;
-    },
-    [baseToggleHabit, isCompleted, playCompletionSound]
-  );
-
-  // Stable content padding reference to avoid object re-creation every render
-  const contentPadding = useMemo(
-    () => ({ paddingBottom: 120, paddingHorizontal: 24, paddingTop: 0 }),
-    []
-  );
+  // Wrap toggle with completion sound
+  const { toggleHabit } = useCompletionSound({
+    settings,
+    toggleHabit: optimisticToggleHabit,
+    getHabitStatus,
+  });
 
   return {
     canNavigateForward: weekDatesState.canNavigateForward,

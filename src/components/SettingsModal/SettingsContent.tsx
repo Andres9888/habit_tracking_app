@@ -14,7 +14,7 @@ import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
-import { AboutSection } from './sections';
+import { CompletionSoundsSection } from './CompletionSoundsSection';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_LABEL_MAP } from './SortPicker.constants';
 import type { HabitSortMode } from '../../features/habits/types';
@@ -94,10 +94,19 @@ export function SettingsContent(p: SettingsContentProps) {
             onToggle={p.onToggleStreakReminders}
           />
         </Animated.View>
-
-        {/* Data Section - Habit management */}
-        <Animated.View entering={anim(120)}>
-          <SettingsSection highContrastMode={hc} title='Data'>
+        <Animated.View entering={anim(75)}>
+          <CompletionSoundsSection
+            completionSoundEnabled={p.completionSoundEnabled}
+            completionSoundSelected={p.completionSoundSelected}
+            highContrastMode={hc}
+            isPremium={p.isPremium}
+            onPremiumUpsell={p.onPremiumUpsell}
+            onToggle={p.onToggleCompletionSound}
+            onChangeSound={p.onChangeCompletionSound}
+          />
+        </Animated.View>
+        <Animated.View entering={anim(100)}>
+          <SettingsSection highContrastMode={hc} title='Habit Management'>
             <SettingsRow
               highContrastMode={hc}
               icon={<ArrowUpDown color={themeColors.settings.sort.icon} size={16} />}

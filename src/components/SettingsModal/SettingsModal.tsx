@@ -36,6 +36,10 @@ function SettingsModalContent({
   onToggleStreakReminders = () => {},
   onChangeStreakReminderTime = () => {},
   onPremiumUpsell,
+  completionSoundEnabled = false,
+  completionSoundSelected = 'chime',
+  onToggleCompletionSound = () => {},
+  onChangeCompletionSound = () => {},
 }: SettingsModalProps) {
   const {
     darkModePreference,
@@ -112,7 +116,9 @@ function SettingsModalContent({
               showGradientFill={showGradientFill}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
-              onChangeCompletionSoundEnabled={onChangeCompletionSoundEnabled}
+              completionSoundEnabled={completionSoundEnabled}
+              completionSoundSelected={completionSoundSelected}
+              onChangeDarkModePreference={setDarkModePreference}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
               onChangeShowGradientFill={setShowGradientFill}
@@ -121,6 +127,8 @@ function SettingsModalContent({
               onOpenSortPicker={handleOpenSortSheet}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
+              onToggleCompletionSound={onToggleCompletionSound}
+              onChangeCompletionSound={onChangeCompletionSound}
             />
           </>
         )}

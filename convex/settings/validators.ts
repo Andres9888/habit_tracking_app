@@ -7,8 +7,9 @@ export const settingsReturnValidator = v.object({
   appIcon: v.string(),
   catTheme: v.boolean(),
   celebrationsEnabled: v.boolean(),
+  // Completion sounds (premium feature)
   completionSoundEnabled: v.boolean(),
-  completionSoundType: v.union(
+  completionSoundSelected: v.union(
     v.literal('chime'),
     v.literal('pop'),
     v.literal('success')
@@ -47,8 +48,9 @@ export const updateArgsValidator = {
   appIcon: v.optional(v.string()),
   catTheme: v.boolean(),
   celebrationsEnabled: v.optional(v.boolean()),
+  // Completion sounds (premium feature)
   completionSoundEnabled: v.optional(v.boolean()),
-  completionSoundType: v.optional(
+  completionSoundSelected: v.optional(
     v.union(v.literal('chime'), v.literal('pop'), v.literal('success'))
   ),
   darkMode: v.union(
