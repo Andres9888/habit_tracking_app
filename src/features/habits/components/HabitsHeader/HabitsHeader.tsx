@@ -14,8 +14,8 @@ import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const ENTERING = FadeInDown.duration(280).springify().damping(18);
 
-// FIXED: #78716c has 4.5:1+ contrast (was #C4BFB7 at 2.8:1)
-const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
+// Font-only style; color comes from theme via themeColors.text.secondary
+const STREAK_STYLE = { fontFamily: 'System' };
 const DATE_STYLE = {
   fontFamily: 'System',
   letterSpacing: -0.76,

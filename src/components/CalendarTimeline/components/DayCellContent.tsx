@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
+import { useThemeColors } from '../../../theme/ThemeContext';
 import {
   FUTURE_DATE_TEXT_COLOR,
+  FUTURE_DATE_TEXT_COLOR_DARK,
   TODAY_HIGHLIGHT,
+  TODAY_HIGHLIGHT_DARK,
   TODAY_SHADOW,
 } from '../CalendarTimeline.styles';
 import type {
@@ -39,7 +42,12 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
   colors,
   reduceMotion,
   pressed = false,
-}) => (
+}) => {
+  const { isDark } = useThemeColors();
+  const todayHighlight = isDark ? TODAY_HIGHLIGHT_DARK : TODAY_HIGHLIGHT;
+  const futureDateColor = isDark ? FUTURE_DATE_TEXT_COLOR_DARK : FUTURE_DATE_TEXT_COLOR;
+
+  return (
   <>
     <Text
       className='text-center text-[13px] font-normal leading-[18px]'
@@ -52,10 +60,10 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
       className='h-9 w-9 items-center justify-center rounded-xl'
       style={{
         backgroundColor: isCurrentDay
-          ? TODAY_HIGHLIGHT.background
+          ? todayHighlight.background
           : colors.dayBackground,
         borderColor: isCurrentDay
-          ? TODAY_HIGHLIGHT.border
+          ? todayHighlight.border
           : (colors.highContrastBorder ?? 'transparent'),
         borderWidth: isCurrentDay ? 2 : (colors.borderWidth ?? 0),
         ...(isCurrentDay && TODAY_SHADOW),
@@ -67,9 +75,9 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
         className='text-center text-[17px] leading-[22px]'
         style={{
           color: isCurrentDay
-            ? TODAY_HIGHLIGHT.text
+            ? todayHighlight.text
             : isUpcoming
-              ? FUTURE_DATE_TEXT_COLOR
+              ? futureDateColor
               : colors.dayText,
           fontWeight: isCurrentDay ? '700' : '600',
         }}
@@ -88,4 +96,5 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
       </View>
     )}
   </>
-);
+  );
+};

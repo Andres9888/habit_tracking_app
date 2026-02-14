@@ -14,6 +14,7 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -39,8 +40,14 @@ function DailyProgressRingComponent({
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = useSharedValue(0);
+  const { isDark } = useThemeColors();
 
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+  // Dark mode adaptive colors
+  const trackColor = isDark ? '#374151' : '#e7e5e4'; // gray-700 / stone-200
+  const progressColor = isDark ? '#34D399' : '#059669'; // emerald-300 / emerald-600
+  const textColor = isDark ? '#6EE7B7' : '#047857'; // emerald-300 / emerald-700
 
   useEffect(() => {
     const target = total > 0 ? completed / total : 0;
@@ -67,7 +74,7 @@ function DailyProgressRingComponent({
             cy={size / 2}
             fill="none"
             r={radius}
-            stroke="#e7e5e4"
+            stroke={trackColor}
             strokeWidth={strokeWidth}
           />
           {/* Progress */}
@@ -79,7 +86,7 @@ function DailyProgressRingComponent({
             origin={`${size / 2}, ${size / 2}`}
             r={radius}
             rotation="-90"
-            stroke="#059669"
+            stroke={progressColor}
             strokeDasharray={circumference}
             strokeLinecap="round"
             strokeWidth={strokeWidth}
@@ -87,7 +94,7 @@ function DailyProgressRingComponent({
         </Svg>
         <Text
           style={{
-            color: '#047857',
+            color: textColor,
             fontFamily: FONT_FAMILY,
             fontSize: 13,
             fontWeight: '700',

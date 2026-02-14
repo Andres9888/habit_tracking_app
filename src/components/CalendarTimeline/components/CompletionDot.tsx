@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
+import { useThemeColors } from '../../../theme/ThemeContext';
 import {
   COMPLETE_DOT_GLOW,
   COMPLETION_DOT_COLORS,
+  COMPLETION_DOT_COLORS_DARK,
   COMPLETION_DOT_SIZES,
 } from '../CalendarTimeline.styles';
 import type { CompletionDotProps } from '../CalendarTimeline.types';
@@ -62,7 +64,9 @@ export const CompletionDot: React.FC<CompletionDotProps> = ({
     };
   }, [status, reduceMotion, isToday, scaleAnim, pulseAnim]);
 
-  const color = COMPLETION_DOT_COLORS[status];
+  const { isDark } = useThemeColors();
+  const dotColors = isDark ? COMPLETION_DOT_COLORS_DARK : COMPLETION_DOT_COLORS;
+  const color = dotColors[status];
   const size = COMPLETION_DOT_SIZES[status];
 
   return (
