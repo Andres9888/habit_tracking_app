@@ -52,7 +52,10 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   });
 
   const habitData = useHabitData({
+    customDays: form.customDays,
     dayPhase: form.dayPhase,
+    frequency: form.frequency,
+    frequencyCount: form.frequencyCount,
     fullHabitName: form.fullHabitName,
     reminderSound: form.reminderSound,
     reminderTime: form.reminderTime,

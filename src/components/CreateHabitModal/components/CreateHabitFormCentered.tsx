@@ -3,6 +3,7 @@ import { Keyboard, Text, TextInput, View } from 'react-native';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
+import { FrequencyPicker } from './FrequencyPicker';
 import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.types';
 
 /**
@@ -10,7 +11,13 @@ import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.typ
  * Follows "identity before behavior" in habit formation psychology.
  */
 const CreateHabitFormCenteredComponent = ({
+  customDays = [1, 2, 3, 4, 5],
+  frequency = 'daily',
+  frequencyCount = 3,
   habitName,
+  onCustomDaysChange,
+  onFrequencyChange,
+  onFrequencyCountChange,
   onHabitNameChange,
   selectedEmoji,
   onEmojiSelect,
@@ -63,7 +70,7 @@ const CreateHabitFormCenteredComponent = ({
       </View>
 
       {/* Optional fields section - scrollable */}
-      <View className='flex-1'>
+      <View className='flex-1 space-y-6'>
         {/* Section label */}
         <Text
           className='mb-8 text-center text-xs font-semibold text-stone-400'
@@ -87,6 +94,24 @@ const CreateHabitFormCenteredComponent = ({
           selectedColor={selectedColor}
           onSelectColor={onColorSelect}
         />
+
+        {/* Frequency picker */}
+        {onFrequencyChange && (
+          <FrequencyPicker
+            value={frequency}
+            frequencyCount={frequencyCount}
+            customDays={customDays}
+            onChange={(freq, count, days) => {
+              onFrequencyChange(freq, count, days);
+              if (count !== undefined && onFrequencyCountChange) {
+                onFrequencyCountChange(count);
+              }
+              if (days !== undefined && onCustomDaysChange) {
+                onCustomDaysChange(days);
+              }
+            }}
+          />
+        )}
 
         {/* Reminder selector with presets and custom time */}
         <EnhancedReminderSelector

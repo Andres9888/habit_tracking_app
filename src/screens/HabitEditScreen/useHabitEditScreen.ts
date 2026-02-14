@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
+import type { FrequencyType } from '../../components/CreateHabitModal/components/FrequencyPicker';
 import { createDateFromTimeString, getDefaultReminderTime } from '../../utils/notifications';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { useHabitSaveHandler } from './useHabitSaveHandler';
@@ -22,6 +23,9 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
+  const [frequency, setFrequency] = useState<FrequencyType>('daily');
+  const [frequencyCount, setFrequencyCount] = useState(3);
+  const [customDays, setCustomDays] = useState<number[]>([1, 2, 3, 4, 5]);
 
   useEffect(() => {
     if (habit) {
@@ -34,10 +38,16 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
       setSelectedColor(habit.iconColor || '#DBEAFE');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
+      setFrequency((habit.frequency as FrequencyType) || 'daily');
+      setFrequencyCount(habit.frequencyCount || 3);
+      setCustomDays(habit.daysOfWeek || [1, 2, 3, 4, 5]);
     }
   }, [habit]);
 
   const { handleSave, isSaving } = useHabitSaveHandler({
+    customDays,
+    frequency,
+    frequencyCount,
     habitId,
     habitName,
     onSuccess: () => {
@@ -75,11 +85,31 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     setReminderTime(time);
   }, []);
 
+  const handleFrequencyChange = useCallback((freq: FrequencyType, count?: number, days?: number[]) => {
+    setFrequency(freq);
+    if (count !== undefined) setFrequencyCount(count);
+    if (days !== undefined) setCustomDays(days);
+  }, []);
+
+  const handleCustomDaysChange = useCallback((days: number[]) => {
+    setCustomDays(days);
+  }, []);
+
+  const handleFrequencyCountChange = useCallback((count: number) => {
+    setFrequencyCount(count);
+  }, []);
+
   return {
+    customDays,
+    frequency,
+    frequencyCount,
     habitName,
     handleColorSelect,
+    handleCustomDaysChange,
     handleDelete,
     handleEmojiSelect,
+    handleFrequencyChange,
+    handleFrequencyCountChange,
     handleArchive,
     handleReminderTimeChange,
     handleReminderToggle,

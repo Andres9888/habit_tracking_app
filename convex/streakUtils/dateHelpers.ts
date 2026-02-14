@@ -21,6 +21,16 @@ export function differenceInDays(date1: Date, date2: Date): number {
 }
 
 /**
+ * Get the day of the week from a date string
+ * @param dateString - Date in YYYY-MM-DD format
+ * @returns Day of week (0 = Sunday, 6 = Saturday)
+ */
+export function getDayOfWeek(dateString: string): number {
+  const date = new Date(dateString + 'T00:00:00');
+  return date.getDay();
+}
+
+/**
  * Calculate the best streak from a list of completed dates
  * @param completedDates - Sorted array of completed dates (descending)
  * @returns The longest streak found

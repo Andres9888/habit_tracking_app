@@ -130,12 +130,25 @@ const applicationTables = {
     // Streak Tracking System (Story 1.3)
     currentStreak: v.optional(v.number()),
 
-    // "daily", "weekly", "custom"
+    // Days of week for custom frequency (0=Sunday, 6=Saturday)
+    // Used when frequency='custom_days'
     daysOfWeek: v.optional(v.array(v.number())),
 
-    // "Regret, shame, broken promise"
     // Background color for icon
-    frequency: v.optional(v.string()),
+    iconColor: v.optional(v.string()),
+
+    // Frequency type: daily, weekdays, custom_days, or x_times_per_week
+    frequency: v.optional(
+      v.union(
+        v.literal('daily'), // Every day
+        v.literal('weekdays'), // Monday-Friday only
+        v.literal('custom_days'), // Specific days selected via daysOfWeek
+        v.literal('x_times_per_week') // Flexible: X completions per week
+      )
+    ),
+
+    // Number of times per week (used when frequency='x_times_per_week')
+    frequencyCount: v.optional(v.number()),
 
     // "default", etc.
     goalDuration: v.optional(v.number()),

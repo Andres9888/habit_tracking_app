@@ -62,8 +62,10 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     habitToEdit,
     parsed: state.parsed,
     setters: {
+      setCustomDays: state.setCustomDays,
       setDayPhase: state.setDayPhase,
       setFrequency: state.setFrequency,
+      setFrequencyCount: state.setFrequencyCount,
       setHabitName: state.setHabitName,
       setReminderOptionState: state.setReminderOptionState,
       setRemindersEnabled: state.setRemindersEnabled,
@@ -76,8 +78,10 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
 
   const resetForm = useHabitFormReset({
     setColorPickerVisible: state.setColorPickerVisible,
+    setCustomDays: state.setCustomDays,
     setDayPhase: state.setDayPhase,
     setFrequency: state.setFrequency,
+    setFrequencyCount: state.setFrequencyCount,
     setHabitName: state.setHabitName,
     setReminderOptionState: state.setReminderOptionState,
     setRemindersEnabled: state.setRemindersEnabled,
@@ -100,8 +104,10 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
 
   return {
     closeColorPicker,
+    customDays: state.customDays,
     dayPhase: state.dayPhase,
     frequency: state.frequency,
+    frequencyCount: state.frequencyCount,
     fullHabitName,
     habitName: habitNameValidation.value,
     habitNameError: habitNameValidation.error,
@@ -116,8 +122,10 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     resetForm,
     selectedColor: state.selectedColor,
     selectedEmoji: state.selectedEmoji,
+    setCustomDays: state.setCustomDays,
     setDayPhase: state.setDayPhase,
     setFrequency: state.setFrequency,
+    setFrequencyCount: state.setFrequencyCount,
     setHabitName: setHabitNameWithValidation,
     setReminderOption,
     setRemindersEnabled: state.setRemindersEnabled,

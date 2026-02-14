@@ -6,13 +6,17 @@
  */
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import type { FrequencyType } from '../components/FrequencyPicker';
 import { formatReminderTime } from '../../../utils/notifications';
 import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStreakReminderSettings';
 import { cancelReminder, scheduleReminder } from './useHabitReminders';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitData {
+  customDays?: number[];
   dayPhase: string | null;
+  frequency?: FrequencyType;
+  frequencyCount?: number;
   fullHabitName: string;
   hasReminders: boolean;
   reminderSound?: string | null;
@@ -33,6 +37,9 @@ export function useCreateHabitHandlers() {
   const updateHabit = useMutation(api.habits.update);
 
   async function handleEdit({
+    customDays = [1, 2, 3, 4, 5],
+    frequency = 'daily',
+    frequencyCount = 3,
     habitToEdit,
     hasReminders,
     fullHabitName,
@@ -59,6 +66,9 @@ export function useCreateHabitHandlers() {
     }
 
     await updateHabit({
+      daysOfWeek: customDays,
+      frequency,
+      frequencyCount,
       habitId: habitToEdit._id,
       icon: selectedEmoji ?? undefined,
       iconColor: selectedColor,
@@ -74,6 +84,9 @@ export function useCreateHabitHandlers() {
   }
 
   async function handleCreate({
+    customDays = [1, 2, 3, 4, 5],
+    frequency = 'daily',
+    frequencyCount = 3,
     hasReminders,
     fullHabitName,
     reminderTime,
@@ -83,6 +96,9 @@ export function useCreateHabitHandlers() {
     reminderSound,
   }: HabitData): Promise<void> {
     const habitId = await createHabit({
+      daysOfWeek: customDays,
+      frequency,
+      frequencyCount,
       icon: selectedEmoji ?? undefined,
       iconColor: selectedColor,
       name: fullHabitName,

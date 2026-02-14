@@ -12,6 +12,7 @@ import {
 } from '../../../constants/hubermanPhases';
 import type { ReminderOption } from '../components/ReminderSelector';
 import { getReminderOptionFromTime } from './reminderUtils';
+import type { FrequencyType } from '../components/FrequencyPicker';
 
 const DEFAULT_SOUND = 'Default';
 
@@ -43,8 +44,14 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
   const [reminderSound, setReminderSound] = useState(
     habitToEdit?.reminderSound ?? DEFAULT_SOUND
   );
-  const [frequency, setFrequency] = useState<string>(
-    habitToEdit?.frequency ?? ''
+  const [frequency, setFrequency] = useState<FrequencyType>(
+    (habitToEdit?.frequency as FrequencyType) ?? 'daily'
+  );
+  const [frequencyCount, setFrequencyCount] = useState(
+    habitToEdit?.frequencyCount ?? 3
+  );
+  const [customDays, setCustomDays] = useState<number[]>(
+    habitToEdit?.daysOfWeek ?? [1, 2, 3, 4, 5] // Default to weekdays
   );
   const [dayPhase, setDayPhase] = useState<HubermanPhase | null>(
     getPhaseFromPreferredTime(habitToEdit?.preferredTime)
@@ -57,8 +64,10 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
   );
 
   return {
+    customDays,
     dayPhase,
     frequency,
+    frequencyCount,
     habitName,
     isColorPickerVisible,
     parsed,
@@ -69,8 +78,10 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     selectedColor,
     selectedEmoji,
     setColorPickerVisible,
+    setCustomDays,
     setDayPhase,
     setFrequency,
+    setFrequencyCount,
     setHabitName,
     setReminderOptionState,
     setRemindersEnabled,

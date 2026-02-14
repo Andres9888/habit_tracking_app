@@ -4,6 +4,7 @@
  * Visual customization options for a habit including:
  * - Emoji icon picker
  * - Accent color selection
+ * - Habit frequency
  * - Reminder scheduling
  */
 
@@ -11,33 +12,47 @@ import { View } from 'react-native';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
+import { FrequencyPicker } from '../../components/CreateHabitModal/components/FrequencyPicker';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
+import type { FrequencyType } from '../../components/CreateHabitModal/components/FrequencyPicker';
 
 interface CustomizeSectionProps {
+  customDays?: number[];
+  frequencyCount?: number;
+  frequency: FrequencyType;
   habitName: string;
-  selectedEmoji: string | null;
   selectedColor: string;
+  selectedEmoji: string | null;
   remindersEnabled: boolean;
   reminderTime: Date;
-  onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
-  onReminderToggle: (enabled: boolean) => void;
+  onCustomDaysChange: (days: number[]) => void;
+  onEmojiSelect: (emoji: string | null) => void;
+  onFrequencyChange: (frequency: FrequencyType, count?: number, days?: number[]) => void;
+  onFrequencyCountChange: (count: number) => void;
   onReminderTimeChange: (time: Date) => void;
+  onReminderToggle: (enabled: boolean) => void;
 }
 
 export function CustomizeSection({
+  customDays = [1, 2, 3, 4, 5],
+  frequency,
+  frequencyCount = 3,
   habitName,
-  selectedEmoji,
-  selectedColor,
   remindersEnabled,
   reminderTime,
-  onEmojiSelect,
+  selectedColor,
+  selectedEmoji,
   onColorSelect,
-  onReminderToggle,
+  onCustomDaysChange,
+  onEmojiSelect,
+  onFrequencyChange,
+  onFrequencyCountChange,
   onReminderTimeChange,
+  onReminderToggle,
 }: CustomizeSectionProps) {
   return (
-    <View className='flex-1'>
+    <View className='flex-1 space-y-6'>
       <EmojiPicker
         hideLabel
         habitName={habitName}
@@ -50,6 +65,17 @@ export function CustomizeSection({
         colors={HABIT_COLORS}
         selectedColor={selectedColor}
         onSelectColor={onColorSelect}
+      />
+
+      <FrequencyPicker
+        value={frequency}
+        frequencyCount={frequencyCount}
+        customDays={customDays}
+        onChange={(freq, count, days) => {
+          onFrequencyChange(freq, count, days);
+          if (count !== undefined) onFrequencyCountChange(count);
+          if (days !== undefined) onCustomDaysChange(days);
+        }}
       />
 
       <EnhancedReminderSelector

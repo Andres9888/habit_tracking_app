@@ -69,13 +69,19 @@ export default function HabitEditScreen({
                   entering={FadeInUp.delay(280).springify().damping(18)}
                 >
                   <CustomizeSection
+                    customDays={state.customDays}
+                    frequency={state.frequency}
+                    frequencyCount={state.frequencyCount}
                     habitName={state.habitName}
                     remindersEnabled={state.remindersEnabled}
                     reminderTime={state.reminderTime}
                     selectedColor={state.selectedColor}
                     selectedEmoji={state.selectedEmoji}
                     onColorSelect={state.handleColorSelect}
+                    onCustomDaysChange={state.handleCustomDaysChange}
                     onEmojiSelect={state.handleEmojiSelect}
+                    onFrequencyChange={state.handleFrequencyChange}
+                    onFrequencyCountChange={state.handleFrequencyCountChange}
                     onReminderTimeChange={state.handleReminderTimeChange}
                     onReminderToggle={state.handleReminderToggle}
                   />

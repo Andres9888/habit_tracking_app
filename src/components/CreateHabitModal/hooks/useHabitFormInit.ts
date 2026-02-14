@@ -5,21 +5,24 @@
 import { useEffect } from 'react';
 import { DEFAULT_COLOR } from '../constants';
 import type { HabitDoc } from '../types';
+import type { FrequencyType } from '../components/FrequencyPicker';
 import { parseReminderTime } from '../utils';
 import { getPhaseFromPreferredTime, type HubermanPhase } from '../../../constants/hubermanPhases';
 import { getReminderOptionFromTime } from './reminderUtils';
 import type { ReminderOption } from '../components/ReminderSelector';
 
 interface FormSetters {
-  setHabitName: (name: string) => void;
-  setSelectedEmoji: (emoji: string | null) => void;
-  setSelectedColor: (color: string) => void;
-  setRemindersEnabled: (enabled: boolean) => void;
-  setReminderTime: (time: Date) => void;
-  setReminderSound: (sound: string) => void;
-  setFrequency: (freq: string) => void;
+  setCustomDays: (days: number[]) => void;
   setDayPhase: (phase: HubermanPhase | null) => void;
+  setFrequency: (freq: FrequencyType) => void;
+  setFrequencyCount: (count: number) => void;
+  setHabitName: (name: string) => void;
   setReminderOptionState: (option: ReminderOption) => void;
+  setRemindersEnabled: (enabled: boolean) => void;
+  setReminderSound: (sound: string) => void;
+  setReminderTime: (time: Date) => void;
+  setSelectedColor: (color: string) => void;
+  setSelectedEmoji: (emoji: string | null) => void;
 }
 
 interface UseHabitFormInitOptions {
@@ -36,8 +39,10 @@ export const useHabitFormInit = ({
   setters,
 }: UseHabitFormInitOptions) => {
   const {
+    setCustomDays,
     setDayPhase,
     setFrequency,
+    setFrequencyCount,
     setHabitName,
     setReminderOptionState,
     setRemindersEnabled,
@@ -58,7 +63,9 @@ export const useHabitFormInit = ({
     setRemindersEnabled(habitToEdit.remindersEnabled ?? false);
     setReminderTime(parseReminderTime(habitToEdit.reminderTime));
     setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);
-    setFrequency(habitToEdit.frequency ?? '');
+    setFrequency((habitToEdit.frequency as FrequencyType) ?? 'daily');
+    setFrequencyCount(habitToEdit.frequencyCount ?? 3);
+    setCustomDays(habitToEdit.daysOfWeek ?? [1, 2, 3, 4, 5]);
     setDayPhase(getPhaseFromPreferredTime(habitToEdit.preferredTime));
     setReminderOptionState(
       getReminderOptionFromTime(

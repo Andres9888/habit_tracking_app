@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
+import type { FrequencyType } from '../../components/CreateHabitModal/components/FrequencyPicker';
 import {
   cancelHabitReminder,
   ensureNotificationPermissions,
@@ -12,6 +13,9 @@ import {
 import { showSaveError } from '../../utils/errorAlerts';
 
 interface UseSaveHandlerProps {
+  customDays?: number[];
+  frequency?: FrequencyType;
+  frequencyCount?: number;
   habitId: Id<'habits'> | null;
   habitName: string;
   selectedEmoji: string | null;
@@ -22,6 +26,9 @@ interface UseSaveHandlerProps {
 }
 
 export function useHabitSaveHandler({
+  customDays = [1, 2, 3, 4, 5],
+  frequency = 'daily',
+  frequencyCount = 3,
   habitId,
   habitName,
   selectedEmoji,
@@ -74,6 +81,9 @@ export function useHabitSaveHandler({
       }
 
       await updateHabit({
+        daysOfWeek: customDays,
+        frequency,
+        frequencyCount,
         habitId,
         icon: selectedEmoji ?? undefined,
         iconColor: selectedColor,
@@ -91,6 +101,9 @@ export function useHabitSaveHandler({
       setIsSaving(false);
     }
   }, [
+    customDays,
+    frequency,
+    frequencyCount,
     isSaving,
     habitId,
     habitName,

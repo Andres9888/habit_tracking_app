@@ -6,7 +6,7 @@ import { v } from 'convex/values';
 import { internal } from '../_generated/api';
 import { internalMutation, mutation } from '../_generated/server';
 import { calculateMomentumStrengthSnapshot } from '../habitStrength';
-import { calculateStreakFromHistory } from '../streakUtils';
+import { calculateFrequencyAwareStreak } from '../streakUtils';
 import { getTodayForTimezone, isFutureDate, isValidDateFormat, maxDateKey } from './utils';
 
 export const toggleHabit = mutation({
@@ -65,7 +65,15 @@ export const recalculateStreakAndStrength = internalMutation({
     const snapshot = calculateMomentumStrengthSnapshot({
       habitCreatedAt: habit.createdAt, throughDate: evaluationDateKey, tracking,
     });
-    const streakData = calculateStreakFromHistory(tracking, evaluationDateKey);
+    
+    // Use frequency-aware streak calculation
+    const streakData = calculateFrequencyAwareStreak(
+      tracking,
+      evaluationDateKey,
+      habit.frequency || 'daily',
+      habit.frequencyCount,
+      habit.daysOfWeek
+    );
 
     await ctx.db.patch(args.habitId, {
       bestStreak: streakData.bestStreak, currentStreak: streakData.currentStreak,

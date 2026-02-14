@@ -12,6 +12,16 @@ export const createHabitArgs = {
   cueAfterBehavior: v.optional(v.string()),
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),
+  daysOfWeek: v.optional(v.array(v.number())),
+  frequency: v.optional(
+    v.union(
+      v.literal('daily'),
+      v.literal('weekdays'),
+      v.literal('custom_days'),
+      v.literal('x_times_per_week')
+    )
+  ),
+  frequencyCount: v.optional(v.number()),
   icon: v.optional(v.string()),
   iconColor: v.optional(v.string()),
   name: v.string(),
@@ -28,7 +38,15 @@ export const updateHabitArgs = {
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),
   daysOfWeek: v.optional(v.array(v.number())),
-  frequency: v.optional(v.string()),
+  frequency: v.optional(
+    v.union(
+      v.literal('daily'),
+      v.literal('weekdays'),
+      v.literal('custom_days'),
+      v.literal('x_times_per_week')
+    )
+  ),
+  frequencyCount: v.optional(v.number()),
   goalDuration: v.optional(v.number()),
   goalUnit: v.optional(v.string()),
   habitId: v.id('habits'),
