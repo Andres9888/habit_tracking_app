@@ -14,10 +14,11 @@ import {
 import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
 import { Springs } from '../constants/motion';
+import { CARD_PRESS_SCALE } from '../utils/animations/cardPressAnimation';
 
 export interface PressAnimationConfig {
   /**
-   * Scale value when pressed (default: 0.96)
+   * Scale value when pressed (default: 0.97)
    */
   pressScale?: number;
 
@@ -77,7 +78,7 @@ export function usePressAnimation(
   config: PressAnimationConfig = {}
 ): UsePressAnimationReturn {
   const {
-    pressScale = 0.96,
+    pressScale = CARD_PRESS_SCALE,
     respectReducedMotion: _respectReducedMotion = true,
     springConfig = Springs.button,
     enableHaptics = true,

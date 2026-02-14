@@ -14,6 +14,10 @@ import {
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { Springs } from '../../../constants/motion';
 import { ENTRANCE_DURATION } from './constants';
+import {
+  CARD_PRESS_SCALE,
+  CARD_REST_SCALE,
+} from '../../../utils/animations/cardPressAnimation';
 
 export function useTipAnimations() {
   const reduceMotion = useReduceMotion();
@@ -40,11 +44,11 @@ export function useTipAnimations() {
   }, [reduceMotion, opacity, translateY]);
 
   const handlePressIn = useCallback(() => {
-    pressScale.value = withSpring(0.98, Springs.button);
+    pressScale.value = withSpring(CARD_PRESS_SCALE, Springs.button);
   }, [pressScale]);
 
   const handlePressOut = useCallback(() => {
-    pressScale.value = withSpring(1, Springs.button);
+    pressScale.value = withSpring(CARD_REST_SCALE, Springs.button);
   }, [pressScale]);
 
   const containerStyle = useAnimatedStyle(() => ({
