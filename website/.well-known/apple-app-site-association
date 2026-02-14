@@ -1,0 +1,21 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAM_ID.com.chainday.app",
+        "paths": [
+          "/habit/*",
+          "/toggle/*",
+          "/settings",
+          "/premium"
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "TEAM_ID.com.chainday.app"
+    ]
+  }
+}
