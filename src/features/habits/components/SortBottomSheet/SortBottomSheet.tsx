@@ -1,4 +1,5 @@
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { X } from 'lucide-react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -71,14 +72,12 @@ export function SortBottomSheet({
               </Text>
               <Pressable
                 accessibilityHint='Close sort options'
-                accessibilityLabel='Done'
+                accessibilityLabel='Close'
                 accessibilityRole='button'
-                className='rounded-lg px-3 py-1.5 active:bg-stone-100'
+                className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
                 onPress={handleDismiss}
               >
-                <Text className='text-[13px] font-semibold text-emerald-700'>
-                  Done
-                </Text>
+                <X className='text-stone-600' size={24} />
               </Pressable>
             </View>
 
