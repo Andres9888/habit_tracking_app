@@ -1,9 +1,12 @@
 /** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
+import { useCallback, useState } from 'react';
 import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
+import { UpgradePrompt } from '../../features/habits/components/HabitsList/UpgradePrompt';
+import { usePremium } from '../../hooks/usePremium/usePremium';
 import { EditHeader } from './EditHeader';
 import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
@@ -20,6 +23,19 @@ export default function HabitEditScreen({
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const state = useHabitEditScreen({ habitId, onClose });
+  const { isPremium, monthlyPackage, purchasePackage } = usePremium();
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
+
+  const handlePremiumUpsell = useCallback(() => {
+    setShowUpgradePrompt(true);
+  }, []);
+
+  const handleUpgradePress = useCallback(async () => {
+    if (monthlyPackage) {
+      await purchasePackage(monthlyPackage);
+    }
+    setShowUpgradePrompt(false);
+  }, [monthlyPackage, purchasePackage]);
   // Modal pattern: return null when not visible — the modal simply doesn't mount
   if (!visible || !habitId) return null;
 
@@ -70,12 +86,14 @@ export default function HabitEditScreen({
                 >
                   <CustomizeSection
                     habitName={state.habitName}
+                    isPremium={isPremium}
                     remindersEnabled={state.remindersEnabled}
                     reminderTime={state.reminderTime}
                     selectedColor={state.selectedColor}
                     selectedEmoji={state.selectedEmoji}
                     onColorSelect={state.handleColorSelect}
                     onEmojiSelect={state.handleEmojiSelect}
+                    onPremiumUpsell={handlePremiumUpsell}
                     onReminderTimeChange={state.handleReminderTimeChange}
                     onReminderToggle={state.handleReminderToggle}
                   />
@@ -95,6 +113,12 @@ export default function HabitEditScreen({
           </View>
         </View>
       </KeyboardAvoidingView>
+
+      <UpgradePrompt
+        visible={showUpgradePrompt}
+        onClose={() => setShowUpgradePrompt(false)}
+        onUpgradePress={() => void handleUpgradePress()}
+      />
     </Modal>
   );
 }

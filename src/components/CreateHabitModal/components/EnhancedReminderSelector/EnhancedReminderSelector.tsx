@@ -32,6 +32,8 @@ function EnhancedReminderSelectorComponent({
   onTimeChange,
   presets = DEFAULT_PRESETS,
   showNextReminder = true,
+  isPremium = true,
+  onPremiumUpsell,
 }: EnhancedReminderSelectorProps) {
   const reduceMotion = useReduceMotion();
 
@@ -49,7 +51,12 @@ function EnhancedReminderSelectorComponent({
 
   return (
     <View className='mb-6' testID='enhanced-reminder-selector'>
-      <ToggleRow enabled={enabled} onToggle={handleToggle} />
+      <ToggleRow
+        enabled={enabled}
+        isPremium={isPremium}
+        onPremiumUpsell={onPremiumUpsell}
+        onToggle={handleToggle}
+      />
 
       {enabled && (
         <View className='mt-4'>

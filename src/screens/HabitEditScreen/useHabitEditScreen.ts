@@ -4,6 +4,7 @@ import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { createDateFromTimeString, getDefaultReminderTime } from '../../utils/notifications';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
+import { usePremium } from '../../hooks/usePremium/usePremium';
 import { useHabitSaveHandler } from './useHabitSaveHandler';
 import { useHabitActions } from './useHabitActions';
 
@@ -14,6 +15,7 @@ interface UseHabitEditScreenProps {
 
 export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps) {
   const { triggerSelection, triggerSuccess } = useHapticFeedback();
+  const { isPremium } = usePremium();
 
   const habit = useQuery(api.habits.get, habitId ? { habitId } : 'skip');
 
@@ -83,6 +85,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     handleArchive,
     handleReminderTimeChange,
     handleReminderToggle,
+    isPremium,
     remindersEnabled,
     handleSave,
     selectedEmoji,

@@ -25,6 +25,10 @@ export interface EnhancedReminderSelectorProps {
   presets?: ReminderPreset[];
   /** Whether to show the next reminder badge (default: true) */
   showNextReminder?: boolean;
+  /** Whether user has premium access (gates reminder feature) */
+  isPremium?: boolean;
+  /** Called when non-premium user taps the toggle */
+  onPremiumUpsell?: () => void;
 }
 
 export interface PresetButtonProps {

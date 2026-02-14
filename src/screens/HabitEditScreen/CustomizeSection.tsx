@@ -23,6 +23,10 @@ interface CustomizeSectionProps {
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
+  /** Whether user has premium access */
+  isPremium?: boolean;
+  /** Called when non-premium user taps the locked reminder toggle */
+  onPremiumUpsell?: () => void;
 }
 
 export function CustomizeSection({
@@ -35,6 +39,8 @@ export function CustomizeSection({
   onColorSelect,
   onReminderToggle,
   onReminderTimeChange,
+  isPremium,
+  onPremiumUpsell,
 }: CustomizeSectionProps) {
   return (
     <View className='flex-1'>
@@ -54,7 +60,9 @@ export function CustomizeSection({
 
       <EnhancedReminderSelector
         enabled={remindersEnabled}
+        isPremium={isPremium}
         reminderTime={reminderTime}
+        onPremiumUpsell={onPremiumUpsell}
         onTimeChange={onReminderTimeChange}
         onToggle={onReminderToggle}
       />

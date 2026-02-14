@@ -24,6 +24,8 @@ const CreateHabitFormCenteredComponent = ({
   onSubmit,
   autoFocus = false,
   showNameError = false,
+  isPremium,
+  onPremiumUpsell,
 }: CreateHabitFormCenteredProps) => {
   return (
     <View className='flex-1 px-6'>
@@ -91,7 +93,9 @@ const CreateHabitFormCenteredComponent = ({
         {/* Reminder selector with presets and custom time */}
         <EnhancedReminderSelector
           enabled={reminderEnabled}
+          isPremium={isPremium}
           reminderTime={reminderTime}
+          onPremiumUpsell={onPremiumUpsell}
           onTimeChange={onReminderTimeChange}
           onToggle={onReminderToggle}
         />

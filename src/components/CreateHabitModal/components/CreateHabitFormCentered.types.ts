@@ -20,4 +20,8 @@ export interface CreateHabitFormCenteredProps {
   autoFocus?: boolean;
   /** Whether to show validation error for empty habit name */
   showNameError?: boolean;
+  /** Whether user has premium access (gates reminder feature) */
+  isPremium?: boolean;
+  /** Called when non-premium user taps the locked reminder toggle */
+  onPremiumUpsell?: () => void;
 }
