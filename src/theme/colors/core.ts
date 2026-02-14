@@ -100,6 +100,13 @@ export const colors = {
 
   surface: '#EDEAE5',
 
+  text: {
+    inverse: '#FFFFFF',
+    primary: '#2D2A26',
+    secondary: '#6B6560',
+    tertiary: '#9C958D',
+  },
+
   warning: '#D97706',
   warningLight: '#FEF3CD',
 } as const;
