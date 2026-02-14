@@ -4,8 +4,7 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable, Modal } from 'react-native';
-import { Eye, X, Sparkles, AlertTriangle } from 'lucide-react-native';
+import { Text, Pressable, Modal } from 'react-native';
 import type { DualVizExplainerModalProps } from '../DualVizSetup.types';
 import { ExplainerHeader } from './ExplainerHeader';
 import { ExplainerKeyInsight } from './ExplainerKeyInsight';
