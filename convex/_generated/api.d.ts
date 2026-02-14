@@ -45,6 +45,7 @@ import type * as character_getCharacterStats from "../character/getCharacterStat
 import type * as character_index from "../character/index.js";
 import type * as character_types from "../character/types.js";
 import type * as character from "../character.js";
+import type * as crons from "../crons.js";
 import type * as debugHabitStrength from "../debugHabitStrength.js";
 import type * as diagnose from "../diagnose.js";
 import type * as habitStrength_allHabitsStats from "../habitStrength/allHabitsStats.js";
@@ -68,6 +69,7 @@ import type * as habits_get from "../habits/get.js";
 import type * as habits_getTracking from "../habits/getTracking.js";
 import type * as habits_list from "../habits/list.js";
 import type * as habits_pause from "../habits/pause.js";
+import type * as habits_purgeDeleted from "../habits/purgeDeleted.js";
 import type * as habits_remove from "../habits/remove.js";
 import type * as habits_reorder from "../habits/reorder.js";
 import type * as habits_stats from "../habits/stats.js";
@@ -124,7 +126,6 @@ import type * as streakUtils_types from "../streakUtils/types.js";
 import type * as streakUtils_updateStreak from "../streakUtils/updateStreak.js";
 import type * as streakUtils from "../streakUtils.js";
 import type * as subscriptions_helpers from "../subscriptions/helpers.js";
-import type * as subscriptions_premiumCheck from "../subscriptions/premiumCheck.js";
 import type * as subscriptions from "../subscriptions.js";
 import type * as templates_clearAndDedupe from "../templates/clearAndDedupe.js";
 import type * as templates_helpers from "../templates/helpers.js";
@@ -202,6 +203,7 @@ declare const fullApi: ApiFromModules<{
   "character/index": typeof character_index;
   "character/types": typeof character_types;
   character: typeof character;
+  crons: typeof crons;
   debugHabitStrength: typeof debugHabitStrength;
   diagnose: typeof diagnose;
   "habitStrength/allHabitsStats": typeof habitStrength_allHabitsStats;
@@ -225,6 +227,7 @@ declare const fullApi: ApiFromModules<{
   "habits/getTracking": typeof habits_getTracking;
   "habits/list": typeof habits_list;
   "habits/pause": typeof habits_pause;
+  "habits/purgeDeleted": typeof habits_purgeDeleted;
   "habits/remove": typeof habits_remove;
   "habits/reorder": typeof habits_reorder;
   "habits/stats": typeof habits_stats;
@@ -281,7 +284,6 @@ declare const fullApi: ApiFromModules<{
   "streakUtils/updateStreak": typeof streakUtils_updateStreak;
   streakUtils: typeof streakUtils;
   "subscriptions/helpers": typeof subscriptions_helpers;
-  "subscriptions/premiumCheck": typeof subscriptions_premiumCheck;
   subscriptions: typeof subscriptions;
   "templates/clearAndDedupe": typeof templates_clearAndDedupe;
   "templates/helpers": typeof templates_helpers;

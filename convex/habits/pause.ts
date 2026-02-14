@@ -150,13 +150,14 @@ export const listPaused = query({
       throw new Error('Unauthenticated: Must be logged in to view paused habits');
     }
 
-    // SEC-001: Return only the user's paused habits
-    return await ctx.db
+    // SEC-001: Return only the user's paused habits (exclude soft-deleted)
+    const paused = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .filter((q) => q.eq(q.field('paused'), true))
       .order('desc')
       .collect();
+    return paused.filter((h) => h.deleted !== true);
   },
   returns: v.array(fullHabitValidator),
 });

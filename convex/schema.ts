@@ -110,6 +110,10 @@ const applicationTables = {
 
     archivedAt: v.optional(v.number()),
 
+    // Soft delete - habit is hidden but retained for 30 days before permanent removal
+    deleted: v.optional(v.boolean()),
+    deletedAt: v.optional(v.number()),
+
     bestStreak: v.optional(v.number()),
 
     // ISO date string (YYYY-MM-DD)
