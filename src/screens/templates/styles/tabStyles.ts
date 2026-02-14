@@ -1,5 +1,9 @@
 /**
- * Tab Styles - OPTIMIZED: Emerald active state, stronger shadows
+ * Tab Styles - Theme-aware base styles for TemplatesScreen tab bar.
+ *
+ * NOTE: Colors that need dark-mode adaptation are applied inline via
+ * useThemeColors() in the TabBar component. This stylesheet provides
+ * only layout/geometry values.
  */
 import { StyleSheet } from 'react-native';
 
@@ -14,16 +18,7 @@ export const tabStyles = StyleSheet.create({
     paddingVertical: 12,
     zIndex: 1,
   },
-  tabActive: {
-    backgroundColor: '#fff',
-    elevation: 3,
-    shadowColor: '#1c1917',
-    shadowOffset: { height: 3, width: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-  },
   tabBar: {
-    backgroundColor: '#ffffff',
     borderRadius: 12,
     flexDirection: 'row',
     marginBottom: 12,
@@ -33,35 +28,26 @@ export const tabStyles = StyleSheet.create({
     position: 'relative',
   },
   tabCount: {
-    color: '#a8a29e',
     fontSize: 13,
     fontWeight: '700',
     marginLeft: 6,
   },
-  // OPTIMIZED: Emerald active count
-  tabCountActive: {
-    color: '#059669',
-  },
   tabIndicator: {
-    backgroundColor: '#fff',
     borderRadius: 12,
     bottom: 5,
     elevation: 3,
     left: 5,
     position: 'absolute',
-    shadowColor: '#059669',
     shadowOffset: { height: 3, width: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 8,
     top: 5,
   },
   tabText: {
-    color: '#78716c',
     fontSize: 13,
     fontWeight: '600',
   },
-  // OPTIMIZED: Emerald active text
-  tabTextActive: {
-    color: '#047857',
-  },
 });
+
+/* ---- Removed old colour-baked entries ---- */
+/* tabActive, tabTextActive, tabCountActive — colours now live in TabBar.tsx */
