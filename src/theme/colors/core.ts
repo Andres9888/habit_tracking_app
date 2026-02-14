@@ -100,6 +100,31 @@ export const colors = {
 
   surface: '#EDEAE5',
 
+  // Text Color Hierarchy
+  text: {
+    // Secondary text, captions (gray.500)
+    disabled: '#9C958D',
+
+    // Interactive text links (secondary.600)
+    error: '#C93B3B',
+
+    // Disabled state text (gray.400)
+    inverse: '#FFFFFF',
+
+    // Text on dark backgrounds
+    link: '#2563EB',
+
+    primary: '#2D2A26',
+
+    // High-contrast main text (gray.800)
+    secondary: '#524D47',
+
+    // Error messages
+    success: '#1B6B4A',
+    // Body text, lower hierarchy (gray.600)
+    tertiary: '#6B6560', // Success messages (primary.700)
+  },
+
   warning: '#D97706',
   warningLight: '#FEF3CD',
 } as const;
