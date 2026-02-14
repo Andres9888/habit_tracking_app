@@ -8,7 +8,7 @@
 
 export const colors = {
   // Convenience aliases for common usage (defaults to light mode)
-  background: '#faf9f7',
+  background: '#FAF8F5',
 
   border: '#e7e5e4',
 
@@ -25,7 +25,7 @@ export const colors = {
 
   // Neutral Grays (iOS-inspired)
   gray: {
-    50: '#faf9f7', // Background, cards in dark mode
+    50: '#FAF8F5', // Background, cards in dark mode
     100: '#f5f5f4', // Card backgrounds
     200: '#E5E7EB', // Borders, dividers
     300: '#D1D5DB', // Disabled elements
@@ -42,10 +42,10 @@ export const colors = {
 
   // Background & Surfaces
   light: {
-    background: '#faf9f7', // Warm stone background
-    card: '#ffffff', // Pure white cards for contrast
+    background: '#FAF8F5', // Warm stone background
+    card: '#f0eeeb', // Warm stone card background
     gradientMid: '#f5f3f0', // Slightly darker warm stone for depth gradients
-    surface: '#ffffff', // White surface for elevated elements
+    surface: '#f0eeeb', // Warm stone surface for elevated elements
     surfaceMuted: '#fafaf9', // stone-50 for subtle sections
   },
 
@@ -101,7 +101,7 @@ export const colors = {
 
   success: '#22c55e', // Green-500 — distinct from primary emerald
 
-  surface: '#faf9f7',
+  surface: '#FAF8F5',
 
   // Text Colors
   text: {
