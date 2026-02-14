@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
   },
   headerTitle: {
     color: '#111827',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.5,
   },
@@ -69,13 +69,13 @@ export const styles = StyleSheet.create({
   input: {
     borderRadius: 12,
     borderWidth: 1,
-    fontSize: 16,
+    fontSize: 17,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   label: {
     color: '#374151',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
     marginBottom: 8,
   },

@@ -62,7 +62,7 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
       onPressOut={handlePressOut}
     >
       <Text
-        style={{ color: colors.text.inverse, fontSize: 16, fontWeight: '600' }}
+        style={{ color: colors.text.inverse, fontSize: 17, fontWeight: '600' }}
       >
         Try Again
       </Text>

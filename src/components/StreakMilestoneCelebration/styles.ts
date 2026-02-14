@@ -39,7 +39,7 @@ emoji: {
 // Emoji badge
 emojiBadge: {
     alignItems: 'center',
-    borderRadius: 50,
+    borderRadius: 9999,
     height: 100,
     justifyContent: 'center',
     marginBottom: spacing.lg,
