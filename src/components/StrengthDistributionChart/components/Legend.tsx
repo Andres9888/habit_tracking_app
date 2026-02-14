@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
 import { spacing, borderRadius } from '../../../theme/spacing';
@@ -9,6 +9,7 @@ import {
   STRENGTH_LEVELS,
 } from '../StrengthDistributionChart.constants';
 import type { StrengthDistributionData } from '../StrengthDistributionChart.types';
+import { AnimatedPressable } from '../../ui';
 
 interface LegendProps {
   data: StrengthDistributionData;
@@ -21,9 +22,8 @@ export function Legend({ data, onSegmentPress }: LegendProps) {
       {STRENGTH_LEVELS.filter((level) => data[level].count > 0).map((level) => {
         const levelData = data[level];
         return (
-          <TouchableOpacity
+          <AnimatedPressable
             key={level}
-            activeOpacity={0.7}
             style={styles.legendItem}
             onPress={() => onSegmentPress?.(level)}
           >
@@ -40,7 +40,7 @@ export function Legend({ data, onSegmentPress }: LegendProps) {
             <Text style={styles.legendValue}>
               {levelData.percentage.toFixed(0)}%
             </Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         );
       })}
     </View>
