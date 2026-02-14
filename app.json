@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#059669"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
@@ -64,7 +66,8 @@
           "project": "react-native"
         }
       ],
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "./plugins/withPrivacyManifest"
     ]
   }
 }
