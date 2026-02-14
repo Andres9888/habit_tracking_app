@@ -78,16 +78,22 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     }
 
     // Always return 200 to acknowledge receipt
-    return new Response(JSON.stringify({ received: true }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 200,
-    });
+    return Response.json(
+      { received: true },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+      }
+    );
   } catch (error) {
     console.error('[RevenueCat] Webhook error:', error);
     // Return 500 so RevenueCat retries failed events
-    return new Response(JSON.stringify({ error: 'Processing error' }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 500,
-    });
+    return Response.json(
+      { error: 'Processing error' },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 500,
+      }
+    );
   }
 });
