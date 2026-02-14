@@ -16,17 +16,29 @@ export function useOnboardingStatus(isSignedIn: boolean) {
 
   useEffect(() => {
     if (isSignedIn) {
-      void AsyncStorage.getItem(ONBOARDING_KEY).then((value) => {
-        if (value === 'true') {
-          // Existing user — already completed onboarding before.
-          setComplete(true);
-        } else {
-          // New user — auto-complete onboarding, skip the carousel.
-          void AsyncStorage.setItem(ONBOARDING_KEY, 'true').then(() => {
+      void AsyncStorage.getItem(ONBOARDING_KEY)
+        .then((value) => {
+          if (value === 'true') {
+            // Existing user — already completed onboarding before.
             setComplete(true);
-          });
-        }
-      });
+          } else {
+            // New user — auto-complete onboarding, skip the carousel.
+            void AsyncStorage.setItem(ONBOARDING_KEY, 'true')
+              .then(() => {
+                setComplete(true);
+              })
+              .catch((error) => {
+                if (__DEV__) console.warn('Error saving onboarding status:', error);
+                // Still mark as complete even if save fails
+                setComplete(true);
+              });
+          }
+        })
+        .catch((error) => {
+          if (__DEV__) console.warn('Error reading onboarding status:', error);
+          // Default to not complete on read error
+          setComplete(false);
+        });
     }
   }, [isSignedIn]);
 
