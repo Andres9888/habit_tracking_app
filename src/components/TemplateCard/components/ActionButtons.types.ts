@@ -2,17 +2,17 @@
  * ActionButtons Types
  */
 
-import type { ViewStyle } from 'react-native';
-import type { AnimatedStyleProp } from 'react-native-reanimated';
+import type { GestureResponderEvent, ViewStyle } from 'react-native';
+import type { AnimatedStyle } from 'react-native-reanimated';
 
 export interface ActionButtonsProps {
-  checkmarkStyle: AnimatedStyleProp<ViewStyle>;
+  checkmarkStyle: AnimatedStyle<ViewStyle>;
   iconColor: string;
   isImported: boolean;
   isImporting: boolean;
   isLocked: boolean;
   name: string;
-  onImportPress: (e: unknown) => void;
+  onImportPress: (e: GestureResponderEvent) => void;
   onPreview?: () => void;
   showPreviewCTA: boolean;
 }

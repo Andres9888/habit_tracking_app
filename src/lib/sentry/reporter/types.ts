@@ -4,7 +4,7 @@
 
 import type { SpanOperation, SentrySpan, SentryTransaction } from '../types';
 
-interface SentrySpanInternal {
+export interface SentrySpanInternal {
   end?: () => void;
   setAttribute?: (key: string, value: unknown) => void;
   setStatus?: (status: string) => void;

@@ -6,7 +6,7 @@
 
 import { useCallback, useState, useEffect } from 'react';
 import { Alert } from 'react-native';
-import { useSharedValue, useAnimatedStyle, withTiming, type AnimatedStyleProp } from 'react-native-reanimated';
+import { useSharedValue, useAnimatedStyle, withTiming, type AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { usePremium } from '../../hooks/usePremium';
@@ -23,7 +23,7 @@ interface Params {
 
 export interface PremiumPaywallHandlers {
   annualPackage: PurchasesPackage | null;
-  buttonAnimatedStyle: AnimatedStyleProp<ViewStyle>;
+  buttonAnimatedStyle: AnimatedStyle<ViewStyle>;
   handleButtonPressIn: () => void;
   handleButtonPressOut: () => void;
   handleClose: () => void;
