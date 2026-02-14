@@ -3,6 +3,7 @@
  * Orchestrates the habits list, modals, overlays, and floating action button
  */
 
+import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -10,6 +11,7 @@ import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 
 import { HabitsList } from './components/HabitsList';
 import FloatingActionButton from './components/FloatingActionButton';
+import { QuickAddHabitSheet } from '../../components/QuickAddHabitSheet';
 import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
@@ -41,6 +43,17 @@ export function HabitsApp() {
     triggerWarning,
   });
 
+  const [quickAddVisible, setQuickAddVisible] = useState(false);
+
+  const handleQuickAddRequest = useCallback(() => {
+    // Respect premium habit limits — reuse the same gate logic
+    if (!list.isPremiumUser && list.hasReachedHabitLimit) {
+      void handleCreateHabitRequest();
+      return;
+    }
+    setQuickAddVisible(true);
+  }, [list.isPremiumUser, list.hasReachedHabitLimit, handleCreateHabitRequest]);
+
   const showHabitsSkeleton = list.isHabitsLoading && list.habits.length === 0;
 
   return (
@@ -70,9 +83,7 @@ export function HabitsApp() {
           <View className='absolute bottom-8 right-6'>
             <FloatingActionButton
               celebrationsEnabled={list.celebrationsEnabled}
-              openCreateHabitScreen={(): void => {
-                void handleCreateHabitRequest();
-              }}
+              openCreateHabitScreen={handleQuickAddRequest}
               reduceMotionPreference={list.reduceMotionPreference}
             />
           </View>
@@ -84,6 +95,12 @@ export function HabitsApp() {
           paywallVisible={paywallVisible}
           onPaywallClose={handlePaywallClose}
           onPaywallSuccess={handlePaywallSuccess}
+        />
+
+        <QuickAddHabitSheet
+          reduceMotion={list.reduceMotionPreference}
+          visible={quickAddVisible}
+          onClose={() => setQuickAddVisible(false)}
         />
       </View>
     </GestureHandlerRootView>
