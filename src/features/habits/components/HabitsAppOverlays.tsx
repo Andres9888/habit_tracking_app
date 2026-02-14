@@ -5,6 +5,8 @@
 
 import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
 import { RevenueCatPaywall } from '../../../components/RevenueCatPaywall';
+import { StreakRecoveryModal } from '../../../components/StreakRecoveryModal';
+import { useStreakRecovery } from '../../../hooks/useStreakRecovery';
 import { HabitsModals } from './HabitsModals';
 import WebToaster from './WebToaster';
 import type { HabitsListState, HabitsModalsState } from '../hooks/types';
@@ -24,9 +26,19 @@ export function HabitsAppOverlays({
   onPaywallClose,
   onPaywallSuccess,
 }: HabitsAppOverlaysProps) {
+  const streakRecovery = useStreakRecovery();
+
   return (
     <>
       <WebToaster />
+
+      <StreakRecoveryModal
+        eligibleHabits={streakRecovery.eligibleHabits}
+        freezesRemaining={streakRecovery.freezesRemaining}
+        visible={streakRecovery.visible}
+        onClose={streakRecovery.handleDismiss}
+        onUseFreeze={streakRecovery.handleUseFreeze}
+      />
       <HabitsModals state={modals} />
 
       <ArchiveUndoToast

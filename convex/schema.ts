@@ -589,6 +589,17 @@ const applicationTables = {
     .index('by_habit', ['habitId'])
     .index('by_user', ['userId'])
     .index('by_habit_and_date', ['habitId', 'createdAt']),
+
+  // Streak Freezes - Premium feature to preserve streaks on missed days
+  // Tracks each freeze usage for monthly limiting (3/month)
+  streakFreezes: defineTable({
+    date: v.string(), // YYYY-MM-DD date that was frozen
+    habitId: v.id('habits'),
+    usedAt: v.number(), // Timestamp when freeze was used
+    userId: v.string(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_habit_and_date', ['habitId', 'date']),
 };
 
 export default defineSchema({
