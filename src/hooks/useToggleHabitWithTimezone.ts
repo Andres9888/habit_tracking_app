@@ -6,6 +6,7 @@
 import { useCallback, useMemo } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
+import type { Id } from '../../convex/_generated/dataModel';
 import { getUserTimezone } from '../utils/timezone';
 
 export function useToggleHabitWithTimezone() {
@@ -13,7 +14,7 @@ export function useToggleHabitWithTimezone() {
   const timezone = useMemo(() => getUserTimezone(), []);
 
   const toggleHabit = useCallback(
-    (args: { date: string; habitId: any }) =>
+    (args: { date: string; habitId: Id<'habits'> }) =>
       rawToggle({ ...args, timezone }),
     [rawToggle, timezone]
   ) as typeof rawToggle;

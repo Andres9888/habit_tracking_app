@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, type GestureResponderEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check, Eye } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
@@ -44,7 +44,7 @@ export function ActionButtons({
           style={styles.previewButton}
           textStyle={styles.previewButtonText}
           variant='primary'
-          onPress={(e: any) => {
+          onPress={(e: GestureResponderEvent) => {
             e.stopPropagation();
             void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             onPreview();

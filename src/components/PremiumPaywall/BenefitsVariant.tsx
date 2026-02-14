@@ -11,10 +11,11 @@ import { BenefitsFeatureCard } from './BenefitsFeatureCard';
 import { BenefitsCTAFooter } from './BenefitsCTAFooter';
 import { MOTIVATION_FEATURES } from './motivationFeatures';
 import type { VariantConfig } from './PremiumPaywall.types';
+import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 
 interface BenefitsVariantProps {
   config: VariantConfig;
-  handlers: any;
+  handlers: PremiumPaywallHandlers;
   triggeredByFeature?: string;
   reduceMotion: boolean;
   testID?: string;

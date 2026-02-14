@@ -4,10 +4,11 @@ import { AlertTriangle, CheckCircle, Activity } from 'lucide-react-native';
 
 import { styles } from '../PredictionInsights.styles';
 import type { RiskLevel } from '../PredictionInsights.types';
+import type { AppTheme } from '../../../theme';
 
 interface RiskBadgeProps {
   level: RiskLevel;
-  theme: any;
+  theme: AppTheme;
 }
 
 const RISK_CONFIG = {

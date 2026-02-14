@@ -61,15 +61,15 @@ export interface UseAnalyticsScreenReturn {
 
   // Data
 
-  overviewStats: any;
+  overviewStats: AnalyticsOverviewStats | null;
 
-  strengthDistribution: any;
+  strengthDistribution: StrengthDistributionData[];
 
-  trendData: any;
+  trendData: TrendDataPoint[];
 
-  complianceData: any;
+  complianceData: ComplianceDay[];
 
-  weeklyInsights: any;
+  weeklyInsights: WeeklyInsight[];
 
   // Handlers
   onRefresh: () => Promise<void>;

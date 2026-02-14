@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Pressable, type PressableProps } from 'react-native';
+import { Pressable, type PressableProps, type GestureResponderEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
   usePressAnimation,
@@ -70,7 +70,7 @@ export function AnimatedPressable({
   });
 
   const handlePressIn = React.useCallback(
-    (event: any) => {
+    (event: GestureResponderEvent) => {
       if (!disableAnimation) {
         pressHandlers.onPressIn();
       }
@@ -80,7 +80,7 @@ export function AnimatedPressable({
   );
 
   const handlePressOut = React.useCallback(
-    (event: any) => {
+    (event: GestureResponderEvent) => {
       if (!disableAnimation) {
         pressHandlers.onPressOut();
       }

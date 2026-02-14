@@ -4,8 +4,14 @@
 
 import type { SpanOperation, SentrySpan, SentryTransaction } from '../types';
 
+interface SentrySpanInternal {
+  end?: () => void;
+  setAttribute?: (key: string, value: unknown) => void;
+  setStatus?: (status: string) => void;
+}
+
 /** Transaction wrapper creation */
-export function createTransactionWrapper(span: any): SentryTransaction {
+export function createTransactionWrapper(span: SentrySpanInternal): SentryTransaction {
   return {
     finish: () => span?.end?.(),
     setData: (key: string, value: unknown) => span?.setAttribute?.(key, value),

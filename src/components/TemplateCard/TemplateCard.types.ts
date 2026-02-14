@@ -5,6 +5,7 @@
  */
 
 import type { ViewStyle } from 'react-native';
+import type { AnimatedStyleProp } from 'react-native-reanimated';
 
 export interface TemplateCardProps {
   /** Animation index for staggered entrance */
@@ -97,12 +98,12 @@ export type TemplateCardRenderProps = Pick<
   reducedMotion: boolean;
   isLocked: boolean;
   iconColor: string;
-  containerStyle: any;
-  glowStyle: any;
-  shadowStyle: any;
-  checkmarkStyle: any;
+  containerStyle: AnimatedStyleProp<ViewStyle>;
+  glowStyle: AnimatedStyleProp<ViewStyle>;
+  shadowStyle: AnimatedStyleProp<ViewStyle>;
+  checkmarkStyle: AnimatedStyleProp<ViewStyle>;
   handleCardPress: () => void;
-  handleImportPress: (e?: any) => void;
+  handleImportPress: (e?: unknown) => void;
   handlePressIn: () => void;
   handlePressOut: () => void;
 };

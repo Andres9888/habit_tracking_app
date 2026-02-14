@@ -4,11 +4,12 @@
 
 import React, { useState } from 'react';
 import { View, Pressable, Text } from 'react-native';
+import type { PurchasesPackage } from 'react-native-purchases';
 
 interface PricingToggleProps {
-  monthlyPackage: any;
-  annualPackage: any;
-  onPackageChange: (pkg: any) => void;
+  monthlyPackage: PurchasesPackage | null;
+  annualPackage: PurchasesPackage | null;
+  onPackageChange: (pkg: PurchasesPackage | null) => void;
 }
 
 export function PricingToggle({

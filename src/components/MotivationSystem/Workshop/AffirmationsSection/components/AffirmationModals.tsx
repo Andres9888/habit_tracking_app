@@ -69,7 +69,7 @@ export function AffirmationModals({
           visible={isScheduleModalOpen}
           onCancel={onCancelSchedule}
           onClose={onCloseScheduleModal}
-          onSave={onSaveSchedule as (schedule: any) => Promise<void>}
+          onSave={onSaveSchedule}
         />
       )}
     </>
