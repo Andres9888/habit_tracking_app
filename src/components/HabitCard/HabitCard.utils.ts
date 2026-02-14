@@ -66,7 +66,8 @@ export function getStrengthEmoji(strength: number): string {
 export function getBackgroundColor(
   completed: boolean,
   atRisk: boolean,
-  theme: AppTheme
+  theme: AppTheme,
+  cardColor?: string
 ): string {
   if (completed) {
     return theme.custom.colors.primary[400] + '20'; // 20% opacity muted green
@@ -74,5 +75,5 @@ export function getBackgroundColor(
   if (atRisk) {
     return theme.custom.colors.warning[500] + '10'; // 10% opacity warning
   }
-  return theme.custom.colors.light.card;
+  return cardColor ?? theme.custom.colors.light.card;
 }
