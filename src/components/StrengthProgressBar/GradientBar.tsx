@@ -1,5 +1,6 @@
 /**
  * GradientBar - Animated gradient fill with glow effect and dividers
+ * Dark mode aware — track and divider colors adapt to theme.
  */
 
 import React from 'react';
@@ -8,7 +9,7 @@ import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
-import { colors } from '@/theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { styles } from './StrengthProgressBar.styles';
 import { DIVIDER_POSITIONS } from './StrengthProgressBar.constants';
 import { useGlowPulse } from './useGlowPulse';
@@ -27,13 +28,14 @@ export function GradientBar({
   showDividers,
 }: GradientBarProps) {
   const glowStyle = useGlowPulse();
+  const { colors: themeColors, isDark } = useThemeColors();
 
   return (
     <View
       style={[
         styles.barContainer,
         {
-          backgroundColor: colors.gray[200],
+          backgroundColor: themeColors.gray[200],
           borderRadius: barHeight / 2,
           height: barHeight,
         },
@@ -55,7 +57,7 @@ export function GradientBar({
         <Animated.View
           style={[
             {
-              backgroundColor: colors.text.inverse,
+              backgroundColor: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.5)',
               borderRadius: barHeight,
               height: barHeight * 1.5,
               position: 'absolute',
@@ -71,7 +73,16 @@ export function GradientBar({
         DIVIDER_POSITIONS.map((pos) => (
           <View
             key={pos}
-            style={[styles.divider, { height: barHeight, left: `${pos}%` }]}
+            style={[
+              styles.divider,
+              {
+                backgroundColor: isDark
+                  ? 'rgba(255, 255, 255, 0.12)'
+                  : 'rgba(0, 0, 0, 0.15)',
+                height: barHeight,
+                left: `${pos}%`,
+              },
+            ]}
           />
         ))}
     </View>
