@@ -19,8 +19,19 @@ export const scheduleDelivery = mutation({
     scheduledTime: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to schedule affirmations');
+    }
+
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
+
+    // Ownership verification via parent habit
+    const habit = await ctx.db.get(affirmation.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to schedule this affirmation');
+    }
 
     if (!isValidTimeFormat(args.scheduledTime)) {
       throw new Error('Invalid time format. Use HH:MM 24-hour format');
@@ -53,8 +64,18 @@ export const scheduleDelivery = mutation({
 export const updateNotificationId = mutation({
   args: { id: v.id('affirmations'), notificationId: v.string() },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to update notification ID');
+    }
+
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
+
+    const habit = await ctx.db.get(affirmation.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to update this affirmation');
+    }
     await ctx.db.patch(args.id, {
       notificationId: args.notificationId,
       updatedAt: Date.now(),
@@ -70,8 +91,18 @@ export const updateNotificationId = mutation({
 export const toggleSchedule = mutation({
   args: { enabled: v.boolean(), id: v.id('affirmations') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to toggle schedule');
+    }
+
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
+
+    const habit = await ctx.db.get(affirmation.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to toggle this affirmation schedule');
+    }
 
     if (args.enabled && !affirmation.scheduledTime) {
       throw new Error(
@@ -95,8 +126,18 @@ export const toggleSchedule = mutation({
 export const cancelSchedule = mutation({
   args: { id: v.id('affirmations') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to cancel schedule');
+    }
+
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
+
+    const habit = await ctx.db.get(affirmation.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to cancel this affirmation schedule');
+    }
     await ctx.db.patch(args.id, {
       daysOfWeek: undefined,
       frequency: undefined,
@@ -117,8 +158,18 @@ export const cancelSchedule = mutation({
 export const recordDelivery = mutation({
   args: { id: v.id('affirmations') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to record delivery');
+    }
+
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
+
+    const habit = await ctx.db.get(affirmation.habitId);
+    if (habit && habit.userId !== identity.subject) {
+      throw new Error('Not authorized to record delivery for this affirmation');
+    }
     await ctx.db.patch(args.id, {
       lastDeliveredAt: Date.now(),
       updatedAt: Date.now(),
