@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Eye, X } from 'lucide-react-native';
 import { VisualizationGuide } from '../../../NotesSection/VisualizationGuide';
 
@@ -28,14 +29,24 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className='flex-1 bg-gradient-to-b from-violet-50 via-white to-stone-50'>
+      <View className='flex-1'>
+        <LinearGradient
+          className='absolute inset-0'
+          colors={['#f5f3ff', '#ffffff', '#fafaf9']}
+        />
         <Animated.View
           className='flex-row items-center justify-between border-b border-stone-100 bg-white/95 px-5 pb-4'
           entering={FadeIn.delay(100)}
           style={{ paddingTop: insets.top + 8 }}
         >
           <View className='flex-row items-center gap-3'>
-            <View className='h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600'>
+            <View className='h-10 w-10 items-center justify-center rounded-xl'>
+              <LinearGradient
+                className='absolute inset-0 rounded-xl'
+                colors={['#7c3aed', '#4f46e5']}
+                end={{ x: 1, y: 1 }}
+                start={{ x: 0, y: 0 }}
+              />
               <Eye color='#ffffff' size={20} />
             </View>
             <View>

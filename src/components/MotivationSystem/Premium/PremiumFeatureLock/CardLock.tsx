@@ -63,9 +63,15 @@ export function CardLock({
       onPressOut={handlePressOut}
     >
       <Animated.View
-        className='overflow-hidden rounded-2xl border-2 border-violet-200 bg-gradient-to-br from-violet-50 to-white'
+        className='overflow-hidden rounded-2xl border-2 border-violet-200'
         style={reduceMotion ? undefined : animatedStyle}
       >
+        <LinearGradient
+          className='absolute inset-0'
+          colors={['#f5f3ff', '#ffffff']}
+          end={{ x: 1, y: 1 }}
+          start={{ x: 0, y: 0 }}
+        />
         <LinearGradient
           className='flex-row items-center gap-3 px-4 py-3'
           colors={['#8b5cf6', '#7c3aed']}

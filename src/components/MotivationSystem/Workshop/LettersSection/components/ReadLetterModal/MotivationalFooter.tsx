@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Heart } from 'lucide-react-native';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
@@ -24,7 +25,13 @@ export function MotivationalFooter({
       className='mt-8'
       style={showContent ? contentAnimatedStyle : { opacity: 0 }}
     >
-      <View className='flex-row items-start gap-3 rounded-xl bg-gradient-to-r from-violet-50 to-rose-50 p-4'>
+      <View className='flex-row items-start gap-3 rounded-xl p-4'>
+        <LinearGradient
+          className='absolute inset-0 rounded-xl'
+          colors={['#f5f3ff', '#fff1f2']}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
+        />
         <View className='h-8 w-8 items-center justify-center rounded-full bg-violet-100'>
           <Heart className='text-violet-500' fill='#8b5cf6' size={16} />
         </View>

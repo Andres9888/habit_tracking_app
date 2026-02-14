@@ -4,6 +4,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -37,7 +38,13 @@ export function StreakDisplay({ streak, reduceMotion }: StreakDisplayProps) {
   }));
 
   return (
-    <View className='flex-row items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 p-4'>
+    <View className='flex-row items-center justify-center gap-3 rounded-2xl p-4'>
+      <LinearGradient
+        className='absolute inset-0 rounded-2xl'
+        colors={['#fffbeb', '#ffedd5']}
+        end={{ x: 1, y: 0 }}
+        start={{ x: 0, y: 0 }}
+      />
       <Animated.View style={flameAnimatedStyle}>
         <Flame className='text-orange-500' fill='#f97316' size={32} />
       </Animated.View>

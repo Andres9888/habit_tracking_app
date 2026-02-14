@@ -63,8 +63,6 @@ export function trackTimeBasedChipEvent(event: TimeBasedChipEvent): void {
   try {
     analyticsTracker.track(event);
   } catch (error) {
-    if (__DEV__) {
-      if (__DEV__) console.error('[Analytics] Error tracking time-based chip event:', error);
-    }
+    if (__DEV__ && __DEV__) console.error('[Analytics] Error tracking time-based chip event:', error);
   }
 }

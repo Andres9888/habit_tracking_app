@@ -67,8 +67,8 @@ export function formatDateString(date: Date | string): string {
     }
     // Try to parse and format
     const parsed = new Date(date);
-    if (isNaN(parsed.getTime())) {
-      throw new Error(`Invalid date string: ${date}`);
+    if (Number.isNaN(parsed.getTime())) {
+      throw new TypeError(`Invalid date string: ${date}`);
     }
     date = parsed;
   }

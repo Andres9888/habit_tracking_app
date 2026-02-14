@@ -8,6 +8,7 @@
 
 import React from 'react';
 import { View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Modal } from '../../../Modal';
 import { AnimatedContent, ModalHeader, DoneButton } from './components';
@@ -36,9 +37,13 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
       onClose={onClose}
     >
       <View
-        className='flex-1 bg-gradient-to-b from-emerald-50 to-stone-50'
+        className='flex-1'
         style={{ paddingTop: insets.top }}
       >
+        <LinearGradient
+          className='absolute inset-0'
+          colors={['#ecfdf5', '#fafaf9']}
+        />
         <ModalHeader onClose={onClose} />
         <CelebrationScreenContent
           habit={habit}

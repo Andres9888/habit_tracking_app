@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, Pressable, GestureResponderEvent } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Sparkles } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import { ButtonContent } from './ButtonContent';
@@ -33,12 +34,23 @@ function getButtonClassName(
 ) {
   const base = 'flex-row items-center justify-center gap-2 rounded-xl py-3';
   if (!isPremium) return clsx(base, 'bg-stone-100');
-  if (isGenerating)
-    return clsx(base, 'bg-gradient-to-r from-violet-400 to-purple-400');
+  if (isGenerating) return base;
   if (showSuccess) return clsx(base, 'bg-emerald-500');
-  if (canGenerate)
-    return clsx(base, 'bg-gradient-to-r from-violet-500 to-purple-500');
+  if (canGenerate) return base;
   return clsx(base, 'bg-stone-300');
+}
+
+function shouldShowGradient(
+  isPremium: boolean,
+  isGenerating: boolean,
+  canGenerate: boolean,
+  showSuccess: boolean
+) {
+  return isPremium && !showSuccess && (isGenerating || canGenerate);
+}
+
+function getGradientColors(isGenerating: boolean): [string, string] {
+  return isGenerating ? ['#a78bfa', '#c084fc'] : ['#7c3aed', '#a855f7'];
 }
 
 export function FullButton({
@@ -61,6 +73,8 @@ export function FullButton({
     ? 'Generate personalized affirmations with AI'
     : 'Upgrade to premium for AI-generated affirmations';
 
+  const showGradient = shouldShowGradient(isPremium, isGenerating, canGenerate, showSuccess);
+
   return (
     <View className='gap-2'>
       <Animated.View style={animatedStyle}>
@@ -80,6 +94,14 @@ export function FullButton({
           onPressIn={onPressIn}
           onPressOut={onPressOut}
         >
+          {showGradient && (
+            <LinearGradient
+              className='absolute inset-0 rounded-xl'
+              colors={getGradientColors(isGenerating)}
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
+            />
+          )}
           <ButtonContent
             isGenerating={isGenerating}
             isPremium={isPremium}

@@ -216,7 +216,7 @@ describe('LivePreview Component - V11', () => {
 
   describe('Component Structure', () => {
     it('should have correct CSS classes for styling', () => {
-      const { container } = render(
+      const { UNSAFE_root: container } = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
@@ -228,7 +228,7 @@ describe('LivePreview Component - V11', () => {
     });
 
     it('should apply shadow styling to preview card', () => {
-      const { container } = render(
+      const { UNSAFE_root: container } = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
@@ -239,7 +239,7 @@ describe('LivePreview Component - V11', () => {
     });
 
     it('should use correct spacing (mb-3 mt-3)', () => {
-      const { container } = render(
+      const { UNSAFE_root: container } = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 

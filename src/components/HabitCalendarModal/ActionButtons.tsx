@@ -20,8 +20,8 @@ export function ActionButtons({ isTodayCompleted, onMarkToday, onEdit }: ActionB
         className={`flex-1 rounded-2xl px-4 py-3 ${
           isTodayCompleted ? 'bg-stone-200' : 'bg-blue-500'
         }`}
-        disabled={isTodayCompleted}
         disableAnimation={isTodayCompleted}
+        disabled={isTodayCompleted}
         onPress={onMarkToday}
       >
         <Text

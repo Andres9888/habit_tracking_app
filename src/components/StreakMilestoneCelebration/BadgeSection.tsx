@@ -16,14 +16,14 @@ interface BadgeSectionProps {
 export function BadgeSection({ milestone, animatedStyle }: BadgeSectionProps) {
   return (
     <Animated.View
+      accessible
+      accessibilityLabel={`${milestone.emoji} ${milestone.title}`}
+      accessibilityRole="image"
       style={[
         styles.emojiBadge,
         { backgroundColor: milestone.color },
         animatedStyle,
       ]}
-      accessible
-      accessibilityLabel={`${milestone.emoji} ${milestone.title}`}
-      accessibilityRole="image"
     >
       <Text style={styles.emoji}>{milestone.emoji}</Text>
     </Animated.View>

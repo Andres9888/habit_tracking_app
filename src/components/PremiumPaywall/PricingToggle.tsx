@@ -26,7 +26,7 @@ export function PricingToggle({
   return (
     <View className='flex-row items-center justify-center gap-3'>
       <Pressable
-        className={`rounded-lg px-4 py-2 ${!isAnnual ? 'bg-white/20' : 'bg-white/5'}`}
+        className={`rounded-lg px-4 py-2 ${isAnnual ? 'bg-white/5' : 'bg-white/20'}`}
         onPress={() => handleToggle(false)}
       >
         <Text className='text-sm text-white'>

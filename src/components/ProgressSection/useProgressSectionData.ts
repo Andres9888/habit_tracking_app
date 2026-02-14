@@ -26,9 +26,9 @@ export function useProgressSectionData({
 }: UseProgressSectionDataArgs) {
   const createdAtNumber = typeof habitCreatedAt === 'number'
     ? habitCreatedAt
-    : habitCreatedAt != null
-      ? new Date(habitCreatedAt).getTime()
-      : undefined;
+    : habitCreatedAt == null
+      ? undefined
+      : new Date(habitCreatedAt).getTime();
 
   const dayStats = useMemo(
     () => calculateDayOfWeekStats(tracking, createdAtNumber),

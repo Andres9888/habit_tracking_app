@@ -1,4 +1,5 @@
 import { Animated, Pressable, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { getAISuggestions } from './suggestions';
 import { usePremiumTeaserAnimations } from './usePremiumTeaserAnimations';
@@ -37,12 +38,22 @@ export function PremiumTeaser({ habitName, onUpgrade }: PremiumTeaserProps) {
           onUpgrade();
         }}
       >
-        <View className='bg-gradient-to-r from-violet-50 to-indigo-50 p-4'>
-          {/* Shimmer overlay */}
-          <Animated.View
-            className='absolute inset-0 bg-gradient-to-r from-transparent via-violet-200/30 to-transparent'
-            style={{ opacity: shimmerOpacity }}
+        <View className='p-4'>
+          <LinearGradient
+            className='absolute inset-0'
+            colors={['#f5f3ff', '#e0e7ff']}
+            end={{ x: 1, y: 0 }}
+            start={{ x: 0, y: 0 }}
           />
+          {/* Shimmer overlay */}
+          <Animated.View className='absolute inset-0' style={{ opacity: shimmerOpacity }}>
+            <LinearGradient
+              className='absolute inset-0'
+              colors={['transparent', 'rgba(221, 214, 254, 0.3)', 'transparent']}
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
+            />
+          </Animated.View>
           <TeaserContent suggestions={suggestions} />
         </View>
       </Pressable>

@@ -14,6 +14,7 @@
 import React, { useCallback } from 'react';
 import { View, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { Modal } from '../../../Modal';
 import type { RescueModeProps } from './RescueMode.types';
@@ -77,9 +78,13 @@ export function RescueMode({
       onClose={onClose}
     >
       <View
-        className='flex-1 bg-gradient-to-b from-rose-50 to-stone-50'
+        className='flex-1'
         style={{ paddingTop: insets.top }}
       >
+        <LinearGradient
+          className='absolute inset-0'
+          colors={['#fff1f2', '#fafaf9']}
+        />
         <RescueModeHeader onClose={onClose} />
 
         <ScrollView

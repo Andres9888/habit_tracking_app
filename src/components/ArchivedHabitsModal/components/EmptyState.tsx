@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export function EmptyState() {
   return (
@@ -6,7 +7,13 @@ export function EmptyState() {
       {/* Illustration - using plant/growth metaphor for warmth */}
       <View className='mb-6 items-center'>
         <View className='relative'>
-          <View className='h-28 w-32 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-100'>
+          <View className='h-28 w-32 items-center justify-center rounded-2xl'>
+            <LinearGradient
+              className='absolute inset-0 rounded-2xl'
+              colors={['#ecfdf5', '#ccfbf1']}
+              end={{ x: 1, y: 1 }}
+              start={{ x: 0, y: 0 }}
+            />
             <Text className='mt-2 text-5xl'>🌱</Text>
           </View>
           {/* Sparkles - repositioned for balance */}

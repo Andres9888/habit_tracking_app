@@ -60,7 +60,7 @@ export function useHabitStrength(
   // This works because the Set is typically recreated when entries change
   const result = useMemo(() => {
     // Defensive check for invalid habitCreatedAt
-    const safeCreatedAt = typeof habitCreatedAt === 'number' && !isNaN(habitCreatedAt) && habitCreatedAt > 0
+    const safeCreatedAt = typeof habitCreatedAt === 'number' && !Number.isNaN(habitCreatedAt) && habitCreatedAt > 0
       ? habitCreatedAt
       : Date.now();
     const createdAtDate = new Date(safeCreatedAt);
@@ -73,7 +73,7 @@ export function useHabitStrength(
     // Current strength is the last value in the timeline
     const currentStrength =
       strengthHistory.length > 0
-        ? strengthHistory[strengthHistory.length - 1].strength
+        ? strengthHistory.at(-1).strength
         : 0;
 
     // Calculate strength at 30 days ago (if habit is old enough)
@@ -95,27 +95,27 @@ export function useHabitStrength(
 
     // Calculate delta vs 30 days ago
     const deltaVsMonth =
-      thirtyDaysAgoStrength !== null
-        ? calculateDelta(currentStrength, thirtyDaysAgoStrength)
-        : currentStrength; // If habit < 30 days, delta is the current value
+      thirtyDaysAgoStrength === null
+        ? currentStrength
+        : calculateDelta(currentStrength, thirtyDaysAgoStrength); // If habit < 30 days, delta is the current value
 
     const metrics: StrengthMetrics = {
       current: currentStrength,
-      thirtyDaysAgo: thirtyDaysAgoStrength,
+      deltaVsMonth,
+      habitAgeDays,
+      lowest: lowest.strength,
+      lowestDate: lowest.date,
       oneYearAgo: oneYearAgoStrength,
       peak: peak.strength,
       peakDate: peak.date,
-      lowest: lowest.strength,
-      lowestDate: lowest.date,
-      deltaVsMonth,
-      habitAgeDays,
+      thirtyDaysAgo: thirtyDaysAgoStrength,
     };
 
     return {
       currentStrength,
-      strengthHistory,
-      metrics,
       isCalculating: false,
+      metrics,
+      strengthHistory,
     };
   }, [completedDates, habitCreatedAt]);
 

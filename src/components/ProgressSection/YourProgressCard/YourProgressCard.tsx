@@ -6,6 +6,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Info } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
@@ -59,7 +60,12 @@ export function YourProgressCard({
       accessibilityRole='summary'
       className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'
     >
-      <View className='absolute inset-0 bg-gradient-to-br from-teal-50/30 via-white to-emerald-50/30' />
+      <LinearGradient
+        className='absolute inset-0'
+        colors={['rgba(240, 253, 250, 0.3)', '#ffffff', 'rgba(236, 253, 245, 0.3)']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
+      />
       <View className='absolute inset-0 rounded-2xl border border-teal-500/20' />
 
       <View className='p-4'>

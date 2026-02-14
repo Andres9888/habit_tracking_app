@@ -5,6 +5,7 @@
 
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import type { StreakChainSectionProps } from './types';
 import { getTierInfo } from './constants';
@@ -36,7 +37,12 @@ export function StreakChainSection({
 
   return (
     <View className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'>
-      <View className='absolute inset-0 bg-gradient-to-br from-orange-50/30 via-white to-amber-50/30' />
+      <LinearGradient
+        className='absolute inset-0'
+        colors={['rgba(255, 247, 237, 0.3)', '#ffffff', 'rgba(255, 251, 235, 0.3)']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
+      />
       <View className='p-5'>
         <StreakHeader currentIcon={current.icon} />
         <StreakNumber
