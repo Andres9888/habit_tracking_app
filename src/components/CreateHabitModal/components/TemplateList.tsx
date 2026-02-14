@@ -49,6 +49,7 @@ export const TemplateList = ({
         accessibilityLabel='Habit templates list'
         accessibilityRole='list'
         data={templates}
+        keyboardDismissMode='on-drag'
         keyExtractor={(item) => item._id}
         ListFooterComponent={() => <TemplateListFooter onClose={onClose} />}
         renderItem={({ item, index }) => (

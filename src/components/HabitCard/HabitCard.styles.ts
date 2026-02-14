@@ -86,6 +86,20 @@ const coreStyles = StyleSheet.create({
     fontWeight: '600',
   },
   strengthFill: { bottom: 0, left: 0, position: 'absolute', top: 0 },
+
+  swipeHintContainer: {
+    alignItems: 'center',
+    gap: 3,
+    justifyContent: 'center',
+    marginLeft: spacing.xs,
+    paddingRight: spacing.xs,
+  },
+  swipeHintLine: {
+    backgroundColor: 'rgba(120, 113, 108, 0.35)',
+    borderRadius: 2,
+    height: 3,
+    width: 14,
+  },
   topRow: {
     alignItems: 'center',
     flexDirection: 'row',

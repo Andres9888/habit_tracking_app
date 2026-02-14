@@ -48,6 +48,7 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
         contentContainerStyle={styles.allTemplatesList}
         data={p.filteredTemplates}
         initialNumToRender={5}
+        keyboardDismissMode='on-drag'
         keyExtractor={(item) => item._id}
         maxToRenderPerBatch={5}
         renderItem={({ item: t }) => (

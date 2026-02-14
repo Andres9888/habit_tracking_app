@@ -23,6 +23,7 @@ export interface HabitsListState {
   habitSortMode: HabitSortMode;
   habitCompletionIcon: HabitSettings['habitCompletionIcon'];
   isHabitsLoading: boolean;
+  isRefreshingHabits: boolean;
   hasReachedHabitLimit: boolean;
   weekDates: Date[];
   weekDateStrings: string[];
@@ -46,6 +47,7 @@ export interface HabitsListState {
   handleNextWeek: () => void;
   handlePreviousWeek: () => void;
   openCreateHabitScreen: () => void;
+  refreshHabits: () => Promise<void>;
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
   getStreak: (habitId: string) => number;
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;

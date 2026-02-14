@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * HabitsListState Hook
  *
@@ -8,7 +9,7 @@
  */
 
 import { useCallback, useState } from 'react';
-import { useMutation, useQuery } from 'convex/react';
+import { useConvex, useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Habit, HabitSettings, HabitSortMode } from '../types';
 import { useHabitsWeekDates } from './useHabitsWeekDates';
@@ -26,9 +27,11 @@ const FREE_HABIT_LIMIT = 3;
 
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
+  const [isRefreshingHabits, setIsRefreshingHabits] = useState(false);
   const isOnline = useIsOnline();
   const toggleHabitMutation = useToggleHabitWithTimezone();
   const reorderHabits = useMutation(api.habits.reorderHabits);
+  const convex = useConvex();
 
   const habitsQuery = useQuery(api.habits.list);
   const habitsFromQuery = habitsQuery ?? [];
@@ -79,14 +82,23 @@ export function useHabitsListState(): HabitsListState {
   const handleHabitPress = useCallback((_habit: Habit) => {
     // Handled by parent component
   }, []);
-
-  // Wrap toggle mutation with optimistic update for immediate feedback
-  // Pass isOnline for offline queue integration (T011)
   const toggleHabit = useOptimisticToggleMutation(
     toggleHabitMutation,
     isCompleted,
     { isOnline }
   );
+
+  const refreshHabits = useCallback(async () => {
+    setIsRefreshingHabits(true);
+    try {
+      await Promise.all([
+        convex.query(api.habits.list),
+        convex.query(api.settings.get),
+      ]);
+    } finally {
+      setIsRefreshingHabits(false);
+    }
+  }, [convex]);
 
   return {
     canNavigateForward: weekDatesState.canNavigateForward,
@@ -113,8 +125,10 @@ export function useHabitsListState(): HabitsListState {
     handleNextWeek: weekDatesState.handleNextWeek,
     handlePreviousWeek: weekDatesState.handlePreviousWeek,
     isPremiumUser,
+    isRefreshingHabits,
     openCreateHabitScreen,
     reduceMotionPreference,
+    refreshHabits,
     toggleHabit,
   };
 }

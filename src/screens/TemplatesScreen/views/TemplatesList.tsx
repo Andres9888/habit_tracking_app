@@ -57,6 +57,7 @@ export function TemplatesList(props: TemplatesListProps) {
         ref={flatListRef}
         contentContainerStyle={styles.listContent}
         data={filteredTemplates}
+        keyboardDismissMode='on-drag'
         keyExtractor={(item) => item._id}
         ListEmptyComponent={
           <TemplatesListEmpty

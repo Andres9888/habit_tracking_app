@@ -37,6 +37,7 @@ export function SettingsContent(p: SettingsContentProps) {
   return (
     <ScrollView
       className='flex-1 px-4'
+      keyboardDismissMode='on-drag'
       showsVerticalScrollIndicator={false}
       style={{
         backgroundColor: hc ? colors.background : themeColors.background,

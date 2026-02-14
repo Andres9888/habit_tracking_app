@@ -94,6 +94,10 @@ export function HabitCardContent({
             completionIcon={completionIcon}
             hasPendingOfflineOps={hasPendingOfflineOps}
           />
+          <View pointerEvents='none' style={styles.swipeHintContainer}>
+            <View style={styles.swipeHintLine} />
+            <View style={styles.swipeHintLine} />
+          </View>
         </View>
       </View>
 

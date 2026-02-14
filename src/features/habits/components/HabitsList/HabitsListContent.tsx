@@ -1,5 +1,10 @@
+/* eslint-disable max-lines */
+/**
+ * HabitsListContent - The draggable list of habits
+ */
+
 import { useCallback, useMemo } from 'react';
-import { View } from 'react-native';
+import { RefreshControl, View } from 'react-native';
 import DraggableFlatList, {
   type RenderItemParams,
 } from 'react-native-draggable-flatlist';
@@ -22,7 +27,6 @@ export function HabitsListContent({
 }: HabitsListContentProps) {
   const { list, modals, onUpgradeIntent } = props;
   const { upgradePromptVisible, onUpgradeDismiss, onUpgradeConfirm } = props;
-
   const contentContainerStyle = useMemo(
     () => ({
       paddingBottom: list.contentPadding.paddingBottom,
@@ -31,7 +35,6 @@ export function HabitsListContent({
     }),
     [list.contentPadding.paddingBottom, list.contentPadding.paddingHorizontal]
   );
-
   const listEmptyComponent = useMemo(
     () =>
       renderHabitsListEmpty({
@@ -42,17 +45,14 @@ export function HabitsListContent({
       }),
     [handlers, list, modals, handleSuccessTransitionComplete]
   );
-
   const listFooterComponent = useMemo(
     () => renderHabitsListFooter({ list, onUpgradeIntent }),
     [list, onUpgradeIntent]
   );
-
   const listHeaderComponent = useMemo(
     () => renderHabitsListHeader({ handlers, props, state }),
     [handlers, props, state]
   );
-
   const renderHabitItem = useCallback(
     (p: RenderItemParams<Habit>) =>
       renderHabitRow({
@@ -81,6 +81,13 @@ export function HabitsListContent({
         ListEmptyComponent={listEmptyComponent}
         ListFooterComponent={listFooterComponent}
         ListHeaderComponent={listHeaderComponent}
+        refreshControl={
+          <RefreshControl
+            refreshing={list.isRefreshingHabits}
+            tintColor='#059669'
+            onRefresh={() => void list.refreshHabits()}
+          />
+        }
         renderItem={renderHabitItem}
         showsVerticalScrollIndicator={false}
         onDragBegin={handlers.handleDragBegin}

@@ -52,6 +52,7 @@ export function BrowseCategoriesTab({
         directionalLockEnabled
         nestedScrollEnabled
         contentContainerStyle={styles.browseContent}
+        keyboardDismissMode='on-drag'
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.categorySections}>
