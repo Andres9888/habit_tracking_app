@@ -147,6 +147,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<BookOpen color='#78716c' size={16} />}
               iconBackgroundColor='#e7e5e4'
+              badge={p.archivedHabitsCount}
               label='Archived Habits'
               showBorder={false}
               type='navigation'

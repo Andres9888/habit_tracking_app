@@ -56,6 +56,7 @@ export interface SettingsContentProps {
   ) => void | Promise<void>;
   onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
   onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
+  archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
   showGradientFill: boolean;
   // Streak reminders
