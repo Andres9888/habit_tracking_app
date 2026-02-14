@@ -28,6 +28,7 @@ export interface SettingsModalProps {
   onToggleStreakReminders?: (value: boolean) => void | Promise<void>;
   onChangeStreakReminderTime?: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
+  isLoading?: boolean;
 }
 
 export interface SettingsColors {
