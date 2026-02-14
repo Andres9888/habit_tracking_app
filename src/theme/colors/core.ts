@@ -100,6 +100,17 @@ export const colors = {
 
   surface: '#EDEAE5',
 
+  // Text Colors (semantic hierarchy)
+  text: {
+    disabled: '#9C958D', // gray.400 — Disabled, placeholder
+    inverse: '#FFFFFF', // White text on colored backgrounds
+    onDark: '#F5F1ED', // Light text on dark surfaces
+    onPrimary: '#FFFFFF', // White text on primary green buttons
+    primary: '#2D2A26', // gray.800 — Headings, strong emphasis
+    secondary: '#524D47', // gray.600 — Body text, default
+    tertiary: '#6B6560', // gray.500 — Secondary text (5.1:1 contrast)
+  },
+
   warning: '#D97706',
   warningLight: '#FEF3CD',
 } as const;
