@@ -28,6 +28,8 @@ export interface SettingsModalProps {
   onToggleStreakReminders?: (value: boolean) => void | Promise<void>;
   onChangeStreakReminderTime?: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
+  // Social accountability
+  onOpenSocialAccountability?: () => void;
   isLoading?: boolean;
 }
 
@@ -66,4 +68,6 @@ export interface SettingsContentProps {
   onToggleStreakReminders: (value: boolean) => void | Promise<void>;
   onChangeStreakReminderTime: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
+  // Social accountability
+  onOpenSocialAccountability?: () => void;
 }

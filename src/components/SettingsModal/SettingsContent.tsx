@@ -14,6 +14,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { StreakRemindersSection } from './StreakRemindersSection';
+import { SocialAccountabilitySection } from './SocialAccountabilitySection';
 import { AccountSection } from './AccountSection';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
@@ -139,6 +140,13 @@ export function SettingsContent(p: SettingsContentProps) {
             onChangeTime={p.onChangeStreakReminderTime}
             onPremiumUpsell={p.onPremiumUpsell}
             onToggle={p.onToggleStreakReminders}
+          />
+        </Animated.View>
+        <Animated.View entering={anim(75)}>
+          <SocialAccountabilitySection
+            highContrastMode={hc}
+            isPremium={p.isPremium}
+            onPremiumUpsell={p.onPremiumUpsell}
           />
         </Animated.View>
         <Animated.View entering={anim(100)}>

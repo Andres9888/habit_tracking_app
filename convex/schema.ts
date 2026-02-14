@@ -435,6 +435,31 @@ const applicationTables = {
     .index('by_habit_and_date', ['habitId', 'date'])
     .index('by_user_and_date', ['userId', 'date']),
 
+  // Social Accountability - Shareable habit dashboard (Premium Feature)
+  // Allows users to create a public read-only view of their habit progress
+  // Friends can view without an account - shows streaks, completion rates, active habits
+  sharedDashboards: defineTable({
+    // Unique share token (generated, e.g., "abc123xyz")
+    shareToken: v.string(),
+
+    // User who owns this shared dashboard
+    userId: v.string(),
+
+    // Display name shown on shared dashboard (e.g., "Alex's Habits")
+    displayName: v.optional(v.string()),
+
+    // Whether sharing is currently enabled
+    isEnabled: v.boolean(),
+
+    // Timestamp when sharing was enabled
+    enabledAt: v.optional(v.number()),
+
+    // Last updated timestamp
+    updatedAt: v.number(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_token', ['shareToken'], { unique: true }),
+
   // Users table for Clerk authentication integration
   // Note: Fields are optional for backwards compatibility with existing anonymous users
   users: defineTable({
