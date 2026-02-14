@@ -30,4 +30,6 @@ export interface HabitCalendarModalProps {
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
   /** Optional callback to navigate to HabitDetail's Motivation tab for advanced features */
   onOpenMotivationTab?: () => void;
+  /** Callback to open the edit screen at the parent level (avoids nested modals) */
+  onEdit?: () => void;
 }

@@ -38,6 +38,10 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
     if (habitToEdit) openHabitDetail(habitToEdit, 'motivation');
   };
 
+  const handleEditFromCalendar = () => {
+    if (selectedHabit) openEditHabit(selectedHabit);
+  };
+
   return (
     <>
       <ErrorBoundary>
@@ -48,6 +52,7 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
           tracking={tracking}
           visible={showHabitCalendar}
           onClose={closeHabitCalendar}
+          onEdit={handleEditFromCalendar}
           onOpenMotivationTab={openMotivationTab}
         />
       </ErrorBoundary>

@@ -15,6 +15,7 @@ interface UseHabitCalendarModalProps {
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
   onClose: () => void;
   onOpenMotivationTab?: () => void;
+  onEdit?: () => void;
 }
 
 export function useHabitCalendarModal({
@@ -23,8 +24,8 @@ export function useHabitCalendarModal({
   toggleHabit,
   onClose,
   onOpenMotivationTab,
+  onEdit,
 }: UseHabitCalendarModalProps) {
-  const [showEditScreen, setShowEditScreen] = useState(false);
   const [calendarView, setCalendarView] = useState<CalendarView>('month');
 
   const todayDateString = format(new Date(), 'yyyy-MM-dd');
@@ -40,43 +41,43 @@ export function useHabitCalendarModal({
     completed: t.completed,
     date: t.date,
   }));
-  const todayTracking = habitTrackingEntries.find((t) => t.date === todayDateString);
+  const todayTracking = habitTrackingEntries.find(
+    (t) => t.date === todayDateString
+  );
   const isTodayCompleted = Boolean(todayTracking?.completed);
-  const recentMissBadge = getLatestMissedBadge(habitTrackingEntries, todayDateString);
+  const recentMissBadge = getLatestMissedBadge(
+    habitTrackingEntries,
+    todayDateString
+  );
   const bestStreak = calculateBestStreak(habitTracking);
   const completionPercentage = calculateCompletionPercentage(
     habit.createdAt || Date.now(),
     habitTracking
   );
 
-  const handleEditPress = () => setShowEditScreen(true);
-  const handleCloseEdit = () => setShowEditScreen(false);
+  const handleEditPress = () => {
+    // Close calendar first, then open edit at parent level to avoid nested modals
+    onClose();
+    onEdit?.();
+  };
   const handleQuickLogPress = () => {
     if (isTodayCompleted) return;
     toggleHabit({ date: todayDateString, habitId: habit._id });
   };
-  const handleOpenAdvancedFeatures = () => {
-    setShowEditScreen(false);
-    onClose();
-    onOpenMotivationTab?.();
-  };
 
   return {
     bestStreak,
-    completionPercentage,
     calendarView,
+    completionPercentage,
     emoji,
     habitTrackingEntries,
     handleEditPress,
-    handleCloseEdit,
-    isTodayCompleted,
-    handleOpenAdvancedFeatures,
-    isValid: true,
     handleQuickLogPress,
+    isTodayCompleted,
+    isValid: true,
     name,
     recentMissBadge,
     scheduleLabel,
     setCalendarView,
-    showEditScreen,
   } as const;
 }
