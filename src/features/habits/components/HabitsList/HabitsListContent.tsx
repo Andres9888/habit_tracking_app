@@ -1,33 +1,15 @@
-/**
- * HabitsListContent - The draggable list of habits
- */
-
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import DraggableFlatList, {
-  type RenderItemParams,
-} from 'react-native-draggable-flatlist';
-import { HabitsListModals } from './HabitsListModals';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 import {
   renderHabitsListHeader,
   renderHabitsListFooter,
   renderHabitsListEmpty,
   renderHabitRow,
 } from './HabitsListRenders';
+import { HabitsListModals } from './HabitsListModals';
 import type { Habit } from '../../types';
-import type { HabitsListProps } from './HabitsList.types';
-
-export interface HabitsListContentProps {
-  props: HabitsListProps;
-  state: ReturnType<typeof import('./useHabitsListState').useHabitsListState>;
-  handlers: ReturnType<
-    typeof import('./useHabitsListHandlers').useHabitsListHandlers
-  >;
-  renderItem: ReturnType<
-    typeof import('../../hooks/useHabitRenderItem').useHabitRenderItem
-  >;
-  handleSuccessTransitionComplete: () => void;
-}
+import type { HabitsListContentProps } from './HabitsList.types';
 
 export function HabitsListContent({
   props,
@@ -113,3 +95,5 @@ export function HabitsListContent({
     </View>
   );
 }
+
+export { type HabitsListContentProps } from './HabitsList.types';

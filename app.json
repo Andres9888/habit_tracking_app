@@ -2,7 +2,6 @@
   "expo": {
     "name": "ChainDay: Daily Habit Tracker",
     "slug": "chainday",
-    "description": "Build lasting habits one chain at a time. Visual streak tracking, smart reminders, and beautiful stats to keep you accountable.",
     "scheme": "habit-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#059669"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
@@ -21,6 +22,7 @@
       "buildNumber": "2",
       "usesAppleSignIn": true,
       "infoPlist": {
+        "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent.",
         "CFBundleDisplayName": "ChainDay"
       }
     },
@@ -68,7 +70,9 @@
           "project": "react-native"
         }
       ],
-      "@sentry/react-native"
-    ]
+      "@sentry/react-native",
+      "./plugins/withPrivacyManifest"
+    ],
+    "description": "Build lasting habits one chain at a time. Visual streak tracking, smart reminders, and beautiful stats to keep you accountable."
   }
 }

@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P0 Fix #5 — Analytics Habit Navigation</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          sans-serif;
+        background: #1a1a2e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 40px 20px;
+        color: #fff;
+      }
+      .label {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #3b82f6;
+        margin-bottom: 8px;
+      }
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: -0.02em;
+      }
+      .subtitle {
+        font-size: 15px;
+        color: #9ca3af;
+        margin-bottom: 40px;
+        max-width: 600px;
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      .phone-pair {
+        display: flex;
+        gap: 60px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .phone-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .phone-label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #6b7280;
+        padding: 4px 12px;
+        border: 1px solid #374151;
+        border-radius: 20px;
+      }
+      .phone-label.bad {
+        color: #ef4444;
+        border-color: #7f1d1d;
+      }
+      .phone-label.good {
+        color: #10b981;
+        border-color: #064e3b;
+      }
+
+      .phone {
+        width: 375px;
+        height: 740px;
+        background: #faf8f5;
+        border-radius: 40px;
+        border: 6px solid #2d2a26;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      }
+      .status-bar {
+        height: 50px;
+        background: #faf8f5;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 6px;
+      }
+      .notch {
+        width: 120px;
+        height: 28px;
+        background: #2d2a26;
+        border-radius: 0 0 16px 16px;
+      }
+      .screen-content {
+        padding: 16px;
+        height: calc(100% - 50px);
+        overflow-y: auto;
+        position: relative;
+      }
+      .screen-header {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2d2a26;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+      }
+
+      /* Rankings list */
+      .rankings-section {
+        margin-top: 8px;
+      }
+      .rankings-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .ranking-item {
+        background: #fff;
+        border-radius: 14px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 1px 3px rgba(28, 25, 23, 0.06);
+        position: relative;
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .ranking-item:hover {
+        transform: scale(1.01);
+        box-shadow: 0 2px 8px rgba(28, 25, 23, 0.12);
+      }
+      .ranking-item.tapped {
+        transform: scale(0.98);
+        background: #f0fdf4;
+      }
+
+      .rank-num {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .rank-1 {
+        background: #fef3c7;
+        color: #d97706;
+      }
+      .rank-2 {
+        background: #e5e7eb;
+        color: #6b7280;
+      }
+      .rank-3 {
+        background: #fde9d9;
+        color: #c2410c;
+      }
+      .rank-other {
+        background: #f5f3f0;
+        color: #78716c;
+      }
+
+      .rank-emoji {
+        font-size: 20px;
+      }
+      .rank-info {
+        flex: 1;
+      }
+      .rank-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .rank-stats {
+        font-size: 12px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+
+      .strength-bar-bg {
+        width: 50px;
+        height: 6px;
+        border-radius: 3px;
+        background: #e5e7eb;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .strength-bar-fill {
+        height: 100%;
+        border-radius: 3px;
+      }
+
+      .chevron {
+        color: #d1d5db;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .chevron.active {
+        color: #10b981;
+      }
+
+      /* Insight cards */
+      .insight-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 14px;
+        margin-bottom: 8px;
+        box-shadow: 0 1px 3px rgba(28, 25, 23, 0.06);
+        cursor: pointer;
+        transition: transform 0.15s;
+        position: relative;
+      }
+      .insight-card:hover {
+        transform: scale(1.01);
+      }
+      .insight-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .insight-emoji {
+        font-size: 18px;
+      }
+      .insight-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .insight-body {
+        font-size: 13px;
+        color: #78716c;
+        line-height: 1.4;
+      }
+      .insight-cta {
+        font-size: 12px;
+        font-weight: 600;
+        color: #10b981;
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* Detail modal preview */
+      .detail-preview {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-radius: 20px 20px 0 0;
+        padding: 20px;
+        z-index: 10;
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.15);
+        animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+
+      .detail-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .detail-emoji {
+        font-size: 32px;
+      }
+      .detail-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: #2d2a26;
+      }
+      .detail-streak {
+        font-size: 13px;
+        color: #10b981;
+        font-weight: 600;
+      }
+
+      .detail-stats {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .detail-stat {
+        flex: 1;
+        background: #faf8f5;
+        border-radius: 12px;
+        padding: 10px;
+        text-align: center;
+      }
+      .detail-stat-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #2d2a26;
+      }
+      .detail-stat-label {
+        font-size: 11px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+
+      .detail-mini-chart {
+        height: 40px;
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        margin-bottom: 12px;
+      }
+      .mini-bar {
+        flex: 1;
+        border-radius: 3px 3px 0 0;
+        background: #10b981;
+      }
+      .mini-bar.empty {
+        background: #e5e7eb;
+      }
+
+      .detail-cta {
+        background: #10b981;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 12px;
+        border-radius: 12px;
+        text-align: center;
+        width: 100%;
+        border: none;
+        cursor: pointer;
+      }
+
+      .annotation {
+        position: absolute;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px dashed;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 20;
+      }
+      .annotation.bad {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+        border-color: #ef4444;
+      }
+      .annotation.good {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+        border-color: #10b981;
+      }
+
+      .dead-cursor {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid #ef4444;
+        position: absolute;
+        animation: cursorTap 1.5s ease infinite;
+      }
+      @keyframes cursorTap {
+        0% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        50% {
+          transform: scale(0.8);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+      }
+
+      .code-note {
+        background: #111827;
+        border: 1px solid #374151;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-top: 30px;
+        max-width: 500px;
+        text-align: left;
+      }
+      .code-note .cn-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: #ef4444;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .code-note code {
+        font-family: 'SF Mono', monospace;
+        font-size: 13px;
+        color: #e5e7eb;
+        line-height: 1.6;
+      }
+      .code-note .hl {
+        color: #ef4444;
+      }
+      .code-note .fix {
+        color: #10b981;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">P0 Fix #5</div>
+    <div class="title">Analytics Habit Navigation</div>
+    <div class="subtitle">
+      handleHabitPress currently only logs to console. Fix: navigate to
+      HabitDetailScreen when tapping a habit in analytics rankings or insights.
+    </div>
+
+    <div class="phone-pair">
+      <!-- BEFORE -->
+      <div class="phone-col">
+        <div class="phone-label bad">Before — Tap Does Nothing</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div class="screen-header">Analytics</div>
+
+            <div class="rankings-section">
+              <div class="rankings-title">🏆 Habit Rankings</div>
+
+              <div class="ranking-item" style="position: relative">
+                <div class="rank-num rank-1">1</div>
+                <span class="rank-emoji">💧</span>
+                <div class="rank-info">
+                  <div class="rank-name">Drink Water</div>
+                  <div class="rank-stats">67% strength · 24-day streak</div>
+                </div>
+                <div class="strength-bar-bg">
+                  <div
+                    class="strength-bar-fill"
+                    style="width: 67%; background: #10b981"
+                  ></div>
+                </div>
+                <div
+                  class="dead-cursor"
+                  style="right: 40px; top: 50%; transform: translateY(-50%)"
+                ></div>
+                <div
+                  class="annotation bad"
+                  style="top: -22px; right: 0; font-size: 10px"
+                >
+                  Tap = console.log only
+                </div>
+              </div>
+
+              <div class="ranking-item">
+                <div class="rank-num rank-2">2</div>
+                <span class="rank-emoji">🏃</span>
+                <div class="rank-info">
+                  <div class="rank-name">Morning Run</div>
+                  <div class="rank-stats">55% strength · 8-day streak</div>
+                </div>
+                <div class="strength-bar-bg">
+                  <div
+                    class="strength-bar-fill"
+                    style="width: 55%; background: #0d9488"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="ranking-item">
+                <div class="rank-num rank-3">3</div>
+                <span class="rank-emoji">🧘</span>
+                <div class="rank-info">
+                  <div class="rank-name">Morning Meditation</div>
+                  <div class="rank-stats">42% strength · 12-day streak</div>
+                </div>
+                <div class="strength-bar-bg">
+                  <div
+                    class="strength-bar-fill"
+                    style="width: 42%; background: #16a34a"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="ranking-item">
+                <div class="rank-num rank-other">4</div>
+                <span class="rank-emoji">📖</span>
+                <div class="rank-info">
+                  <div class="rank-name">Read 20 Pages</div>
+                  <div class="rank-stats">28% strength · 5-day streak</div>
+                </div>
+                <div class="strength-bar-bg">
+                  <div
+                    class="strength-bar-fill"
+                    style="width: 28%; background: #65a30d"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rankings-section" style="margin-top: 16px">
+              <div class="rankings-title">💡 Insights</div>
+
+              <div class="insight-card">
+                <div class="insight-header">
+                  <span class="insight-emoji">🔥</span>
+                  <span class="insight-title">Streak at Risk</span>
+                </div>
+                <div class="insight-body">
+                  Read 20 Pages has dropped 3 days in a row. Tap to view and
+                  rescue your streak.
+                </div>
+                <div
+                  class="annotation bad"
+                  style="bottom: 4px; right: 8px; font-size: 10px"
+                >
+                  Dead-end link
+                </div>
+              </div>
+
+              <div class="insight-card">
+                <div class="insight-header">
+                  <span class="insight-emoji">⭐</span>
+                  <span class="insight-title">New Milestone</span>
+                </div>
+                <div class="insight-body">
+                  Drink Water is about to hit "Strong" strength level. Just 3
+                  more days!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="phone-col">
+        <div class="phone-label good">After — Navigates to Detail</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div class="screen-header">Analytics</div>
+
+            <div class="rankings-section">
+              <div class="rankings-title">🏆 Habit Rankings</div>
+
+              <div class="ranking-item tapped" style="position: relative">
+                <div class="rank-num rank-1">1</div>
+                <span class="rank-emoji">💧</span>
+                <div class="rank-info">
+                  <div class="rank-name">Drink Water</div>
+                  <div class="rank-stats">67% strength · 24-day streak</div>
+                </div>
+                <div class="strength-bar-bg">
+                  <div
+                    class="strength-bar-fill"
+                    style="width: 67%; background: #10b981"
+                  ></div>
+                </div>
+                <span class="chevron active">›</span>
+                <div
+                  class="annotation good"
+                  style="top: -22px; right: 0; font-size: 10px"
+                >
+                  Chevron = tappable
+                </div>
+              </div>
+
+              <div class="ranking-item">
+                <div class="rank-num rank-2">2</div>
+                <span class="rank-emoji">🏃</span>
+                <div class="rank-info">
+                  <div class="rank-name">Morning Run</div>
+                  <div class="rank-stats">55% strength · 8-day streak</div>
+                </div>
+                <div class="strength-bar-bg">
+                  <div
+                    class="strength-bar-fill"
+                    style="width: 55%; background: #0d9488"
+                  ></div>
+                </div>
+                <span class="chevron">›</span>
+              </div>
+
+              <div class="ranking-item">
+                <div class="rank-num rank-3">3</div>
+                <span class="rank-emoji">🧘</span>
+                <div class="rank-info">
+                  <div class="rank-name">Morning Meditation</div>
+                  <div class="rank-stats">42% strength · 12-day streak</div>
+                </div>
+                <div class="strength-bar-bg">
+                  <div
+                    class="strength-bar-fill"
+                    style="width: 42%; background: #16a34a"
+                  ></div>
+                </div>
+                <span class="chevron">›</span>
+              </div>
+            </div>
+
+            <!-- Detail sheet sliding up -->
+            <div class="detail-preview">
+              <div
+                style="
+                  width: 40px;
+                  height: 4px;
+                  background: #d1d5db;
+                  border-radius: 2px;
+                  margin: 0 auto 16px;
+                "
+              ></div>
+              <div class="detail-header">
+                <span class="detail-emoji">💧</span>
+                <div>
+                  <div class="detail-name">Drink Water</div>
+                  <div class="detail-streak">🔥 24-day streak</div>
+                </div>
+              </div>
+              <div class="detail-stats">
+                <div class="detail-stat">
+                  <div class="detail-stat-value">67%</div>
+                  <div class="detail-stat-label">Strength</div>
+                </div>
+                <div class="detail-stat">
+                  <div class="detail-stat-value">89%</div>
+                  <div class="detail-stat-label">Completion</div>
+                </div>
+                <div class="detail-stat">
+                  <div class="detail-stat-value">24</div>
+                  <div class="detail-stat-label">Best Streak</div>
+                </div>
+              </div>
+              <div class="detail-mini-chart">
+                <div class="mini-bar" style="height: 60%"></div>
+                <div class="mini-bar" style="height: 80%"></div>
+                <div class="mini-bar" style="height: 100%"></div>
+                <div class="mini-bar" style="height: 90%"></div>
+                <div class="mini-bar" style="height: 70%"></div>
+                <div class="mini-bar empty" style="height: 20%"></div>
+                <div class="mini-bar" style="height: 50%"></div>
+              </div>
+              <button class="detail-cta">View Full Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-note">
+      <div class="cn-title">Root Cause — AnalyticsScreen.hooks.ts:37-39</div>
+      <code>
+        <span class="hl">const handleHabitPress = (habitId: string) => {</span
+        ><br />
+        <span class="hl"
+          >&nbsp;&nbsp;console.log('Habit pressed:', habitId); // TODO</span
+        ><br />
+        <span class="hl">};</span><br />
+        <span style="color: #6b7280">// Should be:</span><br />
+        <span class="fix">const handleHabitPress = (habitId: string) => {</span
+        ><br />
+        <span class="fix"
+          >&nbsp;&nbsp;navigation.navigate('HabitDetail', { habitId });</span
+        ><br />
+        <span class="fix">};</span>
+      </code>
+    </div>
+  </body>
+</html>

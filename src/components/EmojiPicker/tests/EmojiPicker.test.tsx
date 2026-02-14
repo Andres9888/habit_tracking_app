@@ -293,12 +293,19 @@ describe('EmojiPicker - Story 2.8', () => {
     });
 
     it('should return focus to trigger element on close', async () => {
-      const mockSetAccessibilityFocus = jest.spyOn(AccessibilityInfo, 'setAccessibilityFocus');
+      const mockSetAccessibilityFocus = jest.spyOn(
+        AccessibilityInfo,
+        'setAccessibilityFocus'
+      );
       const triggerRef = createRef<View>() as React.RefObject<View>;
 
       const { getByLabelText } = render(
         <>
-          <View ref={triggerRef} accessible accessibilityLabel="Trigger button" />
+          <View
+            ref={triggerRef}
+            accessible
+            accessibilityLabel='Trigger button'
+          />
           <EmojiPicker {...defaultProps} triggerRef={triggerRef} />
         </>
       );
@@ -446,9 +453,7 @@ describe('EmojiPicker - Story 2.8', () => {
         <EmojiPicker {...defaultProps} habitName='Run' />
       );
 
-      expect(
-        getByLabelText('Select 🏃 emoji from suggestions')
-      ).toBeDefined();
+      expect(getByLabelText('Select 🏃 emoji from suggestions')).toBeDefined();
     });
 
     it('should suggest 💧 for "Drink Water" habit name', () => {
@@ -456,9 +461,7 @@ describe('EmojiPicker - Story 2.8', () => {
         <EmojiPicker {...defaultProps} habitName='Drink Water' />
       );
 
-      expect(
-        getByLabelText('Select 💧 emoji from suggestions')
-      ).toBeDefined();
+      expect(getByLabelText('Select 💧 emoji from suggestions')).toBeDefined();
     });
 
     it('should suggest 🧘 for "Meditate" habit name', () => {
@@ -466,9 +469,7 @@ describe('EmojiPicker - Story 2.8', () => {
         <EmojiPicker {...defaultProps} habitName='Meditate' />
       );
 
-      expect(
-        getByLabelText('Select 🧘 emoji from suggestions')
-      ).toBeDefined();
+      expect(getByLabelText('Select 🧘 emoji from suggestions')).toBeDefined();
     });
 
     it('should call onSelect when suggested emoji is pressed', async () => {
@@ -511,9 +512,7 @@ describe('EmojiPicker - Story 2.8', () => {
       );
 
       // If the suggested emoji matches selectedEmoji, it should have selection state
-      expect(
-        getByLabelText('Select 🏃 emoji from suggestions')
-      ).toBeDefined();
+      expect(getByLabelText('Select 🏃 emoji from suggestions')).toBeDefined();
     });
   });
 });

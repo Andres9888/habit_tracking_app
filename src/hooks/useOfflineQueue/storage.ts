@@ -5,41 +5,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { QUEUE_INDEX_KEY } from './constants';
 import { getItemKey } from './utils';
-import type { OfflineSubmissionType, QueuedSubmission } from './types';
-
-const SUBMISSION_TYPES = new Set<OfflineSubmissionType>([
-  'reflection',
-  'letter',
-  'voiceNote',
-  'visionBoardImage',
-  'affirmation',
-  'habitUpdate',
-]);
-
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-
-function isValidSubmissionType(value: unknown): value is OfflineSubmissionType {
-  return (
-    typeof value === 'string' &&
-    SUBMISSION_TYPES.has(value as OfflineSubmissionType)
-  );
-}
-
-function isValidQueuedSubmission(value: unknown): value is QueuedSubmission {
-  if (!isObject(value)) return false;
-
-  return (
-    typeof value.id === 'string' &&
-    isValidSubmissionType(value.type) &&
-    'payload' in value &&
-    typeof value.queuedAt === 'number' &&
-    Number.isFinite(value.queuedAt) &&
-    typeof value.retryCount === 'number' &&
-    Number.isFinite(value.retryCount)
-  );
-}
+import { isValidQueuedSubmission } from './validation';
+import type { QueuedSubmission } from './types';
 
 /** Load the queue index from storage */
 export async function loadQueueIndex(): Promise<string[]> {
