@@ -74,6 +74,7 @@ export function useHabitSaveHandler({
       }
 
       await updateHabit({
+        color: selectedColor,
         habitId,
         icon: selectedEmoji ?? undefined,
         iconColor: selectedColor,

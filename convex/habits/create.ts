@@ -30,6 +30,7 @@ export const create = mutation({
 
     return await ctx.db.insert('habits', {
       bestStreak: 0,
+      color: validated.color,
       createdAt: Date.now(),
       cueAfterBehavior: validated.cueAfterBehavior,
       cueLocation: validated.cueLocation,

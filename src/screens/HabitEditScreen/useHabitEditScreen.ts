@@ -31,7 +31,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
 
       setHabitName(name || habit.name);
       setSelectedEmoji(emoji || '💪');
-      setSelectedColor(habit.iconColor || '#DBEAFE');
+      setSelectedColor(habit.color || habit.iconColor || '#DBEAFE');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
     }

@@ -11,6 +11,7 @@ export interface Habit {
   _creationTime: number;
   icon?: string;
   iconColor?: string;
+  color?: string;
   order?: number;
   preferredTime?: string;
   tags?: string[];

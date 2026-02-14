@@ -21,6 +21,7 @@ import {
 interface HabitArgs {
   name?: string;
   notes?: string;
+  color?: string;
   cueTime?: string;
   cueLocation?: string;
   cueAfterBehavior?: string;
@@ -39,6 +40,7 @@ interface HabitArgs {
 interface ValidatedHabitFields {
   name: string;
   notes?: string;
+  color?: string;
   cueTime?: string;
   cueLocation?: string;
   cueAfterBehavior?: string;
@@ -94,6 +96,10 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   const iconColorResult = validateColor(args.iconColor, 'Icon color');
   const iconColor = requireValid(iconColorResult, args.iconColor);
 
+  // Optional: habit accent color
+  const colorResult = validateColor(args.color, 'Habit color');
+  const color = requireValid(colorResult, args.color);
+
   // Optional: time fields
   const preferredTimeResult = validateTimeFormat(args.preferredTime, 'Preferred time');
   const preferredTime = requireValid(preferredTimeResult, args.preferredTime);
@@ -124,6 +130,7 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   return {
     name,
     notes,
+    color,
     cueTime,
     cueLocation,
     cueAfterBehavior,
@@ -188,6 +195,11 @@ export function validateHabitUpdateFields(
   if (args.iconColor !== undefined) {
     const iconColorResult = validateColor(args.iconColor, 'Icon color');
     result.iconColor = requireValid(iconColorResult, args.iconColor);
+  }
+
+  if (args.color !== undefined) {
+    const colorResult = validateColor(args.color, 'Habit color');
+    result.color = requireValid(colorResult, args.color);
   }
 
   if (args.preferredTime !== undefined) {

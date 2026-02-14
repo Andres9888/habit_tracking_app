@@ -155,6 +155,9 @@ const applicationTables = {
     // Emoji icon
     iconColor: v.optional(v.string()),
 
+    // User-chosen accent color (hex) — shown on card border & icon background
+    color: v.optional(v.string()),
+
     // Identity - who you are becoming (James Clear's identity-based habits)
     // "I am a healthy person" vs "I want to lose weight"
     identity: v.optional(v.string()),

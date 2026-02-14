@@ -17,6 +17,7 @@ export const fullHabitValidator = v.object({
   archived: v.optional(v.boolean()),
   archivedAt: v.optional(v.number()),
   bestStreak: v.optional(v.number()),
+  color: v.optional(v.string()),
   consecutiveDays: v.optional(v.number()),
   createdAt: v.number(),
   cueAfterBehavior: v.optional(v.string()),

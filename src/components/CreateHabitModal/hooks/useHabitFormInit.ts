@@ -54,7 +54,7 @@ export const useHabitFormInit = ({
     if (!habitToEdit) return;
     setHabitName(parsed.name);
     setSelectedEmoji(parsed.emoji);
-    setSelectedColor(habitToEdit.iconColor ?? DEFAULT_COLOR);
+    setSelectedColor(habitToEdit.color ?? habitToEdit.iconColor ?? DEFAULT_COLOR);
     setRemindersEnabled(habitToEdit.remindersEnabled ?? false);
     setReminderTime(parseReminderTime(habitToEdit.reminderTime));
     setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);
