@@ -3,6 +3,7 @@
 ## Dependencies Removed
 
 ### Unused Dependencies (18 packages)
+
 1. `vibe-kanban-web-companion` - No usage found in codebase
 2. `claude-mem` - No usage found in codebase
 3. `bmad-method` - No usage found in codebase
@@ -73,6 +74,7 @@ mv assets/icon.png.tmp assets/icon.png
 ## Import Analysis
 
 ### Icon Libraries (Dual Usage - Potential Consolidation)
+
 - **lucide-react-native**: 306 imports (heavily used) ✅
 - **@expo/vector-icons** (Ionicons): 21 imports
 
@@ -81,6 +83,7 @@ mv assets/icon.png.tmp assets/icon.png
 **Migration difficulty**: Low-Medium (21 files to update)
 
 ### Large Dependencies Currently Used (Keep)
+
 - `victory-native` - Used for charts (TrendLineChart, StrengthDistributionChart)
 - `sonner` - Used for web toasts (platform-specific)
 - `openai` - Used in Convex backend (affirmationsAI)
@@ -91,15 +94,18 @@ These are all legitimately needed.
 ## Summary
 
 ### Immediate Wins (This PR)
+
 - ✅ Removed 18 unused npm dependencies
 - ✅ Removed unused type declaration file
 
 ### Recommended Follow-ups
+
 1. **Image optimization** (20-25MB savings) - Use pngquant/optipng
 2. **Icon library consolidation** (2-3MB savings) - Migrate Ionicons → Lucide
 3. **Tree-shaking verification** - Ensure production builds use tree-shaking
 
 ### Estimated Total Savings
+
 - **Dependencies removed**: ~5-8MB (install size) + ~2-3MB (bundle size)
 - **Image optimization potential**: ~20MB (assets)
 - **Icon consolidation potential**: ~2-3MB (bundle size)

@@ -33,7 +33,10 @@ import { useMemo } from 'react';
 
 import { differenceInDays, startOfDay, subDays, subYears } from 'date-fns';
 
-import type { StrengthMetrics, UseHabitStrengthReturn } from '../components/HabitStrengthHistory/types';
+import type {
+  StrengthMetrics,
+  UseHabitStrengthReturn,
+} from '../components/HabitStrengthHistory/types';
 import {
   calculateDelta,
   calculateStrengthAtDate,
@@ -60,21 +63,25 @@ export function useHabitStrength(
   // This works because the Set is typically recreated when entries change
   const result = useMemo(() => {
     // Defensive check for invalid habitCreatedAt
-    const safeCreatedAt = typeof habitCreatedAt === 'number' && !Number.isNaN(habitCreatedAt) && habitCreatedAt > 0
-      ? habitCreatedAt
-      : Date.now();
+    const safeCreatedAt =
+      typeof habitCreatedAt === 'number' &&
+      !Number.isNaN(habitCreatedAt) &&
+      habitCreatedAt > 0
+        ? habitCreatedAt
+        : Date.now();
     const createdAtDate = new Date(safeCreatedAt);
     const today = startOfDay(new Date());
     const habitAgeDays = differenceInDays(today, startOfDay(createdAtDate)) + 1;
 
     // Generate the full strength timeline
-    const strengthHistory = generateStrengthTimeline(completedDates, createdAtDate);
+    const strengthHistory = generateStrengthTimeline(
+      completedDates,
+      createdAtDate
+    );
 
     // Current strength is the last value in the timeline
     const currentStrength =
-      strengthHistory.length > 0
-        ? strengthHistory.at(-1).strength
-        : 0;
+      strengthHistory.length > 0 ? (strengthHistory.at(-1)?.strength ?? 0) : 0;
 
     // Calculate strength at 30 days ago (if habit is old enough)
     const thirtyDaysAgo = subDays(today, 30);

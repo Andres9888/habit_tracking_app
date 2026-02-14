@@ -1,0 +1,1284 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day - Onboarding Flow (Hi-Fi Mockup)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─── Reset & Page ─── */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #1a1a2e;
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 40px 20px;
+        gap: 32px;
+        flex-wrap: wrap;
+      }
+
+      /* ─── Screen Label ─── */
+      .screen-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .screen-label {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .screen-label span {
+        color: #10b981;
+      }
+
+      /* ─── iPhone Frame ─── */
+      .phone {
+        width: 375px;
+        height: 812px;
+        background: #faf9f7;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 12px #1c1917,
+          0 0 0 14px #374151,
+          0 25px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      /* ─── Notch ─── */
+      .phone::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 126px;
+        height: 34px;
+        background: #1c1917;
+        border-radius: 0 0 20px 20px;
+        z-index: 100;
+      }
+
+      /* ─── Screen Content ─── */
+      .screen {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 0 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* ─── Chain Day Colors (from core.ts) ─── */
+      :root {
+        --bg: #faf9f7;
+        --bg-muted: #f5f5f4;
+        --card-bg: #ffffff;
+        --primary-100: #d1fae5;
+        --primary-300: #86efac;
+        --primary-400: #34d399;
+        --primary-500: #10b981;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --text-primary: #1f2937;
+        --text-secondary: #78716c;
+        --text-tertiary: #9ca3af;
+        --text-inverse: #ffffff;
+        --border: #e7e5e4;
+        --gray-50: #faf9f7;
+        --gray-100: #f5f5f4;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #1c1917;
+        --strength-starting: #65a30d;
+        --strength-building: #16a34a;
+        --strength-developing: #0d9488;
+        --strength-strong: #0891b2;
+        --strength-automatic: #059669;
+      }
+
+      /* ─── Skip Button ─── */
+      .skip-btn {
+        position: absolute;
+        top: 58px;
+        right: 24px;
+        color: var(--text-tertiary);
+        font-size: 15px;
+        font-weight: 500;
+        z-index: 10;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .skip-btn:hover {
+        color: var(--text-secondary);
+      }
+
+      /* ─── Navigation Dots & Button ─── */
+      .nav-bar {
+        position: absolute;
+        bottom: 48px;
+        left: 24px;
+        right: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .dots {
+        display: flex;
+        gap: 8px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--gray-300);
+        transition: all 0.3s;
+      }
+      .dot.active {
+        background: var(--primary-500);
+        width: 24px;
+        border-radius: 4px;
+      }
+      .next-btn {
+        background: var(--primary-600);
+        color: var(--text-inverse);
+        border: none;
+        padding: 14px 28px;
+        border-radius: 14px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+        transition: all 0.2s;
+      }
+      .next-btn:hover {
+        background: var(--primary-700);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(5, 150, 105, 0.3);
+      }
+      .next-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* ───────────────────────────────────────────
+           SCREEN 1: Build Your Chain
+           ─────────────────────────────────────────── */
+      .s1-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-top: 80px;
+        padding-bottom: 120px;
+      }
+
+      /* Animated chain */
+      .chain-visual {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        margin-bottom: 48px;
+      }
+      .chain-link {
+        width: 36px;
+        height: 52px;
+        border: 4px solid;
+        border-radius: 18px;
+        animation: chainAppear 0.5s ease-out backwards;
+        position: relative;
+      }
+      .chain-link:nth-child(1) {
+        border-color: #86efac;
+        animation-delay: 0.1s;
+      }
+      .chain-link:nth-child(2) {
+        border-color: #6ee7b7;
+        animation-delay: 0.25s;
+        margin-left: -10px;
+      }
+      .chain-link:nth-child(3) {
+        border-color: #34d399;
+        animation-delay: 0.4s;
+        margin-left: -10px;
+      }
+      .chain-link:nth-child(4) {
+        border-color: #10b981;
+        animation-delay: 0.55s;
+        margin-left: -10px;
+      }
+      .chain-link:nth-child(5) {
+        border-color: #059669;
+        animation-delay: 0.7s;
+        margin-left: -10px;
+      }
+      .chain-link:nth-child(6) {
+        border-color: #047857;
+        animation-delay: 0.85s;
+        margin-left: -10px;
+      }
+      .chain-link:nth-child(7) {
+        border-color: #065f46;
+        animation-delay: 1s;
+        margin-left: -10px;
+      }
+
+      @keyframes chainAppear {
+        0% {
+          opacity: 0;
+          transform: scale(0.3) rotate(-15deg);
+        }
+        60% {
+          transform: scale(1.1) rotate(3deg);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+        }
+      }
+
+      /* Glow pulse behind chain */
+      .chain-glow {
+        position: absolute;
+        width: 280px;
+        height: 120px;
+        background: radial-gradient(
+          ellipse,
+          rgba(16, 185, 129, 0.12) 0%,
+          transparent 70%
+        );
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: glowPulse 3s ease-in-out infinite;
+        pointer-events: none;
+      }
+      @keyframes glowPulse {
+        0%,
+        100% {
+          opacity: 0.6;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.15);
+        }
+      }
+
+      .s1-chain-wrapper {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 48px;
+      }
+
+      .s1-title {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--gray-900);
+        text-align: center;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+        margin-bottom: 16px;
+      }
+      .s1-subtitle {
+        font-size: 17px;
+        color: var(--text-secondary);
+        text-align: center;
+        line-height: 1.5;
+        max-width: 300px;
+      }
+      .s1-subtitle strong {
+        color: var(--primary-600);
+        font-weight: 600;
+      }
+
+      /* ───────────────────────────────────────────
+           SCREEN 2: Pick Your First Habit
+           ─────────────────────────────────────────── */
+      .s2-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding-top: 72px;
+        padding-bottom: 120px;
+      }
+      .s2-title {
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--gray-900);
+        letter-spacing: -0.3px;
+        margin-bottom: 6px;
+      }
+      .s2-subtitle {
+        font-size: 15px;
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+      }
+
+      .category-section {
+        margin-bottom: 20px;
+      }
+      .category-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+      }
+      .habit-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+      }
+      .habit-chip {
+        background: var(--card-bg);
+        border: 1.5px solid var(--border);
+        border-radius: 14px;
+        padding: 14px 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .habit-chip:hover {
+        border-color: var(--primary-400);
+        background: var(--primary-100);
+      }
+      .habit-chip.selected {
+        border-color: var(--primary-500);
+        background: var(--primary-100);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+      }
+      .habit-chip .emoji {
+        font-size: 26px;
+        line-height: 1;
+      }
+      .habit-chip .label {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-primary);
+        text-align: center;
+      }
+
+      .custom-input-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 16px;
+        padding: 12px 16px;
+        background: var(--card-bg);
+        border: 1.5px dashed var(--gray-300);
+        border-radius: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .custom-input-row:hover {
+        border-color: var(--primary-400);
+        border-style: solid;
+      }
+      .custom-input-row .icon {
+        font-size: 20px;
+        color: var(--text-tertiary);
+      }
+      .custom-input-row .placeholder {
+        font-size: 15px;
+        color: var(--text-tertiary);
+      }
+
+      /* ───────────────────────────────────────────
+           SCREEN 3: Strength Mechanic
+           ─────────────────────────────────────────── */
+      .s3-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding-top: 72px;
+        padding-bottom: 120px;
+      }
+      .s3-title {
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--gray-900);
+        letter-spacing: -0.3px;
+        margin-bottom: 6px;
+      }
+      .s3-subtitle {
+        font-size: 15px;
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+        line-height: 1.5;
+      }
+
+      .strength-stages {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .strength-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        background: var(--card-bg);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        animation: stageSlideIn 0.4s ease-out backwards;
+      }
+      .strength-row:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .strength-row:nth-child(2) {
+        animation-delay: 0.3s;
+      }
+      .strength-row:nth-child(3) {
+        animation-delay: 0.5s;
+      }
+      .strength-row:nth-child(4) {
+        animation-delay: 0.7s;
+      }
+
+      @keyframes stageSlideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .strength-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      /* Chain link SVGs at different thicknesses */
+      .chain-svg-thin {
+        stroke-width: 2;
+      }
+      .chain-svg-medium {
+        stroke-width: 3;
+      }
+      .chain-svg-thick {
+        stroke-width: 4;
+      }
+      .chain-svg-ultra {
+        stroke-width: 5;
+      }
+
+      .strength-info {
+        flex: 1;
+      }
+      .strength-label {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 2px;
+      }
+      .strength-desc {
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+      .strength-bar-container {
+        width: 100%;
+        height: 6px;
+        background: var(--gray-200);
+        border-radius: 3px;
+        margin-top: 6px;
+        overflow: hidden;
+      }
+      .strength-bar-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 1.5s ease-out;
+      }
+
+      .strength-tip {
+        margin-top: 24px;
+        padding: 16px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-100),
+          rgba(209, 250, 229, 0.3)
+        );
+        border-radius: 14px;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+      }
+      .strength-tip p {
+        font-size: 14px;
+        color: var(--primary-700);
+        line-height: 1.5;
+      }
+      .strength-tip strong {
+        font-weight: 700;
+      }
+
+      /* ───────────────────────────────────────────
+           SCREEN 4: You're Ready
+           ─────────────────────────────────────────── */
+      .s4-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-top: 80px;
+        padding-bottom: 120px;
+      }
+
+      .s4-celebration {
+        font-size: 64px;
+        margin-bottom: 24px;
+        animation: celebrationBounce 1s ease-out;
+      }
+      @keyframes celebrationBounce {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.3);
+        }
+        70% {
+          transform: scale(0.9);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .s4-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--gray-900);
+        letter-spacing: -0.3px;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+      .s4-subtitle {
+        font-size: 15px;
+        color: var(--text-secondary);
+        margin-bottom: 40px;
+        text-align: center;
+      }
+
+      .feature-list {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 40px;
+      }
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        animation: featureSlide 0.4s ease-out backwards;
+      }
+      .feature-item:nth-child(1) {
+        animation-delay: 0.3s;
+      }
+      .feature-item:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      .feature-item:nth-child(3) {
+        animation-delay: 0.7s;
+      }
+
+      .feature-icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 20px;
+      }
+      .feature-text {
+        flex: 1;
+      }
+      .feature-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .feature-desc {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-top: 1px;
+      }
+
+      @keyframes featureSlide {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .start-btn {
+        width: 100%;
+        padding: 18px;
+        background: var(--primary-600);
+        color: white;
+        border: none;
+        border-radius: 16px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.3);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .start-btn:hover {
+        background: var(--primary-700);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(5, 150, 105, 0.35);
+      }
+
+      /* ─── Responsive: Stack on small screens ─── */
+      @media (max-width: 800px) {
+        body {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+
+      /* ─── Interactive Demo Mode ─── */
+      .demo-nav {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        background: rgba(28, 25, 23, 0.9);
+        padding: 10px 16px;
+        border-radius: 16px;
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+      }
+      .demo-btn {
+        color: rgba(255, 255, 255, 0.6);
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+      .demo-btn:hover,
+      .demo-btn.active {
+        color: white;
+        background: var(--primary-600);
+        border-color: var(--primary-600);
+      }
+
+      /* ─── View Mode Toggle ─── */
+      .view-toggle {
+        position: fixed;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        background: rgba(28, 25, 23, 0.9);
+        padding: 6px;
+        border-radius: 12px;
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+      }
+      .view-btn {
+        color: rgba(255, 255, 255, 0.5);
+        background: none;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+      .view-btn.active {
+        color: white;
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      /* ─── Interactive Single-Phone Mode ─── */
+      .interactive-mode .screen-wrapper {
+        display: none;
+      }
+      .interactive-mode .screen-wrapper.visible {
+        display: flex;
+      }
+      .all-mode .screen-wrapper {
+        display: flex !important;
+      }
+
+      /* ─── Title bar ─── */
+      .page-title {
+        position: fixed;
+        top: 70px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        text-align: center;
+        z-index: 999;
+        white-space: nowrap;
+      }
+      .page-title span {
+        color: var(--primary-400);
+      }
+    </style>
+  </head>
+  <body class="all-mode">
+    <!-- View Toggle -->
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="setView('all')">
+        All Screens
+      </button>
+      <button class="view-btn" onclick="setView('interactive')">
+        Interactive
+      </button>
+    </div>
+
+    <div class="page-title">Chain Day <span>Onboarding Flow</span></div>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 1: Build Your Chain
+         ═══════════════════════════════════════════ -->
+    <div class="screen-wrapper visible" data-screen="1">
+      <div class="screen-label">
+        Screen 1 of 4 &mdash; <span>Brand Introduction</span>
+      </div>
+      <div class="phone">
+        <div class="screen">
+          <div class="skip-btn">Skip</div>
+
+          <div class="s1-content">
+            <div class="s1-chain-wrapper">
+              <div class="chain-glow"></div>
+              <div class="chain-visual">
+                <div class="chain-link"></div>
+                <div class="chain-link"></div>
+                <div class="chain-link"></div>
+                <div class="chain-link"></div>
+                <div class="chain-link"></div>
+                <div class="chain-link"></div>
+                <div class="chain-link"></div>
+              </div>
+            </div>
+            <h1 class="s1-title">Build Habits<br />That Stick</h1>
+            <p class="s1-subtitle">
+              Every day you show up, you add a link to your chain. The longer
+              your chain, the <strong>stronger your habit</strong>.
+            </p>
+          </div>
+
+          <div class="nav-bar">
+            <div class="dots">
+              <div class="dot active"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+            <button class="next-btn" onclick="nextScreen(1)">
+              Next
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 2: Pick Your First Habit
+         ═══════════════════════════════════════════ -->
+    <div class="screen-wrapper" data-screen="2">
+      <div class="screen-label">
+        Screen 2 of 4 &mdash; <span>Habit Selection</span>
+      </div>
+      <div class="phone">
+        <div class="screen">
+          <div class="skip-btn">Skip</div>
+
+          <div class="s2-content">
+            <h1 class="s2-title">Pick your first habit</h1>
+            <p class="s2-subtitle">
+              Start small. You can always add more later.
+            </p>
+
+            <div class="category-section">
+              <div class="category-label">Morning Rituals</div>
+              <div class="habit-grid">
+                <div class="habit-chip" onclick="toggleChip(this)">
+                  <span class="emoji">🧘</span>
+                  <span class="label">Meditate</span>
+                </div>
+                <div class="habit-chip selected" onclick="toggleChip(this)">
+                  <span class="emoji">💧</span>
+                  <span class="label">Drink Water</span>
+                </div>
+                <div class="habit-chip" onclick="toggleChip(this)">
+                  <span class="emoji">📖</span>
+                  <span class="label">Read</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="category-section">
+              <div class="category-label">Health & Fitness</div>
+              <div class="habit-grid">
+                <div class="habit-chip" onclick="toggleChip(this)">
+                  <span class="emoji">🏃</span>
+                  <span class="label">Exercise</span>
+                </div>
+                <div class="habit-chip" onclick="toggleChip(this)">
+                  <span class="emoji">🥗</span>
+                  <span class="label">Eat Healthy</span>
+                </div>
+                <div class="habit-chip" onclick="toggleChip(this)">
+                  <span class="emoji">😴</span>
+                  <span class="label">Sleep 8hrs</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="category-section">
+              <div class="category-label">Mind & Growth</div>
+              <div class="habit-grid">
+                <div class="habit-chip" onclick="toggleChip(this)">
+                  <span class="emoji">📝</span>
+                  <span class="label">Journal</span>
+                </div>
+                <div class="habit-chip" onclick="toggleChip(this)">
+                  <span class="emoji">🎯</span>
+                  <span class="label">Gratitude</span>
+                </div>
+                <div class="habit-chip" onclick="toggleChip(this)">
+                  <span class="emoji">📵</span>
+                  <span class="label">No Screens</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="custom-input-row">
+              <span class="icon">✏️</span>
+              <span class="placeholder">Or create your own habit...</span>
+            </div>
+          </div>
+
+          <div class="nav-bar">
+            <div class="dots">
+              <div class="dot"></div>
+              <div class="dot active"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+            <button class="next-btn" onclick="nextScreen(2)">
+              Next
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 3: Strength Mechanic
+         ═══════════════════════════════════════════ -->
+    <div class="screen-wrapper" data-screen="3">
+      <div class="screen-label">
+        Screen 3 of 4 &mdash; <span>Strength System</span>
+      </div>
+      <div class="phone">
+        <div class="screen">
+          <div class="skip-btn">Skip</div>
+
+          <div class="s3-content">
+            <h1 class="s3-title">Your habits grow stronger</h1>
+            <p class="s3-subtitle">
+              Consistency builds real change. Watch your habits evolve from
+              fragile to unbreakable.
+            </p>
+
+            <div class="strength-stages">
+              <!-- Stage 1: Starting -->
+              <div class="strength-row">
+                <div
+                  class="strength-icon"
+                  style="background: rgba(101, 163, 13, 0.1)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#65a30d"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  >
+                    <rect
+                      x="6"
+                      y="4"
+                      width="12"
+                      height="16"
+                      rx="6"
+                      opacity="0.4"
+                    />
+                  </svg>
+                </div>
+                <div class="strength-info">
+                  <div class="strength-label">Starting</div>
+                  <div class="strength-desc">Just getting going</div>
+                  <div class="strength-bar-container">
+                    <div
+                      class="strength-bar-fill"
+                      style="width: 15%; background: #65a30d"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stage 2: Building -->
+              <div class="strength-row">
+                <div
+                  class="strength-icon"
+                  style="background: rgba(22, 163, 74, 0.1)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#16a34a"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <rect
+                      x="6"
+                      y="4"
+                      width="12"
+                      height="16"
+                      rx="6"
+                      opacity="0.6"
+                    />
+                  </svg>
+                </div>
+                <div class="strength-info">
+                  <div class="strength-label">Building</div>
+                  <div class="strength-desc">Gaining momentum</div>
+                  <div class="strength-bar-container">
+                    <div
+                      class="strength-bar-fill"
+                      style="width: 40%; background: #16a34a"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stage 3: Strong -->
+              <div class="strength-row">
+                <div
+                  class="strength-icon"
+                  style="background: rgba(8, 145, 178, 0.1)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#0891b2"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                  >
+                    <rect
+                      x="6"
+                      y="4"
+                      width="12"
+                      height="16"
+                      rx="6"
+                      opacity="0.8"
+                    />
+                  </svg>
+                </div>
+                <div class="strength-info">
+                  <div class="strength-label">Strong</div>
+                  <div class="strength-desc">Deeply rooted</div>
+                  <div class="strength-bar-container">
+                    <div
+                      class="strength-bar-fill"
+                      style="width: 70%; background: #0891b2"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stage 4: Automatic -->
+              <div class="strength-row">
+                <div
+                  class="strength-icon"
+                  style="background: rgba(5, 150, 105, 0.1)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#059669"
+                    stroke-width="5"
+                    stroke-linecap="round"
+                  >
+                    <rect x="6" y="4" width="12" height="16" rx="6" />
+                  </svg>
+                </div>
+                <div class="strength-info">
+                  <div class="strength-label">Automatic</div>
+                  <div class="strength-desc">Part of who you are</div>
+                  <div class="strength-bar-container">
+                    <div
+                      class="strength-bar-fill"
+                      style="width: 95%; background: #059669"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="strength-tip">
+              <p>
+                <strong>Pro tip:</strong> Missing one day won't break your
+                progress. Strength fades gradually, so just pick back up
+                tomorrow.
+              </p>
+            </div>
+          </div>
+
+          <div class="nav-bar">
+            <div class="dots">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot active"></div>
+              <div class="dot"></div>
+            </div>
+            <button class="next-btn" onclick="nextScreen(3)">
+              Next
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 4: You're Ready!
+         ═══════════════════════════════════════════ -->
+    <div class="screen-wrapper" data-screen="4">
+      <div class="screen-label">Screen 4 of 4 &mdash; <span>Launch</span></div>
+      <div class="phone">
+        <div class="screen">
+          <div class="s4-content">
+            <div class="s4-celebration">🎉</div>
+            <h1 class="s4-title">You're all set!</h1>
+            <p class="s4-subtitle">Here's what makes Chain Day special</p>
+
+            <div class="feature-list">
+              <div class="feature-item">
+                <div
+                  class="feature-icon-box"
+                  style="background: var(--primary-100)"
+                >
+                  🔗
+                </div>
+                <div class="feature-text">
+                  <div class="feature-title">Build your chain</div>
+                  <div class="feature-desc">
+                    Complete habits daily to grow your streak
+                  </div>
+                </div>
+              </div>
+              <div class="feature-item">
+                <div
+                  class="feature-icon-box"
+                  style="background: rgba(8, 145, 178, 0.1)"
+                >
+                  💪
+                </div>
+                <div class="feature-text">
+                  <div class="feature-title">Grow stronger</div>
+                  <div class="feature-desc">
+                    Watch your habits become automatic over time
+                  </div>
+                </div>
+              </div>
+              <div class="feature-item">
+                <div
+                  class="feature-icon-box"
+                  style="background: rgba(139, 92, 246, 0.1)"
+                >
+                  ⭐
+                </div>
+                <div class="feature-text">
+                  <div class="feature-title">Earn XP & level up</div>
+                  <div class="feature-desc">
+                    Grow your character as you build good habits
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button class="start-btn">
+              Start Building
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="nav-bar" style="justify-content: center">
+            <div class="dots">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot active"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demo Navigation (for interactive mode) -->
+    <div class="demo-nav" style="display: none" id="demoNav">
+      <button class="demo-btn active" onclick="goToScreen(1)">1. Chain</button>
+      <button class="demo-btn" onclick="goToScreen(2)">2. Habits</button>
+      <button class="demo-btn" onclick="goToScreen(3)">3. Strength</button>
+      <button class="demo-btn" onclick="goToScreen(4)">4. Ready</button>
+    </div>
+
+    <script>
+      let currentScreen = 1;
+
+      function setView(mode) {
+        document
+          .querySelectorAll('.view-btn')
+          .forEach((b) => b.classList.remove('active'));
+        event.target.classList.add('active');
+
+        if (mode === 'all') {
+          document.body.classList.add('all-mode');
+          document.body.classList.remove('interactive-mode');
+          document.getElementById('demoNav').style.display = 'none';
+        } else {
+          document.body.classList.remove('all-mode');
+          document.body.classList.add('interactive-mode');
+          document.getElementById('demoNav').style.display = 'flex';
+          goToScreen(currentScreen);
+        }
+      }
+
+      function goToScreen(n) {
+        currentScreen = n;
+        document
+          .querySelectorAll('.screen-wrapper')
+          .forEach((w) => w.classList.remove('visible'));
+        document.querySelector(`[data-screen="${n}"]`).classList.add('visible');
+        document.querySelectorAll('.demo-btn').forEach((b, i) => {
+          b.classList.toggle('active', i === n - 1);
+        });
+      }
+
+      function nextScreen(current) {
+        if (current < 4) goToScreen(current + 1);
+      }
+
+      function toggleChip(el) {
+        // Allow multiple selection
+        el.classList.toggle('selected');
+      }
+    </script>
+  </body>
+</html>

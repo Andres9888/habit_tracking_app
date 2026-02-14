@@ -11,6 +11,15 @@ import type {
   RenderTiming,
 } from '../../lib/performance';
 
+// Re-export types used by components
+export {
+  type NetworkTiming,
+  type RenderTiming,
+  type MemorySnapshot,
+  type FrameTimingData,
+  type PerformanceThresholds,
+} from '../../lib/performance';
+
 /** Dashboard tab identifiers */
 export type DashboardTab =
   | 'overview'
@@ -110,11 +119,3 @@ export const DEFAULT_DASHBOARD_CONFIG: Required<DashboardConfig> = {
   position: 'bottom-right',
   updateInterval: 1000,
 };
-
-export type {
-  FrameTimingData,
-  MemorySnapshot,
-  NetworkTiming,
-  PerformanceThresholds,
-  RenderTiming,
-} from '../../lib/performance';
