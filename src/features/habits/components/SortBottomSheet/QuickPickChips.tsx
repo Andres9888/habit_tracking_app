@@ -2,6 +2,7 @@ import { Platform, Pressable, ScrollView, Text } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { spacing } from '../../../../theme/spacing';
 import type { HabitSortMode } from '../../types';
 import { QUICK_PICK_OPTIONS } from './constants';
 
@@ -17,7 +18,7 @@ export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
     <ScrollView
       horizontal
       className='mb-4'
-      contentContainerStyle={{ gap: 8, paddingHorizontal: 20 }}
+      contentContainerStyle={{ gap: spacing.sm, paddingHorizontal: spacing.lg - spacing.xs }}
       showsHorizontalScrollIndicator={false}
     >
       {QUICK_PICK_OPTIONS.map((option) => {

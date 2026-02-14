@@ -27,6 +27,7 @@ import Animated, {
   useReducedMotion,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { spacing, borderRadius, shadows } from '../../theme/spacing';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
@@ -403,9 +404,9 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
 const styles = StyleSheet.create({
   bottomContainer: {
     alignItems: 'center',
-    gap: 24,
+    gap: spacing.lg,
     paddingBottom: 60,
-    paddingHorizontal: 32,
+    paddingHorizontal: spacing.xl,
   },
   chainContainer: {
     alignItems: 'center',
@@ -414,7 +415,7 @@ const styles = StyleSheet.create({
   },
   chainLink: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     height: 52,
     justifyContent: 'center',
     marginHorizontal: -2,
@@ -422,7 +423,7 @@ const styles = StyleSheet.create({
   },
   chainLinkInner: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 36,
     width: 20,
   },
@@ -432,14 +433,10 @@ const styles = StyleSheet.create({
   },
   ctaButton: {
     backgroundColor: '#059669',
-    borderRadius: 12,
-    elevation: 4,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    borderRadius: borderRadius.medium,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.base,
+    ...shadows.floatingActionButton,
   },
   ctaButtonDisabled: {
     opacity: 0.7,
@@ -450,24 +447,20 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   dot: {
-    borderRadius: 4,
-    height: 8,
+    borderRadius: borderRadius.xs,
+    height: spacing.sm,
   },
   dotsContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
   },
   nextButton: {
     backgroundColor: '#059669',
-    borderRadius: 12,
-    elevation: 4,
-    paddingHorizontal: 48,
-    paddingVertical: 16,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    borderRadius: borderRadius.medium,
+    paddingHorizontal: spacing['2xl'],
+    paddingVertical: spacing.base,
+    ...shadows.floatingActionButton,
   },
   nextText: {
     color: '#FFFFFF',
@@ -478,7 +471,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 32,
+    paddingHorizontal: spacing.xl,
   },
   skipButton: {
     alignItems: 'center',
@@ -488,7 +481,7 @@ const styles = StyleSheet.create({
   },
   skipContainer: {
     position: 'absolute',
-    right: 24,
+    right: spacing.lg,
     zIndex: 10,
   },
   skipText: {
@@ -498,12 +491,12 @@ const styles = StyleSheet.create({
   },
   strengthBar: {
     backgroundColor: '#059669',
-    borderRadius: 8,
-    height: 32,
+    borderRadius: borderRadius.small,
+    height: spacing.xl,
   },
   strengthContainer: {
-    gap: 12,
-    paddingHorizontal: 16,
+    gap: spacing.md,
+    paddingHorizontal: spacing.base,
     width: '100%',
   },
   strengthLabel: {
@@ -518,13 +511,13 @@ const styles = StyleSheet.create({
   strengthRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.md,
   },
   subtitle: {
     color: '#6B7280',
     fontSize: 17,
     lineHeight: 24,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.base,
     textAlign: 'center',
   },
   templateEmoji: {
@@ -533,29 +526,25 @@ const styles = StyleSheet.create({
   templateGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 16,
+    gap: spacing.base,
     justifyContent: 'center',
     width: 280,
   },
   templateItem: {
     alignItems: 'center',
     backgroundColor: '#F0FDF4',
-    borderRadius: 16,
-    elevation: 2,
+    borderRadius: borderRadius.large,
     height: 56,
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
     width: 56,
+    ...shadows.card,
   },
   title: {
     color: '#047857',
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,
-    marginBottom: 12,
+    marginBottom: spacing.md,
     textAlign: 'center',
   },
   visualContainer: {

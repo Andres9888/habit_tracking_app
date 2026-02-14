@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { spacing, borderRadius } from '../../../theme/spacing';
 
 const STAGES = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
 
@@ -42,12 +43,12 @@ export function StrengthMeter() {
 const styles = StyleSheet.create({
   bar: {
     backgroundColor: '#059669',
-    borderRadius: 8,
-    height: 32,
+    borderRadius: borderRadius.small,
+    height: spacing.xl,
   },
   container: {
-    gap: 12,
-    paddingHorizontal: 16,
+    gap: spacing.md,
+    paddingHorizontal: spacing.base,
     width: '100%',
   },
   label: {
@@ -62,6 +63,6 @@ const styles = StyleSheet.create({
   row: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.md,
   },
 });

@@ -4,25 +4,26 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { spacing, borderRadius } from '../../../theme/spacing';
 import type { TemplateInfoProps } from './types';
 
 const styles = StyleSheet.create({
   infoContainer: {
     flexDirection: 'row',
-    gap: 12,
-    marginTop: 8,
+    gap: spacing.md,
+    marginTop: spacing.sm,
   },
   infoPill: {
     backgroundColor: '#F3F4F6',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flex: 1,
-    padding: 12,
+    padding: spacing.md,
   },
   infoPillLabel: {
     color: '#78716c', // stone-500
     fontSize: 13,
     fontWeight: '600',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
     textTransform: 'uppercase',
   },
   infoPillValue: {

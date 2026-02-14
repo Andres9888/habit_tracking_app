@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
+import { spacing, borderRadius, shadows } from '../../theme/spacing';
 import {
   AuthDivider,
   AuthError,
@@ -77,9 +78,9 @@ export default function SignUpScreen({
           <ScrollView
             contentContainerStyle={{
               flexGrow: 1,
-              paddingBottom: insets.bottom + 24,
-              paddingHorizontal: 24,
-              paddingTop: insets.top + 24,
+              paddingBottom: insets.bottom + spacing.lg,
+              paddingHorizontal: spacing.lg,
+              paddingTop: insets.top + spacing.lg,
             }}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
@@ -95,13 +96,9 @@ export default function SignUpScreen({
               entering={FadeInUp.delay(100).springify().damping(18)}
               style={{
                 backgroundColor: '#ffffff',
-                borderRadius: 16,
-                elevation: 4,
-                padding: 24,
-                shadowColor: '#1c1917',
-                shadowOffset: { height: 4, width: 0 },
-                shadowOpacity: 0.08,
-                shadowRadius: 16,
+                borderRadius: borderRadius.large,
+                padding: spacing.lg,
+                ...shadows.floatingActionButton,
               }}
             >
               <View className='gap-3'>

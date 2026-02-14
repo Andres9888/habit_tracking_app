@@ -10,6 +10,7 @@ import Animated, {
   withDelay,
   withSpring,
 } from 'react-native-reanimated';
+import { spacing, borderRadius } from '../../../../theme/spacing';
 
 interface SocialProofBadgeProps {
   count?: string;
@@ -49,15 +50,11 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: '#fffbeb',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     flexDirection: 'row',
-    // pill badge
-    gap: 8,
-
+    gap: spacing.sm,
     justifyContent: 'center',
-
-    // amber-50
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.base,
     paddingVertical: 10,
   },
   count: {

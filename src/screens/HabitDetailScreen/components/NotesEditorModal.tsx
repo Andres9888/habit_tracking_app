@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { X } from 'lucide-react-native';
 import NoteEditor from '../../../components/StatsNotesModal/NoteEditor';
+import { spacing } from '../../../theme/spacing';
 import type { NotesEditorModalProps } from '../HabitDetailScreen.types';
 
 export function NotesEditorModal({
@@ -24,7 +25,7 @@ export function NotesEditorModal({
 }: NotesEditorModalProps) {
   return (
     <RNModal animationType='slide' visible={isOpen} onRequestClose={onClose}>
-      <View className='flex-1' style={{ backgroundColor: '#FAF8F5', paddingTop: insets.top + 16 }}>
+      <View className='flex-1' style={{ backgroundColor: '#FAF8F5', paddingTop: insets.top + spacing.base }}>
         <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
           <Text
             className='font-bold text-stone-900'
@@ -44,8 +45,8 @@ export function NotesEditorModal({
         <ScrollView
           className='flex-1'
           contentContainerStyle={{
-            padding: 20,
-            paddingBottom: insets.bottom + 20,
+            padding: spacing.lg - spacing.xs,
+            paddingBottom: insets.bottom + spacing.lg - spacing.xs,
           }}
           showsVerticalScrollIndicator={false}
         >

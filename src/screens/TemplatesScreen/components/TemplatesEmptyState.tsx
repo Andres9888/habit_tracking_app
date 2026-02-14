@@ -5,6 +5,7 @@
 import { View } from 'react-native';
 import Button from '../../../components/Button/Button';
 import EmptyState from '../../../components/EmptyState';
+import { spacing } from '../../../theme/spacing';
 import { styles } from '../../templates/templatesScreenStyles';
 
 interface TemplatesEmptyStateProps {
@@ -24,7 +25,7 @@ export function TemplatesEmptyState({
         headline='No Habits Available'
         icon='📚'
       />
-      <View style={{ marginTop: 24, paddingHorizontal: 24 }}>
+      <View style={{ marginTop: spacing.lg, paddingHorizontal: spacing.lg }}>
         <Button
           disabled={isSeeding}
           size='large'

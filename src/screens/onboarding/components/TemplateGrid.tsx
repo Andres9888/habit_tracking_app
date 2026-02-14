@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { spacing, borderRadius, shadows } from '../../../theme/spacing';
 
 const TEMPLATE_ICONS = [
   '🧘',
@@ -41,21 +42,17 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 16,
+    gap: spacing.base,
     justifyContent: 'center',
     width: 280,
   },
   item: {
     alignItems: 'center',
     backgroundColor: '#F0FDF4',
-    borderRadius: 16,
-    elevation: 2,
+    borderRadius: borderRadius.large,
     height: 56,
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
     width: 56,
+    ...shadows.card,
   },
 });

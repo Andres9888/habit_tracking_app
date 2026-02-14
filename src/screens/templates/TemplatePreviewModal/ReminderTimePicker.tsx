@@ -8,17 +8,18 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Haptics from 'expo-haptics';
 import { Clock } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
+import { spacing, borderRadius } from '../../../theme/spacing';
 import { styles as baseStyles } from './styles';
 import type { ReminderTimePickerProps } from './types';
 
 const localStyles = StyleSheet.create({
   timePickerButton: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
-    gap: 12,
-    paddingHorizontal: 16,
+    gap: spacing.md,
+    paddingHorizontal: spacing.base,
     paddingVertical: 14,
   },
   timeText: {

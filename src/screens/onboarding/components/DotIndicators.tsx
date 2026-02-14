@@ -1,4 +1,5 @@
 import { StyleSheet, View } from 'react-native';
+import { spacing, borderRadius } from '../../../theme/spacing';
 
 interface DotIndicatorsProps {
   count: number;
@@ -36,10 +37,10 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
   },
   dot: {
-    borderRadius: 4,
-    height: 8,
+    borderRadius: borderRadius.xs,
+    height: spacing.sm,
   },
 });

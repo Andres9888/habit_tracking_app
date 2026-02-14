@@ -37,6 +37,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { spacing, borderRadius, shadows } from '../../theme/spacing';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -256,11 +257,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   authContent: {
-    gap: 24,
+    gap: spacing.lg,
   },
   brandSection: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: spacing.xl,
   },
   container: {
     backgroundColor: '#fafaf9',
@@ -270,8 +271,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    marginTop: 32,
-    paddingHorizontal: 16,
+    marginTop: spacing.xl,
+    paddingHorizontal: spacing.base,
   },
   footerText: {
     color: '#a8a29e',
@@ -280,17 +281,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   formSection: {
-    gap: 20,
+    gap: spacing.lg - spacing.xs,
   },
   logoContainer: {
-    marginBottom: 16,
+    marginBottom: spacing.base,
   },
   logoEmoji: {
     fontSize: 40,
   },
   logoGradient: {
     alignItems: 'center',
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     elevation: 8,
     height: 80,
     justifyContent: 'center',
@@ -302,32 +303,32 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.lg,
   },
   socialButtons: {
-    gap: 12,
+    gap: spacing.md,
   },
   tagline: {
     color: '#57534e',
     fontSize: 13,
-    marginTop: 4,
+    marginTop: spacing.xs,
     textAlign: 'center',
   },
   welcomeSection: {
-    marginBottom: 32,
+    marginBottom: spacing.xl,
   },
   welcomeSubtitle: {
     color: '#57534e',
     fontSize: 17,
     lineHeight: 24,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.base,
     textAlign: 'center',
   },
   welcomeTitle: {
     color: '#1c1917',
     fontSize: 28,
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
     textAlign: 'center',
   },
 });
