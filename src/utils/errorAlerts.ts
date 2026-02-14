@@ -26,3 +26,27 @@ export function showSyncError() {
     'Your habit couldn\u2019t be saved. It will retry when you\u2019re back online.'
   );
 }
+
+export function showGenericError(message?: string) {
+  Alert.alert(
+    'Something Went Wrong',
+    message || 'An unexpected error occurred. Please try again.',
+    [{ text: 'OK' }]
+  );
+}
+
+export function showNetworkError() {
+  Alert.alert(
+    'Connection Issue',
+    'Please check your internet connection and try again.',
+    [{ text: 'OK' }]
+  );
+}
+
+export function showRetryableError(message: string, onRetry?: () => void) {
+  const buttons = [{ text: 'OK' }];
+  if (onRetry) {
+    buttons.unshift({ text: 'Retry', onPress: onRetry });
+  }
+  Alert.alert('Error', message, buttons);
+}

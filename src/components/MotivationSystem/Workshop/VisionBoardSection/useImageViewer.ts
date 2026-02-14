@@ -57,6 +57,7 @@ export function useImageViewer({
               onClose();
             } catch (error) {
               if (__DEV__) console.error('Failed to delete:', error);
+              Alert.alert('Delete Failed', 'We couldn\u2019t remove the image. Please try again.');
             } finally {
               setIsDeleting(false);
             }
