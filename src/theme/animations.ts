@@ -107,8 +107,8 @@ export const springs = {
   /** Bouncy - playful feel for celebrations */
   bouncy: { damping: 10, stiffness: 180 },
 
-  /** Button press feedback - snappy response */
-  button: { damping: 15, stiffness: 300 },
+  /** Button press feedback - snappy response with spring physics */
+  button: { damping: 18, stiffness: 240 },
 
   /** Modal exit - fast dismissal with minimal bounce */
   exit: { damping: 26, mass: 1, stiffness: 420 },
