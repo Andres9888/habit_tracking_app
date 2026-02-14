@@ -10,6 +10,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { useThemeColors } from '../../theme';
 import { useCountAnimation } from './useCountAnimation';
 import type { StatCardProps } from './types';
 
@@ -27,6 +28,7 @@ export function StatCard({
   suffix = '',
   targetValue,
 }: StatCardProps) {
+  const { colors, isDark } = useThemeColors();
   const scale = useSharedValue(1);
   const displayValue = useCountAnimation({
     animationKey,
@@ -57,8 +59,18 @@ export function StatCard({
       accessibilityHint={accessibilityHint}
       accessibilityLabel={`${label}: ${targetValue}${suffix}`}
       accessibilityRole='button'
-      className='flex-1 items-center rounded-xl bg-white p-3 shadow-sm shadow-stone-200/50'
-      style={animatedStyle}
+      className={`flex-1 items-center rounded-xl p-3`}
+      style={[
+        animatedStyle,
+        {
+          backgroundColor: colors.card,
+          shadowColor: isDark ? '#000' : colors.gray[300],
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: isDark ? 0.3 : 0.15,
+          shadowRadius: 3,
+          elevation: 2,
+        },
+      ]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -72,7 +84,9 @@ export function StatCard({
       </Text>
       <View accessibilityElementsHidden className='flex-row items-center gap-1'>
         <Text className='text-xs'>{emoji}</Text>
-        <Text className='text-xs text-stone-500'>{label}</Text>
+        <Text className='text-xs' style={{ color: colors.text.tertiary }}>
+          {label}
+        </Text>
       </View>
     </AnimatedPressable>
   );

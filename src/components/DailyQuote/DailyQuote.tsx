@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Quote, RefreshCw } from 'lucide-react-native';
+import { useThemeColors } from '../../theme';
 import { QUOTES } from './quotes';
 
 interface DailyQuoteProps {
@@ -27,26 +28,40 @@ function getDayOfYear(): number {
 }
 
 export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: DailyQuoteProps) {
+  const { colors, isDark } = useThemeColors();
+
   const quote = useMemo(() => {
     if (overrideQuote) return overrideQuote;
-    // Use day of year to select quote (consistent per day)
     const dayOfYear = getDayOfYear();
     return QUOTES[dayOfYear % QUOTES.length];
   }, [overrideQuote]);
 
   return (
-    <Animated.View entering={FadeIn.delay(100)} style={styles.container}>
+    <Animated.View
+      entering={FadeIn.delay(100)}
+      style={[
+        styles.container,
+        {
+          backgroundColor: isDark ? colors.gray[100] : colors.gray[50],
+          borderLeftColor: colors.gray[400],
+        },
+      ]}
+    >
       <View style={styles.iconContainer}>
-        <Quote color="#a8a29e" size={16} />
+        <Quote color={colors.gray[400]} size={16} />
       </View>
-      
-      <Text style={styles.quoteText}>"{quote.text}"</Text>
-      
+
+      <Text style={[styles.quoteText, { color: colors.text.secondary }]}>
+        &ldquo;{quote.text}&rdquo;
+      </Text>
+
       <View style={styles.footer}>
-        <Text style={styles.author}>— {quote.author}</Text>
+        <Text style={[styles.author, { color: colors.text.tertiary }]}>
+          — {quote.author}
+        </Text>
         {showRefresh && onRefresh && (
           <Pressable style={styles.refreshButton} onPress={onRefresh}>
-            <RefreshCw color="#a8a29e" size={14} />
+            <RefreshCw color={colors.gray[400]} size={14} />
           </Pressable>
         )}
       </View>
@@ -56,13 +71,10 @@ export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: Dai
 
 const styles = StyleSheet.create({
   author: {
-    color: '#78716c',
     fontSize: 13,
     fontWeight: '500',
   },
   container: {
-    backgroundColor: '#fafaf9',
-    borderLeftColor: '#a8a29e',
     borderLeftWidth: 3,
     borderRadius: 16,
     marginHorizontal: 16,
@@ -79,7 +91,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   quoteText: {
-    color: '#57534e',
     fontSize: 15,
     fontStyle: 'italic',
     lineHeight: 22,
