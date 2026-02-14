@@ -23,10 +23,10 @@ export function NewRecordBadge({
       }}
     >
       <LinearGradient
-        colors={['#fef3c7', '#fffbeb']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
         className='absolute inset-0 rounded-full'
+        colors={['#fef3c7', '#fffbeb']}
+        end={{ x: 1, y: 0 }}
+        start={{ x: 0, y: 0 }}
       />
       <TrendingUp color='#d97706' size={16} strokeWidth={2.5} />
       <Text

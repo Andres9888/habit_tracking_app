@@ -20,7 +20,7 @@ const COOLDOWN_DAYS = 90;
 const MIN_COMPLETIONS = 5;
 
 /** Streak milestones that should trigger a review prompt */
-const REVIEW_ELIGIBLE_MILESTONES = [7, 14, 30];
+const REVIEW_ELIGIBLE_MILESTONES = new Set([7, 14, 30]);
 
 /**
  * Increment the completion counter. Call on every habit completion.
@@ -28,7 +28,7 @@ const REVIEW_ELIGIBLE_MILESTONES = [7, 14, 30];
 export async function incrementCompletionCount(): Promise<number> {
   try {
     const raw = await AsyncStorage.getItem(STORE_REVIEW_COMPLETION_COUNT_KEY);
-    const count = (raw ? parseInt(raw, 10) : 0) + 1;
+    const count = (raw ? Number.parseInt(raw, 10) : 0) + 1;
     await AsyncStorage.setItem(
       STORE_REVIEW_COMPLETION_COUNT_KEY,
       String(count),
@@ -45,7 +45,7 @@ export async function incrementCompletionCount(): Promise<number> {
 async function getCompletionCount(): Promise<number> {
   try {
     const raw = await AsyncStorage.getItem(STORE_REVIEW_COMPLETION_COUNT_KEY);
-    return raw ? parseInt(raw, 10) : 0;
+    return raw ? Number.parseInt(raw, 10) : 0;
   } catch {
     return 0;
   }
@@ -59,7 +59,7 @@ async function isCooldownExpired(): Promise<boolean> {
     const raw = await AsyncStorage.getItem(STORE_REVIEW_LAST_PROMPT_KEY);
     if (!raw) return true;
 
-    const lastPrompt = parseInt(raw, 10);
+    const lastPrompt = Number.parseInt(raw, 10);
     const daysSince = (Date.now() - lastPrompt) / (1000 * 60 * 60 * 24);
     return daysSince >= COOLDOWN_DAYS;
   } catch {
@@ -97,7 +97,7 @@ export async function maybeRequestReview(
 ): Promise<void> {
   try {
     // Only prompt on specific milestones
-    if (!REVIEW_ELIGIBLE_MILESTONES.includes(milestoneDays)) {
+    if (!REVIEW_ELIGIBLE_MILESTONES.has(milestoneDays)) {
       return;
     }
 

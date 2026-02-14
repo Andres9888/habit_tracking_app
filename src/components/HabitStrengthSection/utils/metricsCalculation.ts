@@ -30,7 +30,7 @@ export function calculateExtendedMetrics(
   timeRange: TimeRange
 ): ExtendedStrengthMetrics {
   // Guard against invalid habitCreatedAt - use current time as fallback
-  const safeCreatedAt = typeof habitCreatedAt === 'number' && !isNaN(habitCreatedAt) && habitCreatedAt > 0
+  const safeCreatedAt = typeof habitCreatedAt === 'number' && !Number.isNaN(habitCreatedAt) && habitCreatedAt > 0
     ? habitCreatedAt
     : Date.now();
   const createdAtDate = new Date(safeCreatedAt);

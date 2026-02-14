@@ -96,10 +96,10 @@ export function FullButton({
         >
           {showGradient && (
             <LinearGradient
-              colors={getGradientColors(isGenerating)}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
               className='absolute inset-0 rounded-xl'
+              colors={getGradientColors(isGenerating)}
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
             />
           )}
           <ButtonContent

@@ -10,13 +10,8 @@ import { IconButtonGroup } from './IconButtonGroup';
 import { ProBadge } from './ProBadge';
 import { useHeaderAnimations } from './useHeaderAnimations';
 import { useHeaderHandlers } from './useHeaderHandlers';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
-const DATE_STYLE = {
-  color: '#1c1917',
-  fontFamily: 'System',
-  letterSpacing: -0.76,
-};
-const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
 const ENTERING = FadeInDown.duration(280).springify().damping(18);
 
 const formatTodayDate = (): string => {
@@ -34,6 +29,7 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
     showCompletionSummary = true,
     totalHabits = 0,
   } = props;
+  const { colors: themeColors } = useThemeColors();
   const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });
   const anim = useHeaderAnimations();
   const h = useHeaderHandlers({
@@ -92,14 +88,14 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
         <View className='flex-row items-center gap-3 flex-1'>
           <DailyProgressRing completed={completedToday} total={totalHabits} />
           <View className='flex-1 gap-1'>
-            <Text className='text-[22px] font-bold' style={DATE_STYLE}>
+            <Text className='text-[22px] font-bold' style={{ color: themeColors.text.primary, fontFamily: 'System', letterSpacing: -0.76 }}>
               {formatTodayDate()}
             </Text>
             {showCompletionSummary && (
               <Text
                 accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
                 className='text-[13px]'
-                style={STREAK_STYLE}
+                style={{ color: themeColors.text.secondary, fontFamily: 'System' }}
               >
                 {completedToday} of {totalHabits} done
               </Text>

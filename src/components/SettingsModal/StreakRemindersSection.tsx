@@ -83,7 +83,7 @@ export function StreakRemindersSection({
             onPress={() => setShowTimePicker(!showTimePicker)}
           />
           {showTimePicker && (
-            <View style={{ paddingHorizontal: 16, paddingBottom: 8 }}>
+            <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
               <DateTimePicker
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 mode='time'
@@ -106,7 +106,7 @@ export function StreakRemindersSection({
         </>
       )}
       {!enabled && (
-        <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
+        <View style={{ paddingBottom: 12, paddingHorizontal: 16 }}>
           <Text
             style={{
               color: '#78716c',

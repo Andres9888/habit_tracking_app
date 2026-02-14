@@ -61,7 +61,7 @@ export function NextHabitSuggestion({
         <Text style={styles.completedEmoji}>🎉</Text>
         <Text style={styles.completedTitle}>All done for today!</Text>
         <Text style={styles.completedSubtitle}>
-          {totalCount} habit{totalCount !== 1 ? 's' : ''} completed
+          {totalCount} habit{totalCount === 1 ? '' : 's'} completed
         </Text>
       </View>
     );
@@ -84,7 +84,7 @@ export function NextHabitSuggestion({
         <View style={styles.content}>
           <View style={styles.header}>
             <View style={styles.badge}>
-              <Zap size={12} color="#f59e0b" strokeWidth={2.5} />
+              <Zap color="#f59e0b" size={12} strokeWidth={2.5} />
               <Text style={styles.badgeText}>Focus on</Text>
             </View>
             <Text style={styles.progress}>
@@ -95,14 +95,14 @@ export function NextHabitSuggestion({
           <View style={styles.habitRow}>
             <Text style={styles.habitIcon}>{habit.icon || '📝'}</Text>
             <View style={styles.habitInfo}>
-              <Text style={styles.habitName} numberOfLines={1}>
+              <Text numberOfLines={1} style={styles.habitName}>
                 {habit.name}
               </Text>
               <Text style={styles.habitHint}>
                 Tap to mark complete
               </Text>
             </View>
-            <ArrowRight size={20} color="#a8a29e" />
+            <ArrowRight color="#a8a29e" size={20} />
           </View>
         </View>
       </Animated.View>
@@ -111,28 +111,88 @@ export function NextHabitSuggestion({
 }
 
 const styles = StyleSheet.create({
+  badge: {
+    alignItems: 'center',
+    backgroundColor: '#fef3c7',
+    borderRadius: 12,
+    flexDirection: 'row',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  badgeText: {
+    color: '#b45309',
+    fontSize: 12,
+    fontWeight: '600',
+  },
   container: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    elevation: 3,
     marginHorizontal: 16,
     marginVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#ffffff',
+    overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
-    elevation: 3,
-    overflow: 'hidden',
-  },
-  glow: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 4,
-    backgroundColor: '#f59e0b',
   },
   content: {
     padding: 16,
+  },
+  // Completed state
+completedContainer: {
+    marginHorizontal: 16,
+    borderRadius: 20,
+    marginVertical: 8,
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#ecfdf5',
+  },
+  
+glow: {
+    backgroundColor: '#f59e0b',
+    height: 4,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
+  
+completedEmoji: {
+    fontSize: 36,
+    marginBottom: 8,
+  },
+  
+habitHint: {
+    color: '#a8a29e',
+    fontSize: 13,
+  },
+  
+completedSubtitle: {
+    color: '#059669',
+    fontSize: 14,
+  },
+  
+habitIcon: {
+    fontSize: 32,
+  },
+  
+completedTitle: {
+    color: '#065f46',
+    fontSize: 17,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  
+habitRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  
+  habitInfo: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -140,68 +200,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-  badge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#fef3c7',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  badgeText: {
-    fontSize: 12,
+  habitName: {
+    color: '#1c1917',
+    fontSize: 17,
     fontWeight: '600',
-    color: '#b45309',
+    marginBottom: 2,
   },
   progress: {
     fontSize: 13,
+    color: '#a8a29e',
     fontWeight: '500',
-    color: '#a8a29e',
-  },
-  habitRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  habitIcon: {
-    fontSize: 32,
-  },
-  habitInfo: {
-    flex: 1,
-  },
-  habitName: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#1c1917',
-    marginBottom: 2,
-  },
-  habitHint: {
-    fontSize: 13,
-    color: '#a8a29e',
-  },
-  // Completed state
-  completedContainer: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 20,
-    borderRadius: 20,
-    backgroundColor: '#ecfdf5',
-    alignItems: 'center',
-  },
-  completedEmoji: {
-    fontSize: 36,
-    marginBottom: 8,
-  },
-  completedTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#065f46',
-    marginBottom: 4,
-  },
-  completedSubtitle: {
-    fontSize: 14,
-    color: '#059669',
   },
 });
 

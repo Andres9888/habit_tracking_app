@@ -15,10 +15,10 @@ export function WOOPReminder({ obstacle, plan }: WOOPReminderProps) {
   return (
     <View className='rounded-2xl p-4'>
       <LinearGradient
-        colors={['#fffbeb', '#ecfdf5']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
         className='absolute inset-0 rounded-2xl'
+        colors={['#fffbeb', '#ecfdf5']}
+        end={{ x: 1, y: 0 }}
+        start={{ x: 0, y: 0 }}
       />
       <View className='mb-2 flex-row items-center gap-2'>
         <View className='h-8 w-8 items-center justify-center rounded-lg bg-amber-100'>

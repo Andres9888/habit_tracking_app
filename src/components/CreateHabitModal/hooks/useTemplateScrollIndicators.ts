@@ -58,11 +58,11 @@ export const useTemplateScrollIndicators = () => {
   }, []);
 
   return {
-    showTopShadow,
-    showBottomShadow,
-    handleScroll,
     handleContentSizeChange,
     handleLayout,
+    handleScroll,
     resetIndicators,
+    showBottomShadow,
+    showTopShadow,
   };
 };

@@ -26,7 +26,7 @@ async function shouldRequestPermission(): Promise<boolean> {
   if (!firstHabitDate) return false;
 
   const daysSinceFirstHabit = Math.floor(
-    (Date.now() - parseInt(firstHabitDate, 10)) / (1000 * 60 * 60 * 24)
+    (Date.now() - Number.parseInt(firstHabitDate, 10)) / (1000 * 60 * 60 * 24)
   );
 
   return daysSinceFirstHabit >= 3;
@@ -102,8 +102,8 @@ export function useStreakReminderSettings() {
 
   return {
     enabled,
-    reminderTime,
     permissionGranted,
+    reminderTime,
     setEnabled,
     setReminderTime,
   };

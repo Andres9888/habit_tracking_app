@@ -30,10 +30,10 @@ export function NegativeStep({
       <View className='items-center gap-3'>
         <View className='h-16 w-16 items-center justify-center rounded-2xl'>
           <LinearGradient
-            colors={['#fb7185', '#ef4444']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
             className='absolute inset-0 rounded-2xl'
+            colors={['#fb7185', '#ef4444']}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0 }}
           />
           <CloudRain className='text-white' size={32} />
         </View>

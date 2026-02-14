@@ -5,7 +5,7 @@
 
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 import { HabitsList } from './components/HabitsList';
 import FloatingActionButton from './components/FloatingActionButton';
@@ -16,6 +16,7 @@ import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 
 export function HabitsApp() {
+  const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
@@ -41,7 +42,7 @@ export function HabitsApp() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={{ backgroundColor: colors.light.background, flex: 1 }}>
+      <View style={{ backgroundColor: colors.background, flex: 1 }}>
         <SyncStatusOverlays />
 
         <HabitsList

@@ -49,38 +49,58 @@ export function useAffirmationsSection({
 
     editingAffirmation: editor.editingAffirmation,
 
+    handleCancelSchedule: schedule.handleCancelSchedule,
+
     handleCloseEditor: editor.handleCloseEditor,
-
-    handleDelete: editor.handleDelete,
-
-    handleEditAffirmation: editor.handleEditAffirmation,
 
     handleCloseScheduleModal: schedule.handleCloseScheduleModal,
 
-    // Editor state
-    isEditorOpen: editor.isEditorOpen,
+    handleDelete: editor.handleDelete,
 
-    handleCancelSchedule: schedule.handleCancelSchedule,
+    
+    handleEditAffirmation: editor.handleEditAffirmation,
 
-    isSaving: editor.isSaving,
+    
+// Editor handlers
+handleOpenEditor: editor.handleOpenEditor,
 
-    // Editor handlers
-    handleOpenEditor: editor.handleOpenEditor,
+    
 
-    // Schedule modal state
-    isScheduleModalOpen: schedule.isScheduleModalOpen,
+// Schedule handlers
+handleOpenScheduleModal: schedule.handleOpenScheduleModal,
 
-    // Schedule handlers
-    handleOpenScheduleModal: schedule.handleOpenScheduleModal,
+    
+    
 
-    isScheduleSaving: schedule.isScheduleSaving,
+handleSave: editor.handleSave,
 
-    handleSave: editor.handleSave,
+    
+    
 
+handleSaveSchedule: schedule.handleSaveSchedule,
+
+    
+    
+
+// Computed values
+hasAffirmations: editor.hasAffirmations,
+
+    
+
+// Editor state
+isEditorOpen: editor.isEditorOpen,
+
+    
+
+isSaving: editor.isSaving,
+
+    
+// Schedule modal state
+isScheduleModalOpen: schedule.isScheduleModalOpen,
+
+    
+isScheduleSaving: schedule.isScheduleSaving,
+    
     schedulingAffirmation: schedule.schedulingAffirmation,
-
-    handleSaveSchedule: schedule.handleSaveSchedule,
-    // Computed values
-    hasAffirmations: editor.hasAffirmations,
   };
 }

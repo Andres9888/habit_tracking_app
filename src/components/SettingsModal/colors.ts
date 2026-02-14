@@ -1,4 +1,5 @@
 import { colors } from '@/theme/colors';
+import type { SemanticColors } from '@/theme/darkColors';
 
 import type { SettingsColors } from './types';
 
@@ -24,6 +25,22 @@ export const DEFAULT_COLORS: SettingsColors = {
   versionText: colors.gray[500],
 };
 
-export function getSettingsColors(isHighContrast: boolean): SettingsColors {
-  return isHighContrast ? HIGH_CONTRAST_COLORS : DEFAULT_COLORS;
+export const DARK_COLORS: SettingsColors = {
+  accent: '#F9FAFB',
+  background: '#111827',
+  card: '#1F2937',
+  cardBorder: '#374151',
+  headerText: '#F9FAFB',
+  icon: '#F9FAFB',
+  mutedText: '#9CA3AF',
+  versionText: '#9CA3AF',
+};
+
+export function getSettingsColors(
+  isHighContrast: boolean,
+  isDark: boolean = false
+): SettingsColors {
+  if (isHighContrast) return HIGH_CONTRAST_COLORS;
+  if (isDark) return DARK_COLORS;
+  return DEFAULT_COLORS;
 }

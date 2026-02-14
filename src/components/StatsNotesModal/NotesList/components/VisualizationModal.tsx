@@ -31,8 +31,8 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
     >
       <View className='flex-1'>
         <LinearGradient
-          colors={['#f5f3ff', '#ffffff', '#fafaf9']}
           className='absolute inset-0'
+          colors={['#f5f3ff', '#ffffff', '#fafaf9']}
         />
         <Animated.View
           className='flex-row items-center justify-between border-b border-stone-100 bg-white/95 px-5 pb-4'
@@ -42,10 +42,10 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
           <View className='flex-row items-center gap-3'>
             <View className='h-10 w-10 items-center justify-center rounded-xl'>
               <LinearGradient
-                colors={['#7c3aed', '#4f46e5']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
                 className='absolute inset-0 rounded-xl'
+                colors={['#7c3aed', '#4f46e5']}
+                end={{ x: 1, y: 1 }}
+                start={{ x: 0, y: 0 }}
               />
               <Eye color='#ffffff' size={20} />
             </View>
