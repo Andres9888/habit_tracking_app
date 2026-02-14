@@ -295,6 +295,7 @@ const applicationTables = {
   })
     .index('by_date', ['date'])
     .index('by_habit', ['habitId'])
+    .index('by_userId', ['userId'])
     .index('by_user_and_date', ['userId', 'date']),
 
   // Quick Reflection - Post-habit completion feedback (BJ Fogg's Tiny Habits)
@@ -323,6 +324,7 @@ const applicationTables = {
   })
     .index('by_habit', ['habitId'])
     .index('by_habit_and_date', ['habitId', 'date'])
+    .index('by_userId', ['userId'])
     .index('by_user_and_date', ['userId', 'date']),
 
   // Subscriptions - RevenueCat webhook-driven subscription state

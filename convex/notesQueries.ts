@@ -4,12 +4,24 @@ import { notesArrayValidator, nullableNoteValidator } from './notes/types';
 
 /**
  * Notes queries - list, search, get
+ * SEC-001: All queries require authentication and user filtering to prevent data leaks
  */
 
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query('notes').order('desc').collect();
+    // SEC-001: Authentication check - require user to be logged in
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
+    // SEC-001: Filter notes to only authenticated user's notes
+    return await ctx.db
+      .query('notes')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
+      .order('desc')
+      .collect();
   },
   returns: notesArrayValidator,
 });
@@ -20,9 +32,24 @@ export const search = query({
     searchText: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    let notes = await ctx.db.query('notes').order('desc').collect();
+    // SEC-001: Authentication check - require user to be logged in
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
 
+    // SEC-001: Start with authenticated user's notes only
+    let notes = await ctx.db
+      .query('notes')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
+      .collect();
+
+    // SEC-001: If habitId provided, verify ownership of the habit
     if (args.habitId) {
+      const habit = await ctx.db.get(args.habitId);
+      if (!habit || habit.userId !== identity.subject) {
+        return [];
+      }
       notes = notes.filter((note) => note.habitId === args.habitId);
     }
 
@@ -43,7 +70,23 @@ export const get = query({
     noteId: v.id('notes'),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.noteId);
+    // SEC-001: Authentication check - require user to be logged in
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return null;
+    }
+
+    const note = await ctx.db.get(args.noteId);
+    if (!note) {
+      return null;
+    }
+
+    // SEC-001: Ownership verification - only return if user owns this note
+    if (note.userId !== identity.subject) {
+      throw new Error('Not authorized to access this note');
+    }
+
+    return note;
   },
   returns: nullableNoteValidator,
 });
