@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { typography } from '../../theme/typography';
 
 interface EditHeaderProps {
   paddingTop: number;
@@ -75,7 +76,7 @@ export function EditHeader({
         {isSaving && <ActivityIndicator color='#ffffff' size='small' />}
         <Text
           className={`font-semibold ${canSave && !isSaving ? 'text-white' : 'text-stone-500'}`}
-          style={{ fontSize: 17, letterSpacing: -0.41 }}
+          style={typography.button}
         >
           {isSaving ? 'Saving…' : 'Save'}
         </Text>

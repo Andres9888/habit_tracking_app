@@ -5,6 +5,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { BarChart3, Sparkles } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { typography } from '../../../theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -30,16 +31,16 @@ export const EmptyState: React.FC = () => {
       <Animated.Text
         className='mb-2 text-center font-bold text-stone-900'
         entering={anim(50)}
-        style={{ fontSize: 22, letterSpacing: -0.5 }}
+        style={typography.heading2}
       >
         No Analytics Yet
       </Animated.Text>
 
       {/* Description */}
       <Animated.Text
-        className='mb-8 text-center text-[17px] leading-[22px] text-stone-500'
+        className='mb-8 text-center text-stone-500'
         entering={anim(100)}
-        style={{ maxWidth: 280 }}
+        style={{ ...typography.body, maxWidth: 280 }}
       >
         Create habits and track them for a few days to unlock your insights
         dashboard.
@@ -58,7 +59,7 @@ export const EmptyState: React.FC = () => {
       >
         <View className='mb-3 flex-row items-center gap-2'>
           <Sparkles color='#f59e0b' size={16} />
-          <Text className='text-[13px] font-semibold text-amber-600'>
+          <Text style={[typography.caption, { fontWeight: '600' }]} className='text-amber-600'>
             GET STARTED
           </Text>
         </View>
@@ -77,11 +78,11 @@ function StepItem({ number, text }: { number: string; text: string }) {
   return (
     <View className='flex-row items-center gap-3'>
       <View className='h-7 w-7 items-center justify-center rounded-full bg-stone-100'>
-        <Text className='text-[13px] font-semibold text-stone-600'>
+        <Text style={[typography.caption, { fontWeight: '600' }]} className='text-stone-600'>
           {number}
         </Text>
       </View>
-      <Text className='text-[17px] text-stone-700'>{text}</Text>
+      <Text style={typography.body} className='text-stone-700'>{text}</Text>
     </View>
   );
 }

@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 16,
   },
   statCardEmoji: {
-    fontSize: 22,
+    ...typography.heading2,
     marginRight: spacing.xs,
   },
   statCardLoading: {

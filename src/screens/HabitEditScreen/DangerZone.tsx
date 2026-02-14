@@ -14,6 +14,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { typography } from '../../theme/typography';
 
 interface DangerZoneProps {
   onArchive: () => void;
@@ -62,7 +63,7 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         <Archive color='#d97706' size={18} strokeWidth={2} />
         <Text
           className='font-semibold text-amber-700'
-          style={{ fontSize: 17, letterSpacing: -0.41 }}
+          style={typography.button}
         >
           Archive Habit
         </Text>
@@ -84,7 +85,7 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         <Trash2 color='#dc2626' size={18} strokeWidth={2} />
         <Text
           className='font-semibold text-red-600'
-          style={{ fontSize: 17, letterSpacing: -0.41 }}
+          style={typography.button}
         >
           Delete Habit
         </Text>

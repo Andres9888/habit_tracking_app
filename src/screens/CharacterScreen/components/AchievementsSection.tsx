@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { typography } from '../../../theme/typography';
 import { AchievementCard } from './AchievementCard';
 import type { Achievement } from '../types';
 
@@ -18,7 +19,7 @@ export function AchievementsSection({
       <Animated.Text
         className='px-1 font-semibold text-[#1c1917]'
         entering={FadeInDown.delay(BASE_DELAY).springify().damping(18)}
-        style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22 }}
+        style={typography.body}
       >
         Recent Achievements
       </Animated.Text>

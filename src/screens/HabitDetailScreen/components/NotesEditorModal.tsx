@@ -12,6 +12,7 @@ import {
   Modal as RNModal,
 } from 'react-native';
 import { X } from 'lucide-react-native';
+import { typography } from '../../../theme/typography';
 import NoteEditor from '../../../components/StatsNotesModal/NoteEditor';
 import type { NotesEditorModalProps } from '../HabitDetailScreen.types';
 
@@ -28,7 +29,7 @@ export function NotesEditorModal({
         <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
           <Text
             className='font-bold text-stone-900'
-            style={{ fontSize: 22, letterSpacing: -0.35 }}
+            style={typography.heading2}
           >
             {editingNote ? 'Edit Note' : 'New Note'}
           </Text>

@@ -1,5 +1,6 @@
 import { Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { typography } from '../../../theme/typography';
 import type { StatCardProps } from '../types';
 
 export function StatCard({
@@ -22,13 +23,13 @@ export function StatCard({
       <Text className='text-2xl leading-8'>{emoji}</Text>
       <Text
         className='font-semibold text-[#1c1917]'
-        style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22 }}
+        style={typography.body}
       >
         {value}
       </Text>
       <Text
         className='text-center text-[#78716c]'
-        style={{ fontSize: 13, letterSpacing: -0.08, lineHeight: 18 }}
+        style={typography.caption}
       >
         {label}
       </Text>

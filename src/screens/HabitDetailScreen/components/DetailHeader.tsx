@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { X, Edit3 } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
+import { typography } from '../../../theme/typography';
 import { HeaderCompleteToggle } from '../../../components/HeaderCompleteToggle';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
 import { iconShadow, streakShadow } from './DetailHeader.constants';
@@ -56,12 +57,12 @@ export function DetailHeader({
               shadowColor: habit.iconColor || '#f59e0b',
             }}
           >
-            <Text style={{ fontSize: 40 }}>{habit.icon}</Text>
+            <Text style={typography.displayLarge}>{habit.icon}</Text>
           </View>
         )}
         <Text
           className='text-center font-bold text-stone-900'
-          style={{ fontSize: 34, letterSpacing: -0.5, lineHeight: 41 }}
+          style={typography.heading1}
         >
           {habitName}
         </Text>
@@ -74,8 +75,8 @@ export function DetailHeader({
               .damping(18)}
             style={streakShadow}
           >
-            <Text style={{ fontSize: 17 }}>🔥</Text>
-            <Text className='text-[17px] font-semibold text-emerald-700'>
+            <Text style={typography.body}>🔥</Text>
+            <Text style={[typography.body, { fontWeight: '600' }]} className='text-emerald-700'>
               {habit.currentStreak} day streak
             </Text>
           </Animated.View>

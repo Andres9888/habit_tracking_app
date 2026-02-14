@@ -1,6 +1,7 @@
 /** Section label with animation */
 import { Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { typography } from '../../theme/typography';
 
 interface SectionLabelProps {
   text: string;
@@ -21,7 +22,7 @@ export function SectionLabel({
     >
       <Text
         className={`text-center font-semibold ${color}`}
-        style={{ fontSize: 13, letterSpacing: 0.5, lineHeight: 18 }}
+        style={[typography.caption, { letterSpacing: 0.5 }]}
       >
         {text}
       </Text>

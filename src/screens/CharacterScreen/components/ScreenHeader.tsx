@@ -2,6 +2,7 @@ import { Text, Pressable } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { typography } from '../../../theme/typography';
 
 interface ScreenHeaderProps {
   onBack?: () => void;
@@ -31,7 +32,7 @@ export function ScreenHeader({ onBack }: ScreenHeaderProps) {
       )}
       <Text
         className='font-semibold text-[#1c1917]'
-        style={{ fontSize: 22, letterSpacing: 0.35, lineHeight: 28 }}
+        style={typography.heading2}
       >
         Character
       </Text>
