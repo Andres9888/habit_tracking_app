@@ -2,20 +2,35 @@
 /**
  * CharacterScreenSkeleton - Loading skeleton for character/gamification screen
  * Matches layout: header, character card, attributes grid, stats, achievements
+ * Supports dark mode via useSkeletonTheme.
  */
 import React from 'react';
 import { View } from 'react-native';
 import { SkeletonLoader } from './SkeletonLoader';
+import { useSkeletonTheme } from './useSkeletonTheme';
 import type { ReduceMotionProps } from './types';
 
-function CharacterCardSkeleton({ reduceMotion }: ReduceMotionProps) {
+function CharacterCardSkeleton({
+  reduceMotion,
+  cardBg,
+  borderColor,
+  shadowColor,
+  shadowOpacity,
+}: ReduceMotionProps & {
+  cardBg: string;
+  borderColor: string;
+  shadowColor: string;
+  shadowOpacity: number;
+}) {
   return (
     <View
-      className='mb-6 items-center rounded-3xl border border-stone-100 bg-white p-6'
+      className='mb-6 items-center rounded-3xl border p-6'
       style={{
-        shadowColor: '#1c1917',
+        backgroundColor: cardBg,
+        borderColor,
+        shadowColor,
         shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
+        shadowOpacity,
         shadowRadius: 16,
       }}
     >
@@ -57,14 +72,27 @@ function CharacterCardSkeleton({ reduceMotion }: ReduceMotionProps) {
   );
 }
 
-function AttributeRowSkeleton({ reduceMotion }: ReduceMotionProps) {
+function AttributeRowSkeleton({
+  reduceMotion,
+  cardBg,
+  borderColor,
+  shadowColor,
+  shadowOpacity,
+}: ReduceMotionProps & {
+  cardBg: string;
+  borderColor: string;
+  shadowColor: string;
+  shadowOpacity: number;
+}) {
   return (
     <View
-      className='mb-3 overflow-hidden rounded-3xl border border-stone-100 bg-white'
+      className='mb-3 overflow-hidden rounded-3xl border'
       style={{
-        shadowColor: '#1c1917',
+        backgroundColor: cardBg,
+        borderColor,
+        shadowColor,
         shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
+        shadowOpacity,
         shadowRadius: 16,
       }}
     >
@@ -100,14 +128,27 @@ function AttributeRowSkeleton({ reduceMotion }: ReduceMotionProps) {
   );
 }
 
-function AchievementRowSkeleton({ reduceMotion }: ReduceMotionProps) {
+function AchievementRowSkeleton({
+  reduceMotion,
+  cardBg,
+  borderColor,
+  shadowColor,
+  shadowOpacity,
+}: ReduceMotionProps & {
+  cardBg: string;
+  borderColor: string;
+  shadowColor: string;
+  shadowOpacity: number;
+}) {
   return (
     <View
-      className='mb-3 flex-row items-center gap-4 rounded-3xl border border-stone-100 bg-white px-6 py-6'
+      className='mb-3 flex-row items-center gap-4 rounded-3xl border px-6 py-6'
       style={{
-        shadowColor: '#1c1917',
+        backgroundColor: cardBg,
+        borderColor,
+        shadowColor,
         shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
+        shadowOpacity,
         shadowRadius: 16,
       }}
     >
@@ -144,12 +185,17 @@ function AchievementRowSkeleton({ reduceMotion }: ReduceMotionProps) {
 export function CharacterScreenSkeleton({
   reduceMotion = false,
 }: ReduceMotionProps) {
+  const { pageBg, cardBg, borderColor, shadowColor, shadowOpacity } =
+    useSkeletonTheme();
+  const cardProps = { cardBg, borderColor, shadowColor, shadowOpacity };
+
   return (
     <View
       accessible
       accessibilityLabel='Loading character screen'
       accessibilityRole='progressbar'
-      className='flex-1 bg-white px-6 pt-16'
+      className='flex-1 px-6 pt-16'
+      style={{ backgroundColor: pageBg }}
     >
       {/* Back button + header */}
       <View className='mb-4 flex-row items-center gap-3'>
@@ -167,7 +213,7 @@ export function CharacterScreenSkeleton({
         />
       </View>
 
-      <CharacterCardSkeleton reduceMotion={reduceMotion} />
+      <CharacterCardSkeleton reduceMotion={reduceMotion} {...cardProps} />
 
       {/* Attributes section title */}
       <View className='mb-3'>
@@ -178,9 +224,9 @@ export function CharacterScreenSkeleton({
           width={100}
         />
       </View>
-      <AttributeRowSkeleton reduceMotion={reduceMotion} />
-      <AttributeRowSkeleton reduceMotion={reduceMotion} />
-      <AttributeRowSkeleton reduceMotion={reduceMotion} />
+      <AttributeRowSkeleton reduceMotion={reduceMotion} {...cardProps} />
+      <AttributeRowSkeleton reduceMotion={reduceMotion} {...cardProps} />
+      <AttributeRowSkeleton reduceMotion={reduceMotion} {...cardProps} />
 
       {/* Achievements section title */}
       <View className='mb-3 mt-4'>
@@ -191,8 +237,8 @@ export function CharacterScreenSkeleton({
           width={160}
         />
       </View>
-      <AchievementRowSkeleton reduceMotion={reduceMotion} />
-      <AchievementRowSkeleton reduceMotion={reduceMotion} />
+      <AchievementRowSkeleton reduceMotion={reduceMotion} {...cardProps} />
+      <AchievementRowSkeleton reduceMotion={reduceMotion} {...cardProps} />
     </View>
   );
 }

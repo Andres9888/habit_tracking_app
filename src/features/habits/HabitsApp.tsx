@@ -4,6 +4,7 @@
  */
 
 import { View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
@@ -51,6 +52,7 @@ export function HabitsApp() {
         {showHabitsSkeleton ? (
           <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
         ) : (
+          <Animated.View entering={FadeIn.duration(300)} style={{ flex: 1 }}>
           <HabitsList
             canNavigateForward={list.canNavigateForward}
             list={list}
@@ -64,6 +66,7 @@ export function HabitsApp() {
             onUpgradeDismiss={handleUpgradeDismiss}
             onUpgradeIntent={handleUpgradeIntent}
           />
+          </Animated.View>
         )}
 
         {list.habits.length > 0 && (
