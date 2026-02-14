@@ -13,6 +13,7 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import { CompletionToast } from '../CompletionToast';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
 import { useHabitCard } from './useHabitCard';
 import { styles } from './HabitCard.styles';
@@ -40,6 +41,7 @@ function HabitCardComponent(props: HabitCardProps) {
   } = props;
 
   const habit = useHabitCard(props);
+  const { colors: themeColors } = useThemeColors();
   const { focusStyle, focusHandlers } = useFocusRing({ disabled });
 
   return (
@@ -62,6 +64,7 @@ function HabitCardComponent(props: HabitCardProps) {
             styles.card,
             {
               backgroundColor: habit.backgroundColor,
+              borderColor: themeColors.cardBorder,
               borderRadius: habit.borderRadius,
             },
             disabled && styles.disabled,

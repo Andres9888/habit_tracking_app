@@ -12,7 +12,7 @@ import type {
 } from '../../lib/performance';
 
 // Re-export types used by components
-export type { NetworkTiming, MemorySnapshot, FrameTimingData, PerformanceThresholds };
+
 
 /** Dashboard tab identifiers */
 export type DashboardTab =
@@ -114,4 +114,4 @@ export const DEFAULT_DASHBOARD_CONFIG: Required<DashboardConfig> = {
   updateInterval: 1000,
 };
 
-export { type NetworkTiming, type RenderTiming } from '../../lib/performance';
+export { type NetworkTiming, type RenderTiming, type NetworkTiming, type MemorySnapshot, type FrameTimingData, type PerformanceThresholds } from '../../lib/performance';

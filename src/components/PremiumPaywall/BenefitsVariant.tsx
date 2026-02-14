@@ -68,8 +68,8 @@ export function BenefitsVariant({
           config={config}
           handlers={handlers}
           reduceMotion={reduceMotion}
-          onStartTrial={handleStartTrialPress}
           onRestore={handleRestorePress}
+          onStartTrial={handleStartTrialPress}
         />
       </View>
     </Modal>

@@ -87,8 +87,8 @@ export default function WelcomeScreen() {
             accessibilityLabel='Create free account with Chain Day'
             accessibilityRole='button'
             accessibilityState={{ disabled: !!isLoading }}
-            disabled={!!isLoading}
             disableAnimation={!!isLoading}
+            disabled={!!isLoading}
             style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
             onPress={() => setMode('signup')}
           >
@@ -98,8 +98,8 @@ export default function WelcomeScreen() {
             accessibilityLabel='Sign in to existing account'
             accessibilityRole='link'
             accessibilityState={{ disabled: !!isLoading }}
-            disabled={!!isLoading}
             disableAnimation={!!isLoading}
+            disabled={!!isLoading}
             style={styles.textLink}
             onPress={() => setMode('signin')}
           >

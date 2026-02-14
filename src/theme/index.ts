@@ -279,3 +279,6 @@ export { typography } from './typography';
 export { spacing, borderRadius, shadows, componentSpacing } from './spacing';
 export { durations, easings, springs } from './animations';
 export { iconSizes } from './iconSizes';
+export { ThemeColorProvider, useThemeColors } from './ThemeContext';
+export { darkColors, lightColors } from './darkColors';
+export type { SemanticColors } from './darkColors';

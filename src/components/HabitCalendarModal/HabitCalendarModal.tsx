@@ -22,10 +22,10 @@ export default function HabitCalendarModal({
 }: HabitCalendarModalProps) {
   const state = useHabitCalendarModal({
     habit,
-    tracking,
-    toggleHabit,
     onClose,
     onOpenMotivationTab,
+    toggleHabit,
+    tracking,
   });
 
   if (!state.isValid || !habit) return null;
@@ -80,8 +80,8 @@ export default function HabitCalendarModal({
         habitId={habit._id}
         visible={state.showEditScreen}
         onClose={state.handleCloseEdit}
-        onOpenCueEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
         onOpenAffirmationsEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
+        onOpenCueEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
         onOpenVisionBoard={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
       />
     </Modal>

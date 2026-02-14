@@ -92,10 +92,10 @@ export function JustTwoMinButton({
         onPressOut={handlePressOut}
       >
         <LinearGradient
-          colors={['#f59e0b', '#f97316']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
           className='absolute inset-0 rounded-xl'
+          colors={['#f59e0b', '#f97316']}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
         />
         <Zap className='text-white' fill='white' size={24} />
         <View>

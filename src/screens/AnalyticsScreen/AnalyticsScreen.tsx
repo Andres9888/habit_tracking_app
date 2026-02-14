@@ -9,6 +9,7 @@ import React from 'react';
 import { ScrollView, RefreshControl, View } from 'react-native';
 import { colors } from '../../theme/colors';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
+import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 import { styles } from './AnalyticsScreen.styles';
 import {
@@ -22,7 +23,8 @@ import {
   PremiumBlurOverlay,
 } from './components';
 
-export default function AnalyticsScreen() { // eslint-disable-line max-lines-per-function
+export default function AnalyticsScreen() {
+   
   const {
     refreshing,
     showPaywall,
@@ -43,7 +45,11 @@ export default function AnalyticsScreen() { // eslint-disable-line max-lines-per
     setShowExportMenu,
   } = useAnalyticsScreen();
 
-  const hasNoHabits = !isLoading && overviewStats?.totalHabits === 0;
+  if (isLoading) {
+    return <AnalyticsScreenSkeleton />;
+  }
+
+  const hasNoHabits = overviewStats?.totalHabits === 0;
   const showTeaser = !isPremiumUser;
 
   return (

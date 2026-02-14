@@ -37,7 +37,7 @@ export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: Dai
   return (
     <Animated.View entering={FadeIn.delay(100)} style={styles.container}>
       <View style={styles.iconContainer}>
-        <Quote size={16} color="#a8a29e" />
+        <Quote color="#a8a29e" size={16} />
       </View>
       
       <Text style={styles.quoteText}>"{quote.text}"</Text>
@@ -45,8 +45,8 @@ export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: Dai
       <View style={styles.footer}>
         <Text style={styles.author}>— {quote.author}</Text>
         {showRefresh && onRefresh && (
-          <Pressable onPress={onRefresh} style={styles.refreshButton}>
-            <RefreshCw size={14} color="#a8a29e" />
+          <Pressable style={styles.refreshButton} onPress={onRefresh}>
+            <RefreshCw color="#a8a29e" size={14} />
           </Pressable>
         )}
       </View>
@@ -55,34 +55,34 @@ export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: Dai
 }
 
 const styles = StyleSheet.create({
+  author: {
+    color: '#78716c',
+    fontSize: 13,
+    fontWeight: '500',
+  },
   container: {
+    backgroundColor: '#fafaf9',
+    borderLeftColor: '#a8a29e',
+    borderLeftWidth: 3,
+    borderRadius: 16,
     marginHorizontal: 16,
     marginVertical: 8,
     padding: 16,
-    backgroundColor: '#fafaf9',
-    borderRadius: 16,
-    borderLeftWidth: 3,
-    borderLeftColor: '#a8a29e',
+  },
+  footer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
   },
   iconContainer: {
     marginBottom: 8,
   },
   quoteText: {
+    color: '#57534e',
     fontSize: 15,
     fontStyle: 'italic',
-    color: '#57534e',
     lineHeight: 22,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  author: {
-    fontSize: 13,
-    color: '#78716c',
-    fontWeight: '500',
   },
   refreshButton: {
     padding: 4,
