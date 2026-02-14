@@ -9,10 +9,10 @@ export function EmptyState() {
         <View className='relative'>
           <View className='h-28 w-32 items-center justify-center rounded-2xl'>
             <LinearGradient
-              colors={['#ecfdf5', '#ccfbf1']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
               className='absolute inset-0 rounded-2xl'
+              colors={['#ecfdf5', '#ccfbf1']}
+              end={{ x: 1, y: 1 }}
+              start={{ x: 0, y: 0 }}
             />
             <Text className='mt-2 text-5xl'>🌱</Text>
           </View>

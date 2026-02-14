@@ -61,10 +61,10 @@ export function YourProgressCard({
       className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'
     >
       <LinearGradient
-        colors={['rgba(240, 253, 250, 0.3)', '#ffffff', 'rgba(236, 253, 245, 0.3)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
         className='absolute inset-0'
+        colors={['rgba(240, 253, 250, 0.3)', '#ffffff', 'rgba(236, 253, 245, 0.3)']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
       />
       <View className='absolute inset-0 rounded-2xl border border-teal-500/20' />
 

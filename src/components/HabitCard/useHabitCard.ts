@@ -9,6 +9,7 @@
 import { useCallback } from 'react';
 import { useAnimatedStyle } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useHabitCardEntrance } from './useHabitCardEntrance';
 import { useHabitCardAnimations } from './useHabitCardAnimations';
@@ -42,6 +43,7 @@ export function useHabitCard(props: HabitCardProps) {
   } = props;
 
   const theme = useAppTheme();
+  const { colors: themeColors } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const values = useHabitCardValues(strength);
 
@@ -119,7 +121,7 @@ export function useHabitCard(props: HabitCardProps) {
   return {
     accentColor: color || theme.custom.colors.primary[500],
     animations,
-    backgroundColor: getBackgroundColor(habitState.completed, atRisk, theme),
+    backgroundColor: getBackgroundColor(habitState.completed, atRisk, theme, themeColors.card),
     bestStreak: habitState.bestStreak,
     borderRadius: theme.custom.borderRadius.large,
     completed: habitState.completed,

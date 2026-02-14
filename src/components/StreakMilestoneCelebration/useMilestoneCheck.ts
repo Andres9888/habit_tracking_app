@@ -118,10 +118,10 @@ export function useMilestoneCheck({
   }, [milestone, shownMilestones, habitId]);
 
   return {
-    milestone,
-    showCelebration,
     dismissCelebration,
     markMilestoneShown,
+    milestone,
+    showCelebration,
   };
 }
 

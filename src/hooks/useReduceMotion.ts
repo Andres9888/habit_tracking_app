@@ -10,8 +10,9 @@ const isNativePlatform = Platform.OS === 'ios' || Platform.OS === 'android';
 // Lazy import AccessibilityInfo only when available
 let AccessibilityInfo: any;
 try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   AccessibilityInfo = require('react-native').AccessibilityInfo;
-} catch (e) {
+} catch {
   // AccessibilityInfo not available in this environment
   AccessibilityInfo = null;
 }

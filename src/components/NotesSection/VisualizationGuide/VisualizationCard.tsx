@@ -32,10 +32,10 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
       >
         <View className='h-10 w-10 items-center justify-center rounded-xl'>
           <LinearGradient
-            colors={['#ede9fe', '#e0e7ff']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
             className='absolute inset-0 rounded-xl'
+            colors={['#ede9fe', '#e0e7ff']}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0 }}
           />
           <Brain className='text-violet-600' size={20} />
         </View>

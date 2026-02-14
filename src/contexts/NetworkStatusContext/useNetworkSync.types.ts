@@ -4,7 +4,7 @@
  * Types for the network-to-sync bridge hook.
  */
 
-import type { SyncOrchestratorResult } from '../../lib/offline/sync';
+import type { SyncOrchestratorResult } from '../../lib/offline/sync/types';
 
 /**
  * Configuration options for useNetworkSync

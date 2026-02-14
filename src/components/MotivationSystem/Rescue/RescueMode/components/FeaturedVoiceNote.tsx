@@ -35,10 +35,10 @@ export function FeaturedVoiceNote({
   return (
     <View className='rounded-2xl border-l-4 border-l-teal-400 p-5'>
       <LinearGradient
-        colors={['#f0fdfa', '#ecfdf5']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
         className='absolute inset-0 rounded-2xl'
+        colors={['#f0fdfa', '#ecfdf5']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
       />
       {/* Header */}
       <View className='mb-3 flex-row items-center gap-2'>

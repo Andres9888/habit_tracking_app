@@ -54,9 +54,9 @@ export const TemplateBrowser = ({ isEditMode, template, onViewScience }: Templat
   return (
     <View>
       <TemplateHero
+        chevronRotation={chevronRotation}
         isEditMode={isEditMode}
         isOpen={isTemplateBrowserOpen}
-        chevronRotation={chevronRotation}
         onPress={handleHeroPress}
       />
       {isTemplateBrowserVisible && (
@@ -72,15 +72,15 @@ export const TemplateBrowser = ({ isEditMode, template, onViewScience }: Templat
           />
           <TemplateList
             isLoading={isLoadingTemplates}
+            showBottomShadow={showTemplateBottomShadow}
+            showTopShadow={showTemplateTopShadow}
             templates={filteredTemplates}
-            onSelectTemplate={handleTemplateSelect}
-            onViewScience={onViewScience}
             onClose={closeTemplateBrowser}
-            onScroll={handleTemplateListScroll}
             onContentSizeChange={handleTemplateListContentSizeChange}
             onLayout={handleTemplateListLayout}
-            showTopShadow={showTemplateTopShadow}
-            showBottomShadow={showTemplateBottomShadow}
+            onScroll={handleTemplateListScroll}
+            onSelectTemplate={handleTemplateSelect}
+            onViewScience={onViewScience}
           />
         </Animated.View>
       )}

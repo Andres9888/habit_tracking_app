@@ -19,8 +19,8 @@ export function BlurOverlayHeader({ disabled, onPress }: BlurOverlayHeaderProps)
       <AnimatedPressable
         accessibilityLabel='Close paywall'
         accessibilityRole='button'
-        disabled={disabled}
         className='h-10 w-10 items-center justify-center rounded-full bg-white/90'
+        disabled={disabled}
         onPress={onPress}
       >
         <Ionicons color={colors.text.primary} name='close' size={24} />
