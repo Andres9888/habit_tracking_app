@@ -3,7 +3,7 @@
  * Standardized: FadeInUp animation, icon, proper typography
  */
 
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { BarChart2 } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
