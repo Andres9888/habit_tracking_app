@@ -25,6 +25,8 @@ export interface CategorySearchHandlers {
 
 export interface CategorySearchViewProps {
   categories: CategoryDoc[] | undefined;
+  refreshing: boolean;
+  onRefresh: () => Promise<void>;
   effectiveViewMode: ViewMode;
   filteredTemplates: Doc<'templates'>[];
   getCategoryLabel: (categoryId: string) => string;

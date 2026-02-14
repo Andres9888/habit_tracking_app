@@ -2,9 +2,10 @@
  * Browse mode - Categories tab content
  */
 
-import { ScrollView, View } from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import { colors } from '../../../theme/colors';
 import CollapsibleCategorySection from '../../../components/CollapsibleCategorySection';
 import { styles } from '../../templates/templatesScreenStyles';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
@@ -27,6 +28,8 @@ interface BrowseCategoriesTabProps {
   handleToggleCategory: (categoryId: string) => void;
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
+  refreshing: boolean;
+  onRefresh: () => Promise<void>;
   scienceCountsByCategory: Record<string, number>;
   scrollViewRef: React.RefObject<ScrollView | null>;
   templatesByCategory: Map<string, Doc<'templates'>[]>;
@@ -41,6 +44,8 @@ export function BrowseCategoriesTab({
   handleToggleCategory,
   importedTemplateIds,
   importingTemplateId,
+  onRefresh,
+  refreshing,
   scienceCountsByCategory,
   scrollViewRef,
   templatesByCategory,
@@ -52,6 +57,14 @@ export function BrowseCategoriesTab({
         directionalLockEnabled
         nestedScrollEnabled
         contentContainerStyle={styles.browseContent}
+        refreshControl={
+          <RefreshControl
+            colors={[colors.primary[500]]}
+            refreshing={refreshing}
+            tintColor={colors.primary[500]}
+            onRefresh={() => void onRefresh()}
+          />
+        }
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.categorySections}>

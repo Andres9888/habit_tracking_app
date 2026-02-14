@@ -16,12 +16,14 @@ import {
   useTemplatesByCategory,
   useTemplatesData,
 } from '../useTemplatesData';
+import { useTemplatesRefresh } from './useTemplatesRefresh';
 
 export function useTemplatesScreenProps() {
   const reducedMotion = useReduceMotion();
   const animations = useEntranceAnimations({ reducedMotion });
   const tabIndicator = useTabIndicator({ reducedMotion });
   const data = useTemplatesData();
+  const refresh = useTemplatesRefresh();
   const state = useTemplatesScreenState({ categories: data.categories });
 
   const templatesByCategory = useTemplatesByCategory(data.allTemplates);
@@ -68,6 +70,7 @@ export function useTemplatesScreenProps() {
   return {
     animations,
     data,
+    refresh,
     filteredTemplates,
     getCategoryLabel,
     handlers,

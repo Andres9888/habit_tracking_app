@@ -36,6 +36,8 @@ export function BrowseView(p: BrowseViewProps) {
       />
       {p.browseTab === 'categories' && (
         <BrowseCategoriesTab
+          refreshing={p.refreshing}
+          onRefresh={p.onRefresh}
           categories={cats}
           contentAnimatedStyle={a.contentAnimatedStyle}
           expandedCategories={p.expandedCategories}
@@ -51,6 +53,8 @@ export function BrowseView(p: BrowseViewProps) {
       )}
       {p.browseTab === 'all' && (
         <BrowseAllTab
+          refreshing={p.refreshing}
+          onRefresh={p.onRefresh}
           contentAnimatedStyle={a.contentAnimatedStyle}
           filteredTemplates={p.filteredTemplates}
           handleSelectSortOption={h.handleSelectSortOption}

@@ -23,6 +23,8 @@ function TemplatesScreenContent() {
     );
   }
 
+  const { refreshing, onRefresh } = props.refresh;
+
   const isCategoryOrSearchMode =
     state.effectiveViewMode === 'category' ||
     state.effectiveViewMode === 'search';
@@ -30,6 +32,8 @@ function TemplatesScreenContent() {
     return (
       <CategorySearchView
         categories={data.categories}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         effectiveViewMode={state.effectiveViewMode}
         filteredTemplates={filteredTemplates}
         getCategoryLabel={getCategoryLabel}
@@ -60,6 +64,8 @@ function TemplatesScreenContent() {
   return (
     <BrowseView
       animations={props.animations}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
       browseTab={state.browseTab}
       categories={data.categories}
       expandedCategories={state.expandedCategories}

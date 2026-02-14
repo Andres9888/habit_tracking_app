@@ -2,10 +2,11 @@
  * Browse mode - View All tab content
  */
 
-import { FlatList, Pressable, View } from 'react-native';
+import { FlatList, Pressable, RefreshControl, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import TemplateCard from '../../../components/TemplateCard';
+import { colors } from '../../../theme/colors';
 import type { SortOption } from '../../templates/constants';
 import { styles } from '../../templates/templatesScreenStyles';
 import { FilterControls } from '../components';
@@ -22,6 +23,8 @@ interface BrowseAllTabProps {
   handleTemplatePreview: (template: Doc<'templates'>) => void;
   importingTemplateId: Id<'templates'> | null;
   onCloseSortOptions: () => void;
+  onRefresh: () => Promise<void>;
+  refreshing: boolean;
   researchOnly: boolean;
   setResearchOnly: React.Dispatch<React.SetStateAction<boolean>>;
   setShowSortOptions: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,6 +50,14 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
       <FlatList
         contentContainerStyle={styles.allTemplatesList}
         data={p.filteredTemplates}
+        refreshControl={
+          <RefreshControl
+            colors={[colors.primary[500]]}
+            refreshing={p.refreshing}
+            tintColor={colors.primary[500]}
+            onRefresh={() => void p.onRefresh()}
+          />
+        }
         initialNumToRender={5}
         keyExtractor={(item) => item._id}
         maxToRenderPerBatch={5}

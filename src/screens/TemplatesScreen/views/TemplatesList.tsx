@@ -3,8 +3,9 @@
  */
 
 import { useCallback, useRef } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, RefreshControl, View } from 'react-native';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import { colors } from '../../../theme/colors';
 import { styles } from '../../templates/templatesScreenStyles';
 import { ScrollShadows, TemplatesListEmpty } from '../components';
 import { useScrollShadows } from '../useScrollShadows';
@@ -19,7 +20,9 @@ interface TemplatesListProps {
   selectedCategory: string;
   onImport: (templateId: Id<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
+  onRefresh: () => Promise<void>;
   onResetFilters: () => void;
+  refreshing: boolean;
 }
 
 export function TemplatesList(props: TemplatesListProps) {
@@ -31,7 +34,9 @@ export function TemplatesList(props: TemplatesListProps) {
     selectedCategory,
     onImport,
     onPreview,
+    onRefresh,
     onResetFilters,
+    refreshing,
   } = props;
 
   const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
@@ -57,6 +62,14 @@ export function TemplatesList(props: TemplatesListProps) {
         ref={flatListRef}
         contentContainerStyle={styles.listContent}
         data={filteredTemplates}
+        refreshControl={
+          <RefreshControl
+            colors={[colors.primary[500]]}
+            refreshing={refreshing}
+            tintColor={colors.primary[500]}
+            onRefresh={() => void onRefresh()}
+          />
+        }
         keyExtractor={(item) => item._id}
         ListEmptyComponent={
           <TemplatesListEmpty

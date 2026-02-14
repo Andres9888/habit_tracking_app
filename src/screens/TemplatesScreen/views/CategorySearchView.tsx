@@ -53,6 +53,8 @@ export function CategorySearchView(p: CategorySearchViewProps) {
       </View>
       <TemplatesList
         effectiveViewMode={p.effectiveViewMode}
+        refreshing={p.refreshing}
+        onRefresh={p.onRefresh}
         filteredTemplates={templates}
         hasActiveFilters={p.hasActiveFilters}
         importingTemplateId={p.importingTemplateId}

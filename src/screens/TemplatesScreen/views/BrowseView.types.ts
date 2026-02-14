@@ -32,6 +32,8 @@ export interface BrowseViewHandlers {
 
 export interface BrowseViewProps {
   animations: BrowseViewAnimations;
+  refreshing: boolean;
+  onRefresh: () => Promise<void>;
   browseTab: BrowseTab;
   categories: { icon: string; id: string; label: string }[] | undefined;
   expandedCategories: Set<string>;
