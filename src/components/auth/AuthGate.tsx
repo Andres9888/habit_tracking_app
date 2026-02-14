@@ -13,7 +13,6 @@ import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  ActivityIndicator,
   Pressable,
   StyleSheet,
   Text,
@@ -23,6 +22,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { api } from '../../../convex/_generated/api';
 import { colors } from '../../theme/colors';
+import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
 import { OnboardingScreen } from '../../screens/onboarding';
@@ -85,12 +85,16 @@ function BrandedLoadingScreen() {
             </Pressable>
           </View>
         ) : (
-          <ActivityIndicator
-            color={colors.primary[500]}
-            size='small'
-            style={loadingStyles.spinner}
-          />
+          <View style={loadingStyles.shimmerContainer}>
+            <SkeletonLoader borderRadius={4} height={4} width={120} />
+          </View>
         )}
+      </View>
+
+      {/* Ghost habit cards preview */}
+      <View style={loadingStyles.cardsPreview}>
+        <HabitCardSkeleton />
+        <HabitCardSkeleton />
       </View>
     </View>
   );
@@ -164,8 +168,13 @@ const loadingStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  spinner: {
-    marginTop: 8,
+  cardsPreview: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  shimmerContainer: {
+    marginTop: 12,
   },
 });
 export function AuthGate() {
