@@ -294,7 +294,7 @@ describe('EmojiPicker - Story 2.8', () => {
 
     it('should return focus to trigger element on close', async () => {
       const mockSetAccessibilityFocus = jest.spyOn(AccessibilityInfo, 'setAccessibilityFocus');
-      const triggerRef = createRef<View>();
+      const triggerRef = createRef<View>() as React.RefObject<View>;
 
       const { getByLabelText } = render(
         <>

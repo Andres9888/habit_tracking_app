@@ -9,20 +9,20 @@ import { ConfettiBurst } from '../ConfettiBurst';
 describe('ConfettiBurst', () => {
   it('should not render when inactive', () => {
     const onComplete = jest.fn();
-    const { queryByTestId, container } = render(
+    const { queryByTestId } = render(
       <ConfettiBurst active={false} onComplete={onComplete} />
     );
 
-    expect(container.children.length).toBe(0);
+    expect(queryByTestId('confetti-burst')).toBeNull();
   });
 
   it('should render particles when active', () => {
     const onComplete = jest.fn();
-    const { container } = render(
+    const { queryByTestId } = render(
       <ConfettiBurst active={true} onComplete={onComplete} />
     );
 
-    expect(container.children.length).toBeGreaterThan(0);
+    expect(queryByTestId('confetti-burst')).toBeTruthy();
   });
 
   it('should call onComplete after animation', async () => {
