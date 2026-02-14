@@ -1,14 +1,20 @@
 import { useCallback } from 'react';
-import { Animated, Easing } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
+import {
+  withSpring,
+  withTiming,
+  withSequence,
+  Easing,
+} from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
 interface UseFABHandlersProps {
   openCreateHabitScreen: () => void;
   celebrationsEnabled: boolean;
   reduceMotionPreference: boolean;
-  pressScale: Animated.Value;
-  rippleOpacity: Animated.Value;
-  rippleScale: Animated.Value;
+  pressScale: SharedValue<number>;
+  rippleOpacity: SharedValue<number>;
+  rippleScale: SharedValue<number>;
 }
 
 export function useFABHandlers({
@@ -36,37 +42,20 @@ export function useFABHandlers({
       triggerSelection();
     }
 
-    rippleOpacity.setValue(0.26);
-    rippleScale.setValue(0.6);
+    // Spring press animation — feels more physical than timing
+    pressScale.value = withSequence(
+      withSpring(0.88, { damping: 18, stiffness: 400 }),
+      withSpring(1, { damping: 12, stiffness: 200 })
+    );
 
-    Animated.parallel([
-      Animated.sequence([
-        Animated.timing(pressScale, {
-          duration: 110,
-          easing: Easing.out(Easing.quad),
-          toValue: 0.94,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pressScale, {
-          duration: 160,
-          easing: Easing.out(Easing.ease),
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.timing(rippleScale, {
-        duration: 320,
-        easing: Easing.out(Easing.cubic),
-        toValue: 1.8,
-        useNativeDriver: true,
-      }),
-      Animated.timing(rippleOpacity, {
-        duration: 320,
-        easing: Easing.out(Easing.ease),
-        toValue: 0,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    // Ripple expand and fade
+    rippleOpacity.value = 0.22;
+    rippleScale.value = 0.6;
+    rippleScale.value = withSpring(2.0, { damping: 20, stiffness: 150 });
+    rippleOpacity.value = withTiming(0, {
+      duration: 400,
+      easing: Easing.out(Easing.ease),
+    });
 
     openCreateHabitScreen();
   }, [
