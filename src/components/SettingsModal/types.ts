@@ -45,6 +45,10 @@ export interface SettingsColors {
 export interface SettingsContentProps {
   colors: SettingsColors;
   isHighContrastActive: boolean;
+  darkModePreference: 'system' | 'light' | 'dark';
+  onChangeDarkModePreference: (
+    value: 'system' | 'light' | 'dark'
+  ) => void | Promise<void>;
   habitCompletionIcon: 'chain' | 'checkbox';
   dayShape: 'circle' | 'square';
   onChangeHabitCompletionIcon: (

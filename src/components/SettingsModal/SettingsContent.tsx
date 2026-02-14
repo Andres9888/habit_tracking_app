@@ -1,26 +1,102 @@
+/* eslint-disable max-lines */
 /** SettingsContent - Stagger animations, stone-100 bg, 12px version */
-import { BookOpen, Check, Circle } from 'lucide-react-native';
-import { ScrollView, Text, View } from 'react-native';
+import {
+  Moon,
+  BookOpen,
+  Check,
+  Circle,
+  Monitor,
+  Sun,
+} from 'lucide-react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 
 const anim = (delay: number) => FadeInDown.delay(delay).springify().damping(18);
 
+const DARK_MODE_OPTIONS: Array<{
+  key: 'system' | 'light' | 'dark';
+  label: string;
+  Icon: typeof Monitor;
+}> = [
+  { Icon: Monitor, key: 'system', label: 'System' },
+  { Icon: Sun, key: 'light', label: 'Light' },
+  { Icon: Moon, key: 'dark', label: 'Dark' },
+];
+
 export function SettingsContent(p: SettingsContentProps) {
   const { colors, isHighContrastActive: hc } = p;
+  const { colors: themeColors, isDark } = useThemeColors();
+
   return (
     <ScrollView
       className='flex-1 px-4'
       showsVerticalScrollIndicator={false}
-      style={{ backgroundColor: hc ? colors.background : '#f5f5f4' }}
+      style={{
+        backgroundColor: hc ? colors.background : themeColors.background,
+      }}
     >
       <View className='gap-5 pb-8'>
         <Animated.View entering={anim(0)}>
           <SettingsSection highContrastMode={hc} title='Visual Preferences'>
+            <View className='px-4 pb-4 pt-4'>
+              <Text
+                className='mb-2 text-[13px] font-semibold'
+                style={{ color: themeColors.text.secondary }}
+              >
+                Appearance
+              </Text>
+              <View
+                className='flex-row rounded-xl p-1'
+                style={{
+                  backgroundColor: themeColors.surface,
+                  borderColor: themeColors.border,
+                  borderWidth: 1,
+                }}
+              >
+                {DARK_MODE_OPTIONS.map(({ key, label, Icon }) => {
+                  const selected = p.darkModePreference === key;
+                  return (
+                    <Pressable
+                      key={key}
+                      className='flex-1 flex-row items-center justify-center gap-1.5 rounded-lg px-2 py-2'
+                      style={{
+                        backgroundColor: selected
+                          ? isDark
+                            ? '#374151'
+                            : '#e5e7eb'
+                          : 'transparent',
+                      }}
+                      onPress={() => void p.onChangeDarkModePreference(key)}
+                    >
+                      <Icon
+                        color={
+                          selected
+                            ? themeColors.text.primary
+                            : themeColors.text.secondary
+                        }
+                        size={14}
+                      />
+                      <Text
+                        className='text-[13px] font-semibold'
+                        style={{
+                          color: selected
+                            ? themeColors.text.primary
+                            : themeColors.text.secondary,
+                        }}
+                      >
+                        {label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
             <SettingsRow
               highContrastMode={hc}
               icon={<Check color='#0284c7' size={16} />}
