@@ -5,6 +5,7 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import { StreakMilestonesTimeline } from '../../../components/StreakMilestonesTimeline';
 import type { Habit } from '../../../features/habits/types';
 
 interface HabitDetailContentProps {
@@ -71,6 +72,14 @@ export function HabitDetailContent({
           </Animated.View>
         </>
       )}
+
+      {/* STREAK MILESTONES section */}
+      <SectionLabel delay={330} text='STREAK MILESTONES' />
+      <Animated.View entering={anim(360)}>
+        <ErrorBoundary>
+          <StreakMilestonesTimeline habit={habit} completedDates={completedDates} />
+        </ErrorBoundary>
+      </Animated.View>
 
       {/* HISTORY section - OPTIMIZED: consistent card styling */}
       <SectionLabel delay={360} text='HISTORY' />
