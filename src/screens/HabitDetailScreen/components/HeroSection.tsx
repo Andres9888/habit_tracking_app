@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { HeroSectionProps } from '../HabitDetailScreen.types';
 import { useHeroAnimations } from './useHeroAnimations';
 
@@ -22,11 +23,17 @@ export function HeroSection({
   isCompletedToday,
   reduceMotion = false,
 }: HeroSectionProps) {
+  const { colors: themeColors, isDark } = useThemeColors();
   const showStreakBadge = currentStreak >= 7;
   const { iconAnimatedStyle, badgeAnimatedStyle } = useHeroAnimations(
     showStreakBadge,
     reduceMotion
   );
+
+  const badgeGradient: [string, string] = isDark
+    ? ['#78350f', '#92400e']
+    : ['#ffedd5', '#fef3c7'];
+  const badgeTextColor = isDark ? '#fdba74' : '#ea580c';
 
   return (
     <View className='items-center pb-4'>
@@ -42,7 +49,9 @@ export function HeroSection({
         </Animated.View>
       )}
 
-      <Text className='text-xl font-bold text-stone-900'>{habit.name}</Text>
+      <Text className='text-xl font-bold' style={{ color: themeColors.text.primary }}>
+        {habit.name}
+      </Text>
 
       {showStreakBadge && (
         <Animated.View
@@ -52,18 +61,18 @@ export function HeroSection({
         >
           <LinearGradient
             className='absolute inset-0 rounded-full'
-            colors={['#ffedd5', '#fef3c7']}
+            colors={badgeGradient}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
           />
-          <Text className='text-xs font-semibold text-orange-600'>
+          <Text style={{ fontSize: 12, fontWeight: '600', color: badgeTextColor }}>
             {getStreakBadgeText(currentStreak)}
           </Text>
         </Animated.View>
       )}
 
       {habit.notes ? (
-        <Text className='mt-1 px-6 text-center text-sm text-stone-500'>
+        <Text className='mt-1 px-6 text-center text-sm' style={{ color: themeColors.text.secondary }}>
           {habit.notes}
         </Text>
       ) : null}

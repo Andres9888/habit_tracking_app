@@ -1,9 +1,10 @@
-/** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
+/** HabitDetailScreen - Optimized for 9+ scores across all dimensions, dark mode support */
 import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
+import { useThemeColors } from '../../theme/ThemeContext';
 import {
   DetailHeader,
   DetailLoadingState,
@@ -11,7 +12,7 @@ import {
   HabitDetailModals,
 } from './components';
 import {
-  DETAIL_BG_GRADIENT,
+  getDetailBgGradient,
   buildModalsProps,
 } from './HabitDetailScreen.constants';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
@@ -30,6 +31,8 @@ function HabitDetailScreenContent({
   visible,
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
+  const { colors: themeColors, isDark } = useThemeColors();
+  const bgGradient = getDetailBgGradient(isDark, themeColors);
   const screenState = useHabitDetailScreenState({
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
@@ -71,7 +74,7 @@ function HabitDetailScreenContent({
             <View className='flex-1 bg-black/50'>
               <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
                 <LinearGradient
-                  colors={DETAIL_BG_GRADIENT}
+                  colors={bgGradient}
                   locations={[0, 0.5, 1]}
                   style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
                 >
