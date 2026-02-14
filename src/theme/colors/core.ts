@@ -75,6 +75,16 @@ export const colors = {
     600: '#2563EB', // Darker, pressed
   },
 
+  // Semantic Colors
+  // Streak & Progress — amber/gold tones (chain metaphor)
+  streak: {
+    100: '#fef3c7', // Very light amber, streak backgrounds
+    300: '#fcd34d', // Light amber, streak accents
+    500: '#F59E0B', // Amber-500 — primary streak color
+    600: '#D97706', // Darker amber, pressed states
+    700: '#B45309', // Dark amber, high-contrast text
+  },
+
   // Habit Strength Level Colors (Gradient: lime → green → teal → cyan → emerald)
   strength: {
     automatic: '#059669', // 80-100% - Emerald-600
@@ -89,8 +99,7 @@ export const colors = {
     strongLight: '#cffafe', // Cyan-100
   },
 
-  // Semantic Colors
-  success: '#10B981',
+  success: '#22c55e', // Green-500 — distinct from primary emerald
 
   surface: '#faf9f7',
 
@@ -118,3 +127,4 @@ export type ColorPalette = typeof colors;
 export type PrimaryColor = keyof typeof colors.primary;
 export type GrayColor = keyof typeof colors.gray;
 export type StrengthLevel = keyof typeof colors.strength;
+export type StreakColor = keyof typeof colors.streak;
