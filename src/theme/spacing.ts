@@ -62,23 +62,26 @@ export const componentSpacing = {
  * Consistent rounding — warm-minimal aesthetic
  */
 export const borderRadius = {
+  /** Alias: buttons */
+  button: 12,
+
+  /** Alias: cards */
+  card: 16,
+
+  /** Alias: chips */
+  chip: 8,
+
   /** Pill shape (avatar, icon buttons, pills) */
   full: 9999,
 
   /** Cards, containers, inputs — 16px */
   large: 16,
-  /** Alias: cards */
-  card: 16,
 
   /** Buttons, tags, interactive elements — 12px */
   medium: 12,
-  /** Alias: buttons */
-  button: 12,
 
   /** Chips, badges, small elements — 8px */
   small: 8,
-  /** Alias: chips */
-  chip: 8,
 
   /** Modals, bottom sheets — 24px */
   xl: 24,
@@ -125,7 +128,7 @@ export const shadows = {
     elevation: 8,
     shadowColor: '#2D2A26',
     shadowOffset: { height: 8, width: 0 },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.1,
     shadowRadius: 24,
   },
 
