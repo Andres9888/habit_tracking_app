@@ -22,16 +22,23 @@ const MIN_COMPLETIONS = 5;
 /** Streak milestones that should trigger a review prompt */
 const REVIEW_ELIGIBLE_MILESTONES = new Set([7, 14, 30]);
 
+function parseStoredNonNegativeInt(raw: string | null): number {
+  if (!raw) return 0;
+
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+}
+
 /**
  * Increment the completion counter. Call on every habit completion.
  */
 export async function incrementCompletionCount(): Promise<number> {
   try {
     const raw = await AsyncStorage.getItem(STORE_REVIEW_COMPLETION_COUNT_KEY);
-    const count = (raw ? Number.parseInt(raw, 10) : 0) + 1;
+    const count = parseStoredNonNegativeInt(raw) + 1;
     await AsyncStorage.setItem(
       STORE_REVIEW_COMPLETION_COUNT_KEY,
-      String(count),
+      String(count)
     );
     return count;
   } catch {
@@ -45,7 +52,7 @@ export async function incrementCompletionCount(): Promise<number> {
 async function getCompletionCount(): Promise<number> {
   try {
     const raw = await AsyncStorage.getItem(STORE_REVIEW_COMPLETION_COUNT_KEY);
-    return raw ? Number.parseInt(raw, 10) : 0;
+    return parseStoredNonNegativeInt(raw);
   } catch {
     return 0;
   }
@@ -60,6 +67,8 @@ async function isCooldownExpired(): Promise<boolean> {
     if (!raw) return true;
 
     const lastPrompt = Number.parseInt(raw, 10);
+    if (!Number.isFinite(lastPrompt) || lastPrompt < 0) return true;
+
     const daysSince = (Date.now() - lastPrompt) / (1000 * 60 * 60 * 24);
     return daysSince >= COOLDOWN_DAYS;
   } catch {
@@ -74,7 +83,7 @@ async function recordPromptShown(): Promise<void> {
   try {
     await AsyncStorage.setItem(
       STORE_REVIEW_LAST_PROMPT_KEY,
-      String(Date.now()),
+      String(Date.now())
     );
   } catch {
     // Silent fail — non-critical
@@ -92,9 +101,7 @@ async function recordPromptShown(): Promise<void> {
  *
  * @param milestoneDays - The streak milestone that was just celebrated
  */
-export async function maybeRequestReview(
-  milestoneDays: number,
-): Promise<void> {
+export async function maybeRequestReview(milestoneDays: number): Promise<void> {
   try {
     // Only prompt on specific milestones
     if (!REVIEW_ELIGIBLE_MILESTONES.has(milestoneDays)) {
