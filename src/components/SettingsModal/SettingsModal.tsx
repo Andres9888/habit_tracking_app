@@ -21,6 +21,7 @@ import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
 import { SettingsHeader } from './SettingsHeader';
 import { SettingsContent } from './SettingsContent';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsModalProps } from './types';
 
 export default function SettingsModal({
@@ -43,7 +44,8 @@ export default function SettingsModal({
     visible,
   });
   const insets = useSafeAreaInsets();
-  const colors = getSettingsColors(isHighContrastActive);
+  const { isDark } = useThemeColors();
+  const colors = getSettingsColors(isHighContrastActive, isDark);
 
   if (!visible) return null;
 
