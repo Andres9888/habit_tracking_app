@@ -45,14 +45,12 @@ export function HabitsListHeader(
         <HabitsHeader
           completedToday={computed.completedToday}
           forceShow={props.justCreatedHabitId !== null}
-          isPremiumUser={props.isPremiumUser}
           openCreateHabitScreen={props.onAddHabitPress}
           openSettings={props.openSettings}
           openSortSheet={props.onOpenSortSheet}
           openTemplatesScreen={props.openTemplatesScreen}
           showCompletionSummary={props.showWeekCompletionBar}
           totalHabits={computed.totalHabits}
-          onUpgradePress={props.onUpgradePress}
         />
       </Animated.View>
       {computed.shouldShowTimeline && (

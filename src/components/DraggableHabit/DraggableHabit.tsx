@@ -6,6 +6,7 @@ import { useDraggableHabitAnimations } from './useDraggableHabitAnimations';
 import { useStrengthAnimation } from './useStrengthAnimation';
 import { usePressHandlers } from './usePressHandlers';
 import { useDraggableHabitState } from './useDraggableHabitState';
+import { useCardStrengthFill } from './useCardStrengthFill';
 import { DraggableHabitCard } from './DraggableHabitCard';
 import type { DraggableHabitProps } from './types';
 
@@ -68,6 +69,11 @@ function DraggableHabit(props: DraggableHabitProps) {
   const { progressAnimatedStyle, strengthEmojiAnimatedStyle } =
     useStrengthAnimation(state.strengthPercent, reduceMotionPreference);
 
+  const { isDark, showGradientFill, strengthFillStyle } = useCardStrengthFill(
+    state.strengthPercent,
+    reduceMotionPreference
+  );
+
   const pressHandlers = usePressHandlers({
     archiveFlash: animations.archiveFlash,
     cardScale: animations.cardScale,
@@ -92,12 +98,15 @@ function DraggableHabit(props: DraggableHabitProps) {
       highContrastMode={highContrastMode}
       isConnectedToNextWeek={isConnectedToNextWeek}
       isConnectedToPreviousWeek={isConnectedToPreviousWeek}
+      isDark={isDark}
       progressAnimatedStyle={progressAnimatedStyle}
       reduceMotionPreference={reduceMotionPreference}
       showConnectors={showConnectors}
+      showGradientFill={showGradientFill}
       showHabitStrengthPercentage={showHabitStrengthPercentage}
       streak={streak}
       strengthEmojiAnimatedStyle={strengthEmojiAnimatedStyle}
+      strengthFillStyle={strengthFillStyle}
       toggleHabit={toggleHabit}
       weekDateStrings={weekDateStrings}
       weekStatus={weekStatus}

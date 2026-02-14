@@ -2,7 +2,8 @@ import { Linking, Text, View } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 const TERMS_URL = 'https://andres9888.github.io/chainday-landing/terms.html';
-const PRIVACY_URL = 'https://andres9888.github.io/chainday-landing/privacy.html';
+const PRIVACY_URL =
+  'https://andres9888.github.io/chainday-landing/privacy.html';
 
 const openTerms = () => void Linking.openURL(TERMS_URL);
 const openPrivacy = () => void Linking.openURL(PRIVACY_URL);

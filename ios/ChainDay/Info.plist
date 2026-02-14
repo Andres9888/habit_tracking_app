@@ -42,8 +42,6 @@
     <dict>
       <key>NSAllowsArbitraryLoads</key>
       <false/>
-      <key>NSAllowsLocalNetworking</key>
-      <true/>
     </dict>
     <key>NSCameraUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your camera to capture images for your Vision Board.</string>
@@ -51,6 +49,8 @@
     <string>Allow $(PRODUCT_NAME) to access your microphone for voice note recordings.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your photos to create your Vision Board.</string>
+    <key>NSUserNotificationsUsageDescription</key>
+    <string>ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent.</string>
     <key>RCTNewArchEnabled</key>
     <true/>
     <key>UILaunchStoryboardName</key>
