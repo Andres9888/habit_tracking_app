@@ -1,14 +1,15 @@
 /**
- * ArchiveUndoToast Styles
+ * ArchiveUndoToast Styles — dark mode aware
  */
 
 import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
-import { colors } from '../../theme/colors';
+import type { SemanticColors } from '../../theme/darkColors';
 
-export const styles = StyleSheet.create({
+/** Static layout styles (color-independent) */
+export const layoutStyles = StyleSheet.create({
   container: {
     alignItems: 'center',
     left: 20,
@@ -24,13 +25,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 14,
   },
-  habitName: {
-    color: '#1c1917', // stone-900 - matches app text
-    fontWeight: '600',
-  },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#fef3c7', // amber-100 - warm and matches swipe
     borderRadius: borderRadius.medium,
     height: 36,
     justifyContent: 'center',
@@ -40,15 +36,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     fontSize: typography.bodySmall.fontSize,
   },
-  messageText: {
-    color: '#78716c', // stone-500 - warm gray
-  },
   progressBar: {
-    backgroundColor: '#d97706', // amber-600 - slightly deeper
     height: '100%',
   },
   progressContainer: {
-    backgroundColor: '#fef3c7', // amber-100
     borderBottomLeftRadius: borderRadius.xl,
     borderBottomRightRadius: borderRadius.xl,
     height: 3,
@@ -56,32 +47,52 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   toast: {
-    backgroundColor: colors.light.card, // white - matches habit cards
-    borderColor: '#f5f5f4', // stone-100 - matches card borders
-    borderRadius: borderRadius.xl, // matches card rounded-3xl
+    borderRadius: borderRadius.xl,
     borderWidth: 1,
     ...shadows.alert,
     maxWidth: 400,
     overflow: 'hidden',
-    shadowColor: '#78716c', // stone-500 - warm shadow
     width: '100%',
   },
   undoButton: {
     alignItems: 'center',
-    backgroundColor: '#fef3c7', // amber-100
     borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
-  undoButtonPressed: {
-    backgroundColor: '#fde68a', // amber-200
-  },
   undoText: {
-    color: '#b45309', // amber-700 - richer contrast
     fontSize: 13,
     fontWeight: '700',
     letterSpacing: 0.3,
   },
 });
+
+/** Theme-aware colors for the archive toast */
+export function archiveToastColors(isDark: boolean, colors: SemanticColors) {
+  // Amber palette adjusted for dark mode
+  const amberBg = isDark ? '#451a03' : '#fef3c7'; // amber-950 / amber-100
+  const amberBorder = isDark ? '#78350f' : '#f5f5f4'; // amber-900 / stone-100
+  const amberAccent = isDark ? '#fbbf24' : '#b45309'; // amber-400 / amber-700
+  const amberDeep = isDark ? '#f59e0b' : '#d97706'; // amber-500 / amber-600
+  const amberBgHover = isDark ? '#78350f' : '#fde68a'; // amber-900 / amber-200
+
+  return {
+    iconBg: amberBg,
+    iconColor: amberAccent,
+    habitNameColor: colors.text.primary,
+    messageColor: colors.text.tertiary,
+    progressBar: amberDeep,
+    progressBg: amberBg,
+    shadowColor: isDark ? '#000000' : '#78716c',
+    toastBg: colors.card,
+    toastBorder: amberBorder,
+    undoBg: amberBg,
+    undoBgPressed: amberBgHover,
+    undoColor: amberAccent,
+  };
+}
+
+// Legacy export for tests
+export const styles = layoutStyles;

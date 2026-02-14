@@ -2,11 +2,12 @@ import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
-import { colors } from '../../theme/colors';
+import type { SemanticColors } from '../../theme/darkColors';
 
 export const DISMISS_THRESHOLD = 50;
 
-export const styles = StyleSheet.create({
+/** Static layout styles (color-independent) */
+export const layoutStyles = StyleSheet.create({
   container: {
     alignItems: 'center',
     left: 20,
@@ -24,29 +25,19 @@ export const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#fee2e2', // red-100
     borderRadius: borderRadius.medium,
     height: 36,
     justifyContent: 'center',
     width: 36,
   },
-  itemName: {
-    color: '#1c1917', // stone-900
-    fontWeight: '600',
-  },
   message: {
     flex: 1,
     fontSize: typography.bodySmall.fontSize,
   },
-  messageText: {
-    color: '#78716c', // stone-500
-  },
   progressBar: {
-    backgroundColor: '#dc2626', // red-600
     height: '100%',
   },
   progressContainer: {
-    backgroundColor: '#fee2e2', // red-100
     borderBottomLeftRadius: borderRadius.xl,
     borderBottomRightRadius: borderRadius.xl,
     height: 3,
@@ -54,32 +45,51 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   toast: {
-    backgroundColor: colors.light.card,
-    borderColor: '#fecaca', // red-200
     borderRadius: borderRadius.xl,
     borderWidth: 1,
     ...shadows.alert,
     maxWidth: 400,
     overflow: 'hidden',
-    shadowColor: '#dc2626', // red-600
     width: '100%',
   },
   undoButton: {
     alignItems: 'center',
-    backgroundColor: '#fee2e2', // red-100
     borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
-  undoButtonPressed: {
-    backgroundColor: '#fecaca', // red-200
-  },
   undoText: {
-    color: '#dc2626', // red-600
     fontSize: 13,
     fontWeight: '700',
     letterSpacing: 0.3,
   },
 });
+
+/** Theme-aware colors for the delete toast */
+export function deleteToastColors(isDark: boolean, colors: SemanticColors) {
+  // Red palette adjusted for dark mode
+  const redBg = isDark ? '#450a0a' : '#fee2e2'; // red-950 / red-100
+  const redBorder = isDark ? '#7f1d1d' : '#fecaca'; // red-900 / red-200
+  const redAccent = isDark ? '#f87171' : '#dc2626'; // red-400 / red-600
+  const redBgHover = isDark ? '#7f1d1d' : '#fecaca'; // red-900 / red-200
+
+  return {
+    iconBg: redBg,
+    iconColor: redAccent,
+    itemNameColor: colors.text.primary,
+    messageColor: colors.text.tertiary,
+    progressBar: redAccent,
+    progressBg: redBg,
+    shadowColor: isDark ? '#000000' : '#dc2626',
+    toastBg: colors.card,
+    toastBorder: redBorder,
+    undoBg: redBg,
+    undoBgPressed: redBgHover,
+    undoColor: redAccent,
+  };
+}
+
+// Legacy export for tests — maps to layoutStyles
+export const styles = layoutStyles;

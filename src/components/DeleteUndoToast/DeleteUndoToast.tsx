@@ -6,6 +6,7 @@
  * - Undo action button
  * - Swipe to dismiss
  * - Red color scheme matching destructive action
+ * - Full dark mode support via theme tokens
  */
 
 import { View } from 'react-native';
@@ -13,8 +14,9 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { ProgressBar, ToastContent } from './components';
-import { styles } from './styles';
+import { layoutStyles, deleteToastColors } from './styles';
 import type { DeleteUndoToastProps } from './types';
 import { useDeleteToastAnimations } from './useDeleteToastAnimations';
 
@@ -27,6 +29,8 @@ export function DeleteUndoToast({
   onConfirm,
 }: DeleteUndoToastProps) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useThemeColors();
+  const tc = deleteToastColors(isDark, colors);
 
   const { containerStyle, panGesture, progressStyle } = useDeleteToastAnimations({
     duration,
@@ -41,7 +45,7 @@ export function DeleteUndoToast({
   return (
     <View
       pointerEvents='box-none'
-      style={[styles.container, { bottom: insets.bottom + 16 }]}
+      style={[layoutStyles.container, { bottom: insets.bottom + 16 }]}
     >
       <GestureDetector gesture={panGesture}>
         <Animated.View
@@ -49,7 +53,15 @@ export function DeleteUndoToast({
           accessibilityLabel={`${itemName} will be deleted. Tap undo to cancel.`}
           accessibilityLiveRegion='polite'
           accessibilityRole='alert'
-          style={[styles.toast, containerStyle]}
+          style={[
+            layoutStyles.toast,
+            {
+              backgroundColor: tc.toastBg,
+              borderColor: tc.toastBorder,
+              shadowColor: tc.shadowColor,
+            },
+            containerStyle,
+          ]}
         >
           <ToastContent itemName={itemName} onUndo={onUndo ?? (() => {})} />
           <ProgressBar progressStyle={progressStyle} />

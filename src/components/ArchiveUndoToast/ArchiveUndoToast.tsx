@@ -6,6 +6,7 @@
  * - Undo action button
  * - Swipe to dismiss
  * - Amber color scheme matching archive swipe action
+ * - Full dark mode support via theme tokens
  */
 
 import React from 'react';
@@ -15,8 +16,9 @@ import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Archive, Undo2 } from 'lucide-react-native';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { ArchiveUndoToastProps, DEFAULT_DURATION } from './types';
-import { styles } from './styles';
+import { layoutStyles, archiveToastColors } from './styles';
 import { useArchiveUndoToast } from './useArchiveUndoToast';
 
 export type { ArchiveUndoToastProps } from './types';
@@ -29,6 +31,8 @@ export function ArchiveUndoToast({
   onUndo,
 }: ArchiveUndoToastProps) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useThemeColors();
+  const tc = archiveToastColors(isDark, colors);
   const { panGesture, containerStyle, progressStyle, handleUndo } =
     useArchiveUndoToast({ duration, onDismiss, onUndo, visible });
 
@@ -37,7 +41,7 @@ export function ArchiveUndoToast({
   return (
     <View
       pointerEvents='box-none'
-      style={[styles.container, { bottom: insets.bottom + 16 }]}
+      style={[layoutStyles.container, { bottom: insets.bottom + 16 }]}
     >
       <GestureDetector gesture={panGesture}>
         <Animated.View
@@ -45,34 +49,42 @@ export function ArchiveUndoToast({
           accessibilityLabel={`${habitName} archived. Tap undo to restore.`}
           accessibilityLiveRegion='polite'
           accessibilityRole='alert'
-          style={[styles.toast, containerStyle]}
+          style={[
+            layoutStyles.toast,
+            {
+              backgroundColor: tc.toastBg,
+              borderColor: tc.toastBorder,
+              shadowColor: tc.shadowColor,
+            },
+            containerStyle,
+          ]}
         >
-          <View style={styles.content}>
-            <View style={styles.iconContainer}>
-              <Archive color='#b45309' size={18} strokeWidth={2} />
+          <View style={layoutStyles.content}>
+            <View style={[layoutStyles.iconContainer, { backgroundColor: tc.iconBg }]}>
+              <Archive color={tc.iconColor} size={18} strokeWidth={2} />
             </View>
 
-            <Text numberOfLines={1} style={styles.message}>
-              <Text style={styles.habitName}>"{habitName}"</Text>
-              <Text style={styles.messageText}> archived</Text>
+            <Text numberOfLines={1} style={layoutStyles.message}>
+              <Text style={{ color: tc.habitNameColor, fontWeight: '600' }}>"{habitName}"</Text>
+              <Text style={{ color: tc.messageColor }}> archived</Text>
             </Text>
 
             <Pressable
               accessibilityLabel='Undo archive'
               accessibilityRole='button'
               style={({ pressed }) => [
-                styles.undoButton,
-                pressed && styles.undoButtonPressed,
+                layoutStyles.undoButton,
+                { backgroundColor: pressed ? tc.undoBgPressed : tc.undoBg },
               ]}
               onPress={handleUndo}
             >
-              <Undo2 color='#b45309' size={14} strokeWidth={2.5} />
-              <Text style={styles.undoText}>UNDO</Text>
+              <Undo2 color={tc.undoColor} size={14} strokeWidth={2.5} />
+              <Text style={[layoutStyles.undoText, { color: tc.undoColor }]}>UNDO</Text>
             </Pressable>
           </View>
 
-          <View style={styles.progressContainer}>
-            <Animated.View style={[styles.progressBar, progressStyle]} />
+          <View style={[layoutStyles.progressContainer, { backgroundColor: tc.progressBg }]}>
+            <Animated.View style={[layoutStyles.progressBar, { backgroundColor: tc.progressBar }, progressStyle]} />
           </View>
         </Animated.View>
       </GestureDetector>
