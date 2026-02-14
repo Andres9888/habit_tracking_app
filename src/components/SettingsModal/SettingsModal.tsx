@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { api } from '../../../convex/_generated/api';
 import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
+import LeaderboardScreen from '../../../screens/LeaderboardScreen';
 import { SettingsModalSkeleton } from '../SkeletonLoader';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
@@ -32,6 +33,7 @@ function SettingsModalContent({
   onToggleStreakReminders = () => {},
   onChangeStreakReminderTime = () => {},
   onPremiumUpsell,
+  onOpenLeaderboard = () => {},
 }: SettingsModalProps) {
   const {
     darkModePreference,
@@ -52,6 +54,18 @@ function SettingsModalContent({
   const archivedHabitsCount = archivedHabits?.length ?? 0;
 
   if (!visible) return null;
+
+  if (view === 'leaderboard') {
+    return (
+      <Modal
+        animationType='slide'
+        visible={visible}
+        onRequestClose={handleClose}
+      >
+        <LeaderboardScreen onBack={() => setView('settings')} />
+      </Modal>
+    );
+  }
 
   if (view === 'archived') {
     return (
@@ -100,6 +114,7 @@ function SettingsModalContent({
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               archivedHabitsCount={archivedHabitsCount}
               onOpenArchivedHabits={() => setView('archived')}
+              onOpenLeaderboard={() => setView('leaderboard')}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
             />

@@ -8,6 +8,7 @@ import {
   Droplets,
   Monitor,
   Sun,
+  Trophy,
 } from 'lucide-react-native';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -143,6 +144,14 @@ export function SettingsContent(p: SettingsContentProps) {
         </Animated.View>
         <Animated.View entering={anim(100)}>
           <SettingsSection highContrastMode={hc} title='Habit Management'>
+            <SettingsRow
+              highContrastMode={hc}
+              icon={<Trophy color='#f59e0b' size={16} />}
+              iconBackgroundColor='#fef3c7'
+              label='Streak Leaderboard'
+              type='navigation'
+              onPress={p.onOpenLeaderboard}
+            />
             <SettingsRow
               highContrastMode={hc}
               icon={<BookOpen color='#78716c' size={16} />}
