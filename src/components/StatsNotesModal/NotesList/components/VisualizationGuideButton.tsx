@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Eye } from 'lucide-react-native';
 import { colors } from '../../../../theme/colors';
 
@@ -18,9 +19,15 @@ export const VisualizationGuideButton: React.FC<
   <TouchableOpacity
     accessibilityLabel='Open goal visualization guide'
     accessibilityRole='button'
-    className='flex-row items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-600 py-3.5 active:opacity-90'
+    className='flex-row items-center justify-center gap-2 rounded-2xl py-3.5 active:opacity-90'
     onPress={onPress}
   >
+    <LinearGradient
+      colors={['#7c3aed', '#4f46e5']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      className='absolute inset-0 rounded-2xl'
+    />
     <Eye color={colors.text.inverse} size={18} />
     <Text className='text-sm font-semibold text-white'>
       Visualization Guide

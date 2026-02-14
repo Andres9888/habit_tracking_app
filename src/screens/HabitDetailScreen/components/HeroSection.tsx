@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import type { HeroSectionProps } from '../HabitDetailScreen.types';
 import { useHeroAnimations } from './useHeroAnimations';
 
@@ -46,9 +47,15 @@ export function HeroSection({
       {showStreakBadge && (
         <Animated.View
           accessibilityLabel={`${currentStreak} day streak`}
-          className='mt-2 rounded-full bg-gradient-to-r from-orange-100 to-amber-100 px-3 py-1'
+          className='mt-2 rounded-full px-3 py-1'
           style={badgeAnimatedStyle}
         >
+          <LinearGradient
+            colors={['#ffedd5', '#fef3c7']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            className='absolute inset-0 rounded-full'
+          />
           <Text className='text-xs font-semibold text-orange-600'>
             {getStreakBadgeText(currentStreak)}
           </Text>

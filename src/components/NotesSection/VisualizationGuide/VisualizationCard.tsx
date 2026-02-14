@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Brain, ChevronDown, ChevronUp } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { TechniqueApproach } from './TechniqueApproach';
@@ -29,7 +30,13 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
         className='flex-row items-center gap-3 p-4 active:bg-stone-50'
         onPress={handleToggle}
       >
-        <View className='h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-100 to-indigo-100'>
+        <View className='h-10 w-10 items-center justify-center rounded-xl'>
+          <LinearGradient
+            colors={['#ede9fe', '#e0e7ff']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            className='absolute inset-0 rounded-xl'
+          />
           <Brain className='text-violet-600' size={20} />
         </View>
         <View className='flex-1'>

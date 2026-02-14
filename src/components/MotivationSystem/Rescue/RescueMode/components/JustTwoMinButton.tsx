@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Zap } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
@@ -85,11 +86,17 @@ export function JustTwoMinButton({
         accessibilityHint='Start with a tiny commitment to save your streak'
         accessibilityLabel='Just do 2 minutes'
         accessibilityRole='button'
-        className='flex-row items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-5'
+        className='flex-row items-center justify-center gap-3 rounded-xl px-8 py-5'
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
+        <LinearGradient
+          colors={['#f59e0b', '#f97316']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          className='absolute inset-0 rounded-xl'
+        />
         <Zap className='text-white' fill='white' size={24} />
         <View>
           <Text className='text-xl font-bold text-white'>

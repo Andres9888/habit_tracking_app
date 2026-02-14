@@ -6,6 +6,7 @@
 import React from 'react';
 import { Text, Pressable, GestureResponderEvent } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Wand2, Crown, Check } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import { SparkleAnimation } from './SparkleAnimation';
@@ -34,6 +35,8 @@ export function CompactButton({
   onPressIn,
   onPressOut,
 }: CompactButtonProps) {
+  const showGradient = isPremium && isGenerating;
+
   return (
     <Animated.View style={animatedStyle}>
       <Pressable
@@ -52,11 +55,9 @@ export function CompactButton({
         className={clsx(
           'flex-row items-center gap-1.5 rounded-full px-3 py-1.5',
           isPremium
-            ? isGenerating
-              ? 'bg-gradient-to-r from-violet-500 to-purple-500'
-              : showSuccess
-                ? 'bg-emerald-500'
-                : 'bg-violet-500'
+            ? showSuccess
+              ? 'bg-emerald-500'
+              : 'bg-violet-500'
             : 'bg-stone-200'
         )}
         disabled={isGenerating}
@@ -64,6 +65,14 @@ export function CompactButton({
         onPressIn={onPressIn}
         onPressOut={onPressOut}
       >
+        {showGradient && (
+          <LinearGradient
+            colors={['#7c3aed', '#a855f7']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            className='absolute inset-0 rounded-full'
+          />
+        )}
         {isGenerating ? (
           <SparkleAnimation reduceMotion={reduceMotion} />
         ) : showSuccess ? (

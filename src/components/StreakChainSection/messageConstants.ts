@@ -39,22 +39,22 @@ export const MILESTONE_MESSAGES: Record<number, ContextualMessageData> = {
 
 export const MESSAGE_STYLES: Record<
   MessageType,
-  { bgColor: string; textColor: string }
+  { borderColor: string; textColor: string }
 > = {
   celebrate: {
-    bgColor: 'bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200',
+    borderColor: 'border-emerald-200',
     textColor: 'text-emerald-700',
   },
   motivation: {
-    bgColor: 'bg-gradient-to-r from-violet-50 to-purple-50 border-violet-200',
+    borderColor: 'border-violet-200',
     textColor: 'text-violet-700',
   },
   record: {
-    bgColor: 'bg-gradient-to-r from-amber-100 to-yellow-100 border-amber-200',
+    borderColor: 'border-amber-200',
     textColor: 'text-amber-700',
   },
   start: {
-    bgColor: 'bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200',
+    borderColor: 'border-orange-200',
     textColor: 'text-orange-700',
   },
 };
