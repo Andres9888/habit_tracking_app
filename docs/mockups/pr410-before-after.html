@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PR #410 — UI/UX Quick Wins — Before / After</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          'SF Pro Display',
+          sans-serif;
+        background: #f0eeeb;
+        min-height: 100vh;
+        padding: 48px 24px;
+        color: #1c1917;
+      }
+      h1 {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .subtitle {
+        text-align: center;
+        font-size: 15px;
+        color: #78716c;
+        margin-bottom: 40px;
+      }
+      .compare {
+        display: flex;
+        justify-content: center;
+        gap: 48px;
+        flex-wrap: wrap;
+        margin-bottom: 56px;
+      }
+      .column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .label {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 16px;
+        padding: 4px 14px;
+        border-radius: 20px;
+      }
+      .label.before {
+        background: #fecaca;
+        color: #991b1b;
+      }
+      .label.after {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .phone {
+        width: 390px;
+        height: 844px;
+        background: #fafaf9;
+        border-radius: 52px;
+        position: relative;
+        overflow: hidden;
+        box-shadow:
+          0 25px 60px rgba(28, 25, 23, 0.18),
+          0 0 0 4px #292524,
+          0 0 0 6px #44403c;
+      }
+      .notch {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 160px;
+        height: 34px;
+        background: #292524;
+        border-radius: 0 0 24px 24px;
+        z-index: 10;
+      }
+      .notch::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #1c1917;
+        border: 2px solid #3f3f46;
+      }
+      .status-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 54px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 0 32px 8px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 5;
+      }
+      .screen-content {
+        padding: 64px 20px 20px;
+        height: 100%;
+        overflow-y: auto;
+      }
+
+      /* Section dividers */
+      .section-title {
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        margin: 16px 0 32px;
+        color: #44403c;
+      }
+
+      /* --- FAB --- */
+      .fab {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 28px;
+        font-weight: 300;
+        position: absolute;
+        bottom: 32px;
+        right: 24px;
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.18);
+        z-index: 5;
+      }
+      .fab.old {
+        background: #1c1917;
+      }
+      .fab.new {
+        background: #059669;
+      }
+
+      /* --- HabitCard --- */
+      .habit-card {
+        background: #fff;
+        padding: 16px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+      }
+      .habit-card.old {
+        border-radius: 14px;
+        height: 76px;
+        overflow: hidden;
+      }
+      .habit-card.new {
+        border-radius: 16px;
+        min-height: 76px;
+      }
+      .habit-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .habit-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .habit-name {
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .habit-card.old .habit-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .habit-meta {
+        font-size: 13px;
+        color: #a8a29e;
+        margin-top: 2px;
+      }
+      .streak-badge {
+        font-size: 13px;
+        font-weight: 700;
+        color: #059669;
+        flex-shrink: 0;
+      }
+
+      /* --- Welcome --- */
+      .welcome-screen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: calc(100% - 64px);
+        text-align: center;
+        padding: 0 24px;
+      }
+      .welcome-logo {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #059669, #047857);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        margin-bottom: 28px;
+        box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+      }
+      .welcome-h {
+        font-size: 34px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .welcome-p {
+        font-size: 17px;
+        color: #78716c;
+        line-height: 1.5;
+        margin-bottom: 36px;
+      }
+      .welcome-btn {
+        width: 100%;
+        padding: 16px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+      .welcome-btn.old {
+        background: #1c1917;
+        border-radius: 14px;
+      }
+      .welcome-btn.new {
+        background: #059669;
+        border-radius: 12px;
+      }
+
+      /* --- Nav bar --- */
+      .tab-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 84px;
+        background: #fff;
+        border-top: 1px solid #e7e5e4;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding-top: 10px;
+      }
+      .tab {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        font-size: 10px;
+        color: #a8a29e;
+      }
+      .tab.active {
+        color: #059669;
+      }
+      .tab-icon {
+        font-size: 22px;
+      }
+
+      /* Clipped indicator */
+      .clip-indicator {
+        position: absolute;
+        bottom: 100px;
+        left: 20px;
+        right: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: #ef4444;
+        background: #fef2f2;
+        border: 1px dashed #fca5a5;
+        border-radius: 8px;
+        padding: 6px;
+      }
+      .expand-indicator {
+        position: absolute;
+        bottom: 100px;
+        left: 20px;
+        right: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: #059669;
+        background: #ecfdf5;
+        border: 1px dashed #6ee7b7;
+        border-radius: 8px;
+        padding: 6px;
+      }
+
+      /* callout annotations */
+      .callout {
+        position: absolute;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 8px;
+        white-space: nowrap;
+        z-index: 20;
+        pointer-events: none;
+      }
+      .callout.red {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fca5a5;
+      }
+      .callout.green {
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid #6ee7b7;
+      }
+      .callout::before {
+        content: '';
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        top: 50%;
+      }
+      .callout.red::before {
+        background: #dc2626;
+        left: -12px;
+        transform: translateY(-50%);
+      }
+      .callout.green::before {
+        background: #059669;
+        left: -12px;
+        transform: translateY(-50%);
+      }
+
+      @media (max-width: 900px) {
+        .compare {
+          gap: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>PR #410 — UI/UX Quick Wins</h1>
+    <p class="subtitle">Before → After comparison of visual refinements</p>
+
+    <!-- ===================== SECTION 1: FAB + Habit Cards ===================== -->
+    <p class="section-title">🎯 FAB Button &amp; Habit Cards</p>
+    <div class="compare">
+      <!-- BEFORE -->
+      <div class="column">
+        <div class="label before">Before</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status-bar"><span>9:41</span><span>⚡</span></div>
+          <div class="screen-content">
+            <div style="font-size: 34px; font-weight: 700; margin-bottom: 4px">
+              Today
+            </div>
+            <div style="font-size: 13px; color: #a8a29e; margin-bottom: 20px">
+              Sunday, Feb 8
+            </div>
+
+            <div class="habit-card old">
+              <div class="habit-icon" style="background: #ecfdf5">🧘</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-meta">Every day · 10 min</div>
+              </div>
+              <div class="streak-badge">🔥 12</div>
+            </div>
+
+            <div class="habit-card old">
+              <div class="habit-icon" style="background: #eff6ff">📚</div>
+              <div class="habit-info">
+                <div class="habit-name">
+                  Read 30 Pages of a Non-Fiction Book Before Bed
+                </div>
+                <div class="habit-meta">Every day · 20 min</div>
+              </div>
+              <div class="streak-badge">🔥 5</div>
+            </div>
+
+            <div class="habit-card old">
+              <div class="habit-icon" style="background: #fef3c7">💪</div>
+              <div class="habit-info">
+                <div class="habit-name">Workout</div>
+                <div class="habit-meta">Mon, Wed, Fri</div>
+              </div>
+              <div class="streak-badge">🔥 8</div>
+            </div>
+          </div>
+
+          <div class="clip-indicator">
+            ⚠️ Long names clipped at fixed 76px height
+          </div>
+
+          <div class="fab old">+</div>
+
+          <div class="callout red" style="bottom: 36px; right: 90px">
+            radius: 14px · #1c1917
+          </div>
+
+          <div class="tab-bar">
+            <div class="tab active"><span class="tab-icon">📋</span>Today</div>
+            <div class="tab"><span class="tab-icon">📊</span>Stats</div>
+            <div class="tab"><span class="tab-icon">⚙️</span>Settings</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="column">
+        <div class="label after">After</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status-bar"><span>9:41</span><span>⚡</span></div>
+          <div class="screen-content">
+            <div style="font-size: 34px; font-weight: 700; margin-bottom: 4px">
+              Today
+            </div>
+            <div style="font-size: 13px; color: #a8a29e; margin-bottom: 20px">
+              Sunday, Feb 8
+            </div>
+
+            <div class="habit-card new">
+              <div class="habit-icon" style="background: #ecfdf5">🧘</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-meta">Every day · 10 min</div>
+              </div>
+              <div class="streak-badge">🔥 12</div>
+            </div>
+
+            <div class="habit-card new">
+              <div class="habit-icon" style="background: #eff6ff">📚</div>
+              <div class="habit-info">
+                <div class="habit-name">
+                  Read 30 Pages of a Non-Fiction Book Before Bed
+                </div>
+                <div class="habit-meta">Every day · 20 min</div>
+              </div>
+              <div class="streak-badge">🔥 5</div>
+            </div>
+
+            <div class="habit-card new">
+              <div class="habit-icon" style="background: #fef3c7">💪</div>
+              <div class="habit-info">
+                <div class="habit-name">Workout</div>
+                <div class="habit-meta">Mon, Wed, Fri</div>
+              </div>
+              <div class="streak-badge">🔥 8</div>
+            </div>
+          </div>
+
+          <div class="expand-indicator">
+            ✅ Long names expand — minHeight: 76px
+          </div>
+
+          <div class="fab new">+</div>
+
+          <div class="callout green" style="bottom: 36px; right: 90px">
+            radius: 50% · #059669
+          </div>
+
+          <div class="tab-bar">
+            <div class="tab active"><span class="tab-icon">📋</span>Today</div>
+            <div class="tab"><span class="tab-icon">📊</span>Stats</div>
+            <div class="tab"><span class="tab-icon">⚙️</span>Settings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SECTION 2: Welcome Screen ===================== -->
+    <p class="section-title">👋 Welcome Screen &amp; Button Styles</p>
+    <div class="compare">
+      <!-- BEFORE Welcome -->
+      <div class="column">
+        <div class="label before">Before</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status-bar"><span>9:41</span><span>⚡</span></div>
+          <div class="welcome-screen">
+            <div class="welcome-logo">🔗</div>
+            <div class="welcome-h">Chain Day</div>
+            <div class="welcome-p">
+              Build unbreakable habits,<br />one day at a time.
+            </div>
+            <button class="welcome-btn old">Get Started</button>
+            <div style="margin-top: 16px; font-size: 13px; color: #a8a29e">
+              Already have an account?
+              <span style="color: #1c1917; font-weight: 600">Sign In</span>
+            </div>
+          </div>
+          <div
+            class="callout red"
+            style="bottom: 260px; left: 50%; transform: translateX(-50%)"
+          >
+            button radius: 14px · bg: #1c1917
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER Welcome -->
+      <div class="column">
+        <div class="label after">After</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status-bar"><span>9:41</span><span>⚡</span></div>
+          <div class="welcome-screen">
+            <div class="welcome-logo">🔗</div>
+            <div class="welcome-h">Chain Day</div>
+            <div class="welcome-p">
+              Build unbreakable habits,<br />one day at a time.
+            </div>
+            <button class="welcome-btn new">Create Free Account</button>
+            <div style="margin-top: 16px; font-size: 13px; color: #a8a29e">
+              Already have an account?
+              <span style="color: #047857; font-weight: 600">Sign In</span>
+            </div>
+          </div>
+          <div
+            class="callout green"
+            style="bottom: 260px; left: 50%; transform: translateX(-50%)"
+          >
+            button radius: 12px · bg: #059669
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="text-align: center; padding: 24px; font-size: 13px; color: #a8a29e"
+    >
+      Chain Day — PR #410 Mockup · Generated Feb 8, 2026
+    </div>
+  </body>
+</html>

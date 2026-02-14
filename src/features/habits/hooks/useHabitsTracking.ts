@@ -11,17 +11,17 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   // Use startDate/endDate range instead of sending all 365 date strings
   // This reduces the Convex query argument payload from ~4KB to ~50 bytes
   // Sort to handle arrays in either chronological or reverse order
-  const first = extendedDateStrings[0];
-  const last = extendedDateStrings.at(-1);
-  const startDate = Math.min(first, last);
-  const endDate = Math.max(first, last);
-  const tracking =
-    useQuery(
-      api.habits.getTracking,
-      startDate && endDate
-        ? { endDate, startDate }
-        : { dates: extendedDateStrings }
-    ) ?? [];
+  const queryArgs = useMemo(() => {
+    const first = extendedDateStrings[0];
+    const last = extendedDateStrings.at(-1);
+    const startDate = first && last && first < last ? first : last;
+    const endDate = first && last && first < last ? last : first;
+    return startDate && endDate
+      ? { endDate, startDate }
+      : { dates: extendedDateStrings };
+  }, [extendedDateStrings]);
+
+  const tracking = useQuery(api.habits.getTracking, queryArgs) ?? [];
 
   // Get optimistic state for immediate feedback
   const optimisticStore = useOptimisticStore();
@@ -66,19 +66,9 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
   const getHabitStatus = useCallback(
     (habitId: string, dateString: string): HabitStatus => {
-      // Check optimistic state first for immediate feedback
-      const optimisticKey = `${habitId}:${dateString}`;
-      const pendingToggle = optimisticStore.pendingToggles.get(optimisticKey);
-      if (pendingToggle !== undefined) {
-        return pendingToggle ? 'done' : 'missed';
-      }
-
-      // Fall back to server state
-      const entry = tracking.find(
-        (item) => item && item.habitId === habitId && item.date === dateString
-      );
-
-      if (entry?.completed) {
+      // Use the pre-built map (includes optimistic merges) for O(1) lookup
+      const completedDates = completedDatesByHabit.get(habitId);
+      if (completedDates?.has(dateString)) {
         return 'done';
       }
 
@@ -91,7 +81,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       }
       return 'planned';
     },
-    [today, tracking, optimisticStore.pendingToggles]
+    [today, completedDatesByHabit]
   );
 
   /**

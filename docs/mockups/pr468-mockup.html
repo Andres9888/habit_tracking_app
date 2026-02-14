@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PR #468 — Empty State Cleanup Before/After</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          sans-serif;
+        background: #1a1a2e;
+        color: #1c1917;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px 80px;
+      }
+
+      h1 {
+        color: #faf9f7;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 4px;
+        text-align: center;
+      }
+      .pr-link {
+        color: #7c3aed;
+        font-size: 14px;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+      .subtitle {
+        color: #a8a29e;
+        font-size: 14px;
+        margin-bottom: 40px;
+        text-align: center;
+        max-width: 600px;
+        line-height: 1.5;
+      }
+
+      .sections {
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+        align-items: center;
+      }
+
+      .section-label {
+        color: #faf9f7;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .comparison {
+        display: flex;
+        gap: 32px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .phone-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .label {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        padding: 5px 14px;
+        border-radius: 16px;
+      }
+
+      .label.before {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+      }
+      .label.after {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+      }
+
+      .phone {
+        width: 320px;
+        height: 640px;
+        background: #faf9f7;
+        border-radius: 40px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 20px 50px rgba(0, 0, 0, 0.4),
+          0 0 0 2px rgba(255, 255, 255, 0.08);
+      }
+
+      .notch {
+        width: 100px;
+        height: 28px;
+        background: #000;
+        border-radius: 0 0 16px 16px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+      }
+
+      .status-bar {
+        height: 48px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 6px;
+      }
+
+      .status-bar .time {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1c1917;
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px 20px;
+        height: calc(100% - 48px);
+        overflow-y: auto;
+      }
+
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Success State */
+      .success-icon {
+        font-size: 56px;
+        margin: 24px 0 16px;
+      }
+
+      .confetti {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .confetti-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        animation: confettiFall 1.5s ease-out forwards;
+        opacity: 0.7;
+      }
+
+      @keyframes confettiFall {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(120px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .success-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1c1917;
+        margin-bottom: 6px;
+        text-align: center;
+      }
+
+      .success-subtitle {
+        font-size: 14px;
+        color: #78716c;
+        margin-bottom: 28px;
+        text-align: center;
+      }
+
+      .success-habit-name {
+        font-size: 17px;
+        font-weight: 600;
+        color: #059669;
+        margin-bottom: 32px;
+        text-align: center;
+      }
+
+      /* Buttons */
+      .btn {
+        width: 100%;
+        max-width: 280px;
+        height: 48px;
+        border-radius: 14px;
+        font-size: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 12px;
+      }
+
+      .btn-primary {
+        background: #059669;
+        color: white;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: #44403c;
+        border: 1.5px solid #d6d3d1;
+      }
+
+      .btn-violet {
+        background: #7c3aed;
+        color: white;
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+      }
+
+      .btn-violet-outline {
+        background: transparent;
+        color: #7c3aed;
+        border: 1.5px solid #c4b5fd;
+      }
+
+      .tap-hint {
+        font-size: 12px;
+        color: #a8a29e;
+        margin-top: 16px;
+      }
+
+      /* Template pills — color comparison */
+      .color-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+        gap: 10px;
+      }
+
+      .color-label {
+        font-size: 11px;
+        color: #a8a29e;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .pill-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .pill {
+        padding: 6px 14px;
+        border-radius: 16px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .pill-green {
+        background: rgba(5, 150, 105, 0.1);
+        border: 1px solid rgba(5, 150, 105, 0.25);
+        color: #047857;
+      }
+
+      .pill-violet {
+        background: rgba(124, 58, 237, 0.1);
+        border: 1px solid rgba(124, 58, 237, 0.25);
+        color: #7c3aed;
+      }
+
+      .header-icon-demo {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .header-icon-demo.violet-bg {
+        background: #f5f3ff;
+        color: #7c3aed;
+      }
+
+      .header-icon-demo.green-bg {
+        background: #ecfdf5;
+        color: #047857;
+      }
+
+      /* Dead code visual */
+      .dead-code {
+        width: 100%;
+        max-width: 280px;
+        background: #fef2f2;
+        border: 1px dashed #fca5a5;
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-top: 12px;
+      }
+
+      .dead-code-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #ef4444;
+        margin-bottom: 4px;
+      }
+
+      .dead-code-line {
+        font-size: 10px;
+        color: #b91c1c;
+        font-family: 'SF Mono', monospace;
+        line-height: 1.6;
+        opacity: 0.7;
+      }
+
+      .clean-code {
+        width: 100%;
+        max-width: 280px;
+        background: #ecfdf5;
+        border: 1px dashed #6ee7b7;
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-top: 12px;
+      }
+
+      .clean-code-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #059669;
+        margin-bottom: 4px;
+      }
+
+      .clean-code-line {
+        font-size: 10px;
+        color: #047857;
+        font-family: 'SF Mono', monospace;
+        line-height: 1.6;
+      }
+
+      /* Callouts */
+      .callout {
+        position: absolute;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        z-index: 20;
+      }
+
+      .callout.red {
+        background: rgba(239, 68, 68, 0.9);
+        color: white;
+      }
+      .callout.green {
+        background: rgba(16, 185, 129, 0.9);
+        color: white;
+      }
+      .callout.violet {
+        background: rgba(124, 58, 237, 0.9);
+        color: white;
+      }
+
+      /* New badge */
+      .new-badge {
+        display: inline-block;
+        font-size: 9px;
+        font-weight: 700;
+        background: #7c3aed;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+
+      /* Divider */
+      .section-divider {
+        width: 100%;
+        max-width: 800px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.08);
+        margin: 10px 0;
+      }
+
+      @media (max-width: 700px) {
+        .comparison {
+          flex-direction: column;
+          align-items: center;
+        }
+        .phone {
+          width: 300px;
+          height: 600px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>PR #468 — Empty State Cleanup</h1>
+    <p class="pr-link">github.com/Andres9888/habit_tracking_app/pull/468</p>
+    <p class="subtitle">
+      Deleted 1,735 lines of dead code, added templates nudge after first habit,
+      unified template colors to violet
+    </p>
+
+    <div class="sections">
+      <!-- SECTION 1: Success State -->
+      <div>
+        <div class="section-label">
+          1️⃣ Success State — After First Habit Creation
+        </div>
+        <div class="comparison">
+          <!-- Before -->
+          <div class="phone-wrapper">
+            <span class="label before">Before</span>
+            <div class="phone">
+              <div class="notch"></div>
+              <div class="status-bar"><span class="time">2:00 PM</span></div>
+              <div class="content">
+                <div class="confetti">
+                  <div
+                    class="confetti-dot"
+                    style="background: #10b981; animation-delay: 0s"
+                  ></div>
+                  <div
+                    class="confetti-dot"
+                    style="background: #fcd34d; animation-delay: 0.1s"
+                  ></div>
+                  <div
+                    class="confetti-dot"
+                    style="background: #34d399; animation-delay: 0.2s"
+                  ></div>
+                  <div
+                    class="confetti-dot"
+                    style="background: #f59e0b; animation-delay: 0.15s"
+                  ></div>
+                  <div
+                    class="confetti-dot"
+                    style="background: #6ee7b7; animation-delay: 0.25s"
+                  ></div>
+                </div>
+
+                <div class="success-icon">✅</div>
+                <div class="success-title">You're on your way!</div>
+                <div class="success-subtitle">Your first habit is ready</div>
+                <div class="success-habit-name">💧 Drink Water</div>
+
+                <div class="btn btn-primary">➕ Add another habit</div>
+
+                <div class="tap-hint">Tap anywhere to continue</div>
+
+                <!-- Callout -->
+                <div
+                  style="
+                    position: relative;
+                    width: 100%;
+                    max-width: 280px;
+                    margin-top: 24px;
+                  "
+                >
+                  <div
+                    style="
+                      background: rgba(239, 68, 68, 0.08);
+                      border: 1px dashed #fca5a5;
+                      border-radius: 10px;
+                      padding: 10px 14px;
+                      text-align: center;
+                    "
+                  >
+                    <span
+                      style="font-size: 12px; color: #ef4444; font-weight: 600"
+                      >❌ No template suggestion here</span
+                    ><br />
+                    <span style="font-size: 11px; color: #78716c"
+                      >User creates 1 habit and never discovers 55+
+                      templates</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- After -->
+          <div class="phone-wrapper">
+            <span class="label after">After</span>
+            <div class="phone">
+              <div class="notch"></div>
+              <div class="status-bar"><span class="time">2:00 PM</span></div>
+              <div class="content">
+                <div class="confetti">
+                  <div
+                    class="confetti-dot"
+                    style="background: #10b981; animation-delay: 0s"
+                  ></div>
+                  <div
+                    class="confetti-dot"
+                    style="background: #fcd34d; animation-delay: 0.1s"
+                  ></div>
+                  <div
+                    class="confetti-dot"
+                    style="background: #34d399; animation-delay: 0.2s"
+                  ></div>
+                  <div
+                    class="confetti-dot"
+                    style="background: #f59e0b; animation-delay: 0.15s"
+                  ></div>
+                  <div
+                    class="confetti-dot"
+                    style="background: #6ee7b7; animation-delay: 0.25s"
+                  ></div>
+                </div>
+
+                <div class="success-icon">✅</div>
+                <div class="success-title">You're on your way!</div>
+                <div class="success-subtitle">Your first habit is ready</div>
+                <div class="success-habit-name">💧 Drink Water</div>
+
+                <div class="btn btn-primary">➕ Add another habit</div>
+                <div class="btn btn-violet-outline">
+                  📖 Browse templates →<span class="new-badge">NEW</span>
+                </div>
+
+                <div class="tap-hint">Tap anywhere to continue</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- SECTION 2: Color Consistency -->
+      <div>
+        <div class="section-label">
+          2️⃣ Template UI Color — Unified to Violet
+        </div>
+        <div class="comparison">
+          <!-- Before -->
+          <div class="phone-wrapper">
+            <span class="label before">Before — Mixed Colors</span>
+            <div class="phone">
+              <div class="notch"></div>
+              <div class="status-bar"><span class="time">2:00 PM</span></div>
+              <div class="content" style="justify-content: center; gap: 24px">
+                <div class="color-section">
+                  <span class="color-label">Empty state pills</span>
+                  <div class="pill-row">
+                    <span class="pill pill-green">📋 templates</span>
+                    <span class="pill pill-green">✨ custom habit</span>
+                  </div>
+                  <span style="font-size: 10px; color: #ef4444"
+                    >← Uses green (same as primary CTA)</span
+                  >
+                </div>
+
+                <div class="color-section">
+                  <span class="color-label">Header icon</span>
+                  <div class="pill-row">
+                    <span class="header-icon-demo violet-bg">📖 Templates</span>
+                  </div>
+                  <span style="font-size: 10px; color: #ef4444"
+                    >← Uses violet (different from pills!)</span
+                  >
+                </div>
+
+                <div
+                  style="
+                    background: #fef2f2;
+                    border-radius: 10px;
+                    padding: 10px 16px;
+                    text-align: center;
+                    max-width: 240px;
+                  "
+                >
+                  <span
+                    style="font-size: 12px; color: #ef4444; font-weight: 600"
+                    >❌ Same feature, 2 different colors</span
+                  ><br />
+                  <span style="font-size: 11px; color: #78716c"
+                    >Confusing — is templates green or violet?</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- After -->
+          <div class="phone-wrapper">
+            <span class="label after">After — Consistent Violet</span>
+            <div class="phone">
+              <div class="notch"></div>
+              <div class="status-bar"><span class="time">2:00 PM</span></div>
+              <div class="content" style="justify-content: center; gap: 24px">
+                <div class="color-section">
+                  <span class="color-label">Empty state pills</span>
+                  <div class="pill-row">
+                    <span class="pill pill-violet">📋 Browse templates</span>
+                    <span class="pill pill-violet">✨ Create your own</span>
+                  </div>
+                  <span style="font-size: 10px; color: #10b981"
+                    >← Violet (matches header)</span
+                  >
+                </div>
+
+                <div class="color-section">
+                  <span class="color-label">Header icon</span>
+                  <div class="pill-row">
+                    <span class="header-icon-demo violet-bg">📖 Templates</span>
+                  </div>
+                  <span style="font-size: 10px; color: #10b981"
+                    >← Violet (consistent!)</span
+                  >
+                </div>
+
+                <div class="color-section">
+                  <span class="color-label">Success state CTA</span>
+                  <div class="pill-row">
+                    <span class="header-icon-demo violet-bg"
+                      >📖 Browse templates →</span
+                    >
+                  </div>
+                  <span style="font-size: 10px; color: #10b981"
+                    >← Violet (consistent!)</span
+                  >
+                </div>
+
+                <div
+                  style="
+                    background: #ecfdf5;
+                    border-radius: 10px;
+                    padding: 10px 16px;
+                    text-align: center;
+                    max-width: 240px;
+                  "
+                >
+                  <span
+                    style="font-size: 12px; color: #059669; font-weight: 600"
+                    >✅ One color = one feature</span
+                  ><br />
+                  <span style="font-size: 11px; color: #78716c"
+                    >Violet = templates, Green = actions</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- SECTION 3: Dead Code Removal -->
+      <div>
+        <div class="section-label">
+          3️⃣ Dead Code Cleanup — 1,735 Lines Removed
+        </div>
+        <div class="comparison">
+          <div class="phone-wrapper">
+            <span class="label before">Before — 2 Empty States</span>
+            <div class="phone">
+              <div class="notch"></div>
+              <div class="status-bar"><span class="time">2:00 PM</span></div>
+              <div class="content" style="padding-top: 24px">
+                <div class="dead-code">
+                  <div class="dead-code-title">
+                    📁 HabitsEmptyState/ (UNUSED)
+                  </div>
+                  <div class="dead-code-line">├── HabitsEmptyState.tsx</div>
+                  <div class="dead-code-line">
+                    ├── HabitsEmptyState.types.ts
+                  </div>
+                  <div class="dead-code-line">
+                    ├── HabitsEmptyState.utils.ts
+                  </div>
+                  <div class="dead-code-line">
+                    ├── HabitsEmptyState.constants.ts
+                  </div>
+                  <div class="dead-code-line">├── components/</div>
+                  <div class="dead-code-line">│ ├── WelcomeHero/</div>
+                  <div class="dead-code-line">│ ├── QuickWinCard.tsx</div>
+                  <div class="dead-code-line">│ ├── CustomHabitCard/</div>
+                  <div class="dead-code-line">│ ├── QuickStartButton/</div>
+                  <div class="dead-code-line">│ ├── TemplatesPeekCard.tsx</div>
+                  <div class="dead-code-line">│ ├── FloatingParticle.tsx</div>
+                  <div class="dead-code-line">│ └── ... 14 more files</div>
+                  <div class="dead-code-line">├── habitSuggestions.ts</div>
+                  <div class="dead-code-line">└── styleConstants.ts</div>
+                  <div
+                    style="
+                      margin-top: 6px;
+                      font-size: 11px;
+                      color: #ef4444;
+                      font-weight: 600;
+                    "
+                  >
+                    1,735 lines • Never rendered
+                  </div>
+                </div>
+
+                <div style="margin: 12px 0; font-size: 20px">+</div>
+
+                <div
+                  class="clean-code"
+                  style="background: #f5f3ff; border-color: #c4b5fd"
+                >
+                  <div class="clean-code-title" style="color: #7c3aed">
+                    📁 HabitsEmptyStateMinimal/ (ACTIVE)
+                  </div>
+                  <div class="clean-code-line" style="color: #5b21b6">
+                    ├── HabitsEmptyStateMinimal.tsx
+                  </div>
+                  <div class="clean-code-line" style="color: #5b21b6">
+                    ├── InlineHint.tsx
+                  </div>
+                  <div class="clean-code-line" style="color: #5b21b6">
+                    ├── SuccessState.tsx
+                  </div>
+                  <div class="clean-code-line" style="color: #5b21b6">
+                    └── ... (the real code)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone-wrapper">
+            <span class="label after">After — 1 Clean Source</span>
+            <div class="phone">
+              <div class="notch"></div>
+              <div class="status-bar"><span class="time">2:00 PM</span></div>
+              <div
+                class="content"
+                style="padding-top: 24px; justify-content: flex-start"
+              >
+                <div class="clean-code">
+                  <div class="clean-code-title">
+                    📁 HabitsEmptyStateMinimal/ (SOLE)
+                  </div>
+                  <div class="clean-code-line">
+                    ├── HabitsEmptyStateMinimal.tsx
+                  </div>
+                  <div class="clean-code-line">
+                    ├── InlineHint.tsx ✨ enhanced
+                  </div>
+                  <div class="clean-code-line">
+                    ├── SuccessState.tsx ✨ templates CTA
+                  </div>
+                  <div class="clean-code-line">
+                    ├── SuccessContent.tsx ✨ first-habit nudge
+                  </div>
+                  <div class="clean-code-line">├── animations/</div>
+                  <div class="clean-code-line">├── types.ts</div>
+                  <div class="clean-code-line">└── __tests__/</div>
+                  <div
+                    style="
+                      margin-top: 6px;
+                      font-size: 11px;
+                      color: #059669;
+                      font-weight: 600;
+                    "
+                  >
+                    Clean • No dead code • All tests passing
+                  </div>
+                </div>
+
+                <div
+                  style="margin-top: 24px; text-align: center; max-width: 240px"
+                >
+                  <div style="font-size: 32px; margin-bottom: 8px">🧹</div>
+                  <div
+                    style="
+                      font-size: 14px;
+                      font-weight: 600;
+                      color: #1c1917;
+                      margin-bottom: 4px;
+                    "
+                  >
+                    -1,735 lines
+                  </div>
+                  <div style="font-size: 12px; color: #78716c">
+                    Less confusion, faster builds,<br />one source of truth
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
