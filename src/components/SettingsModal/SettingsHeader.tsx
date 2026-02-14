@@ -43,11 +43,11 @@ export function SettingsHeader({
           accessibilityLabel='Close settings'
           accessibilityRole='button'
           style={{
-            height: 40,
-            width: 40,
+            height: 44,
+            width: 44,
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: 20,
+            borderRadius: 22,
             backgroundColor: themeColors.surface,
           }}
           onPress={handlePress}

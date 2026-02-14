@@ -32,6 +32,7 @@ export const ModalHeader = ({
         accessibilityLabel='Share template'
         accessibilityRole='button'
         style={[headerStyles.shareButton, shareButtonAnimatedStyle]}
+        hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
         onPress={onShare}
         {...pressHandlers}
       >
@@ -55,6 +56,7 @@ export const ModalHeader = ({
         accessibilityLabel='Close habit details'
         accessibilityRole='button'
         style={[headerStyles.closeButton, closeButtonAnimatedStyle]}
+        hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
         onPress={onClose}
         {...pressHandlers}
       >

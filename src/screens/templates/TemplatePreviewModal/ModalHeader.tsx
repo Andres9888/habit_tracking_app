@@ -32,6 +32,7 @@ export function ModalHeader({ disabled, onClose }: ModalHeaderProps) {
         accessibilityRole='button'
         disabled={disabled}
         style={styles.closeButton}
+        hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
         onPress={onClose}
       >
         <X color='#374151' size={24} strokeWidth={2.5} />
