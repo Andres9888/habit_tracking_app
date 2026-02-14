@@ -2,7 +2,7 @@
  * Business logic hooks for AnalyticsScreen
  */
 import { useState, useCallback } from 'react';
-import { Alert } from 'react-native';
+import { useToast } from '../../components/Toast';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { exportData, prepareExportData } from '../../utils/exportData';
@@ -25,6 +25,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const complianceData = useQuery(api.analytics.getComplianceData);
   const weeklyInsights = useQuery(api.analytics.getWeeklyInsights);
 
+  const toast = useToast();
   const isLoading = !overviewStats;
 
   const onRefresh = useCallback(async () => {
@@ -53,18 +54,10 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
         const exportDataObj = await prepareExportData([], [], overviewStats);
         await exportData(exportDataObj, format);
 
-        Alert.alert(
-          'Success',
-          `Data exported successfully as ${format.toUpperCase()}`,
-          [{ text: 'OK' }]
-        );
+        toast.success('Export Complete', `Data exported as ${format.toUpperCase()}`);
       } catch (error) {
         if (__DEV__) console.error('Export error:', error);
-        Alert.alert(
-          'Export Failed',
-          error instanceof Error ? error.message : 'Unable to export data',
-          [{ text: 'OK' }]
-        );
+        toast.error('Export Failed', error instanceof Error ? error.message : 'Unable to export data');
       }
     },
     [overviewStats]

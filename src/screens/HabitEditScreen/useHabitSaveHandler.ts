@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
+import { useToast } from '../../components/Toast';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
@@ -9,7 +9,6 @@ import {
   formatReminderTime,
   scheduleHabitReminder,
 } from '../../utils/notifications';
-import { showSaveError } from '../../utils/errorAlerts';
 
 interface UseSaveHandlerProps {
   habitId: Id<'habits'> | null;
@@ -32,6 +31,7 @@ export function useHabitSaveHandler({
 }: UseSaveHandlerProps) {
   const updateHabit = useMutation(api.habits.update);
   const [isSaving, setIsSaving] = useState(false);
+  const toast = useToast();
 
   const handleSave = useCallback(async () => {
     if (!habitId || !habitName.trim() || isSaving) return;
@@ -64,10 +64,7 @@ export function useHabitSaveHandler({
 
         if (!enableReminders) {
           await cancelHabitReminder(String(habitId));
-          Alert.alert(
-            'Notifications Disabled',
-            'Enable notifications in your device settings to receive habit reminders.'
-          );
+          toast.warning('Notifications Disabled', 'Enable notifications in your device settings to receive habit reminders.');
         }
       } else {
         await cancelHabitReminder(String(habitId));
@@ -86,7 +83,7 @@ export function useHabitSaveHandler({
       onSuccess();
     } catch (error) {
       if (__DEV__) console.error('Failed to save habit:', error);
-      showSaveError();
+      toast.error('Save Failed', 'Your changes couldn\u2019t be saved. Please check your connection and try again.');
     } finally {
       setIsSaving(false);
     }

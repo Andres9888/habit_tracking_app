@@ -4,6 +4,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
+import { useToast } from '../Toast';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
 
@@ -22,6 +23,7 @@ export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
   const { user } = useUser();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const userEmail = user?.primaryEmailAddress?.emailAddress;
+  const toast = useToast();
 
   const handleSignOut = useCallback(() => {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -30,7 +32,7 @@ export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
         onPress: () => {
           setIsSigningOut(true);
           void signOut()
-            .catch(() => Alert.alert('Error', 'Failed to sign out.'))
+            .catch(() => toast.error('Sign Out Failed', 'Please try again.'))
             .finally(() => setIsSigningOut(false));
         },
         style: 'destructive',

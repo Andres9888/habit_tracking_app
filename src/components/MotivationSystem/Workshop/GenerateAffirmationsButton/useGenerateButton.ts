@@ -3,7 +3,7 @@
  */
 
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
+import { useToast } from '../../../../components/Toast';
 import {
   useSharedValue,
   withSpring,
@@ -34,6 +34,7 @@ export function useGenerateButton({
 }: UseGenerateButtonParams) {
   const [showSuccess, setShowSuccess] = useState(false);
   const scale = useSharedValue(1);
+  const toast = useToast();
 
   const handlePress = useCallback(async () => {
     if (!isPremium) {
@@ -44,10 +45,7 @@ export function useGenerateButton({
 
     if (!canGenerate) {
       if (remainingSlots <= 0) {
-        Alert.alert(
-          'Limit Reached',
-          `You can have up to ${maxCount} affirmations per habit. Remove some to generate new ones.`
-        );
+        toast.warning('Limit Reached', `You can have up to ${maxCount} affirmations per habit. Remove some to generate new ones.`);
       }
       return;
     }
@@ -65,12 +63,9 @@ export function useGenerateButton({
       if (__DEV__) console.error('Failed to generate affirmations:', error);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
 
-      Alert.alert(
-        'Generation Failed',
-        error instanceof Error
+      toast.error('Generation Failed', error instanceof Error
           ? error.message
-          : 'Unable to generate affirmations. Please try again.'
-      );
+          : 'Unable to generate affirmations. Please try again.');
     }
   }, [
     isPremium,

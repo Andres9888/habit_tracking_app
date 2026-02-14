@@ -5,7 +5,7 @@
  */
 
 import { useCallback, useState, useEffect } from 'react';
-import { Alert } from 'react-native';
+import { useToast } from '../Toast';
 import { useSharedValue, useAnimatedStyle, withTiming, type AnimatedStyleProp } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
@@ -38,6 +38,7 @@ export interface PremiumPaywallHandlers {
 }
 
 export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePurchases }: Params) {
+  const toast = useToast();
   const { triggerSelection, triggerLightImpact, triggerSuccess } = useHapticFeedback({});
   const { monthlyPackage, packages, priceString, isLoadingOfferings, purchasePackage } =
     usePremium();
@@ -84,7 +85,7 @@ export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePur
         }
       }
     } catch {
-      Alert.alert('Something went wrong', 'Please try again.', [{ text: 'OK' }]);
+      toast.error('Something Went Wrong', 'Please try again.');
     } finally {
       setIsProcessing(false);
     }

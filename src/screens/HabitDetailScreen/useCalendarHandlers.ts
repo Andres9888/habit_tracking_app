@@ -4,8 +4,8 @@
  */
 
 import { useCallback } from 'react';
-import { Alert } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { useToast } from '../../components/Toast';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import type { Habit } from './HabitDetailScreen.types';
@@ -32,6 +32,7 @@ export const useCalendarHandlers = ({
   setPendingDelete,
 }: UseCalendarHandlersProps) => {
   const toggleHabitMutation = useToggleHabitWithTimezone();
+  const toast = useToast();
 
   const handleCalendarDayPress = useCallback(
     (date: string, wasCompleted: boolean): void => {
@@ -47,7 +48,7 @@ export const useCalendarHandlers = ({
       toggleHabitMutation({ date, habitId: habit._id })
         .catch((error: unknown) => {
           if (__DEV__) console.error('Failed to toggle habit:', error);
-          Alert.alert('Error', 'Failed to update habit. Please try again.');
+          toast.error('Update Failed', 'Failed to update habit. Please try again.');
         })
         .finally(() => setIsTogglingCalendar(false));
     },

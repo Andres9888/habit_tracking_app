@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { useSignUp } from '@clerk/clerk-expo';
 import { useState } from 'react';
-import { Alert } from 'react-native';
+import { useToast } from '../../../components/Toast';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail, validatePassword } from '../../../utils/validation';
 import { getClerkErrorMessage } from '../utils/getClerkErrorMessage';
@@ -10,6 +10,7 @@ export function useSignUpFlow() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [pendingVerification, setPendingVerification] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
 
   // Email validation
   const emailField = useFieldValidation({
@@ -33,10 +34,7 @@ export function useSignUpFlow() {
     const passwordResult = passwordField.validateNow();
 
     if (!emailResult.isValid || !passwordResult.isValid) {
-      Alert.alert(
-        'Validation Error',
-        'Please fix the errors before continuing'
-      );
+      toast.warning('Validation Error', 'Please fix the errors before continuing');
       return;
     }
 
@@ -50,7 +48,7 @@ export function useSignUpFlow() {
       setPendingVerification(true);
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', getClerkErrorMessage(error, 'Failed to sign up'));
+      toast.error('Sign Up Failed', getClerkErrorMessage(error, 'Failed to sign up'));
     } finally {
       setIsLoading(false);
     }
@@ -62,10 +60,7 @@ export function useSignUpFlow() {
     const normalizedCode = code.trim();
 
     if (normalizedCode.length !== 6) {
-      Alert.alert(
-        'Invalid code',
-        'Please enter a valid 6-digit verification code.'
-      );
+      toast.warning('Invalid Code', 'Please enter a valid 6-digit verification code.');
       return;
     }
 
@@ -79,14 +74,11 @@ export function useSignUpFlow() {
         await setActive({ session: attempt.createdSessionId });
       } else {
         if (__DEV__) console.error(JSON.stringify(attempt, null, 2));
-        Alert.alert('Error', 'Verification incomplete. Please try again.');
+        toast.error('Verification Incomplete', 'Please try again.');
       }
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert(
-        'Error',
-        getClerkErrorMessage(error, 'Failed to verify email')
-      );
+      toast.error('Verification Failed', getClerkErrorMessage(error, 'Failed to verify email'));
     } finally {
       setIsLoading(false);
     }

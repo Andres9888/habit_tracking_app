@@ -11,7 +11,8 @@
  * - Handles all edge cases (loading, errors, restore)
  */
 
-import { Platform, Modal, View, Text, Pressable, Alert } from 'react-native';
+import { Platform, Modal, View, Text, Pressable } from 'react-native';
+import { useToast } from '../Toast';
 import RevenueCatUI from 'react-native-purchases-ui';
 import type { RevenueCatPaywallProps } from './types';
 
@@ -27,6 +28,7 @@ export function RevenueCatPaywall({
   onPurchaseSuccess,
   onRestoreSuccess,
 }: RevenueCatPaywallProps) {
+  const toast = useToast();
   // Web fallback - RevenueCat UI doesn't work on web
   if (Platform.OS === 'web') {
     if (!visible) return null;
@@ -94,7 +96,7 @@ export function RevenueCatPaywall({
         onPurchaseError={({ error }) => {
           if (__DEV__)
             console.error('[RevenueCatPaywall] Purchase error:', error);
-          Alert.alert('Purchase failed', 'Please try again.');
+          toast.error('Purchase Failed', 'Please try again.');
         }}
         onRestoreCompleted={({ customerInfo }) => {
           if (__DEV__)
@@ -105,7 +107,7 @@ export function RevenueCatPaywall({
         onRestoreError={({ error }) => {
           if (__DEV__)
             console.error('[RevenueCatPaywall] Restore error:', error);
-          Alert.alert('Restore failed', 'Please try again.');
+          toast.error('Restore Failed', 'Please try again.');
         }}
       />
     </Modal>

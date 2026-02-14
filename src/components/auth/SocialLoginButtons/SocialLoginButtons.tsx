@@ -2,7 +2,8 @@ import { useOAuth } from '@clerk/clerk-expo';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
+import { useToast } from '../../Toast';
 
 import { AppleLogo, GoogleLogo } from '../logos';
 import { Divider } from './Divider';
@@ -24,6 +25,7 @@ export function SocialLoginButtons() {
 
   const [googleLoading, setGoogleLoading] = useState(false);
   const [appleLoading, setAppleLoading] = useState(false);
+  const toast = useToast();
 
   const anyLoading = googleLoading || appleLoading;
 
@@ -41,7 +43,7 @@ export function SocialLoginButtons() {
       if (__DEV__) console.error('Google OAuth error:', error);
       const errorMessage = getErrorMessage(error);
       if (errorMessage) {
-        Alert.alert('Sign In Failed', errorMessage);
+        toast.error('Sign In Failed', errorMessage);
       }
     } finally {
       setGoogleLoading(false);
@@ -62,7 +64,7 @@ export function SocialLoginButtons() {
       if (__DEV__) console.error('Apple OAuth error:', error);
       const errorMessage = getErrorMessage(error);
       if (errorMessage) {
-        Alert.alert('Sign In Failed', errorMessage);
+        toast.error('Sign In Failed', errorMessage);
       }
     } finally {
       setAppleLoading(false);

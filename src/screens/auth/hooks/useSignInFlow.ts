@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { useSignIn } from '@clerk/clerk-expo';
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
+import { useToast } from '../../../components/Toast';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail } from '../../../utils/validation';
 
@@ -9,6 +9,7 @@ export function useSignInFlow() {
   const { signIn, setActive, isLoaded } = useSignIn();
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
 
   // Email validation
   const emailField = useFieldValidation({
@@ -23,7 +24,7 @@ export function useSignInFlow() {
     // Validate email before submitting
     const emailResult = emailField.validateNow();
     if (!emailResult.isValid) {
-      Alert.alert('Validation Error', 'Please enter a valid email address');
+      toast.warning('Validation Error', 'Please enter a valid email address');
       return;
     }
 
@@ -37,18 +38,12 @@ export function useSignInFlow() {
       if (signInAttempt.status === 'complete') {
         await setActive({ session: signInAttempt.createdSessionId });
       } else {
-        Alert.alert(
-          'Error',
-          'Sign in incomplete. Please check your credentials.'
-        );
+        toast.error('Sign In Incomplete', 'Please check your credentials.');
       }
     } catch (error: unknown) {
       const clerkError = error as { errors?: Array<{ message?: string }> };
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert(
-        'Error',
-        clerkError.errors?.[0]?.message || 'Failed to sign in'
-      );
+      toast.error('Sign In Failed', clerkError.errors?.[0]?.message || 'Failed to sign in');
     } finally {
       setIsLoading(false);
     }

@@ -4,8 +4,8 @@
  */
 
 import { useState, useCallback } from 'react';
-import { Alert } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { useToast } from '../../../../components/Toast';
 import { useImagePicker } from '../../../../hooks/useImagePicker';
 import { useImageUpload } from '../../../../hooks/useImageUpload';
 import type { Id } from '../../../../../convex/_generated/dataModel';
@@ -25,6 +25,7 @@ export function useImageUploader({
   onPremiumRequired,
 }: UseImageUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const toast = useToast();
   const {
     pickFromCamera,
     pickFromLibrary,
@@ -41,10 +42,7 @@ export function useImageUploader({
         return;
       }
       if (!canAddMore) {
-        Alert.alert(
-          'Vision Board Full',
-          `You can add up to ${MAX_IMAGES} images to your Vision Board.`
-        );
+        toast.warning('Vision Board Full', `You can add up to ${MAX_IMAGES} images to your Vision Board.`);
         return;
       }
 
@@ -67,10 +65,7 @@ export function useImageUploader({
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       } catch (error) {
         if (__DEV__) console.error('Failed to add image:', error);
-        Alert.alert(
-          'Upload Failed',
-          'There was a problem adding your image. Please try again.'
-        );
+        toast.error('Upload Failed', 'There was a problem adding your image. Please try again.');
       } finally {
         setIsUploading(false);
       }

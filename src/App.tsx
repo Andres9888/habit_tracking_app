@@ -21,6 +21,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthGate } from './components/auth/AuthGate';
 import { PurchasesProvider } from './components/providers/PurchasesProvider';
 import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration';
+import { ToastProvider } from './components/Toast';
+import { ToastContainer } from './components/Toast';
 import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
 import { SyncStatusProvider } from './contexts/SyncStatusContext';
 import { tokenCache } from './lib/appConfig';
@@ -54,7 +56,10 @@ function Providers({ children }: PropsWithChildren) {
                       <SyncStatusProvider>
                         <PurchasesProvider>
                           <StreakMilestoneProvider>
-                            {children}
+                            <ToastProvider>
+                              {children}
+                              <ToastContainer />
+                            </ToastProvider>
                           </StreakMilestoneProvider>
                         </PurchasesProvider>
                       </SyncStatusProvider>
