@@ -9,6 +9,8 @@ import { Platform, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
+import { iconBg } from './iconColors';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface StreakRemindersSectionProps {
   highContrastMode: boolean;
@@ -50,6 +52,7 @@ export function StreakRemindersSection({
   onPremiumUpsell,
 }: StreakRemindersSectionProps) {
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const { isDark, colors: themeColors } = useThemeColors();
 
   const handleTimeChange = (_event: unknown, selectedDate?: Date) => {
     if (Platform.OS === 'android') {
@@ -64,8 +67,8 @@ export function StreakRemindersSection({
     <SettingsSection highContrastMode={highContrastMode} title='Notifications'>
       <SettingsRow
         highContrastMode={highContrastMode}
-        icon={<Bell color='#ea580c' size={16} />}
-        iconBackgroundColor='#fed7aa'
+        icon={<Bell color={isDark ? '#fb923c' : '#ea580c'} size={16} />}
+        iconBackgroundColor={iconBg('#fed7aa', isDark)}
         label='Streak Reminders'
         type='toggle'
         value={enabled}
@@ -75,8 +78,8 @@ export function StreakRemindersSection({
         <>
           <SettingsRow
             highContrastMode={highContrastMode}
-            icon={<Clock color='#0284c7' size={16} />}
-            iconBackgroundColor='#bae6fd'
+            icon={<Clock color={isDark ? '#38bdf8' : '#0284c7'} size={16} />}
+            iconBackgroundColor={iconBg('#bae6fd', isDark)}
             label='Reminder Time'
             type='selection'
             value={formatDisplayTime(reminderTime)}
@@ -95,8 +98,8 @@ export function StreakRemindersSection({
           {!isPremium && (
             <SettingsRow
               highContrastMode={highContrastMode}
-              icon={<Crown color='#ca8a04' size={16} />}
-              iconBackgroundColor='#fef9c3'
+              icon={<Crown color={isDark ? '#facc15' : '#ca8a04'} size={16} />}
+              iconBackgroundColor={iconBg('#fef9c3', isDark)}
               label='Custom times per habit'
               showBorder={false}
               type='navigation'
@@ -109,7 +112,7 @@ export function StreakRemindersSection({
         <View style={{ paddingBottom: 12, paddingHorizontal: 16 }}>
           <Text
             style={{
-              color: '#78716c',
+              color: themeColors.text.tertiary,
               fontSize: 13,
               lineHeight: 18,
             }}

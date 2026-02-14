@@ -16,6 +16,7 @@ import { SettingsSection } from './SettingsSection';
 import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { iconBg } from './iconColors';
 import type { SettingsContentProps } from './types';
 
 const anim = (delay: number) => FadeInDown.delay(delay).springify().damping(18);
@@ -100,8 +101,8 @@ export function SettingsContent(p: SettingsContentProps) {
             </View>
             <SettingsRow
               highContrastMode={hc}
-              icon={<Check color='#0284c7' size={16} />}
-              iconBackgroundColor='#bae6fd'
+              icon={<Check color={isDark ? '#38bdf8' : '#0284c7'} size={16} />}
+              iconBackgroundColor={iconBg('#bae6fd', isDark)}
               label='Use checkbox completion icon'
               type='toggle'
               value={p.habitCompletionIcon === 'checkbox'}
@@ -111,8 +112,8 @@ export function SettingsContent(p: SettingsContentProps) {
             />
             <SettingsRow
               highContrastMode={hc}
-              icon={<Circle color='#8b5cf6' size={16} />}
-              iconBackgroundColor='#ddd6fe'
+              icon={<Circle color={isDark ? '#a78bfa' : '#8b5cf6'} size={16} />}
+              iconBackgroundColor={iconBg('#ddd6fe', isDark)}
               label='Use circles for habit days'
               type='toggle'
               value={p.dayShape === 'circle'}
@@ -120,8 +121,8 @@ export function SettingsContent(p: SettingsContentProps) {
             />
             <SettingsRow
               highContrastMode={hc}
-              icon={<Droplets color='#059669' size={16} />}
-              iconBackgroundColor='#d1fae5'
+              icon={<Droplets color={isDark ? '#34d399' : '#059669'} size={16} />}
+              iconBackgroundColor={iconBg('#d1fae5', isDark)}
               label='Show strength gradient fill'
               showBorder={false}
               type='toggle'
@@ -145,8 +146,8 @@ export function SettingsContent(p: SettingsContentProps) {
           <SettingsSection highContrastMode={hc} title='Habit Management'>
             <SettingsRow
               highContrastMode={hc}
-              icon={<BookOpen color='#78716c' size={16} />}
-              iconBackgroundColor='#e7e5e4'
+              icon={<BookOpen color={isDark ? '#a8a29e' : '#78716c'} size={16} />}
+              iconBackgroundColor={iconBg('#e7e5e4', isDark)}
               badge={p.archivedHabitsCount}
               label='Archived Habits'
               showBorder={false}

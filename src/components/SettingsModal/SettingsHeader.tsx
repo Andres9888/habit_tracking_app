@@ -50,8 +50,8 @@ export function SettingsHeader({
         <AnimatedPressable
           accessibilityLabel='Close settings'
           accessibilityRole='button'
-          className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
-          style={animStyle}
+          className='h-10 w-10 items-center justify-center rounded-full'
+          style={[animStyle, { backgroundColor: colors.card }]}
           onTouchCancel={() => {
             scale.value = withSpring(1, { damping: 15 });
           }}
