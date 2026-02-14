@@ -6,7 +6,19 @@ import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { SCREEN_HEIGHT, SORT_OPTIONS } from './constants';
+import {
+  CLOSE_ICON_SIZE,
+  DARK_SURFACE_COLOR,
+  LIGHT_SURFACE_COLOR,
+  SCREEN_HEIGHT,
+  SHEET_BOTTOM_PADDING,
+  SHEET_ELEVATION,
+  SHEET_MAX_HEIGHT_RATIO,
+  SHEET_SHADOW_OFFSET,
+  SHEET_SHADOW_OPACITY,
+  SHEET_SHADOW_RADIUS,
+  SORT_OPTIONS,
+} from './constants';
 import { QuickPickChips } from './QuickPickChips';
 import { SortOptionRow } from './SortOptionRow';
 import type { SortBottomSheetProps } from './types';
@@ -54,13 +66,13 @@ export function SortBottomSheet({
             style={[
               {
                 backgroundColor: themeColors.card,
-                elevation: 20,
-                maxHeight: SCREEN_HEIGHT * 0.85,
-                paddingBottom: insets.bottom + 16,
+                elevation: SHEET_ELEVATION,
+                maxHeight: SCREEN_HEIGHT * SHEET_MAX_HEIGHT_RATIO,
+                paddingBottom: insets.bottom + SHEET_BOTTOM_PADDING,
                 shadowColor: isDark ? '#000000' : '#1c1917',
-                shadowOffset: { height: 4, width: 0 },
-                shadowOpacity: 0.08,
-                shadowRadius: 16,
+                shadowOffset: SHEET_SHADOW_OFFSET,
+                shadowOpacity: SHEET_SHADOW_OPACITY,
+                shadowRadius: SHEET_SHADOW_RADIUS,
               },
               sheetStyle,
             ]}
@@ -84,10 +96,12 @@ export function SortBottomSheet({
                 accessibilityLabel='Close'
                 accessibilityRole='button'
                 className='h-10 w-10 items-center justify-center rounded-full'
-                style={{ backgroundColor: isDark ? '#1f2937' : '#f5f5f4' }}
+                style={{
+                  backgroundColor: isDark ? DARK_SURFACE_COLOR : LIGHT_SURFACE_COLOR,
+                }}
                 onPress={handleDismiss}
               >
-                <X color={themeColors.text.secondary} size={24} />
+                <X color={themeColors.text.secondary} size={CLOSE_ICON_SIZE} />
               </Pressable>
             </View>
 

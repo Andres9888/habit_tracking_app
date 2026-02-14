@@ -26,6 +26,31 @@ export const SHEET_SPRING_CONFIG = {
 export const DISMISS_THRESHOLD = 100;
 export const VELOCITY_THRESHOLD = 800;
 
+/** Animation timing constants */
+export const BACKDROP_VISIBLE_OPACITY = 0.4;
+export const BACKDROP_FADE_IN_DURATION_MS = 300;
+export const BACKDROP_FADE_OUT_DURATION_MS = 250;
+
+/** Bottom sheet layout/styling constants */
+export const SHEET_MAX_HEIGHT_RATIO = 0.85;
+export const SHEET_BOTTOM_PADDING = 16;
+export const SHEET_ELEVATION = 20;
+export const SHEET_SHADOW_OPACITY = 0.08;
+export const SHEET_SHADOW_RADIUS = 16;
+export const SHEET_SHADOW_OFFSET = { height: 4, width: 0 };
+
+/** Reused surface/icon tokens */
+export const DARK_SURFACE_COLOR = '#1f2937';
+export const LIGHT_SURFACE_COLOR = '#f5f5f4';
+export const WHITE_ICON_COLOR = '#ffffff';
+
+/** Icon sizing tokens */
+export const CLOSE_ICON_SIZE = 24;
+export const SORT_OPTION_ICON_SIZE = 20;
+export const CHECK_ICON_SIZE = 14;
+export const SORT_OPTION_ICON_STROKE_WIDTH = 2.25;
+export const CHECK_ICON_STROKE_WIDTH = 2.5;
+
 export const SORT_OPTIONS: SortOptionConfig[] = [
   {
     chipLabel: 'Custom',

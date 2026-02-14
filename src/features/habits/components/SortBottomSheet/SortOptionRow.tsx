@@ -4,6 +4,14 @@ import { Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import {
+  CHECK_ICON_SIZE,
+  CHECK_ICON_STROKE_WIDTH,
+  DARK_SURFACE_COLOR,
+  SORT_OPTION_ICON_SIZE,
+  SORT_OPTION_ICON_STROKE_WIDTH,
+  WHITE_ICON_COLOR,
+} from './constants';
 
 interface SortOptionRowProps {
   /**
@@ -59,7 +67,7 @@ export function SortOptionRow({
       style={{
         backgroundColor: selected
           ? isDark
-            ? '#1f2937'
+            ? DARK_SURFACE_COLOR
             : '#ecfdf5'
           : 'transparent',
         borderColor: selected ? themeColors.primary[300] : 'transparent',
@@ -73,7 +81,11 @@ export function SortOptionRow({
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       >
-        <Icon color='#ffffff' size={20} strokeWidth={2.25} />
+        <Icon
+          color={WHITE_ICON_COLOR}
+          size={SORT_OPTION_ICON_SIZE}
+          strokeWidth={SORT_OPTION_ICON_STROKE_WIDTH}
+        />
       </LinearGradient>
 
       <View className='flex-1'>
@@ -96,7 +108,11 @@ export function SortOptionRow({
           className='h-6 w-6 items-center justify-center rounded-full'
           style={{ backgroundColor: themeColors.primary[500] }}
         >
-          <Check color='#ffffff' size={14} strokeWidth={2.5} />
+          <Check
+            color={WHITE_ICON_COLOR}
+            size={CHECK_ICON_SIZE}
+            strokeWidth={CHECK_ICON_STROKE_WIDTH}
+          />
         </View>
       )}
     </Pressable>
