@@ -1,12 +1,14 @@
 /**
  * EmptyState - Displayed when not enough data is available
  * Standardized: FadeInUp animation, icon, proper typography
+ * Dark mode aware via useThemeColors
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { Activity } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -16,27 +18,42 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({ height }: EmptyStateProps) {
+  const { colors, isDark } = useThemeColors();
+
   return (
     <View
-      className='items-center justify-center rounded-xl bg-stone-50 px-6'
-      style={{ height }}
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 12,
+        backgroundColor: isDark ? colors.gray[100] : colors.gray[50],
+        paddingHorizontal: 24,
+        height,
+      }}
     >
       <Animated.View
-        className='mb-3 h-12 w-12 items-center justify-center rounded-xl bg-violet-100'
         entering={anim(0)}
+        style={{
+          marginBottom: 12,
+          height: 48,
+          width: 48,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 12,
+          backgroundColor: isDark ? '#2e1065' : '#ede9fe',
+        }}
       >
-        <Activity color='#8b5cf6' size={24} strokeWidth={1.5} />
+        <Activity color={isDark ? '#a78bfa' : '#8b5cf6'} size={24} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
-        className='mb-1 text-center font-semibold text-stone-700'
         entering={anim(60)}
-        style={{ fontSize: 17 }}
+        style={{ marginBottom: 4, textAlign: 'center', fontWeight: '600', color: colors.text.primary, fontSize: 17 }}
       >
         Not Enough Data Yet
       </Animated.Text>
       <Animated.Text
-        className='text-center text-[13px] text-stone-500'
         entering={anim(120)}
+        style={{ textAlign: 'center', fontSize: 13, color: colors.text.secondary }}
       >
         Keep tracking to see your progress
       </Animated.Text>

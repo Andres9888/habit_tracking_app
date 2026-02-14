@@ -1,24 +1,34 @@
 /**
  * Empty state components for StrengthTimelineChart
+ * Dark mode aware via useThemeColors
  */
 
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme';
 
 interface EmptyStateProps {
   height: number;
 }
 
 export function NoDataState({ height }: EmptyStateProps) {
+  const { colors, isDark } = useThemeColors();
+
   return (
     <View
       accessible
       accessibilityLabel='Strength timeline chart - No data available yet'
-      className='items-center justify-center rounded-xl bg-stone-50 p-4'
-      style={{ height }}
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 12,
+        backgroundColor: isDark ? colors.gray[100] : colors.gray[50],
+        padding: 16,
+        height,
+      }}
     >
-      <Text className='text-sm text-stone-400'>
+      <Text style={{ fontSize: 14, color: colors.text.secondary }}>
         Building your strength history...
       </Text>
     </View>
@@ -26,15 +36,23 @@ export function NoDataState({ height }: EmptyStateProps) {
 }
 
 export function BuildingHistoryState({ height }: EmptyStateProps) {
+  const { colors, isDark } = useThemeColors();
+
   return (
     <Animated.View
       accessible
       accessibilityLabel='Strength timeline chart - Building history'
-      className='items-center justify-center rounded-xl bg-stone-50 p-4'
       entering={FadeIn.duration(400)}
-      style={{ height }}
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 12,
+        backgroundColor: isDark ? colors.gray[100] : colors.gray[50],
+        padding: 16,
+        height,
+      }}
     >
-      <Text className='text-center text-sm text-stone-500'>
+      <Text style={{ textAlign: 'center', fontSize: 14, color: colors.text.secondary }}>
         Keep going! Your strength chart will appear after a week of tracking.
       </Text>
     </Animated.View>
