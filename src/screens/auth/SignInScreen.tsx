@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   tagline: {
-    color: '#78716c',
+    color: '#57534e',
     fontSize: 14,
     marginTop: 4,
     textAlign: 'center',

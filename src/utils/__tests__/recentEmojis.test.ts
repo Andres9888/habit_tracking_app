@@ -43,9 +43,18 @@ describe('recentEmojis', () => {
 
     it('should limit results to 10 emojis', async () => {
       const storedEmojis = [
-        '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣',
-        '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟',
-        '💪', '🧘',
+        '1️⃣',
+        '2️⃣',
+        '3️⃣',
+        '4️⃣',
+        '5️⃣',
+        '6️⃣',
+        '7️⃣',
+        '8️⃣',
+        '9️⃣',
+        '🔟',
+        '💪',
+        '🧘',
       ];
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
         JSON.stringify(storedEmojis)
@@ -54,6 +63,16 @@ describe('recentEmojis', () => {
       const result = await getRecentEmojis();
 
       expect(result).toHaveLength(10);
+    });
+
+    it('should filter out non-string and empty values from storage', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(['💪', 42, null, '   ', '🧘'])
+      );
+
+      const result = await getRecentEmojis();
+
+      expect(result).toEqual(['💪', '🧘']);
     });
 
     it('should handle invalid JSON gracefully', async () => {
@@ -127,8 +146,16 @@ describe('recentEmojis', () => {
 
     it('should maintain max of 10 emojis', async () => {
       const existingEmojis = [
-        '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣',
-        '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟',
+        '1️⃣',
+        '2️⃣',
+        '3️⃣',
+        '4️⃣',
+        '5️⃣',
+        '6️⃣',
+        '7️⃣',
+        '8️⃣',
+        '9️⃣',
+        '🔟',
       ];
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
         JSON.stringify(existingEmojis)
@@ -137,13 +164,41 @@ describe('recentEmojis', () => {
       await addRecentEmoji('💪');
 
       const expectedEmojis = [
-        '💪', '1️⃣', '2️⃣', '3️⃣', '4️⃣',
-        '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣',
+        '💪',
+        '1️⃣',
+        '2️⃣',
+        '3️⃣',
+        '4️⃣',
+        '5️⃣',
+        '6️⃣',
+        '7️⃣',
+        '8️⃣',
+        '9️⃣',
       ];
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         STORAGE_KEY,
         JSON.stringify(expectedEmojis)
       );
+    });
+
+    it('should trim emoji input before saving', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(['🧘'])
+      );
+
+      await addRecentEmoji('  💪  ');
+
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        STORAGE_KEY,
+        JSON.stringify(['💪', '🧘'])
+      );
+    });
+
+    it('should skip saving when emoji input is empty/whitespace', async () => {
+      await addRecentEmoji('   ');
+
+      expect(AsyncStorage.getItem).not.toHaveBeenCalled();
+      expect(AsyncStorage.setItem).not.toHaveBeenCalled();
     });
 
     it('should handle AsyncStorage errors gracefully', async () => {

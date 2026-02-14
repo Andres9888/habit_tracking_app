@@ -24,6 +24,7 @@ import Animated, {
   FadeIn,
   FadeInDown,
   FadeInUp,
+  useReducedMotion,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -32,7 +33,15 @@ const ONBOARDING_KEY = '@chainday_onboarding_complete';
 
 // ─── Chain Visualization ─────────────────────────────────────────────
 
-function ChainLink({ delay, index }: { delay: number; index: number }) {
+function ChainLink({
+  delay,
+  index,
+  reduceMotion,
+}: {
+  delay: number;
+  index: number;
+  reduceMotion: boolean;
+}) {
   const colors = [
     '#059669',
     '#047857',
@@ -44,7 +53,11 @@ function ChainLink({ delay, index }: { delay: number; index: number }) {
   ];
   return (
     <Animated.View
-      entering={FadeInDown.delay(delay).springify().damping(18)}
+      entering={
+        reduceMotion
+          ? undefined
+          : FadeInDown.delay(delay).springify().damping(18)
+      }
       style={[
         styles.chainLink,
         {
@@ -58,11 +71,16 @@ function ChainLink({ delay, index }: { delay: number; index: number }) {
   );
 }
 
-function ChainVisualization() {
+function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
   return (
     <View style={styles.chainContainer}>
       {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-        <ChainLink key={i} delay={400 + i * 120} index={i} />
+        <ChainLink
+          key={i}
+          delay={400 + i * 120}
+          index={i}
+          reduceMotion={reduceMotion}
+        />
       ))}
     </View>
   );
@@ -70,16 +88,20 @@ function ChainVisualization() {
 
 // ─── Strength Meter ──────────────────────────────────────────────────
 
-function StrengthMeter() {
+function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
   return (
     <View style={styles.strengthContainer}>
       {stages.map((stage, i) => (
         <Animated.View
           key={stage}
-          entering={FadeInDown.delay(400 + i * 200)
-            .springify()
-            .damping(18)}
+          entering={
+            reduceMotion
+              ? undefined
+              : FadeInDown.delay(400 + i * 200)
+                  .springify()
+                  .damping(18)
+          }
           style={styles.strengthRow}
         >
           <View
@@ -129,15 +151,19 @@ const TEMPLATE_ICONS = [
   '🏋️',
 ];
 
-function TemplateGrid() {
+function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
   return (
     <View style={styles.templateGrid}>
       {TEMPLATE_ICONS.map((emoji, i) => (
         <Animated.View
           key={i}
-          entering={FadeIn.delay(300 + i * 60)
-            .springify()
-            .damping(18)}
+          entering={
+            reduceMotion
+              ? undefined
+              : FadeIn.delay(300 + i * 60)
+                  .springify()
+                  .damping(18)
+          }
           style={styles.templateItem}
         >
           <Text style={styles.templateEmoji}>{emoji}</Text>
@@ -153,7 +179,7 @@ interface PageData {
   id: string;
   title: string;
   subtitle: string;
-  Visual: () => React.JSX.Element;
+  Visual: (props: { reduceMotion: boolean }) => React.JSX.Element;
 }
 
 const PAGES: PageData[] = [
@@ -210,6 +236,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
+  const shouldReduceMotion = useReducedMotion();
 
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
@@ -231,7 +258,10 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const handleNext = useCallback(() => {
     void Haptics.impactAsync(ImpactFeedbackStyle.Light);
     if (currentIndex < PAGES.length - 1) {
-      flatListRef.current?.scrollToIndex({ animated: true, index: currentIndex + 1 });
+      flatListRef.current?.scrollToIndex({
+        animated: true,
+        index: currentIndex + 1,
+      });
     }
   }, [currentIndex]);
 
@@ -253,35 +283,43 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
     ({ item }: { item: PageData }) => (
       <View style={[styles.page, { width: SCREEN_WIDTH }]}>
         <View style={styles.visualContainer}>
-          <item.Visual />
+          <item.Visual reduceMotion={!!shouldReduceMotion} />
         </View>
         <Animated.Text
-          entering={FadeInUp.delay(200).springify().damping(18)}
+          entering={
+            shouldReduceMotion
+              ? undefined
+              : FadeInUp.delay(200).springify().damping(18)
+          }
           style={styles.title}
         >
           {item.title}
         </Animated.Text>
         <Animated.Text
-          entering={FadeInUp.delay(350).springify().damping(18)}
+          entering={
+            shouldReduceMotion
+              ? undefined
+              : FadeInUp.delay(350).springify().damping(18)
+          }
           style={styles.subtitle}
         >
           {item.subtitle}
         </Animated.Text>
       </View>
     ),
-    []
+    [shouldReduceMotion]
   );
 
   return (
     <View style={styles.container}>
       {/* Skip button */}
       <Animated.View
-        entering={FadeIn.delay(600)}
+        entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
         style={[styles.skipContainer, { top: insets.top + 12 }]}
       >
         <Pressable
-          accessibilityLabel="Skip onboarding"
-          accessibilityRole="button"
+          accessibilityLabel='Skip onboarding'
+          accessibilityRole='button'
           hitSlop={24}
           style={styles.skipButton}
           onPress={handleSkip}
@@ -314,10 +352,16 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         <DotIndicators currentIndex={currentIndex} />
 
         {isLastPage ? (
-          <Animated.View entering={FadeInDown.springify().damping(18)}>
+          <Animated.View
+            entering={
+              shouldReduceMotion
+                ? undefined
+                : FadeInDown.springify().damping(18)
+            }
+          >
             <Pressable
-              accessibilityLabel="Get started building your first habit"
-              accessibilityRole="button"
+              accessibilityLabel='Get started building your first habit'
+              accessibilityRole='button'
               disabled={isLoading}
               style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
               onPress={() => void handleComplete()}
@@ -333,8 +377,8 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
           </Animated.View>
         ) : (
           <Pressable
-            accessibilityLabel="Next onboarding page"
-            accessibilityRole="button"
+            accessibilityLabel='Next onboarding page'
+            accessibilityRole='button'
             style={styles.nextButton}
             onPress={handleNext}
           >

@@ -61,7 +61,7 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   subtitle: {
-    color: '#78716c',
+    color: '#57534e',
     fontSize: 17,
     textAlign: 'center',
   },
@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   textLinkLabel: {
-    color: '#78716c',
+    color: '#57534e',
     fontSize: 15,
   },
   title: {
