@@ -99,20 +99,28 @@ export const componentSpacing = {
  * Consistent rounding for all components
  */
 export const borderRadius = {
-  // Full screen modals (top corners only)
+  /** Pill shape (avatar, icon buttons, pills) */
   full: 9999,
 
-  // Cards, inputs
+  /** Cards, containers, inputs — 16px */
   large: 16,
+  /** Alias: cards */
+  card: 16,
 
-  // Buttons, tags
+  /** Buttons, tags, interactive elements — 12px */
   medium: 12,
+  /** Alias: buttons */
+  button: 12,
 
+  /** Chips, badges, small elements — 8px */
   small: 8,
-  // Modals, sheets
-  xl: 20, // Circular (avatar, icon buttons) - use 50% in percentage
+  /** Alias: chips */
+  chip: 8,
 
-  // Micro-rounding (progress bars, badges, chips)
+  /** Modals, bottom sheets — 24px */
+  xl: 24,
+
+  /** Micro-rounding (progress bars, dots) — 4px */
   xs: 4,
 } as const;
 
