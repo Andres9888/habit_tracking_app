@@ -495,6 +495,8 @@ const applicationTables = {
 
     showEmojis: v.boolean(),
 
+    showGradientFill: v.optional(v.boolean()),
+
     showMotivationalMessages: v.boolean(),
 
     showNotesStats: v.optional(v.boolean()),

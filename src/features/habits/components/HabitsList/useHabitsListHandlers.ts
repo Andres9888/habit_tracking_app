@@ -8,6 +8,12 @@ import { showCreateError } from '../../../../utils/errorAlerts';
 import { useHabitsListEffects } from './useHabitsListEffects';
 import type { UseHabitsListHandlersOptions } from './HabitsList.types';
 
+/**
+ * Builds memoized HabitsList event handlers and wires supporting effects.
+ *
+ * Keeps imperative UI concerns (quick-create, sort changes, drag haptics)
+ * isolated from presentation components.
+ */
 export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
   const { list, onSettingsChange, onCreateHabitRequest, state } = options;
   const {

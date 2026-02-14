@@ -40,6 +40,13 @@ export function SettingsHeader({
       style={{ backgroundColor: colors.background, paddingTop }}
     >
       <View className='flex-row items-center justify-between'>
+        <View className='h-10 w-10' />
+        <Text
+          className='text-[22px] font-bold tracking-tight'
+          style={{ color: colors.headerText, letterSpacing: -0.5 }}
+        >
+          Settings
+        </Text>
         <AnimatedPressable
           accessibilityLabel='Close settings'
           accessibilityRole='button'
@@ -58,13 +65,6 @@ export function SettingsHeader({
         >
           <X color={colors.icon} size={20} strokeWidth={2.5} />
         </AnimatedPressable>
-        <Text
-          className='text-[22px] font-bold tracking-tight'
-          style={{ color: colors.headerText, letterSpacing: -0.5 }}
-        >
-          Settings
-        </Text>
-        <View className='h-10 w-10' />
       </View>
     </Animated.View>
   );

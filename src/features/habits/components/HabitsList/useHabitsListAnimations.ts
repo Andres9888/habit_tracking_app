@@ -6,6 +6,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
+/**
+ * Animated values and state setters used by the HabitsList entrance sequence.
+ */
 interface UseHabitsListAnimationsOptions {
   headerOpacity: Animated.Value;
   headerTranslateY: Animated.Value;
@@ -17,6 +20,12 @@ interface UseHabitsListAnimationsOptions {
   setShouldTriggerHabitEntrance: (value: boolean) => void;
 }
 
+/**
+ * Encapsulates the success-to-list transition animation choreography.
+ *
+ * Resets header, calendar, and row animated values, then plays a staggered
+ * sequence and re-enables habit entrance behavior when complete.
+ */
 export function useHabitsListAnimations(
   options: UseHabitsListAnimationsOptions
 ) {

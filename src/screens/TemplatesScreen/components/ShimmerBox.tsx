@@ -1,38 +1,27 @@
-import { useEffect } from 'react';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withTiming,
-  withDelay,
-} from 'react-native-reanimated';
+/**
+ * ShimmerBox - Re-exports SkeletonLoader for backward compatibility.
+ */
+
+import { SkeletonLoader } from '../../../components/SkeletonLoader';
+import type { SkeletonWidth } from '../../../components/SkeletonLoader';
 
 export function ShimmerBox({
   width,
   height,
-  delay = 0,
+  delay: _delay,
   style,
 }: {
-  width: number | string;
+  width: SkeletonWidth;
   height: number;
   delay?: number;
   style?: object;
 }) {
-  const opacity = useSharedValue(0.4);
-  useEffect(() => {
-    opacity.value = withDelay(
-      delay,
-      withRepeat(withTiming(1, { duration: 1000 }), -1, true)
-    );
-  }, [delay, opacity]);
-  const animStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
   return (
-    <Animated.View
-      style={[
-        { backgroundColor: '#e7e5e4', borderRadius: 8, height, width },
-        animStyle,
-        style,
-      ]}
+    <SkeletonLoader
+      borderRadius={8}
+      height={height}
+      style={style}
+      width={width}
     />
   );
 }

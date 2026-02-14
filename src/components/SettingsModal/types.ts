@@ -45,13 +45,19 @@ export interface SettingsColors {
 export interface SettingsContentProps {
   colors: SettingsColors;
   isHighContrastActive: boolean;
+  darkModePreference: 'system' | 'light' | 'dark';
+  onChangeDarkModePreference: (
+    value: 'system' | 'light' | 'dark'
+  ) => void | Promise<void>;
   habitCompletionIcon: 'chain' | 'checkbox';
   dayShape: 'circle' | 'square';
   onChangeHabitCompletionIcon: (
     value: 'chain' | 'checkbox'
   ) => void | Promise<void>;
   onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
+  onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
   onOpenArchivedHabits: () => void;
+  showGradientFill: boolean;
   // Streak reminders
   streakRemindersEnabled: boolean;
   streakReminderTime: string;

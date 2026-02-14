@@ -19,7 +19,10 @@ interface ErrorFallbackProps {
 }
 
 export function ErrorFallback({
-  error, onRetry, onLogout, onOpenSettings,
+  error,
+  onRetry,
+  onLogout,
+  onOpenSettings,
 }: ErrorFallbackProps) {
   const retryCountRef = useRef(0);
   const [showLogout, setShowLogout] = useState(false);
@@ -48,7 +51,9 @@ export function ErrorFallback({
   return (
     <View accessibilityRole='alert' style={styles.container}>
       <Text style={styles.emoji}>😕</Text>
-      <Text accessibilityRole='header' style={styles.headline}>{headline}</Text>
+      <Text accessibilityRole='header' style={styles.headline}>
+        {headline}
+      </Text>
       <Text style={styles.safetyNote}>Your data is safe.</Text>
       <Text style={styles.description}>{desc}</Text>
       <SuggestionsCard />

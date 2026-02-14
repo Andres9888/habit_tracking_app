@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
 import {
   DetailHeader,
   DetailLoadingState,
@@ -19,7 +20,7 @@ import { useNotesHandlers } from './useNotesHandlers';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
 
 // eslint-disable-next-line max-lines-per-function
-export default function HabitDetailScreen({
+function HabitDetailScreenContent({
   habit,
   onArchive,
   onClose,
@@ -29,29 +30,29 @@ export default function HabitDetailScreen({
   visible,
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
-  const s = useHabitDetailScreenState({
+  const screenState = useHabitDetailScreenState({
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
     habitStrength: habit?.strength ?? 0,
     tracking,
     visible,
   });
-  const c = useCalendarHandlers({
+  const calendarHandlers = useCalendarHandlers({
     habit,
-    isTogglingCalendar: s.isTogglingCalendar,
+    isTogglingCalendar: screenState.isTogglingCalendar,
     onArchive,
     onClose,
     onDelete,
-    setIsTogglingCalendar: s.setIsTogglingCalendar,
-    setPendingArchive: s.setPendingArchive,
-    setPendingDelete: s.setPendingDelete,
+    setIsTogglingCalendar: screenState.setIsTogglingCalendar,
+    setPendingArchive: screenState.setPendingArchive,
+    setPendingDelete: screenState.setPendingDelete,
   });
-  const n = useNotesHandlers({
+  const notesHandlers = useNotesHandlers({
     habit,
     onEdit,
-    setEditingNoteId: s.setEditingNoteId,
-    setIsNotesEditorOpen: s.setIsNotesEditorOpen,
-    setIsNotesListOpen: s.setIsNotesListOpen,
+    setEditingNoteId: screenState.setEditingNoteId,
+    setIsNotesEditorOpen: screenState.setIsNotesEditorOpen,
+    setIsNotesListOpen: screenState.setIsNotesListOpen,
   });
 
   return (
@@ -76,14 +77,14 @@ export default function HabitDetailScreen({
                 >
                   <DetailHeader
                     habit={habit}
-                    isCompletedToday={s.isCompletedToday}
+                    isCompletedToday={screenState.isCompletedToday}
                     onClose={onClose}
-                    onEdit={n.handleEdit}
+                    onEdit={notesHandlers.handleEdit}
                   />
                   <HabitDetailContent
-                    completedDates={s.completedDates}
+                    completedDates={screenState.completedDates}
                     habit={habit}
-                    onDayPress={c.handleCalendarDayPress}
+                    onDayPress={calendarHandlers.handleCalendarDayPress}
                   />
                 </LinearGradient>
               </View>
@@ -92,12 +93,38 @@ export default function HabitDetailScreen({
           <HabitDetailModals
             habitId={habit._id}
             habitName={habit.name}
-            {...buildModalsProps(s, c, n, insets)}
+            {...buildModalsProps(screenState, calendarHandlers, notesHandlers, insets)}
           />
         </>
       ) : (
         <DetailLoadingState />
       )}
     </Modal>
+  );
+}
+
+export default function HabitDetailScreen(props: HabitDetailScreenProps) {
+  return (
+    <ErrorBoundary
+      fallback={
+        <Modal
+          transparent
+          animationType="slide"
+          visible={props.visible}
+          onRequestClose={props.onClose}
+        >
+          <View style={{ flex: 1, backgroundColor: 'black' }}>
+            <ScreenErrorFallback
+              screenName="Habit Details"
+              error={null}
+              onRetry={() => {}}
+              onGoBack={props.onClose}
+            />
+          </View>
+        </Modal>
+      }
+    >
+      <HabitDetailScreenContent {...props} />
+    </ErrorBoundary>
   );
 }

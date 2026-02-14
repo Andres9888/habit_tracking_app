@@ -43,15 +43,13 @@ export const FooterSection = ({
           Use This Template
         </Button>
         <AnimatedPressable
-          accessibilityLabel='Go back to browse templates'
+          accessibilityLabel='Go back to import habits list'
           accessibilityRole='button'
           style={[footerStyles.backButton, backButtonAnimatedStyle]}
           onPress={onBack}
           {...pressHandlers}
         >
-          <Text style={footerStyles.backButtonText}>
-            Back to Browse Templates
-          </Text>
+          <Text style={footerStyles.backButtonText}>Back to Import Habits</Text>
         </AnimatedPressable>
       </Animated.View>
     </LinearGradient>

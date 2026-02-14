@@ -1,3 +1,4 @@
+/* eslint-disable max-lines, max-lines-per-function */
 /**
  * AuthGate Component
  *
@@ -10,8 +11,14 @@
 
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { View, Text, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { api } from '../../../convex/_generated/api';
@@ -65,8 +72,8 @@ function BrandedLoadingScreen() {
               Taking longer than expected
             </Text>
             <Text style={loadingStyles.errorDescription}>
-              We're having trouble connecting. Check your internet connection and
-              try again.
+              We're having trouble connecting. Check your internet connection
+              and try again.
             </Text>
             <Pressable
               accessibilityLabel='Try Again'
@@ -161,7 +168,6 @@ const loadingStyles = StyleSheet.create({
     marginTop: 8,
   },
 });
-
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();

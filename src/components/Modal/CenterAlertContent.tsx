@@ -29,7 +29,7 @@ export function CenterAlertContent({
         {
           backgroundColor: theme.custom.colors.light.background,
           borderRadius: theme.custom.borderRadius.large,
-          ...theme.custom.shadows.modal,
+          ...theme.custom.shadows.alert,
         },
         animatedStyle,
         customStyle,

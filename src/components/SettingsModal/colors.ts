@@ -1,5 +1,4 @@
 import { colors } from '@/theme/colors';
-import type { SemanticColors } from '@/theme/darkColors';
 
 import type { SettingsColors } from './types';
 

@@ -5,6 +5,7 @@
 import React from 'react';
 import { Modal, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
 import { SettingsModalSkeleton } from '../SkeletonLoader';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
@@ -14,7 +15,7 @@ import { SettingsContent } from './SettingsContent';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsModalProps } from './types';
 
-export default function SettingsModal({
+function SettingsModalContent({
   dayShape = 'square',
   habitCompletionIcon = 'chain',
   isHighContrastActive = false,
@@ -30,7 +31,15 @@ export default function SettingsModal({
   onChangeStreakReminderTime = () => {},
   onPremiumUpsell,
 }: SettingsModalProps) {
-  const { view, setView, handleClose } = useSettingsModalLogic({
+  const {
+    darkModePreference,
+    setDarkModePreference,
+    showGradientFill,
+    setShowGradientFill,
+    view,
+    setView,
+    handleClose,
+  } = useSettingsModalLogic({
     onClose,
     visible,
   });
@@ -72,14 +81,18 @@ export default function SettingsModal({
             />
             <SettingsContent
               colors={colors}
+              darkModePreference={darkModePreference}
               dayShape={dayShape}
               habitCompletionIcon={habitCompletionIcon}
               isHighContrastActive={isHighContrastActive}
               isPremium={isPremium}
+              showGradientFill={showGradientFill}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
+              onChangeDarkModePreference={setDarkModePreference}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
+              onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
               onPremiumUpsell={onPremiumUpsell}
@@ -89,5 +102,28 @@ export default function SettingsModal({
         )}
       </View>
     </Modal>
+  );
+}
+
+export default function SettingsModal(props: SettingsModalProps) {
+  return (
+    <ErrorBoundary
+      fallback={
+        <Modal
+          animationType="slide"
+          visible={props.visible}
+          onRequestClose={props.onClose}
+        >
+          <ScreenErrorFallback
+            screenName="Settings"
+            error={null}
+            onRetry={() => {}}
+            onGoBack={props.onClose}
+          />
+        </Modal>
+      }
+    >
+      <SettingsModalContent {...props} />
+    </ErrorBoundary>
   );
 }

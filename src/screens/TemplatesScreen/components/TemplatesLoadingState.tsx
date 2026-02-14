@@ -6,13 +6,13 @@ import { SkeletonCard } from './SkeletonCard';
 
 export function TemplatesLoadingState() {
   return (
-    <View className='flex-1 bg-[#faf9f7]'>
+    <View className='flex-1 bg-[#FAF8F5]'>
       <View className='px-5 pb-4 pt-6'>
         <Text
           className='font-semibold text-stone-900'
           style={{ fontSize: 22, letterSpacing: -0.35 }}
         >
-          Browse Templates
+          Import Habits
         </Text>
         <Text className='mt-1 text-[17px] text-stone-500'>
           Science-backed habits to get you started

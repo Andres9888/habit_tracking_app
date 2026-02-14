@@ -12,13 +12,18 @@
       "resizeMode": "contain",
       "backgroundColor": "#059669"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.chainday.app",
       "buildNumber": "2",
-      "usesAppleSignIn": true
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -64,7 +69,8 @@
           "project": "react-native"
         }
       ],
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "./plugins/withPrivacyManifest"
     ]
   }
 }

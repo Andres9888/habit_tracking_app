@@ -28,7 +28,11 @@ export const toggleHabit = mutation({
 
     const newCompletedStatus = existing ? !existing.completed : true;
     await (existing
-      ? ctx.db.patch(existing._id, { completed: newCompletedStatus })
+      ? ctx.db.patch(existing._id, {
+          completed: newCompletedStatus,
+          // Backfill userId on legacy records missing it
+          ...(existing.userId ? {} : { userId: identity.subject }),
+        })
       : ctx.db.insert('tracking', {
           completed: true, date: args.date, habitId: args.habitId, userId: identity.subject,
         }));

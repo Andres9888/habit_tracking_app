@@ -1,9 +1,11 @@
+/* eslint-disable max-lines */
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { X } from 'lucide-react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import type { HabitSortMode } from '../../types';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { SCREEN_HEIGHT, SORT_OPTIONS } from './constants';
 import { QuickPickChips } from './QuickPickChips';
 import { SortOptionRow } from './SortOptionRow';
@@ -19,6 +21,7 @@ export function SortBottomSheet({
   reduceMotion = false,
 }: SortBottomSheetProps) {
   const insets = useSafeAreaInsets();
+  const { colors: themeColors, isDark } = useThemeColors();
   const {
     panGesture,
     backdropStyle,
@@ -47,13 +50,14 @@ export function SortBottomSheet({
 
         <GestureDetector gesture={panGesture}>
           <Animated.View
-            className='rounded-t-3xl bg-white'
+            className='rounded-t-3xl'
             style={[
               {
+                backgroundColor: themeColors.card,
                 elevation: 20,
                 maxHeight: SCREEN_HEIGHT * 0.85,
                 paddingBottom: insets.bottom + 16,
-                shadowColor: '#1c1917',
+                shadowColor: isDark ? '#000000' : '#1c1917',
                 shadowOffset: { height: 4, width: 0 },
                 shadowOpacity: 0.08,
                 shadowRadius: 16,
@@ -62,23 +66,28 @@ export function SortBottomSheet({
             ]}
           >
             <View className='items-center py-3'>
-              <View className='h-1 w-10 rounded-full bg-stone-300' />
+              <View
+                className='h-1 w-10 rounded-full'
+                style={{ backgroundColor: themeColors.gray[300] }}
+              />
             </View>
 
             <View className='flex-row items-center justify-between px-5 pb-4'>
-              <Text className='text-[17px] font-bold text-stone-900'>
+              <Text
+                className='text-[17px] font-bold'
+                style={{ color: themeColors.text.primary }}
+              >
                 Sort Habits
               </Text>
               <Pressable
                 accessibilityHint='Close sort options'
-                accessibilityLabel='Done'
+                accessibilityLabel='Close'
                 accessibilityRole='button'
-                className='rounded-lg px-3 py-1.5 active:bg-stone-100'
+                className='h-10 w-10 items-center justify-center rounded-full'
+                style={{ backgroundColor: isDark ? '#1f2937' : '#f5f5f4' }}
                 onPress={handleDismiss}
               >
-                <Text className='text-[13px] font-semibold text-emerald-700'>
-                  Done
-                </Text>
+                <X color={themeColors.text.secondary} size={24} />
               </Pressable>
             </View>
 

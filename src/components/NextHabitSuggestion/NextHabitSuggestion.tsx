@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#ffffff',
-    borderRadius: 20,
+    borderRadius: 16,
     elevation: 3,
     marginHorizontal: 16,
     marginVertical: 8,
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   // Completed state
 completedContainer: {
     marginHorizontal: 16,
-    borderRadius: 20,
+    borderRadius: 16,
     marginVertical: 8,
     alignItems: 'center',
     padding: 20,

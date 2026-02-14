@@ -16,9 +16,7 @@ card: {
     backgroundColor: colors.light.card,
     borderRadius: borderRadius.large,
     maxWidth: 340,
-    padding: spacing.xl,
-    width: '100%',
-    ...shadows.modal,
+    ...shadows.alert,
   },
 
   
