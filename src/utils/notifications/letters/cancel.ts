@@ -28,7 +28,7 @@ export async function cancelLetterUnlockNotification(
       )
     );
 
-    if (toCancel.length > 0) {
+    if (toCancel.length > 0 && __DEV__) {
       // eslint-disable-next-line no-console
       console.info('cancelLetterUnlockNotification: cancelled', {
         count: toCancel.length,
