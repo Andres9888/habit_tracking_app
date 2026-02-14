@@ -3,6 +3,7 @@ import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
 import { colors } from '../../theme/colors';
 import { EditHeader } from './EditHeader';
 import { NameInputSection } from './NameInputSection';
@@ -13,7 +14,7 @@ import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
 // eslint-disable-next-line max-lines-per-function
-export default function HabitEditScreen({
+function HabitEditScreenContent({
   visible,
   habitId,
   onClose,
@@ -96,5 +97,31 @@ export default function HabitEditScreen({
         </View>
       </KeyboardAvoidingView>
     </Modal>
+  );
+}
+
+export default function HabitEditScreen(props: HabitEditScreenProps) {
+  return (
+    <ErrorBoundary
+      fallback={
+        <Modal
+          transparent
+          animationType="slide"
+          visible={props.visible}
+          onRequestClose={props.onClose}
+        >
+          <View style={{ flex: 1, backgroundColor: colors.light.background }}>
+            <ScreenErrorFallback
+              screenName="Edit Habit"
+              error={null}
+              onRetry={() => {}}
+              onGoBack={props.onClose}
+            />
+          </View>
+        </Modal>
+      }
+    >
+      <HabitEditScreenContent {...props} />
+    </ErrorBoundary>
   );
 }
