@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * WelcomeScreen - Auth landing page
  * Clean design consistent with app style

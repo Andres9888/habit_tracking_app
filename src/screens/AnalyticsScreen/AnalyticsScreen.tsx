@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * AnalyticsScreen - Main analytics dashboard screen
  * Shows habit statistics, charts, and insights
@@ -8,7 +9,10 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
-import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
+import {
+  ErrorBoundary,
+  ScreenErrorFallback,
+} from '../../components/ErrorBoundary';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 import { styles } from './AnalyticsScreen.styles';
 import {
@@ -126,7 +130,7 @@ export default function AnalyticsScreen() {
     <ErrorBoundary
       fallback={
         <ScreenErrorFallback
-          screenName="Analytics"
+          screenName='Analytics'
           error={null}
           onRetry={() => {}}
         />

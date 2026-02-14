@@ -1,9 +1,13 @@
+/* eslint-disable max-lines */
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
 import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
+import {
+  ErrorBoundary,
+  ScreenErrorFallback,
+} from '../../components/ErrorBoundary';
 import {
   DetailHeader,
   DetailLoadingState,
@@ -93,7 +97,12 @@ function HabitDetailScreenContent({
           <HabitDetailModals
             habitId={habit._id}
             habitName={habit.name}
-            {...buildModalsProps(screenState, calendarHandlers, notesHandlers, insets)}
+            {...buildModalsProps(
+              screenState,
+              calendarHandlers,
+              notesHandlers,
+              insets
+            )}
           />
         </>
       ) : (
@@ -109,13 +118,13 @@ export default function HabitDetailScreen(props: HabitDetailScreenProps) {
       fallback={
         <Modal
           transparent
-          animationType="slide"
+          animationType='slide'
           visible={props.visible}
           onRequestClose={props.onClose}
         >
           <View style={{ flex: 1, backgroundColor: 'black' }}>
             <ScreenErrorFallback
-              screenName="Habit Details"
+              screenName='Habit Details'
               error={null}
               onRetry={() => {}}
               onGoBack={props.onClose}

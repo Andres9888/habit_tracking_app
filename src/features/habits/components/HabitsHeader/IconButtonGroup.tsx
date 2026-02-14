@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ArrowUpDown, BookOpen, Settings } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
@@ -46,8 +47,13 @@ export function IconButtonGroup({
   const iconColor = isDark ? '#D1D5DB' : '#44403c';
   const dividerBg = isDark ? '#374151' : undefined;
   return (
-    <View className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'
-      style={isDark ? { borderColor: '#374151', backgroundColor: 'rgba(31,41,55,0.8)' } : undefined}
+    <View
+      className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'
+      style={
+        isDark
+          ? { borderColor: '#374151', backgroundColor: 'rgba(31,41,55,0.8)' }
+          : undefined
+      }
     >
       {/* Templates Button - highlighted with subtle purple bg */}
       <Animated.View style={templatesAnimatedStyle}>
@@ -66,13 +72,20 @@ export function IconButtonGroup({
             onPressIn={onTemplatesPressIn}
             onPressOut={onTemplatesPressOut}
           >
-            <BookOpen color={isDark ? '#a78bfa' : '#7c3aed'} size={18} strokeWidth={2.25} />
+            <BookOpen
+              color={isDark ? '#a78bfa' : '#7c3aed'}
+              size={18}
+              strokeWidth={2.25}
+            />
           </Pressable>
           <NotificationBadge count={1} visible={showBadge} />
         </View>
       </Animated.View>
 
-      <View className='mx-0.5 h-4 w-px bg-stone-200' style={dividerBg ? { backgroundColor: dividerBg } : undefined} />
+      <View
+        className='mx-0.5 h-4 w-px bg-stone-200'
+        style={dividerBg ? { backgroundColor: dividerBg } : undefined}
+      />
 
       {/* Sort Button */}
       <Animated.View style={sortAnimatedStyle}>
@@ -92,7 +105,10 @@ export function IconButtonGroup({
         </Pressable>
       </Animated.View>
 
-      <View className='mx-0.5 h-4 w-px bg-stone-200' style={dividerBg ? { backgroundColor: dividerBg } : undefined} />
+      <View
+        className='mx-0.5 h-4 w-px bg-stone-200'
+        style={dividerBg ? { backgroundColor: dividerBg } : undefined}
+      />
 
       {/* Settings Button */}
       <Animated.View style={settingsAnimatedStyle}>

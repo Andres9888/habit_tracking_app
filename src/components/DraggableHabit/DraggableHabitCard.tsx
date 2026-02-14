@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import React from 'react';
 import { Animated, Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';

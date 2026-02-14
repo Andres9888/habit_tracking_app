@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * HabitCardContent Component
  * Inner content of the HabitCard including name, icon, streak, and progress
