@@ -242,3 +242,44 @@ Total commits: 1
 Generated: 2026-02-14  
 Auditor: Claude (Subagent)  
 Reference: GLM-5
+
+## Additional Fixes (Second Commit)
+
+### More User Data Isolation Fixes
+
+5. **analyticsWeekly.ts** — Now filters by userId
+6. **notesQueries.ts** — Fixed list() and search() to filter by userId  
+7. **reflectionsQueries.ts** — Fixed listRecent() to filter by userId
+8. **lettersQueries.ts** — Fixed getUpcomingUnlocks() to filter by userId
+
+**Total Security Fixes:** 9 critical queries now properly filter by user
+
+---
+
+## Summary of Commits
+
+### Commit 1: N+1 and Analytics Security Fixes
+- Fixed 4 analytics queries (distribution, compliance, overview, trend)
+- Fixed N+1 pattern in compliance heatmap
+- Added by_user index to tracking table
+
+### Commit 2: User Data Isolation in Remaining Queries  
+- Fixed analytics weekly query
+- Fixed notes list and search
+- Fixed reflections recent
+- Fixed letters upcoming unlocks
+
+---
+
+## Risk Assessment
+
+**Before Fixes:**
+- 🔴 **CRITICAL SECURITY RISK** — Users could access other users' habits, notes, reflections, letters
+- 🔴 **PERFORMANCE ISSUE** — Full table scans for analytics, O(n) queries
+
+**After Fixes:**
+- ✅ All user-specific queries now properly filter by userId
+- ✅ Reduced database queries significantly
+- ✅ Uses indexes for O(log n) or O(1) lookups
+- ✅ Scales linearly with user data instead of total DB size
+
