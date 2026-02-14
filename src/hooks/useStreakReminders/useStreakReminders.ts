@@ -18,6 +18,16 @@ import {
   scheduleStreakFreezeNotification,
   cancelStreakFreezeNotification,
 } from '../../utils/notifications/streakFreeze';
+import {
+  fireStreakMilestoneNotification,
+} from '../../utils/notifications/streakMilestones';
+import {
+  getSmartTime,
+  recordHabitCompletion,
+} from '../../utils/notifications/smartTiming';
+import {
+  clampToQuietHours,
+} from '../../utils/notifications/quietHours';
 import type { StreakReminderHabit } from './types';
 
 interface UseStreakRemindersParams {
@@ -82,8 +92,25 @@ export function useStreakReminders({
     const globalTime = parseTime(reminderTime);
 
     for (const habit of habits) {
-      if (habit.completedToday || habit.currentStreak === 0) {
-        // Cancel notification — habit is done or no streak to protect
+      if (habit.completedToday) {
+        // Habit completed — cancel reminders, record timing, check milestones
+        await cancelStreakAtRiskNotification(habit.habitId);
+        if (isPremium) {
+          await cancelStreakFreezeNotification(habit.habitId);
+        }
+        // Record completion time for smart timing
+        await recordHabitCompletion(habit.habitId);
+        // Fire milestone celebration if applicable
+        await fireStreakMilestoneNotification({
+          habitId: habit.habitId,
+          habitName: habit.habitName,
+          habitEmoji: habit.habitEmoji,
+          currentStreak: habit.currentStreak,
+        });
+        continue;
+      }
+
+      if (habit.currentStreak === 0) {
         await cancelStreakAtRiskNotification(habit.habitId);
         if (isPremium) {
           await cancelStreakFreezeNotification(habit.habitId);
@@ -91,11 +118,32 @@ export function useStreakReminders({
         continue;
       }
 
-      // Determine reminder time (premium: per-habit custom, free: global)
-      const time =
-        isPremium && habit.customReminderTime
-          ? parseTime(habit.customReminderTime)
-          : globalTime;
+      // Check if this habit has notifications turned off
+      if (habit.notificationMode === 'off') {
+        await cancelStreakAtRiskNotification(habit.habitId);
+        if (isPremium) {
+          await cancelStreakFreezeNotification(habit.habitId);
+        }
+        continue;
+      }
+
+      // Determine reminder time:
+      // 1. Smart timing (premium, mode='smart') — learned from completion history
+      // 2. Per-habit custom time (premium, mode='fixed' + customReminderTime)
+      // 3. Global time (free users)
+      let time = globalTime;
+
+      if (isPremium && habit.notificationMode === 'smart') {
+        const smartTime = await getSmartTime(habit.habitId);
+        if (smartTime) {
+          time = smartTime;
+        }
+      } else if (isPremium && habit.customReminderTime) {
+        time = parseTime(habit.customReminderTime);
+      }
+
+      // Clamp to quiet hours
+      time = clampToQuietHours(time.hour, time.minute);
 
       await scheduleStreakAtRiskNotification({
         currentStreak: habit.currentStreak,
@@ -108,14 +156,14 @@ export function useStreakReminders({
 
       // Premium: schedule streak freeze notification 1 hour after reminder
       if (isPremium && habit.currentStreak >= 3) {
-        const freezeHour = (time.hour + 1) % 24;
+        const freezeTime = clampToQuietHours((time.hour + 1) % 24, time.minute);
         await scheduleStreakFreezeNotification({
           currentStreak: habit.currentStreak,
           habitEmoji: habit.habitEmoji || '🔥',
           habitId: habit.habitId,
           habitName: habit.habitName,
-          hour: freezeHour,
-          minute: time.minute,
+          hour: freezeTime.hour,
+          minute: freezeTime.minute,
         });
       }
     }

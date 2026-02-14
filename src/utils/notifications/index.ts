@@ -62,6 +62,49 @@ export {
 } from './streakFreeze';
 export type { ScheduleStreakFreezeParams } from './streakFreeze';
 
+// Re-export morning motivation notifications
+export {
+  cancelMorningMotivation,
+  getTodaysQuote,
+  scheduleMorningMotivation,
+} from './morningMotivation';
+export type { ScheduleMorningMotivationParams } from './morningMotivation';
+
+// Re-export streak milestone notifications
+export {
+  fireStreakMilestoneNotification,
+  isMilestone,
+  STREAK_MILESTONES,
+} from './streakMilestones';
+export type { StreakMilestoneParams } from './streakMilestones';
+
+// Re-export smart timing
+export {
+  clearSmartTimingData,
+  getCompletionCount,
+  getSmartTime,
+  recordHabitCompletion,
+} from './smartTiming';
+
+// Re-export quiet hours
+export {
+  clampToQuietHours,
+  DEFAULT_QUIET_HOURS,
+  getQuietHoursConfig,
+  isWithinQuietHours,
+  setQuietHoursConfig,
+} from './quietHours';
+export type { QuietHoursConfig } from './quietHours';
+
+// Re-export per-habit notification config
+export {
+  getAllHabitNotificationConfigs,
+  getHabitNotificationConfig,
+  removeHabitNotificationConfig,
+  setHabitNotificationConfig,
+} from './perHabitConfig';
+export type { HabitNotificationConfig, NotificationMode } from './perHabitConfig';
+
 // Re-export types
 export type {
   ScheduleHabitReminderParams,
