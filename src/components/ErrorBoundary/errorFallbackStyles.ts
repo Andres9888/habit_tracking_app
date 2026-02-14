@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   },
   description: {
     color: colors.text.secondary,
-    fontSize: 14,
+    fontSize: 13,
     lineHeight: 20,
     marginBottom: 20,
     maxWidth: 300,
@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
   errorMessage: {
     color: colors.error,
     fontFamily: 'monospace',
-    fontSize: 12,
+    fontSize: 13,
     marginTop: 24,
     maxWidth: 300,
   },
@@ -39,17 +39,17 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   link: { padding: 8 },
-  linkText: { color: colors.primary[600], fontSize: 14, fontWeight: '500' },
+  linkText: { color: colors.primary[600], fontSize: 13, fontWeight: '500' },
   logoutButton: {
     backgroundColor: colors.error,
     borderRadius: 12,
     paddingHorizontal: 24,
     paddingVertical: 12,
   },
-  logoutText: { color: colors.text.inverse, fontSize: 16, fontWeight: '600' },
+  logoutText: { color: colors.text.inverse, fontSize: 17, fontWeight: '600' },
   safetyNote: {
     color: colors.primary[700],
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
     marginBottom: 8,
   },

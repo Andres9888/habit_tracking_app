@@ -36,13 +36,13 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  dismissText: { color: '#6b7280', fontSize: 16, marginLeft: 8 },
-  text: { color: '#1f2937', flex: 1, fontSize: 14, fontWeight: '500' },
+  dismissText: { color: '#6b7280', fontSize: 17, marginLeft: 8 },
+  text: { color: '#1f2937', flex: 1, fontSize: 13, fontWeight: '500' },
   upgradeButton: {
     backgroundColor: '#7c3aed',
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  upgradeText: { color: '#ffffff', fontSize: 14, fontWeight: '600' },
+  upgradeText: { color: '#ffffff', fontSize: 13, fontWeight: '600' },
 });

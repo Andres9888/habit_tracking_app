@@ -250,7 +250,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 const styles = StyleSheet.create({
   appName: {
     color: '#1c1917',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.5,
     textAlign: 'center',
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     color: '#a8a29e',
-    fontSize: 12,
+    fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',
   },
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     color: '#57534e',
-    fontSize: 14,
+    fontSize: 13,
     marginTop: 4,
     textAlign: 'center',
   },
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
   },
   welcomeSubtitle: {
     color: '#57534e',
-    fontSize: 16,
+    fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
     textAlign: 'center',

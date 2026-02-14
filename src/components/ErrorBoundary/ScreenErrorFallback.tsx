@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.text.secondary,
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: 'Courier',
   },
   primaryButton: {

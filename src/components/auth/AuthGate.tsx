@@ -129,7 +129,7 @@ const loadingStyles = StyleSheet.create({
   },
   errorDescription: {
     color: colors.text.secondary,
-    fontSize: 14,
+    fontSize: 13,
     lineHeight: 20,
     marginBottom: 20,
     textAlign: 'center',
@@ -144,7 +144,7 @@ const loadingStyles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: colors.primary[100],
-    borderRadius: 32,
+    borderRadius: 24,
     height: 64,
     justifyContent: 'center',
     marginBottom: 16,
@@ -161,7 +161,7 @@ const loadingStyles = StyleSheet.create({
   },
   retryButtonText: {
     color: colors.text.inverse,
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
   },
   spinner: {
