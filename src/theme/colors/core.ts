@@ -100,6 +100,19 @@ export const colors = {
 
   surface: '#EDEAE5',
 
+  // Text Colors (semantic variants for emphasis levels)
+  text: {
+    // gray.400 — placeholder, hint text
+    inverse: '#FFFFFF',
+
+    primary: '#2D2A26',
+
+    // gray.800 — main text, headings
+    secondary: '#524D47',
+    // gray.600 — secondary/body text
+    tertiary: '#9C958D', // White for text on dark/colored surfaces
+  },
+
   warning: '#D97706',
   warningLight: '#FEF3CD',
 } as const;
