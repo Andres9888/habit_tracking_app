@@ -28,6 +28,7 @@ import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
+import { OTAUpdateBanner } from './components/OTAUpdateBanner';
 
 // Initialize Sentry after first frame to avoid blocking app launch.
 // requestIdleCallback (or setTimeout fallback) defers this work until
@@ -115,6 +116,11 @@ export default function App() {
   return (
     <CoreProviders>
       <AuthGate />
+<<<<<<< HEAD
     </CoreProviders>
+=======
+      <OTAUpdateBanner />
+    </Providers>
+>>>>>>> c8a686a0 (feat: add expo-updates OTA update check on app launch)
   );
 }
