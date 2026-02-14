@@ -11,9 +11,10 @@ import {
   HabitDetailModals,
 } from './components';
 import {
-  DETAIL_BG_GRADIENT,
+  getDetailBgGradient,
   buildModalsProps,
 } from './HabitDetailScreen.constants';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
 import { useNotesHandlers } from './useNotesHandlers';
@@ -30,6 +31,7 @@ function HabitDetailScreenContent({
   visible,
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
+  const { colors: themeColors, isDark } = useThemeColors();
   const screenState = useHabitDetailScreenState({
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
@@ -71,7 +73,7 @@ function HabitDetailScreenContent({
             <View className='flex-1 bg-black/50'>
               <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
                 <LinearGradient
-                  colors={DETAIL_BG_GRADIENT}
+                  colors={getDetailBgGradient(isDark)}
                   locations={[0, 0.5, 1]}
                   style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
                 >

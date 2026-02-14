@@ -1,11 +1,12 @@
-/** DetailHeader - Optimized: AnimatedPressable, fixed letter spacing, unified shadows */
+/** DetailHeader - Dark mode aware with theme colors */
 import React from 'react';
 import { View, Text } from 'react-native';
 import { X, Edit3 } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { HeaderCompleteToggle } from '../../../components/HeaderCompleteToggle';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
-import { iconShadow, streakShadow } from './DetailHeader.constants';
+import { iconShadow } from './DetailHeader.constants';
 import { HeaderButton } from './HeaderButton';
 
 export function DetailHeader({
@@ -14,9 +15,14 @@ export function DetailHeader({
   onClose,
   onEdit,
 }: DetailHeaderProps) {
+  const { colors, isDark } = useThemeColors();
   const habitName = habit.icon
     ? (habit.name ?? '').replace(/^\p{Emoji}\s*/u, '')
     : (habit.name ?? 'Habit');
+
+  const iconColor = isDark ? colors.text.secondary : '#57534e';
+  const streakBg = isDark ? colors.primary[100] : '#ecfdf5';
+  const streakTextColor = isDark ? colors.primary[500] : '#047857';
 
   return (
     <View>
@@ -25,7 +31,7 @@ export function DetailHeader({
         entering={FadeIn.duration(200).delay(50)}
       >
         <HeaderButton
-          icon={<X color='#57534e' size={22} strokeWidth={2.5} />}
+          icon={<X color={iconColor} size={22} strokeWidth={2.5} />}
           label='Close'
           onPress={onClose}
         />
@@ -37,7 +43,7 @@ export function DetailHeader({
             habitName={habit.name}
           />
           <HeaderButton
-            icon={<Edit3 color='#57534e' size={20} strokeWidth={2.5} />}
+            icon={<Edit3 color={iconColor} size={20} strokeWidth={2.5} />}
             label='Edit habit'
             onPress={onEdit}
           />
@@ -60,8 +66,13 @@ export function DetailHeader({
           </View>
         )}
         <Text
-          className='text-center font-bold text-stone-900'
-          style={{ fontSize: 34, letterSpacing: -0.5, lineHeight: 41 }}
+          className='text-center font-bold'
+          style={{
+            color: colors.text.primary,
+            fontSize: 34,
+            letterSpacing: -0.5,
+            lineHeight: 41,
+          }}
         >
           {habitName}
         </Text>
@@ -72,10 +83,19 @@ export function DetailHeader({
               .delay(200)
               .springify()
               .damping(18)}
-            style={streakShadow}
+            style={{
+              backgroundColor: streakBg,
+              shadowColor: isDark ? '#000' : '#059669',
+              shadowOffset: { height: 2, width: 0 },
+              shadowOpacity: isDark ? 0.3 : 0.1,
+              shadowRadius: 8,
+            }}
           >
             <Text style={{ fontSize: 17 }}>🔥</Text>
-            <Text className='text-[17px] font-semibold text-emerald-700'>
+            <Text
+              className='text-[17px] font-semibold'
+              style={{ color: streakTextColor }}
+            >
               {habit.currentStreak} day streak
             </Text>
           </Animated.View>

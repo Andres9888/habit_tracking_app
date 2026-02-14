@@ -23,11 +23,13 @@ import {
   TAB_GAP,
 } from './HabitDetailTabs.constants';
 import { TabButton } from './components/TabButton';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 export function HabitDetailTabs({
   activeTab,
   onTabChange,
 }: HabitDetailTabsProps) {
+  const { colors, isDark } = useThemeColors();
   const containerWidth = useSharedValue(0);
   const indicatorPosition = useSharedValue(
     TABS.findIndex((t) => t.id === activeTab)
@@ -78,16 +80,19 @@ export function HabitDetailTabs({
       className='mx-4 my-3'
       onLayout={handleLayout}
     >
-      <View className='relative rounded-xl bg-stone-100 p-1'>
+      <View
+        className='relative rounded-xl p-1'
+        style={{ backgroundColor: isDark ? colors.surface : '#f5f5f4' }}
+      >
         <Animated.View
           className='absolute bottom-1 top-1 rounded-lg shadow-sm'
           style={[
             pillStyle,
             {
-              backgroundColor: '#059669',
-              shadowColor: '#059669',
+              backgroundColor: colors.primary[600],
+              shadowColor: colors.primary[600],
               shadowOffset: { height: 3, width: 0 },
-              shadowOpacity: 0.15,
+              shadowOpacity: isDark ? 0.3 : 0.15,
               shadowRadius: 8,
             },
           ]}
