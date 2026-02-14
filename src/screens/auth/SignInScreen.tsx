@@ -123,7 +123,10 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
   }));
 
   return (
-    <View style={styles.container}>
+    <View
+      accessibilityLabel='Sign in screen'
+      style={styles.container}
+    >
       {/* Subtle gradient background */}
       <LinearGradient
         colors={['#fafaf9', '#f5f5f4', '#fafaf9']}
@@ -136,6 +139,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
         style={styles.flex}
       >
         <ScrollView
+          accessibilityLabel='Sign in form'
           contentContainerStyle={[
             styles.scrollContent,
             { paddingBottom: insets.bottom + 24, paddingTop: insets.top + 40 },
@@ -144,13 +148,22 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           showsVerticalScrollIndicator={false}
         >
           {/* Logo & Brand */}
-          <View style={styles.brandSection}>
+          <View
+            accessibilityLabel='Chain Day logo and branding'
+            accessibilityRole='header'
+            style={styles.brandSection}
+          >
             <Animated.View style={[styles.logoContainer, logoStyle]}>
               <LinearGradient
                 colors={['#22c55e', '#16a34a']}
                 style={styles.logoGradient}
               >
-                <Text style={styles.logoEmoji}>🔗</Text>
+                <Text
+                  accessibilityLabel='Chain link logo'
+                  style={styles.logoEmoji}
+                >
+                  🔗
+                </Text>
               </LinearGradient>
             </Animated.View>
 
@@ -161,7 +174,11 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           </View>
 
           {/* Welcome Message */}
-          <Animated.View style={[styles.welcomeSection, headerStyle]}>
+          <Animated.View
+            accessibilityLabel='Welcome back! Your habits are waiting. Let's keep the momentum going.'
+            accessibilityRole='header'
+            style={[styles.welcomeSection, headerStyle]}
+          >
             <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
             <Text style={styles.welcomeSubtitle}>
               Your habits are waiting. Let's keep the momentum going.
@@ -174,7 +191,10 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
               <AuthError message={oauthError} onDismiss={clearError} />
             )}
 
-            <View style={styles.socialButtons}>
+            <View
+              accessibilityLabel='Social sign-in options'
+              style={styles.socialButtons}
+            >
               <SocialSignInButton
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_apple'}
@@ -191,7 +211,10 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 
             <AuthDivider />
 
-            <View style={styles.formSection}>
+            <View
+              accessibilityLabel='Email and password sign-in form'
+              style={styles.formSection}
+            >
               <FormInput
                 autoCapitalize='none'
                 autoComplete='email'
@@ -231,7 +254,10 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           </Animated.View>
 
           {/* Footer */}
-          <View style={styles.footer}>
+          <View
+            accessibilityLabel='Legal notice'
+            style={styles.footer}
+          >
             <Text style={styles.footerText}>
               By continuing, you agree to our Terms & Privacy Policy
             </Text>
