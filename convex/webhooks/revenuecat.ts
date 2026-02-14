@@ -13,6 +13,7 @@
 import { httpAction } from '../_generated/server';
 import { internal } from '../_generated/api';
 import { verifyRevenueCatSignature } from './revenuecatSignature';
+import { validateWebhookTimestamp } from '../subscriptions/premiumCheck';
 
 // RevenueCat webhook event types we handle
 const GRANT_EVENTS = new Set([
@@ -52,16 +53,26 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
 
     console.log('[RevenueCat] Processing event:', eventType, 'for:', appUserId);
 
+    // Extract and validate timestamps from webhook
+    const validatedExpiresAt = validateWebhookTimestamp(
+      event.expiration_at_ms,
+      'expiration_at_ms'
+    );
+    const validatedTrialEndsAt = validateWebhookTimestamp(
+      event.trial_end_at_ms,
+      'trial_end_at_ms'
+    );
+
     // Route to appropriate handler based on event type
     if (GRANT_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.grantPremium, {
         clerkId: appUserId,
         eventType,
-        expiresAt: event.expiration_at_ms,
+        expiresAt: validatedExpiresAt,
         isTrialing: event.period_type === 'TRIAL',
         productId: event.product_id,
         revenueCatId: event.original_app_user_id,
-        trialEndsAt: event.trial_end_at_ms,
+        trialEndsAt: validatedTrialEndsAt,
       });
     } else if (REVOKE_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.revokePremium, {
