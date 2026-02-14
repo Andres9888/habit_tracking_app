@@ -116,7 +116,10 @@ export function StreakMilestoneProvider({
       // After celebration dismissal, maybe prompt for App Store review
       // Small delay so the modal finishes closing before the system dialog appears
       setTimeout(() => {
-        void maybeRequestReview(celebrationData.milestone.days);
+        void maybeRequestReview({
+          milestoneDays: celebrationData.milestone.days,
+          currentStreak: celebrationData.streakDays,
+        });
       }, 500);
     }
     setCelebrationData(null);
