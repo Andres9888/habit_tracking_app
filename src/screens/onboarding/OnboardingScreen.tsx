@@ -6,7 +6,7 @@
  */
 /* eslint-disable max-lines, max-lines-per-function */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useThemeColors } from '../../theme/ThemeContext';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
@@ -42,14 +42,14 @@ function ChainLink({
   index: number;
   reduceMotion: boolean;
 }) {
-  const colors = [
-    '#059669',
-    '#047857',
-    '#10B981',
-    '#047857',
-    '#059669',
-    '#10B981',
-    '#047857',
+  const chainColors = [
+    colors.primary[600],
+    colors.primary[700],
+    colors.primary[400],
+    colors.primary[700],
+    colors.primary[600],
+    colors.primary[400],
+    colors.primary[700],
   ];
   return (
     <Animated.View
@@ -61,7 +61,7 @@ function ChainLink({
       style={[
         styles.chainLink,
         {
-          backgroundColor: colors[index % colors.length],
+          backgroundColor: chainColors[index % chainColors.length],
           transform: [{ rotate: '0deg' }], // Uniform rotation (placeholder for future alternating style)
         },
       ]}
@@ -129,9 +129,9 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
 }
 
 function interpolateColor(t: number): string {
-  if (t < 0.5) return '#10B981';
-  if (t < 0.75) return '#059669';
-  return '#047857';
+  if (t < 0.5) return colors.primary[400];
+  if (t < 0.75) return colors.primary[600];
+  return colors.primary[700];
 }
 
 // ─── Template Grid ───────────────────────────────────────────────────
@@ -207,6 +207,7 @@ const PAGES: PageData[] = [
 // ─── Dot Indicators ──────────────────────────────────────────────────
 
 function DotIndicators({ currentIndex }: { currentIndex: number }) {
+  const { colors } = useThemeColors();
   return (
     <View
       accessible
@@ -223,7 +224,7 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
           style={[
             styles.dot,
             {
-              backgroundColor: i === currentIndex ? '#059669' : '#D1D5DB',
+              backgroundColor: i === currentIndex ? colors.primary[600] : colors.gray[300],
               width: i === currentIndex ? 24 : 8,
             },
           ]}
@@ -240,6 +241,7 @@ interface OnboardingScreenProps {
 }
 
 export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
+  const { colors } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
