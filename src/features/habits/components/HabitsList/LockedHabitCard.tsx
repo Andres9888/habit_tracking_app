@@ -27,7 +27,7 @@ export function LockedHabitCard({
     }
     Animated.parallel([
       Animated.spring(scale, {
-        damping: 12,
+        damping: 18,
         stiffness: 140,
         toValue: 1,
         useNativeDriver: true,
@@ -43,12 +43,12 @@ export function LockedHabitCard({
 
   return (
     <Animated.View
-      className='gap-4 rounded-3xl border border-dashed border-violet-200 p-5'
+      className='gap-4 rounded-3xl border border-dashed border-emerald-200 p-5'
       style={{ opacity, transform: [{ scale }] }}
     >
       <LinearGradient
-        colors={['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
         className='absolute inset-0 rounded-3xl'
+        colors={['rgba(236, 253, 245, 0.8)', 'rgba(250, 250, 249, 0.4)']}
       />
       <View className='items-center gap-2'>
         <Text className='text-[24px]'>✨</Text>
@@ -65,15 +65,15 @@ export function LockedHabitCard({
       <Pressable
         accessibilityLabel='Upgrade to unlock unlimited habits'
         accessibilityRole='button'
-        className='items-center rounded-full px-5 py-3 shadow-[0px_8px_16px_rgba(109,40,217,0.2)]'
+        className='items-center rounded-full px-5 py-3 shadow-[0px_8px_16px_rgba(5,150,105,0.2)]'
         style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
         onPress={onUpgradePress}
       >
         <LinearGradient
-          colors={['#7c3aed', '#4f46e5']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
           className='absolute inset-0 rounded-full'
+          colors={['#059669', '#047857']}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
         />
         <Text className='text-[15px] font-semibold text-white'>
           Start Free Trial

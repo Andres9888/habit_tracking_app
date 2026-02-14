@@ -22,8 +22,8 @@ export function UpgradePrompt({
 
   return (
     <Animated.View
-      entering={FadeIn.duration(280)}
       className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
+      entering={FadeIn.duration(280)}
     >
       <Pressable
         accessibilityLabel='Close upgrade prompt'
@@ -32,12 +32,12 @@ export function UpgradePrompt({
         onPress={onClose}
       />
       <Animated.View
-        entering={SlideInDown.duration(280).damping(18)}
         className='w-full rounded-t-3xl px-6 py-8'
+        entering={SlideInDown.duration(280).damping(18)}
       >
         <LinearGradient
-          colors={['#ffffff', 'rgba(255, 251, 235, 0.3)']}
           className='absolute inset-0 rounded-t-3xl'
+          colors={['#ffffff', 'rgba(255, 251, 235, 0.3)']}
         />
         <View className='gap-4'>
           <View className='items-center pb-2'>
@@ -50,23 +50,23 @@ export function UpgradePrompt({
             Track unlimited habits across all areas of your life. Premium
             members build stronger routines and stay consistent 2× longer.
           </Text>
-          <View className='items-center rounded-2xl bg-violet-50 px-4 py-3'>
-            <Text className='text-center text-[13px] font-semibold text-violet-700'>
+          <View className='items-center rounded-2xl bg-emerald-50 px-4 py-3'>
+            <Text className='text-center text-[13px] font-semibold text-emerald-700'>
               $0 for 7 days · Cancel anytime
             </Text>
           </View>
           <Pressable
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
-            className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
+            className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(5,150,105,0.25)]'
             style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
             onPress={onUpgradePress}
           >
             <LinearGradient
-              colors={['#7c3aed', '#4f46e5']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
               className='absolute inset-0 rounded-full'
+              colors={['#059669', '#047857']}
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
             />
             <Text className='text-[17px] font-semibold text-white'>
               Start Free Trial →
