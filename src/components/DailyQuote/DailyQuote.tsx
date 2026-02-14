@@ -1,24 +1,26 @@
 /**
  * DailyQuote Component
  * Shows a motivational quote that changes daily
+ * Supports dismissal that persists per day in AsyncStorage
  */
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { Quote, RefreshCw } from 'lucide-react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { Quote, X } from 'lucide-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { QUOTES } from './quotes';
 import { useThemeColors } from '../../theme/ThemeContext';
 
-interface DailyQuoteProps {
-  /** Override the quote (optional) */
-  quote?: { text: string; author: string };
-  /** Show refresh button */
-  showRefresh?: boolean;
-  /** Callback when refresh is pressed */
-  onRefresh?: () => void;
+const DAILY_QUOTE_DISMISSED_KEY = 'daily_quote_dismissed';
+
+/** Get today's date as a string (YYYY-MM-DD) */
+function getTodayDateString(): string {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
 
+/** Get day of year for quote selection */
 function getDayOfYear(): number {
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 0);
@@ -27,19 +29,53 @@ function getDayOfYear(): number {
   return Math.floor(diff / oneDay);
 }
 
-export function DailyQuote({
-  quote: overrideQuote,
-  showRefresh,
-  onRefresh,
-}: DailyQuoteProps) {
-  const { colors } = useThemeColors();
+/** Check if quote was dismissed today */
+async function isDismissedToday(): Promise<boolean> {
+  try {
+    const today = getTodayDateString();
+    const dismissedDate = await AsyncStorage.getItem(DAILY_QUOTE_DISMISSED_KEY);
+    return dismissedDate === today;
+  } catch {
+    return false;
+  }
+}
 
-  const quote = useMemo(() => {
-    if (overrideQuote) return overrideQuote;
-    // Use day of year to select quote (consistent per day)
-    const dayOfYear = getDayOfYear();
-    return QUOTES[dayOfYear % QUOTES.length];
-  }, [overrideQuote]);
+/** Mark quote as dismissed today */
+async function dismissToday(): Promise<void> {
+  try {
+    const today = getTodayDateString();
+    await AsyncStorage.setItem(DAILY_QUOTE_DISMISSED_KEY, today);
+  } catch {
+    // Silently fail - dismissal is best effort
+  }
+}
+
+export function DailyQuote() {
+  const [isVisible, setIsVisible] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Get quote based on day of year
+  const quote = QUOTES[getDayOfYear() % QUOTES.length];
+
+  // Check dismissal status on mount
+  useEffect(() => {
+    async function checkDismissal() {
+      const dismissed = await isDismissedToday();
+      setIsVisible(!dismissed);
+      setIsLoading(false);
+    }
+    checkDismissal();
+  }, []);
+
+  const handleDismiss = useCallback(async () => {
+    await dismissToday();
+    setIsVisible(false);
+  }, []);
+
+  // Don't render if dismissed or still loading
+  if (!isVisible || isLoading) {
+    return null;
+  }
 
   const styles = useMemo(
     () =>
@@ -84,7 +120,15 @@ export function DailyQuote({
   );
 
   return (
-    <Animated.View entering={FadeIn.delay(100)} style={styles.container}>
+    <Animated.View
+      entering={FadeIn.delay(100).duration(300)}
+      exiting={FadeOut.duration(200)}
+      style={styles.container}
+    >
+      <Pressable style={styles.dismissButton} onPress={handleDismiss} hitSlop={8}>
+        <X color="#a8a29e" size={16} />
+      </Pressable>
+      
       <View style={styles.iconContainer}>
         <Quote color={colors.gray[400]} size={16} />
       </View>
@@ -93,20 +137,47 @@ export function DailyQuote({
 
       <View style={styles.footer}>
         <Text style={styles.author}>— {quote.author}</Text>
-        {showRefresh && onRefresh && (
-          <Pressable
-            accessibilityLabel='Refresh quote'
-            accessibilityRole='button'
-            hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
-            style={styles.refreshButton}
-            onPress={onRefresh}
-          >
-            <RefreshCw color={colors.gray[400]} size={14} />
-          </Pressable>
-        )}
       </View>
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  author: {
+    color: '#78716c',
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  container: {
+    backgroundColor: '#fafaf9',
+    borderLeftColor: '#a8a29e',
+    borderLeftWidth: 3,
+    borderRadius: 16,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    padding: 16,
+  },
+  dismissButton: {
+    position: 'absolute',
+    right: 12,
+    top: 12,
+    zIndex: 1,
+  },
+  footer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  iconContainer: {
+    marginBottom: 8,
+  },
+  quoteText: {
+    color: '#57534e',
+    fontSize: 15,
+    fontStyle: 'italic',
+    lineHeight: 22,
+  },
+});
 
 export default DailyQuote;

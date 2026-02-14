@@ -14,6 +14,7 @@ import React, { memo } from 'react';
 import { Animated, View } from 'react-native';
 import { HabitsHeader } from '../HabitsHeader';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
+import { DailyQuote } from '../../../../components/DailyQuote';
 import { OfflineIndicator } from '../../../../components/SyncStatus';
 import {
   TrialCountdownBanner,
@@ -53,6 +54,10 @@ function HabitsListHeaderComponent(
           totalHabits={computed.totalHabits}
         />
       </Animated.View>
+
+      {/* Daily Motivation Quote */}
+      <DailyQuote />
+
       {computed.shouldShowTimeline && (
         <Animated.View
           style={{
