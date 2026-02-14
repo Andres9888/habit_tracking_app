@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Alert } from 'react-native';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail, validatePassword } from '../../../utils/validation';
+import { getClerkErrorMessage } from '../utils/getClerkErrorMessage';
 
 export function useSignUpFlow() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -47,9 +48,9 @@ export function useSignUpFlow() {
       });
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
       setPendingVerification(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', error.errors?.[0]?.message || 'Failed to sign up');
+      Alert.alert('Error', getClerkErrorMessage(error, 'Failed to sign up'));
     } finally {
       setIsLoading(false);
     }
@@ -58,9 +59,21 @@ export function useSignUpFlow() {
   const handleVerification = async (code: string) => {
     if (!isLoaded) return;
 
+    const normalizedCode = code.trim();
+
+    if (normalizedCode.length !== 6) {
+      Alert.alert(
+        'Invalid code',
+        'Please enter a valid 6-digit verification code.'
+      );
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const attempt = await signUp.attemptEmailAddressVerification({ code });
+      const attempt = await signUp.attemptEmailAddressVerification({
+        code: normalizedCode,
+      });
 
       if (attempt.status === 'complete') {
         await setActive({ session: attempt.createdSessionId });
@@ -68,11 +81,11 @@ export function useSignUpFlow() {
         if (__DEV__) console.error(JSON.stringify(attempt, null, 2));
         Alert.alert('Error', 'Verification incomplete. Please try again.');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert(
         'Error',
-        error.errors?.[0]?.message || 'Failed to verify email'
+        getClerkErrorMessage(error, 'Failed to verify email')
       );
     } finally {
       setIsLoading(false);

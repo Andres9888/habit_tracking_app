@@ -2,7 +2,7 @@
 import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 
-import { colors as themeColors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SettingsSectionProps {
   title: string;
@@ -15,6 +15,8 @@ export function SettingsSection({
   children,
   highContrastMode = false,
 }: SettingsSectionProps) {
+  const { colors: themeColors, isDark } = useThemeColors();
+
   const colors = highContrastMode
     ? {
         background: '#111111',
@@ -22,9 +24,9 @@ export function SettingsSection({
         title: '#facc15',
       }
     : {
-        background: themeColors.light.card,
-        border: themeColors.gray[100],
-        title: themeColors.gray[500],
+        background: themeColors.card,
+        border: themeColors.border,
+        title: themeColors.text.secondary,
       };
 
   return (
@@ -42,7 +44,11 @@ export function SettingsSection({
           borderColor: highContrastMode ? colors.border : undefined,
           borderWidth: highContrastMode ? 1 : 0,
           elevation: highContrastMode ? 0 : 3,
-          shadowColor: highContrastMode ? 'transparent' : '#1c1917',
+          shadowColor: highContrastMode
+            ? 'transparent'
+            : isDark
+              ? '#000000'
+              : '#1c1917',
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: highContrastMode ? 0 : 0.08,
           shadowRadius: 16,
