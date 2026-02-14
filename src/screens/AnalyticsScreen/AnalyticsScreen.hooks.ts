@@ -15,7 +15,7 @@ import type {
 export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const [refreshing, setRefreshing] = useState(false);
   const { isPremium: isPremiumUser } = usePremium();
-  const [showPaywall, setShowPaywall] = useState(!isPremiumUser);
+  const [showPaywall, setShowPaywall] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
 
   // Fetch analytics data from Convex

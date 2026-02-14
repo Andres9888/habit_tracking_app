@@ -58,4 +58,8 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.lg,
     paddingHorizontal: spacing.sm,
   },
+  teaserWrapper: {
+    overflow: 'hidden',
+    position: 'relative',
+  },
 });
