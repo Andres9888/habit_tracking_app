@@ -96,7 +96,7 @@ export async function processQueue(
     if (stopOnFirstFailure && !result.success) break;
   }
 
-  const lastOp = pendingOperations[pendingOperations.length - 1];
+  const lastOp = pendingOperations.at(-1);
   if (lastOp) {
     onProgress?.(pendingOperations.length, pendingOperations.length, lastOp);
   }

@@ -47,8 +47,8 @@ export function LockedHabitCard({
       style={{ opacity, transform: [{ scale }] }}
     >
       <LinearGradient
-        colors={['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
         className='absolute inset-0 rounded-3xl'
+        colors={['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
       />
       <View className='items-center gap-2'>
         <Text className='text-[24px]'>✨</Text>
@@ -70,10 +70,10 @@ export function LockedHabitCard({
         onPress={onUpgradePress}
       >
         <LinearGradient
-          colors={['#7c3aed', '#4f46e5']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
           className='absolute inset-0 rounded-full'
+          colors={['#7c3aed', '#4f46e5']}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
         />
         <Text className='text-[15px] font-semibold text-white'>
           Start Free Trial

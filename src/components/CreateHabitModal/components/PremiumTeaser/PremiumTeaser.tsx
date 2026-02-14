@@ -40,18 +40,18 @@ export function PremiumTeaser({ habitName, onUpgrade }: PremiumTeaserProps) {
       >
         <View className='p-4'>
           <LinearGradient
-            colors={['#f5f3ff', '#e0e7ff']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
             className='absolute inset-0'
+            colors={['#f5f3ff', '#e0e7ff']}
+            end={{ x: 1, y: 0 }}
+            start={{ x: 0, y: 0 }}
           />
           {/* Shimmer overlay */}
-          <Animated.View style={{ opacity: shimmerOpacity }} className='absolute inset-0'>
+          <Animated.View className='absolute inset-0' style={{ opacity: shimmerOpacity }}>
             <LinearGradient
-              colors={['transparent', 'rgba(221, 214, 254, 0.3)', 'transparent']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
               className='absolute inset-0'
+              colors={['transparent', 'rgba(221, 214, 254, 0.3)', 'transparent']}
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
             />
           </Animated.View>
           <TeaserContent suggestions={suggestions} />

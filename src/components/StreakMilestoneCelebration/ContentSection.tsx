@@ -45,7 +45,7 @@ export function ContentSection({
         {/* Habit Info */}
         <View style={styles.habitRow}>
           <Text style={styles.habitEmoji}>{habitEmoji}</Text>
-          <Text style={styles.habitName} numberOfLines={1}>
+          <Text numberOfLines={1} style={styles.habitName}>
             {habitName}
           </Text>
         </View>

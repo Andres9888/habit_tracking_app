@@ -22,8 +22,8 @@ export function NoteEditorActions({
         accessibilityLabel='Cancel'
         accessibilityRole='button'
         className='py-2'
-        disabled={isSaving}
         disableAnimation={isSaving}
+        disabled={isSaving}
         onPress={onCancel}
       >
         <Text className='text-xs font-semibold tracking-[2px] text-stone-500'>
@@ -36,8 +36,8 @@ export function NoteEditorActions({
         className={`rounded-3xl border border-stone-900 px-4 py-2.5 ${
           !isValid || isSaving ? 'opacity-40' : ''
         }`}
-        disabled={!isValid || isSaving}
         disableAnimation={!isValid || isSaving}
+        disabled={!isValid || isSaving}
         onPress={onSave}
       >
         {isSaving ? (

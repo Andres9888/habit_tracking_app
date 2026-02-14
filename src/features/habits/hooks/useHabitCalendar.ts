@@ -31,7 +31,7 @@ export function useHabitCalendar() {
   const extendedDateRange = useMemo(() => {
     const endDate = today;
     const startDate = subMonths(endDate, 12);
-    return eachDayOfInterval({ start: startDate, end: endDate });
+    return eachDayOfInterval({ end: endDate, start: startDate });
   }, [today]);
 
   const extendedDateStrings = useMemo(
@@ -40,12 +40,12 @@ export function useHabitCalendar() {
   );
 
   return {
+    canNavigateForward,
+    extendedDateStrings,
+    handleNextWeek,
+    handlePreviousWeek,
     today,
     weekDates,
     weekDateStrings,
-    extendedDateStrings,
-    handlePreviousWeek,
-    handleNextWeek,
-    canNavigateForward,
   };
 }
