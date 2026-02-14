@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface EditHeaderProps {
   paddingTop: number;
@@ -26,6 +27,7 @@ export function EditHeader({
   onCancel,
   onSave,
 }: EditHeaderProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -42,6 +44,8 @@ export function EditHeader({
     onSave();
   };
 
+  const saveEnabled = canSave && !isSaving;
+
   return (
     <Animated.View
       className='flex-row items-center justify-between px-4 pb-2'
@@ -51,19 +55,27 @@ export function EditHeader({
       <Pressable
         accessibilityLabel='Cancel'
         accessibilityRole='button'
-        className='h-11 w-11 items-center justify-center rounded-full active:bg-stone-100'
+        className='h-11 w-11 items-center justify-center rounded-full'
+        style={{ backgroundColor: 'transparent' }}
         onPress={handleCancel}
       >
-        <X color='#44403c' size={24} strokeWidth={2} />
+        <X color={colors.text.secondary} size={24} strokeWidth={2} />
       </Pressable>
       <View className='flex-1' />
       <AnimatedPressable
         accessibilityLabel={isSaving ? 'Saving changes' : 'Save changes'}
         accessibilityRole='button'
-        accessibilityState={{ busy: isSaving, disabled: !canSave || isSaving }}
-        className={`flex-row items-center gap-2 rounded-xl px-5 py-2.5 ${canSave && !isSaving ? 'bg-[#059669]' : 'bg-stone-300'}`}
-        disabled={!canSave || isSaving}
-        style={animatedStyle}
+        accessibilityState={{ busy: isSaving, disabled: !saveEnabled }}
+        className='flex-row items-center gap-2 rounded-xl px-5 py-2.5'
+        disabled={!saveEnabled}
+        style={[
+          animatedStyle,
+          {
+            backgroundColor: saveEnabled
+              ? colors.primary[500]
+              : colors.gray[300],
+          },
+        ]}
         onPress={handleSave}
         onPressIn={() => {
           scale.value = withSpring(0.95, { damping: 15 });
@@ -74,8 +86,12 @@ export function EditHeader({
       >
         {isSaving && <ActivityIndicator color='#ffffff' size='small' />}
         <Text
-          className={`font-semibold ${canSave && !isSaving ? 'text-white' : 'text-stone-500'}`}
-          style={{ fontSize: 17, letterSpacing: -0.41 }}
+          className='font-semibold'
+          style={{
+            fontSize: 17,
+            letterSpacing: -0.41,
+            color: saveEnabled ? '#ffffff' : colors.text.tertiary,
+          }}
         >
           {isSaving ? 'Saving…' : 'Save'}
         </Text>

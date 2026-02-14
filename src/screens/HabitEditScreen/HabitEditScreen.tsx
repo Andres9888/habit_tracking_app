@@ -3,7 +3,7 @@ import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { EditHeader } from './EditHeader';
 import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
@@ -19,6 +19,7 @@ export default function HabitEditScreen({
   onClose,
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
   const state = useHabitEditScreen({ habitId, onClose });
   // Modal pattern: return null when not visible — the modal simply doesn't mount
   if (!visible || !habitId) return null;
@@ -37,7 +38,7 @@ export default function HabitEditScreen({
         <View className='flex-1 bg-black/50'>
           <View
             className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
-            style={{ backgroundColor: colors.light.background }}
+            style={{ backgroundColor: colors.background }}
           >
             <EditHeader
               canSave={state.habitName.trim().length >= 2}
@@ -82,8 +83,9 @@ export default function HabitEditScreen({
                 </Animated.View>
                 <SectionLabel delay={340} text='DANGER ZONE' variant='danger' />
                 <Animated.View
-                  className='mx-4 rounded-2xl bg-red-50/50 p-4'
+                  className='mx-4 rounded-2xl p-4'
                   entering={FadeInUp.delay(400).springify().damping(18)}
+                  style={{ backgroundColor: colors.gray[50] }}
                 >
                   <DangerZone
                     onArchive={state.handleArchive}
