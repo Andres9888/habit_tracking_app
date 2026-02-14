@@ -208,10 +208,18 @@ const PAGES: PageData[] = [
 
 function DotIndicators({ currentIndex }: { currentIndex: number }) {
   return (
-    <View style={styles.dotsContainer}>
+    <View
+      accessible
+      accessibilityLabel={`Page ${currentIndex + 1} of ${PAGES.length}`}
+      accessibilityRole='tablist'
+      style={styles.dotsContainer}
+    >
       {PAGES.map((_, i) => (
         <Animated.View
           key={i}
+          accessibilityLabel={`Page ${i + 1}${i === currentIndex ? ', current' : ''}`}
+          accessibilityRole='tab'
+          accessibilityState={{ selected: i === currentIndex }}
           style={[
             styles.dot,
             {
@@ -499,7 +507,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   strengthLabel: {
-    color: '#9CA3AF',
+    color: '#57534e',
     fontSize: 13,
     fontWeight: '500',
   },
