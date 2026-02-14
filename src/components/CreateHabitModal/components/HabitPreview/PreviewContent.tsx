@@ -3,6 +3,7 @@
  */
 import { Animated, Text, View } from 'react-native';
 import STRINGS from '../../../../constants/strings';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { getTimeOfDayLabel } from './helpers';
 import type { HubermanPhase } from '../../../../constants/hubermanPhases';
 
@@ -26,52 +27,60 @@ export const PreviewContent = ({
   contentOpacity,
   contentScale,
   pulseAnim,
-}: PreviewContentProps) => (
-  <Animated.View
-    style={{ opacity: contentOpacity, transform: [{ scale: contentScale }] }}
-  >
-    <View className='flex-row items-center gap-3'>
-      <Animated.View style={{ transform: [{ scale: iconScale }] }}>
-        {selectedEmoji ? (
-          <View className='relative'>
-            <Animated.View
-              className='absolute inset-0 rounded-2xl'
-              style={{
-                backgroundColor: selectedColor,
-                opacity: 0.3,
-                transform: [{ scale: pulseAnim }],
-              }}
-            />
+}: PreviewContentProps) => {
+  const { colors } = useThemeColors();
+
+  return (
+    <Animated.View
+      style={{ opacity: contentOpacity, transform: [{ scale: contentScale }] }}
+    >
+      <View className='flex-row items-center gap-3'>
+        <Animated.View style={{ transform: [{ scale: iconScale }] }}>
+          {selectedEmoji ? (
+            <View className='relative'>
+              <Animated.View
+                className='absolute inset-0 rounded-2xl'
+                style={{
+                  backgroundColor: selectedColor,
+                  opacity: 0.3,
+                  transform: [{ scale: pulseAnim }],
+                }}
+              />
+              <View
+                className='h-14 w-14 items-center justify-center rounded-2xl'
+                style={{ backgroundColor: selectedColor }}
+              >
+                <Text className='text-[28px]'>{selectedEmoji}</Text>
+              </View>
+            </View>
+          ) : (
             <View
               className='h-14 w-14 items-center justify-center rounded-2xl'
-              style={{ backgroundColor: selectedColor }}
+              style={{ backgroundColor: colors.gray[200] }}
             >
-              <Text className='text-[28px]'>{selectedEmoji}</Text>
+              <Text className='text-xl' style={{ color: colors.text.tertiary }}>?</Text>
             </View>
-          </View>
-        ) : (
-          <View className='h-14 w-14 items-center justify-center rounded-2xl bg-stone-200'>
-            <Text className='text-xl text-stone-400'>?</Text>
-          </View>
-        )}
-      </Animated.View>
-      <View className='flex-1'>
-        {habitName ? (
-          <Text
-            className='text-lg font-semibold text-stone-800'
-            numberOfLines={1}
-          >
-            {habitName}
+          )}
+        </Animated.View>
+        <View className='flex-1'>
+          {habitName ? (
+            <Text
+              className='text-lg font-semibold'
+              numberOfLines={1}
+              style={{ color: colors.text.primary }}
+            >
+              {habitName}
+            </Text>
+          ) : (
+            <Text className='text-lg font-semibold' style={{ color: colors.text.tertiary }}>
+              {STRINGS.CREATE_HABIT.namePlaceholder}
+            </Text>
+          )}
+          <Text className='text-sm' style={{ color: colors.text.secondary }}>
+            {getTimeOfDayLabel(timeOfDay)}
           </Text>
-        ) : (
-          <Text className='text-lg font-semibold text-stone-400'>
-            {STRINGS.CREATE_HABIT.namePlaceholder}
-          </Text>
-        )}
-        <Text className='text-sm text-stone-500'>
-          {getTimeOfDayLabel(timeOfDay)}
-        </Text>
+        </View>
       </View>
-    </View>
-  </Animated.View>
-);
+    </Animated.View>
+  );
+};

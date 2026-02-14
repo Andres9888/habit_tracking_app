@@ -3,6 +3,7 @@
  */
 import { Text, View } from 'react-native';
 import { SkeletonCard } from '../SkeletonLoader';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { usePreviewAnimations } from './usePreviewAnimations';
 import { getAccessibilityLabel } from './helpers';
 import { EmptyPreview } from './EmptyPreview';
@@ -15,6 +16,7 @@ export const HabitPreview = ({
   selectedColor,
   timeOfDay,
 }: HabitPreviewProps) => {
+  const { colors } = useThemeColors();
   const isEmpty = !habitName && !selectedEmoji;
   const animations = usePreviewAnimations(
     isEmpty,
@@ -33,13 +35,14 @@ export const HabitPreview = ({
         timeOfDay
       )}
       accessibilityRole='summary'
-      className='mb-4 mt-3 overflow-hidden rounded-2xl bg-white p-3'
+      className='mb-4 mt-3 overflow-hidden rounded-2xl p-3'
       style={{
-        borderColor: isEmpty ? '#e7e5e4' : selectedColor,
+        backgroundColor: colors.card,
+        borderColor: isEmpty ? colors.border : selectedColor,
         borderWidth: 2,
       }}
     >
-      <Text className='mb-2 text-xs font-semibold text-stone-500'>
+      <Text className='mb-2 text-xs font-semibold' style={{ color: colors.text.tertiary }}>
         ✨ Live Preview
       </Text>
 

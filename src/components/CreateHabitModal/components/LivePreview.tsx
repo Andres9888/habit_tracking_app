@@ -1,22 +1,12 @@
 import { memo } from 'react';
 import { Text, View } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 /**
  * V11 Live Preview Micro-Component
  *
  * A simple 40px preview card showing emoji + color + habit name in real-time.
  * Positioned between input and emoji picker to provide instant visual feedback.
- *
- * Design goals:
- * - 40px height (compact, not distracting)
- * - Real-time updates as user types
- * - Leverages "endowment effect" - emotional attachment before save
- * - Shows default state "Your new habit" when empty
- *
- * Impact:
- * - 35% increase in color/emoji experimentation
- * - 28% reduction in immediate edits after creation
- * - +5% retention = $250/month for 1000 MAU
  */
 
 interface LivePreviewProps {
@@ -25,16 +15,12 @@ interface LivePreviewProps {
   habitName: string;
 }
 
-/**
- * V11 Live Preview Component - Simple 40px card with emoji + color + name
- */
 export const LivePreview = memo(({ emoji, color, habitName }: LivePreviewProps) => {
-  // Use default values when fields are empty
+  const { colors } = useThemeColors();
   const displayEmoji = emoji || '🎯';
   const displayName = habitName.trim() || 'Your new habit';
-  const displayColor = color || '#10b981'; // emerald-500 default
+  const displayColor = color || '#10b981';
 
-  // V11 Task 8: Accessibility label for VoiceOver
   const accessibilityLabel = `Preview: ${displayEmoji} ${displayName}`;
 
   return (
@@ -43,9 +29,9 @@ export const LivePreview = memo(({ emoji, color, habitName }: LivePreviewProps) 
       accessibilityHint='This shows how your habit will appear in the list'
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='text'
-      className='mb-3 mt-3 flex-row items-center rounded-2xl bg-white p-3 shadow-sm'
+      className='mb-3 mt-3 flex-row items-center rounded-2xl p-3 shadow-sm'
+      style={{ backgroundColor: colors.card }}
     >
-      {/* Emoji Icon with Color Background */}
       <View
         accessible={false}
         className='h-10 w-10 items-center justify-center rounded-xl'
@@ -54,12 +40,12 @@ export const LivePreview = memo(({ emoji, color, habitName }: LivePreviewProps) 
         <Text className='text-2xl'>{displayEmoji}</Text>
       </View>
 
-      {/* Habit Name */}
       <Text
         accessible={false}
-        className='ml-3 flex-1 text-[15px] font-medium text-stone-700'
+        className='ml-3 flex-1 text-[15px] font-medium'
         ellipsizeMode='tail'
         numberOfLines={1}
+        style={{ color: colors.text.secondary }}
       >
         {displayName}
       </Text>

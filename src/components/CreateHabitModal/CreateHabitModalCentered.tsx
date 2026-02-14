@@ -17,11 +17,13 @@ import { ModalHeader } from './components/ModalHeader';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { useSwipeDismiss } from './hooks/useSwipeDismiss';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { CreateHabitModalProps } from './types';
 
 export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, handleCreate } = useCreateHabitModal(props);
+  const { colors: themeColors, isDark } = useThemeColors();
   const scrollViewRef = useRef<ScrollViewType>(null);
   const [showNameError, setShowNameError] = useState(false);
   const { animatedStyle, panGesture } = useSwipeDismiss({ onClose });
@@ -56,8 +58,8 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
         <View className='flex-1 bg-black/50'>
           <GestureDetector gesture={panGesture}>
             <Animated.View
-              className='flex-1 overflow-hidden rounded-t-3xl bg-stone-50 shadow-2xl'
-              style={animatedStyle}
+              className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
+              style={[animatedStyle, { backgroundColor: themeColors.background }]}
             >
               <ModalHeader
                 habitName={form.habitName}

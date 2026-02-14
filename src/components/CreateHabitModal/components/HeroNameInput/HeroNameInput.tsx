@@ -7,6 +7,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Text, TextInput, View } from 'react-native';
 import { colors } from '@/theme/colors';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { HeroNameInputProps } from './types';
 import { MAX_LENGTH } from './types';
@@ -20,6 +21,7 @@ export const HeroNameInput = ({
   const charCount = value.length;
   const isNearLimit = charCount > 40;
   const { triggerWarning } = useHapticFeedback();
+  const { colors: themeColors } = useThemeColors();
   const previousCount = useRef(charCount);
   const inputRef = useRef<TextInput>(null);
 
@@ -50,8 +52,8 @@ export const HeroNameInput = ({
   return (
     <View className='mb-4'>
       <Animated.Text
-        className='mb-3 text-xl font-bold text-stone-800'
-        style={{ opacity: labelOpacity }}
+        className='mb-3 text-xl font-bold'
+        style={{ color: themeColors.text.primary, opacity: labelOpacity }}
       >
         What habit do you want to build?
       </Animated.Text>
@@ -63,15 +65,17 @@ export const HeroNameInput = ({
           accessibilityHint='Enter the name of your new habit'
           accessibilityLabel='Habit name input'
           autoFocus={autoFocus}
-          className='h-16 rounded-2xl bg-white px-5 pr-16 text-lg font-medium text-stone-800 shadow-sm'
+          className='h-16 rounded-2xl px-5 pr-16 text-lg font-medium shadow-sm'
           maxLength={MAX_LENGTH}
           placeholder='e.g., Read for 10 minutes'
-          placeholderTextColor='#a8a29e'
+          placeholderTextColor={themeColors.text.tertiary}
           returnKeyType='done'
           style={{
+            backgroundColor: themeColors.card,
             borderColor:
-              value.length > 0 ? colors.secondary[500] : colors.border,
+              value.length > 0 ? colors.secondary[500] : themeColors.border,
             borderWidth: value.length > 0 ? 2 : 1,
+            color: themeColors.text.primary,
           }}
           value={value}
           onChangeText={onChange}
@@ -80,8 +84,9 @@ export const HeroNameInput = ({
         <View className='-transtone-y-1/2 absolute right-4 top-1/2'>
           <Text
             className={`text-xs font-medium ${
-              isNearLimit ? 'text-amber-500' : 'text-stone-400'
+              isNearLimit ? 'text-amber-500' : ''
             }`}
+            style={!isNearLimit ? { color: themeColors.text.tertiary } : undefined}
           >
             {charCount}/{MAX_LENGTH}
           </Text>

@@ -1,6 +1,7 @@
 import { Switch, Text, View } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { formatReminderTime } from '../../../utils/notifications';
 
 interface ReminderSectionProps {
@@ -22,14 +23,15 @@ export const ReminderSection = ({
   onTimePress,
 }: ReminderSectionProps) => {
   const { triggerSelection } = useHapticFeedback();
+  const { colors } = useThemeColors();
 
   return (
-    <View className='mb-6 rounded-2xl bg-white p-4'>
+    <View className='mb-6 rounded-2xl p-4' style={{ backgroundColor: colors.card }}>
       <View className='flex-row items-center'>
         {/* Bell icon in colored circle */}
         <View
           className='mr-3 h-10 w-10 items-center justify-center rounded-full'
-          style={{ backgroundColor: remindersEnabled ? '#DCFCE7' : '#F5F5F5' }}
+          style={{ backgroundColor: remindersEnabled ? '#DCFCE7' : colors.surface }}
         >
           <Text style={{ fontSize: 18 }}>🔔</Text>
         </View>
@@ -49,10 +51,10 @@ export const ReminderSection = ({
             }
           }}
         >
-          <Text className='text-base font-semibold text-stone-800'>Remind me</Text>
+          <Text className='text-base font-semibold' style={{ color: colors.text.primary }}>Remind me</Text>
           <Text
             className='text-sm'
-            style={{ color: remindersEnabled ? '#22C55E' : '#a8a29e' }}
+            style={{ color: remindersEnabled ? '#22C55E' : colors.text.tertiary }}
           >
             {formatReminderTime(reminderTime)}
           </Text>
@@ -63,9 +65,9 @@ export const ReminderSection = ({
           accessibilityLabel='Toggle reminder'
           accessibilityRole='switch'
           accessibilityState={{ checked: remindersEnabled }}
-          ios_backgroundColor='#E5E5E5'
+          ios_backgroundColor={colors.gray[300]}
           thumbColor='#FFFFFF'
-          trackColor={{ false: '#E5E5E5', true: '#22C55E' }}
+          trackColor={{ false: colors.gray[300], true: '#22C55E' }}
           value={remindersEnabled}
           onValueChange={(val) => {
             triggerSelection();

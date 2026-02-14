@@ -5,6 +5,7 @@
 
 import { useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import {
   HUBERMAN_PHASES,
   type HubermanPhase,
@@ -22,6 +23,7 @@ export const TimeOfDayButton = ({
   onPress,
 }: TimeOfDayButtonProps) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const { colors } = useThemeColors();
   const phaseInfo = HUBERMAN_PHASES[phase];
 
   const handlePressIn = () => {
@@ -56,8 +58,8 @@ export const TimeOfDayButton = ({
         className='items-center justify-center rounded-xl px-3 py-3'
         style={[
           {
-            backgroundColor: isSelected ? '#22C55E' : '#fafaf9',
-            borderColor: isSelected ? '#16A34A' : '#e7e5e4',
+            backgroundColor: isSelected ? '#22C55E' : colors.surface,
+            borderColor: isSelected ? '#16A34A' : colors.border,
             borderWidth: 1.5,
             transform: [{ scale: scaleAnim }],
           },
@@ -66,7 +68,7 @@ export const TimeOfDayButton = ({
         <Text className='mb-1 text-lg'>{phaseInfo.icon}</Text>
         <Text
           className='text-sm font-semibold'
-          style={{ color: isSelected ? '#FFFFFF' : '#1c1917' }}
+          style={{ color: isSelected ? '#FFFFFF' : colors.text.primary }}
         >
           {phaseInfo.shortLabel}
         </Text>

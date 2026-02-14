@@ -3,6 +3,7 @@ import { Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import STRINGS from '../../../constants/strings';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import {
   MAX_LENGTH,
   MAX_CHARS,
@@ -21,6 +22,7 @@ const HabitNameFieldComponent = ({
   error,
   onBlur: onBlurProp,
 }: HabitNameFieldProps) => {
+  const { colors } = useThemeColors();
   const charCount = value.length;
   const showCounter = charCount > SHOW_THRESHOLD;
   const isWarning = charCount > WARNING_THRESHOLD;
@@ -41,7 +43,7 @@ const HabitNameFieldComponent = ({
     onBlurProp?.();
   }, [onBlurProp]);
 
-  const counterColor = isError ? '#EF4444' : isWarning ? '#F59E0B' : '#78716c';
+  const counterColor = isError ? '#EF4444' : isWarning ? '#F59E0B' : colors.text.tertiary;
 
   return (
     <View className='mb-3'>
@@ -50,12 +52,15 @@ const HabitNameFieldComponent = ({
         accessibilityHint='Enter a name for your habit, up to 50 characters'
         accessibilityLabel='Habit name'
         autoFocus={autoFocus}
-        className='h-14 rounded-xl bg-white px-4 text-base text-stone-800'
+        className='h-14 rounded-xl px-4 text-base'
         maxLength={MAX_LENGTH}
         placeholder={STRINGS.CREATE_HABIT.namePlaceholder}
-        placeholderTextColor='#a8a29e'
+        placeholderTextColor={colors.text.tertiary}
         returnKeyType='done'
-        style={animatedInputStyle}
+        style={[animatedInputStyle, {
+          backgroundColor: colors.card,
+          color: colors.text.primary,
+        }]}
         value={value}
         onBlur={handleBlur}
         onChangeText={onChange}

@@ -7,6 +7,7 @@ import { memo, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useKeyboardState } from '../../hooks/useKeyboardState';
 import type { StickyCreateBarProps } from './types';
 import { DEFAULT_BUTTON_COLOR, getGradientColors } from './colorUtils';
@@ -20,6 +21,7 @@ function StickyCreateBarComponent({
   selectedColor,
 }: StickyCreateBarProps) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useThemeColors();
   const { isKeyboardVisible, keyboardHeight } = useKeyboardState();
   const { scale, colorOpacity, triggerSuccess, handlePressIn, handlePressOut } =
     useStickyBarAnimations(disabled, selectedColor);
@@ -42,6 +44,10 @@ function StickyCreateBarComponent({
     }
   }, [disabled, onPress, triggerSuccess]);
 
+  const bgColor = colors.background;
+  const bgTransparent = isDark ? 'rgba(17, 24, 39, 0)' : 'rgba(250, 248, 245, 0)';
+  const bgSemi = isDark ? 'rgba(17, 24, 39, 0.9)' : 'rgba(250, 248, 245, 0.9)';
+
   return (
     <View
       pointerEvents='box-none'
@@ -54,12 +60,12 @@ function StickyCreateBarComponent({
       }}
     >
       <LinearGradient
-        colors={['transparent', 'rgba(250, 248, 245, 0.9)', '#FAF8F5']}
+        colors={[bgTransparent, bgSemi, bgColor]}
         locations={[0, 0.4, 1]}
         pointerEvents='none'
         style={{ height: 32 }}
       />
-      <View className='bg-[#FAF8F5] px-4 pb-2'>
+      <View className='px-4 pb-2' style={{ backgroundColor: bgColor }}>
         <MotivationText />
         <CreateButton
           colorOpacity={colorOpacity}
@@ -71,7 +77,10 @@ function StickyCreateBarComponent({
           onPressOut={handlePressOut}
         />
         <View className='mt-3 items-center'>
-          <View className='h-1 w-32 rounded-full bg-stone-300/60' />
+          <View
+            className='h-1 w-32 rounded-full'
+            style={{ backgroundColor: colors.gray[300], opacity: 0.6 }}
+          />
         </View>
       </View>
     </View>

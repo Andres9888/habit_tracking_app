@@ -8,7 +8,7 @@ import { Animated, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
 import STRINGS from '../../../../constants/strings';
-import { colors } from '../../../../theme/colors';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface CreateButtonProps {
   disabled: boolean;
@@ -30,9 +30,10 @@ export function CreateButton({
   onPressIn,
   onPressOut,
 }: CreateButtonProps) {
+  const { colors } = useThemeColors();
+
   return (
-    // OPTIMIZED: Stronger shadow, larger padding
-    <View className='rounded-2xl bg-white p-2.5 shadow-xl'>
+    <View className='rounded-2xl p-2.5 shadow-xl' style={{ backgroundColor: colors.card }}>
       <Animated.View style={{ opacity: colorOpacity, transform: [{ scale }] }}>
         <Pressable
           accessibilityHint={
@@ -53,19 +54,18 @@ export function CreateButton({
           onPressOut={onPressOut}
         >
           <LinearGradient
-            // OPTIMIZED: Taller button, 17px text
             className='flex-row items-center justify-center rounded-xl py-4'
             colors={gradientColors}
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
             style={{
-              shadowColor: '#1c1917',
+              shadowColor: colors.text.primary,
               shadowOffset: { height: 4, width: 0 },
               shadowOpacity: 0.08,
               shadowRadius: 16,
             }}
           >
-            <Check color={colors.text.inverse} size={20} strokeWidth={2.5} />
+            <Check color='#FFFFFF' size={20} strokeWidth={2.5} />
             <Text className='ml-2 text-[17px] font-semibold text-white'>
               {STRINGS.CREATE_HABIT.createAction}
             </Text>

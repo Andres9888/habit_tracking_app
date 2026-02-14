@@ -5,6 +5,7 @@
 
 import { AccessibilityInfo, Text, View } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import {
   HUBERMAN_PHASES,
   PHASE_ORDER,
@@ -22,6 +23,7 @@ export const TimeOfDaySelector = ({
   onSelectPhase,
 }: TimeOfDaySelectorProps) => {
   const { triggerSelection } = useHapticFeedback();
+  const { colors } = useThemeColors();
 
   const handleSelectPhase = (phase: HubermanPhase) => {
     triggerSelection();
@@ -33,8 +35,8 @@ export const TimeOfDaySelector = ({
   };
 
   return (
-    <View className='mb-6 rounded-2xl bg-white p-4'>
-      <Text className='mb-3 text-base font-semibold text-stone-800'>When</Text>
+    <View className='mb-6 rounded-2xl p-4' style={{ backgroundColor: colors.card }}>
+      <Text className='mb-3 text-base font-semibold' style={{ color: colors.text.primary }}>When</Text>
       <View className='flex-row gap-3'>
         {PHASE_ORDER.map((phase) => (
           <TimeOfDayButton

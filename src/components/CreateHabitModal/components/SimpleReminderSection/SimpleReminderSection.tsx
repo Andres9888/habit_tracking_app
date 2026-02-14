@@ -8,6 +8,7 @@
 import { View } from 'react-native';
 
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { QuickTimeButton } from './QuickTimeButton';
 import { ReminderHeader } from './ReminderHeader';
 import { CustomTimeButton } from './CustomTimeButton';
@@ -23,11 +24,13 @@ export const SimpleReminderSection = ({
   disabled = false,
 }: SimpleReminderSectionProps) => {
   const { triggerSelection } = useHapticFeedback();
+  const { colors } = useThemeColors();
   const presets = buildQuickPresets();
 
   return (
     <View
-      className='mb-6 rounded-2xl bg-white p-4'
+      className='mb-6 rounded-2xl p-4'
+      style={{ backgroundColor: colors.card }}
       pointerEvents={disabled ? 'none' : 'auto'}
       style={{ opacity: disabled ? 0.4 : 1 }}
     >
