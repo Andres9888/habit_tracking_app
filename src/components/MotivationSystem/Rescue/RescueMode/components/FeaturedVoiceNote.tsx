@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Mic, Sparkles } from 'lucide-react-native';
 
 import { VoiceNotePlaybackUI } from '../../../Workshop/VoiceNotePlaybackUI';
@@ -32,7 +33,13 @@ export function FeaturedVoiceNote({
   );
 
   return (
-    <View className='rounded-2xl border-l-4 border-l-teal-400 bg-gradient-to-br from-teal-50 to-emerald-50 p-5'>
+    <View className='rounded-2xl border-l-4 border-l-teal-400 p-5'>
+      <LinearGradient
+        colors={['#f0fdfa', '#ecfdf5']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className='absolute inset-0 rounded-2xl'
+      />
       {/* Header */}
       <View className='mb-3 flex-row items-center gap-2'>
         <View className='h-10 w-10 items-center justify-center rounded-xl bg-teal-100'>

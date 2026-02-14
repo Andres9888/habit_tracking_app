@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { CloudRain, AlertTriangle, Lightbulb } from 'lucide-react-native';
 import { PromptList } from './PromptList';
@@ -27,7 +28,13 @@ export function NegativeStep({
   return (
     <Animated.View className='flex-1 gap-5' entering={FadeInDown.springify().damping(18)}>
       <View className='items-center gap-3'>
-        <View className='h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-400 to-red-500'>
+        <View className='h-16 w-16 items-center justify-center rounded-2xl'>
+          <LinearGradient
+            colors={['#fb7185', '#ef4444']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            className='absolute inset-0 rounded-2xl'
+          />
           <CloudRain className='text-white' size={32} />
         </View>
         <Text className='text-xl font-bold text-stone-900'>

@@ -13,6 +13,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { BarChart3, ChevronRight } from 'lucide-react-native';
 
@@ -44,7 +45,12 @@ export function ThisMonthCard({
       className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'
     >
       {/* Gradient Background */}
-      <View className='absolute inset-0 bg-gradient-to-br from-violet-50/30 via-white to-blue-50/30' />
+      <LinearGradient
+        colors={['rgba(245, 243, 255, 0.3)', '#ffffff', 'rgba(239, 246, 255, 0.3)']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className='absolute inset-0'
+      />
       <View className='absolute inset-0 rounded-2xl border border-violet-500/20' />
 
       <View className='p-4'>

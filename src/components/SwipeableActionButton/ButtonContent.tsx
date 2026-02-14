@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { clsx } from 'clsx';
@@ -40,8 +41,7 @@ export function ButtonContent({
       className={clsx(
         'flex-row items-center gap-3 rounded-xl border px-4 py-3.5 active:opacity-70',
         isDestructive && 'border-red-200/60 bg-red-50/50',
-        isBoost &&
-          'border-violet-200/60 bg-gradient-to-r from-violet-50 to-indigo-50',
+        isBoost && 'border-violet-200/60',
         !isDestructive && !isBoost && 'border-stone-200 bg-white/80'
       )}
       onPress={() => {
@@ -49,14 +49,29 @@ export function ButtonContent({
         onPress();
       }}
     >
+      {isBoost && (
+        <LinearGradient
+          colors={['#f5f3ff', '#e0e7ff']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          className='absolute inset-0 rounded-xl'
+        />
+      )}
       <View
         className={clsx(
           'h-10 w-10 items-center justify-center rounded-xl',
-          isBoost && 'bg-gradient-to-br from-violet-500 to-indigo-600',
           isDestructive && 'bg-red-100',
           !isBoost && !isDestructive && 'bg-stone-100'
         )}
       >
+        {isBoost && (
+          <LinearGradient
+            colors={['#7c3aed', '#4f46e5']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            className='absolute inset-0 rounded-xl'
+          />
+        )}
         <Icon
           className={clsx(
             isDestructive && 'text-red-500',

@@ -3,6 +3,7 @@
  */
 
 import { View, Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Flame, Sparkles } from 'lucide-react-native';
 
 interface SectionHeaderProps {
@@ -12,7 +13,13 @@ interface SectionHeaderProps {
 export function SectionHeader({ bestStreak }: SectionHeaderProps) {
   return (
     <View className='mb-3 flex-row items-center gap-2'>
-      <View className='h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-100 to-orange-100'>
+      <View className='h-10 w-10 items-center justify-center rounded-xl'>
+        <LinearGradient
+          colors={['#fef3c7', '#ffedd5']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          className='absolute inset-0 rounded-xl'
+        />
         <Flame className='text-amber-600' size={20} />
       </View>
       <View className='flex-1'>
@@ -23,7 +30,13 @@ export function SectionHeader({ bestStreak }: SectionHeaderProps) {
           Voice notes from your {bestStreak}-day streak
         </Text>
       </View>
-      <View className='flex-row items-center gap-1 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 px-2 py-1'>
+      <View className='flex-row items-center gap-1 rounded-full px-2 py-1'>
+        <LinearGradient
+          colors={['#fef3c7', '#ffedd5']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          className='absolute inset-0 rounded-full'
+        />
         <Sparkles className='text-amber-600' size={12} />
         <Text className='text-xs font-medium text-amber-700'>
           Peak Motivation

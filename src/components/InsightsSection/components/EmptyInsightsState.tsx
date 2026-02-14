@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { BarChart3, Calendar } from 'lucide-react-native';
 import type { EmptyInsightsStateProps } from '../InsightsSection.types';
@@ -15,7 +16,12 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
       className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'
       entering={FadeInDown.delay(100).springify().damping(18)}
     >
-      <View className='absolute inset-0 bg-gradient-to-br from-violet-50/30 via-white to-blue-50/30' />
+      <LinearGradient
+        colors={['rgba(245, 243, 255, 0.3)', '#ffffff', 'rgba(239, 246, 255, 0.3)']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className='absolute inset-0'
+      />
       <View className='p-5'>
         <View className='mb-3 flex-row items-center justify-center gap-2'>
           <View className='h-8 w-8 items-center justify-center rounded-lg bg-violet-100'>
