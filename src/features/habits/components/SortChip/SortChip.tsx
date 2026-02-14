@@ -8,6 +8,7 @@ import Animated, {
   FadeInDown,
 } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { HabitSortMode } from '../../types';
 import {
   SORT_LABEL_MAP,
@@ -42,7 +43,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
  * - Full width tappable row with rounded corners
  * - Left: List icon + "My Habits" label
  * - Right: Current sort label + chevron
- * - Subtle background (bg-stone-50)
+ * - Subtle background using theme surface tokens
  * - Press animation: scale 0.98
  * - Haptic: light impact on press
  */
@@ -52,6 +53,7 @@ export function SortChip({
   onPress,
   reduceMotion = false,
 }: SortChipProps) {
+  const { colors: themeColors } = useThemeColors();
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
 
   // Animated value for button press scale
@@ -95,12 +97,13 @@ export function SortChip({
         accessibilityHint='Opens sort options'
         accessibilityLabel={accessibilityLabel}
         accessibilityRole='button'
-        className='flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3 active:bg-stone-100'
+        className='flex-row items-center justify-between rounded-xl px-4 py-3'
         style={[
           animatedStyle,
           {
-            borderColor: '#e7e5e4',
-            borderWidth: 1, // stone-200
+            backgroundColor: themeColors.gray[50],
+            borderColor: themeColors.gray[200],
+            borderWidth: 1,
           },
         ]}
         onPress={handlePress}
@@ -109,18 +112,24 @@ export function SortChip({
       >
         {/* Left side: icon + label */}
         <View className='flex-row items-center gap-2'>
-          <LayoutList color='#78716c' size={18} strokeWidth={2} />
-          <Text className='text-[14px] font-semibold text-stone-700'>
+          <LayoutList color={themeColors.text.secondary} size={18} strokeWidth={2} />
+          <Text
+            className='text-[14px] font-semibold'
+            style={{ color: themeColors.text.primary }}
+          >
             My Habits
           </Text>
         </View>
 
         {/* Right side: sort label + chevron */}
         <View className='flex-row items-center gap-1'>
-          <Text className='text-[13px] font-normal text-stone-500'>
+          <Text
+            className='text-[13px] font-normal'
+            style={{ color: themeColors.text.secondary }}
+          >
             {sortLabel}
           </Text>
-          <ChevronRight color='#a8a29e' size={16} strokeWidth={2} />
+          <ChevronRight color={themeColors.gray[400]} size={16} strokeWidth={2} />
         </View>
       </AnimatedPressable>
     </Animated.View>

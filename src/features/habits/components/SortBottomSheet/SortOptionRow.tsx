@@ -34,6 +34,7 @@ interface SortOptionRowProps {
 
 /**
  * SortOptionRow - A single sort option in the detailed options list.
+ * Uses theme tokens for all colors to support dark mode.
  */
 export function SortOptionRow({
   Icon,
@@ -43,7 +44,7 @@ export function SortOptionRow({
   selected,
   onPress,
 }: SortOptionRowProps) {
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
 
   const handlePress = () => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -58,9 +59,7 @@ export function SortOptionRow({
       className='mb-1 flex-row items-center gap-3 rounded-xl px-3 py-3'
       style={{
         backgroundColor: selected
-          ? isDark
-            ? '#1f2937'
-            : '#ecfdf5'
+          ? `${themeColors.primary[100]}80`
           : 'transparent',
         borderColor: selected ? themeColors.primary[300] : 'transparent',
         borderWidth: selected ? 1 : 0,

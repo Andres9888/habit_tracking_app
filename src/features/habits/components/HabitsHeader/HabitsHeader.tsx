@@ -14,8 +14,6 @@ import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const ENTERING = FadeInDown.duration(280).springify().damping(18);
 
-// FIXED: #78716c has 4.5:1+ contrast (was #C4BFB7 at 2.8:1)
-const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
 const DATE_STYLE = {
   fontFamily: 'System',
   letterSpacing: -0.76,
@@ -114,7 +112,7 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
               <Text
                 accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
                 className='text-[13px]'
-                style={[{ color: themeColors.text.secondary }, STREAK_STYLE]}
+                style={{ color: themeColors.text.secondary, fontFamily: 'System' }}
               >
                 {completedToday} of {totalHabits} done
               </Text>

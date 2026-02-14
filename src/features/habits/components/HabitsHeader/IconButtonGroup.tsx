@@ -26,6 +26,7 @@ interface IconButtonGroupProps {
 
 /**
  * Compact icon button group containing Templates, Sort, and Settings buttons.
+ * All colors derived from theme tokens for dark/light mode consistency.
  */
 export function IconButtonGroup({
   templatesAnimatedStyle,
@@ -42,12 +43,24 @@ export function IconButtonGroup({
   onSettingsPressIn,
   onSettingsPressOut,
 }: IconButtonGroupProps) {
-  const { isDark } = useThemeColors();
-  const iconColor = isDark ? '#D1D5DB' : '#44403c';
-  const dividerBg = isDark ? '#374151' : undefined;
+  const { colors: themeColors, isDark } = useThemeColors();
+
+  const iconColor = themeColors.text.secondary;
+  const dividerColor = themeColors.border;
+  const containerBorderColor = themeColors.border;
+  const containerBgColor = isDark
+    ? `${themeColors.card}CC` // 80% opacity
+    : `${themeColors.gray[50]}CC`;
+  const pressedBg = isDark ? `${themeColors.gray[300]}20` : `${themeColors.gray[800]}0D`;
+
   return (
-    <View className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'
-      style={isDark ? { borderColor: '#374151', backgroundColor: 'rgba(31,41,55,0.8)' } : undefined}
+    <View
+      className='flex-row items-center rounded-full p-1'
+      style={{
+        borderColor: containerBorderColor,
+        borderWidth: 1,
+        backgroundColor: containerBgColor,
+      }}
     >
       {/* Templates Button - highlighted with subtle purple bg */}
       <Animated.View style={templatesAnimatedStyle}>
@@ -56,7 +69,7 @@ export function IconButtonGroup({
             accessibilityHint='Browse habit templates to add'
             accessibilityLabel='Browse habit templates'
             accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full bg-violet-50'
+            className='h-11 w-11 items-center justify-center rounded-full'
             style={({ pressed }) => ({
               backgroundColor: pressed
                 ? 'rgba(139, 92, 246, 0.15)'
@@ -72,7 +85,7 @@ export function IconButtonGroup({
         </View>
       </Animated.View>
 
-      <View className='mx-0.5 h-4 w-px bg-stone-200' style={dividerBg ? { backgroundColor: dividerBg } : undefined} />
+      <View className='mx-0.5 h-4 w-px' style={{ backgroundColor: dividerColor }} />
 
       {/* Sort Button */}
       <Animated.View style={sortAnimatedStyle}>
@@ -82,7 +95,7 @@ export function IconButtonGroup({
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-full'
           style={({ pressed }) => ({
-            backgroundColor: pressed ? 'rgba(0, 0, 0, 0.05)' : 'transparent',
+            backgroundColor: pressed ? pressedBg : 'transparent',
           })}
           onPress={onSortPress}
           onPressIn={onSortPressIn}
@@ -92,7 +105,7 @@ export function IconButtonGroup({
         </Pressable>
       </Animated.View>
 
-      <View className='mx-0.5 h-4 w-px bg-stone-200' style={dividerBg ? { backgroundColor: dividerBg } : undefined} />
+      <View className='mx-0.5 h-4 w-px' style={{ backgroundColor: dividerColor }} />
 
       {/* Settings Button */}
       <Animated.View style={settingsAnimatedStyle}>
@@ -101,7 +114,7 @@ export function IconButtonGroup({
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-full'
           style={({ pressed }) => ({
-            backgroundColor: pressed ? 'rgba(0, 0, 0, 0.05)' : 'transparent',
+            backgroundColor: pressed ? pressedBg : 'transparent',
           })}
           onPress={onSettingsPress}
           onPressIn={onSettingsPressIn}

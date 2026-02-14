@@ -11,7 +11,7 @@ interface QuickPickChipsProps {
 }
 
 export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
 
   return (
     <ScrollView
@@ -32,9 +32,7 @@ export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
             style={{
               backgroundColor: isSelected
                 ? themeColors.primary[600]
-                : isDark
-                  ? '#1f2937'
-                  : '#f5f5f4',
+                : themeColors.gray[100],
               minHeight: 44,
             }}
             onPress={() => {

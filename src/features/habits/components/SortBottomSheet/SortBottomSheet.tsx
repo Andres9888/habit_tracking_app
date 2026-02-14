@@ -5,6 +5,7 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { shadows } from '../../../../theme/spacing';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { SCREEN_HEIGHT, SORT_OPTIONS } from './constants';
 import { QuickPickChips } from './QuickPickChips';
@@ -21,7 +22,7 @@ export function SortBottomSheet({
   reduceMotion = false,
 }: SortBottomSheetProps) {
   const insets = useSafeAreaInsets();
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
   const {
     panGesture,
     backdropStyle,
@@ -54,13 +55,9 @@ export function SortBottomSheet({
             style={[
               {
                 backgroundColor: themeColors.card,
-                elevation: 20,
                 maxHeight: SCREEN_HEIGHT * 0.85,
                 paddingBottom: insets.bottom + 16,
-                shadowColor: isDark ? '#000000' : '#1c1917',
-                shadowOffset: { height: 4, width: 0 },
-                shadowOpacity: 0.08,
-                shadowRadius: 16,
+                ...shadows.modal,
               },
               sheetStyle,
             ]}
@@ -84,7 +81,7 @@ export function SortBottomSheet({
                 accessibilityLabel='Close'
                 accessibilityRole='button'
                 className='h-10 w-10 items-center justify-center rounded-full'
-                style={{ backgroundColor: isDark ? '#1f2937' : '#f5f5f4' }}
+                style={{ backgroundColor: themeColors.gray[100] }}
                 onPress={handleDismiss}
               >
                 <X color={themeColors.text.secondary} size={24} />
