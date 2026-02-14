@@ -13,7 +13,8 @@ export function ModalHeader({ name, onClose, onEdit }: ModalHeaderProps) {
       <Pressable
         accessibilityLabel='Habit options'
         accessibilityRole='button'
-        className='h-10 w-10 items-center justify-center rounded-full active:bg-stone-200'
+        className='h-11 w-11 items-center justify-center rounded-full active:bg-stone-200'
+        hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
         onPress={onEdit}
       >
         <MoreVertical color='#1c1917' size={20} />
@@ -23,7 +24,8 @@ export function ModalHeader({ name, onClose, onEdit }: ModalHeaderProps) {
         accessibilityHint='Close this modal'
         accessibilityLabel='Close'
         accessibilityRole='button'
-        className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+        className='h-11 w-11 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+        hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
         onPress={onClose}
       >
         <X color='#57534e' size={24} strokeWidth={2} />
