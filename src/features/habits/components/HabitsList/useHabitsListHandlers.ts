@@ -4,6 +4,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { trackFunnelEvent } from '../../../../lib/analytics/conversionTracker';
 import { showCreateError } from '../../../../utils/errorAlerts';
 import { useHabitsListEffects } from './useHabitsListEffects';
 import type { UseHabitsListHandlersOptions } from './HabitsList.types';
@@ -53,6 +54,7 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
           remindersEnabled: false,
         })) as Id<'habits'>;
         if (newHabitId) {
+          trackFunnelEvent('habit_created', { name: habitName });
           state.setJustCreatedHabitId(newHabitId);
           state.setIsInSuccessCelebration(true);
         }

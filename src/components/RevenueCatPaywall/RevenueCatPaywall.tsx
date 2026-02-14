@@ -13,6 +13,11 @@
 
 import { Platform, Modal, View, Text, Pressable, Alert } from 'react-native';
 import RevenueCatUI from 'react-native-purchases-ui';
+import {
+  trackPurchaseStarted,
+  trackPurchaseCancelled,
+  trackPurchaseFailed,
+} from '../../lib/analytics/conversionTracker';
 import type { RevenueCatPaywallProps } from './types';
 
 /**
@@ -81,6 +86,7 @@ export function RevenueCatPaywall({
         }}
         onPurchaseCancelled={() => {
           if (__DEV__) console.log('[RevenueCatPaywall] Purchase cancelled');
+          trackPurchaseCancelled('home_hero');
         }}
         onPurchaseCompleted={({ customerInfo }) => {
           if (__DEV__)
@@ -94,7 +100,16 @@ export function RevenueCatPaywall({
         onPurchaseError={({ error }) => {
           if (__DEV__)
             console.error('[RevenueCatPaywall] Purchase error:', error);
+          trackPurchaseFailed('home_hero', error?.message);
           Alert.alert('Purchase failed', 'Please try again.');
+        }}
+        onPurchaseStarted={({ packageBeingPurchased }) => {
+          if (__DEV__)
+            console.log(
+              '[RevenueCatPaywall] Purchase started:',
+              packageBeingPurchased
+            );
+          trackPurchaseStarted('home_hero', packageBeingPurchased?.packageType);
         }}
         onRestoreCompleted={({ customerInfo }) => {
           if (__DEV__)
