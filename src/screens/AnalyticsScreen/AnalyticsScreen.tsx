@@ -4,6 +4,7 @@
  */
 import React from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
@@ -72,30 +73,44 @@ function AnalyticsScreenContent() {
       }
       style={styles.container}
     >
-      <AnalyticsHeader />
+      <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
+        <AnalyticsHeader />
+      </Animated.View>
 
-      {hasNoHabits && <EmptyState />}
+      {hasNoHabits && (
+        <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
+          <EmptyState />
+        </Animated.View>
+      )}
 
-      <OverviewStats
-        isLoading={isLoading}
-        stats={overviewStats}
-        onHabitPress={handleHabitPress}
-      />
+      <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
+        <OverviewStats
+          isLoading={isLoading}
+          stats={overviewStats}
+          onHabitPress={handleHabitPress}
+        />
+      </Animated.View>
 
-      <ChartSections
-        complianceData={complianceData}
-        isLoading={isLoading}
-        strengthDistribution={strengthDistribution}
-        trendData={trendData}
-      />
+      <Animated.View entering={FadeInDown.delay(400).springify().damping(18)}>
+        <ChartSections
+          complianceData={complianceData}
+          isLoading={isLoading}
+          strengthDistribution={strengthDistribution}
+          trendData={trendData}
+        />
+      </Animated.View>
 
-      <InsightsSections
-        rankedHabits={overviewStats?.rankedHabits || []}
-        weeklyInsights={weeklyInsights}
-        onHabitPress={handleHabitPress}
-      />
+      <Animated.View entering={FadeInDown.delay(460).springify().damping(18)}>
+        <InsightsSections
+          rankedHabits={overviewStats?.rankedHabits || []}
+          weeklyInsights={weeklyInsights}
+          onHabitPress={handleHabitPress}
+        />
+      </Animated.View>
 
-      <ExportButton onPress={() => void handleExportPress()} />
+      <Animated.View entering={FadeInDown.delay(520).springify().damping(18)}>
+        <ExportButton onPress={() => void handleExportPress()} />
+      </Animated.View>
 
       <ExportMenu
         visible={showExportMenu}
