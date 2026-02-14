@@ -43,6 +43,18 @@ export default function HabitRankingsList({
 
   const keyExtractor = useCallback((item: HabitRanking) => item.id, []);
 
+  // Fixed height for getItemLayout optimization
+  const ITEM_HEIGHT = 72;
+
+  const getItemLayout = useCallback(
+    (_: any, index: number) => ({
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index,
+    }),
+    []
+  );
+
   const ItemSeparator = useCallback(
     () => <View style={styles.separator} />,
     []
@@ -57,11 +69,13 @@ export default function HabitRankingsList({
       nestedScrollEnabled
       contentContainerStyle={styles.listContainer}
       data={habits}
+      getItemLayout={getItemLayout}
       ItemSeparatorComponent={ItemSeparator}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       scrollEnabled={false}
       showsVerticalScrollIndicator={false}
+      windowSize={5}
     />
   );
 }
