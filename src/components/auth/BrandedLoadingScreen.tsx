@@ -4,9 +4,10 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../../theme/colors';
+import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import { LoadingTimeoutCard } from './LoadingTimeoutCard';
 
 const LOADING_TIMEOUT_MS = 10_000;
@@ -37,12 +38,16 @@ export function BrandedLoadingScreen() {
         {timedOut ? (
           <LoadingTimeoutCard onRetry={handleRetry} />
         ) : (
-          <ActivityIndicator
-            color={colors.primary[500]}
-            size='small'
-            style={styles.spinner}
-          />
+          <View style={styles.shimmerBar}>
+            <SkeletonLoader borderRadius={4} height={4} width={120} />
+          </View>
         )}
+      </View>
+
+      {/* Ghost habit cards */}
+      <View style={styles.cardsPreview}>
+        <HabitCardSkeleton />
+        <HabitCardSkeleton />
       </View>
     </View>
   );
@@ -73,5 +78,12 @@ const styles = StyleSheet.create({
     width: 64,
   },
   iconText: { fontSize: 28 },
-  spinner: { marginTop: 8 },
+  cardsPreview: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  shimmerBar: {
+    marginTop: 12,
+  },
 });

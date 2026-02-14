@@ -3,8 +3,9 @@ import type {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import type { HabitTemplate } from '../types';
+import { TemplateListSkeleton } from '../../SkeletonLoader';
 import { TemplateListEmpty } from './TemplateListEmpty';
 import { TemplateListFooter } from './TemplateListFooter';
 import { TemplateListItem } from './TemplateListItem';
@@ -37,9 +38,7 @@ export const TemplateList = ({
 }: TemplateListProps) => (
   <View className='relative max-h-[300px]'>
     {isLoading ? (
-      <View className='items-center justify-center py-12'>
-        <ActivityIndicator color='#1c1917' size='small' />
-      </View>
+      <TemplateListSkeleton />
     ) : templates.length === 0 ? (
       <TemplateListEmpty />
     ) : (
