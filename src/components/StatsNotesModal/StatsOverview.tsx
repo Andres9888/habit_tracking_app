@@ -1,9 +1,11 @@
 import { Text, View } from 'react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import HabitStats from './HabitStats';
 import { StatCard } from './StatCard';
 import { useStatsOverviewData } from './useStatsOverviewData';
 
 export default function StatsOverview() {
+  const { colors: themeColors } = useThemeColors();
   const {
     todayCompleted,
     totalHabits,
@@ -15,7 +17,12 @@ export default function StatsOverview() {
   return (
     <View className='gap-8'>
       <View className='gap-4'>
-        <Text className='text-lg font-semibold text-stone-900'>Overview</Text>
+        <Text
+          className='text-lg font-semibold'
+          style={{ color: themeColors.text.primary }}
+        >
+          Overview
+        </Text>
 
         <View className='gap-3'>
           <StatCard
@@ -39,12 +46,11 @@ export default function StatsOverview() {
             description='Currently tracking'
             label='ACTIVE HABITS'
             value={activeHabits}
-            valueColor='#1c1917'
           />
         </View>
       </View>
 
-      <View className='h-px bg-stone-200' />
+      <View className='h-px' style={{ backgroundColor: themeColors.border }} />
       <HabitStats />
     </View>
   );

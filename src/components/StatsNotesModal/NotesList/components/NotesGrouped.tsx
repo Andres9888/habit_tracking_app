@@ -6,6 +6,7 @@
 import React, { useMemo } from 'react';
 import { View, Text } from 'react-native';
 import { format } from 'date-fns';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import { NoteCard } from './NoteCard';
 
@@ -42,6 +43,7 @@ export const NotesGrouped: React.FC<NotesGroupedProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const { colors: themeColors } = useThemeColors();
   const habitNameById = useMemo(() => {
     return new Map(habits.map((habit) => [habit._id, habit.name]));
   }, [habits]);
@@ -50,7 +52,10 @@ export const NotesGrouped: React.FC<NotesGroupedProps> = ({
     <View className='gap-6'>
       {groupedNotes.map(({ date, notes }) => (
         <View key={date} className='gap-3'>
-          <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
+          <Text
+            className='text-xs font-semibold uppercase tracking-[2px]'
+            style={{ color: themeColors.text.secondary }}
+          >
             {format(new Date(date), 'MMM d, yyyy')}
           </Text>
           {notes.map((note) => {

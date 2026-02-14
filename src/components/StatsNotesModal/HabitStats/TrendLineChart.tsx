@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { Text, View } from 'react-native';
 import Svg, { Line, Circle, Text as SvgText } from 'react-native-svg';
 import { colors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { ChartDataItem } from './HabitStats.types';
 
 interface TrendLineChartProps {
@@ -17,6 +18,8 @@ const CHART_HEIGHT = 100;
 const POINT_RADIUS = 3;
 
 export function TrendLineChart({ data }: TrendLineChartProps) {
+  const { colors: themeColors, isDark } = useThemeColors();
+
   if (data.length === 0) {
     return null;
   }
@@ -33,7 +36,7 @@ export function TrendLineChart({ data }: TrendLineChartProps) {
       <Svg height={CHART_HEIGHT} width={CHART_WIDTH}>
         {/* Grid lines */}
         <Line
-          stroke={colors.border}
+          stroke={themeColors.border}
           strokeDasharray='4,4'
           strokeWidth='1'
           x1='0'
@@ -44,7 +47,7 @@ export function TrendLineChart({ data }: TrendLineChartProps) {
 
         {/* Line path */}
         <Line
-          stroke={colors.gray[300]}
+          stroke={isDark ? '#4B5563' : colors.gray[300]}
           strokeWidth='1'
           x1={points[0]?.x ?? 0}
           x2={points.at(-1)?.x ?? 0}
@@ -58,16 +61,16 @@ export function TrendLineChart({ data }: TrendLineChartProps) {
             key={index}
             cx={point.x}
             cy={point.y}
-            fill={point.completed ? colors.primary[400] : colors.gray[200]}
+            fill={point.completed ? colors.primary[400] : (isDark ? '#374151' : colors.gray[200])}
             r={POINT_RADIUS}
-            stroke={point.completed ? colors.primary[400] : colors.gray[400]}
+            stroke={point.completed ? colors.primary[400] : (isDark ? '#6B7280' : colors.gray[400])}
             strokeWidth='1.5'
           />
         ))}
 
         {/* Labels */}
         <SvgText
-          fill={colors.gray[500]}
+          fill={themeColors.text.secondary}
           fontSize='10'
           textAnchor='start'
           x='0'
@@ -76,7 +79,7 @@ export function TrendLineChart({ data }: TrendLineChartProps) {
           ✓
         </SvgText>
         <SvgText
-          fill={colors.gray[500]}
+          fill={themeColors.text.secondary}
           fontSize='10'
           textAnchor='start'
           x='0'
@@ -85,7 +88,10 @@ export function TrendLineChart({ data }: TrendLineChartProps) {
           ✗
         </SvgText>
       </Svg>
-      <Text className='mt-2 text-xs text-stone-500'>
+      <Text
+        className='mt-2 text-xs'
+        style={{ color: themeColors.text.secondary }}
+      >
         {format(new Date(data[0].date), 'MMM d')} -{' '}
         {format(new Date(data.at(-1)?.date ?? data[0].date), 'MMM d')}
       </Text>

@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import NoteEditor from '../NoteEditor';
 import type { NotesListProps } from './NotesList.types';
 import { useNotesList } from './useNotesList';
@@ -22,6 +23,7 @@ export default function NotesList({
   initialHabitId,
 }: NotesListProps) {
   const state = useNotesList(initialHabitId);
+  const { colors: themeColors } = useThemeColors();
   const { isAdding, setIsAdding, editingNote, setEditingNoteId } = state;
 
   if (isAdding) {
@@ -72,7 +74,10 @@ export default function NotesList({
 
       {state.groupedNotes.length === 0 ? (
         <View className='items-center py-8'>
-          <Text className='text-center text-sm text-stone-500'>
+          <Text
+            className='text-center text-sm'
+            style={{ color: themeColors.text.secondary }}
+          >
             {hasFilters
               ? 'No notes found'
               : 'No notes yet. Add your first note!'}

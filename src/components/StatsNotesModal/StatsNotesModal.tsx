@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../theme/ThemeContext';
 import StatsOverview from './StatsOverview';
 import NotesList from './NotesList';
 import { StatsNotesHeader } from './StatsNotesHeader';
@@ -11,20 +12,21 @@ interface StatsNotesModalProps {
   onClose: () => void;
 }
 
-const cardShadow = {
-  elevation: 5,
-  shadowColor: '#1c1917',
-  shadowOffset: { height: 4, width: 0 },
-  shadowOpacity: 0.08,
-  shadowRadius: 16,
-};
-
 export default function StatsNotesModal({
   visible,
   onClose,
 }: StatsNotesModalProps) {
   const [activeTab, setActiveTab] = useState<'stats' | 'notes'>('stats');
   const insets = useSafeAreaInsets();
+  const { colors: themeColors, isDark } = useThemeColors();
+
+  const cardShadow = {
+    elevation: 5,
+    shadowColor: isDark ? '#000000' : '#1c1917',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: isDark ? 0.3 : 0.08,
+    shadowRadius: 16,
+  };
 
   return (
     <Modal
@@ -36,8 +38,8 @@ export default function StatsNotesModal({
       <Pressable className='flex-1 bg-black/50' onPress={onClose}>
         <View className='flex-1 p-5' style={{ paddingTop: insets.top + 8 }}>
           <Pressable
-            className='flex-1 overflow-hidden rounded-2xl bg-white'
-            style={cardShadow}
+            className='flex-1 overflow-hidden rounded-2xl'
+            style={[{ backgroundColor: themeColors.card }, cardShadow]}
             onPress={(e) => e.stopPropagation()}
           >
             <StatsNotesHeader

@@ -5,7 +5,7 @@
  */
 
 import { Text, TextInput, View } from 'react-native';
-import { colors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HabitSelector } from './HabitSelector';
 import { NoteEditorActions } from './NoteEditorActions';
@@ -20,6 +20,7 @@ export default function NoteEditor({
   onCancel,
   onSave,
 }: NoteEditorProps) {
+  const { colors: themeColors } = useThemeColors();
   const {
     body,
     setBody,
@@ -42,10 +43,20 @@ export default function NoteEditor({
     onSaveComplete: onSave,
   });
 
+  const inputStyle = {
+    backgroundColor: themeColors.surface,
+    borderColor: themeColors.border,
+    borderWidth: 1,
+    color: themeColors.text.primary,
+  };
+
   return (
     <View className='gap-4'>
       <View className='gap-2'>
-        <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
+        <Text
+          className='text-xs font-semibold uppercase tracking-[2px]'
+          style={{ color: themeColors.text.secondary }}
+        >
           {isEditing ? 'EDIT NOTE' : 'NEW NOTE'}
         </Text>
 
@@ -53,9 +64,10 @@ export default function NoteEditor({
           <>
             <TextInput
               accessibilityLabel='Note date'
-              className='w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
+              className='w-full rounded-2xl px-4 py-3 text-sm font-medium'
               placeholder='YYYY-MM-DD'
-              placeholderTextColor={colors.gray[400]}
+              placeholderTextColor={themeColors.text.tertiary}
+              style={inputStyle}
               value={date}
               onChangeText={setDate}
             />
@@ -71,9 +83,10 @@ export default function NoteEditor({
         <TextInput
           multiline
           accessibilityLabel='Note body'
-          className='min-h-[120px] w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
+          className='min-h-[120px] w-full rounded-2xl px-4 py-3 text-sm font-medium'
           placeholder='Write your note here...'
-          placeholderTextColor={colors.gray[400]}
+          placeholderTextColor={themeColors.text.tertiary}
+          style={inputStyle}
           textAlignVertical='top'
           value={body}
           onChangeText={setBody}
@@ -81,9 +94,10 @@ export default function NoteEditor({
 
         <View className='flex-row justify-between'>
           <Text
-            className={`text-xs ${
-              characterCount > 1000 ? 'text-red-500' : 'text-stone-500'
-            }`}
+            className='text-xs'
+            style={{
+              color: characterCount > 1000 ? '#ef4444' : themeColors.text.secondary,
+            }}
           >
             {characterCount} / 1000 characters
           </Text>
