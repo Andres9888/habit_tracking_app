@@ -59,10 +59,10 @@ export function ContextualMessage({
     MessageType,
     { colors: [string, string]; border: string; text: string }
   > = {
-    celebrate: { colors: ['#ecfdf5', '#f0fdfa'], border: 'border-emerald-200', text: 'text-emerald-700' },
-    motivation: { colors: ['#f5f3ff', '#faf5ff'], border: 'border-violet-200', text: 'text-violet-700' },
-    record: { colors: ['#fef3c7', '#fefce8'], border: 'border-amber-200', text: 'text-amber-700' },
-    start: { colors: ['#fff7ed', '#fffbeb'], border: 'border-orange-200', text: 'text-orange-700' },
+    celebrate: { border: 'border-emerald-200', colors: ['#ecfdf5', '#f0fdfa'], text: 'text-emerald-700' },
+    motivation: { border: 'border-violet-200', colors: ['#f5f3ff', '#faf5ff'], text: 'text-violet-700' },
+    record: { border: 'border-amber-200', colors: ['#fef3c7', '#fefce8'], text: 'text-amber-700' },
+    start: { border: 'border-orange-200', colors: ['#fff7ed', '#fffbeb'], text: 'text-orange-700' },
   };
 
   const { colors, border, text } = gradientMap[type];
@@ -73,10 +73,10 @@ export function ContextualMessage({
       style={animatedStyle}
     >
       <LinearGradient
-        colors={colors}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
         className='absolute inset-0 rounded-xl'
+        colors={colors}
+        end={{ x: 1, y: 0 }}
+        start={{ x: 0, y: 0 }}
       />
       <Text className='text-base'>{emoji}</Text>
       <Text className={`text-sm font-semibold ${text}`}>{message}</Text>

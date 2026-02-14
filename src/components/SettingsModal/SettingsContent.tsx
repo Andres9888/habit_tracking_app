@@ -46,13 +46,13 @@ export function SettingsContent(p: SettingsContentProps) {
         </Animated.View>
         <Animated.View entering={anim(50)}>
           <StreakRemindersSection
-            highContrastMode={hc}
             enabled={p.streakRemindersEnabled}
-            reminderTime={p.streakReminderTime}
+            highContrastMode={hc}
             isPremium={p.isPremium}
-            onToggle={p.onToggleStreakReminders}
+            reminderTime={p.streakReminderTime}
             onChangeTime={p.onChangeStreakReminderTime}
             onPremiumUpsell={p.onPremiumUpsell}
+            onToggle={p.onToggleStreakReminders}
           />
         </Animated.View>
         <Animated.View entering={anim(100)}>

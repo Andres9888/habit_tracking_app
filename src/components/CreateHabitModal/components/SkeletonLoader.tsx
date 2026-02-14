@@ -22,13 +22,13 @@ export const SkeletonLoader = ({
     const animation = Animated.loop(
       Animated.sequence([
         Animated.timing(opacity, {
-          toValue: 1,
           duration: 800,
+          toValue: 1,
           useNativeDriver: true,
         }),
         Animated.timing(opacity, {
-          toValue: 0.3,
           duration: 800,
+          toValue: 0.3,
           useNativeDriver: true,
         }),
       ])
@@ -41,11 +41,11 @@ export const SkeletonLoader = ({
     <Animated.View
       className={className}
       style={{
-        width,
-        height,
-        borderRadius,
         backgroundColor: '#e7e5e4',
+        borderRadius,
+        height,
         opacity,
+        width,
       }}
     />
   );
@@ -53,20 +53,20 @@ export const SkeletonLoader = ({
 
 // Preset skeleton components
 export const SkeletonText = ({ className = '' }: { className?: string }) => (
-  <SkeletonLoader width='60%' height={16} className={className} />
+  <SkeletonLoader className={className} height={16} width='60%' />
 );
 
 export const SkeletonButton = ({ className = '' }: { className?: string }) => (
-  <SkeletonLoader width={120} height={40} borderRadius={20} className={className} />
+  <SkeletonLoader borderRadius={20} className={className} height={40} width={120} />
 );
 
 export const SkeletonCard = ({ className = '' }: { className?: string }) => (
   <View className={`rounded-2xl bg-white p-4 ${className}`}>
     <View className='flex-row items-center gap-4'>
-      <SkeletonLoader width={64} height={64} borderRadius={16} />
+      <SkeletonLoader borderRadius={16} height={64} width={64} />
       <View className='flex-1'>
-        <SkeletonLoader width='70%' height={20} className='mb-2' />
-        <SkeletonLoader width='40%' height={14} />
+        <SkeletonLoader className='mb-2' height={20} width='70%' />
+        <SkeletonLoader height={14} width='40%' />
       </View>
     </View>
   </View>

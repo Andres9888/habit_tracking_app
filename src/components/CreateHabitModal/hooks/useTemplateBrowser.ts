@@ -42,15 +42,15 @@ export const useTemplateBrowser = ({ isEditMode, visible, onTemplateSelect }: Us
     handleTemplateSelect,
     resetVisibility,
   } = useTemplateBrowserHandlers({
+    animateClose,
+    animateOpen,
     isEditMode,
     isOpen,
+    onTemplateSelect,
+    scrollViewRef,
+    setHasScrolledPastHero,
     setIsOpen,
     setIsVisible,
-    setHasScrolledPastHero,
-    animateOpen,
-    animateClose,
-    scrollViewRef,
-    onTemplateSelect,
   });
 
   useEffect(() => { resetIndicators(); }, [filtered.length, isOpen, resetIndicators]);

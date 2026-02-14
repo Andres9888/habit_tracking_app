@@ -15,8 +15,8 @@ import { Platform } from 'react-native';
 import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 
 const API_KEYS = {
-  ios: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY || '',
   android: process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY || '',
+  ios: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY || '',
 };
 
 let isInitialized = false;
@@ -118,4 +118,6 @@ export function isPurchasesAvailable(): boolean {
   return isInitialized && Platform.OS !== 'web';
 }
 
-export { Purchases };
+
+
+export {default as Purchases} from 'react-native-purchases';

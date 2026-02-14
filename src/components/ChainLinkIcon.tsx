@@ -40,11 +40,11 @@ export const ChainLinkIcon: React.FC<ChainLinkIconProps> = ({
       className="items-center justify-center"
       style={{ transform: [{ rotate: `${angleDeg}deg` }] }}
     >
-      <Svg width={width} height={height} viewBox="0 0 20 16" fill="none">
+      <Svg fill="none" height={height} viewBox="0 0 20 16" width={width}>
         <G fill={color}>
-          <Rect x={1.6} y={7} width={8} height={3.2} rx={1.6} transform="rotate(-30 1.6 7)" />
-          <Rect x={10.4} y={5.8} width={8} height={3.2} rx={1.6} transform="rotate(30 10.4 5.8)" />
-          <Rect x={8.8} y={7.2} width={2.4} height={1.6} rx={0.8} />
+          <Rect height={3.2} rx={1.6} transform="rotate(-30 1.6 7)" width={8} x={1.6} y={7} />
+          <Rect height={3.2} rx={1.6} transform="rotate(30 10.4 5.8)" width={8} x={10.4} y={5.8} />
+          <Rect height={1.6} rx={0.8} width={2.4} x={8.8} y={7.2} />
         </G>
       </Svg>
     </View>

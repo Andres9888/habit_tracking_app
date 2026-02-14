@@ -67,8 +67,8 @@ export function BlurOverlayVariant({
             <BlurOverlayActions
               config={config}
               handlers={handlers}
-              onStartTrial={handleStartTrialPress}
               onRestore={handleRestorePress}
+              onStartTrial={handleStartTrialPress}
             />
           </ScrollView>
         </View>

@@ -38,10 +38,10 @@ export function StreakChainSection({
   return (
     <View className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'>
       <LinearGradient
-        colors={['rgba(255, 247, 237, 0.3)', '#ffffff', 'rgba(255, 251, 235, 0.3)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
         className='absolute inset-0'
+        colors={['rgba(255, 247, 237, 0.3)', '#ffffff', 'rgba(255, 251, 235, 0.3)']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
       />
       <View className='p-5'>
         <StreakHeader currentIcon={current.icon} />

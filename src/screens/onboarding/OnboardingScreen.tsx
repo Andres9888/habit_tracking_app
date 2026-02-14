@@ -78,9 +78,9 @@ function StrengthMeter() {
             style={[
               styles.strengthBar,
               {
-                width: `${20 + i * 20}%`,
                 backgroundColor: interpolateColor(i / 4),
                 opacity: 0.15 + i * 0.2125,
+                width: `${20 + i * 20}%`,
               },
             ]}
           />
@@ -137,21 +137,21 @@ interface PageData {
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    title: "Don't Break the Chain",
     subtitle: 'Complete your habits daily to build unbreakable chains',
+    title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
   {
     id: 'strength',
-    title: 'Science-Backed Strength',
     subtitle:
       'Your habits get stronger over time — backed by behavioral science research',
+    title: 'Science-Backed Strength',
     Visual: StrengthMeter,
   },
   {
     id: 'templates',
-    title: '200+ Templates to Start',
     subtitle: 'Choose from science-backed habit templates or create your own',
+    title: '200+ Templates to Start',
     Visual: TemplateGrid,
   },
 ];
@@ -209,7 +209,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const handleNext = useCallback(() => {
     void Haptics.impactAsync(ImpactFeedbackStyle.Light);
     if (currentIndex < PAGES.length - 1) {
-      flatListRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
+      flatListRef.current?.scrollToIndex({ animated: true, index: currentIndex + 1 });
     }
   }, [currentIndex]);
 
@@ -256,11 +256,11 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         style={[styles.skipContainer, { top: insets.top + 12 }]}
       >
         <Pressable
-          onPress={handleSkip}
+          accessibilityLabel="Skip onboarding"
+          accessibilityRole="button"
           hitSlop={24}
           style={styles.skipButton}
-          accessibilityRole="button"
-          accessibilityLabel="Skip onboarding"
+          onPress={handleSkip}
         >
           <Text style={styles.skipText}>Skip</Text>
         </Pressable>
@@ -269,20 +269,20 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
       {/* Pages */}
       <FlatList
         ref={flatListRef}
-        data={PAGES}
-        renderItem={renderPage}
-        keyExtractor={(item) => item.id}
         horizontal
         pagingEnabled
-        showsHorizontalScrollIndicator={false}
         bounces={false}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
+        data={PAGES}
         getItemLayout={(_, index) => ({
+          index,
           length: SCREEN_WIDTH,
           offset: SCREEN_WIDTH * index,
-          index,
         })}
+        keyExtractor={(item) => item.id}
+        renderItem={renderPage}
+        showsHorizontalScrollIndicator={false}
+        viewabilityConfig={viewabilityConfig}
+        onViewableItemsChanged={onViewableItemsChanged}
       />
 
       {/* Bottom section */}
@@ -292,11 +292,11 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         {isLastPage ? (
           <Animated.View entering={FadeInDown.springify().damping(18)}>
             <Pressable
+              accessibilityLabel="Get started building your first habit"
+              accessibilityRole="button"
+              disabled={isLoading}
               style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
               onPress={() => void handleComplete()}
-              disabled={isLoading}
-              accessibilityRole="button"
-              accessibilityLabel="Get started building your first habit"
             >
               {isLoading ? (
                 <ActivityIndicator color="#FFFFFF" />
@@ -307,10 +307,10 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
           </Animated.View>
         ) : (
           <Pressable
+            accessibilityLabel="Next onboarding page"
+            accessibilityRole="button"
             style={styles.nextButton}
             onPress={handleNext}
-            accessibilityRole="button"
-            accessibilityLabel="Next onboarding page"
           >
             <Text style={styles.nextText}>Next</Text>
           </Pressable>
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     paddingVertical: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 48,
     paddingVertical: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
@@ -467,7 +467,7 @@ const styles = StyleSheet.create({
     height: 56,
     justifyContent: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
     width: 56,

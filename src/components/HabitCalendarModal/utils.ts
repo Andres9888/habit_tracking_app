@@ -2,9 +2,9 @@ import { format, parseISO } from 'date-fns';
 import type { Habit, TrackingEntry } from './types';
 
 const FREQUENCY_LABELS: Record<string, string> = {
+  custom: 'Custom',
   daily: 'Daily',
   weekly: 'Weekly',
-  custom: 'Custom',
 };
 
 export function buildScheduleLabel(habit: Habit): string | undefined {

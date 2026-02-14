@@ -27,7 +27,7 @@ export function HabitSelector({
           className={`rounded-xl px-3 py-2 ${
             selectedHabitId ? 'bg-stone-100' : 'bg-stone-900'
           }`}
-          onPress={() => onSelectHabit(undefined)}
+          onPress={() => onSelectHabit()}
         >
           <Text
             className={`text-sm font-medium ${

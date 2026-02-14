@@ -50,5 +50,5 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
     );
   }, [habitId, archiveHabit, onSuccess]);
 
-  return { handleDelete, handleArchive };
+  return { handleArchive, handleDelete };
 }

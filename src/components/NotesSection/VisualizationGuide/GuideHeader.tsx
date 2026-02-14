@@ -19,10 +19,10 @@ export function GuideHeader({ habitName }: GuideHeaderProps) {
       entering={FadeInDown.delay(50).springify().damping(18)}
     >
       <LinearGradient
-        colors={['#7c3aed', '#4f46e5', '#7e22ce']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
         className='absolute inset-0 rounded-2xl'
+        colors={['#7c3aed', '#4f46e5', '#7e22ce']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
       />
       <View className='flex-row items-start gap-3'>
         <View className='h-12 w-12 items-center justify-center rounded-2xl bg-white/20'>

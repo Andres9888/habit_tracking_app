@@ -116,7 +116,7 @@ const loadingStyles = StyleSheet.create({
     marginTop: 8,
     padding: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
