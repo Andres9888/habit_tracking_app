@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
     width: 20,
   },
   container: {
-    backgroundColor: '#faf9f7',
+    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   ctaButton: {

@@ -25,7 +25,7 @@ export default function PausedHabitsModal({
   const { pausedHabits, handleResume } = usePausedHabitsModalLogic();
 
   return (
-    <View className='flex-1' style={{ backgroundColor: '#faf9f7' }}>
+    <View className='flex-1' style={{ backgroundColor: '#FAF8F5' }}>
       <View style={{ paddingTop: insets.top + 8 }}>
         <Animated.View
           className='mb-6 flex-row items-center justify-between px-4'

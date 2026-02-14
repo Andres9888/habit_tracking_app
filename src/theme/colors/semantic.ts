@@ -10,9 +10,9 @@
  * the app from standard cool-gray Tailwind defaults.
  */
 export const warmPalette = {
-  background: '#faf9f7', // Consolidated: was #FAF8F5, now matches core.ts
+  background: '#FAF8F5', // Warm stone background — single source of truth with core.ts
   border: '#E5E2DE',
-  cardBg: '#ffffff', // Consolidated: was #f0eeeb, now matches light.card
+  cardBg: '#f0eeeb', // Warm stone card — single source of truth with core.ts light.card
   foreground: '#2D2A26',
   neutral: '#C4BFB7',
 } as const;

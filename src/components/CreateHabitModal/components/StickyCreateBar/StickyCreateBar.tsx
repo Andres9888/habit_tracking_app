@@ -54,12 +54,12 @@ function StickyCreateBarComponent({
       }}
     >
       <LinearGradient
-        colors={['transparent', 'rgba(250, 249, 247, 0.9)', '#faf9f7']}
+        colors={['transparent', 'rgba(250, 248, 245, 0.9)', '#FAF8F5']}
         locations={[0, 0.4, 1]}
         pointerEvents='none'
         style={{ height: 32 }}
       />
-      <View className='bg-[#faf9f7] px-4 pb-2'>
+      <View className='bg-[#FAF8F5] px-4 pb-2'>
         <MotivationText />
         <CreateButton
           colorOpacity={colorOpacity}

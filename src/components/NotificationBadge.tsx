@@ -60,7 +60,7 @@ export function NotificationBadge({
         {
           alignItems: 'center',
           backgroundColor: '#ef4444',
-          borderColor: '#faf9f7',
+          borderColor: '#FAF8F5',
           borderRadius: borderRadius.full,
           borderWidth: 2,
           height: 18,
