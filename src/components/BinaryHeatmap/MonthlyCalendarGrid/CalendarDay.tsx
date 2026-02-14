@@ -1,7 +1,8 @@
 /**
  * CalendarDay Component
  *
- * Individual day cell for the monthly calendar.
+ * Individual day cell for the monthly calendar with circle indicators.
+ * Shows filled green circles for completed days and empty circles for missed days.
  */
 
 import React, { memo } from 'react';
@@ -30,6 +31,7 @@ export const CalendarDay = memo(function CalendarDay({
   // Guard against undefined day properties
   const showCompleted = Boolean(day?.isCompleted && day?.isCurrentMonth && !day?.isFuture);
   const isToday = Boolean(day?.isToday);
+  const isPastDay = Boolean(day?.isCurrentMonth && !day?.isFuture && !day?.isBeforeCreation);
 
   return (
     <Pressable
@@ -53,8 +55,19 @@ export const CalendarDay = memo(function CalendarDay({
         >
           {day?.dayNumber ?? ''}
         </Text>
-        {showCompleted && (
-          <View style={[styles.dot, { backgroundColor: habitColor }]} />
+        {/* Streak Calendar: Show circle indicators */}
+        {isPastDay && (
+          <View
+            style={[
+              styles.circle,
+              showCompleted
+                ? { backgroundColor: habitColor }
+                : {
+                    borderColor: hexToRgba(habitColor, 0.3),
+                    borderWidth: 1.5,
+                  },
+            ]}
+          />
         )}
       </View>
     </Pressable>

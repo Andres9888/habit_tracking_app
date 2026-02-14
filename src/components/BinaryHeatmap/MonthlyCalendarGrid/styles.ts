@@ -11,6 +11,13 @@ import { typography } from '@/theme/typography';
 import { COLORS } from './colors';
 
 export const styles = StyleSheet.create({
+  circle: {
+    borderRadius: 6,
+    bottom: 2,
+    height: 12,
+    position: 'absolute',
+    width: 12,
+  },
   container: {
     ...shadows.card,
     backgroundColor: COLORS.CARD_BG,

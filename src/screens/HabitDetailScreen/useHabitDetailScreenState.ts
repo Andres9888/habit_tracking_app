@@ -36,6 +36,10 @@ export const useHabitDetailScreenState = ({
   // Calendar toggling state
   const [isTogglingCalendar, setIsTogglingCalendar] = useState(false);
 
+  // Reflection note modal state
+  const [isReflectionModalOpen, setIsReflectionModalOpen] = useState(false);
+  const [selectedReflectionDate, setSelectedReflectionDate] = useState<string | null>(null);
+
   // Fetch habit notes
   const habitNotes =
     useQuery(api.notes.search, visible && habitId ? { habitId } : 'skip') ?? [];
@@ -97,15 +101,19 @@ export const useHabitDetailScreenState = ({
     isCompletedToday,
     isNotesEditorOpen,
     isNotesListOpen,
+    isReflectionModalOpen,
     isTogglingCalendar,
     pendingArchive,
     pendingDelete,
+    selectedReflectionDate,
     setEditingNoteId,
     setIsNotesEditorOpen,
     setIsNotesListOpen,
+    setIsReflectionModalOpen,
     setIsTogglingCalendar,
     setPendingArchive,
     setPendingDelete,
+    setSelectedReflectionDate,
     strengthPercent,
     today,
     totalCompletions,

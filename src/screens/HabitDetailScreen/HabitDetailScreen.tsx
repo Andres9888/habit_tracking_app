@@ -9,6 +9,7 @@ import {
   DetailLoadingState,
   HabitDetailContent,
   HabitDetailModals,
+  ReflectionNoteModal,
 } from './components';
 import {
   DETAIL_BG_GRADIENT,
@@ -43,7 +44,9 @@ function HabitDetailScreenContent({
     onArchive,
     onClose,
     onDelete,
+    setIsReflectionModalOpen: screenState.setIsReflectionModalOpen,
     setIsTogglingCalendar: screenState.setIsTogglingCalendar,
+    setSelectedReflectionDate: screenState.setSelectedReflectionDate,
     setPendingArchive: screenState.setPendingArchive,
     setPendingDelete: screenState.setPendingDelete,
   });
@@ -94,6 +97,12 @@ function HabitDetailScreenContent({
             habitId={habit._id}
             habitName={habit.name}
             {...buildModalsProps(screenState, calendarHandlers, notesHandlers, insets)}
+          />
+          <ReflectionNoteModal
+            visible={screenState.isReflectionModalOpen}
+            onClose={() => screenState.setIsReflectionModalOpen(false)}
+            habitId={habit?._id ?? null}
+            selectedDate={screenState.selectedReflectionDate}
           />
         </>
       ) : (

@@ -16,7 +16,9 @@ interface UseCalendarHandlersProps {
   onArchive?: (habitId: Id<'habits'>) => void;
   onClose: () => void;
   onDelete?: (habitId: Id<'habits'>) => void;
+  setIsReflectionModalOpen: (open: boolean) => void;
   setIsTogglingCalendar: (toggling: boolean) => void;
+  setSelectedReflectionDate: (date: string | null) => void;
   setPendingArchive: (pending: boolean) => void;
   setPendingDelete: (pending: boolean) => void;
 }
@@ -27,7 +29,9 @@ export const useCalendarHandlers = ({
   onArchive,
   onClose,
   onDelete,
+  setIsReflectionModalOpen,
   setIsTogglingCalendar,
+  setSelectedReflectionDate,
   setPendingArchive,
   setPendingDelete,
 }: UseCalendarHandlersProps) => {
@@ -35,13 +39,24 @@ export const useCalendarHandlers = ({
 
   const handleCalendarDayPress = useCallback(
     (date: string, wasCompleted: boolean): void => {
-      if (isTogglingCalendar || !habit?._id) return;
+      if (!habit?._id) return;
 
       const inputDate = new Date(date);
       const todayDate = new Date();
       inputDate.setHours(0, 0, 0, 0);
       todayDate.setHours(0, 0, 0, 0);
       if (inputDate > todayDate) return;
+
+      // Open the reflection modal to show completion notes
+      setSelectedReflectionDate(date);
+      setIsReflectionModalOpen(true);
+    },
+    [habit?._id, setIsReflectionModalOpen, setSelectedReflectionDate]
+  );
+
+  const handleToggleFromReflectionModal = useCallback(
+    (date: string): void => {
+      if (isTogglingCalendar || !habit?._id) return;
 
       setIsTogglingCalendar(true);
       toggleHabitMutation({ date, habitId: habit._id })
@@ -95,6 +110,7 @@ export const useCalendarHandlers = ({
     handleConfirmDelete,
     handleSwipeArchive,
     handleSwipeDelete,
+    handleToggleFromReflectionModal,
     handleUndoArchive,
     handleUndoDelete,
   };
