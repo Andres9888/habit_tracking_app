@@ -12,7 +12,24 @@ import { query } from './_generated/server';
 export const getStrengthDistribution = query({
   args: {},
   handler: async (ctx) => {
-    const habits = await ctx.db.query('habits').collect();
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      const empty = { count: 0, emoji: '', percentage: 0 };
+      return {
+        automatic: { ...empty, emoji: '⚡' },
+        building: { ...empty, emoji: '🌿' },
+        developing: { ...empty, emoji: '🌳' },
+        starting: { ...empty, emoji: '🌱' },
+        strong: { ...empty, emoji: '💪' },
+        total: 0,
+      };
+    }
+
+    // PERF FIX: Use by_userId index instead of full table scan
+    const habits = await ctx.db
+      .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
+      .collect();
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
     // Categorize by strength level

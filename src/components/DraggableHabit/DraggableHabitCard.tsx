@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Animated, Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated from 'react-native-reanimated';
@@ -12,7 +12,9 @@ import { borderRadius } from '../../theme/spacing';
 
 export type { DraggableHabitCardProps } from './DraggableHabitCard.types';
 
-export function DraggableHabitCard(props: DraggableHabitCardProps) {
+// PERF FIX: Memoize to prevent re-renders when parent list re-renders
+// but this card's props haven't changed (common in FlatList scenarios).
+function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
   const effectiveAccentColor = getEffectiveAccentColor(props.accentColor);
   const borderAccentColor = getBorderAccentColor(
     props.highContrastMode,
@@ -108,3 +110,5 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
     </Swipeable>
   );
 }
+
+export const DraggableHabitCard = memo(DraggableHabitCardComponent);

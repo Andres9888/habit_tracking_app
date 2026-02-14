@@ -9,7 +9,15 @@ import { notesArrayValidator, nullableNoteValidator } from './notes/types';
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query('notes').order('desc').collect();
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    // PERF FIX: Use by_user_and_date index instead of full table scan
+    return await ctx.db
+      .query('notes')
+      .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
+      .order('desc')
+      .collect();
   },
   returns: notesArrayValidator,
 });
@@ -20,10 +28,26 @@ export const search = query({
     searchText: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    let notes = await ctx.db.query('notes').order('desc').collect();
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
 
+    let notes;
     if (args.habitId) {
-      notes = notes.filter((note) => note.habitId === args.habitId);
+      // PERF FIX: Use by_habit index for direct habit lookups
+      notes = await ctx.db
+        .query('notes')
+        .withIndex('by_habit', (q) => q.eq('habitId', args.habitId!))
+        .order('desc')
+        .collect();
+      // Filter to user's notes only
+      notes = notes.filter((n) => n.userId === identity.subject);
+    } else {
+      // PERF FIX: Use by_user_and_date index instead of full table scan
+      notes = await ctx.db
+        .query('notes')
+        .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
+        .order('desc')
+        .collect();
     }
 
     if (args.searchText && args.searchText.trim()) {
