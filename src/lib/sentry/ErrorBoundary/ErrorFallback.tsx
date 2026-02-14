@@ -34,7 +34,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#1c1917',
-    borderRadius: 10,
+    borderRadius: 12,
     paddingHorizontal: 24,
     paddingVertical: 12,
   },

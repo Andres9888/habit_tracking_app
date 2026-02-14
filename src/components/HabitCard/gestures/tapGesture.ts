@@ -4,10 +4,11 @@
  */
 
 import { Gesture } from 'react-native-gesture-handler';
-import { withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
+import { runOnJS, type SharedValue } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { showSyncError } from '../../../utils/errorAlerts';
+import { pressCard, releaseCard } from '../../../utils/animations/cardPressAnimation';
 
 interface TapGestureOptions {
   id: Id<'habits'>;
@@ -60,15 +61,19 @@ export function createTapGesture(options: TapGestureOptions) {
         })();
       }
 
-      // Crisp press scale
-      cardScale.value = reduceMotion
-        ? withTiming(0.96, { duration: 0 })
-        : withTiming(0.96, { duration: 40 });
+      // Standard card press animation with spring physics
+      if (!reduceMotion) {
+        pressCard(cardScale);
+      } else {
+        cardScale.value = 0.97;
+      }
     })
     .onFinalize(() => {
-      cardScale.value = reduceMotion
-        ? withTiming(1, { duration: 0 })
-        : withTiming(1, { duration: 80 });
+      if (!reduceMotion) {
+        releaseCard(cardScale);
+      } else {
+        cardScale.value = 1;
+      }
     })
     .onEnd(() => {
       if (disabled) return;

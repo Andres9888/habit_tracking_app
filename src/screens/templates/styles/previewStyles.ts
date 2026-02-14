@@ -50,7 +50,7 @@ export const previewStyles = StyleSheet.create({
   youtubeIconWrapper: {
     alignItems: 'center',
     backgroundColor: '#DC2626',
-    borderRadius: 10,
+    borderRadius: 12,
     height: 40,
     justifyContent: 'center',
     width: 40,
