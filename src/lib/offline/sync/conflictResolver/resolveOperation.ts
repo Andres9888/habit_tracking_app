@@ -1,7 +1,5 @@
 /**
  * Resolve Single Operation
- *
- * Resolves a single offline operation against server state.
  * Implements US4 (Graceful Conflict Resolution) and FR-010 (completion wins).
  */
 
@@ -22,16 +20,10 @@ import {
   checkWithTimeout,
   emitConflictEvents,
 } from './resolveOperation.helpers';
+import { DEFAULT_CONFLICT_RESOLVER_CONFIG } from './resolveOperationConfig';
 
-/** Default configuration for conflict resolver */
-export const DEFAULT_CONFLICT_RESOLVER_CONFIG: Required<ConflictResolverConfig> =
-  {
-    checkServerStateBeforeSync: true,
-    completionWins: true,
-    serverCheckTimeoutMs: 5000,
-  };
+export { DEFAULT_CONFLICT_RESOLVER_CONFIG } from './resolveOperationConfig';
 
-/** Resolve a single operation against server state */
 export async function resolveOperation(
   operation: OfflineOperation<'toggleCompletion'>,
   checkServerState: CompletionStateChecker,
@@ -59,7 +51,6 @@ export async function resolveOperation(
       date,
       mergedConfig.serverCheckTimeoutMs
     );
-
     if (serverCompleted === null) {
       return buildResolutionResult(
         operation.id,
@@ -69,7 +60,6 @@ export async function resolveOperation(
         'Could not determine server state - proceeding with sync'
       );
     }
-
     const serverState: ServerCompletionState = {
       date,
       fetchedAt: Date.now(),
@@ -77,8 +67,7 @@ export async function resolveOperation(
       isCompleted: serverCompleted,
     };
     const { resolution, reason } = resolveConflict(payload, serverState);
-
-    if (toCompleted === serverCompleted && onEvent) {
+    if (toCompleted === serverCompleted && onEvent)
       emitConflictEvents(
         operation.id,
         habitId,
@@ -87,8 +76,6 @@ export async function resolveOperation(
         reason,
         onEvent
       );
-    }
-
     return buildResolutionResult(
       operation.id,
       payload,
@@ -98,7 +85,7 @@ export async function resolveOperation(
     );
   } catch (error) {
     const msg = error instanceof Error ? error.message : 'Unknown error';
-    if (onEvent) {
+    if (onEvent)
       onEvent(
         createConflictEvent('conflict:error', {
           date,
@@ -107,7 +94,6 @@ export async function resolveOperation(
           operationId: operation.id,
         })
       );
-    }
     return buildResolutionResult(
       operation.id,
       payload,

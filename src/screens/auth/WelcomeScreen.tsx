@@ -1,25 +1,17 @@
 /**
  * WelcomeScreen - Auth landing page
- * Clean design consistent with app style
  */
 
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated from 'react-native-reanimated';
-import { Link } from 'lucide-react-native';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import {
-  AuthDivider,
-  AuthError,
-  BackButton,
-  SocialSignInButton,
-} from './components';
+import { BackButton } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
 import { styles } from './WelcomeScreen.styles';
+import { WelcomeContent } from './WelcomeContent';
 
 type AuthMode = 'welcome' | 'signin' | 'signup';
 
@@ -28,8 +20,7 @@ export default function WelcomeScreen() {
   const insets = useSafeAreaInsets();
   const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =
     useOAuthSignIn();
-  const { iconStyle, titleStyle, subtitleStyle, buttonsStyle } =
-    useWelcomeAnimations();
+  const anim = useWelcomeAnimations();
 
   if (mode === 'signin') {
     return (
@@ -55,59 +46,20 @@ export default function WelcomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
-        <View style={styles.heroSection}>
-          <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <Link color='#1c1917' size={40} strokeWidth={2} />
-          </Animated.View>
-          <Animated.Text style={[styles.title, titleStyle]}>
-            Chain Day
-          </Animated.Text>
-          <Animated.Text style={[styles.subtitle, subtitleStyle]}>
-            Build habits that stick
-          </Animated.Text>
-        </View>
-
-        <Animated.View style={[styles.actionSection, buttonsStyle]}>
-          {error && <AuthError message={error} onDismiss={clearError} />}
-          <SocialSignInButton
-            disabled={!!isLoading}
-            isLoading={isLoading === 'oauth_apple'}
-            provider='apple'
-            onPress={signInWithApple}
-          />
-          <SocialSignInButton
-            disabled={!!isLoading}
-            isLoading={isLoading === 'oauth_google'}
-            provider='google'
-            onPress={signInWithGoogle}
-          />
-          <AuthDivider />
-          <AnimatedPressable
-            accessibilityLabel='Create free account with Chain Day'
-            accessibilityRole='button'
-            accessibilityState={{ disabled: !!isLoading }}
-            disableAnimation={!!isLoading}
-            disabled={!!isLoading}
-            style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
-            onPress={() => setMode('signup')}
-          >
-            <Text style={styles.primaryButtonText}>Create Free Account</Text>
-          </AnimatedPressable>
-          <AnimatedPressable
-            accessibilityLabel='Sign in to existing account'
-            accessibilityRole='link'
-            accessibilityState={{ disabled: !!isLoading }}
-            disableAnimation={!!isLoading}
-            disabled={!!isLoading}
-            style={styles.textLink}
-            onPress={() => setMode('signin')}
-          >
-            <Text style={styles.textLinkLabel}>Already have an account?</Text>
-            <Text style={styles.textLinkAction}> Sign in</Text>
-          </AnimatedPressable>
-        </Animated.View>
-      </View>
+      <WelcomeContent
+        buttonsStyle={anim.buttonsStyle}
+        clearError={clearError}
+        error={error}
+        iconStyle={anim.iconStyle}
+        insets={insets}
+        isLoading={isLoading}
+        signInWithApple={signInWithApple}
+        signInWithGoogle={signInWithGoogle}
+        subtitleStyle={anim.subtitleStyle}
+        titleStyle={anim.titleStyle}
+        onSignIn={() => setMode('signin')}
+        onSignUp={() => setMode('signup')}
+      />
     </View>
   );
 }

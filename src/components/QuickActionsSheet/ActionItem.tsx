@@ -5,6 +5,7 @@ import { ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { clsx } from 'clsx';
 import type { ActionItemProps } from './types';
+import { ActionItemIcon } from './ActionItemIcon';
 
 export const ActionItem = ({
   badge,
@@ -45,24 +46,11 @@ export const ActionItem = ({
           start={{ x: 0, y: 0 }}
         />
       )}
-      <View
-        className={clsx(
-          'h-10 w-10 items-center justify-center rounded-xl',
-          destructive && 'bg-red-100',
-          !highlighted && !destructive && 'bg-stone-100'
-        )}
-      >
-        {highlighted && (
-          <LinearGradient
-            className='absolute inset-0 rounded-xl'
-            colors={['#7c3aed', '#4f46e5']}
-            end={{ x: 1, y: 1 }}
-            start={{ x: 0, y: 0 }}
-          />
-        )}
-        {icon}
-      </View>
-
+      <ActionItemIcon
+        destructive={destructive}
+        highlighted={highlighted}
+        icon={icon}
+      />
       <View className='flex-1'>
         <View className='flex-row items-center gap-2'>
           <Text
@@ -94,7 +82,6 @@ export const ActionItem = ({
           </Text>
         )}
       </View>
-
       {showChevron && (
         <ChevronRight
           className={clsx(

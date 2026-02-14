@@ -4,28 +4,20 @@
  */
 
 import React, { useCallback } from 'react';
-import { Pressable, Modal, Dimensions } from 'react-native';
+import { Pressable, Modal } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   FadeIn,
   FadeOut,
   SlideInDown,
   SlideOutDown,
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  runOnJS,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-
 import type { QuickActionsSheetProps } from './types';
 import { SheetHeader } from './SheetHeader';
 import { ActionsList } from './ActionsList';
-
-const DISMISS_THRESHOLD = 100;
-const VELOCITY_THRESHOLD = 500;
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+import { usePanGesture } from './usePanGesture';
 
 export const QuickActionsSheet = ({
   habit,
@@ -40,7 +32,14 @@ export const QuickActionsSheet = ({
   visible,
 }: QuickActionsSheetProps) => {
   const insets = useSafeAreaInsets();
-  const translateY = useSharedValue(0);
+
+  const handleDismiss = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onClose();
+  }, [onClose]);
+
+  const { panGesture, sheetAnimatedStyle, translateY } =
+    usePanGesture(handleDismiss);
 
   React.useEffect(() => {
     if (visible) {
@@ -49,37 +48,7 @@ export const QuickActionsSheet = ({
     }
   }, [visible, translateY]);
 
-  const handleDismiss = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onClose();
-  }, [onClose]);
-
-  const panGesture = Gesture.Pan()
-    .onUpdate((event) => {
-      if (event.translationY > 0) {
-        translateY.value = event.translationY;
-      }
-    })
-    .onEnd((event) => {
-      const velocityY = Math.round(event.velocityY);
-      if (
-        event.translationY > DISMISS_THRESHOLD ||
-        velocityY > VELOCITY_THRESHOLD
-      ) {
-        translateY.value = withSpring(SCREEN_HEIGHT, { damping: 20, stiffness: 150 });
-        runOnJS(handleDismiss)();
-      } else {
-        translateY.value = withSpring(0, { damping: 20, stiffness: 150 });
-      }
-    });
-
-  const sheetAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
-  }));
-
-  if (!habit) {
-    return null;
-  }
+  if (!habit) return null;
 
   const handleAction = (action?: () => void) => {
     onClose();
@@ -107,7 +76,6 @@ export const QuickActionsSheet = ({
           onPress={onClose}
         />
       </Animated.View>
-
       <GestureDetector gesture={panGesture}>
         <Animated.View
           className='absolute bottom-0 left-0 right-0 rounded-t-3xl bg-white shadow-xl'

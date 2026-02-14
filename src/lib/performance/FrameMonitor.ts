@@ -3,8 +3,15 @@
  */
 import type { FrameTimingData } from './types';
 import { now } from './PerformanceTimer';
+import {
+  calculateMetrics,
+  getCurrentFPS,
+  getJankPercentage,
+  getP95FrameTime,
+} from './frameMetrics';
 
-const FRAME_BUDGET_MS = 16.67;
+export { measureFrameTime } from './frameMetrics';
+
 const SAMPLE_WINDOW_SIZE = 60;
 
 export class FrameMonitor {
@@ -49,53 +56,24 @@ export class FrameMonitor {
     this.lastFrameTime = currentTime;
     if (frameTime > 0 && frameTime < 1000) {
       this.frameTimes.push(frameTime);
-      if (this.frameTimes.length > SAMPLE_WINDOW_SIZE) {
-        this.frameTimes.shift();
-      }
+      if (this.frameTimes.length > SAMPLE_WINDOW_SIZE) this.frameTimes.shift();
       if (this.frameTimes.length === SAMPLE_WINDOW_SIZE) {
-        const sample = this.calculateMetrics();
+        const sample = calculateMetrics(this.frameTimes);
         this.samples.push(sample);
         this.onSample?.(sample);
       }
     }
   }
 
-  private calculateMetrics(): FrameTimingData {
-    const totalFrames = this.frameTimes.length;
-    const totalTime = this.frameTimes.reduce((sum, t) => sum + t, 0);
-    const averageFrameTime = totalTime / totalFrames;
-    return {
-      fps: 1000 / averageFrameTime,
-      frameTime: averageFrameTime,
-      jankFrames: this.frameTimes.filter((t) => t > FRAME_BUDGET_MS).length,
-      timestamp: now(),
-      totalFrames,
-    };
-  }
-
   getCurrentFPS(): number {
-    if (this.frameTimes.length < 2) return 0;
-    const recentFrames = this.frameTimes.slice(-10);
-    return (
-      1000 / (recentFrames.reduce((a, b) => a + b, 0) / recentFrames.length)
-    );
+    return getCurrentFPS(this.frameTimes);
   }
-
   getJankPercentage(): number {
-    if (this.frameTimes.length === 0) return 0;
-    return (
-      (this.frameTimes.filter((t) => t > FRAME_BUDGET_MS).length /
-        this.frameTimes.length) *
-      100
-    );
+    return getJankPercentage(this.frameTimes);
   }
-
   getP95FrameTime(): number {
-    if (this.frameTimes.length === 0) return 0;
-    const sorted = [...this.frameTimes].sort((a, b) => a - b);
-    return sorted[Math.floor(sorted.length * 0.95)] ?? sorted.at(-1) ?? 0;
+    return getP95FrameTime(this.frameTimes);
   }
-
   getSamples(): FrameTimingData[] {
     return [...this.samples];
   }
@@ -106,13 +84,4 @@ export class FrameMonitor {
   isActive(): boolean {
     return this.isMonitoring;
   }
-}
-
-export function measureFrameTime(): Promise<number> {
-  return new Promise((resolve) => {
-    const start = now();
-    requestAnimationFrame(() => {
-      resolve(now() - start);
-    });
-  });
 }
