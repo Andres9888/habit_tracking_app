@@ -157,7 +157,7 @@ jest
   .spyOn(AccessibilityInfo, 'announceForAccessibility')
   .mockImplementation(jest.fn());
 
-import CreateHabitModal from '../CreateHabitModal';
+import CreateHabitModal from '../CreateHabitModalCentered';
 
 describe('CreateHabitModal V11 Integration Tests', () => {
   const mockOnClose = jest.fn();
@@ -233,9 +233,13 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should update all preview elements simultaneously', async () => {
-      const { getByPlaceholderText, getAllByTestId, getByTestId, getByText, getAllByText } = render(
-        <CreateHabitModal {...defaultProps} />
-      );
+      const {
+        getByPlaceholderText,
+        getAllByTestId,
+        getByTestId,
+        getByText,
+        getAllByText,
+      } = render(<CreateHabitModal {...defaultProps} />);
 
       // 1. Set name
       const input = getByPlaceholderText('e.g., Read 10 minutes');
@@ -696,9 +700,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should handle rapid emoji selection changes', async () => {
-      const { getAllByTestId } = render(
-        <CreateHabitModal {...defaultProps} />
-      );
+      const { getAllByTestId } = render(<CreateHabitModal {...defaultProps} />);
 
       // Select multiple emojis quickly
       const emoji1 = getAllByTestId('emoji-chip-🎯')[0];
@@ -716,9 +718,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should handle rapid color selection changes', async () => {
-      const { getByTestId } = render(
-        <CreateHabitModal {...defaultProps} />
-      );
+      const { getByTestId } = render(<CreateHabitModal {...defaultProps} />);
 
       // Select multiple colors quickly
       const color1 = getByTestId('color-swatch-22C55E');

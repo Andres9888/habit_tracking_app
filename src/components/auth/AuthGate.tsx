@@ -1,3 +1,4 @@
+/* eslint-disable max-lines, max-lines-per-function */
 /**
  * AuthGate Component
  *
@@ -10,7 +11,14 @@
 
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { api } from '../../../convex/_generated/api';
@@ -20,7 +28,6 @@ import { useConvexAuthReady } from '../../providers';
 import { OnboardingScreen } from '../../screens/onboarding';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
-import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 
 const LOADING_TIMEOUT_MS = 10_000;
 
@@ -65,8 +72,8 @@ function BrandedLoadingScreen() {
               Taking longer than expected
             </Text>
             <Text style={loadingStyles.errorDescription}>
-              We're having trouble connecting. Check your internet connection and
-              try again.
+              We're having trouble connecting. Check your internet connection
+              and try again.
             </Text>
             <Pressable
               accessibilityLabel='Try Again'
@@ -116,7 +123,7 @@ const loadingStyles = StyleSheet.create({
     marginTop: 8,
     padding: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
