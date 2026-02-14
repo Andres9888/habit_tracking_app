@@ -12,7 +12,7 @@ export const VARIANT_CONFIGS: Record<string, VariantConfig> = {
     heroTitle: 'Unlock Premium Analytics',
     presentation: 'blur-overlay',
     showPricingToggle: true,
-    showSocialProof: false,
+    showSocialProof: true,
   },
   benefits: {
     ctaText: 'Start 7-Day Free Trial',
