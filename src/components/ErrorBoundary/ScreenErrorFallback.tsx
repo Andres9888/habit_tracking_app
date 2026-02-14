@@ -27,12 +27,22 @@ export function ScreenErrorFallback({
         {screenName} encountered an error, but your data is safe.
       </Text>
 
-      <Pressable style={styles.primaryButton} onPress={onRetry}>
+      <Pressable
+        accessibilityLabel='Retry loading screen'
+        accessibilityRole='button'
+        style={styles.primaryButton}
+        onPress={onRetry}
+      >
         <Text style={styles.primaryButtonText}>Try Again</Text>
       </Pressable>
 
       {onGoBack && (
-        <Pressable style={styles.secondaryButton} onPress={onGoBack}>
+        <Pressable
+          accessibilityLabel='Go back to previous screen'
+          accessibilityRole='button'
+          style={styles.secondaryButton}
+          onPress={onGoBack}
+        >
           <Text style={styles.secondaryButtonText}>Go Back</Text>
         </Pressable>
       )}

@@ -58,7 +58,12 @@ export function ErrorFallback({
       <Text style={styles.description}>{desc}</Text>
       <SuggestionsCard />
       {showLogout && onLogout ? (
-        <Pressable style={styles.logoutButton} onPress={onLogout}>
+        <Pressable
+          accessibilityLabel='Sign out to resolve persistent error'
+          accessibilityRole='button'
+          style={styles.logoutButton}
+          onPress={onLogout}
+        >
           <Text style={styles.logoutText}>Sign Out</Text>
         </Pressable>
       ) : (
