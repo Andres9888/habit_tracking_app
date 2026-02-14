@@ -39,6 +39,8 @@ export function TabBar({
 
   return (
     <Animated.View
+      accessibilityLabel='Template tabs'
+      accessibilityRole='tablist'
       style={[styles.tabBar, tabBarAnimatedStyle]}
       onLayout={onLayout}
     >

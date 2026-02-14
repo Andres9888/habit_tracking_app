@@ -56,7 +56,11 @@ export default function HabitEditScreen({
               keyboardShouldPersistTaps='handled'
               showsVerticalScrollIndicator={false}
             >
-              <Pressable onPress={Keyboard.dismiss}>
+              <Pressable
+                accessibilityElementsHidden
+                importantForAccessibility='no-hide-descendants'
+                onPress={Keyboard.dismiss}
+              >
                 <View className='pt-4'>
                   <NameInputSection
                     habitName={state.habitName}

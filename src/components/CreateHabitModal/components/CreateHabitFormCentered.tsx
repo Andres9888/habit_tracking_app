@@ -37,6 +37,8 @@ const CreateHabitFormCenteredComponent = ({
         </Text>
 
         <TextInput
+          accessibilityHint='Enter a name for your new habit'
+          accessibilityLabel='Habit name'
           autoFocus={autoFocus}
           className={`w-full rounded-2xl border-2 bg-white px-6 py-6 text-center text-xl text-stone-900 ${
             showNameError ? 'border-red-400' : 'border-stone-200'

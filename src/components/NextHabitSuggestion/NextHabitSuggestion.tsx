@@ -69,6 +69,9 @@ export function NextHabitSuggestion({
 
   return (
     <Pressable
+      accessibilityHint='Opens this habit so you can mark it complete'
+      accessibilityLabel={`Focus suggestion: ${habit.name}. ${completedCount} of ${totalCount} habits completed.`}
+      accessibilityRole='button'
       onPress={() => onPress?.(habit)}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

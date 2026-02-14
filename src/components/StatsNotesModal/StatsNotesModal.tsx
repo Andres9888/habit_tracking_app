@@ -33,9 +33,17 @@ export default function StatsNotesModal({
       visible={visible}
       onRequestClose={onClose}
     >
-      <Pressable className='flex-1 bg-black/50' onPress={onClose}>
+      <Pressable
+        accessibilityHint='Closes stats and notes modal'
+        accessibilityLabel='Close stats and notes'
+        accessibilityRole='button'
+        className='flex-1 bg-black/50'
+        onPress={onClose}
+      >
         <View className='flex-1 p-5' style={{ paddingTop: insets.top + 8 }}>
           <Pressable
+            accessibilityElementsHidden
+            importantForAccessibility='no-hide-descendants'
             className='flex-1 overflow-hidden rounded-2xl bg-white'
             style={cardShadow}
             onPress={(e) => e.stopPropagation()}

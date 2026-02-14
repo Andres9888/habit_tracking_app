@@ -16,11 +16,22 @@ export function TrialCountdownBanner({
   return (
     <View style={localStyles.container}>
       <Text style={localStyles.text}>{getTrialMessage(daysRemaining)}</Text>
-      <Pressable onPress={onUpgrade} style={localStyles.upgradeButton}>
+      <Pressable
+        accessibilityHint='Opens subscription options'
+        accessibilityLabel='Upgrade trial plan'
+        accessibilityRole='button'
+        onPress={onUpgrade}
+        style={localStyles.upgradeButton}
+      >
         <Text style={localStyles.upgradeText}>Upgrade</Text>
       </Pressable>
       {dismissible && onDismiss && (
-        <Pressable onPress={onDismiss}>
+        <Pressable
+          accessibilityHint='Dismisses this banner'
+          accessibilityLabel='Dismiss trial banner'
+          accessibilityRole='button'
+          onPress={onDismiss}
+        >
           <Text style={localStyles.dismissText}>✕</Text>
         </Pressable>
       )}

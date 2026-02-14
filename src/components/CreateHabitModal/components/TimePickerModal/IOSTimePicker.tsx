@@ -40,6 +40,8 @@ export function IOSTimePicker({
         onPress={onCancel}
       >
         <Pressable
+          accessibilityElementsHidden
+          importantForAccessibility='no-hide-descendants'
           className='mx-6 w-full max-w-sm rounded-2xl bg-white p-5'
           onPress={(e) => e.stopPropagation()}
         >

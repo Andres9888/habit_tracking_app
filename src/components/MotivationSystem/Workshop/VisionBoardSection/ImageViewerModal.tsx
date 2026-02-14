@@ -55,6 +55,8 @@ export function ImageViewerModal({
           {image.imageUrl && (
             <Image
               accessibilityIgnoresInvertColors
+              accessibilityLabel={image.caption || 'Vision board image preview'}
+              accessibilityRole='image'
               resizeMode='contain'
               source={{ uri: image.imageUrl }}
               style={{ height: SCREEN_WIDTH, width: SCREEN_WIDTH }}

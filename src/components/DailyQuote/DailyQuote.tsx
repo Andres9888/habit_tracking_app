@@ -45,7 +45,13 @@ export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: Dai
       <View style={styles.footer}>
         <Text style={styles.author}>— {quote.author}</Text>
         {showRefresh && onRefresh && (
-          <Pressable onPress={onRefresh} style={styles.refreshButton}>
+          <Pressable
+            accessibilityHint='Loads a different motivational quote'
+            accessibilityLabel='Refresh quote'
+            accessibilityRole='button'
+            onPress={onRefresh}
+            style={styles.refreshButton}
+          >
             <RefreshCw size={14} color="#a8a29e" />
           </Pressable>
         )}
