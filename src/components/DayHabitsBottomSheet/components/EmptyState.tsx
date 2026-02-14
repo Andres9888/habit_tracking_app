@@ -1,42 +1,62 @@
 /**
- * Empty state shown when no habits exist
- * Standardized: FadeInUp animation, proper typography
+ * Empty state shown when no habits exist for a selected day
+ * Theme-aware with encouraging copy
  */
 
-import { Text, View } from 'react-native';
-import { ClipboardList } from 'lucide-react-native';
+import { View } from 'react-native';
+import { CalendarPlus } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='items-center px-6 py-10'>
+    <View style={{ alignItems: 'center', paddingHorizontal: 24, paddingVertical: 40 }}>
       <Animated.View
-        className='mb-4 h-14 w-14 items-center justify-center rounded-xl bg-stone-100'
         entering={anim(0)}
         style={{
-          shadowColor: '#1c1917',
+          width: 56,
+          height: 56,
+          borderRadius: 16,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: colors.primary[100],
+          marginBottom: 16,
+          shadowColor: colors.text.primary,
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.06,
           shadowRadius: 12,
         }}
       >
-        <ClipboardList color='#78716c' size={28} strokeWidth={1.5} />
+        <CalendarPlus color={colors.primary[500]} size={28} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
-        className='mb-1 text-center font-semibold text-stone-700'
         entering={anim(60)}
-        style={{ fontSize: 17 }}
+        style={{
+          fontSize: 17,
+          fontWeight: '600',
+          color: colors.text.primary,
+          textAlign: 'center',
+          marginBottom: 4,
+        }}
       >
-        No Habits Yet
+        A Fresh Start
       </Animated.Text>
       <Animated.Text
-        className='text-center text-[13px] text-stone-500'
         entering={anim(120)}
+        style={{
+          fontSize: 13,
+          color: colors.text.secondary,
+          textAlign: 'center',
+          lineHeight: 18,
+          maxWidth: 240,
+        }}
       >
-        Create your first habit to start tracking
+        No habits tracked this day yet. Head to the Home tab to create one and get going.
       </Animated.Text>
     </View>
   );

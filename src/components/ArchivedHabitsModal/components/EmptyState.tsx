@@ -1,54 +1,103 @@
-import { Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View } from 'react-native';
+import { Archive } from 'lucide-react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
+
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='items-center justify-center px-6 py-16'>
-      {/* Illustration - using plant/growth metaphor for warmth */}
-      <View className='mb-6 items-center'>
-        <View className='relative'>
-          <View className='h-28 w-32 items-center justify-center rounded-2xl'>
-            <LinearGradient
-              className='absolute inset-0 rounded-2xl'
-              colors={['#ecfdf5', '#ccfbf1']}
-              end={{ x: 1, y: 1 }}
-              start={{ x: 0, y: 0 }}
-            />
-            <Text className='mt-2 text-5xl'>🌱</Text>
-          </View>
-          {/* Sparkles - repositioned for balance */}
-          <Text className='absolute -right-3 -top-3 text-xl'>🌟</Text>
-          <Text className='absolute -bottom-2 -left-3 text-lg'>✨</Text>
-        </View>
-      </View>
+    <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 64 }}>
+      {/* Icon */}
+      <Animated.View
+        entering={anim(0)}
+        style={{
+          width: 80,
+          height: 80,
+          borderRadius: 24,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: colors.primary[100],
+          marginBottom: 20,
+          shadowColor: colors.primary[500],
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.06,
+          shadowRadius: 16,
+        }}
+      >
+        <Archive color={colors.primary[500]} size={36} strokeWidth={1.5} />
+      </Animated.View>
 
-      {/* Text Content - warmer, more encouraging copy */}
-      <Text className='mb-2 text-center text-2xl font-bold tracking-tight text-stone-900'>
-        Your Habits Are Thriving!
-      </Text>
-      <Text className='mb-1 text-center text-base text-stone-500'>
-        All your habits are active and growing.
-      </Text>
-      <Text className='mb-6 max-w-xs text-center text-sm text-stone-500'>
-        When you need a break from a habit, swipe left to archive it here for
-        safekeeping.
-      </Text>
+      {/* Copy */}
+      <Animated.Text
+        entering={anim(60)}
+        style={{
+          fontSize: 22,
+          fontWeight: '700',
+          letterSpacing: -0.35,
+          color: colors.text.primary,
+          textAlign: 'center',
+          marginBottom: 8,
+        }}
+      >
+        All Habits Active
+      </Animated.Text>
+      <Animated.Text
+        entering={anim(120)}
+        style={{
+          fontSize: 15,
+          lineHeight: 21,
+          color: colors.text.secondary,
+          textAlign: 'center',
+          maxWidth: 280,
+          marginBottom: 24,
+        }}
+      >
+        Nothing archived yet. Swipe left on any habit to tuck it away without losing your progress.
+      </Animated.Text>
 
-      {/* Pro Tip Card - warmer color scheme */}
-      <View className='w-full max-w-xs rounded-2xl border border-emerald-100 bg-emerald-50 p-4'>
-        <View className='flex-row items-start gap-3'>
-          <Text className='text-2xl'>💚</Text>
-          <View className='flex-1'>
-            <Text className='mb-1 text-sm font-medium text-emerald-800'>
-              Good to Know
-            </Text>
-            <Text className='text-xs leading-5 text-emerald-700'>
-              Archiving preserves all your progress and streaks. You can restore
-              habits anytime and pick up right where you left off!
-            </Text>
-          </View>
+      {/* Tip Card */}
+      <Animated.View
+        entering={anim(180)}
+        style={{
+          width: '100%',
+          maxWidth: 320,
+          borderRadius: 16,
+          backgroundColor: colors.primary[100],
+          borderWidth: 1,
+          borderColor: colors.primary[300],
+          padding: 16,
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          gap: 12,
+        }}
+      >
+        <Animated.Text style={{ fontSize: 20 }}>💡</Animated.Text>
+        <View style={{ flex: 1 }}>
+          <Animated.Text
+            style={{
+              fontSize: 14,
+              fontWeight: '600',
+              color: colors.primary[500],
+              marginBottom: 4,
+            }}
+          >
+            Good to Know
+          </Animated.Text>
+          <Animated.Text
+            style={{
+              fontSize: 13,
+              lineHeight: 18,
+              color: colors.text.secondary,
+            }}
+          >
+            Archiving keeps all your streaks and data safe. Restore anytime and pick up right where you left off.
+          </Animated.Text>
         </View>
-      </View>
+      </Animated.View>
     </View>
   );
 }

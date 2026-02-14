@@ -1,44 +1,64 @@
 /**
  * HabitRankingsList EmptyState
- * Standardized: FadeInUp animation, Lucide icon, proper typography
+ * Theme-aware, on-brand emerald palette, engaging copy
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
-import { ListOrdered } from 'lucide-react-native';
+import { View } from 'react-native';
+import { Trophy } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='items-center justify-center px-6 py-12'>
+    <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}>
       <Animated.View
-        className='mb-4 h-20 w-20 items-center justify-center rounded-2xl bg-violet-50'
         entering={anim(0)}
         style={{
-          shadowColor: '#8b5cf6',
+          width: 80,
+          height: 80,
+          borderRadius: 24,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: colors.primary[100],
+          marginBottom: 16,
+          shadowColor: colors.primary[500],
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
         }}
       >
-        <ListOrdered color='#8b5cf6' size={40} strokeWidth={1.5} />
+        <Trophy color={colors.primary[500]} size={40} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
-        className='mb-2 text-center font-bold text-stone-900'
         entering={anim(60)}
-        style={{ fontSize: 22, letterSpacing: -0.5 }}
+        style={{
+          fontSize: 22,
+          fontWeight: '700',
+          letterSpacing: -0.5,
+          color: colors.text.primary,
+          textAlign: 'center',
+          marginBottom: 8,
+        }}
       >
-        No Habits to Rank Yet
+        Leaderboard Unlocks Soon
       </Animated.Text>
       <Animated.Text
-        className='text-center text-[17px] leading-[22px] text-stone-500'
         entering={anim(120)}
-        style={{ maxWidth: 280 }}
+        style={{
+          fontSize: 17,
+          lineHeight: 22,
+          color: colors.text.secondary,
+          textAlign: 'center',
+          maxWidth: 280,
+        }}
       >
-        Complete some habits to see your rankings here
+        Complete a few habits and your top performers will show up here.
       </Animated.Text>
     </View>
   );

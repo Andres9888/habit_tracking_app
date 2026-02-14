@@ -13,28 +13,28 @@ export const VARIANT_CONFIG: Record<EmptyStateVariant, VariantConfig> = {
   noData: {
     ctaLabel: 'Go to Habits',
     description:
-      'You need at least 7 days of data to see meaningful analytics.',
-    headline: 'Keep tracking',
+      'A few more days of tracking and your analytics will come alive.',
+    headline: 'Almost There',
     icon: '📊',
   },
   noHabits: {
-    ctaLabel: 'Create Custom Habit',
-    description: 'Or start with a popular template:',
-    headline: 'Ready to build a new habit?',
-    icon: '🚀',
+    ctaLabel: 'Create Your Own',
+    description: 'Or jump in with a popular template:',
+    headline: 'Your journey starts here',
+    icon: '🌱',
   },
   noResults: {
     ctaLabel: 'Clear Filters',
     description:
-      "Try adjusting your search or filters to find what you're looking for.",
-    headline: 'No results found',
+      'Try different keywords or remove some filters.',
+    headline: 'Nothing matched',
     icon: '🔍',
   },
   premiumLocked: {
     ctaLabel: 'Start Free Trial',
-    description: 'Unlock advanced analytics and insights with Premium.',
-    headline: 'Premium Feature',
-    icon: '🔒',
+    description: 'Deeper insights, trends, and patterns — all included with Premium.',
+    headline: 'Unlock the Full Picture',
+    icon: '✨',
   },
 };
 
