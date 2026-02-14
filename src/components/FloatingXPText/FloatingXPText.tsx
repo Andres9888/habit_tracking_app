@@ -1,13 +1,11 @@
 /**
  * FloatingXPText Component
  *
- * Displays "+X XP" text that floats up and fades out
- * Used when user completes a habit or earns bonus XP
+ * Displays "+X XP" text that floats up and fades out with spring physics.
+ * Used when user completes a habit or earns bonus XP.
  *
- * Based on Part B: Micro-Transitions Strategy
- * Duration: 800ms
- * Movement: Floats up 40px
- * Opacity: 1 → 0
+ * Animation: spring-driven float (60px), scale pop 1→1.3→1→0.8, fade out
+ * Duration: ~900ms total
  */
 
 import React, { useEffect } from 'react';
@@ -15,11 +13,12 @@ import { StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
+  withSpring,
   withTiming,
-  Easing,
+  withSequence,
+  withDelay,
   runOnJS,
 } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 
 export interface FloatingXPTextProps {
   /** XP value to display (e.g., 10, 50, 100) */
@@ -42,33 +41,48 @@ export function FloatingXPText({
   showCoin = false,
 }: FloatingXPTextProps) {
   const translateY = useSharedValue(0);
-  const opacity = useSharedValue(1);
+  const opacity = useSharedValue(0);
+  const scale = useSharedValue(0.5);
 
   useEffect(() => {
-    // Animate upward movement
-    translateY.value = withTiming(-40, {
-      duration: 800,
-      easing: Easing.out(Easing.cubic),
+    // Pop in: scale from 0.5 → 1.3 → 1.0 with spring
+    scale.value = withSequence(
+      withSpring(1.3, { damping: 12, stiffness: 300 }),
+      withSpring(1.0, { damping: 14, stiffness: 200 }),
+    );
+
+    // Fade in quickly
+    opacity.value = withTiming(1, { duration: 120 });
+
+    // Float upward with spring physics (overshoots slightly for organic feel)
+    translateY.value = withSpring(-60, {
+      damping: 18,
+      stiffness: 80,
+      mass: 0.8,
     });
 
-    // Animate fade out
-    opacity.value = withTiming(
-      0,
-      {
-        duration: 800,
-        easing: Easing.in(Easing.cubic),
-      },
-      (finished) => {
+    // After holding visible, fade out and shrink
+    opacity.value = withDelay(
+      500,
+      withTiming(0, { duration: 400 }, (finished) => {
         if (finished && onComplete) {
           runOnJS(onComplete)();
         }
-      }
+      }),
     );
-  }, []);
+
+    scale.value = withDelay(
+      500,
+      withSpring(0.6, { damping: 18, stiffness: 150 }),
+    );
+  }, [onComplete, opacity, scale, translateY]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
+    transform: [
+      { translateY: translateY.value },
+      { scale: scale.value },
+    ],
   }));
 
   return (
@@ -85,10 +99,8 @@ export function FloatingXPText({
       ]}
     >
       {showCoin ? (
-        // Coin variant (gold color)
         <Animated.Text style={styles.coinText}>+{value} 🪙</Animated.Text>
       ) : (
-        // XP variant (green gradient - simulate with shadow for now)
         <Animated.Text style={styles.xpText}>+{value} XP</Animated.Text>
       )}
     </Animated.View>
@@ -98,11 +110,11 @@ export function FloatingXPText({
 const styles = StyleSheet.create({
   coinText: {
     color: '#F59E0B',
-    fontSize: 17,
-    fontWeight: '600', // Amber 500
-    textShadowColor: '#F59E0B',
+    fontSize: 18,
+    fontWeight: '700',
+    textShadowColor: 'rgba(245, 158, 11, 0.5)',
     textShadowOffset: { height: 0, width: 0 },
-    textShadowRadius: 8,
+    textShadowRadius: 12,
   },
   container: {
     alignItems: 'center',
@@ -111,11 +123,11 @@ const styles = StyleSheet.create({
   },
   xpText: {
     color: '#047857',
-    fontSize: 17,
-    fontWeight: '600', // Green 700 (WCAG AA compliant text)
-    textShadowColor: '#10B981',
+    fontSize: 18,
+    fontWeight: '700',
+    textShadowColor: 'rgba(16, 185, 129, 0.5)',
     textShadowOffset: { height: 0, width: 0 },
-    textShadowRadius: 8,
+    textShadowRadius: 12,
   },
 });
 
