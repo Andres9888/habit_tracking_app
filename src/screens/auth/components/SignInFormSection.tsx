@@ -5,14 +5,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import {
-  AuthDivider,
-  AuthError,
-  ForgotPasswordLink,
-  FormInput,
-  SocialSignInButton,
-  SubmitButton,
-} from './index';
+import { AuthDivider } from './AuthDivider';
+import { AuthError } from './AuthError';
+import { ForgotPasswordLink } from './ForgotPasswordLink';
+import { FormInput } from './FormInput';
+import { SocialSignInButton } from './SocialSignInButton';
+import { SubmitButton } from './SubmitButton';
 import { styles } from '../SignInScreen.styles';
 import type { SignInFormSectionProps } from './SignInFormSection.types';
 

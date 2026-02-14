@@ -113,11 +113,11 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
         isConnectedToNextWeek &&
         isCompleted(weekDateStrings.length - 1) && (
           <ChainConnector
+            visible
             accentColor={accentColor}
             connectorColor={connectorColor}
             currentStreak={currentStreak}
             position="end"
-            visible
           />
         )}
     </View>

@@ -47,11 +47,11 @@ export function ConfettiAnimation({
   return (
     <ConfettiCannon
       ref={confettiRef}
+      fadeOut
       autoStart={false}
       colors={CONFETTI_COLORS}
       count={150}
       explosionSpeed={400}
-      fadeOut
       fallSpeed={2800}
       origin={{ x: SCREEN_WIDTH / 2, y: -20 }}
       onAnimationEnd={onComplete}

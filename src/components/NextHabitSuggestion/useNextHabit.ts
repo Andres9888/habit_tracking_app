@@ -27,7 +27,7 @@ export function useNextHabit(
 ): UseNextHabitResult {
   return useMemo(() => {
     if (!habits || habits.length === 0) {
-      return { nextHabit: null, completedCount: 0, totalCount: 0 };
+      return { completedCount: 0, nextHabit: null, totalCount: 0 };
     }
 
     // Separate completed and incomplete habits
@@ -46,8 +46,8 @@ export function useNextHabit(
     if (incomplete.length === 0) {
       // All habits complete!
       return {
-        nextHabit: null,
         completedCount: completed.length,
+        nextHabit: null,
         totalCount: habits.length,
       };
     }
@@ -69,8 +69,8 @@ export function useNextHabit(
     });
 
     return {
-      nextHabit: sorted[0],
       completedCount: completed.length,
+      nextHabit: sorted[0],
       totalCount: habits.length,
     };
   }, [habits, todayTracking]);

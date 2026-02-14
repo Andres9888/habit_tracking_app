@@ -19,9 +19,12 @@ function getGradientColors(baseColor: string): [string, string, string] {
   // Create darker and lighter variants
   // Base colors are: #10b981 (green), #f59e0b (amber), #8b5cf6 (violet)
   const gradients: Record<string, [string, string, string]> = {
-    '#10b981': ['#059669', '#10b981', '#34d399'], // Emerald gradient
-    '#f59e0b': ['#d97706', '#f59e0b', '#fbbf24'], // Amber gradient
-    '#8b5cf6': ['#7c3aed', '#8b5cf6', '#a78bfa'], // Violet gradient
+    // Amber gradient
+'#8b5cf6': ['#7c3aed', '#8b5cf6', '#a78bfa'], 
+    
+'#10b981': ['#059669', '#10b981', '#34d399'], 
+    // Emerald gradient
+'#f59e0b': ['#d97706', '#f59e0b', '#fbbf24'], // Violet gradient
   };
 
   return gradients[baseColor] || ['#059669', '#10b981', '#34d399'];
@@ -37,11 +40,11 @@ export function AchievementCard({
   const gradientColors = getGradientColors(milestone.color);
 
   return (
-    <View ref={viewRef} style={styles.container} collapsable={false}>
+    <View ref={viewRef} collapsable={false} style={styles.container}>
       <LinearGradient
         colors={gradientColors}
-        start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
         style={styles.gradient}
       >
         {/* Achievement Badge */}
@@ -59,7 +62,7 @@ export function AchievementCard({
         {/* Habit Info */}
         <View style={styles.habitContainer}>
           <Text style={styles.habitEmoji}>{habitEmoji}</Text>
-          <Text style={styles.habitName} numberOfLines={1}>
+          <Text numberOfLines={1} style={styles.habitName}>
             {habitName}
           </Text>
         </View>

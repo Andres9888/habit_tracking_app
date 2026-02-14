@@ -51,10 +51,10 @@ export function HeroSection({
           style={badgeAnimatedStyle}
         >
           <LinearGradient
-            colors={['#ffedd5', '#fef3c7']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
             className='absolute inset-0 rounded-full'
+            colors={['#ffedd5', '#fef3c7']}
+            end={{ x: 1, y: 0 }}
+            start={{ x: 0, y: 0 }}
           />
           <Text className='text-xs font-semibold text-orange-600'>
             {getStreakBadgeText(currentStreak)}

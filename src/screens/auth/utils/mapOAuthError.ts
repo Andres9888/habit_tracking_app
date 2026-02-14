@@ -39,31 +39,31 @@ export interface MappedError {
 
 /** Error message map - keys are Clerk error codes */
 const ERROR_MESSAGES: Record<OAuthErrorCode, string> = {
-  oauth_access_denied: 'Sign in was cancelled.',
-  user_cancelled: 'Sign in was cancelled.',
-  external_account_not_found:
-    'Unable to verify your account. Please try again.',
-  external_account_exists:
-    'This account is already linked to another user. Please sign in with your original account.',
   email_address_not_found:
     "We couldn't retrieve your email. Please try a different sign-in method.",
+  external_account_exists:
+    'This account is already linked to another user. Please sign in with your original account.',
+  external_account_not_found:
+    'Unable to verify your account. Please try again.',
   identifier_already_signed_in: 'You are already signed in.',
-  session_exists: 'You already have an active session.',
   network_error: 'Please check your internet connection and try again.',
+  oauth_access_denied: 'Sign in was cancelled.',
+  session_exists: 'You already have an active session.',
   unknown: 'Failed to sign in. Please try again.',
+  user_cancelled: 'Sign in was cancelled.',
 };
 
 /** Codes that indicate user cancellation (don't show error) */
-const CANCELLATION_CODES: OAuthErrorCode[] = [
+const CANCELLATION_CODES = new Set<OAuthErrorCode>([
   'oauth_access_denied',
   'user_cancelled',
-];
+]);
 
 /** Codes that indicate user should be redirected */
-const REDIRECT_CODES: OAuthErrorCode[] = [
+const REDIRECT_CODES = new Set<OAuthErrorCode>([
   'identifier_already_signed_in',
   'session_exists',
-];
+]);
 
 /**
  * Determines if an error is a network-related error.
@@ -146,8 +146,8 @@ export function mapOAuthError(error: unknown): MappedError {
 
   return {
     code: errorCode,
-    isCancellation: CANCELLATION_CODES.includes(errorCode),
+    isCancellation: CANCELLATION_CODES.has(errorCode),
     message,
-    shouldRedirect: REDIRECT_CODES.includes(errorCode),
+    shouldRedirect: REDIRECT_CODES.has(errorCode),
   };
 }

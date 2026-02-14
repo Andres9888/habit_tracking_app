@@ -29,10 +29,10 @@ export function PositiveStep({
       <View className='items-center gap-3'>
         <View className='h-16 w-16 items-center justify-center rounded-2xl'>
           <LinearGradient
-            colors={['#34d399', '#14b8a6']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
             className='absolute inset-0 rounded-2xl'
+            colors={['#34d399', '#14b8a6']}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0 }}
           />
           <Sun className='text-white' size={32} />
         </View>

@@ -44,10 +44,10 @@ export const RewardCelebrationToast = ({
         </Text>
         <View className='mt-3 rounded-2xl p-3'>
           <LinearGradient
-            colors={['#faf5ff', '#eff6ff']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
             className='absolute inset-0 rounded-2xl'
+            colors={['#faf5ff', '#eff6ff']}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0 }}
           />
           <Text className='text-[13px] font-semibold text-[#7c3aed]'>
             ✨ {premiumCTA.benefit}

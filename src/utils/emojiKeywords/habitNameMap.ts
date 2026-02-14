@@ -11,6 +11,12 @@
  * Words are mapped to an array of emojis, with the first being the "best match".
  */
 export const HABIT_NAME_EMOJI_MAP: Record<string, string[]> = {
+  bike: ['🚴', '🚵', '🏃'],
+
+  biking: ['🚴', '🚵', '🚶'],
+
+  cycling: ['🚴', '🚵', '🏃'],
+
   exercise: ['💪', '🏃', '🏋️'],
 
   gym: ['🏋️', '💪', '🏃'],
@@ -19,228 +25,314 @@ export const HABIT_NAME_EMOJI_MAP: Record<string, string[]> = {
 
   jogging: ['🏃', '🚶', '💪'],
 
-  bike: ['🚴', '🚵', '🏃'],
-
   lift: ['🏋️', '💪', '🏃'],
 
-  biking: ['🚴', '🚵', '🚶'],
-
   lifting: ['🏋️', '💪', '💯'],
-
-  cycling: ['🚴', '🚵', '🏃'],
-  // Fitness & Exercise
-  run: ['🏃', '💪', '🏅'],
-  pushup: ['💪', '🏋️', '🏃'],
-  running: ['🏃', '💪', '🏅'],
-  plank: ['💪', '🏋️', '🧘'],
-  walk: ['🚶', '🏃', '👟'],
+  
   // Wellness & Relaxation
-  meditate: ['🧘', '💆', '🌿'],
+meditate: ['🧘', '💆', '🌿'],
+  
 
+breathe: ['🧘', '🌿', '💨'],
+  
+
+meditation: ['🧘', '💆', '🙏'],
+  
+
+breathing: ['🧘', '🌿', '💨'],
+  
+
+nap: ['😴', '💤', '🛋️'],
+  
+  
+drink: ['💧', '🥤', '☕'],
+
+  
+plank: ['💪', '🏋️', '🧘'],
+
+  
+eat: ['🍎', '🥗', '🍽️'],
+
+  
+pushup: ['💪', '🏋️', '🏃'],
+
+  
+fruit: ['🍎', '🍌', '🍇'],
+
+  // Fitness & Exercise
+run: ['🏃', '💪', '🏅'],
+
+  healthy: ['🥗', '🍎', '💪'],
+
+  running: ['🏃', '💪', '🏅'],
+
+  hydrate: ['💧', '🥤', '💦'],
+  walk: ['🚶', '🏃', '👟'],
+  medicine: ['💊', '🩺', '💉'],
   walking: ['🚶', '🏃', '👟'],
-
-  meditation: ['🧘', '💆', '🙏'],
-
+  breakfast: ['🍳', '🥣', '☕'],
   workout: ['💪', '🏋️', '🏃'],
-
-  nap: ['😴', '💤', '🛋️'],
-
-  breathe: ['🧘', '🌿', '💨'],
+  coffee: ['☕', '🫖', '🍵'],
+  meal: ['🍽️', '🥗', '🍳'],
 
   swim: ['🏊', '💧', '🏄'],
 
-  breathing: ['🧘', '🌿', '💨'],
+  book: ['📚', '📖', '🎓'],
 
   swimming: ['🏊', '💧', '🏄'],
-  drink: ['💧', '🥤', '☕'],
-  stretch: ['🧘', '💪', '🤸'],
-  eat: ['🍎', '🥗', '🍽️'],
-  yoga: ['🧘', '💆', '🌿'],
-  fruit: ['🍎', '🍌', '🍇'],
-  stretching: ['🧘', '💪', '🤸'],
-  healthy: ['🥗', '🍎', '💪'],
 
-  pushups: ['💪', '🏋️', '🏃'],
-
-  hydrate: ['💧', '🥤', '💦'],
-
-  relax: ['💆', '🧘', '🛁'],
-
-  medicine: ['💊', '🩺', '💉'],
-
-  sleep: ['😴', '🛏️', '💤'],
-
-  breakfast: ['🍳', '🥣', '☕'],
-
-  rest: ['😴', '💤', '🛋️'],
-
-  coffee: ['☕', '🫖', '🍵'],
-
-  supplement: ['💊', '💪', '🍎'],
-
-  meal: ['🍽️', '🥗', '🍳'],
-  // Health & Nutrition
-  water: ['💧', '🥤', '💦'],
-  book: ['📚', '📖', '🎓'],
   books: ['📚', '📖', '🎓'],
-  vegetable: ['🥦', '🥕', '🥗'],
+
+  stretch: ['🧘', '💪', '🤸'],
+
   learn: ['🧠', '📚', '🎓'],
-  vegetables: ['🥦', '🥕', '🥗'],
+
+  yoga: ['🧘', '💆', '🌿'],
 
   learning: ['🧠', '📚', '🎓'],
 
-  vitamin: ['💊', '🍎', '🥗'],
+  stretching: ['🧘', '💪', '🤸'],
 
   practice: ['🎯', '✏️', '🏋️'],
+  
+  pushups: ['💪', '🏋️', '🏃'],
+  
+journal: ['📓', '✍️', '📝'],
+  
+relax: ['💆', '🧘', '🛁'],
+  
+journaling: ['📓', '✍️', '📝'],
+  
+sleep: ['😴', '🛏️', '💤'],
+  
+course: ['🎓', '📚', '💻'],
 
-  vitamins: ['💊', '🍎', '🥗'],
+  
+rest: ['😴', '💤', '🛋️'],
 
-  journal: ['📓', '✍️', '📝'],
+  
+email: ['📧', '💻', '📱'],
 
-  supplements: ['💊', '💪', '🍎'],
+  
+supplement: ['💊', '💪', '🍎'],
 
-  journaling: ['📓', '✍️', '📝'],
+  
+emails: ['📧', '💻', '📱'],
 
-  course: ['🎓', '📚', '💻'],
-  // Learning & Knowledge
-  read: ['📖', '📚', '🧠'],
-  email: ['📧', '💻', '📱'],
-  tea: ['🍵', '🫖', '☕'],
-  emails: ['📧', '💻', '📱'],
-  reading: ['📖', '📚', '🧠'],
+  // Health & Nutrition
+water: ['💧', '🥤', '💦'],
+
   focus: ['🎯', '🧠', '💡'],
-  study: ['📚', '🎓', '📝'],
+
   language: ['🗣️', '📚', '🌍'],
 
+  vegetable: ['🥦', '🥕', '🥗'],
+  
+  organize: ['📋', '🗂️', '📁'],
+  
+vegetables: ['🥦', '🥕', '🥗'],
+  
+call: ['📞', '🤳', '💬'],
+  
+vitamin: ['💊', '🍎', '🥗'],
+  
+code: ['💻', '⌨️', '🖥️'],
+  
+vitamins: ['💊', '🍎', '🥗'],
+  
+coding: ['💻', '⌨️', '🖥️'],
+  
+supplements: ['💊', '💪', '🍎'],
+
+  
+// Creative
+draw: ['🎨', '✏️', '🖌️'],
+
+  
+
+drawing: ['🎨', '✏️', '🖌️'],
+
+  
+// Learning & Knowledge
+read: ['📖', '📚', '🧠'],
+
+  
+guitar: ['🎸', '🎵', '🎶'],
+
+  
+tea: ['🍵', '🫖', '☕'],
+
+  
+meeting: ['📅', '💼', '🤝'],
+
+  
+reading: ['📖', '📚', '🧠'],
+
+  
+  music: ['🎵', '🎸', '🎹'],
+
+  study: ['📚', '🎓', '📝'],
+
+  craft: ['✂️', '🧵', '🎨'],
+
+  
   studying: ['📚', '🎓', '📝'],
 
-  organize: ['📋', '🗂️', '📁'],
+  
+// Home & Chores
+clean: ['🧹', '🧼', '✨'],
 
-  call: ['📞', '🤳', '💬'],
+  
 
-  write: ['✍️', '📝', '🖊️'],
+cleaning: ['🧹', '🧼', '✨'],
 
-  code: ['💻', '⌨️', '🖥️'],
+  
 
-  writing: ['✍️', '📝', '📖'],
+write: ['✍️', '📝', '🖊️'],
 
-  coding: ['💻', '⌨️', '🖥️'],
+  
 
-  // Creative
-  draw: ['🎨', '✏️', '🖌️'],
+cook: ['🍳', '👨‍🍳', '🍽️'],
+  
 
-  plan: ['📅', '📋', '🎯'],
+writing: ['✍️', '📝', '📖'],
+  
 
-  drawing: ['🎨', '✏️', '🖌️'],
+cooking: ['🍳', '👨‍🍳', '🍽️'],
+  
+
+dishes: ['🍽️', '🧼', '🧹'],
+  
+  
+plan: ['📅', '📋', '🎯'],
+
+  
+bed: ['🛏️', '😴', '💤'],
 
   // Work & Productivity
-  work: ['💼', '💻', '📊'],
+work: ['💼', '💻', '📊'],
 
-  guitar: ['🎸', '🎵', '🎶'],
+  garden: ['🌱', '🪴', '🌻'],
 
   task: ['✅', '📋', '🎯'],
 
-  meeting: ['📅', '💼', '🤝'],
+  budget: ['💰', '📊', '💵'],
 
   tasks: ['✅', '📋', '🎯'],
-  music: ['🎵', '🎸', '🎹'],
-  craft: ['✂️', '🧵', '🎨'],
-  planning: ['📅', '📋', '🎯'],
-  // Home & Chores
-  clean: ['🧹', '🧼', '✨'],
 
-  paint: ['🎨', '🖌️', '🖼️'],
-
-  cleaning: ['🧹', '🧼', '✨'],
-
-  painting: ['🎨', '🖌️', '🖼️'],
-
-  cook: ['🍳', '👨‍🍳', '🍽️'],
-
-  project: ['📊', '💼', '🎯'],
-
-  cooking: ['🍳', '👨‍🍳', '🍽️'],
-
-  dishes: ['🍽️', '🧼', '🧹'],
-
-  photo: ['📷', '📸', '🖼️'],
-  bed: ['🛏️', '😴', '💤'],
-  piano: ['🎹', '🎵', '🎶'],
-  garden: ['🌱', '🪴', '🌻'],
-  sing: ['🎤', '🎵', '🎶'],
-  budget: ['💰', '📊', '💵'],
-  singing: ['🎤', '🎵', '🎶'],
   gardening: ['🌱', '🪴', '🌻'],
-  photography: ['📷', '📸', '🖼️'],
+
   expense: ['💸', '📊', '💰'],
-  invest: ['📈', '💰', '💎'],
-
+  planning: ['📅', '📋', '🎯'],
   expenses: ['💸', '📊', '💰'],
-
-  laundry: ['🧺', '👕', '🧼'],
-
+  paint: ['🎨', '🖌️', '🖼️'],
   // Social
-  family: ['👨‍👩‍👧', '❤️', '🏠'],
+family: ['👨‍👩‍👧', '❤️', '🏠'],
+  
+painting: ['🎨', '🖌️', '🖼️'],
+  
+friend: ['🤝', '👋', '💬'],
+  
+project: ['📊', '💼', '🎯'],
+  
+friends: ['🤝', '👋', '💬'],
+  
+connect: ['💬', '📞', '🤝'],
+  
+photo: ['📷', '📸', '🖼️'],
 
-  friend: ['🤝', '👋', '💬'],
+  
+// Mindset & Goals
+goal: ['🎯', '🏆', '⭐'],
 
-  plant: ['🌱', '🪴', '🌿'],
+  
 
-  friends: ['🤝', '👋', '💬'],
+piano: ['🎹', '🎵', '🎶'],
 
-  plants: ['🌱', '🪴', '🌿'],
+  
+  
+affirmation: ['💬', '💪', '✨'],
 
-  connect: ['💬', '📞', '🤝'],
+  
+sing: ['🎤', '🎵', '🎶'],
 
+  
+affirmations: ['💬', '💪', '✨'],
+
+  
+singing: ['🎤', '🎵', '🎶'],
+
+  
+goals: ['🎯', '🏆', '⭐'],
+
+  
+photography: ['📷', '📸', '🖼️'],
+
+  
+  
+grateful: ['🙏', '❤️', '✨'],
+
+  
+  
+invest: ['📈', '💰', '💎'],
+
+  
+gratitude: ['🙏', '❤️', '✨'],
+
+  
+laundry: ['🧺', '👕', '🧼'],
+
+  
+habit: ['✅', '📈', '🔥'],
+
+  
+investing: ['📈', '💰', '💎'],
+
+  
+plant: ['🌱', '🪴', '🌿'],
+
+  
+kindness: ['❤️', '🤗', '💝'],
+
+  
+plants: ['🌱', '🪴', '🌿'],
+
+  
+evening: ['🌙', '⭐', '🌆'],
   // Finance
-  save: ['💰', '🏦', '💵'],
-
-  // Mindset & Goals
-  goal: ['🎯', '🏆', '⭐'],
-
+save: ['💰', '🏦', '💵'],
+  daily: ['📅', '✅', '🔁'],
   saving: ['💰', '🏦', '💵'],
-
-  affirmation: ['💬', '💪', '✨'],
-
-  savings: ['💰', '🏦', '💵'],
-
-  affirmations: ['💬', '💪', '✨'],
-
-  investing: ['📈', '💰', '💎'],
-
-  goals: ['🎯', '🏆', '⭐'],
-
-  money: ['💰', '💵', '💳'],
-
-  grateful: ['🙏', '❤️', '✨'],
-  gratitude: ['🙏', '❤️', '✨'],
-  habit: ['✅', '📈', '🔥'],
-  kindness: ['❤️', '🤗', '💝'],
   limit: ['📵', '⏰', '🎯'],
 
+  
+  savings: ['💰', '🏦', '💵'],
+
+  
+log: ['📝', '📓', '📊'],
+
+  
+money: ['💰', '💵', '💳'],
+
+  
+morning: ['🌅', '☀️', '⏰'],
+  
+night: ['🌙', '⭐', '😴'],
   // Misc
-  no: ['🚫', '❌', '✋'],
-
+no: ['🚫', '❌', '✋'],
   phone: ['📵', '📱', '☎️'],
-
-  thank: ['🙏', '❤️', '💝'],
-
-  morning: ['🌅', '☀️', '⏰'],
   positive: ['😊', '✨', '☀️'],
-  evening: ['🌙', '⭐', '🌆'],
   pray: ['🙏', '⛪', '✝️'],
-  daily: ['📅', '✅', '🔁'],
-  quit: ['🚫', '✋', '💪'],
-  log: ['📝', '📓', '📊'],
-  reflect: ['🪞', '🧠', '📝'],
-  night: ['🌙', '⭐', '😴'],
-  reflection: ['🪞', '🧠', '📝'],
   prayer: ['🙏', '⛪', '✝️'],
+  quit: ['🚫', '✋', '💪'],
+  reflect: ['🪞', '🧠', '📝'],
+  thank: ['🙏', '❤️', '💝'],
+  reflection: ['🪞', '🧠', '📝'],
   screen: ['📵', '📱', '💻'],
-  stop: ['🛑', '🚫', '✋'],
   social: ['📵', '📱', '🤳'],
   step: ['🚶', '👟', '📈'],
   steps: ['🚶', '👟', '📈'],
+  stop: ['🛑', '🚫', '✋'],
   streak: ['🔥', '📈', '⚡'],
   track: ['📊', '📈', '✅'],
 };

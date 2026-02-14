@@ -27,7 +27,7 @@ import { ANIMATION_TIMING } from './constants';
 import { styles } from './styles';
 import type { StreakMilestoneCelebrationProps } from './types';
 
-const SPRING_CONFIG = { damping: 18, stiffness: 180, mass: 1 };
+const SPRING_CONFIG = { damping: 18, mass: 1, stiffness: 180 };
 
 export function StreakMilestoneCelebration({
   visible,
@@ -125,20 +125,20 @@ export function StreakMilestoneCelebration({
       <Modal backdropOpacity={0.7} style={styles.modalContent} variant="fullScreen" visible={visible} onClose={onClose}>
         <View style={styles.container}>
           <View style={styles.card}>
-            <BadgeSection milestone={milestone} animatedStyle={badgeAnimatedStyle} />
+            <BadgeSection animatedStyle={badgeAnimatedStyle} milestone={milestone} />
             <ContentSection
+              contentAnimatedStyle={contentAnimatedStyle}
+              habitEmoji={habitEmoji}
+              habitName={habitName}
               milestone={milestone}
               streakDays={streakDays}
-              habitName={habitName}
-              habitEmoji={habitEmoji}
               titleAnimatedStyle={titleAnimatedStyle}
-              contentAnimatedStyle={contentAnimatedStyle}
             />
             <ActionButtons
-              onShare={onShare}
-              onClose={onClose}
-              shareButtonAnimatedStyle={shareButtonAnimatedStyle}
               continueButtonAnimatedStyle={continueButtonAnimatedStyle}
+              shareButtonAnimatedStyle={shareButtonAnimatedStyle}
+              onClose={onClose}
+              onShare={onShare}
             />
           </View>
         </View>

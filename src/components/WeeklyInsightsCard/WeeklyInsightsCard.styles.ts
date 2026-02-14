@@ -11,11 +11,16 @@ export const styles = StyleSheet.create({
   archiveButton: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    flexDirection: 'row',
     borderRadius: 12,
+    flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: spacing.md,
     padding: spacing.md,
+  },
+  archiveButtonText: {
+    ...typography.body,
+    color: colors.text.secondary,
+    marginLeft: spacing.sm,
   },
   badge: {
     backgroundColor: '#D1FAE5',
@@ -23,11 +28,6 @@ export const styles = StyleSheet.create({
     marginLeft: spacing.xs,
     paddingHorizontal: spacing.xs,
     paddingVertical: 2,
-  },
-  archiveButtonText: {
-    ...typography.body,
-    color: colors.text.secondary,
-    marginLeft: spacing.sm,
   },
   badgeText: {
     ...typography.caption,

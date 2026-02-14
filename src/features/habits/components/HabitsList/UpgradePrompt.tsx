@@ -22,8 +22,8 @@ export function UpgradePrompt({
 
   return (
     <Animated.View
-      entering={FadeIn.duration(280)}
       className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
+      entering={FadeIn.duration(280)}
     >
       <Pressable
         accessibilityLabel='Close upgrade prompt'
@@ -32,12 +32,12 @@ export function UpgradePrompt({
         onPress={onClose}
       />
       <Animated.View
-        entering={SlideInDown.duration(280).damping(18)}
         className='w-full rounded-t-3xl px-6 py-8'
+        entering={SlideInDown.duration(280).damping(18)}
       >
         <LinearGradient
-          colors={['#ffffff', 'rgba(255, 251, 235, 0.3)']}
           className='absolute inset-0 rounded-t-3xl'
+          colors={['#ffffff', 'rgba(255, 251, 235, 0.3)']}
         />
         <View className='gap-4'>
           <View className='items-center pb-2'>
@@ -63,10 +63,10 @@ export function UpgradePrompt({
             onPress={onUpgradePress}
           >
             <LinearGradient
-              colors={['#7c3aed', '#4f46e5']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
               className='absolute inset-0 rounded-full'
+              colors={['#7c3aed', '#4f46e5']}
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
             />
             <Text className='text-[17px] font-semibold text-white'>
               Start Free Trial →

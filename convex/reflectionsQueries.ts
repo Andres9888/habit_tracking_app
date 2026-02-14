@@ -3,7 +3,7 @@ import { query } from './_generated/server';
 import {
   nullableReflectionValidator,
   reflectionsArrayValidator,
-} from './reflections';
+} from './reflections/types';
 
 /**
  * Reflections queries
