@@ -23,6 +23,14 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
+<<<<<<< HEAD
+=======
+import { WhatsNewModal, useWhatsNew } from './components/WhatsNewModal';
+import { PurchasesProvider } from './components/providers/PurchasesProvider';
+import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration';
+import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
+import { SyncStatusProvider } from './contexts/SyncStatusContext';
+>>>>>>> 92d8dfee (feat: add What's New changelog modal shown after OTA updates)
 import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
@@ -112,9 +120,20 @@ function CoreProviders({ children }: PropsWithChildren) {
 }
 
 export default function App() {
+  const { visible, dismiss, changelog } = useWhatsNew();
+
   return (
     <CoreProviders>
       <AuthGate />
+<<<<<<< HEAD
     </CoreProviders>
+=======
+      <WhatsNewModal
+        changelog={changelog}
+        visible={visible}
+        onDismiss={dismiss}
+      />
+    </Providers>
+>>>>>>> 92d8dfee (feat: add What's New changelog modal shown after OTA updates)
   );
 }
