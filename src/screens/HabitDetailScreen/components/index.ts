@@ -11,3 +11,6 @@ export { NotesListModal } from './NotesListModal';
 export { UndoToasts } from './UndoToasts';
 export { HabitDetailContent } from './HabitDetailContent';
 export { HabitDetailModals } from './HabitDetailModals';
+export { QuickStatsCards } from './QuickStatsCards';
+export { ContributionGrid } from './ContributionGrid';
+export { ShareStreakButton } from './ShareStreakButton';

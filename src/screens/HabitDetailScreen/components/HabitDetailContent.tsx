@@ -1,10 +1,13 @@
-/** HabitDetailContent - Optimized for 9+ scores: typography, layout, motion */
+/** HabitDetailContent - Premium detail screen with stats, streaks, and share */
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import { QuickStatsCards } from './QuickStatsCards';
+import { ContributionGrid } from './ContributionGrid';
+import { ShareStreakButton } from './ShareStreakButton';
 import type { Habit } from '../../../features/habits/types';
 
 interface HabitDetailContentProps {
@@ -41,16 +44,28 @@ export function HabitDetailContent({
     <ScrollView
       bounces
       className='flex-1'
-      contentContainerClassName='pb-8 px-4'
+      contentContainerClassName='pb-10 px-4'
       showsVerticalScrollIndicator={false}
     >
-      {/* STRENGTH section - OPTIMIZED: better visual weight, deeper shadows */}
+      {/* QUICK STATS - Completion rate + trend, current vs best streak */}
+      <SectionLabel delay={60} text='OVERVIEW' />
+      <QuickStatsCards completedDates={completedDates} baseDelay={120} />
+
+      {/* STREAK CALENDAR - GitHub-style contribution grid */}
+      <SectionLabel delay={180} text='STREAK CALENDAR' />
+      <ContributionGrid
+        completedDates={completedDates}
+        habitColor={habit.iconColor ?? '#047857'}
+        baseDelay={240}
+      />
+
+      {/* STRENGTH section */}
       {habit.createdAt && (
         <>
-          <SectionLabel delay={240} text='STRENGTH' />
+          <SectionLabel delay={300} text='STRENGTH' />
           <Animated.View
             className='rounded-2xl bg-white'
-            entering={anim(300)}
+            entering={anim(360)}
             style={{
               elevation: 4,
               shadowColor: '#1c1917',
@@ -72,11 +87,11 @@ export function HabitDetailContent({
         </>
       )}
 
-      {/* HISTORY section - OPTIMIZED: consistent card styling */}
-      <SectionLabel delay={360} text='HISTORY' />
+      {/* HISTORY section - Monthly calendar */}
+      <SectionLabel delay={420} text='HISTORY' />
       <Animated.View
         className='rounded-2xl bg-white p-4'
-        entering={anim(420)}
+        entering={anim(480)}
         style={{
           elevation: 4,
           shadowColor: '#1c1917',
@@ -95,6 +110,13 @@ export function HabitDetailContent({
           />
         </ErrorBoundary>
       </Animated.View>
+
+      {/* SHARE STREAK button */}
+      <ShareStreakButton
+        habitName={habit.name}
+        completedDates={completedDates}
+        baseDelay={540}
+      />
     </ScrollView>
   );
 }
