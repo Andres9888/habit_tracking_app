@@ -1,6 +1,6 @@
 import { v } from 'convex/values';
 import { mutation } from './_generated/server';
-import { DATE_FORMAT_REGEX, MAX_NOTE_BODY_LENGTH } from './notes';
+import { DATE_FORMAT_REGEX, MAX_NOTE_BODY_LENGTH } from './notes/types';
 import {
   validateLongText,
   requireValid,
