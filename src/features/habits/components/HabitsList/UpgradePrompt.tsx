@@ -50,20 +50,20 @@ export function UpgradePrompt({
             Track unlimited habits across all areas of your life. Premium
             members build stronger routines and stay consistent 2× longer.
           </Text>
-          <View className='items-center rounded-2xl bg-violet-50 px-4 py-3'>
-            <Text className='text-center text-[13px] font-semibold text-violet-700'>
+          <View className='items-center rounded-2xl bg-emerald-50 px-4 py-3'>
+            <Text className='text-center text-[13px] font-semibold text-emerald-700'>
               $0 for 7 days · Cancel anytime
             </Text>
           </View>
           <Pressable
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
-            className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
+            className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(5,150,105,0.25)]'
             style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
             onPress={onUpgradePress}
           >
             <LinearGradient
-              colors={['#7c3aed', '#4f46e5']}
+              colors={['#059669', '#047857']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               className='absolute inset-0 rounded-full'

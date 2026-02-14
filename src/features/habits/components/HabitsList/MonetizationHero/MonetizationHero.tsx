@@ -37,13 +37,13 @@ export function MonetizationHero({
       }}
     >
       <View className='gap-2'>
-        <Text className='text-[13px] font-medium uppercase tracking-[4px] text-[#a5b4fc]'>
+        <Text className='text-[13px] font-medium uppercase tracking-[4px] text-[#6ee7b7]'>
           ✨ Try Premium Free
         </Text>
         <Text className='text-[22px] font-semibold leading-[28px] tracking-tight text-white'>
           Ready for unlimited habits?
         </Text>
-        <Text className='text-[17px] font-normal leading-[22px] text-[#cbd5f5]'>
+        <Text className='text-[17px] font-normal leading-[22px] text-stone-400'>
           Start a 7-day free trial to track every area of your life, get smart
           reminders, and unlock AI-powered insights.
         </Text>
@@ -52,11 +52,11 @@ export function MonetizationHero({
         <AnimatedPressable
           accessibilityLabel='Upgrade to premium for unlimited habits'
           accessibilityRole='button'
-          className='flex-1 items-center rounded-full bg-[#6d28d9] px-5 py-3'
+          className='flex-1 items-center rounded-full bg-[#059669] px-5 py-3'
           style={({ pressed }: { pressed: boolean }) => ({
             elevation: 6,
             opacity: pressed ? 0.8 : 1,
-            shadowColor: '#312e81',
+            shadowColor: '#047857',
             shadowOffset: { height: 8, width: 0 },
             shadowOpacity: 0.32,
             shadowRadius: 16,
@@ -70,7 +70,7 @@ export function MonetizationHero({
         </AnimatedPressable>
         <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>
           <Animated.Text
-            className='text-center text-[13px] font-semibold text-[#cbd5f5]'
+            className='text-center text-[13px] font-semibold text-stone-400'
             style={{ opacity: shimmer }}
           >
             Keep 3 habits free

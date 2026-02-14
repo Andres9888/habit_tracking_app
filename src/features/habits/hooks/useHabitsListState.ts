@@ -10,6 +10,7 @@
 import { useCallback, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import type { Habit, HabitSettings, HabitSortMode } from '../types';
 import { useHabitsWeekDates } from './useHabitsWeekDates';
 import { useHabitsTracking } from './useHabitsTracking';
@@ -26,7 +27,7 @@ const FREE_HABIT_LIMIT = 3;
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
   const isOnline = useIsOnline();
-  const toggleHabitMutation = useMutation(api.habits.toggleHabit);
+  const toggleHabitMutation = useToggleHabitWithTimezone();
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
   const habitsQuery = useQuery(api.habits.list);

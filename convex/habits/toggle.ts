@@ -9,13 +9,18 @@ import { calculateMomentumStrengthSnapshot } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
 import {
   getTodayDateKey,
+  getTodayForTimezone,
   isFutureDate,
   isValidDateFormat,
   maxDateKey,
 } from './utils';
 
 export const toggleHabit = mutation({
-  args: { date: v.string(), habitId: v.id('habits') },
+  args: {
+    date: v.string(),
+    habitId: v.id('habits'),
+    timezone: v.optional(v.string()),
+  },
   handler: async (ctx, args) => {
     // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
@@ -61,7 +66,7 @@ export const toggleHabit = mutation({
     await ctx.scheduler.runAfter(
       0,
       internal.habits.toggle.recalculateStreakAndStrength,
-      { date: args.date, habitId: args.habitId }
+      { date: args.date, habitId: args.habitId, timezone: args.timezone }
     );
 
     return null;
@@ -74,7 +79,11 @@ export const toggleHabit = mutation({
  * Scheduled asynchronously after toggle to keep the user-facing mutation fast.
  */
 export const recalculateStreakAndStrength = internalMutation({
-  args: { date: v.string(), habitId: v.id('habits') },
+  args: {
+    date: v.string(),
+    habitId: v.id('habits'),
+    timezone: v.optional(v.string()),
+  },
   handler: async (ctx, args) => {
     const habit = await ctx.db.get(args.habitId);
     if (!habit) return;
@@ -88,7 +97,10 @@ export const recalculateStreakAndStrength = internalMutation({
     for (const record of allTracking) {
       maxTrackingDateKey = maxDateKey(maxTrackingDateKey, record.date);
     }
-    const evaluationDateKey = maxDateKey(getTodayDateKey(), maxTrackingDateKey);
+    const evaluationDateKey = maxDateKey(
+      getTodayForTimezone(args.timezone),
+      maxTrackingDateKey
+    );
 
     const snapshot = calculateMomentumStrengthSnapshot({
       habitCreatedAt: habit.createdAt,

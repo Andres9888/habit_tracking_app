@@ -7,9 +7,11 @@
  * @see docs/offline-habit-sync.md T011
  */
 
+import { useCallback, useMemo } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
+import { getUserTimezone } from '../../../utils/timezone';
 
 export interface UseHabitMutationsResult {
   toggleHabit: ReturnType<typeof useMutation<typeof api.habits.toggleHabit>>;
@@ -44,12 +46,21 @@ export interface UseHabitMutationsResult {
  */
 export function useHabitMutations(): UseHabitMutationsResult {
   const isOnline = useIsOnline();
-  const toggleHabit = useMutation(api.habits.toggleHabit);
+  const rawToggleHabit = useMutation(api.habits.toggleHabit);
   const archiveHabit = useMutation(api.habits.archive);
   const pauseHabit = useMutation(api.habits.pause);
   const removeHabit = useMutation(api.habits.remove);
   const reorderHabits = useMutation(api.habits.reorderHabits);
   const updateSettings = useMutation(api.settings.update);
+
+  // Auto-inject user timezone so server-side streak calculations
+  // use local time instead of UTC
+  const timezone = useMemo(() => getUserTimezone(), []);
+  const toggleHabit = useCallback(
+    (args: { date: string; habitId: any }) =>
+      rawToggleHabit({ ...args, timezone }),
+    [rawToggleHabit, timezone]
+  ) as typeof rawToggleHabit;
 
   return {
     archiveHabit,

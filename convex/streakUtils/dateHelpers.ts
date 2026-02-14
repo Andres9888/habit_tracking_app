@@ -1,28 +1,37 @@
 /**
  * Date calculation helpers for streak tracking
+ *
+ * All date comparisons use YYYY-MM-DD strings or UTC-explicit parsing
+ * to avoid timezone bugs on servers running in UTC (e.g. Convex).
  */
 
 /**
- * Calculate the difference in days between two dates
- * @param date1 - First date
- * @param date2 - Second date
- * @returns Number of days difference
+ * Parse a YYYY-MM-DD string to a UTC Date (midnight UTC).
+ * Always appends 'Z' to ensure consistent UTC interpretation
+ * regardless of server timezone.
  */
-export function differenceInDays(date1: Date, date2: Date): number {
-  const d1 = new Date(date1);
-  const d2 = new Date(date2);
+function parseUTC(dateStr: string): Date {
+  return new Date(dateStr + 'T00:00:00Z');
+}
 
-  // Normalize to midnight
-  d1.setHours(0, 0, 0, 0);
-  d2.setHours(0, 0, 0, 0);
-
+/**
+ * Calculate the difference in days between two YYYY-MM-DD date strings.
+ * Uses UTC parsing to avoid timezone/DST issues.
+ *
+ * @param dateStr1 - First date in YYYY-MM-DD format
+ * @param dateStr2 - Second date in YYYY-MM-DD format
+ * @returns Number of days difference (positive if dateStr1 > dateStr2)
+ */
+export function differenceInDays(dateStr1: string, dateStr2: string): number {
+  const d1 = parseUTC(dateStr1);
+  const d2 = parseUTC(dateStr2);
   const diffMs = d1.getTime() - d2.getTime();
-  return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  return Math.round(diffMs / (1000 * 60 * 60 * 24));
 }
 
 /**
  * Calculate the best streak from a list of completed dates
- * @param completedDates - Sorted array of completed dates (descending)
+ * @param completedDates - Sorted array of completed dates (descending), YYYY-MM-DD
  * @returns The longest streak found
  */
 export function calculateBestStreakFromDates(completedDates: string[]): number {
@@ -36,9 +45,7 @@ export function calculateBestStreakFromDates(completedDates: string[]): number {
   let currentRun = 1;
 
   for (let i = 1; i < sortedAsc.length; i++) {
-    const prevDate = new Date(sortedAsc[i - 1] + 'T00:00:00');
-    const currDate = new Date(sortedAsc[i] + 'T00:00:00');
-    const diff = differenceInDays(currDate, prevDate);
+    const diff = differenceInDays(sortedAsc[i], sortedAsc[i - 1]);
 
     if (diff === 1) {
       currentRun++;

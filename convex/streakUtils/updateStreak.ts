@@ -9,6 +9,8 @@ import type { StreakData } from './types';
 /**
  * Update streak based on habit completion (legacy)
  * @deprecated Use calculateStreakFromHistory instead for accurate backfill support
+ *
+ * All date comparisons use YYYY-MM-DD strings via differenceInDays (UTC-safe).
  */
 export function updateStreak(
   currentData: {
@@ -39,9 +41,6 @@ export function updateStreak(
     };
   }
 
-  // Completing a habit
-  const completionDateObj = new Date(completionDate + 'T00:00:00');
-
   // First completion ever
   if (!lastCompletedDate) {
     return {
@@ -51,8 +50,8 @@ export function updateStreak(
     };
   }
 
-  const lastDateObj = new Date(lastCompletedDate + 'T00:00:00');
-  const daysDiff = differenceInDays(completionDateObj, lastDateObj);
+  // Compare YYYY-MM-DD strings via UTC-safe differenceInDays
+  const daysDiff = differenceInDays(completionDate, lastCompletedDate);
 
   let newCurrentStreak: number;
 

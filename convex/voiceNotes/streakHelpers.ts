@@ -1,6 +1,10 @@
 /**
  * Voice Notes streak helper functions
+ *
+ * Uses UTC-explicit date parsing to avoid timezone bugs on UTC-based servers.
  */
+
+import { differenceInDays } from '../streakUtils/dateHelpers';
 
 /**
  * Find the date range of the best streak in the completion history
@@ -22,11 +26,7 @@ export function findBestStreakPeriod(
   let currentLength = 1;
 
   for (let i = 1; i < completedDates.length; i++) {
-    const prevDate = new Date(completedDates[i - 1] + 'T00:00:00');
-    const currDate = new Date(completedDates[i] + 'T00:00:00');
-    const diffDays = Math.floor(
-      (currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
+    const diffDays = differenceInDays(completedDates[i], completedDates[i - 1]);
 
     if (diffDays === 1) {
       currentLength++;

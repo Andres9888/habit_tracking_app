@@ -8,8 +8,12 @@ import type { StreakData, TrackingRecord } from './types';
 /**
  * Calculate streak from full tracking history
  * This is more accurate than incremental updates, especially for backfills
+ *
+ * All date comparisons use YYYY-MM-DD strings directly or UTC-explicit
+ * parsing to avoid timezone bugs on UTC-based servers (e.g. Convex).
+ *
  * @param tracking - Array of tracking records with date and completed status
- * @param todayDate - Today's date in YYYY-MM-DD format
+ * @param todayDate - Today's date in YYYY-MM-DD format (from the user's local timezone)
  * @returns Streak data calculated from history
  */
 export function calculateStreakFromHistory(
@@ -32,11 +36,8 @@ export function calculateStreakFromHistory(
 
   const lastCompletedDate = completedDates[0];
 
-  // Calculate current streak - count consecutive days from today backwards
-  // The streak is valid if completed today OR yesterday (grace period)
-  const today = new Date(todayDate + 'T00:00:00');
-  const lastCompleted = new Date(lastCompletedDate + 'T00:00:00');
-  const daysSinceLastCompletion = differenceInDays(today, lastCompleted);
+  // Compare dates as strings via differenceInDays (UTC-safe)
+  const daysSinceLastCompletion = differenceInDays(todayDate, lastCompletedDate);
 
   // If last completion was more than 1 day ago, streak is broken
   if (daysSinceLastCompletion > 1) {
@@ -54,9 +55,7 @@ export function calculateStreakFromHistory(
 
   for (let i = 1; i < completedDates.length; i++) {
     const prevDate = completedDates[i];
-    const checkDateObj = new Date(checkDate + 'T00:00:00');
-    const prevDateObj = new Date(prevDate + 'T00:00:00');
-    const diff = differenceInDays(checkDateObj, prevDateObj);
+    const diff = differenceInDays(checkDate, prevDate);
 
     if (diff === 1) {
       currentStreak++;

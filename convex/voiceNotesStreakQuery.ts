@@ -45,8 +45,8 @@ export const getFromBestStreak = query({
     if (!bestStreakPeriod) return [];
 
     const { startDate, endDate } = bestStreakPeriod;
-    const startTimestamp = new Date(startDate + 'T00:00:00').getTime();
-    const endTimestamp = new Date(endDate + 'T23:59:59').getTime();
+    const startTimestamp = new Date(startDate + 'T00:00:00Z').getTime();
+    const endTimestamp = new Date(endDate + 'T23:59:59Z').getTime();
 
     const allNotes = await ctx.db
       .query('voiceNotes')
@@ -64,7 +64,7 @@ export const getFromBestStreak = query({
     const notesWithContext = notesFromBestStreak.map((note) => {
       const noteDate = new Date(note.createdAt);
       noteDate.setHours(0, 0, 0, 0);
-      const streakStartDate = new Date(startDate + 'T00:00:00');
+      const streakStartDate = new Date(startDate + 'T00:00:00Z');
       const dayOfStreak =
         Math.floor(
           (noteDate.getTime() - streakStartDate.getTime()) /
