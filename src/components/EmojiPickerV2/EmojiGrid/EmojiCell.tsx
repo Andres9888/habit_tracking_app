@@ -7,15 +7,16 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 
+import { colors } from '../../../theme/colors';
 import { styles } from './styles';
 import type { EmojiCellProps } from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
- * Memoized emoji cell component with press animation
+ * Memoized emoji cell component with press animation and dark mode support
  */
-export const EmojiCell = memo(({ emoji, isSelected, onPress }: EmojiCellProps) => {
+export const EmojiCell = memo(({ emoji, isSelected, onPress, themeColors }: EmojiCellProps) => {
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -38,7 +39,18 @@ export const EmojiCell = memo(({ emoji, isSelected, onPress }: EmojiCellProps) =
       accessibilityLabel={`Select ${emoji} emoji`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
-      style={[styles.emojiCell, isSelected && styles.emojiCellSelected, animatedStyle]}
+      style={[
+        styles.emojiCell,
+        themeColors && { backgroundColor: themeColors.gray[50] },
+        isSelected && [
+          styles.emojiCellSelected,
+          {
+            backgroundColor: colors.secondary[100],
+            borderColor: colors.secondary[500],
+          },
+        ],
+        animatedStyle,
+      ]}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

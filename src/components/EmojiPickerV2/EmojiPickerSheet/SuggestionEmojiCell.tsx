@@ -1,6 +1,7 @@
 /**
  * SuggestionEmojiCell Component
  * Memoized emoji cell with press animation for AI suggestions
+ * Theme-aware with dark mode support
  */
 
 import React, { memo, useCallback } from 'react';
@@ -14,6 +15,7 @@ import Animated, {
 
 import { colors } from '../../../theme/colors';
 import { borderRadius } from '../../../theme/spacing';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -21,10 +23,11 @@ interface SuggestionEmojiCellProps {
   emoji: string;
   isSelected: boolean;
   onPress: () => void;
+  themeColors: SemanticColors;
 }
 
 export const SuggestionEmojiCell = memo(
-  ({ emoji, isSelected, onPress }: SuggestionEmojiCellProps) => {
+  ({ emoji, isSelected, onPress, themeColors }: SuggestionEmojiCellProps) => {
     const scale = useSharedValue(1);
 
     const handlePressIn = useCallback(() => {
@@ -49,7 +52,11 @@ export const SuggestionEmojiCell = memo(
         accessibilityState={{ selected: isSelected }}
         style={[
           suggestionCellStyles.cell,
-          isSelected && suggestionCellStyles.cellSelected,
+          { backgroundColor: themeColors.surface },
+          isSelected && [
+            suggestionCellStyles.cellSelected,
+            { backgroundColor: colors.secondary[100], borderColor: colors.secondary[500] },
+          ],
           animatedStyle,
         ]}
         onPress={onPress}
@@ -67,15 +74,12 @@ SuggestionEmojiCell.displayName = 'SuggestionEmojiCell';
 export const suggestionCellStyles = StyleSheet.create({
   cell: {
     alignItems: 'center',
-    backgroundColor: colors.light.surface,
     borderRadius: borderRadius.large,
     height: 56,
     justifyContent: 'center',
     width: 56,
   },
   cellSelected: {
-    backgroundColor: colors.secondary[100],
-    borderColor: colors.secondary[500],
     borderWidth: 2,
   },
   emojiText: {

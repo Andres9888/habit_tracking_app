@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 
-import { colors } from '../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
 
@@ -15,7 +14,6 @@ export const styles = StyleSheet.create({
   },
   categoryPill: {
     alignItems: 'center',
-    backgroundColor: colors.gray[100],
     borderRadius: borderRadius.full,
     flexDirection: 'row',
     paddingHorizontal: spacing.base,
@@ -23,19 +21,14 @@ export const styles = StyleSheet.create({
   },
   categoryPillActive: {
     ...shadows.card,
-    backgroundColor: colors.gray[900],
     shadowOpacity: 0.15,
   },
   categoryPillIcon: {
     fontSize: typography.bodySmall.fontSize,
   },
   categoryPillText: {
-    color: colors.gray[500],
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
     marginLeft: spacing.xs,
-  },
-  categoryPillTextActive: {
-    color: colors.text.inverse,
   },
 });

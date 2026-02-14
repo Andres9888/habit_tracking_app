@@ -1,6 +1,7 @@
 /**
  * EmojiPickerSheet Component
  * Main orchestrator for the emoji picker bottom sheet
+ * Theme-aware with full dark mode support
  */
 
 import React, { memo } from 'react';
@@ -9,11 +10,12 @@ import { BlurView } from 'expo-blur';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import type { EmojiPickerSheetProps } from './EmojiPickerSheet.types';
-import { styles } from './EmojiPickerSheet.styles';
+import { styles, themedStyles } from './EmojiPickerSheet.styles';
 import { useEmojiPickerState } from './useEmojiPickerState';
 import { useSheetAnimations } from './useSheetAnimations';
 import { useSheetHandlers } from './useSheetHandlers';
 import { SheetContent } from './SheetContent';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -32,6 +34,8 @@ export const EmojiPickerSheet = memo(
       state.setIsSearchFocused,
       animations
     );
+    const { colors, isDark } = useThemeColors();
+    const themed = themedStyles(colors);
     const displayedSelectedEmoji = handlers.pendingEmoji ?? selectedEmoji;
 
     return (
@@ -55,14 +59,14 @@ export const EmojiPickerSheet = memo(
                 StyleSheet.absoluteFill,
                 animations.backdropAnimatedStyle,
               ]}
-              tint='dark'
+              tint={isDark ? 'light' : 'dark'}
             />
           </Pressable>
 
           <GestureDetector gesture={animations.gesture}>
             <Animated.View
               accessibilityViewIsModal
-              style={[styles.sheet, animations.sheetAnimatedStyle]}
+              style={[themed.sheet, animations.sheetAnimatedStyle]}
             >
               <SheetContent
                 currentCategoryName={state.currentCategoryName}
@@ -70,6 +74,7 @@ export const EmojiPickerSheet = memo(
                 habitName={habitName}
                 handleCategorySelect={state.handleCategorySelect}
                 handleClearSearch={state.handleClearSearch}
+                isDark={isDark}
                 isSearchFocused={state.isSearchFocused}
                 searchBarAnimatedStyle={animations.searchBarAnimatedStyle}
                 searchFocusAnim={animations.searchFocusAnim}
@@ -79,6 +84,7 @@ export const EmojiPickerSheet = memo(
                 setIsSearchFocused={handlers.handleSearchFocus}
                 setSearchQuery={state.setSearchQuery}
                 suggestedEmojis={state.suggestedEmojis}
+                themeColors={colors}
                 onEmojiSelect={handlers.handleEmojiSelect}
                 onNoIcon={handlers.handleNoIcon}
               />

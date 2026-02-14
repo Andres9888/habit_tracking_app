@@ -6,9 +6,9 @@ import { styles } from './styles';
 import { EMOJIS_PER_ROW, type EmojiRowProps } from './types';
 
 /**
- * Memoized emoji row component
+ * Memoized emoji row component with theme support
  */
-export const EmojiRow = memo(({ emojis, selectedEmoji, onEmojiSelect }: EmojiRowProps) => {
+export const EmojiRow = memo(({ emojis, selectedEmoji, onEmojiSelect, themeColors }: EmojiRowProps) => {
   return (
     <View style={styles.emojiRow}>
       {emojis.map((emoji, index) => (
@@ -16,6 +16,7 @@ export const EmojiRow = memo(({ emojis, selectedEmoji, onEmojiSelect }: EmojiRow
           <EmojiCell
             emoji={emoji}
             isSelected={selectedEmoji === emoji}
+            themeColors={themeColors}
             onPress={() => onEmojiSelect(emoji)}
           />
         </View>

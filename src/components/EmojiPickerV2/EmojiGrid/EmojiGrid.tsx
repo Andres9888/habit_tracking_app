@@ -9,13 +9,7 @@ import { useEmojiGrid } from './useEmojiGrid';
 
 /**
  * EmojiGrid - A virtualized 6-column emoji grid with press animations
- *
- * Features:
- * - 6-column responsive layout
- * - Virtualized FlatList for performance
- * - Press animations (scale 0.92 on press, bounce on release)
- * - Selection state with blue ring
- * - Optional category header
+ * Theme-aware with dark mode support
  */
 export const EmojiGrid = memo(
   ({
@@ -24,6 +18,7 @@ export const EmojiGrid = memo(
     onEmojiSelect,
     categoryName,
     showCategoryHeader = true,
+    themeColors,
   }: EmojiGridProps) => {
     const { flatListRef, emojiRows, keyExtractor, getItemLayout } =
       useEmojiGrid(emojis, selectedEmoji);
@@ -33,21 +28,34 @@ export const EmojiGrid = memo(
         <EmojiRow
           emojis={item}
           selectedEmoji={selectedEmoji}
+          themeColors={themeColors}
           onEmojiSelect={onEmojiSelect}
         />
       ),
-      [selectedEmoji, onEmojiSelect]
+      [selectedEmoji, onEmojiSelect, themeColors]
     );
 
     if (emojis.length === 0) {
-      return <EmptyState />;
+      return <EmptyState themeColors={themeColors} />;
     }
 
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          themeColors && { backgroundColor: themeColors.surface },
+        ]}
+      >
         {showCategoryHeader && categoryName && (
           <View style={styles.categoryHeader}>
-            <Text style={styles.categoryHeaderText}>{categoryName}</Text>
+            <Text
+              style={[
+                styles.categoryHeaderText,
+                themeColors && { color: themeColors.gray[500] },
+              ]}
+            >
+              {categoryName}
+            </Text>
           </View>
         )}
 

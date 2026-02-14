@@ -7,6 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { HABIT_CATEGORIES } from '../../constants/habitEmojis';
 import { styles } from './CategoryPills.styles';
+import type { SemanticColors } from '../../theme/darkColors';
 
 export interface Category {
   id: string;
@@ -20,10 +21,11 @@ interface CategoryPillProps {
   name: string;
   isSelected: boolean;
   onPress: () => void;
+  themeColors: SemanticColors;
 }
 
 export const CategoryPill = memo(
-  ({ icon, name, isSelected, onPress }: CategoryPillProps) => {
+  ({ icon, name, isSelected, onPress, themeColors }: CategoryPillProps) => {
     const scale = useSharedValue(1);
 
     const animatedStyle = useAnimatedStyle(() => ({
@@ -50,7 +52,11 @@ export const CategoryPill = memo(
         <Animated.View
           style={[
             styles.categoryPill,
-            isSelected && styles.categoryPillActive,
+            { backgroundColor: themeColors.gray[100] },
+            isSelected && [
+              styles.categoryPillActive,
+              { backgroundColor: themeColors.gray[900] },
+            ],
             animatedStyle,
           ]}
         >
@@ -58,7 +64,8 @@ export const CategoryPill = memo(
           <Text
             style={[
               styles.categoryPillText,
-              isSelected && styles.categoryPillTextActive,
+              { color: themeColors.gray[500] },
+              isSelected && { color: themeColors.text.inverse },
             ]}
           >
             {name}
@@ -75,6 +82,7 @@ interface CategoryPillsProps {
   selectedCategory: string;
   onCategorySelect: (categoryId: string) => void;
   categories?: Category[];
+  themeColors?: SemanticColors;
 }
 
 export const CategoryPills = memo(
@@ -82,24 +90,31 @@ export const CategoryPills = memo(
     selectedCategory,
     onCategorySelect,
     categories = HABIT_CATEGORIES,
-  }: CategoryPillsProps) => (
-    <ScrollView
-      horizontal
-      contentContainerStyle={styles.categoriesContent}
-      showsHorizontalScrollIndicator={false}
-      style={styles.categoriesScroll}
-    >
-      {categories.map((category) => (
-        <CategoryPill
-          key={category.id}
-          icon={category.icon}
-          isSelected={selectedCategory === category.id}
-          name={category.name}
-          onPress={() => onCategorySelect(category.id)}
-        />
-      ))}
-    </ScrollView>
-  )
+    themeColors,
+  }: CategoryPillsProps) => {
+    // Fallback import for backward compat if themeColors not passed
+    const tc = themeColors!;
+
+    return (
+      <ScrollView
+        horizontal
+        contentContainerStyle={styles.categoriesContent}
+        showsHorizontalScrollIndicator={false}
+        style={styles.categoriesScroll}
+      >
+        {categories.map((category) => (
+          <CategoryPill
+            key={category.id}
+            icon={category.icon}
+            isSelected={selectedCategory === category.id}
+            name={category.name}
+            themeColors={tc}
+            onPress={() => onCategorySelect(category.id)}
+          />
+        ))}
+      </ScrollView>
+    );
+  }
 );
 
 CategoryPills.displayName = 'CategoryPills';
