@@ -16,3 +16,13 @@ export const NOTIFICATION_TYPE_LETTER_UNLOCK = 'letterUnlock';
  * Used to differentiate from habit reminders and letter unlocks
  */
 export const NOTIFICATION_TYPE_AFFIRMATION_DELIVERY = 'affirmationDelivery';
+
+/**
+ * Android notification channel ID for weekly review
+ */
+export const ANDROID_WEEKLY_REVIEW_CHANNEL_ID = 'weekly-review';
+
+/**
+ * Notification type identifier for weekly review
+ */
+export const NOTIFICATION_TYPE_WEEKLY_REVIEW = 'weeklyReview';

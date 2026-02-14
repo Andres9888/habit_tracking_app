@@ -14,6 +14,7 @@ import {
   ANDROID_AFFIRMATION_CHANNEL_ID,
   ANDROID_CHANNEL_ID,
   ANDROID_LETTER_CHANNEL_ID,
+  ANDROID_WEEKLY_REVIEW_CHANNEL_ID,
 } from './constants';
 
 /**
@@ -66,6 +67,27 @@ export async function configureAffirmationChannel(): Promise<void> {
       importance: Notifications.AndroidImportance.DEFAULT,
       lightColor: '#f59e0b', // Amber-500 to match Affirmations theme
       name: 'Daily Affirmations',
+      sound: 'default',
+      vibrationPattern: [0, 200, 100, 200],
+    }
+  );
+}
+
+/**
+ * Configure Android notification channel for weekly review insights
+ * Uses teal color to match the review/insights theme
+ */
+export async function configureWeeklyReviewChannel(): Promise<void> {
+  if (Platform.OS !== 'android') {
+    return;
+  }
+
+  await Notifications.setNotificationChannelAsync(
+    ANDROID_WEEKLY_REVIEW_CHANNEL_ID,
+    {
+      importance: Notifications.AndroidImportance.DEFAULT,
+      lightColor: '#0d9488', // Teal-600
+      name: 'Weekly Review',
       sound: 'default',
       vibrationPattern: [0, 200, 100, 200],
     }

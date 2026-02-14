@@ -12,6 +12,8 @@ import {
   TrialCountdownBanner,
   useTrialCountdown,
 } from '../../../../components/TrialCountdownBanner';
+import { WeeklyReviewCard } from '../../../../components/WeeklyReviewCard';
+import { useWeeklyReview } from '../../../../hooks/useWeeklyReview';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
@@ -27,6 +29,9 @@ export function HabitsListHeader(
 
   // Trial countdown banner
   const { shouldShowBanner, daysRemaining } = useTrialCountdown();
+
+  // Weekly review card (Sunday evening / Monday)
+  const weeklyReview = useWeeklyReview();
 
   return (
     <View className='gap-4 pb-4 pt-14'>
@@ -74,6 +79,16 @@ export function HabitsListHeader(
             onPreviousWeek={props.onPreviousWeek}
           />
         </Animated.View>
+      )}
+
+      {/* Weekly Review Card */}
+      {weeklyReview.isVisible && weeklyReview.review && (
+        <WeeklyReviewCard
+          review={weeklyReview.review}
+          isPremium={weeklyReview.isPremium}
+          onDismiss={weeklyReview.dismiss}
+          onUpgrade={props.onUpgradePress}
+        />
       )}
 
       {/* Trial Countdown Banner */}
