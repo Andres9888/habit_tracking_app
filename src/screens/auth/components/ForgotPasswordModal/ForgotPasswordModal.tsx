@@ -4,6 +4,7 @@
 
 import { useCallback } from 'react';
 import { Text, View } from 'react-native';
+import { typography } from '../../../../theme/typography';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import Modal from '../../../../components/Modal';
 import { PasswordResetForm } from './PasswordResetForm';
@@ -60,7 +61,7 @@ export function ForgotPasswordModal({
         >
           <Text
             className='font-bold text-stone-900'
-            style={{ fontSize: 22, letterSpacing: -0.35, lineHeight: 28 }}
+            style={typography.heading3}
           >
             Reset Password
           </Text>

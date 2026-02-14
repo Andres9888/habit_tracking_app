@@ -3,7 +3,12 @@
  */
 
 import React, { useEffect } from 'react';
+<<<<<<< HEAD
 import { Text, StyleSheet } from 'react-native';
+=======
+import { View, Text, StyleSheet } from 'react-native';
+import { typography } from '../../../../theme/typography';
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -64,12 +69,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   star: {
-    fontSize: 13, // caption scale
+    ...typography.caption,
   },
   text: {
-    // caption scale
+    ...typography.caption,
     color: '#92400e',
-    fontSize: 13, // amber-800
   },
 });
 

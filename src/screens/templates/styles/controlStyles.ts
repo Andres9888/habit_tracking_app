@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { typography } from '../../../../theme/typography';
 
 export const controlStyles = StyleSheet.create({
   controlButton: {
@@ -17,7 +18,7 @@ export const controlStyles = StyleSheet.create({
   },
   controlButtonText: {
     color: '#1c1917',
-    fontSize: 13,
+    ...typography.caption,
     fontWeight: '600',
   },
   controlRow: {

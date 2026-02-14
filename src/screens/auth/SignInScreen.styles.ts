@@ -1,9 +1,16 @@
+<<<<<<< HEAD
 /* eslint-disable max-lines */
 /** SignInScreen Styles - Type scale: 34/22/17/13, proper contrast, depth */
 import { StyleSheet, TextStyle } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '@/theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
+=======
+/** SignInScreen Styles - Uses typography tokens from theme */
+import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
+import { typography } from '../../theme/typography';
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
 
 export function useSignInStyles() {
   const { colors: themeColors, isDark } = useThemeColors();
@@ -83,7 +90,11 @@ export function useSignInStyles() {
 /** @deprecated Use useSignInStyles() for dark mode support */
 export const styles = StyleSheet.create({
   appName: {
+<<<<<<< HEAD
     ...typography.displayLarge,
+=======
+    ...typography.heading1,
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
     color: '#1c1917',
     textAlign: 'center',
   } as TextStyle,
@@ -137,12 +148,19 @@ export const styles = StyleSheet.create({
   welcomeSubtitle: {
     ...typography.body,
     color: '#57534e',
+<<<<<<< HEAD
     lineHeight: 24,
+=======
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
     paddingHorizontal: 16,
     textAlign: 'center',
   } as TextStyle,
   welcomeTitle: {
+<<<<<<< HEAD
     ...typography.heading1,
+=======
+    ...typography.heading2,
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
     color: '#1c1917',
     marginBottom: 8,
     textAlign: 'center',

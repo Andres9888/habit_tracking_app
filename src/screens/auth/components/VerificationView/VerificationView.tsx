@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
+=======
+import { useState } from 'react';
+import { Text, View } from 'react-native';
+import { typography } from '../../../../theme/typography';
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -48,7 +54,7 @@ export function VerificationView({
         <Animated.View entering={anim(0)}>
           <Text
             className='mb-2 font-extrabold text-stone-900'
-            style={{ fontSize: 34, letterSpacing: -1 }}
+            style={typography.heading1}
           >
             Verify Email
           </Text>
@@ -56,7 +62,7 @@ export function VerificationView({
         <Animated.Text
           className='mb-10 text-stone-600'
           entering={anim(60)}
-          style={{ fontSize: 17 }}
+          style={typography.body}
         >
           We sent a verification code to {emailAddress}
         </Animated.Text>

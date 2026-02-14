@@ -5,6 +5,7 @@
  * are applied inline via useThemeColors() in the TabBar component.
  */
 import { StyleSheet } from 'react-native';
+import { typography } from '../../../../theme/typography';
 
 export const tabStyles = StyleSheet.create({
   tab: {
@@ -27,7 +28,12 @@ export const tabStyles = StyleSheet.create({
     position: 'relative',
   },
   tabCount: {
+<<<<<<< HEAD
     fontSize: 13,
+=======
+    color: '#a8a29e',
+    ...typography.caption,
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
     fontWeight: '700',
     marginLeft: 6,
   },
@@ -46,7 +52,12 @@ export const tabStyles = StyleSheet.create({
     top: 5,
   },
   tabText: {
+<<<<<<< HEAD
     fontSize: 13,
+=======
+    color: '#78716c',
+    ...typography.caption,
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
     fontWeight: '600',
   },
   tabTextActive: {

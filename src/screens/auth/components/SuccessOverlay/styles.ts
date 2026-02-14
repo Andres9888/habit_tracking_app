@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { typography } from '../../../../theme/typography';
 
 export const styles = StyleSheet.create({
   checkmark: {
@@ -10,9 +11,13 @@ export const styles = StyleSheet.create({
     width: 80,
   },
   checkmarkText: {
+    ...typography.displayLarge,
     color: '#ffffff',
+<<<<<<< HEAD
     fontSize: 34,
     fontWeight: 'bold',
+=======
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
   },
   content: {
     alignItems: 'center',
@@ -40,10 +45,9 @@ export const styles = StyleSheet.create({
     width: 100,
   },
   successText: {
+    ...typography.heading2,
     color: '#1c1917',
-    fontSize: 22,
     fontWeight: '700',
-    letterSpacing: 0.5,
     marginTop: 24,
   },
 });

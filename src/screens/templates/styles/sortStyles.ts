@@ -1,5 +1,9 @@
 import { StyleSheet } from 'react-native';
+<<<<<<< HEAD
 import { colors } from '../../../theme/colors';
+=======
+import { typography } from '../../../../theme/typography';
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
 
 export const sortStyles = StyleSheet.create({
   dropdownBackdrop: {
@@ -45,7 +49,11 @@ export const sortStyles = StyleSheet.create({
   },
   sortDropdownOptionText: {
     color: '#374151',
+<<<<<<< HEAD
     fontSize: 17,
+=======
+    ...typography.bodySmall,
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
     fontWeight: '500',
   },
   sortDropdownOptionTextSelected: {

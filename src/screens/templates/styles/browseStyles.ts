@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { typography } from '../../../../theme/typography';
 
 export const browseStyles = StyleSheet.create({
   backButton: {
@@ -9,7 +10,11 @@ export const browseStyles = StyleSheet.create({
   },
   backButtonText: {
     color: '#374151',
+<<<<<<< HEAD
     fontSize: 17,
+=======
+    ...typography.bodySmall,
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
     fontWeight: '600',
   },
   browseContent: {

@@ -26,6 +26,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { typography } from '../../theme/typography';
 import {
   AuthDivider,
   AuthError,
@@ -273,6 +274,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
   );
 }
 
+<<<<<<< HEAD
 function useScreenStyles() {
   const { colors: themeColors } = useThemeColors();
   return StyleSheet.create({
@@ -372,3 +374,85 @@ export default function SignInScreen(props: SignInScreenProps) {
     </ScreenErrorBoundary>
   );
 }
+=======
+const styles = StyleSheet.create({
+  appName: {
+    ...typography.heading2,
+    color: '#1c1917',
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  authContent: {
+    gap: 24,
+  },
+  brandSection: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  container: {
+    backgroundColor: '#fafaf9',
+    flex: 1,
+  },
+  flex: {
+    flex: 1,
+  },
+  footer: {
+    marginTop: 32,
+    paddingHorizontal: 16,
+  },
+  footerText: {
+    ...typography.caption,
+    color: '#a8a29e',
+    textAlign: 'center',
+  },
+  formSection: {
+    gap: 20,
+  },
+  logoContainer: {
+    marginBottom: 16,
+  },
+  logoEmoji: {
+    fontSize: 40,
+  },
+  logoGradient: {
+    alignItems: 'center',
+    borderRadius: 24,
+    elevation: 8,
+    height: 80,
+    justifyContent: 'center',
+    shadowColor: '#22c55e',
+    shadowOffset: { height: 8, width: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    width: 80,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+  },
+  socialButtons: {
+    gap: 12,
+  },
+  tagline: {
+    ...typography.caption,
+    color: '#57534e',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  welcomeSection: {
+    marginBottom: 32,
+  },
+  welcomeSubtitle: {
+    ...typography.body,
+    color: '#57534e',
+    paddingHorizontal: 16,
+    textAlign: 'center',
+  },
+  welcomeTitle: {
+    ...typography.heading1,
+    color: '#1c1917',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+});
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)

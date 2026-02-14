@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { typography } from '../../../../theme/typography';
 
 export const searchStyles = StyleSheet.create({
   searchBar: {
@@ -14,7 +15,11 @@ export const searchStyles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
+<<<<<<< HEAD
     fontSize: 17,
+=======
+    ...typography.bodySmall,
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
   },
   searchSection: {
     paddingHorizontal: 20,

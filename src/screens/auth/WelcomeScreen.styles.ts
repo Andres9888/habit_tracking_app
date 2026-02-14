@@ -1,10 +1,15 @@
 /**
- * WelcomeScreen styles
+ * WelcomeScreen styles — uses typography tokens from theme
  */
 
+<<<<<<< HEAD
 import { StyleSheet, TextStyle } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '@/theme/typography';
+=======
+import { StyleSheet } from 'react-native';
+import { typography } from '../../theme/typography';
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
 
 export const styles = StyleSheet.create({
   actionSection: {
@@ -65,7 +70,11 @@ export const styles = StyleSheet.create({
   primaryButtonText: {
     ...typography.button,
     color: '#ffffff',
+<<<<<<< HEAD
   } as TextStyle,
+=======
+  },
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
   subtitle: {
     ...typography.body,
     color: '#57534e',
@@ -78,13 +87,21 @@ export const styles = StyleSheet.create({
   },
   textLinkAction: {
     ...typography.bodySmall,
+<<<<<<< HEAD
     color: colors.primary[700],
+=======
+    color: '#047857',
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
     fontWeight: '600',
   } as TextStyle,
   textLinkLabel: {
     ...typography.bodySmall,
     color: '#57534e',
+<<<<<<< HEAD
   } as TextStyle,
+=======
+  },
+>>>>>>> bc0f7748 (ui: migrate hardcoded font sizes to typography tokens across auth + template screens)
   title: {
     ...typography.displayLarge,
     color: '#1c1917',

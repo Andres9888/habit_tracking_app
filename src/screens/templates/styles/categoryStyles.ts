@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { typography } from '../../../../theme/typography';
 
 export const categoryStyles = StyleSheet.create({
   categoriesContainer: {
@@ -38,7 +39,7 @@ export const categoryStyles = StyleSheet.create({
     paddingVertical: 2,
   },
   categoryCountText: {
-    fontSize: 13,
+    ...typography.caption,
     fontWeight: '600',
   },
   categoryHeaderIcon: {
@@ -54,7 +55,7 @@ export const categoryStyles = StyleSheet.create({
     gap: 14,
   },
   categoryIcon: {
-    fontSize: 17,
+    ...typography.body,
   },
   categoryScrollGradient: {
     height: '100%',

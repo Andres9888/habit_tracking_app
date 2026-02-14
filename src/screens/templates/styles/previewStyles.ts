@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { typography } from '../../../../theme/typography';
 
 export const previewStyles = StyleSheet.create({
   previewActions: {
@@ -12,7 +13,7 @@ export const previewStyles = StyleSheet.create({
     alignItems: 'center',
   },
   previewIcon: {
-    fontSize: 48,
+    ...typography.displayLarge,
   },
   previewIconContainer: {
     alignItems: 'center',
@@ -42,10 +43,10 @@ export const previewStyles = StyleSheet.create({
     marginTop: 8,
   },
   scienceIcon: {
-    fontSize: 17,
+    ...typography.body,
   },
   youtubeIcon: {
-    fontSize: 17,
+    ...typography.body,
   },
   youtubeIconWrapper: {
     alignItems: 'center',
