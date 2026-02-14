@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "ChainDay",
+    "name": "ChainDay: Daily Habit Tracker",
     "slug": "chainday",
+    "description": "Build lasting habits one chain at a time. Visual streak tracking, smart reminders, and beautiful stats to keep you accountable.",
     "scheme": "habit-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,10 +21,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.chainday.app",
-      "buildNumber": "7",
+      "buildNumber": "2",
       "usesAppleSignIn": true,
       "infoPlist": {
-        "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent."
+        "CFBundleDisplayName": "ChainDay"
       }
     },
     "android": {
