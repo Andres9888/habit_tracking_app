@@ -31,7 +31,7 @@ export function calculateDayOfWeekStats(
   const startDate = habitCreatedAt
     ? new Date(habitCreatedAt)
     : tracking.length > 0
-      ? new Date(tracking.at(-1)!.date)
+      ? new Date(tracking.at(-1)?.date ?? Date.now())
       : new Date();
 
   const today = new Date();
