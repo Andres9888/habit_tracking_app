@@ -2,7 +2,7 @@
  * HabitsListHeader Types
  */
 
-import type { Animated } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 
 export interface HabitsListHeaderProps {
   habits: Array<{ _id: string }>;
@@ -13,10 +13,10 @@ export interface HabitsListHeaderProps {
   justCreatedHabitId: string | null;
   reduceMotionPreference: boolean;
   showWeekCompletionBar: boolean;
-  headerOpacity: Animated.Value;
-  headerTranslateY: Animated.Value;
-  calendarOpacity: Animated.Value;
-  calendarTranslateY: Animated.Value;
+  headerOpacity: SharedValue<number>;
+  headerTranslateY: SharedValue<number>;
+  calendarOpacity: SharedValue<number>;
+  calendarTranslateY: SharedValue<number>;
   getHabitStatus: (habitId: string, dateString: string) => string;
   onAddHabitPress: () => void;
   onDayPress: (date: Date) => void;

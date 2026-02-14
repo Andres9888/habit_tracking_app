@@ -1,10 +1,12 @@
 /**
  * HabitsList State Hook
  * Manages local UI state for the HabitsList component
+ *
+ * Uses react-native-reanimated shared values for spring-physics animations.
  */
 
 import { useCallback, useState, useRef } from 'react';
-import { Animated } from 'react-native';
+import { useSharedValue } from 'react-native-reanimated';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 
 export function useHabitsListState() {
@@ -19,13 +21,13 @@ export function useHabitsListState() {
 
   const seenHabitIdsRef = useRef<Set<string>>(new Set());
 
-  // Animation values
-  const headerOpacity = useRef(new Animated.Value(1)).current;
-  const headerTranslateY = useRef(new Animated.Value(0)).current;
-  const calendarOpacity = useRef(new Animated.Value(1)).current;
-  const calendarTranslateY = useRef(new Animated.Value(0)).current;
-  const habitRowOpacity = useRef(new Animated.Value(1)).current;
-  const habitRowTranslateY = useRef(new Animated.Value(0)).current;
+  // Animation shared values (reanimated for spring physics)
+  const headerOpacity = useSharedValue(1);
+  const headerTranslateY = useSharedValue(0);
+  const calendarOpacity = useSharedValue(1);
+  const calendarTranslateY = useSharedValue(0);
+  const habitRowOpacity = useSharedValue(1);
+  const habitRowTranslateY = useSharedValue(0);
 
   const handleOpenSortSheet = useCallback(() => setIsSortSheetOpen(true), []);
   const handleCloseSortSheet = useCallback(() => setIsSortSheetOpen(false), []);

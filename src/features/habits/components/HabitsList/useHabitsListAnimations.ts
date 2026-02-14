@@ -1,31 +1,44 @@
 /**
  * HabitsList Entrance Animations Hook
- * Handles staggered entrance animations for header, calendar, and habit rows
+ * Handles staggered spring-physics entrance animations for header, calendar, and habit rows.
+ *
+ * Uses react-native-reanimated withSpring for natural, premium-feeling transitions.
  */
 
-import { useCallback, useEffect, useRef } from 'react';
-import { Animated, Easing } from 'react-native';
+import { useCallback } from 'react';
+import {
+  withSpring,
+  withDelay,
+  withTiming,
+  runOnJS,
+  type SharedValue,
+  Easing,
+} from 'react-native-reanimated';
 
-/**
- * Animated values and state setters used by the HabitsList entrance sequence.
- */
+/** Spring config matching the app's design system: springify().damping(18) */
+const LIST_SPRING_CONFIG = {
+  damping: 18,
+  stiffness: 120,
+  mass: 0.8,
+  overshootClamping: false,
+  restDisplacementThreshold: 0.01,
+  restSpeedThreshold: 0.01,
+};
+
+/** Stagger delay between header → calendar → habit rows */
+const STAGGER_MS = 80;
+
 interface UseHabitsListAnimationsOptions {
-  headerOpacity: Animated.Value;
-  headerTranslateY: Animated.Value;
-  calendarOpacity: Animated.Value;
-  calendarTranslateY: Animated.Value;
-  habitRowOpacity: Animated.Value;
-  habitRowTranslateY: Animated.Value;
+  headerOpacity: SharedValue<number>;
+  headerTranslateY: SharedValue<number>;
+  calendarOpacity: SharedValue<number>;
+  calendarTranslateY: SharedValue<number>;
+  habitRowOpacity: SharedValue<number>;
+  habitRowTranslateY: SharedValue<number>;
   setIsInSuccessCelebration: (value: boolean) => void;
   setShouldTriggerHabitEntrance: (value: boolean) => void;
 }
 
-/**
- * Encapsulates the success-to-list transition animation choreography.
- *
- * Resets header, calendar, and row animated values, then plays a staggered
- * sequence and re-enables habit entrance behavior when complete.
- */
 export function useHabitsListAnimations(
   options: UseHabitsListAnimationsOptions
 ) {
@@ -40,64 +53,41 @@ export function useHabitsListAnimations(
     setShouldTriggerHabitEntrance,
   } = options;
 
-  const animationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
-  const animationRef = useRef<Animated.CompositeAnimation | null>(null);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current);
-      }
-      if (animationRef.current) {
-        animationRef.current.stop();
-      }
-    };
-  }, []);
-
   const handleSuccessTransitionComplete = useCallback(() => {
     setIsInSuccessCelebration(false);
-    const config = {
-      duration: 350,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
-    };
 
-    headerOpacity.setValue(0);
-    headerTranslateY.setValue(20);
-    calendarOpacity.setValue(0);
-    calendarTranslateY.setValue(20);
-    habitRowOpacity.setValue(0);
-    habitRowTranslateY.setValue(20);
+    // Reset all values to their starting positions
+    headerOpacity.value = 0;
+    headerTranslateY.value = 16;
+    calendarOpacity.value = 0;
+    calendarTranslateY.value = 16;
+    habitRowOpacity.value = 0;
+    habitRowTranslateY.value = 16;
 
-    // Clear any existing timeout
-    if (animationTimeoutRef.current) {
-      clearTimeout(animationTimeoutRef.current);
-    }
+    // Phase 1: Header springs in
+    const fadeConfig = { duration: 280, easing: Easing.out(Easing.cubic) };
 
-    animationRef.current = Animated.stagger(100, [
-      Animated.parallel([
-        Animated.timing(headerOpacity, { ...config, toValue: 1 }),
-        Animated.timing(headerTranslateY, { ...config, toValue: 0 }),
-      ]),
-      Animated.parallel([
-        Animated.timing(calendarOpacity, { ...config, toValue: 1 }),
-        Animated.timing(calendarTranslateY, { ...config, toValue: 0 }),
-      ]),
-      Animated.parallel([
-        Animated.timing(habitRowOpacity, { ...config, toValue: 1 }),
-        Animated.timing(habitRowTranslateY, { ...config, toValue: 0 }),
-      ]),
-    ]);
+    headerOpacity.value = withTiming(1, fadeConfig);
+    headerTranslateY.value = withSpring(0, LIST_SPRING_CONFIG);
 
-    animationRef.current.start(() => {
-      animationTimeoutRef.current = setTimeout(
-        () => setShouldTriggerHabitEntrance(true),
-        200
-      );
-    });
+    // Phase 2: Calendar springs in (staggered)
+    calendarOpacity.value = withDelay(STAGGER_MS, withTiming(1, fadeConfig));
+    calendarTranslateY.value = withDelay(
+      STAGGER_MS,
+      withSpring(0, LIST_SPRING_CONFIG)
+    );
+
+    // Phase 3: Habit rows spring in (staggered further)
+    const rowDelay = STAGGER_MS * 2;
+    habitRowOpacity.value = withDelay(rowDelay, withTiming(1, fadeConfig));
+    habitRowTranslateY.value = withDelay(
+      rowDelay,
+      withSpring(0, LIST_SPRING_CONFIG, (finished) => {
+        if (finished) {
+          runOnJS(setShouldTriggerHabitEntrance)(true);
+        }
+      })
+    );
   }, [
     headerOpacity,
     headerTranslateY,
