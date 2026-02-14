@@ -2,7 +2,7 @@
  * Color configurations for SettingsRow component
  */
 
-import { colors } from '@/theme/colors';
+import { darkColors, lightColors } from '@/theme/darkColors';
 
 export interface SettingsRowColors {
   background: string;
@@ -15,17 +15,6 @@ export interface SettingsRowColors {
   value: string;
 }
 
-export const STANDARD_COLORS: SettingsRowColors = {
-  background: colors.light.card,
-  border: colors.gray[200],
-  chevron: colors.gray[500],
-  label: colors.text.primary,
-  switchThumb: colors.text.inverse,
-  switchTrackFalse: colors.gray[300],
-  switchTrackTrue: colors.primary[500],
-  value: colors.gray[500],
-};
-
 export const HIGH_CONTRAST_COLORS: SettingsRowColors = {
   background: '#111111',
   border: '#2f2f2f',
@@ -37,8 +26,25 @@ export const HIGH_CONTRAST_COLORS: SettingsRowColors = {
   value: '#facc15',
 };
 
+const buildStandardColors = (isDark: boolean): SettingsRowColors => {
+  const semantic = isDark ? darkColors : lightColors;
+
+  return {
+    background: semantic.card,
+    border: semantic.border,
+    chevron: semantic.text.secondary,
+    label: semantic.text.primary,
+    switchThumb: semantic.text.inverse,
+    switchTrackFalse: semantic.gray[300],
+    switchTrackTrue: semantic.primary[500],
+    value: semantic.text.secondary,
+  };
+};
+
 export function getSettingsRowColors(
-  highContrastMode: boolean
+  highContrastMode: boolean,
+  isDark: boolean = false
 ): SettingsRowColors {
-  return highContrastMode ? HIGH_CONTRAST_COLORS : STANDARD_COLORS;
+  if (highContrastMode) return HIGH_CONTRAST_COLORS;
+  return buildStandardColors(isDark);
 }

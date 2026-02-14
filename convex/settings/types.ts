@@ -21,7 +21,7 @@ export const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
   catTheme: true,
   celebrationsEnabled: true,
-  darkMode: 'light' as DarkModePreference,
+  darkMode: 'system' as DarkModePreference,
   dayShape: 'square' as const,
   habitCompletionIcon: 'chain' as const,
   habitSortMode: 'manual' as HabitSortMode,

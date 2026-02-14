@@ -6,6 +6,7 @@ import { ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
 
 interface SettingsRowProps {
@@ -31,7 +32,8 @@ export function SettingsRow({
   showBorder = true,
   highContrastMode = false,
 }: SettingsRowProps) {
-  const colors = getSettingsRowColors(highContrastMode);
+  const { isDark } = useThemeColors();
+  const colors = getSettingsRowColors(highContrastMode, isDark);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
   const handleToggle = (v: boolean) => {
