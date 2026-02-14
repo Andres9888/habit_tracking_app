@@ -98,6 +98,14 @@ export const colors = {
 
   success: '#22c55e',
 
+  // Semantic text aliases consumed across app components
+  text: {
+    inverse: '#FAF8F5',
+    primary: '#2D2A26',
+    secondary: '#6B6560',
+    tertiary: '#9C958D',
+  },
+
   surface: '#EDEAE5',
 
   warning: '#D97706',
