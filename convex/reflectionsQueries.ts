@@ -53,8 +53,17 @@ export const listRecent = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
     const limit = args.limit ?? 10;
-    return await ctx.db.query('reflections').order('desc').take(limit);
+    return await ctx.db
+      .query('reflections')
+      .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
+      .order('desc')
+      .take(limit);
   },
   returns: reflectionsArrayValidator,
 });

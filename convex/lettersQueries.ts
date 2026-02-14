@@ -39,6 +39,8 @@ export const getUnreadUnlocked = query({
 
 /**
  * Get all letters that are about to unlock (within next 24 hours)
+ *
+ * PERF FIX: Added userId filter when neither habitId nor userId arg is provided
  */
 export const getUpcomingUnlocks = query({
   args: { habitId: v.optional(v.id('habits')), userId: v.optional(v.string()) },
@@ -52,13 +54,18 @@ export const getUpcomingUnlocks = query({
         .query('letters')
         .withIndex('by_habit', (q) => q.eq('habitId', args.habitId!))
         .collect();
-    } else if (args.userId) {
+    } else {
+      // Get authenticated user's letters
+      const identity = await ctx.auth.getUserIdentity();
+      const userId = args.userId ?? identity?.subject;
+      if (!userId) {
+        return [];
+      }
+
       letters = await ctx.db
         .query('letters')
-        .withIndex('by_user', (q) => q.eq('userId', args.userId))
+        .withIndex('by_user', (q) => q.eq('userId', userId))
         .collect();
-    } else {
-      letters = await ctx.db.query('letters').collect();
     }
 
     return letters.filter(
