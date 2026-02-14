@@ -28,8 +28,25 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useThemeColors } from '../../theme/ThemeContext';
+import { colors as coreColors } from '../../theme/colors';
+import { typography, fontWeights } from '../../theme/typography';
+import { spacing, borderRadius, shadows } from '../../theme/spacing';
+import { springs, durations } from '../../theme/animations';
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
+
+// Chain link colors use the primary palette
+const CHAIN_COLORS = [
+  coreColors.primary[600],
+  coreColors.primary[700],
+  coreColors.primary[500],
+  coreColors.primary[700],
+  coreColors.primary[600],
+  coreColors.primary[500],
+  coreColors.primary[700],
+];
 
 // ─── Chain Visualization ─────────────────────────────────────────────
 
@@ -42,31 +59,29 @@ function ChainLink({
   index: number;
   reduceMotion: boolean;
 }) {
-  const colors = [
-    '#059669',
-    '#047857',
-    '#10B981',
-    '#047857',
-    '#059669',
-    '#10B981',
-    '#047857',
-  ];
+  const theme = useThemeColors();
   return (
     <Animated.View
       entering={
         reduceMotion
           ? undefined
-          : FadeInDown.delay(delay).springify().damping(18)
+          : FadeInDown.delay(delay)
+              .springify()
+              .damping(springs.button.damping)
       }
       style={[
         styles.chainLink,
         {
-          backgroundColor: colors[index % colors.length],
-          transform: [{ rotate: '0deg' }], // Uniform rotation (placeholder for future alternating style)
+          backgroundColor: CHAIN_COLORS[index % CHAIN_COLORS.length],
         },
       ]}
     >
-      <View style={styles.chainLinkInner} />
+      <View
+        style={[
+          styles.chainLinkInner,
+          { backgroundColor: theme.text.inverse },
+        ]}
+      />
     </Animated.View>
   );
 }
@@ -89,6 +104,7 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
 // ─── Strength Meter ──────────────────────────────────────────────────
 
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
+  const theme = useThemeColors();
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
   return (
     <View style={styles.strengthContainer}>
@@ -100,7 +116,7 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
               ? undefined
               : FadeInDown.delay(400 + i * 200)
                   .springify()
-                  .damping(18)
+                  .damping(springs.button.damping)
           }
           style={styles.strengthRow}
         >
@@ -117,7 +133,11 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
           <Text
             style={[
               styles.strengthLabel,
-              i === 4 && styles.strengthLabelActive,
+              { color: theme.text.secondary },
+              i === 4 && {
+                color: theme.primary[700],
+                fontWeight: fontWeights.bold,
+              },
             ]}
           >
             {stage}
@@ -129,9 +149,9 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
 }
 
 function interpolateColor(t: number): string {
-  if (t < 0.5) return '#10B981';
-  if (t < 0.75) return '#059669';
-  return '#047857';
+  if (t < 0.5) return coreColors.primary[500];
+  if (t < 0.75) return coreColors.primary[600];
+  return coreColors.primary[700];
 }
 
 // ─── Template Grid ───────────────────────────────────────────────────
@@ -152,6 +172,7 @@ const TEMPLATE_ICONS = [
 ];
 
 function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
+  const theme = useThemeColors();
   return (
     <View style={styles.templateGrid}>
       {TEMPLATE_ICONS.map((emoji, i) => (
@@ -160,11 +181,17 @@ function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
           entering={
             reduceMotion
               ? undefined
-              : FadeIn.delay(300 + i * 60)
+              : FadeIn.delay(300 + i * durations.stagger)
                   .springify()
-                  .damping(18)
+                  .damping(springs.button.damping)
           }
-          style={styles.templateItem}
+          style={[
+            styles.templateItem,
+            {
+              backgroundColor: theme.primary[100],
+            },
+            shadows.card,
+          ]}
         >
           <Text style={styles.templateEmoji}>{emoji}</Text>
         </Animated.View>
@@ -207,6 +234,7 @@ const PAGES: PageData[] = [
 // ─── Dot Indicators ──────────────────────────────────────────────────
 
 function DotIndicators({ currentIndex }: { currentIndex: number }) {
+  const theme = useThemeColors();
   return (
     <View
       accessible
@@ -223,7 +251,10 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
           style={[
             styles.dot,
             {
-              backgroundColor: i === currentIndex ? '#059669' : '#D1D5DB',
+              backgroundColor:
+                i === currentIndex
+                  ? theme.primary[600]
+                  : theme.gray[300],
               width: i === currentIndex ? 24 : 8,
             },
           ]}
@@ -245,6 +276,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
   const shouldReduceMotion = useReducedMotion();
+  const theme = useThemeColors();
 
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
@@ -297,9 +329,11 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
           entering={
             shouldReduceMotion
               ? undefined
-              : FadeInUp.delay(200).springify().damping(18)
+              : FadeInUp.delay(200)
+                  .springify()
+                  .damping(springs.button.damping)
           }
-          style={styles.title}
+          style={[styles.title, { color: theme.primary[700] }]}
         >
           {item.title}
         </Animated.Text>
@@ -307,32 +341,36 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
           entering={
             shouldReduceMotion
               ? undefined
-              : FadeInUp.delay(350).springify().damping(18)
+              : FadeInUp.delay(350)
+                  .springify()
+                  .damping(springs.button.damping)
           }
-          style={styles.subtitle}
+          style={[styles.subtitle, { color: theme.text.secondary }]}
         >
           {item.subtitle}
         </Animated.Text>
       </View>
     ),
-    [shouldReduceMotion]
+    [shouldReduceMotion, theme]
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Skip button */}
       <Animated.View
         entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
-        style={[styles.skipContainer, { top: insets.top + 12 }]}
+        style={[styles.skipContainer, { top: insets.top + spacing.md }]}
       >
         <Pressable
           accessibilityLabel='Skip onboarding'
           accessibilityRole='button'
-          hitSlop={24}
+          hitSlop={spacing.lg}
           style={styles.skipButton}
           onPress={handleSkip}
         >
-          <Text style={styles.skipText}>Skip</Text>
+          <Text style={[styles.skipText, { color: theme.text.tertiary }]}>
+            Skip
+          </Text>
         </Pressable>
       </Animated.View>
 
@@ -364,20 +402,28 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
             entering={
               shouldReduceMotion
                 ? undefined
-                : FadeInDown.springify().damping(18)
+                : FadeInDown.springify()
+                    .damping(springs.button.damping)
             }
           >
             <Pressable
               accessibilityLabel='Get started building your first habit'
               accessibilityRole='button'
               disabled={isLoading}
-              style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
+              style={[
+                styles.ctaButton,
+                { backgroundColor: theme.primary[600] },
+                shadows.floatingActionButton,
+                isLoading && styles.ctaButtonDisabled,
+              ]}
               onPress={() => void handleComplete()}
             >
               {isLoading ? (
-                <ActivityIndicator color='#FFFFFF' />
+                <ActivityIndicator color={theme.text.inverse} />
               ) : (
-                <Text style={styles.ctaText}>
+                <Text
+                  style={[styles.ctaText, { color: theme.text.inverse }]}
+                >
                   Let's Build Your First Habit →
                 </Text>
               )}
@@ -387,10 +433,16 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
           <Pressable
             accessibilityLabel='Next onboarding page'
             accessibilityRole='button'
-            style={styles.nextButton}
+            style={[
+              styles.nextButton,
+              { backgroundColor: theme.primary[600] },
+              shadows.floatingActionButton,
+            ]}
             onPress={handleNext}
           >
-            <Text style={styles.nextText}>Next</Text>
+            <Text style={[styles.nextText, { color: theme.text.inverse }]}>
+              Next
+            </Text>
           </Pressable>
         )}
       </View>
@@ -403,9 +455,9 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
 const styles = StyleSheet.create({
   bottomContainer: {
     alignItems: 'center',
-    gap: 24,
+    gap: spacing.lg,
     paddingBottom: 60,
-    paddingHorizontal: 32,
+    paddingHorizontal: spacing.xl,
   },
   chainContainer: {
     alignItems: 'center',
@@ -414,71 +466,55 @@ const styles = StyleSheet.create({
   },
   chainLink: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     height: 52,
     justifyContent: 'center',
     marginHorizontal: -2,
     width: 36,
   },
   chainLinkInner: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 36,
     width: 20,
   },
   container: {
-    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   ctaButton: {
-    backgroundColor: '#059669',
-    borderRadius: 12,
-    elevation: 4,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    borderRadius: borderRadius.button,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.base,
   },
   ctaButtonDisabled: {
     opacity: 0.7,
   },
   ctaText: {
-    color: '#FFFFFF',
+    ...typography.button,
     fontSize: 17,
-    fontWeight: '600',
   },
   dot: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 8,
   },
   dotsContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
   },
   nextButton: {
-    backgroundColor: '#059669',
-    borderRadius: 12,
-    elevation: 4,
-    paddingHorizontal: 48,
-    paddingVertical: 16,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    borderRadius: borderRadius.button,
+    paddingHorizontal: spacing['2xl'],
+    paddingVertical: spacing.base,
   },
   nextText: {
-    color: '#FFFFFF',
+    ...typography.button,
     fontSize: 17,
-    fontWeight: '600',
   },
   page: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 32,
+    paddingHorizontal: spacing.xl,
   },
   skipButton: {
     alignItems: 'center',
@@ -488,43 +524,36 @@ const styles = StyleSheet.create({
   },
   skipContainer: {
     position: 'absolute',
-    right: 24,
+    right: spacing.lg,
     zIndex: 10,
   },
   skipText: {
-    color: '#6B7280',
+    ...typography.body,
     fontSize: 17,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
   },
   strengthBar: {
-    backgroundColor: '#059669',
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     height: 32,
   },
   strengthContainer: {
-    gap: 12,
-    paddingHorizontal: 16,
+    gap: spacing.md,
+    paddingHorizontal: spacing.base,
     width: '100%',
   },
   strengthLabel: {
-    color: '#57534e',
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  strengthLabelActive: {
-    color: '#047857',
-    fontWeight: '700',
+    ...typography.caption,
   },
   strengthRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.md,
   },
   subtitle: {
-    color: '#6B7280',
+    ...typography.body,
     fontSize: 17,
     lineHeight: 24,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.base,
     textAlign: 'center',
   },
   templateEmoji: {
@@ -533,29 +562,21 @@ const styles = StyleSheet.create({
   templateGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 16,
+    gap: spacing.base,
     justifyContent: 'center',
     width: 280,
   },
   templateItem: {
     alignItems: 'center',
-    backgroundColor: '#F0FDF4',
-    borderRadius: 16,
-    elevation: 2,
+    borderRadius: borderRadius.large,
     height: 56,
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
     width: 56,
   },
   title: {
-    color: '#047857',
+    ...typography.displayLarge,
     fontSize: 34,
-    fontWeight: '700',
-    letterSpacing: -0.5,
-    marginBottom: 12,
+    marginBottom: spacing.md,
     textAlign: 'center',
   },
   visualContainer: {

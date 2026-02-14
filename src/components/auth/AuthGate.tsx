@@ -22,6 +22,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { api } from '../../../convex/_generated/api';
 import { colors } from '../../theme/colors';
+import { typography, fontWeights } from '../../theme/typography';
+import { spacing, borderRadius, shadows } from '../../theme/spacing';
 import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
@@ -102,11 +104,11 @@ function BrandedLoadingScreen() {
 
 const loadingStyles = StyleSheet.create({
   appName: {
+    ...typography.heading2,
     color: colors.primary[700],
     fontSize: 22,
-    fontWeight: '700',
     letterSpacing: 0.5,
-    marginBottom: 32,
+    marginBottom: spacing.xl,
   },
   container: {
     alignItems: 'center',
@@ -121,17 +123,15 @@ const loadingStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.light.card,
     borderColor: colors.border,
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
-    marginHorizontal: 24,
-    marginTop: 8,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.sm,
+    padding: spacing.lg,
+    ...shadows.floatingActionButton,
   },
   errorDescription: {
+    ...typography.caption,
     color: colors.text.secondary,
     fontSize: 13,
     lineHeight: 20,
@@ -139,19 +139,19 @@ const loadingStyles = StyleSheet.create({
     textAlign: 'center',
   },
   errorTitle: {
+    ...typography.heading3,
     color: colors.text.primary,
     fontSize: 17,
-    fontWeight: '600',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
     textAlign: 'center',
   },
   iconContainer: {
     alignItems: 'center',
     backgroundColor: colors.primary[100],
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     height: 64,
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: spacing.base,
     width: 64,
   },
   iconText: {
@@ -159,22 +159,22 @@ const loadingStyles = StyleSheet.create({
   },
   retryButton: {
     backgroundColor: colors.primary[600],
-    borderRadius: 12,
-    paddingHorizontal: 32,
-    paddingVertical: 12,
+    borderRadius: borderRadius.button,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
   },
   retryButtonText: {
+    ...typography.button,
     color: colors.text.inverse,
     fontSize: 17,
-    fontWeight: '600',
   },
   cardsPreview: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 24,
+    paddingHorizontal: spacing.base,
+    paddingTop: spacing.lg,
   },
   shimmerContainer: {
-    marginTop: 12,
+    marginTop: spacing.md,
   },
 });
 export function AuthGate() {
