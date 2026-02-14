@@ -12,6 +12,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 type CalendarView = 'month' | 'year';
 
@@ -24,6 +25,7 @@ const SPRING_CONFIG = { damping: 18, mass: 1, stiffness: 180 };
 const PADDING = 4;
 
 export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
+  const { colors, isDark } = useThemeColors();
   const containerWidth = useSharedValue(0);
   const indicatorX = useSharedValue(activeView === 'month' ? 0 : 1);
 
@@ -61,22 +63,26 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
     [activeView, onViewChange]
   );
 
+  const activeColor = isDark ? '#34D399' : '#059669';
+  const inactiveColor = colors.text.tertiary;
+
   return (
     <View
       accessibilityRole='tablist'
-      className='mb-4 rounded-lg bg-stone-100'
-      style={{ padding: PADDING }}
+      className='mb-4 rounded-lg'
+      style={{ backgroundColor: colors.surface, padding: PADDING }}
       onLayout={handleLayout}
     >
       <Animated.View
-        className='absolute bottom-1 top-1 rounded-md bg-white'
+        className='absolute bottom-1 top-1 rounded-md'
         style={[
           indicatorStyle,
           {
+            backgroundColor: colors.card,
             elevation: 3,
-            shadowColor: '#059669',
+            shadowColor: isDark ? '#000' : '#059669',
             shadowOffset: { height: 3, width: 0 },
-            shadowOpacity: 0.12,
+            shadowOpacity: isDark ? 0.3 : 0.12,
             shadowRadius: 8,
           },
         ]}
@@ -91,7 +97,7 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
         >
           <Text
             style={{
-              color: activeView === 'month' ? '#059669' : '#78716c',
+              color: activeView === 'month' ? activeColor : inactiveColor,
               fontSize: 13,
               fontWeight: '600',
             }}
@@ -108,7 +114,7 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
         >
           <Text
             style={{
-              color: activeView === 'year' ? '#059669' : '#78716c',
+              color: activeView === 'year' ? activeColor : inactiveColor,
               fontSize: 13,
               fontWeight: '600',
             }}

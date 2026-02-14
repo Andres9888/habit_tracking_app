@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { getEmojiAndName } from '../DraggableHabit/DraggableHabit.hooks';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface StatsCardProps {
   habitName: string;
@@ -22,29 +23,50 @@ export function StatsCard({
   scheduleLabel,
   showHeader = true,
 }: StatsCardProps) {
+  const { colors, isDark } = useThemeColors();
   const { emoji: extractedEmoji, name } = getEmojiAndName(habitName);
   const displayEmoji = emoji || extractedEmoji;
   const scheduleText = scheduleLabel || 'Daily at 7:00 AM';
 
   return (
-    <View className='rounded-2xl bg-white p-5'>
+    <View
+      className='rounded-2xl p-5'
+      style={{
+        backgroundColor: colors.card,
+        borderColor: colors.cardBorder,
+        borderWidth: isDark ? 1 : 0,
+      }}
+    >
       {/* Habit Header */}
       {showHeader && (
         <View className='mb-6 flex-row items-start gap-3'>
           {displayEmoji && (
-            <View className='h-14 w-14 items-center justify-center rounded-xl bg-blue-100'>
+            <View
+              className='h-14 w-14 items-center justify-center rounded-xl'
+              style={{ backgroundColor: isDark ? 'rgba(59,130,246,0.15)' : '#DBEAFE' }}
+            >
               <Text className='text-[30px]'>{displayEmoji}</Text>
             </View>
           )}
           <View className='flex-1'>
-            <Text className='text-2xl font-semibold text-stone-900'>
+            <Text
+              className='text-2xl font-semibold'
+              style={{ color: colors.text.primary }}
+            >
               {name}
             </Text>
-            <Text className='mt-1 text-base text-stone-500'>
+            <Text
+              className='mt-1 text-base'
+              style={{ color: colors.text.secondary }}
+            >
               {scheduleText}
             </Text>
             {habitNotes ? (
-              <Text className='mt-2 text-sm text-stone-500' numberOfLines={2}>
+              <Text
+                className='mt-2 text-sm'
+                numberOfLines={2}
+                style={{ color: colors.text.secondary }}
+              >
                 {habitNotes}
               </Text>
             ) : null}
@@ -59,27 +81,42 @@ export function StatsCard({
           <Text className='text-[30px] font-extrabold text-orange-500'>
             {currentStreak}
           </Text>
-          <Text className='mt-1 text-center text-sm font-medium leading-5 text-stone-500'>
+          <Text
+            className='mt-1 text-center text-sm font-medium leading-5'
+            style={{ color: colors.text.secondary }}
+          >
             Current{'\n'}Streak
           </Text>
         </View>
 
         {/* Best Streak */}
         <View className='items-center'>
-          <Text className='text-[30px] font-extrabold text-stone-900'>
+          <Text
+            className='text-[30px] font-extrabold'
+            style={{ color: colors.text.primary }}
+          >
             {bestStreak}
           </Text>
-          <Text className='mt-1 text-center text-sm font-medium leading-5 text-stone-500'>
+          <Text
+            className='mt-1 text-center text-sm font-medium leading-5'
+            style={{ color: colors.text.secondary }}
+          >
             Best Streak
           </Text>
         </View>
 
         {/* Completion Percentage */}
         <View className='items-center'>
-          <Text className='text-[30px] font-extrabold text-emerald-700'>
+          <Text
+            className='text-[30px] font-extrabold'
+            style={{ color: isDark ? '#34D399' : '#047857' }}
+          >
             {completionPercentage}%
           </Text>
-          <Text className='mt-1 text-center text-sm font-medium leading-5 text-stone-500'>
+          <Text
+            className='mt-1 text-center text-sm font-medium leading-5'
+            style={{ color: colors.text.secondary }}
+          >
             Completion
           </Text>
         </View>

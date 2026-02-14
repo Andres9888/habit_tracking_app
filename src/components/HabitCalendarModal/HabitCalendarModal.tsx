@@ -9,6 +9,7 @@ import HeatmapCalendar from './HeatmapCalendar';
 import HabitCalendarView from '../HabitCalendarView';
 import HabitEditScreen from '../../screens/HabitEditScreen';
 import { useHabitCalendarModal } from './useHabitCalendarModal';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { HabitCalendarModalProps } from './types';
 
 export default function HabitCalendarModal({
@@ -20,6 +21,7 @@ export default function HabitCalendarModal({
   toggleHabit,
   onOpenMotivationTab,
 }: HabitCalendarModalProps) {
+  const { colors } = useThemeColors();
   const state = useHabitCalendarModal({
     habit,
     onClose,
@@ -32,7 +34,7 @@ export default function HabitCalendarModal({
 
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
-      <SafeAreaView className='flex-1 bg-[#F8F5F1]'>
+      <SafeAreaView className='flex-1' style={{ backgroundColor: colors.background }}>
         <ModalHeader name={state.name} onClose={onClose} onEdit={state.handleEditPress} />
 
         <ScrollView className='px-4' showsVerticalScrollIndicator={false}>
