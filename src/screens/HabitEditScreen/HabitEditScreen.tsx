@@ -3,8 +3,9 @@ import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { EditHeader } from './EditHeader';
+import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
 import { DangerZone } from './DangerZone';
@@ -20,6 +21,7 @@ export default function HabitEditScreen({
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const state = useHabitEditScreen({ habitId, onClose });
+  const { colors: themeColors } = useThemeColors();
   // Modal pattern: return null when not visible — the modal simply doesn't mount
   if (!visible || !habitId) return null;
 
@@ -37,8 +39,14 @@ export default function HabitEditScreen({
         <View className='flex-1 bg-black/50'>
           <View
             className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
-            style={{ backgroundColor: colors.light.background }}
+            style={{ backgroundColor: themeColors.background }}
           >
+            {state.isLoading ? (
+              <View style={{ paddingTop: Math.max(insets.top + 4, 12) }}>
+                <HabitEditSkeleton />
+              </View>
+            ) : (
+              <>
             <EditHeader
               canSave={state.habitName.trim().length >= 2}
               isSaving={state.isSaving}
@@ -92,6 +100,8 @@ export default function HabitEditScreen({
                 </Animated.View>
               </Pressable>
             </ScrollView>
+            </>
+            )}
           </View>
         </View>
       </KeyboardAvoidingView>
