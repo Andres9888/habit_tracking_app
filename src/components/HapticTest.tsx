@@ -10,9 +10,11 @@ import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 import { Button, Text, Surface } from 'react-native-paper';
 import * as Haptics from 'expo-haptics';
 import { useAppTheme } from '../theme';
+import { useThemeColors } from '../theme/ThemeContext';
 
 export function HapticTest() {
   const theme = useAppTheme();
+  const { colors: themeColors } = useThemeColors();
   const [lastResult, setLastResult] = useState<string>(
     'Tap any button to test'
   );
@@ -44,7 +46,7 @@ export function HapticTest() {
       contentContainerStyle={styles.contentContainer}
       style={[
         styles.container,
-        { backgroundColor: theme.custom.colors.light.background },
+        { backgroundColor: themeColors.background },
       ]}
     >
       <Surface elevation={1} style={styles.surface}>

@@ -11,6 +11,7 @@ import {
 } from 'react-native-gesture-handler';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { styles } from './Modal.styles';
 import { borderRadius } from '../../theme/spacing';
 
@@ -28,6 +29,7 @@ export function FullScreenContent({
   customStyle,
 }: FullScreenContentProps) {
   const theme = useAppTheme();
+  const { colors: themeColors } = useThemeColors();
 
   return (
     <GestureDetector gesture={gesture}>
@@ -35,7 +37,7 @@ export function FullScreenContent({
         style={[
           styles.fullScreen,
           {
-            backgroundColor: theme.custom.colors.light.background,
+            backgroundColor: themeColors.background,
             borderTopLeftRadius: borderRadius.medium,
             borderTopRightRadius: borderRadius.medium,
           },

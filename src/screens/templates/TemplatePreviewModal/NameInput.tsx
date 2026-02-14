@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from './styles';
 import type { NameInputProps } from './types';
 
@@ -14,6 +15,7 @@ export function NameInput({
   onChangeName,
 }: NameInputProps) {
   const theme = useAppTheme();
+  const { colors: themeColors } = useThemeColors();
 
   return (
     <View style={styles.section}>
@@ -29,12 +31,12 @@ export function NameInput({
         accessibilityLabel='Habit name'
         editable={!disabled}
         placeholder='Enter habit name'
-        placeholderTextColor='#a8a29e'
+        placeholderTextColor={themeColors.gray[400]}
         style={[
           styles.input,
           {
-            backgroundColor: theme.custom.colors.light.background,
-            borderColor: theme.custom.colors.gray[200],
+            backgroundColor: themeColors.background,
+            borderColor: themeColors.gray[200],
             fontFamily: theme.custom.fontFamilies.primary.text,
           },
         ]}

@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import Svg, { Line, Circle, Path } from 'react-native-svg';
 
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../StrengthHistoryChart.styles';
 import type { ChartPoint } from '../StrengthHistoryChart.types';
 
@@ -24,6 +25,7 @@ export function ChartSvg({
   height,
 }: ChartSvgProps) {
   const theme = useAppTheme();
+  const { colors: themeColors } = useThemeColors();
 
   return (
     <View
@@ -82,7 +84,7 @@ export function ChartSvg({
             cy={point.y}
             fill={theme.custom.colors.primary[500]}
             r={4}
-            stroke={theme.custom.colors.light.background}
+            stroke={themeColors.background}
             strokeWidth='2'
           />
         ))}
