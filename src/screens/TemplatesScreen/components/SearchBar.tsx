@@ -27,6 +27,7 @@ export function SearchBar({
         accessibilityLabel='Search habits'
         placeholder={placeholder}
         placeholderTextColor='#a8a29e'
+        returnKeyType='search'
         style={styles.searchInput}
         value={value}
         onChangeText={onChangeText}

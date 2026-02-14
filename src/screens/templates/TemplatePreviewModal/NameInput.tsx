@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, Keyboard } from 'react-native';
 import { useAppTheme } from '../../../theme';
 import { styles } from './styles';
 import type { NameInputProps } from './types';
@@ -38,8 +38,10 @@ export function NameInput({
             fontFamily: theme.custom.fontFamilies.primary.text,
           },
         ]}
+        returnKeyType='done'
         value={customName}
         onChangeText={onChangeName}
+        onSubmitEditing={Keyboard.dismiss}
       />
     </View>
   );

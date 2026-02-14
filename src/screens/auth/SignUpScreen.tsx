@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import { ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { useRef } from 'react';
+import { ScrollView, View, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -26,6 +27,7 @@ export default function SignUpScreen({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
+  const passwordRef = useRef<TextInput>(null);
   const {
     emailAddress,
     setEmailAddress,
@@ -125,25 +127,31 @@ export default function SignUpScreen({
                 <FormInput
                   autoCapitalize='none'
                   autoComplete='email'
+                  blurOnSubmit={false}
                   editable={!isAnyLoading}
                   error={emailError}
                   keyboardType='email-address'
                   label='Email'
                   placeholder='Enter your email'
+                  returnKeyType='next'
                   value={emailAddress}
                   onBlur={onEmailBlur}
                   onChangeText={setEmailAddress}
+                  onSubmitEditing={() => passwordRef.current?.focus()}
                 />
                 <FormInput
+                  ref={passwordRef}
                   secureTextEntry
                   autoComplete='password-new'
                   editable={!isAnyLoading}
                   error={passwordError}
                   label='Password'
                   placeholder='Create a password'
+                  returnKeyType='go'
                   value={password}
                   onBlur={onPasswordBlur}
                   onChangeText={setPassword}
+                  onSubmitEditing={handleSignUp}
                 />
                 <SubmitButton
                   disabled={
