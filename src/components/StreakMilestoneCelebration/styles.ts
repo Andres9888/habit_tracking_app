@@ -1,43 +1,44 @@
 /**
  * Styles for StreakMilestoneCelebration component
  * Uses design system: 34/22/17/13 typography, 16px border-radius, shadows
+ *
+ * Layout styles are static; color styles are applied dynamically via
+ * useThemeColors() in each sub-component to support dark mode.
  */
 
 import { StyleSheet } from 'react-native';
 import { spacing, borderRadius, shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
-import { colors } from '../../theme/colors';
 
 export const styles = StyleSheet.create({
-  
-  // Content card
-card: {
+  // Action buttons
+  actionsContainer: {
+    gap: spacing.md,
+    width: '100%',
+  },
+
+  // Content card — colors applied dynamically
+  card: {
     alignItems: 'center',
-    backgroundColor: colors.light.card,
     borderRadius: borderRadius.large,
     maxWidth: 340,
+    padding: spacing.xl,
     ...shadows.alert,
   },
 
-  
-
-container: {
+  container: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
   },
 
-  
-  
-emoji: {
+  emoji: {
     fontSize: 48,
   },
 
-  
-  
-// Emoji badge
-emojiBadge: {
+  // Emoji badge
+  emojiBadge: {
     alignItems: 'center',
     borderRadius: 9999,
     height: 100,
@@ -47,139 +48,62 @@ emojiBadge: {
     ...shadows.floatingActionButton,
   },
 
-  
-
-
-// Action buttons
-actionsContainer: {
-    gap: spacing.md,
-    width: '100%',
-  },
-
-  
-  
-
-
-
-
-
-habitEmoji: {
+  habitEmoji: {
     fontSize: 24,
     marginRight: spacing.sm,
   },
 
-  
-  
-
-
-
-
-
-
-
-habitName: {
+  habitName: {
     ...typography.heading3,
-    color: colors.text.primary,
   },
 
-  
-  
-
-
-
-
-
-// Habit info row
-habitRow: {
+  // Habit info row
+  habitRow: {
     alignItems: 'center',
     flexDirection: 'row',
     marginBottom: spacing.lg,
   },
 
-  
-
-
-
-
-// Modal container
-modalContent: {
+  // Modal container
+  modalContent: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
   },
 
-  
-
-
-
-
-primaryButton: {
+  primaryButton: {
     alignItems: 'center',
-    backgroundColor: colors.primary[500],
     borderRadius: borderRadius.medium,
     paddingVertical: spacing.base,
     ...shadows.card,
   },
 
-  
-  
-
-
-
-primaryButtonText: {
+  primaryButtonText: {
     ...typography.button,
     color: '#FFFFFF',
   },
 
-  
-
-
-// Streak count badge
-streakBadge: {
-    alignItems: 'center',
-    backgroundColor: colors.gray[100],
-    flexDirection: 'row',
-    borderRadius: borderRadius.full,
-    marginBottom: spacing.xl,
-    paddingHorizontal: spacing.base,
-    paddingVertical: spacing.sm,
-  },
-
-  
-
-
-secondaryButton: {
+  secondaryButton: {
     alignItems: 'center',
     backgroundColor: 'transparent',
-    borderColor: colors.gray[300],
     borderRadius: borderRadius.medium,
     borderWidth: 1.5,
     paddingVertical: spacing.base,
   },
 
-  
-  
-// Subtitle (17pt - body)
-subtitle: {
-    ...typography.body,
-    color: colors.text.secondary,
-    marginBottom: spacing.base,
-    textAlign: 'center',
-  },
-
-  
-secondaryButtonText: {
+  secondaryButtonText: {
     ...typography.button,
-    color: colors.text.secondary,
   },
 
-  // Title (22pt - heading2)
-title: {
-    ...typography.heading2,
-    color: colors.text.primary,
-    textAlign: 'center',
-    marginBottom: spacing.sm,
+  // Streak count badge
+  streakBadge: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderRadius: borderRadius.full,
+    marginBottom: spacing.xl,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.sm,
   },
 
   streakCount: {
@@ -190,7 +114,20 @@ title: {
 
   streakLabel: {
     ...typography.body,
-    color: colors.text.secondary,
+  },
+
+  // Subtitle (17pt - body)
+  subtitle: {
+    ...typography.body,
+    marginBottom: spacing.base,
+    textAlign: 'center',
+  },
+
+  // Title (22pt - heading2)
+  title: {
+    ...typography.heading2,
+    textAlign: 'center',
+    marginBottom: spacing.sm,
   },
 });
 

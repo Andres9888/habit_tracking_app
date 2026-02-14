@@ -19,6 +19,7 @@ import {
 } from 'react-native-reanimated';
 import { Modal } from '../Modal';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { ConfettiAnimation } from './ConfettiAnimation';
 import { BadgeSection } from './BadgeSection';
 import { ContentSection } from './ContentSection';
@@ -39,6 +40,7 @@ export function StreakMilestoneCelebration({
   onShare,
 }: StreakMilestoneCelebrationProps) {
   const reduceMotion = useReduceMotion();
+  const { colors } = useThemeColors();
 
   const badgeScale = useSharedValue(0);
   const badgeRotate = useSharedValue(-15);
@@ -124,7 +126,7 @@ export function StreakMilestoneCelebration({
     <>
       <Modal backdropOpacity={0.7} style={styles.modalContent} variant="fullScreen" visible={visible} onClose={onClose}>
         <View style={styles.container}>
-          <View style={styles.card}>
+          <View style={[styles.card, { backgroundColor: colors.card }]}>
             <BadgeSection animatedStyle={badgeAnimatedStyle} milestone={milestone} />
             <ContentSection
               contentAnimatedStyle={contentAnimatedStyle}

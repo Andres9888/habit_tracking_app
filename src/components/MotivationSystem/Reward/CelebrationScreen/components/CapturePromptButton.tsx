@@ -1,5 +1,6 @@
 /**
  * CapturePromptButton - "Capture this feeling" action button
+ * Uses theme-aware colors for dark mode support.
  */
 
 import React, { useCallback } from 'react';
@@ -12,6 +13,7 @@ import Animated, {
 import { Sparkles } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { SPRING_BUTTON } from '../constants';
 import type { CapturePromptButtonProps } from '../types';
 
@@ -23,6 +25,7 @@ export function CapturePromptButton({
   isPremium = false,
 }: CapturePromptButtonProps) {
   const scale = useSharedValue(1);
+  const { colors } = useThemeColors();
 
   const handlePressIn = useCallback(() => {
     scale.value = withSpring(0.96, SPRING_BUTTON);
@@ -46,26 +49,40 @@ export function CapturePromptButton({
       <Pressable
         accessibilityLabel={label}
         accessibilityRole='button'
-        className='flex-row items-center gap-3 rounded-xl bg-stone-50 p-4'
+        className='flex-row items-center gap-3 rounded-xl p-4'
+        style={{ backgroundColor: colors.gray[50] }}
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        <View className='h-10 w-10 items-center justify-center rounded-lg bg-stone-100'>
+        <View
+          className='h-10 w-10 items-center justify-center rounded-lg'
+          style={{ backgroundColor: colors.gray[100] }}
+        >
           {icon}
         </View>
         <View className='flex-1'>
           <View className='flex-row items-center gap-2'>
-            <Text className='font-semibold text-stone-700'>{label}</Text>
+            <Text
+              className='font-semibold'
+              style={{ color: colors.text.primary }}
+            >
+              {label}
+            </Text>
             {isPremium && (
               <View className='rounded-full bg-amber-100 px-2 py-0.5'>
                 <Text className='text-xs font-medium text-amber-700'>PRO</Text>
               </View>
             )}
           </View>
-          <Text className='text-xs text-stone-500'>{description}</Text>
+          <Text
+            className='text-xs'
+            style={{ color: colors.text.tertiary }}
+          >
+            {description}
+          </Text>
         </View>
-        <Sparkles className='text-stone-400' size={16} />
+        <Sparkles color={colors.text.tertiary} size={16} />
       </Pressable>
     </Animated.View>
   );

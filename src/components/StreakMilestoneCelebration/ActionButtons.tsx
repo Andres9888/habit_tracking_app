@@ -1,11 +1,13 @@
 /**
  * ActionButtons - Share and Continue buttons for milestone celebration
+ * Uses theme-aware colors for dark mode support.
  */
 
 import React, { useCallback } from 'react';
 import { View, Text, Pressable, Platform } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { styles } from './styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -23,6 +25,8 @@ export function ActionButtons({
   shareButtonAnimatedStyle,
   continueButtonAnimatedStyle,
 }: ActionButtonsProps) {
+  const { colors } = useThemeColors();
+
   const handleShare = useCallback(() => {
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
@@ -44,7 +48,11 @@ export function ActionButtons({
           accessible
           accessibilityLabel="Share your achievement"
           accessibilityRole="button"
-          style={[styles.primaryButton, shareButtonAnimatedStyle]}
+          style={[
+            styles.primaryButton,
+            { backgroundColor: colors.primary[500] },
+            shareButtonAnimatedStyle,
+          ]}
           onPress={handleShare}
         >
           <Text style={styles.primaryButtonText}>Share 🎉</Text>
@@ -55,10 +63,21 @@ export function ActionButtons({
         accessible
         accessibilityLabel="Continue"
         accessibilityRole="button"
-        style={[styles.secondaryButton, continueButtonAnimatedStyle]}
+        style={[
+          styles.secondaryButton,
+          { borderColor: colors.gray[300] },
+          continueButtonAnimatedStyle,
+        ]}
         onPress={handleContinue}
       >
-        <Text style={styles.secondaryButtonText}>Continue</Text>
+        <Text
+          style={[
+            styles.secondaryButtonText,
+            { color: colors.text.secondary },
+          ]}
+        >
+          Continue
+        </Text>
       </AnimatedPressable>
     </View>
   );
