@@ -19,7 +19,8 @@ import {
   ExportMenu,
 } from './components';
 
-export default function AnalyticsScreen() { // eslint-disable-line max-lines-per-function
+export default function AnalyticsScreen() {
+  // eslint-disable-line max-lines-per-function
   const {
     refreshing,
     showPaywall,
@@ -44,8 +45,8 @@ export default function AnalyticsScreen() { // eslint-disable-line max-lines-per
   if (!isPremiumUser && showPaywall) {
     return (
       <PremiumPaywall
-        variant="analytics"
         visible
+        variant='analytics'
         onClose={() => setShowPaywall(false)}
         onStartTrial={handleStartTrial}
       />

@@ -1,22 +1,12 @@
 /**
  * SettingsModal Component
- *
- * Full-screen modal for app settings. Manages navigation between:
- * - Main settings view (visual preferences, account)
- * - Archived habits sub-view
- *
- * Provides controls for:
- * - Visual preferences (progress bar, icons, shapes)
- * - Habit management (archived habits)
- * - Account actions (sign out, delete)
- *
- * Supports high contrast mode for accessibility.
  */
 
 import React from 'react';
 import { Modal, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
+import { SettingsModalSkeleton } from '../SkeletonLoader';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
 import { SettingsHeader } from './SettingsHeader';
