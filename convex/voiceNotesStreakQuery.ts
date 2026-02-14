@@ -22,9 +22,16 @@ import {
 export const getFromBestStreak = query({
   args: { habitId: v.id('habits'), limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
+    // SEC: Authentication check — prevent cross-user data access
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
     const limit = args.limit ?? 3;
     const habit = await ctx.db.get(args.habitId);
     if (!habit) return [];
+
+    // SEC: Ownership verification — only return data for the authenticated user's habits
+    if (habit.userId !== identity.subject) return [];
 
     const bestStreak = habit.bestStreak ?? 0;
     if (bestStreak < 3) return [];
