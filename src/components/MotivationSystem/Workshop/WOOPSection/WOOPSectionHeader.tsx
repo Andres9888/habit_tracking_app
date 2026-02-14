@@ -1,15 +1,18 @@
 /**
  * WOOPSectionHeader - Header row for WOOPSection
+ * Uses WorkshopSectionHeader with custom trailing content for the help button.
  */
 
 import React, { useCallback } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { HelpCircle, Plus, Pencil } from 'lucide-react-native';
+import { HelpCircle, Pencil } from 'lucide-react-native';
+import { WorkshopSectionHeader } from '../shared';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -22,6 +25,7 @@ export function WOOPSectionHeader({
   hasWoop,
   onHelpPress,
 }: WOOPSectionHeaderProps) {
+  const { isDark } = useThemeColors();
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -36,34 +40,42 @@ export function WOOPSectionHeader({
     transform: [{ scale: scale.value }],
   }));
 
+  const iconColor = isDark ? '#A8A29E' : '#A1A1AA';
+
+  const trailingContent = (
+    <>
+      <AnimatedPressable
+        accessibilityLabel="Learn about WOOP"
+        accessibilityRole="button"
+        hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
+        style={[
+          {
+            alignItems: 'center',
+            height: 24,
+            justifyContent: 'center',
+            width: 24,
+          },
+          animatedStyle,
+        ]}
+        onPress={onHelpPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+      >
+        <HelpCircle color={iconColor} size={16} />
+      </AnimatedPressable>
+      {hasWoop && (
+        <Pencil color={iconColor} size={14} />
+      )}
+    </>
+  );
+
   return (
-    <View className='mb-2 flex-row items-center justify-between'>
-      <View className='flex-row items-center gap-2'>
-        <Text className='text-base'>🎯</Text>
-        <Text className='text-xs font-semibold text-stone-800'>WOOP Plan</Text>
-      </View>
-      <View className='flex-row items-center gap-2'>
-        <AnimatedPressable
-          accessibilityLabel='Learn about WOOP'
-          accessibilityRole='button'
-          className='h-6 w-6 items-center justify-center rounded-full'
-          hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
-          style={animatedStyle}
-          onPress={onHelpPress}
-          onPressIn={handlePressIn}
-          onPressOut={handlePressOut}
-        >
-          <HelpCircle className='text-stone-400' size={16} />
-        </AnimatedPressable>
-        {hasWoop ? (
-          <Pencil className='text-stone-400' size={14} />
-        ) : (
-          <View className='flex-row items-center gap-1'>
-            <Plus className='text-stone-600' size={12} />
-            <Text className='text-xs font-medium text-stone-600'>Set up</Text>
-          </View>
-        )}
-      </View>
-    </View>
+    <WorkshopSectionHeader
+      accent="stone"
+      emoji="🎯"
+      title="WOOP Plan"
+      trailingAction={!hasWoop ? { label: 'Set up' } : undefined}
+      trailingContent={trailingContent}
+    />
   );
 }
