@@ -61,6 +61,7 @@ export function useCreateHabitHandlers() {
     await updateHabit({
       habitId: habitToEdit._id,
       icon: selectedEmoji ?? undefined,
+      color: selectedColor,
       iconColor: selectedColor,
       name: fullHabitName,
       notes: habitToEdit.notes ?? '',
@@ -84,6 +85,7 @@ export function useCreateHabitHandlers() {
   }: HabitData): Promise<void> {
     const habitId = await createHabit({
       icon: selectedEmoji ?? undefined,
+      color: selectedColor,
       iconColor: selectedColor,
       name: fullHabitName,
       notes: '',
