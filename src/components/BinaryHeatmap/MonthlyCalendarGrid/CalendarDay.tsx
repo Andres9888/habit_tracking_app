@@ -2,12 +2,13 @@
  * CalendarDay Component
  *
  * Individual day cell for the monthly calendar.
+ * Shows filled green circles for completed days and empty circles for missed days.
  */
 
 import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import type { DayData } from './types';
-import { COLORS, hexToRgba } from './colors';
+import { COLORS } from './colors';
 import { styles } from './styles';
 
 interface CalendarDayProps {
@@ -29,7 +30,27 @@ export const CalendarDay = memo(function CalendarDay({
 }: CalendarDayProps) {
   // Guard against undefined day properties
   const showCompleted = Boolean(day?.isCompleted && day?.isCurrentMonth && !day?.isFuture);
+  const showMissed = Boolean(day?.isMissed && day?.isCurrentMonth && !day?.isFuture);
   const isToday = Boolean(day?.isToday);
+
+  // Determine circle style based on completion status
+  const getCircleStyle = () => {
+    if (showCompleted) {
+      // Filled green circle for completed days
+      return {
+        backgroundColor: COLORS.GREEN_COMPLETED,
+      };
+    }
+    if (showMissed) {
+      // Empty circle with green border for missed days
+      return {
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderColor: COLORS.GREEN_COMPLETED,
+      };
+    }
+    return {};
+  };
 
   return (
     <Pressable
@@ -40,7 +61,7 @@ export const CalendarDay = memo(function CalendarDay({
       <View
         style={[
           styles.dayCell,
-          showCompleted && { backgroundColor: hexToRgba(habitColor, 0.15) },
+          showCompleted && { backgroundColor: `${COLORS.GREEN_COMPLETED}26` },
           isToday && { borderColor: habitColor, borderWidth: 2 },
         ]}
       >
@@ -53,8 +74,8 @@ export const CalendarDay = memo(function CalendarDay({
         >
           {day?.dayNumber ?? ''}
         </Text>
-        {showCompleted && (
-          <View style={[styles.dot, { backgroundColor: habitColor }]} />
+        {(showCompleted || showMissed) && (
+          <View style={[styles.streakCircle, getCircleStyle()]} />
         )}
       </View>
     </Pressable>
