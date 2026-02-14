@@ -9,6 +9,7 @@ import { BenefitsHeader } from './BenefitsHeader';
 import { BenefitsHero } from './BenefitsHero';
 import { BenefitsFeatureCard } from './BenefitsFeatureCard';
 import { BenefitsCTAFooter } from './BenefitsCTAFooter';
+import { PricingToggle } from './PricingToggle';
 import { MOTIVATION_FEATURES } from './motivationFeatures';
 import type { VariantConfig } from './PremiumPaywall.types';
 import type { PremiumPaywallHandlers } from './usePremiumPaywall';
@@ -64,6 +65,14 @@ export function BenefitsVariant({
             />
           ))}
           {config.showSocialProof && <SocialProofSection />}
+          {config.showPricingToggle && (
+            <PricingToggle
+              darkMode
+              annualPackage={handlers.annualPackage}
+              monthlyPackage={handlers.monthlyPackage}
+              onPackageChange={handlers.setSelectedPackage}
+            />
+          )}
         </ScrollView>
         <BenefitsCTAFooter
           config={config}

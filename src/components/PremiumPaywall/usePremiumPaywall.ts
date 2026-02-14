@@ -73,7 +73,7 @@ export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePur
     triggerSelection();
     setIsProcessing(true);
     try {
-      if (variant === 'analytics' && selectedPackage) {
+      if (selectedPackage) {
         const success = await purchasePackage(selectedPackage);
         if (success) { triggerSuccess(); onStartTrial(); onClose(); }
       } else {
@@ -89,7 +89,7 @@ export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePur
       setIsProcessing(false);
     }
      
-  }, [isProcessing, variant, selectedPackage, purchasePackage, onStartTrial, onClose, triggerSelection, triggerSuccess]);
+  }, [isProcessing, selectedPackage, purchasePackage, onStartTrial, onClose, triggerSelection, triggerSuccess]);
 
   const { handleRestorePurchases } = useRestorePurchases({ onClose, onRestorePurchases });
 
