@@ -15,15 +15,15 @@ export function LegalFooter() {
         accessibilityRole='link'
         onPress={openTerms}
       >
-        <Text className='text-xs text-stone-500'>Terms</Text>
+        <Text className='text-xs text-stone-600'>Terms</Text>
       </AnimatedPressable>
-      <Text className='mx-2 text-xs text-stone-500'>·</Text>
+      <Text className='mx-2 text-xs text-stone-600'>·</Text>
       <AnimatedPressable
         accessibilityLabel='Privacy Policy'
         accessibilityRole='link'
         onPress={openPrivacy}
       >
-        <Text className='text-xs text-stone-500'>Privacy</Text>
+        <Text className='text-xs text-stone-600'>Privacy</Text>
       </AnimatedPressable>
     </View>
   );
