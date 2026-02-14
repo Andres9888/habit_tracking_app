@@ -1,10 +1,11 @@
 /**
  * ScreenErrorFallback - Lightweight error fallback for individual screens
- * Designed to prevent one screen crash from killing the entire app
+ * Designed to prevent one screen crash from killing the entire app.
+ * Theme-aware: reads system color scheme directly (works outside ThemeColorProvider).
  */
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { colors } from '../../theme/colors';
+import { useErrorTheme } from './useErrorTheme';
 
 interface ScreenErrorFallbackProps {
   screenName: string;
@@ -19,18 +20,25 @@ export function ScreenErrorFallback({
   onRetry,
   onGoBack,
 }: ScreenErrorFallbackProps) {
+  const { colors } = useErrorTheme();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={styles.emoji}>😕</Text>
-      <Text style={styles.title}>Something went wrong</Text>
-      <Text style={styles.subtitle}>
+      <Text style={[styles.title, { color: colors.text.primary }]}>
+        Something went wrong
+      </Text>
+      <Text style={[styles.subtitle, { color: colors.text.secondary }]}>
         {screenName} encountered an error, but your data is safe.
       </Text>
 
       <Pressable
         accessibilityLabel='Retry loading screen'
         accessibilityRole='button'
-        style={styles.primaryButton}
+        style={[styles.primaryButton, {
+          backgroundColor: colors.primary[500],
+          shadowColor: colors.primary[500],
+        }]}
         onPress={onRetry}
       >
         <Text style={styles.primaryButtonText}>Try Again</Text>
@@ -43,14 +51,24 @@ export function ScreenErrorFallback({
           style={styles.secondaryButton}
           onPress={onGoBack}
         >
-          <Text style={styles.secondaryButtonText}>Go Back</Text>
+          <Text style={[styles.secondaryButtonText, { color: colors.text.secondary }]}>
+            Go Back
+          </Text>
         </Pressable>
       )}
 
       {__DEV__ && error && (
-        <View style={styles.errorDetails}>
-          <Text style={styles.errorText}>{error.message}</Text>
-          <Text style={styles.errorStack}>{error.stack?.slice(0, 200)}</Text>
+        <View style={[styles.errorDetails, {
+          backgroundColor: colors.card,
+          borderColor: colors.cardBorder,
+          borderWidth: 1,
+        }]}>
+          <Text style={[styles.errorText, { color: colors.text.secondary }]}>
+            {error.message}
+          </Text>
+          <Text style={[styles.errorStack, { color: colors.text.tertiary }]}>
+            {error.stack?.slice(0, 200)}
+          </Text>
         </View>
       )}
     </View>
@@ -60,7 +78,6 @@ export function ScreenErrorFallback({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: colors.light.background,
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
@@ -70,31 +87,26 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   errorDetails: {
-    backgroundColor: colors.light.card,
     borderRadius: 8,
     marginTop: 24,
     padding: 12,
     width: '100%',
   },
   errorStack: {
-    color: colors.text.tertiary,
     fontFamily: 'Courier',
     fontSize: 10,
     marginTop: 8,
   },
   errorText: {
-    color: colors.text.secondary,
-    fontSize: 13,
     fontFamily: 'Courier',
+    fontSize: 13,
   },
   primaryButton: {
     alignItems: 'center',
-    backgroundColor: colors.primary[500],
     borderRadius: 12,
     marginTop: 24,
     paddingHorizontal: 32,
     paddingVertical: 14,
-    shadowColor: colors.primary[500],
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
@@ -110,19 +122,16 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   secondaryButtonText: {
-    color: colors.text.secondary,
     fontSize: 17,
     fontWeight: '500',
   },
   subtitle: {
-    color: colors.text.secondary,
     fontSize: 15,
     lineHeight: 22,
     marginTop: 8,
     textAlign: 'center',
   },
   title: {
-    color: colors.text.primary,
     fontSize: 22,
     fontWeight: '600',
     textAlign: 'center',

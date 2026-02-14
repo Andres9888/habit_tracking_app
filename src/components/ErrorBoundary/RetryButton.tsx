@@ -1,6 +1,7 @@
 /**
  * RetryButton Component
- * Animated retry button with haptic feedback for error recovery
+ * Animated retry button with haptic feedback for error recovery.
+ * Theme-aware via useErrorTheme (works outside ThemeColorProvider).
  */
 
 import React from 'react';
@@ -12,7 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { colors } from '../../theme/colors';
+import { useErrorTheme } from './useErrorTheme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -23,6 +24,7 @@ interface RetryButtonProps {
 }
 
 export function RetryButton({ onRetry }: RetryButtonProps) {
+  const { colors } = useErrorTheme();
   const { triggerMediumImpact } = useHapticFeedback();
   const scale = useSharedValue(1);
 
@@ -62,7 +64,7 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
       onPressOut={handlePressOut}
     >
       <Text
-        style={{ color: colors.text.inverse, fontSize: 17, fontWeight: '600' }}
+        style={{ color: '#FFFFFF', fontSize: 17, fontWeight: '600' }}
       >
         Try Again
       </Text>

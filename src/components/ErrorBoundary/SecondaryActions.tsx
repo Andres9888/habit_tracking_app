@@ -1,8 +1,8 @@
-/** Secondary action links for ErrorFallback. */
+/** Secondary action links for ErrorFallback. Theme-aware. */
 
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { styles } from './errorFallbackStyles';
+import { useErrorTheme } from './useErrorTheme';
 
 interface SecondaryActionsProps {
   onOpenSettings?: () => void;
@@ -13,6 +13,8 @@ export function SecondaryActions({
   onOpenSettings,
   onContactSupport,
 }: SecondaryActionsProps) {
+  const { colors } = useErrorTheme();
+
   return (
     <View style={styles.actions}>
       {onOpenSettings && (
@@ -22,7 +24,9 @@ export function SecondaryActions({
           style={styles.link}
           onPress={onOpenSettings}
         >
-          <Text style={styles.linkText}>Go to Settings</Text>
+          <Text style={[styles.linkText, { color: colors.primary[600] }]}>
+            Go to Settings
+          </Text>
         </Pressable>
       )}
       <Pressable
@@ -31,8 +35,16 @@ export function SecondaryActions({
         style={styles.link}
         onPress={onContactSupport}
       >
-        <Text style={styles.linkText}>Contact Support</Text>
+        <Text style={[styles.linkText, { color: colors.primary[600] }]}>
+          Contact Support
+        </Text>
       </Pressable>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  actions: { flexDirection: 'row', gap: 16, marginTop: 16 },
+  link: { padding: 8 },
+  linkText: { fontSize: 13, fontWeight: '500' },
+});

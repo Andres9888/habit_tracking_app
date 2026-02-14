@@ -6,7 +6,7 @@ import { Linking, Pressable, Text, View } from 'react-native';
 import { RetryButton } from './RetryButton';
 import { SecondaryActions } from './SecondaryActions';
 import { SuggestionsCard } from './SuggestionsCard';
-import { styles } from './errorFallbackStyles';
+import { useErrorTheme } from './useErrorTheme';
 
 const SUPPORT_EMAIL = 'support@chainday.app';
 const MAX_RETRIES = 3;
@@ -24,6 +24,7 @@ export function ErrorFallback({
   onLogout,
   onOpenSettings,
 }: ErrorFallbackProps) {
+  const { colors } = useErrorTheme();
   const retryCountRef = useRef(0);
   const [showLogout, setShowLogout] = useState(false);
 
@@ -49,22 +50,51 @@ export function ErrorFallback({
     : 'Something unexpected happened, but nothing was lost.';
 
   return (
-    <View accessibilityRole='alert' style={styles.container}>
-      <Text style={styles.emoji}>😕</Text>
-      <Text accessibilityRole='header' style={styles.headline}>
+    <View accessibilityRole='alert' style={{
+      alignItems: 'center',
+      backgroundColor: colors.background,
+      flex: 1,
+      justifyContent: 'center',
+      padding: 24,
+    }}>
+      <Text style={{ fontSize: 48, marginBottom: 16 }}>😕</Text>
+      <Text accessibilityRole='header' style={{
+        color: colors.text.primary,
+        fontSize: 22,
+        fontWeight: '700',
+        marginBottom: 4,
+        textAlign: 'center',
+      }}>
         {headline}
       </Text>
-      <Text style={styles.safetyNote}>Your data is safe.</Text>
-      <Text style={styles.description}>{desc}</Text>
+      <Text style={{
+        color: colors.primary[700],
+        fontSize: 13,
+        fontWeight: '600',
+        marginBottom: 8,
+      }}>Your data is safe.</Text>
+      <Text style={{
+        color: colors.text.secondary,
+        fontSize: 13,
+        lineHeight: 20,
+        marginBottom: 20,
+        maxWidth: 300,
+        textAlign: 'center',
+      }}>{desc}</Text>
       <SuggestionsCard />
       {showLogout && onLogout ? (
         <Pressable
           accessibilityLabel='Sign out to resolve persistent error'
           accessibilityRole='button'
-          style={styles.logoutButton}
+          style={{
+            backgroundColor: '#C93B3B',
+            borderRadius: 12,
+            paddingHorizontal: 24,
+            paddingVertical: 12,
+          }}
           onPress={onLogout}
         >
-          <Text style={styles.logoutText}>Sign Out</Text>
+          <Text style={{ color: colors.text.inverse, fontSize: 17, fontWeight: '600' }}>Sign Out</Text>
         </Pressable>
       ) : (
         <RetryButton onRetry={handleRetry} />
@@ -74,7 +104,13 @@ export function ErrorFallback({
         onOpenSettings={onOpenSettings}
       />
       {__DEV__ && error && (
-        <Text style={styles.errorMessage}>{error.message}</Text>
+        <Text style={{
+          color: '#C93B3B',
+          fontFamily: 'monospace',
+          fontSize: 13,
+          marginTop: 24,
+          maxWidth: 300,
+        }}>{error.message}</Text>
       )}
     </View>
   );
