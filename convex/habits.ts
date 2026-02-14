@@ -27,7 +27,8 @@ export { create } from './habits/create';
 export { update, updateNotes } from './habits/update';
 export { archive, deleteAllArchived, unarchive } from './habits/archive';
 export { pause, resume } from './habits/pause';
-export { remove, restore } from './habits/remove';
+export { remove, restore, listDeleted } from './habits/remove';
+// purgeDeleted is an internal mutation exported from habits/purgeDeleted.ts (used by crons.ts)
 export { reorderHabits } from './habits/reorder';
 export { toggleHabit } from './habits/toggle';
 

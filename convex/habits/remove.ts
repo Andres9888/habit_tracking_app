@@ -1,17 +1,24 @@
 /**
- * Habit Removal and Restoration
- * Delete habits with undo support
+ * Habit Soft Delete and Restoration
+ * Soft-deletes habits (deleted:true flag) with 30-day retention before permanent cleanup.
+ * Permanent cleanup is handled by habits/purgeDeleted.ts (cron job).
  */
 import { v } from 'convex/values';
-import { mutation } from '../_generated/server';
+import { mutation, query } from '../_generated/server';
 import { findMaxOrder } from './utils';
 
+/** Thirty days in milliseconds */
+const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+/**
+ * Soft-delete a habit: sets deleted:true + deletedAt timestamp.
+ * The habit and its data are retained for 30 days, then permanently removed by the scheduled cleanup.
+ */
 export const remove = mutation({
   args: {
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
-    // SEC-004: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to delete habits');
@@ -22,36 +29,23 @@ export const remove = mutation({
       throw new Error('Habit not found');
     }
 
-    // SEC-004: Ownership verification
     if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to delete this habit');
     }
 
-    // Get all tracking data before deleting
-    const trackingEntries = await ctx.db
-      .query('tracking')
-      .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
-      .collect();
+    // Soft delete — mark as deleted instead of removing from DB
+    await ctx.db.patch(args.habitId, {
+      deleted: true,
+      deletedAt: Date.now(),
+    });
 
-    // Delete the habit permanently
-    await ctx.db.delete(args.habitId);
-
-    // Delete all tracking data for this habit
-    for (const entry of trackingEntries) {
-      await ctx.db.delete(entry._id);
-    }
-
-    // Return the deleted data for potential undo
     return {
       habit: {
         createdAt: habit.createdAt,
         name: habit.name,
         notes: habit.notes,
       },
-      tracking: trackingEntries.map((entry) => ({
-        completed: entry.completed,
-        date: entry.date,
-      })),
+      tracking: [], // Data is retained — no need to return for undo
     };
   },
   returns: v.object({
@@ -69,56 +63,89 @@ export const remove = mutation({
   }),
 });
 
+/**
+ * Restore a soft-deleted habit back to active state.
+ */
 export const restore = mutation({
   args: {
-    habitData: v.object({
-      createdAt: v.number(),
-      name: v.string(),
-      notes: v.optional(v.string()),
-    }),
-    trackingData: v.array(
-      v.object({
-        completed: v.boolean(),
-        date: v.string(),
-      })
-    ),
+    habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
-    // SEC-004: Authentication check - restored habit will belong to authenticated user
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to restore habits');
     }
 
-    // Issue 7: Scope to authenticated user using index instead of reading ALL habits
-    const userHabits = await ctx.db
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to restore this habit');
+    }
+
+    if (habit.deleted !== true) {
+      throw new Error('Habit is not deleted');
+    }
+
+    // Restore: clear deleted flag and place at end of order
+    const activeHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .collect();
-    const maxOrder = findMaxOrder(userHabits);
+    const nonDeletedHabits = activeHabits.filter((h) => h.deleted !== true);
 
-    // Recreate the habit with proper order and initialize strength
-    // SEC-004: Associate restored habit with authenticated user
-    const habitId = await ctx.db.insert('habits', {
-      ...args.habitData,
-      order: maxOrder + 1,
-      strength: 0,
-      strengthLevel: 'starting',
-      strengthUpdatedAt: Date.now(),
-      userId: identity.subject,
+    await ctx.db.patch(args.habitId, {
+      deleted: undefined,
+      deletedAt: undefined,
+      order: findMaxOrder(nonDeletedHabits) + 1,
     });
 
-    // Recreate all tracking data
-    for (const trackingEntry of args.trackingData) {
-      await ctx.db.insert('tracking', {
-        completed: trackingEntry.completed,
-        date: trackingEntry.date,
-        habitId,
-        userId: identity.subject,
-      });
-    }
-
-    return habitId;
+    return args.habitId;
   },
   returns: v.id('habits'),
+});
+
+/**
+ * List soft-deleted habits for the authenticated user (for a "Recently Deleted" screen).
+ */
+export const listDeleted = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
+    const habits = await ctx.db
+      .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
+      .collect();
+
+    return habits
+      .filter((h) => h.deleted === true)
+      .map((h) => ({
+        _id: h._id,
+        deletedAt: h.deletedAt ?? 0,
+        name: h.name,
+        daysRemaining: h.deletedAt
+          ? Math.max(
+              0,
+              Math.ceil(
+                (h.deletedAt + THIRTY_DAYS_MS - Date.now()) /
+                  (24 * 60 * 60 * 1000)
+              )
+            )
+          : 0,
+      }));
+  },
+  returns: v.array(
+    v.object({
+      _id: v.id('habits'),
+      deletedAt: v.number(),
+      name: v.string(),
+      daysRemaining: v.number(),
+    })
+  ),
 });

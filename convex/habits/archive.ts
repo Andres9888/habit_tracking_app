@@ -54,11 +54,13 @@ export const listArchived = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     requireAuth(identity, 'view archived habits');
-    return await ctx.db
+    const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
       .filter((q) => q.eq(q.field('archived'), true))
       .collect();
+    // Exclude soft-deleted habits from archived view
+    return habits.filter((h) => h.deleted !== true);
   },
   returns: v.array(fullHabitValidator),
 });
@@ -68,11 +70,13 @@ export const deleteAllArchived = mutation({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     requireAuth(identity, 'delete archived habits');
-    const archivedHabits = await ctx.db
+    const allArchived = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
       .filter((q) => q.eq(q.field('archived'), true))
       .collect();
+    // Only permanently delete non-soft-deleted archived habits
+    const archivedHabits = allArchived.filter((h) => h.deleted !== true);
     let deletedCount = 0;
     for (const habit of archivedHabits) {
       const records = await ctx.db

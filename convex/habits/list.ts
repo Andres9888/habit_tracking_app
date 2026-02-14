@@ -20,9 +20,9 @@ export const list = query({
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .collect();
 
-    // Filter out archived and paused habits in JS after index narrowing
+    // Filter out archived, paused, and soft-deleted habits in JS after index narrowing
     const activeHabits = habits.filter(
-      (h) => h.archived !== true && h.paused !== true
+      (h) => h.archived !== true && h.paused !== true && h.deleted !== true
     );
 
     // Sort by order field (ascending), use _creationTime as fallback

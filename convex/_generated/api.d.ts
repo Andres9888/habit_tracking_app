@@ -45,6 +45,7 @@ import type * as character_getCharacterStats from "../character/getCharacterStat
 import type * as character_index from "../character/index.js";
 import type * as character_types from "../character/types.js";
 import type * as character from "../character.js";
+import type * as crons from "../crons.js";
 import type * as debugHabitStrength from "../debugHabitStrength.js";
 import type * as diagnose from "../diagnose.js";
 import type * as habitStrength_allHabitsStats from "../habitStrength/allHabitsStats.js";
@@ -68,6 +69,7 @@ import type * as habits_get from "../habits/get.js";
 import type * as habits_getTracking from "../habits/getTracking.js";
 import type * as habits_list from "../habits/list.js";
 import type * as habits_pause from "../habits/pause.js";
+import type * as habits_purgeDeleted from "../habits/purgeDeleted.js";
 import type * as habits_remove from "../habits/remove.js";
 import type * as habits_reorder from "../habits/reorder.js";
 import type * as habits_stats from "../habits/stats.js";
@@ -123,6 +125,7 @@ import type * as streakUtils_index from "../streakUtils/index.js";
 import type * as streakUtils_types from "../streakUtils/types.js";
 import type * as streakUtils_updateStreak from "../streakUtils/updateStreak.js";
 import type * as streakUtils from "../streakUtils.js";
+import type * as subscriptions_helpers from "../subscriptions/helpers.js";
 import type * as subscriptions from "../subscriptions.js";
 import type * as templates_clearAndDedupe from "../templates/clearAndDedupe.js";
 import type * as templates_helpers from "../templates/helpers.js";
@@ -137,7 +140,6 @@ import type * as tracking_getCompletionStatus from "../tracking/getCompletionSta
 import type * as tracking_helpers from "../tracking/helpers.js";
 import type * as tracking_index from "../tracking/index.js";
 import type * as tracking_strengthUpdater from "../tracking/strengthUpdater.js";
-import type * as tracking_toggleCompletion from "../tracking/toggleCompletion.js";
 import type * as tracking from "../tracking.js";
 import type * as users from "../users.js";
 import type * as visionBoard from "../visionBoard.js";
@@ -201,6 +203,7 @@ declare const fullApi: ApiFromModules<{
   "character/index": typeof character_index;
   "character/types": typeof character_types;
   character: typeof character;
+  crons: typeof crons;
   debugHabitStrength: typeof debugHabitStrength;
   diagnose: typeof diagnose;
   "habitStrength/allHabitsStats": typeof habitStrength_allHabitsStats;
@@ -224,6 +227,7 @@ declare const fullApi: ApiFromModules<{
   "habits/getTracking": typeof habits_getTracking;
   "habits/list": typeof habits_list;
   "habits/pause": typeof habits_pause;
+  "habits/purgeDeleted": typeof habits_purgeDeleted;
   "habits/remove": typeof habits_remove;
   "habits/reorder": typeof habits_reorder;
   "habits/stats": typeof habits_stats;
@@ -279,6 +283,7 @@ declare const fullApi: ApiFromModules<{
   "streakUtils/types": typeof streakUtils_types;
   "streakUtils/updateStreak": typeof streakUtils_updateStreak;
   streakUtils: typeof streakUtils;
+  "subscriptions/helpers": typeof subscriptions_helpers;
   subscriptions: typeof subscriptions;
   "templates/clearAndDedupe": typeof templates_clearAndDedupe;
   "templates/helpers": typeof templates_helpers;
@@ -293,7 +298,6 @@ declare const fullApi: ApiFromModules<{
   "tracking/helpers": typeof tracking_helpers;
   "tracking/index": typeof tracking_index;
   "tracking/strengthUpdater": typeof tracking_strengthUpdater;
-  "tracking/toggleCompletion": typeof tracking_toggleCompletion;
   tracking: typeof tracking;
   users: typeof users;
   visionBoard: typeof visionBoard;

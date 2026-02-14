@@ -18,7 +18,7 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
 
     Alert.alert(
       'Delete Habit',
-      'This action cannot be undone. All your progress and history will be permanently deleted.',
+      'This habit will be moved to Recently Deleted and permanently removed after 30 days. You can restore it anytime before then.',
       [
         { style: 'cancel', text: 'Cancel' },
         {
