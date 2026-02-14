@@ -1,6 +1,7 @@
 /**
  * SignInScreen - Premium sign in experience
  * Clean design with chain branding and smooth animations
+ * Supports dark mode via useThemeColors()
  */
 
 /* eslint-disable max-lines */
@@ -37,6 +38,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -47,6 +49,7 @@ interface SignInScreenProps {
 
 export default function SignInScreen(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useThemeColors();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const {
     emailAddress,
@@ -122,11 +125,16 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
     transform: [{ translateY: contentTranslateY.value }],
   }));
 
+  // Theme-aware gradient colors
+  const gradientColors: [string, string, string] = isDark
+    ? [colors.background, colors.surface, colors.background]
+    : ['#fafaf9', '#f5f5f4', '#fafaf9'];
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Subtle gradient background */}
       <LinearGradient
-        colors={['#fafaf9', '#f5f5f4', '#fafaf9']}
+        colors={gradientColors}
         locations={[0, 0.5, 1]}
         style={StyleSheet.absoluteFill}
       />
@@ -147,7 +155,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           <View style={styles.brandSection}>
             <Animated.View style={[styles.logoContainer, logoStyle]}>
               <LinearGradient
-                colors={['#22c55e', '#16a34a']}
+                colors={isDark ? ['#059669', '#047857'] : ['#22c55e', '#16a34a']}
                 style={styles.logoGradient}
               >
                 <Text style={styles.logoEmoji}>🔗</Text>
@@ -155,15 +163,28 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
             </Animated.View>
 
             <Animated.View style={headerStyle}>
-              <Text style={styles.appName}>Chain Day</Text>
-              <Text style={styles.tagline}>Don't break the chain</Text>
+              <Text style={[styles.appName, { color: colors.text.primary }]}>
+                Chain Day
+              </Text>
+              <Text style={[styles.tagline, { color: colors.text.secondary }]}>
+                Don't break the chain
+              </Text>
             </Animated.View>
           </View>
 
           {/* Welcome Message */}
           <Animated.View style={[styles.welcomeSection, headerStyle]}>
-            <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
-            <Text style={styles.welcomeSubtitle}>
+            <Text
+              style={[styles.welcomeTitle, { color: colors.text.primary }]}
+            >
+              Welcome back! 👋
+            </Text>
+            <Text
+              style={[
+                styles.welcomeSubtitle,
+                { color: colors.text.secondary },
+              ]}
+            >
               Your habits are waiting. Let's keep the momentum going.
             </Text>
           </Animated.View>
@@ -232,7 +253,9 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 
           {/* Footer */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>
+            <Text
+              style={[styles.footerText, { color: colors.text.tertiary }]}
+            >
               By continuing, you agree to our Terms & Privacy Policy
             </Text>
           </View>
@@ -249,7 +272,6 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 
 const styles = StyleSheet.create({
   appName: {
-    color: '#1c1917',
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.5,
@@ -263,7 +285,6 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   container: {
-    backgroundColor: '#fafaf9',
     flex: 1,
   },
   flex: {
@@ -274,7 +295,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   footerText: {
-    color: '#a8a29e',
     fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',
@@ -308,7 +328,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   tagline: {
-    color: '#57534e',
     fontSize: 13,
     marginTop: 4,
     textAlign: 'center',
@@ -317,14 +336,12 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   welcomeSubtitle: {
-    color: '#57534e',
     fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
     textAlign: 'center',
   },
   welcomeTitle: {
-    color: '#1c1917',
     fontSize: 28,
     fontWeight: '700',
     marginBottom: 8,

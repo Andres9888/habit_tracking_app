@@ -1,4 +1,4 @@
-import { Platform, Pressable, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useReducedMotion,
@@ -9,25 +9,9 @@ import { AppleLogo } from '../../../../components/auth/logos/AppleLogo';
 import { GoogleLogo } from '../../../../components/auth/logos/GoogleLogo';
 import { LoadingSpinner } from './LoadingSpinner';
 import { SocialSignInButtonProps } from './types';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-const PROVIDER_CONFIG = {
-  apple: {
-    bgColor: 'bg-black',
-    borderColor: 'border-black',
-    label: 'Continue with Apple',
-    spinnerColor: '#FFFFFF',
-    textColor: 'text-white',
-  },
-  google: {
-    bgColor: 'bg-white',
-    borderColor: 'border-stone-200',
-    label: 'Continue with Google',
-    spinnerColor: '#44403c',
-    textColor: 'text-stone-800',
-  },
-} as const;
 
 export function SocialSignInButton({
   disabled,
@@ -35,7 +19,7 @@ export function SocialSignInButton({
   onPress,
   provider,
 }: SocialSignInButtonProps) {
-  const config = PROVIDER_CONFIG[provider];
+  const { colors, isDark } = useThemeColors();
   const reduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
 
@@ -62,36 +46,81 @@ export function SocialSignInButton({
 
   const isDisabled = isLoading || disabled;
 
+  // Apple button: always dark bg, white text
+  // Google button: adapts to theme
+  const isApple = provider === 'apple';
+  const bgColor = isApple
+    ? isDark ? '#E5E7EB' : '#000000'
+    : isDark ? colors.card : '#ffffff';
+  const borderColor = isApple
+    ? isDark ? '#E5E7EB' : '#000000'
+    : colors.border;
+  const textColor = isApple
+    ? isDark ? '#111827' : '#ffffff'
+    : colors.text.primary;
+  const spinnerColor = isApple
+    ? isDark ? '#111827' : '#FFFFFF'
+    : colors.text.secondary;
+  const appleLogoColor = isDark ? '#111827' : '#FFFFFF';
+  const labelText = isApple ? 'Continue with Apple' : 'Continue with Google';
+
   return (
     <AnimatedPressable
-      accessibilityHint={`Sign in using your ${provider === 'apple' ? 'Apple' : 'Google'} account`}
-      accessibilityLabel={config.label}
+      accessibilityHint={`Sign in using your ${isApple ? 'Apple' : 'Google'} account`}
+      accessibilityLabel={labelText}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
-      className={`flex-row items-center justify-center rounded-2xl border py-4 ${config.borderColor} ${config.bgColor} ${
-        isDisabled ? 'opacity-40' : ''
-      }`}
       disabled={isDisabled}
-      style={animatedStyle}
+      style={[
+        styles.button,
+        {
+          backgroundColor: bgColor,
+          borderColor,
+          opacity: isDisabled ? 0.4 : 1,
+        },
+        animatedStyle,
+      ]}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
       <View
-        className='mr-2 h-5 w-5 items-center justify-center'
+        style={styles.iconContainer}
         testID={isLoading ? 'social-button-spinner' : `${provider}-logo`}
       >
         {isLoading ? (
-          <LoadingSpinner color={config.spinnerColor} />
-        ) : provider === 'google' ? (
-          <GoogleLogo size={20} />
+          <LoadingSpinner color={spinnerColor} />
+        ) : isApple ? (
+          <AppleLogo color={appleLogoColor} size={20} />
         ) : (
-          <AppleLogo color='#FFFFFF' size={20} />
+          <GoogleLogo size={20} />
         )}
       </View>
-      <Text className={`text-[15px] font-semibold ${config.textColor}`}>
-        {isLoading ? 'Signing in...' : config.label}
+      <Text style={[styles.label, { color: textColor }]}>
+        {isLoading ? 'Signing in...' : labelText}
       </Text>
     </AnimatedPressable>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    borderRadius: 16,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 16,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    height: 20,
+    justifyContent: 'center',
+    marginRight: 8,
+    width: 20,
+  },
+  label: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
+});

@@ -1,10 +1,11 @@
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface SubmitButtonProps {
   label: string;
@@ -24,6 +25,7 @@ export function SubmitButton({
   onPress,
 }: SubmitButtonProps) {
   const isDisabled = isLoading || disabled;
+  const { isDark } = useThemeColors();
   const reduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
 
@@ -48,33 +50,73 @@ export function SubmitButton({
       accessibilityLabel={isLoading ? loadingLabel : label}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
-      className={`mt-4 flex-row items-center justify-center rounded-2xl bg-stone-900 py-4 shadow-lg ${
-        isDisabled ? 'opacity-40' : ''
-      }`}
       disabled={isDisabled}
       style={[
-        animatedStyle,
+        styles.button,
         {
-          shadowColor: '#1c1917',
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
+          backgroundColor: isDark ? '#E5E7EB' : '#1c1917',
+          opacity: isDisabled ? 0.4 : 1,
+          shadowColor: isDark ? '#000000' : '#1c1917',
         },
+        animatedStyle,
       ]}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <Text className='text-[17px] font-semibold text-white'>
+      <Text
+        style={[
+          styles.label,
+          { color: isDark ? '#111827' : '#ffffff' },
+        ]}
+      >
         {isLoading ? loadingLabel : label}
       </Text>
-      <View className='ml-2 w-5 items-center justify-center'>
+      <View style={styles.iconContainer}>
         {isLoading ? (
-          <ActivityIndicator color='#FFFFFF' size='small' />
+          <ActivityIndicator
+            color={isDark ? '#111827' : '#FFFFFF'}
+            size='small'
+          />
         ) : (
-          <Text className='text-lg text-white'>→</Text>
+          <Text
+            style={[
+              styles.arrow,
+              { color: isDark ? '#111827' : '#ffffff' },
+            ]}
+          >
+            →
+          </Text>
         )}
       </View>
     </AnimatedPressable>
   );
 }
+
+const styles = StyleSheet.create({
+  arrow: {
+    fontSize: 18,
+  },
+  button: {
+    alignItems: 'center',
+    borderRadius: 16,
+    elevation: 4,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 16,
+    paddingVertical: 16,
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 8,
+    width: 20,
+  },
+  label: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
+});

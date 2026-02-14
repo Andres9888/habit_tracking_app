@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { VerificationForm } from './VerificationForm';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface VerificationViewProps {
   emailAddress: string;
@@ -20,22 +21,19 @@ export function VerificationView({
 }: VerificationViewProps) {
   const [code, setCode] = useState('');
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
 
   return (
-    <View className='flex-1' style={{ backgroundColor: '#FAF8F5' }}>
-      <View className='flex-1 px-6' style={{ paddingTop: insets.top + 24 }}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
         <Animated.View entering={anim(0)}>
-          <Text
-            className='mb-2 font-extrabold text-stone-900'
-            style={{ fontSize: 34, letterSpacing: -1 }}
-          >
+          <Text style={[styles.title, { color: colors.text.primary }]}>
             Verify Email
           </Text>
         </Animated.View>
         <Animated.Text
-          className='mb-10 text-stone-600'
           entering={anim(60)}
-          style={{ fontSize: 17 }}
+          style={[styles.subtitle, { color: colors.text.secondary }]}
         >
           We sent a verification code to {emailAddress}
         </Animated.Text>
@@ -51,3 +49,23 @@ export function VerificationView({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 24,
+  },
+  subtitle: {
+    fontSize: 17,
+    marginBottom: 40,
+  },
+  title: {
+    fontSize: 34,
+    fontWeight: '800',
+    letterSpacing: -1,
+    marginBottom: 8,
+  },
+});

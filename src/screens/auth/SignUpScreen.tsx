@@ -4,7 +4,6 @@ import { ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../../theme/colors';
 import {
   AuthDivider,
   AuthError,
@@ -17,6 +16,7 @@ import {
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignUpFlow } from './hooks/useSignUpFlow';
 import { SignUpHeader } from './components/SignUpHeader';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface SignUpScreenProps {
   onNavigateToSignIn?: () => void;
@@ -26,6 +26,7 @@ export default function SignUpScreen({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useThemeColors();
   const {
     emailAddress,
     setEmailAddress,
@@ -61,15 +62,13 @@ export default function SignUpScreen({
     );
   }
 
+  const gradientColors: [string, string] = isDark
+    ? [colors.background, colors.surface]
+    : [colors.background, colors.surface];
+
   return (
-    <View className='flex-1'>
-      <LinearGradient
-        colors={[
-          colors.light.background,
-          colors.light.gradientMid ?? '#f5f5f0',
-        ]}
-        style={{ flex: 1 }}
-      >
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <LinearGradient colors={gradientColors} style={{ flex: 1 }}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}
@@ -90,21 +89,23 @@ export default function SignUpScreen({
               <AuthError message={oauthError} onDismiss={clearError} />
             )}
 
-            {/* OPTIMIZED: Form card with depth matching SignIn */}
+            {/* Form card with depth */}
             <Animated.View
               entering={FadeInUp.delay(100).springify().damping(18)}
               style={{
-                backgroundColor: '#ffffff',
+                backgroundColor: isDark ? colors.card : '#ffffff',
+                borderColor: colors.cardBorder,
                 borderRadius: 16,
+                borderWidth: isDark ? 1 : 0,
                 elevation: 4,
                 padding: 24,
-                shadowColor: '#1c1917',
+                shadowColor: isDark ? '#000000' : '#1c1917',
                 shadowOffset: { height: 4, width: 0 },
-                shadowOpacity: 0.08,
+                shadowOpacity: isDark ? 0.3 : 0.08,
                 shadowRadius: 16,
               }}
             >
-              <View className='gap-3'>
+              <View style={{ gap: 12 }}>
                 <SocialSignInButton
                   disabled={isAnyLoading}
                   isLoading={oauthLoading === 'oauth_apple'}
@@ -121,7 +122,7 @@ export default function SignUpScreen({
 
               <AuthDivider />
 
-              <View className='gap-6'>
+              <View style={{ gap: 24 }}>
                 <FormInput
                   autoCapitalize='none'
                   autoComplete='email'

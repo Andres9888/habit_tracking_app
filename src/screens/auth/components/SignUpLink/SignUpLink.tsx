@@ -1,5 +1,6 @@
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface SignUpLinkProps {
   disabled?: boolean;
@@ -7,9 +8,13 @@ interface SignUpLinkProps {
 }
 
 export function SignUpLink({ disabled, onPress }: SignUpLinkProps) {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='mt-6 flex-row items-center justify-center'>
-      <Text className='text-sm text-stone-600'>Don't have an account? </Text>
+    <View style={styles.container}>
+      <Text style={[styles.text, { color: colors.text.secondary }]}>
+        Don't have an account?{' '}
+      </Text>
       <AnimatedPressable
         accessibilityLabel='Create a new account'
         accessibilityRole='link'
@@ -18,8 +23,25 @@ export function SignUpLink({ disabled, onPress }: SignUpLinkProps) {
         disabled={disabled}
         onPress={onPress}
       >
-        <Text className='text-sm font-semibold text-emerald-700'>Sign up</Text>
+        <Text style={styles.link}>Sign up</Text>
       </AnimatedPressable>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 24,
+  },
+  link: {
+    color: '#047857',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  text: {
+    fontSize: 14,
+  },
+});

@@ -1,20 +1,22 @@
 /**
- * ForgotPasswordModal - OPTIMIZED: Entry animations, stagger, polish
+ * ForgotPasswordModal - Dark mode aware
  */
 
 import { useCallback } from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import Modal from '../../../../components/Modal';
 import { PasswordResetForm } from './PasswordResetForm';
 import { PasswordResetSuccess } from './PasswordResetSuccess';
 import { useForgotPassword } from './useForgotPassword';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { ForgotPasswordModalProps } from './types';
 
 export function ForgotPasswordModal({
   visible,
   onClose,
 }: ForgotPasswordModalProps) {
+  const { colors } = useThemeColors();
   const {
     email,
     error,
@@ -51,26 +53,23 @@ export function ForgotPasswordModal({
       visible={visible}
       onClose={handleClose}
     >
-      <View className='gap-4'>
-        {/* Header - OPTIMIZED: FadeInDown entry */}
+      <View style={styles.container}>
+        {/* Header */}
         <Animated.View
-          className='gap-1'
           entering={FadeInDown.duration(280).springify().damping(18)}
+          style={styles.header}
         >
-          <Text
-            className='font-bold text-stone-900'
-            style={{ fontSize: 22, letterSpacing: -0.35, lineHeight: 28 }}
-          >
+          <Text style={[styles.title, { color: colors.text.primary }]}>
             Reset Password
           </Text>
-          <Text className='text-[17px] leading-[22px] text-stone-600'>
+          <Text style={[styles.subtitle, { color: colors.text.secondary }]}>
             {success
               ? 'Check your email for reset instructions'
               : "Enter your email and we'll send you a reset link"}
           </Text>
         </Animated.View>
 
-        {/* Content - OPTIMIZED: FadeInDown with delay */}
+        {/* Content */}
         <Animated.View
           entering={FadeInDown.duration(280).delay(80).springify().damping(18)}
         >
@@ -91,5 +90,24 @@ export function ForgotPasswordModal({
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 16,
+  },
+  header: {
+    gap: 4,
+  },
+  subtitle: {
+    fontSize: 17,
+    lineHeight: 22,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    letterSpacing: -0.35,
+    lineHeight: 28,
+  },
+});
 
 export default ForgotPasswordModal;
