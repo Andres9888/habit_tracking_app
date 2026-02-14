@@ -99,7 +99,7 @@ export default function AnalyticsScreen() {
       <ExportMenu
         visible={showExportMenu}
         onClose={() => setShowExportMenu(false)}
-        onExport={() => void handleExport()}
+        onExport={(format) => void handleExport(format)}
       />
     </ScrollView>
   );
