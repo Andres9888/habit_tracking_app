@@ -4,6 +4,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated from 'react-native-reanimated';
 import { ArchiveAction } from './ArchiveAction';
 import { CardContent } from './CardContent';
+import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
 import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
 import { buildCardStyle } from './cardStyles';
 import type { DraggableHabitCardProps } from './DraggableHabitCard.types';
@@ -17,7 +18,6 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
     props.highContrastMode,
     props.accentColor
   );
-
   const cardStyle = buildCardStyle({
     cardScale: props.cardScale,
     colors: props.colors,
@@ -58,6 +58,13 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
             className='flex-1'
             style={props.entranceContentStyle}
           >
+            {props.showGradientFill && (
+              <StrengthFillBackground
+                isDark={props.isDark}
+                strengthColor={effectiveAccentColor}
+                strengthFillStyle={props.strengthFillStyle}
+              />
+            )}
             <Animated.View
               pointerEvents='none'
               style={{

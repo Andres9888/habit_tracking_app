@@ -45,7 +45,6 @@ export function HabitsListHeader(
         <HabitsHeader
           completedToday={computed.completedToday}
           forceShow={props.justCreatedHabitId !== null}
-          isPremiumUser={props.isPremiumUser}
           openCreateHabitScreen={props.onAddHabitPress}
           openSettings={props.openSettings}
           openSortSheet={props.onOpenSortSheet}
@@ -53,7 +52,6 @@ export function HabitsListHeader(
           perfectDayStreak={props.perfectDayStreak}
           showCompletionSummary={props.showWeekCompletionBar}
           totalHabits={computed.totalHabits}
-          onUpgradePress={props.onUpgradePress}
         />
       </Animated.View>
       {computed.shouldShowTimeline && (

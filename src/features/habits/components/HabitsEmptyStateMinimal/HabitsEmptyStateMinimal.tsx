@@ -1,5 +1,3 @@
-/* eslint-disable max-lines-per-function */
-
 /**
  * HabitsEmptyStateMinimal - Main Component
  *
@@ -47,7 +45,6 @@ export function HabitsEmptyStateMinimal({
         habitEmoji={flow.successEmoji ?? undefined}
         habitName={flow.successHabitName}
         onAddAnother={flow.handleAddAnother}
-        onBrowseTemplates={openTemplatesScreen}
         onTransitionComplete={onSuccessTransitionComplete}
       />
     );
