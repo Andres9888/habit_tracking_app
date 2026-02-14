@@ -3,6 +3,7 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { DragHandle, EmptyState, HabitList, SheetHeader } from './components';
 import { getSheetContainerStyle } from './styles';
@@ -35,6 +36,7 @@ export function DayHabitsBottomSheet({
   reduceMotion = false,
 }: DayHabitsBottomSheetProps) {
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
   const { triggerLightImpact } = useHapticFeedback({});
 
   const {
@@ -77,8 +79,8 @@ export function DayHabitsBottomSheet({
 
         <GestureDetector gesture={panGesture}>
           <Animated.View
-            className='rounded-t-3xl bg-white'
-            style={[getSheetContainerStyle(insets.bottom), sheetStyle]}
+            className='rounded-t-3xl'
+            style={[getSheetContainerStyle(insets.bottom), sheetStyle, { backgroundColor: colors.surface }]}
           >
             <DragHandle />
 

@@ -8,6 +8,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { MailOpen, X } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { useThemeColors } from '../../../../../../theme/ThemeContext';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 
@@ -22,6 +23,8 @@ export function ReadLetterHeader({
   envelopeAnimatedStyle,
   onClose,
 }: ReadLetterHeaderProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='flex-row items-center justify-between px-4 pb-4 pt-14'>
       <View className='flex-1' />
@@ -31,7 +34,7 @@ export function ReadLetterHeader({
             <MailOpen className='text-violet-600' size={24} />
           </View>
         </Animated.View>
-        <Text className='text-lg font-bold text-stone-800'>
+        <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
           {title || 'Letter from Past Self'}
         </Text>
       </View>
@@ -39,13 +42,14 @@ export function ReadLetterHeader({
         <Pressable
           accessibilityLabel='Close letter'
           accessibilityRole='button'
-          className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
+          className='h-10 w-10 items-center justify-center rounded-full'
+          style={{ backgroundColor: colors.gray[200] }}
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             onClose();
           }}
         >
-          <X className='text-stone-500' size={24} />
+          <X color={colors.text.secondary} size={20} />
         </Pressable>
       </View>
     </View>

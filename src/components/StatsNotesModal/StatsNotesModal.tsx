@@ -4,6 +4,7 @@ import { Modal, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import StatsOverview from './StatsOverview';
 import NotesList from './NotesList';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { StatsNotesHeader } from './StatsNotesHeader';
 
 interface StatsNotesModalProps {
@@ -25,6 +26,7 @@ export default function StatsNotesModal({
 }: StatsNotesModalProps) {
   const [activeTab, setActiveTab] = useState<'stats' | 'notes'>('stats');
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
 
   return (
     <Modal
@@ -36,8 +38,8 @@ export default function StatsNotesModal({
       <Pressable className='flex-1 bg-black/50' onPress={onClose}>
         <View className='flex-1 p-5' style={{ paddingTop: insets.top + 8 }}>
           <Pressable
-            className='flex-1 overflow-hidden rounded-2xl bg-white'
-            style={cardShadow}
+            className='flex-1 overflow-hidden rounded-2xl'
+            style={[cardShadow, { backgroundColor: colors.surface }]}
             onPress={(e) => e.stopPropagation()}
           >
             <StatsNotesHeader

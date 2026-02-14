@@ -18,6 +18,7 @@ import { FrequencySelector } from './FrequencySelector';
 import { DaySelectorSection } from './DaySelectorSection';
 import { ScheduleFooter } from './ScheduleFooter';
 import { useScheduleForm } from './useScheduleForm';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { AffirmationScheduleModalProps } from './types';
 
 export function AffirmationScheduleModal({
@@ -29,6 +30,7 @@ export function AffirmationScheduleModal({
   affirmationText,
   isSaving = false,
 }: AffirmationScheduleModalProps) {
+  const { colors } = useThemeColors();
   const form = useScheduleForm({ initialSchedule, visible });
 
   const handleSave = useCallback(() => {
@@ -50,7 +52,7 @@ export function AffirmationScheduleModal({
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className='flex-1 bg-white'>
+      <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <ScheduleHeader onClose={onClose} />
         <ScrollView
           className='flex-1'
