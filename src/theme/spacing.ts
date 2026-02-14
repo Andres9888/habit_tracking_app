@@ -99,20 +99,28 @@ export const componentSpacing = {
  * Consistent rounding for all components
  */
 export const borderRadius = {
-  // Full screen modals (top corners only)
+  /** Pill shape (avatar, icon buttons, pills) */
   full: 9999,
 
-  // Cards, inputs
+  /** Cards, containers, inputs — 16px */
   large: 16,
+  /** Alias: cards */
+  card: 16,
 
-  // Buttons, tags
+  /** Buttons, tags, interactive elements — 12px */
   medium: 12,
+  /** Alias: buttons */
+  button: 12,
 
+  /** Chips, badges, small elements — 8px */
   small: 8,
-  // Modals, sheets
-  xl: 20, // Circular (avatar, icon buttons) - use 50% in percentage
+  /** Alias: chips */
+  chip: 8,
 
-  // Micro-rounding (progress bars, badges, chips)
+  /** Modals, bottom sheets — 24px */
+  xl: 24,
+
+  /** Micro-rounding (progress bars, dots) — 4px */
   xs: 4,
 } as const;
 
@@ -121,14 +129,15 @@ export const borderRadius = {
  * React Native shadow properties
  */
 export const shadows = {
-  /** Level 0 – subtle elements (chips, badges) */
-  subtle: {
-    elevation: 1,
+  /** Level 4 – alerts, overlays (highest elevation) */
+  alert: {
+    elevation: 12,
     shadowColor: '#1c1917',
-    shadowOffset: { height: 1, width: 0 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowOffset: { height: 12, width: 0 },
+    shadowOpacity: 0.16,
+    shadowRadius: 32,
   },
+
   /** Level 1 – cards */
   card: {
     elevation: 3,
@@ -137,14 +146,16 @@ export const shadows = {
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
+
   /** Level 2 – raised cards, FAB */
   floatingActionButton: {
     elevation: 6,
     shadowColor: '#1c1917',
     shadowOffset: { height: 6, width: 0 },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.1,
     shadowRadius: 20,
   },
+
   /** Level 3 – modals, bottom sheets */
   modal: {
     elevation: 8,
@@ -153,13 +164,14 @@ export const shadows = {
     shadowOpacity: 0.12,
     shadowRadius: 24,
   },
-  /** Level 4 – alerts, overlays (highest elevation) */
-  alert: {
-    elevation: 12,
+
+  /** Level 0 – subtle elements (chips, badges) */
+  subtle: {
+    elevation: 1,
     shadowColor: '#1c1917',
-    shadowOffset: { height: 12, width: 0 },
-    shadowOpacity: 0.16,
-    shadowRadius: 32,
+    shadowOffset: { height: 1, width: 0 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
   },
 } as const;
 

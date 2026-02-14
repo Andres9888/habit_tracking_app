@@ -7,9 +7,11 @@
  */
 import React from 'react';
 import { ScrollView, RefreshControl, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
+import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 import { styles } from './AnalyticsScreen.styles';
 import {
@@ -23,7 +25,7 @@ import {
   PremiumBlurOverlay,
 } from './components';
 
-export default function AnalyticsScreen() {
+function AnalyticsScreenContent() {
   const {
     refreshing,
     showPaywall,
@@ -65,54 +67,70 @@ export default function AnalyticsScreen() {
         }
         style={styles.container}
       >
-        <AnalyticsHeader />
+        <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
+          <AnalyticsHeader />
+        </Animated.View>
 
-        {hasNoHabits && <EmptyState />}
+        {hasNoHabits && (
+          <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
+            <EmptyState />
+          </Animated.View>
+        )}
 
         {/* Overview stats are always visible — free users see real data */}
-        <OverviewStats
-          isLoading={isLoading}
-          stats={overviewStats}
-          onHabitPress={handleHabitPress}
-        />
+        <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
+          <OverviewStats
+            isLoading={isLoading}
+            stats={overviewStats}
+            onHabitPress={handleHabitPress}
+          />
+        </Animated.View>
 
         {showTeaser ? (
           /* Free users: render charts behind a blur overlay */
-          <View style={styles.teaserWrapper}>
-            <View pointerEvents="none">
+          <Animated.View entering={FadeInDown.delay(400).springify().damping(18)}>
+            <View style={styles.teaserWrapper}>
+              <View pointerEvents="none">
+                <ChartSections
+                  complianceData={complianceData}
+                  isLoading={isLoading}
+                  strengthDistribution={strengthDistribution}
+                  trendData={trendData}
+                />
+
+                <InsightsSections
+                  rankedHabits={overviewStats?.rankedHabits || []}
+                  weeklyInsights={weeklyInsights}
+                  onHabitPress={handleHabitPress}
+                />
+              </View>
+
+              <PremiumBlurOverlay onUpgrade={() => setShowPaywall(true)} />
+            </View>
+          </Animated.View>
+        ) : (
+          /* Premium users: full access */
+          <>
+            <Animated.View entering={FadeInDown.delay(400).springify().damping(18)}>
               <ChartSections
                 complianceData={complianceData}
                 isLoading={isLoading}
                 strengthDistribution={strengthDistribution}
                 trendData={trendData}
               />
+            </Animated.View>
 
+            <Animated.View entering={FadeInDown.delay(460).springify().damping(18)}>
               <InsightsSections
                 rankedHabits={overviewStats?.rankedHabits || []}
                 weeklyInsights={weeklyInsights}
                 onHabitPress={handleHabitPress}
               />
-            </View>
+            </Animated.View>
 
-            <PremiumBlurOverlay onUpgrade={() => setShowPaywall(true)} />
-          </View>
-        ) : (
-          /* Premium users: full access */
-          <>
-            <ChartSections
-              complianceData={complianceData}
-              isLoading={isLoading}
-              strengthDistribution={strengthDistribution}
-              trendData={trendData}
-            />
-
-            <InsightsSections
-              rankedHabits={overviewStats?.rankedHabits || []}
-              weeklyInsights={weeklyInsights}
-              onHabitPress={handleHabitPress}
-            />
-
-            <ExportButton onPress={() => void handleExportPress()} />
+            <Animated.View entering={FadeInDown.delay(520).springify().damping(18)}>
+              <ExportButton onPress={() => void handleExportPress()} />
+            </Animated.View>
           </>
         )}
 
@@ -133,5 +151,21 @@ export default function AnalyticsScreen() {
         />
       )}
     </>
+  );
+}
+
+export default function AnalyticsScreen() {
+  return (
+    <ErrorBoundary
+      fallback={
+        <ScreenErrorFallback
+          screenName="Analytics"
+          error={null}
+          onRetry={() => {}}
+        />
+      }
+    >
+      <AnalyticsScreenContent />
+    </ErrorBoundary>
   );
 }

@@ -20,7 +20,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       ? { endDate, startDate }
       : { dates: extendedDateStrings };
   }, [extendedDateStrings]);
-  
+
   const tracking = useQuery(api.habits.getTracking, queryArgs) ?? [];
 
   // Get optimistic state for immediate feedback
@@ -36,7 +36,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       if (!map.has(entry.habitId)) {
         map.set(entry.habitId, new Set<string>());
       }
-      map.get(entry.habitId)!.add(entry.date);
+      map.get(entry.habitId)?.add(entry.date);
     }
 
     // Then, apply optimistic updates
@@ -46,9 +46,9 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
         map.set(habitId, new Set<string>());
       }
       if (toCompleted) {
-        map.get(habitId)!.add(date);
+        map.get(habitId)?.add(date);
       } else {
-        map.get(habitId)!.delete(date);
+        map.get(habitId)?.delete(date);
       }
     }
 
