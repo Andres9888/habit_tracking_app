@@ -6,6 +6,7 @@
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 
 import { HabitsList } from './components/HabitsList';
 import FloatingActionButton from './components/FloatingActionButton';
@@ -40,24 +41,30 @@ export function HabitsApp() {
     triggerWarning,
   });
 
+  const showHabitsSkeleton = list.isHabitsLoading && list.habits.length === 0;
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ backgroundColor: colors.background, flex: 1 }}>
         <SyncStatusOverlays />
 
-        <HabitsList
-          canNavigateForward={list.canNavigateForward}
-          list={list}
-          modals={modals}
-          upgradePromptVisible={upgradePromptVisible}
-          weekDates={list.weekDates}
-          onCreateHabitRequest={handleCreateHabitRequest}
-          onNextWeek={list.handleNextWeek}
-          onPreviousWeek={list.handlePreviousWeek}
-          onUpgradeConfirm={handleUpgradeConfirm}
-          onUpgradeDismiss={handleUpgradeDismiss}
-          onUpgradeIntent={handleUpgradeIntent}
-        />
+        {showHabitsSkeleton ? (
+          <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
+        ) : (
+          <HabitsList
+            canNavigateForward={list.canNavigateForward}
+            list={list}
+            modals={modals}
+            upgradePromptVisible={upgradePromptVisible}
+            weekDates={list.weekDates}
+            onCreateHabitRequest={handleCreateHabitRequest}
+            onNextWeek={list.handleNextWeek}
+            onPreviousWeek={list.handlePreviousWeek}
+            onUpgradeConfirm={handleUpgradeConfirm}
+            onUpgradeDismiss={handleUpgradeDismiss}
+            onUpgradeIntent={handleUpgradeIntent}
+          />
+        )}
 
         {list.habits.length > 0 && (
           <View className='absolute bottom-8 right-6'>
