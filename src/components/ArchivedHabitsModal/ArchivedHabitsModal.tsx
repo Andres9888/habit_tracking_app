@@ -17,14 +17,17 @@ export default function ArchivedHabitsModal({
 }: ArchivedHabitsModalProps) {
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
-  const { archivedHabits, handleRestore, handlePermanentDelete, isLoading } =
+  const { archivedHabits, handleRestore, handlePermanentDelete, handleDeleteAll, isLoading } =
     useArchivedHabitsModalLogic();
 
   return (
     <>
       <ModalHeader insets={insets} onBack={onBack} onClose={onClose} />
 
-      <StatsSummaryBar habitCount={isLoading ? 0 : archivedHabits.length} />
+      <StatsSummaryBar
+        habitCount={isLoading ? 0 : archivedHabits.length}
+        onDeleteAll={handleDeleteAll}
+      />
 
       <ScrollView
         className='flex-1'
