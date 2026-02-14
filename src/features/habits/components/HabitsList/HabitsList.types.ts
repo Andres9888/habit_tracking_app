@@ -18,6 +18,8 @@ export interface HabitsListProps {
   weekDates: Date[];
   onNextWeek: () => void;
   onPreviousWeek: () => void;
+  /** Current perfect day streak count */
+  perfectDayStreak?: number;
 }
 
 export interface UseHabitsListHandlersOptions {

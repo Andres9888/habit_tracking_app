@@ -13,12 +13,39 @@ import FloatingActionButton from './components/FloatingActionButton';
 import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
+import React, { useMemo } from 'react';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { usePerfectDayStreak } from '../../hooks/usePerfectDayStreak';
+import { usePerfectDayDetection } from '../../hooks/usePerfectDayDetection';
+import { PerfectDayCelebration } from '../../components/PerfectDayCelebration';
+import { getLocalDateString } from '../../utils/getLocalDateString';
 
 export function HabitsApp() {
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
+
+  // Perfect day detection & streak tracking
+  const todayString = getLocalDateString();
+  const totalHabits = list.habits.length;
+  const completedToday = list.habits.filter(
+    (h) => list.getHabitStatus(h._id, todayString) === 'done'
+  ).length;
+
+  const perfectDayStreak = usePerfectDayStreak();
+  const { showCelebration, dismissCelebration } = usePerfectDayDetection({
+    completedToday,
+    totalHabits,
+    enabled: list.celebrationsEnabled,
+  });
+
+  // Record perfect day when celebration triggers
+  React.useEffect(() => {
+    if (showCelebration) {
+      void perfectDayStreak.recordPerfectDay();
+    }
+  }, [showCelebration]);
+
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
@@ -63,6 +90,7 @@ export function HabitsApp() {
             onUpgradeConfirm={handleUpgradeConfirm}
             onUpgradeDismiss={handleUpgradeDismiss}
             onUpgradeIntent={handleUpgradeIntent}
+            perfectDayStreak={perfectDayStreak.currentStreak}
           />
         )}
 
@@ -84,6 +112,15 @@ export function HabitsApp() {
           paywallVisible={paywallVisible}
           onPaywallClose={handlePaywallClose}
           onPaywallSuccess={handlePaywallSuccess}
+        />
+
+        <PerfectDayCelebration
+          isPremiumUser={list.isPremiumUser}
+          perfectDayStreak={perfectDayStreak.currentStreak}
+          reduceMotion={list.reduceMotionPreference}
+          visible={showCelebration}
+          onDismiss={dismissCelebration}
+          onUpgradePress={handleUpgradeIntent}
         />
       </View>
     </GestureHandlerRootView>

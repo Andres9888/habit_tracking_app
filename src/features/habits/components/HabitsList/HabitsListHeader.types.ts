@@ -26,4 +26,6 @@ export interface HabitsListHeaderProps {
   onUpgradePress: () => void;
   openSettings: () => void;
   openTemplatesScreen: () => void;
+  /** Current perfect day streak count */
+  perfectDayStreak?: number;
 }

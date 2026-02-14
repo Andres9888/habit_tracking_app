@@ -50,6 +50,7 @@ export function renderHabitsListHeader({
       onOpenSortSheet={state.handleOpenSortSheet}
       onPreviousWeek={onPreviousWeek}
       onUpgradePress={onUpgradeIntent}
+      perfectDayStreak={props.perfectDayStreak}
     />
   );
 }

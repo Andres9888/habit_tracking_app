@@ -15,6 +15,8 @@ export interface HabitsHeaderProps {
   reduceMotion?: boolean;
   showCompletionSummary?: boolean;
   totalHabits?: number;
+  /** Current perfect day streak count */
+  perfectDayStreak?: number;
 }
 
 export interface HeaderAnimations {

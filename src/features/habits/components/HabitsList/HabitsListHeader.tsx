@@ -50,6 +50,7 @@ export function HabitsListHeader(
           openSettings={props.openSettings}
           openSortSheet={props.onOpenSortSheet}
           openTemplatesScreen={props.openTemplatesScreen}
+          perfectDayStreak={props.perfectDayStreak}
           showCompletionSummary={props.showWeekCompletionBar}
           totalHabits={computed.totalHabits}
           onUpgradePress={props.onUpgradePress}

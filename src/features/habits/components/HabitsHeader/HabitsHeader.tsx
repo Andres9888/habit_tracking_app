@@ -11,6 +11,7 @@ import { ProBadge } from './ProBadge';
 import { useHeaderAnimations } from './useHeaderAnimations';
 import { useHeaderHandlers } from './useHeaderHandlers';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { PerfectDayBadge } from '../../../../components/PerfectDayCelebration';
 
 const ENTERING = FadeInDown.duration(280).springify().damping(18);
 
@@ -28,6 +29,7 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
     onUpgradePress,
     showCompletionSummary = true,
     totalHabits = 0,
+    perfectDayStreak = 0,
   } = props;
   const { colors: themeColors } = useThemeColors();
   const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });
@@ -92,13 +94,16 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
               {formatTodayDate()}
             </Text>
             {showCompletionSummary && (
-              <Text
-                accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
-                className='text-[13px]'
-                style={{ color: themeColors.text.secondary, fontFamily: 'System' }}
-              >
-                {completedToday} of {totalHabits} done
-              </Text>
+              <View className='flex-row items-center gap-2'>
+                <Text
+                  accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
+                  className='text-[13px]'
+                  style={{ color: themeColors.text.secondary, fontFamily: 'System' }}
+                >
+                  {completedToday} of {totalHabits} done
+                </Text>
+                <PerfectDayBadge streak={perfectDayStreak} />
+              </View>
             )}
           </View>
         </View>
