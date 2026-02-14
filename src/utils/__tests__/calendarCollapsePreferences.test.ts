@@ -59,6 +59,38 @@ describe('calendarCollapsePreferences', () => {
       expect(result).toEqual({});
     });
 
+    it('should return empty object when stored payload is not an object', async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(['not', 'an', 'object'])
+      );
+
+      const result = await getCalendarCollapsePreferences();
+
+      expect(result).toEqual({});
+    });
+
+    it('should keep only valid preference entries from mixed payloads', async () => {
+      const mixedData = {
+        'habit-valid': { isExpanded: true, updatedAt: 1234567890 },
+        'habit-missing-updated-at': { isExpanded: false },
+        'habit-invalid-expanded-type': {
+          isExpanded: 'yes',
+          updatedAt: 1234567891,
+        },
+        'habit-null': null,
+      };
+
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(mixedData)
+      );
+
+      const result = await getCalendarCollapsePreferences();
+
+      expect(result).toEqual({
+        'habit-valid': { isExpanded: true, updatedAt: 1234567890 },
+      });
+    });
+
     it('should return empty object on storage error', async () => {
       (AsyncStorage.getItem as jest.Mock).mockRejectedValue(
         new Error('Storage error')

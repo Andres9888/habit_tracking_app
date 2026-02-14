@@ -11,11 +11,49 @@ import type { Id } from '../../convex/_generated/dataModel';
 
 const STORAGE_KEY = '@habit_app:calendar_collapse_preferences';
 
+interface CalendarPreferenceEntry {
+  isExpanded: boolean;
+  updatedAt: number;
+}
+
 interface CalendarCollapsePreferences {
-  [habitId: string]: {
-    isExpanded: boolean;
-    updatedAt: number;
-  };
+  [habitId: string]: CalendarPreferenceEntry;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isCalendarPreferenceEntry(
+  value: unknown
+): value is CalendarPreferenceEntry {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    typeof value.isExpanded === 'boolean' &&
+    typeof value.updatedAt === 'number' &&
+    Number.isFinite(value.updatedAt)
+  );
+}
+
+function sanitizeCalendarCollapsePreferences(
+  value: unknown
+): CalendarCollapsePreferences {
+  if (!isRecord(value)) {
+    return {};
+  }
+
+  const sanitized: CalendarCollapsePreferences = {};
+
+  for (const [habitId, entry] of Object.entries(value)) {
+    if (isCalendarPreferenceEntry(entry)) {
+      sanitized[habitId] = entry;
+    }
+  }
+
+  return sanitized;
 }
 
 /**
@@ -26,14 +64,13 @@ export async function getCalendarCollapsePreferences(): Promise<CalendarCollapse
   try {
     const stored = await AsyncStorage.getItem(STORAGE_KEY);
     if (stored) {
-      const parsed = JSON.parse(stored);
-      if (typeof parsed === 'object' && parsed !== null) {
-        return parsed as CalendarCollapsePreferences;
-      }
+      const parsed = JSON.parse(stored) as unknown;
+      return sanitizeCalendarCollapsePreferences(parsed);
     }
     return {};
   } catch (error) {
-    if (__DEV__) console.error('Error reading calendar collapse preferences:', error);
+    if (__DEV__)
+      console.error('Error reading calendar collapse preferences:', error);
     return {};
   }
 }
@@ -93,7 +130,8 @@ export async function clearCalendarCollapsePreference(
     delete updated[habitId];
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (error) {
-    if (__DEV__) console.error('Error clearing calendar collapse preference:', error);
+    if (__DEV__)
+      console.error('Error clearing calendar collapse preference:', error);
   }
 }
 
@@ -104,6 +142,7 @@ export async function clearAllCalendarCollapsePreferences(): Promise<void> {
   try {
     await AsyncStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    if (__DEV__) console.error('Error clearing all calendar collapse preferences:', error);
+    if (__DEV__)
+      console.error('Error clearing all calendar collapse preferences:', error);
   }
 }
