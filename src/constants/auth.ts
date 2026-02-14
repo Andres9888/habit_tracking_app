@@ -71,7 +71,7 @@ text: '#1c1917',
   
   
 /** Muted text color - stone-500 */
-textMuted: '#78716c',
+textMuted: '#57534e',
 } as const;
 
 /**

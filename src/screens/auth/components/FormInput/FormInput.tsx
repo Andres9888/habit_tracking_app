@@ -41,7 +41,7 @@ export function FormInput({
   return (
     <View className='gap-2'>
       <View className='flex-row items-center justify-between'>
-        <Text className='text-sm font-medium text-stone-500'>{label}</Text>
+        <Text className='text-sm font-medium text-stone-600'>{label}</Text>
         {labelRight}
       </View>
       <Animated.View

@@ -14,7 +14,7 @@ export function SignInLink({
 }: SignInLinkProps) {
   return (
     <View className={`flex-row items-center justify-center ${className}`}>
-      <Text className='text-sm text-stone-500'>Already have an account? </Text>
+      <Text className='text-sm text-stone-600'>Already have an account? </Text>
       <AnimatedPressable
         accessibilityLabel='Sign in to existing account'
         accessibilityRole='link'
