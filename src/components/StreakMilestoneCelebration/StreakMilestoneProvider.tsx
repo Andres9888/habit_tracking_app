@@ -7,48 +7,12 @@
  * when a habit completion might cross a milestone threshold
  */
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useMemo,
-  type ReactNode,
-} from 'react';
+import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { StreakMilestoneCelebration } from './StreakMilestoneCelebration';
 import { ShareCardGenerator } from '../ShareCardGenerator';
-import { checkStreakMilestoneCrossed, type StreakMilestone } from './constants';
-import { persistMilestoneShown } from './useMilestoneCheck';
-import {
-  maybeRequestReview,
-  incrementCompletionCount,
-} from '../../utils/storeReview';
-import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
-
-interface CelebrationData {
-  milestone: StreakMilestone;
-  habitId: string;
-  habitName: string;
-  habitEmoji: string;
-  streakDays: number;
-}
-
-interface ShareCardData {
-  habitName: string;
-  milestoneLevel: MilestoneLevel;
-  strengthPercentage: number;
-  userName: string;
-}
+import { useCelebrationHandlers } from './useCelebrationHandlers';
 
 interface StreakMilestoneContextValue {
-  /**
-   * Check if a streak crosses a milestone and trigger celebration if so
-   * @param habitId - Unique habit identifier
-   * @param habitName - Display name of the habit
-   * @param habitEmoji - Emoji icon for the habit
-   * @param previousStreak - Streak before completion
-   * @param currentStreak - Streak after completion
-   */
   checkAndCelebrate: (
     habitId: string,
     habitName: string,
@@ -71,84 +35,15 @@ export function StreakMilestoneProvider({
   children,
   userName = '',
 }: StreakMilestoneProviderProps) {
-  const [celebrationData, setCelebrationData] =
-    useState<CelebrationData | null>(null);
-  const [showShareCard, setShowShareCard] = useState(false);
-  const [shareData, setShareData] = useState<ShareCardData | null>(null);
-
-  const checkAndCelebrate = useCallback(
-    (
-      habitId: string,
-      habitName: string,
-      habitEmoji: string,
-      previousStreak: number,
-      currentStreak: number
-    ) => {
-      // Track completion for store review eligibility
-      void incrementCompletionCount();
-
-      const milestone = checkStreakMilestoneCrossed(
-        previousStreak,
-        currentStreak
-      );
-
-      if (milestone) {
-        setCelebrationData({
-          habitEmoji,
-          habitId,
-          habitName,
-          milestone,
-          streakDays: currentStreak,
-        });
-      }
-    },
-    []
-  );
-
-  const handleClose = useCallback(() => {
-    if (celebrationData) {
-      // Persist that this milestone was shown
-      persistMilestoneShown(
-        celebrationData.habitId,
-        celebrationData.milestone.days
-      );
-      // After celebration dismissal, maybe prompt for App Store review
-      // Small delay so the modal finishes closing before the system dialog appears
-      setTimeout(() => {
-        void maybeRequestReview(celebrationData.milestone.days);
-      }, 500);
-    }
-    setCelebrationData(null);
-  }, [celebrationData]);
-
-  const handleShare = useCallback(() => {
-    if (celebrationData) {
-      // Map streak milestone to strength level for share card
-      const milestoneLevel: MilestoneLevel =
-        celebrationData.milestone.days >= 100
-          ? 'automatic'
-          : celebrationData.milestone.days >= 30
-            ? 'strong'
-            : 'developing';
-
-      setShareData({
-        habitName: celebrationData.habitName,
-        milestoneLevel,
-        strengthPercentage: Math.round(
-          (celebrationData.streakDays / celebrationData.milestone.days) * 100
-        ),
-        userName,
-      });
-      setShowShareCard(true);
-    }
-  }, [celebrationData, userName]);
-
-  const handleShareClose = useCallback(() => {
-    setShowShareCard(false);
-    setShareData(null);
-    // Also close the celebration modal
-    handleClose();
-  }, [handleClose]);
+  const {
+    celebrationData,
+    shareData,
+    showShareCard,
+    checkAndCelebrate,
+    handleClose,
+    handleShare,
+    handleShareClose,
+  } = useCelebrationHandlers(userName);
 
   const contextValue = useMemo<StreakMilestoneContextValue>(
     () => ({
