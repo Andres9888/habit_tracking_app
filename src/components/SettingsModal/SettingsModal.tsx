@@ -33,6 +33,8 @@ export default function SettingsModal({
   const {
     darkModePreference,
     setDarkModePreference,
+    showGradientFill,
+    setShowGradientFill,
     view,
     setView,
     handleClose,
@@ -83,11 +85,13 @@ export default function SettingsModal({
               habitCompletionIcon={habitCompletionIcon}
               isHighContrastActive={isHighContrastActive}
               isPremium={isPremium}
+              showGradientFill={showGradientFill}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
               onChangeDarkModePreference={setDarkModePreference}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
+              onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
               onPremiumUpsell={onPremiumUpsell}

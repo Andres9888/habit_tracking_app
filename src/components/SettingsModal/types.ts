@@ -55,7 +55,9 @@ export interface SettingsContentProps {
     value: 'chain' | 'checkbox'
   ) => void | Promise<void>;
   onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
+  onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
   onOpenArchivedHabits: () => void;
+  showGradientFill: boolean;
   // Streak reminders
   streakRemindersEnabled: boolean;
   streakReminderTime: string;

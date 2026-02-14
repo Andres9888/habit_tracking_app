@@ -115,8 +115,6 @@ export interface InlineHintProps {
 }
 
 /**
-
-/**
  * SuccessState component props
  */
 export interface SuccessStateProps {
@@ -126,8 +124,6 @@ export interface SuccessStateProps {
   habitEmoji?: string;
   /** Callback to add another habit (resets to initial state) */
   onAddAnother: () => void;
-  /** Callback to open the templates screen */
-  onBrowseTemplates?: () => void;
   /** Callback when exit transition completes (for transitioning to list) */
   onTransitionComplete?: () => void;
   /** Whether to auto-transition to list after celebration (default: true) */

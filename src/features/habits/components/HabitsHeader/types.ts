@@ -4,10 +4,14 @@ export interface HabitsHeaderProps {
   completedToday?: number;
   /** Force show header even when totalHabits is 0 (used during empty->list transition) */
   forceShow?: boolean;
+  /** Whether the current user has an active premium subscription */
+  isPremiumUser?: boolean;
   openCreateHabitScreen: () => void;
   openSettings: () => void;
   openSortSheet: () => void;
   openTemplatesScreen: () => void;
+  /** Callback when the user taps the PRO upgrade badge */
+  onUpgradePress?: () => void;
   reduceMotion?: boolean;
   showCompletionSummary?: boolean;
   totalHabits?: number;
