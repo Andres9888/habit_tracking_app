@@ -1,14 +1,16 @@
 /**
  * WelcomeScreen - Auth landing page
  * Clean design consistent with app style
+ * Dark mode support via useThemeColors
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import { Link } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '@/theme/ThemeContext';
 import {
   AuthDivider,
   AuthError,
@@ -19,7 +21,7 @@ import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
-import { styles } from './WelcomeScreen.styles';
+import { createStyles } from './WelcomeScreen.styles';
 
 type AuthMode = 'welcome' | 'signin' | 'signup';
 
@@ -30,6 +32,10 @@ export default function WelcomeScreen() {
     useOAuthSignIn();
   const { iconStyle, titleStyle, subtitleStyle, buttonsStyle } =
     useWelcomeAnimations();
+  const { colors, isDark } = useThemeColors();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+
+  const iconColor = isDark ? colors.gray[700] : '#1c1917';
 
   if (mode === 'signin') {
     return (
@@ -58,7 +64,7 @@ export default function WelcomeScreen() {
       <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
         <View style={styles.heroSection}>
           <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <Link color='#1c1917' size={40} strokeWidth={2} />
+            <Link color={iconColor} size={40} strokeWidth={2} />
           </Animated.View>
           <Animated.Text style={[styles.title, titleStyle]}>
             Chain Day
