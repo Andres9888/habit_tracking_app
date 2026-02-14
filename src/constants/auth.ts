@@ -68,15 +68,15 @@ export const AUTH_SPACING = {
  * Border radius values in pixels
  */
 export const AUTH_BORDER_RADIUS = {
-  /** Large - 20px */
-  lg: 20,
+  /** Large - 16px (cards, containers) */
+  lg: 16,
 
-  /** Medium - 16px */
+  /** Medium - 16px (inputs, cards) */
   md: 16,
 
-  /** Small - 12px */
+  /** Small - 12px (buttons, tags) */
   sm: 12,
-  /** Extra large - 24px (rounded-3xl) */
+  /** Extra large - 24px (rounded-3xl, sheets) */
   xl: 24,
 } as const;
 

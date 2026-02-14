@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 export const tabStyles = StyleSheet.create({
   tab: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 12,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -44,7 +44,7 @@ export const tabStyles = StyleSheet.create({
   },
   tabIndicator: {
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 12,
     bottom: 5,
     elevation: 3,
     left: 5,
