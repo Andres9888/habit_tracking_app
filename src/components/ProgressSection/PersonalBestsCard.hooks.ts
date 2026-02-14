@@ -15,7 +15,12 @@ export function usePulseAnimation(currentStreak: number) {
   const pulseOpacity = useSharedValue(0.6);
 
   useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
+    void AccessibilityInfo.isReduceMotionEnabled()
+      .then(setReduceMotion)
+      .catch((error) => {
+        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
+        setReduceMotion(false);
+      });
   }, []);
 
   useEffect(() => {
