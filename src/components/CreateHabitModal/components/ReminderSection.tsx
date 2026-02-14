@@ -36,12 +36,12 @@ export const ReminderSection = ({
 
         {/* Label and time - tappable when enabled */}
         <AnimatedPressable
-          className='flex-1'
-          disabled={!remindersEnabled}
-          disableAnimation={!remindersEnabled}
-          accessibilityRole='button'
           accessibilityLabel={`Reminder time: ${formatReminderTime(reminderTime)}. Tap to change.`}
+          accessibilityRole='button'
           accessibilityState={{ disabled: !remindersEnabled }}
+          className='flex-1'
+          disableAnimation={!remindersEnabled}
+          disabled={!remindersEnabled}
           onPress={() => {
             if (remindersEnabled) {
               triggerSelection();
@@ -60,13 +60,13 @@ export const ReminderSection = ({
 
         {/* Toggle switch on right */}
         <Switch
+          accessibilityLabel='Toggle reminder'
+          accessibilityRole='switch'
+          accessibilityState={{ checked: remindersEnabled }}
           ios_backgroundColor='#E5E5E5'
           thumbColor='#FFFFFF'
           trackColor={{ false: '#E5E5E5', true: '#22C55E' }}
           value={remindersEnabled}
-          accessibilityRole='switch'
-          accessibilityLabel='Toggle reminder'
-          accessibilityState={{ checked: remindersEnabled }}
           onValueChange={(val) => {
             triggerSelection();
             onToggle(val);

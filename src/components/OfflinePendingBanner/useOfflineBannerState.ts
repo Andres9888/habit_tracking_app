@@ -28,10 +28,10 @@ export const useOfflineBannerState = ({
 
   return {
     displayStats,
-    hasPendingItems,
     getStats,
-    isExpanded,
+    hasPendingItems,
     hasQueuedItems,
+    isExpanded,
     isOffline,
     isOnline,
     isProcessing,

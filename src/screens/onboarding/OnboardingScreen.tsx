@@ -49,7 +49,7 @@ function ChainLink({ delay, index }: { delay: number; index: number }) {
         styles.chainLink,
         {
           backgroundColor: colors[index % colors.length],
-          transform: [{ rotate: index % 2 === 0 ? '0deg' : '0deg' }],
+          transform: [{ rotate: '0deg' }], // Uniform rotation (placeholder for future alternating style)
         },
       ]}
     >
@@ -231,10 +231,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const handleNext = useCallback(() => {
     void Haptics.impactAsync(ImpactFeedbackStyle.Light);
     if (currentIndex < PAGES.length - 1) {
-      flatListRef.current?.scrollToIndex({
-        animated: true,
-        index: currentIndex + 1,
-      });
+      flatListRef.current?.scrollToIndex({ animated: true, index: currentIndex + 1 });
     }
   }, [currentIndex]);
 
@@ -283,11 +280,11 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         style={[styles.skipContainer, { top: insets.top + 12 }]}
       >
         <Pressable
-          onPress={handleSkip}
+          accessibilityLabel="Skip onboarding"
+          accessibilityRole="button"
           hitSlop={24}
           style={styles.skipButton}
-          accessibilityRole="button"
-          accessibilityLabel="Skip onboarding"
+          onPress={handleSkip}
         >
           <Text style={styles.skipText}>Skip</Text>
         </Pressable>
@@ -319,8 +316,8 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         {isLastPage ? (
           <Animated.View entering={FadeInDown.springify().damping(18)}>
             <Pressable
-              accessibilityLabel='Get started building your first habit'
-              accessibilityRole='button'
+              accessibilityLabel="Get started building your first habit"
+              accessibilityRole="button"
               disabled={isLoading}
               style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
               onPress={() => void handleComplete()}
@@ -336,8 +333,8 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
           </Animated.View>
         ) : (
           <Pressable
-            accessibilityLabel='Next onboarding page'
-            accessibilityRole='button'
+            accessibilityLabel="Next onboarding page"
+            accessibilityRole="button"
             style={styles.nextButton}
             onPress={handleNext}
           >
@@ -378,7 +375,7 @@ const styles = StyleSheet.create({
     width: 20,
   },
   container: {
-    backgroundColor: '#faf9f7',
+    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   ctaButton: {
@@ -388,7 +385,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     paddingVertical: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
@@ -416,7 +413,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 48,
     paddingVertical: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
@@ -496,7 +493,7 @@ const styles = StyleSheet.create({
     height: 56,
     justifyContent: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
     width: 56,

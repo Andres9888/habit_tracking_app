@@ -18,10 +18,7 @@ export function useInsightChipsData({
   onFocusDayPress,
 }: InsightChipsProps): InsightChipData[] {
   return useMemo(() => {
-    const chips: InsightChipData[] = [];
-
-    // Current Streak chip
-    chips.push({
+    const chips: InsightChipData[] = [ {
       borderColor: 'orange-200',
       hasPulse: currentStreak > 0,
       icon: '🔥',
@@ -29,7 +26,9 @@ export function useInsightChipsData({
       isInteractive: false,
       label: 'Current Streak',
       value: currentStreak === 1 ? '1 day' : `${currentStreak} days`,
-    });
+    }];
+
+    // Current Streak chip
 
     // Best Day chip
     if (bestDay) {

@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     opacity: 0.5,
   },
   container: {
-    backgroundColor: '#faf9f7',
+    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   content: {

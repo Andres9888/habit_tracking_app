@@ -40,7 +40,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   }
 
   const firstDate = dates[0];
-  const lastDate = dates[dates.length - 1];
+  const lastDate = dates.at(-1);
   if (!firstDate || !lastDate) {
     return null;
   }

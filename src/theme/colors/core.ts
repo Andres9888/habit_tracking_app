@@ -8,7 +8,7 @@
 
 export const colors = {
   // Convenience aliases for common usage (defaults to light mode)
-  background: '#faf9f7',
+  background: '#FAF8F5',
 
   border: '#e7e5e4',
 
@@ -25,7 +25,7 @@ export const colors = {
 
   // Neutral Grays (iOS-inspired)
   gray: {
-    50: '#faf9f7', // Background, cards in dark mode
+    50: '#FAF8F5', // Background, cards in dark mode
     100: '#f5f5f4', // Card backgrounds
     200: '#E5E7EB', // Borders, dividers
     300: '#D1D5DB', // Disabled elements
@@ -42,10 +42,10 @@ export const colors = {
 
   // Background & Surfaces
   light: {
-    background: '#faf9f7', // Warm stone background
-    card: '#ffffff', // Pure white cards for contrast
+    background: '#FAF8F5', // Warm stone background
+    card: '#f0eeeb', // Warm stone card background
     gradientMid: '#f5f3f0', // Slightly darker warm stone for depth gradients
-    surface: '#ffffff', // White surface for elevated elements
+    surface: '#f0eeeb', // Warm stone surface for elevated elements
     surfaceMuted: '#fafaf9', // stone-50 for subtle sections
   },
 
@@ -75,6 +75,16 @@ export const colors = {
     600: '#2563EB', // Darker, pressed
   },
 
+  // Semantic Colors
+  // Streak & Progress — amber/gold tones (chain metaphor)
+  streak: {
+    100: '#fef3c7', // Very light amber, streak backgrounds
+    300: '#fcd34d', // Light amber, streak accents
+    500: '#F59E0B', // Amber-500 — primary streak color
+    600: '#D97706', // Darker amber, pressed states
+    700: '#B45309', // Dark amber, high-contrast text
+  },
+
   // Habit Strength Level Colors (Gradient: lime → green → teal → cyan → emerald)
   strength: {
     automatic: '#059669', // 80-100% - Emerald-600
@@ -89,10 +99,9 @@ export const colors = {
     strongLight: '#cffafe', // Cyan-100
   },
 
-  // Semantic Colors
-  success: '#10B981',
+  success: '#22c55e', // Green-500 — distinct from primary emerald
 
-  surface: '#faf9f7',
+  surface: '#FAF8F5',
 
   // Text Colors
   text: {
@@ -118,3 +127,4 @@ export type ColorPalette = typeof colors;
 export type PrimaryColor = keyof typeof colors.primary;
 export type GrayColor = keyof typeof colors.gray;
 export type StrengthLevel = keyof typeof colors.strength;
+export type StreakColor = keyof typeof colors.streak;

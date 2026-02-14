@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/consistent-function-scoping -- factory functions intentionally return inner arrow functions */
 /**
  * Analytics Event Creator Functions
  * Factory functions for creating analytics tracking functions

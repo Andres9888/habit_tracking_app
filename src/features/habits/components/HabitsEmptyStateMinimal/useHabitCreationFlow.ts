@@ -71,16 +71,16 @@ export function useHabitCreationFlow({
 
   return {
     errorMessage,
-    handleChipSelect: chipSelection.handleChipSelect,
     handleAddAnother,
+    handleChipSelect: chipSelection.handleChipSelect,
     handleClearInput,
     handleCreateHabit,
-    inputValue: chipSelection.inputValue,
     handleDismissError,
-    isCreating,
     handleInputChange: chipSelection.handleInputChange,
-    selectedChipIndex: chipSelection.selectedChipIndex,
     handleSubmitEditing,
+    inputValue: chipSelection.inputValue,
+    isCreating,
+    selectedChipIndex: chipSelection.selectedChipIndex,
     successEmoji,
     successHabitName,
   };

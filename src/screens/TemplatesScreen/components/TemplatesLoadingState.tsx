@@ -6,7 +6,7 @@ import { SkeletonCard } from './SkeletonCard';
 
 export function TemplatesLoadingState() {
   return (
-    <View className='flex-1 bg-[#faf9f7]'>
+    <View className='flex-1 bg-[#FAF8F5]'>
       <View className='px-5 pb-4 pt-6'>
         <Text
           className='font-semibold text-stone-900'

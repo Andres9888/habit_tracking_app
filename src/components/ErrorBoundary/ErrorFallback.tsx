@@ -19,7 +19,10 @@ interface ErrorFallbackProps {
 }
 
 export function ErrorFallback({
-  error, onRetry, onLogout, onOpenSettings,
+  error,
+  onRetry,
+  onLogout,
+  onOpenSettings,
 }: ErrorFallbackProps) {
   const retryCountRef = useRef(0);
   const [showLogout, setShowLogout] = useState(false);

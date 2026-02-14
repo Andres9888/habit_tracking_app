@@ -11,101 +11,101 @@ export interface HabitCategory {
  */
 export const HABIT_CATEGORIES: HabitCategory[] = [
   {
-    id: 'fitness',
-    name: 'Fitness',
-    icon: '💪',
     emojis: [
       '💪', '🏃', '🚴', '🧘', '🏋️', '🏊', '🚶', '🤸',
       '⚽', '🏀', '🎾', '🏈', '🥊', '🎯', '🛹', '🏇',
       '🥋', '🏌️', '🤾', '🏄', '🧗', '🏂', '⛷️', '🚵',
       '⛹️', '🤼', '🤽', '🤺', '🥏', '🏓', '🏸', '🥌',
     ],
+    icon: '💪',
+    id: 'fitness',
+    name: 'Fitness',
   },
   {
-    id: 'learning',
-    name: 'Learning',
-    icon: '📚',
     emojis: [
       '📖', '📚', '✏️', '🎓', '💡', '🧠', '📝', '🔬',
       '✍️', '🖊️', '📓', '📔', '🔍', '🧪', '📐', '📏',
       '🖋️', '📑', '🗒️', '💻', '🎯', '📊', '📈', '🧮',
     ],
+    icon: '📚',
+    id: 'learning',
+    name: 'Learning',
   },
   {
-    id: 'wellness',
-    name: 'Wellness',
-    icon: '🧘',
     emojis: [
       '🧘', '💆', '😴', '💤', '🌅', '🌿', '💚', '🛁',
       '🧖', '🌸', '🌺', '🪷', '☮️', '🌙', '⭐', '✨',
       '🌈', '🦋', '🕯️', '🪴', '🍃', '🌾', '💫', '☯️',
     ],
+    icon: '🧘',
+    id: 'wellness',
+    name: 'Wellness',
   },
   {
-    id: 'health',
-    name: 'Health',
-    icon: '🍎',
     emojis: [
       '🥗', '🍎', '💧', '🥦', '🍳', '🥤', '💊', '🩺',
       '🥑', '🍌', '🍊', '🥕', '🍇', '🍓', '🍵', '🥛',
       '☕', '🧃', '🫖', '🌽', '🥬', '🫐', '🍒', '🧈',
     ],
+    icon: '🍎',
+    id: 'health',
+    name: 'Health',
   },
   {
-    id: 'work',
-    name: 'Work',
-    icon: '💼',
     emojis: [
       '💼', '📋', '✅', '📅', '⏰', '🎯', '📈', '💻',
       '📧', '📞', '🗓️', '📌', '📎', '🖇️', '📁', '📂',
       '🗄️', '💵', '💰', '🏦', '📊', '📉', '⌛', '⏳',
     ],
+    icon: '💼',
+    id: 'work',
+    name: 'Work',
   },
   {
-    id: 'creative',
-    name: 'Creative',
-    icon: '🎨',
     emojis: [
       '🎨', '🎵', '🎸', '📷', '✍️', '🎭', '🖌️', '🎹',
       '🎺', '🎻', '🥁', '🎤', '🎬', '🎥', '📹', '🎞️',
       '✂️', '🧵', '🧶', '🪡', '🎪', '🖼️', '🎧', '🎶',
     ],
+    icon: '🎨',
+    id: 'creative',
+    name: 'Creative',
   },
   {
-    id: 'home',
-    name: 'Home',
-    icon: '🏠',
     emojis: [
       '🏠', '🧹', '🌱', '🛏️', '🧺', '🍳', '👕', '🧼',
       '🚿', '🛋️', '🪑', '🖼️', '🛍️', '🧴', '🧽', '🪣',
       '🗑️', '📦', '🔧', '🔨', '🪛', '🧰', '🪴', '🌻',
     ],
+    icon: '🏠',
+    id: 'home',
+    name: 'Home',
   },
   {
-    id: 'finance',
-    name: 'Finance',
-    icon: '💰',
     emojis: [
       '💰', '💵', '📊', '🏦', '💳', '📉', '💎', '🪙',
       '💲', '💸', '🤑', '📈', '🧾', '💴', '💶', '💷',
       '🏧', '💱', '⚖️', '🎰', '📅', '📋', '✅', '🎯',
     ],
+    icon: '💰',
+    id: 'finance',
+    name: 'Finance',
   },
   {
-    id: 'social',
-    name: 'Social',
-    icon: '❤️',
     emojis: [
       '❤️', '👨‍👩‍👧', '📞', '💬', '🤝', '👋', '😊', '🎉',
       '💌', '🥳', '🤗', '💕', '💖', '👪', '👫', '👭',
       '👬', '🙌', '👏', '🎊', '🎁', '💝', '💓', '💗',
     ],
+    icon: '❤️',
+    id: 'social',
+    name: 'Social',
   },
   {
-    id: 'all',
-    name: 'All',
+    emojis: [],
     icon: '⭐',
-    emojis: [], // Empty - will load full library from emojiData
+    id: 'all',
+    name: 'All', // Empty - will load full library from emojiData
   },
 ];
 

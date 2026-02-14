@@ -48,20 +48,6 @@ export function ViewerHeader({
 
   return (
     <View className='flex-row items-center justify-between px-4 pb-4 pt-14'>
-      <AnimatedPressable
-        accessibilityLabel='Close image viewer'
-        accessibilityRole='button'
-        className='h-10 w-10 items-center justify-center rounded-full bg-white/10'
-        style={closeAnim.animatedStyle}
-        onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          onClose();
-        }}
-        onPressIn={closeAnim.handlePressIn}
-        onPressOut={closeAnim.handlePressOut}
-      >
-        <X className='text-white' size={24} />
-      </AnimatedPressable>
       <View className='flex-row gap-2'>
         <AnimatedPressable
           accessibilityLabel='Edit caption'
@@ -97,6 +83,20 @@ export function ViewerHeader({
           )}
         </AnimatedPressable>
       </View>
+      <AnimatedPressable
+        accessibilityLabel='Close image viewer'
+        accessibilityRole='button'
+        className='h-10 w-10 items-center justify-center rounded-full bg-white/10'
+        style={closeAnim.animatedStyle}
+        onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          onClose();
+        }}
+        onPressIn={closeAnim.handlePressIn}
+        onPressOut={closeAnim.handlePressOut}
+      >
+        <X className='text-white' size={24} />
+      </AnimatedPressable>
     </View>
   );
 }

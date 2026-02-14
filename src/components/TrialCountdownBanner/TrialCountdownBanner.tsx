@@ -16,7 +16,7 @@ export function TrialCountdownBanner({
   return (
     <View style={localStyles.container}>
       <Text style={localStyles.text}>{getTrialMessage(daysRemaining)}</Text>
-      <Pressable onPress={onUpgrade} style={localStyles.upgradeButton}>
+      <Pressable style={localStyles.upgradeButton} onPress={onUpgrade}>
         <Text style={localStyles.upgradeText}>Upgrade</Text>
       </Pressable>
       {dismissible && onDismiss && (

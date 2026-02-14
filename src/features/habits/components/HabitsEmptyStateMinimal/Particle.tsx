@@ -50,17 +50,17 @@ export function Particle({
   const translateY = Math.round(Math.sin(angle) * distance);
 
   const animatedStyle = useAnimatedStyle(() => {
-    const p = progress.value;
+    const animationProgress = progress.value;
 
     // Scale: 0 → 1 at 30% → 0.5 at 100%
-    const scale = interpolate(p, [0, 0.3, 1], [0, 1, 0.5]);
+    const scale = interpolate(animationProgress, [0, 0.3, 1], [0, 1, 0.5]);
 
     // Opacity: 1 at peak → 0 at end
-    const opacity = interpolate(p, [0, 0.3, 1], [0, 1, 0]);
+    const opacity = interpolate(animationProgress, [0, 0.3, 1], [0, 1, 0]);
 
     // Position: move outward over time
-    const currentTranslateX = interpolate(p, [0, 1], [0, translateX]);
-    const currentTranslateY = interpolate(p, [0, 1], [0, translateY]);
+    const currentTranslateX = interpolate(animationProgress, [0, 1], [0, translateX]);
+    const currentTranslateY = interpolate(animationProgress, [0, 1], [0, translateY]);
 
     return {
       opacity,

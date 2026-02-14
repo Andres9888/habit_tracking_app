@@ -3,186 +3,258 @@
 // Marked as data exception similar to templatesDataSeed.ts.
 
 export const EMOJI_KEYWORDS: Record<string, string[]> = {
-  // Smileys
-  '😀': ['smile', 'happy', 'grin'],
-  '😁': ['smile', 'happy', 'grin', 'teeth'],
-  '😂': ['laugh', 'cry', 'tears', 'joy', 'funny'],
-  '😃': ['smile', 'happy', 'grin', 'open'],
-  '😄': ['smile', 'happy', 'grin', 'laugh'],
-  '😅': ['sweat', 'nervous', 'laugh'],
-  '😆': ['laugh', 'happy', 'squint'],
+  
   // Gestures
-  '👋': ['wave', 'hello', 'hi', 'bye'],
+'👋': ['wave', 'hello', 'hi', 'bye'],
+  
 
-  '😇': ['angel', 'innocent', 'halo'],
+'👍': ['thumbs', 'up', 'yes', 'good', 'ok', 'like'],
+  
 
-  '👍': ['thumbs', 'up', 'yes', 'good', 'ok', 'like'],
+'👎': ['thumbs', 'down', 'no', 'bad', 'dislike'],
+  
 
+'👏': ['clap', 'applause', 'congrats'],
+  
+// Smileys
+'😀': ['smile', 'happy', 'grin'],
+  
+'✊': ['fist', 'punch', 'power'],
+  
+'😁': ['smile', 'happy', 'grin', 'teeth'],
+  
+  '✌️': ['peace', 'victory', 'v'],
+
+  '😂': ['laugh', 'cry', 'tears', 'joy', 'funny'],
+
+  '✍️': ['write', 'writing', 'pen'],
+
+  '😃': ['smile', 'happy', 'grin', 'open'],
+
+  // Hearts & Love
+'❤️': ['heart', 'love', 'red'],
+
+  
+'😄': ['smile', 'happy', 'grin', 'laugh'],
+
+  
+'💙': ['heart', 'blue'],
+
+  
+'😅': ['sweat', 'nervous', 'laugh'],
+
+  
+'💚': ['heart', 'green'],
+
+  
+'😆': ['laugh', 'happy', 'squint'],
+  
+'💔': ['heart', 'broken'],
+  
+'😇': ['angel', 'innocent', 'halo'],
+  
+'💕': ['hearts', 'love'],
+  
   '😊': ['smile', 'blush', 'happy'],
 
-  '👎': ['thumbs', 'down', 'no', 'bad', 'dislike'],
-
-  '😍': ['love', 'heart', 'eyes'],
-
-  '👏': ['clap', 'applause', 'congrats'],
-
-  '😎': ['cool', 'sunglasses'],
-
-  '✊': ['fist', 'punch', 'power'],
-
-  '🤣': ['laugh', 'lol', 'rofl', 'funny'],
-  '✌️': ['peace', 'victory', 'v'],
-  '🙂': ['smile', 'slight'],
-  '✍️': ['write', 'writing', 'pen'],
-  // Hearts & Love
-  '❤️': ['heart', 'love', 'red'],
-
-  '🥰': ['love', 'hearts', 'adore'],
-
-  '💙': ['heart', 'blue'],
-
-  '🤩': ['star', 'excited', 'wow'],
-
-  '💚': ['heart', 'green'],
-
-  '🤓': ['nerd', 'glasses', 'geek'],
-
-  '💔': ['heart', 'broken'],
-
-  '💪': ['muscle', 'strong', 'strength', 'workout', 'gym', 'flex', 'bicep'],
-  '💕': ['hearts', 'love'],
-  '🙌': ['hands', 'celebrate', 'praise', 'hooray'],
   // Activities & Fitness
-  '🏃': ['run', 'running', 'jog', 'exercise', 'cardio'],
+'🏃': ['run', 'running', 'jog', 'exercise', 'cardio'],
+
+  
+'😍': ['love', 'heart', 'eyes'],
+
+  
+'💖': ['heart', 'sparkle'],
+
+  
+'😎': ['cool', 'sunglasses'],
+
+  
+'🏋️': ['gym', 'workout', 'lift', 'weight', 'exercise', 'fitness'],
+
+  
+'🤣': ['laugh', 'lol', 'rofl', 'funny'],
+
+  
+'🏊': ['swim', 'swimming', 'pool'],
+  
+'🙂': ['smile', 'slight'],
+  
+'⛹️': ['basketball', 'ball', 'sport'],
+  
+  // Nature & Weather
+'🌞': ['sun', 'sunny', 'morning', 'day'],
+
+  
+'🥰': ['love', 'hearts', 'adore'],
+
+  
+'⭐': ['star', 'favorite'],
+
+  
+'🤩': ['star', 'excited', 'wow'],
+
+  
+'✨': ['sparkle', 'magic', 'special'],
+
+  
+'🤓': ['nerd', 'glasses', 'geek'],
+
+  
+'🌙': ['moon', 'night', 'evening', 'sleep'],
+
+  
+'💪': ['muscle', 'strong', 'strength', 'workout', 'gym', 'flex', 'bicep'],
+
+  
+'🌱': ['plant', 'grow', 'seed', 'sprout', 'nature'],
+
+  
+  '🙌': ['hands', 'celebrate', 'praise', 'hooray'],
+
+  '🌳': ['tree', 'nature', 'forest'],
 
   '🙏': ['pray', 'please', 'thanks', 'hope', 'grateful'],
 
-  '💖': ['heart', 'sparkle'],
+  '🌸': ['flower', 'cherry', 'blossom', 'spring'],
 
   '💛': ['heart', 'yellow'],
 
-  '🏋️': ['gym', 'workout', 'lift', 'weight', 'exercise', 'fitness'],
+  '⚡': ['lightning', 'energy', 'power', 'electric', 'bolt'],
 
   '🤙': ['call', 'hang', 'loose', 'shaka'],
 
-  '🏊': ['swim', 'swimming', 'pool'],
-
-  '⛹️': ['basketball', 'ball', 'sport'],
-
-  '🧡': ['heart', 'orange'],
-
-  // Nature & Weather
-  '🌞': ['sun', 'sunny', 'morning', 'day'],
-
-  '💜': ['heart', 'purple'],
-
-  '⭐': ['star', 'favorite'],
-
-  '🖤': ['heart', 'black'],
-
-  '✨': ['sparkle', 'magic', 'special'],
-
-  '🤍': ['heart', 'white'],
-
-  '🌙': ['moon', 'night', 'evening', 'sleep'],
-
-  '🌱': ['plant', 'grow', 'seed', 'sprout', 'nature'],
-
-  '💗': ['heart', 'growing'],
-  '🌳': ['tree', 'nature', 'forest'],
-  '🚶': ['walk', 'walking', 'step'],
-  '🌸': ['flower', 'cherry', 'blossom', 'spring'],
-  '🧘': ['yoga', 'meditate', 'meditation', 'zen', 'mindful'],
-  '⚡': ['lightning', 'energy', 'power', 'electric', 'bolt'],
-  '🚴': ['bike', 'cycle', 'cycling', 'bicycle'],
   '🌺': ['flower', 'hibiscus'],
+
   '🌻': ['sunflower', 'flower'],
-  '🤸': ['gymnastics', 'cartwheel', 'acrobat'],
+  '🧡': ['heart', 'orange'],
   '🍀': ['clover', 'luck', 'lucky', 'irish'],
+  '💜': ['heart', 'purple'],
   '☕': ['coffee', 'cafe', 'morning', 'drink'],
-  '💧': ['water', 'drop', 'hydrate', 'drink'],
-
+  '🖤': ['heart', 'black'],
   '🍊': ['orange', 'fruit', 'citrus'],
-
-  '🔥': ['fire', 'hot', 'lit', 'flame', 'streak'],
-
+  '🤍': ['heart', 'white'],
   '🍋': ['lemon', 'citrus', 'sour'],
-
   '🍌': ['banana', 'fruit'],
-  // Food & Drink
-  '🍎': ['apple', 'fruit', 'healthy', 'food'],
-  '🍏': ['apple', 'green', 'fruit'],
+  '💗': ['heart', 'growing'],
   '✏️': ['pencil', 'write', 'drawing'],
-  '🍵': ['tea', 'drink', 'green'],
+  '🚶': ['walk', 'walking', 'step'],
 
-  '💊': ['pill', 'medicine', 'vitamin', 'supplement'],
+  // Food & Drink
+'🍎': ['apple', 'fruit', 'healthy', 'food'],
 
-  '📓': ['notebook', 'journal', 'diary'],
+  
+'🧘': ['yoga', 'meditate', 'meditation', 'zen', 'mindful'],
 
-  '🎓': ['graduate', 'study', 'education', 'school', 'learn'],
+  
+'🍏': ['apple', 'green', 'fruit'],
 
-  // Objects & Learning
-  '📖': ['book', 'read', 'reading', 'study'],
+  
+'🚴': ['bike', 'cycle', 'cycling', 'bicycle'],
+  
+  
+'🍵': ['tea', 'drink', 'green'],
+  
+'🎓': ['graduate', 'study', 'education', 'school', 'learn'],
+  '🤸': ['gymnastics', 'cartwheel', 'acrobat'],
+  '🎨': ['art', 'paint', 'creative', 'palette'],
 
   '🎯': ['target', 'goal', 'aim', 'focus', 'bullseye'],
-  '🥑': ['avocado', 'healthy', 'food'],
-  '🏆': ['trophy', 'win', 'winner', 'champion', 'award'],
-  '🥗': ['salad', 'healthy', 'food', 'vegetable'],
-  '🎨': ['art', 'paint', 'creative', 'palette'],
-  '🥦': ['broccoli', 'vegetable', 'healthy'],
+
+  '💧': ['water', 'drop', 'hydrate', 'drink'],
+
   '🎵': ['music', 'note', 'song'],
-  '🎶': ['music', 'notes', 'song'],
-  '🥤': ['drink', 'soda', 'cup'],
-  // Time & Sleep
-  '⏰': ['alarm', 'clock', 'time', 'wake'],
 
-  '📚': ['books', 'read', 'reading', 'study', 'library'],
+  
+  '🔥': ['fire', 'hot', 'lit', 'flame', 'streak'],
 
-  '🎸': ['guitar', 'music', 'instrument'],
+  
+// Time & Sleep
+'⏰': ['alarm', 'clock', 'time', 'wake'],
+  
 
-  '📝': ['note', 'write', 'writing', 'memo', 'journal'],
+'🎶': ['music', 'notes', 'song'],
+  
 
-  '🎹': ['piano', 'music', 'keyboard', 'instrument'],
+'🎸': ['guitar', 'music', 'instrument'],
+  
 
-  '🖊️': ['pen', 'write'],
+'🏆': ['trophy', 'win', 'winner', 'champion', 'award'],
+  
 
-  '💡': ['idea', 'light', 'bulb', 'think', 'creative'],
+'🎹': ['piano', 'music', 'keyboard', 'instrument'],
+  
 
-  '💤': ['sleep', 'zzz', 'snore', 'rest'],
+'💊': ['pill', 'medicine', 'vitamin', 'supplement'],
+  
 
-  // Tech & Work
-  '💻': ['computer', 'laptop', 'work', 'tech'],
+'💡': ['idea', 'light', 'bulb', 'think', 'creative'],
+  
 
-  '🧠': ['brain', 'think', 'smart', 'mind', 'learn'],
+'📓': ['notebook', 'journal', 'diary'],
+  
+
+'💤': ['sleep', 'zzz', 'snore', 'rest'],
+  
+  // Objects & Learning
+'📖': ['book', 'read', 'reading', 'study'],
 
   '💯': ['hundred', 'perfect', 'score', 'complete'],
 
+  '🥑': ['avocado', 'healthy', 'food'],
+
   '✅': ['check', 'done', 'complete', 'yes', 'correct'],
 
-  '🥇': ['medal', 'gold', 'first', 'win'],
+  '🥗': ['salad', 'healthy', 'food', 'vegetable'],
 
   '❌': ['x', 'no', 'wrong', 'cancel', 'delete'],
-  '💼': ['briefcase', 'work', 'business', 'job'],
-  '⭕': ['circle', 'zero', 'ring'],
-  '📧': ['email', 'mail', 'message'],
 
+  '🥦': ['broccoli', 'vegetable', 'healthy'],
+
+  '⭕': ['circle', 'zero', 'ring'],
+
+  
   '🎉': ['party', 'celebrate', 'confetti', 'congrats'],
 
-  '🕐': ['clock', 'time', 'one'],
+  
+'🥤': ['drink', 'soda', 'cup'],
 
-  '🎊': ['confetti', 'celebrate', 'party'],
+  
+'🎊': ['confetti', 'celebrate', 'party'],
 
-  '😴': ['sleep', 'sleepy', 'zzz', 'tired'],
+  
+'📚': ['books', 'read', 'reading', 'study', 'library'],
 
-  '🏠': ['house', 'home'],
+  
+'🏠': ['house', 'home'],
 
-  '🛏️': ['bed', 'sleep', 'rest'],
+  
+'📝': ['note', 'write', 'writing', 'memo', 'journal'],
+  
+// Tech & Work
+'💻': ['computer', 'laptop', 'work', 'tech'],
+  
+'🖊️': ['pen', 'write'],
+  '💼': ['briefcase', 'work', 'business', 'job'],
+
+  '📧': ['email', 'mail', 'message'],
 
   '📱': ['phone', 'mobile', 'cell'],
 
+  '🧠': ['brain', 'think', 'smart', 'mind', 'learn'],
+
   '📵': ['phone', 'no', 'off', 'digital', 'detox'],
+
+  '🕐': ['clock', 'time', 'one'],
+
+  '🥇': ['medal', 'gold', 'first', 'win'],
+
+  '😴': ['sleep', 'sleepy', 'zzz', 'tired'],
+
   // Misc
-  '🚀': ['rocket', 'launch', 'fast', 'start', 'go'],
+'🚀': ['rocket', 'launch', 'fast', 'start', 'go'],
+  
+  '🛏️': ['bed', 'sleep', 'rest'],
   '🧹': ['broom', 'clean', 'sweep', 'tidy'],
   '🧼': ['soap', 'clean', 'wash'],
 };

@@ -12,7 +12,7 @@ export function HabitCardSkeleton({ reduceMotion = false }: ReduceMotionProps) {
     <View
       className='mb-5 overflow-hidden rounded-3xl p-5'
       style={{
-        ...shadows.modal,
+        ...shadows.card,
         backgroundColor: '#fafaf9',
         shadowColor: '#44403c',
         shadowOpacity: 0.08,

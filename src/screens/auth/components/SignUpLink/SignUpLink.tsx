@@ -14,8 +14,8 @@ export function SignUpLink({ disabled, onPress }: SignUpLinkProps) {
         accessibilityLabel='Create a new account'
         accessibilityRole='link'
         accessibilityState={{ disabled }}
-        disabled={disabled}
         disableAnimation={disabled}
+        disabled={disabled}
         onPress={onPress}
       >
         <Text className='text-sm font-semibold text-emerald-700'>Sign up</Text>

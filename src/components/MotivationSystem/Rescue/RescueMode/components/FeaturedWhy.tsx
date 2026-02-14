@@ -14,10 +14,10 @@ export function FeaturedWhy({ why }: FeaturedWhyProps) {
   return (
     <View className='rounded-2xl border-l-4 border-l-rose-400 p-5'>
       <LinearGradient
-        colors={['#fff1f2', '#fffbeb']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
         className='absolute inset-0 rounded-2xl'
+        colors={['#fff1f2', '#fffbeb']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
       />
       <View className='mb-3 flex-row items-center gap-2'>
         <View className='h-10 w-10 items-center justify-center rounded-xl bg-rose-100'>

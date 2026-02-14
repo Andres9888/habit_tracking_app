@@ -23,8 +23,8 @@ const DATE_STYLE = {
 
 /** Format today's date as "Today · Mon D" per spec */
 const formatTodayDate = (): string => {
-  const d = new Date();
-  return `Today · ${d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
+  const now = new Date();
+  return `Today · ${now.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
 };
 
 // eslint-disable-next-line max-lines-per-function
@@ -44,7 +44,7 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
   const { colors: themeColors } = useThemeColors();
   const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });
   const anim = useHeaderAnimations();
-  const h = useHeaderHandlers({
+  const handlers = useHeaderHandlers({
     addButtonScale: anim.addButtonScale,
     dismissBadge,
     openCreateHabitScreen,
@@ -62,15 +62,15 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
       showBadge={showBadge}
       sortAnimatedStyle={anim.sortButtonAnimatedStyle}
       templatesAnimatedStyle={anim.templatesButtonAnimatedStyle}
-      onSettingsPress={h.handleSettingsPress}
-      onSettingsPressIn={h.handleSettingsPressIn}
-      onSettingsPressOut={h.handleSettingsPressOut}
-      onSortPress={h.handleSortPress}
-      onSortPressIn={h.handleSortPressIn}
-      onSortPressOut={h.handleSortPressOut}
-      onTemplatesPress={h.handleTemplatesPress}
-      onTemplatesPressIn={h.handleTemplatesPressIn}
-      onTemplatesPressOut={h.handleTemplatesPressOut}
+      onSettingsPress={handlers.handleSettingsPress}
+      onSettingsPressIn={handlers.handleSettingsPressIn}
+      onSettingsPressOut={handlers.handleSettingsPressOut}
+      onSortPress={handlers.handleSortPress}
+      onSortPressIn={handlers.handleSortPressIn}
+      onSortPressOut={handlers.handleSortPressOut}
+      onTemplatesPress={handlers.handleTemplatesPress}
+      onTemplatesPressIn={handlers.handleTemplatesPressIn}
+      onTemplatesPressOut={handlers.handleTemplatesPressOut}
     />
   );
 
