@@ -1,16 +1,11 @@
-/** SettingsHeader - OPTIMIZED: FadeInDown, AnimatedPressable, X button */
+/** SettingsHeader - Theme-aware close button with spring press animation */
 import { X } from 'lucide-react-native';
 import { Text, View } from 'react-native';
-import Animated, {
-  FadeInDown,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { AnimatedPressable } from '../ui/AnimatedPressable';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsColors } from './types';
-
-const AnimatedPressable = Animated.createAnimatedComponent(View);
 
 interface SettingsHeaderProps {
   colors: SettingsColors;
@@ -23,10 +18,7 @@ export function SettingsHeader({
   paddingTop,
   onClose,
 }: SettingsHeaderProps) {
-  const scale = useSharedValue(1);
-  const animStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const { colors: themeColors } = useThemeColors();
 
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -35,7 +27,7 @@ export function SettingsHeader({
 
   return (
     <Animated.View
-      className='bg-background px-5 pb-4'
+      className='px-5 pb-4'
       entering={FadeInDown.duration(280).springify().damping(18)}
       style={{ backgroundColor: colors.background, paddingTop }}
     >
@@ -50,18 +42,15 @@ export function SettingsHeader({
         <AnimatedPressable
           accessibilityLabel='Close settings'
           accessibilityRole='button'
-          className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
-          style={animStyle}
-          onTouchCancel={() => {
-            scale.value = withSpring(1, { damping: 15 });
+          style={{
+            height: 40,
+            width: 40,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 20,
+            backgroundColor: themeColors.surface,
           }}
-          onTouchEnd={() => {
-            scale.value = withSpring(1, { damping: 15 });
-            handlePress();
-          }}
-          onTouchStart={() => {
-            scale.value = withSpring(0.9, { damping: 15 });
-          }}
+          onPress={handlePress}
         >
           <X color={colors.icon} size={20} strokeWidth={2.5} />
         </AnimatedPressable>
