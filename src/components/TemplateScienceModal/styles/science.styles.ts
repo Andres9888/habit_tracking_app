@@ -27,7 +27,7 @@ export const scienceStyles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   citationText: {
-    color: '#374151',
+    color: '#3D3833',
     fontSize: 15,
     fontStyle: 'italic',
     lineHeight: 24,

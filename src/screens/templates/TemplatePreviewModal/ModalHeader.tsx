@@ -34,7 +34,7 @@ export function ModalHeader({ disabled, onClose }: ModalHeaderProps) {
         style={styles.closeButton}
         onPress={onClose}
       >
-        <X color='#374151' size={24} strokeWidth={2.5} />
+        <X color='#3D3833' size={24} strokeWidth={2.5} />
       </Pressable>
     </View>
   );

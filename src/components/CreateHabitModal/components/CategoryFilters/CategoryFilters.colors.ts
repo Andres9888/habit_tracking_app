@@ -101,7 +101,7 @@ export const CATEGORY_COLORS: Record<string, CategoryColors> = {
 
 export const DEFAULT_COLORS: CategoryColors = {
   bg: '#f5f5f4',
-  bgSelected: '#374151',
+  bgSelected: '#3D3833',
   border: '#e7e5e4',
-  text: '#374151',
+  text: '#3D3833',
 };

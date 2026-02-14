@@ -10,7 +10,7 @@ export const layoutStyles = StyleSheet.create({
   },
   closeButton: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#FAF8F5',
     borderRadius: 16,
     height: 40,
     justifyContent: 'center',

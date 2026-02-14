@@ -13,7 +13,7 @@ export const LEVEL_COLORS = {
   high: '#10B981', // Green-300
   low: '#D1FAE5', // Gray-100
   medium: '#6EE7B7', // Green-100
-  none: '#F3F4F6', // Primary green
+  none: '#FAF8F5', // Primary green
 } as const;
 
 export const MONTH_NAMES = [

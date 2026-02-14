@@ -18,7 +18,7 @@ export const formStyles = StyleSheet.create({
     width: 44,
   },
   colorSwatchActive: {
-    borderColor: '#111827',
+    borderColor: '#1A1816',
     borderWidth: 3,
   },
   inputLabel: {
@@ -48,8 +48,8 @@ export const formStyles = StyleSheet.create({
     paddingVertical: 6,
   },
   reminderChipActive: {
-    backgroundColor: '#111827',
-    borderColor: '#111827',
+    backgroundColor: '#1A1816',
+    borderColor: '#1A1816',
   },
   reminderChipText: {
     fontSize: 13,

@@ -38,7 +38,7 @@ export function ColorPicker({
               styles.colorOption,
               {
                 backgroundColor: color,
-                borderColor: customColor === color ? '#1F2937' : 'transparent',
+                borderColor: customColor === color ? '#252220' : 'transparent',
                 borderWidth: customColor === color ? 3 : 0,
               },
             ]}

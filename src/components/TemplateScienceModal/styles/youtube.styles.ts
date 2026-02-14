@@ -32,7 +32,7 @@ export const youtubeStyles = StyleSheet.create({
     flex: 1,
   },
   youtubeTitle: {
-    color: '#111827',
+    color: '#1A1816',
     fontSize: typography.body.fontSize,
     fontWeight: '700',
     marginBottom: 2,

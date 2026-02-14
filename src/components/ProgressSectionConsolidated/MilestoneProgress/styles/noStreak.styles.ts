@@ -19,7 +19,7 @@ export const noStreakStyles = StyleSheet.create({
     flex: 1,
   },
   noStreakTitle: {
-    color: '#374151', // gray-700
+    color: '#3D3833', // gray-700
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },

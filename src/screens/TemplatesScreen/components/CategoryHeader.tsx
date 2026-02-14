@@ -45,7 +45,7 @@ export function CategoryHeader({
           style={styles.backButton}
           onPress={onBackPress}
         >
-          <ArrowLeft color='#374151' size={20} strokeWidth={2.5} />
+          <ArrowLeft color='#3D3833' size={20} strokeWidth={2.5} />
           <Text style={styles.backButtonText}>Back</Text>
         </Pressable>
       )}

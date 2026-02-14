@@ -22,7 +22,7 @@ export const heroStyles = StyleSheet.create({
   },
   frequencyPill: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#FAF8F5',
     borderRadius: borderRadius.xl,
     flexDirection: 'row',
     gap: 6,

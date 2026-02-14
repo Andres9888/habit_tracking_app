@@ -7,7 +7,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#FAF8F5',
     borderRadius: 16,
     height: 40,
     justifyContent: 'center',
@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
     zIndex: 10,
   },
   headerTitle: {
-    color: '#111827',
+    color: '#1A1816',
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.5,
@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   label: {
-    color: '#374151',
+    color: '#3D3833',
     fontSize: 13,
     fontWeight: '600',
     marginBottom: 8,

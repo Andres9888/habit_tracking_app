@@ -80,7 +80,7 @@ export function SectionHeader({
           <Text
             style={[
               styles.label,
-              { color: isExpanded ? colors.bgSelected : '#374151' },
+              { color: isExpanded ? colors.bgSelected : '#3D3833' },
             ]}
           >
             {label}

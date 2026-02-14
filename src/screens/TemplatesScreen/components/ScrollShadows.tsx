@@ -37,8 +37,8 @@ export function ScrollShadows({
               { backgroundColor: 'rgba(255, 255, 255, 0.9)' },
             ]}
           >
-            <ChevronDown color='#374151' size={16} strokeWidth={2.25} />
-            <Text style={[styles.scrollHintText, { color: '#374151' }]}>
+            <ChevronDown color='#3D3833' size={16} strokeWidth={2.25} />
+            <Text style={[styles.scrollHintText, { color: '#3D3833' }]}>
               Scroll for more
             </Text>
           </View>

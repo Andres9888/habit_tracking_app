@@ -69,7 +69,7 @@ export function SettingsContent(p: SettingsContentProps) {
                       style={{
                         backgroundColor: selected
                           ? isDark
-                            ? '#374151'
+                            ? '#3D3833'
                             : '#e5e7eb'
                           : 'transparent',
                       }}

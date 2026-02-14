@@ -34,10 +34,10 @@ export const TemplateHero = ({
         className='mr-4 h-11 w-11 items-center justify-center rounded-full bg-white shadow-md shadow-black/10'
         style={{ elevation: 2 }}
       >
-        <BookOpen color='#111827' size={20} strokeWidth={2} />
+        <BookOpen color='#1A1816' size={20} strokeWidth={2} />
       </View>
       <View className='h-[80px] flex-1'>
-        <Text className='text-lg font-bold text-[#111827]'>
+        <Text className='text-lg font-bold text-[#1A1816]'>
           {STRINGS.CREATE_HABIT.templateHeroTitle}
         </Text>
         <Text className='mt-1 text-[13px] font-normal text-stone-500'>
@@ -45,7 +45,7 @@ export const TemplateHero = ({
         </Text>
       </View>
       <Animated.View style={{ transform: [{ rotate: chevronRotation }] }}>
-        <ChevronRight color='#111827' size={18} strokeWidth={2.5} />
+        <ChevronRight color='#1A1816' size={18} strokeWidth={2.5} />
       </Animated.View>
     </AnimatedPressable>
   );

@@ -8,7 +8,7 @@ export const browseStyles = StyleSheet.create({
     marginBottom: 12,
   },
   backButtonText: {
-    color: '#374151',
+    color: '#3D3833',
     fontSize: 15,
     fontWeight: '600',
   },

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   infoPill: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#FAF8F5',
     borderRadius: 12,
     flex: 1,
     padding: 12,

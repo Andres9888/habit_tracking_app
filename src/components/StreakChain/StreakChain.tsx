@@ -54,7 +54,7 @@ export default function StreakChain({
               <View
                 className='items-center justify-center'
                 style={{
-                  backgroundColor: isDone ? '#3B82F6' : '#E5E7EB',
+                  backgroundColor: isDone ? '#3B82F6' : '#DDD8D2',
                   borderRadius: circleSize / 2,
                   height: circleSize,
                   opacity: isFuture ? 0.5 : 1,
@@ -72,7 +72,7 @@ export default function StreakChain({
                 <View
                   className='mx-1.5 h-0.5 w-[18px] rounded-sm'
                   style={{
-                    backgroundColor: connectorActive ? '#93C5FD' : '#E5E7EB',
+                    backgroundColor: connectorActive ? '#93C5FD' : '#DDD8D2',
                   }}
                 />
               )}

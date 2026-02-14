@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   description: {
-    color: '#374151',
+    color: '#3D3833',
     fontSize: typography.bodySmall.fontSize,
     lineHeight: 20,
     marginTop: 4,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    color: '#111827',
+    color: '#1A1816',
     fontSize: typography.heading2.fontSize,
     fontWeight: '700',
   },

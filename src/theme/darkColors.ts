@@ -1,57 +1,52 @@
 /**
- * Dark Mode Color Palette
- * Mirrors the light mode semantic structure with dark-appropriate values.
+ * Dark Mode Color Palette — Warm Dark
+ *
+ * Uses warm brown-black tones that harmonize with the light mode
+ * warm stone palette. Avoids cool blue-grays (Tailwind defaults)
+ * to maintain consistent warmth across both modes.
+ *
+ * Base: warm charcoal (#1A1816) from gray.900
+ * Surfaces lift with warm undertones, not blue ones.
  */
 
 export const darkColors = {
-  background: '#111827',
+  background: '#1A1816', // Warm charcoal (matches gray.900)
 
-  border: '#374151',
+  border: '#3D3833', // Warm border (matches gray.700)
 
-  // gray-800
-  card: '#1F2937',
+  card: '#252220', // Warm elevated surface
 
-  // gray-800
-  cardBorder: '#374151',
+  cardBorder: '#3D3833',
 
   gray: {
-    50: '#111827',
-    100: '#1F2937',
-    200: '#374151',
-    300: '#4B5563',
-    400: '#6B7280',
-    500: '#9CA3AF',
-    600: '#D1D5DB',
-    700: '#E5E7EB',
-    800: '#F3F4F6',
-    900: '#F9FAFB',
+    50: '#1A1816', // Inverted: darkest at 50
+    100: '#252220', // Card-level surface
+    200: '#3D3833', // Borders, dividers
+    300: '#524D47', // Subtle separators
+    400: '#6B6560', // Placeholder text
+    500: '#9C958D', // Secondary text
+    600: '#C4BFB7', // Body text on dark
+    700: '#DDD8D2', // Headings on dark
+    800: '#F5F1ED', // High-emphasis text
+    900: '#FAF8F5', // Maximum contrast
   },
 
-  // gray-700
-  // Semantic colors stay the same but slightly adjusted for dark bg
   primary: {
-    100: '#064E3B', // emerald-900
-    300: '#059669',
-    400: '#10B981',
-    500: '#34D399', // brighter on dark
-    600: '#6EE7B7',
-    700: '#A7F3D0',
+    100: '#1B3A2E', // Deep forest tint
+    300: '#2A9D6E', // Matches light 500
+    400: '#3FBD7E', // Same as light 400
+    500: '#6FCF9A', // Brighter on dark (matches light 300)
+    600: '#8EDBB2', // Light enough for dark bg text
+    700: '#D4F0E2', // Maximum contrast green
   },
 
-  // gray-900
-  surface: '#1F2937',
+  surface: '#252220', // Warm elevated surface
 
-  // gray-700
   text: {
-    // gray-500
-    inverse: '#111827',
-
-    primary: '#F9FAFB',
-
-    // gray-50
-    secondary: '#9CA3AF',
-    // gray-400
-    tertiary: '#6B7280', // gray-900
+    inverse: '#1A1816',
+    primary: '#FAF8F5', // Warm white (from gray.50)
+    secondary: '#9C958D', // Warm mid-gray (from gray.400)
+    tertiary: '#6B6560', // Warm dim (from gray.500)
   },
 } as const;
 

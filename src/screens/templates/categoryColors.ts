@@ -98,8 +98,8 @@ export const CATEGORY_COLORS: Record<string, CategoryColorTokens> = {
 };
 
 export const DEFAULT_CATEGORY_COLORS: CategoryColorTokens = {
-  bg: '#F3F4F6',
-  bgSelected: '#374151',
-  border: '#E5E7EB',
-  text: '#374151',
+  bg: '#FAF8F5',
+  bgSelected: '#3D3833',
+  border: '#DDD8D2',
+  text: '#3D3833',
 };

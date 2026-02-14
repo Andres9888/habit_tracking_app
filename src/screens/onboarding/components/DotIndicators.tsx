@@ -22,7 +22,7 @@ export function DotIndicators({ count, currentIndex }: DotIndicatorsProps) {
           style={[
             styles.dot,
             {
-              backgroundColor: i === currentIndex ? '#059669' : '#D1D5DB',
+              backgroundColor: i === currentIndex ? '#059669' : '#C4BFB7',
               width: i === currentIndex ? 24 : 8,
             },
           ]}

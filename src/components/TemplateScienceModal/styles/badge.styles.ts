@@ -20,7 +20,7 @@ export const badgeStyles = StyleSheet.create({
   },
   readingTimePill: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#FAF8F5',
     borderRadius: 16,
     flexDirection: 'row',
     gap: 6,
@@ -36,7 +36,7 @@ export const badgeStyles = StyleSheet.create({
     alignItems: 'center',
   },
   templateName: {
-    color: '#111827',
+    color: '#1A1816',
     fontSize: 28,
     fontWeight: '800',
     letterSpacing: -0.5,

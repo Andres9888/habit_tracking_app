@@ -25,14 +25,14 @@ export const DEFAULT_COLORS: SettingsColors = {
 };
 
 export const DARK_COLORS: SettingsColors = {
-  accent: '#F9FAFB',
-  background: '#111827',
-  card: '#1F2937',
-  cardBorder: '#374151',
-  headerText: '#F9FAFB',
-  icon: '#F9FAFB',
-  mutedText: '#9CA3AF',
-  versionText: '#9CA3AF',
+  accent: '#FAF8F5',
+  background: '#1A1816',
+  card: '#252220',
+  cardBorder: '#3D3833',
+  headerText: '#FAF8F5',
+  icon: '#FAF8F5',
+  mutedText: '#9C958D',
+  versionText: '#9C958D',
 };
 
 export function getSettingsColors(

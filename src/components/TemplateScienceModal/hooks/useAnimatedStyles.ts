@@ -78,7 +78,7 @@ export const useAnimatedStyles = (values: AnimationValues) => {
     return {
       borderBottomColor:
         interpolate(values.scrollY.value ?? 0, [0, 50], [0, 1]) > 0.5
-          ? '#E5E7EB'
+          ? '#DDD8D2'
           : 'transparent',
     };
   });

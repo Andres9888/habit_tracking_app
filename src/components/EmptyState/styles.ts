@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
     fontSize: typography.body.fontSize,
   },
   templateName: {
-    color: '#374151',
+    color: '#3D3833',
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },

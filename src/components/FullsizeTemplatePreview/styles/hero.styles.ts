@@ -13,7 +13,7 @@ export const heroStyles = StyleSheet.create({
     paddingTop: 20,
   },
   descriptionText: {
-    color: '#4B5563',
+    color: '#524D47',
     fontSize: typography.body.fontSize,
     lineHeight: 26,
     textAlign: 'center',

@@ -13,11 +13,11 @@ export const colors = {
 
   border: '#DDD8D2',
 
-  // Dark Mode (Future)
+  // Dark Mode — warm dark tones (harmonize with warm stone light palette)
   dark: {
-    background: '#111827',
-    card: '#374151',
-    surface: '#1F2937',
+    background: '#1A1816',
+    card: '#252220',
+    surface: '#252220',
   },
 
   error: '#C93B3B',

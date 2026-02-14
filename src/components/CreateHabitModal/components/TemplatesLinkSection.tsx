@@ -83,7 +83,7 @@ export const TemplatesLinkSection = ({
 
           {/* Text content */}
           <View className='flex-1'>
-            <Text className='text-sm font-semibold text-[#1F2937]'>
+            <Text className='text-sm font-semibold text-[#252220]'>
               Need inspiration?
             </Text>
             <Text className='mt-0.5 text-xs text-[#78716c]'>

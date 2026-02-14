@@ -55,7 +55,7 @@ export function useAnimatedStyles({
     color: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      ['#374151', '#ffffff']
+      ['#3D3833', '#ffffff']
     ),
   }));
 

@@ -9,7 +9,7 @@ import { typography } from '../../../theme/typography';
 
 export const sectionStyles = StyleSheet.create({
   descriptionText: {
-    color: '#4B5563',
+    color: '#524D47',
     fontSize: typography.body.fontSize,
     lineHeight: 26,
   },
@@ -41,7 +41,7 @@ export const sectionStyles = StyleSheet.create({
     fontSize: 17,
   },
   sectionTitle: {
-    color: '#111827',
+    color: '#1A1816',
     fontSize: 17,
     fontWeight: '700',
     letterSpacing: -0.3,

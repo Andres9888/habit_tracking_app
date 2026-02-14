@@ -43,11 +43,11 @@ export function IconButtonGroup({
   onSettingsPressOut,
 }: IconButtonGroupProps) {
   const { isDark } = useThemeColors();
-  const iconColor = isDark ? '#D1D5DB' : '#44403c';
-  const dividerBg = isDark ? '#374151' : undefined;
+  const iconColor = isDark ? '#C4BFB7' : '#44403c';
+  const dividerBg = isDark ? '#3D3833' : undefined;
   return (
     <View className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'
-      style={isDark ? { borderColor: '#374151', backgroundColor: 'rgba(31,41,55,0.8)' } : undefined}
+      style={isDark ? { borderColor: '#3D3833', backgroundColor: 'rgba(37,34,32,0.8)' } : undefined}
     >
       {/* Templates Button - highlighted with subtle purple bg */}
       <Animated.View style={templatesAnimatedStyle}>

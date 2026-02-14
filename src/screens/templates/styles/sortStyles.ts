@@ -43,7 +43,7 @@ export const sortStyles = StyleSheet.create({
     backgroundColor: '#f0fdf4',
   },
   sortDropdownOptionText: {
-    color: '#374151',
+    color: '#3D3833',
     fontSize: 15,
     fontWeight: '500',
   },

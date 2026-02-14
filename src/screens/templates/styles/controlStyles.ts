@@ -12,8 +12,8 @@ export const controlStyles = StyleSheet.create({
     paddingVertical: 10,
   },
   controlButtonActive: {
-    backgroundColor: '#111827',
-    borderColor: '#111827',
+    backgroundColor: '#1A1816',
+    borderColor: '#1A1816',
   },
   controlButtonText: {
     color: '#1c1917',
