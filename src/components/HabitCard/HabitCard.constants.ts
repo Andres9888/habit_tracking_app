@@ -7,4 +7,7 @@
 export const SWIPE_THRESHOLD = -100;
 
 /** Width of each action button (edit/delete) */
-export const ACTION_WIDTH = 80;
+export const ACTION_WIDTH = 72;
+
+/** Total width of the swipe actions area (two buttons + gap + padding) */
+export const SWIPE_ACTIONS_WIDTH = ACTION_WIDTH * 2 + 6 + 8;

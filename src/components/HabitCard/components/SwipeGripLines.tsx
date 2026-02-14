@@ -6,19 +6,22 @@
 
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 const GRIP_LINE_COUNT = 3;
-const GRIP_LINE_COLOR = 'rgba(0, 0, 0, 0.10)';
 
 export function SwipeGripLines() {
+  const { isDark } = useThemeColors();
+  const lineColor = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.10)';
+
   return (
     <View
       accessibilityElementsHidden
-      importantForAccessibility='no-hide-descendants'
+      importantForAccessibility="no-hide-descendants"
       style={gripStyles.container}
     >
       {Array.from({ length: GRIP_LINE_COUNT }).map((_, i) => (
-        <View key={i} style={gripStyles.line} />
+        <View key={i} style={[gripStyles.line, { backgroundColor: lineColor }]} />
       ))}
     </View>
   );
@@ -34,7 +37,6 @@ const gripStyles = StyleSheet.create({
     paddingVertical: 16,
   },
   line: {
-    backgroundColor: GRIP_LINE_COLOR,
     borderRadius: 1,
     height: 20,
     width: 2,
