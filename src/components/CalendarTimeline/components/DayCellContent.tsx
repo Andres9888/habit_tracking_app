@@ -2,9 +2,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 
 import {
-  FUTURE_DATE_TEXT_COLOR,
-  TODAY_HIGHLIGHT,
-  TODAY_SHADOW,
+  getTodayHighlight,
+  getTodayShadow,
 } from '../CalendarTimeline.styles';
 import type {
   CalendarColors,
@@ -25,6 +24,7 @@ interface DayCellContentProps {
     highContrastBorder?: string;
   };
   reduceMotion: boolean;
+  isDark?: boolean;
   pressed?: boolean;
 }
 
@@ -38,54 +38,62 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
   hasCompletionData,
   colors,
   reduceMotion,
+  isDark = false,
   pressed = false,
-}) => (
-  <>
-    <Text
-      className='text-center text-[13px] font-normal leading-[18px]'
-      style={{ color: colors.secondaryText }}
-    >
-      {weekday}
-    </Text>
+}) => {
+  const todayHighlight = getTodayHighlight(isDark);
+  const todayShadow = getTodayShadow(isDark);
+  const futureTextColor = isDark ? colors.secondaryText : '#d6d3d1';
 
-    <View
-      className='h-9 w-9 items-center justify-center rounded-xl'
-      style={{
-        backgroundColor: isCurrentDay
-          ? TODAY_HIGHLIGHT.background
-          : colors.dayBackground,
-        borderColor: isCurrentDay
-          ? TODAY_HIGHLIGHT.border
-          : (colors.highContrastBorder ?? 'transparent'),
-        borderWidth: isCurrentDay ? 2 : (colors.borderWidth ?? 0),
-        ...(isCurrentDay && TODAY_SHADOW),
-        ...(pressed && !reduceMotion && { transform: [{ scale: 0.95 }] }),
-        ...(pressed && { opacity: 0.7 }),
-      }}
-    >
+  return (
+    <>
       <Text
-        className='text-center text-[17px] leading-[22px]'
+        className='text-center text-[13px] font-normal leading-[18px]'
+        style={{ color: colors.secondaryText }}
+      >
+        {weekday}
+      </Text>
+
+      <View
+        className='h-9 w-9 items-center justify-center rounded-xl'
         style={{
-          color: isCurrentDay
-            ? TODAY_HIGHLIGHT.text
-            : isUpcoming
-              ? FUTURE_DATE_TEXT_COLOR
-              : colors.dayText,
-          fontWeight: isCurrentDay ? '700' : '600',
+          backgroundColor: isCurrentDay
+            ? todayHighlight.background
+            : colors.dayBackground,
+          borderColor: isCurrentDay
+            ? todayHighlight.border
+            : (colors.highContrastBorder ?? 'transparent'),
+          borderWidth: isCurrentDay ? 2 : (colors.borderWidth ?? 0),
+          ...(isCurrentDay && todayShadow),
+          ...(pressed && !reduceMotion && { transform: [{ scale: 0.95 }] }),
+          ...(pressed && { opacity: 0.7 }),
         }}
       >
-        {dayNumber}
-      </Text>
-    </View>
-
-    {hasCompletionData && (
-      <View className='mt-1 h-2 items-center justify-center'>
-        <CompletionDot
-          isToday={isCurrentDay}
-          reduceMotion={reduceMotion}
-          status={completionStatus}
-        />
+        <Text
+          className='text-center text-[17px] leading-[22px]'
+          style={{
+            color: isCurrentDay
+              ? todayHighlight.text
+              : isUpcoming
+                ? futureTextColor
+                : colors.dayText,
+            fontWeight: isCurrentDay ? '700' : '600',
+          }}
+        >
+          {dayNumber}
+        </Text>
       </View>
-    )}
-  </>
-);
+
+      {hasCompletionData && (
+        <View className='mt-1 h-2 items-center justify-center'>
+          <CompletionDot
+            isDark={isDark}
+            isToday={isCurrentDay}
+            reduceMotion={reduceMotion}
+            status={completionStatus}
+          />
+        </View>
+      )}
+    </>
+  );
+};

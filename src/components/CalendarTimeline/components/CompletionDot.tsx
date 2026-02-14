@@ -2,17 +2,18 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
 import {
-  COMPLETE_DOT_GLOW,
-  COMPLETION_DOT_COLORS,
+  getCompletionDotColors,
+  getCompleteDotGlow,
   COMPLETION_DOT_SIZES,
 } from '../CalendarTimeline.styles';
 import type { CompletionDotProps } from '../CalendarTimeline.types';
 
 /** Animated completion indicator dot */
-export const CompletionDot: React.FC<CompletionDotProps> = ({
+export const CompletionDot: React.FC<CompletionDotProps & { isDark?: boolean }> = ({
   status,
   reduceMotion = false,
   isToday = false,
+  isDark = false,
 }) => {
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -62,7 +63,8 @@ export const CompletionDot: React.FC<CompletionDotProps> = ({
     };
   }, [status, reduceMotion, isToday, scaleAnim, pulseAnim]);
 
-  const color = COMPLETION_DOT_COLORS[status];
+  const dotColors = getCompletionDotColors(isDark);
+  const color = dotColors[status];
   const size = COMPLETION_DOT_SIZES[status];
 
   return (
@@ -76,7 +78,7 @@ export const CompletionDot: React.FC<CompletionDotProps> = ({
           { scale: isToday && status !== 'complete' ? pulseAnim : 1 },
         ],
         width: size,
-        ...(status === 'complete' && COMPLETE_DOT_GLOW),
+        ...(status === 'complete' && getCompleteDotGlow(isDark)),
       }}
     />
   );

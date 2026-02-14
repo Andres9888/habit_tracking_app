@@ -2,8 +2,12 @@ import React, { memo } from 'react';
 import { View } from 'react-native';
 import { format } from 'date-fns';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useCalendarTimelineLogic } from './CalendarTimeline.hooks';
-import { CONTAINER_SHADOW, getColors } from './CalendarTimeline.styles';
+import {
+  getThemeAwareColors,
+  getContainerStyle,
+} from './CalendarTimeline.styles';
 import type {
   CalendarTimelineProps,
   CompletionStatus,
@@ -21,9 +25,12 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   onDayPress,
   isDayPressEnabled,
   disableFutureDayPress = true,
+  showSeparator,
 }) => {
   const { isToday, isFuture } = useCalendarTimelineLogic();
-  const colors = getColors(highContrastMode);
+  const { colors: themeColors, isDark } = useThemeColors();
+  const colors = getThemeAwareColors(themeColors, isDark, highContrastMode);
+  const containerStyle = getContainerStyle(themeColors, isDark, highContrastMode);
 
   const getCompletionStatus = (date: Date): CompletionStatus => {
     if (isFuture(date)) return 'future';
@@ -57,12 +64,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   return (
     <View
       className='mb-4 rounded-2xl px-3 pb-3 pt-2'
-      style={{
-        backgroundColor: highContrastMode ? 'transparent' : '#ffffff',
-        borderColor: highContrastMode ? 'transparent' : '#f5f5f4',
-        borderWidth: highContrastMode ? 0 : 1,
-        ...CONTAINER_SHADOW,
-      }}
+      style={containerStyle}
     >
       <WeekNavigationHeader
         canNavigateForward={canNavigateForward}
@@ -83,6 +85,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             hasCompletionData={hasCompletionData}
             index={index}
             isCurrentDay={isToday(date)}
+            isDark={isDark}
             isDayPressEnabled={isDayPressEnabled ?? !!onDayPress}
             isUpcoming={isFuture(date)}
             reduceMotion={reduceMotion}

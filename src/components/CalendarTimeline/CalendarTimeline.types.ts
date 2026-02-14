@@ -52,6 +52,7 @@ export interface DayCellProps {
   hasCompletionData: boolean;
   colors: CalendarColors;
   reduceMotion: boolean;
+  isDark?: boolean;
   onDayPress?: (date: Date) => void;
   isDayPressEnabled: boolean;
   disableFutureDayPress: boolean;

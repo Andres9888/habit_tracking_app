@@ -2,7 +2,7 @@
  * CalendarTimeline Theme
  *
  * Centralized color configurations for calendar timeline variants.
- * Supports both standard and high-contrast modes.
+ * Supports standard, dark, and high-contrast modes.
  */
 
 /**
@@ -28,17 +28,31 @@ export interface CalendarTimelineColors {
 }
 
 /**
- * Standard color scheme (default)
+ * Standard color scheme (light mode)
  */
 const STANDARD_COLORS: CalendarTimelineColors = {
-  currentDayBackground: '#1a1a1a',
+  currentDayBackground: '#1c1917',
   currentDayText: '#ffffff',
   dayBackground: '#ffffff',
   dayBorder: 'transparent',
-  dayText: '#1a1a1a',
-  icon: '#1a1a1a',
-  primaryText: '#1a1a1a',
-  secondaryText: '#6B7280',
+  dayText: '#57534e',
+  icon: '#78716c',
+  primaryText: '#1c1917',
+  secondaryText: '#a8a29e',
+};
+
+/**
+ * Dark mode color scheme
+ */
+const DARK_COLORS: CalendarTimelineColors = {
+  currentDayBackground: '#fbbf24', // amber-400
+  currentDayText: '#1c1917',
+  dayBackground: '#1F2937', // gray-800
+  dayBorder: 'transparent',
+  dayText: '#9CA3AF', // gray-400
+  icon: '#6B7280', // gray-500
+  primaryText: '#F9FAFB', // gray-50
+  secondaryText: '#6B7280', // gray-500
 };
 
 /**
@@ -56,25 +70,25 @@ const HIGH_CONTRAST_COLORS: CalendarTimelineColors = {
 };
 
 /**
- * Get color theme based on high contrast mode setting
+ * Get color theme based on mode settings
  *
  * @param highContrastMode - Whether high contrast mode is enabled
+ * @param isDark - Whether dark mode is active
  * @returns Color theme object
- *
- * @example
- * const colors = getCalendarTimelineColors(settings.highContrastMode);
- * <Text style={{ color: colors.primaryText }}>Date Range</Text>
  */
 export function getCalendarTimelineColors(
-  highContrastMode: boolean
+  highContrastMode: boolean,
+  isDark = false
 ): CalendarTimelineColors {
-  return highContrastMode ? HIGH_CONTRAST_COLORS : STANDARD_COLORS;
+  if (highContrastMode) return HIGH_CONTRAST_COLORS;
+  return isDark ? DARK_COLORS : STANDARD_COLORS;
 }
 
 /**
  * Export individual themes for direct access if needed
  */
 export const CALENDAR_THEMES = {
+  dark: DARK_COLORS,
   highContrast: HIGH_CONTRAST_COLORS,
   standard: STANDARD_COLORS,
 } as const;
