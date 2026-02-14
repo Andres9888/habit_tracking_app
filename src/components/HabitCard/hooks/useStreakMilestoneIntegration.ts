@@ -7,6 +7,7 @@
  */
 
 import { useEffect, useRef } from 'react';
+import * as Haptics from 'expo-haptics';
 import { useStreakMilestone } from '../../StreakMilestoneCelebration';
 
 interface UseStreakMilestoneIntegrationOptions {
@@ -51,6 +52,9 @@ export function useStreakMilestoneIntegration({
 
     if (justCompleted && currentStreak > previousStreakRef.current) {
       // Habit was just completed and streak increased - check for milestone
+      void Haptics.notificationAsync(
+        Haptics.NotificationFeedbackType.Success
+      ).catch(() => {});
       checkAndCelebrate(
         habitId,
         habitName,

@@ -59,6 +59,9 @@ export function useCenteredFormCallbacks({
   );
 
   const handleValidationError = useCallback(() => {
+    void Haptics.notificationAsync(
+      Haptics.NotificationFeedbackType.Warning
+    ).catch(() => {});
     setShowNameError(true);
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(
@@ -69,6 +72,9 @@ export function useCenteredFormCallbacks({
 
   const handleReminderToggle = useCallback(
     (enabled: boolean) => {
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
+        () => {}
+      );
       form.setRemindersEnabled(enabled);
       // Auto-scroll to show reminder options when enabled
       if (enabled) {

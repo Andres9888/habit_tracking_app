@@ -13,6 +13,7 @@ describe('ConfettiBurst', () => {
       <ConfettiBurst active={false} onComplete={onComplete} />
     );
 
+    // Component should not render particles when inactive
     expect(queryByTestId('confetti-burst')).toBeNull();
   });
 
@@ -22,6 +23,7 @@ describe('ConfettiBurst', () => {
       <ConfettiBurst active={true} onComplete={onComplete} />
     );
 
+    // Component should render when active
     expect(queryByTestId('confetti-burst')).toBeTruthy();
   });
 

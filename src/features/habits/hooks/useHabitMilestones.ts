@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import * as Haptics from 'expo-haptics';
 
 import type { Habit } from '../types';
 import { useMilestoneDetection } from '../../../hooks/useMilestoneDetection';
@@ -40,7 +41,11 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
   }, [habits, isLoading]);
 
   useEffect(() => {
-    // milestone detected - celebration UI handles display
+    if (milestone) {
+      void Haptics.notificationAsync(
+        Haptics.NotificationFeedbackType.Success
+      ).catch(() => {});
+    }
   }, [milestone]);
 
   const resetMilestone = () => {

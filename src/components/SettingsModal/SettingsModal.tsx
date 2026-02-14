@@ -100,25 +100,17 @@ function SettingsModalContent({
               onClose={handleClose}
             />
             <SettingsContent
-              archivedHabitsCount={archivedHabitsCount}
-              bottomInset={insets.bottom}
               colors={colors}
-              completionSoundEnabled={completionSoundEnabled}
               dayShape={dayShape}
               habitCompletionIcon={habitCompletionIcon}
-              habitSortMode={habitSortMode}
               isHighContrastActive={isHighContrastActive}
               isPremium={isPremium}
-              showGradientFill={showGradientFill}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
-              onChangeCompletionSoundEnabled={onChangeCompletionSoundEnabled}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
-              onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
-              onOpenSortPicker={handleOpenSortSheet}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
             />
