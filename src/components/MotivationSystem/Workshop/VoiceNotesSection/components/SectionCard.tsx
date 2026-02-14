@@ -1,6 +1,7 @@
 /**
  * SectionCard - Card with press animation (app-card style, 16px radius, subtle shadow)
  */
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { View, Pressable } from 'react-native';
 import Animated, {
@@ -10,7 +11,6 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../../animations';
 import { shadows } from '../../../../../theme/spacing';
 
@@ -59,7 +59,7 @@ export function SectionCard({
   }, [scale, shadowOpacity, elevation]);
 
   const handlePress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress?.();
   }, [onPress]);
 

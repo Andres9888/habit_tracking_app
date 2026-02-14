@@ -6,9 +6,8 @@
  */
 /* eslint-disable max-lines, max-lines-per-function */
 
+import { triggerHaptic } from '@/utils/haptics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Haptics from 'expo-haptics';
-import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -241,7 +240,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
     setIsLoading(true);
-    void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     try {
       await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
       onComplete();
@@ -251,12 +250,12 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   }, [onComplete, isLoading]);
 
   const handleSkip = useCallback(() => {
-    void Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     void handleComplete();
   }, [handleComplete]);
 
   const handleNext = useCallback(() => {
-    void Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     if (currentIndex < PAGES.length - 1) {
       flatListRef.current?.scrollToIndex({
         animated: true,

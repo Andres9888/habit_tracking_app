@@ -1,5 +1,5 @@
+import { triggerHaptic } from '@/utils/haptics';
 import { Platform, Pressable, ScrollView, Text } from 'react-native';
-import * as Haptics from 'expo-haptics';
 
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { HabitSortMode } from '../../types';
@@ -39,9 +39,7 @@ export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
             }}
             onPress={() => {
               if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
-                  () => {}
-                );
+                triggerHaptic('tap');
               }
               onSelect(option.value);
             }}

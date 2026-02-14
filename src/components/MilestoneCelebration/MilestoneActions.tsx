@@ -2,11 +2,11 @@
  * Action buttons for MilestoneCelebration
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { Button } from '../Button/Button';
 import { styles } from './styles';
 
@@ -25,13 +25,13 @@ export function MilestoneActions({
 }: MilestoneActionsProps) {
   const handleShare = useCallback(() => {
     if (onShare) {
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      triggerHaptic('toggle');
       onShare();
     }
   }, [onShare]);
 
   const handleContinue = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onClose();
   }, [onClose]);
 

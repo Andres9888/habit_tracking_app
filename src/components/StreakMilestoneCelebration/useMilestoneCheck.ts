@@ -7,9 +7,9 @@
  * Integrates with haptic feedback for celebration
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
 import {
   checkStreakMilestoneCrossed,
@@ -96,11 +96,7 @@ export function useMilestoneCheck({
       // Trigger success haptic feedback
       if (Platform.OS === 'ios' || Platform.OS === 'android') {
         setTimeout(() => {
-          Haptics.notificationAsync(
-            Haptics.NotificationFeedbackType.Success
-          ).catch(() => {
-            // Silently fail - haptics are non-critical
-          });
+          triggerHaptic('success');
         }, ANIMATION_TIMING.HAPTIC_DELAY);
       }
     }
@@ -174,9 +170,7 @@ export async function checkAndTriggerMilestone(
 
     // Trigger haptic
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
-      await Haptics.notificationAsync(
-        Haptics.NotificationFeedbackType.Success
-      ).catch(() => {});
+      triggerHaptic('success');
     }
 
     return crossedMilestone;

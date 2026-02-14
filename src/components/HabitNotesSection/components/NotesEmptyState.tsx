@@ -1,4 +1,5 @@
 /** NotesEmptyState - OPTIMIZED: Better animation, haptics, engaging illustration */
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { StickyNote, Plus } from 'lucide-react-native';
@@ -8,7 +9,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 interface NotesEmptyStateProps {
   onAddNote: () => void;
@@ -31,7 +31,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   };
 
   const handlePress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onAddNote();
   };
 

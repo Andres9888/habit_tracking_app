@@ -2,9 +2,9 @@
  * Tab bar component with animated indicator
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { Pressable, Text, type LayoutChangeEvent } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { styles } from '../../templates/templatesScreenStyles';
 import type { BrowseTab } from '../TemplatesScreen.types';
 
@@ -28,12 +28,12 @@ export function TabBar({
   tabIndicatorStyle,
 }: TabBarProps) {
   const handleCategoriesPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onTabPress('categories');
   };
 
   const handleAllPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onTabPress('all');
   };
 

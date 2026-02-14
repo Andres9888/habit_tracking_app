@@ -3,10 +3,10 @@
  * Preview and Import action buttons for the spotlight hero
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ArrowRight } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { shadows } from '../../../theme/spacing';
 
 interface ActionButtonsProps {
@@ -23,12 +23,12 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onImport,
 }) => {
   const handlePreview = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPreview();
   };
 
   const handleImport = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onImport();
   };
 

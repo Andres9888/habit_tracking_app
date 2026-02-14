@@ -2,8 +2,8 @@
  * Hook for TemplatePreviewModal business logic
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useState, useEffect, useCallback } from 'react';
-import * as Haptics from 'expo-haptics';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { DEFAULT_ICON_COLOR, safeColor } from './constants';
 import type { TemplateCustomizations } from './types';
@@ -39,7 +39,7 @@ export function useTemplatePreview({
   const handleImport = useCallback(() => {
     if (!template) return;
 
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
 
     const customizations: TemplateCustomizations = {};
 
@@ -57,17 +57,17 @@ export function useTemplatePreview({
   }, [template, customName, customColor, reminderTime, showTimePicker, onImport]);
 
   const handleClose = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onClose();
   }, [onClose]);
 
   const handleColorSelect = useCallback((color: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setCustomColor(color);
   }, []);
 
   const handleTimeChange = useCallback((time: Date) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setReminderTime(time);
   }, []);
 

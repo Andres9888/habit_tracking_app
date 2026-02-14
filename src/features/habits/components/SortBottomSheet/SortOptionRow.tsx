@@ -1,8 +1,8 @@
+import { triggerHaptic } from '@/utils/haptics';
 import { Check } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface SortOptionRowProps {
@@ -46,7 +46,7 @@ export function SortOptionRow({
   const { colors: themeColors, isDark } = useThemeColors();
 
   const handlePress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   };
 

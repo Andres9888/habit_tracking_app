@@ -2,6 +2,7 @@
  * DoneButton - Primary CTA with celebratory styling and glow effect
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback, useEffect } from 'react';
 import { Pressable, Text } from 'react-native';
 import Animated, {
@@ -12,7 +13,6 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
 import { SPRING_BUTTON } from '../constants';
 import type { DoneButtonProps } from '../types';
@@ -56,7 +56,7 @@ export function DoneButton({ onPress, reduceMotion = false }: DoneButtonProps) {
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onPress();
   }, [onPress]);
 

@@ -1,3 +1,4 @@
+import { triggerHaptic } from '@/utils/haptics';
 import { Alert, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
@@ -5,7 +6,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { X } from 'lucide-react-native';
 
 import CustomModal from '../../../../components/Modal';
@@ -36,7 +36,7 @@ export function VisualizationModalSection({
   }));
 
   const handleClose = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     closeVisualizationExercise();
   };
 

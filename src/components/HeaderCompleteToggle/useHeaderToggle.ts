@@ -1,3 +1,4 @@
+import { triggerHaptic } from '@/utils/haptics';
 import { getTodayString } from '../../utils/getLocalDateString';
 /**
  * Hook for HeaderCompleteToggle toggle logic
@@ -10,7 +11,6 @@ import {
   withTiming,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
@@ -49,11 +49,7 @@ export function useHeaderToggle({
     setIsToggling(true);
 
     // Haptic feedback
-    Haptics.impactAsync(
-      localCompleted
-        ? Haptics.ImpactFeedbackStyle.Light
-        : Haptics.ImpactFeedbackStyle.Medium
-    );
+    triggerHaptic(localCompleted ? 'tap' : 'toggle');
 
     // Button animation
     buttonScale.value = withSequence(

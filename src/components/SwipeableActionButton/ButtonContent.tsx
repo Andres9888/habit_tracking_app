@@ -2,11 +2,11 @@
  * ButtonContent - The main pressable button content
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { clsx } from 'clsx';
 
 interface ButtonContentProps {
@@ -45,7 +45,7 @@ export function ButtonContent({
         !isDestructive && !isBoost && 'border-stone-200 bg-white/80'
       )}
       onPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        triggerHaptic('tap');
         onPress();
       }}
     >

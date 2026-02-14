@@ -1,6 +1,6 @@
+import { triggerHaptic } from '@/utils/haptics';
 import { Text, Pressable } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 interface ScreenHeaderProps {
@@ -9,7 +9,7 @@ interface ScreenHeaderProps {
 
 export function ScreenHeader({ onBack }: ScreenHeaderProps) {
   const handleBack = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onBack?.();
   };
 

@@ -6,9 +6,9 @@
  * Key insight: Visualize FAILURE when unmotivated (fear drives action 2x)
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback, useState } from 'react';
 import { View, Text } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from './components/SectionCard';
 import { AnimatedSection } from './components/AnimatedSection';
@@ -31,7 +31,7 @@ export function DualVizSetup({
   const isComplete = isVizComplete(visualization);
 
   const handleHelpPress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setShowExplainer(true);
   }, []);
 

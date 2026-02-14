@@ -2,6 +2,7 @@
  * Hook for GenerateAffirmationsButton logic
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import {
@@ -9,7 +10,6 @@ import {
   withSpring,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../animations';
 import { SUCCESS_FEEDBACK_DURATION } from './constants';
 
@@ -37,7 +37,7 @@ export function useGenerateButton({
 
   const handlePress = useCallback(async () => {
     if (!isPremium) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+      triggerHaptic('warning');
       onPremiumRequired();
       return;
     }
@@ -52,18 +52,18 @@ export function useGenerateButton({
       return;
     }
 
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
 
     try {
       await onGenerate();
 
       setShowSuccess(true);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      triggerHaptic('success');
 
       setTimeout(() => setShowSuccess(false), SUCCESS_FEEDBACK_DURATION);
     } catch (error) {
       if (__DEV__) console.error('Failed to generate affirmations:', error);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      triggerHaptic('error');
 
       Alert.alert(
         'Generation Failed',

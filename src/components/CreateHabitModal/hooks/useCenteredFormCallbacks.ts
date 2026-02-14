@@ -4,10 +4,10 @@
  * Provides memoized form callbacks for CreateHabitModalCentered.
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback, type RefObject } from 'react';
 import { Platform } from 'react-native';
 import type { ScrollView as ScrollViewType } from 'react-native';
-import * as Haptics from 'expo-haptics';
 
 interface FormState {
   setHabitName: (name: string) => void;
@@ -61,9 +61,7 @@ export function useCenteredFormCallbacks({
   const handleValidationError = useCallback(() => {
     setShowNameError(true);
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(
-        () => {}
-      );
+      triggerHaptic('warning');
     }
   }, [setShowNameError]);
 

@@ -3,6 +3,7 @@
  * Consistent card styling with press animation for Workshop sections
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { View, Pressable } from 'react-native';
 import Animated, {
@@ -12,7 +13,6 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../../animations';
 import { shadows } from '../../../../../theme/spacing';
 import type { SectionCardProps } from '../DualVizSetup.types';
@@ -53,7 +53,7 @@ export function SectionCard({
   }, [scale, shadowOpacity, elevation]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress?.();
   }, [onPress]);
 

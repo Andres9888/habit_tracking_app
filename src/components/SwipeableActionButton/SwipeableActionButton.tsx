@@ -8,11 +8,11 @@
  * - Supports custom swipe action (delete, archive, etc.)
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useRef } from 'react';
 import { Animated } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Trash2 } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { getSwipeColors } from './styles';
 import { SwipeActions } from './SwipeActions';
 import { ButtonContent } from './ButtonContent';
@@ -57,7 +57,7 @@ export function SwipeableActionButton({
   );
 
   const handleSwipeableOpen = () => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    triggerHaptic('warning');
     swipeableRef.current?.close();
     onSwipeAction?.();
   };

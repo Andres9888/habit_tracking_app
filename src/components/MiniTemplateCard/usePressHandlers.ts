@@ -2,8 +2,8 @@
  * Press handlers for MiniTemplateCard component
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { SharedValue, withSpring, withTiming } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import {
   CARD_PRESS_SPRING_CONFIG,
   CARD_PRESS_SCALE,
@@ -52,7 +52,7 @@ export function createPressHandlers(
   };
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   };
 
@@ -72,7 +72,7 @@ export function createImportHandler(
         isImporting,
       });
     if (isImporting || isImported || !onImport) return;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onImport();
   };
 }

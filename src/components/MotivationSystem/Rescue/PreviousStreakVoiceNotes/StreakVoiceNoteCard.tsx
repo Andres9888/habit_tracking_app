@@ -2,6 +2,7 @@
  * StreakVoiceNoteCard component
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, {
@@ -10,7 +11,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import * as Haptics from 'expo-haptics';
 import { VoiceNotePlaybackUI } from '../../Workshop/VoiceNotePlaybackUI';
 import { SPRING_BUTTON, formatDaysAgoText } from './constants';
 import { CardHeader } from './CardHeader';
@@ -33,7 +33,7 @@ export function StreakVoiceNoteCard({
     scale.value = withSpring(1, SPRING_BUTTON);
   }, [scale]);
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onToggleExpand();
   }, [onToggleExpand]);
 

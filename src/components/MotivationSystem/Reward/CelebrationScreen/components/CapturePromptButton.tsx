@@ -2,6 +2,7 @@
  * CapturePromptButton - "Capture this feeling" action button
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, {
@@ -10,7 +11,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Sparkles } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
 import { SPRING_BUTTON } from '../constants';
 import type { CapturePromptButtonProps } from '../types';
@@ -33,7 +33,7 @@ export function CapturePromptButton({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

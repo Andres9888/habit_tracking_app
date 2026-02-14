@@ -2,6 +2,7 @@
  * Success state animation logic for FullsizeTemplatePreview
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useEffect, useCallback, useRef } from 'react';
 import {
   useSharedValue,
@@ -11,7 +12,6 @@ import {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
 interface UseSuccessAnimationsProps {
@@ -32,7 +32,7 @@ export const useSuccessAnimations = ({
   const successIconBounce = useSharedValue(0);
 
   const triggerSuccessHaptic = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    triggerHaptic('success');
   }, []);
 
   const triggerConfetti = useCallback(() => {

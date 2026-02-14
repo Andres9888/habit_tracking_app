@@ -7,8 +7,8 @@
  * - Mental contrasting + implementation intentions = 2x goal achievement
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback, useState } from 'react';
-import * as Haptics from 'expo-haptics';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from './SectionCard';
 import { AnimatedSection } from './AnimatedSection';
@@ -30,7 +30,7 @@ export function WOOPSection({
   const isComplete = isWOOPComplete(woop);
 
   const handleHelpPress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setShowExplainer(true);
   }, []);
 

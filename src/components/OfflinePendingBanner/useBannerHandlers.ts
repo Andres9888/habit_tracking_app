@@ -1,6 +1,6 @@
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback } from 'react';
 import { withSpring } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { SPRING_CONFIG } from './constants';
 import type { QueueStats } from '../../hooks/useOfflineQueue';
 
@@ -26,7 +26,7 @@ export const useOfflineBannerHandlers = ({
   onSyncPress,
 }: UseOfflineBannerHandlersParams) => {
   const handlePress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
 
     if (!isExpanded && !externalStats) {
       void getStats().then(setStats);
@@ -47,7 +47,7 @@ export const useOfflineBannerHandlers = ({
   ]);
 
   const handleSyncPress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onSyncPress?.();
   }, [onSyncPress]);
 

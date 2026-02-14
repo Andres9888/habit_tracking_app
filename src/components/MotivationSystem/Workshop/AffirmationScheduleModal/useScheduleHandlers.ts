@@ -3,9 +3,9 @@
  * Event handlers for schedule form interactions
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback, Dispatch, SetStateAction } from 'react';
 import { Platform } from 'react-native';
-import * as Haptics from 'expo-haptics';
 
 export function useScheduleHandlers(
   setDaysOfWeek: Dispatch<SetStateAction<number[]>>,
@@ -40,7 +40,7 @@ export function useScheduleHandlers(
 
   const handleToggleEnabled = useCallback(
     (value: boolean) => {
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       setIsEnabled(value);
     },
     [setIsEnabled]

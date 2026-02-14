@@ -4,6 +4,7 @@
  * Animated sliding indicator with haptic feedback
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback, useEffect } from 'react';
 import { View, Text, Pressable, type LayoutChangeEvent } from 'react-native';
 import Animated, {
@@ -11,7 +12,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 type CalendarView = 'month' | 'year';
 
@@ -54,7 +54,7 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
   const handlePress = useCallback(
     (view: CalendarView) => {
       if (view !== activeView) {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        triggerHaptic('tap');
         onViewChange(view);
       }
     },

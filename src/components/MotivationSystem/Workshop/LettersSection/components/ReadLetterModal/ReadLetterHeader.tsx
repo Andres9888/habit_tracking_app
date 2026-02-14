@@ -3,11 +3,11 @@
  * Header for the read letter modal with animated envelope
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { MailOpen, X } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 
@@ -41,7 +41,7 @@ export function ReadLetterHeader({
           accessibilityRole='button'
           className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
           onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            triggerHaptic('tap');
             onClose();
           }}
         >

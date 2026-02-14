@@ -2,9 +2,9 @@
  * Handlers for navigation and filter reset operations
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback } from 'react';
 import type { FlatList } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { Category, SortOption } from '../../templates/constants';
 import type { ViewMode } from '../TemplatesScreen.types';
@@ -46,7 +46,7 @@ export function useNavigationHandlers(opts: UseNavigationHandlersOptions) {
   );
 
   const handleBackToBrowse = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setSelectedCategory('all');
     setViewMode('browse');
     flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });

@@ -1,6 +1,7 @@
 /**
  * VoiceNoteItem - Individual voice note with expandable playback UI
  */
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import Animated, {
@@ -8,7 +9,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../../animations';
 import { VoiceNotePlaybackUI } from '../../VoiceNotePlaybackUI';
 import { VoiceNoteItemHeader } from './VoiceNoteItemHeader';
@@ -34,7 +34,7 @@ export function VoiceNoteItem({
 
   const handleToggleExpand = useCallback(() => {
     if (!note.audioUrl) return;
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     const willExpand = !isExpanded;
     setIsExpanded(willExpand);
     if (reduceMotion) {

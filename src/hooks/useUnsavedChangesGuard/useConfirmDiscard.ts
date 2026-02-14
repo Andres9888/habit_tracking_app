@@ -4,9 +4,9 @@
  * Core logic for showing the discard confirmation dialog.
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback } from 'react';
 import { Alert, type AlertButton } from 'react-native';
-import * as Haptics from 'expo-haptics';
 
 interface UseConfirmDiscardOptions {
   hasUnsavedChanges: boolean;
@@ -37,7 +37,7 @@ export function useConfirmDiscard({
         return;
       }
 
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      triggerHaptic('toggle');
       setIsConfirmationVisible(true);
 
       const buttons: AlertButton[] = [
@@ -49,7 +49,7 @@ export function useConfirmDiscard({
         {
           onPress: () => {
             setIsConfirmationVisible(false);
-            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            triggerHaptic('tap');
             onDiscard?.();
             onConfirm();
           },

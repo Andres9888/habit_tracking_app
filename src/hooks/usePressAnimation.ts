@@ -5,15 +5,15 @@
  * Respects reduced motion preferences.
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback } from 'react';
 import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { Platform } from 'react-native';
 import { Springs } from '../constants/motion';
+import type { HapticPatternName } from '@/utils/haptics';
 import { CARD_PRESS_SCALE } from '../utils/animations/cardPressAnimation';
 
 export interface PressAnimationConfig {
@@ -65,14 +65,12 @@ export interface UsePressAnimationReturn {
   scale: ReturnType<typeof useSharedValue<number>>;
 }
 
-const HAPTIC_MAP = {
-  heavy: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
-  light: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
-  medium: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
-  selection: () => Haptics.selectionAsync(),
+const HAPTIC_STYLE_MAP: Record<string, HapticPatternName> = {
+  heavy: 'heavy',
+  light: 'tap',
+  medium: 'toggle',
+  selection: 'selection',
 };
-
-const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
 
 export function usePressAnimation(
   config: PressAnimationConfig = {}
@@ -87,11 +85,9 @@ export function usePressAnimation(
 
   const scale = useSharedValue(1);
 
-  const triggerHaptic = useCallback(() => {
-    if (enableHaptics && isHapticsSupported) {
-      HAPTIC_MAP[hapticStyle]().catch(() => {
-        // Silently fail - haptics are non-critical
-      });
+  const fireHaptic = useCallback(() => {
+    if (enableHaptics) {
+      triggerHaptic(HAPTIC_STYLE_MAP[hapticStyle] || 'tap');
     }
   }, [enableHaptics, hapticStyle]);
 
@@ -99,13 +95,13 @@ export function usePressAnimation(
     (): PressAnimationHandlers => ({
       onPressIn: () => {
         scale.value = withSpring(pressScale, springConfig);
-        triggerHaptic();
+        fireHaptic();
       },
       onPressOut: () => {
         scale.value = withSpring(1, springConfig);
       },
     }),
-    [pressScale, springConfig, scale, triggerHaptic]
+    [pressScale, springConfig, scale, fireHaptic]
   )();
 
   const animatedStyle = useAnimatedStyle(() => ({

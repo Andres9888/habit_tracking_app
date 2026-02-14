@@ -1,7 +1,7 @@
 /** EditHeader - X button left, Save button right (like Create modal) */
+import { triggerHaptic } from '@/utils/haptics';
 import { View, Pressable, Text, Keyboard, ActivityIndicator } from 'react-native';
 import { X } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import Animated, {
   FadeInDown,
   useAnimatedStyle,
@@ -32,13 +32,13 @@ export function EditHeader({
   }));
 
   const handleCancel = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     Keyboard.dismiss();
     onCancel();
   };
 
   const handleSave = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onSave();
   };
 

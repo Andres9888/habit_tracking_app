@@ -5,6 +5,7 @@
  * Uses a pill/segment control style with smooth sliding animation.
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback, useEffect } from 'react';
 import { View, LayoutChangeEvent } from 'react-native';
 import Animated, {
@@ -13,7 +14,6 @@ import Animated, {
   withSpring,
   useDerivedValue,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 import type { TabType, HabitDetailTabsProps } from './HabitDetailTabs.types';
 import {
@@ -65,7 +65,7 @@ export function HabitDetailTabs({
   const handleTabPress = useCallback(
     (tab: TabType) => {
       if (tab !== activeTab) {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        triggerHaptic('tap');
         onTabChange(tab);
       }
     },

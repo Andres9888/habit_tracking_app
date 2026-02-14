@@ -3,9 +3,9 @@
  * Manages state and navigation for VisionBoardPreview
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { AccessibilityInfo, ScrollView } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import type { VisionBoardItem } from './VisionBoardPreview.types';
 
 interface UseVisionBoardPreviewParams {
@@ -49,12 +49,12 @@ export function useVisionBoardPreview({
   const hasPrev = currentIndex > 0;
 
   const handleClose = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onClose();
   }, [onClose]);
 
   const handleEdit = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     if (currentItem) {
       onEdit(currentItem);
     }
@@ -62,14 +62,14 @@ export function useVisionBoardPreview({
 
   const goToNext = useCallback(() => {
     if (hasNext) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       setCurrentIndex((prev) => prev + 1);
     }
   }, [hasNext]);
 
   const goToPrev = useCallback(() => {
     if (hasPrev) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       setCurrentIndex((prev) => prev - 1);
     }
   }, [hasPrev]);

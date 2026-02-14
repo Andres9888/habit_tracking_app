@@ -3,10 +3,10 @@
  * Back and Continue buttons for step navigation
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { clsx } from 'clsx';
 
 interface NavigationButtonsProps {
@@ -31,7 +31,7 @@ export function NavigationButtons({
         accessibilityRole='button'
         className='flex-1 items-center rounded-xl border border-stone-200 bg-white py-3.5 active:bg-stone-50'
         onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          triggerHaptic('tap');
           onBack();
         }}
       >
@@ -48,7 +48,7 @@ export function NavigationButtons({
         )}
         disabled={!canContinue}
         onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          triggerHaptic('toggle');
           onNext();
         }}
       >

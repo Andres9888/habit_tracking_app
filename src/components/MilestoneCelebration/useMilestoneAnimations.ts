@@ -2,9 +2,9 @@
  * Animation state hook for MilestoneCelebration
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useEffect } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { runAnimationSequence, resetAnimations } from './animationSequences';
 
 interface UseAnimationsProps {
@@ -38,7 +38,7 @@ export function useMilestoneAnimations({
 
   useEffect(() => {
     if (visible) {
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+      triggerHaptic('heavy');
 
       if (reduceMotion) {
         badgeScale.value = 1;

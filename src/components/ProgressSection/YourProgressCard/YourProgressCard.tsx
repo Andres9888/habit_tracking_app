@@ -4,11 +4,11 @@
  * @deprecated This component is deprecated. Use `ProgressSectionConsolidated` instead.
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Info } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
 import type { YourProgressCardProps } from '../types';
 import {
@@ -43,7 +43,7 @@ export function YourProgressCard({
   );
 
   const handleInfoPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onInfoPress?.();
   };
 

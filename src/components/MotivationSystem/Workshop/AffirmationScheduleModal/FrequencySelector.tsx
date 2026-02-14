@@ -3,11 +3,11 @@
  * Toggle between daily and weekly delivery frequency
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Calendar } from 'lucide-react-native';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import type { FrequencySelectorProps } from './types';
 
 export function FrequencySelector({
@@ -27,7 +27,7 @@ export function FrequencySelector({
             : 'border-stone-200 bg-white'
         )}
         onPress={() => {
-          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          triggerHaptic('tap');
           onSelect('daily');
         }}
       >
@@ -58,7 +58,7 @@ export function FrequencySelector({
             : 'border-stone-200 bg-white'
         )}
         onPress={() => {
-          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          triggerHaptic('tap');
           onSelect('weekly');
         }}
       >

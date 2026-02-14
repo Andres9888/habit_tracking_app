@@ -1,9 +1,9 @@
 /* eslint-disable max-lines */
 /** SettingsRow - OPTIMIZED: AnimatedPressable, scale animation, haptics */
+import { triggerHaptic } from '@/utils/haptics';
 import { ReactNode } from 'react';
 import { Switch, Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -37,12 +37,12 @@ export function SettingsRow({
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
   const handleToggle = (v: boolean) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onToggle?.(v);
   };
 
   const handleNavPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress?.();
   };
 

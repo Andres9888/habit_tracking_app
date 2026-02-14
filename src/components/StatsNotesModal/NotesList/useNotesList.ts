@@ -3,9 +3,9 @@
  * State management and data fetching for notes list
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useState, useEffect, useMemo } from 'react';
 import { useMutation, useQuery } from 'convex/react';
-import * as Haptics from 'expo-haptics';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
@@ -68,12 +68,12 @@ export function useNotesList(initialHabitId?: Id<'habits'>) {
   };
 
   const handleOpenVisualizationGuide = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     setShowVisualizationGuide(true);
   };
 
   const handleCloseVisualizationGuide = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setShowVisualizationGuide(false);
   };
 

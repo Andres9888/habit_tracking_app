@@ -4,6 +4,7 @@
  * Individual emoji button for motivation selection with animated feedback
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback, useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, {
@@ -14,7 +15,6 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 
 import { SPRING_BUTTON, SPRING_BOUNCY, ACCENT_CLASSES } from './constants';
 import type { MotivationButtonProps } from './types';
@@ -52,7 +52,7 @@ export function MotivationButton({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

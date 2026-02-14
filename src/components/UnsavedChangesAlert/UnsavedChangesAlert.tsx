@@ -2,10 +2,10 @@
  * UnsavedChangesAlert Component
  * Custom styled modal for confirming discard of unsaved changes
  */
+import { triggerHaptic } from '@/utils/haptics';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { Modal } from '../Modal';
 import { VARIANT_STYLES } from './constants';
 import type { UnsavedChangesAlertProps } from './types';
@@ -25,12 +25,12 @@ export function UnsavedChangesAlert({
   const styles = VARIANT_STYLES[variant];
 
   const handleDiscard = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onDiscard();
   };
 
   const handleKeepEditing = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onKeepEditing();
   };
 

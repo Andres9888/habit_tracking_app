@@ -1,4 +1,5 @@
 /** HeaderButton - Animated button with scale + haptic feedback */
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated, {
@@ -6,7 +7,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { buttonShadow } from './DetailHeader.constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -24,7 +24,7 @@ export function HeaderButton({ onPress, icon, label }: HeaderButtonProps) {
   }));
 
   const handlePress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   };
 

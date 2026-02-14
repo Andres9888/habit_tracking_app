@@ -1,3 +1,4 @@
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback, useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, {
@@ -8,7 +9,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 
 import { SPRING_BUTTON } from '../../../../animations';
 import { SPRING_BOUNCY } from '../QuickReflection.constants';
@@ -53,7 +53,7 @@ export function EmojiButton({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

@@ -2,6 +2,7 @@
  * ActionButton - Reusable button for permission actions
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { Pressable, Text } from 'react-native';
 import Animated, {
@@ -10,7 +11,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../animations';
 import type { ActionButtonProps } from './types';
 
@@ -37,7 +37,7 @@ export function ActionButton({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

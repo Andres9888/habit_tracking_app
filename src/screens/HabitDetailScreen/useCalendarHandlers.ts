@@ -3,9 +3,9 @@
  * Calendar toggle and undo/redo handlers for habit detail screen
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import type { Habit } from './HabitDetailScreen.types';
@@ -55,12 +55,12 @@ export const useCalendarHandlers = ({
   );
 
   const handleSwipeDelete = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    triggerHaptic('warning');
     setPendingDelete(true);
   }, [setPendingDelete]);
 
   const handleSwipeArchive = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    triggerHaptic('warning');
     setPendingArchive(true);
   }, [setPendingArchive]);
 

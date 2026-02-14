@@ -13,10 +13,10 @@
  * ```
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback, useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -54,7 +54,7 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
   const handlePress = useCallback(
     (newValue: TimeRange) => {
       if (newValue !== value) {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        triggerHaptic('tap');
         onChange(newValue);
       }
     },

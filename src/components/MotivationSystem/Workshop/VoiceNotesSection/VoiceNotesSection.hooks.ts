@@ -2,9 +2,9 @@
  * Hooks for VoiceNotesSection component
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { useAudioRecording } from '../../../../hooks/useAudioRecording';
 import { MAX_RECORDING_DURATION, FREE_TIER_MAX_NOTES } from './VoiceNotesSection.constants';
 
@@ -42,7 +42,7 @@ export function useVoiceNotesSection({
       }
     },
     onWarningThresholdReached: (secondsRemaining) => {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+      triggerHaptic('warning');
       // warning threshold reached
     },
     warningThresholdSeconds: 30,

@@ -2,10 +2,10 @@
  * ActionButtons - Share and Continue buttons for milestone celebration
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { View, Text, Pressable, Platform } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { styles } from './styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -25,14 +25,14 @@ export function ActionButtons({
 }: ActionButtonsProps) {
   const handleShare = useCallback(() => {
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+      triggerHaptic('tap');
     }
     onShare?.();
   }, [onShare]);
 
   const handleContinue = useCallback(() => {
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+      triggerHaptic('tap');
     }
     onClose();
   }, [onClose]);

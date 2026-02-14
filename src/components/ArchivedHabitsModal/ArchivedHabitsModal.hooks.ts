@@ -1,6 +1,6 @@
+import { triggerHaptic } from '@/utils/haptics';
 import { useMutation, useQuery } from 'convex/react';
 import { Alert } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 
@@ -15,16 +15,16 @@ export const useArchivedHabitsModalLogic = () => {
     habitId: Id<'habits'>,
     habitName: string
   ): Promise<boolean> => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
 
     try {
       await unarchiveHabit({ habitId });
       // Success haptic feedback after restore completes
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      triggerHaptic('success');
       return true;
     } catch (error) {
       if (__DEV__) console.error('Failed to restore habit:', error);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      triggerHaptic('error');
       Alert.alert(
         'Error',
         `Failed to restore "${habitName}". Please try again.`
@@ -34,7 +34,7 @@ export const useArchivedHabitsModalLogic = () => {
   };
 
   const handlePermanentDelete = (habitId: Id<'habits'>, habitName: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
 
     Alert.alert(
       `Permanently Delete "${habitName}"?`,
@@ -48,12 +48,10 @@ export const useArchivedHabitsModalLogic = () => {
           onPress: async () => {
             try {
               await removeHabit({ habitId });
-              Haptics.notificationAsync(
-                Haptics.NotificationFeedbackType.Success
-              );
+              triggerHaptic('success');
             } catch (error) {
               if (__DEV__) console.error('Failed to delete habit:', error);
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              triggerHaptic('error');
               Alert.alert(
                 'Error',
                 `Failed to delete "${habitName}". Please try again.`

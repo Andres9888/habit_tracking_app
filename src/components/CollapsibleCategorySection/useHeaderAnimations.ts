@@ -2,6 +2,7 @@
  * CollapsibleCategorySection Header Animations Hook
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -9,7 +10,6 @@ import {
   withTiming,
   withSequence,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 interface UseHeaderAnimationsParams {
   isExpanded: boolean;
@@ -58,7 +58,7 @@ export function useHeaderAnimations({
   };
 
   const handleHeaderPress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
 
     // Trigger icon bounce when expanding (not collapsing)
     if (!isExpanded && !reducedMotion) {

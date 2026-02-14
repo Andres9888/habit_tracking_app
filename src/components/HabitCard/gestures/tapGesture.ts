@@ -3,9 +3,9 @@
  * Handles tap-to-toggle completion with haptic feedback
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, type SharedValue } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { showSyncError } from '../../../utils/errorAlerts';
 import { pressCard, releaseCard } from '../../../utils/animations/cardPressAnimation';
@@ -49,15 +49,11 @@ export function createTapGesture(options: TapGestureOptions) {
       // Instant haptic feedback on touch
       if (completed) {
         runOnJS(() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
-            () => {}
-          );
+          triggerHaptic('tap');
         })();
       } else {
         runOnJS(() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
-            () => {}
-          );
+          triggerHaptic('toggle');
         })();
       }
 

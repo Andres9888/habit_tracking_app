@@ -2,6 +2,7 @@
  * StatCard - Individual stat display with animated counting
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, {
@@ -9,7 +10,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { useCountAnimation } from './useCountAnimation';
 import type { StatCardProps } from './types';
 
@@ -48,7 +48,7 @@ export function StatCard({
   };
 
   const handlePress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress?.();
   };
 

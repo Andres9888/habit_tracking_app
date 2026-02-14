@@ -2,9 +2,9 @@
  * Event handlers hook for TemplateScienceModal
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback, useState } from 'react';
 import { Linking, Share } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 interface UseModalHandlersProps {
@@ -21,12 +21,12 @@ export const useModalHandlers = ({
   const [showConfetti, setShowConfetti] = useState(false);
 
   const handleClose = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onClose();
   }, [onClose]);
 
   const handleLinkPress = useCallback(async () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     if (template?.scientificLink) {
       const canOpen = await Linking.canOpenURL(template.scientificLink);
       if (canOpen) {
@@ -36,7 +36,7 @@ export const useModalHandlers = ({
   }, [template?.scientificLink]);
 
   const handleYoutubePress = useCallback(async () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     if (template?.youtubeLink) {
       const canOpen = await Linking.canOpenURL(template.youtubeLink);
       if (canOpen) {
@@ -47,7 +47,7 @@ export const useModalHandlers = ({
 
   const handleShare = useCallback(async () => {
     if (!template) return;
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     try {
       await Share.share({
         message: `Check out this habit template: "${template.name}"\n\n${template.description}\n\n🔬 Scientific backing: ${template.scientificReference}\n\nBuild this habit with Chain Day: https://apps.apple.com/app/chain-day`,
@@ -59,7 +59,7 @@ export const useModalHandlers = ({
   }, [template]);
 
   const handleUseTemplate = useCallback(() => {
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    triggerHaptic('success');
     setShowConfetti(true);
     setTimeout(() => {
       onUseTemplate();

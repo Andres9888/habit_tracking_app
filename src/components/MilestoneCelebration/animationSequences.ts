@@ -2,6 +2,7 @@
  * Animation sequence functions for MilestoneCelebration
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import {
   withSpring,
   withSequence,
@@ -10,7 +11,6 @@ import {
   runOnJS,
   Easing,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { ANIMATION_TIMING } from './constants';
 import type { AnimationValues } from './types';
 
@@ -39,7 +39,7 @@ export function runAnimationSequence(anim: AnimationValues, strength: number) {
       1,
       { damping: BADGE_SETTLE_DAMPING, stiffness: BADGE_SETTLE_STIFFNESS },
       () => {
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Heavy);
+        runOnJS(triggerHaptic)('heavy');
       }
     )
   );

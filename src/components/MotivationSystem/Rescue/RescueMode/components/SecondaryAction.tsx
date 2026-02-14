@@ -1,3 +1,4 @@
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { Pressable, Text } from 'react-native';
 import Animated, {
@@ -6,7 +7,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 
 import { SPRING_BUTTON } from '../RescueMode.constants';
 
@@ -37,7 +37,7 @@ export function SecondaryAction({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

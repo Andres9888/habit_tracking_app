@@ -3,9 +3,9 @@
  * Modal for setting up scheduled delivery of affirmations
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { View, Modal, ScrollView } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { ScheduleHeader } from './ScheduleHeader';
 import {
   AffirmationPreview,
@@ -33,13 +33,13 @@ export function AffirmationScheduleModal({
 
   const handleSave = useCallback(() => {
     if (isSaving) return;
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     void onSave(form.getScheduleData()).then(() => onClose());
   }, [isSaving, form, onSave, onClose]);
 
   const handleCancelSchedule = useCallback(() => {
     if (isSaving) return;
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     void onCancel().then(() => onClose());
   }, [isSaving, onCancel, onClose]);
 

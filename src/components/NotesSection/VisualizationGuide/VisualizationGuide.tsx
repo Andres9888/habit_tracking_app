@@ -3,6 +3,7 @@
  * Based on Andrew Huberman's research on effective goal visualization
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -13,7 +14,6 @@ import {
   ChevronDown,
   ChevronUp,
 } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import type { VisualizationGuideProps } from './VisualizationGuide.types';
 import { VISUALIZATION_TECHNIQUES } from './visualizationTechniques';
 import { GuideHeader } from './GuideHeader';
@@ -28,7 +28,7 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
     : VISUALIZATION_TECHNIQUES.slice(0, 2);
 
   const handleShowMore = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setShowAllTechniques(!showAllTechniques);
   };
 

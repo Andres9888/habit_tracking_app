@@ -1,8 +1,8 @@
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { format } from 'date-fns';
 import { Edit3 } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 interface RecentNotePreviewProps {
@@ -12,7 +12,7 @@ interface RecentNotePreviewProps {
 
 export function RecentNotePreview({ note, onEdit }: RecentNotePreviewProps) {
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onEdit(note);
   };
 

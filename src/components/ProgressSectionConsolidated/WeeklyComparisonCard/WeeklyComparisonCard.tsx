@@ -10,6 +10,7 @@
  * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, {
@@ -19,7 +20,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Info } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
 import type { WeeklyComparisonCardProps } from './types';
 import { getTrendStyle, getMessage } from './helpers';
@@ -41,7 +41,7 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
   const absoluteChange = Math.abs(rateChange);
 
   const handleInfoPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onInfoPress?.();
   };
 

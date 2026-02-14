@@ -2,10 +2,10 @@
  * Reminder time picker section
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import * as Haptics from 'expo-haptics';
 import { Clock } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { styles as baseStyles } from './styles';
@@ -38,7 +38,7 @@ export function ReminderTimePicker({
   const theme = useAppTheme();
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onTogglePicker(true);
   };
 

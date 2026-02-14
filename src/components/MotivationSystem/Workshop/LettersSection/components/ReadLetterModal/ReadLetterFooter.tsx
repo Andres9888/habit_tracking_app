@@ -3,10 +3,10 @@
  * Footer for the read letter modal with done button
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Check } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
 interface ReadLetterFooterProps {
   isLocked: boolean;
@@ -21,7 +21,7 @@ export function ReadLetterFooter({ isLocked, onClose }: ReadLetterFooterProps) {
         accessibilityRole='button'
         className='flex-row items-center justify-center gap-2 rounded-xl bg-violet-500 py-4'
         onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          triggerHaptic('toggle');
           onClose();
         }}
       >

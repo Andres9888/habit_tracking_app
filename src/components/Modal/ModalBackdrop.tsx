@@ -3,10 +3,10 @@
  * Animated backdrop overlay with tap-to-close functionality
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { StyleSheet, Pressable, type ViewStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 interface ModalBackdropProps {
   disableBackdropClose: boolean;
@@ -21,7 +21,7 @@ export function ModalBackdrop({
 }: ModalBackdropProps) {
   const handlePress = () => {
     if (!disableBackdropClose) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       onClose();
     }
   };

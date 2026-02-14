@@ -3,9 +3,9 @@
  * State management for the WriteLetterModal component
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { useState, useCallback, useEffect } from 'react';
 import { Keyboard } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { MIN_CONTENT_LENGTH, ONE_DAY_MS } from '../../LettersSection.constants';
 import type { WriteLetterStep } from './WriteLetterModal.types';
 
@@ -55,19 +55,19 @@ export function useWriteLetterModal({
 
   const handleNext = useCallback(() => {
     if (!canProceedToSchedule) return;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     Keyboard.dismiss();
     setStep('schedule');
   }, [canProceedToSchedule]);
 
   const handleBack = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setStep('write');
   }, []);
 
   const handleSave = useCallback(async () => {
     if (!canSave || isSaving) return;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     try {
       await onSave(content.trim(), unlockDays, title.trim() || undefined);
       onClose();

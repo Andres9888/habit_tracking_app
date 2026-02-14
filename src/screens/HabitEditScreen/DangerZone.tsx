@@ -6,9 +6,9 @@
  * with appropriate visual warnings.
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { View, Text, Pressable } from 'react-native';
 import { Trash2, Archive } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -35,12 +35,12 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   }));
 
   const handleArchive = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onArchive();
   };
 
   const handleDelete = () => {
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    triggerHaptic('warning');
     onDelete();
   };
 

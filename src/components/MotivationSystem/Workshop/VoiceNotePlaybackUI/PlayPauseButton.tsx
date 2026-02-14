@@ -3,6 +3,7 @@
  * Animated play/pause toggle button for audio playback
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { View, Pressable, ActivityIndicator } from 'react-native';
 import Animated, {
@@ -11,7 +12,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Play, Pause, RotateCcw } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../animations';
 import type { PlayPauseButtonProps } from './types';
 
@@ -41,7 +41,7 @@ export function PlayPauseButton({
   }, [reduceMotion, scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

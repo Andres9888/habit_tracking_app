@@ -2,8 +2,8 @@
  * CategoryChip Press Handlers Hook
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import { withSpring, type SharedValue } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { springs } from '@/theme/animations';
 import {
   CARD_PRESS_SCALE,
@@ -23,7 +23,7 @@ export function useCategoryChipHandlers(
   };
 
   const handlePress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   };
 

@@ -1,4 +1,5 @@
 /** SettingsHeader - OPTIMIZED: FadeInDown, AnimatedPressable, X button */
+import { triggerHaptic } from '@/utils/haptics';
 import { X } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 import Animated, {
@@ -7,7 +8,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import type { SettingsColors } from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(View);
@@ -29,7 +29,7 @@ export function SettingsHeader({
   }));
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onClose();
   };
 

@@ -3,6 +3,7 @@
  * Seekable progress bar with animated fill for audio playback
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
@@ -15,7 +16,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import type { ProgressBarProps } from './types';
 
 export function ProgressBar({
@@ -56,7 +56,7 @@ export function ProgressBar({
       const { locationX } = event.nativeEvent;
       const newProgress = Math.max(0, Math.min(1, locationX / barWidth));
 
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       animatedProgress.value = newProgress;
       onSeek(newProgress);
     },

@@ -3,6 +3,7 @@
  * Bottom sheet with quick actions for habit management
  */
 
+import { triggerHaptic } from '@/utils/haptics';
 import React, { useCallback } from 'react';
 import { Pressable, Modal, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,7 +18,6 @@ import Animated, {
   withSpring,
   runOnJS,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 import type { QuickActionsSheetProps } from './types';
 import { SheetHeader } from './SheetHeader';
@@ -45,12 +45,12 @@ export const QuickActionsSheet = ({
   React.useEffect(() => {
     if (visible) {
       translateY.value = 0;
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
     }
   }, [visible, translateY]);
 
   const handleDismiss = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onClose();
   }, [onClose]);
 
