@@ -12,9 +12,13 @@ import { HabitsList } from './components/HabitsList';
 import FloatingActionButton from './components/FloatingActionButton';
 import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { HabitsAppOverlays } from './components/HabitsAppOverlays';
+import { OnboardingTooltipManager } from './components/OnboardingTooltipManager';
+import { SuggestedHabitsQuickStart } from './components/SuggestedHabitsQuickStart';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { useFirstTimeUser } from '../../hooks/useFirstTimeUser';
+import { trackFirstHabitCreated } from '../../lib/analytics/onboarding';
 
 export function HabitsApp() {
   const { colors } = useThemeColors();
@@ -41,7 +45,21 @@ export function HabitsApp() {
     triggerWarning,
   });
 
+  const {
+    showTooltips,
+    showSuggestedHabits,
+    dismissTooltips,
+    dismissSuggestedHabits,
+  } = useFirstTimeUser();
+
+  const handleSuggestedHabitSelect = async (habitName: string) => {
+    void trackFirstHabitCreated(habitName);
+    dismissSuggestedHabits();
+    modals.openCreateHabitScreen();
+  };
+
   const showHabitsSkeleton = list.isHabitsLoading && list.habits.length === 0;
+  const showSuggested = showSuggestedHabits && list.habits.length === 0 && !showHabitsSkeleton;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -63,6 +81,20 @@ export function HabitsApp() {
             onUpgradeConfirm={handleUpgradeConfirm}
             onUpgradeDismiss={handleUpgradeDismiss}
             onUpgradeIntent={handleUpgradeIntent}
+          />
+        )}
+
+        {showSuggested && (
+          <SuggestedHabitsQuickStart
+            onSelectHabit={handleSuggestedHabitSelect}
+            onDismiss={dismissSuggestedHabits}
+          />
+        )}
+
+        {list.habits.length > 0 && showTooltips && (
+          <OnboardingTooltipManager
+            enabled={showTooltips}
+            onComplete={dismissTooltips}
           />
         )}
 

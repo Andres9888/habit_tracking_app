@@ -7,6 +7,7 @@ import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { showCreateError } from '../../../../utils/errorAlerts';
 import { useHabitsListEffects } from './useHabitsListEffects';
 import type { UseHabitsListHandlersOptions } from './HabitsList.types';
+import { trackFirstHabitCreated } from '../../../../lib/analytics/onboarding';
 
 /**
  * Builds memoized HabitsList event handlers and wires supporting effects.
@@ -59,6 +60,7 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
           remindersEnabled: false,
         })) as Id<'habits'>;
         if (newHabitId) {
+          void trackFirstHabitCreated(habitName);
           state.setJustCreatedHabitId(newHabitId);
           state.setIsInSuccessCelebration(true);
         }

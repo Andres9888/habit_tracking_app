@@ -9,7 +9,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+import {
+  trackAppFirstOpen,
+  trackOnboardingStart,
+  trackOnboardingComplete,
+} from '../../lib/analytics/onboarding';
 import {
   ActivityIndicator,
   Dimensions,
@@ -238,12 +244,19 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const insets = useSafeAreaInsets();
   const shouldReduceMotion = useReducedMotion();
 
+  // Track onboarding analytics events
+  useEffect(() => {
+    void trackAppFirstOpen();
+    void trackOnboardingStart();
+  }, []);
+
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
     setIsLoading(true);
     void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
     try {
       await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
+      void trackOnboardingComplete();
       onComplete();
     } finally {
       setIsLoading(false);
