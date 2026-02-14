@@ -4,6 +4,7 @@
  */
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { Lock } from 'lucide-react-native';
 
 import Animated from 'react-native-reanimated';
 
@@ -20,9 +21,11 @@ export function MiniCardContainer({
   description,
   icon,
   iconColor,
+  hasAccess,
   hasResearch,
   isImporting,
   isImported,
+  isPremium,
   animatedCardStyle,
   glowStyle,
   chevronStyle,
@@ -34,6 +37,9 @@ export function MiniCardContainer({
   onPressOut,
   onImport,
 }: MiniCardContainerProps) {
+  // Determine if the card should be locked
+  const isLocked = isPremium && !hasAccess;
+
   return (
     <View>
       <AnimatedPressable
@@ -44,6 +50,7 @@ export function MiniCardContainer({
           styles.card,
           { backgroundColor: `${iconColor}08` },
           animatedCardStyle,
+          isLocked && styles.lockedCard,
         ]}
         onPress={onPress}
         onPressIn={onPressIn}
@@ -70,16 +77,23 @@ export function MiniCardContainer({
           iconColor={iconColor}
           scienceBadgeStyle={scienceBadgeStyle}
         />
-        <Text numberOfLines={1} style={styles.name}>
-          {name}
-        </Text>
+        <View style={styles.nameRow}>
+          <Text numberOfLines={1} style={styles.name}>
+            {name}
+          </Text>
+          {isLocked && (
+            <View style={styles.lockIcon}>
+              <Lock size={12} color="#6B7280" />
+            </View>
+          )}
+        </View>
         {description && (
           <Text numberOfLines={2} style={styles.description}>
             {description}
           </Text>
         )}
       </AnimatedPressable>
-      {onImport && (
+      {onImport && !isLocked && (
         <ImportButton
           checkmarkStyle={checkmarkStyle}
           iconColor={iconColor}

@@ -39,6 +39,7 @@ export interface BrowseViewProps {
   handlers: BrowseViewHandlers;
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
+  isPremiumUser: boolean;
   onCloseSortOptions: () => void;
   onTabPress: (tab: BrowseTab) => void;
   previewTemplate: Doc<'templates'> | null;

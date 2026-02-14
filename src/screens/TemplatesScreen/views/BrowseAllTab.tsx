@@ -21,6 +21,7 @@ interface BrowseAllTabProps {
   ) => Promise<void>;
   handleTemplatePreview: (template: Doc<'templates'>) => void;
   importingTemplateId: Id<'templates'> | null;
+  isPremiumUser: boolean;
   onCloseSortOptions: () => void;
   researchOnly: boolean;
   setResearchOnly: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,6 +32,12 @@ interface BrowseAllTabProps {
 
 export function BrowseAllTab(p: BrowseAllTabProps) {
   const toggle = () => p.setResearchOnly((prev) => !prev);
+
+  // Define premium categories (templates that require premium to access)
+  const PREMIUM_CATEGORIES = ['andrew_huberman', 'longevity', 'recovery'];
+
+  const isPremiumTemplate = (category: string) =>
+    PREMIUM_CATEGORIES.includes(category);
 
   return (
     <Animated.View style={[{ flex: 1 }, p.contentAnimatedStyle]}>
@@ -58,10 +65,12 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
             category={t.category}
             description={t.description}
             frequency={t.frequency}
+            hasAccess={p.isPremiumUser}
             icon={t.icon}
             iconColor={t.iconColor}
             id={t._id}
             isImporting={p.importingTemplateId === t._id}
+            isPremium={isPremiumTemplate(t.category)}
             name={t.name}
             popularityScore={t.popularityScore}
             scientificLink={t.scientificLink}

@@ -3,6 +3,7 @@
  */
 
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { usePremium } from '../../../hooks/usePremium/usePremium';
 import {
   useEntranceAnimations,
   useTabIndicator,
@@ -23,6 +24,7 @@ export function useTemplatesScreenProps() {
   const tabIndicator = useTabIndicator({ reducedMotion });
   const data = useTemplatesData();
   const state = useTemplatesScreenState({ categories: data.categories });
+  const { isPremium: isPremiumUser } = usePremium();
 
   const templatesByCategory = useTemplatesByCategory(data.allTemplates);
   const scienceCountsByCategory = useScienceCountsByCategory(data.allTemplates);
@@ -72,6 +74,7 @@ export function useTemplatesScreenProps() {
     getCategoryLabel,
     handlers,
     handleTabPress,
+    isPremiumUser,
     scienceCountsByCategory,
     state,
     tabIndicator,

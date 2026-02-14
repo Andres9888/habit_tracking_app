@@ -10,8 +10,10 @@ export interface MiniCardContainerProps {
   icon: string;
   iconColor: string;
   hasResearch?: boolean;
+  hasAccess?: boolean;
   isImporting?: boolean;
   isImported?: boolean;
+  isPremium?: boolean;
   animatedCardStyle: ViewStyle;
   glowStyle: ViewStyle;
   chevronStyle: ViewStyle;

@@ -27,6 +27,7 @@ interface BrowseCategoriesTabProps {
   handleToggleCategory: (categoryId: string) => void;
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
+  isPremiumUser: boolean;
   scienceCountsByCategory: Record<string, number>;
   scrollViewRef: React.RefObject<ScrollView | null>;
   templatesByCategory: Map<string, Doc<'templates'>[]>;
@@ -41,6 +42,7 @@ export function BrowseCategoriesTab({
   handleToggleCategory,
   importedTemplateIds,
   importingTemplateId,
+  isPremiumUser,
   scienceCountsByCategory,
   scrollViewRef,
   templatesByCategory,
@@ -69,6 +71,7 @@ export function BrowseCategoriesTab({
                   importedTemplateIds={importedTemplateIds}
                   importingTemplateId={importingTemplateId}
                   isExpanded={expandedCategories.has(category.id)}
+                  isPremiumUser={isPremiumUser}
                   label={category.label}
                   scienceCount={scienceCountsByCategory[category.id] || 0}
                   templates={templates}

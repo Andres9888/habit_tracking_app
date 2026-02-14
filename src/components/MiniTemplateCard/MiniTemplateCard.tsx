@@ -24,11 +24,13 @@ import { createImportHandler, createPressHandlers } from './usePressHandlers';
 export function MiniTemplateCard(props: MiniTemplateCardProps) {
   const {
     description = '',
+    hasAccess,
     hasResearch,
     icon = '📝',
     iconColor: iconColorProp,
     isImported,
     isImporting,
+    isPremium,
     name = 'Untitled',
     onImport,
     onPress,
@@ -73,12 +75,14 @@ export function MiniTemplateCard(props: MiniTemplateCardProps) {
       chevronStyle={chevronStyle}
       description={description}
       glowStyle={glowStyle}
+      hasAccess={hasAccess}
       hasResearch={hasResearch}
       icon={icon}
       iconColor={iconColor}
       importButtonStyle={importButtonStyle}
       isImported={isImported}
       isImporting={isImporting}
+      isPremium={isPremium}
       name={name}
       scienceBadgeStyle={scienceBadgeStyle}
       onImport={onImport ? handleImport : undefined}

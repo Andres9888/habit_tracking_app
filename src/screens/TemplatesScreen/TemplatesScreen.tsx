@@ -67,6 +67,7 @@ function TemplatesScreenContent() {
       handlers={handlers}
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
+      isPremiumUser={props.isPremiumUser}
       previewTemplate={state.previewTemplate}
       researchOnly={state.researchOnly}
       scienceCountsByCategory={props.scienceCountsByCategory}

@@ -25,6 +25,10 @@ export interface MiniTemplateCardProps {
   isImporting?: boolean;
   /** Has been successfully imported */
   isImported?: boolean;
+  /** Is this a premium template */
+  isPremium?: boolean;
+  /** Does user have premium access */
+  hasAccess?: boolean;
 }
 
 export interface AnimationValues {

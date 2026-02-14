@@ -43,11 +43,26 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     right: 0,
     top: 0,
   },
+  lockIcon: {
+    alignItems: 'center',
+    backgroundColor: '#f3f4f6',
+    borderRadius: 6,
+    justifyContent: 'center',
+    marginLeft: 6,
+    padding: 2,
+  },
+  lockedCard: {
+    opacity: 0.7,
+  },
   name: {
     color: '#1c1917',
     fontSize: typography.body.fontSize,
     fontWeight: '700',
     lineHeight: 21,
     marginBottom: 6,
+  },
+  nameRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 };

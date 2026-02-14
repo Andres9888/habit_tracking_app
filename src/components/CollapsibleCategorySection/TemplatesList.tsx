@@ -22,9 +22,13 @@ const FREQUENCY_LABELS: Record<string, string> = {
   weekly: 'Weekly',
 };
 
+/** Premium categories that require premium subscription */
+const PREMIUM_CATEGORIES = ['andrew_huberman', 'longevity', 'recovery'];
+
 interface TemplatesListProps {
   importedTemplateIds?: Set<string>;
   importingTemplateId?: string | null;
+  isPremiumUser: boolean;
   reducedMotion: boolean;
   templates: Doc<'templates'>[];
   onImport: (template: Doc<'templates'>) => void;
@@ -34,6 +38,7 @@ interface TemplatesListProps {
 export function TemplatesList({
   importedTemplateIds,
   importingTemplateId,
+  isPremiumUser,
   reducedMotion,
   templates,
   onImport,
@@ -70,11 +75,13 @@ export function TemplatesList({
           >
             <MiniTemplateCard
               description={template.description || ''}
+              hasAccess={isPremiumUser}
               hasResearch={Boolean(template.scientificLink)}
               icon={template.icon || '📝'}
               iconColor={template.iconColor}
               isImported={importedTemplateIds?.has(template._id)}
               isImporting={importingTemplateId === template._id}
+              isPremium={PREMIUM_CATEGORIES.includes(template.category)}
               name={template.name || 'Untitled'}
               scientificReference={template.scientificReference}
               subtitle={
