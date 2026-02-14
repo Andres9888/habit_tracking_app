@@ -5,6 +5,7 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import { AddToSiriButton } from '../../../components/SiriShortcut';
 import type { Habit } from '../../../features/habits/types';
 
 interface HabitDetailContentProps {
@@ -95,6 +96,14 @@ export function HabitDetailContent({
           />
         </ErrorBoundary>
       </Animated.View>
+
+      {/* SIRI SHORTCUT - "Add to Siri" for quick habit logging */}
+      <AddToSiriButton
+        delay={480}
+        habitEmoji={habit.icon}
+        habitId={habit._id as string}
+        habitName={habit.name}
+      />
     </ScrollView>
   );
 }

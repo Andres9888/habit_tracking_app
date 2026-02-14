@@ -1,0 +1,1 @@
+export { AddToSiriButton } from './AddToSiriButton';
