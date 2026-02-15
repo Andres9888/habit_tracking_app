@@ -6,7 +6,7 @@
  * with appropriate visual warnings.
  */
 
-import { View, Text, Pressable } from 'react-native';
+import { Alert, View, Text, Pressable } from 'react-native';
 import { Trash2, Archive } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, {
@@ -35,13 +35,27 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   }));
 
   const handleArchive = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    onArchive();
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Alert.alert(
+      'Archive Habit',
+      'This habit will be hidden from your daily list. You can restore it later from Settings.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Archive', style: 'destructive', onPress: onArchive },
+      ],
+    );
   };
 
   const handleDelete = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    onDelete();
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Alert.alert(
+      'Delete Habit',
+      'This will permanently delete this habit and all its history. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: onDelete },
+      ],
+    );
   };
 
   return (
