@@ -73,9 +73,9 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.emoji}>😔</Text>
-        <Text style={styles.title}>Something went wrong</Text>
+        <Text style={styles.title}>Unable to display this content</Text>
         <Text style={styles.message}>
-          We've been notified and are working to fix this.
+          Tap below to reload and try again.
         </Text>
         {__DEV__ && error && (
           <Text style={styles.errorDetail}>{error.message}</Text>

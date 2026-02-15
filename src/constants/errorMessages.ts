@@ -173,9 +173,9 @@ export const ERROR_MESSAGES = {
   // ============================================
   UI: {
     GENERIC_ERROR: 'An unexpected error occurred. Please try again.',
-    SOMETHING_WENT_WRONG: 'Something went wrong. Please try again.',
+    SOMETHING_WENT_WRONG: "Couldn't complete that action. Please try again.",
     TRY_AGAIN: 'Please try again.',
-    RETRY_FAILED: 'Retry failed. Please try again.',
+    RETRY_FAILED: "That didn't work. Please try again.",
     LOADING_FAILED: 'Failed to load. Please try again.',
   },
 } as const;

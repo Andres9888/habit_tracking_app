@@ -35,7 +35,7 @@ export function RetryableErrorView({
   onRetry,
   onSecondaryAction,
   secondaryLabel = 'Go Back',
-  title = 'Something went wrong',
+  title = "Couldn't load this content",
   compact = false,
 }: RetryableErrorViewProps) {
   const { colors } = useThemeColors();

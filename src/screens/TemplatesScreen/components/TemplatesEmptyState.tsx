@@ -20,8 +20,8 @@ export function TemplatesEmptyState({
     <View style={styles.container}>
       <EmptyState
         hideCTA
-        description='Tap the button below to load science-backed habits.'
-        headline='No Habits Available'
+        description='Get started with proven habits that work.'
+        headline='Ready to Build Better Habits?'
         icon='📚'
       />
       <View style={{ marginTop: 24, paddingHorizontal: 24 }}>
@@ -31,7 +31,7 @@ export function TemplatesEmptyState({
           variant='primary'
           onPress={onSeedTemplates}
         >
-          {isSeeding ? 'Loading Habits...' : 'Load Habits'}
+          {isSeeding ? 'Loading Habits...' : 'Browse Templates'}
         </Button>
       </View>
     </View>

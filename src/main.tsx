@@ -25,7 +25,7 @@ class ErrorBoundary extends React.Component<
     if (this.state.hasError) {
       return (
         <div className='m-4 rounded-md border border-red-300 bg-red-50 p-4 text-red-800'>
-          <h2 className='mb-2 font-semibold'>Something went wrong</h2>
+          <h2 className='mb-2 font-semibold'>Unable to load the app</h2>
           <pre className='whitespace-pre-wrap text-sm'>
             {String(this.state.error)}
           </pre>
@@ -35,7 +35,7 @@ class ErrorBoundary extends React.Component<
             type='button'
             onClick={() => window.location.reload()}
           >
-            Reload
+            Reload App
           </button>
         </div>
       );

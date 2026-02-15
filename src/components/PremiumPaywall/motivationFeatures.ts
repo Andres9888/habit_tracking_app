@@ -15,7 +15,7 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
     premiumValue: 'Unlimited recordings',
     scienceFact: 'Voice has 40% higher emotional recall than text',
     subtitle: '40% higher emotional recall',
-    title: 'Unlimited Voice Notes',
+    title: 'Voice Notes That Stick',
   },
   {
     accentColor: '#8b5cf6',
@@ -26,7 +26,7 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
     premiumValue: 'Unlimited letters',
     scienceFact: 'Connecting with future self increases self-control',
     subtitle: 'Time-locked motivation',
-    title: 'Letters to Self',
+    title: 'Letters From Your Future Self',
   },
   {
     accentColor: '#d946ef',
@@ -37,7 +37,7 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
     premiumValue: '4 images per habit',
     scienceFact: 'Personal images create stronger emotional connections',
     subtitle: 'Visual goal reinforcement',
-    title: 'Vision Board',
+    title: 'Vision Board That Inspires',
   },
   {
     accentColor: '#f59e0b',
@@ -48,7 +48,7 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
     premiumValue: 'Unlimited affirmations',
     scienceFact: 'Repetition builds neural pathways',
     subtitle: 'Build neural pathways',
-    title: 'Unlimited Affirmations',
+    title: 'Affirmations That Resonate',
   },
   {
     accentColor: '#ef4444',
@@ -59,7 +59,7 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
     premiumValue: 'Smart streak protection',
     scienceFact: 'Streak rescue is #1 retention driver (Duolingo)',
     subtitle: '#1 streak protection',
-    title: 'Rescue Mode',
+    title: 'Never Lose Your Streak',
   },
   {
     accentColor: '#10b981',
@@ -70,6 +70,6 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
     premiumValue: 'Complete protocol',
     scienceFact: 'Fear moves you 2x better when unmotivated',
     subtitle: 'Fear moves you 2x better',
-    title: 'Advanced Visualization',
+    title: 'Visualization That Works',
   },
 ];

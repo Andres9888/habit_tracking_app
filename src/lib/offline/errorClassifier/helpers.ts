@@ -50,7 +50,7 @@ export function getDisplayMessage(error: unknown): string {
       return 'This item was modified elsewhere. Please refresh.';
     }
     default: {
-      return 'Something went wrong. Will retry automatically.';
+      return "Couldn't save your changes. We'll keep trying in the background.";
     }
   }
 }
