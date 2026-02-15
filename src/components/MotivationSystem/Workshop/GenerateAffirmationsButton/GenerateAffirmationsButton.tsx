@@ -12,11 +12,12 @@
  */
 
 import React from 'react';
-import { DEFAULT_MAX_COUNT } from './constants';
-import { useGenerateButton } from './useGenerateButton';
-import { CompactButton } from './CompactButton';
-import { FullButton } from './FullButton';
+
 import type { GenerateAffirmationsButtonProps } from './types';
+import { CompactButton } from './CompactButton';
+import { DEFAULT_MAX_COUNT } from './constants';
+import { FullButton } from './FullButton';
+import { useGenerateButton } from './useGenerateButton';
 
 export function GenerateAffirmationsButton({
   isPremium,

@@ -3,6 +3,7 @@
  */
 
 import { useCallback } from 'react';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -10,6 +11,7 @@ import {
   interpolate,
   Easing,
 } from 'react-native-reanimated';
+
 import { ANIMATION_DURATION } from './constants';
 
 interface UseExpandAnimationProps {

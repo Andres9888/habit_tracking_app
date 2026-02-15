@@ -1,11 +1,13 @@
+
 import React from 'react';
 import { View, ScrollView } from 'react-native';
-import { AnimatedContent } from './AnimatedContent';
-import { HabitCard } from './HabitCard';
-import { WhySection } from './WhySection';
-import { WOOPReminder } from './WOOPReminder';
-import { CueReminder } from './CueReminder';
+
 import type { ActivationHabitData } from './types';
+import { AnimatedContent } from './AnimatedContent';
+import { CueReminder } from './CueReminder';
+import { HabitCard } from './HabitCard';
+import { WOOPReminder } from './WOOPReminder';
+import { WhySection } from './WhySection';
 
 interface ActivationModalContentProps {
   habit: ActivationHabitData;

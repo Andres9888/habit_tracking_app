@@ -13,14 +13,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import type { OfflineQueueState } from '../queue';
-import { OFFLINE_QUEUE_VERSION } from '../queue';
-
 import {
   clearQueueState,
   loadQueueState,
   OFFLINE_QUEUE_STORAGE_KEY,
   saveQueueState,
 } from './queueStorage';
+import { OFFLINE_QUEUE_VERSION } from '../queue';
 
 jest.mock('@react-native-async-storage/async-storage');
 

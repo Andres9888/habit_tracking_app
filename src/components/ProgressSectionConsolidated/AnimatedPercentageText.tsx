@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { Text } from 'react-native';
+
 import { useDerivedValue, runOnJS, SharedValue } from 'react-native-reanimated';
 
 interface AnimatedPercentageTextProps {

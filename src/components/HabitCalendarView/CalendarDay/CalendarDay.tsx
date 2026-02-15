@@ -1,6 +1,9 @@
-import { format, isToday } from 'date-fns';
-import clsx from 'clsx';
+
 import { Pressable, Text, View } from 'react-native';
+
+import clsx from 'clsx';
+import { format, isToday } from 'date-fns';
+
 import type { HabitStatus } from '../HabitCalendarView.hooks';
 
 interface CalendarDayProps {

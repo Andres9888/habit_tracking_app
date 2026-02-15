@@ -5,12 +5,13 @@
  */
 
 import { renderHook, act } from '@testing-library/react-native';
-import { useOfflineQueue } from './useOfflineQueue';
+
+import type { QueueEvent } from '../queue';
 import {
   createOfflineQueueManager,
   resetOfflineQueueManager,
 } from '../queueManager';
-import type { QueueEvent } from '../queue';
+import { useOfflineQueue } from './useOfflineQueue';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({

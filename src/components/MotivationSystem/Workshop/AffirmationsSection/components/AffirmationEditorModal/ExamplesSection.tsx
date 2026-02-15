@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { MessageSquareQuote } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { MessageSquareQuote } from 'lucide-react-native';
+
 import { EXAMPLE_AFFIRMATIONS } from '../../AffirmationsSection.constants';
 
 interface ExamplesSectionProps {

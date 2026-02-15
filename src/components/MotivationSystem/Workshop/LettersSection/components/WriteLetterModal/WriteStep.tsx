@@ -5,8 +5,10 @@
 
 import React, { useRef } from 'react';
 import { View, Text, TextInput, ScrollView } from 'react-native';
+
 import { Sparkles } from 'lucide-react-native';
 import { clsx } from 'clsx';
+
 import {
   MAX_CONTENT_LENGTH,
   MAX_TITLE_LENGTH,

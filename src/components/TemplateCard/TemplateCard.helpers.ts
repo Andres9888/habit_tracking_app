@@ -1,5 +1,6 @@
-import { DEFAULT_ICON_COLOR } from './TemplateCard.constants';
+
 import type { TemplateCardProps } from './TemplateCard.types';
+import { DEFAULT_ICON_COLOR } from './TemplateCard.constants';
 
 export function getTemplateCardState(props: TemplateCardProps) {
   const {

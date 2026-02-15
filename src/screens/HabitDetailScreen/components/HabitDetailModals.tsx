@@ -2,12 +2,13 @@
  * HabitDetailModals - Notes modals and undo toasts for habit detail screen
  */
 
-import React from 'react';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import { NotesListModal } from './NotesListModal';
-import { NotesEditorModal } from './NotesEditorModal';
-import { UndoToasts } from './UndoToasts';
+import React from 'react';
+
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import { NotesEditorModal } from './NotesEditorModal';
+import { NotesListModal } from './NotesListModal';
+import { UndoToasts } from './UndoToasts';
 
 interface HabitDetailModalsProps {
   habitId: Id<'habits'>;

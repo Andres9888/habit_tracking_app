@@ -4,8 +4,8 @@
  * Manages the animation values and sequences for the success modal
  */
 
-import { useEffect, useRef, useCallback } from 'react';
 import { Animated } from 'react-native';
+import { useEffect, useRef, useCallback } from 'react';
 
 import {
   createEntranceSequence,

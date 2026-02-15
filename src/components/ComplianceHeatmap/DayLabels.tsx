@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { DAY_NAMES } from './ComplianceHeatmap.constants';
 import { styles } from './ComplianceHeatmap.styles';
 

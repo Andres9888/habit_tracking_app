@@ -11,12 +11,11 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
 
-import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
-import { InsightChip } from './InsightChip';
-import { useInsightChipsData } from './useInsightChipsData';
-
 import type { InsightChipsProps } from '../types';
+import { InsightChip } from './InsightChip';
+import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
+import { useInsightChipsData } from './useInsightChipsData';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 
 export function InsightChips(props: InsightChipsProps) {
   const reduceMotion = useReduceMotion();

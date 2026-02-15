@@ -2,8 +2,8 @@
  * Auth Handler API Types
  */
 
-import type { ClassifiedError } from '../../types';
 import type { AuthEventListener, AuthHandlerState } from './types';
+import type { ClassifiedError } from '../../types';
 
 /**
  * Auth Handler API

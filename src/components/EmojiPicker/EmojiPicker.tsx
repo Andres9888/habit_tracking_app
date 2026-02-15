@@ -1,15 +1,17 @@
-import { memo } from 'react';
+
 import { Modal, View } from 'react-native';
-import { useEmojiPicker } from './useEmojiPicker';
-import { EmojiPickerHeader } from './components/EmojiPickerHeader';
-import { EmojiPickerSearch } from './components/EmojiPickerSearch';
-import { SuggestedEmojis } from './components/SuggestedEmojis';
-import { RecentEmojis } from './components/RecentEmojis';
+import { memo } from 'react';
+
+import type { EmojiPickerProps } from './EmojiPicker.types';
 import { CategoryChips } from './components/CategoryChips';
 import { EmojiGrid } from './components/EmojiGrid';
+import { EmojiPickerHeader } from './components/EmojiPickerHeader';
+import { EmojiPickerSearch } from './components/EmojiPickerSearch';
 import { NoIconButton } from './components/NoIconButton';
+import { RecentEmojis } from './components/RecentEmojis';
+import { SuggestedEmojis } from './components/SuggestedEmojis';
+import { useEmojiPicker } from './useEmojiPicker';
 import { useThemeColors } from '../../theme/ThemeContext';
-import type { EmojiPickerProps } from './EmojiPicker.types';
 
 export const EmojiPicker = memo(
   ({

@@ -3,6 +3,7 @@
  */
 
 import { useEffect, type MutableRefObject } from 'react';
+
 import { MIDNIGHT_CHECK_INTERVAL_MS } from './constants';
 
 export function useMidnightReset(

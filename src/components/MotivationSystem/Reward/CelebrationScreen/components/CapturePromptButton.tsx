@@ -4,16 +4,17 @@
 
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 import { Sparkles } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
-import { SPRING_BUTTON } from '../constants';
 import type { CapturePromptButtonProps } from '../types';
+import { SPRING_BUTTON } from '../constants';
 
 export function CapturePromptButton({
   icon,

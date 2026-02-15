@@ -13,11 +13,12 @@
  */
 
 import { useCallback, useState } from 'react';
+
 import * as ImagePicker from 'expo-image-picker';
 
+import type { ImageSource, PickedImage, UseImagePickerReturn } from './types';
 import { showPermissionDeniedAlert } from './helpers';
 import { useImagePickerHandlers } from './useImagePickerHandlers';
-import type { ImageSource, PickedImage, UseImagePickerReturn } from './types';
 
 /**
  * Custom hook for image picking with expo-image-picker

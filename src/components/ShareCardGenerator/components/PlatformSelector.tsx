@@ -5,10 +5,11 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { useAppTheme } from '../../../theme';
-import { controlsStyles as styles } from '../styles';
-import { SHARE_FORMATS } from '../ShareCardGenerator.constants';
+
 import type { SharePlatform } from '../ShareCardGenerator.types';
+import { SHARE_FORMATS } from '../ShareCardGenerator.constants';
+import { controlsStyles as styles } from '../styles';
+import { useAppTheme } from '../../../theme';
 
 interface PlatformSelectorProps {
   selectedPlatform: SharePlatform;

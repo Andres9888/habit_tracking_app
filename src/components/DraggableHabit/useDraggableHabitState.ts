@@ -7,10 +7,11 @@
  */
 
 import { useMemo } from 'react';
-import { useDraggableHabitLogic } from './DraggableHabit.hooks';
+
+import type { DraggableHabitProps } from './types';
 import { getCardColors } from './colorUtils';
 import { getStrengthPercent } from './strengthUtils';
-import type { DraggableHabitProps } from './types';
+import { useDraggableHabitLogic } from './DraggableHabit.hooks';
 
 type HabitData = DraggableHabitProps['habit'];
 type WeekStatus = DraggableHabitProps['weekStatus'];

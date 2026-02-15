@@ -5,11 +5,12 @@
 
 import React from 'react';
 import { Text } from 'react-native';
-import { CompletionCheckmark } from '../../../../animations';
+
 import type { AffirmationData } from '../AffirmationsSection.types';
-import { AffirmationsSectionHeader } from './AffirmationsSectionHeader';
 import { AffirmationsActionButtons } from './AffirmationsActionButtons';
 import { AffirmationsList } from './AffirmationsList';
+import { AffirmationsSectionHeader } from './AffirmationsSectionHeader';
+import { CompletionCheckmark } from '../../../../animations';
 
 interface AffirmationsSectionContentProps {
   affirmations: AffirmationData[];

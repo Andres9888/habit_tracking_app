@@ -3,8 +3,9 @@
  */
 
 import { useCallback } from 'react';
-import { trackError, getSeverity } from '../tracker/index';
+
 import type { ErrorContext, TrackedError } from '../types';
+import { trackError, getSeverity } from '../tracker/index';
 
 /** Hook for tracking errors with classification */
 export function useErrorTracking() {

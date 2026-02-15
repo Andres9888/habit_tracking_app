@@ -2,14 +2,14 @@
  * Sync Preconditions Checker
  */
 
-import { OfflineSyncManager } from '../../syncManager';
 import type {
   SyncOrchestratorResult,
   SyncOrchestratorState,
   ToggleSyncExecutor,
 } from '../types';
-import { shouldSkipSync } from '../helpers';
+import { OfflineSyncManager } from '../../syncManager';
 import { createSyncResult, createErrorResult } from '../resultHelpers';
+import { shouldSkipSync } from '../helpers';
 
 export interface CheckPreconditionsParams {
   executor: ToggleSyncExecutor | null;

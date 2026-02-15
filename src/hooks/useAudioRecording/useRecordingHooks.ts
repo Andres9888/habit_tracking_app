@@ -3,20 +3,22 @@
  */
 
 import { useRef, useState } from 'react';
+
 import { Audio } from 'expo-av';
+
 import type { UseAudioRecordingOptions, RecordingStatus } from './types';
 import {
   MAX_RECORDING_DURATION_SECONDS,
   DEFAULT_WARNING_THRESHOLD_SECONDS,
   INITIAL_RECORDING_STATUS,
 } from './constants';
-import { useRecordingPermission } from './useRecordingPermission';
 import { useAudioMode } from './useAudioMode';
+import { useRecordingControl } from './useRecordingControl';
+import { useRecordingPermission } from './useRecordingPermission';
+import { useRecordingSettingsHelpers } from './useRecordingSettingsHelpers';
 import { useRecordingStatusHandler } from './useRecordingStatusHandler';
 import { useStartRecording } from './useStartRecording';
 import { useStopRecording } from './useStopRecording';
-import { useRecordingControl } from './useRecordingControl';
-import { useRecordingSettingsHelpers } from './useRecordingSettingsHelpers';
 
 export function useRecordingHooks(options?: UseAudioRecordingOptions) {
   const opts = { ...options };

@@ -5,17 +5,19 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Clock, Sparkles } from 'lucide-react-native';
-import { useAppTheme } from '../../../theme';
-import { heroStyles } from '../styles';
+import { LinearGradient } from 'expo-linear-gradient';
+
+import type { HeroSectionProps } from './HeroSection.types';
 import {
   FREQUENCY_LABELS,
   CATEGORY_LABELS,
 } from '../FullsizeTemplatePreview.constants';
 import { MetadataPill } from './MetadataPill';
-import type { HeroSectionProps } from './HeroSection.types';
+import { heroStyles } from '../styles';
+import { useAppTheme } from '../../../theme';
 
 export function HeroSection({
   template,

@@ -9,6 +9,7 @@
  */
 
 import Constants from 'expo-constants';
+
 import type { SentryConfig } from './types';
 import { DEFAULT_SENTRY_CONFIG } from './types';
 

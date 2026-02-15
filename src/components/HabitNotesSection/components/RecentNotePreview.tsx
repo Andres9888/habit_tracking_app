@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { format } from 'date-fns';
-import { Edit3 } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
-import { useThemeColors } from '../../../theme/ThemeContext';
+import { Edit3 } from 'lucide-react-native';
+import { format } from 'date-fns';
+
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 interface RecentNotePreviewProps {
@@ -13,37 +15,24 @@ interface RecentNotePreviewProps {
 
 export function RecentNotePreview({ note, onEdit }: RecentNotePreviewProps) {
   const handlePress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onEdit(note);
   };
-
-  const { colors } = useThemeColors();
 
   return (
     <Pressable
       accessibilityLabel={`Most recent note: ${note.body.slice(0, 50)}`}
       accessibilityRole='button'
-      className='rounded-xl border p-4'
-      style={{
-        borderColor: colors.cardBorder,
-        backgroundColor: colors.gray[50],
-      }}
+      className='rounded-xl border border-stone-100 bg-stone-50/50 p-4 active:bg-stone-100'
       onPress={handlePress}
     >
       <View className='mb-2 flex-row items-center justify-between'>
-        <Text
-          className='text-xs font-medium'
-          style={{ color: colors.text.tertiary }}
-        >
+        <Text className='text-xs font-medium text-stone-500'>
           {format(new Date(note.date), 'MMM d, yyyy')}
         </Text>
-        <Edit3 color={colors.text.tertiary} size={14} />
+        <Edit3 className='text-stone-400' size={14} />
       </View>
-      <Text
-        className='text-sm leading-5'
-        numberOfLines={3}
-        style={{ color: colors.text.primary }}
-      >
+      <Text className='text-sm leading-5 text-stone-700' numberOfLines={3}>
         {note.body}
       </Text>
     </Pressable>

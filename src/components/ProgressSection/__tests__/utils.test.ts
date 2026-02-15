@@ -4,6 +4,8 @@
  * Tests for habit insights calculation functions.
  */
 
+import type { DayStats } from '../types';
+import type { HabitTrackingEntry } from '../../../features/habits/types';
 import {
   calculateDayOfWeekStats,
   calculateCurrentStreak,
@@ -12,8 +14,6 @@ import {
   generateActionableTip,
   getBestAndWorstDays,
 } from '../utils';
-import type { HabitTrackingEntry } from '../../../features/habits/types';
-import type { DayStats } from '../types';
 
 // Helper to create tracking entries
 function createTrackingEntry(

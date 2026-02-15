@@ -3,14 +3,15 @@
  */
 
 import React from 'react';
+
 import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg';
 
+import type { ChartDimensions, ChartPoint } from './types';
 import {
   GridLines,
   AnimatedLinePath,
   CurrentPositionDot,
 } from './ChartElements';
-import type { ChartDimensions, ChartPoint } from './types';
 
 interface ChartSvgProps {
   dimensions: ChartDimensions;

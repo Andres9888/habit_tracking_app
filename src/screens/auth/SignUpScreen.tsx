@@ -1,12 +1,13 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import { useRef } from 'react';
+
 import { ScrollView, View, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useRef } from 'react';
+
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../../theme/colors';
-import { useThemeColors } from '../../theme/ThemeContext';
+
 import {
   AuthDivider,
   AuthError,
@@ -17,21 +18,19 @@ import {
   SubmitButton,
   VerificationView,
 } from './components';
+import { SignUpHeader } from './components/SignUpHeader';
+import { colors } from '../../theme/colors';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignUpFlow } from './hooks/useSignUpFlow';
-import { PasswordStrengthBar } from './components/PasswordStrengthBar';
-import { SignUpHeader } from './components/SignUpHeader';
-import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignUpScreenProps {
   onNavigateToSignIn?: () => void;
 }
 
-function SignUpScreenContent({
+export default function SignUpScreen({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
-  const { colors: themeColors } = useThemeColors();
   const passwordRef = useRef<TextInput>(null);
   const {
     emailAddress,
@@ -101,7 +100,7 @@ function SignUpScreenContent({
             <Animated.View
               entering={FadeInUp.delay(100).springify().damping(18)}
               style={{
-                backgroundColor: themeColors.card,
+                backgroundColor: '#ffffff',
                 borderRadius: 16,
                 elevation: 4,
                 padding: 24,
@@ -116,14 +115,12 @@ function SignUpScreenContent({
                   disabled={isAnyLoading}
                   isLoading={oauthLoading === 'oauth_apple'}
                   provider='apple'
-                  testID='auth-sign-up-apple-button'
                   onPress={signInWithApple}
                 />
                 <SocialSignInButton
                   disabled={isAnyLoading}
                   isLoading={oauthLoading === 'oauth_google'}
                   provider='google'
-                  testID='auth-sign-up-google-button'
                   onPress={signInWithGoogle}
                 />
               </View>
@@ -146,21 +143,18 @@ function SignUpScreenContent({
                   onChangeText={setEmailAddress}
                   onSubmitEditing={() => passwordRef.current?.focus()}
                 />
-                <View>
-                  <PasswordInput
-                    ref={passwordRef}
-                    autoComplete='password-new'
-                    editable={!isAnyLoading}
-                    error={passwordError}
-                    placeholder='Create a password'
-                    returnKeyType='go'
-                    value={password}
-                    onBlur={onPasswordBlur}
-                    onChangeText={setPassword}
-                    onSubmitEditing={handleSignUp}
-                  />
-                  <PasswordStrengthBar password={password} />
-                </View>
+                <PasswordInput
+                  ref={passwordRef}
+                  autoComplete='password-new'
+                  editable={!isAnyLoading}
+                  error={passwordError}
+                  placeholder='Create a password'
+                  returnKeyType='go'
+                  value={password}
+                  onBlur={onPasswordBlur}
+                  onChangeText={setPassword}
+                  onSubmitEditing={handleSignUp}
+                />
                 <SubmitButton
                   disabled={
                     !emailAddress || !password || isAnyLoading || !isFormValid
@@ -168,7 +162,6 @@ function SignUpScreenContent({
                   isLoading={isLoading}
                   label='Create Account'
                   loadingLabel='Creating your account…'
-                  testID='auth-sign-up-button'
                   onPress={handleSignUp}
                 />
               </View>
@@ -189,13 +182,5 @@ function SignUpScreenContent({
         </KeyboardAvoidingView>
       </LinearGradient>
     </View>
-  );
-}
-
-export default function SignUpScreen(props: SignUpScreenProps) {
-  return (
-    <ScreenErrorBoundary screenName="Sign Up">
-      <SignUpScreenContent {...props} />
-    </ScreenErrorBoundary>
   );
 }

@@ -1,5 +1,8 @@
+
 import React, { useCallback, useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -8,10 +11,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 
-import { SPRING_BUTTON } from '../../../../animations';
 import { SPRING_BOUNCY } from '../QuickReflection.constants';
+import { SPRING_BUTTON } from '../../../../animations';
 
 interface EmojiButtonProps {
   emoji: string;

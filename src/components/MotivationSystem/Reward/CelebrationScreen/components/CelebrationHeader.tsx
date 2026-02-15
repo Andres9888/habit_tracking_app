@@ -4,6 +4,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -14,9 +15,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { PartyPopper, Crown } from 'lucide-react-native';
 
-import { SPRING_BOUNCY } from '../constants';
-import { ConfettiBurst } from './animations';
 import type { CelebrationHeaderProps } from '../types';
+import { ConfettiBurst } from './animations';
+import { SPRING_BOUNCY } from '../constants';
 
 export function CelebrationHeader({
   habitName,

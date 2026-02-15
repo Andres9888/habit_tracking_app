@@ -3,6 +3,7 @@
  */
 
 import { useCallback } from 'react';
+
 import type { UseOfflineQueueReturn } from './types';
 
 type Manager = {

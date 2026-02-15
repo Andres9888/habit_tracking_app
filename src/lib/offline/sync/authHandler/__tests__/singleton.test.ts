@@ -2,8 +2,8 @@
  * Auth Handler Singleton Tests
  */
 
-import { getAuthHandler, hasAuthHandler, resetAuthHandler } from '../singleton';
 import type { AuthHandlerDeps } from '../types';
+import { getAuthHandler, hasAuthHandler, resetAuthHandler } from '../singleton';
 
 describe('Auth Handler Singleton', () => {
   afterEach(() => {

@@ -1,10 +1,12 @@
 /**
  * Styles for AnalyticsScreen
  */
+
 import { StyleSheet } from 'react-native';
+
 import { colors } from '../../theme/colors';
-import { typography } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   container: {

@@ -3,11 +3,11 @@
  */
 
 import type { UseAudioPlaybackOptions } from './types';
-import { usePlaybackState } from './usePlaybackState';
 import { useAudioMode } from './useAudioMode';
-import { usePlaybackStatusHandler } from './usePlaybackStatusHandler';
 import { useLoadAudio } from './useLoadAudio';
 import { usePlaybackControls } from './usePlaybackControls';
+import { usePlaybackState } from './usePlaybackState';
+import { usePlaybackStatusHandler } from './usePlaybackStatusHandler';
 import { useResumeFromInterruption } from './useResumeFromInterruption';
 import { useSeekControls } from './useSeekControls';
 import { useSpeedAndMute } from './useSpeedAndMute';

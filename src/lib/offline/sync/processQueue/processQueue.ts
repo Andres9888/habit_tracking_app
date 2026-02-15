@@ -7,7 +7,6 @@
  * Implements FR-005 (FIFO processing order) and FR-012 (non-blocking).
  */
 
-import { getOperationsForSync } from '../helpers';
 import type {
   ProcessQueueConfig,
   ProcessQueueResult,
@@ -15,8 +14,9 @@ import type {
   ProcessingContext,
   ProcessOperationResult,
 } from './types';
-import { processSingleOperation } from './processSingleOperation';
 import { createEmptyResult, aggregateResults } from './helpers';
+import { getOperationsForSync } from '../helpers';
+import { processSingleOperation } from './processSingleOperation';
 
 /** Default batch size for queue processing */
 export const DEFAULT_BATCH_SIZE = 50;

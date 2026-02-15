@@ -4,6 +4,7 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
+
 import type {
   RescueEligibleHabit,
   RescueTriggerConfig,
@@ -11,10 +12,10 @@ import type {
 } from './types';
 import { DEFAULT_CONFIG } from './constants';
 import { getHoursUntilMidnight, isInQuietHoursWindow } from './timeUtils';
-import { useRescueEligibility } from './useRescueEligibility';
-import { useScheduledTrigger } from './useScheduledTrigger';
 import { useAppResumeTrigger } from './useAppResumeTrigger';
 import { useMidnightReset } from './useMidnightReset';
+import { useRescueEligibility } from './useRescueEligibility';
+import { useScheduledTrigger } from './useScheduledTrigger';
 
 export function useRescueTrigger(
   habits: RescueEligibleHabit[],

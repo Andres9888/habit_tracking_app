@@ -5,7 +5,9 @@
  */
 
 import { useCallback, RefObject } from 'react';
+
 import { Audio } from 'expo-av';
+
 import type { RecordingStatus } from './types';
 import { RECORDING_OPTIONS, STATUS_UPDATE_INTERVAL_MS } from './constants';
 

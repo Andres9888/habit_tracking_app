@@ -8,14 +8,16 @@
 
 import React, { useRef, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
+
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+
+import type { ConfettiAnimationProps } from './types';
 import {
   CONFETTI_COLORS,
   SCREEN_WIDTH,
   ANIMATION_TIMING,
 } from './constants';
-import type { ConfettiAnimationProps } from './types';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export function ConfettiAnimation({
   active,

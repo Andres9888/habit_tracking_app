@@ -3,9 +3,10 @@
  */
 
 import { useEffect } from 'react';
+
 import type { RescueEligibleHabit } from './types';
-import { getHoursUntilMidnight } from './timeUtils';
 import { SCHEDULED_CHECK_INTERVAL_MS } from './constants';
+import { getHoursUntilMidnight } from './timeUtils';
 
 interface UseScheduledTriggerProps {
   enabled: boolean;

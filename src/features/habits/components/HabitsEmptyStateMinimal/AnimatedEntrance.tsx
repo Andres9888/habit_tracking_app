@@ -9,6 +9,7 @@
  */
 
 import { type ReactNode, useEffect } from 'react';
+
 import Animated, {
   useAnimatedStyle,
   useReducedMotion,

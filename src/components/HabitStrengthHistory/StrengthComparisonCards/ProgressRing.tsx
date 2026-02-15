@@ -4,8 +4,10 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
+
 import Animated from 'react-native-reanimated';
+import Svg, { Circle } from 'react-native-svg';
+
 import { RING_SIZE, RING_STROKE_WIDTH } from './constants';
 import { useStrengthAnimation } from './useStrengthAnimation';
 

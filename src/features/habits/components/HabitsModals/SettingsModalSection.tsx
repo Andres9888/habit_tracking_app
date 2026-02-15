@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import SettingsModal from '../../../../components/SettingsModal';
-import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders';
-import { usePremium } from '../../../../hooks/usePremium';
+
 import type { SettingsModalSectionProps } from './HabitsModals.types';
+import SettingsModal from '../../../../components/SettingsModal';
+import { usePremium } from '../../../../hooks/usePremium';
+import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders';
 
 /**
  * Settings modal section - handles app settings configuration

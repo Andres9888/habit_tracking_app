@@ -4,9 +4,9 @@
  */
 
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
-import TemplateCard from '../../../components/TemplateCard';
+
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
-import { colors } from '../../../theme/colors';
+import TemplateCard from '../../../components/TemplateCard';
 
 interface TemplateListCardProps {
   item: Doc<'templates'>;
@@ -44,7 +44,7 @@ export function TemplateListCard({
       />
       {isImporting && (
         <View style={loadingStyles.overlay}>
-          <ActivityIndicator color={colors.primary[600]} size="small" />
+          <ActivityIndicator color="#059669" size="small" />
         </View>
       )}
     </View>

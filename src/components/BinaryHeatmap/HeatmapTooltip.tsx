@@ -6,6 +6,7 @@
 
 import React, { memo, useEffect } from 'react';
 import { View, Text, Modal, Pressable } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -14,10 +15,10 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import type { HeatmapTooltipProps } from './types';
-import { formatTooltipText } from './utils';
 import { TOOLTIP } from './constants';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { formatTooltipText } from './utils';
 import { styles } from './HeatmapTooltip.styles';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 

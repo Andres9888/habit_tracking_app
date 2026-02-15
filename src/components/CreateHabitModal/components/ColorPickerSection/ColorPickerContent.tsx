@@ -4,11 +4,12 @@
  */
 
 import { Text, View } from 'react-native';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+
+import type { ColorPickerSectionProps } from './types';
 import STRINGS from '../../../../constants/strings';
 import { ColorButton } from './ColorButton';
 import { CustomColorButton } from './CustomColorButton';
-import type { ColorPickerSectionProps } from './types';
+import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 
 export const ColorPickerContent = ({
   colors,

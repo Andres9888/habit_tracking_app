@@ -4,8 +4,6 @@
  * Helper functions for identifying and processing orphaned operations.
  */
 
-import type { Id } from '../../../../../convex/_generated/dataModel';
-import type { OfflineOperation } from '../../queue';
 import type {
   CleanupOrphansEvent,
   CleanupOrphansEventType,
@@ -13,6 +11,8 @@ import type {
   HabitExistsResult,
   OrphanedOperation,
 } from './types';
+import type { Id } from '../../../../../convex/_generated/dataModel';
+import type { OfflineOperation } from '../../queue';
 
 /**
  * Extract unique habit IDs from operations

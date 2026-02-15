@@ -3,9 +3,10 @@
  */
 
 import { Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { ChevronDown } from 'lucide-react-native';
-import { useThemeColors } from '../../../theme/ThemeContext';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import { styles } from '../../templates/templatesScreenStyles';
 
 interface ScrollShadowsProps {
@@ -17,49 +18,29 @@ export function ScrollShadows({
   showBottomShadow,
   showTopShadow,
 }: ScrollShadowsProps) {
-  const { colors, isDark } = useThemeColors();
-  const bgOpaque = isDark
-    ? 'rgba(17,24,39,0.96)'
-    : 'rgba(248,247,245,0.96)';
-  const bgTransparent = isDark
-    ? 'rgba(17,24,39,0)'
-    : 'rgba(248,247,245,0)';
-  const chipBg = isDark
-    ? 'rgba(31,41,55,0.9)'
-    : 'rgba(255,255,255,0.9)';
-
   return (
     <>
       {showTopShadow && (
         <LinearGradient
-          colors={[bgOpaque, bgTransparent]}
+          colors={['rgba(248,247,245,0.96)', 'rgba(248,247,245,0)']}
           pointerEvents='none'
           style={styles.scrollFadeTop}
         />
       )}
       {showBottomShadow && (
         <LinearGradient
-          colors={[bgTransparent, bgOpaque]}
+          colors={['rgba(248,247,245,0)', 'rgba(248,247,245,0.95)']}
           pointerEvents='none'
           style={styles.scrollFadeBottom}
         >
           <View
             style={[
               styles.scrollHintChip,
-              { backgroundColor: chipBg },
+              { backgroundColor: 'rgba(255, 255, 255, 0.9)' },
             ]}
           >
-            <ChevronDown
-              color={colors.text.secondary}
-              size={16}
-              strokeWidth={2.25}
-            />
-            <Text
-              style={[
-                styles.scrollHintText,
-                { color: colors.text.secondary },
-              ]}
-            >
+            <ChevronDown color='#374151' size={16} strokeWidth={2.25} />
+            <Text style={[styles.scrollHintText, { color: '#374151' }]}>
               Scroll for more
             </Text>
           </View>

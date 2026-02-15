@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 
 import type { CalendarColors } from '../CalendarTimeline.types';

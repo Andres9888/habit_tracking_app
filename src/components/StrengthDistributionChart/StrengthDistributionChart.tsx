@@ -1,6 +1,7 @@
+
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
-import { Pie, PolarChart } from 'victory-native';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,17 +9,19 @@ import Animated, {
   withTiming,
   interpolate,
 } from 'react-native-reanimated';
-import { styles } from './StrengthDistributionChart.styles';
+import { Pie, PolarChart } from 'victory-native';
+
+import type {
+  StrengthDistributionChartProps,
+  ChartDataItem,
+} from './StrengthDistributionChart.types';
 import {
   CHART_SIZE,
   LEVEL_COLORS,
   STRENGTH_LEVELS,
 } from './StrengthDistributionChart.constants';
 import { Legend } from './components';
-import type {
-  StrengthDistributionChartProps,
-  ChartDataItem,
-} from './StrengthDistributionChart.types';
+import { styles } from './StrengthDistributionChart.styles';
 
 export default function StrengthDistributionChart({
   data,

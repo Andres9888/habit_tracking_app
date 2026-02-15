@@ -3,6 +3,7 @@
  */
 
 import type { SharedValue } from 'react-native-reanimated';
+
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 
 /** Props for the main FullsizeTemplatePreview component */

@@ -6,8 +6,10 @@
  */
 
 import React from 'react';
-import { renderHook, act, waitFor } from '@testing-library/react-native';
+
 import NetInfo from '@react-native-community/netinfo';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
+
 import { NetworkStatusProvider } from '../NetworkStatusProvider';
 import { useNetworkSync } from '../useNetworkSync';
 

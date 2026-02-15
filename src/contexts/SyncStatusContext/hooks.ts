@@ -5,13 +5,14 @@
  */
 
 import { useContext, useEffect } from 'react';
-import { SyncStatusContext } from './context';
+
 import type {
   SyncStatus,
   SyncStatusContextValue,
   SyncStatusIndicator,
 } from './types';
 import type { SyncOrchestratorResult } from '../../lib/offline/sync/types';
+import { SyncStatusContext } from './context';
 
 /**
  * Main hook for accessing full sync status context

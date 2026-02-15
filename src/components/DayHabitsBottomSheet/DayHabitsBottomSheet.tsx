@@ -1,15 +1,17 @@
+
 import { Modal, Pressable, View } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
+
 import Animated from 'react-native-reanimated';
+import { GestureDetector } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useThemeColors } from '../../theme/ThemeContext';
-import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import type { DayHabitsBottomSheetProps } from './types';
 import { DragHandle, EmptyState, HabitList, SheetHeader } from './components';
 import { getSheetContainerStyle } from './styles';
-import type { DayHabitsBottomSheetProps } from './types';
 import { useDayHabitsSheet } from './useDayHabitsSheet';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useSheetAnimations } from './useSheetAnimations';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 /**
  * DayHabitsBottomSheet - iOS-style bottom sheet for viewing and toggling habits on a specific day.

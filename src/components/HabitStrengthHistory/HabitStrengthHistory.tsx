@@ -6,21 +6,22 @@
  */
 
 import React, { useState, useCallback } from 'react';
+
 import Animated, {
   FadeIn,
   FadeInUp,
   useReducedMotion,
 } from 'react-native-reanimated';
 
-import { useHabitStrength } from '../../hooks/useHabitStrength';
+import type { HabitStrengthHistoryProps } from './types';
 import { EmptyStrengthState } from './EmptyStrengthState';
 import { HabitStrengthHistorySkeleton } from './HabitStrengthHistorySkeleton';
 import { HabitStrengthInfoModal } from './InfoModal';
 import { SectionHeader } from './SectionHeader';
 import { StrengthComparisonCards } from './StrengthComparisonCards';
-import { StrengthTimelineChart } from './StrengthTimelineChart';
 import { StrengthInsightsRow } from './StrengthInsightsRow';
-import type { HabitStrengthHistoryProps } from './types';
+import { StrengthTimelineChart } from './StrengthTimelineChart';
+import { useHabitStrength } from '../../hooks/useHabitStrength';
 
 const SECTION_FADE_DURATION = 400;
 const SECTION_SLIDE_DURATION = 400;

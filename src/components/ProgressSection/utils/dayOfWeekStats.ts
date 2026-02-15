@@ -2,8 +2,8 @@
  * Day of week statistics calculations
  */
 
-import type { HabitTrackingEntry } from '../../../features/habits/types';
 import type { DayStats } from '../types';
+import type { HabitTrackingEntry } from '../../../features/habits/types';
 import { formatDateString } from '../../../utils/dateUtils';
 
 // Day labels

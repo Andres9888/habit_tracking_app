@@ -1,4 +1,6 @@
+
 import { Text, View } from 'react-native';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface SignInLinkProps {

@@ -15,10 +15,12 @@
  */
 
 import React, { useState, useCallback } from 'react';
+
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
-import { BinaryHeatmap } from '..';
-import type { TimeRange } from '../types';
+
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { TimeRange } from '../types';
+import { BinaryHeatmap } from '..';
 
 // Mock the useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({

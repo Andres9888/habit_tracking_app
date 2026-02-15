@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { ChevronRight } from 'lucide-react-native';
 import { clsx } from 'clsx';
 
 interface NavigationButtonsProps {

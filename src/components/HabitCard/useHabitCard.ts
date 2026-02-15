@@ -7,18 +7,20 @@
  */
 
 import { useCallback } from 'react';
+
 import { useAnimatedStyle } from 'react-native-reanimated';
+
+import type { HabitCardProps } from './HabitCard.types';
+import { getStrengthColor, getBackgroundColor } from './HabitCard.utils';
 import { useAppTheme } from '../../theme';
-import { useThemeColors } from '../../theme/ThemeContext';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { useHabitCardEntrance } from './useHabitCardEntrance';
 import { useHabitCardAnimations } from './useHabitCardAnimations';
-import { useHabitCardGestures } from './useHabitCardGestures';
 import { useHabitCardEffects } from './useHabitCardEffects';
+import { useHabitCardEntrance } from './useHabitCardEntrance';
+import { useHabitCardGestures } from './useHabitCardGestures';
 import { useHabitCardState, useStreakMilestoneIntegration } from './hooks';
 import { useHabitCardValues } from './useHabitCardValues';
-import { getStrengthColor, getBackgroundColor } from './HabitCard.utils';
-import type { HabitCardProps } from './HabitCard.types';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 export function useHabitCard(props: HabitCardProps) {
   const {

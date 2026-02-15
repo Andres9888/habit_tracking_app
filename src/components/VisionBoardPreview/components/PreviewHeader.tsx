@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Pressable, Text } from 'react-native';
+
 import { X, Edit3, Eye } from 'lucide-react-native';
+
 import type { PreviewHeaderProps } from '../VisionBoardPreview.types';
 
 export function PreviewHeader({

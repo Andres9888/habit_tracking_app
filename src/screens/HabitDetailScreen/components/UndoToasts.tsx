@@ -3,8 +3,9 @@
  */
 
 import React from 'react';
-import { DeleteUndoToast } from '../../../components/DeleteUndoToast';
+
 import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
+import { DeleteUndoToast } from '../../../components/DeleteUndoToast';
 
 interface UndoToastsProps {
   habitName: string;

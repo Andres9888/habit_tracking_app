@@ -1,6 +1,8 @@
+
 import { lazy, Suspense } from 'react';
-import PauseHabitModal from '../../../../components/PauseHabitModal';
+
 import type { ShareAndPauseModalsProps } from './HabitsModals.types';
+import PauseHabitModal from '../../../../components/PauseHabitModal';
 
 const ShareCardGenerator = lazy(
   () => import('../../../../components/ShareCardGenerator')

@@ -1,18 +1,20 @@
 /**
  * ChartSections - Analytics chart components (Strength, Trend, Heatmap)
  */
+
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
-import { typography } from '../../../theme/typography';
-import { spacing } from '../../../theme/spacing';
-import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
+
+import type { HeatmapData } from '../../../components/ComplianceHeatmap/ComplianceHeatmap.types';
 import type { StrengthDistributionData } from '../../../components/StrengthDistributionChart/StrengthDistributionChart.types';
-import TrendLineChart from '../../../components/TrendLineChart';
 import type { TrendData } from '../../../components/TrendLineChart/types';
 import ComplianceHeatmap from '../../../components/ComplianceHeatmap';
-import type { HeatmapData } from '../../../components/ComplianceHeatmap/ComplianceHeatmap.types';
+import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
+import TrendLineChart from '../../../components/TrendLineChart';
 import { ChartLoadingSkeleton } from './ChartLoadingSkeleton';
+import { colors } from '../../../theme/colors';
+import { spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 interface ChartSectionsProps {
   strengthDistribution: StrengthDistributionData | undefined;

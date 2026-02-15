@@ -1,6 +1,8 @@
-import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+
 import { Pressable, Text, View } from 'react-native';
+
+import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { format } from 'date-fns';
 
 interface CalendarHeaderProps {
   currentMonth: Date;

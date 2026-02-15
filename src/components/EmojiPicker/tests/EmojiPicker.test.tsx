@@ -11,9 +11,11 @@
  */
 
 import React, { createRef } from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { AccessibilityInfo, View } from 'react-native';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+
 import { EmojiPicker } from '../EmojiPicker';
 
 // Use the mock from __mocks__/@react-native-async-storage/async-storage.js

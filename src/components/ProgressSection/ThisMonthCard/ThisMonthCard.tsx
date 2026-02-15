@@ -13,14 +13,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { BarChart3, ChevronRight } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import type { ThisMonthCardProps } from '../types';
-import { useDayStats } from './useDayStats';
 import { DayBar } from './DayBar';
 import { SummaryRow } from './SummaryRow';
+import { useDayStats } from './useDayStats';
 
 export function ThisMonthCard({
   dayStats,

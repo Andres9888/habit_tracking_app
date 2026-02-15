@@ -1,9 +1,9 @@
+
 import React from 'react';
 import { View } from 'react-native';
 
-import { EMOJI_OPTIONS } from '../QuickReflection.constants';
 import type { EmojiType } from '../QuickReflection.types';
-
+import { EMOJI_OPTIONS } from '../QuickReflection.constants';
 import { EmojiButton } from './EmojiButton';
 
 interface EmojiSelectorProps {

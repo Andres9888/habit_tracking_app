@@ -5,6 +5,7 @@
 
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
+
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Linking,
@@ -17,8 +18,7 @@ import {
   Pressable,
   TextInput,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -26,6 +26,9 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import {
   AuthDivider,
   AuthError,

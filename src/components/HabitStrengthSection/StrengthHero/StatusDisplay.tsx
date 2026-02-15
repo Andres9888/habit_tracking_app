@@ -9,8 +9,8 @@ import { Text, View } from 'react-native';
 
 import { TrendingDown, TrendingUp } from 'lucide-react-native';
 
-import { COLORS, STRENGTH_COLORS, STRENGTH_LABELS } from '../constants';
 import type { StatusDisplayProps } from './types';
+import { COLORS, STRENGTH_COLORS, STRENGTH_LABELS } from '../constants';
 
 /**
  * Displays strength label and delta change.

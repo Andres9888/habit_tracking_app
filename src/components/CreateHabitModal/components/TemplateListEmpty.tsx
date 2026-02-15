@@ -1,5 +1,8 @@
-import { View } from 'react-native';
+
+import { Text, View } from 'react-native';
+
 import Animated, { FadeInUp } from 'react-native-reanimated';
+
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 const anim = (delay: number) =>
@@ -12,11 +15,7 @@ export const TemplateListEmpty = () => {
     <View
       accessibilityLabel='No habits found in this category. Try selecting a different category.'
       accessibilityRole='text'
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 48,
-      }}
+      style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 48 }}
     >
       <Animated.Text entering={anim(0)} style={{ fontSize: 32 }}>
         🔍

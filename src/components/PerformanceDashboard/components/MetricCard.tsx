@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { StatusIndicator } from './StatusIndicator';
+
 import type { StatusLevel } from '../types';
+import { StatusIndicator } from './StatusIndicator';
 
 interface MetricCardProps {
   label: string;

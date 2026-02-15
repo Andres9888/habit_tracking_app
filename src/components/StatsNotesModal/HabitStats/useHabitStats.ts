@@ -2,12 +2,14 @@
  * Hook for HabitStats data fetching and processing
  */
 
-import { useQuery } from 'convex/react';
-import { format, startOfDay, subDays } from 'date-fns';
 import { useMemo, useState } from 'react';
-import { api } from '../../../../convex/_generated/api';
-import type { Id } from '../../../../convex/_generated/dataModel';
+
+import { format, startOfDay, subDays } from 'date-fns';
+import { useQuery } from 'convex/react';
+
 import type { HabitStatsData } from './HabitStats.types';
+import type { Id } from '../../../../convex/_generated/dataModel';
+import { api } from '../../../../convex/_generated/api';
 
 export function useHabitStats() {
   const habits = useQuery(api.habits.list) ?? [];

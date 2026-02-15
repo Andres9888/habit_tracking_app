@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { Check } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { Check } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ReadLetterFooterProps {

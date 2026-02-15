@@ -1,8 +1,11 @@
-import { ConvexProvider, ConvexReactClient } from 'convex/react';
+
 import React, { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App';
+
 import './index.css';
+import { ConvexProvider, ConvexReactClient } from 'convex/react';
+import { createRoot } from 'react-dom/client';
+
+import App from './App';
 
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },

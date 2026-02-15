@@ -5,10 +5,12 @@
  */
 
 import { useCallback, useState, useEffect } from 'react';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQuery } from 'convex/react';
+
 import { api } from '../../../convex/_generated/api';
 import { ensureNotificationPermissions } from '../../utils/notifications/permissions';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FIRST_HABIT_CREATED_KEY = '@chain_day:first_habit_created_at';
 const PERMISSION_REQUESTED_KEY = '@chain_day:notif_permission_requested';

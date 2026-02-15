@@ -4,14 +4,13 @@
  * Form for creating and editing notes with optional habit linking.
  */
 
-import { useRef } from 'react';
 import { Text, TextInput, View } from 'react-native';
-import { colors } from '@/theme/colors';
-import { AccessibleErrorMessage } from '@/components/ui/AccessibleErrorMessage';
+import { useRef } from 'react';
 
+import type { NoteEditorProps } from './types';
 import { HabitSelector } from './HabitSelector';
 import { NoteEditorActions } from './NoteEditorActions';
-import type { NoteEditorProps } from './types';
+import { colors } from '@/theme/colors';
 import { useNoteEditor } from './useNoteEditor';
 
 export default function NoteEditor({
@@ -91,13 +90,12 @@ export default function NoteEditor({
             className={`text-xs ${
               characterCount > 1000 ? 'text-red-500' : 'text-stone-500'
             }`}
-            maxFontSizeMultiplier={2}
           >
             {characterCount} / 1000 characters
           </Text>
         </View>
 
-        <AccessibleErrorMessage message={error} urgency="polite" />
+        {error ? <Text className='text-sm text-red-500'>{error}</Text> : null}
       </View>
 
       <NoteEditorActions

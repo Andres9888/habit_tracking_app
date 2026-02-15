@@ -14,9 +14,9 @@ import {
 } from 'date-fns';
 
 import type { StrengthSnapshot } from '../../HabitStrengthHistory/types';
-import { getStrengthLabel } from '../../HabitStrengthHistory/strengthUtils';
 import type { TimeRange } from '../types';
 import { TIME_RANGE_DAYS } from '../constants';
+import { getStrengthLabel } from '../../HabitStrengthHistory/strengthUtils';
 
 /** Exponential smoothing constants (matches Loop Habit Tracker) */
 const GROWTH_RATE = 0.05; // +5% of remaining on completion

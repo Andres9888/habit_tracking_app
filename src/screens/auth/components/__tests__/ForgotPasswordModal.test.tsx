@@ -5,6 +5,7 @@
  */
 
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
+
 import { ForgotPasswordModal } from '../ForgotPasswordModal';
 
 // Mock Clerk

@@ -4,12 +4,12 @@
  * Timeout and event emission utilities for conflict resolution.
  */
 
-import type { Id } from '../../../../../convex/_generated/dataModel';
 import type {
   CompletionStateChecker,
   ConflictEventListener,
   ConflictResolution,
 } from './types';
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import { createConflictEvent } from './helpers';
 
 export async function checkWithTimeout(

@@ -6,13 +6,12 @@
 
 import { Animated, Modal, View } from 'react-native';
 
+import type { SuccessAnimationProps, ConfettiParticleData } from './types';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
-import { ConfettiParticle } from './ConfettiParticle';
 import { CONFETTI_COLORS, CONFETTI_PARTICLE_COUNT } from './constants';
+import { ConfettiParticle } from './ConfettiParticle';
 import { SuccessCard } from './SuccessCard';
 import { useSuccessAnimations } from './useSuccessAnimations';
-
-import type { SuccessAnimationProps, ConfettiParticleData } from './types';
 
 export const SuccessAnimation = ({
   habitName,

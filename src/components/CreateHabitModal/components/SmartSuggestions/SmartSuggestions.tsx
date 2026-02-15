@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import { Animated, ScrollView, Text, View } from 'react-native';
-import { Motion } from '../../../../constants/motion';
-import { EmptyState } from './EmptyState';
-import { SuggestionChip } from './SuggestionChip';
-import { SUGGESTIONS } from './suggestions.data';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import type { SmartSuggestionsProps } from './types';
+import { EmptyState } from './EmptyState';
+import { Motion } from '../../../../constants/motion';
+import { SUGGESTIONS } from './suggestions.data';
+import { SuggestionChip } from './SuggestionChip';
 
 export const SmartSuggestions = ({ onPick, query }: SmartSuggestionsProps) => {
   const [isLoading, setIsLoading] = useState(false);

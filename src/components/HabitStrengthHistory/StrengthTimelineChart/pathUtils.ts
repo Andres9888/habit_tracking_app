@@ -2,8 +2,8 @@
  * SVG path generation utilities for StrengthTimelineChart
  */
 
-import type { StrengthSnapshot } from '../types';
 import type { ChartDimensions, ChartPaths } from './types';
+import type { StrengthSnapshot } from '../types';
 import { dataToSvg, generateBezierCurves } from './bezierUtils';
 
 /**

@@ -3,8 +3,9 @@
  */
 
 import { useMemo } from 'react';
-import type { Doc } from '../../../convex/_generated/dataModel';
+
 import type { Category, SortOption } from '../templates/constants';
+import type { Doc } from '../../../convex/_generated/dataModel';
 
 export function useTemplatesByCategory(
   allTemplates: Doc<'templates'>[] | undefined

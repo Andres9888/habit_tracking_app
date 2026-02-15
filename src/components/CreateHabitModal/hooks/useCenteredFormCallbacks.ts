@@ -4,9 +4,10 @@
  * Provides memoized form callbacks for CreateHabitModalCentered.
  */
 
-import { useCallback, type RefObject } from 'react';
-import { Platform } from 'react-native';
 import type { ScrollView as ScrollViewType } from 'react-native';
+import { Platform } from 'react-native';
+import { useCallback, type RefObject } from 'react';
+
 import * as Haptics from 'expo-haptics';
 
 interface FormState {

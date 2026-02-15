@@ -6,13 +6,7 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import { CHART_WIDTH, styles } from './StrengthHistoryChart.styles';
 import type { StrengthHistoryChartProps } from './StrengthHistoryChart.types';
-import {
-  calculateChartPoints,
-  generateLinePath,
-  getTrendDirection,
-} from './StrengthHistoryChart.utils';
 import {
   ChartLegend,
   ChartSvg,
@@ -20,6 +14,12 @@ import {
   StatsRow,
   XAxisLabels,
 } from './components';
+import {
+  calculateChartPoints,
+  generateLinePath,
+  getTrendDirection,
+} from './StrengthHistoryChart.utils';
+import { CHART_WIDTH, styles } from './StrengthHistoryChart.styles';
 
 const PADDING = 20;
 

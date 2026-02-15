@@ -1,6 +1,8 @@
+
 import { memo } from 'react';
-import { ColorPickerContent } from './ColorPickerContent';
+
 import type { ColorPickerSectionProps } from './types';
+import { ColorPickerContent } from './ColorPickerContent';
 
 const ColorPickerSectionComponent = ({
   colors,

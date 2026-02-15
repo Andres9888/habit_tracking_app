@@ -1,7 +1,10 @@
 /**
  * Monitor Refs Hook - Creates refs for performance monitor instances.
  */
+
 import { useRef } from 'react';
+
+import type { FrameTimingData } from '../../lib/performance';
 import {
   FrameMonitor,
   MemoryMonitor,
@@ -9,7 +12,6 @@ import {
   PerformanceTimer,
   RenderTracker,
 } from '../../lib/performance';
-import type { FrameTimingData } from '../../lib/performance';
 
 /**
  * Generates a unique session ID for performance monitoring sessions.

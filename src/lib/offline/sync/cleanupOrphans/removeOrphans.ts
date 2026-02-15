@@ -4,13 +4,13 @@
  * Functions for removing orphaned operations from the queue.
  */
 
-import { createCleanupEvent } from './helpers';
 import type {
   CleanupOrphansConfig,
   CleanupOrphansDeps,
   CleanupOrphansEvent,
   OrphanedOperation,
 } from './types';
+import { createCleanupEvent } from './helpers';
 
 /**
  * Remove orphaned operations from the queue

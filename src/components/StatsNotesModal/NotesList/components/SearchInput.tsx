@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, TextInput } from 'react-native';
+
 import { Search } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 

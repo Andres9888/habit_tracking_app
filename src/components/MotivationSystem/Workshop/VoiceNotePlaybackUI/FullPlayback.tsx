@@ -5,11 +5,12 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { PlayPauseButton } from './PlayPauseButton';
-import { ProgressBar } from './ProgressBar';
 import { PlaybackHeader } from './PlaybackHeader';
-import { TimeControls } from './TimeControls';
 import { PlaybackSpeed } from '../../../../hooks/useAudioPlayback';
+import { ProgressBar } from './ProgressBar';
+import { TimeControls } from './TimeControls';
 
 interface FullPlaybackProps {
   label?: string;

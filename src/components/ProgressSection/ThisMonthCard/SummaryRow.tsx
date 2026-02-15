@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { TrendingUp, TrendingDown, CheckCircle2 } from 'lucide-react-native';
 
 interface SummaryRowProps {

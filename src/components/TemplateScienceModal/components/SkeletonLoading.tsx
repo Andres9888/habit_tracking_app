@@ -4,7 +4,9 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { ScrollView } from 'react-native-gesture-handler';
+
 import Modal from '../../Modal';
 import { SkeletonBox } from './SkeletonBox';
 import { useThemeColors } from '../../../theme/ThemeContext';

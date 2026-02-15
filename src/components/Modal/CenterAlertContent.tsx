@@ -5,10 +5,12 @@
 
 import React from 'react';
 import type { ViewStyle } from 'react-native';
+
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
+import { styles } from './Modal.styles';
 import { useAppTheme } from '../../theme';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { styles } from './Modal.styles';
 
 interface CenterAlertContentProps {
   children: React.ReactNode;

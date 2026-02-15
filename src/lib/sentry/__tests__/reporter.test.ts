@@ -3,9 +3,9 @@
  * Unit tests for the Sentry reporter module.
  */
 
-import { getSentryReporter, sentryReporter } from '../reporter';
-import type { SentryReporter, SentryBreadcrumb, SentryUser } from '../types';
 import type { PerformanceIssue } from '../../../contexts/PerformanceContext/types';
+import type { SentryReporter, SentryBreadcrumb, SentryUser } from '../types';
+import { getSentryReporter, sentryReporter } from '../reporter';
 
 // Mock the init module to control initialization state
 jest.mock('../init', () => ({

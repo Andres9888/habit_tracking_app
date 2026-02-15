@@ -8,10 +8,11 @@
  */
 
 import { useCallback } from 'react';
+
 import type { Id } from '../../../../convex/_generated/dataModel';
-import { optimisticStore } from '../store';
 import type { ToggleOperationPayload } from '../types';
 import { getOfflineQueueManager, isNetworkError } from '../../offline';
+import { optimisticStore } from '../store';
 
 export interface OptimisticToggleOptions {
   /** Whether the app is currently online (pass from useIsOnline) */

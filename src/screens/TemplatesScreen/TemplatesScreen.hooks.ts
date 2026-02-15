@@ -2,11 +2,12 @@
  * State management for TemplatesScreen
  */
 
-import { useEffect, useRef, useState } from 'react';
 import { FlatList, ScrollView } from 'react-native';
-import type { Doc, Id } from '../../../convex/_generated/dataModel';
-import type { Category, SortOption } from '../templates/constants';
+import { useEffect, useRef, useState } from 'react';
+
 import type { BrowseTab, ViewMode } from './TemplatesScreen.types';
+import type { Category, SortOption } from '../templates/constants';
+import type { Doc, Id } from '../../../convex/_generated/dataModel';
 
 interface UseTemplatesScreenStateOptions {
   categories: { id: string }[] | undefined;

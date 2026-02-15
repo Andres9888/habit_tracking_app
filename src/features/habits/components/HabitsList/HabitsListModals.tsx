@@ -10,10 +10,10 @@
  * `upgradePromptVisible` (upgrade prompt, controlled by the parent screen).
  */
 
-import { SortBottomSheet } from '../SortBottomSheet';
-import { DayHabitsBottomSheet } from '../../../../components/DayHabitsBottomSheet';
-import { UpgradePrompt } from './UpgradePrompt';
 import type { HabitsListProps } from './HabitsList.types';
+import { DayHabitsBottomSheet } from '../../../../components/DayHabitsBottomSheet';
+import { SortBottomSheet } from '../SortBottomSheet';
+import { UpgradePrompt } from './UpgradePrompt';
 
 export interface HabitsListModalsProps {
   list: HabitsListProps['list'];

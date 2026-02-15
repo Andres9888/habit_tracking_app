@@ -1,4 +1,6 @@
+
 import { useEffect } from 'react';
+
 import {
   withSpring,
   withTiming,
@@ -6,14 +8,15 @@ import {
   withSequence,
   Easing,
 } from 'react-native-reanimated';
-import { Springs } from '../../../constants/motion';
-import { MILESTONES } from '../MilestoneProgressTypes';
+
+import type { UseAnimationEffectsParams } from './useAnimationEffects.types';
 import {
   ENTRANCE_DURATION,
   PROGRESS_BAR_DURATION,
   PULSE_DURATION,
 } from './animation.constants';
-import type { UseAnimationEffectsParams } from './useAnimationEffects.types';
+import { MILESTONES } from '../MilestoneProgressTypes';
+import { Springs } from '../../../constants/motion';
 
 export const useAnimationEffects = ({
   animationValues,

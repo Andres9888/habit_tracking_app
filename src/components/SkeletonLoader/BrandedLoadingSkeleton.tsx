@@ -4,10 +4,12 @@
  * Layout: chain icon, app name shimmer, 3 habit card placeholders
  * Supports dark mode via useSkeletonTheme.
  */
+
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { SkeletonLoader } from './SkeletonLoader';
+
 import { HabitCardSkeleton } from './HabitCardSkeleton';
+import { SkeletonLoader } from './SkeletonLoader';
 import { useSkeletonTheme } from './useSkeletonTheme';
 
 function ChainIcon({ isDark }: { isDark: boolean }) {

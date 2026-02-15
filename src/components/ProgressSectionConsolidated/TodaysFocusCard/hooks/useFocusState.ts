@@ -11,13 +11,13 @@ import type {
   FocusState,
 } from '../../TodaysFocusCardTypes';
 import {
-  getCelebrationMilestone,
-  getNextCelebrationMilestone,
-} from '../../TodaysFocusCardTypes';
-import {
   determineFocusState,
   calculateGoalValue,
 } from '../TodaysFocusCard.utils';
+import {
+  getCelebrationMilestone,
+  getNextCelebrationMilestone,
+} from '../../TodaysFocusCardTypes';
 import { FOCUS_STATE_CONFIGS } from '../TodaysFocusCard.constants';
 
 export interface UseFocusStateResult {

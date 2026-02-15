@@ -1,7 +1,8 @@
-import { SettingItem } from './SettingItem';
-import { SETTINGS_CONFIG } from './SettingsDialog.config';
-import { useEscapeKey, useSettingsDialog } from './SettingsDialog.hooks';
+
 import type { SettingsDialogProps } from './SettingsDialog.types';
+import { SETTINGS_CONFIG } from './SettingsDialog.config';
+import { SettingItem } from './SettingItem';
+import { useEscapeKey, useSettingsDialog } from './SettingsDialog.hooks';
 
 export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
   const { localSettings, toggleSetting } = useSettingsDialog(isOpen);

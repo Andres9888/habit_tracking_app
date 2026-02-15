@@ -2,12 +2,14 @@
  * MiniTemplateCard Component
  * Compact template card for horizontal scrolling previews within category sections
  */
+
 import React from 'react';
 
-import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { DEFAULT_ICON_COLOR } from './constants';
-import { MiniCardContainer } from './MiniCardContainer';
 import type { MiniTemplateCardProps } from './MiniTemplateCard.types';
+import {
+  useAnimatedCardStyle,
+  useMiniTemplateCardAnimations,
+} from './useMiniTemplateCardAnimations';
 import {
   useCheckmarkStyle,
   useChevronStyle,
@@ -15,11 +17,10 @@ import {
   useImportButtonStyle,
   useScienceBadgeStyle,
 } from './useAnimatedStyles';
-import {
-  useAnimatedCardStyle,
-  useMiniTemplateCardAnimations,
-} from './useMiniTemplateCardAnimations';
+import { DEFAULT_ICON_COLOR } from './constants';
+import { MiniCardContainer } from './MiniCardContainer';
 import { createImportHandler, createPressHandlers } from './usePressHandlers';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export function MiniTemplateCard(props: MiniTemplateCardProps) {
   const {

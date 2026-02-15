@@ -2,41 +2,33 @@
  * CtaButton - Primary call-to-action button
  */
 
+import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import { useCallback } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import Animated from 'react-native-reanimated';
 
-import { AccessibleText } from '../../../../components/ui/AccessibleText';
-import { useHaptics } from '../../../../utils/haptics/useHaptics';
-import { CTA_SHIMMER } from './animations';
-import { COPY } from './constants';
+import * as Haptics from 'expo-haptics';
+import Animated from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { CtaButtonProps } from './types';
-import { useEmptyStateColors } from './useEmptyStateColors';
+import { COPY } from './constants';
+import { CTA_SHIMMER } from './animations';
+import { getCtaButtonStyle, ctaTextStyle } from './CtaButton.styles';
 import { useCtaButtonAnimations } from './useCtaButtonAnimations';
-import { getCtaButtonStyle, getCtaTextStyle } from './CtaButton.styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
-export function CtaButton({
-  disabled,
-  isLoading,
-  onPress,
-  inputValue,
-}: CtaButtonProps & { inputValue?: string }) {
+export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
   const isDisabled = disabled || isLoading;
-  const colors = useEmptyStateColors();
-  const { trigger } = useHaptics();
 
   const { animatedStyle, handlePressIn, handlePressOut, shimmerAnimatedStyle } =
     useCtaButtonAnimations({ disabled: !!disabled, isLoading: !!isLoading });
 
   const handlePress = useCallback(() => {
     if (disabled || isLoading) return;
-    trigger('tap');
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
-  }, [disabled, isLoading, onPress, trigger]);
+  }, [disabled, isLoading, onPress]);
 
   return (
     <AnimatedPressable
@@ -47,14 +39,7 @@ export function CtaButton({
       accessibilityRole='button'
       accessibilityState={{ disabled: isDisabled }}
       disabled={isDisabled}
-      style={[
-        animatedStyle,
-        getCtaButtonStyle(
-          !!isDisabled,
-          colors.ctaBackground,
-          colors.ctaBackground
-        ),
-      ]}
+      style={[animatedStyle, getCtaButtonStyle(!!isDisabled)]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -75,16 +60,9 @@ export function CtaButton({
         testID='cta-shimmer-overlay'
       />
       {isLoading ? (
-        <ActivityIndicator color={colors.ctaText} size='small' />
+        <ActivityIndicator color='#ffffff' size='small' />
       ) : (
-        <AccessibleText
-          scalingType='ui'
-          style={getCtaTextStyle(colors.ctaText)}
-        >
-          {inputValue?.trim()
-            ? COPY.ctaButtonDynamic(inputValue.trim())
-            : COPY.ctaButton}
-        </AccessibleText>
+        <Text style={ctaTextStyle}>{COPY.ctaButton}</Text>
       )}
     </AnimatedPressable>
   );

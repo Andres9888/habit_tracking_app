@@ -7,8 +7,10 @@
 
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Platform } from 'react-native';
-import { Button, Text, Surface } from 'react-native-paper';
+
 import * as Haptics from 'expo-haptics';
+import { Button, Text, Surface } from 'react-native-paper';
+
 import { useAppTheme } from '../theme';
 
 export function HapticTest() {

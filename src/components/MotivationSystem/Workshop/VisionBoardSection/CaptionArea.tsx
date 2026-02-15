@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Text, Pressable, TextInput } from 'react-native';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { MAX_CAPTION_LENGTH, type VisionBoardImage } from './types';
 
 interface CaptionAreaProps {

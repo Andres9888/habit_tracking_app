@@ -7,11 +7,11 @@
 
 import { View } from 'react-native';
 
+import type { SimpleReminderSectionProps } from './types';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
+import { CustomTimeButton } from './CustomTimeButton';
 import { QuickTimeButton } from './QuickTimeButton';
 import { ReminderHeader } from './ReminderHeader';
-import { CustomTimeButton } from './CustomTimeButton';
-import type { SimpleReminderSectionProps } from './types';
 import { buildQuickPresets, isTimeMatch } from './utils';
 
 export const SimpleReminderSection = ({

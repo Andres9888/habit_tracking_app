@@ -5,13 +5,18 @@
  * Verifies FR-005 (FIFO processing order) and FR-012 (non-blocking).
  */
 
-import type { OfflineQueueManagerAPI } from '../../queueManager';
 import type {
   OfflineSyncManager,
   SyncItem,
   SyncResult,
 } from '../../syncManager';
+import type {
+  QueueProcessorDeps,
+  ProcessQueueConfig,
+  ProcessSingleOptions,
+} from '../processQueue';
 import type { OfflineOperation, OfflineQueueState } from '../../queue';
+import type { OfflineQueueManagerAPI } from '../../queueManager';
 import type { ToggleCompletionPayload } from '../../queue';
 import {
   processQueue,
@@ -20,11 +25,6 @@ import {
   operationToSyncItem,
   shouldSkipOperation,
   DEFAULT_BATCH_SIZE,
-} from '../processQueue';
-import type {
-  QueueProcessorDeps,
-  ProcessQueueConfig,
-  ProcessSingleOptions,
 } from '../processQueue';
 
 describe('processQueue', () => {

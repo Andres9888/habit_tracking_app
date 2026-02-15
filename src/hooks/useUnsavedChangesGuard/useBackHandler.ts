@@ -4,8 +4,8 @@
  * Intercepts Android back button to confirm discard.
  */
 
-import { useEffect } from 'react';
 import { BackHandler, Platform } from 'react-native';
+import { useEffect } from 'react';
 
 interface UseBackHandlerOptions {
   hasUnsavedChanges: boolean;

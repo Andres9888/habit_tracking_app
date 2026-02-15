@@ -14,17 +14,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import type { OfflineQueueState } from '../queue';
-import { OFFLINE_QUEUE_VERSION } from '../queue';
-import {
-  createDefaultState,
-  isValidQueueState,
-  migrateQueueState,
-} from './queueStorageHelpers';
 import {
   cleanupTransaction,
   recoverTransaction,
   transactionSafeWrite,
 } from './transactionWrite';
+import {
+  createDefaultState,
+  isValidQueueState,
+  migrateQueueState,
+} from './queueStorageHelpers';
+import { OFFLINE_QUEUE_VERSION } from '../queue';
 
 /** Storage key for the offline queue state */
 export const OFFLINE_QUEUE_STORAGE_KEY = '@chainday:offline_queue_v1';

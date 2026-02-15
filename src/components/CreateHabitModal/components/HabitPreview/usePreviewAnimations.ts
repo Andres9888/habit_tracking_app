@@ -1,8 +1,9 @@
 /**
  * Animation hooks for HabitPreview
  */
-import { useEffect, useRef, useState } from 'react';
+
 import { Animated } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
 
 export const usePreviewAnimations = (
   isEmpty: boolean,

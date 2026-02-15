@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 
 const FADE_IN_DURATION = 400;

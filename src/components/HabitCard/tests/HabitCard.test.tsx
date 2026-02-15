@@ -7,11 +7,13 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import { PaperProvider } from 'react-native-paper';
+
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { extendedTheme } from '../../../theme';
+import { PaperProvider } from 'react-native-paper';
+import { render, fireEvent } from '@testing-library/react-native';
+
 import { HabitCard } from '../HabitCard';
+import { extendedTheme } from '../../../theme';
 
 // Wrapper with theme and gesture handler
 const renderWithProviders = (component: React.ReactElement) => {

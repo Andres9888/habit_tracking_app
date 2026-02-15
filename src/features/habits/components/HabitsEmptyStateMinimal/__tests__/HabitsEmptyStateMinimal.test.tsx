@@ -12,6 +12,7 @@
  */
 
 import React from 'react';
+
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import { CHIP_STAGGER, ENTRANCE_DELAYS, KEYBOARD_LAYOUT } from '../animations';

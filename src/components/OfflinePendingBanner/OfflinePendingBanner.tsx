@@ -6,18 +6,18 @@
 import React from 'react';
 import { View, Pressable } from 'react-native';
 
-import { styles } from './OfflinePendingBanner.styles';
-import { useOfflineBannerState } from './useOfflineBannerState';
+import type { OfflinePendingBannerProps } from './types';
 import {
   useOfflineBannerAnimations,
   useOfflineBannerHandlers,
 } from './OfflinePendingBanner.hooks';
-import { BannerIcon } from './BannerIcon';
 import { BannerContent } from './BannerContent';
+import { BannerIcon } from './BannerIcon';
+import { ExpandedStats } from './ExpandedStats';
 import { ProgressBar } from './ProgressBar';
 import { SyncButton } from './SyncButton';
-import { ExpandedStats } from './ExpandedStats';
-import type { OfflinePendingBannerProps } from './types';
+import { styles } from './OfflinePendingBanner.styles';
+import { useOfflineBannerState } from './useOfflineBannerState';
 
 export function OfflinePendingBanner({
   processingState,

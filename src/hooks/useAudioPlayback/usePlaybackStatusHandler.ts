@@ -5,7 +5,9 @@
  */
 
 import { useCallback, useRef, useEffect } from 'react';
+
 import type { AVPlaybackStatus } from 'expo-av';
+
 import type {
   PlaybackState,
   PlaybackStatus,

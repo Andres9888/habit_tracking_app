@@ -1,7 +1,9 @@
+
+import type { EdgeInsets } from 'react-native-safe-area-context';
 import React from 'react';
 import { View } from 'react-native';
+
 import { Play, Clock } from 'lucide-react-native';
-import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import { AnimatedContent } from './AnimatedContent';
 import { JustTwoMinButton } from './JustTwoMinButton';

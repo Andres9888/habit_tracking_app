@@ -3,36 +3,22 @@
  * Provides network connectivity status throughout the app
  */
 
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+
 import * as Network from 'expo-network';
+
 import type {
   NetworkStatus,
   NetworkStatusContextValue,
   NetworkStatusProviderProps,
 } from './types';
-import { networkStateToStatus, calculateIsOnline } from './utils';
 import type { NetworkState } from './utils';
-import { defaultNetworkStatus } from './defaults';
 import { NetworkStatusContext } from './context';
+import { defaultNetworkStatus } from './defaults';
+import { networkStateToStatus, calculateIsOnline } from './utils';
 
-/**
- * Provider component that monitors network connectivity status and notifies
- * subscribers when network state changes.
- * 
- * Automatically checks network status on mount and provides callbacks for
- * online/offline events throughout the app.
- * 
- * @param children - React children to render
- * @param onStatusChange - Optional callback invoked when network status changes
- * @param refreshOnFocus - Whether to refresh network status when app comes to foreground (default: true)
- * 
- * @example
- * ```tsx
- * <NetworkStatusProvider onStatusChange={(status) => console.log(status)}>
- *   <App />
- * </NetworkStatusProvider>
- * ```
- */
+// Re-export context for consumers
+
 export function NetworkStatusProvider({
   children,
   onStatusChange,
@@ -110,17 +96,14 @@ export function NetworkStatusProvider({
     };
   }, []);
 
-  const value: NetworkStatusContextValue = useMemo(
-    () => ({
-      isChecking,
-      isOnline,
-      onOffline: onOfflineCallback,
-      onOnline: onOnlineCallback,
-      refresh,
-      status,
-    }),
-    [isChecking, isOnline, onOfflineCallback, onOnlineCallback, refresh, status]
-  );
+  const value: NetworkStatusContextValue = {
+    isChecking,
+    isOnline,
+    onOffline: onOfflineCallback,
+    onOnline: onOnlineCallback,
+    refresh,
+    status,
+  };
 
   return (
     <NetworkStatusContext.Provider value={value}>

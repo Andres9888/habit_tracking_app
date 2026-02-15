@@ -1,5 +1,6 @@
+
 import { Text, View } from 'react-native';
-import { useThemeColors } from '../../../theme/ThemeContext';
+
 import type { ArchivedHabit, StrengthInfo } from '../types';
 
 interface HabitStatsBadgesProps {
@@ -13,8 +14,6 @@ export function HabitStatsBadges({
   strength,
   strengthInfo,
 }: HabitStatsBadgesProps) {
-  const { isDark } = useThemeColors();
-
   return (
     <View className='mb-3 flex-row flex-wrap gap-2'>
       {/* Strength Badge */}
@@ -29,32 +28,16 @@ export function HabitStatsBadges({
 
       {/* Streak Badge */}
       {(habit.currentStreak ?? 0) > 0 ? (
-        <View
-          className='flex-row items-center gap-1.5 rounded-lg px-2.5 py-1'
-          style={{
-            backgroundColor: isDark ? '#78350f' : '#fef3c7',
-          }}
-        >
+        <View className='flex-row items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1'>
           <Text className='text-sm'>🔥</Text>
-          <Text
-            className='text-xs font-semibold'
-            style={{ color: isDark ? '#fde68a' : '#b45309' }}
-          >
+          <Text className='text-xs font-semibold text-amber-700'>
             {habit.currentStreak} day streak
           </Text>
         </View>
       ) : (
-        <View
-          className='flex-row items-center gap-1.5 rounded-lg px-2.5 py-1'
-          style={{
-            backgroundColor: isDark ? '#374151' : '#f5f5f4',
-          }}
-        >
+        <View className='flex-row items-center gap-1.5 rounded-lg bg-stone-100 px-2.5 py-1'>
           <Text className='text-sm'>🔥</Text>
-          <Text
-            className='text-xs font-semibold'
-            style={{ color: isDark ? '#9ca3af' : '#78716c' }}
-          >
+          <Text className='text-xs font-semibold text-stone-500'>
             No streak
           </Text>
         </View>
@@ -62,22 +45,9 @@ export function HabitStatsBadges({
 
       {/* Total Completions Badge */}
       {(habit.totalCompletions ?? 0) > 0 && (
-        <View
-          className='flex-row items-center gap-1.5 rounded-lg px-2.5 py-1'
-          style={{
-            backgroundColor: isDark ? '#1e3a8a' : '#dbeafe',
-          }}
-        >
-          <Text
-            className='text-xs font-bold'
-            style={{ color: isDark ? '#93c5fd' : '#2563eb' }}
-          >
-            ✓
-          </Text>
-          <Text
-            className='text-xs font-semibold'
-            style={{ color: isDark ? '#93c5fd' : '#1d4ed8' }}
-          >
+        <View className='flex-row items-center gap-1.5 rounded-lg bg-blue-50 px-2.5 py-1'>
+          <Text className='text-xs font-bold text-blue-600'>✓</Text>
+          <Text className='text-xs font-semibold text-blue-700'>
             {habit.totalCompletions} total
           </Text>
         </View>

@@ -2,8 +2,9 @@
  * Press handlers for MiniTemplateCard component
  */
 
-import { SharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { SharedValue, withSpring, withTiming } from 'react-native-reanimated';
+
 import {
   CARD_PRESS_SPRING_CONFIG,
   CARD_PRESS_SCALE,

@@ -3,12 +3,13 @@
  * Shows gradient shadows at top/bottom when content is scrollable
  */
 
-import { useCallback, useRef, useState, useEffect } from 'react';
 import type {
   NativeSyntheticEvent,
   NativeScrollEvent,
   LayoutChangeEvent,
 } from 'react-native';
+import { useCallback, useRef, useState, useEffect } from 'react';
+
 import type { ScrollMetrics } from './TemplatesScreen.types';
 
 interface UseScrollShadowsOptions {

@@ -1,10 +1,12 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { TrendingUp, TrendingDown, Activity } from 'lucide-react-native';
 
-import { styles } from '../PredictionInsights.styles';
-import type { TrendDirection } from '../PredictionInsights.types';
 import type { AppTheme } from '../../../theme';
+import type { TrendDirection } from '../PredictionInsights.types';
+import { styles } from '../PredictionInsights.styles';
 
 interface TrendIndicatorProps {
   trend: TrendDirection;

@@ -4,8 +4,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { useAppTheme } from '../../../theme';
+
 import { heroStyles } from '../styles';
+import { useAppTheme } from '../../../theme';
 
 interface DescriptionSectionProps {
   description: string;

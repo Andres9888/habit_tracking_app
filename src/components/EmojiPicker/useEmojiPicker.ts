@@ -1,7 +1,9 @@
+
 import type { RefObject } from 'react';
 import type { View } from 'react-native';
-import { useEmojiPickerState } from './useEmojiPickerState';
+
 import { useEmojiPickerHandlers } from './useEmojiPickerHandlers';
+import { useEmojiPickerState } from './useEmojiPickerState';
 
 interface UseEmojiPickerOptions {
   visible: boolean;

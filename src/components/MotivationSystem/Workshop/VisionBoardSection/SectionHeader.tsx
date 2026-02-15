@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Plus } from 'lucide-react-native';
+
 import { MAX_IMAGES } from './types';
 
 interface SectionHeaderProps {

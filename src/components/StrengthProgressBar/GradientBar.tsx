@@ -2,15 +2,17 @@
  * GradientBar - Animated gradient fill with glow effect and dividers
  */
 
+import type { AnimatedStyle } from 'react-native-reanimated';
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import { View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import type { AnimatedStyle } from 'react-native-reanimated';
-import type { ViewStyle } from 'react-native';
+
+import { DIVIDER_POSITIONS } from './StrengthProgressBar.constants';
 import { colors } from '@/theme/colors';
 import { styles } from './StrengthProgressBar.styles';
-import { DIVIDER_POSITIONS } from './StrengthProgressBar.constants';
 import { useGlowPulse } from './useGlowPulse';
 
 interface GradientBarProps {

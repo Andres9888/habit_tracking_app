@@ -1,6 +1,8 @@
+
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
-import { SuggestionChips } from './SuggestionChips';
+
 import type { SuggestionChip } from './types';
+import { SuggestionChips } from './SuggestionChips';
 
 interface ChipsSectionProps {
   isKeyboardVisible: boolean;

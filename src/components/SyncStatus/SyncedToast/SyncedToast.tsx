@@ -10,6 +10,7 @@
 
 import React from 'react';
 import { Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 

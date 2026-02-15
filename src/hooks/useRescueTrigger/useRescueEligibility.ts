@@ -3,6 +3,7 @@
  */
 
 import { useCallback, type MutableRefObject } from 'react';
+
 import type { RescueEligibleHabit } from './types';
 import { isPastScheduledTime } from './timeUtils';
 

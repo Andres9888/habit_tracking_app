@@ -3,9 +3,9 @@
  */
 
 import type { SentryReporter } from '../types';
-import { isSentryInitialized } from '../init/index';
 import { createNoOpReporter } from './noOpReporter';
 import { createSentryReporter } from './sentryReporter';
+import { isSentryInitialized } from '../init/index';
 
 /** Get the reporter instance (creates no-op if Sentry not initialized) */
 export function getSentryReporter(): SentryReporter {

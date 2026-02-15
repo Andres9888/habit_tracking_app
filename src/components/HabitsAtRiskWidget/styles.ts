@@ -1,4 +1,6 @@
+
 import { StyleSheet } from 'react-native';
+
 import { typography } from '@/theme/typography';
 import type { SemanticColors } from '../../theme/darkColors';
 

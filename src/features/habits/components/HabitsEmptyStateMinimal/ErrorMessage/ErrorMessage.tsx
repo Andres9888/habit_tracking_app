@@ -11,13 +11,14 @@
  * - Proper accessibility attributes (role="alert", liveRegion="polite")
  */
 
+import { Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 
-import { AccessibleText } from '../../../../../components/ui/AccessibleText';
 import type { ErrorMessageProps } from '../types';
-import { useEmptyStateColors } from '../useEmptyStateColors';
-import { ErrorIcon } from './ErrorIcon';
 import { DismissButton } from './DismissButton';
+import { ERROR_COLORS } from './constants';
+import { ErrorIcon } from './ErrorIcon';
 import { useErrorAnimations } from './useErrorAnimations';
 
 export function ErrorMessage({
@@ -25,7 +26,6 @@ export function ErrorMessage({
   onDismiss,
   autoDismiss = false,
 }: ErrorMessageProps) {
-  const colors = useEmptyStateColors();
   const { animatedStyle, handleDismiss } = useErrorAnimations({
     autoDismiss,
     onDismiss,
@@ -39,8 +39,8 @@ export function ErrorMessage({
         animatedStyle,
         {
           alignItems: 'center',
-          backgroundColor: colors.errorBackground,
-          borderColor: colors.errorBorder,
+          backgroundColor: ERROR_COLORS.background,
+          borderColor: ERROR_COLORS.border,
           borderRadius: 12,
           borderWidth: 1,
           flexDirection: 'row',
@@ -51,11 +51,10 @@ export function ErrorMessage({
         },
       ]}
     >
-      <ErrorIcon iconColor={colors.errorIcon} />
-      <AccessibleText
-        scalingType='body'
+      <ErrorIcon />
+      <Text
         style={{
-          color: colors.errorText,
+          color: ERROR_COLORS.text,
           flex: 1,
           fontSize: 13,
           fontWeight: '500',
@@ -63,8 +62,8 @@ export function ErrorMessage({
         }}
       >
         {message}
-      </AccessibleText>
-      <DismissButton dismissColor={colors.errorText} onPress={handleDismiss} />
+      </Text>
+      <DismissButton onPress={handleDismiss} />
     </Animated.View>
   );
 }

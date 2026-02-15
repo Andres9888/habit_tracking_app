@@ -4,13 +4,14 @@
  */
 
 import { useEffect } from 'react';
+
 import type {
   UseAudioRecordingOptions,
   UseAudioRecordingReturn,
 } from './types';
-import { useRecordingHooks } from './useRecordingHooks';
-import { useAppStateInterruption } from './useAppStateInterruption';
 import { buildReturnValue } from './buildReturnValue';
+import { useAppStateInterruption } from './useAppStateInterruption';
+import { useRecordingHooks } from './useRecordingHooks';
 
 export function useAudioRecording(
   options?: UseAudioRecordingOptions

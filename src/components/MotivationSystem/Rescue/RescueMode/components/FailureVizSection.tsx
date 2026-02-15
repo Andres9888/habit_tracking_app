@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { View } from 'react-native';
 
-import { FailureViz } from '../../FailureViz';
 import type { RescueHabitData } from '../RescueMode.types';
 import { AnimatedContent } from './AnimatedContent';
+import { FailureViz } from '../../FailureViz';
 
 interface FailureVizSectionProps {
   habit: RescueHabitData;

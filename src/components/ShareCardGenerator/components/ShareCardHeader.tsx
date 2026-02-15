@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { useAppTheme } from '../../../theme';
+
 import { containerStyles as styles } from '../styles';
+import { useAppTheme } from '../../../theme';
 
 interface ShareCardHeaderProps {
   onClose: () => void;

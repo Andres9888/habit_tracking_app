@@ -1,9 +1,12 @@
+
 import { Animated, Pressable, View } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
+
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
+import { TeaserContent } from './TeaserContent';
 import { getAISuggestions } from './suggestions';
 import { usePremiumTeaserAnimations } from './usePremiumTeaserAnimations';
-import { TeaserContent } from './TeaserContent';
 
 interface PremiumTeaserProps {
   habitName: string;

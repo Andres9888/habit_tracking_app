@@ -2,8 +2,9 @@
  * CustomTimeButton - Button to pick a custom reminder time
  */
 
-import { memo } from 'react';
 import { Pressable, Text } from 'react-native';
+import { memo } from 'react';
+
 import { Clock } from 'lucide-react-native';
 
 interface CustomTimeButtonProps {

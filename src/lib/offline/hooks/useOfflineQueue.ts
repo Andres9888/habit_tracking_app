@@ -8,8 +8,9 @@
  */
 
 import { useMemo, useSyncExternalStore } from 'react';
-import { getOfflineQueueManager } from '../queueManager';
+
 import type { UseOfflineQueueOptions, UseOfflineQueueReturn } from './types';
+import { getOfflineQueueManager } from '../queueManager';
 import { useQueueActions } from './useQueueActions';
 
 /**

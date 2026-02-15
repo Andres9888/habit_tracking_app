@@ -5,11 +5,7 @@
 
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { FPSTab } from './FPSTab';
-import { MemoryTab } from './MemoryTab';
-import { NetworkTab } from './NetworkTab';
-import { OverviewTab } from './OverviewTab';
-import { RendersTab } from './RendersTab';
+
 import type {
   DashboardTab,
   FPSData,
@@ -17,6 +13,11 @@ import type {
   NetworkData,
   RenderData,
 } from '../types';
+import { FPSTab } from './FPSTab';
+import { MemoryTab } from './MemoryTab';
+import { NetworkTab } from './NetworkTab';
+import { OverviewTab } from './OverviewTab';
+import { RendersTab } from './RendersTab';
 
 interface TabContentProps {
   activeTab: DashboardTab;

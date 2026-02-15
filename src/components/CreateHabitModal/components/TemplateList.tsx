@@ -1,17 +1,18 @@
-/* eslint-disable max-lines */
-import { useCallback, useMemo } from 'react';
+
 import type {
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
 import { FlatList, View } from 'react-native';
+import { useCallback, useMemo } from 'react';
+
 import type { HabitTemplate } from '../types';
-import { TemplateListSkeleton } from '../../SkeletonLoader';
 import { TemplateListEmpty } from './TemplateListEmpty';
 import { TemplateListFooter } from './TemplateListFooter';
 import { TemplateListItem } from './TemplateListItem';
 import { TemplateListShadows } from './TemplateListShadows';
+import { TemplateListSkeleton } from '../../SkeletonLoader';
 
 interface TemplateListProps {
   isLoading: boolean;
@@ -42,7 +43,7 @@ export const TemplateList = ({
   showBottomShadow,
 }: TemplateListProps) => {
   const getItemLayout = useCallback(
-    (_: unknown, index: number) => ({
+    (_: any, index: number) => ({
       length: ITEM_HEIGHT,
       offset: ITEM_HEIGHT * index,
       index,

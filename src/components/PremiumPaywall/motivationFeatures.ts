@@ -3,6 +3,7 @@
  */
 
 import { Mic, Mail, Image, Sparkles, Shield, Eye } from 'lucide-react-native';
+
 import type { MotivationFeatureItem } from './PremiumPaywall.types';
 
 export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [

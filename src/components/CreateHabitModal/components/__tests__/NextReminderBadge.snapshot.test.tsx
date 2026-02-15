@@ -4,7 +4,9 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
+
 import { NextReminderBadge } from '../NextReminderBadge';
 
 // Mock react-native-reanimated

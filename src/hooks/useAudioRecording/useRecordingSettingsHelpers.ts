@@ -4,12 +4,13 @@
  */
 
 import { useCallback } from 'react';
+
+import type { RecordingStatus } from './types';
 import {
   openMicrophoneSettings,
   showMicrophonePermissionAlert,
 } from './permissionUtils';
 import { INITIAL_RECORDING_STATUS } from './constants';
-import type { RecordingStatus } from './types';
 
 interface UseRecordingSettingsHelpersParams {
   setStatus: React.Dispatch<React.SetStateAction<RecordingStatus>>;

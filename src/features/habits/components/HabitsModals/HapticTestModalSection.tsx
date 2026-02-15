@@ -1,6 +1,8 @@
+
 import { Modal, Pressable, Text, View } from 'react-native';
-import HapticTest from '../../../../components/HapticTest';
+
 import type { HapticTestModalSectionProps } from './HabitsModals.types';
+import HapticTest from '../../../../components/HapticTest';
 
 /**
  * Haptic test modal section - provides haptic feedback testing UI

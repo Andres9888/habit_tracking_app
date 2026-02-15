@@ -2,7 +2,8 @@
  * Styles for StreakIndicator component
  */
 
-import { StyleSheet, TextStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
+
 import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
@@ -14,9 +15,9 @@ export const styles = StyleSheet.create({
   },
 
   bestStreakText: {
-    ...typography.bodySmall,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
-  } as TextStyle,
+  },
   // Compact View Styles
   compactContainer: {
     alignItems: 'center',
@@ -62,17 +63,17 @@ export const styles = StyleSheet.create({
     fontSize: typography.body.fontSize,
   },
   milestoneBadgeLabel: {
-    ...typography.caption,
+    fontSize: typography.caption.fontSize,
     fontWeight: '600',
-  } as TextStyle,
+  },
   milestoneBadgeLarge: {
     fontSize: 24,
     marginLeft: -4,
   },
   milestoneEmoji: {
-    ...typography.bodySmall,
+    fontSize: typography.bodySmall.fontSize,
     marginLeft: -2,
-  } as TextStyle,
+  },
   // Milestones Legend Styles
   milestonesLegend: {
     flexDirection: 'row',
@@ -81,14 +82,14 @@ export const styles = StyleSheet.create({
   },
 
   streakLabel: {
-    ...typography.bodySmall,
+    fontSize: typography.bodySmall.fontSize,
     marginTop: 2,
-  } as TextStyle,
+  },
 
   streakNumber: {
-    ...typography.bodySmall,
+    fontSize: 15,
     fontWeight: '600',
-  } as TextStyle,
+  },
 
   streakNumberLarge: {
     fontSize: 32,
@@ -103,7 +104,7 @@ export const styles = StyleSheet.create({
   },
 
   zeroStreakText: {
-    ...typography.caption,
+    fontSize: 13,
     fontStyle: 'italic',
-  } as TextStyle,
+  },
 });

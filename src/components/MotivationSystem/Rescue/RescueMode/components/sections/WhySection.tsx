@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { View } from 'react-native';
+
+import type { ContentFlags } from '../RescueModeContent.helpers';
 import { AnimatedContent } from '../AnimatedContent';
 import { FeaturedWhy } from '../FeaturedWhy';
 import { getAnimationIndex } from '../useAnimationIndex';
-import type { ContentFlags } from '../RescueModeContent.helpers';
 
 type WhySectionProps = {
   why: string;

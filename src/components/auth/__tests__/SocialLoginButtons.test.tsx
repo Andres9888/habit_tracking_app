@@ -1,6 +1,8 @@
-import { useOAuth } from '@clerk/clerk-expo';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+
 import { Alert } from 'react-native';
+
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { useOAuth } from '@clerk/clerk-expo';
 
 import { SocialLoginButtons } from '../SocialLoginButtons';
 

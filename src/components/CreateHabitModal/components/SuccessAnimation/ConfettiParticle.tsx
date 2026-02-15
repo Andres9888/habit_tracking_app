@@ -4,8 +4,8 @@
  * Individual animated confetti particle with falling animation
  */
 
-import { useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
+import { useEffect, useRef } from 'react';
 
 import type { ConfettiParticleProps } from './types';
 

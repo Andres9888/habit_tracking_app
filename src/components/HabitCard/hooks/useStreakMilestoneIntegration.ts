@@ -7,6 +7,7 @@
  */
 
 import { useEffect, useRef } from 'react';
+
 import { useStreakMilestone } from '../../StreakMilestoneCelebration';
 
 interface UseStreakMilestoneIntegrationOptions {

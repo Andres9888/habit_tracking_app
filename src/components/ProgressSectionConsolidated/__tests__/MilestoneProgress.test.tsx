@@ -8,8 +8,10 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
-import { MilestoneProgress } from '../MilestoneProgress';
+
+import type { MilestoneProgressProps } from '../MilestoneProgressTypes';
 import {
   calculateMilestoneProgress,
   getNextMilestone,
@@ -18,7 +20,7 @@ import {
   isOnMilestone,
   MILESTONES,
 } from '../MilestoneProgressTypes';
-import type { MilestoneProgressProps } from '../MilestoneProgressTypes';
+import { MilestoneProgress } from '../MilestoneProgress';
 
 // Mock useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({

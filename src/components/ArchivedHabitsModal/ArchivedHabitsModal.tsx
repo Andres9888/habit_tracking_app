@@ -1,8 +1,10 @@
+
+import { FlatList, View } from 'react-native';
 import { useCallback } from 'react';
-import { FlatList } from 'react-native';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+
+import type { ArchivedHabitsModalProps } from './types';
 import {
   AnimatedHabitCard,
   EmptyState,
@@ -10,7 +12,8 @@ import {
   StatsSummaryBar,
 } from './components';
 import { LoadingState } from './components/LoadingState';
-import type { ArchivedHabitsModalProps } from './types';
+import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export default function ArchivedHabitsModal({
   onClose,
@@ -18,13 +21,8 @@ export default function ArchivedHabitsModal({
 }: ArchivedHabitsModalProps) {
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
-  const {
-    archivedHabits,
-    handleRestore,
-    handlePermanentDelete,
-    handleDeleteAll,
-    isLoading,
-  } = useArchivedHabitsModalLogic();
+  const { archivedHabits, handleRestore, handlePermanentDelete, handleDeleteAll, isLoading } =
+    useArchivedHabitsModalLogic();
 
   const renderItem = useCallback(
     ({ item, index }: { item: (typeof archivedHabits)[0]; index: number }) => (

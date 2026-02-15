@@ -2,14 +2,15 @@
  * useStreakAccordionState - State management for StreakRecordsAccordion
  */
 
-import { useState, useCallback, useMemo } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { useState, useCallback, useMemo } from 'react';
+
+import type { StreakRecord } from '../types';
+import { MEDALS } from './constants';
+import { useExpandAnimation } from './useExpandAnimation';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { usePulseAnimation } from './usePulseAnimation';
-import { useExpandAnimation } from './useExpandAnimation';
-import { MEDALS } from './constants';
-import type { StreakRecord } from '../types';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 
 interface UseStreakAccordionStateArgs {
   streakRecords: StreakRecord[];

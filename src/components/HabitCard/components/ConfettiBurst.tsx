@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { View } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -8,6 +10,7 @@ import Animated, {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
+
 import { colors } from '../../../theme/colors';
 import { styles } from './ConfettiBurst.styles';
 

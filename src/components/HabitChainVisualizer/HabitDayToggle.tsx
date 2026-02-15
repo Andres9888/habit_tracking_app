@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Animated, Pressable } from 'react-native';
+
 import clsx from 'clsx';
+
 import type { HabitDayToggleProps } from './types';
-import { useHabitDayToggleAnimations } from './useHabitDayToggleAnimations';
-import { useHabitDayToggleHandlers } from './useHabitDayToggleHandlers';
 import {
   getTodayGlowStyle,
   getCompletedShadowStyle,
@@ -11,6 +12,8 @@ import {
   getBorderColor,
 } from './habitDayToggleStyles';
 import { AnimatedCompletionIcon } from './AnimatedCompletionIcon';
+import { useHabitDayToggleAnimations } from './useHabitDayToggleAnimations';
+import { useHabitDayToggleHandlers } from './useHabitDayToggleHandlers';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

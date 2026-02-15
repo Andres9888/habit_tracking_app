@@ -4,8 +4,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { WOOPField } from './WOOPField';
+
 import type { WOOPData } from './WOOPSection.types';
+import { WOOPField } from './WOOPField';
 
 interface WOOPSectionContentProps {
   woop?: WOOPData;

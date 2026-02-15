@@ -4,10 +4,12 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
-import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
-import { useCategoryFilterAnimations } from './useCategoryFilterAnimations';
+
 import type { CategoryFilterItemProps } from './CategoryFilters.types';
+import { useCategoryFilterAnimations } from './useCategoryFilterAnimations';
+import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

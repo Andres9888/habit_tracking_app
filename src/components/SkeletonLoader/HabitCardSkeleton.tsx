@@ -2,12 +2,14 @@
  * HabitCardSkeleton - Loading skeleton for habit cards
  * Supports dark mode via useSkeletonTheme.
  */
+
 import React from 'react';
 import { View } from 'react-native';
-import { shadows } from '../../theme/spacing';
-import { SkeletonLoader } from './SkeletonLoader';
-import { useSkeletonTheme } from './useSkeletonTheme';
+
 import type { ReduceMotionProps } from './types';
+import { SkeletonLoader } from './SkeletonLoader';
+import { shadows } from '../../theme/spacing';
+import { useSkeletonTheme } from './useSkeletonTheme';
 
 export function HabitCardSkeleton({ reduceMotion = false }: ReduceMotionProps) {
   const { surfaceBg, borderColor, shadowColor, shadowOpacity } = useSkeletonTheme();

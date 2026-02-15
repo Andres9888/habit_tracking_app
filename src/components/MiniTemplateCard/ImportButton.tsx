@@ -4,10 +4,12 @@
 
 import React from 'react';
 import { ActivityIndicator, Pressable, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { Check, Plus } from 'lucide-react-native';
-import { styles } from './MiniTemplateCard.styles';
+
 import { SUCCESS_COLOR } from './constants';
+import { styles } from './MiniTemplateCard.styles';
 
 interface ImportButtonProps {
   name: string;

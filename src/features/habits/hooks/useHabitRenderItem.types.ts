@@ -2,9 +2,9 @@
  * Type definitions for useHabitRenderItem hook
  */
 
-import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitStatus } from '../types';
 import type { HabitCardEntranceVariant } from '../../../components/HabitCard/useHabitCardEntrance';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 export interface UseHabitRenderItemArgs {
   celebrationsEnabled: boolean;

@@ -3,6 +3,7 @@
  */
 
 import { Text, View } from 'react-native';
+
 import { colors } from '@/theme/colors';
 import { useThemeColors } from '@/theme/ThemeContext';
 

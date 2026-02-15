@@ -3,9 +3,10 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Check, ChevronDown, SlidersHorizontal } from 'lucide-react-native';
-import { useThemeColors } from '../../../theme/ThemeContext';
+
 import {
   SORT_LABELS,
   SORT_OPTIONS,
@@ -28,9 +29,7 @@ export function FilterControls({
   showSortOptions,
   sortOption,
 }: FilterControlsProps) {
-  const { colors, isDark } = useThemeColors();
-  const defaultIconColor = colors.text.primary;
-  const iconColor = showSortOptions ? '#fff' : defaultIconColor;
+  const iconColor = showSortOptions ? '#fff' : '#1c1917';
 
   return (
     <View style={styles.sortButtonWrapper}>
@@ -47,7 +46,6 @@ export function FilterControls({
         <Text
           style={[
             styles.controlButtonText,
-            { color: defaultIconColor },
             showSortOptions && { color: '#fff' },
           ]}
         >
@@ -64,10 +62,7 @@ export function FilterControls({
       {showSortOptions && (
         <Animated.View
           entering={FadeIn.duration(150)}
-          style={[
-            styles.sortDropdown,
-            isDark && { backgroundColor: colors.card, borderColor: colors.border },
-          ]}
+          style={styles.sortDropdown}
         >
           {SORT_OPTIONS.map((opt) => {
             const selected = sortOption === opt.value;

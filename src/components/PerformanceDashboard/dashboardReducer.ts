@@ -3,7 +3,6 @@
  * State management for the performance dashboard.
  */
 
-import { DEFAULT_THRESHOLDS } from '../../lib/performance';
 import type {
   DashboardAction,
   DashboardConfig,
@@ -13,6 +12,7 @@ import type {
   NetworkData,
   RenderData,
 } from './types';
+import { DEFAULT_THRESHOLDS } from '../../lib/performance';
 
 export const initialFPSData: FPSData = {
   averageFPS: 60,

@@ -3,13 +3,14 @@
  * Calendar toggle and undo/redo handlers for habit detail screen
  */
 
-import { useCallback } from 'react';
 import { Alert } from 'react-native';
+import { useCallback } from 'react';
+
 import * as Haptics from 'expo-haptics';
+
+import type { Habit } from './HabitDetailScreen.types';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
-import type { Habit } from './HabitDetailScreen.types';
-import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 interface UseCalendarHandlersProps {
   habit: Habit | null;
@@ -53,7 +54,7 @@ export const useCalendarHandlers = ({
       toggleHabitMutation({ date, habitId: habit._id })
         .catch((error: unknown) => {
           if (__DEV__) console.error('Failed to toggle habit:', error);
-          Alert.alert('Error', ERROR_MESSAGES.DATA_OPS.TOGGLE_HABIT_FAILED);
+          Alert.alert('Error', 'Failed to update habit. Please try again.');
         })
         .finally(() => setIsTogglingCalendar(false));
     },

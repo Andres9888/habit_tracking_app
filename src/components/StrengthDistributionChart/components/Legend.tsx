@@ -1,14 +1,16 @@
+
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { colors } from '../../../theme/colors';
-import { typography } from '../../../theme/typography';
-import { spacing, borderRadius } from '../../../theme/spacing';
+
+import type { StrengthDistributionData } from '../StrengthDistributionChart.types';
 import {
   LEVEL_COLORS,
   LEVEL_LABELS,
   STRENGTH_LEVELS,
 } from '../StrengthDistributionChart.constants';
-import type { StrengthDistributionData } from '../StrengthDistributionChart.types';
+import { colors } from '../../../theme/colors';
+import { spacing, borderRadius } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 interface LegendProps {
   data: StrengthDistributionData;

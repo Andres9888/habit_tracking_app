@@ -3,6 +3,7 @@
  */
 
 import { renderHook, act } from '@testing-library/react-native';
+
 import { usePressAnimation } from '../usePressAnimation';
 
 describe('usePressAnimation', () => {

@@ -3,8 +3,9 @@
  * Handles pulsing animation when week is complete
  */
 
-import { useEffect } from 'react';
 import { Animated } from 'react-native';
+import { useEffect } from 'react';
+
 import { runIconPulseLoop } from './animationSequences';
 
 export function useIconPulse(

@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { Bell, X } from 'lucide-react-native';
+
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface ScheduleHeaderProps {

@@ -1,5 +1,8 @@
+
 import { View, Text } from 'react-native';
+
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
+
 import { HeatmapDot } from './HeatmapDot';
 import { getDaysByWeekDay, MAX_OCCURRENCES } from './utils';
 

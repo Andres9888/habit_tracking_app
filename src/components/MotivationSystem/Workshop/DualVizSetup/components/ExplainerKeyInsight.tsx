@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 
 export function ExplainerKeyInsight() {

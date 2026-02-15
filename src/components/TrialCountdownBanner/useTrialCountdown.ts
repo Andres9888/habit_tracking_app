@@ -4,6 +4,7 @@
  */
 
 import { useMemo } from 'react';
+
 import { usePremium } from '../../hooks/usePremium';
 
 export function useTrialCountdown() {

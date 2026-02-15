@@ -3,13 +3,14 @@
  */
 
 import React from 'react';
+
 import Animated from 'react-native-reanimated';
 
 import type { VizType } from './types';
-import { useContentAnimation } from './useContentAnimation';
-import { VizFields } from './VizFields';
 import { EmptyVizState } from './EmptyVizState';
 import { FeelItPrompt } from './FeelItPrompt';
+import { VizFields } from './VizFields';
+import { useContentAnimation } from './useContentAnimation';
 
 interface VisualizationContentProps {
   type: VizType;

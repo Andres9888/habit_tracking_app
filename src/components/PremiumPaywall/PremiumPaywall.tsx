@@ -10,11 +10,12 @@
  */
 
 import React from 'react';
-import { usePremiumPaywall } from './usePremiumPaywall';
-import { VARIANT_CONFIGS } from './variants';
+
+import type { PremiumPaywallProps } from './PremiumPaywall.types';
 import { BenefitsVariant } from './BenefitsVariant';
 import { BlurOverlayVariant } from './BlurOverlayVariant';
-import type { PremiumPaywallProps } from './PremiumPaywall.types';
+import { VARIANT_CONFIGS } from './variants';
+import { usePremiumPaywall } from './usePremiumPaywall';
 
 export function PremiumPaywall({
   variant,

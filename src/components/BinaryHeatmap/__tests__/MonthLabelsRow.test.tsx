@@ -6,10 +6,12 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
-import { MonthLabelsRow } from '../MonthLabelsRow';
+
 import type { BinaryMonthLabel } from '../types';
 import { CELL_SIZE, CELL_GAP, MONTH_LABEL } from '../constants';
+import { MonthLabelsRow } from '../MonthLabelsRow';
 
 describe('MonthLabelsRow', () => {
   const cellUnit = CELL_SIZE + CELL_GAP; // 13px per cell/week column

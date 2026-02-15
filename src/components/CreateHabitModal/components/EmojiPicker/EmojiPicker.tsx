@@ -3,7 +3,6 @@
  * Displays suggested emojis in 5-4 triangle layout with full picker modal
  */
 
-import { memo, useCallback, useState } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
@@ -11,13 +10,15 @@ import {
   Text,
   View,
 } from 'react-native';
-import useHapticFeedback from '../../../../hooks/useHapticFeedback';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
-import STRINGS from '../../../../constants/strings';
-import { EmojiPickerSheet } from '../../../EmojiPickerV2';
-import { EmojiGrid } from './EmojiGrid';
-import { useSuggestedEmojis } from './useSuggestedEmojis';
+import { memo, useCallback, useState } from 'react';
+
 import type { EmojiPickerProps } from './types';
+import STRINGS from '../../../../constants/strings';
+import useHapticFeedback from '../../../../hooks/useHapticFeedback';
+import { EmojiGrid } from './EmojiGrid';
+import { EmojiPickerSheet } from '../../../EmojiPickerV2';
+import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+import { useSuggestedEmojis } from './useSuggestedEmojis';
 
 function EmojiPickerComponent({
   selectedEmoji,

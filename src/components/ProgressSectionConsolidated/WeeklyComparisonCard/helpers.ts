@@ -3,6 +3,7 @@
  */
 
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
+
 import type { TrendStyle } from './types';
 
 /**

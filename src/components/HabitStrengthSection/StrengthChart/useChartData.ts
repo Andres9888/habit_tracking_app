@@ -1,8 +1,10 @@
 /**
  * useChartData Hook - Computes chart points and path data from strength snapshots.
  */
+
 import { useMemo } from 'react';
 
+import type { ChartPathData } from './StrengthChart.types';
 import type { StrengthSnapshot } from '../../HabitStrengthHistory/types';
 import {
   CHART_HEIGHT,
@@ -10,9 +12,7 @@ import {
   CHART_PADDING_TOP,
   CHART_PADDING_X,
 } from '../constants';
-
 import { catmullRomToBezier } from './StrengthChart.utils';
-import type { ChartPathData } from './StrengthChart.types';
 
 interface UseChartDataOptions {
   data: StrengthSnapshot[];

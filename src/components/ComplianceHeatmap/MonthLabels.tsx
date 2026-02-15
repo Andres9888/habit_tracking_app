@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import type { MonthLabel } from './ComplianceHeatmap.types';
 import { CELL_SIZE } from './ComplianceHeatmap.constants';
 import { spacing } from '../../theme/spacing';

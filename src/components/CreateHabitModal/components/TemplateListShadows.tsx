@@ -1,6 +1,8 @@
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { Text, View } from 'react-native';
+
 import { ChevronDown } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface TemplateListShadowsProps {
   showTop: boolean;

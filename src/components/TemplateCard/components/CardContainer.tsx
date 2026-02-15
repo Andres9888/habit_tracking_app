@@ -3,9 +3,10 @@
  *
  * Pressable container with animations for TemplateCard
  */
+
+import type { AnimatedStyle } from 'react-native-reanimated';
 import React from 'react';
 import { Pressable, View, type ViewStyle } from 'react-native';
-import type { AnimatedStyle } from 'react-native-reanimated';
 
 import Animated from 'react-native-reanimated';
 

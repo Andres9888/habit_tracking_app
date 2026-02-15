@@ -1,18 +1,20 @@
 /**
- * DangerZone Component — Dark mode aware
+ * DangerZone Component
  *
- * Destructive actions with confirmation dialogs.
+ * Destructive actions section for habit management.
+ * Provides archive (recoverable) and delete (permanent) options
+ * with appropriate visual warnings.
  */
 
-import { Alert, View, Text, Pressable } from 'react-native';
-import { Trash2, Archive } from 'lucide-react-native';
+import { View, Text, Pressable } from 'react-native';
+
 import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { useThemeColors } from '../../theme';
+import { Trash2, Archive } from 'lucide-react-native';
 
 interface DangerZoneProps {
   onArchive: () => void;
@@ -22,7 +24,6 @@ interface DangerZoneProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
-  const { isDark } = useThemeColors();
   const archiveScale = useSharedValue(1);
   const deleteScale = useSharedValue(1);
 
@@ -35,52 +36,34 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   }));
 
   const handleArchive = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert(
-      'Archive Habit',
-      'This habit will be hidden from your daily list. You can restore it anytime from Settings.',
-      [
-        { text: 'Keep Active', style: 'cancel' },
-        { text: 'Archive', style: 'destructive', onPress: onArchive },
-      ],
-    );
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    onArchive();
   };
 
   const handleDelete = () => {
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    Alert.alert(
-      'Delete Habit',
-      'This will permanently delete this habit and all its history. This cannot be undone.',
-      [
-        { text: 'Keep Habit', style: 'cancel' },
-        { text: 'Delete Forever', style: 'destructive', onPress: onDelete },
-      ],
-    );
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    onDelete();
   };
-
-  // Dark mode: use slightly lighter tinted backgrounds
-  const archiveBg = isDark ? '#422006' : '#FFFBEB';
-  const archiveBorder = isDark ? '#92400E' : '#FDE68A';
-  const deleteBg = isDark ? '#450A0A' : '#FEF2F2';
-  const deleteBorder = isDark ? '#991B1B' : '#FECACA';
-
-  const springConfig = { damping: 18, stiffness: 150 };
 
   return (
     <View className='flex-col gap-3'>
       <AnimatedPressable
         accessibilityLabel='Archive habit'
         accessibilityRole='button'
-        className='flex-row items-center justify-center gap-2 rounded-xl py-4'
-        style={[archiveStyle, { backgroundColor: archiveBg, borderWidth: 1, borderColor: archiveBorder }]}
+        className='flex-row items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 py-4'
+        style={archiveStyle}
         onPress={handleArchive}
-        onPressIn={() => { archiveScale.value = withSpring(0.97, springConfig); }}
-        onPressOut={() => { archiveScale.value = withSpring(1, springConfig); }}
+        onPressIn={() => {
+          archiveScale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
+        }}
+        onPressOut={() => {
+          archiveScale.value = withSpring(1, { damping: 18, stiffness: 240 });
+        }}
       >
         <Archive color='#d97706' size={18} strokeWidth={2} />
         <Text
-          className='font-semibold'
-          style={{ fontSize: 17, letterSpacing: -0.41, color: isDark ? '#FBBF24' : '#B45309' }}
+          className='font-semibold text-amber-700'
+          style={{ fontSize: 17, letterSpacing: -0.41 }}
         >
           Archive Habit
         </Text>
@@ -89,16 +72,20 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
       <AnimatedPressable
         accessibilityLabel='Delete habit'
         accessibilityRole='button'
-        className='flex-row items-center justify-center gap-2 rounded-xl py-4'
-        style={[deleteStyle, { backgroundColor: deleteBg, borderWidth: 1, borderColor: deleteBorder }]}
+        className='flex-row items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 py-4'
+        style={deleteStyle}
         onPress={handleDelete}
-        onPressIn={() => { deleteScale.value = withSpring(0.97, springConfig); }}
-        onPressOut={() => { deleteScale.value = withSpring(1, springConfig); }}
+        onPressIn={() => {
+          deleteScale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
+        }}
+        onPressOut={() => {
+          deleteScale.value = withSpring(1, { damping: 18, stiffness: 240 });
+        }}
       >
         <Trash2 color='#dc2626' size={18} strokeWidth={2} />
         <Text
-          className='font-semibold'
-          style={{ fontSize: 17, letterSpacing: -0.41, color: isDark ? '#F87171' : '#DC2626' }}
+          className='font-semibold text-red-600'
+          style={{ fontSize: 17, letterSpacing: -0.41 }}
         >
           Delete Habit
         </Text>

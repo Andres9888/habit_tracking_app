@@ -6,8 +6,8 @@
  */
 
 import type { OfflineOperation } from '../../queue';
-import { resolveOperation } from '../conflictResolver';
 import type { QueueProcessorDeps, ProcessSingleOptions } from './types';
+import { resolveOperation } from '../conflictResolver';
 
 /** Result of conflict check */
 export interface ConflictCheckResult {

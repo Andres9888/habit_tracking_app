@@ -1,7 +1,10 @@
+
 import React from 'react';
 import { View } from 'react-native';
-import { Link2 } from 'lucide-react-native';
+
 import Svg, { G, Rect } from 'react-native-svg';
+import { Link2 } from 'lucide-react-native';
+
 import { colors } from '../../theme/colors';
 
 interface ChainLinkIconProps {

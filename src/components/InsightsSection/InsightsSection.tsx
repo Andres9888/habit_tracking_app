@@ -4,9 +4,17 @@
  */
 
 import React, { useMemo } from 'react';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
+
 import type { InsightsSectionProps } from './InsightsSection.types';
-import { MIN_TRACKING_DAYS_FOR_INSIGHTS } from './InsightsSection.constants';
+import {
+  JourneyStatsSection,
+  BestDaysSection,
+  StreakRecordsSection,
+  TrendSection,
+  EmptyInsightsState,
+} from './components';
 import {
   calculateDayOfWeekStats,
   calculateStreakRecords,
@@ -15,13 +23,7 @@ import {
   findBestDay,
   findWorstDay,
 } from './utils';
-import {
-  JourneyStatsSection,
-  BestDaysSection,
-  StreakRecordsSection,
-  TrendSection,
-  EmptyInsightsState,
-} from './components';
+import { MIN_TRACKING_DAYS_FOR_INSIGHTS } from './InsightsSection.constants';
 
 export function InsightsSection({
   tracking,

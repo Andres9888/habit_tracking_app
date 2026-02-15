@@ -1,4 +1,6 @@
+
 import { Linking, Text, View } from 'react-native';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 const TERMS_URL = 'https://andres9888.github.io/chainday-landing/terms.html';

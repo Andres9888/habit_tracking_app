@@ -5,10 +5,12 @@
 
 import React from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Target, Save } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Target, Save } from 'lucide-react-native';
+
 import type { SummaryStepProps } from '../types';
 import { VisualizationCards } from './VisualizationCards';
 

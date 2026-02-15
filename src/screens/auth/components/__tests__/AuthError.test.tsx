@@ -1,5 +1,8 @@
+
 import React from 'react';
+
 import { fireEvent, render } from '@testing-library/react-native';
+
 import { AuthError } from '../AuthError';
 
 describe('AuthError', () => {

@@ -12,9 +12,11 @@
  * - Edge cases (empty values, nullish handling)
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { Alert, BackHandler, Platform } from 'react-native';
+
 import * as Haptics from 'expo-haptics';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
+
 import {
   useUnsavedChangesGuard,
   type UseUnsavedChangesGuardOptions,

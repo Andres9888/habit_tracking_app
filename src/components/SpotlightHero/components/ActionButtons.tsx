@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { ArrowRight } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { ArrowRight } from 'lucide-react-native';
+
 import { shadows } from '../../../theme/spacing';
 
 interface ActionButtonsProps {

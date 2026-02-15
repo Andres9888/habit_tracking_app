@@ -10,12 +10,13 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { HelpCircle, Sparkles } from 'lucide-react-native';
 import { clsx } from 'clsx';
 
-import { MotivationButton } from './MotivationButton';
-import { MOTIVATION_OPTIONS, getAccentColor } from './constants';
 import type { MotivationCheckProps } from './types';
+import { MOTIVATION_OPTIONS, getAccentColor } from './constants';
+import { MotivationButton } from './MotivationButton';
 
 export function MotivationCheck({
   selectedLevel,

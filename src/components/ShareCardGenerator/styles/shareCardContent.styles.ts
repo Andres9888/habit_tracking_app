@@ -3,9 +3,11 @@
  */
 
 // Intentional: static color for share card rendering — white text/fills on gradient backgrounds
+
 import { StyleSheet } from 'react-native';
-import { colors } from '@/theme/colors';
+
 import { borderRadius } from '../../../theme/spacing';
+import { colors } from '@/theme/colors';
 import { typography } from '../../../theme/typography';
 
 export const shareCardContentStyles = StyleSheet.create({

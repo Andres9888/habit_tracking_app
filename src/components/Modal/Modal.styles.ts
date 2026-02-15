@@ -4,6 +4,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+
 import { SCREEN_HEIGHT } from './Modal.constants';
 
 export const styles = StyleSheet.create({

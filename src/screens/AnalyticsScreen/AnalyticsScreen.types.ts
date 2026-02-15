@@ -2,9 +2,9 @@
  * Type definitions for AnalyticsScreen
  */
 
+import type { HeatmapData } from '../../components/ComplianceHeatmap/ComplianceHeatmap.types';
 import type { StrengthDistributionData } from '../../components/StrengthDistributionChart/StrengthDistributionChart.types';
 import type { TrendData } from '../../components/TrendLineChart/types';
-import type { HeatmapData } from '../../components/ComplianceHeatmap/ComplianceHeatmap.types';
 import type { WeeklyInsights } from '../../components/WeeklyInsightsCard';
 
 // Re-export canonical chart types for consumers

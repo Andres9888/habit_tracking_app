@@ -10,9 +10,10 @@
  */
 
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View } from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 
 // Mock expo-blur
 jest.mock('expo-blur', () => {

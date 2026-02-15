@@ -4,10 +4,11 @@
  */
 
 import { Gesture } from 'react-native-gesture-handler';
+
+import type { UseHabitCardGesturesOptions } from './gestures/types';
+import { createLongPressGesture } from './gestures/longPressGesture';
 import { createPanGesture } from './gestures/panGesture';
 import { createTapGesture } from './gestures/tapGesture';
-import { createLongPressGesture } from './gestures/longPressGesture';
-import type { UseHabitCardGesturesOptions } from './gestures/types';
 
 export type { UseHabitCardGesturesOptions } from './gestures/types';
 

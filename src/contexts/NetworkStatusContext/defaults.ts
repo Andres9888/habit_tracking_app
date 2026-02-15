@@ -3,6 +3,7 @@
  */
 
 import { NetworkStateType } from 'expo-network';
+
 import type { NetworkStatus, NetworkStatusContextValue } from './types';
 
 // No-op functions for default context

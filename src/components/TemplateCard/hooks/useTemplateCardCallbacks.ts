@@ -4,8 +4,9 @@
  * Card press and import callback handlers
  */
 
-import { useCallback } from 'react';
 import type { GestureResponderEvent } from 'react-native';
+import { useCallback } from 'react';
+
 import * as Haptics from 'expo-haptics';
 
 interface UseTemplateCardCallbacksProps {

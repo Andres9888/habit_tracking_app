@@ -8,6 +8,7 @@ import {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+
 import { springs } from '@/theme/animations';
 
 interface UseToastButtonAnimationOptions {

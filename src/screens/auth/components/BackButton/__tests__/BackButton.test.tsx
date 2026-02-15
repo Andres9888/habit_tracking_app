@@ -1,5 +1,8 @@
+
 import React from 'react';
+
 import { fireEvent, render } from '@testing-library/react-native';
+
 import { BackButton } from '../BackButton';
 
 describe('BackButton', () => {

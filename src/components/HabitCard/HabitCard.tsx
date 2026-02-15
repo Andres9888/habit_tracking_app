@@ -9,16 +9,12 @@
 
 import React, { memo } from 'react';
 import { View } from 'react-native';
+
+import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
-import FloatingXPText from '../FloatingXPText/FloatingXPText';
-import { CompletionToast } from '../CompletionToast';
-import { SuccessShimmer } from '../animations/SuccessShimmer';
-import { useThemeColors } from '../../theme/ThemeContext';
-import { useFocusRing } from '../../utils/accessibility';
-import { useHabitCard } from './useHabitCard';
-import { styles } from './HabitCard.styles';
+
 import type { HabitCardProps } from './HabitCard.types';
+import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import {
   SwipeActions,
   SwipeGripLines,
@@ -26,6 +22,11 @@ import {
   HabitCardContent,
   ConfettiBurst,
 } from './components';
+import { CompletionToast } from '../CompletionToast';
+import { styles } from './HabitCard.styles';
+import { useFocusRing } from '../../utils/accessibility';
+import { useHabitCard } from './useHabitCard';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 export type { HabitCardProps } from './HabitCard.types';
 
@@ -58,11 +59,10 @@ function HabitCardComponent(props: HabitCardProps) {
       <GestureDetector gesture={habit.composedGesture}>
         <Animated.View
           accessible
-          accessibilityHint='Tap to toggle completion. Swipe left to reveal edit and delete actions.'
-          accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}`}
+          accessibilityHint='Tap to toggle completion. Swipe left for edit and delete options.'
+          accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}. Swipe left for actions.`}
           accessibilityRole='button'
           accessibilityState={{ checked: habit.completed, disabled }}
-          testID='home-habit-toggle'
           style={[
             styles.card,
             {
@@ -82,7 +82,6 @@ function HabitCardComponent(props: HabitCardProps) {
             strengthColor={habit.strengthColor}
             strengthFillStyle={habit.strengthFillStyle}
           />
-          <SuccessShimmer active={habit.showConfetti} />
           <Animated.View
             style={[
               styles.accentBar,
@@ -102,7 +101,7 @@ function HabitCardComponent(props: HabitCardProps) {
             completed={habit.completed}
             completionIcon={completionIcon}
             currentStreak={habit.currentStreak}
-            entranceContentStyle={habit.entrance.contentStyle as AnimatedStyle}
+            entranceContentStyle={habit.entrance.contentStyle as any}
             hasPendingOfflineOps={habit.hasPendingOfflineOps}
             icon={icon}
             name={name}

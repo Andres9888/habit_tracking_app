@@ -4,6 +4,7 @@
  */
 
 import { Dimensions } from 'react-native';
+
 import { springs } from '../../theme/animations';
 
 export const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } =

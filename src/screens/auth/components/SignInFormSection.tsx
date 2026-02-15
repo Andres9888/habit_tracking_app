@@ -4,7 +4,10 @@
 
 import React, { useRef } from 'react';
 import { TextInput, View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
+
+import type { SignInFormSectionProps } from './SignInFormSection.types';
 import { AuthDivider } from './AuthDivider';
 import { AuthError } from './AuthError';
 import { ForgotPasswordLink } from './ForgotPasswordLink';
@@ -13,7 +16,6 @@ import { PasswordInput } from './PasswordInput';
 import { SocialSignInButton } from './SocialSignInButton';
 import { SubmitButton } from './SubmitButton';
 import { styles } from '../SignInScreen.styles';
-import type { SignInFormSectionProps } from './SignInFormSection.types';
 
 export function SignInFormSection(props: SignInFormSectionProps) {
   const {

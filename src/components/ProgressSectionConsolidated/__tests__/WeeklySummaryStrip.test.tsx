@@ -8,12 +8,14 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
-import { WeeklySummaryStrip } from '../WeeklySummaryStrip';
+
 import type {
   WeeklySummaryStripProps,
   WeekDayData,
 } from '../WeeklySummaryStripTypes';
+import { WeeklySummaryStrip } from '../WeeklySummaryStrip';
 
 // Mock useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({

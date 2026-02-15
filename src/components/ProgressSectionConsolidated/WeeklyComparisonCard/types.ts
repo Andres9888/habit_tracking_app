@@ -3,6 +3,7 @@
  */
 
 import type { TrendingUp } from 'lucide-react-native';
+
 import type { WeekOverWeekTrend } from '../../../utils/trendCalculations';
 
 export interface WeeklyComparisonCardProps {

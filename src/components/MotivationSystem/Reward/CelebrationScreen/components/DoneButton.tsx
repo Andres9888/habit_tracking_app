@@ -4,6 +4,8 @@
 
 import React, { useCallback, useEffect } from 'react';
 import { Pressable, Text } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -12,10 +14,9 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
-import { SPRING_BUTTON } from '../constants';
 import type { DoneButtonProps } from '../types';
+import { SPRING_BUTTON } from '../constants';
 
 export function DoneButton({ onPress, reduceMotion = false }: DoneButtonProps) {
   const scale = useSharedValue(1);

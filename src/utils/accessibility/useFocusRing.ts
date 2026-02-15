@@ -1,7 +1,9 @@
-import { useCallback, useMemo, useState } from 'react';
+
 import type { ViewStyle } from 'react-native';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useCallback, useMemo, useState } from 'react';
+
 import { focusRingCompactStyle, focusRingStyle } from './focusRing';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 interface UseFocusRingOptions {
   compact?: boolean;

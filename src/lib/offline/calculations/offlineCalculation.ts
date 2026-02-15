@@ -5,13 +5,13 @@
  * for accurate streak calculation while offline.
  */
 
-import { calculateStreakFromHistory } from './historyCalculation';
 import type {
   PendingToggleOperation,
   StreakCalculatorOptions,
   StreakData,
   TrackingRecord,
 } from './types';
+import { calculateStreakFromHistory } from './historyCalculation';
 
 /**
  * Merge server tracking with pending offline operations

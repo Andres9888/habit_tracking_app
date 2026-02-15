@@ -3,11 +3,12 @@
  */
 
 import { useContext, useEffect } from 'react';
+
+import type { SyncEvent, SyncStatus } from '../types';
 import {
   OfflineSyncContext,
   type OfflineSyncContextValue,
 } from './OfflineSyncContext';
-import type { SyncEvent, SyncStatus } from '../types';
 
 /**
  * Hook to access offline sync context

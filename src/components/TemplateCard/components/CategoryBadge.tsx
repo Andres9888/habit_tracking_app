@@ -6,11 +6,11 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useAppTheme } from '../../../theme';
-import { useThemeColors } from '../../../theme/ThemeContext';
+
+import { CATEGORY_LABELS } from '../TemplateCard.constants';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
-import { CATEGORY_LABELS } from '../TemplateCard.constants';
+import { useAppTheme } from '../../../theme';
 
 interface CategoryBadgeProps {
   category?: string;
@@ -24,7 +24,6 @@ export function CategoryBadge({
   isPremium,
 }: CategoryBadgeProps) {
   const theme = useAppTheme();
-  const { colors } = useThemeColors();
 
   return (
     <View style={styles.badgeRow}>
@@ -35,7 +34,7 @@ export function CategoryBadge({
           <Text
             style={[
               theme.custom.typography.caption,
-              { color: colors.text.secondary, fontWeight: '600' },
+              { color: '#4b5563', fontWeight: '600' },
             ]}
           >
             {CATEGORY_LABELS[category] || category}

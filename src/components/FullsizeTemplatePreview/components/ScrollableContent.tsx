@@ -3,14 +3,15 @@
  */
 
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import { View, ScrollView } from 'react-native';
-import { HeroSection } from './HeroSection';
+
+import type { Template } from '../../../types/template';
 import { DescriptionSection } from './DescriptionSection';
+import { HeroSection } from './HeroSection';
 import { ScienceBox } from './ScienceBox';
 import { TipsBox } from './TipsBox';
 import { layoutStyles } from '../styles';
-import type { Template } from '../../../types/template';
-import type { ViewStyle } from 'react-native';
 
 interface ScrollableContentProps {
   template: Template;

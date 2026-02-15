@@ -1,7 +1,10 @@
+
 import React from 'react';
+
 import { ExternalLink } from 'lucide-react-native';
-import { SettingsSection } from '../SettingsSection';
+
 import { SettingsRow } from '../SettingsRow';
+import { SettingsSection } from '../SettingsSection';
 
 interface Props {
   highContrast: boolean;

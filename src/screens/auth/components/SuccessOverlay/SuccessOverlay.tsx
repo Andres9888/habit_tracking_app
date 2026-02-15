@@ -1,8 +1,10 @@
+
 import { Text, View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 
-import { styles } from './styles';
 import type { SuccessOverlayProps } from './types';
+import { styles } from './styles';
 import { useSuccessOverlayAnimations } from './useSuccessOverlayAnimations';
 
 /**

@@ -1,4 +1,6 @@
+
 import { useCallback, useState } from 'react';
+
 import type { HabitTemplate } from '../types';
 
 interface UseScienceModalOptions {

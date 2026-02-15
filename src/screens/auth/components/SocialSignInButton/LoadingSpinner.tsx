@@ -1,4 +1,6 @@
+
 import { useEffect } from 'react';
+
 import Animated, {
   Easing,
   useAnimatedStyle,

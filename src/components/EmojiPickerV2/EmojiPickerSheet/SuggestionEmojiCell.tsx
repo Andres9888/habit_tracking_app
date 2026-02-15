@@ -5,6 +5,7 @@
 
 import React, { memo, useCallback } from 'react';
 import { Text, Pressable, StyleSheet } from 'react-native';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,8 +13,8 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 
-import { colors } from '../../../theme/colors';
 import { borderRadius } from '../../../theme/spacing';
+import { colors } from '../../../theme/colors';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

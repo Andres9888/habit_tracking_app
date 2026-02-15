@@ -9,6 +9,7 @@ import {
   Extrapolate,
   type SharedValue,
 } from 'react-native-reanimated';
+
 import { SWIPE_THRESHOLD } from '../HabitCard.constants';
 
 export function useCardAnimatedStyle(

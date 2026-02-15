@@ -3,11 +3,11 @@
  * Type definitions for the habit detail screen
  */
 
-import type { Id, Doc } from '../../../convex/_generated/dataModel';
 import type {
   Habit as HabitDoc,
   HabitTrackingEntry,
 } from '../../features/habits/types';
+import type { Id, Doc } from '../../../convex/_generated/dataModel';
 
 export type Habit = HabitDoc & {
   successRate?: number;

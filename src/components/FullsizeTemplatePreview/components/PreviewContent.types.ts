@@ -2,11 +2,11 @@
  * Types for PreviewContent
  */
 
-import type { ViewStyle } from 'react-native';
-import type ConfettiCannon from 'react-native-confetti-cannon';
 import type { SharedValue } from 'react-native-reanimated';
-import type { Template } from '../../../types/template';
+import type { ViewStyle } from 'react-native';
+
 import type { PressHandlers } from '../FullsizeTemplatePreview.types';
+import type { Template } from '../../../types/template';
 
 export interface PreviewContentAnimatedStyles {
   contentStyle: ViewStyle;
@@ -30,7 +30,7 @@ export interface PreviewContentHandlers {
 
 export interface PreviewContentProps {
   animatedStyles: PreviewContentAnimatedStyles;
-  confettiRef: React.RefObject<ConfettiCannon | null>;
+  confettiRef: React.RefObject<any>;
   createPressHandlers: (
     scale: SharedValue<number>,
     scaleValue?: number

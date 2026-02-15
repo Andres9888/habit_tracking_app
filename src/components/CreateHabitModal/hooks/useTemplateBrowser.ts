@@ -1,13 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+
 import type { ScrollView } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { useQuery } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
+
 import type { Category, CategoryFilter, HabitTemplate } from '../types';
+import { api } from '../../../../convex/_generated/api';
+import { useHabitTemplates } from './useHabitTemplates';
 import { useKeyboardState } from './useKeyboardState';
 import { useTemplateAnimation } from './useTemplateAnimation';
 import { useTemplateBrowserHandlers } from './useTemplateBrowserHandlers';
 import { useTemplateScrollIndicators } from './useTemplateScrollIndicators';
-import { useHabitTemplates } from './useHabitTemplates';
+
 interface UseTemplateBrowserOptions {
   isEditMode: boolean;
   visible: boolean;

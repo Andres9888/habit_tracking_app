@@ -29,16 +29,18 @@
  * ```
  */
 
+import { Platform } from 'react-native';
 import { useCallback } from 'react';
+
+import * as Haptics from 'expo-haptics';
 import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { Platform } from 'react-native';
-import { Springs } from '../constants/motion';
+
 import { CARD_PRESS_SCALE } from '../utils/animations/cardPressAnimation';
+import { Springs } from '../constants/motion';
 
 export interface PressAnimationConfig {
   /**

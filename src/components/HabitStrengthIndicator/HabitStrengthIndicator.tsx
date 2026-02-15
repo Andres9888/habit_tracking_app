@@ -10,15 +10,15 @@
  */
 
 import React, { memo, useMemo } from 'react';
-import { useAppTheme } from '../../theme';
 
 import type { HabitStrengthIndicatorProps } from './types';
-import { STRENGTH_LEVEL_CONFIG } from './constants';
-import { getStrengthLevel, getStrengthColor } from './utils';
-import { useStrengthAnimation } from './useStrengthAnimation';
 import { CompactIndicator } from './CompactIndicator';
 import { FullIndicator } from './FullIndicator';
 import { GraphIndicator } from './GraphIndicator';
+import { STRENGTH_LEVEL_CONFIG } from './constants';
+import { getStrengthLevel, getStrengthColor } from './utils';
+import { useAppTheme } from '../../theme';
+import { useStrengthAnimation } from './useStrengthAnimation';
 
 function HabitStrengthIndicatorComponent({
   strength,

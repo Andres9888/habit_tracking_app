@@ -1,7 +1,9 @@
+
 import { useState } from 'react';
+
+import type { ProcessingState } from '../OfflineQueueProcessor';
 import { useNetworkStatus } from '../../contexts/NetworkStatusContext';
 import { useOfflineQueue, type QueueStats } from '../../hooks/useOfflineQueue';
-import type { ProcessingState } from '../OfflineQueueProcessor';
 
 interface UseOfflineBannerStateParams {
   processingState?: ProcessingState;

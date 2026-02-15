@@ -23,6 +23,7 @@
 
 import React from 'react';
 import { View, ViewStyle, StyleProp } from 'react-native';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export interface SafeHeaderProps {

@@ -1,5 +1,7 @@
-import { memo, useCallback } from 'react';
+
 import { Pressable, Text } from 'react-native';
+import { memo, useCallback } from 'react';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,8 +9,8 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 
-import { styles } from './styles';
 import type { EmojiCellProps } from './types';
+import { styles } from './styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

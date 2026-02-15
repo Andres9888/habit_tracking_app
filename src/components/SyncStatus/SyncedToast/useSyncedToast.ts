@@ -10,9 +10,9 @@
 
 import { useState, useCallback } from 'react';
 
-import { useOnSyncComplete } from '../../../contexts/SyncStatusContext/hooks';
 import type { SyncOrchestratorResult } from '../../../lib/offline/sync/types';
 import type { UseSyncedToastOptions, UseSyncedToastResult } from './types';
+import { useOnSyncComplete } from '../../../contexts/SyncStatusContext/hooks';
 
 const DEFAULT_DURATION = 2000;
 

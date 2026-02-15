@@ -1,7 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { useSignIn } from '@clerk/clerk-expo';
-import { useCallback, useState } from 'react';
+
 import { Alert } from 'react-native';
+import { useCallback, useState } from 'react';
+
+import { useSignIn } from '@clerk/clerk-expo';
+
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail } from '../../../utils/validation';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';

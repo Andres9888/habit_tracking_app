@@ -1,9 +1,11 @@
 /**
  * useFPSMonitor Hook - Monitor and report FPS during component lifetime.
  */
+
 import { useCallback, useEffect, useState } from 'react';
-import { usePerformance } from './usePerformance';
+
 import type { FrameTimingData } from '../../lib/performance';
+import { usePerformance } from './usePerformance';
 
 interface FPSStats {
   averageFPS: number;

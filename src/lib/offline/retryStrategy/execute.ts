@@ -3,12 +3,12 @@
  */
 
 import type { ClassifiedError, RetryContext, RetryStrategy } from '../types';
-import { DEFAULT_RETRY_STRATEGY } from './config';
 import {
   createRetryContext,
   updateRetryContext,
   getTimeUntilRetry,
 } from './context';
+import { DEFAULT_RETRY_STRATEGY } from './config';
 
 /**
  * Execute a function with retry logic

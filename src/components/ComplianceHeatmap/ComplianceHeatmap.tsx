@@ -6,14 +6,15 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import type { ComplianceHeatmapProps } from './ComplianceHeatmap.types';
-import { useComplianceHeatmap } from './useComplianceHeatmap';
-import { styles } from './ComplianceHeatmap.styles';
-import { EmptyState } from './EmptyState';
 import { DayLabels } from './DayLabels';
+import { EmptyState } from './EmptyState';
 import { HeatmapGrid } from './HeatmapGrid';
 import { Legend } from './Legend';
 import { Summary } from './Summary';
+import { styles } from './ComplianceHeatmap.styles';
+import { useComplianceHeatmap } from './useComplianceHeatmap';
 
 export type {
   ComplianceHeatmapProps,

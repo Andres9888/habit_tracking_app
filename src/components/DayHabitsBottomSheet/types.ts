@@ -1,5 +1,6 @@
-import type { Id } from '../../../convex/_generated/dataModel';
+
 import type { Habit, HabitStatus } from '../../features/habits/types';
+import type { Id } from '../../../convex/_generated/dataModel';
 
 /**
  * Props for DayHabitsBottomSheet component

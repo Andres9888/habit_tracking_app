@@ -3,9 +3,11 @@
  * Manages state and navigation for VisionBoardPreview
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
 import { AccessibilityInfo, ScrollView } from 'react-native';
+import { useState, useEffect, useCallback, useRef } from 'react';
+
 import * as Haptics from 'expo-haptics';
+
 import type { VisionBoardItem } from './VisionBoardPreview.types';
 
 interface UseVisionBoardPreviewParams {

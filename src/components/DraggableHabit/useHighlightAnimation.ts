@@ -3,8 +3,9 @@
  * Handles glow animation when a habit is just created
  */
 
-import { useEffect } from 'react';
 import { Animated } from 'react-native';
+import { useEffect } from 'react';
+
 import { runHighlightAnimation } from './animationSequences';
 
 export function useHighlightAnimation(

@@ -1,25 +1,21 @@
 /**
  * HabitsPageSkeleton - Full-page loading skeleton for habits page
  */
+
 import React from 'react';
 import { View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { SkeletonLoader } from './SkeletonLoader';
-import { HabitCardSkeleton } from './HabitCardSkeleton';
-import { CalendarTimelineSkeleton } from './CalendarTimelineSkeleton';
-import { MomentumMeterSkeleton } from './MomentumMeterSkeleton';
+
 import type { ReduceMotionProps } from './types';
+import { CalendarTimelineSkeleton } from './CalendarTimelineSkeleton';
+import { HabitCardSkeleton } from './HabitCardSkeleton';
+import { MomentumMeterSkeleton } from './MomentumMeterSkeleton';
+import { SkeletonLoader } from './SkeletonLoader';
 
 export function HabitsPageSkeleton({
   reduceMotion = false,
 }: ReduceMotionProps) {
   return (
-    <View
-      accessible
-      accessibilityLabel='Loading your habits...'
-      accessibilityRole='progressbar'
-      className='flex-1 gap-3 px-4 pt-16'
-    >
+    <View className='flex-1 gap-3 px-4 pt-16'>
       <View className='gap-3'>
         <View className='flex-row items-center justify-between'>
           <SkeletonLoader
@@ -47,14 +43,9 @@ export function HabitsPageSkeleton({
       </View>
       <CalendarTimelineSkeleton reduceMotion={reduceMotion} />
       <View className='mt-2 gap-0'>
-        {[0, 1, 2].map((index) => (
-          <Animated.View
-            key={index}
-            entering={reduceMotion ? undefined : FadeIn.duration(300).delay(index * 60)}
-          >
-            <HabitCardSkeleton reduceMotion={reduceMotion} />
-          </Animated.View>
-        ))}
+        <HabitCardSkeleton reduceMotion={reduceMotion} />
+        <HabitCardSkeleton reduceMotion={reduceMotion} />
+        <HabitCardSkeleton reduceMotion={reduceMotion} />
       </View>
     </View>
   );

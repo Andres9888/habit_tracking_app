@@ -5,13 +5,13 @@
  * Implements FR-010: completion wins strategy.
  */
 
-import type { Id } from '../../../../../convex/_generated/dataModel';
-import type { ToggleCompletionPayload } from '../../queue';
 import type {
   ConflictResolution,
   ConflictResolutionResult,
   ServerCompletionState,
 } from './types';
+import type { Id } from '../../../../../convex/_generated/dataModel';
+import type { ToggleCompletionPayload } from '../../queue';
 
 /**
  * Create a unique key for a habit+date combination

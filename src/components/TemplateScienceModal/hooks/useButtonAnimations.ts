@@ -3,11 +3,13 @@
  */
 
 import { useCallback } from 'react';
+
 import {
   useSharedValue,
   withSpring,
   type SharedValue,
 } from 'react-native-reanimated';
+
 import type { PressHandlers } from '../TemplateScienceModal.types';
 
 export const useButtonAnimations = () => {

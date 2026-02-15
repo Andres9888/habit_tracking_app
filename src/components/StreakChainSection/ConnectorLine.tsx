@@ -4,6 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -11,6 +12,7 @@ import Animated, {
   withSpring,
   cancelAnimation,
 } from 'react-native-reanimated';
+
 import type { ConnectorLineProps } from './types';
 
 export function ConnectorLine({ active, index }: ConnectorLineProps) {

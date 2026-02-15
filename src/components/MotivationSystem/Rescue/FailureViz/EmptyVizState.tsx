@@ -4,9 +4,11 @@
  */
 
 import React from 'react';
-import { View } from 'react-native';
-import { AlertTriangle } from 'lucide-react-native';
+import { View, Text } from 'react-native';
+
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { AlertTriangle } from 'lucide-react-native';
+
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const anim = (delay: number) =>
@@ -16,13 +18,7 @@ export function EmptyVizState() {
   const { colors, isDark } = useThemeColors();
 
   return (
-    <View
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 24,
-      }}
-    >
+    <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 24 }}>
       <Animated.View
         entering={anim(0)}
         style={{

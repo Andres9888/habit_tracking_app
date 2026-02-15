@@ -5,10 +5,12 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
-import { useAppTheme } from '../../theme';
-import { styles } from './styles';
+
 import type { IndicatorVariantProps } from './types';
+import { styles } from './styles';
+import { useAppTheme } from '../../theme';
 
 export function CompactIndicator({
   strength,

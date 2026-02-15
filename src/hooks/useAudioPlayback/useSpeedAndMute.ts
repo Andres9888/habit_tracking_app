@@ -5,7 +5,9 @@
  */
 
 import { useCallback } from 'react';
+
 import { Audio } from 'expo-av';
+
 import type { PlaybackSpeed, PlaybackStatus } from './types';
 
 export interface UseSpeedAndMuteOptions {

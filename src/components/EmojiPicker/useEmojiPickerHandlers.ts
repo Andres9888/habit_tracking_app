@@ -1,9 +1,11 @@
-import { useCallback } from 'react';
-import { AccessibilityInfo, findNodeHandle } from 'react-native';
+
 import type { RefObject } from 'react';
 import type { View } from 'react-native';
-import { addRecentEmoji } from '../../utils/recentEmojis';
+import { AccessibilityInfo, findNodeHandle } from 'react-native';
+import { useCallback } from 'react';
+
 import { FOCUS_RETURN_DELAY_MS } from './EmojiPicker.constants';
+import { addRecentEmoji } from '../../utils/recentEmojis';
 
 interface UseEmojiPickerHandlersOptions {
   onClose: () => void;

@@ -5,15 +5,16 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
+
 import Animated from 'react-native-reanimated';
+import Svg, { Circle } from 'react-native-svg';
 
 import type { CompactStrengthRingProps } from './StatsGridTypes';
-import { TrendBadge } from './TrendBadge';
 import {
   useStrengthRingAnimation,
   RING_CONSTANTS,
 } from './useStrengthRingAnimation';
+import { TrendBadge } from './TrendBadge';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const { CENTER, CIRCUMFERENCE, RADIUS, RING_SIZE, STROKE_WIDTH } =

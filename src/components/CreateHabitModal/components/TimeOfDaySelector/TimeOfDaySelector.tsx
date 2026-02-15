@@ -4,6 +4,7 @@
  */
 
 import { AccessibilityInfo, Text, View } from 'react-native';
+
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import {
   HUBERMAN_PHASES,

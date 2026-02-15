@@ -3,6 +3,7 @@
  */
 
 import { useEffect, useState } from 'react';
+
 import {
   Easing,
   runOnJS,
@@ -12,6 +13,7 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+
 import { NUMBER_COUNT_UP_DURATION } from './constants';
 
 interface UseStrengthAnimationParams {

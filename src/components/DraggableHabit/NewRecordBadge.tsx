@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Animated, Text } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { TrendingUp } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';

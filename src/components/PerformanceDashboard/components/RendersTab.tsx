@@ -5,11 +5,12 @@
 
 import React, { useCallback } from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { StatusIndicator } from './StatusIndicator';
-import { StatRow } from './StatRow';
-import { tabStyles, valueStyles } from './tabStyles';
-import { rendersStyles } from './RendersTab.styles';
+
 import type { RenderData, RenderTiming } from '../types';
+import { StatRow } from './StatRow';
+import { StatusIndicator } from './StatusIndicator';
+import { rendersStyles } from './RendersTab.styles';
+import { tabStyles, valueStyles } from './tabStyles';
 
 interface RendersTabProps {
   data: RenderData;

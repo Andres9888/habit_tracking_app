@@ -1,21 +1,22 @@
 /**
  * StrengthRing - Apple Watch-style ring visualization for habit strength
  */
+
 import React from 'react';
 import { View } from 'react-native';
 
 import Animated from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 
-import { LevelLabel } from './LevelLabel';
-import { RingCenter } from './RingCenter';
+import type { StrengthRingProps } from './StrengthRing.types';
 import {
   BACKGROUND_COLOR,
   getLevelInfo,
   SIZE_CONFIG,
 } from './StrengthRing.constants';
+import { LevelLabel } from './LevelLabel';
+import { RingCenter } from './RingCenter';
 import { styles } from './StrengthRing.styles';
-import type { StrengthRingProps } from './StrengthRing.types';
 import { useStrengthRingAnimation } from './useStrengthRingAnimation';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);

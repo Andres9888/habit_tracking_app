@@ -3,8 +3,9 @@
  */
 
 import { useEffect, useCallback, useMemo } from 'react';
-import type { UseTemplateBrowser } from './useTemplateBrowser';
+
 import type { UseScienceModal } from './useScienceModal';
+import type { UseTemplateBrowser } from './useTemplateBrowser';
 
 interface UseModalEffectsParams {
   visible: boolean;

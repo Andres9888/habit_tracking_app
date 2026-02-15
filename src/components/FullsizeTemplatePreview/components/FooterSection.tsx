@@ -5,11 +5,13 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import Animated from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
-import { footerStyles } from '../styles';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { FooterSectionProps } from './FooterSection.types';
+import { footerStyles } from '../styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

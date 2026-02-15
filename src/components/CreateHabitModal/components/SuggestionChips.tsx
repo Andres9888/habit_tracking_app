@@ -1,9 +1,11 @@
-import { useCallback, useRef } from 'react';
+
 import { Animated, Pressable, Text, View } from 'react-native';
+import { useCallback, useRef } from 'react';
+
+import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { Motion } from '../../../constants/motion';
 import { colors } from '@/theme/colors';
 import { shadows } from '@/theme/spacing';
-import { Motion } from '../../../constants/motion';
-import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
 interface SuggestionChip {
   name: string;

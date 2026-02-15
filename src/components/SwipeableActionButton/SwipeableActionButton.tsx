@@ -10,13 +10,15 @@
 
 import React, { useRef } from 'react';
 import { Animated } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Trash2 } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
-import { getSwipeColors } from './styles';
-import { SwipeActions } from './SwipeActions';
-import { ButtonContent } from './ButtonContent';
+
 import type { SwipeableActionButtonProps } from './types';
+import { ButtonContent } from './ButtonContent';
+import { SwipeActions } from './SwipeActions';
+import { getSwipeColors } from './styles';
 
 export function SwipeableActionButton({
   icon: Icon,

@@ -1,19 +1,21 @@
-/* eslint-disable max-lines */
 /** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
+
 import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
+
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import { useThemeColors } from '../../theme/ThemeContext';
+
+import type { HabitEditScreenProps } from './types';
+import { CustomizeSection } from './CustomizeSection';
+import { DangerZone } from './DangerZone';
 import { EditHeader } from './EditHeader';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { NameInputSection } from './NameInputSection';
-import { CustomizeSection } from './CustomizeSection';
-import { DangerZone } from './DangerZone';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { SectionLabel } from './SectionLabel';
 import { useHabitEditScreen } from './useHabitEditScreen';
-import type { HabitEditScreenProps } from './types';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 // eslint-disable-next-line max-lines-per-function
 function HabitEditScreenContent({
@@ -23,10 +25,9 @@ function HabitEditScreenContent({
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const state = useHabitEditScreen({ habitId, onClose });
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
   return (
     <Modal
-      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}
@@ -46,7 +47,7 @@ function HabitEditScreenContent({
                 <HabitEditSkeleton />
               </View>
             ) : (
-              <Animated.View entering={FadeIn.duration(300)} style={{ flex: 1 }}>
+              <>
             <EditHeader
               canSave={state.habitName.trim().length >= 2}
               isSaving={state.isSaving}
@@ -90,16 +91,8 @@ function HabitEditScreenContent({
                 </Animated.View>
                 <SectionLabel delay={340} text='DANGER ZONE' variant='danger' />
                 <Animated.View
-                  className='mx-4 rounded-2xl p-4'
+                  className='mx-4 rounded-2xl bg-red-50/50 p-4'
                   entering={FadeInUp.delay(400).springify().damping(18)}
-                  style={{
-                    backgroundColor: themeColors.card,
-                    elevation: 4,
-                    shadowColor: isDark ? '#000000' : '#1c1917',
-                    shadowOffset: { height: 4, width: 0 },
-                    shadowOpacity: isDark ? 0.3 : 0.08,
-                    shadowRadius: 16,
-                  }}
                 >
                   <DangerZone
                     onArchive={state.handleArchive}
@@ -108,7 +101,7 @@ function HabitEditScreenContent({
                 </Animated.View>
               </Pressable>
             </ScrollView>
-            </Animated.View>
+            </>
             )}
           </View>
         </View>

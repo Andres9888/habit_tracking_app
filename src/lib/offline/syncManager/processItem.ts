@@ -2,11 +2,11 @@
  * Item Processing Logic
  */
 
-import { classifyError, getDisplayMessage } from '../errorClassifier';
 import type { CircuitBreaker } from '../circuitBreaker';
-import { createRetryContext, updateRetryContext } from '../retryStrategy';
 import type { RetryStrategy, SyncEventType } from '../types';
 import type { SyncItem, SyncItemExecutor, SyncResult } from './types';
+import { classifyError, getDisplayMessage } from '../errorClassifier';
+import { createRetryContext, updateRetryContext } from '../retryStrategy';
 
 export async function processItem<T>(
   item: SyncItem<T>,

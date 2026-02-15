@@ -11,10 +11,11 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
 
-import { StrengthTimelineChart } from '../StrengthTimelineChart';
 import type { StrengthSnapshot } from '../types';
+import { StrengthTimelineChart } from '../StrengthTimelineChart';
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {

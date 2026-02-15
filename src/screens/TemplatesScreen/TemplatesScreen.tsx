@@ -3,11 +3,11 @@
  * Browse and import science-backed habit templates
  */
 
+import { BrowseView, CategorySearchView } from './views';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesLoadingState } from './components/TemplatesLoadingState';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
-import { BrowseView, CategorySearchView } from './views';
 
 function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();

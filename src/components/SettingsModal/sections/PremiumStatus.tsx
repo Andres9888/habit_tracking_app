@@ -1,9 +1,11 @@
+
 import React from 'react';
-import { Linking, Platform, Text, View } from 'react-native';
-import { Crown, Zap, Settings } from 'lucide-react-native';
-import { SettingsSection } from '../SettingsSection';
-import { SettingsRow } from '../SettingsRow';
+import { Text, View } from 'react-native';
+
+import { Crown, Zap } from 'lucide-react-native';
+
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
+import { SettingsSection } from '../SettingsSection';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
@@ -15,17 +17,9 @@ interface Props {
 export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
   const { colors: themeColors, isDark } = useThemeColors();
 
-  const handleManageSubscription = () => {
-    if (Platform.OS === 'ios') {
-      void Linking.openURL('https://apps.apple.com/account/subscriptions');
-    } else if (Platform.OS === 'android') {
-      void Linking.openURL('https://play.google.com/store/account/subscriptions');
-    }
-  };
-
   if (isPremium) {
     return (
-      <SettingsSection highContrastMode={highContrast} title='Premium'>
+      <SettingsSection highContrastMode={highContrast} title='Subscription'>
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
@@ -63,27 +57,13 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
             </Text>
           </View>
         </View>
-        <SettingsRow
-          highContrastMode={highContrast}
-          icon={<Settings color='#6366f1' size={16} />}
-          iconBackgroundColor='#e0e7ff'
-          label='Manage Subscription'
-          showBorder={false}
-          type='navigation'
-          onPress={handleManageSubscription}
-        />
       </SettingsSection>
     );
   }
 
   return (
     <SettingsSection highContrastMode={highContrast} title='Subscription'>
-      <AnimatedPressable
-        accessibilityHint='Opens premium upgrade screen'
-        accessibilityLabel='Upgrade to Premium'
-        accessibilityRole='button'
-        onPress={onUpgrade}
-      >
+      <AnimatedPressable onPress={onUpgrade}>
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
@@ -111,7 +91,9 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               backgroundColor: '#8b5cf6',
             }}
           >
-            <Text className='text-[13px] font-bold text-white'>PRO</Text>
+            <Text className='text-[13px] font-bold text-white'>
+              PRO
+            </Text>
           </View>
         </View>
       </AnimatedPressable>

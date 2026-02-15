@@ -1,9 +1,12 @@
-import { subMonths } from 'date-fns';
+
 import { View } from 'react-native';
-import { MonthLabels } from './MonthLabels';
-import { DayRow } from './DayRow';
-import { DISPLAY_DAYS } from './utils';
+
+import { subMonths } from 'date-fns';
+
 import type { HeatmapCalendarProps } from './types';
+import { DISPLAY_DAYS } from './utils';
+import { DayRow } from './DayRow';
+import { MonthLabels } from './MonthLabels';
 
 export default function HeatmapCalendar({
   habitId,

@@ -4,8 +4,9 @@
  */
 
 import { useEffect } from 'react';
-import type { FrameTimingData } from '../../../lib/performance';
+
 import type { DashboardAction, FPSData } from '../types';
+import type { FrameTimingData } from '../../../lib/performance';
 import { getFPSStatus } from '../statusUtils';
 
 export function useFPSSubscription(

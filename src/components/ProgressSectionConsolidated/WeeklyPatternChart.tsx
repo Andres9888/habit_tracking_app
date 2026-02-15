@@ -10,14 +10,14 @@
 
 import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { ChevronRight } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+import type { WeeklyPatternChartProps } from './types';
 import { DayBar } from './DayBar';
 import { findBestDay, findWorstDay } from './WeeklyPatternChart.helpers';
-
-import type { WeeklyPatternChartProps } from './types';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 /** Chart container height (px) */
 const CHART_HEIGHT = 56;

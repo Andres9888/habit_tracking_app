@@ -12,13 +12,13 @@ import type {
   QueueEventCallback,
   QueueStateListener,
 } from './types';
-import { DEFAULT_QUEUE_STATE, OFFLINE_QUEUE_VERSION } from '../queue';
 import type { OfflineQueueState, QueueEvent } from '../queue';
-import { loadQueueState, saveQueueState } from '../persistence';
+import { DEFAULT_QUEUE_STATE, OFFLINE_QUEUE_VERSION } from '../queue';
 import { calculateStats } from './helpers';
-import { createOperations } from './operations';
 import { createBatchOperations } from './optimized';
+import { createOperations } from './operations';
 import { createStatusUpdaters } from './status';
+import { loadQueueState, saveQueueState } from '../persistence';
 
 export function createOfflineQueueManager(
   config: OfflineQueueManagerConfig = {}

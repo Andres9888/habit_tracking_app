@@ -4,8 +4,10 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { Settings, RefreshCw } from 'lucide-react-native';
 import { clsx } from 'clsx';
+
 import { ActionButton } from './ActionButton';
 
 interface PermissionActionButtonsProps {

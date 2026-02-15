@@ -3,15 +3,16 @@
  * Handles tap-to-toggle completion with haptic feedback
  */
 
+import * as Haptics from 'expo-haptics';
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, type SharedValue } from 'react-native-reanimated';
-import { HapticPatterns } from '../../../utils/haptics/patterns';
+
 import type { Id } from '../../../../convex/_generated/dataModel';
-import { showSyncError } from '../../../utils/errorAlerts';
 import {
   pressCard,
   releaseCard,
 } from '../../../utils/animations/cardPressAnimation';
+import { showSyncError } from '../../../utils/errorAlerts';
 
 interface TapGestureOptions {
   id: Id<'habits'>;
@@ -51,9 +52,17 @@ export function createTapGesture(options: TapGestureOptions) {
 
       // Instant haptic feedback on touch
       if (completed) {
-        runOnJS(HapticPatterns.tap)();
+        runOnJS(() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
+            () => {}
+          );
+        })();
       } else {
-        runOnJS(HapticPatterns.toggle)();
+        runOnJS(() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
+            () => {}
+          );
+        })();
       }
 
       // Standard card press animation with spring physics

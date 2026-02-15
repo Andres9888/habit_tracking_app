@@ -13,13 +13,14 @@ import {
   Extrapolation,
 } from 'react-native-reanimated';
 import { Gesture } from 'react-native-gesture-handler';
+
+import type { UseVisionBoardGesturesParams } from './useVisionBoardGestures.types';
 import {
   SCREEN_HEIGHT,
   DISMISS_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD,
   HORIZONTAL_SWIPE_THRESHOLD,
 } from './VisionBoardPreview.constants';
-import type { UseVisionBoardGesturesParams } from './useVisionBoardGestures.types';
 import { SPRING_CONFIG } from './useVisionBoardGestures.types';
 
 const springValue = (reduceMotion: boolean, val: number) =>

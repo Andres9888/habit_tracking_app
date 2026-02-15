@@ -5,10 +5,11 @@
 
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
+
 import type { PremiumFeatureLockProps } from './PremiumFeatureLock.types';
+import { CardLock } from './CardLock';
 import { InlineLock } from './InlineLock';
 import { OverlayLock } from './OverlayLock';
-import { CardLock } from './CardLock';
 
 export function PremiumFeatureLock({
   feature,

@@ -3,16 +3,12 @@
  * AnalyticsScreen - Main analytics dashboard screen
  * Shows habit statistics, charts, and insights
  */
+
 import React, { useMemo } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { colors } from '../../theme/colors';
-import { useThemeColors } from '../../theme/ThemeContext';
-import { PremiumPaywall } from '../../components/PremiumPaywall';
-import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
-import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
-import { styles } from './AnalyticsScreen.styles';
+
 import {
   AnalyticsHeader,
   EmptyState,
@@ -22,9 +18,14 @@ import {
   ExportButton,
   ExportMenu,
 } from './components';
+import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
+import { PremiumPaywall } from '../../components/PremiumPaywall';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { colors } from '../../theme/colors';
+import { styles } from './AnalyticsScreen.styles';
+import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 
 function AnalyticsScreenContent() {
-  const { colors: themeColors } = useThemeColors();
   const {
     refreshing,
     showPaywall,
@@ -45,13 +46,6 @@ function AnalyticsScreenContent() {
     setShowExportMenu,
   } = useAnalyticsScreen();
 
-  // All React hooks must be called before any early returns
-  const rankedHabits = useMemo(
-    () => overviewStats?.rankedHabits || [],
-    [overviewStats?.rankedHabits]
-  );
-  const hasNoHabits = overviewStats?.totalHabits === 0;
-
   // Show paywall modal if not premium user
   if (!isPremiumUser && showPaywall) {
     return (
@@ -68,6 +62,9 @@ function AnalyticsScreenContent() {
     return <AnalyticsScreenSkeleton />;
   }
 
+  const hasNoHabits = overviewStats?.totalHabits === 0;
+  const rankedHabits = useMemo(() => overviewStats?.rankedHabits || [], [overviewStats?.rankedHabits]);
+
   return (
     <ScrollView
       contentContainerStyle={styles.contentContainer}
@@ -79,56 +76,46 @@ function AnalyticsScreenContent() {
           onRefresh={() => void onRefresh()}
         />
       }
-      style={[styles.container, { backgroundColor: themeColors.background }]}
+      style={styles.container}
     >
       <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
         <AnalyticsHeader />
       </Animated.View>
 
-      {hasNoHabits ? (
+      {hasNoHabits && (
         <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
           <EmptyState />
         </Animated.View>
-      ) : (
-        <>
-          <Animated.View
-            entering={FadeInDown.delay(340).springify().damping(18)}
-          >
-            <OverviewStats
-              isLoading={isLoading}
-              stats={overviewStats}
-              onHabitPress={handleHabitPress}
-            />
-          </Animated.View>
-
-          <Animated.View
-            entering={FadeInDown.delay(400).springify().damping(18)}
-          >
-            <ChartSections
-              complianceData={complianceData}
-              isLoading={isLoading}
-              strengthDistribution={strengthDistribution}
-              trendData={trendData}
-            />
-          </Animated.View>
-
-          <Animated.View
-            entering={FadeInDown.delay(460).springify().damping(18)}
-          >
-            <InsightsSections
-              rankedHabits={rankedHabits}
-              weeklyInsights={weeklyInsights}
-              onHabitPress={handleHabitPress}
-            />
-          </Animated.View>
-
-          <Animated.View
-            entering={FadeInDown.delay(520).springify().damping(18)}
-          >
-            <ExportButton onPress={() => void handleExportPress()} />
-          </Animated.View>
-        </>
       )}
+
+      <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
+        <OverviewStats
+          isLoading={isLoading}
+          stats={overviewStats}
+          onHabitPress={handleHabitPress}
+        />
+      </Animated.View>
+
+      <Animated.View entering={FadeInDown.delay(400).springify().damping(18)}>
+        <ChartSections
+          complianceData={complianceData}
+          isLoading={isLoading}
+          strengthDistribution={strengthDistribution}
+          trendData={trendData}
+        />
+      </Animated.View>
+
+      <Animated.View entering={FadeInDown.delay(460).springify().damping(18)}>
+        <InsightsSections
+          rankedHabits={rankedHabits}
+          weeklyInsights={weeklyInsights}
+          onHabitPress={handleHabitPress}
+        />
+      </Animated.View>
+
+      <Animated.View entering={FadeInDown.delay(520).springify().damping(18)}>
+        <ExportButton onPress={() => void handleExportPress()} />
+      </Animated.View>
 
       <ExportMenu
         visible={showExportMenu}
@@ -141,7 +128,7 @@ function AnalyticsScreenContent() {
 
 export default function AnalyticsScreen() {
   return (
-    <ScreenErrorBoundary screenName='Analytics'>
+    <ScreenErrorBoundary screenName="Analytics">
       <AnalyticsScreenContent />
     </ScreenErrorBoundary>
   );

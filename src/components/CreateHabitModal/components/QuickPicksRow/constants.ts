@@ -1,5 +1,6 @@
-import { colors } from '@/theme/colors';
+
 import type { QuickPickTemplate } from './types';
+import { colors } from '@/theme/colors';
 
 export const QUICK_PICK_TEMPLATES: QuickPickTemplate[] = [
   {

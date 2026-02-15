@@ -1,17 +1,17 @@
-/* eslint-disable max-lines */
 /**
  * useCreateHabitHandlers - Handle habit creation and editing operations
  *
  * Extracted from useCreateHabitModal to separate mutation logic
  * from the main modal orchestration.
  */
+
 import { useMutation } from 'convex/react';
+
+import type { Id } from '../../../../convex/_generated/dataModel';
 import { api } from '../../../../convex/_generated/api';
+import { cancelReminder, scheduleReminder } from './useHabitReminders';
 import { formatReminderTime } from '../../../utils/notifications';
 import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStreakReminderSettings';
-import { cancelReminder, scheduleReminder } from './useHabitReminders';
-import { validateHabitName } from '../../../utils/validation';
-import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitData {
   dayPhase: string | null;
@@ -44,20 +44,13 @@ export function useCreateHabitHandlers() {
     dayPhase,
     reminderSound,
   }: EditHabitData): Promise<void> {
-    // Validate habit name
-    const validation = validateHabitName(fullHabitName);
-    if (!validation.isValid) {
-      throw new Error(validation.error ?? 'Invalid habit name');
-    }
-    const sanitizedName = validation.sanitized;
-
     let finalHasReminders = hasReminders;
 
     try {
       if (hasReminders) {
         const scheduled = await scheduleReminder({
           habitId: habitToEdit._id,
-          habitName: sanitizedName,
+          habitName: fullHabitName,
           reminderTime,
         });
         if (!scheduled) {
@@ -71,9 +64,8 @@ export function useCreateHabitHandlers() {
       await updateHabit({
         habitId: habitToEdit._id,
         icon: selectedEmoji ?? undefined,
-        color: selectedColor,
         iconColor: selectedColor,
-        name: sanitizedName,
+        name: fullHabitName,
         notes: habitToEdit.notes ?? '',
         preferredTime: dayPhase ?? undefined,
         remindersEnabled: finalHasReminders,
@@ -97,18 +89,11 @@ export function useCreateHabitHandlers() {
     dayPhase,
     reminderSound,
   }: HabitData): Promise<void> {
-    // Validate habit name
-    const validation = validateHabitName(fullHabitName);
-    if (!validation.isValid) {
-      throw new Error(validation.error ?? 'Invalid habit name');
-    }
-    const sanitizedName = validation.sanitized;
-
     try {
       const habitId = await createHabit({
         icon: selectedEmoji ?? undefined,
         iconColor: selectedColor,
-        name: sanitizedName,
+        name: fullHabitName,
         notes: '',
         preferredTime: dayPhase ?? undefined,
         remindersEnabled: hasReminders,
@@ -122,7 +107,7 @@ export function useCreateHabitHandlers() {
       if (hasReminders && habitId) {
         await scheduleReminder({
           habitId,
-          habitName: sanitizedName,
+          habitName: fullHabitName,
           reminderTime,
         });
       }

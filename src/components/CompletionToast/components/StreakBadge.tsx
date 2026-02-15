@@ -5,9 +5,10 @@
 
 import React from 'react';
 import { Text, Pressable } from 'react-native';
-import { styles } from '../styles';
+
 import { COLORS } from '../constants';
 import { getStreakEmoji } from '../utils';
+import { styles } from '../styles';
 
 interface StreakBadgeProps {
   streak: number;

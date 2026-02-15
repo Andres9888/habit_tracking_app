@@ -2,14 +2,16 @@
  * Hook for GenerateAffirmationsButton logic
  */
 
-import { useCallback, useState, useRef, useEffect } from 'react';
 import { Alert } from 'react-native';
+import { useCallback, useState, useRef, useEffect } from 'react';
+
+import * as Haptics from 'expo-haptics';
 import {
   useSharedValue,
   withSpring,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+
 import { SPRING_BUTTON } from '../../../animations';
 import { SUCCESS_FEEDBACK_DURATION } from './constants';
 

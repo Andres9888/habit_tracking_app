@@ -1,5 +1,7 @@
-import { useCallback } from 'react';
+
 import type { RenderItemParams } from 'react-native-draggable-flatlist';
+import { useCallback } from 'react';
+
 import type { Habit } from '../types';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
 import {

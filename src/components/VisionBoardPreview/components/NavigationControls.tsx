@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Pressable } from 'react-native';
+
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+
 import type { NavigationControlsProps } from '../VisionBoardPreview.types';
 
 export function NavigationControls({

@@ -8,10 +8,11 @@
  * ACCESSIBILITY: Uses shared focus ring system (src/utils/accessibility/focusRing.ts)
  */
 
-import { StyleSheet, TextStyle } from 'react-native';
-import { spacing, borderRadius } from '@/theme/spacing';
-import { fontFamilies, typography } from '@/theme/typography';
+import { StyleSheet } from 'react-native';
+
 import { REDESIGN_COLORS } from './HabitCard.colors';
+import { fontFamilies } from '@/theme/typography';
+import { spacing, borderRadius } from '@/theme/spacing';
 import { statusStyles } from './HabitCard.statusStyles';
 
 export { actionStyles } from './HabitCard.actionStyles';
@@ -46,7 +47,7 @@ const coreStyles = StyleSheet.create({
     marginHorizontal: spacing.md,
     padding: spacing.md,
   },
-  completedText: { opacity: 0.55, textDecorationLine: 'line-through' as const },
+  completedText: { opacity: 0.7 },
   container: {
     marginVertical: spacing.xs,
     minHeight: 76,
@@ -62,28 +63,29 @@ const coreStyles = StyleSheet.create({
   },
   // Meta text for habit strength
   habitMeta: {
-    ...typography.caption,
     color: REDESIGN_COLORS.metaText,
     fontFamily: fontFamilies.primary.text,
+    fontSize: 13,
     letterSpacing: -0.08,
+    lineHeight: 18,
     marginTop: 2,
-  } as TextStyle,
+  },
   habitName: {
-    ...typography.body,
     color: REDESIGN_COLORS.secondaryText,
     fontFamily: fontFamilies.primary.text,
+    fontSize: 17,
     fontWeight: '600',
     letterSpacing: -0.41,
     lineHeight: 22,
-  } as TextStyle,
+  },
   icon: { fontSize: 26 },
   // Streak text with proper contrast
   streakText: {
-    ...typography.bodySmall,
     color: REDESIGN_COLORS.streakText,
     fontFamily: fontFamilies.primary.text,
+    fontSize: 15,
     fontWeight: '600',
-  } as TextStyle,
+  },
   strengthFill: { bottom: 0, left: 0, position: 'absolute', top: 0 },
   topRow: {
     alignItems: 'center',

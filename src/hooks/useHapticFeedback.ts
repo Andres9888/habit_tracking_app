@@ -7,8 +7,8 @@
  * Updated by Opus to use centralized HapticPatterns.
  */
 
-import { useMemo } from 'react';
 import { Platform } from 'react-native';
+import { useMemo } from 'react';
 
 import { HapticPatterns } from '../utils/haptics/patterns';
 import { useReduceMotion } from './useReduceMotion';

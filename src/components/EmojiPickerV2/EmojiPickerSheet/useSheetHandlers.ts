@@ -4,6 +4,7 @@
  */
 
 import { useCallback, useState, useRef, useEffect } from 'react';
+
 import { addRecentEmoji } from '../../../utils/recentEmojis';
 
 const SELECTION_FEEDBACK_DELAY = 300;

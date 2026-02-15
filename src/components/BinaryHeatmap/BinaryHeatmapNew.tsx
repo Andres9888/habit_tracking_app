@@ -12,9 +12,9 @@ import type { BinaryHeatmapProps, TimeRange, BinaryDay } from './types';
 import { HeatmapLegend } from './HeatmapLegend';
 import { HeatmapTooltip } from './HeatmapTooltip';
 import { InlineHeatmapGrid } from './InlineHeatmapGrid';
+import { createDayLookupMap } from './cellHelpers';
 import { generateBinaryGrid } from './utils';
 import { styles } from './BinaryHeatmapNew.styles';
-import { createDayLookupMap } from './cellHelpers';
 
 const FIXED_TIME_RANGE: TimeRange = '6m';
 

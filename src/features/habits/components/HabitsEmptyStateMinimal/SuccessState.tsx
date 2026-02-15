@@ -11,15 +11,16 @@
  * - "Add another habit" button to reset (if staying on empty state)
  */
 
-import { useEffect, useCallback } from 'react';
 import { AccessibilityInfo, Pressable } from 'react-native';
+import { useEffect, useCallback } from 'react';
+
 import Animated, { useReducedMotion } from 'react-native-reanimated';
 
-import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import type { SuccessStateProps } from './types';
 import { Confetti } from './Confetti';
 import { SuccessContent } from './SuccessContent';
 import { SuccessIcon } from './SuccessIcon';
-import type { SuccessStateProps } from './types';
+import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useSuccessStateAnimations } from './useSuccessStateAnimations';
 
 export function SuccessState({

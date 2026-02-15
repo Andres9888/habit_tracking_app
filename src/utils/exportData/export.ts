@@ -3,11 +3,12 @@
  */
 
 import { Share, Platform } from 'react-native';
+
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
-import { convertToCSV, convertToJSON } from './converters';
-import { AUTO_DISMISS_DELAY_MS } from '@/constants';
+
 import type { ExportData, ToastResult } from './types';
+import { convertToCSV, convertToJSON } from './converters';
 
 /**
  * Export data using iOS Share Sheet or Android sharing
@@ -60,7 +61,7 @@ export async function exportData(
       FileSystem.deleteAsync(fileUri, { idempotent: true }).catch(() => {
         // Ignore cleanup errors
       });
-    }, AUTO_DISMISS_DELAY_MS);
+    }, 5000);
   } catch (error) {
     if (error instanceof Error) {
       if (

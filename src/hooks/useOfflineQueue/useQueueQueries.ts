@@ -3,6 +3,13 @@
  */
 
 import { useCallback, MutableRefObject } from 'react';
+
+import type { QueuedSubmission, QueueStats } from './types';
+import {
+  calculateRetryDelay,
+  calculateQueueStats,
+  createEmptyQueueStats,
+} from './utils';
 import {
   loadQueueIndex,
   saveQueueIndex,
@@ -10,12 +17,6 @@ import {
   removeQueueItem,
   loadAllQueueItems,
 } from './storage';
-import {
-  calculateRetryDelay,
-  calculateQueueStats,
-  createEmptyQueueStats,
-} from './utils';
-import type { QueuedSubmission, QueueStats } from './types';
 
 interface UseQueueQueriesProps {
   baseRetryDelayMs: number;

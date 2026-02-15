@@ -3,15 +3,17 @@
  * Header for the read letter modal with animated envelope
  */
 
+import type { AnimatedStyle } from 'react-native-reanimated';
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import { View, Text, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated from 'react-native-reanimated';
 import { MailOpen, X } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { useThemeColors } from '../../../../../../theme/ThemeContext';
-import type { AnimatedStyle } from 'react-native-reanimated';
-import type { ViewStyle } from 'react-native';
 
 interface ReadLetterHeaderProps {
   title: string | undefined;

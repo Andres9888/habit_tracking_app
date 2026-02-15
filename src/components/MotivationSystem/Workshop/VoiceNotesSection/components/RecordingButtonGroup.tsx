@@ -1,8 +1,10 @@
 /**
  * RecordingButtonGroup - Layout for cancel, record, and stop buttons
  */
+
 import React from 'react';
 import { View } from 'react-native';
+
 import { CancelButton } from './CancelButton';
 import { MainRecordButton } from './MainRecordButton';
 import { StopButton } from './StopButton';

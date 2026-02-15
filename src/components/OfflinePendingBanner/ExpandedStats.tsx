@@ -1,16 +1,19 @@
+
+import type { AnimatedStyle } from 'react-native-reanimated';
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import { View, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
-import { styles } from './OfflinePendingBanner.styles';
-import { TYPE_LABELS } from './constants';
-import { formatRelativeTime } from './utils';
+
 import type {
   QueueStats,
   OfflineSubmissionType,
 } from '../../hooks/useOfflineQueue';
-import type { AnimatedStyle } from 'react-native-reanimated';
-import type { ViewStyle } from 'react-native';
+import { TYPE_LABELS } from './constants';
+import { formatRelativeTime } from './utils';
+import { styles } from './OfflinePendingBanner.styles';
 
 interface ExpandedStatsProps {
   stats: QueueStats | null;

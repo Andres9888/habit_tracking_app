@@ -2,6 +2,7 @@
  * Auth Handler Helpers Tests
  */
 
+import type { AuthHandlerState, AuthStatus } from '../types';
 import type { ClassifiedError, ErrorCategory } from '../../../types';
 import {
   createAuthEvent,
@@ -13,7 +14,6 @@ import {
   requiresUserAction,
   shouldPauseSync,
 } from '../helpers';
-import type { AuthHandlerState, AuthStatus } from '../types';
 
 // Helper to create classified error
 function createClassifiedError(

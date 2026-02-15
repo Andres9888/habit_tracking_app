@@ -2,16 +2,18 @@
  * AnalyticsHeader - Screen header with title and subtitle
  * OPTIMIZED: FadeInDown animation, type scale 28/17
  */
+
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useThemeColors } from '../../../theme/ThemeContext';
+
+import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 
 export const AnalyticsHeader: React.FC = () => {
   const insets = useSafeAreaInsets();
-  const { colors } = useThemeColors();
 
   return (
     <View
@@ -24,7 +26,7 @@ export const AnalyticsHeader: React.FC = () => {
         accessibilityLabel='Analytics'
         accessibilityRole='text'
         entering={FadeInDown.delay(0).springify().damping(18)}
-        style={[styles.headerTitle, { color: colors.text.primary }]}
+        style={styles.headerTitle}
       >
         Analytics
       </Animated.Text>
@@ -32,7 +34,7 @@ export const AnalyticsHeader: React.FC = () => {
         accessibilityLabel='Track your habit journey'
         accessibilityRole='text'
         entering={FadeInDown.delay(50).springify().damping(18)}
-        style={[styles.headerSubtitle, { color: colors.text.secondary }]}
+        style={styles.headerSubtitle}
       >
         Track your habit journey
       </Animated.Text>
@@ -46,15 +48,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   headerSubtitle: {
+    color: colors.text.secondary,
     fontSize: 17,
     letterSpacing: -0.41,
     lineHeight: 22,
     marginTop: spacing.xs,
   },
   headerTitle: {
-    fontSize: 22,
+    color: colors.text.primary,
+    fontSize: 28,
     fontWeight: '700',
     letterSpacing: 0.35,
-    lineHeight: 34,
+    lineHeight: 28,
   },
 });

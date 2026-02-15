@@ -3,6 +3,7 @@
  */
 
 import { useCallback, useRef } from 'react';
+
 import { trackError } from '../tracker/index';
 
 /** Hook for async operation error tracking */

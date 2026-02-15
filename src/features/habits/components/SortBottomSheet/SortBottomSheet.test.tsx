@@ -13,9 +13,11 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
-import { SortBottomSheet } from './SortBottomSheet';
+
 import type { HabitSortMode } from '../../types';
+import { SortBottomSheet } from './SortBottomSheet';
 
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => ({

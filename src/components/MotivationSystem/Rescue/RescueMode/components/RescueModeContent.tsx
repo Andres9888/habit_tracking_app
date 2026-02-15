@@ -1,15 +1,16 @@
+
 import React from 'react';
 
-import { FailureVizSection } from './FailureVizSection';
-import { ScienceTipSection } from './ScienceTipSection';
 import type { RescueModeContentProps } from './RescueModeContent.types';
-import { getContentFlags } from './RescueModeContent.helpers';
 import {
   StreakSection,
   WhySection,
   VoiceNoteSection,
   PreviousStreakSection,
 } from './sections';
+import { FailureVizSection } from './FailureVizSection';
+import { ScienceTipSection } from './ScienceTipSection';
+import { getContentFlags } from './RescueModeContent.helpers';
 
 export function RescueModeContent({
   habit,

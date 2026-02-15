@@ -1,38 +1,26 @@
 /**
- * Wrapper hook around the toggleHabit mutation that automatically injects
- * the user's timezone so server-side streak calculations use local time
- * instead of UTC.
- *
- * Edge case guard: Timezone is re-calculated on every toggle to handle
- * timezone switching (e.g., user travels across timezones).
- *
- * @returns Toggle function that accepts date and habitId
- *
- * @example
- * ```ts
- * const toggleHabit = useToggleHabitWithTimezone();
- * await toggleHabit({ date: '2024-01-15', habitId: 'abc123' });
- * ```
+ * Wrapper around the toggleHabit mutation that auto-injects
+ * the user's timezone so server-side streak calculations
+ * use local time instead of UTC.
  */
-import { useCallback } from 'react';
+
+import { useCallback, useMemo } from 'react';
+
 import { useMutation } from 'convex/react';
-import { api } from '../../convex/_generated/api';
+
 import type { Id } from '../../convex/_generated/dataModel';
+import { api } from '../../convex/_generated/api';
 import { getUserTimezone } from '../utils/timezone';
 
 export function useToggleHabitWithTimezone() {
   const rawToggle = useMutation(api.habits.toggleHabit);
+  const timezone = useMemo(() => getUserTimezone(), []);
 
   const toggleHabit = useCallback(
-    (args: { date: string; habitId: Id<'habits'> }) => {
-      // Re-read timezone on every toggle to handle timezone switching
-      const currentTimezone = getUserTimezone();
-      return rawToggle({ ...args, timezone: currentTimezone });
-    },
-    [rawToggle]
+    (args: { date: string; habitId: Id<'habits'> }) =>
+      rawToggle({ ...args, timezone }),
+    [rawToggle, timezone]
   ) as typeof rawToggle;
 
   return toggleHabit;
 }
-
-export default useToggleHabitWithTimezone;

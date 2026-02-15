@@ -5,13 +5,15 @@
 
 import React, { forwardRef } from 'react';
 import { View } from 'react-native';
+
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { layoutStyles } from '../styles';
+
 import {
   CONFETTI_COLORS,
   SCREEN_WIDTH,
   SCREEN_HEIGHT,
 } from '../FullsizeTemplatePreview.constants';
+import { layoutStyles } from '../styles';
 
 interface ConfettiOverlayProps {
   visible: boolean;

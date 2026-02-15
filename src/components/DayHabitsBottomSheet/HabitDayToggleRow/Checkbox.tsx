@@ -1,5 +1,8 @@
+
 import { Animated, View, ActivityIndicator } from 'react-native';
+
 import { Check } from 'lucide-react-native';
+
 import { colors } from '../../../theme/colors';
 
 interface CheckboxProps {

@@ -1,10 +1,11 @@
-import { Gesture } from 'react-native-gesture-handler';
+
 import {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { Gesture } from 'react-native-gesture-handler';
 
 // Swipe dismissal constants
 const SWIPE_DISMISS_THRESHOLD = 100; // pixels

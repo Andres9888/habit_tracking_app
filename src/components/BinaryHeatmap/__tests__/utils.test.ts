@@ -5,6 +5,8 @@
  */
 
 import { format, subDays } from 'date-fns';
+
+import type { BinaryDay, TimeRange } from '../types';
 import {
   generateBinaryGrid,
   calculateBinaryGridStats,
@@ -18,7 +20,6 @@ import {
   isValidDateString,
   formatDateString,
 } from '../utils';
-import type { BinaryDay, TimeRange } from '../types';
 import { TIME_RANGE_CONFIG } from '../constants';
 
 describe('getTimeRangeDays', () => {

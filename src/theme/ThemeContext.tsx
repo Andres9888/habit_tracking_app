@@ -7,10 +7,12 @@
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme as useSystemColorScheme } from 'react-native';
+
 import { useQuery } from 'convex/react';
+
+import type { SemanticColors } from './darkColors';
 import { api } from '../../convex/_generated/api';
 import { darkColors, lightColors } from './darkColors';
-import type { SemanticColors } from './darkColors';
 
 type DarkModePref = 'system' | 'light' | 'dark';
 

@@ -14,7 +14,9 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
+
 import { CueTriggerSection, CueTriggerData } from '../CueTriggerSection';
 
 // Mock expo-haptics

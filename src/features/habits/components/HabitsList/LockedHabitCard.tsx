@@ -10,8 +10,9 @@
  * Both respect the `reduceMotion` preference.
  */
 
-import { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { SCALE, ANIMATION_DURATION } from '../../../../constants';

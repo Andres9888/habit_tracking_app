@@ -6,11 +6,12 @@
  */
 
 import React from 'react';
+
 import type { DailyMomentumMeterProps } from './types';
-import { getProgressColors, getMessage } from './helpers';
-import { useAnimations } from './useAnimations';
 import { CompactMeter } from './CompactMeter';
 import { StandardMeter } from './StandardMeter';
+import { getProgressColors, getMessage } from './helpers';
+import { useAnimations } from './useAnimations';
 
 export function DailyMomentumMeter({
   completedToday,

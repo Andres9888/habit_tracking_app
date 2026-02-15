@@ -1,12 +1,13 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
+import type { CompletionDotProps } from '../CalendarTimeline.types';
 import {
   COMPLETE_DOT_GLOW,
   COMPLETION_DOT_COLORS,
   COMPLETION_DOT_SIZES,
 } from '../CalendarTimeline.styles';
-import type { CompletionDotProps } from '../CalendarTimeline.types';
 
 /** Animated completion indicator dot */
 export const CompletionDot: React.FC<CompletionDotProps> = ({

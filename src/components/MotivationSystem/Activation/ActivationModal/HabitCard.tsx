@@ -1,5 +1,7 @@
+
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -8,6 +10,7 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 import { Flame, Target } from 'lucide-react-native';
+
 import type { ActivationHabitData } from './types';
 import { SPRING_BOUNCY, SPRING_BUTTON } from './constants';
 

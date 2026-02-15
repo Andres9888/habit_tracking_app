@@ -1,7 +1,9 @@
-import { memo, useCallback, useRef } from 'react';
+
 import { Animated, Pressable, Text } from 'react-native';
-import { shadows } from '../../../theme/spacing';
+import { memo, useCallback, useRef } from 'react';
+
 import type { QuickAccessEmojiItemProps } from '../EmojiPicker.types';
+import { shadows } from '../../../theme/spacing';
 
 export const QuickAccessEmojiItem = memo(
   ({

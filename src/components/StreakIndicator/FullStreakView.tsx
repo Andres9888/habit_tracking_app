@@ -4,11 +4,13 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
+
 import type { Milestone } from './StreakIndicator.types';
 import { MILESTONE_BADGES, COLORS } from './StreakIndicator.constants';
-import { styles } from './StreakIndicator.styles';
 import { MilestonesLegend } from './MilestonesLegend';
+import { styles } from './StreakIndicator.styles';
 
 interface FullStreakViewProps {
   currentStreak: number;

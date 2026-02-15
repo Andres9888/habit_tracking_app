@@ -6,10 +6,11 @@
 
 import React, { memo } from 'react';
 import { View, Text } from 'react-native';
+
 import { Flame } from 'lucide-react-native';
 
-import { styles } from './StatsRow.styles';
 import { getHabitColor50, formatStreakText } from './StatsRow.helpers';
+import { styles } from './StatsRow.styles';
 
 const FLAME_ICON_SIZE = 14;
 

@@ -4,9 +4,9 @@
  * Tests for pure conflict detection and resolution logic.
  */
 
+import type { ConflictResolutionResult, ServerCompletionState } from '../types';
 import type { Id } from '../../../../../../convex/_generated/dataModel';
 import type { ToggleCompletionPayload } from '../../../queue';
-import type { ConflictResolutionResult, ServerCompletionState } from '../types';
 import {
   buildBatchResult,
   buildResolutionResult,

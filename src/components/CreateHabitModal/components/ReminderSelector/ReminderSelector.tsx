@@ -10,14 +10,15 @@
  * V11 Task 8: Reduced motion support
  */
 
-import { memo, useCallback } from 'react';
 import { AccessibilityInfo, Text, View } from 'react-native';
-import useHapticFeedback from '../../../../hooks/useHapticFeedback';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+import { memo, useCallback } from 'react';
+
+import type { ReminderOption, ReminderSelectorProps } from './types';
 import STRINGS from '../../../../constants/strings';
+import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { REMINDER_OPTIONS, REMINDER_OPTION_ORDER } from './constants';
 import { ReminderOptionButton } from './ReminderOptionButton';
-import type { ReminderOption, ReminderSelectorProps } from './types';
+import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 
 function ReminderSelectorComponent({
   selectedOption,

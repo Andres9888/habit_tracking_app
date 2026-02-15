@@ -3,8 +3,8 @@
  * Bridges the existing PerformanceProvider with Sentry reporting.
  */
 
-import type { PerformanceReport } from '../../performance/types';
 import type { PerformanceIssue } from '../../../contexts/PerformanceContext/types';
+import type { PerformanceReport } from '../../performance/types';
 import { getSentryReporter } from '../reporter/index';
 
 export { reportFrameIssue } from './frameReporter';

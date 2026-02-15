@@ -2,20 +2,20 @@
  * Hook to prepare props for TemplatesScreen child views
  */
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import type { BrowseTab } from '../TemplatesScreen.types';
 import {
   useEntranceAnimations,
   useTabIndicator,
 } from '../TemplatesScreen.animations';
-import { useTemplateHandlers } from '../TemplatesScreen.handlers';
-import { useTemplatesScreenState } from '../TemplatesScreen.hooks';
-import type { BrowseTab } from '../TemplatesScreen.types';
 import {
   useFilteredTemplates,
   useScienceCountsByCategory,
   useTemplatesByCategory,
   useTemplatesData,
 } from '../useTemplatesData';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { useTemplateHandlers } from '../TemplatesScreen.handlers';
+import { useTemplatesScreenState } from '../TemplatesScreen.hooks';
 
 export function useTemplatesScreenProps() {
   const reducedMotion = useReduceMotion();

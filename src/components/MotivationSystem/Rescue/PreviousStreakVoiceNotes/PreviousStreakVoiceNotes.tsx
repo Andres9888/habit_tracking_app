@@ -10,10 +10,12 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
+
 import * as Haptics from 'expo-haptics';
+
+import type { PreviousStreakVoiceNotesProps } from './types';
 import { SectionHeader } from './SectionHeader';
 import { StreakVoiceNoteCard } from './StreakVoiceNoteCard';
-import type { PreviousStreakVoiceNotesProps } from './types';
 
 export function PreviousStreakVoiceNotes({
   voiceNotes,

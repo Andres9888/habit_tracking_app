@@ -12,16 +12,17 @@ import {
   Keyboard,
 } from 'react-native';
 import { View } from 'react-native';
+
+import type { AffirmationEditorModalProps } from './AffirmationEditorModal.types';
 import type { AffirmationType } from '../../AffirmationsSection.types';
-import { MAX_TEXT_LENGTH } from '../../AffirmationsSection.constants';
-import { TypeSelector } from '../TypeSelector';
 import { EditorHeader } from './EditorHeader';
+import { ExamplesSection } from './ExamplesSection';
+import { MAX_TEXT_LENGTH } from '../../AffirmationsSection.constants';
+import { SaveButton } from './SaveButton';
 import { ScienceCallout } from './ScienceCallout';
 import { TextInputSection } from './TextInputSection';
-import { ExamplesSection } from './ExamplesSection';
-import { SaveButton } from './SaveButton';
+import { TypeSelector } from '../TypeSelector';
 import { useThemeColors } from '../../../../../../theme/ThemeContext';
-import type { AffirmationEditorModalProps } from './AffirmationEditorModal.types';
 
 export function AffirmationEditorModal({
   visible,

@@ -1,28 +1,13 @@
+
+import { Animated, Easing } from 'react-native';
 import { useEffect, useRef } from 'react';
-import { Animated, Easing, AccessibilityInfo } from 'react-native';
-import { useState } from 'react';
 
 export function useRewardToastAnimation(visible: boolean) {
   const translateY = useRef(new Animated.Value(160)).current;
   const opacity = useRef(new Animated.Value(0)).current;
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  // Check accessibility preference
-  useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
-      setReduceMotion(enabled);
-    });
-  }, []);
 
   useEffect(() => {
     if (visible) {
-      if (reduceMotion) {
-        // Instant appearance for reduce motion
-        translateY.setValue(0);
-        opacity.setValue(1);
-        return;
-      }
-
       Animated.parallel([
         Animated.timing(translateY, {
           duration: 280,
@@ -40,13 +25,6 @@ export function useRewardToastAnimation(visible: boolean) {
       return;
     }
 
-    if (reduceMotion) {
-      // Instant disappearance for reduce motion
-      translateY.setValue(160);
-      opacity.setValue(0);
-      return;
-    }
-
     Animated.parallel([
       Animated.timing(translateY, {
         duration: 220,
@@ -61,7 +39,7 @@ export function useRewardToastAnimation(visible: boolean) {
         useNativeDriver: true,
       }),
     ]).start();
-  }, [opacity, translateY, visible, reduceMotion]);
+  }, [opacity, translateY, visible]);
 
   return { opacity, translateY };
 }

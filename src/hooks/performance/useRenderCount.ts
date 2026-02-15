@@ -4,8 +4,9 @@
  */
 
 import { useRef, useEffect } from 'react';
-import { usePerformance } from './usePerformance';
+
 import { now } from '../../lib/performance';
+import { usePerformance } from './usePerformance';
 
 interface RenderCountOptions {
   log?: boolean;

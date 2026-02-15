@@ -5,6 +5,7 @@
  */
 
 import type { SharedValue } from 'react-native-reanimated';
+
 import type { PressHandlers } from '../FullsizeTemplatePreview.types';
 
 export interface FooterSectionProps {

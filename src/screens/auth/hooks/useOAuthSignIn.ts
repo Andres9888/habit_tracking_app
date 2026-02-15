@@ -1,6 +1,9 @@
-import { useSSO } from '@clerk/clerk-expo';
-import * as WebBrowser from 'expo-web-browser';
+
 import { useCallback, useEffect, useState } from 'react';
+
+import * as WebBrowser from 'expo-web-browser';
+import { useSSO } from '@clerk/clerk-expo';
+
 import { mapOAuthError, MappedError } from '../utils';
 
 // Warm up browser for better UX on Android

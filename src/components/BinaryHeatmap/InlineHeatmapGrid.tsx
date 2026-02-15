@@ -10,8 +10,8 @@ import { View, Text, ScrollView } from 'react-native';
 
 import type { BinaryMonthLabel, BinaryDay } from './types';
 import { CELL_SIZE, CELL_GAP, GRID } from './constants';
-import { styles } from './BinaryHeatmapNew.styles';
 import { getCellBackgroundColor, transformWeeksToRows } from './cellHelpers';
+import { styles } from './BinaryHeatmapNew.styles';
 
 const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 

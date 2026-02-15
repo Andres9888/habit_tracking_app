@@ -3,8 +3,9 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import type { EmojiType } from '../QuickReflection';
+
 import type { CelebrationHabitData } from './types';
+import type { EmojiType } from '../QuickReflection';
 
 interface UseCelebrationScreenParams {
   habit: CelebrationHabitData | null;

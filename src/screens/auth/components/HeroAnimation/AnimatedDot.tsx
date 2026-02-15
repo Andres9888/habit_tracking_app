@@ -1,5 +1,7 @@
-import Animated, { useAnimatedStyle, SharedValue } from 'react-native-reanimated';
+
 import { StyleSheet } from 'react-native';
+
+import Animated, { useAnimatedStyle, SharedValue } from 'react-native-reanimated';
 
 interface AnimatedDotProps {
   index: number;

@@ -4,10 +4,11 @@
  */
 
 import React from 'react';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import type { FullsizeTemplatePreviewProps } from './FullsizeTemplatePreview.types';
 import Modal from '../Modal';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { PreviewContent } from './components';
 import {
   useEntranceAnimations,
   useSuccessAnimations,
@@ -16,7 +17,8 @@ import {
   useHandlers,
 } from './hooks';
 import { DEFAULT_ICON_COLOR } from './FullsizeTemplatePreview.constants';
-import type { FullsizeTemplatePreviewProps } from './FullsizeTemplatePreview.types';
+import { PreviewContent } from './components';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export default function FullsizeTemplatePreview({
   template,

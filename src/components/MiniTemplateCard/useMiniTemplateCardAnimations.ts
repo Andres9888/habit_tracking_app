@@ -8,6 +8,7 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+
 import {
   useScienceBadgePulse,
   useButtonPulse,

@@ -1,3 +1,4 @@
+
 import { Platform, type ViewStyle } from 'react-native';
 
 import { colors } from '@/theme/colors';

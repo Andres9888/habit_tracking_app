@@ -5,6 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { Text } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -13,6 +14,7 @@ import Animated, {
   withDelay,
 } from 'react-native-reanimated';
 import { Flame } from 'lucide-react-native';
+
 import type { StreakLossPreviewProps } from './FailureViz.types';
 import { SPRING_BOUNCY } from './FailureViz.constants';
 

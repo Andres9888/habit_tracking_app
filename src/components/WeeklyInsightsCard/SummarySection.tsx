@@ -5,10 +5,12 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
+
+import type { WeeklyInsights } from './WeeklyInsightsCard.types';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
-import type { WeeklyInsights } from './WeeklyInsightsCard.types';
 import { styles } from './WeeklyInsightsCard.styles';
 import { summaryStyles } from './SummarySection.styles';
 

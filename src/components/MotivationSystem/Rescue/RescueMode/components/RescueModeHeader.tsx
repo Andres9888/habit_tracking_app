@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { AlertTriangle, X } from 'lucide-react-native';
 
 interface RescueModeHeaderProps {

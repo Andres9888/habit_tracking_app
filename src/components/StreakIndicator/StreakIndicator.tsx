@@ -6,10 +6,11 @@
  */
 
 import React from 'react';
+
 import type { StreakIndicatorProps } from './StreakIndicator.types';
-import { useStreakIndicator } from './useStreakIndicator';
 import { CompactStreakView } from './CompactStreakView';
 import { FullStreakView } from './FullStreakView';
+import { useStreakIndicator } from './useStreakIndicator';
 
 export type { StreakIndicatorProps } from './StreakIndicator.types';
 

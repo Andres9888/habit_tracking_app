@@ -5,7 +5,9 @@
  */
 
 import { useCallback } from 'react';
+
 import { Audio } from 'expo-av';
+
 import type { PlaybackStatus } from './types';
 import { DEFAULT_SEEK_STEP_SECONDS } from './constants';
 

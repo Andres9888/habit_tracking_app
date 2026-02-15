@@ -3,8 +3,9 @@
  * Individual button for time of day selection with press animations
  */
 
-import { useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
+import { useRef } from 'react';
+
 import {
   HUBERMAN_PHASES,
   type HubermanPhase,

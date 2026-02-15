@@ -1,11 +1,14 @@
+
+import type { AnimatedStyle } from 'react-native-reanimated';
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import { View, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
-import { styles } from './MilestoneProgress.styles';
+
 import { MILESTONES } from '../MilestoneProgressTypes';
-import type { AnimatedStyle } from 'react-native-reanimated';
-import type { ViewStyle } from 'react-native';
+import { styles } from './MilestoneProgress.styles';
 
 interface NoStreakStateProps {
   accessibilityLabel: string;

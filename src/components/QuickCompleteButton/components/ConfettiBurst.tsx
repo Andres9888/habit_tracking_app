@@ -5,13 +5,14 @@
 
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
-import { styles } from '../QuickCompleteButton.styles';
+
 import type { ConfettiBurstProps } from '../QuickCompleteButton.types';
 import {
   CONFETTI_COLORS,
   PARTICLE_COUNT,
 } from '../QuickCompleteButton.constants';
 import { ConfettiParticle } from './ConfettiParticle';
+import { styles } from '../QuickCompleteButton.styles';
 
 interface ParticleConfig {
   angle: number;

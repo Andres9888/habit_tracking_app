@@ -7,11 +7,10 @@
  * - Minimal touch targets
  */
 
-import { Pressable, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
-import { AccessibleText } from '../../../../components/ui/AccessibleText';
-import { COLORS, COPY, TOUCH_TARGETS } from './constants';
 import type { SecondaryLinksProps } from './types';
+import { COLORS, COPY, TOUCH_TARGETS } from './constants';
 
 /**
  * Secondary navigation links for templates and custom creation
@@ -44,8 +43,7 @@ export function SecondaryLinks({
         })}
         onPress={onBrowseTemplates}
       >
-        <AccessibleText
-          scalingType='ui'
+        <Text
           style={{
             color: COLORS.stone500,
             fontSize: 13,
@@ -53,19 +51,18 @@ export function SecondaryLinks({
           }}
         >
           {COPY.browseTemplates}
-        </AccessibleText>
+        </Text>
       </Pressable>
 
       {/* Dot separator */}
-      <AccessibleText
-        scalingType='ui'
+      <Text
         style={{
           color: COLORS.stone500,
           fontSize: 13,
         }}
       >
         •
-      </AccessibleText>
+      </Text>
 
       <Pressable
         accessibilityHint='Opens full habit creation screen'
@@ -81,8 +78,7 @@ export function SecondaryLinks({
         })}
         onPress={onCreateCustom}
       >
-        <AccessibleText
-          scalingType='ui'
+        <Text
           style={{
             color: COLORS.stone500,
             fontSize: 13,
@@ -90,7 +86,7 @@ export function SecondaryLinks({
           }}
         >
           {COPY.createCustom}
-        </AccessibleText>
+        </Text>
       </Pressable>
     </View>
   );

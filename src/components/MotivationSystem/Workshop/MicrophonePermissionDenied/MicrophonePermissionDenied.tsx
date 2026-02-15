@@ -7,10 +7,12 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { MicOff, AlertCircle } from 'lucide-react-native';
 import { clsx } from 'clsx';
-import { PermissionActionButtons } from './PermissionActionButtons';
+
 import type { MicrophonePermissionDeniedProps } from './types';
+import { PermissionActionButtons } from './PermissionActionButtons';
 
 const MESSAGES = {
   canAskAgain:

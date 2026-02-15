@@ -8,10 +8,11 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Modal } from './Modal';
+
 import { Button } from './Button/Button';
-import { useAppTheme } from '../theme';
+import { Modal } from './Modal';
 import { typography } from '../theme/typography';
+import { useAppTheme } from '../theme';
 
 interface PauseHabitModalProps {
   visible: boolean;

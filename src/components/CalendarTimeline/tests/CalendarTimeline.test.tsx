@@ -1,7 +1,10 @@
+
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import { CalendarTimeline } from '../CalendarTimeline';
+
 import { addDays, subDays } from 'date-fns';
+import { render, fireEvent } from '@testing-library/react-native';
+
+import { CalendarTimeline } from '../CalendarTimeline';
 
 describe('CalendarTimeline', () => {
   const today = new Date(2024, 9, 14); // Oct 14, 2024 (Monday)

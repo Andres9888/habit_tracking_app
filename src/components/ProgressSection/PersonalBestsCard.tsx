@@ -15,13 +15,14 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { Trophy } from 'lucide-react-native';
 
 import type { PersonalBestsCardProps } from './types';
-import { usePulseAnimation } from './PersonalBestsCard.hooks';
-import { MedalRow } from './MedalRow';
 import { BestWorstDayCards } from './BestWorstDayCards';
+import { MedalRow } from './MedalRow';
+import { usePulseAnimation } from './PersonalBestsCard.hooks';
 
 export function PersonalBestsCard({
   streakRecords,

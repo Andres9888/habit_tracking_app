@@ -1,5 +1,7 @@
-import { memo } from 'react';
+
 import { ScrollView, Text, View } from 'react-native';
+import { memo } from 'react';
+
 import { QuickAccessEmojiItem } from './QuickAccessEmojiItem';
 
 interface RecentEmojisProps {

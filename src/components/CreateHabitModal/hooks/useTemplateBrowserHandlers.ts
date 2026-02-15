@@ -1,5 +1,7 @@
-import { useCallback, type Dispatch, type SetStateAction } from 'react';
+
 import type { NativeScrollEvent, NativeSyntheticEvent, ScrollView } from 'react-native';
+import { useCallback, type Dispatch, type SetStateAction } from 'react';
+
 import type { HabitTemplate } from '../types';
 
 interface UseTemplateBrowserHandlersOptions {

@@ -1,14 +1,16 @@
+
 import { useCallback, useState } from 'react';
+
+import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
 import {
   checkStreakMilestoneCrossed,
   type StreakMilestone,
 } from './constants';
-import { persistMilestoneShown } from './useMilestoneCheck';
 import {
   maybeRequestReview,
   incrementCompletionCount,
 } from '../../utils/storeReview';
-import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
+import { persistMilestoneShown } from './useMilestoneCheck';
 
 interface CelebrationData {
   milestone: StreakMilestone;

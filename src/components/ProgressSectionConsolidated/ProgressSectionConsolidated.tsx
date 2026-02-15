@@ -13,14 +13,14 @@ import { View } from 'react-native';
 
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
-import { shadows } from '../../theme/spacing';
+import type { ProgressSectionConsolidatedProps } from './types';
 import { ActionableTipCard } from './ActionableTipCard';
 import { MilestoneProgress } from './MilestoneProgress';
 import { StatsGrid } from './StatsGrid';
 import { StreakRecordsAccordion } from './StreakRecordsAccordion';
-import type { ProgressSectionConsolidatedProps } from './types';
-import { useProgressSectionStats } from './useProgressSectionStats';
 import { WeeklyPatternChart } from './WeeklyPatternChart';
+import { shadows } from '../../theme/spacing';
+import { useProgressSectionStats } from './useProgressSectionStats';
 
 /**
  * Unified progress section that consolidates all progress information

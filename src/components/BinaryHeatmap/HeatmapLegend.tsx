@@ -12,9 +12,9 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { typography } from '@/theme/typography';
 import type { HeatmapLegendProps } from './types';
 import { LEGEND_INDICATOR_SIZE, COLORS, CELL_BORDER_RADIUS } from './constants';
+import { typography } from '@/theme/typography';
 
 /**
  * Format completion rate as a rounded percentage string

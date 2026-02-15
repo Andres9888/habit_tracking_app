@@ -2,6 +2,7 @@
  * Orphan Cleanup Helpers Tests
  */
 
+import type { HabitExistsResult, OrphanedOperation } from '../types';
 import type { Id } from '../../../../../../convex/_generated/dataModel';
 import type { OfflineOperation } from '../../../queue';
 import {
@@ -14,7 +15,6 @@ import {
   groupOperationsByHabit,
   identifyOrphans,
 } from '../helpers';
-import type { HabitExistsResult, OrphanedOperation } from '../types';
 
 // Helper to create test operations
 function createTestOperation(

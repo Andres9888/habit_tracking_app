@@ -2,8 +2,9 @@
  * Handlers for sort and filter operations
  */
 
-import { useCallback } from 'react';
 import type { FlatList } from 'react-native';
+import { useCallback } from 'react';
+
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { SortOption } from '../../templates/constants';
 

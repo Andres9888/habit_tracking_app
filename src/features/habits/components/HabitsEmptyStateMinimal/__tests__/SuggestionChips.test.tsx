@@ -4,8 +4,9 @@
  * Tests for the time-based suggestion chips component.
  */
 
-import { render } from '@testing-library/react-native';
 import { View } from 'react-native';
+
+import { render } from '@testing-library/react-native';
 
 import { SuggestionChips } from '../SuggestionChips';
 import { getTimeBasedChips } from '../utils';

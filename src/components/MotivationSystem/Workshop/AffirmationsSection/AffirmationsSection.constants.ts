@@ -4,6 +4,7 @@
  */
 
 import { User, Zap, BookOpen } from 'lucide-react-native';
+
 import type { TypeConfig } from './AffirmationsSection.types';
 
 // Content limits (matching Convex validation)

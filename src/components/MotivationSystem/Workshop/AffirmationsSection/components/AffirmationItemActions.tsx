@@ -5,9 +5,11 @@
 
 import React from 'react';
 import { View, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import { Bell, BellOff, Edit2, Trash2 } from 'lucide-react-native';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
+
 import { formatTimeForDisplay } from '../AffirmationsSection.utils';
 
 interface AffirmationItemActionsProps {

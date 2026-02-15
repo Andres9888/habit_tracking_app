@@ -4,8 +4,9 @@
  * Monitors app state changes to detect and handle audio interruptions.
  */
 
-import { useEffect } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
+import { useEffect } from 'react';
+
 import type { PlaybackState, InterruptionReason } from './types';
 
 export interface UseAppStatePlaybackOptions {

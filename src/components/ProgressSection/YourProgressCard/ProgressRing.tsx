@@ -1,13 +1,16 @@
+
 import React from 'react';
 import { View } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
+
 import Animated, {
   useAnimatedProps,
   SharedValue,
 } from 'react-native-reanimated';
+import Svg, { Circle } from 'react-native-svg';
+
 import type { LevelConfig } from '../types';
-import { RING_SIZE, STROKE_WIDTH } from './constants';
 import { AnimatedPercentageText } from './AnimatedPercentageText';
+import { RING_SIZE, STROKE_WIDTH } from './constants';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 

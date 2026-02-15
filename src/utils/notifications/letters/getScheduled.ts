@@ -1,7 +1,8 @@
+
 import * as Notifications from 'expo-notifications';
 
-import { NOTIFICATION_TYPE_LETTER_UNLOCK } from '../constants';
 import type { ScheduledLetterNotification } from '../types';
+import { NOTIFICATION_TYPE_LETTER_UNLOCK } from '../constants';
 
 /**
  * Get all scheduled letter unlock notifications

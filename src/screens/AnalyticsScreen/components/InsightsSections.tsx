@@ -1,15 +1,17 @@
 /**
  * InsightsSections - Weekly insights and habit rankings sections
  */
+
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
-import { typography } from '../../../theme/typography';
-import { spacing } from '../../../theme/spacing';
-import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
-import HabitRankingsList from '../../../components/HabitRankingsList';
-import type { WeeklyInsights } from '../AnalyticsScreen.types';
+
 import type { RankedHabit } from '../AnalyticsScreen.types';
+import type { WeeklyInsights } from '../AnalyticsScreen.types';
+import HabitRankingsList from '../../../components/HabitRankingsList';
+import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
+import { colors } from '../../../theme/colors';
+import { spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 interface InsightsSectionsProps {
   weeklyInsights: WeeklyInsights | undefined;

@@ -5,7 +5,9 @@
  */
 
 import { useCallback } from 'react';
+
 import { Audio, AVPlaybackStatus } from 'expo-av';
+
 import type { PlaybackStatus } from './types';
 import {
   STATUS_UPDATE_INTERVAL_MS,

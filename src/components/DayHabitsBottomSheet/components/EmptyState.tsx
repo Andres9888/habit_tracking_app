@@ -1,27 +1,25 @@
 /**
  * Empty state shown when no habits exist
- * Standardized: animation (respects reduce-motion), proper typography, dark mode, accessible
+ * Standardized: FadeInUp animation, proper typography, dark mode
  */
 
 import { View } from 'react-native';
+
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import { ClipboardList } from 'lucide-react-native';
-import Animated from 'react-native-reanimated';
+
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { useReducedMotionEntry } from '../../EmptyState/useReducedMotionEntry';
+
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
   const { colors } = useThemeColors();
-  const { entry } = useReducedMotionEntry();
 
   return (
-    <View
-      accessible
-      accessibilityLabel='No habits yet. Create your first habit to start tracking.'
-      accessibilityRole='text'
-      style={{ alignItems: 'center', paddingHorizontal: 24, paddingVertical: 40 }}
-    >
+    <View style={{ alignItems: 'center', paddingHorizontal: 24, paddingVertical: 40 }}>
       <Animated.View
-        entering={entry(0)}
+        entering={anim(0)}
         style={{
           alignItems: 'center',
           backgroundColor: colors.gray[100],
@@ -39,7 +37,7 @@ export function EmptyState() {
         <ClipboardList color={colors.text.tertiary} size={28} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
-        entering={entry(60)}
+        entering={anim(60)}
         style={{
           color: colors.text.primary,
           fontSize: 17,
@@ -51,7 +49,7 @@ export function EmptyState() {
         No Habits Yet
       </Animated.Text>
       <Animated.Text
-        entering={entry(120)}
+        entering={anim(120)}
         style={{
           color: colors.text.secondary,
           fontSize: 13,

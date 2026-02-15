@@ -4,14 +4,16 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { useCountAnimation } from './useCountAnimation';
+
 import type { StatCardProps } from './types';
+import { useCountAnimation } from './useCountAnimation';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

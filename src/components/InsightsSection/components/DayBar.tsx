@@ -5,6 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -12,6 +13,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+
 import type { DayBarProps } from '../InsightsSection.types';
 import { DAY_LABELS_SHORT } from '../InsightsSection.constants';
 

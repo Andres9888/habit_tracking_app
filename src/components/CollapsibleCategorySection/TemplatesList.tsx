@@ -5,6 +5,7 @@
 
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
+
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import type { Doc } from '../../../convex/_generated/dataModel';

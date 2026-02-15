@@ -3,7 +3,9 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
+
 import { ConfettiBurst } from '../ConfettiBurst';
 
 describe('ConfettiBurst', () => {

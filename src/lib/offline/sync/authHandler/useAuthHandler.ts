@@ -5,14 +5,15 @@
  * Provides auth status and callbacks for re-authentication.
  */
 
-import { useAuth } from '@clerk/clerk-expo';
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
 
-import type { AuthEvent, AuthHandlerState } from './types';
+import { useAuth } from '@clerk/clerk-expo';
+
 import type {
   UseAuthHandlerOptions,
   UseAuthHandlerReturn,
 } from './useAuthHandler.types';
+import type { AuthEvent, AuthHandlerState } from './types';
 import { getAuthHandler } from './singleton';
 
 /**

@@ -1,7 +1,9 @@
+
 import React from 'react';
-import { QuickReflection } from '../../QuickReflection';
-import { AnimatedSection } from '../components/AnimatedSection';
+
 import type { EmojiType } from '../../QuickReflection';
+import { AnimatedSection } from '../components/AnimatedSection';
+import { QuickReflection } from '../../QuickReflection';
 
 type ReflectionSectionProps = {
   localNote: string;

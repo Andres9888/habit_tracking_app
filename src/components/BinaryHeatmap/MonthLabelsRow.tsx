@@ -9,8 +9,8 @@ import { View, Text } from 'react-native';
 
 import type { BinaryMonthLabel } from './types';
 import { CELL_SIZE, CELL_GAP, MONTH_LABEL } from './constants';
-import { styles } from './MonthLabelsRow.styles';
 import { getFullMonthName } from './MonthLabelsRow.helpers';
+import { styles } from './MonthLabelsRow.styles';
 
 export interface MonthLabelsRowProps {
   monthLabels: BinaryMonthLabel[];

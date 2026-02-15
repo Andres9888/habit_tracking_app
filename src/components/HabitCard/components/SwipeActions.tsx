@@ -5,10 +5,12 @@
 
 import React, { memo } from 'react';
 import { Pressable, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { withSpring, type SharedValue } from 'react-native-reanimated';
-import { useAppTheme } from '../../../theme';
+
 import { actionStyles } from '../HabitCard.actionStyles';
+import { useAppTheme } from '../../../theme';
 
 interface SwipeActionsProps {
   name: string;

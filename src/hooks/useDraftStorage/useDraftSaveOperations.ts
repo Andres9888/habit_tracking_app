@@ -4,8 +4,9 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
-import { saveDraft } from './storage';
+
 import type { DraftContentType } from './types';
+import { saveDraft } from './storage';
 
 interface UseDraftSaveOperationsParams {
   habitId: string;

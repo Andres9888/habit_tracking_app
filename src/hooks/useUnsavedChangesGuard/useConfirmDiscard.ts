@@ -4,8 +4,9 @@
  * Core logic for showing the discard confirmation dialog.
  */
 
-import { useCallback } from 'react';
 import { Alert, type AlertButton } from 'react-native';
+import { useCallback } from 'react';
+
 import * as Haptics from 'expo-haptics';
 
 interface UseConfirmDiscardOptions {

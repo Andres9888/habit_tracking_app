@@ -4,15 +4,17 @@
  */
 
 import { useEffect, useRef } from 'react';
+
 import { cancelAnimation } from 'react-native-reanimated';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
-import { useEntranceAnimationValues } from './useEntranceAnimationValues';
-import { useEntranceHandlers } from './useEntranceHandlers';
-import { useEntranceStyles } from './useEntranceStyles';
+
 import type {
   UseHabitCardEntranceOptions,
   UseHabitCardEntranceReturn,
 } from './types';
+import { useEntranceAnimationValues } from './useEntranceAnimationValues';
+import { useEntranceHandlers } from './useEntranceHandlers';
+import { useEntranceStyles } from './useEntranceStyles';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 
 export function useHabitCardEntrance({
   variant = 'accentSlideDown',

@@ -17,9 +17,9 @@ import {
   DEFAULT_KEEP_EDITING_BUTTON,
 } from './constants';
 import { hasChanges } from './helpers';
+import { useBackHandler } from './useBackHandler';
 import { useConfirmDiscard } from './useConfirmDiscard';
 import { useConfirmDiscardAsync } from './useConfirmDiscardAsync';
-import { useBackHandler } from './useBackHandler';
 
 /**
  * useUnsavedChangesGuard Hook

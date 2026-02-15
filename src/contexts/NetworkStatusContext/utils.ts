@@ -3,6 +3,7 @@
  */
 
 import { NetworkStateType, type NetworkState } from 'expo-network';
+
 import type { NetworkStatus } from './types';
 
 /**

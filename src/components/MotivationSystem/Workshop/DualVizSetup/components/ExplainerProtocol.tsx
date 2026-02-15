@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
 
 export function ExplainerProtocol() {

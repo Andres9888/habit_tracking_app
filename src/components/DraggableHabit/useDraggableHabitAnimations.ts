@@ -10,8 +10,9 @@
  * Returns the animated values and `showNewRecord` state for the card renderer.
  */
 
-import { useRef, useState } from 'react';
 import { Animated } from 'react-native';
+import { useRef, useState } from 'react';
+
 import { useEntranceAnimation } from './useEntranceAnimation';
 import { useHighlightAnimation } from './useHighlightAnimation';
 import { useIconPulse } from './useIconPulse';

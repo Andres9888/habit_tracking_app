@@ -3,9 +3,9 @@
  * Handles long-press for quick actions menu
  */
 
+import * as Haptics from 'expo-haptics';
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
-import { HapticPatterns } from '../../../utils/haptics/patterns';
 
 interface LongPressGestureOptions {
   disabled: boolean;
@@ -20,7 +20,11 @@ export function createLongPressGesture({
     .minDuration(500)
     .onStart(() => {
       if (onLongPress && !disabled) {
-        runOnJS(HapticPatterns.heavy)();
+        runOnJS(() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(
+            () => {}
+          );
+        })();
         runOnJS(onLongPress)();
       }
     });

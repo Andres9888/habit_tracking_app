@@ -6,14 +6,16 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, type GestureResponderEvent } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated from 'react-native-reanimated';
 import { Check, Eye } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+
+import type { ActionButtonsProps } from './ActionButtons.types';
 import Button from '../../Button/Button';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
-import type { ActionButtonsProps } from './ActionButtons.types';
 
 export function ActionButtons({
   checkmarkStyle,

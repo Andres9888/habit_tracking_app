@@ -9,15 +9,16 @@
 
 import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Activity, Info } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Activity, Info, TrendingUp, TrendingDown } from 'lucide-react-native';
 
 import type { ConsistencyIndexCardProps } from './types';
-import { getScoreColor, getFeedbackMessage } from './helpers';
-import { ProgressRing } from './ProgressRing';
 import { BreakdownSection } from './BreakdownSection';
 import { ChangeIndicator } from './ChangeIndicator';
+import { ProgressRing } from './ProgressRing';
+import { getScoreColor, getFeedbackMessage } from './helpers';
 
 export function ConsistencyIndexCard({
   consistencyIndex,

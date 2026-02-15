@@ -1,5 +1,7 @@
-import { act, render } from '@testing-library/react-native';
+
 import React, { useEffect } from 'react';
+
+import { act, render } from '@testing-library/react-native';
 
 import { useHapticFeedback } from '../useHapticFeedback';
 

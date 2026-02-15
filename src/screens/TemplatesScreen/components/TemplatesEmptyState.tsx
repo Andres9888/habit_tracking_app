@@ -3,6 +3,7 @@
  */
 
 import { View } from 'react-native';
+
 import Button from '../../../components/Button/Button';
 import EmptyState from '../../../components/EmptyState';
 import { styles } from '../../templates/templatesScreenStyles';

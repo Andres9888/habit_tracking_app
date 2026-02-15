@@ -5,12 +5,12 @@
  * Implements US4 (Graceful Conflict Resolution) integration.
  */
 
-import type { OfflineOperation } from '../../queue';
 import type {
   ProcessOperationResult,
   QueueProcessorDeps,
   ProcessSingleOptions,
 } from './types';
+import type { OfflineOperation } from '../../queue';
 import { checkAndResolveConflict } from './conflictCheck';
 import { executeSync } from './executeSync';
 

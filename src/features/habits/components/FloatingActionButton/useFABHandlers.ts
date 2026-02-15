@@ -1,5 +1,7 @@
-import { useCallback } from 'react';
+
 import { Animated, Easing } from 'react-native';
+import { useCallback } from 'react';
+
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { FAB, SCALE, RIPPLE_EFFECT } from '../../../../constants';
 

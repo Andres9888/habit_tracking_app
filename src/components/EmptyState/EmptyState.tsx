@@ -10,15 +10,17 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
-import { useAppTheme } from '../../theme';
-import { useThemeColors } from '../../theme/ThemeContext';
-import Button from '../Button/Button';
+
 import type { EmptyStateProps } from './types';
-import { VARIANT_CONFIG, QUICK_START_TEMPLATES } from './constants';
-import { useEmptyStateAnimations } from './useEmptyStateAnimations';
-import { styles } from './styles';
+import Button from '../Button/Button';
 import { TemplateChip } from './TemplateChip';
+import { VARIANT_CONFIG, QUICK_START_TEMPLATES } from './constants';
+import { styles } from './styles';
+import { useAppTheme } from '../../theme';
+import { useEmptyStateAnimations } from './useEmptyStateAnimations';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 export function EmptyState({
   variant = 'noHabits',

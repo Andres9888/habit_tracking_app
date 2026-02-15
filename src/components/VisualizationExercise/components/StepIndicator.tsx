@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { clsx } from 'clsx';
+
 import type { StepIndicatorProps } from '../types';
 
 export function StepIndicator({ currentStep, totalSteps }: StepIndicatorProps) {

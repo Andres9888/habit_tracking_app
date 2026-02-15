@@ -4,12 +4,13 @@
  * Manages state and logic for the note editor form.
  */
 
-import { useMutation, useQuery } from 'convex/react';
-import { format } from 'date-fns';
 import { useState } from 'react';
 
-import { api } from '../../../../convex/_generated/api';
+import { format } from 'date-fns';
+import { useMutation, useQuery } from 'convex/react';
+
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { api } from '../../../../convex/_generated/api';
 
 interface UseNoteEditorOptions {
   noteId?: Id<'notes'>;

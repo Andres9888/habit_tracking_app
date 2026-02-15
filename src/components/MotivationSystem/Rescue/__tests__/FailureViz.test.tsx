@@ -11,7 +11,9 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
+
 import { FailureViz, type FailureVisualizationData } from '../FailureViz';
 
 // Mock expo-haptics

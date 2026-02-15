@@ -4,8 +4,10 @@
 
 import React from 'react';
 import { View, Pressable, Text } from 'react-native';
-import type { PremiumPaywallHandlers } from './usePremiumPaywall';
+
 import { LinearGradient } from 'expo-linear-gradient';
+
+import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 import type { VariantConfig } from './PremiumPaywall.types';
 
 interface BlurOverlayActionsProps {

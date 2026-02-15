@@ -4,10 +4,11 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { TrendingUp, Trophy, Target } from 'lucide-react-native';
 
-import { StatCard } from './StatCard';
 import type { StatsRowProps } from '../types';
+import { StatCard } from './StatCard';
 
 export function StatsRow({
   completionRate,

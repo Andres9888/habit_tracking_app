@@ -1,7 +1,7 @@
+
 import React from 'react';
-import { View, Text } from 'react-native';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { View, Text, Animated } from 'react-native';
+
 import type { ProgressColors, MotivationalMessage } from './types';
 
 interface StandardMeterProps {
@@ -10,10 +10,10 @@ interface StandardMeterProps {
   totalHabits: number;
   colors: ProgressColors;
   message: MotivationalMessage;
-  celebrationAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
-  glowAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
-  flameAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
-  progressAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
+  celebrationScale: Animated.Value;
+  glowOpacity: Animated.Value;
+  flameScale: Animated.Value;
+  progressWidth: Animated.AnimatedInterpolation<string | number>;
 }
 
 export function StandardMeter({
@@ -22,44 +22,40 @@ export function StandardMeter({
   totalHabits,
   colors,
   message,
-  celebrationAnimatedStyle,
-  glowAnimatedStyle,
-  flameAnimatedStyle,
-  progressAnimatedStyle,
+  celebrationScale,
+  glowOpacity,
+  flameScale,
+  progressWidth,
 }: StandardMeterProps) {
-  const { colors: themeColors, isDark } = useThemeColors();
   return (
     <Animated.View
       className='flex-row items-center gap-4 rounded-2xl px-4 py-3'
-      style={[
-        {
-          backgroundColor: colors.bg,
-          elevation: percentage === 100 ? 4 : 0,
-          shadowColor: percentage === 100 ? colors.glow : 'transparent',
-          shadowOffset: { height: 0, width: 0 },
-          shadowOpacity: percentage === 100 ? 0.4 : 0,
-          shadowRadius: 16,
-        },
-        celebrationAnimatedStyle,
-      ]}
+      style={{
+        backgroundColor: colors.bg,
+        elevation: percentage === 100 ? 4 : 0,
+        shadowColor: percentage === 100 ? colors.glow : 'transparent',
+        shadowOffset: { height: 0, width: 0 },
+        shadowOpacity: percentage === 100 ? 0.4 : 0,
+        shadowRadius: 16,
+        transform: [{ scale: celebrationScale }],
+      }}
     >
       {/* Progress ring */}
       <View className='relative'>
         <View
           className='h-14 w-14 items-center justify-center rounded-full border-4'
-          style={{
-            backgroundColor: 'transparent',
-            borderColor: isDark ? themeColors.gray[200] : '#ffffff',
-          }}
+          style={{ backgroundColor: 'transparent', borderColor: '#ffffff' }}
         >
           <View
             className='h-10 w-10 items-center justify-center rounded-full'
             style={{
-              backgroundColor:
-                percentage > 0 ? colors.fill : themeColors.gray[200],
+              backgroundColor: percentage > 0 ? colors.fill : '#e7e5e4',
             }}
           >
-            <Animated.Text className='text-lg' style={flameAnimatedStyle}>
+            <Animated.Text
+              className='text-lg'
+              style={{ transform: [{ scale: flameScale }] }}
+            >
               {message.emoji}
             </Animated.Text>
           </View>
@@ -85,13 +81,11 @@ export function StandardMeter({
         <View className='mt-2'>
           <View
             className='h-1.5 overflow-hidden rounded-full'
-            style={{
-              backgroundColor: isDark ? themeColors.gray[200] : '#ffffff',
-            }}
+            style={{ backgroundColor: '#ffffff' }}
           >
             <Animated.View
               className='h-full rounded-full'
-              style={[{ backgroundColor: colors.fill }, progressAnimatedStyle]}
+              style={{ backgroundColor: colors.fill, width: progressWidth }}
             />
           </View>
         </View>
@@ -99,7 +93,7 @@ export function StandardMeter({
 
       {/* Celebration sparkles */}
       {percentage === 100 && (
-        <Animated.View style={glowAnimatedStyle}>
+        <Animated.View style={{ opacity: glowOpacity }}>
           <Text className='text-2xl'>🎉</Text>
         </Animated.View>
       )}

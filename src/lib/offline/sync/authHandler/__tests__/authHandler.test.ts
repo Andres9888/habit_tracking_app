@@ -2,9 +2,9 @@
  * Auth Handler Tests
  */
 
+import type { AuthEvent, AuthHandlerConfig, AuthHandlerDeps } from '../types';
 import type { ClassifiedError } from '../../../types';
 import { createAuthHandler, type AuthHandlerAPI } from '../authHandler';
-import type { AuthEvent, AuthHandlerConfig, AuthHandlerDeps } from '../types';
 
 // Helper to create classified error
 function createAuthError(statusCode = 401): ClassifiedError {

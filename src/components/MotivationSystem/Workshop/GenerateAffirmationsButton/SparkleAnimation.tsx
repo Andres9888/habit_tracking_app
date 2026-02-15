@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -12,6 +13,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { Sparkles } from 'lucide-react-native';
+
 import { SPARKLE_DURATION } from './constants';
 
 interface SparkleAnimationProps {

@@ -5,13 +5,14 @@
  * Separated from data fetching for cleaner responsibility boundaries.
  */
 
-import { useCallback, useEffect, useRef } from 'react';
-import { isPurchasesAvailable, Purchases } from '../../lib/purchases';
 import type {
   PurchasesPackage,
   CustomerInfo,
   PurchasesError,
 } from 'react-native-purchases';
+import { useCallback } from 'react';
+
+import { isPurchasesAvailable, Purchases } from '../../lib/purchases';
 
 const PREMIUM_ENTITLEMENT_ID = 'premium';
 
@@ -30,29 +31,16 @@ export function usePremiumActions({
   setCustomerInfo,
   setError,
 }: PremiumActionsInput): PremiumActionsReturn {
-  const isMountedRef = useRef(true);
-
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
   const purchasePackage = useCallback(
     async (pkg: PurchasesPackage): Promise<boolean> => {
       if (!isPurchasesAvailable()) {
-        if (isMountedRef.current) {
-          setError('Purchases not available on this platform');
-        }
+        setError('Purchases not available on this platform');
         return false;
       }
 
       try {
-        if (isMountedRef.current) {
-          setError(null);
-        }
+        setError(null);
         const { customerInfo: newInfo } = await Purchases.purchasePackage(pkg);
-        
-        if (!isMountedRef.current) return false;
         setCustomerInfo(newInfo);
 
         return (
@@ -63,9 +51,7 @@ export function usePremiumActions({
         if (purchaseError.userCancelled) return false;
 
         if (__DEV__) console.error('[usePremium] Purchase failed:', purchaseError);
-        if (isMountedRef.current) {
-          setError(purchaseError.message || 'Purchase failed');
-        }
+        setError(purchaseError.message || 'Purchase failed');
         return false;
       }
     },
@@ -74,27 +60,19 @@ export function usePremiumActions({
 
   const restorePurchases = useCallback(async (): Promise<boolean> => {
     if (!isPurchasesAvailable()) {
-      if (isMountedRef.current) {
-        setError('Purchases not available on this platform');
-      }
+      setError('Purchases not available on this platform');
       return false;
     }
 
     try {
-      if (isMountedRef.current) {
-        setError(null);
-      }
+      setError(null);
       const info = await Purchases.restorePurchases();
-      
-      if (!isMountedRef.current) return false;
       setCustomerInfo(info);
 
       return info.entitlements.active[PREMIUM_ENTITLEMENT_ID] !== undefined;
     } catch (error_) {
       if (__DEV__) console.error('[usePremium] Restore failed:', error_);
-      if (isMountedRef.current) {
-        setError('Failed to restore purchases');
-      }
+      setError('Failed to restore purchases');
       return false;
     }
   }, [setCustomerInfo, setError]);
@@ -104,8 +82,6 @@ export function usePremiumActions({
 
     try {
       const info = await Purchases.getCustomerInfo();
-      
-      if (!isMountedRef.current) return;
       setCustomerInfo(info);
     } catch (error_) {
       if (__DEV__) console.error('[usePremium] Refresh failed:', error_);

@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 
 import { TrendIndicator } from '../TrendIndicator';

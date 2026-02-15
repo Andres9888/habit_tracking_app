@@ -3,14 +3,16 @@
  */
 
 import React from 'react';
+
 import Animated from 'react-native-reanimated';
-import { layoutStyles } from '../styles';
-import { SuccessGlowOverlay } from './SuccessGlowOverlay';
+
+import type { PreviewContentProps } from './PreviewContent.types';
+import { ConfettiOverlay } from './ConfettiOverlay';
+import { FooterSection } from './FooterSection';
 import { ModalHeader } from './ModalHeader';
 import { ScrollableContent } from './ScrollableContent';
-import { FooterSection } from './FooterSection';
-import { ConfettiOverlay } from './ConfettiOverlay';
-import type { PreviewContentProps } from './PreviewContent.types';
+import { SuccessGlowOverlay } from './SuccessGlowOverlay';
+import { layoutStyles } from '../styles';
 
 export function PreviewContent({
   animatedStyles,

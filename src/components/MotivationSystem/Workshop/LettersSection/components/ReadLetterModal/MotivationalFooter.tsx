@@ -3,13 +3,14 @@
  * Encouraging message at the bottom of the letter
  */
 
-import React from 'react';
-import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Heart } from 'lucide-react-native';
 import type { AnimatedStyle } from 'react-native-reanimated';
+import React from 'react';
 import type { ViewStyle } from 'react-native';
+import { View, Text } from 'react-native';
+
+import Animated from 'react-native-reanimated';
+import { Heart } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface MotivationalFooterProps {
   showContent: boolean;

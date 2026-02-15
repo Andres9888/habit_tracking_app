@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { clsx } from 'clsx';
+
 import * as Haptics from 'expo-haptics';
+import { clsx } from 'clsx';
+
 import type { AffirmationType } from '../AffirmationsSection.types';
 import { TYPE_CONFIG } from '../AffirmationsSection.constants';
 

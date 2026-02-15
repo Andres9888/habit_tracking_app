@@ -4,8 +4,10 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react-native';
 import { Platform } from 'react-native';
+
+import { render } from '@testing-library/react-native';
+
 import { TimePickerModal } from '../TimePickerModal';
 
 // Mock useHapticFeedback

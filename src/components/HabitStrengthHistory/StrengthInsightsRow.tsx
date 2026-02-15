@@ -9,7 +9,9 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { Trophy, BarChart3 } from 'lucide-react-native';
+
 import { InsightCard } from './InsightCard';
 import { getDeltaIcon, getDeltaColor, formatDelta } from './deltaHelpers';
 

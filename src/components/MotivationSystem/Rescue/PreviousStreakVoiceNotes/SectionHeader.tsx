@@ -3,8 +3,9 @@
  */
 
 import { View, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { Flame, Sparkles } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface SectionHeaderProps {
   bestStreak: number;

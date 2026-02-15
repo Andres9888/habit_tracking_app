@@ -3,10 +3,12 @@
  */
 
 import React, { useCallback } from 'react';
-import { View } from 'react-native';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
+import { View } from 'react-native';
+
 import * as Haptics from 'expo-haptics';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
 import { Button } from '../Button/Button';
 import { styles } from './styles';
 

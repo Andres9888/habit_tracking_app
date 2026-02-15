@@ -5,9 +5,10 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { ChevronRight } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { ChevronRight } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { clsx } from 'clsx';
 import type { ButtonContentProps } from './ButtonContent.types';
 import { IconContainer } from './IconContainer';

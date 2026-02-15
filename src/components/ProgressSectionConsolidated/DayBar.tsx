@@ -5,6 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -13,6 +14,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+
 import {
   DAY_LABELS_SHORT,
   BAR_STAGGER_DELAY,

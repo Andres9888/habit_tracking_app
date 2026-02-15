@@ -2,14 +2,16 @@
  * ForgotPasswordModal - OPTIMIZED: Entry animations, stagger, polish
  */
 
-import { useCallback } from 'react';
 import { Text, View } from 'react-native';
+import { useCallback } from 'react';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
+
+import type { ForgotPasswordModalProps } from './types';
 import Modal from '../../../../components/Modal';
 import { PasswordResetForm } from './PasswordResetForm';
 import { PasswordResetSuccess } from './PasswordResetSuccess';
 import { useForgotPassword } from './useForgotPassword';
-import type { ForgotPasswordModalProps } from './types';
 
 export function ForgotPasswordModal({
   visible,

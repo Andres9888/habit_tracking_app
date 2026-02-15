@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Trophy } from 'lucide-react-native';
 
 interface BestStreakBadgeProps {

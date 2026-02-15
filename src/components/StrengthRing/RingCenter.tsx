@@ -1,14 +1,15 @@
 /**
  * RingCenter - Content displayed in the center of the ring (emoji or percentage)
  */
+
 import React from 'react';
 import { Text, View, ViewStyle } from 'react-native';
 
 import Animated from 'react-native-reanimated';
 
 import type { LevelInfo } from './StrengthRing.types';
-import { styles } from './StrengthRing.styles';
 import { TrendArrow } from './TrendArrow';
+import { styles } from './StrengthRing.styles';
 
 interface RingCenterProps {
   showEmoji: boolean;

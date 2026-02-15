@@ -9,10 +9,12 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import Animated from 'react-native-reanimated';
+
 import type { StatCardProps } from './StatsGridTypes';
-import { useStatCardAnimation } from './useStatCardAnimation';
 import { StatCardTrendBadge } from './StatCardTrendBadge';
+import { useStatCardAnimation } from './useStatCardAnimation';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

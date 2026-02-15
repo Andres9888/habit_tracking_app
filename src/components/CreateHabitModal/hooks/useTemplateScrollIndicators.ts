@@ -1,5 +1,6 @@
-import { useCallback, useRef, useState } from 'react';
+
 import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import { useCallback, useRef, useState } from 'react';
 
 export const useTemplateScrollIndicators = () => {
   const scrollOffset = useRef(0);

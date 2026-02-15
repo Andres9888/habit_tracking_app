@@ -5,8 +5,9 @@
  */
 
 import { useContext } from 'react';
-import { OfflineContext } from './OfflineProvider';
+
 import type { OfflineContextValue } from './types';
+import { OfflineContext } from './OfflineProvider';
 
 /**
  * Hook to access the offline queue restoration context.

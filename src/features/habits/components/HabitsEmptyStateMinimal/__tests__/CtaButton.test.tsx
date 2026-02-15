@@ -10,10 +10,11 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
 
-import { CTA_SHIMMER, CTA_TRANSFORMS, SPRING_CONFIGS } from '../animations';
 import { COPY } from '../constants';
+import { CTA_SHIMMER, CTA_TRANSFORMS, SPRING_CONFIGS } from '../animations';
 import { CtaButton } from '../CtaButton';
 
 // Mock reanimated

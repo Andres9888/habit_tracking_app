@@ -13,6 +13,7 @@
 
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -21,6 +22,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
+
 import {
   SPRING_BOUNCY,
   STAGGER_DELAY,

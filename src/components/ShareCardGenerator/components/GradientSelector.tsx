@@ -5,10 +5,12 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppTheme } from '../../../theme';
-import { controlsStyles as styles } from '../styles';
+
 import { GRADIENT_PRESETS } from '../ShareCardGenerator.constants';
+import { controlsStyles as styles } from '../styles';
+import { useAppTheme } from '../../../theme';
 
 interface GradientSelectorProps {
   selectedGradient: number;

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+
 import {
   AccessibilityInfo,
   Animated,
@@ -6,7 +6,10 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useRef } from 'react';
+
 import { LayoutGrid, ChevronRight } from 'lucide-react-native';
+
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
 interface TemplatesLinkSectionProps {

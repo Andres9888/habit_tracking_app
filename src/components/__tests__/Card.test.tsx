@@ -1,6 +1,9 @@
+
 import React from "react";
-import { render } from "@testing-library/react-native";
 import { Text, View } from "react-native";
+
+import { render } from "@testing-library/react-native";
+
 import { Card, CardHeader, CardContent } from "../Card";
 
 describe("Card Component", () => {

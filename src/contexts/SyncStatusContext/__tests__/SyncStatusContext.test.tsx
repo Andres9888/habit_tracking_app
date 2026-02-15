@@ -10,7 +10,10 @@
  */
 
 import React from 'react';
+
 import { renderHook, act, waitFor } from '@testing-library/react-native';
+
+import type { SyncOrchestratorResult } from '../../../lib/offline/sync/types';
 import {
   SyncStatusProvider,
   useSyncStatus,
@@ -22,7 +25,6 @@ import {
   useOnSyncComplete,
   useOnSyncError,
 } from '../index';
-import type { SyncOrchestratorResult } from '../../../lib/offline/sync/types';
 
 // Mock useSyncOrchestrator
 const mockTriggerSync = jest.fn();

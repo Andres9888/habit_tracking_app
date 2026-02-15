@@ -7,11 +7,13 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react-native';
+
 import { PaperProvider } from 'react-native-paper';
+import { render } from '@testing-library/react-native';
 import { useSharedValue } from 'react-native-reanimated';
-import { extendedTheme } from '../../../../theme';
+
 import { ChainLinkAnimation } from '../ChainLinkAnimation';
+import { extendedTheme } from '../../../../theme';
 
 // Wrapper with theme
 const renderWithProviders = (component: React.ReactElement) => {

@@ -4,9 +4,10 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Eye, Sparkles, Target } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface GuideHeaderProps {
   habitName?: string;

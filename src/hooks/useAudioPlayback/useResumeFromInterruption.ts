@@ -5,7 +5,9 @@
  */
 
 import { useCallback } from 'react';
+
 import { Audio } from 'expo-av';
+
 import type { PlaybackState, PlaybackStatus } from './types';
 
 export interface UseResumeFromInterruptionOptions {

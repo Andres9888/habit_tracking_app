@@ -1,6 +1,7 @@
+
+import { useCallback, useState } from 'react';
+
 import { useSignIn } from '@clerk/clerk-expo';
-import { useCallback, useState, useEffect, useRef } from 'react';
-import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 
 interface UseForgotPasswordReturn {
   email: string;
@@ -27,14 +28,6 @@ export function useForgotPassword(): UseForgotPasswordReturn {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const isMountedRef = useRef(true);
-
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
-
   const clearError = useCallback(() => setError(null), []);
 
   const handleResetPassword = useCallback(async () => {
@@ -43,12 +36,12 @@ export function useForgotPassword(): UseForgotPasswordReturn {
 
     // Validate email
     if (!email.trim()) {
-      setError(ERROR_MESSAGES.VALIDATION.REQUIRED_FIELD);
+      setError('Please enter your email address');
       return;
     }
 
     if (!isValidEmail(email)) {
-      setError(ERROR_MESSAGES.VALIDATION.INVALID_EMAIL);
+      setError('Please enter a valid email address');
       return;
     }
 
@@ -61,13 +54,10 @@ export function useForgotPassword(): UseForgotPasswordReturn {
         strategy: 'reset_password_email_code',
       });
 
-      if (!isMountedRef.current) return;
       setSuccess(true);
       setError(null);
     } catch (error_: unknown) {
       if (__DEV__) console.error('Password reset error:', error_);
-
-      if (!isMountedRef.current) return;
 
       // Handle common errors
       const clerkError = error_ as { errors?: Array<{ code?: string; message?: string }> };
@@ -80,14 +70,12 @@ export function useForgotPassword(): UseForgotPasswordReturn {
       } else {
         setError(
           clerkError.errors?.[0]?.message ||
-            ERROR_MESSAGES.AUTH.PASSWORD_RESET_FAILED
+            'Failed to send reset email. Please try again.'
         );
       }
       setSuccess(false);
     } finally {
-      if (isMountedRef.current) {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
   }, [email, signIn]);
 

@@ -3,13 +3,15 @@
  */
 
 import { useCallback } from 'react';
+
 import {
   useSharedValue,
   withSpring,
   type SharedValue,
 } from 'react-native-reanimated';
-import { Springs } from '../../../constants/motion';
+
 import type { PressHandlers } from '../FullsizeTemplatePreview.types';
+import { Springs } from '../../../constants/motion';
 
 interface UseButtonAnimationsProps {
   reducedMotion: boolean;

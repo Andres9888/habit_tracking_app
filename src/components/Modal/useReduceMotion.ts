@@ -3,8 +3,8 @@
  * Checks for system reduce motion preference
  */
 
-import { useEffect, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
+import { useEffect, useState } from 'react';
 
 export function useReduceMotion(respectReduceMotion: boolean) {
   const [reduceMotion, setReduceMotion] = useState(false);

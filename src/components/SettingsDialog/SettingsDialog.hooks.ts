@@ -1,8 +1,11 @@
-import { useMutation, useQuery } from 'convex/react';
+
 import { useEffect, useState } from 'react';
-import { api } from '../../../convex/_generated/api';
-import { DEFAULT_SETTINGS } from './SettingsDialog.config';
+
+import { useMutation, useQuery } from 'convex/react';
+
 import type { Settings } from './SettingsDialog.types';
+import { DEFAULT_SETTINGS } from './SettingsDialog.config';
+import { api } from '../../../convex/_generated/api';
 
 export function useSettingsDialog(isOpen: boolean) {
   const settings = useQuery(api.settings.get) ?? DEFAULT_SETTINGS;

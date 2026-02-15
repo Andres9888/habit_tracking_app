@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useRef, useCallback } from 'react';
+
 import { usePerformance } from './usePerformance';
 
 interface TimingResult {

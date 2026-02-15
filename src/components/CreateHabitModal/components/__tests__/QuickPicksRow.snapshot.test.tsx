@@ -9,7 +9,9 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
+
 import { QuickPicksRow } from '../QuickPicksRow';
 
 // Mock useHapticFeedback

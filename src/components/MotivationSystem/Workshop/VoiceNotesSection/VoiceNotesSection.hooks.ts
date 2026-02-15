@@ -2,11 +2,13 @@
  * Hooks for VoiceNotesSection component
  */
 
-import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
+import { useCallback, useState } from 'react';
+
 import * as Haptics from 'expo-haptics';
-import { useAudioRecording } from '../../../../hooks/useAudioRecording';
+
 import { MAX_RECORDING_DURATION, FREE_TIER_MAX_NOTES } from './VoiceNotesSection.constants';
+import { useAudioRecording } from '../../../../hooks/useAudioRecording';
 
 interface UseVoiceNotesSectionOptions {
   voiceNoteCount: number;

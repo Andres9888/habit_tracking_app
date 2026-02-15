@@ -4,10 +4,12 @@
  * Exposes isConvexReady so children know when auth is available.
  */
 
-import { ConvexProvider } from 'convex/react';
-import { useAuth } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+
+import { ConvexProvider } from 'convex/react';
+import { useAuth } from '@clerk/clerk-expo';
+
 import { convexClient } from '../lib/appConfig';
 
 const ConvexAuthContext = createContext({ isConvexReady: false });

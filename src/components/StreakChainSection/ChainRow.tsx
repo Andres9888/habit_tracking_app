@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { DayCircle } from './DayCircle';
+
 import { ConnectorLine } from './ConnectorLine';
+import { DayCircle } from './DayCircle';
 
 interface ChainRowProps {
   chainData: { completed: boolean; isToday: boolean }[];

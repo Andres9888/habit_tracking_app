@@ -5,6 +5,8 @@
 
 import React, { useCallback } from 'react';
 import { View, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,7 +14,7 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
+
 import { SPRING_BUTTON } from '../../../animations';
 import { shadows } from '../../../../theme/spacing';
 

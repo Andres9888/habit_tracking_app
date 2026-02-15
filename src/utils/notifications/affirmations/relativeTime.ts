@@ -1,7 +1,7 @@
-import { parseTimeString } from '../timeUtils';
 
 import type { AffirmationFrequency } from './types';
 import { getNextWeeklyOccurrence } from './weeklyUtils';
+import { parseTimeString } from '../timeUtils';
 
 /**
  * Get relative time string for the next affirmation delivery

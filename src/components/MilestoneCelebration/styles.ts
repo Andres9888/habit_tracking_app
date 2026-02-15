@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+
 import { milestoneColors } from '../../theme/milestone-colors';
 
 export const styles = StyleSheet.create({

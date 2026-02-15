@@ -1,8 +1,10 @@
 /**
  * RecordingErrorState - Error state UI for recording failures
  */
+
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { AlertCircle } from 'lucide-react-native';
 
 interface RecordingErrorStateProps {

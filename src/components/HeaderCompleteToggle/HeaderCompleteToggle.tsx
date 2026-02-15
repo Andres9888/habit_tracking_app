@@ -10,12 +10,14 @@
 
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
+
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Check, Circle } from 'lucide-react-native';
-import { MiniConfettiBurst } from './MiniConfettiBurst';
-import { useHeaderToggle } from './useHeaderToggle';
-import { styles } from './styles';
+
 import type { HeaderCompleteToggleProps } from './types';
+import { MiniConfettiBurst } from './MiniConfettiBurst';
+import { styles } from './styles';
+import { useHeaderToggle } from './useHeaderToggle';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

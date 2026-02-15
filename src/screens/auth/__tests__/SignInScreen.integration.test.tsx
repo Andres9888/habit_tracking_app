@@ -9,8 +9,9 @@
  */
 
 import React from 'react';
-import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { Alert, Keyboard } from 'react-native';
+
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { useOAuth } from '@clerk/clerk-expo';
 
 // Mock Keyboard

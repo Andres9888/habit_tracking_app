@@ -1,14 +1,17 @@
 /**
  * PasswordInput - Secure text input with visibility toggle
  */
-import { forwardRef, useState } from 'react';
+
 import { Text, TextInput, View } from 'react-native';
+import { forwardRef, useState } from 'react';
+
 import Animated from 'react-native-reanimated';
 import { Eye, EyeOff, Lock } from 'lucide-react-native';
+
+import type { PasswordInputProps } from './types';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { usePasswordInputAnimations } from './usePasswordInputAnimations';
-import type { PasswordInputProps } from './types';
 
 export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
   function PasswordInput(

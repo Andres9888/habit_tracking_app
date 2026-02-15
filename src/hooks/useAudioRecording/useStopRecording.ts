@@ -5,7 +5,9 @@
  */
 
 import { useCallback, RefObject } from 'react';
+
 import { Audio } from 'expo-av';
+
 import type { RecordingStatus } from './types';
 
 type SetStatus = React.Dispatch<React.SetStateAction<RecordingStatus>>;

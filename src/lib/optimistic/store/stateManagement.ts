@@ -2,7 +2,6 @@
  * Store state management (confirm, fail, clear, getters)
  */
 
-import type { Id } from '../../../../convex/_generated/dataModel';
 import type {
   OptimisticOperation,
   OptimisticStore,
@@ -10,6 +9,7 @@ import type {
   ArchiveOperationPayload,
   PauseOperationPayload,
 } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import { getToggleKey } from './helpers';
 
 export function createStateManagement(

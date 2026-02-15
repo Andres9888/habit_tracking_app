@@ -5,18 +5,18 @@
  * status tracking, persistence, and event emission.
  */
 
+import type { OfflineQueueManagerAPI } from './types';
+import type { QueueEvent } from '../queue';
 import {
   createOfflineQueueManager,
   getOfflineQueueManager,
   resetOfflineQueueManager,
 } from './index';
-import type { OfflineQueueManagerAPI } from './types';
 import {
   loadQueueState,
   saveQueueState,
   clearQueueState,
 } from '../persistence';
-import type { QueueEvent } from '../queue';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({

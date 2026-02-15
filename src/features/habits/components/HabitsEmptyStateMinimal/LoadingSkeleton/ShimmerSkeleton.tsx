@@ -4,9 +4,9 @@
  * Single skeleton element with shimmer animation.
  */
 
-import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useEffect } from 'react';
+
 import Animated, {
   Easing,
   interpolate,
@@ -15,13 +15,14 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 
-import { useThemeColors } from '../../../../../theme/ThemeContext';
 import {
   SKELETON_COLORS_LIGHT,
   SKELETON_COLORS_DARK,
   SHIMMER_DURATION,
 } from '../../../../../components/SkeletonLoader/SkeletonLoader';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 

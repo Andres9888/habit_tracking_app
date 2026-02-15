@@ -9,23 +9,23 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import type { TodaysFocusCardProps } from '../TodaysFocusCardTypes';
-
-import { styles } from './TodaysFocusCard.styles';
-import { ConfettiBurst } from './components/ConfettiBurst';
-import { FocusIcon } from './components/FocusIcon';
-import { FocusTextContent } from './components/FocusTextContent';
-import { ShareButton } from './components/ShareButton';
-import { DismissButton } from './components/DismissButton';
 import {
   useFocusState,
   useFocusAnimations,
   useCelebrationEffects,
 } from './hooks';
+import { ConfettiBurst } from './components/ConfettiBurst';
+import { DismissButton } from './components/DismissButton';
+import { FocusIcon } from './components/FocusIcon';
+import { FocusTextContent } from './components/FocusTextContent';
+import { ShareButton } from './components/ShareButton';
+import { styles } from './TodaysFocusCard.styles';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 
 export const TodaysFocusCard = React.memo(function TodaysFocusCard(
   props: TodaysFocusCardProps

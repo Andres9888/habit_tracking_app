@@ -10,8 +10,10 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
+
+import { render, fireEvent } from '@testing-library/react-native';
+
 import { ColorPickerSection } from '../ColorPickerSection';
 import { HABIT_COLORS, COLOR_NAMES, getColorName } from '../../constants';
 

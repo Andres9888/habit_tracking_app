@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { View } from 'react-native';
+
 import { Smile } from 'lucide-react-native';
 
 import { PulsingIcon, CompletionCheckmark } from '../../../../animations';

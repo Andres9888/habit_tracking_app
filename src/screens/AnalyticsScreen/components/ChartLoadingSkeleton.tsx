@@ -2,10 +2,12 @@
  * ChartLoadingSkeleton - Loading state for analytics charts
  * Uses the central SkeletonLoader with gradient shimmer.
  */
+
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { spacing } from '../../../theme/spacing';
+
 import { SkeletonLoader } from '../../../components/SkeletonLoader';
+import { spacing } from '../../../theme/spacing';
 
 export const ChartLoadingSkeleton: React.FC = () => {
   return (

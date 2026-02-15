@@ -6,14 +6,15 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useAppTheme } from '../../../theme';
-import { spacing } from '../../../theme/spacing';
+
+import type { TemplateCardContentProps } from './TemplateCardContent.types';
 import { ActionButtons } from './ActionButtons';
 import { CategoryBadge } from './CategoryBadge';
 import { MetadataPills } from './MetadataPills';
 import { ScienceBox } from './ScienceBox';
 import { TemplateIcon } from './TemplateIcon';
-import type { TemplateCardContentProps } from './TemplateCardContent.types';
+import { spacing } from '../../../theme/spacing';
+import { useAppTheme } from '../../../theme';
 
 export function TemplateCardContent({
   category,

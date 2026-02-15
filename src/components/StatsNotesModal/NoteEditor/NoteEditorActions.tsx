@@ -5,9 +5,9 @@
  */
 
 import { ActivityIndicator, Text, View } from 'react-native';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 import type { NoteEditorActionsProps } from './types';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 export function NoteEditorActions({
   isValid,

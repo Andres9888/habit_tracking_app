@@ -10,17 +10,18 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
-import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { shadows } from '../../theme/spacing';
+import type { HabitStrengthSectionProps } from './types';
 import { COLORS } from './constants';
-import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { StrengthChart } from './StrengthChart';
 import { StrengthHero } from './StrengthHero';
 import { StrengthStatsRow } from './StrengthStatsRow';
 import { TimeRangeToggle } from './TimeRangeToggle';
-import type { HabitStrengthSectionProps } from './types';
+import { shadows } from '../../theme/spacing';
+import { useHabitStrengthData } from './HabitStrengthSection.hooks';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   completedDates,

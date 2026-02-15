@@ -1,24 +1,23 @@
+
 import React from 'react';
-import { LogOut, Trash2, User } from 'lucide-react-native';
-import { SettingsSection } from '../SettingsSection';
+
+import { LogOut, User } from 'lucide-react-native';
+
 import { SettingsRow } from '../SettingsRow';
+import { SettingsSection } from '../SettingsSection';
 
 interface Props {
   email?: string;
   highContrast: boolean;
   isLoading: boolean;
-  isDeletingAccount?: boolean;
   onSignOut: () => void;
-  onDeleteAccount?: () => void;
 }
 
 export function AccountInfo({
   email,
   highContrast,
   isLoading,
-  isDeletingAccount = false,
   onSignOut,
-  onDeleteAccount,
 }: Props) {
   return (
     <SettingsSection highContrastMode={highContrast} title='Account'>
@@ -36,20 +35,10 @@ export function AccountInfo({
         icon={<LogOut color='#ef4444' size={16} />}
         iconBackgroundColor='#fecaca'
         label={isLoading ? 'Signing out...' : 'Sign Out'}
+        showBorder={false}
         type='navigation'
         onPress={onSignOut}
       />
-      {onDeleteAccount ? (
-        <SettingsRow
-          highContrastMode={highContrast}
-          icon={<Trash2 color='#dc2626' size={16} />}
-          iconBackgroundColor='#fecaca'
-          label={isDeletingAccount ? 'Deleting account...' : 'Delete Account'}
-          showBorder={false}
-          type='navigation'
-          onPress={onDeleteAccount}
-        />
-      ) : null}
     </SettingsSection>
   );
 }

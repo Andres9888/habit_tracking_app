@@ -4,8 +4,10 @@
 
 import React, { useCallback } from 'react';
 import { View, Text, Pressable, Platform } from 'react-native';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
 import * as Haptics from 'expo-haptics';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
 import { styles } from './styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);

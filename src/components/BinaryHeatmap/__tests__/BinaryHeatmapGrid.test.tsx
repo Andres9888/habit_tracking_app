@@ -6,10 +6,12 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
 import { ScrollView } from 'react-native';
-import { BinaryHeatmapGrid } from '../BinaryHeatmapGrid';
+
+import { render, fireEvent } from '@testing-library/react-native';
+
 import type { BinaryGridData, BinaryDay } from '../types';
+import { BinaryHeatmapGrid } from '../BinaryHeatmapGrid';
 import { GRID } from '../constants';
 
 // Mock the useReduceMotion hook

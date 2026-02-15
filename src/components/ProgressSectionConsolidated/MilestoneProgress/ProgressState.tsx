@@ -1,10 +1,13 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { styles } from './MilestoneProgress.styles';
-import type { Milestone } from '../MilestoneProgressTypes';
+
 import type { AnimatedStyle } from 'react-native-reanimated';
+import React from 'react';
 import type { ViewStyle } from 'react-native';
+import { View, Text } from 'react-native';
+
+import Animated from 'react-native-reanimated';
+
+import type { Milestone } from '../MilestoneProgressTypes';
+import { styles } from './MilestoneProgress.styles';
 
 interface ProgressStateProps {
   accessibilityLabel: string;

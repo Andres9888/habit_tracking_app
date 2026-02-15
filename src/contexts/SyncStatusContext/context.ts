@@ -3,6 +3,7 @@
  */
 
 import { createContext } from 'react';
+
 import type { SyncStatusContextValue } from './types';
 import { defaultContextValue } from './defaults';
 

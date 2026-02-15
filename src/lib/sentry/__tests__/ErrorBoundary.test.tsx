@@ -4,8 +4,10 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
 import { Text, View } from 'react-native';
+
+import { render, fireEvent } from '@testing-library/react-native';
+
 import { SentryErrorBoundary } from '../ErrorBoundary';
 
 // Mock @sentry/react-native

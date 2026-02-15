@@ -4,7 +4,6 @@
  * Comprehensive tests for time-based chip selection logic.
  */
 
-import { getTimeBasedChips, TIME_WINDOWS } from '../utils';
 import {
   MORNING_CHIPS,
   AFTERNOON_CHIPS,
@@ -12,6 +11,7 @@ import {
   NIGHT_CHIPS,
   STATIC_CHIPS,
 } from '../constants';
+import { getTimeBasedChips, TIME_WINDOWS } from '../utils';
 
 describe('getTimeBasedChips', () => {
   describe('Time window detection', () => {

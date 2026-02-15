@@ -9,11 +9,13 @@
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react-native';
+
 import { PaperProvider } from 'react-native-paper';
+import { render, screen } from '@testing-library/react-native';
 import { useSharedValue } from 'react-native-reanimated';
-import { extendedTheme } from '../../../../theme';
+
 import { HabitCardContent } from '../HabitCardContent';
+import { extendedTheme } from '../../../../theme';
 
 // Wrapper to provide theme and shared animation values
 function TestWrapper({

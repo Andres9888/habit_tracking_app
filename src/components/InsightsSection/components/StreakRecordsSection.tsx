@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { Trophy } from 'lucide-react-native';
+
 import type { StreakRecordsSectionProps } from '../InsightsSection.types';
 import { TOP_STREAK_MEDAL_COUNT } from '../InsightsSection.constants';
 

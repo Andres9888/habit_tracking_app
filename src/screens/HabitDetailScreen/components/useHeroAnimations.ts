@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useRef } from 'react';
+
 import {
   useAnimatedStyle,
   useSharedValue,

@@ -3,7 +3,7 @@
  */
 
 import { useEffect, useCallback, useRef } from 'react';
-import { Gesture } from 'react-native-gesture-handler';
+
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -12,6 +12,8 @@ import {
   withSequence,
   runOnJS,
 } from 'react-native-reanimated';
+import { Gesture } from 'react-native-gesture-handler';
+
 import { DISMISS_THRESHOLD } from './constants';
 
 interface UseCompletionToastAnimationsParams {

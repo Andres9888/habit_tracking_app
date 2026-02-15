@@ -2,10 +2,11 @@
  * Accessibility announcement hook for MilestoneCelebration
  */
 
-import { useEffect } from 'react';
 import { AccessibilityInfo } from 'react-native';
-import { STRENGTH_LEVEL_CONFIG } from '../HabitStrengthIndicator';
+import { useEffect } from 'react';
+
 import type { StrengthLevel } from '../HabitStrengthIndicator';
+import { STRENGTH_LEVEL_CONFIG } from '../HabitStrengthIndicator';
 
 interface UseAccessibilityAnnouncementProps {
   visible: boolean;

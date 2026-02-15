@@ -3,10 +3,12 @@
  * Logic for managing paused habits
  */
 
-import { useMutation, useQuery } from 'convex/react';
 import { Platform } from 'react-native';
-import { api } from '../../../convex/_generated/api';
+
+import { useMutation, useQuery } from 'convex/react';
+
 import type { Id } from '../../../convex/_generated/dataModel';
+import { api } from '../../../convex/_generated/api';
 
 export function usePausedHabitsModalLogic() {
   const pausedHabits = useQuery(api.habits.listPaused) ?? [];

@@ -10,15 +10,16 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { Pressable } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 
-import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import type { ActionableTipCardProps } from '../types';
+import type { QuickAction } from '../TipQuickActionsSheet/types';
+import { TipCardContent } from './TipCardContent';
 import { TipQuickActionsSheet } from '../TipQuickActionsSheet';
 import { determineTipTypeFromText } from '../TipQuickActionsSheet/determineTipTypeFromText';
-import type { QuickAction } from '../TipQuickActionsSheet/types';
+import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { useTipAnimations } from './useTipAnimations';
-import { TipCardContent } from './TipCardContent';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

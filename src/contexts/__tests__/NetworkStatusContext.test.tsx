@@ -11,10 +11,9 @@
  */
 
 import React from 'react';
-import { renderHook, act, waitFor } from '@testing-library/react-native';
 
-// Import the globally mocked NetInfo from jest.setup.js
 import NetInfo from '@react-native-community/netinfo';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
 
 import {
   NetworkStatusProvider,

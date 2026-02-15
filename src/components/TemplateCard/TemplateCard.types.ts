@@ -4,8 +4,8 @@
  * Type definitions for the TemplateCard component
  */
 
-import type { GestureResponderEvent, ViewStyle } from 'react-native';
 import type { AnimatedStyle } from 'react-native-reanimated';
+import type { GestureResponderEvent, ViewStyle } from 'react-native';
 
 export interface TemplateCardProps {
   /** Animation index for staggered entrance */

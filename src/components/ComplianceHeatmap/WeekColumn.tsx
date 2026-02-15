@@ -4,9 +4,10 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import type { HeatmapData } from './ComplianceHeatmap.types';
-import { styles } from './ComplianceHeatmap.styles';
 import { HeatmapCell } from './HeatmapCell';
+import { styles } from './ComplianceHeatmap.styles';
 
 interface WeekColumnProps {
   week: HeatmapData[];

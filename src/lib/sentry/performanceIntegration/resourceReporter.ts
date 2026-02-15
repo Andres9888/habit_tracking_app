@@ -3,8 +3,8 @@
  */
 
 import type { PerformanceIssue } from '../../../contexts/PerformanceContext/types';
-import { getSentryReporter } from '../reporter/index';
 import { DEFAULT_THRESHOLDS } from '../../performance/types';
+import { getSentryReporter } from '../reporter/index';
 
 /** Report memory issues to Sentry */
 export function reportMemoryIssue(

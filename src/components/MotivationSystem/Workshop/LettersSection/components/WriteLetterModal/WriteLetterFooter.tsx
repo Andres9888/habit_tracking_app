@@ -5,9 +5,11 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { ChevronRight, Lock } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import type { WriteLetterStep } from './WriteLetterModal.types';
 
 interface WriteLetterFooterProps {

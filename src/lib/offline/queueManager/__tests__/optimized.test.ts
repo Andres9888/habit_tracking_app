@@ -8,14 +8,14 @@
  */
 
 import type { Id } from '../../../../../convex/_generated/dataModel';
-import { createOfflineQueueManager, resetOfflineQueueManager } from '../index';
-import type { OfflineQueueManagerAPI } from '../types';
 import type { OfflineOperation } from '../../queue';
+import type { OfflineQueueManagerAPI } from '../types';
 import {
   buildOperationIndex,
   findOperationIndexOptimized,
   hasDuplicateOptimized,
 } from '../optimized';
+import { createOfflineQueueManager, resetOfflineQueueManager } from '../index';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({

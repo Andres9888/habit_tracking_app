@@ -4,12 +4,14 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+
 import { SPRING_GENTLE } from './FailureViz.constants';
 
 export function useFailureVizAnimation(reduceMotion: boolean) {

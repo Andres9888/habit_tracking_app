@@ -6,10 +6,12 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { DayHabitsBottomSheet } from './DayHabitsBottomSheet';
+
 import type { Habit, HabitStatus } from '../../features/habits/types';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { DayHabitsBottomSheet } from './DayHabitsBottomSheet';
 
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => ({

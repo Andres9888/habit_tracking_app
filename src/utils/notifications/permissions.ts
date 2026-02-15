@@ -5,8 +5,9 @@
  * Manages platform-specific permission flows (iOS/Android).
  */
 
-import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
+
+import * as Notifications from 'expo-notifications';
 
 import { configureAndroidChannel } from './channels';
 

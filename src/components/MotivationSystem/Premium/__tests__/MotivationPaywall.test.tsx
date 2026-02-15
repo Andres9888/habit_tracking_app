@@ -3,8 +3,10 @@
  */
 
 import React from 'react';
-import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { Alert } from 'react-native';
+
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
+
 import { PremiumPaywall as MotivationPaywall } from '../../../PremiumPaywall';
 import { PremiumPaywall as PremiumBenefitsModal } from '../../../PremiumPaywall';
 

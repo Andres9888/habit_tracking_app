@@ -2,6 +2,7 @@
  * Animation sequence functions for MilestoneCelebration
  */
 
+import * as Haptics from 'expo-haptics';
 import {
   withSpring,
   withSequence,
@@ -10,9 +11,9 @@ import {
   runOnJS,
   Easing,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { ANIMATION_TIMING } from './constants';
+
 import type { AnimationValues } from './types';
+import { ANIMATION_TIMING } from './constants';
 
 const {
   BADGE_BOUNCE_DAMPING,

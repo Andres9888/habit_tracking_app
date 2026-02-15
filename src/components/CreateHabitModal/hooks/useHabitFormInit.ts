@@ -3,12 +3,13 @@
  */
 
 import { useEffect } from 'react';
-import { DEFAULT_COLOR } from '../constants';
+
 import type { HabitDoc } from '../types';
-import { parseReminderTime } from '../utils';
+import type { ReminderOption } from '../components/ReminderSelector';
+import { DEFAULT_COLOR } from '../constants';
 import { getPhaseFromPreferredTime, type HubermanPhase } from '../../../constants/hubermanPhases';
 import { getReminderOptionFromTime } from './reminderUtils';
-import type { ReminderOption } from '../components/ReminderSelector';
+import { parseReminderTime } from '../utils';
 
 interface FormSetters {
   setHabitName: (name: string) => void;

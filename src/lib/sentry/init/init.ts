@@ -4,8 +4,9 @@
  */
 
 import * as Sentry from '@sentry/react-native';
-import { buildSentryConfig } from '../config';
+
 import type { SentryConfig } from '../types';
+import { buildSentryConfig } from '../config';
 import { createBeforeSend, beforeBreadcrumb } from './sentryCallbacks';
 
 let isInitialized = false;

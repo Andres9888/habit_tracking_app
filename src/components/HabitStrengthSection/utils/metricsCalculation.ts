@@ -5,10 +5,10 @@
  */
 
 import type { StrengthSnapshot } from '../../HabitStrengthHistory/types';
-import { getStrengthLabel } from '../../HabitStrengthHistory/strengthUtils';
 import type { TimeRange, ExtendedStrengthMetrics } from '../types';
-import { filterHistoryByTimeRange } from './historyFilters';
 import { calculateWeekDelta, calculateMonthDelta } from './deltaCalculations';
+import { filterHistoryByTimeRange } from './historyFilters';
+import { getStrengthLabel } from '../../HabitStrengthHistory/strengthUtils';
 
 /**
  * Calculate extended metrics for the HabitStrengthSection.

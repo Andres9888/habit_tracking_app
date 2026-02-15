@@ -7,6 +7,7 @@
 
 import { memo } from 'react';
 import { Text, View } from 'react-native';
+
 import { PREMIUM_BENEFITS } from './constants';
 
 function PremiumBenefitsRowComponent() {

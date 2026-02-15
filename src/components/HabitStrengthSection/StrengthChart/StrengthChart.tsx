@@ -2,32 +2,32 @@
  * StrengthChart - Full-width timeline chart with smooth bezier curve,
  * gradient fill, grid lines, X-axis labels, and a pulsing dot.
  */
+
 import React, { useMemo, useState } from 'react';
 import { LayoutChangeEvent, View } from 'react-native';
 
 import Svg from 'react-native-svg';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import type { StrengthChartProps } from '../types';
 import {
   CHART_HEIGHT,
   CHART_PADDING_BOTTOM,
   CHART_PADDING_X,
   STRENGTH_COLORS,
 } from '../constants';
-import type { StrengthChartProps } from '../types';
-
-import { ChartCurve } from './ChartCurve';
-import { ChartGrid } from './ChartGrid';
-import { EmptyState } from './EmptyState';
-import { PulsingDot } from './PulsingDot';
 import {
   getStrengthLabel,
   getXAxisLabelsFromData,
 } from './StrengthChart.utils';
+import { ChartCurve } from './ChartCurve';
+import { ChartGrid } from './ChartGrid';
+import { EmptyState } from './EmptyState';
+import { PulsingDot } from './PulsingDot';
+import { XAxisLabels } from './XAxisLabels';
 import { useChartData } from './useChartData';
 import { useChartGridLines } from './useChartGridLines';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useStrengthChartAnimations } from './useStrengthChartAnimations';
-import { XAxisLabels } from './XAxisLabels';
 
 export const StrengthChart = React.memo(function StrengthChart({
   data,

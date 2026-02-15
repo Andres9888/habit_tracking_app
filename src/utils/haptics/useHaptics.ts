@@ -7,11 +7,11 @@
  * Created by Opus.
  */
 
-import { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
+import { useCallback, useMemo } from 'react';
 
-import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { HapticPatterns, type HapticPatternName } from './patterns';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
 

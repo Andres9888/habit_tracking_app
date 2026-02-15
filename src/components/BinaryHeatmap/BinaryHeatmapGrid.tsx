@@ -10,11 +10,11 @@ import React, { memo, useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 
 import type { BinaryHeatmapGridProps } from './types';
+import { CELL_SIZE, CELL_GAP, DAY_LABELS, GRID } from './constants';
 import { GridRow } from './GridRow';
 import { MonthLabelsRow } from './MonthLabelsRow';
-import { transformWeeksToRows } from './cellHelpers';
-import { CELL_SIZE, CELL_GAP, DAY_LABELS, GRID } from './constants';
 import { styles } from './BinaryHeatmapGrid.styles';
+import { transformWeeksToRows } from './cellHelpers';
 
 const DAY_FULL_NAMES = [
   'Sunday',

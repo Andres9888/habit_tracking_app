@@ -1,5 +1,6 @@
+
 import { useEffect } from 'react';
-import { Gesture } from 'react-native-gesture-handler';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -8,8 +9,8 @@ import {
   runOnJS,
   Easing,
 } from 'react-native-reanimated';
+import { Gesture } from 'react-native-gesture-handler';
 
-import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import type { HabitSortMode } from '../../types';
 import {
   BACKDROP_FADE_IN_DURATION_MS,
@@ -20,6 +21,7 @@ import {
   SHEET_SPRING_CONFIG,
   VELOCITY_THRESHOLD,
 } from './constants';
+import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
 interface UseSortBottomSheetOptions {
   visible: boolean;

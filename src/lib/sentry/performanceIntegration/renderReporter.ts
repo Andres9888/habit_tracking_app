@@ -2,10 +2,10 @@
  * Render Issue Reporter
  */
 
-import type { RenderTiming } from '../../performance/types';
 import type { PerformanceIssue } from '../../../contexts/PerformanceContext/types';
-import { getSentryReporter } from '../reporter/index';
+import type { RenderTiming } from '../../performance/types';
 import { DEFAULT_THRESHOLDS } from '../../performance/types';
+import { getSentryReporter } from '../reporter/index';
 
 /** Report slow component renders to Sentry */
 export function reportSlowRenders(

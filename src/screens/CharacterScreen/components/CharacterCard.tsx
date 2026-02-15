@@ -1,30 +1,28 @@
-/* eslint-disable max-lines */
+
 import { View, Text } from 'react-native';
-import { Trophy } from 'lucide-react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { AVATAR_GRADIENT, XP_GRADIENT, TROPHY_GRADIENT } from '../constants';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Trophy } from 'lucide-react-native';
+
 import type { CharacterData } from '../types';
+import { AVATAR_GRADIENT, XP_GRADIENT, TROPHY_GRADIENT } from '../constants';
 
 interface CharacterCardProps {
   data: CharacterData;
 }
 
 export function CharacterCard({ data }: CharacterCardProps) {
-  const xpToNextLevel = data.xpToNextLevel || 1;
+  const xpToNextLevel = data.xpToNextLevel || 1; // Guard against 0
   const xpProgress = (data.xp / xpToNextLevel) * 100;
   const xpRemaining = xpToNextLevel - data.xp;
-  const { colors } = useThemeColors();
 
   return (
     <Animated.View
-      className='mb-6 overflow-hidden rounded-3xl border'
+      className='mb-6 overflow-hidden rounded-3xl border border-stone-100 bg-white'
       entering={FadeInDown.delay(60).springify().damping(18)}
       style={{
-        backgroundColor: colors.card,
-        borderColor: colors.cardBorder,
-        shadowColor: colors.text.primary,
+        shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 16,
@@ -50,12 +48,12 @@ export function CharacterCard({ data }: CharacterCardProps) {
             </View>
             <View className='flex-col'>
               <View className='flex-row items-center gap-2'>
-                <Text className='text-base font-normal leading-6 tracking-[-0.3125px]' style={{ color: colors.text.primary }}>
+                <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
                   Level {data.level}
                 </Text>
                 <Text className='text-lg'>✨</Text>
               </View>
-              <Text className='text-sm font-normal leading-5 tracking-[-0.15px]' style={{ color: colors.text.secondary }}>
+              <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#6a7282]'>
                 {data.title}
               </Text>
             </View>
@@ -83,14 +81,14 @@ export function CharacterCard({ data }: CharacterCardProps) {
 
         <View className='flex-col gap-2'>
           <View className='flex-row items-center justify-between'>
-            <Text className='text-sm font-normal leading-5 tracking-[-0.15px]' style={{ color: colors.text.secondary }}>
+            <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#4a5565]'>
               Experience
             </Text>
-            <Text className='text-sm font-normal leading-5 tracking-[-0.15px]' style={{ color: colors.text.primary }}>
+            <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#101828]'>
               {data.xp}/{data.xpToNextLevel} XP
             </Text>
           </View>
-          <View className='h-3 w-full overflow-hidden rounded-full' style={{ backgroundColor: colors.gray[200] }}>
+          <View className='h-3 w-full overflow-hidden rounded-full bg-stone-100'>
             <View style={{ width: `${xpProgress}%` }}>
               <LinearGradient
                 colors={XP_GRADIENT}
@@ -100,7 +98,7 @@ export function CharacterCard({ data }: CharacterCardProps) {
               />
             </View>
           </View>
-          <Text className='text-center text-xs font-normal leading-4' style={{ color: colors.text.tertiary }}>
+          <Text className='text-center text-xs font-normal leading-4 text-[#99a1af]'>
             {xpRemaining} XP to Level {data.level + 1}
           </Text>
         </View>

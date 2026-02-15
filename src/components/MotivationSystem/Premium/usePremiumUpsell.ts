@@ -35,6 +35,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+
 import { MotivationPremiumFeature } from './PremiumFeatureLock';
 
 interface PremiumUpsellState {

@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { Sparkles, X } from 'lucide-react-native';
 
 interface EditorHeaderProps {

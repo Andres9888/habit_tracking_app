@@ -5,14 +5,16 @@
 
 import React, { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import { colors } from '../../theme/colors';
+
 import type { WeeklyInsightsCardProps } from './WeeklyInsightsCard.types';
-import { styles } from './WeeklyInsightsCard.styles';
-import { SummarySection } from './SummarySection';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { HabitListSection } from './HabitListSection';
 import { SuggestedActions } from './SuggestedActions';
+import { SummarySection } from './SummarySection';
+import { colors } from '../../theme/colors';
+import { styles } from './WeeklyInsightsCard.styles';
 
 export default function WeeklyInsightsCard({
   insights,

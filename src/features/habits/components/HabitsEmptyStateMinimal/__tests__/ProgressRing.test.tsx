@@ -9,10 +9,11 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
 
-import { PROGRESS_RING, TAP_HINT_PULSE } from '../animations';
 import { COLORS } from '../constants';
+import { PROGRESS_RING, TAP_HINT_PULSE } from '../animations';
 import { ProgressRing } from '../ProgressRing';
 
 // Mock react-native-reanimated

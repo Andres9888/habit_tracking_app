@@ -4,8 +4,9 @@
 
 import React from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
-import { MedalCardsRow } from './MedalCardsRow';
+
 import type { StreakRecord } from '../types';
+import { MedalCardsRow } from './MedalCardsRow';
 
 interface MeasurementContainerProps {
   currentStreak: number;

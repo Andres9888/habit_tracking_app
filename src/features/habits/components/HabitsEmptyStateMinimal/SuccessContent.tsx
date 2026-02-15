@@ -5,6 +5,7 @@
  */
 
 import { Pressable, Text, ViewStyle } from 'react-native';
+
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';

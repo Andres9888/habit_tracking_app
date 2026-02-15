@@ -6,8 +6,10 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
+
+import { render } from '@testing-library/react-native';
+
 import { HeroStrengthSection } from '../HeroStrengthSection';
 
 // Mock AccessibilityInfo

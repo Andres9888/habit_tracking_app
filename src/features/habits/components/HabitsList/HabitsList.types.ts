@@ -7,9 +7,9 @@
  * automatically.
  */
 
-import type { Id } from '../../../../../convex/_generated/dataModel';
 import type { HabitsListState } from '../../hooks/useHabitsApp';
 import type { HabitsModalsState } from '../../hooks/types';
+import type { Id } from '../../../../../convex/_generated/dataModel';
 
 export interface HabitsListProps {
   list: HabitsListState;

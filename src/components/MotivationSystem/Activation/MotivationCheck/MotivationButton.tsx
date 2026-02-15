@@ -6,6 +6,8 @@
 
 import React, { useCallback, useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -14,10 +16,9 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 
-import { SPRING_BUTTON, SPRING_BOUNCY, ACCENT_CLASSES } from './constants';
 import type { MotivationButtonProps } from './types';
+import { SPRING_BUTTON, SPRING_BOUNCY, ACCENT_CLASSES } from './constants';
 
 export function MotivationButton({
   emoji,

@@ -1,8 +1,9 @@
 /**
  * Shake animation hook for validation errors
  */
-import { useRef, useCallback } from 'react';
+
 import { Animated } from 'react-native';
+import { useRef, useCallback } from 'react';
 
 export const useShakeAnimation = (
   triggerWarning: () => void,

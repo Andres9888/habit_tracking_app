@@ -2,8 +2,9 @@
  * Button animated styles for TemplateScienceModal
  */
 
-import { useAnimatedStyle } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
+
+import { useAnimatedStyle } from 'react-native-reanimated';
 
 interface ButtonScaleValues {
   backButtonScale: SharedValue<number>;

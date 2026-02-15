@@ -5,17 +5,19 @@
 
 import React, { useCallback, useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Lock, Crown, ChevronRight, Sparkles } from 'lucide-react-native';
+
 import {
   useSharedValue,
   withRepeat,
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Lock, Crown, ChevronRight, Sparkles } from 'lucide-react-native';
+
 import type { MotivationPremiumFeature } from './PremiumFeatureLock.types';
 import { FEATURE_META } from './featureMetadata';
+import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
 interface OverlayLockProps {
   feature: MotivationPremiumFeature;

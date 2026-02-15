@@ -4,12 +4,13 @@
  */
 
 import React, { useEffect, useCallback, useMemo, useRef } from 'react';
-import { useOnlineCallback } from '../../contexts/NetworkStatusContext';
-import { useQueueProcessor } from './useQueueProcessor';
+
 import {
   DEFAULT_MIN_PROCESSING_INTERVAL_MS,
   type OfflineQueueProcessorProps,
 } from './types';
+import { useOnlineCallback } from '../../contexts/NetworkStatusContext';
+import { useQueueProcessor } from './useQueueProcessor';
 
 export function OfflineQueueProcessor({
   autoProcess = true,

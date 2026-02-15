@@ -1,6 +1,7 @@
 /**
  * useChartGridLines Hook - Computes Y positions for horizontal grid lines.
  */
+
 import { useMemo } from 'react';
 
 import {

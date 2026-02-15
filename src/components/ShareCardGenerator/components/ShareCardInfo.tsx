@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { shareCardContentStyles as styles } from '../styles';
 
 interface ShareCardInfoProps {

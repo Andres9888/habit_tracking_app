@@ -8,8 +8,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 
 import type { FocusState, FocusStateConfig } from '../../TodaysFocusCardTypes';
-import { styles } from '../TodaysFocusCard.styles';
 import { AnimatedGoalNumber } from './AnimatedGoalNumber';
+import { styles } from '../TodaysFocusCard.styles';
 
 export interface FocusTextContentProps {
   focusState: FocusState;

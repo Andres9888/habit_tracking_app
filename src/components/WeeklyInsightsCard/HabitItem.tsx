@@ -3,13 +3,15 @@
  * Displays a single habit with change indicator
  */
 
-import type { ComponentProps } from 'react';
 import React from 'react';
+import type { ComponentProps } from 'react';
 import { View, Text } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
+
+import type { HabitChange, HabitChangeType } from './WeeklyInsightsCard.types';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
-import type { HabitChange, HabitChangeType } from './WeeklyInsightsCard.types';
 import { habitItemStyles as styles } from './HabitItem.styles';
 
 /** Valid Ionicons icon name */

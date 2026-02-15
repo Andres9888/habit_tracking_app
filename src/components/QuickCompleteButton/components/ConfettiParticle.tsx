@@ -4,6 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -13,6 +14,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+
 import { styles } from '../QuickCompleteButton.styles';
 
 const SPRING_CONFIG = { damping: 12, mass: 1, stiffness: 200 };

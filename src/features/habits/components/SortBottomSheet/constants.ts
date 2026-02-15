@@ -1,3 +1,6 @@
+
+import { Dimensions } from 'react-native';
+
 import {
   ArrowDownAZ,
   ArrowUpAZ,
@@ -6,7 +9,6 @@ import {
   Sun,
   Zap,
 } from 'lucide-react-native';
-import { Dimensions } from 'react-native';
 
 
 import type { SortOptionConfig } from './types';

@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { formatDaysOfWeek } from '../../../../utils/notifications';
+
 import { DaySelector } from './DaySelector';
+import { formatDaysOfWeek } from '../../../../utils/notifications';
 
 interface DaySelectorSectionProps {
   daysOfWeek: number[];

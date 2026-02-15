@@ -2,8 +2,10 @@
  * InitializeHabitStrengthSkeleton - Skeleton for habit strength initialization loading
  * Replaces the ActivityIndicator spinner when habits are loading
  */
+
 import React from 'react';
 import { View } from 'react-native';
+
 import { SkeletonLoader } from './SkeletonLoader';
 
 export function InitializeHabitStrengthSkeleton() {

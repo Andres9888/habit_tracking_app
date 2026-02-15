@@ -5,11 +5,13 @@
 
 import React from 'react';
 import { View, Text, Modal, Pressable, ScrollView } from 'react-native';
+
 import { X, TrendingUp, TrendingDown, Target } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useThemeColors } from '../../../theme/ThemeContext';
+
 import { InfoCard } from './InfoCard';
 import { TipsSection } from './TipsSection';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
   visible: boolean;

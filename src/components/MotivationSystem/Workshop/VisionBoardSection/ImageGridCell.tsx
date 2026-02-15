@@ -4,9 +4,10 @@
  */
 
 import React from 'react';
+
+import type { VisionBoardImage } from './types';
 import { EmptyImageCell } from './EmptyImageCell';
 import { FilledImageCell } from './FilledImageCell';
-import type { VisionBoardImage } from './types';
 
 interface ImageGridCellProps {
   image?: VisionBoardImage;

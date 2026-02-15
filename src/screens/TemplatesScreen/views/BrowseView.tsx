@@ -3,13 +3,15 @@
  */
 
 import { View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
+
+import type { BrowseViewProps } from './BrowseView.types';
 import Toast from '../../../components/Toast';
-import { styles } from '../../templates/templatesScreenStyles';
-import { BrowseHeader, SearchBar, TabBar, TemplateModals } from '../components';
 import { BrowseAllTab } from './BrowseAllTab';
 import { BrowseCategoriesTab } from './BrowseCategoriesTab';
-import type { BrowseViewProps } from './BrowseView.types';
+import { BrowseHeader, SearchBar, TabBar, TemplateModals } from '../components';
+import { styles } from '../../templates/templatesScreenStyles';
 
 export function BrowseView(p: BrowseViewProps) {
   const { animations: a, handlers: h, tabIndicator: ti, categories: cats } = p;

@@ -2,11 +2,13 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
+
 import type { StreakRecordsAccordionProps } from '../types';
 import { AccordionHeader } from './AccordionHeader';
-import { MedalCardsRow } from './MedalCardsRow';
 import { MeasurementContainer } from './MeasurementContainer';
+import { MedalCardsRow } from './MedalCardsRow';
 import { StreakEmptyState } from './StreakEmptyState';
 import { useStreakAccordionState } from './useStreakAccordionState';
 

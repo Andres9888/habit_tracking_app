@@ -10,6 +10,7 @@
  */
 
 import { useEffect, useRef } from 'react';
+
 import {
   Easing as ReanimatedEasing,
   useAnimatedStyle,
@@ -19,6 +20,7 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import { useQuery } from 'convex/react';
+
 import { api } from '../../../convex/_generated/api';
 import { useThemeColors } from '../../theme/ThemeContext';
 

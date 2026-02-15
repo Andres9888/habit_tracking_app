@@ -7,10 +7,10 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import { SkeletonLoader } from '../../SkeletonLoader/SkeletonLoader';
 import { ComparisonCardSkeleton } from './ComparisonCardSkeleton';
 import { GradientShimmerSkeleton } from './GradientShimmerSkeleton';
 import { InsightCardSkeleton } from './InsightCardSkeleton';
+import { SkeletonLoader } from '../../SkeletonLoader/SkeletonLoader';
 
 export interface HabitStrengthHistorySkeletonProps {
   reduceMotion?: boolean;

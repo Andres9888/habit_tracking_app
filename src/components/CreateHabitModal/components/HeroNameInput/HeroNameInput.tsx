@@ -4,12 +4,13 @@
  * Hero-styled text input for habit name with validation feedback.
  */
 
-import { useEffect, useRef } from 'react';
 import { Animated, Text, TextInput, View } from 'react-native';
-import { colors } from '@/theme/colors';
-import useHapticFeedback from '../../../../hooks/useHapticFeedback';
+import { useEffect, useRef } from 'react';
+
 import type { HeroNameInputProps } from './types';
+import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { MAX_LENGTH } from './types';
+import { colors } from '@/theme/colors';
 import { useHeroNameInputAnimations } from './useHeroNameInputAnimations';
 
 export const HeroNameInput = ({

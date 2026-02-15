@@ -6,8 +6,9 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
+
 import Animated, { type SharedValue } from 'react-native-reanimated';
+import Svg, { Circle } from 'react-native-svg';
 
 import {
   RING_SIZE,

@@ -3,12 +3,14 @@
  * Displays emojis in 5-4 triangle layout with animations
  */
 
+import { View } from 'react-native';
+
 import Animated, {
   FadeIn,
   FadeOut,
   LinearTransition,
 } from 'react-native-reanimated';
-import { View } from 'react-native';
+
 import { EmojiChip } from './EmojiChip';
 
 interface EmojiGridProps {

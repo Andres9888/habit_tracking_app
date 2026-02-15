@@ -15,8 +15,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { getOfflineQueueManager } from '../../lib/offline';
+
 import type { OfflineContextValue, OfflineProviderProps } from './types';
+import { getOfflineQueueManager } from '../../lib/offline';
 
 export const OfflineContext = createContext<OfflineContextValue | null>(null);
 

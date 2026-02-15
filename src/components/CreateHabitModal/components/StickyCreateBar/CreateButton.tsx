@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { Check } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import STRINGS from '../../../../constants/strings';
 import { colors } from '../../../../theme/colors';
 

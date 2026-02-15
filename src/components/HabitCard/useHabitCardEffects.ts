@@ -2,8 +2,9 @@
  * useHabitCardEffects - Side effect synchronization for HabitCard
  */
 
-import { useEffect } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
+import { useEffect } from 'react';
+
 import { withSpring } from 'react-native-reanimated';
 
 interface UseHabitCardEffectsOptions {

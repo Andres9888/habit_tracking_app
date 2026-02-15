@@ -10,18 +10,20 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { Modal } from '../Modal';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+
 import type { MilestoneCelebrationProps } from './types';
-import { styles } from './styles';
 import { CONFETTI_COLORS, SCREEN_WIDTH } from './constants';
-import { useMilestoneAnimations } from './useMilestoneAnimations';
-import { useMilestoneAnimatedStyles } from './useMilestoneAnimatedStyles';
-import { useConfetti } from './useConfetti';
-import { useAccessibilityAnnouncement } from './useAccessibilityAnnouncement';
-import { MilestoneContent } from './MilestoneContent';
 import { MilestoneActions } from './MilestoneActions';
+import { MilestoneContent } from './MilestoneContent';
+import { Modal } from '../Modal';
+import { styles } from './styles';
+import { useAccessibilityAnnouncement } from './useAccessibilityAnnouncement';
+import { useConfetti } from './useConfetti';
+import { useMilestoneAnimatedStyles } from './useMilestoneAnimatedStyles';
+import { useMilestoneAnimations } from './useMilestoneAnimations';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export function MilestoneCelebration({
   visible,

@@ -5,15 +5,17 @@
 
 import React from 'react';
 import { View, type ViewStyle } from 'react-native';
+
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import {
   GestureDetector,
   type GestureType,
 } from 'react-native-gesture-handler';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { styles } from './Modal.styles';
 import { useAppTheme } from '../../theme';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { styles } from './Modal.styles';
 
 interface BottomSheetContentProps {
   children: React.ReactNode;

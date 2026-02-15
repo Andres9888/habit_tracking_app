@@ -8,11 +8,13 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
-import { StatsGrid } from '../StatsGrid';
+
+import type { StatsGridProps } from '../StatsGridTypes';
 import { CompactStrengthRing } from '../CompactStrengthRing';
 import { StatCard } from '../StatCard';
-import type { StatsGridProps } from '../StatsGridTypes';
+import { StatsGrid } from '../StatsGrid';
 
 // Mock useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({

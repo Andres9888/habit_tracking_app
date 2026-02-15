@@ -4,14 +4,16 @@
  */
 
 import React, { useEffect } from 'react';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+
 import { SPRING_GENTLE, STAGGER_DELAY } from '../../../animations';
+import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 
 interface AnimatedSectionProps {
   children: React.ReactNode;

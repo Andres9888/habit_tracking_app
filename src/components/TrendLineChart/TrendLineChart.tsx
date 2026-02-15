@@ -5,19 +5,21 @@
 
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { CartesianChart, Line, Scatter } from 'victory-native';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   interpolate,
 } from 'react-native-reanimated';
+import { CartesianChart, Line, Scatter } from 'victory-native';
+
+import type { TrendLineChartProps, TrendData } from './types';
+import { ChartLegend } from './ChartLegend';
+import { ChartTooltip } from './ChartTooltip';
+import { EmptyState } from './EmptyState';
 import { colors } from '../../theme/colors';
 import { styles, chartWidth, chartHeight } from './styles';
-import { EmptyState } from './EmptyState';
-import { ChartTooltip } from './ChartTooltip';
-import { ChartLegend } from './ChartLegend';
-import type { TrendLineChartProps, TrendData } from './types';
 
 export default function TrendLineChart({ data }: TrendLineChartProps) {
   const [selectedPoint, setSelectedPoint] = useState<TrendData | null>(null);

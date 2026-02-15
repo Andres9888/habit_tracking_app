@@ -3,11 +3,13 @@
  * State management for the WriteLetterModal component
  */
 
-import { useState, useCallback, useEffect } from 'react';
 import { Keyboard } from 'react-native';
+import { useState, useCallback, useEffect } from 'react';
+
 import * as Haptics from 'expo-haptics';
-import { MIN_CONTENT_LENGTH, ONE_DAY_MS } from '../../LettersSection.constants';
+
 import type { WriteLetterStep } from './WriteLetterModal.types';
+import { MIN_CONTENT_LENGTH, ONE_DAY_MS } from '../../LettersSection.constants';
 
 interface UseWriteLetterModalParams {
   visible: boolean;

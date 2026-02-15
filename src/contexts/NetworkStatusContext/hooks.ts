@@ -3,8 +3,9 @@
  */
 
 import { useContext, useEffect } from 'react';
-import { NetworkStatusContext } from './NetworkStatusProvider';
+
 import type { NetworkStatusContextValue } from './types';
+import { NetworkStatusContext } from './NetworkStatusProvider';
 
 /**
  * useNetworkStatus Hook

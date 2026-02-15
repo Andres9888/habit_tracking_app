@@ -1,5 +1,6 @@
-import type { ComponentType } from 'react';
+
 import type { SvgProps } from 'react-native-svg';
+import type { ComponentType } from 'react';
 
 export interface DailyMomentumMeterProps {
   /** Number of habits completed today */

@@ -1,10 +1,12 @@
+
 import React from 'react';
 import { View } from 'react-native';
+
+import type { ContentFlags } from '../RescueModeContent.helpers';
 import type { Day1VoiceNoteData } from '../../RescueMode.types';
 import { AnimatedContent } from '../AnimatedContent';
 import { FeaturedVoiceNote } from '../FeaturedVoiceNote';
 import { getAnimationIndex } from '../useAnimationIndex';
-import type { ContentFlags } from '../RescueModeContent.helpers';
 
 type VoiceNoteSectionProps = {
   voiceNote: Day1VoiceNoteData;

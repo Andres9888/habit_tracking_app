@@ -1,4 +1,6 @@
+
 import { useEffect } from 'react';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -7,6 +9,7 @@ import {
   withSpring,
   Easing,
 } from 'react-native-reanimated';
+
 import { RING_ANIMATION_DURATION } from './constants';
 
 export function useProgressAnimations(

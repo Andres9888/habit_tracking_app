@@ -4,10 +4,11 @@
 
 import React from 'react';
 import { View, ScrollView } from 'react-native';
+
 import type { HeatmapData, MonthLabel } from './ComplianceHeatmap.types';
-import { styles } from './ComplianceHeatmap.styles';
 import { MonthLabels } from './MonthLabels';
 import { WeekColumn } from './WeekColumn';
+import { styles } from './ComplianceHeatmap.styles';
 
 interface HeatmapGridProps {
   weeks: HeatmapData[][];

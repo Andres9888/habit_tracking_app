@@ -2,12 +2,12 @@
  * Utility functions for the offline queue system
  */
 
-import { QUEUE_ITEM_PREFIX, DEFAULT_BASE_RETRY_DELAY_MS } from './constants';
 import type {
   QueuedSubmission,
   QueueStats,
   OfflineSubmissionType,
 } from './types';
+import { QUEUE_ITEM_PREFIX, DEFAULT_BASE_RETRY_DELAY_MS } from './constants';
 
 /** Generate a unique ID for a submission */
 export function generateSubmissionId(): string {

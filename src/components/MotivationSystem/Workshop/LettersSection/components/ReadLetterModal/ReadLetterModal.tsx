@@ -8,14 +8,16 @@
 
 import React from 'react';
 import { View, Modal } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
-import { useThemeColors } from '../../../../../../theme/ThemeContext';
+
 import type { ReadLetterModalProps } from './ReadLetterModal.types';
-import { useReadLetterModal } from './useReadLetterModal';
-import { ReadLetterHeader } from './ReadLetterHeader';
-import { ReadLetterFooter } from './ReadLetterFooter';
 import { LetterContent } from './LetterContent';
 import { LockedLetterView } from './LockedLetterView';
+import { ReadLetterFooter } from './ReadLetterFooter';
+import { ReadLetterHeader } from './ReadLetterHeader';
+import { useReadLetterModal } from './useReadLetterModal';
+import { useThemeColors } from '../../../../../../theme/ThemeContext';
 
 export function ReadLetterModal({
   visible,

@@ -5,18 +5,20 @@
 
 import React from 'react';
 import { View, ScrollView, Modal } from 'react-native';
+
 import { BlurView } from 'expo-blur';
-import { SocialProofSection } from './SocialProofSection';
-import { PricingToggle } from './PricingToggle';
+
 import type { PremiumPaywallHandlers } from './usePremiumPaywall';
-import { BlurOverlayHeader } from './BlurOverlayHeader';
-import { BlurOverlayHero } from './BlurOverlayHero';
-import { BlurOverlayActions } from './BlurOverlayActions';
+import type { VariantConfig } from './PremiumPaywall.types';
 import {
   AnalyticsFeatureList,
   MotivationFeatureList,
 } from './BlurOverlayFeatureList';
-import type { VariantConfig } from './PremiumPaywall.types';
+import { BlurOverlayActions } from './BlurOverlayActions';
+import { BlurOverlayHeader } from './BlurOverlayHeader';
+import { BlurOverlayHero } from './BlurOverlayHero';
+import { PricingToggle } from './PricingToggle';
+import { SocialProofSection } from './SocialProofSection';
 
 interface BlurOverlayVariantProps {
   variant: 'motivation' | 'analytics';

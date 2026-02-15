@@ -4,11 +4,13 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { withSpring, withTiming, withSequence } from 'react-native-reanimated';
+
 import * as Haptics from 'expo-haptics';
-import { SPRING_BOUNCY, SPRING_GENTLE } from '../../../../../animations';
-import { ONE_HOUR_MS, ONE_DAY_MS } from '../../LettersSection.constants';
+import { withSpring, withTiming, withSequence } from 'react-native-reanimated';
+
 import type { LetterData } from '../../LettersSection.types';
+import { ONE_HOUR_MS, ONE_DAY_MS } from '../../LettersSection.constants';
+import { SPRING_BOUNCY, SPRING_GENTLE } from '../../../../../animations';
 import { useReadLetterAnimations } from './useReadLetterAnimations';
 
 interface UseReadLetterModalParams {

@@ -6,15 +6,14 @@
 
 import React, { useMemo } from 'react';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
-import { calculateMilestoneProgress } from '../MilestoneProgressTypes';
 import type { MilestoneProgressProps } from '../MilestoneProgressTypes';
-
-import { useMilestoneAnimations } from './MilestoneProgress.hooks';
-import { useAccessibilityLabel } from './useAccessibilityLabel';
-import { NoStreakState } from './NoStreakState';
 import { CelebrationState } from './CelebrationState';
+import { NoStreakState } from './NoStreakState';
 import { ProgressState } from './ProgressState';
+import { calculateMilestoneProgress } from '../MilestoneProgressTypes';
+import { useAccessibilityLabel } from './useAccessibilityLabel';
+import { useMilestoneAnimations } from './MilestoneProgress.hooks';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 
 export const MilestoneProgress = React.memo(function MilestoneProgress({
   currentStreak,

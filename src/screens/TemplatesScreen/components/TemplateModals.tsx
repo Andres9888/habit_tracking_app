@@ -3,9 +3,9 @@
  */
 
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import type { TemplateCustomizations } from '../TemplatesScreen.types';
 import FullsizeTemplatePreview from '../../../components/FullsizeTemplatePreview';
 import TemplatePreviewModal from '../../templates/TemplatePreviewModal';
-import type { TemplateCustomizations } from '../TemplatesScreen.types';
 
 interface TemplateModalsProps {
   importedTemplateIds: Set<string>;

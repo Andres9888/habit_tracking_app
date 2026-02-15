@@ -5,16 +5,17 @@
 
 import React from 'react';
 import { Text, Pressable } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 
-import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { useThemeColors } from '../../theme/ThemeContext';
 import type { QuickStartTemplate } from './types';
 import { styles } from './styles';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

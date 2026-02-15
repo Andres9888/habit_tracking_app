@@ -5,10 +5,11 @@
  */
 
 import React from 'react';
+
 import { renderHook, act } from '@testing-library/react-native';
 
-import { useSyncedToast } from '../useSyncedToast';
 import type { SyncOrchestratorResult } from '../../../../lib/offline/sync/types';
+import { useSyncedToast } from '../useSyncedToast';
 
 // Track the callback registered via useOnSyncComplete
 let registeredCallback: ((result: SyncOrchestratorResult) => void) | null =

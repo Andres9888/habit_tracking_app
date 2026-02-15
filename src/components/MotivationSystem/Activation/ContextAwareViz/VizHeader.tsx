@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
 import { clsx } from 'clsx';

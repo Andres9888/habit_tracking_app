@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
 import { clsx } from 'clsx';
+
 import type { VizPreviewProps } from '../DualVizSetup.types';
 
 export function VizPreview({ type, body, mind, emotion }: VizPreviewProps) {

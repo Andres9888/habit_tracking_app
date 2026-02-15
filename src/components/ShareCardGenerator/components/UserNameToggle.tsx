@@ -5,9 +5,10 @@
 
 import React from 'react';
 import { View, Text, Switch } from 'react-native';
-import { useAppTheme } from '../../../theme';
+
 import { colors } from '@/theme/colors';
 import { controlsStyles as styles } from '../styles';
+import { useAppTheme } from '../../../theme';
 
 interface UserNameToggleProps {
   showUserName: boolean;

@@ -1,10 +1,12 @@
-import * as Notifications from 'expo-notifications';
+
 import { Platform } from 'react-native';
 
-import { configureAndroidChannel } from './channels';
-import { ANDROID_CHANNEL_ID } from './constants';
-import { ensureNotificationPermissions } from './permissions';
+import * as Notifications from 'expo-notifications';
+
 import type { ScheduleHabitReminderParams } from './types';
+import { ANDROID_CHANNEL_ID } from './constants';
+import { configureAndroidChannel } from './channels';
+import { ensureNotificationPermissions } from './permissions';
 
 export async function cancelHabitReminder(habitId: string): Promise<void> {
   try {

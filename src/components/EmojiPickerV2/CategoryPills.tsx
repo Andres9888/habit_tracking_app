@@ -1,10 +1,13 @@
-import { memo, useCallback } from 'react';
+
 import { Pressable, ScrollView, Text } from 'react-native';
+import { memo, useCallback } from 'react';
+
 import Animated, {
   useAnimatedStyle,
   withSpring,
   useSharedValue,
 } from 'react-native-reanimated';
+
 import { HABIT_CATEGORIES } from '../../constants/habitEmojis';
 import { styles } from './CategoryPills.styles';
 

@@ -6,11 +6,6 @@
  */
 /* eslint-disable max-lines, max-lines-per-function */
 
-import { useThemeColors } from '../../theme/ThemeContext';
-import { colors } from '../../theme/colors';
-import * as Haptics from 'expo-haptics';
-import { ImpactFeedbackStyle } from 'expo-haptics';
-import { useCallback, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -21,15 +16,19 @@ import {
   View,
   type ViewToken,
 } from 'react-native';
+import { useCallback, useRef, useState } from 'react';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   FadeIn,
   FadeInDown,
   FadeInUp,
   useReducedMotion,
 } from 'react-native-reanimated';
+import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { safeSetBoolean } from '@/utils/storage';
-import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
@@ -45,7 +44,6 @@ function ChainLink({
   index: number;
   reduceMotion: boolean;
 }) {
-  const { colors } = useThemeColors();
   const chainColors = [
     colors.primary[600],
     colors.primary[700],
@@ -93,7 +91,6 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
 // ─── Strength Meter ──────────────────────────────────────────────────
 
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
-  const { colors } = useThemeColors();
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
   return (
     <View style={styles.strengthContainer}>
@@ -113,7 +110,7 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
             style={[
               styles.strengthBar,
               {
-                backgroundColor: interpolateColor(i / 4, colors.primary),
+                backgroundColor: interpolateColor(i / 4),
                 opacity: 0.15 + i * 0.2125,
                 width: `${20 + i * 20}%`,
               },
@@ -133,10 +130,10 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-function interpolateColor(t: number, primary: Record<number, string>): string {
-  if (t < 0.5) return primary[400];
-  if (t < 0.75) return primary[600];
-  return primary[700];
+function interpolateColor(t: number): string {
+  if (t < 0.5) return colors.primary[400];
+  if (t < 0.75) return colors.primary[600];
+  return colors.primary[700];
 }
 
 // ─── Template Grid ───────────────────────────────────────────────────
@@ -190,8 +187,7 @@ interface PageData {
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    subtitle:
-      'Complete your habits daily and watch your chain grow — every link counts.',
+    subtitle: 'Complete your habits daily and watch your chain grow — every link counts.',
     title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
@@ -204,8 +200,7 @@ const PAGES: PageData[] = [
   },
   {
     id: 'templates',
-    subtitle:
-      'Pick from science-backed templates or create your own in seconds.',
+    subtitle: 'Pick from science-backed templates or create your own in seconds.',
     title: '200+ Ready-Made Templates',
     Visual: TemplateGrid,
   },
@@ -231,8 +226,7 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
           style={[
             styles.dot,
             {
-              backgroundColor:
-                i === currentIndex ? colors.primary[600] : colors.gray[300],
+              backgroundColor: i === currentIndex ? colors.primary[600] : colors.gray[300],
               width: i === currentIndex ? 24 : 8,
             },
           ]}
@@ -248,7 +242,7 @@ interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
-function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
+export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const { colors } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -261,18 +255,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
     setIsLoading(true);
     void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
     try {
-      // Mark onboarding as complete in AsyncStorage
-      await safeSetBoolean(ONBOARDING_KEY, true);
-      onComplete();
-    } catch (error) {
-      // If storage fails, still proceed to avoid blocking user
-      // They might see onboarding again on next launch, but that's acceptable
-      if (__DEV__) {
-        console.error(
-          '[OnboardingScreen] Failed to save completion state:',
-          error
-        );
-      }
+      await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
       onComplete();
     } finally {
       setIsLoading(false);
@@ -340,7 +323,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={styles.container}>
       {/* Skip button */}
       <Animated.View
         entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
@@ -452,7 +435,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ctaButton: {
-    backgroundColor: colors.primary[600],
+    backgroundColor: '#059669',
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 32,
@@ -480,7 +463,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   nextButton: {
-    backgroundColor: colors.primary[600],
+    backgroundColor: '#059669',
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 48,
@@ -518,7 +501,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   strengthBar: {
-    backgroundColor: colors.primary[600],
+    backgroundColor: '#059669',
     borderRadius: 8,
     height: 32,
   },
@@ -533,7 +516,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   strengthLabelActive: {
-    color: colors.primary[700],
+    color: '#047857',
     fontWeight: '700',
   },
   strengthRow: {
@@ -549,7 +532,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   templateEmoji: {
-    fontSize: 22,
+    fontSize: 28,
   },
   templateGrid: {
     flexDirection: 'row',
@@ -572,7 +555,7 @@ const styles = StyleSheet.create({
     width: 56,
   },
   title: {
-    color: colors.primary[700],
+    color: '#047857',
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,
@@ -588,11 +571,3 @@ const styles = StyleSheet.create({
 });
 
 export { ONBOARDING_KEY };
-
-export function OnboardingScreen(props: OnboardingScreenProps) {
-  return (
-    <ScreenErrorBoundary screenName="Onboarding">
-      <OnboardingScreenContent {...props} />
-    </ScreenErrorBoundary>
-  );
-}

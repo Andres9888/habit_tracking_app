@@ -13,8 +13,8 @@
  * @category Infrastructure
  */
 
-import { ConvexReactClient } from 'convex/react';
 import * as SecureStore from 'expo-secure-store';
+import { ConvexReactClient } from 'convex/react';
 
 const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL;
 if (!convexUrl) {

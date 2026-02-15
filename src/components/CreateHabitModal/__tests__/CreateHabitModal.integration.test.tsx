@@ -11,8 +11,9 @@
  */
 
 import React from 'react';
-import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
+
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 
 // Create trackable mock functions at module level (prefixed with "mock" for jest)
 const mockMutationFn = jest.fn(() => Promise.resolve('new-habit-id'));

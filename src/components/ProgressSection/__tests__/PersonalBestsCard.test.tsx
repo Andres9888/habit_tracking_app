@@ -3,10 +3,12 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
-import { PersonalBestsCard } from '../PersonalBestsCard';
+
+import { render, fireEvent } from '@testing-library/react-native';
+
 import type { StreakRecord, DayStats } from '../types';
+import { PersonalBestsCard } from '../PersonalBestsCard';
 
 // Mock AccessibilityInfo
 jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockImplementation(

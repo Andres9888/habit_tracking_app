@@ -1,5 +1,8 @@
+
 import { View, Text } from 'react-native';
+
 import { CheckCircle2, FastForward } from 'lucide-react-native';
+
 import {
   formatActivityDate,
   formatActivityTime,

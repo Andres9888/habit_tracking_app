@@ -3,9 +3,12 @@
  * ScreenErrorFallback - Lightweight error fallback for individual screens
  * Designed to prevent one screen crash from killing the entire app
  */
+
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { useThemeColors } from '../../theme/ThemeContext';
 
 interface ScreenErrorFallbackProps {

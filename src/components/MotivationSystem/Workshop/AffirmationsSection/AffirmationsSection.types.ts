@@ -4,6 +4,7 @@
  */
 
 import type { LucideIcon } from 'lucide-react-native';
+
 import type { AffirmationScheduleData } from '../AffirmationScheduleModal/types';
 
 // Affirmation types for categorization

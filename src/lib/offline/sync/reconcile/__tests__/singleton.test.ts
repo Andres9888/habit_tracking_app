@@ -2,8 +2,8 @@
  * StateReconciler Singleton Tests
  */
 
-import { getStateReconciler, resetStateReconciler } from '../singleton';
 import { StateReconciler } from '../reconciler';
+import { getStateReconciler, resetStateReconciler } from '../singleton';
 
 describe('StateReconciler Singleton', () => {
   afterEach(() => {

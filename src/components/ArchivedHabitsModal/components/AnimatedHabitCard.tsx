@@ -1,14 +1,16 @@
+
 import { View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
-import { useAnimatedHabitCard } from './AnimatedHabitCard.hooks';
-import { getStrengthInfo, getStrengthGradientColor } from '../utils';
+
+import type { AnimatedHabitCardProps } from '../types';
+import { ActionButtons } from './ActionButtons';
 import { HabitCardHeader } from './HabitCardHeader';
 import { HabitStatsBadges } from './HabitStatsBadges';
-import { ActionButtons } from './ActionButtons';
 import { StrengthBackground } from './StrengthBackground';
+import { getStrengthInfo, getStrengthGradientColor } from '../utils';
 import { shadows } from '../../../theme/spacing';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import type { AnimatedHabitCardProps } from '../types';
+import { useAnimatedHabitCard } from './AnimatedHabitCard.hooks';
 
 const CARD_SHADOW = {
   ...shadows.card,
@@ -22,7 +24,6 @@ export function AnimatedHabitCard({
   onRestore,
   onDelete,
 }: AnimatedHabitCardProps) {
-  const { isDark } = useThemeColors();
   const {
     isRestoring,
     showSuccess,
@@ -38,21 +39,15 @@ export function AnimatedHabitCard({
   });
 
   const strength = (habit.strength ?? 0) * 100;
-  const strengthInfo = getStrengthInfo(strength, isDark);
+  const strengthInfo = getStrengthInfo(strength);
   const gradientColor = getStrengthGradientColor(strength);
   const archiveDate = habit.archivedAt || habit._creationTime;
 
   return (
     <Animated.View style={animatedStyle}>
       <View
-        className='overflow-hidden rounded-2xl border'
-        style={[
-          CARD_SHADOW,
-          {
-            backgroundColor: isDark ? '#1f2937' : '#ffffff',
-            borderColor: isDark ? '#374151' : '#e7e5e4',
-          },
-        ]}
+        className='overflow-hidden rounded-2xl border border-stone-200 bg-white'
+        style={CARD_SHADOW}
       >
         <StrengthBackground gradientColor={gradientColor} strength={strength} />
 

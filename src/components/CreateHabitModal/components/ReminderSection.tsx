@@ -1,6 +1,8 @@
+
 import { Switch, Text, View } from 'react-native';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { formatReminderTime } from '../../../utils/notifications';
 
 interface ReminderSectionProps {

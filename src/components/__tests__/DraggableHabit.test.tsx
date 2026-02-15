@@ -1,7 +1,10 @@
+
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
-import DraggableHabit from '../DraggableHabit/DraggableHabit';
+
 import type { Id } from '../../../convex/_generated/dataModel';
+import DraggableHabit from '../DraggableHabit/DraggableHabit';
 
 const buildHabit = (overrides: Partial<Record<string, unknown>> = {}) =>
   ({

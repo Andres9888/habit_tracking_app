@@ -3,15 +3,17 @@
  * Collapsible section for habit lists (gained, lost, at-risk)
  */
 
-import type { ComponentProps } from 'react';
 import React from 'react';
+import type { ComponentProps } from 'react';
 import { View, Text } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import { colors } from '../../theme/colors';
+
 import type { HabitChange, HabitChangeType } from './WeeklyInsightsCard.types';
-import { styles } from './WeeklyInsightsCard.styles';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { HabitItem } from './HabitItem';
+import { colors } from '../../theme/colors';
+import { styles } from './WeeklyInsightsCard.styles';
 
 /** Valid Ionicons icon name */
 type IconName = ComponentProps<typeof Ionicons>['name'];

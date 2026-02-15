@@ -4,14 +4,16 @@
  */
 
 import React, { useCallback } from 'react';
-import { Text, Pressable } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Lock } from 'lucide-react-native';
+import { View, Text, Pressable } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Lock } from 'lucide-react-native';
+
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
 interface InlineLockProps {

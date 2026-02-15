@@ -10,6 +10,7 @@ import { View } from 'react-native';
 import Animated, { useAnimatedProps } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 
+import type { ProgressRingProps } from './types';
 import {
   COLORS,
   RING_CIRCUMFERENCE,
@@ -19,7 +20,6 @@ import {
   STRENGTH_LABELS,
 } from '../constants';
 import { AnimatedPercentage } from './AnimatedPercentage';
-import type { ProgressRingProps } from './types';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 

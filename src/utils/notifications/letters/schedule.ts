@@ -1,15 +1,16 @@
-import * as Notifications from 'expo-notifications';
+
 import { Platform } from 'react-native';
 
-import { configureLetterUnlockChannel } from '../channels';
+import * as Notifications from 'expo-notifications';
+
+import type { ScheduleLetterUnlockParams } from '../types';
 import {
   ANDROID_LETTER_CHANNEL_ID,
   NOTIFICATION_TYPE_LETTER_UNLOCK,
 } from '../constants';
-import { ensureNotificationPermissions } from '../permissions';
-import type { ScheduleLetterUnlockParams } from '../types';
-
 import { cancelLetterUnlockNotification } from './cancel';
+import { configureLetterUnlockChannel } from '../channels';
+import { ensureNotificationPermissions } from '../permissions';
 
 /**
  * Schedule a notification for when a letter unlocks

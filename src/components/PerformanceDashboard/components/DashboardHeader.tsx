@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { StatusIndicator } from './StatusIndicator';
+
 import type { StatusLevel } from '../types';
+import { StatusIndicator } from './StatusIndicator';
 
 interface DashboardHeaderProps {
   isExpanded: boolean;

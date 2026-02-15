@@ -3,17 +3,18 @@
  * Sticky bottom CTA bar for the Create Habit modal
  */
 
-import { memo, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { memo, useCallback, useMemo } from 'react';
+
 import { LinearGradient } from 'expo-linear-gradient';
-import { useThemeColors } from '../../../../theme/ThemeContext';
-import { useKeyboardState } from '../../hooks/useKeyboardState';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import type { StickyCreateBarProps } from './types';
-import { DEFAULT_BUTTON_COLOR, getGradientColors } from './colorUtils';
-import { useStickyBarAnimations } from './useStickyBarAnimations';
 import { CreateButton } from './CreateButton';
+import { DEFAULT_BUTTON_COLOR, getGradientColors } from './colorUtils';
 import { MotivationText } from './MotivationText';
+import { useKeyboardState } from '../../hooks/useKeyboardState';
+import { useStickyBarAnimations } from './useStickyBarAnimations';
 
 function StickyCreateBarComponent({
   disabled,
@@ -21,7 +22,6 @@ function StickyCreateBarComponent({
   selectedColor,
 }: StickyCreateBarProps) {
   const insets = useSafeAreaInsets();
-  const { colors: themeColors, isDark } = useThemeColors();
   const { isKeyboardVisible, keyboardHeight } = useKeyboardState();
   const { scale, colorOpacity, triggerSuccess, handlePressIn, handlePressOut } =
     useStickyBarAnimations(disabled, selectedColor);
@@ -56,19 +56,12 @@ function StickyCreateBarComponent({
       }}
     >
       <LinearGradient
-        colors={
-          isDark
-            ? ['transparent', `${themeColors.surface}E6`, themeColors.surface]
-            : ['transparent', 'rgba(250, 248, 245, 0.9)', '#FAF8F5']
-        }
+        colors={['transparent', 'rgba(250, 248, 245, 0.9)', '#FAF8F5']}
         locations={[0, 0.4, 1]}
         pointerEvents='none'
         style={{ height: 32 }}
       />
-      <View
-        className='px-4 pb-2'
-        style={{ backgroundColor: isDark ? themeColors.surface : '#FAF8F5' }}
-      >
+      <View className='bg-[#FAF8F5] px-4 pb-2'>
         <MotivationText />
         <CreateButton
           colorOpacity={colorOpacity}

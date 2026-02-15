@@ -1,9 +1,10 @@
-import { Plus } from 'lucide-react-native';
+
+import type { ViewStyle } from 'react-native';
 import { Pressable, Text } from 'react-native';
+
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import type { ViewStyle } from 'react-native';
-import { SHADOW_OPACITY } from '../../../../constants';
+import { Plus } from 'lucide-react-native';
 
 interface AddHabitButtonProps {
   animatedStyle: AnimatedStyle<ViewStyle>;
@@ -40,7 +41,7 @@ export function AddHabitButton({
             elevation: 3,
             shadowColor: '#1c1917',
             shadowOffset: { height: 4, width: 0 },
-            shadowOpacity: SHADOW_OPACITY.minimal,
+            shadowOpacity: 0.08,
             shadowRadius: 16,
           }}
         >

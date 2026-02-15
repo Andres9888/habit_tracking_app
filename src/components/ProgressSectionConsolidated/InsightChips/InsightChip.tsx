@@ -6,12 +6,13 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
-import { useInsightChipAnimations } from './useInsightChipAnimations';
-import { BORDER_COLOR_MAP } from './constants';
 import type { InsightChipProps } from './types';
+import { BORDER_COLOR_MAP } from './constants';
+import { useInsightChipAnimations } from './useInsightChipAnimations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

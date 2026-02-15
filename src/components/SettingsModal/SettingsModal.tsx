@@ -5,18 +5,20 @@
 
 import React from 'react';
 import { Modal, View } from 'react-native';
+
 import { useQuery } from 'convex/react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { api } from '../../../convex/_generated/api';
-import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
-import ArchivedHabitsModal from '../ArchivedHabitsModal';
-import { SettingsModalSkeleton } from '../SkeletonLoader';
-import { useSettingsModalLogic } from './SettingsModal.hooks';
-import { getSettingsColors } from './colors';
-import { SettingsHeader } from './SettingsHeader';
-import { SettingsContent } from './SettingsContent';
-import { useThemeColors } from '../../theme/ThemeContext';
+
 import type { SettingsModalProps } from './types';
+import ArchivedHabitsModal from '../ArchivedHabitsModal';
+import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
+import { SettingsContent } from './SettingsContent';
+import { SettingsHeader } from './SettingsHeader';
+import { SettingsModalSkeleton } from '../SkeletonLoader';
+import { api } from '../../../convex/_generated/api';
+import { getSettingsColors } from './colors';
+import { useSettingsModalLogic } from './SettingsModal.hooks';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 function SettingsModalContent({
   completionSoundEnabled = false,

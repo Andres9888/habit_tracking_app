@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import { suggestedActionsStyles as styles } from './SuggestedActions.styles';

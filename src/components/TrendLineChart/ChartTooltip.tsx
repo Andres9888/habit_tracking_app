@@ -4,8 +4,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { styles } from './styles';
+
 import type { TrendData } from './types';
+import { styles } from './styles';
 
 interface ChartTooltipProps {
   selectedPoint: TrendData | null;

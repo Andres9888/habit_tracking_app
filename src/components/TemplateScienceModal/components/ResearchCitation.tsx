@@ -4,12 +4,13 @@
 
 import React from 'react';
 import { View, Text, Pressable, type ViewStyle } from 'react-native';
+
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ExternalLink } from 'lucide-react-native';
-import { useAppTheme } from '../../../theme';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { scienceStyles, themedScienceStyles } from '../styles';
+
 import { AnimatedBorderBox } from './AnimatedBorderBox';
+import { scienceStyles } from '../styles';
+import { useAppTheme } from '../../../theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -36,17 +37,14 @@ export function ResearchCitation({
   pressHandlers,
 }: ResearchCitationProps) {
   const theme = useAppTheme();
-  const { colors, isDark } = useThemeColors();
-  const themed = themedScienceStyles(colors, isDark);
 
   return (
     <AnimatedBorderBox baseColor={baseColor}>
       <View style={scienceStyles.citationHeader}>
-        <View style={[scienceStyles.citationDot, themed.citationDot]} />
+        <View style={scienceStyles.citationDot} />
         <Text
           style={[
             scienceStyles.citationLabel,
-            themed.citationLabel,
             { fontFamily: theme.custom.fontFamilies.primary.text },
           ]}
         >
@@ -56,7 +54,6 @@ export function ResearchCitation({
       <Text
         style={[
           scienceStyles.citationText,
-          themed.citationText,
           { fontFamily: theme.custom.fontFamilies.primary.text },
         ]}
       >
@@ -68,15 +65,14 @@ export function ResearchCitation({
           accessibilityHint='Opens research paper in your browser'
           accessibilityLabel='Read the full research paper'
           accessibilityRole='link'
-          style={[scienceStyles.linkButton, themed.linkButton, linkButtonAnimatedStyle]}
+          style={[scienceStyles.linkButton, linkButtonAnimatedStyle]}
           onPress={onLinkPress}
           {...pressHandlers}
         >
-          <ExternalLink color={isDark ? colors.primary[400] : '#3B82F6'} size={16} strokeWidth={2.5} />
+          <ExternalLink color='#3B82F6' size={16} strokeWidth={2.5} />
           <Text
             style={[
               scienceStyles.linkText,
-              themed.linkText,
               { fontFamily: theme.custom.fontFamilies.primary.text },
             ]}
           >

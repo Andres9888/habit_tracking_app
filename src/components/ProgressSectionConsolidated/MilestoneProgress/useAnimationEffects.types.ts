@@ -6,6 +6,7 @@
  */
 
 import type { SharedValue } from 'react-native-reanimated';
+
 import type { MilestoneDisplayState } from '../MilestoneProgressTypes';
 
 export interface AnimationValues {

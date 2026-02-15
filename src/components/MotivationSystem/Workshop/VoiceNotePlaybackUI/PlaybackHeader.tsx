@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import type { PlaybackHeaderProps } from './types';
 
 export function PlaybackHeader({ label, isDay1 }: PlaybackHeaderProps) {

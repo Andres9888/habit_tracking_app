@@ -6,6 +6,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useAnimatedStyle,
   useSharedValue,

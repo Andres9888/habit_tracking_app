@@ -10,12 +10,14 @@
  */
 
 import React from 'react';
+
 import Animated, {
   useAnimatedStyle,
   interpolate,
   Extrapolation,
   type SharedValue,
 } from 'react-native-reanimated';
+
 import { ChainLinkIcon } from '../../ChainLinkIcon/ChainLinkIcon';
 import { useAppTheme } from '../../../theme';
 

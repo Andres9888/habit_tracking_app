@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { LEVEL_COLORS } from './ComplianceHeatmap.constants';
 import { styles } from './ComplianceHeatmap.styles';
 

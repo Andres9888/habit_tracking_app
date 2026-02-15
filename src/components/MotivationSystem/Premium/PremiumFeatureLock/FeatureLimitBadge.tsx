@@ -5,7 +5,9 @@
 
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { ChevronRight } from 'lucide-react-native';
+
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
 interface FeatureLimitBadgeProps {

@@ -8,15 +8,17 @@
 
 import React, { useCallback, useState } from 'react';
 import { View, Text } from 'react-native';
+
 import * as Haptics from 'expo-haptics';
-import { CompletionCheckmark } from '../../../animations';
-import { SectionCard } from './components/SectionCard';
-import { AnimatedSection } from './components/AnimatedSection';
-import { VizPreview } from './components/VizPreview';
-import { DualVizHeader } from './components/DualVizHeader';
-import { DualVizExplainerModal } from './components/DualVizExplainerModal';
-import { hasVizData, isVizComplete } from './DualVizSetup.utils';
+
 import type { DualVizSetupProps } from './DualVizSetup.types';
+import { AnimatedSection } from './components/AnimatedSection';
+import { CompletionCheckmark } from '../../../animations';
+import { DualVizExplainerModal } from './components/DualVizExplainerModal';
+import { DualVizHeader } from './components/DualVizHeader';
+import { SectionCard } from './components/SectionCard';
+import { VizPreview } from './components/VizPreview';
+import { hasVizData, isVizComplete } from './DualVizSetup.utils';
 
 export function DualVizSetup({
   visualization,

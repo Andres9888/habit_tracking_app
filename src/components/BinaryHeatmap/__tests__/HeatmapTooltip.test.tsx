@@ -5,10 +5,12 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { HeatmapTooltip } from '../HeatmapTooltip';
-import { COLORS, TOOLTIP } from '../constants';
+
 import type { BinaryDay } from '../types';
+import { COLORS, TOOLTIP } from '../constants';
+import { HeatmapTooltip } from '../HeatmapTooltip';
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {

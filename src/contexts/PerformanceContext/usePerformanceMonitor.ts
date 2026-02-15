@@ -1,13 +1,15 @@
 /**
  * Performance Monitor Hook - Core monitoring logic for PerformanceProvider.
  */
+
 import { useCallback, useState } from 'react';
-import { FrameMonitor, now } from '../../lib/performance';
+
 import type {
   FrameTimingData,
   PerformanceBaseline,
 } from '../../lib/performance';
 import type { PerformanceConfig } from './types';
+import { FrameMonitor, now } from '../../lib/performance';
 import { generateSessionId, useMonitorRefs } from './useMonitorRefs';
 
 /**

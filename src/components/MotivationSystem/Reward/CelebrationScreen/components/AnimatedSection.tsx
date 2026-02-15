@@ -2,6 +2,7 @@
  * AnimatedSection - Wrapper for animated celebration content sections
  * Combines AnimatedContent wrapper with optional View margin
  */
+
 import React from 'react';
 import { View } from 'react-native';
 

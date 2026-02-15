@@ -4,12 +4,13 @@
  */
 
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { HABIT_CATEGORIES } from '../../../constants/habitEmojis';
-import { getAllEmojis } from '../../../utils/emojiData';
+
 import {
   searchEmojisByKeyword,
   suggestEmojisForHabitName,
 } from '../../../utils/emojiKeywords';
+import { HABIT_CATEGORIES } from '../../../constants/habitEmojis';
+import { getAllEmojis } from '../../../utils/emojiData';
 import { getRecentEmojis } from '../../../utils/recentEmojis';
 
 export function useEmojiPickerState(visible: boolean, habitName: string) {

@@ -1,5 +1,6 @@
+
 import { useEffect, useCallback, useRef } from 'react';
-import { Gesture } from 'react-native-gesture-handler';
+
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -8,9 +9,10 @@ import {
   runOnJS,
   Easing,
 } from 'react-native-reanimated';
+import { Gesture } from 'react-native-gesture-handler';
 
-import { springs } from '../../theme/animations';
 import { DISMISS_THRESHOLD } from './styles';
+import { springs } from '../../theme/animations';
 
 interface UseDeleteToastAnimationsOptions {
   visible: boolean;

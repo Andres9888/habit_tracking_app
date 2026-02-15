@@ -5,6 +5,8 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
+
+import * as Haptics from 'expo-haptics';
 import {
   withSpring,
   withTiming,
@@ -12,7 +14,6 @@ import {
   withDelay,
   SharedValue,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 import type { FocusState } from '../../TodaysFocusCardTypes';
 import { CONFETTI_DURATION } from '../TodaysFocusCard.constants';

@@ -8,15 +8,17 @@
  */
 
 import React, { useCallback, useState } from 'react';
+
 import * as Haptics from 'expo-haptics';
+
+import type { WOOPSectionProps } from './WOOPSection.types';
+import { AnimatedSection } from './AnimatedSection';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from './SectionCard';
-import { AnimatedSection } from './AnimatedSection';
 import { WOOPExplainerModal } from './WOOPExplainerModal';
-import { WOOPSectionHeader } from './WOOPSectionHeader';
 import { WOOPSectionContent } from './WOOPSectionContent';
+import { WOOPSectionHeader } from './WOOPSectionHeader';
 import { hasWOOPData, isWOOPComplete } from './woopUtils';
-import type { WOOPSectionProps } from './WOOPSection.types';
 
 export function WOOPSection({
   woop,

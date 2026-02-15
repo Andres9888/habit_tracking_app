@@ -1,17 +1,18 @@
 /* eslint-disable max-lines */
+
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
-import { X } from 'lucide-react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
+
 import Animated from 'react-native-reanimated';
+import { GestureDetector } from 'react-native-gesture-handler';
+import { X } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useThemeColors } from '../../../../theme/ThemeContext';
-import { SCREEN_HEIGHT, SORT_OPTIONS } from './constants';
-import { QuickPickChips } from './QuickPickChips';
-import { SortOptionRow } from './SortOptionRow';
 import type { SortBottomSheetProps } from './types';
+import { QuickPickChips } from './QuickPickChips';
+import { SCREEN_HEIGHT, SORT_OPTIONS } from './constants';
+import { SortOptionRow } from './SortOptionRow';
 import { useSortBottomSheet } from './useSortBottomSheet';
-import { SCREEN, SHADOW_OPACITY } from '../../../../constants';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 /** iOS-style bottom sheet for selecting habit sort order */
 export function SortBottomSheet({
@@ -56,11 +57,11 @@ export function SortBottomSheet({
               {
                 backgroundColor: themeColors.card,
                 elevation: 20,
-                maxHeight: SCREEN_HEIGHT * SCREEN.maxHeightPercent,
+                maxHeight: SCREEN_HEIGHT * 0.85,
                 paddingBottom: insets.bottom + 16,
                 shadowColor: isDark ? '#000000' : '#1c1917',
                 shadowOffset: { height: 4, width: 0 },
-                shadowOpacity: SHADOW_OPACITY.minimal,
+                shadowOpacity: 0.08,
                 shadowRadius: 16,
               },
               sheetStyle,
@@ -84,8 +85,8 @@ export function SortBottomSheet({
                 accessibilityHint='Close sort options'
                 accessibilityLabel='Close'
                 accessibilityRole='button'
-                className='h-11 w-11 items-center justify-center rounded-full'
-                style={{ backgroundColor: isDark ? themeColors.gray[800] : themeColors.gray[100] }}
+                className='h-10 w-10 items-center justify-center rounded-full'
+                style={{ backgroundColor: isDark ? '#1f2937' : '#f5f5f4' }}
                 onPress={handleDismiss}
               >
                 <X color={themeColors.text.secondary} size={24} />

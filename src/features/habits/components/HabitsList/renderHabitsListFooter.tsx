@@ -6,8 +6,8 @@
  * For premium users or users below the limit, the footer is `null`.
  */
 
-import { HabitsListFooter } from './HabitsListFooter';
 import type { HabitsListProps } from './HabitsList.types';
+import { HabitsListFooter } from './HabitsListFooter';
 
 interface RenderHabitsListFooterOptions {
   list: HabitsListProps['list'];

@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import NoteEditor from '../NoteEditor';
+
 import type { NotesListProps } from './NotesList.types';
-import { useNotesList } from './useNotesList';
+import NoteEditor from '../NoteEditor';
 import {
   NotesHeader,
   SearchInput,
@@ -16,6 +16,7 @@ import {
   VisualizationModal,
   NotesGrouped,
 } from './components';
+import { useNotesList } from './useNotesList';
 
 export default function NotesList({
   hideHabitFilter = false,

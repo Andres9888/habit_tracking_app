@@ -6,8 +6,9 @@
  */
 
 import { renderHook, act, waitFor } from '@testing-library/react-native';
-import { useLetterNotification } from '../useLetterNotification';
+
 import * as notifications from '../../utils/notifications';
+import { useLetterNotification } from '../useLetterNotification';
 
 // Mock Convex
 const mockCreateLetter = jest.fn();

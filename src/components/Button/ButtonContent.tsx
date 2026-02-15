@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { View, Text, ActivityIndicator, type TextStyle } from 'react-native';
-import { useAppTheme } from '../../theme';
-import { styles } from './styles';
+
 import type { ButtonVariant, VariantStyles } from './types';
+import { styles } from './styles';
+import { useAppTheme } from '../../theme';
 
 interface ButtonContentProps {
   children: React.ReactNode;

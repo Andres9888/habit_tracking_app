@@ -2,13 +2,13 @@
  * Type definitions for CategorySearchView
  */
 
-import type { Doc, Id } from '../../../../convex/_generated/dataModel';
-import type { Category, SortOption } from '../../templates/constants';
 import type {
   CategoryDoc,
   TemplateCustomizations,
   ViewMode,
 } from '../TemplatesScreen.types';
+import type { Category, SortOption } from '../../templates/constants';
+import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 
 export interface CategorySearchHandlers {
   handleBackToBrowse: () => void;

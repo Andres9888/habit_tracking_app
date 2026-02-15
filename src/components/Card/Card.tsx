@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { View, ViewProps, type StyleProp, type ViewStyle } from 'react-native';
+
 import clsx from 'clsx';
 import { useThemeColors } from '../../theme/ThemeContext';
 

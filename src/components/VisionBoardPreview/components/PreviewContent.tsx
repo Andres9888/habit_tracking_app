@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
+
 import type { PreviewContentProps } from '../VisionBoardPreview.types';
 
 export function PreviewContent({ item }: PreviewContentProps) {

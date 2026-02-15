@@ -4,6 +4,7 @@
 
 import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,6 +13,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+
 import type { ConfettiParticleProps } from '../TemplateScienceModal.types';
 import { borderRadius } from '../../../theme/spacing';
 

@@ -6,7 +6,9 @@
  */
 
 /* eslint-disable max-lines-per-function */
+
 import { useState, useCallback, useEffect, useRef } from 'react';
+
 import type { ValidationResult } from './index';
 
 interface UseFieldValidationOptions {

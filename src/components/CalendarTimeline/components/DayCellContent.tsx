@@ -1,16 +1,16 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
 
+import type {
+  CalendarColors,
+  CompletionStatus,
+} from '../CalendarTimeline.types';
 import {
   FUTURE_DATE_TEXT_COLOR,
   TODAY_HIGHLIGHT,
   TODAY_SHADOW,
 } from '../CalendarTimeline.styles';
-import type {
-  CalendarColors,
-  CompletionStatus,
-} from '../CalendarTimeline.types';
-
 import { CompletionDot } from './CompletionDot';
 
 interface DayCellContentProps {

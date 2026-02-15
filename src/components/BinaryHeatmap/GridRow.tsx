@@ -9,8 +9,8 @@ import { View } from 'react-native';
 
 import type { BinaryDay } from './types';
 import { CELL_SIZE } from './constants';
-import { styles } from './BinaryHeatmapGrid.styles';
 import { getCellBackgroundColor } from './cellHelpers';
+import { styles } from './BinaryHeatmapGrid.styles';
 
 export interface GridRowProps {
   dayIndex: number;

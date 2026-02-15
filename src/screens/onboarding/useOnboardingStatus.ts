@@ -1,5 +1,7 @@
+
 import { useCallback, useEffect, useState } from 'react';
-import { safeGetBoolean, safeSetBoolean } from '@/utils/storage';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { ONBOARDING_KEY } from './OnboardingScreen';
 
@@ -16,26 +18,26 @@ export function useOnboardingStatus(isSignedIn: boolean) {
 
   useEffect(() => {
     if (isSignedIn) {
-      void safeGetBoolean(ONBOARDING_KEY, false)
-        .then((isComplete) => {
-          if (isComplete) {
+      void AsyncStorage.getItem(ONBOARDING_KEY)
+        .then((value) => {
+          if (value === 'true') {
             // Existing user — already completed onboarding before.
             setComplete(true);
           } else {
             // New user — auto-complete onboarding, skip the carousel.
-            void safeSetBoolean(ONBOARDING_KEY, true)
+            void AsyncStorage.setItem(ONBOARDING_KEY, 'true')
               .then(() => {
                 setComplete(true);
               })
               .catch((error) => {
-                if (__DEV__) console.warn('[useOnboardingStatus] Error saving status:', error);
+                if (__DEV__) console.warn('Error saving onboarding status:', error);
                 // Still mark as complete even if save fails
                 setComplete(true);
               });
           }
         })
         .catch((error) => {
-          if (__DEV__) console.warn('[useOnboardingStatus] Error reading status:', error);
+          if (__DEV__) console.warn('Error reading onboarding status:', error);
           // Default to not complete on read error
           setComplete(false);
         });

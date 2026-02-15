@@ -7,9 +7,10 @@
  */
 
 import type { ViewStyle } from 'react-native';
+
+import type { HabitCardEntranceVariant } from './useHabitCardEntrance';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { TrackingRecord } from '../../lib/offline';
-import type { HabitCardEntranceVariant } from './useHabitCardEntrance';
 
 /** Completion icon type - chain link for visual "chain building" or checkbox */
 export type CompletionIconType = 'chain' | 'checkbox';

@@ -1,9 +1,12 @@
+
 import { View } from 'react-native';
-import { Heart, Dumbbell, Brain, Zap } from 'lucide-react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { AttributeCard } from './AttributeCard';
-import { ATTRIBUTE_CONFIGS } from '../constants';
+import { Heart, Dumbbell, Brain, Zap } from 'lucide-react-native';
+
 import type { CharacterAttributes } from '../types';
+import { ATTRIBUTE_CONFIGS } from '../constants';
+import { AttributeCard } from './AttributeCard';
 
 interface AttributesSectionProps {
   attributes: CharacterAttributes;

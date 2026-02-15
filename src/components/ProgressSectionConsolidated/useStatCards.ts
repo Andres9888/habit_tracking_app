@@ -6,6 +6,7 @@
  */
 
 import { useMemo } from 'react';
+
 import type { StatItemConfig, DayInfo } from './StatsGridTypes';
 import { STAT_CARD_COLORS } from './StatsGridTypes';
 

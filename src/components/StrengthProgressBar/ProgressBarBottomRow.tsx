@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { styles } from './StrengthProgressBar.styles';
+
 import type { LevelConfig, SizeConfig } from './StrengthProgressBar.types';
+import { styles } from './StrengthProgressBar.styles';
 
 interface ProgressBarBottomRowProps {
   showLabel: boolean;

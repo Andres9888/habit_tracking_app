@@ -5,6 +5,7 @@
 
 import React, { useRef } from 'react';
 import { View, ScrollView } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,

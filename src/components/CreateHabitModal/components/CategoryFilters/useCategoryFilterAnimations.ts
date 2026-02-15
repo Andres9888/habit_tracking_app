@@ -4,6 +4,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -13,12 +14,13 @@ import {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+
 import {
   ENTRANCE_STAGGER_DELAY,
   ENTRANCE_DURATION,
   ENTRANCE_TRANSLATE_Y,
 } from './CategoryFilters.constants';
+import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 
 export function useCategoryFilterAnimations(index: number) {
   const reduceMotion = useReduceMotion();

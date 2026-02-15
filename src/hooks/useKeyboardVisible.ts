@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Keyboard, Platform } from 'react-native';
+
 import type { KeyboardEvent } from 'react-native';
+import { Keyboard, Platform } from 'react-native';
+import { useEffect, useState } from 'react';
 
 /**
  * Hook that tracks keyboard visibility and height for responsive UI adjustments.

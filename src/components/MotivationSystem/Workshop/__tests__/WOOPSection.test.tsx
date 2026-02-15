@@ -15,7 +15,9 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
+
 import { WOOPSection, WOOPData } from '../WOOPSection';
 
 // Mock expo-haptics

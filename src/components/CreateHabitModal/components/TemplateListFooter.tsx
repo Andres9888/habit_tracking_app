@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+
 import { Pressable, Text, View } from 'react-native';
-import { ChevronDown } from 'lucide-react-native';
+import { useEffect } from 'react';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -10,6 +11,8 @@ import Animated, {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
+import { ChevronDown } from 'lucide-react-native';
+
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 

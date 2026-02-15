@@ -4,6 +4,7 @@
 
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,8 +13,9 @@ import Animated, {
   Easing,
   interpolate,
 } from 'react-native-reanimated';
-import { hexToRgba } from '../TemplateScienceModal.utils';
+
 import type { AnimatedBorderBoxProps } from '../TemplateScienceModal.types';
+import { hexToRgba } from '../TemplateScienceModal.utils';
 
 export const AnimatedBorderBox = ({
   children,

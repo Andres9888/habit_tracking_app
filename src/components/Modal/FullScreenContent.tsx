@@ -5,15 +5,17 @@
 
 import React from 'react';
 import type { ViewStyle } from 'react-native';
+
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import {
   GestureDetector,
   type GestureType,
 } from 'react-native-gesture-handler';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
+import { borderRadius } from '../../theme/spacing';
+import { styles } from './Modal.styles';
 import { useAppTheme } from '../../theme';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { styles } from './Modal.styles';
-import { borderRadius } from '../../theme/spacing';
 
 interface FullScreenContentProps {
   children: React.ReactNode;

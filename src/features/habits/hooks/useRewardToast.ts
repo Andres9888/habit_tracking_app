@@ -1,4 +1,6 @@
+
 import { useCallback, useState } from 'react';
+
 import type { Habit, RewardToastData } from '../types';
 import { logInteraction } from '../../../lib/analytics/interactions';
 

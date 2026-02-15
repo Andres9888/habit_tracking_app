@@ -5,18 +5,18 @@
 
 import React from 'react';
 import { View, ScrollView } from 'react-native';
+
+import type { TemplatePreviewModalProps } from './types';
 import Modal from '../../../components/Modal';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { ModalHeader } from './ModalHeader';
-import { ModalFooter } from './ModalFooter';
-import { TemplatePreview } from './TemplatePreview';
-import { NameInput } from './NameInput';
 import { ColorPicker } from './ColorPicker';
+import { ModalFooter } from './ModalFooter';
+import { ModalHeader } from './ModalHeader';
+import { NameInput } from './NameInput';
 import { ReminderTimePicker } from './ReminderTimePicker';
 import { TemplateInfo } from './TemplateInfo';
-import { useTemplatePreview } from './useTemplatePreview';
+import { TemplatePreview } from './TemplatePreview';
 import { styles } from './styles';
-import type { TemplatePreviewModalProps } from './types';
+import { useTemplatePreview } from './useTemplatePreview';
 
 export default function TemplatePreviewModal({
   importingTemplateId,
@@ -38,21 +38,18 @@ export default function TemplatePreviewModal({
     handleTimeChange,
   } = useTemplatePreview({ onClose, onImport, template });
 
-  const { colors } = useThemeColors();
-
   if (!template) return null;
 
   const isImporting = importingTemplateId === template._id;
 
   return (
     <Modal
-      accessibilityViewIsModal
       disableBackdropClose={isImporting}
       variant='fullScreen'
       visible={visible}
       onClose={handleClose}
     >
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={styles.container}>
         <ModalHeader disabled={isImporting} onClose={handleClose} />
 
         <ScrollView

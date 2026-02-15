@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { Text, View, Pressable, StyleSheet } from 'react-native';
+
 import type { TrialCountdownBannerProps } from './types';
 import { getTrialMessage } from './styles';
 

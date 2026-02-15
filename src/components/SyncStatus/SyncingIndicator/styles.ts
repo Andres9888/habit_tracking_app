@@ -6,9 +6,10 @@
  */
 
 import { StyleSheet } from 'react-native';
+
 import { borderRadius } from '../../../theme/spacing';
-import { typography } from '@/theme/typography';
 import { colors } from '../../../theme/colors';
+import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {

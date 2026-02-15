@@ -1,19 +1,19 @@
-/** PausedEmptyState - Empty state for paused habits, respects reduce-motion */
+/** PausedEmptyState - Empty state for paused habits */
+
 import { Text } from 'react-native';
-import Animated from 'react-native-reanimated';
+
+import Animated, { FadeInDown } from 'react-native-reanimated';
+
 import { useThemeColors } from '../../theme/ThemeContext';
-import { useReducedMotionEntry } from '../EmptyState/useReducedMotionEntry';
+
+const anim = FadeInDown.duration(280).delay(60).springify().damping(18);
 
 export function PausedEmptyState() {
   const { colors } = useThemeColors();
-  const { entry } = useReducedMotionEntry();
 
   return (
     <Animated.View
-      accessible
-      accessibilityLabel='No paused habits. Paused habits will appear here.'
-      accessibilityRole='text'
-      entering={entry(60)}
+      entering={anim}
       style={{ alignItems: 'center', gap: 12, paddingVertical: 48 }}
     >
       <Text style={{ fontSize: 48 }}>⏸️</Text>

@@ -3,11 +3,11 @@
  */
 
 import React from 'react';
-import { View, Text, TextInput } from 'react-native';
-import { useAppTheme } from '../../../theme';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { styles } from './styles';
+import { View, Text, TextInput, Keyboard } from 'react-native';
+
 import type { NameInputProps } from './types';
+import { styles } from './styles';
+import { useAppTheme } from '../../../theme';
 
 export function NameInput({
   customName,
@@ -15,17 +15,13 @@ export function NameInput({
   onChangeName,
 }: NameInputProps) {
   const theme = useAppTheme();
-  const { colors } = useThemeColors();
 
   return (
     <View style={styles.section}>
       <Text
         style={[
           styles.label,
-          {
-            color: colors.text.secondary,
-            fontFamily: theme.custom.fontFamilies.primary.text,
-          },
+          { fontFamily: theme.custom.fontFamilies.primary.text },
         ]}
       >
         Habit Name
@@ -34,18 +30,19 @@ export function NameInput({
         accessibilityLabel='Habit name'
         editable={!disabled}
         placeholder='Enter habit name'
-        placeholderTextColor={colors.text.tertiary}
+        placeholderTextColor='#a8a29e'
         style={[
           styles.input,
           {
-            backgroundColor: colors.gray[50],
-            borderColor: colors.gray[200],
-            color: colors.text.primary,
+            backgroundColor: theme.custom.colors.light.background,
+            borderColor: theme.custom.colors.gray[200],
             fontFamily: theme.custom.fontFamilies.primary.text,
           },
         ]}
+        returnKeyType='done'
         value={customName}
         onChangeText={onChangeName}
+        onSubmitEditing={Keyboard.dismiss}
       />
     </View>
   );

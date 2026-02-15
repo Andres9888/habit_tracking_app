@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import type { LevelConfig } from '../types';
 import { TrendIndicator } from './TrendIndicator';
 

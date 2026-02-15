@@ -5,13 +5,15 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import {
   BarChart3,
   CheckCircle2,
   Percent,
   Calendar,
 } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { JourneyStatsSectionProps } from '../InsightsSection.types';
 
 export function JourneyStatsSection({

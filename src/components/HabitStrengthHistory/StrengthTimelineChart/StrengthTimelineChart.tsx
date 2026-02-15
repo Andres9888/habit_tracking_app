@@ -3,24 +3,25 @@
  */
 
 import React, { useMemo } from 'react';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { getStrengthColor } from '../strengthUtils';
+import type { StrengthTimelineChartProps } from './types';
 import {
   DEFAULT_HEIGHT,
   DEFAULT_CHART_COLOR,
   MIN_HISTORY_LENGTH,
   PATH_ANIMATION_DURATION,
 } from './constants';
+import { ChartSvg } from './ChartSvg';
+import { NoDataState, BuildingHistoryState } from './EmptyStates';
+import { XAxisLabels } from './XAxisLabels';
 import { generateChartPaths } from './pathUtils';
 import { generateXAxisLabels, calculateTrendDescription } from './axisUtils';
+import { getStrengthColor } from '../strengthUtils';
 import { useChartDimensions } from './useChartDimensions';
 import { usePathAnimation } from './usePathAnimation';
 import { usePulseAnimation } from './usePulseAnimation';
-import { ChartSvg } from './ChartSvg';
-import { XAxisLabels } from './XAxisLabels';
-import { NoDataState, BuildingHistoryState } from './EmptyStates';
-import type { StrengthTimelineChartProps } from './types';
 
 export function StrengthTimelineChart({
   strengthHistory,

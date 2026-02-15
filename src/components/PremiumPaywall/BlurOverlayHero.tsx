@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import type { VariantConfig } from './PremiumPaywall.types';
 
 export function BlurOverlayHero({ config }: { config: VariantConfig }) {

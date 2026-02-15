@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Mic, Mail } from 'lucide-react-native';
 
 import { CapturePromptButton } from './CapturePromptButton';

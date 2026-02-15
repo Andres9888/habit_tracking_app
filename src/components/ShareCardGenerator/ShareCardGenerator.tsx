@@ -12,12 +12,9 @@
  */
 
 import React from 'react';
-import { View, ScrollView, Keyboard } from 'react-native';
-import type ViewShot from 'react-native-view-shot';
-import { Modal } from '../Modal';
-import { Button } from '../Button/Button';
-import { useShareCard } from './useShareCard';
-import { containerStyles, controlsStyles } from './styles';
+import { View, ScrollView, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+
+import type { ShareCardGeneratorProps } from './ShareCardGenerator.types';
 import {
   ShareCardPreview,
   ShareCardHeader,
@@ -26,7 +23,10 @@ import {
   PersonalMessageInput,
   UserNameToggle,
 } from './components';
-import type { ShareCardGeneratorProps } from './ShareCardGenerator.types';
+import { Button } from '../Button/Button';
+import { Modal } from '../Modal';
+import { containerStyles, controlsStyles } from './styles';
+import { useShareCard } from './useShareCard';
 
 export function ShareCardGenerator({
   visible,
@@ -52,7 +52,6 @@ export function ShareCardGenerator({
 
   return (
     <Modal variant='fullScreen' visible={visible} onClose={onClose}>
-      accessibilityViewIsModal
       <View style={containerStyles.container}>
         <ShareCardHeader onClose={onClose} />
 
@@ -67,7 +66,7 @@ export function ShareCardGenerator({
             showUserName={showUserName}
             strengthPercentage={data.strengthPercentage}
             userName={data.userName}
-            viewShotRef={viewShotRef as React.RefObject<ViewShot>}
+            viewShotRef={viewShotRef as any}
           />
         </View>
 

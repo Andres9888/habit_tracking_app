@@ -1,10 +1,13 @@
+
 import { Platform } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+
 import { springs } from '@/theme/animations';
 
 /**

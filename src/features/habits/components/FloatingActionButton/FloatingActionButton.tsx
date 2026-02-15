@@ -1,9 +1,12 @@
-import { Plus } from 'lucide-react-native';
+
 import { Animated, Pressable } from 'react-native';
-import { useFocusRing } from '../../../../utils/accessibility';
+
+import { Plus } from 'lucide-react-native';
+
+import type { FloatingActionButtonProps } from './types';
 import { useFABAnimations } from './useFABAnimations';
 import { useFABHandlers } from './useFABHandlers';
-import type { FloatingActionButtonProps } from './types';
+import { useFocusRing } from '../../../../utils/accessibility';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

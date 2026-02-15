@@ -4,8 +4,10 @@
  */
 
 import { useState, useRef } from 'react';
-import ViewShot from 'react-native-view-shot';
+
 import * as Sharing from 'expo-sharing';
+import ViewShot from 'react-native-view-shot';
+
 import type {
   SharePlatform,
   ShareCardData,

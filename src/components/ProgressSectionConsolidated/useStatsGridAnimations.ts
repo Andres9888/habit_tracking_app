@@ -5,11 +5,13 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
+
 import { Springs } from '../../constants/motion';
 
 interface UseStatsGridAnimationsArgs {

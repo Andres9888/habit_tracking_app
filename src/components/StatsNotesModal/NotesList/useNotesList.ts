@@ -4,10 +4,12 @@
  */
 
 import { useState, useEffect, useMemo } from 'react';
-import { useMutation, useQuery } from 'convex/react';
+
 import * as Haptics from 'expo-haptics';
-import { api } from '../../../../convex/_generated/api';
+import { useMutation, useQuery } from 'convex/react';
+
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { api } from '../../../../convex/_generated/api';
 
 export function useNotesList(initialHabitId?: Id<'habits'>) {
   const [searchText, setSearchText] = useState('');

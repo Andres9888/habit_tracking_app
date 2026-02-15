@@ -2,7 +2,9 @@
  * Particle - Individual radial particle for burst effect
  */
 
+import { StyleSheet } from 'react-native';
 import { useEffect } from 'react';
+
 import Animated, {
   Easing,
   interpolate,
@@ -11,7 +13,6 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import { StyleSheet } from 'react-native';
 
 const PARTICLE_SIZE = 8;
 

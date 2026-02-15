@@ -3,14 +3,16 @@
  */
 
 import { useEffect, useMemo } from 'react';
+
 import {
   useSharedValue,
   useAnimatedProps,
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+
 import { getLevelFromStrength } from './types';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 const RING_ANIMATION_DURATION = 800;
 const RING_SIZE = 56;

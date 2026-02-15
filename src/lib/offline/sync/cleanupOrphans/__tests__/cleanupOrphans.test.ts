@@ -2,13 +2,6 @@
  * Orphan Cleanup Main Function Tests
  */
 
-import type { Id } from '../../../../../../convex/_generated/dataModel';
-import type { OfflineOperation } from '../../../queue';
-import {
-  cleanupOrphans,
-  createOrphanCleaner,
-  DEFAULT_CLEANUP_BATCH_SIZE,
-} from '../cleanupOrphans';
 import type {
   CleanupOrphansConfig,
   CleanupOrphansDeps,
@@ -16,6 +9,13 @@ import type {
   HabitExistsResult,
   OrphanedOperation,
 } from '../types';
+import type { Id } from '../../../../../../convex/_generated/dataModel';
+import type { OfflineOperation } from '../../../queue';
+import {
+  cleanupOrphans,
+  createOrphanCleaner,
+  DEFAULT_CLEANUP_BATCH_SIZE,
+} from '../cleanupOrphans';
 
 // Helper to create test operations
 function createTestOperation(

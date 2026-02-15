@@ -5,9 +5,9 @@
  */
 
 import type { SuggestionChip } from '../types';
-import { trackTimeBasedChipEvent } from './trackers';
 import { getChipLabels } from './helpers';
 import { getTimeContext } from './timeContext';
+import { trackTimeBasedChipEvent } from './trackers';
 
 /** Track when user first views chips */
 export function createTrackChipsDisplayed() {

@@ -2,8 +2,9 @@
  * Animation hooks for HeroStrengthSection
  */
 
-import { useEffect, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
+import { useEffect, useState } from 'react';
+
 import {
   useSharedValue,
   useAnimatedProps,

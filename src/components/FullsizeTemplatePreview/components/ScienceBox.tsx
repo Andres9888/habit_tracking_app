@@ -5,16 +5,18 @@
 
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 import { ExternalLink } from 'lucide-react-native';
-import { useAppTheme } from '../../../theme';
-import { springs } from '@/theme/animations';
-import { scienceStyles } from '../styles';
+
 import type { Doc } from '../../../../convex/_generated/dataModel';
+import { scienceStyles } from '../styles';
+import { springs } from '@/theme/animations';
+import { useAppTheme } from '../../../theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

@@ -1,8 +1,11 @@
 /** SettingsHeader - Theme-aware header with shared close button */
+
 import { Text, View } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { ModalCloseButton } from '../ui/ModalCloseButton';
+
 import type { SettingsColors } from './types';
+import { ModalCloseButton } from '../ui/ModalCloseButton';
 
 interface SettingsHeaderProps {
   colors: SettingsColors;

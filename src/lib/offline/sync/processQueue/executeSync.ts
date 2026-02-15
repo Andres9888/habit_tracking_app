@@ -4,13 +4,13 @@
  * Handles the actual sync execution for offline operations.
  */
 
-import type { OfflineOperation, ToggleCompletionPayload } from '../../queue';
-import type { SyncItem } from '../../syncManager';
 import type {
   ProcessOperationResult,
   QueueProcessorDeps,
   ProcessSingleOptions,
 } from './types';
+import type { OfflineOperation, ToggleCompletionPayload } from '../../queue';
+import type { SyncItem } from '../../syncManager';
 
 /** Convert an offline operation to a sync item */
 export function operationToSyncItem(

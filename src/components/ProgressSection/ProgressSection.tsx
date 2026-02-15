@@ -8,12 +8,13 @@
  */
 
 import React from 'react';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
-import { YourProgressCard } from './YourProgressCard';
+import type { ProgressSectionProps } from './types';
 import { PersonalBestsCard } from './PersonalBestsCard';
 import { ThisMonthCard } from './ThisMonthCard';
-import type { ProgressSectionProps } from './types';
+import { YourProgressCard } from './YourProgressCard';
 import { useProgressSectionData } from './useProgressSectionData';
 
 export function ProgressSection({

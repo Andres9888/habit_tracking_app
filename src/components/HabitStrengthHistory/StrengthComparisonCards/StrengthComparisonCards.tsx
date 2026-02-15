@@ -10,9 +10,9 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import { isPerfectStreak } from '../strengthUtils';
-import { StrengthCard } from './StrengthCard';
 import type { StrengthComparisonCardsProps } from './types';
+import { StrengthCard } from './StrengthCard';
+import { isPerfectStreak } from '../strengthUtils';
 
 export function StrengthComparisonCards({
   current,

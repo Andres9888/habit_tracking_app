@@ -1,7 +1,9 @@
-import { memo, useCallback, useRef } from 'react';
+
 import { Animated, Pressable, Text, View } from 'react-native';
-import { HUBERMAN_PHASES } from '../../../../constants/hubermanPhases';
+import { memo, useCallback, useRef } from 'react';
+
 import type { QuickPickCardProps } from './types';
+import { HUBERMAN_PHASES } from '../../../../constants/hubermanPhases';
 
 const QuickPickCardComponent = ({
   template,

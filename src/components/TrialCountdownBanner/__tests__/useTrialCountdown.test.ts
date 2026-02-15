@@ -3,8 +3,9 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks';
-import { useTrialCountdown } from '../useTrialCountdown';
+
 import { usePremium } from '../../../hooks/usePremium';
+import { useTrialCountdown } from '../useTrialCountdown';
 
 jest.mock('../../../hooks/usePremium');
 

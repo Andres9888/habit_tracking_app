@@ -3,8 +3,8 @@
  * Type definitions for the Modal component and its variants
  */
 
-import type { ViewStyle } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 
 export type ModalVariant = 'bottomSheet' | 'fullScreen' | 'centerAlert';
 

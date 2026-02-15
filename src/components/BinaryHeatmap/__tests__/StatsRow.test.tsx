@@ -8,7 +8,9 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent, screen } from '@testing-library/react-native';
+
 import { StatsRow } from '../StatsRow';
 
 // Mock lucide-react-native icons - return simple string representations

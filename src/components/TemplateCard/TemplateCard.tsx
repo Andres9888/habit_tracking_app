@@ -1,13 +1,15 @@
+
 import React from 'react';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
+
+import type { TemplateCardProps } from './TemplateCard.types';
 import {
   useTemplateCardAnimations,
   useTemplateCardCallbacks,
   useTemplateCardHandlers,
 } from './hooks';
-import type { TemplateCardProps } from './TemplateCard.types';
-import { getTemplateCardState } from './TemplateCard.helpers';
 import { TemplateCardRender } from './TemplateCardRender';
+import { getTemplateCardState } from './TemplateCard.helpers';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export function TemplateCard(props: TemplateCardProps) {
   const {

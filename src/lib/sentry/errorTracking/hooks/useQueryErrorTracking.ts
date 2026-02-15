@@ -3,6 +3,7 @@
  */
 
 import { useCallback } from 'react';
+
 import { trackQueryError, addQueryBreadcrumb } from '../queryTracker';
 
 /** Hook for tracking query errors */

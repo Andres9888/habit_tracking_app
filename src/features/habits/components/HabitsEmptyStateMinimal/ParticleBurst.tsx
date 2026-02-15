@@ -9,8 +9,9 @@
  * - Uses reanimated for smooth 60fps animation
  */
 
-import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useMemo } from 'react';
+
 import { useReducedMotion } from 'react-native-reanimated';
 
 import { PARTICLE_BURST } from './animations';

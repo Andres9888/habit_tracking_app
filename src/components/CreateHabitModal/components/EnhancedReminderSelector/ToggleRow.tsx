@@ -2,9 +2,11 @@
  * ToggleRow - Row with bell icon, label, and switch
  */
 
-import { memo } from 'react';
 import { Switch, Text, View } from 'react-native';
+import { memo } from 'react';
+
 import { Bell } from 'lucide-react-native';
+
 import { shadows } from '../../../../theme/spacing';
 
 interface ToggleRowProps {

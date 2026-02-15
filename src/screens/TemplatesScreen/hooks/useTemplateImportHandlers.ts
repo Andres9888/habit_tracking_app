@@ -2,20 +2,13 @@
  * Handlers for template preview and import operations
  */
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback } from 'react';
+
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
 export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
   const showSuccess = useCallback(() => {
     o.setShowToast(true);
     o.setToastMessage('Imported habit successfully');
@@ -53,8 +46,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
         if (res.success) {
           o.setImportedTemplateIds((p) => new Set(p).add(id));
           showSuccess();
-          if (timeoutRef.current) clearTimeout(timeoutRef.current);
-          timeoutRef.current = setTimeout(() => o.setShowFullsizePreview(false), 1000);
+          setTimeout(() => o.setShowFullsizePreview(false), 1000);
         }
       } catch (error_) {
         if (__DEV__) console.error('[IMPORT] Failed to import:', error_);

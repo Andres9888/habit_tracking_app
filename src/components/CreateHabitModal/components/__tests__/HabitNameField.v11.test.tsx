@@ -12,7 +12,9 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
+
 import { HabitNameField } from '../HabitNameField';
 
 // Mock useHapticFeedback

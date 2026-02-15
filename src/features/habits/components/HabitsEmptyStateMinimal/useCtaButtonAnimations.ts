@@ -3,6 +3,7 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
+
 import {
   Easing,
   interpolate,
@@ -12,6 +13,7 @@ import {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+
 import { CTA_SHIMMER, CTA_TRANSFORMS, SPRING_CONFIGS } from './animations';
 
 interface UseCtaButtonAnimationsOptions {

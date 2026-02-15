@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { Eye, X } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface ExplainerHeaderProps {

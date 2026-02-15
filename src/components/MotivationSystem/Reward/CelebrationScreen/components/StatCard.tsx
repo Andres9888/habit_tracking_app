@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { clsx } from 'clsx';
 
 import type { StatCardProps } from '../types';

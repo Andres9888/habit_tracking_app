@@ -6,7 +6,9 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
+
 import { FloatingActionButton } from '../FloatingActionButton';
 
 describe('FloatingActionButton', () => {

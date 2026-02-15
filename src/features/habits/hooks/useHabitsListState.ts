@@ -8,24 +8,25 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import { useCallback, useMemo, useState } from 'react';
-import { useMutation, useQuery } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
-import type { Habit, HabitSettings, HabitSortMode } from '../types';
-import { useHabitsWeekDates } from './useHabitsWeekDates';
-import { useHabitsTracking } from './useHabitsTracking';
-import { useHabitsSorting } from './useHabitsSorting';
-import { useHabitsArchive } from './useHabitsArchive';
-import { useRewardToast } from './useRewardToast';
-import { useOptimisticToggleMutation } from '../../../lib/optimistic';
-import { useOptimisticDragEnd } from './useOptimisticDragEnd';
-import { useIsOnline } from '../../../contexts/NetworkStatusContext';
-import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
-import { useCompletionSound } from '../../../hooks/useCompletionSound';
-import { validateHabitsArray } from '../../../utils/validation';
-import type { HabitsListState } from './types';
+import { useCallback, useState } from 'react';
 
-import { FREE_HABIT_LIMIT } from '@/constants';
+import { useMutation, useQuery } from 'convex/react';
+
+import type { Habit, HabitSettings, HabitSortMode } from '../types';
+import type { HabitsListState } from './types';
+import { api } from '../../../../convex/_generated/api';
+import { useCompletionSound } from '../../../hooks/useCompletionSound';
+import { useHabitsArchive } from './useHabitsArchive';
+import { useHabitsSorting } from './useHabitsSorting';
+import { useHabitsTracking } from './useHabitsTracking';
+import { useHabitsWeekDates } from './useHabitsWeekDates';
+import { useIsOnline } from '../../../contexts/NetworkStatusContext';
+import { useOptimisticDragEnd } from './useOptimisticDragEnd';
+import { useOptimisticToggleMutation } from '../../../lib/optimistic';
+import { useRewardToast } from './useRewardToast';
+import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
+
+const FREE_HABIT_LIMIT = 3;
 
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
@@ -34,18 +35,8 @@ export function useHabitsListState(): HabitsListState {
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
   const habitsQuery = useQuery(api.habits.list);
-  // Validate and limit habits array for performance (guards against 100+ habits edge case)
-  const habitsValidation = useMemo(
-    () => validateHabitsArray(habitsQuery ?? []),
-    [habitsQuery]
-  );
-  const habitsFromQuery = habitsValidation.limited;
+  const habitsFromQuery = habitsQuery ?? [];
   const isHabitsLoading = habitsQuery === undefined;
-
-  // Warn if habits array was limited
-  if (habitsValidation.warning && __DEV__) {
-    console.warn('[useHabitsListState]', habitsValidation.warning);
-  }
 
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
@@ -116,22 +107,14 @@ export function useHabitsListState(): HabitsListState {
       const currentlyCompleted = isCompleted(args.habitId, args.date);
 
       // Call the original toggle function
-      const result = await baseToggleHabit(args);
+      await baseToggleHabit(args);
 
       // Play sound if marking as complete (not uncompleting)
       if (!currentlyCompleted) {
         playCompletionSound();
       }
-
-      return result;
     },
     [baseToggleHabit, isCompleted, playCompletionSound]
-  );
-
-  // Stable content padding reference to avoid object re-creation every render
-  const contentPadding = useMemo(
-    () => ({ paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 }),
-    []
   );
 
   return {
@@ -139,7 +122,7 @@ export function useHabitsListState(): HabitsListState {
     celebrationsEnabled,
     completionSoundEnabled,
     completionSoundType,
-    contentPadding,
+    contentPadding: { paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 },
     dayShape,
     freeHabitLimit: FREE_HABIT_LIMIT,
     habitCompletionIcon,

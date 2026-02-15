@@ -1,11 +1,14 @@
-import React from 'react';
-import { Text } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { styles } from './MilestoneProgress.styles';
-import { MILESTONES } from '../MilestoneProgressTypes';
-import type { Milestone } from '../MilestoneProgressTypes';
+
 import type { AnimatedStyle } from 'react-native-reanimated';
+import React from 'react';
 import type { ViewStyle } from 'react-native';
+import { Text } from 'react-native';
+
+import Animated from 'react-native-reanimated';
+
+import type { Milestone } from '../MilestoneProgressTypes';
+import { MILESTONES } from '../MilestoneProgressTypes';
+import { styles } from './MilestoneProgress.styles';
 
 interface CelebrationStateProps {
   accessibilityLabel: string;

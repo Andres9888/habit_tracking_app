@@ -10,7 +10,9 @@
  */
 
 import { useEffect } from 'react';
+
 import { useUser } from '@clerk/clerk-expo';
+
 import {
   initializePurchases,
   identifyUser,

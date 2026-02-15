@@ -6,6 +6,7 @@
  */
 
 import { View } from 'react-native';
+
 import { LockedHabitCard } from './LockedHabitCard';
 
 interface HabitsListFooterProps {

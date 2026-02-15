@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { ImageGridCell } from './ImageGridCell';
 import { MAX_IMAGES, type VisionBoardImage } from './types';
 

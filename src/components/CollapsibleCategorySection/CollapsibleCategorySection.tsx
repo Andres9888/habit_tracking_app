@@ -5,18 +5,19 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
+import type { CollapsibleCategorySectionProps } from './types';
 import {
   CATEGORY_COLORS,
   DEFAULT_CATEGORY_COLORS,
 } from '../../screens/templates/constants';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
-import type { CollapsibleCategorySectionProps } from './types';
-import { styles } from './styles';
-import { useHeaderAnimations } from './useHeaderAnimations';
 import { SectionHeader } from './SectionHeader';
 import { TemplatesList } from './TemplatesList';
+import { styles } from './styles';
+import { useHeaderAnimations } from './useHeaderAnimations';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 

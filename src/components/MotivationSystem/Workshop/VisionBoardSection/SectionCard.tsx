@@ -4,6 +4,8 @@
 
 import React, { useCallback } from 'react';
 import { View, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -11,9 +13,9 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
-import { shadows } from '../../../../theme/spacing';
+
 import { SPRING_BUTTON } from '../../../animations';
+import { shadows } from '../../../../theme/spacing';
 
 interface SectionCardProps {
   children: React.ReactNode;

@@ -6,14 +6,15 @@
  */
 
 import { useMemo, useState } from 'react';
-import { useHabitStrength } from '../../hooks/useHabitStrength';
-import { getStrengthLabel } from '../HabitStrengthHistory/strengthUtils';
+
 import type { TimeRange } from './types';
 import {
   calculateExtendedMetrics,
   generateChartDataFromCompletions,
   sampleHistoryForChart,
 } from './utils';
+import { getStrengthLabel } from '../HabitStrengthHistory/strengthUtils';
+import { useHabitStrength } from '../../hooks/useHabitStrength';
 
 interface HabitStrengthInput {
   completedDates: Set<string>;

@@ -3,9 +3,10 @@
  */
 
 import { useCallback } from 'react';
+
 import type { Id } from '../../../../convex/_generated/dataModel';
-import { optimisticStore } from '../store';
 import type { ReorderOperationPayload, PauseOperationPayload } from '../types';
+import { optimisticStore } from '../store';
 
 /**
  * Creates an optimistic reorder mutation wrapper

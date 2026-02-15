@@ -5,6 +5,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -18,11 +19,11 @@ import {
   SharedValue,
 } from 'react-native-reanimated';
 
-import { Springs } from '../../../../constants/motion';
 import {
   ENTRANCE_DURATION,
   SHIMMER_DURATION,
 } from '../TodaysFocusCard.constants';
+import { Springs } from '../../../../constants/motion';
 
 export interface UseFocusAnimationsResult {
   scale: SharedValue<number>;

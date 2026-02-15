@@ -4,8 +4,8 @@
  * Provides global access to a single StateReconciler instance.
  */
 
-import { StateReconciler } from './reconciler';
 import type { ReconciliationConfig } from './types';
+import { StateReconciler } from './reconciler';
 
 let reconcilerInstance: StateReconciler | null = null;
 

@@ -1,6 +1,7 @@
 /**
  * useStrengthRingAnimation - Animation logic for the strength ring
  */
+
 import { useEffect, useRef } from 'react';
 
 import {

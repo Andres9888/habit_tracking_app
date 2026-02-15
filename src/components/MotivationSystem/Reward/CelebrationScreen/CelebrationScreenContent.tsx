@@ -1,5 +1,8 @@
+
 import React from 'react';
 import { ScrollView } from 'react-native';
+
+import type { CelebrationScreenContentPropsExtended } from './CelebrationScreenContent.types';
 import {
   AnimatedSection,
   CaptureSection,
@@ -7,7 +10,6 @@ import {
   StatsRow,
   StreakDisplay,
 } from './components';
-import type { CelebrationScreenContentPropsExtended } from './CelebrationScreenContent.types';
 import { HeaderSection, ReflectionSection } from './sections';
 
 export function CelebrationScreenContent({

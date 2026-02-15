@@ -2,8 +2,9 @@
  * App resume trigger effect for useRescueTrigger
  */
 
-import { useEffect, useRef } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
+import { useEffect, useRef } from 'react';
+
 import type { RescueEligibleHabit } from './types';
 import { getHoursUntilMidnight } from './timeUtils';
 

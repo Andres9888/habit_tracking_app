@@ -3,10 +3,11 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import type { QueuedSubmission } from './types';
 import { QUEUE_INDEX_KEY } from './constants';
 import { getItemKey } from './utils';
 import { isValidQueuedSubmission } from './validation';
-import type { QueuedSubmission } from './types';
 
 /** Load the queue index from storage */
 export async function loadQueueIndex(): Promise<string[]> {

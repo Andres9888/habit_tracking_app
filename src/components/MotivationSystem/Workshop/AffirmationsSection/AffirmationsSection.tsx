@@ -4,11 +4,12 @@
  */
 
 import React, { useCallback } from 'react';
+
 import type { AffirmationsSectionProps } from './AffirmationsSection.types';
-import { useAffirmationsSection } from './useAffirmationsSection';
-import { SectionCard, AnimatedSection } from './components';
-import { AffirmationsSectionContent } from './components/AffirmationsSectionContent';
 import { AffirmationModals } from './components/AffirmationModals';
+import { AffirmationsSectionContent } from './components/AffirmationsSectionContent';
+import { SectionCard, AnimatedSection } from './components';
+import { useAffirmationsSection } from './useAffirmationsSection';
 
 export function AffirmationsSection({
   affirmations,

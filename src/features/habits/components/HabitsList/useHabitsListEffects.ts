@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import {
   ENTRANCE_ANIMATION_DELAY_MS,

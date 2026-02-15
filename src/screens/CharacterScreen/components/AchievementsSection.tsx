@@ -1,7 +1,10 @@
+
 import { View } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { AchievementCard } from './AchievementCard';
+
 import type { Achievement } from '../types';
+import { AchievementCard } from './AchievementCard';
 
 interface AchievementsSectionProps {
   achievements: Achievement[];

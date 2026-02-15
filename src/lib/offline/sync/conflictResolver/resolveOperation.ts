@@ -4,12 +4,6 @@
  * Implements US4 (Graceful Conflict Resolution) and FR-010 (completion wins).
  */
 
-import type { OfflineOperation } from '../../queue';
-import {
-  buildResolutionResult,
-  createConflictEvent,
-  resolveConflict,
-} from './helpers';
 import type {
   CompletionStateChecker,
   ConflictEventListener,
@@ -17,6 +11,12 @@ import type {
   ConflictResolverConfig,
   ServerCompletionState,
 } from './types';
+import type { OfflineOperation } from '../../queue';
+import {
+  buildResolutionResult,
+  createConflictEvent,
+  resolveConflict,
+} from './helpers';
 import {
   checkWithTimeout,
   emitConflictEvents,

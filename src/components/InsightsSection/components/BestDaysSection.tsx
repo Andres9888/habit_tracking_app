@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { Calendar } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { BestDaysSectionProps } from '../InsightsSection.types';
 import { DayBar } from './DayBar';
 import { DayStatsCards } from './DayStatsCards';

@@ -11,9 +11,11 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { HabitNameField } from '../HabitNameField';
+
 import STRINGS from '../../../../constants/strings';
+import { HabitNameField } from '../HabitNameField';
 
 // Mock useHapticFeedback
 const mockTriggerWarning = jest.fn();

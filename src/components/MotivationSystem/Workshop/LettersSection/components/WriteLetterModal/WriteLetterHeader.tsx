@@ -5,9 +5,11 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { Mail, X } from 'lucide-react-native';
-import { useThemeColors } from '../../../../../../theme/ThemeContext';
+
 import type { WriteLetterStep } from './WriteLetterModal.types';
+import { useThemeColors } from '../../../../../../theme/ThemeContext';
 
 interface WriteLetterHeaderProps {
   step: WriteLetterStep;

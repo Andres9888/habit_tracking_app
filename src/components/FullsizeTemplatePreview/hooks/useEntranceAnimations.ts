@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useSharedValue,
   withSpring,
@@ -10,8 +11,9 @@ import {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import { Springs } from '../../../constants/motion';
+
 import type { Doc } from '../../../../convex/_generated/dataModel';
+import { Springs } from '../../../constants/motion';
 
 interface UseEntranceAnimationsProps {
   visible: boolean;

@@ -1,4 +1,6 @@
+
 import { Zap, Target, Trophy, Sparkles, Flame } from 'lucide-react-native';
+
 import type { ProgressColors, MotivationalMessage } from './types';
 
 export function getProgressColors(percentage: number): ProgressColors {

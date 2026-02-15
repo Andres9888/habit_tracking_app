@@ -8,6 +8,7 @@ import {
   interpolate,
   Extrapolation,
 } from 'react-native-reanimated';
+
 import type { AnimationValues } from './animatedStyles.types';
 import { useButtonAnimatedStyles } from './buttonAnimatedStyles';
 import { useCardAnimatedStyles } from './cardAnimatedStyles';

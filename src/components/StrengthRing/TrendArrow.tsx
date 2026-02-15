@@ -1,6 +1,7 @@
 /**
  * TrendArrow - Displays an up, down, or stable trend indicator
  */
+
 import React from 'react';
 import { Text } from 'react-native';
 

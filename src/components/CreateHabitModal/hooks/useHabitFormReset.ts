@@ -3,11 +3,12 @@
  */
 
 import { useCallback } from 'react';
+
 import type { HubermanPhase } from '../../../constants/hubermanPhases';
 import type { ReminderOption } from '../components/ReminderSelector';
 import { DEFAULT_COLOR } from '../constants';
-import { parseReminderTime } from '../utils';
 import { getSmartReminderDefault } from '../../../utils/reminderDefaults';
+import { parseReminderTime } from '../utils';
 
 const DEFAULT_SOUND = 'Default';
 

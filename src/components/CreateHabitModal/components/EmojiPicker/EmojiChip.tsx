@@ -5,8 +5,9 @@
  * V11 Task 8: Respects reduced motion preference
  */
 
-import { memo, useCallback } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { memo, useCallback } from 'react';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -14,6 +15,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
+
 import type { EmojiChipProps } from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);

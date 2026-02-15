@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { View } from 'react-native';
+
+import type { ReduceMotionProps } from './types';
 import { SkeletonLoader } from './SkeletonLoader';
 import { useSkeletonTheme } from './useSkeletonTheme';
-import type { ReduceMotionProps } from './types';
 
 function StatCardSkeleton({ reduceMotion, surfaceBg }: ReduceMotionProps & { surfaceBg: string }) {
   return (

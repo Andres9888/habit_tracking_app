@@ -1,8 +1,11 @@
-import { memo, useCallback, useMemo } from 'react';
+
 import { FlatList, Text, View } from 'react-native';
+import { memo, useCallback, useMemo } from 'react';
+
 import { Search } from 'lucide-react-native';
-import { EmojiItem } from './EmojiItem';
+
 import { EMOJIS_PER_ROW } from '../EmojiPicker.constants';
+import { EmojiItem } from './EmojiItem';
 
 interface EmojiGridProps {
   displayedEmojis: string[];

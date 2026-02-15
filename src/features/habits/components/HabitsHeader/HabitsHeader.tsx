@@ -3,14 +3,16 @@
 
 import { View, Text } from 'react-native';
 import { memo } from 'react';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { useTemplateBadge } from '../../hooks/useTemplateBadge';
-import { DailyProgressRing } from '../../../../components/DailyProgressRing';
+
 import type { HabitsHeaderProps } from './types';
+import { DailyProgressRing } from '../../../../components/DailyProgressRing';
 import { IconButtonGroup } from './IconButtonGroup';
 import { ProBadge } from './ProBadge';
 import { useHeaderAnimations } from './useHeaderAnimations';
 import { useHeaderHandlers } from './useHeaderHandlers';
+import { useTemplateBadge } from '../../hooks/useTemplateBadge';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const ENTERING = FadeInDown.duration(280).springify().damping(18);

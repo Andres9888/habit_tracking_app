@@ -1,10 +1,13 @@
+
 import React from 'react';
 import { View } from 'react-native';
+
 import { Clock, Zap } from 'lucide-react-native';
-import { AnimatedContent } from './AnimatedContent';
-import { StartNowButton } from './StartNowButton';
-import { QuickAction } from './QuickAction';
+
 import type { ActivationHabitData } from './types';
+import { AnimatedContent } from './AnimatedContent';
+import { QuickAction } from './QuickAction';
+import { StartNowButton } from './StartNowButton';
 
 interface ActivationModalActionsProps {
   habit: ActivationHabitData;

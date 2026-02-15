@@ -3,6 +3,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import { MAX_IMAGES, type VisionBoardImage } from './types';
 import { useImageUploader } from './useImageUploader';

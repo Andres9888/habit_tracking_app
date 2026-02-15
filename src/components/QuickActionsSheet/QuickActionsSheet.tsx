@@ -6,8 +6,8 @@
 
 import React, { useCallback } from 'react';
 import { Pressable, Modal, Dimensions } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -18,12 +18,13 @@ import Animated, {
   withSpring,
   runOnJS,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useThemeColors } from '../../theme/ThemeContext';
 import type { QuickActionsSheetProps } from './types';
-import { SheetHeader } from './SheetHeader';
 import { ActionsList } from './ActionsList';
+import { SheetHeader } from './SheetHeader';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const DISMISS_THRESHOLD = 100;
 const VELOCITY_THRESHOLD = 500;

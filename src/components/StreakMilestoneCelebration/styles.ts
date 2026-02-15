@@ -5,9 +5,10 @@
  */
 
 import { StyleSheet } from 'react-native';
+
+import { colors } from '../../theme/colors';
 import { spacing, borderRadius, shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
-import { colors } from '../../theme/colors';
 
 export const styles = StyleSheet.create({
   // Content card

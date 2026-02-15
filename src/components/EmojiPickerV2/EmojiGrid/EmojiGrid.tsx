@@ -1,10 +1,11 @@
-import { memo, useCallback } from 'react';
-import { FlatList, View, Text, type ListRenderItemInfo } from 'react-native';
 
+import { FlatList, View, Text, type ListRenderItemInfo } from 'react-native';
+import { memo, useCallback } from 'react';
+
+import type { EmojiGridProps } from './types';
 import { EmojiRow } from './EmojiRow';
 import { EmptyState } from './EmptyState';
 import { styles } from './styles';
-import type { EmojiGridProps } from './types';
 import { useEmojiGrid } from './useEmojiGrid';
 
 /**

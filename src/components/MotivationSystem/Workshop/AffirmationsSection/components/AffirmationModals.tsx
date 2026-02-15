@@ -4,13 +4,14 @@
  */
 
 import React from 'react';
-import { AffirmationScheduleModal } from '../../AffirmationScheduleModal';
+
 import type {
   AffirmationData,
   AffirmationType,
 } from '../AffirmationsSection.types';
 import type { AffirmationScheduleConfig } from '../AffirmationsSection.types';
 import { AffirmationEditorModal } from './AffirmationEditorModal';
+import { AffirmationScheduleModal } from '../../AffirmationScheduleModal';
 
 interface AffirmationModalsProps {
   // Editor modal

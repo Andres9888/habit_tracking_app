@@ -1,13 +1,15 @@
 /**
  * Live preview of habit being created/edited
  */
+
 import { Text, View } from 'react-native';
-import { SkeletonCard } from '../SkeletonLoader';
-import { usePreviewAnimations } from './usePreviewAnimations';
-import { getAccessibilityLabel } from './helpers';
+
+import type { HabitPreviewProps } from './types';
 import { EmptyPreview } from './EmptyPreview';
 import { PreviewContent } from './PreviewContent';
-import type { HabitPreviewProps } from './types';
+import { SkeletonCard } from '../SkeletonLoader';
+import { getAccessibilityLabel } from './helpers';
+import { usePreviewAnimations } from './usePreviewAnimations';
 
 export const HabitPreview = ({
   habitName,

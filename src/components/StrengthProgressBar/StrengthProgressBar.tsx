@@ -5,6 +5,7 @@
 
 import React, { memo } from 'react';
 import { View } from 'react-native';
+
 import type { StrengthProgressBarProps } from './StrengthProgressBar.types';
 import {
   getCurrentLevel,
@@ -12,10 +13,10 @@ import {
   formatStrengthPercentage,
   SIZE_CONFIG,
 } from './StrengthProgressBar.constants';
-import { useStrengthAnimation } from './useStrengthAnimation';
-import { styles } from './StrengthProgressBar.styles';
 import { ProgressBarBottomRow } from './ProgressBarBottomRow';
 import { ProgressBarRow } from './ProgressBarRow';
+import { styles } from './StrengthProgressBar.styles';
+import { useStrengthAnimation } from './useStrengthAnimation';
 
 export const StrengthProgressBar = memo(({
   showDividers = true,

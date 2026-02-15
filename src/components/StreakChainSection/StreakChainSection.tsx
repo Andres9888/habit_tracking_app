@@ -5,18 +5,19 @@
 
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 
 import type { StreakChainSectionProps } from './types';
-import { getTierInfo } from './constants';
+import { BestStreakBadge } from './BestStreakBadge';
+import { ChainRow } from './ChainRow';
 import { ContextualMessage } from './ContextualMessage';
+import { ProgressBar } from './ProgressBar';
 import { StreakHeader } from './StreakHeader';
 import { StreakNumber } from './StreakNumber';
-import { ProgressBar } from './ProgressBar';
-import { ChainRow } from './ChainRow';
-import { BestStreakBadge } from './BestStreakBadge';
-import { useStreakAnimation } from './useStreakAnimation';
 import { buildChainData, getDayLabels } from './chainUtils';
+import { getTierInfo } from './constants';
+import { useStreakAnimation } from './useStreakAnimation';
 
 export function StreakChainSection({
   bestStreak,

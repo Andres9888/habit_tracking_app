@@ -3,10 +3,10 @@
  * Per spec: 36×36px visual, 48×48px tap, scale 1.15 selected with white+color rings
  */
 
+import { Animated, TouchableOpacity, View } from 'react-native';
 import { useCallback, useRef } from 'react';
-import { Animated, View } from 'react-native';
+
 import { Motion } from '../../../../constants/motion';
-import { AnimatedPressable } from '../../../ui';
 
 interface ColorSwatchProps {
   color: string;
@@ -91,10 +91,11 @@ export const ColorSwatch = ({
               padding: isSelected ? 3 : 0,
             }}
           >
-            <AnimatedPressable
+            <TouchableOpacity
               accessibilityLabel={`${colorName} color${isSelected ? ', selected' : ''}`}
               accessibilityRole='button'
               accessibilityState={{ selected: isSelected }}
+              activeOpacity={0.8}
               style={getSwatchStyle(color, isSelected)}
               testID={`color-swatch-${color.replace('#', '')}`}
               onPress={onPress}

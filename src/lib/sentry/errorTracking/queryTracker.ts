@@ -3,9 +3,9 @@
  * Specialized tracking for Convex query errors.
  */
 
+import type { QueryErrorContext, TrackedError } from './types';
 import { getSentryReporter } from '../reporter/index';
 import { trackError } from './tracker';
-import type { QueryErrorContext, TrackedError } from './types';
 
 /** Sanitize query arguments */
 function sanitizeQueryArgs(

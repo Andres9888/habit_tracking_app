@@ -4,15 +4,17 @@
 
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
+
 import { useCallback, useMemo } from 'react';
+
 import type { HabitDoc } from '../types';
-import { buildHabitName } from '../utils';
 import type { ReminderOption } from '../components/ReminderSelector';
-import { useReminderOptionSync } from './useReminderOptionSync';
-import { useHabitFormState } from './useHabitFormState';
+import { buildHabitName } from '../utils';
+import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { useHabitFormInit } from './useHabitFormInit';
 import { useHabitFormReset } from './useHabitFormReset';
-import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
+import { useHabitFormState } from './useHabitFormState';
+import { useReminderOptionSync } from './useReminderOptionSync';
 import { validateHabitName } from '../../../utils/validation';
 
 interface UseHabitFormOptions {

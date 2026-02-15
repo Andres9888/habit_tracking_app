@@ -8,14 +8,16 @@
  */
 
 import { Pressable, type ViewStyle } from 'react-native';
+
 import Animated from 'react-native-reanimated';
-import { useAppTheme } from '../../theme';
-import { useFocusRing } from '../../utils/accessibility';
+
+import type { ButtonProps } from './types';
 import { ButtonContent } from './ButtonContent';
 import { styles } from './styles';
-import type { ButtonProps } from './types';
+import { useAppTheme } from '../../theme';
 import { useButtonAnimation } from './useButtonAnimation';
 import { useButtonConfig } from './useButtonConfig';
+import { useFocusRing } from '../../utils/accessibility';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

@@ -9,8 +9,8 @@ import type {
   OfflineQueueState,
   QueueEvent,
 } from '../../queue';
-import { calculateStats } from '../helpers';
 import type { BatchStatusResult } from './types';
+import { calculateStats } from '../helpers';
 
 type StateGetter = () => OfflineQueueState;
 type StateSetter = (state: OfflineQueueState) => void;

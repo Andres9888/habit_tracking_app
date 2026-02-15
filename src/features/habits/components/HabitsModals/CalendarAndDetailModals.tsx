@@ -1,8 +1,9 @@
+
+import type { CalendarAndDetailModalsProps } from './HabitsModals.types';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
 import HabitCalendarModal from '../../../../components/HabitCalendarModal';
 import HabitDetailScreen from '../../../../screens/HabitDetailScreen';
 import HabitEditScreen from '../../../../screens/HabitEditScreen';
-import type { CalendarAndDetailModalsProps } from './HabitsModals.types';
 
 /** Calendar and detail modals section - handles habit calendar, detail, and edit screens */
 export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {

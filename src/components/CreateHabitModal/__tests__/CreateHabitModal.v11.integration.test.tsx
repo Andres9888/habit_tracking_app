@@ -11,9 +11,10 @@
  */
 
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
+
 import { Gesture } from 'react-native-gesture-handler';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 
 // Mock dependencies before imports
 jest.mock('convex/react', () => ({

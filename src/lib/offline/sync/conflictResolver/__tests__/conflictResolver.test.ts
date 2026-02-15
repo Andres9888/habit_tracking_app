@@ -5,6 +5,11 @@
  * Implements US4 (Graceful Conflict Resolution) and FR-010 (completion wins).
  */
 
+import type {
+  BatchCompletionStateChecker,
+  CompletionStateChecker,
+  ConflictEvent,
+} from '../types';
 import type { Id } from '../../../../../../convex/_generated/dataModel';
 import type { OfflineOperation } from '../../../queue';
 import {
@@ -14,11 +19,6 @@ import {
   resolveOperationsBatch,
 } from '../conflictResolver';
 import { createHabitDateKey } from '../helpers';
-import type {
-  BatchCompletionStateChecker,
-  CompletionStateChecker,
-  ConflictEvent,
-} from '../types';
 
 describe('conflictResolver', () => {
   const mockHabitId = 'habit_123' as Id<'habits'>;

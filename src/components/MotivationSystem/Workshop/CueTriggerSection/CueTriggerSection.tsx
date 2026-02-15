@@ -9,13 +9,15 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Plus, Pencil } from 'lucide-react-native';
-import { CompletionCheckmark } from '../../../animations';
-import { SectionCard } from './SectionCard';
-import { AnimatedSection } from './AnimatedSection';
-import { CueField } from './CueField';
-import { hasCueData } from './utils';
+
 import type { CueTriggerSectionProps } from './types';
+import { AnimatedSection } from './AnimatedSection';
+import { CompletionCheckmark } from '../../../animations';
+import { CueField } from './CueField';
+import { SectionCard } from './SectionCard';
+import { hasCueData } from './utils';
 
 export function CueTriggerSection({
   cue,

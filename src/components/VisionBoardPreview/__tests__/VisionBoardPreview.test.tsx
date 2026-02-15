@@ -1,10 +1,13 @@
+
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
-import { VisionBoardPreview } from '../VisionBoardPreview';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 import * as Haptics from 'expo-haptics';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { VisionBoardPreview } from '../VisionBoardPreview';
 
 // Mock expo-haptics
 jest.mock('expo-haptics');

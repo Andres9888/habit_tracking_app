@@ -1,10 +1,13 @@
+
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
-import { RefreshCw, X } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
-import { VARIANT_STYLES } from './constants';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { RefreshCw, X } from 'lucide-react-native';
+
 import type { DraftRecoveryBannerProps } from './types';
+import { VARIANT_STYLES } from './constants';
 
 export function DraftRecoveryBanner({
   visible,
@@ -30,7 +33,7 @@ export function DraftRecoveryBanner({
   return (
     <Animated.View
       className={`mx-4 mb-3 rounded-xl border ${styles.border} ${styles.bg} p-3`}
-      entering={FadeInDown.duration(280).springify().damping(18)}
+      entering={FadeIn.duration(200)}
       exiting={FadeOut.duration(150)}
     >
       <View className='flex-row items-center gap-3'>

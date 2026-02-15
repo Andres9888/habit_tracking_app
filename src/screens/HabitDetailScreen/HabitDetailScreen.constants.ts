@@ -1,22 +1,15 @@
 /** Constants and helpers for HabitDetailScreen */
-import { darkColors, lightColors } from '../../theme/darkColors';
+
 import type { EdgeInsets } from 'react-native-safe-area-context';
+
 import type { Doc } from '../../../convex/_generated/dataModel';
+import { colors } from '../../theme/colors';
 
-export const DETAIL_BG_GRADIENT_LIGHT = [
-  lightColors.background,
-  lightColors.gray[50],
-  lightColors.background,
+export const DETAIL_BG_GRADIENT = [
+  colors.light.background,
+  colors.light.gradientMid,
+  colors.light.background,
 ] as const;
-
-export const DETAIL_BG_GRADIENT_DARK = [
-  darkColors.background,
-  darkColors.surface,
-  darkColors.background,
-] as const;
-
-/** @deprecated Use DETAIL_BG_GRADIENT_LIGHT/DARK with useThemeColors instead */
-export const DETAIL_BG_GRADIENT = DETAIL_BG_GRADIENT_LIGHT;
 
 /** Assemble props for HabitDetailModals from hook return values */
 export function buildModalsProps(

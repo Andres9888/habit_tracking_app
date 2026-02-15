@@ -5,15 +5,13 @@
  * Design system: #059669 fill, #e7e5e4 track, springify().damping(18).
  */
 
-import { memo, useEffect } from 'react';
 import { View, Text, Platform } from 'react-native';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { memo, useEffect } from 'react';
+
 import Animated, {
   useSharedValue,
   useAnimatedProps,
-  useAnimatedStyle,
   withSpring,
-  withSequence,
   FadeIn,
 } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
@@ -39,61 +37,38 @@ function DailyProgressRingComponent({
   size = 64,
   strokeWidth = 6,
 }: DailyProgressRingProps): React.ReactElement {
-  const { colors: themeColors } = useThemeColors();
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = useSharedValue(0);
-  const ringScale = useSharedValue(1);
 
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
 
   useEffect(() => {
     const target = total > 0 ? completed / total : 0;
-    // Spring-physics fill with design system values
-    progress.value = withSpring(target, { damping: 18, stiffness: 150 });
-
-    // Subtle scale pulse when progress changes (premium micro-interaction)
-    if (target > 0) {
-      ringScale.value = withSequence(
-        withSpring(1.04, { damping: 12, stiffness: 200 }),
-        withSpring(1, { damping: 18, stiffness: 150 })
-      );
-    }
-  }, [completed, total, progress, ringScale]);
+    progress.value = withSpring(target, { damping: 18 });
+  }, [completed, total, progress]);
 
   const animatedProps = useAnimatedProps(() => ({
     strokeDashoffset: circumference * (1 - progress.value),
   }));
 
-  const scaleStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: ringScale.value }],
-  }));
-
   return (
-    <Animated.View
-      entering={FadeIn.duration(280).springify().damping(18)}
-      style={scaleStyle}
-    >
+    <Animated.View entering={FadeIn.duration(280).springify().damping(18)}>
       <View
-        accessible
-        accessibilityLabel={`${completed} of ${total} habits completed, ${percentage} percent`}
-        accessibilityRole='progressbar'
-        accessibilityValue={{ max: total, min: 0, now: completed }}
-        style={{
-          alignItems: 'center',
-          height: size,
-          justifyContent: 'center',
-          width: size,
-        }}
+        style={{ alignItems: 'center', height: size, justifyContent: 'center', width: size }}
       >
-        <Svg height={size} style={{ position: 'absolute' }} width={size}>
+        <Svg
+          height={size}
+          style={{ position: 'absolute' }}
+          width={size}
+        >
           {/* Track */}
           <Circle
             cx={size / 2}
             cy={size / 2}
-            fill='none'
+            fill="none"
             r={radius}
-            stroke={themeColors.border ?? '#e7e5e4'}
+            stroke="#e7e5e4"
             strokeWidth={strokeWidth}
           />
           {/* Progress */}
@@ -101,19 +76,19 @@ function DailyProgressRingComponent({
             animatedProps={animatedProps}
             cx={size / 2}
             cy={size / 2}
-            fill='none'
+            fill="none"
             origin={`${size / 2}, ${size / 2}`}
             r={radius}
-            rotation='-90'
-            stroke={themeColors.primary?.[500] ?? '#059669'}
+            rotation="-90"
+            stroke="#059669"
             strokeDasharray={circumference}
-            strokeLinecap='round'
+            strokeLinecap="round"
             strokeWidth={strokeWidth}
           />
         </Svg>
         <Text
           style={{
-            color: themeColors.primary?.[700] ?? '#047857',
+            color: '#047857',
             fontFamily: FONT_FAMILY,
             fontSize: 13,
             fontWeight: '700',

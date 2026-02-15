@@ -1,12 +1,15 @@
 /**
  * ExportMenu - Modal for selecting data export format
  */
+
 import React from 'react';
 import { View, Text, Pressable, Modal } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
+
+import type { ExportFormat } from '../AnalyticsScreen.types';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../../theme/colors';
-import type { ExportFormat } from '../AnalyticsScreen.types';
 import { styles } from './ExportMenu.styles';
 
 interface ExportMenuProps {

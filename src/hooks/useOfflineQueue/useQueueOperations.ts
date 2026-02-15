@@ -3,6 +3,9 @@
  */
 
 import { useCallback } from 'react';
+
+import type { OfflineSubmissionType, QueuedSubmission } from './types';
+import type { UseQueueOperationsProps } from './useQueueOperations.types';
 import {
   loadQueueIndex,
   saveQueueIndex,
@@ -12,8 +15,6 @@ import {
   loadAllQueueItems,
 } from './storage';
 import { generateSubmissionId, calculateQueueStats } from './utils';
-import type { OfflineSubmissionType, QueuedSubmission } from './types';
-import type { UseQueueOperationsProps } from './useQueueOperations.types';
 
 export function useQueueOperations({
   maxQueueSize,

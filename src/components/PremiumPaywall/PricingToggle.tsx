@@ -2,9 +2,9 @@
  * Monthly/Annual pricing toggle for blur overlay variants
  */
 
+import type { PurchasesPackage } from 'react-native-purchases';
 import React, { useState } from 'react';
 import { View, Pressable, Text } from 'react-native';
-import type { PurchasesPackage } from 'react-native-purchases';
 
 interface PricingToggleProps {
   monthlyPackage: PurchasesPackage | null;

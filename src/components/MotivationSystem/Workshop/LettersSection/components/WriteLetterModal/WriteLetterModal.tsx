@@ -5,13 +5,14 @@
 
 import React from 'react';
 import { Modal, KeyboardAvoidingView, Platform } from 'react-native';
+
 import type { WriteLetterModalProps } from './WriteLetterModal.types';
-import { useWriteLetterModal } from './useWriteLetterModal';
-import { WriteLetterHeader } from './WriteLetterHeader';
-import { WriteLetterFooter } from './WriteLetterFooter';
-import { useThemeColors } from '../../../../../../theme/ThemeContext';
-import { WriteStep } from './WriteStep';
 import { ScheduleStep } from './ScheduleStep';
+import { WriteLetterFooter } from './WriteLetterFooter';
+import { WriteLetterHeader } from './WriteLetterHeader';
+import { WriteStep } from './WriteStep';
+import { useThemeColors } from '../../../../../../theme/ThemeContext';
+import { useWriteLetterModal } from './useWriteLetterModal';
 
 export function WriteLetterModal({
   visible,

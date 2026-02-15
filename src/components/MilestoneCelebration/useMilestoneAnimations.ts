@@ -3,8 +3,10 @@
  */
 
 import { useEffect } from 'react';
-import { useSharedValue } from 'react-native-reanimated';
+
 import * as Haptics from 'expo-haptics';
+import { useSharedValue } from 'react-native-reanimated';
+
 import { runAnimationSequence, resetAnimations } from './animationSequences';
 
 interface UseAnimationsProps {

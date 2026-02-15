@@ -3,6 +3,12 @@
  * Batch Resolution Helpers
  */
 
+import type {
+  BatchConflictResolutionResult,
+  ConflictEventListener,
+  ConflictResolutionResult,
+  ServerCompletionState,
+} from './types';
 import type { OfflineOperation } from '../../queue';
 import {
   buildBatchResult,
@@ -11,12 +17,6 @@ import {
   createHabitDateKey,
   resolveConflict,
 } from './helpers';
-import type {
-  BatchConflictResolutionResult,
-  ConflictEventListener,
-  ConflictResolutionResult,
-  ServerCompletionState,
-} from './types';
 
 export { handleBatchError } from './batchErrorHandler';
 

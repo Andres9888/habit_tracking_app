@@ -10,6 +10,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import {
   CheckCircle2,
   TrendingUp,
@@ -17,6 +18,7 @@ import {
   Calendar,
   BarChart3,
 } from 'lucide-react-native';
+
 import { StatCard } from './StatCard';
 
 export interface StatsGridProps {

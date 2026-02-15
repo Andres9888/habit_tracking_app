@@ -3,7 +3,12 @@
  */
 
 import { renderHook, act } from '@testing-library/react-native';
-import { optimisticStore } from '../store';
+
+import type { Id } from '../../../../convex/_generated/dataModel';
+import {
+  resetOfflineQueueManager,
+  getOfflineQueueManager,
+} from '../../offline';
 import {
   useOptimisticStore,
   useHasPendingOperations,
@@ -15,11 +20,7 @@ import {
   useOptimisticArchiveMutation,
   useOptimisticReorderMutation,
 } from '../hooks';
-import type { Id } from '../../../../convex/_generated/dataModel';
-import {
-  resetOfflineQueueManager,
-  getOfflineQueueManager,
-} from '../../offline';
+import { optimisticStore } from '../store';
 
 // Helper to create mock habit ID
 const mockHabitId = (id: string) => id as Id<'habits'>;

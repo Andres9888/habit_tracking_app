@@ -5,13 +5,15 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
-import { HeatmapLegend } from '../HeatmapLegend';
+
 import {
   COLORS,
   LEGEND_INDICATOR_SIZE,
   CELL_BORDER_RADIUS,
 } from '../constants';
+import { HeatmapLegend } from '../HeatmapLegend';
 
 describe('HeatmapLegend', () => {
   const defaultProps = {

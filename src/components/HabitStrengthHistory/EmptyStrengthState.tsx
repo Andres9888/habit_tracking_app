@@ -1,7 +1,10 @@
+
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { Info, Zap } from 'lucide-react-native';
+
 import { useThemeColors } from '../../theme/ThemeContext';
 
 const SECTION_FADE_DURATION = 400;

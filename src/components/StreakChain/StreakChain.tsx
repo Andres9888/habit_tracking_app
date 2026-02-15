@@ -1,8 +1,11 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Feather } from '@expo/vector-icons';
+
+import type { DayStatus, StreakChainProps } from './StreakChain.types';
 import { useStreakChainLogic } from './StreakChain.hooks';
-import type { StreakChainProps } from './StreakChain.types';
 
 // Re-export types for backwards compatibility
 export type { DayStatus, StreakChainProps } from './StreakChain.types';

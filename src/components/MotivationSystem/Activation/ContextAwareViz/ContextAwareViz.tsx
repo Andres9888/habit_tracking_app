@@ -12,13 +12,14 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { clsx } from 'clsx';
 
 import type { ContextAwareVizProps } from './types';
-import { useVizData } from './useVizData';
-import { useIconAnimation } from './useIconAnimation';
-import { VizHeader } from './VizHeader';
 import { VisualizationContent } from './VisualizationContent';
+import { VizHeader } from './VizHeader';
+import { useIconAnimation } from './useIconAnimation';
+import { useVizData } from './useVizData';
 
 export function ContextAwareViz({
   motivationLevel,

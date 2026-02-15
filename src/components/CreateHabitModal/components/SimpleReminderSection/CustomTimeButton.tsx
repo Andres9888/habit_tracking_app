@@ -3,7 +3,9 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
+
 import { ChevronRight } from 'lucide-react-native';
+
 import { formatReminderTime } from '../../../../utils/notifications';
 
 interface CustomTimeButtonProps {

@@ -8,6 +8,7 @@
  */
 
 import type { ComponentProps } from 'react';
+
 import type { Ionicons } from '@expo/vector-icons';
 import type { LucideIcon } from 'lucide-react-native';
 

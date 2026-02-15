@@ -3,8 +3,8 @@
  * Pure functions for updating dashboard metrics via dispatch.
  */
 
-import type { RenderTiming } from '../../../lib/performance';
 import type { DashboardAction, MemoryData, NetworkTiming } from '../types';
+import type { RenderTiming } from '../../../lib/performance';
 import { formatBytes, getStatusLevel } from '../statusUtils';
 
 export function updateMemory(

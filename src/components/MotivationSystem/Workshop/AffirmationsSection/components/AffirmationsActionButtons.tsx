@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { Plus, Sparkles } from 'lucide-react-native';
+
 import { GenerateAffirmationsButton } from '../../GenerateAffirmationsButton';
 
 interface AffirmationsActionButtonsProps {

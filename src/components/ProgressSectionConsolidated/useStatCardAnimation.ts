@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -11,11 +12,12 @@ import {
   withSpring,
   Easing,
 } from 'react-native-reanimated';
-import { Springs } from '../../constants/motion';
+
 import {
   CARD_PRESS_SCALE,
   CARD_REST_SCALE,
 } from '../../utils/animations/cardPressAnimation';
+import { Springs } from '../../constants/motion';
 
 const CARD_STAGGER_DELAY = 50;
 const CARD_ENTRANCE_DURATION = 280;

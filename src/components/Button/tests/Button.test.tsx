@@ -7,11 +7,13 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import { PaperProvider } from 'react-native-paper';
 import { Text } from 'react-native';
-import { extendedTheme } from '../../../theme';
+
+import { PaperProvider } from 'react-native-paper';
+import { render, fireEvent } from '@testing-library/react-native';
+
 import { Button } from '../Button';
+import { extendedTheme } from '../../../theme';
 
 const renderWithTheme = (component: React.ReactElement) => {
   return render(

@@ -5,11 +5,12 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Sparkles } from 'lucide-react-native';
-import { SuggestionEmojiCell } from './SuggestionEmojiCell';
 
-import { colors } from '../../../theme/colors';
+import { Sparkles } from 'lucide-react-native';
+
+import { SuggestionEmojiCell } from './SuggestionEmojiCell';
 import { borderRadius, spacing } from '../../../theme/spacing';
+import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
 
 interface SuggestionsSectionProps {

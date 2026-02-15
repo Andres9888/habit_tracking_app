@@ -4,12 +4,14 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react-native';
 import { View } from 'react-native';
-import ReanimatedMock from 'react-native-reanimated/mock';
-import { HabitCard } from '../HabitCard';
-import { useQuery, useMutation } from 'convex/react';
+
 import * as Haptics from 'expo-haptics';
+import ReanimatedMock from 'react-native-reanimated/mock';
+import { render } from '@testing-library/react-native';
+import { useQuery, useMutation } from 'convex/react';
+
+import { HabitCard } from '../HabitCard';
 
 // Mock modules
 jest.mock('convex/react');

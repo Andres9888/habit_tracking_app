@@ -3,8 +3,9 @@
  */
 
 import { useEffect } from 'react';
-import { getSentryReporter } from '../reporter/index';
+
 import type { SentryUser } from '../types';
+import { getSentryReporter } from '../reporter/index';
 
 /**
  * Hook to set user context when authentication changes.

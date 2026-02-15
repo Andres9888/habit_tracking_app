@@ -1,11 +1,11 @@
-import * as Notifications from 'expo-notifications';
 
-import { NOTIFICATION_TYPE_AFFIRMATION_DELIVERY } from '../constants';
+import * as Notifications from 'expo-notifications';
 
 import type {
   AffirmationFrequency,
   ScheduledAffirmationDelivery,
 } from './types';
+import { NOTIFICATION_TYPE_AFFIRMATION_DELIVERY } from '../constants';
 
 /**
  * Get all scheduled affirmation delivery notifications

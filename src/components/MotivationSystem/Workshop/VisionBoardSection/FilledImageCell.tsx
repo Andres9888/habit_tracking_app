@@ -1,19 +1,19 @@
 /**
  * FilledImageCell Component - Image cell with caption and zoom indicator
- * Uses expo-image for optimized memory management and caching (App Store compliance)
  */
 
 import React, { useCallback } from 'react';
-import { View, Text, Pressable, ActivityIndicator } from 'react-native';
-import { Image } from 'expo-image';
+import { View, Text, Pressable, Image, ActivityIndicator } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 import { ZoomIn } from 'lucide-react-native';
-import { SPRING_BUTTON } from '../../../animations';
+
 import { IMAGE_SIZE, type VisionBoardImage } from './types';
+import { SPRING_BUTTON } from '../../../animations';
 
 interface FilledImageCellProps {
   image: VisionBoardImage;
@@ -52,12 +52,10 @@ export function FilledImageCell({
         {image.imageUrl ? (
           <Image
             accessibilityLabel={image.caption || `Vision board image ${index + 1}`}
-            contentFit="cover"
+            accessibilityIgnoresInvertColors
+            resizeMode='cover'
             source={{ uri: image.imageUrl }}
             style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
-            cachePolicy="memory-disk"
-            transition={200}
-            placeholder={{ blurhash: 'LGF5?xYk^6#M@-5c,1J5@[or[Q6.' }}
           />
         ) : (
           <View className='flex-1 items-center justify-center bg-stone-200'>
@@ -66,7 +64,7 @@ export function FilledImageCell({
         )}
         {image.caption && (
           <View className='absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1'>
-            <Text className='text-xs text-white' numberOfLines={2} maxFontSizeMultiplier={2}>
+            <Text className='text-xs text-white' numberOfLines={2}>
               {image.caption}
             </Text>
           </View>

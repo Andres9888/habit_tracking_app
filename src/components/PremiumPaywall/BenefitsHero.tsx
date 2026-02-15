@@ -4,7 +4,9 @@
 
 import React from 'react';
 import { Text } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
+
 import type { VariantConfig } from './PremiumPaywall.types';
 
 export function BenefitsHero({ config }: { config: VariantConfig }) {

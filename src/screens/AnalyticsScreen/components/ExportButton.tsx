@@ -1,13 +1,16 @@
 /**
  * ExportButton - Button to trigger data export
  */
+
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../../theme/colors';
+import { spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
-import { spacing, borderRadius } from '../../../theme/spacing';
 
 interface ExportButtonProps {
   onPress: () => void;
@@ -33,7 +36,7 @@ const styles = StyleSheet.create({
   exportButton: {
     alignItems: 'center',
     backgroundColor: colors.primary[500],
-    borderRadius: borderRadius.button,
+    borderRadius: 12,
     flexDirection: 'row',
     justifyContent: 'center',
     marginHorizontal: spacing.lg,

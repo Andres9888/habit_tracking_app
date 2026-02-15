@@ -1,4 +1,6 @@
+
 import type { ViewStyle } from 'react-native';
+
 import type { Id } from '../../../convex/_generated/dataModel';
 
 export type DayShape = 'circle' | 'square';

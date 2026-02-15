@@ -1,7 +1,10 @@
+
 import { Animated, Text, View } from 'react-native';
+
 import { BookOpen, ChevronRight } from 'lucide-react-native';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+
 import STRINGS from '../../../constants/strings';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface TemplateHeroProps {
   isEditMode: boolean;

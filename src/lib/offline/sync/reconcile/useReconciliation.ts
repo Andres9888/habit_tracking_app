@@ -5,12 +5,13 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getStateReconciler } from './singleton';
-import type { ReconciliationEvent, ReconciliationState } from './types';
+
 import type {
   UseReconciliationOptions,
   UseReconciliationReturn,
 } from './useReconciliation.types';
+import type { ReconciliationEvent, ReconciliationState } from './types';
+import { getStateReconciler } from './singleton';
 
 function createEventHandler(
   reconciler: ReturnType<typeof getStateReconciler>,

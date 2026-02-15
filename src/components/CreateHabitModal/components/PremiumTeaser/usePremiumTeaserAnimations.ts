@@ -1,5 +1,7 @@
-import { useEffect, useRef } from 'react';
+
 import { Animated } from 'react-native';
+import { useEffect, useRef } from 'react';
+
 import { Motion } from '../../../../constants/motion';
 
 export function usePremiumTeaserAnimations(habitName: string) {

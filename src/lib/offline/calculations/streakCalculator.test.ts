@@ -9,6 +9,7 @@
  * - SC-001: Habit completion with feedback in under 200ms regardless of connectivity
  */
 
+import type { PendingToggleOperation, TrackingRecord } from './types';
 import {
   calculateBestStreakFromDates,
   calculateOfflineStreak,
@@ -16,7 +17,6 @@ import {
   computeCurrentStreakFromDates,
   mergeTrackingWithPending,
 } from './streakCalculator';
-import type { PendingToggleOperation, TrackingRecord } from './types';
 
 describe('streakCalculator', () => {
   describe('mergeTrackingWithPending', () => {

@@ -3,8 +3,8 @@
  * Helper functions for timing operations.
  */
 
-import { now } from './PerformanceTimer';
 import type { PerformanceTimer } from './PerformanceTimer';
+import { now } from './PerformanceTimer';
 
 /** Utility to time an async function */
 export async function timeAsync<T>(

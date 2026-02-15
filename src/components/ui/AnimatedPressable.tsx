@@ -7,7 +7,9 @@
 
 import React from 'react';
 import { Pressable, type PressableProps, type GestureResponderEvent } from 'react-native';
+
 import Animated from 'react-native-reanimated';
+
 import {
   usePressAnimation,
   type PressAnimationConfig,

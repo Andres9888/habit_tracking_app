@@ -5,21 +5,23 @@
 
 import React, { useCallback } from 'react';
 import { View, Modal, ScrollView } from 'react-native';
+
 import * as Haptics from 'expo-haptics';
-import { ScheduleHeader } from './ScheduleHeader';
+
+import type { AffirmationScheduleModalProps } from './types';
 import {
   AffirmationPreview,
   NextDeliveryPreview,
   ScienceCallout,
 } from './InfoCallouts';
-import { EnabledToggle } from './EnabledToggle';
-import { TimePicker } from './TimePicker';
-import { FrequencySelector } from './FrequencySelector';
 import { DaySelectorSection } from './DaySelectorSection';
+import { EnabledToggle } from './EnabledToggle';
+import { FrequencySelector } from './FrequencySelector';
 import { ScheduleFooter } from './ScheduleFooter';
+import { ScheduleHeader } from './ScheduleHeader';
+import { TimePicker } from './TimePicker';
 import { useScheduleForm } from './useScheduleForm';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import type { AffirmationScheduleModalProps } from './types';
 
 export function AffirmationScheduleModal({
   visible,

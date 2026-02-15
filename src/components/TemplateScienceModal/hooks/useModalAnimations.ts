@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useSharedValue,
   withDelay,
@@ -12,6 +13,7 @@ import {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import {
   HERO_ANIMATION,

@@ -4,7 +4,9 @@
  */
 
 import { useMemo } from 'react';
+
 import { useSharedValue } from 'react-native-reanimated';
+
 import type { EntranceAnimationValues } from './types';
 
 /**

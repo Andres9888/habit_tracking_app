@@ -1,4 +1,6 @@
+
 import { useEffect } from 'react';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -9,6 +11,7 @@ import {
   cancelAnimation,
   type SharedValue,
 } from 'react-native-reanimated';
+
 import { CARD_ANIMATION_DURATION, CARD_ANIMATION_STAGGER } from '../utils';
 
 interface UseCardAnimatedStylesParams {

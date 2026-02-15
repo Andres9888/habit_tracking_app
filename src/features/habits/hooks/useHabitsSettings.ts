@@ -1,8 +1,11 @@
+
 import { useMemo } from 'react';
+
 import { useQuery } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
-import type { CompletionSoundType } from '../../../../convex/settings/types';
+
+import type { CompletionSoundType } from '../../../convex/settings/types';
 import type { HabitSettings } from '../types';
+import { api } from '../../../../convex/_generated/api';
 
 export interface HabitsSettingsResult {
   settings: HabitSettings | undefined;

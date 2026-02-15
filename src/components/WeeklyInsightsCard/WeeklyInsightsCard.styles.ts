@@ -3,15 +3,16 @@
  */
 
 import { StyleSheet } from 'react-native';
+
 import { colors } from '../../theme/colors';
+import { spacing } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
-import { spacing, borderRadius } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   archiveButton: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: borderRadius.button,
+    borderRadius: 12,
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: spacing.md,
@@ -23,8 +24,8 @@ export const styles = StyleSheet.create({
     marginLeft: spacing.sm,
   },
   badge: {
-    backgroundColor: colors.strength.buildingLight,
-    borderRadius: borderRadius.chip,
+    backgroundColor: '#D1FAE5',
+    borderRadius: 8,
     marginLeft: spacing.xs,
     paddingHorizontal: spacing.xs,
     paddingVertical: 2,
@@ -47,7 +48,7 @@ export const styles = StyleSheet.create({
   loadingContainer: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: borderRadius.button,
+    borderRadius: 12,
     justifyContent: 'center',
     padding: spacing.xl,
   },
@@ -57,7 +58,7 @@ export const styles = StyleSheet.create({
   },
   section: {
     backgroundColor: colors.surface,
-    borderRadius: borderRadius.button,
+    borderRadius: 12,
     marginBottom: spacing.md,
     overflow: 'hidden',
   },

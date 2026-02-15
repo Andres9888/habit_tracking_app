@@ -1,15 +1,16 @@
+
 import React, { memo } from 'react';
 import { View } from 'react-native';
+
 import { format } from 'date-fns';
 
-import { useCalendarTimelineLogic } from './CalendarTimeline.hooks';
-import { CONTAINER_SHADOW, getColors } from './CalendarTimeline.styles';
 import type {
   CalendarTimelineProps,
   CompletionStatus,
 } from './CalendarTimeline.types';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { CONTAINER_SHADOW, getColors } from './CalendarTimeline.styles';
 import { DayCell, WeekNavigationHeader } from './components';
+import { useCalendarTimelineLogic } from './CalendarTimeline.hooks';
 
 const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   dates,
@@ -24,8 +25,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   disableFutureDayPress = true,
 }) => {
   const { isToday, isFuture } = useCalendarTimelineLogic();
-  const { isDark, colors: themeColors } = useThemeColors();
-  const colors = getColors(highContrastMode, isDark);
+  const colors = getColors(highContrastMode);
 
   const getCompletionStatus = (date: Date): CompletionStatus => {
     if (isFuture(date)) return 'future';
@@ -60,8 +60,8 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
     <View
       className='mb-4 rounded-2xl px-3 pb-3 pt-2'
       style={{
-        backgroundColor: highContrastMode ? 'transparent' : themeColors.card,
-        borderColor: highContrastMode ? 'transparent' : themeColors.cardBorder,
+        backgroundColor: highContrastMode ? 'transparent' : '#ffffff',
+        borderColor: highContrastMode ? 'transparent' : '#f5f5f4',
         borderWidth: highContrastMode ? 0 : 1,
         ...CONTAINER_SHADOW,
       }}

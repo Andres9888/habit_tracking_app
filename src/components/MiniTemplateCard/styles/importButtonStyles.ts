@@ -3,6 +3,7 @@
  */
 
 import type { ViewStyle, TextStyle } from 'react-native';
+
 import { typography } from '@/theme/typography';
 
 export const importButtonStyles: Record<string, ViewStyle | TextStyle> = {

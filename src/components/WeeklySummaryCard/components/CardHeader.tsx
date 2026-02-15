@@ -1,5 +1,8 @@
+
 import { View, Text, Animated } from 'react-native';
+
 import { Star, ChevronRight } from 'lucide-react-native';
+
 import type { ColorScheme } from '../types';
 
 interface CardHeaderProps {

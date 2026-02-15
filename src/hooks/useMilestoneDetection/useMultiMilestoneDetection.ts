@@ -13,12 +13,13 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { getStrengthLevel } from '../../components/HabitStrengthIndicator';
+
 import type {
   MilestoneAchievement,
   UseMultiMilestoneDetectionReturn,
 } from './types';
 import { checkMilestoneCrossed } from './utils';
+import { getStrengthLevel } from '../../components/HabitStrengthIndicator';
 
 export function useMultiMilestoneDetection(
   habits: Array<{ id: string; name: string; strength: number }>

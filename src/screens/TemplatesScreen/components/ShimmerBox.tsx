@@ -2,8 +2,8 @@
  * ShimmerBox - Re-exports SkeletonLoader for backward compatibility.
  */
 
-import { SkeletonLoader } from '../../../components/SkeletonLoader';
 import type { SkeletonWidth } from '../../../components/SkeletonLoader';
+import { SkeletonLoader } from '../../../components/SkeletonLoader';
 
 export function ShimmerBox({
   width,

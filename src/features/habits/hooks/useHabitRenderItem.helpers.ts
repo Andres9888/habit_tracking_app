@@ -1,7 +1,8 @@
+
 import type { Habit } from '../types';
+import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
 import { getNextWeekConnection } from './getNextWeekConnection';
 import { getPreviousWeekConnection } from './getPreviousWeekConnection';
-import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
 
 export function getHabitRenderData(
   item: Habit,

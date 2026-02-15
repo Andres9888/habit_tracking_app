@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Clock } from 'lucide-react-native';
 
 interface CueReminderProps {

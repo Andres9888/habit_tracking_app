@@ -1,10 +1,12 @@
+
+import type { AnimatedStyle } from 'react-native-reanimated';
 import React from 'react';
 import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
-import type { AnimatedStyle } from 'react-native-reanimated';
 
-import { MEDALS, MEDAL_COLORS } from './PersonalBestsCard.constants';
+import Animated from 'react-native-reanimated';
+
 import type { StreakRecord } from './types';
+import { MEDALS, MEDAL_COLORS } from './PersonalBestsCard.constants';
 
 interface MedalRowProps {
   records: StreakRecord[];

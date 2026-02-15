@@ -1,35 +1,32 @@
+
 import React from 'react';
-import { View, Text } from 'react-native';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { View, Text, Animated } from 'react-native';
+
 import type { ProgressColors } from './types';
 
 interface CompactMeterProps {
   percentage: number;
   colors: ProgressColors;
-  progressAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
+  progressWidth: Animated.AnimatedInterpolation<string | number>;
 }
 
 export function CompactMeter({
   percentage,
   colors,
-  progressAnimatedStyle,
+  progressWidth,
 }: CompactMeterProps) {
-  const { colors: themeColors } = useThemeColors();
   return (
     <View className='flex-row items-center gap-2'>
       <View
         className='h-2 flex-1 overflow-hidden rounded-full'
-        style={{ backgroundColor: themeColors.gray[200] }}
+        style={{ backgroundColor: '#e7e5e4' }}
       >
         <Animated.View
           className='h-full rounded-full'
-          style={[
-            {
-              backgroundColor: colors.fill,
-            },
-            progressAnimatedStyle,
-          ]}
+          style={{
+            backgroundColor: colors.fill,
+            width: progressWidth,
+          }}
         />
       </View>
       <Text

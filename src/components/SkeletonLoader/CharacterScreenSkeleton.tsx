@@ -4,14 +4,16 @@
  * Matches layout: header, character card, attributes grid, stats, achievements
  * Supports dark mode via useSkeletonTheme.
  */
+
 import React from 'react';
 import { View } from 'react-native';
+
+import type { ReduceMotionProps } from './types';
+import { AchievementRowSkeleton } from './skeletons/AchievementRowSkeleton';
+import { AttributeRowSkeleton } from './skeletons/AttributeRowSkeleton';
+import { CharacterCardSkeleton } from './skeletons/CharacterCardSkeleton';
 import { SkeletonLoader } from './SkeletonLoader';
 import { useSkeletonTheme } from './useSkeletonTheme';
-import type { ReduceMotionProps } from './types';
-import { CharacterCardSkeleton } from './skeletons/CharacterCardSkeleton';
-import { AttributeRowSkeleton } from './skeletons/AttributeRowSkeleton';
-import { AchievementRowSkeleton } from './skeletons/AchievementRowSkeleton';
 
 export function CharacterScreenSkeleton({
   reduceMotion = false,

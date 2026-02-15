@@ -5,13 +5,15 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { MessageSquareQuote } from 'lucide-react-native';
 import { clsx } from 'clsx';
-import { getNextAffirmationDeliveryRelativeTime } from '../../../../../utils/notifications';
+
 import type { AffirmationData } from '../AffirmationsSection.types';
-import { TYPE_CONFIG } from '../AffirmationsSection.constants';
 import { AffirmationItemActions } from './AffirmationItemActions';
 import { ScheduleIndicator } from './ScheduleIndicator';
+import { TYPE_CONFIG } from '../AffirmationsSection.constants';
+import { getNextAffirmationDeliveryRelativeTime } from '../../../../../utils/notifications';
 
 interface AffirmationItemProps {
   affirmation: AffirmationData;

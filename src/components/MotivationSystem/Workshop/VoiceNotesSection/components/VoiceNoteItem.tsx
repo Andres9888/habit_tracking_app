@@ -1,18 +1,21 @@
 /**
  * VoiceNoteItem - Individual voice note with expandable playback UI
  */
+
 import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { SPRING_BUTTON } from '../../../../animations';
-import { VoiceNotePlaybackUI } from '../../VoiceNotePlaybackUI';
-import { VoiceNoteItemHeader } from './VoiceNoteItemHeader';
+
 import type { VoiceNoteSummary } from '../VoiceNotesSection.types';
+import { SPRING_BUTTON } from '../../../../animations';
+import { VoiceNoteItemHeader } from './VoiceNoteItemHeader';
+import { VoiceNotePlaybackUI } from '../../VoiceNotePlaybackUI';
 
 interface VoiceNoteItemProps {
   note: VoiceNoteSummary;

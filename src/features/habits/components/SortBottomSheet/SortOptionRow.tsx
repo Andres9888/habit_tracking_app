@@ -1,17 +1,12 @@
-import { Check } from 'lucide-react-native';
-import type { LucideIcon } from 'lucide-react-native';
+
 import { Pressable, Text, View } from 'react-native';
+
+import type { LucideIcon } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
+import { Check } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useHaptics } from '../../../../utils/haptics/useHaptics';
+
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import {
-  CHECK_ICON_SIZE,
-  CHECK_ICON_STROKE_WIDTH,
-  DARK_SURFACE_COLOR,
-  SORT_OPTION_ICON_SIZE,
-  SORT_OPTION_ICON_STROKE_WIDTH,
-  WHITE_ICON_COLOR,
-} from './constants';
 
 interface SortOptionRowProps {
   /**
@@ -52,10 +47,9 @@ export function SortOptionRow({
   onPress,
 }: SortOptionRowProps) {
   const { colors: themeColors, isDark } = useThemeColors();
-  const { trigger } = useHaptics();
 
   const handlePress = () => {
-    trigger('tap');
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
   };
 
@@ -69,7 +63,7 @@ export function SortOptionRow({
       style={{
         backgroundColor: selected
           ? isDark
-            ? DARK_SURFACE_COLOR
+            ? '#1f2937'
             : '#ecfdf5'
           : 'transparent',
         borderColor: selected ? themeColors.primary[300] : 'transparent',
@@ -83,11 +77,7 @@ export function SortOptionRow({
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       >
-        <Icon
-          color={WHITE_ICON_COLOR}
-          size={SORT_OPTION_ICON_SIZE}
-          strokeWidth={SORT_OPTION_ICON_STROKE_WIDTH}
-        />
+        <Icon color='#ffffff' size={20} strokeWidth={2.25} />
       </LinearGradient>
 
       <View className='flex-1'>
@@ -110,11 +100,7 @@ export function SortOptionRow({
           className='h-6 w-6 items-center justify-center rounded-full'
           style={{ backgroundColor: themeColors.primary[500] }}
         >
-          <Check
-            color={WHITE_ICON_COLOR}
-            size={CHECK_ICON_SIZE}
-            strokeWidth={CHECK_ICON_STROKE_WIDTH}
-          />
+          <Check color='#ffffff' size={14} strokeWidth={2.5} />
         </View>
       )}
     </Pressable>

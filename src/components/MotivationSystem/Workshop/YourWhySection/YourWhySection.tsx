@@ -12,11 +12,13 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Plus, Pencil } from 'lucide-react-native';
+
+import type { YourWhySectionProps } from './types';
+import { AnimatedSection } from '../CueTriggerSection/AnimatedSection';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from '../CueTriggerSection/SectionCard';
-import { AnimatedSection } from '../CueTriggerSection/AnimatedSection';
-import type { YourWhySectionProps } from './types';
 
 /**
  * YourWhySection - Main component

@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -10,8 +11,8 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
-import { SPRING_GENTLE } from './constants';
 import type { VizType } from './types';
+import { SPRING_GENTLE } from './constants';
 
 interface UseContentAnimationProps {
   type: VizType;

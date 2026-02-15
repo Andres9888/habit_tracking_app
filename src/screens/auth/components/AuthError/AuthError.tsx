@@ -1,7 +1,10 @@
 /** AuthError - OPTIMIZED: FadeIn animation, better styling, haptics */
+
 import { Text, View } from 'react-native';
+
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { AlertCircle, X } from 'lucide-react-native';
-import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { AuthErrorProps } from './types';
 
@@ -11,7 +14,7 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
       accessibilityLiveRegion='assertive'
       accessibilityRole='alert'
       className='mb-4 flex-row items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4'
-      entering={FadeInDown.duration(280).springify().damping(18)}
+      entering={FadeIn.duration(200)}
       exiting={FadeOut.duration(150)}
       style={{
         shadowColor: '#1c1917',

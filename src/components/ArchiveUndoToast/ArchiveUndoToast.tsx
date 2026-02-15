@@ -10,10 +10,11 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
+
 import Animated from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Archive, Undo2 } from 'lucide-react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 import { ArchiveUndoToastProps, DEFAULT_DURATION } from './types';

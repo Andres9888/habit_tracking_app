@@ -2,25 +2,23 @@
  * TabButton Component
  *
  * Individual tab button with press animation for HabitDetailTabs.
- * Theme-aware with proper dark mode support.
  */
 
 import React, { useCallback } from 'react';
 import { Text, Pressable } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { useFocusRing } from '../../../utils/accessibility';
-import { useThemeColors } from '../../../theme/ThemeContext';
 
 import type { TabButtonProps } from '../HabitDetailTabs.types';
+import { useFocusRing } from '../../../utils/accessibility';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function TabButton({ isActive, label, onPress }: TabButtonProps) {
-  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
@@ -29,16 +27,12 @@ export function TabButton({ isActive, label, onPress }: TabButtonProps) {
   }));
 
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.96, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(0.96, { damping: 15, stiffness: 350 });
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(1, { damping: 15, stiffness: 350 });
   }, [scale]);
-
-  // Theme-aware text colors
-  const activeTextColor = '#ffffff';
-  const inactiveTextColor = colors.text.secondary;
 
   return (
     <AnimatedPressable
@@ -54,7 +48,7 @@ export function TabButton({ isActive, label, onPress }: TabButtonProps) {
     >
       <Text
         style={{
-          color: isActive ? activeTextColor : inactiveTextColor,
+          color: isActive ? '#ffffff' : '#78716c',
           fontSize: 13,
           fontWeight: '600',
         }}

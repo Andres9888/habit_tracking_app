@@ -2,8 +2,10 @@
  * HabitEditSkeleton - Loading skeleton shown while habit data loads in the edit modal.
  * Matches the edit form layout: header, name input, emoji/color pickers, reminder toggle.
  */
+
 import React from 'react';
 import { View } from 'react-native';
+
 import { SkeletonLoader } from '../../components/SkeletonLoader';
 import { useSkeletonTheme } from '../../components/SkeletonLoader/useSkeletonTheme';
 

@@ -2,11 +2,13 @@
  * Weekly bar chart for HabitStats
  */
 
-import { format } from 'date-fns';
 import { Text, View } from 'react-native';
+
 import Svg, { Rect, Text as SvgText } from 'react-native-svg';
-import { colors } from '@/theme/colors';
+import { format } from 'date-fns';
+
 import type { ChartDataItem } from './HabitStats.types';
+import { colors } from '@/theme/colors';
 
 interface WeeklyBarChartProps {
   data: ChartDataItem[];

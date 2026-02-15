@@ -2,8 +2,9 @@
  * useSuccessExitAnimation - Exit animation for SuccessState
  */
 
-import { useCallback, useRef } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
+import { useCallback, useRef } from 'react';
+
 import {
   withDelay,
   withTiming,
@@ -14,8 +15,8 @@ import {
 
 import { EXIT_TRANSITION, EXIT_SPRING_CONFIG } from './animations';
 import { useAutoTransitionTimer } from './useAutoTransitionTimer';
-import { useExitAnimationValues } from './useExitAnimationValues';
 import { useExitAnimationStyles } from './useExitAnimationStyles';
+import { useExitAnimationValues } from './useExitAnimationValues';
 
 interface UseSuccessExitAnimationParams {
   shouldReduceMotion: boolean | null;

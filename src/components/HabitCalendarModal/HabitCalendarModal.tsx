@@ -1,16 +1,19 @@
+
 import { Modal, View, ScrollView } from 'react-native';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useThemeColors } from '../../theme/ThemeContext';
-import { StatsCard } from './StatsCard';
+
+import type { HabitCalendarModalProps } from './types';
+import HabitCalendarView from '../HabitCalendarView';
+import HabitEditScreen from '../../screens/HabitEditScreen';
+import HeatmapCalendar from './HeatmapCalendar';
 import { ActivityLog } from './ActivityLog';
 import { CalendarTabs } from './CalendarTabs';
 import { ModalHeader } from './ModalHeader';
+import { StatsCard } from './StatsCard';
 import { StatusRibbon } from './StatusRibbon';
-import HeatmapCalendar from './HeatmapCalendar';
-import HabitCalendarView from '../HabitCalendarView';
-import HabitEditScreen from '../../screens/HabitEditScreen';
 import { useHabitCalendarModal } from './useHabitCalendarModal';
-import type { HabitCalendarModalProps } from './types';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 export default function HabitCalendarModal({
   visible,

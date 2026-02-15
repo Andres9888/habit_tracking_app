@@ -2,6 +2,7 @@
  * CollapsibleCategorySection Header Animations Hook
  */
 
+import * as Haptics from 'expo-haptics';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -9,7 +10,6 @@ import {
   withTiming,
   withSequence,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 interface UseHeaderAnimationsParams {
   isExpanded: boolean;

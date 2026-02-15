@@ -6,8 +6,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, AccessibilityInfo } from 'react-native';
-import { StatCard } from './StatCard';
+
 import type { QuickStatsStripProps } from './types';
+import { StatCard } from './StatCard';
 
 const STAGGER_DELAY = 100;
 

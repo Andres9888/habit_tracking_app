@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Flame } from 'lucide-react-native';
+
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { Flame } from 'lucide-react-native';
+
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 const anim = (delay: number) =>

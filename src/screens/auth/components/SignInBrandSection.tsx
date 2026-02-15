@@ -2,12 +2,14 @@
  * SignInBrandSection - Logo, app name, and welcome message
  */
 
-import React from 'react';
-import { Text, View } from 'react-native';
-import { Link } from 'lucide-react-native';
-import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
+import React from 'react';
 import type { ViewStyle } from 'react-native';
+import { Text, View } from 'react-native';
+
+import Animated from 'react-native-reanimated';
+import { Link } from 'lucide-react-native';
+
 import { styles } from '../SignInScreen.styles';
 
 interface SignInBrandSectionProps {

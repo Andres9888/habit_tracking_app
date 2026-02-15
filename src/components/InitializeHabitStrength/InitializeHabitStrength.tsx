@@ -4,11 +4,13 @@
 
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
+
 import { useMutation, useQuery } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
-import { InitializeHabitStrengthSkeleton } from '../SkeletonLoader';
+
 import { InitializeButton } from './InitializeButton';
+import { InitializeHabitStrengthSkeleton } from '../SkeletonLoader';
 import { ResultDisplay } from './ResultDisplay';
+import { api } from '../../../convex/_generated/api';
 
 type Result = {
   total: number;

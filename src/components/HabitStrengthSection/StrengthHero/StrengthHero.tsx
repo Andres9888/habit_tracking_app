@@ -21,10 +21,10 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import { STRENGTH_COLORS } from '../constants';
-import { ProgressRing } from './ProgressRing';
-import { StatusDisplay } from './StatusDisplay';
 import type { StrengthHeroProps } from './types';
+import { ProgressRing } from './ProgressRing';
+import { STRENGTH_COLORS } from '../constants';
+import { StatusDisplay } from './StatusDisplay';
 import { useStrengthHeroAnimations } from './useStrengthHeroAnimations';
 
 /**

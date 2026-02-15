@@ -6,10 +6,11 @@
  */
 
 import { Text, View, ViewStyle } from 'react-native';
+
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 
-import { PROGRESS_RING, PARTICLE_BURST } from './animations';
 import { COLORS } from './constants';
+import { PROGRESS_RING, PARTICLE_BURST } from './animations';
 import { ParticleBurst } from './ParticleBurst';
 import { ProgressRing } from './ProgressRing';
 

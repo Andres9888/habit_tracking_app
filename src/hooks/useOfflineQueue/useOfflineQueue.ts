@@ -4,17 +4,18 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
+
+import type { UseOfflineQueueOptions, UseOfflineQueueReturn } from './types';
 import {
   DEFAULT_MAX_QUEUE_SIZE,
   DEFAULT_MAX_ITEM_AGE_MS,
   DEFAULT_MAX_RETRIES,
   DEFAULT_BASE_RETRY_DELAY_MS,
 } from './constants';
-import { loadAllQueueItems } from './storage';
 import { calculateQueueStats } from './utils';
+import { loadAllQueueItems } from './storage';
 import { useQueueOperations } from './useQueueOperations';
 import { useQueueQueries } from './useQueueQueries';
-import type { UseOfflineQueueOptions, UseOfflineQueueReturn } from './types';
 
 export function useOfflineQueue({
   maxQueueSize = DEFAULT_MAX_QUEUE_SIZE,

@@ -4,13 +4,14 @@
  */
 
 import { useCallback, useMemo, useRef } from 'react';
-import { runFadeUp, runAccentSlideDown, runWidthExpansion } from './animations';
-import { createSetInstantVisible } from './setInstantVisible';
-import { createResetAnimation } from './resetAnimation';
+
 import type {
   UseEntranceHandlersOptions,
   UseEntranceHandlersReturn,
 } from './types';
+import { createResetAnimation } from './resetAnimation';
+import { createSetInstantVisible } from './setInstantVisible';
+import { runFadeUp, runAccentSlideDown, runWidthExpansion } from './animations';
 
 export function useEntranceHandlers({
   values,

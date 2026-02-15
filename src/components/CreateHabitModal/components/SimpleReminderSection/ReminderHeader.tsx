@@ -3,7 +3,9 @@
  */
 
 import { Pressable, Switch, Text, View } from 'react-native';
+
 import { Bell } from 'lucide-react-native';
+
 import { colors } from '@/theme/colors';
 import { formatReminderTime } from '../../../../utils/notifications';
 

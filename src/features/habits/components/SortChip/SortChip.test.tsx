@@ -6,9 +6,11 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
-import { SortChip } from './SortChip';
+
 import type { HabitSortMode } from '../../types';
+import { SortChip } from './SortChip';
 
 describe('SortChip', () => {
   const defaultProps = {

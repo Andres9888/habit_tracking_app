@@ -1,4 +1,6 @@
+
 import { View, Text } from 'react-native';
+
 import { Flame } from 'lucide-react-native';
 
 interface StreakBadgeProps {

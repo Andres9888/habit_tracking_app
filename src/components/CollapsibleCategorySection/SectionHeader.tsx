@@ -5,12 +5,13 @@
 
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
+
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ChevronDown } from 'lucide-react-native';
 
 import type { CategoryColors } from './types';
-import { styles } from './styles';
 import { CountBadge } from './CountBadge';
+import { styles } from './styles';
 
 interface SectionHeaderProps {
   label: string;

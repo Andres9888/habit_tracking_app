@@ -4,8 +4,9 @@
  * Promise-based confirmation dialog for more flexible control flow.
  */
 
-import { useCallback, type MutableRefObject } from 'react';
 import { Alert, type AlertButton } from 'react-native';
+import { useCallback, type MutableRefObject } from 'react';
+
 import * as Haptics from 'expo-haptics';
 
 interface UseConfirmDiscardAsyncOptions {

@@ -4,16 +4,6 @@
  * Batch resolution of offline operations using individual server checks.
  */
 
-import type { OfflineOperation } from '../../queue';
-import {
-  buildBatchResult,
-  buildResolutionResult,
-  createEmptyBatchResult,
-} from './helpers';
-import {
-  DEFAULT_CONFLICT_RESOLVER_CONFIG,
-  resolveOperation,
-} from './resolveOperation';
 import type {
   BatchConflictResolutionResult,
   CompletionStateChecker,
@@ -21,6 +11,16 @@ import type {
   ConflictResolutionResult,
   ConflictResolverConfig,
 } from './types';
+import type { OfflineOperation } from '../../queue';
+import {
+  DEFAULT_CONFLICT_RESOLVER_CONFIG,
+  resolveOperation,
+} from './resolveOperation';
+import {
+  buildBatchResult,
+  buildResolutionResult,
+  createEmptyBatchResult,
+} from './helpers';
 
 /**
  * Resolve multiple operations using individual server state checks

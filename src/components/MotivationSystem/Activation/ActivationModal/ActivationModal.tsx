@@ -13,12 +13,14 @@
 
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Modal } from '../../../Modal';
-import { ActivationModalHeader } from './ActivationModalHeader';
-import { ActivationModalContent } from './ActivationModalContent';
-import { ActivationModalActions } from './ActivationModalActions';
+
 import type { ActivationModalProps } from './types';
+import { ActivationModalActions } from './ActivationModalActions';
+import { ActivationModalContent } from './ActivationModalContent';
+import { ActivationModalHeader } from './ActivationModalHeader';
+import { Modal } from '../../../Modal';
 
 /**
  * ActivationModal - Main component

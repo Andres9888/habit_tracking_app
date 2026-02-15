@@ -6,8 +6,8 @@
  * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
 
-import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
+import type { Id } from '../../../convex/_generated/dataModel';
 import {
   getWeekStart,
   getWeekEnd,

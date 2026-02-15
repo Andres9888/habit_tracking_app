@@ -1,5 +1,7 @@
-import { useEffect, useRef } from 'react';
+
 import { Animated, Easing } from 'react-native';
+import { useEffect, useRef } from 'react';
+
 import { createCelebrationAnimations } from './celebrationAnimations';
 
 interface UseWeeklySummaryAnimationsParams {

@@ -4,10 +4,11 @@
  */
 
 import { useEffect } from 'react';
+
 import type { UseAudioPlaybackOptions, UseAudioPlaybackReturn } from './types';
-import { usePlaybackHooks } from './usePlaybackHooks';
-import { useAppStatePlayback } from './useAppStatePlayback';
 import { buildPlaybackReturnValue } from './buildPlaybackReturnValue';
+import { useAppStatePlayback } from './useAppStatePlayback';
+import { usePlaybackHooks } from './usePlaybackHooks';
 
 export function useAudioPlayback(
   options?: UseAudioPlaybackOptions

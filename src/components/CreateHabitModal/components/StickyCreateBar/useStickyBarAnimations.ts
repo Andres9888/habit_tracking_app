@@ -3,11 +3,12 @@
  * Handles color transitions and enable-bounce animations
  */
 
-import { useCallback, useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
-import { Motion } from '../../../../constants/motion';
+import { useCallback, useEffect, useRef } from 'react';
+
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { DEFAULT_BUTTON_COLOR } from './colorUtils';
+import { Motion } from '../../../../constants/motion';
 
 export function useStickyBarAnimations(
   disabled: boolean,

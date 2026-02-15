@@ -5,11 +5,12 @@
  */
 
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme/ThemeContext';
 
 import { CHART_HEIGHT } from '../constants';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 /**
  * Displays a message when chart has insufficient data.

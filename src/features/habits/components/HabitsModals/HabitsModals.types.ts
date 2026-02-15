@@ -1,7 +1,9 @@
+
 import type { ComponentType } from 'react';
+
+import type { HabitsModalsState } from '../../hooks/useHabitsApp';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import type { ShareCardData } from '../../types';
-import type { HabitsModalsState } from '../../hooks/useHabitsApp';
 
 /** Props for the main HabitsModals orchestrator component */
 export interface HabitsModalsProps {

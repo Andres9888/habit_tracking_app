@@ -1,10 +1,12 @@
 /**
  * StopButton - Stop and save recording button
  */
+
 import React, { useCallback } from 'react';
 import { Pressable } from 'react-native';
-import { Square } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { Square } from 'lucide-react-native';
 
 interface StopButtonProps {
   onStopRecording: () => void;

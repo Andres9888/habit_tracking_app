@@ -2,8 +2,9 @@
  * StyleSection - Color picker section for habit customization.
  */
 
-import { useCallback } from 'react';
 import { Animated, Text, View, Keyboard } from 'react-native';
+import { useCallback } from 'react';
+
 import { AnimatedColorButton } from './AnimatedColorButton';
 import { borderRadius } from '../../../theme/spacing';
 

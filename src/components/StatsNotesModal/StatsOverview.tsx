@@ -1,5 +1,6 @@
+
 import { Text, View } from 'react-native';
-import { useThemeColors } from '../../theme/ThemeContext';
+
 import HabitStats from './HabitStats';
 import { StatCard } from './StatCard';
 import { useStatsOverviewData } from './useStatsOverviewData';
@@ -12,12 +13,11 @@ export default function StatsOverview() {
     longestStreak,
     activeHabits,
   } = useStatsOverviewData();
-  const { colors } = useThemeColors();
 
   return (
     <View className='gap-8'>
       <View className='gap-4'>
-        <Text className='text-lg font-semibold' style={{ color: colors.text.primary }}>Overview</Text>
+        <Text className='text-lg font-semibold text-stone-900'>Overview</Text>
 
         <View className='gap-3'>
           <StatCard
@@ -41,12 +41,12 @@ export default function StatsOverview() {
             description='Currently tracking'
             label='ACTIVE HABITS'
             value={activeHabits}
-            valueColor={colors.text.primary}
+            valueColor='#1c1917'
           />
         </View>
       </View>
 
-      <View className='h-px' style={{ backgroundColor: colors.border }} />
+      <View className='h-px bg-stone-200' />
       <HabitStats />
     </View>
   );

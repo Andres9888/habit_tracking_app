@@ -1,5 +1,6 @@
-import { useCallback, useRef } from 'react';
+
 import { Animated, Easing } from 'react-native';
+import { useCallback, useRef } from 'react';
 
 interface UseToggleAnimationsOptions {
   isCompleted: boolean;

@@ -3,10 +3,12 @@
  * Uses the central SkeletonLoader with gradient shimmer.
  * Supports dark mode via useSkeletonTheme.
  */
+
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { spacing } from '../../../theme/spacing';
+
 import { SkeletonLoader } from '../../SkeletonLoader';
+import { spacing } from '../../../theme/spacing';
 import { useSkeletonTheme } from '../../SkeletonLoader/useSkeletonTheme';
 
 export const LoadingState: React.FC = () => {

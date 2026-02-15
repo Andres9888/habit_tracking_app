@@ -6,7 +6,9 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent, screen } from '@testing-library/react-native';
+
 import { MicrophonePermissionDenied } from '../MicrophonePermissionDenied';
 
 // Mock expo-haptics

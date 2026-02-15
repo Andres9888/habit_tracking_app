@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { VoiceNoteItem } from './VoiceNoteItem';
+
 import type { VoiceNoteSummary } from '../VoiceNotesSection.types';
+import { VoiceNoteItem } from './VoiceNoteItem';
 
 interface VoiceNotesListProps {
   voiceNotes: VoiceNoteSummary[];

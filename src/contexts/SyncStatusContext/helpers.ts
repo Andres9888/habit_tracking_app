@@ -3,8 +3,8 @@
  */
 
 import type { SyncOrchestratorResult } from '../../lib/offline/sync/types';
-import type { SyncStatus, SyncStatusIndicator } from './types';
 import type { SyncOrchestratorState } from '../../lib/offline/sync/types';
+import type { SyncStatus, SyncStatusIndicator } from './types';
 
 /**
  * Derive status indicator from sync state

@@ -10,14 +10,14 @@ import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import type { TrendDirection, WeekDayData } from '../WeeklySummaryStripTypes';
-import { DayCell } from './DayCell';
-import { SparkleEffect } from './SparkleEffect';
-import { styles } from './WeeklySummaryStripStyles';
 import {
   getDayVisualState,
   getTrendColor,
   getTrendIcon,
 } from './WeeklySummaryStripUtils';
+import { DayCell } from './DayCell';
+import { SparkleEffect } from './SparkleEffect';
+import { styles } from './WeeklySummaryStripStyles';
 
 interface CardContentProps {
   currentWeekCompleted: number;

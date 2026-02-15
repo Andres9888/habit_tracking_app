@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
-import { styles } from './OfflinePendingBanner.styles';
+
 import type { ProcessingState } from '../OfflineQueueProcessor';
+import { styles } from './OfflinePendingBanner.styles';
 
 interface BannerContentProps {
   isOffline: boolean;

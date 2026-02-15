@@ -1,10 +1,12 @@
-import { act, renderHook } from '@testing-library/react-native';
+
 import type {
   EmitterSubscription,
   KeyboardEvent,
   KeyboardEventName,
 } from 'react-native';
 import { Keyboard, Platform } from 'react-native';
+
+import { act, renderHook } from '@testing-library/react-native';
 
 import { useKeyboardVisible } from '../useKeyboardVisible';
 

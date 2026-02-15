@@ -1,5 +1,7 @@
+
 import { ForwardedRef, forwardRef } from 'react';
 import { TextInput, View } from 'react-native';
+
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
 import { HabitInput } from './HabitInput';

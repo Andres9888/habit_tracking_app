@@ -2,14 +2,15 @@
  * Template list with scroll shadows for CategorySearchView
  */
 
-import { useCallback, useRef } from 'react';
 import { FlatList, View } from 'react-native';
+import { useCallback, useRef } from 'react';
+
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
-import { styles } from '../../templates/templatesScreenStyles';
-import { ScrollShadows, TemplatesListEmpty } from '../components';
-import { useScrollShadows } from '../useScrollShadows';
-import { TemplateListCard } from './TemplateListCard';
 import type { ViewMode } from '../TemplatesScreen.types';
+import { ScrollShadows, TemplatesListEmpty } from '../components';
+import { TemplateListCard } from './TemplateListCard';
+import { styles } from '../../templates/templatesScreenStyles';
+import { useScrollShadows } from '../useScrollShadows';
 
 interface TemplatesListProps {
   effectiveViewMode: ViewMode;

@@ -1,4 +1,6 @@
+
 import { View, Text, Pressable } from 'react-native';
+
 import { Trash2, Undo2 } from 'lucide-react-native';
 
 import { useThemeColors } from '../../../theme/ThemeContext';

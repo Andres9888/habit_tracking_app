@@ -4,15 +4,17 @@
  */
 
 import React, { useEffect } from 'react';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { useReduceMotion } from '../../../../../hooks/useReduceMotion';
-import { SPRING_GENTLE, STAGGER_DELAY } from '../../../../animations';
+
 import type { AnimatedSectionProps } from '../DualVizSetup.types';
+import { SPRING_GENTLE, STAGGER_DELAY } from '../../../../animations';
+import { useReduceMotion } from '../../../../../hooks/useReduceMotion';
 
 const INITIAL_TRANSLATE_Y = 24;
 

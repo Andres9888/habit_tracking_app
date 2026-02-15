@@ -1,8 +1,11 @@
+
 import { useCallback } from 'react';
-import { withSpring } from 'react-native-reanimated';
+
 import * as Haptics from 'expo-haptics';
-import { SPRING_CONFIG } from './constants';
+import { withSpring } from 'react-native-reanimated';
+
 import type { QueueStats } from '../../hooks/useOfflineQueue';
+import { SPRING_CONFIG } from './constants';
 
 interface UseOfflineBannerHandlersParams {
   isExpanded: boolean;

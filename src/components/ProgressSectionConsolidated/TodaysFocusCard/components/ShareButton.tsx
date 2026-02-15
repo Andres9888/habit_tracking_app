@@ -5,11 +5,12 @@
  */
 
 import React from 'react';
+
 import Animated from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 
-import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import type { FocusState } from '../../TodaysFocusCardTypes';
+import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import { styles } from '../TodaysFocusCard.styles';
 
 export interface ShareButtonProps {

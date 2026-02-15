@@ -4,10 +4,11 @@
  */
 
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
+
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface ShimmerOverlayProps {
   shimmerStyle: AnimatedStyle<ViewStyle>;

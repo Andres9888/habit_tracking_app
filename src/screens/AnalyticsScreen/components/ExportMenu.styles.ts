@@ -1,16 +1,18 @@
 /**
  * Styles for ExportMenu component
  */
+
 import { StyleSheet } from 'react-native';
+
 import { colors } from '../../../theme/colors';
+import { spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
-import { spacing, borderRadius } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   exportMenu: {
     backgroundColor: colors.surface,
-    borderTopLeftRadius: borderRadius.xl,
-    borderTopRightRadius: borderRadius.xl,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: spacing.lg,
   },
   exportMenuCancel: {
@@ -20,12 +22,12 @@ export const styles = StyleSheet.create({
   },
   exportMenuCancelText: {
     ...typography.body,
-    color: colors.text.secondary,
+    color: colors.error,
   },
   exportMenuItem: {
     alignItems: 'center',
     backgroundColor: colors.background,
-    borderRadius: borderRadius.button,
+    borderRadius: 12,
     flexDirection: 'row',
     marginBottom: spacing.sm,
     padding: spacing.md,

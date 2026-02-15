@@ -1,8 +1,11 @@
+
 import { View } from 'react-native';
+
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
+
 import { AnimatedEntrance } from './AnimatedEntrance';
-import { ENTRANCE_DELAYS } from './animations';
 import { CtaButton } from './CtaButton';
+import { ENTRANCE_DELAYS } from './animations';
 import { ErrorMessage } from './ErrorMessage';
 import { InlineHint } from './InlineHint';
 

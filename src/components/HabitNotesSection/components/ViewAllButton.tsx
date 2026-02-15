@@ -1,7 +1,10 @@
+
 import React from 'react';
 import { Text } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { ChevronRight } from 'lucide-react-native';
+
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { useThemeColors } from '../../../theme/ThemeContext';
 

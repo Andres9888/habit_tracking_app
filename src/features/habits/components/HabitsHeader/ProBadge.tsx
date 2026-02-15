@@ -1,6 +1,8 @@
+
 import { Pressable, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { Crown } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface ProBadgeProps {
   onPress: () => void;

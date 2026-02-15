@@ -5,8 +5,10 @@
  */
 
 import { Modal, Pressable, Text, View } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+
 import type { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface IOSTimePickerProps {

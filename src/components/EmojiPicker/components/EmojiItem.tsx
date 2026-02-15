@@ -1,7 +1,9 @@
-import { memo, useCallback, useRef } from 'react';
+
 import { Animated, Pressable, Text } from 'react-native';
-import { EMOJIS_PER_ROW } from '../EmojiPicker.constants';
+import { memo, useCallback, useRef } from 'react';
+
 import type { EmojiItemProps } from '../EmojiPicker.types';
+import { EMOJIS_PER_ROW } from '../EmojiPicker.constants';
 
 export const EmojiItem = memo(
   ({ emoji, isSelected, onPress }: EmojiItemProps) => {

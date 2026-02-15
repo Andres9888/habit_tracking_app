@@ -3,8 +3,9 @@
  * Per spec: 48px height, Morning/Midday/Evening with time labels
  */
 
-import { memo, useCallback, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
+import { memo, useCallback, useRef } from 'react';
+
 import type { PresetButtonProps } from './types';
 
 const useButtonAnimation = (reduceMotion: boolean) => {

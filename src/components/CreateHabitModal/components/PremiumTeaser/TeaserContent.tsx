@@ -1,4 +1,6 @@
+
 import { Text, View } from 'react-native';
+
 import { Sparkles, Lock } from 'lucide-react-native';
 
 interface TeaserContentProps {

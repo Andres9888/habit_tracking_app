@@ -1,5 +1,8 @@
+
 import { Text, View } from 'react-native';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
+
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface EmptyStateProps {

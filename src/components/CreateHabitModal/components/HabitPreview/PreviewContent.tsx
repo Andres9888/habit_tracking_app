@@ -1,10 +1,12 @@
 /**
  * Content view for populated HabitPreview
  */
+
 import { Animated, Text, View } from 'react-native';
+
+import type { HubermanPhase } from '../../../../constants/hubermanPhases';
 import STRINGS from '../../../../constants/strings';
 import { getTimeOfDayLabel } from './helpers';
-import type { HubermanPhase } from '../../../../constants/hubermanPhases';
 
 interface PreviewContentProps {
   habitName: string;

@@ -6,9 +6,10 @@
 
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
+
 import { CONFETTI_COLORS, PARTICLE_COUNT } from './constants';
-import { styles } from './styles';
 import { ConfettiParticle } from './ConfettiParticle';
+import { styles } from './styles';
 
 interface MiniConfettiBurstProps {
   isActive: boolean;

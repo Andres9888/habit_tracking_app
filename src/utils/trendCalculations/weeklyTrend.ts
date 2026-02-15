@@ -5,9 +5,9 @@
  */
 
 import type { HabitTrackingEntry } from '../../features/habits/types';
+import type { WeekOverWeekTrend } from './types';
 import { formatDateString } from '../dateUtils';
 import { getWeekStart } from './dateHelpers';
-import type { WeekOverWeekTrend } from './types';
 
 /**
  * Calculate week-over-week completion trend

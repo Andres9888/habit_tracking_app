@@ -5,13 +5,13 @@
 import { useMemo } from 'react';
 import { useWindowDimensions } from 'react-native';
 
+import type { ChartDimensions } from './types';
 import {
   PADDING_BOTTOM,
   PADDING_LEFT,
   PADDING_RIGHT,
   PADDING_TOP,
 } from './constants';
-import type { ChartDimensions } from './types';
 
 export function useChartDimensions(height: number): ChartDimensions {
   const { width: windowWidth } = useWindowDimensions();

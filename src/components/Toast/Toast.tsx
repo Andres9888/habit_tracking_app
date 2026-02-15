@@ -5,16 +5,17 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
+
 import Animated from 'react-native-reanimated';
+import { GestureDetector } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useAppTheme } from '../../theme';
 import type { ToastProps } from './types';
+import { ToastActions } from './ToastActions';
 import { VARIANT_CONFIG } from './constants';
 import { styles } from './styles';
+import { useAppTheme } from '../../theme';
 import { useToastAnimations } from './useToastAnimations';
-import { ToastActions } from './ToastActions';
 
 export function Toast({
   visible,

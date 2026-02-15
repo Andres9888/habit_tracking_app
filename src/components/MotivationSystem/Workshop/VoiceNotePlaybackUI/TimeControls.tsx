@@ -5,9 +5,11 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { Volume2, VolumeX } from 'lucide-react-native';
-import { SpeedControl } from './SpeedControl';
+
 import type { TimeControlsProps } from './types';
+import { SpeedControl } from './SpeedControl';
 
 export function TimeControls({
   formattedPosition,

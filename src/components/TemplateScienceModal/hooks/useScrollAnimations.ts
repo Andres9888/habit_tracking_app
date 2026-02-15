@@ -3,12 +3,14 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useSharedValue,
   useAnimatedScrollHandler,
   interpolate,
   Extrapolation,
 } from 'react-native-reanimated';
+
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 interface UseScrollAnimationsProps {

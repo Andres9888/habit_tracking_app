@@ -3,10 +3,12 @@
  * Catches React errors and reports them to Sentry.
  */
 
-import * as Sentry from '@sentry/react-native';
 import React, { Component, type ErrorInfo, type ReactNode } from 'react';
-import { isSentryInitialized } from '../init/index';
+
+import * as Sentry from '@sentry/react-native';
+
 import { ErrorFallback } from './ErrorFallback';
+import { isSentryInitialized } from '../init/index';
 
 interface ErrorBoundaryProps {
   children: ReactNode;

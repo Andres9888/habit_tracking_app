@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
 
 // WCAG AA compliant colors (4.5:1 minimum contrast ratio)

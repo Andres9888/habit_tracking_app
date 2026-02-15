@@ -7,6 +7,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import type { Id } from '../../convex/_generated/dataModel';
 
 const STORAGE_KEY = '@habit_app:calendar_collapse_preferences';

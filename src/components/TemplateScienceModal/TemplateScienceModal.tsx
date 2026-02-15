@@ -4,7 +4,10 @@
  */
 
 import React, { useMemo } from 'react';
+
 import Animated from 'react-native-reanimated';
+
+import type { TemplateScienceModalProps } from './TemplateScienceModal.types';
 import Modal from '../Modal';
 import {
   ModalHeader,
@@ -21,10 +24,8 @@ import {
   useAnimatedStyles,
   useModalHandlers,
 } from './hooks';
-import { useThemeColors } from '../../theme/ThemeContext';
-import { layoutStyles, themedLayoutStyles } from './styles';
 import { calculateReadingTime } from './TemplateScienceModal.utils';
-import type { TemplateScienceModalProps } from './TemplateScienceModal.types';
+import { layoutStyles } from './styles';
 
 export default function TemplateScienceModal({
   isLoading = false,
@@ -40,8 +41,6 @@ export default function TemplateScienceModal({
   const modalAnimations = useModalAnimations({ template, visible });
   const scrollAnimations = useScrollAnimations({ template, visible });
   const { scaleValues, createPressHandlers } = useButtonAnimations();
-  const { colors } = useThemeColors();
-  const themedLayout = themedLayoutStyles(colors);
   const handlers = useModalHandlers({ onClose, onUseTemplate, template });
 
   const animatedStyles = useAnimatedStyles({
@@ -63,13 +62,12 @@ export default function TemplateScienceModal({
 
   return (
     <Modal
-      accessibilityViewIsModal
       disableBackdropClose={false}
       variant='fullScreen'
       visible={visible}
       onClose={onClose}
     >
-      <Animated.View style={[layoutStyles.container, themedLayout.container, animatedStyles.container]}>
+      <Animated.View style={[layoutStyles.container, animatedStyles.container]}>
         <DismissIndicator animatedStyle={animatedStyles.dismissIndicator} />
         <ModalHeader
           closeButtonAnimatedStyle={animatedStyles.closeButton}

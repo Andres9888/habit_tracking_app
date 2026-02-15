@@ -3,25 +3,21 @@
  * Handles uploading images to Convex file storage
  *
  * Flow:
- * 1. Resize image to max dimensions (1200px) for memory/bandwidth optimization
- * 2. Get signed upload URL from Convex
- * 3. Fetch processed file as blob
- * 4. POST blob to signed URL
- * 5. Return storage ID for persistence
+ * 1. Get signed upload URL from Convex
+ * 2. Fetch local file as blob
+ * 3. POST blob to signed URL
+ * 4. Return storage ID for persistence
  *
  * Story T12.3: Image upload to storage for Vision Board
- * App Store Compliance: Images resized to prevent memory issues and excessive bandwidth
  */
 
 import { useCallback, useState } from 'react';
-import { useMutation } from 'convex/react';
-import * as ImageManipulator from 'expo-image-manipulator';
-import { api } from '../../convex/_generated/api';
-import { Id } from '../../convex/_generated/dataModel';
-import type { PickedImage } from './useImagePicker';
 
-/** Maximum image dimension (width or height) - balances quality and performance */
-const MAX_IMAGE_DIMENSION = 1200;
+import { useMutation } from 'convex/react';
+
+import type { PickedImage } from './useImagePicker';
+import { Id } from '../../convex/_generated/dataModel';
+import { api } from '../../convex/_generated/api';
 
 export interface UploadResult {
   storageId: Id<'_storage'>;
@@ -42,20 +38,7 @@ export interface UseImageUploadReturn {
 }
 
 /**
- * Custom hook for uploading images to Convex file storage.
- * Handles the complete upload flow: getting signed URL, fetching local file,
- * and uploading to storage.
- *
- * @returns Object containing upload function and state
- *
- * @example
- * ```ts
- * const { uploadImage, isUploading, error } = useImageUpload();
- * const result = await uploadImage(pickedImage);
- * if (result) {
- *   console.log('Uploaded:', result.storageId);
- * }
- * ```
+ * Custom hook for uploading images to Convex file storage
  */
 export function useImageUpload(): UseImageUploadReturn {
   const [isUploading, setIsUploading] = useState(false);
@@ -66,42 +49,7 @@ export function useImageUpload(): UseImageUploadReturn {
   const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
 
   /**
-   * Resize image if dimensions exceed MAX_IMAGE_DIMENSION
-   * Maintains aspect ratio and reduces memory/bandwidth usage
-   */
-  const resizeImageIfNeeded = useCallback(
-    async (image: PickedImage): Promise<string> => {
-      const maxDimension = Math.max(image.width, image.height);
-      
-      // No resize needed if already within limits
-      if (maxDimension <= MAX_IMAGE_DIMENSION) {
-        return image.uri;
-      }
-
-      // Calculate resize ratio to fit within MAX_IMAGE_DIMENSION
-      const ratio = MAX_IMAGE_DIMENSION / maxDimension;
-      const newWidth = Math.round(image.width * ratio);
-      const newHeight = Math.round(image.height * ratio);
-
-      if (__DEV__) {
-        console.log(`Resizing image from ${image.width}x${image.height} to ${newWidth}x${newHeight}`);
-      }
-
-      // Resize using expo-image-manipulator
-      const resizedImage = await ImageManipulator.manipulateAsync(
-        image.uri,
-        [{ resize: { width: newWidth, height: newHeight } }],
-        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
-      );
-
-      return resizedImage.uri;
-    },
-    []
-  );
-
-  /**
    * Upload an image to Convex storage
-   * Automatically resizes large images before upload for App Store compliance
    */
   const uploadImage = useCallback(
     async (image: PickedImage): Promise<UploadResult | null> => {
@@ -110,14 +58,11 @@ export function useImageUpload(): UseImageUploadReturn {
       setProgress(0);
 
       try {
-        // Step 1: Resize image if needed (App Store compliance)
-        const processedUri = await resizeImageIfNeeded(image);
-
-        // Step 2: Get signed upload URL from Convex
+        // Step 1: Get signed upload URL from Convex
         const uploadUrl = await generateUploadUrl();
 
-        // Step 3: Fetch the processed file as a blob
-        const fileResponse = await fetch(processedUri);
+        // Step 2: Fetch the local file as a blob
+        const fileResponse = await fetch(image.uri);
         if (!fileResponse.ok) {
           throw new Error(`Failed to read local file: ${fileResponse.status}`);
         }
@@ -131,7 +76,7 @@ export function useImageUpload(): UseImageUploadReturn {
           );
         }
 
-        // Step 4: Upload the blob to Convex storage
+        // Step 3: Upload the blob to Convex storage
         const uploadResponse = await fetch(uploadUrl, {
           body: blob,
           headers: {
@@ -147,7 +92,7 @@ export function useImageUpload(): UseImageUploadReturn {
           );
         }
 
-        // Step 5: Parse the storage ID from the response
+        // Step 4: Parse the storage ID from the response
         const { storageId } = await uploadResponse.json();
 
         // The URL will be the upload response but we typically get
@@ -169,7 +114,7 @@ export function useImageUpload(): UseImageUploadReturn {
         return null;
       }
     },
-    [generateUploadUrl, resizeImageIfNeeded]
+    [generateUploadUrl]
   );
 
   /**

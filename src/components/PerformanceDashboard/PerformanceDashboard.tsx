@@ -5,7 +5,10 @@
 
 import React from 'react';
 import { View, useWindowDimensions } from 'react-native';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import type { DashboardConfig } from './types';
 import {
   DashboardFAB,
   DashboardHeader,
@@ -13,10 +16,9 @@ import {
   TabBar,
   TabContent,
 } from './components';
-import { useDashboardData } from './useDashboardData';
-import { getOverallStatus, getPositionStyle } from './utils';
 import { dashboardStyles } from './PerformanceDashboard.styles';
-import type { DashboardConfig } from './types';
+import { getOverallStatus, getPositionStyle } from './utils';
+import { useDashboardData } from './useDashboardData';
 
 interface PerformanceDashboardProps {
   config?: DashboardConfig;

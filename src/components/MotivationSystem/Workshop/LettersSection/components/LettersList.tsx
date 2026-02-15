@@ -5,9 +5,10 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import type { LetterSummary } from '../LettersSection.types';
-import { PREVIEW_LETTER_COUNT } from '../LettersSection.constants';
 import { LetterItem } from './LetterItem';
+import { PREVIEW_LETTER_COUNT } from '../LettersSection.constants';
 
 interface LettersListProps {
   letters: LetterSummary[];

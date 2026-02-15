@@ -5,21 +5,21 @@
  * rounded top container, KeyboardAvoidingView, and swipe-to-dismiss.
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
 import type { ScrollView as ScrollViewType } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
 
-import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
+import { GestureDetector } from 'react-native-gesture-handler';
 
-import { useThemeColors } from '../../theme/ThemeContext';
+import type { CreateHabitModalProps } from './types';
 import { CreateHabitScrollContent } from './components/CreateHabitScrollContent';
 import { ModalHeader } from './components/ModalHeader';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
 import { useKeyboardState } from './hooks/useKeyboardState';
 import { useSwipeDismiss } from './hooks/useSwipeDismiss';
-import type { CreateHabitModalProps } from './types';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const { visible, onClose } = props;

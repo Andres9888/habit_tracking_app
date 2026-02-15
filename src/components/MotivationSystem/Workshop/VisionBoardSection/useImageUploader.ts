@@ -3,14 +3,15 @@
  * Handles image picking and uploading for the Vision Board
  */
 
-import { useState, useCallback } from 'react';
 import { Alert } from 'react-native';
+import { useState, useCallback } from 'react';
+
 import * as Haptics from 'expo-haptics';
-import { useImagePicker } from '../../../../hooks/useImagePicker';
-import { useImageUpload } from '../../../../hooks/useImageUpload';
+
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import { MAX_IMAGES } from './types';
-import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
+import { useImagePicker } from '../../../../hooks/useImagePicker';
+import { useImageUpload } from '../../../../hooks/useImageUpload';
 
 interface UseImageUploaderProps {
   isPremium: boolean;
@@ -70,7 +71,7 @@ export function useImageUploader({
         if (__DEV__) console.error('Failed to add image:', error);
         Alert.alert(
           'Upload Failed',
-          ERROR_MESSAGES.DATA_OPS.UPLOAD_IMAGE_FAILED
+          'There was a problem adding your image. Please try again.'
         );
       } finally {
         setIsUploading(false);

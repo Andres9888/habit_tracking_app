@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { Lock, Mail } from 'lucide-react-native';
 import { clsx } from 'clsx';
+
 import type { LetterSummary } from '../LettersSection.types';
 import {
   formatRelativeTime,

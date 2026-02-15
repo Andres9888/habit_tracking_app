@@ -4,8 +4,10 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { Crown, X } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { VariantConfig } from './PremiumPaywall.types';
 
 interface BenefitsHeaderProps {

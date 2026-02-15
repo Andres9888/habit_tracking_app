@@ -6,8 +6,8 @@
 
 import type { OfflineQueueManagerAPI } from '../queueManager';
 import type { SyncItem } from '../syncManager';
-import type { ToggleCompletionPayload } from '../queue';
 import type { SyncOrchestratorResult } from './types';
+import type { ToggleCompletionPayload } from '../queue';
 
 /**
  * Create a sync result object

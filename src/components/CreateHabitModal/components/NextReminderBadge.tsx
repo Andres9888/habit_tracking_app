@@ -1,7 +1,10 @@
-import { useMemo } from 'react';
+
 import { Text, View } from 'react-native';
+import { useMemo } from 'react';
+
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Clock } from 'lucide-react-native';
+
 import { formatReminderTime } from '../../../utils/notifications';
 
 /**

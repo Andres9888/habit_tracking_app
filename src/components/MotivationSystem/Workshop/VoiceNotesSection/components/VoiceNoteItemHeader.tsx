@@ -1,13 +1,16 @@
 /**
  * VoiceNoteItemHeader - Header row with note info and expand icon
  */
+
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import { View, Text, Pressable } from 'react-native';
+
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { Mic, ChevronDown } from 'lucide-react-native';
-import { formatDuration, formatRelativeTime } from '../VoiceNotesSection.utils';
+
 import type { VoiceNoteSummary } from '../VoiceNotesSection.types';
-import type { ViewStyle } from 'react-native';
+import { formatDuration, formatRelativeTime } from '../VoiceNotesSection.utils';
 
 interface VoiceNoteItemHeaderProps {
   note: VoiceNoteSummary;

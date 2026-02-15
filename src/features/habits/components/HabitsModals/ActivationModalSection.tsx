@@ -1,6 +1,7 @@
+
+import type { ActivationModalSectionProps } from './HabitsModals.types';
 import { ActivationModal } from '../../../../components/MotivationSystem/Activation/ActivationModal';
 import { getTodayString } from '../../../../utils/getLocalDateString';
-import type { ActivationModalSectionProps } from './HabitsModals.types';
 
 /** Build the activation habit data structure from the habit object */
 function buildActivationHabitData(

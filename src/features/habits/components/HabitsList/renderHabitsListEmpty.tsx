@@ -7,8 +7,8 @@
  * after the first habit is created from the empty state.
  */
 
-import { HabitsEmptyStateMinimal } from '../HabitsEmptyStateMinimal';
 import type { HabitsListProps } from './HabitsList.types';
+import { HabitsEmptyStateMinimal } from '../HabitsEmptyStateMinimal';
 
 interface RenderHabitsListEmptyOptions {
   list: HabitsListProps['list'];

@@ -3,9 +3,10 @@
  */
 
 import { StyleSheet } from 'react-native';
+
 import { colors } from '../../theme/colors';
-import { typography } from '../../theme/typography';
 import { spacing, borderRadius } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 export const itemStyles = StyleSheet.create({
   habitEmoji: {

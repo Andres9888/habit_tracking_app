@@ -6,6 +6,7 @@
 
 import React, { memo, useCallback } from 'react';
 import { View, Text, Pressable, Platform } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -16,12 +17,12 @@ import { Settings } from 'lucide-react-native';
 
 import type { StatsRowProps } from './types';
 import { COLORS } from './constants';
-import { useThemedStatsStyles } from './StatsRow.styles';
 import { StreakBadge } from './StreakBadge';
+import { styles } from './StatsRow.styles';
 
 const PRESS_SCALE = 0.95;
 const SETTINGS_ICON_SIZE = 18;
-const SPRING_CONFIG = { damping: 18, stiffness: 150 };
+const SPRING_CONFIG = { damping: 15, stiffness: 400 };
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const StatsRow = memo(function StatsRow({
@@ -30,7 +31,6 @@ export const StatsRow = memo(function StatsRow({
   habitColor,
   onSettingsPress,
 }: StatsRowProps) {
-  const styles = useThemedStatsStyles();
   const shouldReduceMotion = useReducedMotion();
   const settingsScale = useSharedValue(1);
 

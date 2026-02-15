@@ -1,5 +1,6 @@
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+
 import { Animated, Easing } from 'react-native';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 
 interface UseHabitDayToggleAnimationsParams {
   completed: boolean;

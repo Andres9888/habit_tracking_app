@@ -1,7 +1,10 @@
+
 import { View } from 'react-native';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { useSkeletonTheme } from '../../../components/SkeletonLoader/useSkeletonTheme';
+
 import { ShimmerBox } from './ShimmerBox';
+import { useSkeletonTheme } from '../../../components/SkeletonLoader/useSkeletonTheme';
 
 export function SkeletonCard({ index }: { index: number }) {
   const { cardBg, shadowColor, shadowOpacity } = useSkeletonTheme();

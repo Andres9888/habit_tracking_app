@@ -2,16 +2,18 @@
 /**
  * CalendarTabs Component
  * Tab switcher for Month vs Year (Heatmap) calendar views
+ * Animated sliding indicator with haptic feedback
  */
 
+import { View, Text, Pressable, type LayoutChangeEvent } from 'react-native';
 import { useCallback, useEffect } from 'react';
-import { View, type LayoutChangeEvent } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { TabButton } from './TabButton';
 
 type CalendarView = 'month' | 'year';
 
@@ -51,6 +53,16 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
     };
   });
 
+  const handlePress = useCallback(
+    (view: CalendarView) => {
+      if (view !== activeView) {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        onViewChange(view);
+      }
+    },
+    [activeView, onViewChange]
+  );
+
   return (
     <View
       accessibilityRole='tablist'
@@ -72,18 +84,40 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
         ]}
       />
       <View className='flex-row'>
-        <TabButton
-          activeView={activeView}
-          label='Month'
-          view='month'
-          onPress={onViewChange}
-        />
-        <TabButton
-          activeView={activeView}
-          label='Year'
-          view='year'
-          onPress={onViewChange}
-        />
+        <Pressable
+          accessibilityLabel='Month view'
+          accessibilityRole='tab'
+          accessibilityState={{ selected: activeView === 'month' }}
+          className='z-10 flex-1 items-center py-2'
+          onPress={() => handlePress('month')}
+        >
+          <Text
+            style={{
+              color: activeView === 'month' ? '#059669' : '#78716c',
+              fontSize: 13,
+              fontWeight: '600',
+            }}
+          >
+            Month
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityLabel='Year view'
+          accessibilityRole='tab'
+          accessibilityState={{ selected: activeView === 'year' }}
+          className='z-10 flex-1 items-center py-2'
+          onPress={() => handlePress('year')}
+        >
+          <Text
+            style={{
+              color: activeView === 'year' ? '#059669' : '#78716c',
+              fontSize: 13,
+              fontWeight: '600',
+            }}
+          >
+            Year
+          </Text>
+        </Pressable>
       </View>
     </View>
   );

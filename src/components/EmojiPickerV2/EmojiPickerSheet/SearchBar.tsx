@@ -5,13 +5,15 @@
 
 import React, { useCallback } from 'react';
 import { View, TextInput, Pressable, type ViewStyle } from 'react-native';
-import { Search, X } from 'lucide-react-native';
+
 import Animated, {
   useSharedValue,
   withTiming,
   type AnimatedStyle,
   type SharedValue,
 } from 'react-native-reanimated';
+import { Search, X } from 'lucide-react-native';
+
 import { colors } from '../../../theme/colors';
 import { styles } from './EmojiPickerSheet.styles';
 

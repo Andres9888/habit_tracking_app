@@ -1,7 +1,10 @@
+
 import React from 'react';
-import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
-import { DeleteUndoToast } from '../DeleteUndoToast';
+
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
+
+import { DeleteUndoToast } from '../DeleteUndoToast';
 
 // Mock safe area insets
 jest.mock('react-native-safe-area-context', () => ({

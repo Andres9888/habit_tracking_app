@@ -1,4 +1,6 @@
+
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useReducedMotion,

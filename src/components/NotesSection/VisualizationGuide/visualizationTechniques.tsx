@@ -3,7 +3,9 @@
  */
 
 import React from 'react';
+
 import { CheckCircle2, XCircle } from 'lucide-react-native';
+
 import type { VisualizationTechnique } from './VisualizationGuide.types';
 
 export const VISUALIZATION_TECHNIQUES: VisualizationTechnique[] = [

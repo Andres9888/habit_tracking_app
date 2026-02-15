@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   Easing,
   useAnimatedProps,
@@ -13,8 +14,8 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
-import { PULSE_DURATION, DOT_RADIUS } from './constants';
 import type { ChartPoint } from './types';
+import { PULSE_DURATION, DOT_RADIUS } from './constants';
 
 interface UsePulseAnimationProps {
   lastPoint: ChartPoint | null;

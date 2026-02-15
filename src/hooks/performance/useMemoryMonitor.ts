@@ -1,9 +1,11 @@
 /**
  * useMemoryMonitor Hook - Monitor memory usage during component lifetime.
  */
+
 import { useCallback, useEffect, useState } from 'react';
-import { usePerformance } from './usePerformance';
+
 import { MemoryMonitor } from '../../lib/performance';
+import { usePerformance } from './usePerformance';
 
 interface MemoryStats {
   currentUsage: number | null;

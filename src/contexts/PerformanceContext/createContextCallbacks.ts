@@ -2,9 +2,10 @@
  * Context Callbacks Factory
  * Creates callback functions for the performance context.
  */
-import { DEFAULT_THRESHOLDS, now } from '../../lib/performance';
+
 import type { FrameTimingData } from '../../lib/performance';
 import type { usePerformanceMonitor } from './usePerformanceMonitor';
+import { DEFAULT_THRESHOLDS, now } from '../../lib/performance';
 
 export function createContextCallbacks(
   monitor: ReturnType<typeof usePerformanceMonitor>

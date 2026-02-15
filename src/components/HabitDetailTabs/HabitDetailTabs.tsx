@@ -8,13 +8,14 @@
 
 import React, { useCallback, useEffect } from 'react';
 import { View, LayoutChangeEvent } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   useDerivedValue,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { TabType, HabitDetailTabsProps } from './HabitDetailTabs.types';

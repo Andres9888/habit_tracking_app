@@ -12,9 +12,11 @@
  */
 
 import { Platform, Modal, View, Text, Pressable, Alert } from 'react-native';
+
 import RevenueCatUI from 'react-native-purchases-ui';
-import { useThemeColors } from '../../theme/ThemeContext';
+
 import type { RevenueCatPaywallProps } from './types';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 /**
  * Presents the RevenueCat native paywall

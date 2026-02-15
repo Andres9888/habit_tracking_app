@@ -8,11 +8,12 @@
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 
-import { ProgressSectionConsolidated } from '../ProgressSectionConsolidated';
+import { render, screen } from '@testing-library/react-native';
+
 import type { HabitTrackingEntry } from '../../../features/habits/types';
+import { ProgressSectionConsolidated } from '../ProgressSectionConsolidated';
 
 /**
  * Mock tracking entry type for tests.

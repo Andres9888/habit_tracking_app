@@ -4,13 +4,15 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Sparkles, Clock, Timer, Flame } from 'lucide-react-native';
-import { useAppTheme } from '../../../theme';
-import { heroStyles, badgeStyles } from '../styles';
-import { getGradientColors } from '../TemplateScienceModal.utils';
+
 import type { HeroSectionProps } from '../TemplateScienceModal.types';
+import { getGradientColors } from '../TemplateScienceModal.utils';
+import { heroStyles, badgeStyles } from '../styles';
+import { useAppTheme } from '../../../theme';
 
 export const HeroSection = ({
   baseColor,

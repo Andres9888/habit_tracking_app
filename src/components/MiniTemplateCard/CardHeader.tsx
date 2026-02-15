@@ -4,8 +4,10 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { ChevronRight, FlaskConical } from 'lucide-react-native';
+
 import { styles } from './MiniTemplateCard.styles';
 
 interface CardHeaderProps {

@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { Target } from 'lucide-react-native';
 

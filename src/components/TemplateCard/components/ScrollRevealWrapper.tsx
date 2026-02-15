@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 
 interface ScrollRevealWrapperProps {

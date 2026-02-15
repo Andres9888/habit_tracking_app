@@ -1,10 +1,13 @@
+
 import { Platform, Pressable, Text, View } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+
 import { AppleLogo } from '../../../../components/auth/logos/AppleLogo';
 import { GoogleLogo } from '../../../../components/auth/logos/GoogleLogo';
 import { LoadingSpinner } from './LoadingSpinner';

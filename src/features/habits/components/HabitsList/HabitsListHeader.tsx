@@ -16,14 +16,15 @@
 
 import React, { memo } from 'react';
 import { Animated, View } from 'react-native';
-import { HabitsHeader } from '../HabitsHeader';
-import { CalendarTimeline } from '../../../../components/CalendarTimeline';
-import { OfflineIndicator } from '../../../../components/SyncStatus';
+
+import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import {
   TrialCountdownBanner,
   useTrialCountdown,
 } from '../../../../components/TrialCountdownBanner';
-import type { HabitsListHeaderProps } from './HabitsListHeader.types';
+import { CalendarTimeline } from '../../../../components/CalendarTimeline';
+import { HabitsHeader } from '../HabitsHeader';
+import { OfflineIndicator } from '../../../../components/SyncStatus';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
 function HabitsListHeaderComponent(

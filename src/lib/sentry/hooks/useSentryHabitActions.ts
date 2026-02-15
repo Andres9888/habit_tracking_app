@@ -3,6 +3,7 @@
  */
 
 import { useCallback, useMemo } from 'react';
+
 import { getSentryReporter } from '../reporter/index';
 
 /**

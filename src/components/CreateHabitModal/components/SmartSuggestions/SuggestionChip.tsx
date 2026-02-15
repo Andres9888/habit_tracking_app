@@ -1,10 +1,12 @@
-import { useCallback, useRef } from 'react';
+
 import { Animated, Pressable, Text, View } from 'react-native';
+import { useCallback, useRef } from 'react';
+
+import type { SuggestionChipProps } from './types';
+import useHapticFeedback from '../../../../hooks/useHapticFeedback';
+import { Motion } from '../../../../constants/motion';
 import { colors } from '@/theme/colors';
 import { shadows } from '@/theme/spacing';
-import { Motion } from '../../../../constants/motion';
-import useHapticFeedback from '../../../../hooks/useHapticFeedback';
-import type { SuggestionChipProps } from './types';
 
 export const SuggestionChip = ({
   color,

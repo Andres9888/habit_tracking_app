@@ -1,6 +1,9 @@
+
 import React from 'react';
 import { View } from 'react-native';
+
 import { clsx } from 'clsx';
+
 import { shadows } from '../../../../../theme/spacing';
 
 interface SectionCardProps {

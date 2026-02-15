@@ -9,16 +9,17 @@
 
 import React from 'react';
 import { Text } from 'react-native';
-import { CompletionCheckmark } from '../../../animations';
+
 import type { LettersSectionProps } from './LettersSection.types';
-import { useLettersSection } from './useLettersSection';
-import { SectionCard } from './components/SectionCard';
 import { AnimatedSection } from './components/AnimatedSection';
-import { LettersSectionHeader } from './components/LettersSectionHeader';
-import { WriteLetterButton } from './components/WriteLetterButton';
+import { CompletionCheckmark } from '../../../animations';
 import { LettersList } from './components/LettersList';
-import { WriteLetterModal } from './components/WriteLetterModal';
+import { LettersSectionHeader } from './components/LettersSectionHeader';
 import { ReadLetterModal } from './components/ReadLetterModal';
+import { SectionCard } from './components/SectionCard';
+import { WriteLetterButton } from './components/WriteLetterButton';
+import { WriteLetterModal } from './components/WriteLetterModal';
+import { useLettersSection } from './useLettersSection';
 
 export function LettersSection(props: LettersSectionProps) {
   const {

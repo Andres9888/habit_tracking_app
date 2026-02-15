@@ -3,11 +3,11 @@
  * Re-exports aggregated handlers from focused hook modules
  */
 
+import type { UseTemplateHandlersOptions } from './TemplatesScreen.handlers.types';
 import { useNavigationHandlers } from './hooks/useNavigationHandlers';
 import { useSeedHandlers } from './hooks/useSeedHandlers';
 import { useSortHandlers } from './hooks/useSortHandlers';
 import { useTemplateImportHandlers } from './hooks/useTemplateImportHandlers';
-import type { UseTemplateHandlersOptions } from './TemplatesScreen.handlers.types';
 
 export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
   const navigation = useNavigationHandlers({

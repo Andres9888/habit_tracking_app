@@ -1,4 +1,6 @@
+
 import { Text } from 'react-native';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface ForgotPasswordLinkProps {

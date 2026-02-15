@@ -5,8 +5,6 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import type { Id } from '../../../../convex/_generated/dataModel';
-import type { ToggleMutationResult } from '../../../lib/optimistic';
 import type {
   Habit,
   HabitSettings,
@@ -14,6 +12,8 @@ import type {
   HabitTrackingEntry,
   ShareCardData,
 } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
+import type { ToggleMutationResult } from '../../../lib/optimistic';
 
 export interface HabitsModalsState {
   celebrationsEnabled: boolean;

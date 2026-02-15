@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
+
 import { MessageSquare } from 'lucide-react-native';
 
 interface NoteInputProps {

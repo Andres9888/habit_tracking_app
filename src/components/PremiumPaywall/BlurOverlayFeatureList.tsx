@@ -4,10 +4,12 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../../theme/colors';
-import { MOTIVATION_FEATURES } from './motivationFeatures';
+
 import { ANALYTICS_FEATURES } from './analyticsFeatures';
+import { MOTIVATION_FEATURES } from './motivationFeatures';
+import { colors } from '../../theme/colors';
 
 interface MotivationFeatureListProps {
   triggeredByFeature?: string;

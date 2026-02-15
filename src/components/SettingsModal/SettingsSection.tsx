@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 /** SettingsSection - OPTIMIZED: Deeper shadows, better card styling */
+
 import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 

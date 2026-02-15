@@ -8,13 +8,14 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { CompletionCheckmark } from '../../../animations';
-import { useVoiceNotesSection } from './VoiceNotesSection.hooks';
+
+import type { VoiceNotesSectionProps } from './VoiceNotesSection.types';
 import {
   AnimatedSection, SectionCard, WaveformVisualization, RecordingControls,
   VoiceNotesList, VoiceNotesSectionHeader, RecordButton,
 } from './components';
-import type { VoiceNotesSectionProps } from './VoiceNotesSection.types';
+import { CompletionCheckmark } from '../../../animations';
+import { useVoiceNotesSection } from './VoiceNotesSection.hooks';
 
 export function VoiceNotesSection(props: VoiceNotesSectionProps) {
   const {

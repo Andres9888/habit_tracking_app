@@ -4,9 +4,11 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
-import { HabitNotesSection } from '../HabitNotesSection';
+
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import { HabitNotesSection } from '../HabitNotesSection';
 
 // Mock expo-haptics
 jest.mock('expo-haptics', () => ({

@@ -1,11 +1,14 @@
-import { memo } from 'react';
+
 import { Pressable, Text, View } from 'react-native';
-import { Microscope } from 'lucide-react-native';
+import { memo, useCallback, useRef } from 'react';
+
 import Animated from 'react-native-reanimated';
+import { Microscope } from 'lucide-react-native';
+
+import type { HabitTemplate } from '../../types';
 import { colors } from '@/theme/colors';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
-import type { HabitTemplate } from '../../types';
 import { useTemplateListItemAnimations } from './useTemplateListItemAnimations';
 import { useTemplateListItemHandlers } from './useTemplateListItemHandlers';
 

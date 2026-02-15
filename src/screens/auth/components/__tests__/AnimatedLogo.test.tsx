@@ -1,6 +1,9 @@
+
 import React from 'react';
-import { render } from '@testing-library/react-native';
+
 import * as Reanimated from 'react-native-reanimated';
+import { render } from '@testing-library/react-native';
+
 import { AnimatedLogo } from '../AnimatedLogo';
 
 // Mock expo-linear-gradient

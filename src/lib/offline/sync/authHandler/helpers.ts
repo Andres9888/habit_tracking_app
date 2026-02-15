@@ -4,7 +4,6 @@
  * Utility functions for detecting and handling auth errors during sync.
  */
 
-import type { ClassifiedError, ErrorCategory } from '../../types';
 import type {
   AuthEvent,
   AuthEventData,
@@ -12,6 +11,7 @@ import type {
   AuthHandlerState,
   AuthStatus,
 } from './types';
+import type { ClassifiedError, ErrorCategory } from '../../types';
 import { DEFAULT_AUTH_CONFIG } from './types';
 
 /** Auth error status codes */

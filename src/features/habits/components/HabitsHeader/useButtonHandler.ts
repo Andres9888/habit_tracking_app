@@ -1,4 +1,6 @@
+
 import type { SharedValue } from 'react-native-reanimated';
+
 import { withSpring, withTiming } from 'react-native-reanimated';
 import { SPRING_CONFIGS } from '@/utils/animations/helpers';
 

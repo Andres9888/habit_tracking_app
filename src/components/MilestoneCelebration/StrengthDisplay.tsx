@@ -3,11 +3,13 @@
  */
 
 import React from 'react';
-import { Text } from 'react-native';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
-import { useAppTheme } from '../../theme';
+import { Text } from 'react-native';
+
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
 import { styles } from './styles';
+import { useAppTheme } from '../../theme';
 
 interface StrengthDisplayProps {
   strength: number;

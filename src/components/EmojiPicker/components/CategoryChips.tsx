@@ -1,8 +1,10 @@
-import { memo } from 'react';
+
 import { Pressable, ScrollView, Text } from 'react-native';
+import { memo } from 'react';
+
+import { HABIT_CATEGORIES } from '../../../constants/habitEmojis';
 import { shadows } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
-import { HABIT_CATEGORIES } from '../../../constants/habitEmojis';
 
 interface CategoryChipsProps {
   selectedCategory: string;

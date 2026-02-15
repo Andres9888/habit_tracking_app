@@ -1,12 +1,12 @@
+
 import { useCallback } from 'react';
-import type { Id } from '../../../../convex/_generated/dataModel';
-import type { Habit, HabitSettingsUpdate } from '../types';
+
 import type {
   HabitModalSetters,
   HabitModalDeps,
 } from './useHabitModalHandlers.types';
-import { showGenericError, showSaveError } from '../../../utils/errorAlerts';
-import { ERROR_MESSAGES } from '../../../constants/errorMessages';
+import type { Habit, HabitSettingsUpdate } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 export function useHabitModalHandlers(
   setters: HabitModalSetters,
@@ -49,7 +49,6 @@ export function useHabitModalHandlers(
       setters.setIsHabitDetailOpen(false);
     } catch (error) {
       if (__DEV__) console.error('Failed to pause habit:', error);
-      showGenericError('Failed to pause habit. Please try again.');
     }
   }, [deps.habitToPause, deps.pauseHabit]);
 
@@ -80,7 +79,6 @@ export function useHabitModalHandlers(
         await deps.updateSettings({ ...deps.settings, ...updates });
       } catch (error) {
         if (__DEV__) console.error('Failed to update settings:', error);
-        showSaveError();
       }
     },
     [deps.settings, deps.updateSettings]
@@ -94,7 +92,6 @@ export function useHabitModalHandlers(
         setters.setSelectedHabit(null);
       } catch (error) {
         if (__DEV__) console.error('Failed to delete habit:', error);
-        showGenericError(ERROR_MESSAGES.DATA_OPS.DELETE_HABIT_FAILED);
       }
     },
     [deps.removeHabit]

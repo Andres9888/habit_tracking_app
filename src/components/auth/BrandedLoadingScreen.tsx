@@ -4,12 +4,12 @@
  * Supports dark mode via useThemeColors.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useThemeColors } from '../../theme/ThemeContext';
-import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import { LoadingTimeoutCard } from './LoadingTimeoutCard';
+import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const LOADING_TIMEOUT_MS = 10_000;
 

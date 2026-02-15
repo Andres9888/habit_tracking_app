@@ -5,6 +5,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+
 import type { LetterData, LettersSectionProps } from './LettersSection.types';
 
 type UseLettersSectionParams = Pick<

@@ -3,10 +3,12 @@
  * StreakRemindersSection — Settings toggle for streak reminder notifications
  */
 
-import { useState } from 'react';
-import { Bell, Clock, Crown } from 'lucide-react-native';
 import { Platform, Text, View } from 'react-native';
+import { useState } from 'react';
+
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Bell, Clock, Crown } from 'lucide-react-native';
+
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import {

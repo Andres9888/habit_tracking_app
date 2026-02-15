@@ -3,6 +3,7 @@
  */
 
 import { useSyncExternalStore } from 'react';
+
 import { optimisticStore } from '../store';
 
 export function useOptimisticStore() {

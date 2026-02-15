@@ -11,7 +11,9 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
+
 import { StrengthRing } from '../StrengthRing';
 
 describe('StrengthRing Component', () => {

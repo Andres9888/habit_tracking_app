@@ -5,9 +5,11 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { Brain, Heart, User } from 'lucide-react-native';
-import { VizField } from './VizField';
+
 import { EmptyVizState } from './EmptyVizState';
+import { VizField } from './VizField';
 
 export interface VizFieldsListProps {
   failureBody?: string;

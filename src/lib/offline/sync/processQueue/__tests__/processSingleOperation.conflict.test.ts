@@ -7,14 +7,14 @@
  * @see docs/offline-habit-sync.md US4 - Graceful Conflict Resolution
  */
 
-import type { Id } from '../../../../../../convex/_generated/dataModel';
-import type { OfflineOperation } from '../../../queue';
-import type { OfflineQueueManagerAPI } from '../../../queueManager';
-import type { OfflineSyncManager, SyncItem } from '../../../syncManager';
 import type {
   CompletionStateChecker,
   ConflictEvent,
 } from '../../conflictResolver';
+import type { Id } from '../../../../../../convex/_generated/dataModel';
+import type { OfflineOperation } from '../../../queue';
+import type { OfflineQueueManagerAPI } from '../../../queueManager';
+import type { OfflineSyncManager, SyncItem } from '../../../syncManager';
 import type { QueueProcessorDeps, ProcessSingleOptions } from '../types';
 import { processSingleOperation } from '../processSingleOperation';
 

@@ -1,13 +1,16 @@
+
 import { useState, useCallback } from 'react';
+
 import {
   withSequence,
   withSpring,
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import { useCardAnimatedStyles } from './useCardAnimatedStyles';
-import { EXIT_ANIMATION_DURATION } from '../utils';
+
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { EXIT_ANIMATION_DURATION } from '../utils';
+import { useCardAnimatedStyles } from './useCardAnimatedStyles';
 
 interface UseAnimatedHabitCardParams {
   habitId: Id<'habits'>;

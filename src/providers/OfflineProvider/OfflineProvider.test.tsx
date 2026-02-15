@@ -6,14 +6,16 @@
 
 import React from 'react';
 import { Text } from 'react-native';
+
 import { render, waitFor, act } from '@testing-library/react-native';
-import { OfflineProvider } from './OfflineProvider';
-import { useOfflineContext } from './useOfflineContext';
+
+import * as persistence from '../../lib/offline/persistence';
 import {
   getOfflineQueueManager,
   resetOfflineQueueManager,
 } from '../../lib/offline';
-import * as persistence from '../../lib/offline/persistence';
+import { OfflineProvider } from './OfflineProvider';
+import { useOfflineContext } from './useOfflineContext';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({

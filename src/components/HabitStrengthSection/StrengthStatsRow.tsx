@@ -21,8 +21,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { COLORS } from './constants';
 import type { StrengthStatsRowProps } from './types';
+import { COLORS } from './constants';
 
 /**
  * Format a delta value for display with + or - prefix.

@@ -5,11 +5,13 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+
 import { FlaskConical } from 'lucide-react-native';
-import { useAppTheme } from '../../../theme';
+
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { TemplateIcon } from './TemplateIcon';
 import { typography } from '@/theme/typography';
+import { useAppTheme } from '../../../theme';
 
 interface TemplateContentProps {
   template: Doc<'templates'>;

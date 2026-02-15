@@ -3,13 +3,15 @@
  */
 
 import { FlatList, Pressable, View } from 'react-native';
+
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
-import TemplateCard from '../../../components/TemplateCard';
 import type { SortOption } from '../../templates/constants';
-import { styles } from '../../templates/templatesScreenStyles';
-import { FilterControls } from '../components';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
+import TemplateCard from '../../../components/TemplateCard';
+import { FilterControls } from '../components';
+import { styles } from '../../templates/templatesScreenStyles';
 
 interface BrowseAllTabProps {
   contentAnimatedStyle: AnimatedStyle;

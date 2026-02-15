@@ -2,8 +2,8 @@
  * setInstantVisible - Sets all animation values to their final visible state instantly
  */
 
-import { ACCENT_TARGET_WIDTH } from './constants';
 import type { EntranceAnimationValues } from './types';
+import { ACCENT_TARGET_WIDTH } from './constants';
 
 export function createSetInstantVisible(values: EntranceAnimationValues) {
   return () => {

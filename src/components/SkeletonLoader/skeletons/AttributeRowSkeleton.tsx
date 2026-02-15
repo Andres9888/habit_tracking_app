@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { View } from 'react-native';
-import { SkeletonLoader } from '../SkeletonLoader';
+
 import type { ReduceMotionProps } from '../types';
+import { SkeletonLoader } from '../SkeletonLoader';
 
 export function AttributeRowSkeleton({ reduceMotion }: ReduceMotionProps) {
   return (

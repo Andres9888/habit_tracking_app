@@ -9,8 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useSyncOrchestrator } from '../../lib/offline/sync/useSyncOrchestrator';
-import { SyncStatusContext } from './context';
+
 import type { SyncOrchestratorResult } from '../../lib/offline/sync/types';
 import type { SyncStatusContextValue, SyncStatusProviderProps } from './types';
 import {
@@ -19,6 +18,8 @@ import {
   type SyncCompleteCallback,
   type SyncErrorCallback,
 } from './helpers';
+import { SyncStatusContext } from './context';
+import { useSyncOrchestrator } from '../../lib/offline/sync/useSyncOrchestrator';
 
 /**
  * Provider component that manages sync orchestration state and provides

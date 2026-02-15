@@ -4,8 +4,9 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { suggestEmojisForHabitName } from '../../../../utils/emojiKeywords';
+
 import { DEFAULT_EMOJIS, SUGGESTION_DEBOUNCE_MS } from './constants';
+import { suggestEmojisForHabitName } from '../../../../utils/emojiKeywords';
 
 export function useSuggestedEmojis(
   habitName: string | undefined,

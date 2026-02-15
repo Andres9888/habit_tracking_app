@@ -2,7 +2,6 @@
  * Types for optimistic update store
  */
 
-import type { Id } from '../../../../convex/_generated/dataModel';
 import type {
   OptimisticOperation,
   OptimisticStore,
@@ -11,6 +10,7 @@ import type {
   ReorderOperationPayload,
   PauseOperationPayload,
 } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 export type StoreListener = () => void;
 

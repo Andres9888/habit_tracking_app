@@ -4,15 +4,17 @@
  * Unified purchase/restore logic for all paywall variants.
  */
 
-import { useCallback, useState, useEffect } from 'react';
-import { Alert } from 'react-native';
-import { useSharedValue, useAnimatedStyle, withTiming, type AnimatedStyle } from 'react-native-reanimated';
+import type { PurchasesPackage } from 'react-native-purchases';
 import type { ViewStyle } from 'react-native';
+import { Alert } from 'react-native';
+import { useCallback, useState, useEffect } from 'react';
+
+import { useSharedValue, useAnimatedStyle, withTiming, type AnimatedStyle } from 'react-native-reanimated';
+
+import type { PaywallVariant } from './PremiumPaywall.types';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { usePremium } from '../../hooks/usePremium';
 import { useRestorePurchases } from './useRestorePurchases';
-import type { PaywallVariant } from './PremiumPaywall.types';
-import type { PurchasesPackage } from 'react-native-purchases';
 
 interface Params {
   variant: PaywallVariant;

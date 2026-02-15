@@ -3,6 +3,7 @@
  */
 
 import { useCallback } from 'react';
+
 import { trackError } from '../tracker/index';
 
 /** Hook for component-level error boundary integration */

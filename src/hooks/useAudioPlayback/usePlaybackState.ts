@@ -4,9 +4,11 @@
  * Manages the playback status state and provides setter functions.
  */
 
-import { useState, useRef } from 'react';
-import { Audio } from 'expo-av';
 import { AppState, AppStateStatus } from 'react-native';
+import { useState, useRef } from 'react';
+
+import { Audio } from 'expo-av';
+
 import type { PlaybackStatus } from './types';
 import { INITIAL_PLAYBACK_STATUS } from './constants';
 

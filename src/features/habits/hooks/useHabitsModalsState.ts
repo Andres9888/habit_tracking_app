@@ -9,24 +9,25 @@
  */
 
 import { useCallback } from 'react';
-import type { Id } from '../../../../convex/_generated/dataModel';
+
 import type { Habit } from '../types';
-import { useHabitMutations } from './useHabitMutations';
-import { useHabitMilestones } from './useHabitMilestones';
-import { useHabitsTracking } from './useHabitsTracking';
-import { useHabitsModalsHandlers } from './useHabitsModalsHandlers';
-import { useModalVisibilityState } from './useModalVisibilityState';
-import { useHabitSelectionState } from './useHabitSelectionState';
-import { useHabitsSettings } from './useHabitsSettings';
-import { buildModalsStateReturnValue } from './buildModalsStateReturnValue';
-import { buildModalsSettersArg } from './buildModalsSettersArg';
+import type { HabitsModalsState } from './types';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import {
   generateDateStrings,
   getTodayMidnight,
   useSyncAllHabitStates,
 } from './modalsStateHelpers';
+import { buildModalsSettersArg } from './buildModalsSettersArg';
+import { buildModalsStateReturnValue } from './buildModalsStateReturnValue';
+import { useHabitMilestones } from './useHabitMilestones';
+import { useHabitMutations } from './useHabitMutations';
+import { useHabitSelectionState } from './useHabitSelectionState';
+import { useHabitsModalsHandlers } from './useHabitsModalsHandlers';
+import { useHabitsSettings } from './useHabitsSettings';
+import { useHabitsTracking } from './useHabitsTracking';
+import { useModalVisibilityState } from './useModalVisibilityState';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
-import type { HabitsModalsState } from './types';
 
 interface UseHabitsModalsStateProps {
   habits: Habit[];

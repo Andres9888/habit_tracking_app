@@ -3,9 +3,6 @@
  * Offline Sync Manager
  */
 
-import type { CircuitBreaker } from '../circuitBreaker';
-import { calculateDelay } from '../retryStrategy';
-import type { RetryStrategy, SyncEventType, SyncStatus } from '../types';
 import type {
   OfflineSyncManagerConfig,
   SyncItem,
@@ -14,10 +11,16 @@ import type {
   SyncResult,
   BatchResult,
 } from './types';
-import { processItem } from './processItem';
-import { processBatch as processBatchFn } from './processBatch';
+import type { RetryStrategy, SyncEventType, SyncStatus } from '../types';
+import {
+  createCircuitBreaker,
+  DEFAULT_CIRCUIT_CONFIG,
+  type CircuitBreaker,
+} from '../circuitBreaker';
+import { calculateDelay, DEFAULT_RETRY_STRATEGY } from '../retryStrategy';
 import { emitSyncEvent } from './emitSyncEvent';
-import { createSyncCircuit } from './createSyncCircuit';
+import { processBatch as processBatchFn } from './processBatch';
+import { processItem } from './processItem';
 
 export class OfflineSyncManager {
   private circuitBreaker: CircuitBreaker;
@@ -28,12 +31,30 @@ export class OfflineSyncManager {
   private lastSyncAt?: number;
 
   constructor(config: OfflineSyncManagerConfig = {}) {
-    const { circuitBreaker, retryStrategy } = createSyncCircuit(
-      config,
-      this.emit.bind(this)
-    );
-    this.circuitBreaker = circuitBreaker;
-    this.retryStrategy = retryStrategy;
+    this.retryStrategy = { ...DEFAULT_RETRY_STRATEGY, ...config.retryStrategy };
+    this.circuitBreaker = createCircuitBreaker({
+      ...DEFAULT_CIRCUIT_CONFIG,
+      ...config.circuitBreaker,
+    });
+    this.circuitBreaker.subscribe(({ state }) => {
+      switch (state) {
+        case 'open': {
+          this.emit('circuit:open');
+          break;
+        }
+        case 'closed': {
+          this.emit('circuit:close');
+          break;
+        }
+        case 'half-open': {
+          {
+            this.emit('circuit:half-open');
+            // No default
+          }
+          break;
+        }
+      }
+    });
   }
 
   getStatus(): SyncStatus {

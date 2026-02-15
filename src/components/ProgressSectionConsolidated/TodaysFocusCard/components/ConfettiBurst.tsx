@@ -8,12 +8,12 @@
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 
-import { ConfettiParticle } from './ConfettiParticle';
-import { styles } from '../TodaysFocusCard.styles';
 import {
   CONFETTI_COLORS,
   CONFETTI_PARTICLE_COUNT,
 } from '../TodaysFocusCard.constants';
+import { ConfettiParticle } from './ConfettiParticle';
+import { styles } from '../TodaysFocusCard.styles';
 
 export interface ConfettiBurstProps {
   isActive: boolean;

@@ -1,10 +1,12 @@
+
 import React from 'react';
+
+import type { TemplateCardRenderProps } from './TemplateCard.types';
 import {
   CardContainer,
   ScrollRevealWrapper,
   TemplateCardContent,
 } from './components';
-import type { TemplateCardRenderProps } from './TemplateCard.types';
 
 export function TemplateCardRender({
   category,

@@ -11,14 +11,16 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
+
+import { render, fireEvent } from '@testing-library/react-native';
+
+import type { HubermanPhase } from '../../../../constants/hubermanPhases';
 import {
   TimeOfDaySelector,
   PHASE_REMINDER_TIMES,
   getReminderTimeForPhase,
 } from '../TimeOfDaySelector';
-import type { HubermanPhase } from '../../../../constants/hubermanPhases';
 
 // Mock useHapticFeedback
 const mockTriggerSelection = jest.fn();

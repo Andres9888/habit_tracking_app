@@ -6,10 +6,12 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
-import { ProgressSection } from '../ProgressSection';
+
+import { render } from '@testing-library/react-native';
+
 import type { HabitTrackingEntry } from '../../../features/habits/types';
+import { ProgressSection } from '../ProgressSection';
 
 // Mock AccessibilityInfo
 jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockImplementation(

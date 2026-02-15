@@ -7,8 +7,8 @@
  * Updated by Opus to use centralized patterns.
  */
 
-import { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
+import { useCallback, useMemo } from 'react';
 
 import { HapticPatterns } from '../utils/haptics/patterns';
 import { useReduceMotion } from './useReduceMotion';

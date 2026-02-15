@@ -5,6 +5,7 @@
  */
 
 import { withTiming } from 'react-native-reanimated';
+
 import {
   CARD_PRESS_SCALE,
   CARD_PRESS_SPRING_CONFIG,

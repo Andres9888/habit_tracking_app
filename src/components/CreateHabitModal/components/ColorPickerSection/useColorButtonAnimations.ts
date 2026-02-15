@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useRef } from 'react';
+
 import { Animated } from 'react-native';
+import { useCallback, useEffect, useRef } from 'react';
+
 import { Motion } from '../../../../constants/motion';
 
 interface UseColorButtonAnimationsParams {

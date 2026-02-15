@@ -12,7 +12,9 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
+
 import { YourWhySection } from '../YourWhySection';
 
 // Mock expo-haptics

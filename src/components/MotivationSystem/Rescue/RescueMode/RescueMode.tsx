@@ -13,16 +13,17 @@
 
 import React, { useCallback } from 'react';
 import { View, ScrollView } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 
-import { Modal } from '../../../Modal';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import type { RescueModeProps } from './RescueMode.types';
 import {
   RescueModeHeader,
   RescueModeContent,
   RescueModeActions,
 } from './components';
+import { Modal } from '../../../Modal';
 
 /**
  * RescueMode - Main component

@@ -5,8 +5,8 @@
  * when connectivity returns. See spec: docs/offline-habit-sync.md
  */
 
-import type { Id } from '../../../../convex/_generated/dataModel';
 import type { ErrorCategory } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 /**
  * Status of an offline operation in the queue

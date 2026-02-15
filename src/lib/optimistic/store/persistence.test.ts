@@ -14,7 +14,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { OptimisticOperation, OptimisticStore } from '../types';
-
 import {
   clearOptimisticStore,
   loadOptimisticStore,

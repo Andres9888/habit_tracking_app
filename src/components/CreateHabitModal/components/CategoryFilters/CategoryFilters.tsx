@@ -4,9 +4,10 @@
  */
 
 import { ScrollView } from 'react-native';
+
+import type { CategoryFiltersProps } from './CategoryFilters.types';
 import { CATEGORY_COLORS, DEFAULT_COLORS } from './CategoryFilters.constants';
 import { CategoryFilterItem } from './CategoryFilterItem';
-import type { CategoryFiltersProps } from './CategoryFilters.types';
 
 export function CategoryFilters({
   categories,

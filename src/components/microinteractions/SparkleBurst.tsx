@@ -1,4 +1,6 @@
+
 import { Animated, View } from 'react-native';
+
 import { useSparkleBurstAnimation } from './useSparkleBurstAnimation';
 
 interface SparkleBurstProps {

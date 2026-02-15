@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   Easing,
   useAnimatedProps,

@@ -2,7 +2,6 @@
  * Auth Handler - Handle Auth Error Method
  */
 
-import type { ClassifiedError } from '../../types';
 import type {
   AuthEventData,
   AuthEventType,
@@ -10,6 +9,7 @@ import type {
   AuthHandlerDeps,
   AuthHandlerState,
 } from './types';
+import type { ClassifiedError } from '../../types';
 import {
   getSuggestedAction,
   isAuthError,

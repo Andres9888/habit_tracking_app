@@ -1,5 +1,7 @@
-import { memo } from 'react';
+
 import { Text, View } from 'react-native';
+import { memo } from 'react';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface NoIconButtonProps {

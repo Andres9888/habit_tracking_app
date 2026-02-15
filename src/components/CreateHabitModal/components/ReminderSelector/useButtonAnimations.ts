@@ -2,8 +2,8 @@
  * Animation hooks for ReminderOptionButton
  */
 
-import { useCallback, useRef } from 'react';
 import { Animated } from 'react-native';
+import { useCallback, useRef } from 'react';
 
 export function useButtonAnimations(reduceMotion: boolean) {
   const scaleAnim = useRef(new Animated.Value(1)).current;

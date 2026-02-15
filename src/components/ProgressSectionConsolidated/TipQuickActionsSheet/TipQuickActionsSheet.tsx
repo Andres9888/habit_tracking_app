@@ -6,14 +6,16 @@
 
 import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { X } from 'lucide-react-native';
+
+import type { TipQuickActionsSheetProps, QuickAction } from './types';
 import { Modal } from '../../Modal';
+import { QuickActionItem } from './QuickActionItem';
+import { getQuickActionsForTipType } from './getQuickActionsForTipType';
+import { styles } from './styles';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
-import type { TipQuickActionsSheetProps, QuickAction } from './types';
-import { getQuickActionsForTipType } from './getQuickActionsForTipType';
-import { QuickActionItem } from './QuickActionItem';
-import { styles } from './styles';
 
 export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
   visible,

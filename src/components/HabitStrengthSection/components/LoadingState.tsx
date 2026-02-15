@@ -3,8 +3,10 @@
  * Shows skeleton shimmer while strength is being computed.
  * Supports dark mode via useSkeletonTheme.
  */
+
 import React from 'react';
 import { View } from 'react-native';
+
 import { SkeletonLoader } from '../../SkeletonLoader/SkeletonLoader';
 import { useSkeletonTheme } from '../../SkeletonLoader/useSkeletonTheme';
 

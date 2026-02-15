@@ -4,8 +4,9 @@
  * Story T10.2: Audio recording integration (expo-av)
  */
 
-import { useEffect, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
+import { useEffect, useRef } from 'react';
+
 import type { RecordingState } from './types';
 
 interface UseAppStateInterruptionOptions {

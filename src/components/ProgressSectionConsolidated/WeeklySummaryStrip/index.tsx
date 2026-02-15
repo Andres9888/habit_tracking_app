@@ -8,6 +8,7 @@
 
 import React, { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -17,13 +18,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
-import { Springs } from '../../../constants/motion';
-
 import type { WeeklySummaryStripProps } from '../WeeklySummaryStripTypes';
-import { getTrendDirection } from './WeeklySummaryStripUtils';
 import { CardContent } from './CardContent';
+import { Springs } from '../../../constants/motion';
+import { getTrendDirection } from './WeeklySummaryStripUtils';
 import { styles } from './WeeklySummaryStripStyles';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 
 /** Animation timing constants */
 const ENTRANCE_DURATION = 300;

@@ -2,8 +2,8 @@
  * Sync Manager Singleton
  */
 
-import { OfflineSyncManager } from './OfflineSyncManager';
 import type { OfflineSyncManagerConfig } from './types';
+import { OfflineSyncManager } from './OfflineSyncManager';
 
 /** Singleton instance */
 let defaultManager: OfflineSyncManager | null = null;

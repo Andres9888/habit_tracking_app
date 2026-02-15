@@ -2,11 +2,12 @@
  * AccordionHeader - Clickable header for accordion
  */
 
-import React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
+import React from 'react';
 import type { ViewStyle } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
+
+import Animated from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 
 interface AccordionHeaderProps {

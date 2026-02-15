@@ -5,12 +5,12 @@
  * Features press animation and haptic feedback.
  */
 
-import { useCallback, useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
+import { useCallback, useRef } from 'react';
 
-import { Motion } from '../../../../constants/motion';
-import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { QuickTimeButtonProps } from './types';
+import useHapticFeedback from '../../../../hooks/useHapticFeedback';
+import { Motion } from '../../../../constants/motion';
 
 export const QuickTimeButton = ({
   isSelected,

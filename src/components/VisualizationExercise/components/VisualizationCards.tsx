@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Sun, CloudRain, Brain } from 'lucide-react-native';
 
 interface VisualizationCardsProps {

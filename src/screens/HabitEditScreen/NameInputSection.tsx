@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { View, Text, TextInput, Keyboard } from 'react-native';
+
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
 

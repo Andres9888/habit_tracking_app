@@ -5,8 +5,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import { PADDING_LEFT, PADDING_RIGHT } from './constants';
 import type { XAxisLabel } from './types';
+import { PADDING_LEFT, PADDING_RIGHT } from './constants';
 
 interface XAxisLabelsProps {
   labels: XAxisLabel[];

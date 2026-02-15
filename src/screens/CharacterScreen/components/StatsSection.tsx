@@ -1,6 +1,8 @@
+
 import { View } from 'react-native';
-import { StatCard } from './StatCard';
+
 import type { CharacterStats } from '../types';
+import { StatCard } from './StatCard';
 
 interface StatsSectionProps {
   stats: CharacterStats;

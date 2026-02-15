@@ -4,7 +4,7 @@
  */
 
 import { useCallback, useReducer, useRef } from 'react';
-import { usePerformance } from '../../hooks/performance';
+
 import type {
   DashboardConfig,
   DashboardState,
@@ -14,6 +14,7 @@ import type {
 import { DEFAULT_DASHBOARD_CONFIG } from './types';
 import { createInitialState, dashboardReducer } from './dashboardReducer';
 import { useFPSSubscription } from './hooks/useFPSSubscription';
+import { usePerformance } from '../../hooks/performance';
 import { usePollingUpdates } from './hooks/usePollingUpdates';
 
 export function useDashboardData(config: DashboardConfig = {}) {

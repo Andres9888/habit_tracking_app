@@ -4,8 +4,9 @@
 
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { ConfettiParticle } from './ConfettiParticle';
+
 import { CONFETTI_COLORS } from '../TemplateScienceModal.utils';
+import { ConfettiParticle } from './ConfettiParticle';
 
 interface ConfettiOverlayProps {
   visible: boolean;

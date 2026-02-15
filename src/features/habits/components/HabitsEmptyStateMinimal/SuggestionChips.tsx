@@ -7,14 +7,14 @@
  * - Staggered entrance animation (50ms between each chip)
  */
 
-import { useCallback, useEffect, useRef } from 'react';
 import { View } from 'react-native';
+import { useCallback, useEffect, useRef } from 'react';
 
-import { useTimeBasedChipAnalytics } from './analytics';
+import type { SuggestionChip, SuggestionChipsProps } from './types';
 import { CHIP_STAGGER } from './animations';
 import { Chip } from './Chip';
-import type { SuggestionChip, SuggestionChipsProps } from './types';
 import { getTimeBasedChips } from './utils';
+import { useTimeBasedChipAnalytics } from './analytics';
 
 export function SuggestionChips({
   selectedIndex,

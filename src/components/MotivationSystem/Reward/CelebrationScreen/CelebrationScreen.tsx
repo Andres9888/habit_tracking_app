@@ -8,13 +8,15 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Modal } from '../../../Modal';
+
+import type { CelebrationScreenProps } from './types';
 import { AnimatedContent, ModalHeader, DoneButton } from './components';
 import { CelebrationScreenContent } from './CelebrationScreenContent';
+import { Modal } from '../../../Modal';
 import { useCelebrationScreen } from './useCelebrationScreen';
-import type { CelebrationScreenProps } from './types';
 
 export function CelebrationScreen(props: CelebrationScreenProps) {
   const {

@@ -12,6 +12,7 @@
 
 import React from 'react';
 import { Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { GitMerge } from 'lucide-react-native';
 

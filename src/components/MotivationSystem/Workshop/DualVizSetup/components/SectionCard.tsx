@@ -5,6 +5,8 @@
 
 import React, { useCallback } from 'react';
 import { View, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -12,10 +14,10 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
+
+import type { SectionCardProps } from '../DualVizSetup.types';
 import { SPRING_BUTTON } from '../../../../animations';
 import { shadows } from '../../../../../theme/spacing';
-import type { SectionCardProps } from '../DualVizSetup.types';
 
 export function SectionCard({
   children,

@@ -1,6 +1,7 @@
+
+import type { ProcessingState, OfflineQueueProcessorProps } from './types';
 import type { QueuedSubmission } from '../../hooks/useOfflineQueue';
 import { processItem } from './processItem';
-import type { ProcessingState, OfflineQueueProcessorProps } from './types';
 
 type ProcessorCallbacks = Pick<
   OfflineQueueProcessorProps,

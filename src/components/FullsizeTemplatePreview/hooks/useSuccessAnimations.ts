@@ -3,6 +3,9 @@
  */
 
 import { useEffect, useCallback, useRef } from 'react';
+
+import * as Haptics from 'expo-haptics';
+import ConfettiCannon from 'react-native-confetti-cannon';
 import {
   useSharedValue,
   withSpring,
@@ -11,8 +14,6 @@ import {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import ConfettiCannon from 'react-native-confetti-cannon';
 
 interface UseSuccessAnimationsProps {
   isImported: boolean;

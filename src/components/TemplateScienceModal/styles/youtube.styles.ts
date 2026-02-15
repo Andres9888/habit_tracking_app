@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+
 import { typography } from '../../../theme/typography';
 
 export const youtubeStyles = StyleSheet.create({

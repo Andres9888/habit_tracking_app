@@ -5,9 +5,11 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Clock } from 'lucide-react-native';
-import { formatDaysOfWeek } from '../../../../../utils/notifications';
+
 import type { AffirmationFrequency } from '../AffirmationsSection.types';
+import { formatDaysOfWeek } from '../../../../../utils/notifications';
 
 interface ScheduleIndicatorProps {
   nextDelivery: string;

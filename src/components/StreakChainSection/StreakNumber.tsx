@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 
 interface StreakNumberProps {

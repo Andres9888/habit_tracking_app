@@ -6,8 +6,9 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { StatCard } from './StatCard';
+
 import type { StatItemConfig } from './StatsGridTypes';
+import { StatCard } from './StatCard';
 
 interface StatsRowProps {
   cards: StatItemConfig[];

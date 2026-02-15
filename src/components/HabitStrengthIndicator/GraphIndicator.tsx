@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { useAppTheme } from '../../theme';
+
 import { styles } from './styles';
+import { useAppTheme } from '../../theme';
 
 export function GraphIndicator() {
   const theme = useAppTheme();

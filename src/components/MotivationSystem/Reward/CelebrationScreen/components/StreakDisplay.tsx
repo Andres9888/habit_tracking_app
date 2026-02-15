@@ -4,7 +4,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -13,6 +13,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { Flame } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import type { StreakDisplayProps } from '../types';
 

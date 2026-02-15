@@ -6,8 +6,9 @@
  * maintain their streak before the day ends.
  */
 
-import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
+
+import * as Notifications from 'expo-notifications';
 
 import { ANDROID_CHANNEL_ID } from './constants';
 import { ensureNotificationPermissions } from './permissions';

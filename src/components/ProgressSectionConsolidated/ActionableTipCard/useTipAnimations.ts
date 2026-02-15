@@ -3,6 +3,7 @@
  */
 
 import { useEffect, useCallback } from 'react';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -11,13 +12,13 @@ import {
   Easing,
 } from 'react-native-reanimated';
 
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
-import { Springs } from '../../../constants/motion';
-import { ENTRANCE_DURATION } from './constants';
 import {
   CARD_PRESS_SCALE,
   CARD_REST_SCALE,
 } from '../../../utils/animations/cardPressAnimation';
+import { ENTRANCE_DURATION } from './constants';
+import { Springs } from '../../../constants/motion';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 
 export function useTipAnimations() {
   const reduceMotion = useReduceMotion();

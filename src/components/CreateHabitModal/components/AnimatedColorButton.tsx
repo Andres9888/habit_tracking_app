@@ -3,8 +3,9 @@
  * Used for color picker buttons in StyleSection.
  */
 
-import { useCallback } from 'react';
 import { Animated, Pressable } from 'react-native';
+import { useCallback } from 'react';
+
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { useColorButtonAnimations } from './useColorButtonAnimations';
 

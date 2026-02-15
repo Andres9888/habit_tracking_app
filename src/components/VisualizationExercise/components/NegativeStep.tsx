@@ -6,12 +6,14 @@
 
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { CloudRain, AlertTriangle, Lightbulb } from 'lucide-react-native';
-import { PromptList } from './PromptList';
-import { NavigationButtons } from './NavigationButtons';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { VisualizationInputStepProps } from '../types';
+import { NavigationButtons } from './NavigationButtons';
+import { PromptList } from './PromptList';
 
 const PROMPTS = [
   'What happens if you quit this habit?',

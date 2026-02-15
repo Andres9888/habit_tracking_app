@@ -5,11 +5,13 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
-import { styles } from './StrengthProgressBar.styles';
+
 import type { ProgressBarRowProps } from './ProgressBarRow.types';
-import { getGradientColors } from './ProgressBarRow.helpers';
 import { GradientBar } from './GradientBar';
+import { getGradientColors } from './ProgressBarRow.helpers';
+import { styles } from './StrengthProgressBar.styles';
 
 export function ProgressBarRow({
   config,

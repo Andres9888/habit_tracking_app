@@ -5,10 +5,12 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { clsx } from 'clsx';
+
 import * as Haptics from 'expo-haptics';
-import { DAY_NAMES } from './constants';
+import { clsx } from 'clsx';
+
 import type { DaySelectorProps } from './types';
+import { DAY_NAMES } from './constants';
 
 export function DaySelector({ selectedDays, onToggleDay }: DaySelectorProps) {
   return (

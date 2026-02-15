@@ -10,10 +10,12 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, type ViewStyle } from 'react-native';
-import { Lock, Flame, Sparkles } from 'lucide-react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
-import { shadows, borderRadius } from '../theme/spacing';
+import { Lock, Flame, Sparkles } from 'lucide-react-native';
+
 import { colors } from '../theme/colors';
+import { shadows, borderRadius } from '../theme/spacing';
 
 type PremiumBadgeVariant = 'pro' | 'popular' | 'new';
 

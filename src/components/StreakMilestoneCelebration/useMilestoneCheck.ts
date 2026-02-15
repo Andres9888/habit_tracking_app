@@ -7,19 +7,21 @@
  * Integrates with haptic feedback for celebration
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
+import { useState, useEffect, useCallback, useRef } from 'react';
+
+import * as Haptics from 'expo-haptics';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import type {
+  UseStreakMilestoneCheckOptions,
+  UseStreakMilestoneCheckReturn,
+} from './types';
 import {
   checkStreakMilestoneCrossed,
   ANIMATION_TIMING,
   type StreakMilestone,
 } from './constants';
-import type {
-  UseStreakMilestoneCheckOptions,
-  UseStreakMilestoneCheckReturn,
-} from './types';
 
 const STORAGE_KEY_PREFIX = '@chain_day:streak_milestones_shown:';
 

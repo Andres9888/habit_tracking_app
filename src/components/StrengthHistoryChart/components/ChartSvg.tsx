@@ -1,10 +1,12 @@
+
 import React from 'react';
 import { View } from 'react-native';
+
 import Svg, { Line, Circle, Path } from 'react-native-svg';
 
-import { useAppTheme } from '../../../theme';
-import { styles } from '../StrengthHistoryChart.styles';
 import type { ChartPoint } from '../StrengthHistoryChart.types';
+import { styles } from '../StrengthHistoryChart.styles';
+import { useAppTheme } from '../../../theme';
 
 interface ChartSvgProps {
   chartWidth: number;

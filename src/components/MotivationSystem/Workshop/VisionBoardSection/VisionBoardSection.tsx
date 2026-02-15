@@ -8,16 +8,17 @@
 
 import React from 'react';
 import { Text } from 'react-native';
-import { CompletionCheckmark } from '../../../animations';
+
+import type { VisionBoardSectionProps } from './types';
+import { AddFirstImageButton } from './AddFirstImageButton';
+import { AddImageModal } from './AddImageModal';
 import { AnimatedSection } from './AnimatedSection';
+import { CompletionCheckmark } from '../../../animations';
+import { ImageGrid } from './ImageGrid';
+import { ImageViewerModal } from './ImageViewerModal';
 import { SectionCard } from './SectionCard';
 import { SectionHeader } from './SectionHeader';
-import { ImageGrid } from './ImageGrid';
-import { AddImageModal } from './AddImageModal';
-import { ImageViewerModal } from './ImageViewerModal';
-import { AddFirstImageButton } from './AddFirstImageButton';
 import { useVisionBoardState } from './VisionBoardSection.hooks';
-import type { VisionBoardSectionProps } from './types';
 
 export function VisionBoardSection({
   images,

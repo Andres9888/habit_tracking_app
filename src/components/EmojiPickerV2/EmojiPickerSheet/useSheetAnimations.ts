@@ -4,13 +4,15 @@
  */
 
 import { useEffect, useCallback } from 'react';
-import { Gesture } from 'react-native-gesture-handler';
+
 import {
   useSharedValue,
   withSpring,
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
+import { Gesture } from 'react-native-gesture-handler';
+
 import {
   SHEET_HEIGHT_COLLAPSED,
   SHEET_HEIGHT_EXPANDED,

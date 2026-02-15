@@ -1,16 +1,19 @@
 /* eslint-disable max-lines */
+
 import { useCallback, useRef, useState, useMemo } from 'react';
+
 import { useMutation } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
-import { useNetworkStatus } from '../../contexts/NetworkStatusContext';
-import { useOfflineQueue } from '../../hooks/useOfflineQueue';
-import { executeQueueProcessing } from './processQueue';
+
 import type { Mutations } from './processItem';
 import {
   INITIAL_PROCESSING_STATE,
   type ProcessingState,
   type OfflineQueueProcessorProps,
 } from './types';
+import { api } from '../../../convex/_generated/api';
+import { executeQueueProcessing } from './processQueue';
+import { useNetworkStatus } from '../../contexts/NetworkStatusContext';
+import { useOfflineQueue } from '../../hooks/useOfflineQueue';
 
 type ProcessorCallbacks = Pick<
   OfflineQueueProcessorProps,

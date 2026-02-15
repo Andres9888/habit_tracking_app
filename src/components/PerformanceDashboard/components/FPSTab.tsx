@@ -5,11 +5,12 @@
 
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { StatusIndicator } from './StatusIndicator';
-import { StatRow } from './StatRow';
-import { HistoryChart } from './HistoryChart';
-import { tabStyles, valueStyles } from './tabStyles';
+
 import type { FPSData } from '../types';
+import { HistoryChart } from './HistoryChart';
+import { StatRow } from './StatRow';
+import { StatusIndicator } from './StatusIndicator';
+import { tabStyles, valueStyles } from './tabStyles';
 
 interface FPSTabProps {
   data: FPSData;

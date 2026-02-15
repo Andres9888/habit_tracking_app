@@ -4,8 +4,8 @@
  * Functions for checking if habits exist on the server.
  */
 
-import type { Id } from '../../../../../convex/_generated/dataModel';
 import type { CleanupOrphansDeps, HabitExistsResult } from './types';
+import type { Id } from '../../../../../convex/_generated/dataModel';
 
 /**
  * Check existence for multiple habits using single-habit checker

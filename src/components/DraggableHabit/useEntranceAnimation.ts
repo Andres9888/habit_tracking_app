@@ -3,8 +3,8 @@
  * Handles fade-in and slide animation when habit card appears
  */
 
-import { useEffect } from 'react';
 import { Animated, Easing } from 'react-native';
+import { useEffect } from 'react';
 
 export function useEntranceAnimation(
   fade: Animated.Value,

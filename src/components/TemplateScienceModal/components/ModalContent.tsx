@@ -2,18 +2,20 @@
  * ModalContent - Scrollable content area for TemplateScienceModal
  */
 
+import type { SharedValue } from 'react-native-reanimated';
 import React from 'react';
 import { View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+
 import Animated from 'react-native-reanimated';
-import { HeroSection } from './HeroSection';
-import { AboutSection } from './AboutSection';
-import { YouTubeSection } from './YouTubeSection';
-import { ScienceSection } from './ScienceSection';
-import { layoutStyles } from '../styles';
-import type { SharedValue } from 'react-native-reanimated';
+import { ScrollView } from 'react-native-gesture-handler';
+
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { PressHandlers } from '../TemplateScienceModal.types';
+import { AboutSection } from './AboutSection';
+import { HeroSection } from './HeroSection';
+import { ScienceSection } from './ScienceSection';
+import { YouTubeSection } from './YouTubeSection';
+import { layoutStyles } from '../styles';
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 

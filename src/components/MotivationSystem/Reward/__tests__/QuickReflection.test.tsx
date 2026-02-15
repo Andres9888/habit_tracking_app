@@ -12,7 +12,9 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
+
 import { QuickReflection, type EmojiType } from '../QuickReflection';
 
 // Mock expo-haptics

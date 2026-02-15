@@ -1,12 +1,14 @@
+
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getAllEmojis } from '../../utils/emojiData';
-import { HABIT_CATEGORIES } from '../../constants/habitEmojis';
+
 import {
   searchEmojisByKeyword,
   suggestEmojisForHabitName,
 } from '../../utils/emojiKeywords';
-import { getRecentEmojis } from '../../utils/recentEmojis';
+import { HABIT_CATEGORIES } from '../../constants/habitEmojis';
 import { SEARCH_DEBOUNCE_MS } from './EmojiPicker.constants';
+import { getAllEmojis } from '../../utils/emojiData';
+import { getRecentEmojis } from '../../utils/recentEmojis';
 
 interface UseEmojiPickerStateOptions {
   visible: boolean;

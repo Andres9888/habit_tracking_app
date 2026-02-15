@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Star } from 'lucide-react-native';
 
 export function SocialProofSection({ dark = false }: { dark?: boolean }) {

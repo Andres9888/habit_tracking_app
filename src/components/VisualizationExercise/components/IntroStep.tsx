@@ -6,7 +6,8 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
+import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import {
   Sun,
@@ -15,7 +16,8 @@ import {
   ChevronRight,
   Brain,
 } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { IntroStepProps } from '../types';
 
 export function IntroStep({ habitName, onNext }: IntroStepProps) {

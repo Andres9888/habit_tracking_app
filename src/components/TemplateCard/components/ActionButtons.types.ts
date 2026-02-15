@@ -2,8 +2,8 @@
  * ActionButtons Types
  */
 
-import type { GestureResponderEvent, ViewStyle } from 'react-native';
 import type { AnimatedStyle } from 'react-native-reanimated';
+import type { GestureResponderEvent, ViewStyle } from 'react-native';
 
 export interface ActionButtonsProps {
   checkmarkStyle: AnimatedStyle<ViewStyle>;

@@ -1,5 +1,6 @@
+
 import { useEffect } from 'react';
-import { Gesture } from 'react-native-gesture-handler';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -8,6 +9,7 @@ import {
   runOnJS,
   Easing,
 } from 'react-native-reanimated';
+import { Gesture } from 'react-native-gesture-handler';
 
 import {
   SCREEN_HEIGHT,

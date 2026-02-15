@@ -1,18 +1,19 @@
 /** PasswordResetSuccess - OPTIMIZED: FadeIn animation, better styling */
+
 import { Text, View } from 'react-native';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+
+import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import { useThemeColors } from '../../../../theme/ThemeContext';
+
 import type { PasswordResetSuccessProps } from './types';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
-  const { colors } = useThemeColors();
   return (
     <View className='gap-4 py-2'>
       <Animated.View
         className='items-center justify-center rounded-2xl bg-emerald-50 p-6'
-        entering={FadeInDown.duration(280).springify().damping(18)}
+        entering={FadeIn.duration(300)}
         style={{
           shadowColor: '#1c1917',
           shadowOffset: { height: 4, width: 0 },
@@ -38,8 +39,7 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
           accessibilityHint='Closes this dialog and returns to sign in'
           accessibilityLabel='Close modal'
           accessibilityRole='button'
-          className='items-center rounded-2xl py-4'
-          style={{ backgroundColor: colors.gray[900] }}
+          className='items-center rounded-2xl bg-stone-900 py-4 active:bg-stone-800'
           style={{
             shadowColor: '#1c1917',
             shadowOffset: { height: 4, width: 0 },

@@ -4,11 +4,12 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Sparkles, AlertTriangle } from 'lucide-react-native';
+
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { useThemeColors } from '../../../../theme/ThemeContext';
+import { Sparkles, AlertTriangle } from 'lucide-react-native';
 
 import type { VizType } from './types';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface EmptyVizStateProps {
   type: VizType;

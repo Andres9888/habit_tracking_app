@@ -6,8 +6,8 @@
  * plucked from the full `HabitsListProps`, local UI state, and handler bag.
  */
 
-import { HabitsListHeader } from './HabitsListHeader';
 import type { HabitsListProps } from './HabitsList.types';
+import { HabitsListHeader } from './HabitsListHeader';
 
 interface RenderHabitsListHeaderOptions {
   props: HabitsListProps;

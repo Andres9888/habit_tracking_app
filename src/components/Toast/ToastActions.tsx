@@ -5,12 +5,13 @@
 
 import React from 'react';
 import { Text, Pressable } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 
-import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { useAppTheme } from '../../theme';
 import type { ToastVariant } from './types';
 import { styles } from './styles';
+import { useAppTheme } from '../../theme';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useToastButtonAnimation } from './useToastButtonAnimation';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);

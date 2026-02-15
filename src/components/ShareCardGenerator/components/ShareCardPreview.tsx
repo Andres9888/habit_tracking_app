@@ -5,10 +5,12 @@
 
 import React, { RefObject } from 'react';
 import { View, Dimensions } from 'react-native';
+
 import ViewShot from 'react-native-view-shot';
+
+import type { ShareFormat, GradientPreset } from '../ShareCardGenerator.types';
 import { ShareCard } from './ShareCard';
 import { containerStyles } from '../styles';
-import type { ShareFormat, GradientPreset } from '../ShareCardGenerator.types';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 

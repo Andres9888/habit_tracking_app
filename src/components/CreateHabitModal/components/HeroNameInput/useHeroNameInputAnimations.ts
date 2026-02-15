@@ -4,10 +4,11 @@
  * Handles validation message animations for HeroNameInput.
  */
 
-import { useRef, useState, useEffect } from 'react';
 import { Animated } from 'react-native';
-import { Motion } from '../../../../constants/motion';
+import { useRef, useState, useEffect } from 'react';
+
 import type { ValidationResult } from './types';
+import { Motion } from '../../../../constants/motion';
 
 function getValidationMessage(name: string): ValidationResult | null {
   const trimmed = name.trim();

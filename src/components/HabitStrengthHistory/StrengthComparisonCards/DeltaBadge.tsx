@@ -4,9 +4,11 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
-import { DELTA_BADGE_COLORS } from './constants';
+
 import type { DeltaBadgeProps } from './types';
+import { DELTA_BADGE_COLORS } from './constants';
 
 export function DeltaBadge({ delta }: DeltaBadgeProps) {
   const isPositive = delta > 0;

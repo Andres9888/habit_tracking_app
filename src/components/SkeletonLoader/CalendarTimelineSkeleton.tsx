@@ -1,11 +1,13 @@
 /**
  * CalendarTimelineSkeleton - Loading skeleton for calendar timeline
  */
+
 import React from 'react';
 import { View } from 'react-native';
+
+import type { ReduceMotionProps } from './types';
 import { SkeletonLoader } from './SkeletonLoader';
 import { useSkeletonTheme } from './useSkeletonTheme';
-import type { ReduceMotionProps } from './types';
 
 export function CalendarTimelineSkeleton({
   reduceMotion = false,

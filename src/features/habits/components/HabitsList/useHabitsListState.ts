@@ -14,8 +14,9 @@
  * consumers free from knowing which setter to call.
  */
 
-import { useCallback, useState, useRef } from 'react';
 import { Animated } from 'react-native';
+import { useCallback, useState, useRef } from 'react';
+
 import type { Id } from '../../../../../convex/_generated/dataModel';
 
 export function useHabitsListState() {

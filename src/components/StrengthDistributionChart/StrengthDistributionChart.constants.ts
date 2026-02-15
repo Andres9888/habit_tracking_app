@@ -1,6 +1,8 @@
+
 import { Dimensions } from 'react-native';
-import { spacing } from '../../theme/spacing';
+
 import type { StrengthLevelKey } from './StrengthDistributionChart.types';
+import { spacing } from '../../theme/spacing';
 
 const { width: screenWidth } = Dimensions.get('window');
 export const CHART_SIZE = Math.min(screenWidth - spacing.xl * 2, 280);

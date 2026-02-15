@@ -11,20 +11,20 @@
  */
 
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { OfflineOperation, OfflineQueueState } from '../queue';
+import type { PendingToggleOperation, TrackingRecord } from '../calculations';
 import {
   buildOperationIndex,
   createOfflineQueueManager,
   resetOfflineQueueManager,
   type OfflineQueueManagerAPI,
 } from '../queueManager';
-import type { OfflineOperation, OfflineQueueState } from '../queue';
-import { DEFAULT_QUEUE_STATE } from '../queue';
 import {
   calculateOfflineStreak,
   calculateStreakFromHistory,
   mergeTrackingWithPending,
 } from '../calculations';
-import type { PendingToggleOperation, TrackingRecord } from '../calculations';
+import { DEFAULT_QUEUE_STATE } from '../queue';
 
 // Mock AsyncStorage with configurable latency
 const mockStorage = new Map<string, string>();

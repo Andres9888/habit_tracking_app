@@ -3,8 +3,9 @@
  */
 
 import React from 'react';
-import { SkeletonLoader } from '../../SkeletonLoader';
+
 import type { SkeletonBoxProps } from '../TemplateScienceModal.types';
+import { SkeletonLoader } from '../../SkeletonLoader';
 
 export const SkeletonBox = ({
   height,

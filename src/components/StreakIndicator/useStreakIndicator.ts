@@ -3,15 +3,17 @@
  */
 
 import { useEffect, useRef } from 'react';
+
 import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withSequence,
 } from 'react-native-reanimated';
-import { useAppTheme } from '../../theme';
+
 import type { Milestone } from './StreakIndicator.types';
 import { MILESTONES, MILESTONE_BADGES } from './StreakIndicator.constants';
+import { useAppTheme } from '../../theme';
 
 interface UseStreakIndicatorOptions {
   currentStreak: number;

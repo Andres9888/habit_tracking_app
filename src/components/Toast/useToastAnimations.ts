@@ -3,7 +3,7 @@
  */
 
 import { useEffect, useCallback, useRef } from 'react';
-import { Gesture } from 'react-native-gesture-handler';
+
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -11,9 +11,10 @@ import {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
+import { Gesture } from 'react-native-gesture-handler';
 
-import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { DISMISS_THRESHOLD } from './constants';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
 interface UseToastAnimationsParams {
   visible: boolean;

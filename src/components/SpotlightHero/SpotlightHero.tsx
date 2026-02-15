@@ -8,21 +8,22 @@
 
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated from 'react-native-reanimated';
-import { shadows } from '../../theme/spacing';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import type { SpotlightHeroProps } from './SpotlightHero.types';
-import {
-  useSpotlightAnimations,
-  getGradientColors,
-} from './SpotlightHero.hooks';
 import {
   SpotlightBadge,
   TemplateContent,
   ActionButtons,
   ShimmerOverlay,
 } from './components';
+import {
+  useSpotlightAnimations,
+  getGradientColors,
+} from './SpotlightHero.hooks';
+import { shadows } from '../../theme/spacing';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

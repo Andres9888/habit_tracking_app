@@ -2,10 +2,9 @@
  * StrengthProgressBar Constants
  */
 
+import type { LevelConfig, SizeConfig } from './StrengthProgressBar.types';
 import { colors } from '@/theme/colors';
 import { typography } from '@/theme/typography';
-
-import type { LevelConfig, SizeConfig } from './StrengthProgressBar.types';
 
 export const LEVELS: LevelConfig[] = [
   {

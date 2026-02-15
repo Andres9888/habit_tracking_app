@@ -10,12 +10,13 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
+
+import type { SyncEvent, SyncStatus } from '../types';
 import {
   OfflineSyncManager,
   getOfflineSyncManager,
   type OfflineSyncManagerConfig,
 } from '../syncManager';
-import type { SyncEvent, SyncStatus } from '../types';
 
 export interface OfflineSyncContextValue {
   status: SyncStatus;

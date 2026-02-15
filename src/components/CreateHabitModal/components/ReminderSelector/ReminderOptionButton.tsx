@@ -3,11 +3,12 @@
  * V11 Task 8: Respects reduced motion preference
  */
 
-import { memo } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
+import { memo } from 'react';
+
+import type { ReminderOptionButtonProps } from './types';
 import { REMINDER_OPTIONS } from './constants';
 import { useButtonAnimations } from './useButtonAnimations';
-import type { ReminderOptionButtonProps } from './types';
 
 function ReminderOptionButtonComponent({
   option,

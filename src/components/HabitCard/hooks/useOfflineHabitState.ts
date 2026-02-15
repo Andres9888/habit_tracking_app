@@ -8,7 +8,7 @@
  */
 
 import { useMemo } from 'react';
-import { calculateOfflineStreak, useOfflineQueue } from '../../../lib/offline';
+
 import type {
   UseOfflineHabitStateOptions,
   UseOfflineHabitStateReturn,
@@ -18,6 +18,7 @@ import {
   getCompletionFromPending,
   toPendingToggleOps,
 } from './offlineStateHelpers';
+import { calculateOfflineStreak, useOfflineQueue } from '../../../lib/offline';
 
 /**
  * Hook to get offline-aware habit state

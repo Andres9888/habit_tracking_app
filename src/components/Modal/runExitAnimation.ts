@@ -4,13 +4,14 @@
  */
 
 import { withSpring, withTiming } from 'react-native-reanimated';
+
+import type { AnimationValues } from './modalAnimationEffects.types';
 import type { ModalVariant } from './Modal.types';
 import {
   SCREEN_HEIGHT,
   EXIT_SPRING_CONFIG,
   BOTTOM_SHEET_SPRING_CONFIG,
 } from './Modal.constants';
-import type { AnimationValues } from './modalAnimationEffects.types';
 import { fadeOut } from './modalAnimationHelpers';
 
 export function runExitAnimation(

@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
+
 import type { HeatmapData } from './ComplianceHeatmap.types';
 import { LEVEL_COLORS } from './ComplianceHeatmap.constants';
 import { styles } from './ComplianceHeatmap.styles';

@@ -14,8 +14,9 @@
  * - Callback invocations
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
+
 import {
   useOfflineQueue,
   generateSubmissionId,

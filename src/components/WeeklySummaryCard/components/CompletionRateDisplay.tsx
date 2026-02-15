@@ -1,4 +1,6 @@
+
 import { View, Text } from 'react-native';
+
 import type { ColorScheme } from '../types';
 
 interface CompletionRateDisplayProps {

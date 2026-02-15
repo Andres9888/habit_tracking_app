@@ -13,14 +13,14 @@ import type {
   AuthHandlerDeps,
   AuthHandlerState,
 } from './types';
-import { DEFAULT_AUTH_CONFIG } from './types';
-import { createAuthEvent, createInitialState } from './helpers';
 import type { AuthHandlerAPI } from './authHandler.types';
 import {
   createAttemptRefresh,
   createHandleAuthError,
   createNotifyAuthRestored,
 } from './handlerMethods';
+import { DEFAULT_AUTH_CONFIG } from './types';
+import { createAuthEvent, createInitialState } from './helpers';
 
 // Re-export type
 export type { AuthHandlerAPI } from './authHandler.types';

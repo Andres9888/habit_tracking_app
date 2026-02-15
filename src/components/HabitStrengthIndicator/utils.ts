@@ -2,8 +2,8 @@
  * HabitStrengthIndicator Utility Functions
  */
 
-import type { StrengthLevel } from './types';
 import type { AppTheme } from '../../theme';
+import type { StrengthLevel } from './types';
 
 /**
  * Get strength level from percentage

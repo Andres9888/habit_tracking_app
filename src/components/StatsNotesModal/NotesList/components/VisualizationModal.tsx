@@ -5,12 +5,14 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Eye, X } from 'lucide-react-native';
-import { useThemeColors } from '../../../../theme/ThemeContext';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { VisualizationGuide } from '../../../NotesSection/VisualizationGuide';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface VisualizationModalProps {
   visible: boolean;

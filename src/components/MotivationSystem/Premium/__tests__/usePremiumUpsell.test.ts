@@ -3,6 +3,7 @@
  */
 
 import { renderHook, act } from '@testing-library/react-native';
+
 import { usePremiumUpsell } from '../usePremiumUpsell';
 
 describe('usePremiumUpsell', () => {

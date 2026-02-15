@@ -1,10 +1,12 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { AlertTriangle, CheckCircle, Activity } from 'lucide-react-native';
 
-import { styles } from '../PredictionInsights.styles';
-import type { RiskLevel } from '../PredictionInsights.types';
 import type { AppTheme } from '../../../theme';
+import type { RiskLevel } from '../PredictionInsights.types';
+import { styles } from '../PredictionInsights.styles';
 
 interface RiskBadgeProps {
   level: RiskLevel;

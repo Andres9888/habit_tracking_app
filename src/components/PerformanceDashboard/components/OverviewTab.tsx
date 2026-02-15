@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { MetricCard } from './MetricCard';
+
 import type { FPSData, MemoryData, NetworkData, RenderData } from '../types';
+import { MetricCard } from './MetricCard';
 
 interface OverviewTabProps {
   fps: FPSData;

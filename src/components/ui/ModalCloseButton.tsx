@@ -7,8 +7,9 @@
  * Design system: 44×44 (Apple HIG minimum), rounded-full, surface background, X icon size 24
  */
 
-import { X } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { X } from 'lucide-react-native';
+
 import { AnimatedPressable } from './AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
 

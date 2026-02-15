@@ -4,10 +4,11 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { colors } from '../../theme/colors';
-import { spacing, borderRadius } from '@/theme/spacing';
-import { fontFamilies, typography } from '@/theme/typography';
+
 import { REDESIGN_COLORS } from './HabitCard.colors';
+import { colors } from '../../theme/colors';
+import { fontFamilies, typography } from '@/theme/typography';
+import { spacing, borderRadius } from '@/theme/spacing';
 
 export const statusStyles = StyleSheet.create({
   checkCircle: {

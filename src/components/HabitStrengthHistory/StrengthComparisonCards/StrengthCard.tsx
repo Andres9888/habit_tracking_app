@@ -4,14 +4,15 @@
 
 import React from 'react';
 import { Text } from 'react-native';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { getStrengthColors, getStrengthLabel } from '../strengthUtils';
-import { getLabelText } from './utils';
+import type { StrengthCardProps } from './types';
 import { DeltaBadge } from './DeltaBadge';
 import { PerfectBadge } from './PerfectBadge';
 import { ProgressRing } from './ProgressRing';
-import type { StrengthCardProps } from './types';
+import { getLabelText } from './utils';
+import { getStrengthColors, getStrengthLabel } from '../strengthUtils';
 
 export function StrengthCard({
   strength,

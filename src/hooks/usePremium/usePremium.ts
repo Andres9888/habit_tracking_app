@@ -13,8 +13,8 @@
  */
 
 import type { UsePremiumReturn, SubscriptionStatus } from './types';
-import { usePremiumData } from './usePremiumData';
 import { usePremiumActions } from './usePremiumActions';
+import { usePremiumData } from './usePremiumData';
 
 const PREMIUM_ENTITLEMENT_ID = 'premium';
 

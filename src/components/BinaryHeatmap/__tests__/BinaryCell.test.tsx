@@ -5,9 +5,11 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
-import { BinaryCell } from '../BinaryCell';
+
 import type { BinaryDay } from '../types';
+import { BinaryCell } from '../BinaryCell';
 import { COLORS } from '../constants';
 
 // Mock the useReduceMotion hook

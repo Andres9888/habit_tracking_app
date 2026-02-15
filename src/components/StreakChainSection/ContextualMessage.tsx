@@ -5,7 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -15,6 +15,8 @@ import Animated, {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { ContextualMessageProps, MessageType } from './types';
 import { getContextualMessage } from './messageUtils';
 

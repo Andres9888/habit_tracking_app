@@ -3,6 +3,7 @@
  */
 
 import type { ViewStyle } from 'react-native';
+
 import type { SizeConfig } from './StrengthProgressBar.constants';
 
 export interface ProgressBarRowProps {

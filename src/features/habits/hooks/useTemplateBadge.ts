@@ -1,4 +1,6 @@
+
 import { useEffect, useState } from 'react';
+
 import * as SecureStore from 'expo-secure-store';
 
 const BADGE_DISMISSED_KEY = 'template_badge_dismissed';

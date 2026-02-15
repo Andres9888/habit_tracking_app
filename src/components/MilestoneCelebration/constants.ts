@@ -3,6 +3,7 @@
  */
 
 import { Dimensions } from 'react-native';
+
 import { colors } from '../../theme/colors';
 import { milestoneColors } from '../../theme/milestone-colors';
 

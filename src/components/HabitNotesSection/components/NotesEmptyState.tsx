@@ -1,22 +1,24 @@
-/* eslint-disable max-lines */
-/** NotesEmptyState - OPTIMIZED: Better animation, haptics, dark mode, Pressable for a11y */
+/** NotesEmptyState - OPTIMIZED: Better animation, haptics, dark mode */
+
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { StickyNote, Plus } from 'lucide-react-native';
+import { Text, View } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   FadeIn,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { StickyNote, Plus } from 'lucide-react-native';
+
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface NotesEmptyStateProps {
   onAddNote: () => void;
 }
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const AnimatedPressable = Animated.createAnimatedComponent(View);
 
 export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   const { colors, isDark } = useThemeColors();
@@ -26,11 +28,11 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.97, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(1, { damping: 18, stiffness: 240 });
   };
 
   const handlePress = () => {
@@ -41,8 +43,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   return (
     <Animated.View entering={FadeIn.duration(250)}>
       <AnimatedPressable
-        accessible
-        accessibilityLabel='Add your first note — record insights to learn what works best'
+        accessibilityLabel='Add your first note'
         accessibilityRole='button'
         style={[
           animatedStyle,
@@ -57,9 +58,12 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
             shadowRadius: 16,
           },
         ]}
-        onPress={handlePress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
+        onTouchCancel={handlePressOut}
+        onTouchEnd={() => {
+          handlePressOut();
+          handlePress();
+        }}
+        onTouchStart={handlePressIn}
       >
         {/* Icon */}
         <View
@@ -73,11 +77,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
             width: 56,
           }}
         >
-          <StickyNote
-            color={isDark ? '#FCD34D' : '#D97706'}
-            size={28}
-            strokeWidth={1.5}
-          />
+          <StickyNote color={isDark ? '#FCD34D' : '#D97706'} size={28} strokeWidth={1.5} />
         </View>
 
         {/* Text */}
@@ -106,13 +106,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
           }}
         >
           <Plus color='#ffffff' size={16} strokeWidth={2.5} />
-          <Text
-            style={{
-              color: colors.text.inverse,
-              fontSize: 13,
-              fontWeight: '600',
-            }}
-          >
+          <Text style={{ color: '#ffffff', fontSize: 13, fontWeight: '600' }}>
             Add Note
           </Text>
         </View>

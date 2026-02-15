@@ -1,6 +1,7 @@
 /**
  * LevelLabel - Shows level emoji, label, and weekly change below the ring
  */
+
 import React from 'react';
 import { Text, View } from 'react-native';
 

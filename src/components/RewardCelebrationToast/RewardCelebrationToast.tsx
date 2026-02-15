@@ -1,5 +1,8 @@
+
 import { Animated, Text, View } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
+
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useRewardToastAnimation } from './useRewardToastAnimation';

@@ -1,10 +1,12 @@
+
 import React from 'react';
 import { View } from 'react-native';
-import type { StreakVoiceNoteData } from '../../../PreviousStreakVoiceNotes';
-import { PreviousStreakVoiceNotes } from '../../../PreviousStreakVoiceNotes';
-import { AnimatedContent } from '../AnimatedContent';
-import { getAnimationIndex } from '../useAnimationIndex';
+
 import type { ContentFlags } from '../RescueModeContent.helpers';
+import type { StreakVoiceNoteData } from '../../../PreviousStreakVoiceNotes';
+import { AnimatedContent } from '../AnimatedContent';
+import { PreviousStreakVoiceNotes } from '../../../PreviousStreakVoiceNotes';
+import { getAnimationIndex } from '../useAnimationIndex';
 
 type PreviousStreakSectionProps = {
   bestStreak: number;

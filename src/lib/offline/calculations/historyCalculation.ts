@@ -5,9 +5,9 @@
  * streak values whether online or offline.
  */
 
+import type { StreakData, TrackingRecord } from './types';
 import { calculateBestStreakFromDates } from './streakFromDates';
 import { differenceInDays, parseDate } from './dateHelpers';
-import type { StreakData, TrackingRecord } from './types';
 
 /**
  * Calculate streak from tracking history

@@ -1,7 +1,10 @@
+
 import { View, Text } from 'react-native';
+
 import { AlertTriangle } from 'lucide-react-native';
-import { StreakBadge } from './StreakBadge';
+
 import { ActionButtons } from './ActionButtons';
+import { StreakBadge } from './StreakBadge';
 
 interface StatusRibbonProps {
   emoji: string;

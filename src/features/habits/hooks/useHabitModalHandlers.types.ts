@@ -2,8 +2,8 @@
  * Types for useHabitModalHandlers hook
  */
 
-import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitSettings } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 export interface HabitModalSetters {
   setIsHabitDetailOpen: (v: boolean) => void;

@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { Trophy, AlertTriangle, ChevronRight } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { Trophy, AlertTriangle, ChevronRight } from 'lucide-react-native';
 
 import type { DayStats } from './types';
 

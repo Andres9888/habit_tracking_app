@@ -6,8 +6,9 @@
  */
 
 import React from 'react';
-import { Pressable } from 'react-native';
-import {
+import { View, Text, Pressable } from 'react-native';
+
+import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -15,9 +16,12 @@ import {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
+import { ArrowRight, Zap } from 'lucide-react-native';
+
 import type { NextHabitSuggestionProps } from './types';
 import { CompletedState } from './CompletedState';
 import { HabitContent } from './HabitContent';
+import { styles } from './styles';
 
 export function NextHabitSuggestion({
   habit,
@@ -63,9 +67,6 @@ export function NextHabitSuggestion({
 
   return (
     <Pressable
-      accessibilityHint='Double tap to open this habit'
-      accessibilityLabel={`Next habit: ${habit.name ?? 'habit'}`}
-      accessibilityRole='button'
       onPress={() => onPress?.(habit)}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -76,6 +77,7 @@ export function NextHabitSuggestion({
         totalCount={totalCount}
         cardStyle={cardStyle}
         glowStyle={glowStyle}
+        glowOpacity={glowOpacity}
       />
     </Pressable>
   );

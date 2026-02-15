@@ -1,10 +1,12 @@
+
 import type { RefObject } from 'react';
-import { Keyboard, Pressable, ScrollView } from 'react-native';
 import type { ScrollView as ScrollViewType } from 'react-native';
-import { CreateHabitFormCentered } from './CreateHabitFormCentered';
-import { HABIT_COLORS } from '../constants';
+import { Keyboard, Pressable, ScrollView } from 'react-native';
+
 import type { useCenteredFormCallbacks } from '../hooks/useCenteredFormCallbacks';
 import type { useHabitForm } from '../hooks/useHabitForm';
+import { CreateHabitFormCentered } from './CreateHabitFormCentered';
+import { HABIT_COLORS } from '../constants';
 
 interface CreateHabitScrollContentProps {
   form: ReturnType<typeof useHabitForm>;

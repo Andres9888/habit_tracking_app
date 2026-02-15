@@ -3,12 +3,11 @@
  * Groups modals, toasts, and paywall into a single render unit
  */
 
-import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
-import { RevenueCatPaywall } from '../../../components/RevenueCatPaywall';
-import { HabitsModals } from './HabitsModals';
-import WebToaster from './WebToaster';
-import { TOAST_DURATION_MS } from '@/constants';
 import type { HabitsListState, HabitsModalsState } from '../hooks/types';
+import WebToaster from './WebToaster';
+import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
+import { HabitsModals } from './HabitsModals';
+import { RevenueCatPaywall } from '../../../components/RevenueCatPaywall';
 
 interface HabitsAppOverlaysProps {
   list: HabitsListState;
@@ -31,7 +30,7 @@ export function HabitsAppOverlays({
       <HabitsModals state={modals} />
 
       <ArchiveUndoToast
-        duration={TOAST_DURATION_MS}
+        duration={5000}
         habitName={list.archiveUndoHabitName}
         visible={list.archiveUndoVisible}
         onDismiss={list.dismissArchiveUndo}

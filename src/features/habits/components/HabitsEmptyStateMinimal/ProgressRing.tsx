@@ -8,9 +8,9 @@
  * - Uses reanimated for smooth 60fps animation
  */
 
-import { useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
+import { useEffect, useRef } from 'react';
+
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -18,9 +18,10 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import Svg, { Circle } from 'react-native-svg';
 
-import { PROGRESS_RING } from './animations';
 import { COLORS } from './constants';
+import { PROGRESS_RING } from './animations';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 

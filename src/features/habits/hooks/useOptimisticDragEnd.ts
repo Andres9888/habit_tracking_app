@@ -3,8 +3,9 @@
  */
 
 import { useCallback } from 'react';
-import type { Id } from '../../../../convex/_generated/dataModel';
+
 import type { Habit, HabitSortMode } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import { optimisticStore } from '../../../lib/optimistic';
 import { showGenericError } from '../../../utils/errorAlerts';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';

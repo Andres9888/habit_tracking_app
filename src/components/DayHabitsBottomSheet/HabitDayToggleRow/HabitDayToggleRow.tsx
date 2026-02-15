@@ -1,8 +1,9 @@
-import { memo, useCallback, useState } from 'react';
-import { Animated, Pressable, Text, View } from 'react-native';
 
-import { Checkbox } from './Checkbox';
+import { Animated, Pressable, Text, View } from 'react-native';
+import { memo, useCallback, useState } from 'react';
+
 import type { HabitDayToggleRowProps } from './types';
+import { Checkbox } from './Checkbox';
 import { useToggleAnimations } from './useToggleAnimations';
 
 /**

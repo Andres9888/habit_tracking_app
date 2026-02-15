@@ -7,10 +7,12 @@
  */
 
 import { Platform } from 'react-native';
+
 import DateTimePicker from '@react-native-community/datetimepicker';
+
 import type { TimePickerModalProps } from './types';
-import { useTimePickerModal } from './useTimePickerModal';
 import { IOSTimePicker } from './IOSTimePicker';
+import { useTimePickerModal } from './useTimePickerModal';
 
 export const TimePickerModal = ({
   visible,

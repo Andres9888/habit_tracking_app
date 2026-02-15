@@ -4,12 +4,13 @@
  */
 
 import { withSpring, withTiming } from 'react-native-reanimated';
+
+import type { AnimationValues } from './modalAnimationEffects.types';
 import type { ModalVariant } from './Modal.types';
 import {
   FULLSCREEN_ORGANIC_SPRING,
   BOTTOM_SHEET_SPRING_CONFIG,
 } from './Modal.constants';
-import type { AnimationValues } from './modalAnimationEffects.types';
 import { fadeIn } from './modalAnimationHelpers';
 
 export function runEnterAnimation(

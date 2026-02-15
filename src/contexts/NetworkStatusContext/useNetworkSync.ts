@@ -11,14 +11,16 @@
  */
 
 import { useEffect, useCallback, useMemo, useRef, useState } from 'react';
-import { useNetworkStatus } from './hooks';
-import { useSyncOrchestrator } from '../../lib/offline/sync/useSyncOrchestrator';
-import { getOfflineQueueManager } from '../../lib/offline/queueManager';
-import { DEFAULT_RECONNECT_DELAY_MS } from '@/constants';
+
 import type {
   UseNetworkSyncOptions,
   UseNetworkSyncReturn,
 } from './useNetworkSync.types';
+import { getOfflineQueueManager } from '../../lib/offline/queueManager';
+import { useNetworkStatus } from './hooks';
+import { useSyncOrchestrator } from '../../lib/offline/sync/useSyncOrchestrator';
+
+const DEFAULT_RECONNECT_DELAY_MS = 1000;
 
 /**
  * useNetworkSync - Wires network status changes to sync orchestrator

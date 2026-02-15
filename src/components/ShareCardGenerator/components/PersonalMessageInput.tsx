@@ -5,9 +5,10 @@
 
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
-import { useAppTheme } from '../../../theme';
-import { controlsStyles as styles } from '../styles';
+
 import { MESSAGE_MAX_LENGTH } from '../ShareCardGenerator.constants';
+import { controlsStyles as styles } from '../styles';
+import { useAppTheme } from '../../../theme';
 
 interface PersonalMessageInputProps {
   value: string;

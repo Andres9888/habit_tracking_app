@@ -1,11 +1,14 @@
 /** StatsNotesModal - OPTIMIZED: Design system, Pressable, animations */
-import { useState } from 'react';
+
 import { Modal, Pressable, ScrollView, View } from 'react-native';
+import { useState } from 'react';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import StatsOverview from './StatsOverview';
+
 import NotesList from './NotesList';
-import { useThemeColors } from '../../theme/ThemeContext';
+import StatsOverview from './StatsOverview';
 import { StatsNotesHeader } from './StatsNotesHeader';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface StatsNotesModalProps {
   visible: boolean;

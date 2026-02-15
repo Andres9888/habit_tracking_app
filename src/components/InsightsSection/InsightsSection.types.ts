@@ -2,8 +2,8 @@
  * Type definitions for InsightsSection components
  */
 
-import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
+import type { Id } from '../../../convex/_generated/dataModel';
 
 /**
  * Props for the main InsightsSection component

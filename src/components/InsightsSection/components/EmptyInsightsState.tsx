@@ -5,10 +5,12 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { BarChart3, Calendar } from 'lucide-react-native';
-import { useThemeColors } from '../../../theme/ThemeContext';
+
 import type { EmptyInsightsStateProps } from '../InsightsSection.types';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
   const { colors, isDark } = useThemeColors();

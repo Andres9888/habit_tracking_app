@@ -5,12 +5,14 @@
 
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Sun, CheckCircle2 } from 'lucide-react-native';
-import { PromptList } from './PromptList';
-import { NavigationButtons } from './NavigationButtons';
+
 import type { VisualizationInputStepProps } from '../types';
+import { NavigationButtons } from './NavigationButtons';
+import { PromptList } from './PromptList';
 
 const PROMPTS = [
   'How do you feel after completing this habit?',

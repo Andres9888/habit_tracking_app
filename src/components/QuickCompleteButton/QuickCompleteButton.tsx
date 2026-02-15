@@ -11,13 +11,14 @@
 
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { Check, Zap } from 'lucide-react-native';
 
 import type { QuickCompleteButtonProps } from './QuickCompleteButton.types';
-import { useQuickCompleteButton } from './useQuickCompleteButton';
 import { ConfettiBurst } from './components';
 import { styles } from './QuickCompleteButton.styles';
+import { useQuickCompleteButton } from './useQuickCompleteButton';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

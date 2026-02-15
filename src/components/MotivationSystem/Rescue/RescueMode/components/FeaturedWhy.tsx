@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { Heart } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface FeaturedWhyProps {
   why: string;

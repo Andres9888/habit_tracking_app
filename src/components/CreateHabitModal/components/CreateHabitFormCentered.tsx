@@ -1,10 +1,11 @@
-import { memo } from 'react';
+
 import { Keyboard, Text, TextInput, View } from 'react-native';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { EmojiPicker } from './EmojiPicker';
-import { ColorPickerSection } from './ColorPickerSection';
-import { EnhancedReminderSelector } from './EnhancedReminderSelector';
+import { memo } from 'react';
+
 import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.types';
+import { ColorPickerSection } from './ColorPickerSection';
+import { EmojiPicker } from './EmojiPicker';
+import { EnhancedReminderSelector } from './EnhancedReminderSelector';
 
 /**
  * Centered habit creation form with optional fields.
@@ -26,68 +27,39 @@ const CreateHabitFormCenteredComponent = ({
   autoFocus = false,
   showNameError = false,
 }: CreateHabitFormCenteredProps) => {
-  const { colors: themeColors, isDark } = useThemeColors();
-
   return (
     <View className='flex-1 px-6'>
       {/* Centered top section - name input */}
       <View
         className='items-center'
-        style={{ marginBottom: 40, marginTop: 28 }}
+        style={{ marginBottom: 48, marginTop: 32 }}
       >
-        <Text
-          className='mb-6 text-center text-[28px] font-bold leading-tight'
-          style={{ color: themeColors.text.primary }}
-        >
-          Name your new habit
+        <Text className='mb-6 text-center text-4xl font-bold leading-tight text-stone-900'>
+          What habit do you want to build?
         </Text>
 
         <TextInput
-          accessibilityLabel='Habit name'
           autoFocus={autoFocus}
-          className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
+          className={`w-full rounded-2xl border-2 bg-white px-6 py-6 text-center text-xl text-stone-900 ${
+            showNameError ? 'border-red-400' : 'border-stone-200'
+          }`}
           maxLength={50}
-          placeholder='e.g., Read 20 minutes daily'
-          placeholderTextColor={isDark ? themeColors.text.tertiary : '#A8A29E'}
+          placeholder='e.g., Read for 20 minutes'
+          placeholderTextColor='#A8A29E'
           returnKeyType='done'
-          style={{
-            lineHeight: 28,
-            color: themeColors.text.primary,
-            backgroundColor: isDark ? themeColors.card : '#FFFFFF',
-            borderColor: showNameError
-              ? '#f87171'
-              : isDark
-                ? themeColors.border
-                : themeColors.border,
-          }}
           value={habitName}
           onChangeText={onHabitNameChange}
           onSubmitEditing={Keyboard.dismiss}
         />
 
-        {/* Error message or character counter (only when typing) */}
+        {/* Error message or character counter */}
         {showNameError ? (
-          <Text
-            accessibilityLiveRegion='polite'
-            accessibilityRole='alert'
-            className='mt-3 text-sm font-medium'
-            style={{ color: '#ef4444' }}
-          >
-            Give your habit a name (at least 2 characters)
-          </Text>
-        ) : habitName.length > 0 ? (
-          <Text
-            className='mt-3 text-xs'
-            style={{ color: themeColors.text.tertiary }}
-          >
-            {habitName.length}/50 characters
+          <Text className='mt-3 text-xs font-medium text-red-500'>
+            Please enter a habit name
           </Text>
         ) : (
-          <Text
-            className='mt-3 text-xs'
-            style={{ color: themeColors.text.tertiary }}
-          >
-            Be specific — include when, how long, or where
+          <Text className='mt-3 text-xs text-stone-400'>
+            {habitName.length}/50 characters
           </Text>
         )}
       </View>
@@ -96,8 +68,8 @@ const CreateHabitFormCenteredComponent = ({
       <View className='flex-1'>
         {/* Section label */}
         <Text
-          className='mb-8 text-center text-xs font-semibold'
-          style={{ letterSpacing: 1, color: themeColors.text.tertiary }}
+          className='mb-8 text-center text-xs font-semibold text-stone-400'
+          style={{ letterSpacing: 1 }}
         >
           CUSTOMIZE
         </Text>

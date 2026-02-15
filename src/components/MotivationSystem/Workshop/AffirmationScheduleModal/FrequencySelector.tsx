@@ -5,9 +5,11 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import { Calendar } from 'lucide-react-native';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
+
 import type { FrequencySelectorProps } from './types';
 
 export function FrequencySelector({

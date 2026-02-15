@@ -1,10 +1,13 @@
+
 import { useMemo, useState } from 'react';
+
 import { parse, format } from 'date-fns';
+
+import type { HabitStatus } from './types';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useHabitChainVisualizerLogic } from './HabitChainVisualizer.hooks';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useToggleDayHandler } from './useToggleDayHandler';
-import type { HabitStatus } from './types';
 
 interface UseChainVisualizerStateParams {
   weekDateStrings: string[];

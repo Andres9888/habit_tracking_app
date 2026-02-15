@@ -2,14 +2,14 @@
  * Mutation Error Tracking
  */
 
-import { getSentryReporter } from '../../reporter/index';
-import { trackError } from '../tracker/index';
 import type { MutationErrorContext, TrackedError } from '../types';
-import { sanitizeArgs } from './sanitize';
 import {
   addMutationBreadcrumb,
   addMutationSuccessBreadcrumb,
 } from './breadcrumbs';
+import { getSentryReporter } from '../../reporter/index';
+import { sanitizeArgs } from './sanitize';
+import { trackError } from '../tracker/index';
 
 /** Track a mutation error with full context */
 export function trackMutationError(

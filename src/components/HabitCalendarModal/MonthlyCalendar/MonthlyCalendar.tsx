@@ -5,6 +5,8 @@
  */
 
 import { View } from 'react-native';
+import { useState } from 'react';
+
 import {
   format,
   startOfMonth,
@@ -14,11 +16,11 @@ import {
   isSameDay,
   startOfToday,
 } from 'date-fns';
-import { useState } from 'react';
+
 import type { Id } from '../../../../convex/_generated/dataModel';
-import { MonthNavigator } from './MonthNavigator';
-import { DayNamesRow } from './DayNamesRow';
 import { DayCell } from './DayCell';
+import { DayNamesRow } from './DayNamesRow';
+import { MonthNavigator } from './MonthNavigator';
 
 interface MonthlyCalendarProps {
   habitId: Id<'habits'>;

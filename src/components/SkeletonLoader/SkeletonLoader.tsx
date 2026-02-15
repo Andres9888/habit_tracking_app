@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated, {
   Easing,
   interpolate,
@@ -16,8 +16,10 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { SkeletonLoaderProps } from './types';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 /** Light and dark skeleton color pairs */
 export const SKELETON_COLORS_LIGHT = {

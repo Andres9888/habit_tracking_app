@@ -5,11 +5,12 @@
 
 import React, { useCallback } from 'react';
 import { View, FlatList } from 'react-native';
-import { styles } from './styles';
-import { getRankBadge } from './utils';
-import { HabitRankingItem } from './HabitRankingItem';
-import { EmptyState } from './EmptyState';
+
 import type { HabitRankingsListProps, HabitRanking } from './types';
+import { EmptyState } from './EmptyState';
+import { HabitRankingItem } from './HabitRankingItem';
+import { getRankBadge } from './utils';
+import { styles } from './styles';
 
 export default function HabitRankingsList({
   habits,

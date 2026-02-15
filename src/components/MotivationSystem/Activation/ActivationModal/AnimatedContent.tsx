@@ -1,4 +1,6 @@
+
 import React, { useEffect } from 'react';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -6,6 +8,7 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
+
 import { SPRING_GENTLE, STAGGER_DELAY } from './constants';
 
 interface AnimatedContentProps {

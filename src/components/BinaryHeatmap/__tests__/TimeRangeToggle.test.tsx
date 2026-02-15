@@ -5,9 +5,11 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
-import { TimeRangeToggle } from '../TimeRangeToggle';
+
 import type { TimeRange } from '../types';
+import { TimeRangeToggle } from '../TimeRangeToggle';
 
 // Mock the useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({

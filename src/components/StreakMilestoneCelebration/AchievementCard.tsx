@@ -8,9 +8,11 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
-import { achievementCardStyles as styles } from './styles';
+
 import type { AchievementCardProps } from './types';
+import { achievementCardStyles as styles } from './styles';
 
 /**
  * Generate gradient colors for a milestone

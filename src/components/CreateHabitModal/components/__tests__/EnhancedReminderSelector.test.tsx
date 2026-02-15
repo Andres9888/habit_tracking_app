@@ -15,8 +15,10 @@
  */
 
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { AccessibilityInfo, Keyboard } from 'react-native';
+
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+
 import {
   EnhancedReminderSelector,
   EnhancedReminderSelectorProps,

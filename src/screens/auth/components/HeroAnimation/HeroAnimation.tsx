@@ -4,6 +4,7 @@
 
 import React, { useEffect, useCallback } from 'react';
 import { View } from 'react-native';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -14,6 +15,7 @@ import Animated, {
   Easing,
   interpolate,
 } from 'react-native-reanimated';
+
 import { AnimatedDot } from './AnimatedDot';
 import { styles } from './HeroAnimation.styles';
 

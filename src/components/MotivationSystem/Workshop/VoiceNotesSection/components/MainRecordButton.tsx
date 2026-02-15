@@ -1,12 +1,15 @@
 /**
  * MainRecordButton - Primary record/pause button with pulse animation
  */
+
 import React, { useCallback, useEffect } from 'react';
 import { View, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, withRepeat, cancelAnimation } from 'react-native-reanimated';
 import { Mic, Pause, Play } from 'lucide-react-native';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
+
 import { SPRING_BUTTON } from '../../../../animations';
 
 interface MainRecordButtonProps {

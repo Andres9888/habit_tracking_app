@@ -3,6 +3,7 @@
  */
 
 import type { ViewStyle, TextStyle } from 'react-native';
+
 import { shadows, borderRadius } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 

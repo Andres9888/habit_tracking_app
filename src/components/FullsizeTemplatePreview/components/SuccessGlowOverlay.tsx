@@ -3,9 +3,11 @@
  */
 
 import React from 'react';
-import Animated from 'react-native-reanimated';
-import { layoutStyles } from '../styles';
 import type { ViewStyle } from 'react-native';
+
+import Animated from 'react-native-reanimated';
+
+import { layoutStyles } from '../styles';
 
 interface SuccessGlowOverlayProps {
   animatedStyle: ViewStyle;

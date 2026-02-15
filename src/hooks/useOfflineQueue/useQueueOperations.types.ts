@@ -3,6 +3,7 @@
  */
 
 import type { MutableRefObject } from 'react';
+
 import type { QueuedSubmission, QueueStats } from './types';
 
 export interface UseQueueOperationsProps {

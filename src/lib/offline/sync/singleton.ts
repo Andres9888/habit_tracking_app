@@ -5,10 +5,10 @@
  * Lazily creates the orchestrator on first access.
  */
 
+import type { SyncOrchestratorConfig } from './types';
+import { SyncOrchestrator } from './SyncOrchestrator';
 import { getOfflineQueueManager } from '../queueManager';
 import { getOfflineSyncManager } from '../syncManager';
-import { SyncOrchestrator } from './SyncOrchestrator';
-import type { SyncOrchestratorConfig } from './types';
 
 let instance: SyncOrchestrator | null = null;
 

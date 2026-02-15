@@ -1,5 +1,6 @@
-import type { Id } from '../../../../convex/_generated/dataModel';
+
 import type { Habit, ShareCardData } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 export interface HandlersReturn {
   closeCreateHabit: () => void;

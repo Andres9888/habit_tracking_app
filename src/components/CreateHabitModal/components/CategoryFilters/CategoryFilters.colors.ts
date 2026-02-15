@@ -3,8 +3,8 @@
  * Data-only file containing static theme configuration
  */
 
-import { colors } from '@/theme/colors';
 import type { CategoryColors } from './CategoryFilters.types';
+import { colors } from '@/theme/colors';
 
 export const CATEGORY_COLORS: Record<string, CategoryColors> = {
   all: {

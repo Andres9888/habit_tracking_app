@@ -1,5 +1,8 @@
+
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
+
 import { SocialProofBadge } from '../SocialProofBadge';
 
 // Mock expo-linear-gradient

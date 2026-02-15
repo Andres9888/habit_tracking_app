@@ -1,7 +1,9 @@
+
 import { Alert } from 'react-native';
+
+import type { QuickActionsSectionProps } from './HabitsModals.types';
 import { QuickActionsSheet } from '../../../../components/QuickActionsSheet';
 import { getTodayString } from '../../../../utils/getLocalDateString';
-import type { QuickActionsSectionProps } from './HabitsModals.types';
 
 function buildHabitData(
   quickActionsHabit: NonNullable<QuickActionsSectionProps['quickActionsHabit']>,

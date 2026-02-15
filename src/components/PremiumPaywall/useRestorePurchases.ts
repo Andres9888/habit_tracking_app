@@ -2,8 +2,9 @@
  * Restore purchases handler extracted from usePremiumPaywall
  */
 
-import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
+import { useCallback, useState } from 'react';
+
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { usePremium } from '../../hooks/usePremium';
 

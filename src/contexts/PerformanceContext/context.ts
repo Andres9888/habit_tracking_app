@@ -4,6 +4,7 @@
  */
 
 import { createContext } from 'react';
+
 import type { PerformanceContextValue } from './types';
 
 const noop = () => {};

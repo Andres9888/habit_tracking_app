@@ -3,8 +3,9 @@
  * Handles animation and badge display for new personal records
  */
 
-import { useEffect } from 'react';
 import { Animated } from 'react-native';
+import { useEffect } from 'react';
+
 import {
   runNewRecordAnimation,
   hideNewRecordBadge,

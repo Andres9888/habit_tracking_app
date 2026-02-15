@@ -5,12 +5,14 @@
 
 import React, { forwardRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import ViewShot from 'react-native-view-shot';
-import { shareCardContentStyles as contentStyles } from '../styles';
-import { ShareCardInfo } from './ShareCardInfo';
-import { ShareCardFooter } from './ShareCardFooter';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { ShareFormat, GradientPreset } from '../ShareCardGenerator.types';
+import { ShareCardFooter } from './ShareCardFooter';
+import { ShareCardInfo } from './ShareCardInfo';
+import { shareCardContentStyles as contentStyles } from '../styles';
 
 interface ShareCardProps {
   habitName: string;

@@ -7,9 +7,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import { useAppTheme } from '../../theme';
-
-import { styles } from './PredictionInsights.styles';
 import type { PredictionInsightsProps } from './PredictionInsights.types';
 import {
   ConfidenceLevel,
@@ -18,6 +15,8 @@ import {
   SuggestedActions,
   TrendIndicator,
 } from './components';
+import { styles } from './PredictionInsights.styles';
+import { useAppTheme } from '../../theme';
 
 export default function PredictionInsights({
   data,

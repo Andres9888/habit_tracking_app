@@ -4,9 +4,11 @@
 
 import React from 'react';
 import { Text } from 'react-native';
+
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
-import { styles } from './styles';
+
 import type { StreakMilestone } from './constants';
+import { styles } from './styles';
 
 interface BadgeSectionProps {
   milestone: StreakMilestone;

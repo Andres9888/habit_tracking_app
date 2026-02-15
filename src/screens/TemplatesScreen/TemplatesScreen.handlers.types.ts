@@ -3,8 +3,9 @@
  */
 
 import type { FlatList } from 'react-native';
-import type { Doc, Id } from '../../../convex/_generated/dataModel';
+
 import type { Category, SortOption } from '../templates/constants';
+import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import type { TemplateCustomizations, ViewMode } from './TemplatesScreen.types';
 
 export interface UseTemplateHandlersOptions {

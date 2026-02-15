@@ -5,7 +5,9 @@
 
 import React, { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
+
 import { useClerk, useUser } from '@clerk/clerk-expo';
+
 import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { PremiumStatus } from './sections/PremiumStatus';
 import { FeedbackModal } from '../FeedbackModal';

@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import { useAppTheme } from '../../../theme';
-import { styles } from '../StrengthHistoryChart.styles';
 import type { TrendDirection } from '../StrengthHistoryChart.types';
+import { styles } from '../StrengthHistoryChart.styles';
+import { useAppTheme } from '../../../theme';
 
 interface StatsRowProps {
   latestStrength: number;

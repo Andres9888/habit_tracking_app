@@ -3,14 +3,15 @@
  * Routes to the appropriate variant content component
  */
 
+import type { AnimatedStyle } from 'react-native-reanimated';
+import type { GestureType } from 'react-native-gesture-handler';
 import React from 'react';
 import type { ViewStyle } from 'react-native';
-import type { GestureType } from 'react-native-gesture-handler';
-import type { AnimatedStyle } from 'react-native-reanimated';
+
 import type { ModalVariant } from './Modal.types';
 import { BottomSheetContent } from './BottomSheetContent';
-import { FullScreenContent } from './FullScreenContent';
 import { CenterAlertContent } from './CenterAlertContent';
+import { FullScreenContent } from './FullScreenContent';
 
 interface AnimatedStyles {
   bottomSheetStyle: AnimatedStyle<ViewStyle>;

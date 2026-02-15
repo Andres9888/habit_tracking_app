@@ -3,9 +3,10 @@
  */
 
 import { StyleSheet, Dimensions } from 'react-native';
+
 import { colors } from '../../theme/colors';
-import { typography } from '../../theme/typography';
 import { spacing, shadows } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 const { width: screenWidth } = Dimensions.get('window');
 export const chartWidth = screenWidth - spacing.xl * 2;

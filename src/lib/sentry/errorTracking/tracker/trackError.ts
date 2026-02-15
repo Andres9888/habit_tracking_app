@@ -2,14 +2,14 @@
  * Track Error Function
  */
 
-import { classifyError } from '../../../offline/errorClassifier/classify';
-import { getSentryReporter } from '../../reporter/index';
-import { isSentryInitialized } from '../../init/index';
 import type { ErrorContext, TrackedError } from '../types';
 import { SILENT_ERROR_CATEGORIES } from '../types';
-import { getConfig } from './config';
-import { isRateLimited, shouldSample } from './rateLimit';
 import { buildTags, buildExtra } from './builders';
+import { classifyError } from '../../../offline/errorClassifier/classify';
+import { getConfig } from './config';
+import { getSentryReporter } from '../../reporter/index';
+import { isRateLimited, shouldSample } from './rateLimit';
+import { isSentryInitialized } from '../../init/index';
 
 /**
  * Track an error with classification and Sentry reporting

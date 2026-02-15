@@ -2,8 +2,8 @@
  * Tests for optimistic update store
  */
 
-import { optimisticStore } from '../store';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { optimisticStore } from '../store';
 
 // Helper to create mock habit ID
 const mockHabitId = (id: string) => id as Id<'habits'>;

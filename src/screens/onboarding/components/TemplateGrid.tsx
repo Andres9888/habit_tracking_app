@@ -1,4 +1,6 @@
+
 import { StyleSheet, Text, View } from 'react-native';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 const TEMPLATE_ICONS = [

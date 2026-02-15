@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Sparkles } from 'lucide-react-native';
 
 export function PerfectBadge() {

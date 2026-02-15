@@ -7,8 +7,8 @@
  * - 100 days: 💎 (Diamond) - Legendary
  */
 
-import { colors, milestoneColors } from '../../theme/colors';
 import type { Milestone, MilestoneBadge } from './StreakIndicator.types';
+import { colors, milestoneColors } from '../../theme/colors';
 
 export const MILESTONES: readonly Milestone[] = [7, 30, 100];
 

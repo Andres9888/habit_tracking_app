@@ -5,15 +5,17 @@
 
 import React, { memo } from 'react';
 import { Modal, View, Pressable, StyleSheet } from 'react-native';
+
+import Animated from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
+
 import type { EmojiPickerSheetProps } from './EmojiPickerSheet.types';
+import { SheetContent } from './SheetContent';
 import { styles } from './EmojiPickerSheet.styles';
 import { useEmojiPickerState } from './useEmojiPickerState';
 import { useSheetAnimations } from './useSheetAnimations';
 import { useSheetHandlers } from './useSheetHandlers';
-import { SheetContent } from './SheetContent';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 

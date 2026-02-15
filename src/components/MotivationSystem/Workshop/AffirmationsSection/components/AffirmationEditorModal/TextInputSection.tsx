@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
+
 import { clsx } from 'clsx';
+
 import { MAX_TEXT_LENGTH } from '../../AffirmationsSection.constants';
 
 interface TextInputSectionProps {

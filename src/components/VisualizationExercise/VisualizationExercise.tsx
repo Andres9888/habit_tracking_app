@@ -15,6 +15,12 @@
 
 import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
+
+import type {
+  VisualizationStep,
+  VisualizationData,
+  VisualizationExerciseProps,
+} from './types';
 import {
   StepIndicator,
   IntroStep,
@@ -22,11 +28,6 @@ import {
   NegativeStep,
   SummaryStep,
 } from './components';
-import type {
-  VisualizationStep,
-  VisualizationData,
-  VisualizationExerciseProps,
-} from './types';
 
 const STEP_NUMBERS: Record<VisualizationStep, number> = {
   intro: 1,

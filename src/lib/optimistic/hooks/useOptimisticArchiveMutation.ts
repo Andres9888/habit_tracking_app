@@ -6,9 +6,10 @@
  */
 
 import { useCallback } from 'react';
+
+import type { ArchiveOperationPayload } from '../types';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { optimisticStore } from '../store';
-import type { ArchiveOperationPayload } from '../types';
 
 /**
  * Creates an optimistic archive mutation wrapper

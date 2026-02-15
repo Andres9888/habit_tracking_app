@@ -1,19 +1,12 @@
 /**
- * UpgradePrompt — full-screen modal overlay for trial conversion.
- *
- * Part of the **monetization flow**: shown by {@link HabitsListModals} when
- * `upgradePromptVisible` is true (typically after the user tries to exceed
- * the free-tier habit limit).
- *
- * Features a slide-in card with headline, value prop, pricing pill, primary
- * CTA ("Start Free Trial"), and a dismissive secondary button ("Maybe later").
- * The backdrop is tappable to dismiss.
+ * UpgradePrompt Component
+ * Modal overlay for upgrade CTA — optimized for trial conversion
  */
 
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
+
+import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
 
 interface UpgradePromptProps {
   onClose: () => void;
@@ -31,7 +24,7 @@ export function UpgradePrompt({
   return (
     <Animated.View
       className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
-      entering={FadeInDown.duration(280).springify().damping(18)}
+      entering={FadeIn.duration(280)}
     >
       <Pressable
         accessibilityHint='Tap outside to dismiss'
@@ -42,7 +35,7 @@ export function UpgradePrompt({
       />
       <Animated.View
         className='w-full rounded-t-3xl px-6 py-8'
-        entering={SlideInDown.duration(ANIMATION_DURATION.medium).damping(ANIMATION_VALUES.springDamping)}
+        entering={SlideInDown.duration(280).damping(18)}
       >
         <LinearGradient
           className='absolute inset-0 rounded-t-3xl'
@@ -53,7 +46,7 @@ export function UpgradePrompt({
             <Text className='text-[32px]'>🚀</Text>
           </View>
           <Text className='text-center text-[24px] font-bold tracking-tight text-stone-900'>
-            Ready to build more habits?
+            You're on a roll! Ready for more?
           </Text>
           <Text className='text-center text-[15px] font-normal leading-[20px] text-stone-500'>
             Track unlimited habits across all areas of your life. Premium
@@ -69,7 +62,7 @@ export function UpgradePrompt({
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
             className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
-            style={({ pressed }) => ({ opacity: pressed ? OPACITY.strong : OPACITY.full })}
+            style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
             onPress={onUpgradePress}
           >
             <LinearGradient
@@ -87,7 +80,7 @@ export function UpgradePrompt({
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
             className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
-            style={({ pressed }) => ({ opacity: pressed ? OPACITY.high : OPACITY.full })}
+            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             onPress={onClose}
           >
             <Text className='text-[15px] font-normal text-stone-600'>

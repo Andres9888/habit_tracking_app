@@ -2,8 +2,8 @@
  * Toast Constants
  */
 
-import { colors } from '../../theme/colors';
 import type { ToastVariant, VariantConfig } from './types';
+import { colors } from '../../theme/colors';
 
 /** Variant configuration (icons, colors) */
 export const VARIANT_CONFIG: Record<ToastVariant, VariantConfig> = {

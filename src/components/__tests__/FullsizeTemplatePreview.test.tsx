@@ -10,12 +10,13 @@
  */
 
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import * as Haptics from 'expo-haptics';
 
-import FullsizeTemplatePreview from '../FullsizeTemplatePreview';
+import * as Haptics from 'expo-haptics';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
+import FullsizeTemplatePreview from '../FullsizeTemplatePreview';
 
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => ({

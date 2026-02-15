@@ -3,15 +3,16 @@
  */
 
 import React from 'react';
-import { Circle, Line, G, Path } from 'react-native-svg';
-import Animated from 'react-native-reanimated';
 
+import Animated from 'react-native-reanimated';
+import { Circle, Line, G, Path } from 'react-native-svg';
+
+import type { ChartDimensions, ChartPoint } from './types';
 import {
   GRID_LINE_COUNT,
   DOT_RADIUS,
   ESTIMATED_PATH_LENGTH,
 } from './constants';
-import type { ChartDimensions, ChartPoint } from './types';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedPath = Animated.createAnimatedComponent(Path);

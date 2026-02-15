@@ -5,6 +5,7 @@
  */
 
 import { useMemo } from 'react';
+
 import {
   format,
   startOfMonth,
@@ -18,6 +19,7 @@ import {
   endOfWeek,
   isValid,
 } from 'date-fns';
+
 import type { DayData } from './types';
 
 /** Safely format a date, returning empty string on error */

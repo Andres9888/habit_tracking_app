@@ -17,8 +17,10 @@
  */
 
 import { useEffect, useRef, useCallback } from 'react';
-import * as Notifications from 'expo-notifications';
+
 import type { NotificationResponse } from 'expo-notifications';
+import * as Notifications from 'expo-notifications';
+
 import { NOTIFICATION_TYPE_LETTER_UNLOCK } from '../utils/notifications';
 
 export interface NotificationResponseHandler {

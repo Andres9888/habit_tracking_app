@@ -5,12 +5,14 @@
 
 import React, { memo, useCallback } from 'react';
 import { View, Text } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+
+import type { HabitRanking, RankBadge } from './types';
 import HabitStrengthIndicator from '../HabitStrengthIndicator/HabitStrengthIndicator';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import { itemStyles as styles } from './itemStyles';
-import type { HabitRanking, RankBadge } from './types';
 
 interface HabitRankingItemProps {
   item: HabitRanking;

@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { HelpCircle, Plus, Pencil } from 'lucide-react-native';
 
 interface DualVizHeaderProps {

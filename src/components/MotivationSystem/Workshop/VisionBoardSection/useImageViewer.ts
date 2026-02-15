@@ -2,8 +2,9 @@
  * useImageViewer Hook - State and handlers for the image viewer modal
  */
 
-import { useState, useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
+import { useState, useCallback, useEffect } from 'react';
+
 import type { VisionBoardImage } from './types';
 import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 

@@ -3,12 +3,14 @@
  * Animated styles for the emoji picker bottom sheet
  */
 
+import type { SharedValue } from 'react-native-reanimated';
+
 import {
   useAnimatedStyle,
   interpolate,
   Extrapolation,
 } from 'react-native-reanimated';
-import type { SharedValue } from 'react-native-reanimated';
+
 import { colors } from '../../../theme/colors';
 
 export function useSheetStyles(

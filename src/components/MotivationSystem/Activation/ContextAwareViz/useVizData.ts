@@ -2,9 +2,9 @@
  * useVizData - Hook to derive visualization data and type from props
  */
 
-import { shouldShowFailureViz } from '../MotivationCheck';
-import type { VisualizationData, VizType } from './types';
 import type { MotivationLevel } from '../MotivationCheck';
+import type { VisualizationData, VizType } from './types';
+import { shouldShowFailureViz } from '../MotivationCheck';
 
 interface UseVizDataProps {
   motivationLevel: MotivationLevel | undefined;

@@ -4,6 +4,7 @@
  */
 
 import { useMemo } from 'react';
+
 import type { DayStats } from '../types';
 
 interface DayStatsResult {

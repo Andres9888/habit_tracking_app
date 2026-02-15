@@ -3,6 +3,7 @@
  */
 
 import * as Sentry from '@sentry/react-native';
+
 import type {
   SentryBreadcrumb,
   SentryReporter,
@@ -10,8 +11,8 @@ import type {
   TransactionName,
 } from '../types';
 import type { PerformanceIssue } from '../../../contexts/PerformanceContext/types';
-import { isSentryInitialized } from '../init/index';
 import { createTransactionWrapper, type SentrySpanInternal } from './types';
+import { isSentryInitialized } from '../init/index';
 
 /** Create the Sentry reporter instance */
 export function createSentryReporter(): SentryReporter {

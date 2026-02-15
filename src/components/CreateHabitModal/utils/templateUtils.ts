@@ -3,8 +3,9 @@
  *
  * Helper functions for template data extraction and transformation.
  */
-import { DEFAULT_EMOJI } from '../constants';
+
 import type { HabitTemplate } from '../types';
+import { DEFAULT_EMOJI } from '../constants';
 
 /** Extract emoji and cleaned name from a habit template */
 export function extractTemplateDetails(template: HabitTemplate): {

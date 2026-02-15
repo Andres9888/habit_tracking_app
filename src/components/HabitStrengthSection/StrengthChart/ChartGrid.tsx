@@ -8,14 +8,13 @@ import React from 'react';
 
 import { G, Line } from 'react-native-svg';
 
+import type { ChartGridProps } from './StrengthChart.types';
 import {
   CHART_PADDING_X,
   COLORS,
   GRID_LINE_DASH,
   GRID_LINE_OPACITY,
 } from '../constants';
-
-import type { ChartGridProps } from './StrengthChart.types';
 
 /**
  * Renders horizontal grid lines (0%, 50%, 100%) as dashed lines.

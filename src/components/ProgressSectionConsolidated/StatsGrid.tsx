@@ -8,16 +8,16 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 
-import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
-
+import type { StatsGridProps } from './StatsGridTypes';
 import { CompactStrengthRing } from './CompactStrengthRing';
 import { StatsRow } from './StatsRow';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useStatCards } from './useStatCards';
 import { useStatsGridAnimations } from './useStatsGridAnimations';
-import type { StatsGridProps } from './StatsGridTypes';
 
 /**
  * StatsGrid - Compact 2x2 statistics grid with strength ring

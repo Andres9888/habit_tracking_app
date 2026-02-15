@@ -3,11 +3,13 @@
  */
 
 import { Pressable, Text, type LayoutChangeEvent } from 'react-native';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
 import * as Haptics from 'expo-haptics';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
+import type { BrowseTab } from '../TemplatesScreen.types';
 import { styles } from '../../templates/templatesScreenStyles';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import type { BrowseTab } from '../TemplatesScreen.types';
 
 interface TabBarProps {
   activeTab: BrowseTab;

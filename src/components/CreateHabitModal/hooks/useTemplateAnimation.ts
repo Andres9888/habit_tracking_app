@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useRef } from 'react';
+
 import { Animated, Easing } from 'react-native';
+import { useCallback, useMemo, useRef } from 'react';
 
 export const useTemplateAnimation = () => {
   const anim = useRef(new Animated.Value(0)).current;

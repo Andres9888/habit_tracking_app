@@ -5,7 +5,13 @@
  * Implements Edge Case: "Deleted habit on server: Orphaned completions discarded gracefully"
  */
 
-import { checkHabitsExistence } from './checkExistence';
+import type {
+  CleanupOrphansConfig,
+  CleanupOrphansDeps,
+  CleanupOrphansEvent,
+  CleanupOrphansEventListener,
+  CleanupOrphansResult,
+} from './types';
 import {
   buildCleanupResult,
   createCleanupEvent,
@@ -15,14 +21,8 @@ import {
   groupOperationsByHabit,
   identifyOrphans,
 } from './helpers';
+import { checkHabitsExistence } from './checkExistence';
 import { notifyOrphansFound, removeOrphans } from './removeOrphans';
-import type {
-  CleanupOrphansConfig,
-  CleanupOrphansDeps,
-  CleanupOrphansEvent,
-  CleanupOrphansEventListener,
-  CleanupOrphansResult,
-} from './types';
 
 /** Default batch size for cleanup */
 export const DEFAULT_CLEANUP_BATCH_SIZE = 100;

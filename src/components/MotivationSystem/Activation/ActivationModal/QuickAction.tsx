@@ -1,11 +1,14 @@
+
 import React, { useCallback } from 'react';
 import { Pressable, Text } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+
 import { SPRING_BUTTON } from './constants';
 
 interface QuickActionProps {

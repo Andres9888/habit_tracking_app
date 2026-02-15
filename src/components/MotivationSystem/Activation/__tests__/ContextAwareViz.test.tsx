@@ -13,9 +13,11 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
-import { ContextAwareViz, type VisualizationData } from '../ContextAwareViz';
+
 import type { MotivationLevel } from '../MotivationCheck';
+import { ContextAwareViz, type VisualizationData } from '../ContextAwareViz';
 
 // Mock expo-haptics
 jest.mock('expo-haptics', () => ({

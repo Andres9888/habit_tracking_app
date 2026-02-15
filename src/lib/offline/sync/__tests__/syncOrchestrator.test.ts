@@ -5,11 +5,11 @@
  * FIFO processing, event emission, and error handling.
  */
 
-import { SyncOrchestrator } from '../SyncOrchestrator';
 import type { OfflineQueueManagerAPI } from '../../queueManager';
-import { OfflineSyncManager } from '../../syncManager';
 import type { OfflineQueueState, OfflineOperation } from '../../queue';
 import type { SyncOrchestratorEvent } from '../types';
+import { OfflineSyncManager } from '../../syncManager';
+import { SyncOrchestrator } from '../SyncOrchestrator';
 
 // Mock timer functions
 jest.useFakeTimers();

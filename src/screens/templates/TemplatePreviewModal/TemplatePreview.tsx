@@ -4,13 +4,14 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useAppTheme } from '../../../theme';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { styles as baseStyles } from './styles';
+
 import type { TemplatePreviewProps } from './types';
+import { styles as baseStyles } from './styles';
+import { useAppTheme } from '../../../theme';
 
 const localStyles = StyleSheet.create({
   templateDescription: {
+    color: '#78716c', // stone-500
     fontSize: 17,
     lineHeight: 22,
     textAlign: 'center',
@@ -23,7 +24,6 @@ export function TemplatePreview({
   icon,
 }: TemplatePreviewProps) {
   const theme = useAppTheme();
-  const { colors } = useThemeColors();
 
   return (
     <View style={baseStyles.previewContainer}>
@@ -38,10 +38,7 @@ export function TemplatePreview({
       <Text
         style={[
           localStyles.templateDescription,
-          {
-            color: colors.text.secondary,
-            fontFamily: theme.custom.fontFamilies.primary.text,
-          },
+          { fontFamily: theme.custom.fontFamilies.primary.text },
         ]}
       >
         {description}

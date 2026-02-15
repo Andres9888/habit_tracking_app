@@ -4,13 +4,15 @@
  * Extracted from useCreateHabitModal to separate reminder-specific logic
  * from the main modal orchestration.
  */
+
 import { Alert, Platform } from 'react-native';
+
+import type { Id } from '../../../../convex/_generated/dataModel';
 import {
   cancelHabitReminder,
   ensureNotificationPermissions,
   scheduleHabitReminder,
 } from '../../../utils/notifications';
-import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface ScheduleReminderParams {
   habitId: Id<'habits'>;

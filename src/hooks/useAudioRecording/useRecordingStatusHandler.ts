@@ -5,12 +5,14 @@
  */
 
 import { useCallback, useRef } from 'react';
+
 import { Audio } from 'expo-av';
-import type { RecordingState } from './types';
+
 import type {
   SetStatus,
   UseRecordingStatusHandlerOptions,
 } from './useRecordingStatusHandler.types';
+import type { RecordingState } from './types';
 
 export function useRecordingStatusHandler(
   setStatus: SetStatus,

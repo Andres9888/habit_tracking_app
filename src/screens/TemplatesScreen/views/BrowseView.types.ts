@@ -4,12 +4,13 @@
 
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { LayoutChangeEvent, ScrollView } from 'react-native';
-import type { Doc, Id } from '../../../../convex/_generated/dataModel';
-import type { SortOption } from '../../templates/constants';
+
 import type {
   BrowseTab,
   TemplateCustomizations,
 } from '../TemplatesScreen.types';
+import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import type { SortOption } from '../../templates/constants';
 
 export interface BrowseViewAnimations {
   contentAnimatedStyle: AnimatedStyle;

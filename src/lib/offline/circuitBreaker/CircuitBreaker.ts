@@ -8,7 +8,6 @@ import type {
   ClassifiedError,
   ErrorCategory,
 } from '../types';
-import { DEFAULT_CIRCUIT_CONFIG } from './config';
 import {
   createInitialState,
   transitionState,
@@ -17,6 +16,7 @@ import {
   shouldTransitionToOpen,
   type CircuitStateData,
 } from './state';
+import { DEFAULT_CIRCUIT_CONFIG } from './config';
 
 export class CircuitBreaker {
   private config: CircuitBreakerConfig;

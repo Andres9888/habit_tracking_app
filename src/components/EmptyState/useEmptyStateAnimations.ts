@@ -4,12 +4,14 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withDelay,
 } from 'react-native-reanimated';
+
 import type { EmptyStateVariant } from './types';
 
 const SPRING_CONFIG = { damping: 15, stiffness: 150 };

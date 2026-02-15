@@ -5,16 +5,16 @@
  * Implements FR-005 (FIFO processing order).
  */
 
-import type { OfflineOperation } from '../../queue';
-import type { OfflineQueueManagerAPI } from '../../queueManager';
-import type { OfflineSyncManager } from '../../syncManager';
-import type { ToggleSyncExecutor } from '../types';
 import type {
   CompletionStateChecker,
   ConflictEventListener,
   ConflictResolverConfig,
   ConflictResolution,
 } from '../conflictResolver';
+import type { OfflineOperation } from '../../queue';
+import type { OfflineQueueManagerAPI } from '../../queueManager';
+import type { OfflineSyncManager } from '../../syncManager';
+import type { ToggleSyncExecutor } from '../types';
 
 /**
  * Result of processing a single operation

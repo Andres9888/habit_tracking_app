@@ -3,8 +3,9 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { getSentryReporter } from '../reporter/index';
+
 import type { SentryTransaction } from '../types';
+import { getSentryReporter } from '../reporter/index';
 
 /**
  * Hook for tracking screen/navigation changes.

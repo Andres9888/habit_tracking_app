@@ -4,8 +4,8 @@
  * handling edge cases like deleted or newly added habits.
  */
 
-import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 export function applyOptimisticReorder(
   habits: Habit[],

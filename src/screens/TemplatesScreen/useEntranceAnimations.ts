@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
 interface UseEntranceAnimationsOptions {

@@ -1,10 +1,11 @@
-import type { HabitsModalsState } from './types';
-import type { ModalVisibilityState } from './useModalVisibilityState';
-import type { HabitSelectionState } from './useHabitSelectionState';
+
 import type {
   HandlersReturn,
   ExtraState,
 } from './buildModalsStateReturnValue.types';
+import type { HabitSelectionState } from './useHabitSelectionState';
+import type { HabitsModalsState } from './types';
+import type { ModalVisibilityState } from './useModalVisibilityState';
 
 /**
  * Builds the complete HabitsModalsState return value by combining visibility state,

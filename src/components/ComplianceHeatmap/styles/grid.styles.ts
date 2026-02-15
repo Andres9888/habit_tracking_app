@@ -3,9 +3,10 @@
  */
 
 import { StyleSheet } from 'react-native';
+
+import { CELL_SIZE } from '../ComplianceHeatmap.constants';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
-import { CELL_SIZE } from '../ComplianceHeatmap.constants';
 
 export const gridStyles = StyleSheet.create({
   cell: {

@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { Pressable, StyleSheet, Text, ViewStyle } from 'react-native';
-import { StatusIndicator } from './StatusIndicator';
+
 import type { StatusLevel } from '../types';
+import { StatusIndicator } from './StatusIndicator';
 
 interface DashboardFABProps {
   currentFPS: number;

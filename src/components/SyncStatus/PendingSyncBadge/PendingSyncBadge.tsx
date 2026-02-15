@@ -12,6 +12,7 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { Cloud } from 'lucide-react-native';
 

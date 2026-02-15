@@ -3,8 +3,9 @@
  * Tests consecutive completion counting logic
  */
 
-import { computeCurrentStreakFromDates } from '../streak';
 import { format, subDays } from 'date-fns';
+
+import { computeCurrentStreakFromDates } from '../streak';
 
 describe('streak', () => {
   describe('computeCurrentStreakFromDates', () => {

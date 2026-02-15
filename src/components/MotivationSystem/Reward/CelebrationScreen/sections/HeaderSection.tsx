@@ -1,4 +1,6 @@
+
 import React from 'react';
+
 import { AnimatedContent } from '../components/animations/AnimatedContent';
 import { CelebrationHeader } from '../components/CelebrationHeader';
 

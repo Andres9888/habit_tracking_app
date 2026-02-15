@@ -4,11 +4,12 @@
  */
 
 import { View } from 'react-native';
+
 import Animated, {
   FadeInDown,
   type AnimatedStyle,
 } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme/ThemeContext';
+
 import { styles } from '../../templates/templatesScreenStyles';
 
 interface BrowseHeaderProps {
@@ -16,15 +17,13 @@ interface BrowseHeaderProps {
 }
 
 export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
-  const { colors } = useThemeColors();
-
   return (
     <Animated.View style={[styles.header, animatedStyle]}>
       <View>
         <Animated.Text
           entering={FadeInDown.delay(0).springify().damping(18)}
           style={{
-            color: colors.text.primary,
+            color: '#1c1917',
             fontSize: 22,
             fontWeight: '600',
             letterSpacing: 0.35,
@@ -36,7 +35,7 @@ export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
         <Animated.Text
           entering={FadeInDown.delay(50).springify().damping(18)}
           style={{
-            color: colors.text.secondary,
+            color: '#78716c',
             fontSize: 17,
             letterSpacing: -0.41,
             lineHeight: 22,

@@ -2,9 +2,11 @@
  * Event handlers hook for TemplateScienceModal
  */
 
-import { useCallback, useState, useRef, useEffect } from 'react';
 import { Linking, Share } from 'react-native';
+import { useCallback, useState, useRef, useEffect } from 'react';
+
 import * as Haptics from 'expo-haptics';
+
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 interface UseModalHandlersProps {

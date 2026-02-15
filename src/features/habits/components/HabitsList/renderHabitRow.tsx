@@ -7,9 +7,10 @@
  * the animated wrapper to avoid unnecessary native-driver overhead.
  */
 
+import type { RenderItemParams } from 'react-native-draggable-flatlist';
 import React from 'react';
 import { Animated } from 'react-native';
-import type { RenderItemParams } from 'react-native-draggable-flatlist';
+
 import type { Habit } from '../../types';
 
 interface RenderHabitRowOptions {

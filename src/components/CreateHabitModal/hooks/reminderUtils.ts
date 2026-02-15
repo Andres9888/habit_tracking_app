@@ -1,5 +1,6 @@
-import { parseReminderTime } from '../utils';
+
 import type { ReminderOption } from '../components/ReminderSelector';
+import { parseReminderTime } from '../utils';
 
 /**
  * Derives the reminder option from habit's reminder time

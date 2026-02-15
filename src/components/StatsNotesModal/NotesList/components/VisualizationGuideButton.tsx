@@ -4,11 +4,12 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, TouchableOpacity } from 'react-native';
+
 import { Eye } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import { colors } from '../../../../theme/colors';
-import { AnimatedPressable } from '../../../ui';
 
 interface VisualizationGuideButtonProps {
   onPress: () => void;
@@ -17,7 +18,7 @@ interface VisualizationGuideButtonProps {
 export const VisualizationGuideButton: React.FC<
   VisualizationGuideButtonProps
 > = ({ onPress }) => (
-  <AnimatedPressable
+  <TouchableOpacity
     accessibilityLabel='Open goal visualization guide'
     accessibilityRole='button'
     className='flex-row items-center justify-center gap-2 rounded-2xl py-3.5 active:opacity-90'
@@ -36,5 +37,5 @@ export const VisualizationGuideButton: React.FC<
     <View className='rounded-full bg-white/20 px-2 py-0.5'>
       <Text className='text-xs font-medium text-white'>Huberman</Text>
     </View>
-  </AnimatedPressable>
+  </TouchableOpacity>
 );

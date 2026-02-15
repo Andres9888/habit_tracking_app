@@ -1,10 +1,11 @@
+
 import { View, Text, Pressable } from 'react-native';
-import { useAppTheme } from '../../theme';
-import { useThemeColors } from '../../theme/ThemeContext';
-import { getInterventionSuggestion } from './utils';
-import { styles } from './styles';
+
 import type { AtRiskHabit } from './types';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { getInterventionSuggestion } from './utils';
+import { styles } from './styles';
+import { useAppTheme } from '../../theme';
 
 interface HabitCardProps {
   habit: AtRiskHabit;
@@ -13,7 +14,6 @@ interface HabitCardProps {
 
 export function HabitCard({ habit, onPress }: HabitCardProps) {
   const theme = useAppTheme();
-  const { colors, isDark } = useThemeColors();
 
   return (
     <Pressable
@@ -22,7 +22,7 @@ export function HabitCard({ habit, onPress }: HabitCardProps) {
       accessibilityRole='button'
       style={({ pressed }) => [
         styles.habitCard,
-        { backgroundColor: isDark ? colors.gray[100] : '#FFFBEB' },
+        { backgroundColor: '#FFFBEB' },
         pressed && { opacity: 0.7 },
       ]}
       onPress={() => onPress(habit._id)}

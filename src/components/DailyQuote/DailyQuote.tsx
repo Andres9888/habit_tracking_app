@@ -5,8 +5,10 @@
 
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Quote, RefreshCw } from 'lucide-react-native';
+
 import { QUOTES } from './quotes';
 import { useThemeColors } from '../../theme/ThemeContext';
 

@@ -1,5 +1,8 @@
+
 import React, { useCallback, useEffect } from 'react';
 import { Pressable, Text } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -8,7 +11,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { Play } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+
 import { SPRING_BUTTON } from './constants';
 
 interface StartNowButtonProps {

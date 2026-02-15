@@ -1,11 +1,14 @@
-import { format } from 'date-fns';
+
 import { View } from 'react-native';
+
+import { format } from 'date-fns';
+
 import type { Id } from '../../../convex/_generated/dataModel';
-import { useHabitCalendarViewLogic } from './HabitCalendarView.hooks';
-import { CalendarHeader } from './CalendarHeader';
-import { DayNamesRow } from './DayNamesRow';
 import { CalendarDay } from './CalendarDay';
+import { CalendarHeader } from './CalendarHeader';
 import { CalendarLegend } from './CalendarLegend';
+import { DayNamesRow } from './DayNamesRow';
+import { useHabitCalendarViewLogic } from './HabitCalendarView.hooks';
 
 interface HabitCalendarViewProps {
   habitId: Id<'habits'>;

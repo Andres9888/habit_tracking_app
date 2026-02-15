@@ -8,12 +8,13 @@
  */
 
 import { renderHook } from '@testing-library/react-native';
-import { useOfflineHabitState } from '../useOfflineHabitState';
+
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import {
   createOfflineQueueManager,
   resetOfflineQueueManager,
 } from '../../../../lib/offline/queueManager';
-import type { Id } from '../../../../../convex/_generated/dataModel';
+import { useOfflineHabitState } from '../useOfflineHabitState';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({

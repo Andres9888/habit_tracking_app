@@ -1,28 +1,26 @@
-/* eslint-disable max-lines */
 /**
- * EmptyState - OPTIMIZED: animation (respects reduce-motion), dark mode, accessible
+ * EmptyState - OPTIMIZED: FadeInUp animation, better visuals, dark mode
  */
+
 import React from 'react';
 import { View, Text } from 'react-native';
+
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import { BarChart3, Sparkles } from 'lucide-react-native';
-import Animated from 'react-native-reanimated';
+
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { useReducedMotionEntry } from '../../../components/EmptyState/useReducedMotionEntry';
+
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export const EmptyState: React.FC = () => {
   const { colors, isDark } = useThemeColors();
-  const { entry } = useReducedMotionEntry();
 
   return (
-    <View
-      accessible
-      accessibilityLabel='No analytics yet. Create habits and track them for a few days to unlock your insights dashboard.'
-      accessibilityRole='text'
-      style={{ alignItems: 'center', flex: 1, justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}
-    >
+    <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}>
       {/* Illustration */}
       <Animated.View
-        entering={entry(0)}
+        entering={anim(0)}
         style={{
           alignItems: 'center',
           backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
@@ -42,7 +40,7 @@ export const EmptyState: React.FC = () => {
 
       {/* Title */}
       <Animated.Text
-        entering={entry(50)}
+        entering={anim(50)}
         style={{
           color: colors.text.primary,
           fontSize: 22,
@@ -57,7 +55,7 @@ export const EmptyState: React.FC = () => {
 
       {/* Description */}
       <Animated.Text
-        entering={entry(100)}
+        entering={anim(100)}
         style={{
           color: colors.text.secondary,
           fontSize: 17,
@@ -73,7 +71,7 @@ export const EmptyState: React.FC = () => {
 
       {/* Steps Card */}
       <Animated.View
-        entering={entry(150)}
+        entering={anim(150)}
         style={{
           backgroundColor: colors.card,
           borderRadius: 16,

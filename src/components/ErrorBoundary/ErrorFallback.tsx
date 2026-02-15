@@ -3,11 +3,11 @@
 import React, { useRef, useState } from 'react';
 import { Linking, Pressable, Text, View } from 'react-native';
 
-import { useThemeColors } from '../../theme/ThemeContext';
 import { RetryButton } from './RetryButton';
 import { SecondaryActions } from './SecondaryActions';
 import { SuggestionsCard } from './SuggestionsCard';
-import { useStyles } from './errorFallbackStyles';
+import { getStyles } from './errorFallbackStyles';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const SUPPORT_EMAIL = 'support@chainday.app';
 const MAX_RETRIES = 3;
@@ -27,8 +27,8 @@ export function ErrorFallback({
 }: ErrorFallbackProps) {
   const retryCountRef = useRef(0);
   const [showLogout, setShowLogout] = useState(false);
-  const { colors } = useThemeColors();
-  const styles = useStyles();
+  const colors = useThemeColors();
+  const styles = getStyles();
 
   const handleRetry = () => {
     retryCountRef.current += 1;

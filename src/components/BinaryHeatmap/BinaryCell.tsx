@@ -8,12 +8,13 @@
  */
 
 import React, { memo } from 'react';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import type { BinaryCellProps } from './types';
-import { getCellState, getBinaryCellAccessibilityLabel } from './utils';
-import { getBackgroundColor } from './BinaryCell.helpers';
 import { ANIMATION, COLORS } from './constants';
+import { getBackgroundColor } from './BinaryCell.helpers';
+import { getCellState, getBinaryCellAccessibilityLabel } from './utils';
 import { styles } from './BinaryCell.styles';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 

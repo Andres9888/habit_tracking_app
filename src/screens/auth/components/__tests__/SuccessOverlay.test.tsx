@@ -1,4 +1,6 @@
+
 import { render, act } from '@testing-library/react-native';
+
 import { SuccessOverlay } from '../SuccessOverlay';
 
 // Mock react-native-reanimated

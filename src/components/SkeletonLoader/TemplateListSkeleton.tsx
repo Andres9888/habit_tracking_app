@@ -2,10 +2,12 @@
  * TemplateListSkeleton - Skeleton for template list in CreateHabitModal
  * Matches layout: emoji icon + title/subtitle rows
  */
+
 import React from 'react';
 import { View } from 'react-native';
-import { SkeletonLoader } from './SkeletonLoader';
+
 import type { ReduceMotionProps } from './types';
+import { SkeletonLoader } from './SkeletonLoader';
 
 function TemplateItemSkeleton({ reduceMotion }: ReduceMotionProps) {
   return (

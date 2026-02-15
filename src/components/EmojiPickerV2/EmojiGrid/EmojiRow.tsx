@@ -1,9 +1,10 @@
-import { memo } from 'react';
-import { View } from 'react-native';
 
+import { View } from 'react-native';
+import { memo } from 'react';
+
+import { EMOJIS_PER_ROW, type EmojiRowProps } from './types';
 import { EmojiCell } from './EmojiCell';
 import { styles } from './styles';
-import { EMOJIS_PER_ROW, type EmojiRowProps } from './types';
 
 /**
  * Memoized emoji row component

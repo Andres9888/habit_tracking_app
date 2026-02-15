@@ -1,10 +1,11 @@
 /**
  * useDraftRecovery - Internal hook for draft recovery on mount
  */
+
 import { useEffect, useState } from 'react';
 
-import { getDraft } from './storage';
 import type { DraftContentType } from './types';
+import { getDraft } from './storage';
 
 interface UseDraftRecoveryOptions {
   habitId: string;

@@ -3,8 +3,9 @@
  * Event handlers for schedule form interactions
  */
 
-import { useCallback, Dispatch, SetStateAction } from 'react';
 import { Platform } from 'react-native';
+import { useCallback, Dispatch, SetStateAction } from 'react';
+
 import * as Haptics from 'expo-haptics';
 
 export function useScheduleHandlers(

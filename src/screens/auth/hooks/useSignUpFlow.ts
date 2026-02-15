@@ -1,11 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { useSignUp } from '@clerk/clerk-expo';
-import { useState } from 'react';
+
 import { Alert } from 'react-native';
+import { useState } from 'react';
+
+import { useSignUp } from '@clerk/clerk-expo';
+
+import { getClerkErrorMessage } from '../utils/getClerkErrorMessage';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail, validatePassword } from '../../../utils/validation';
-import { getClerkErrorMessage } from '../utils/getClerkErrorMessage';
-import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 
 export function useSignUpFlow() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -51,7 +53,7 @@ export function useSignUpFlow() {
       setPendingVerification(true);
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', getClerkErrorMessage(error, ERROR_MESSAGES.AUTH.SIGN_UP_FAILED));
+      Alert.alert('Error', getClerkErrorMessage(error, 'Failed to sign up'));
     } finally {
       setIsLoading(false);
     }
@@ -80,13 +82,13 @@ export function useSignUpFlow() {
         await setActive({ session: attempt.createdSessionId });
       } else {
         if (__DEV__) console.error(JSON.stringify(attempt, null, 2));
-        Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_UP_VERIFICATION_INCOMPLETE);
+        Alert.alert('Error', 'Verification incomplete. Please try again.');
       }
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert(
         'Error',
-        getClerkErrorMessage(error, ERROR_MESSAGES.AUTH.SIGN_UP_VERIFICATION_INCOMPLETE)
+        getClerkErrorMessage(error, 'Failed to verify email')
       );
     } finally {
       setIsLoading(false);

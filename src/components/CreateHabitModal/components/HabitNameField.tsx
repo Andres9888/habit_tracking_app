@@ -1,6 +1,9 @@
-import { memo, useCallback, useState } from 'react';
+
 import { Text, TextInput, View } from 'react-native';
+import { memo, useCallback, useState } from 'react';
+
 import Animated from 'react-native-reanimated';
+
 import STRINGS from '../../../constants/strings';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import {

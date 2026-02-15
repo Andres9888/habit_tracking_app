@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 

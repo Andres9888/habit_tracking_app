@@ -10,10 +10,11 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
 
-import { LoadingSkeleton } from '../LoadingSkeleton';
 import { LoadingSkeleton as ExportedLoadingSkeleton } from '../index';
+import { LoadingSkeleton } from '../LoadingSkeleton';
 
 describe('LoadingSkeleton', () => {
   describe('Rendering', () => {

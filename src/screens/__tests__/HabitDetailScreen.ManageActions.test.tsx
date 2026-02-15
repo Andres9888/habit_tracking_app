@@ -12,8 +12,9 @@
  */
 
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { Alert } from 'react-native';
+
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 
 // Mock modules before imports
 jest.mock('react-native-safe-area-context', () => ({

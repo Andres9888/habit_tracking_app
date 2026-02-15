@@ -4,13 +4,15 @@
  */
 
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import { Text, Pressable, GestureResponderEvent } from 'react-native';
+
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Wand2, Crown, Check } from 'lucide-react-native';
 import { clsx } from 'clsx';
+
 import { SparkleAnimation } from './SparkleAnimation';
-import type { ViewStyle } from 'react-native';
 
 interface CompactButtonProps {
   isPremium: boolean;

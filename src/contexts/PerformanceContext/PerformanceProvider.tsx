@@ -5,16 +5,17 @@
  */
 
 import React, { useEffect, useMemo, useCallback } from 'react';
-import { PerformanceContext } from './context';
+
 import type { PerformanceConfig, PerformanceProviderProps } from './types';
-import { DEFAULT_CONFIG } from './types';
-import { createContextCallbacks } from './createContextCallbacks';
-import { usePerformanceMonitor } from './usePerformanceMonitor';
 import {
   isSentryEnabled,
   reportFrameIssue,
   createSentryIssueHandler,
 } from '../../lib/sentry';
+import { DEFAULT_CONFIG } from './types';
+import { PerformanceContext } from './context';
+import { createContextCallbacks } from './createContextCallbacks';
+import { usePerformanceMonitor } from './usePerformanceMonitor';
 
 export function PerformanceProvider({
   children,

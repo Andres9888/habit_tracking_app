@@ -1,6 +1,6 @@
-import { colors } from '@/theme/colors';
 
 import type { SettingsColors } from './types';
+import { colors } from '@/theme/colors';
 
 export const HIGH_CONTRAST_COLORS: SettingsColors = {
   accent: '#facc15',

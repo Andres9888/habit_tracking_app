@@ -4,22 +4,22 @@
  * Handles the core sync cycle execution.
  */
 
-import type { OfflineOperation } from '../../queue';
-import type { OfflineQueueManagerAPI } from '../../queueManager';
-import { OfflineSyncManager } from '../../syncManager';
 import type {
   SyncOrchestratorResult,
   SyncOrchestratorState,
   SyncProgressCallback,
   ToggleSyncExecutor,
 } from '../types';
-import { operationsToSyncItems } from '../helpers';
+import type { OfflineOperation } from '../../queue';
+import type { OfflineQueueManagerAPI } from '../../queueManager';
 import {
   createSyncResult,
   createErrorResult,
   processBatchResults,
   createItemExecutor,
 } from '../resultHelpers';
+import { OfflineSyncManager } from '../../syncManager';
+import { operationsToSyncItems } from '../helpers';
 
 interface ExecuteSyncParams {
   operations: OfflineOperation[];

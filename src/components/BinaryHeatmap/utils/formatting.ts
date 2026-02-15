@@ -6,6 +6,7 @@
  */
 
 import { format, parseISO } from 'date-fns';
+
 import type { BinaryDay } from '../types';
 import { DAY_NAMES_FULL } from '../constants';
 

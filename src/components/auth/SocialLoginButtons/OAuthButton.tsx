@@ -1,4 +1,6 @@
+
 import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 
 import { usePressAnimation } from './usePressAnimation';

@@ -7,11 +7,12 @@
  */
 
 import React from 'react';
-import { ErrorState } from './ErrorState';
+
+import type { VoiceNotePlaybackUIProps } from './types';
 import { CompactPlayback } from './CompactPlayback';
+import { ErrorState } from './ErrorState';
 import { FullPlayback } from './FullPlayback';
 import { useVoiceNotePlayback } from './useVoiceNotePlayback';
-import type { VoiceNotePlaybackUIProps } from './types';
 
 export function VoiceNotePlaybackUI({
   audioUri,

@@ -5,8 +5,8 @@
  * @see docs/offline-habit-sync.md
  */
 
-import type { OfflineQueueState, QueueEvent } from './types';
 import type { ErrorCategory } from '../types';
+import type { OfflineQueueState, QueueEvent } from './types';
 import { calculateStats, findOperationIndex } from './helpers';
 import { createUpdateOperation } from './statusHelpers';
 

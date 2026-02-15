@@ -1,5 +1,8 @@
+
 import { useCallback } from 'react';
+
 import { SharedValue, withSpring } from 'react-native-reanimated';
+
 import { CHIP_TRANSFORMS, SPRING_CONFIGS } from '../animations';
 
 interface UseChipPressHandlersParams {

@@ -10,12 +10,14 @@ import {
   GestureResponderEvent,
   LayoutChangeEvent,
 } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+
 import type { ProgressBarProps } from './types';
 
 export function ProgressBar({

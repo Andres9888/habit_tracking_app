@@ -5,14 +5,15 @@
 
 import React from 'react';
 import { Modal as RNModal, View } from 'react-native';
+
 import type { ModalProps } from './Modal.types';
-import { styles } from './Modal.styles';
-import { useReduceMotion } from './useReduceMotion';
-import { useModalAnimations } from './useModalAnimations';
-import { useModalStyles } from './useModalStyles';
-import { useModalGestures } from './useModalGestures';
 import { ModalBackdrop } from './ModalBackdrop';
 import { ModalContent } from './ModalContent';
+import { styles } from './Modal.styles';
+import { useModalAnimations } from './useModalAnimations';
+import { useModalGestures } from './useModalGestures';
+import { useModalStyles } from './useModalStyles';
+import { useReduceMotion } from './useReduceMotion';
 
 export function Modal({
   visible,

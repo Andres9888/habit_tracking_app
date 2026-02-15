@@ -1,6 +1,9 @@
-import { memo } from 'react';
+
 import { TextInput, View } from 'react-native';
+import { memo } from 'react';
+
 import { Search, X } from 'lucide-react-native';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface EmojiPickerSearchProps {

@@ -3,6 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
+
 import type { NetworkStateType } from 'expo-network';
 
 /**

@@ -9,18 +9,19 @@
 
 import React from 'react';
 import { View, Modal as RNModal } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { VisionBoardPreviewProps } from './VisionBoardPreview.types';
-import { useVisionBoardPreview } from './useVisionBoardPreview';
-import { useVisionBoardGestures } from './useVisionBoardGestures';
 import {
   PreviewHeader,
   PreviewContent,
   NavigationControls,
 } from './components';
+import { useVisionBoardGestures } from './useVisionBoardGestures';
+import { useVisionBoardPreview } from './useVisionBoardPreview';
 
 export function VisionBoardPreview({
   items,

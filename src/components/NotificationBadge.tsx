@@ -1,5 +1,7 @@
-import { useEffect } from 'react';
+
 import { Text } from 'react-native';
+import { useEffect } from 'react';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -9,9 +11,8 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 
-import { colors } from '../theme/colors';
-import { useThemeColors } from '../theme/ThemeContext';
 import { borderRadius } from '../theme/spacing';
+import { colors } from '../theme/colors';
 import { typography } from '@/theme/typography';
 
 interface NotificationBadgeProps {
@@ -23,7 +24,6 @@ export function NotificationBadge({
   count = 1,
   visible = true,
 }: NotificationBadgeProps) {
-  const { colors: themeColors } = useThemeColors();
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 
@@ -62,7 +62,7 @@ export function NotificationBadge({
         {
           alignItems: 'center',
           backgroundColor: '#ef4444',
-          borderColor: themeColors.background,
+          borderColor: '#FAF8F5',
           borderRadius: borderRadius.full,
           borderWidth: 2,
           height: 18,

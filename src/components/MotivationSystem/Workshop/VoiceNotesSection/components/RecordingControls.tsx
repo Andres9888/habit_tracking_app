@@ -1,13 +1,15 @@
 /**
  * RecordingControls - Recording state machine UI
  */
+
 import React from 'react';
 import { View, Text } from 'react-native';
-import { RecordingState } from '../../../../../hooks/useAudioRecording';
+
 import { MicrophonePermissionDenied } from '../../MicrophonePermissionDenied';
-import { RecordingDurationDisplay } from './RecordingDurationDisplay';
 import { RecordingButtonGroup } from './RecordingButtonGroup';
+import { RecordingDurationDisplay } from './RecordingDurationDisplay';
 import { RecordingErrorState } from './RecordingErrorState';
+import { RecordingState } from '../../../../../hooks/useAudioRecording';
 
 interface RecordingControlsProps {
   state: RecordingState;

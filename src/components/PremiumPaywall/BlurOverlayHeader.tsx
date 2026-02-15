@@ -4,9 +4,11 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
+import { Ionicons } from '@expo/vector-icons';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
-import { Ionicons } from '@expo/vector-icons';
 
 interface BlurOverlayHeaderProps {
   disabled: boolean;

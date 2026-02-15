@@ -3,11 +3,13 @@
  */
 
 import { useEffect, useRef, useCallback } from 'react';
+
 import {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+
 import { MAX_LENGTH, MAX_CHARS } from './HabitNameField.constants';
 
 interface UseHabitNameFieldAnimationParams {

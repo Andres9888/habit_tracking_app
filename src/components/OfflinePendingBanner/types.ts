@@ -1,5 +1,6 @@
-import type { QueueStats } from '../../hooks/useOfflineQueue';
+
 import type { ProcessingState } from '../OfflineQueueProcessor';
+import type { QueueStats } from '../../hooks/useOfflineQueue';
 
 /**
  * Props for OfflinePendingBanner

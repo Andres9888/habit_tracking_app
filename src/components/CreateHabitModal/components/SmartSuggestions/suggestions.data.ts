@@ -1,5 +1,6 @@
-import { colors } from '@/theme/colors';
+
 import type { Suggestion } from './types';
+import { colors } from '@/theme/colors';
 
 /**
  * Curated list of habit suggestions for quick selection.

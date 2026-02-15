@@ -5,6 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -17,6 +18,7 @@ import Animated, {
   cancelAnimation,
 } from 'react-native-reanimated';
 import { Check, Zap } from 'lucide-react-native';
+
 import type { DayCircleProps } from './types';
 
 export function DayCircle({

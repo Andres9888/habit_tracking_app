@@ -9,6 +9,7 @@
 
 import React, { useEffect } from 'react';
 import { View, AccessibilityInfo } from 'react-native';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -18,15 +19,16 @@ import {
   withSequence,
   Easing,
 } from 'react-native-reanimated';
-import { Modal } from '../Modal';
-import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { ConfettiAnimation } from './ConfettiAnimation';
-import { BadgeSection } from './BadgeSection';
-import { ContentSection } from './ContentSection';
-import { ActionButtons } from './ActionButtons';
-import { ANIMATION_TIMING } from './constants';
-import { styles } from './styles';
+
 import type { StreakMilestoneCelebrationProps } from './types';
+import { ANIMATION_TIMING } from './constants';
+import { ActionButtons } from './ActionButtons';
+import { BadgeSection } from './BadgeSection';
+import { ConfettiAnimation } from './ConfettiAnimation';
+import { ContentSection } from './ContentSection';
+import { Modal } from '../Modal';
+import { styles } from './styles';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 const SPRING_CONFIG = { damping: 18, mass: 1, stiffness: 180 };
 

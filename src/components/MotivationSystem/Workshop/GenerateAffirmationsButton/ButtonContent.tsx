@@ -4,7 +4,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Wand2, Crown, Check } from 'lucide-react-native';
+
 import { SparkleAnimation } from './SparkleAnimation';
 
 interface ButtonContentProps {

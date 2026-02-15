@@ -1,4 +1,6 @@
+
 import { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
+
 import type { MilestoneDisplayState } from '../MilestoneProgressTypes';
 import { useAnimationEffects } from './useAnimationEffects';
 

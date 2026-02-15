@@ -2,8 +2,9 @@
  * Animation hooks for AnimatedColorButton.
  */
 
-import { useCallback, useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
+import { useCallback, useEffect, useRef } from 'react';
+
 import { Motion } from '../../../constants/motion';
 
 export function useColorButtonAnimations(isSelected: boolean) {

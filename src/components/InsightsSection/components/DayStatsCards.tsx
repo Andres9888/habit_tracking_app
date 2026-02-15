@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Trophy, AlertTriangle } from 'lucide-react-native';
+
 import type { DayStats } from '../InsightsSection.types';
 
 interface DayStatsCardsProps {

@@ -212,13 +212,15 @@
  * ```
  */
 
-import { MD3LightTheme, configureFonts } from 'react-native-paper';
 import type { MD3Theme } from 'react-native-paper';
+
+import { MD3LightTheme, configureFonts } from 'react-native-paper';
+
 import { colors } from './colors';
-import { typography, fontFamilies, fontWeights } from './typography';
-import { spacing, borderRadius, shadows, componentSpacing } from './spacing';
 import { durations, easings, springs } from './animations';
 import { iconSizes } from './iconSizes';
+import { spacing, borderRadius, shadows, componentSpacing } from './spacing';
+import { typography, fontFamilies, fontWeights } from './typography';
 
 /**
  * Custom Font Configuration for React Native Paper

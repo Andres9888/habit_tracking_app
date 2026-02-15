@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Text, Pressable } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,

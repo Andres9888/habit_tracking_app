@@ -3,6 +3,7 @@
  */
 
 import { Dimensions } from 'react-native';
+
 import { spacing } from '../../theme/spacing';
 
 const { width: screenWidth } = Dimensions.get('window');

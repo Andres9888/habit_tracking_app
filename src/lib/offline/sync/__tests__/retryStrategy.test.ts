@@ -5,6 +5,7 @@
  * Covers FR-006: Implement retry logic with exponential backoff
  */
 
+import type { ClassifiedError, RetryContext } from '../../types';
 import {
   SYNC_RETRY_STRATEGY,
   FAST_SYNC_RETRY_STRATEGY,
@@ -16,7 +17,6 @@ import {
   updateSyncRetryContext,
   getTimeUntilSyncRetry,
 } from '../retryStrategy';
-import type { ClassifiedError, RetryContext } from '../../types';
 
 // Mock Math.random for deterministic jitter testing
 const mockRandom = jest.spyOn(Math, 'random');

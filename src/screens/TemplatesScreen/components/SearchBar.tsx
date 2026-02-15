@@ -3,7 +3,9 @@
  */
 
 import { TextInput, View } from 'react-native';
+
 import { Search, X } from 'lucide-react-native';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';

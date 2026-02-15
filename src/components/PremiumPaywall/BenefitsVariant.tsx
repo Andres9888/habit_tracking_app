@@ -4,15 +4,16 @@
 
 import React from 'react';
 import { View, ScrollView, Modal } from 'react-native';
-import { SocialProofSection } from './SocialProofSection';
+
+import type { PremiumPaywallHandlers } from './usePremiumPaywall';
+import type { VariantConfig } from './PremiumPaywall.types';
+import { BenefitsCTAFooter } from './BenefitsCTAFooter';
+import { BenefitsFeatureCard } from './BenefitsFeatureCard';
 import { BenefitsHeader } from './BenefitsHeader';
 import { BenefitsHero } from './BenefitsHero';
-import { BenefitsFeatureCard } from './BenefitsFeatureCard';
-import { BenefitsCTAFooter } from './BenefitsCTAFooter';
 import { MOTIVATION_FEATURES } from './motivationFeatures';
-import type { VariantConfig } from './PremiumPaywall.types';
+import { SocialProofSection } from './SocialProofSection';
 import { useThemeColors } from '../../theme/ThemeContext';
-import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 
 interface BenefitsVariantProps {
   config: VariantConfig;

@@ -8,8 +8,9 @@
 
 import React from 'react';
 import { Text, Pressable } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import Animated from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import type { CategoryChipProps } from './CategoryChip.types';
 import { hexToRgba } from './CategoryChip.constants';

@@ -1,4 +1,6 @@
+
 import { View } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 export function SignUpHeader() {

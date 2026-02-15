@@ -3,8 +3,9 @@
  * Type definitions and constants for the Vision Board feature
  */
 
-import type { Id } from '../../../../../convex/_generated/dataModel';
 import { Dimensions } from 'react-native';
+
+import type { Id } from '../../../../../convex/_generated/dataModel';
 
 // ============================================================================
 // Types & Interfaces

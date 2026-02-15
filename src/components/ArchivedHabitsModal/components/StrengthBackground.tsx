@@ -1,4 +1,6 @@
+
 import { View } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 
 interface StrengthBackgroundProps {

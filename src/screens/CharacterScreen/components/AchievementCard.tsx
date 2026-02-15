@@ -1,7 +1,9 @@
+
 import { View, Text } from 'react-native';
-import { Trophy } from 'lucide-react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme/ThemeContext';
+import { Trophy } from 'lucide-react-native';
+
 import type { Achievement } from '../types';
 
 interface AchievementCardProps {
@@ -13,15 +15,12 @@ export function AchievementCard({
   achievement,
   delay = 0,
 }: AchievementCardProps) {
-  const { colors } = useThemeColors();
   return (
     <Animated.View
-      className='flex-row items-center gap-4 rounded-3xl border px-6 py-6'
+      className='flex-row items-center gap-4 rounded-3xl border border-stone-100 bg-white px-6 py-6'
       entering={FadeInDown.delay(delay).springify().damping(18)}
       style={{
-        backgroundColor: colors.card,
-        borderColor: colors.cardBorder,
-        shadowColor: colors.text.primary,
+        shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 16,
@@ -32,13 +31,14 @@ export function AchievementCard({
       </View>
       <View className='flex-1 flex-col'>
         <Text
-          className='font-semibold'
-          style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22, color: colors.text.primary }}
+          className='font-semibold text-[#1c1917]'
+          style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22 }}
         >
           {achievement.title}
         </Text>
         <Text
-          style={{ fontSize: 13, letterSpacing: -0.08, lineHeight: 18, color: colors.text.secondary }}
+          className='text-[#78716c]'
+          style={{ fontSize: 13, letterSpacing: -0.08, lineHeight: 18 }}
         >
           {achievement.description}
         </Text>

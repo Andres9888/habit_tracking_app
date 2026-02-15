@@ -23,9 +23,9 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { TIME_RANGE_OPTIONS } from './constants';
 import type { TimeRange, TimeRangeToggleProps } from './types';
+import { TIME_RANGE_OPTIONS } from './constants';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 

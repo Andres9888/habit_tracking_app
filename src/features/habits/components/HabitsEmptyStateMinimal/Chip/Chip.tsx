@@ -1,16 +1,16 @@
-import { useCallback } from 'react';
+
 import { Pressable, Text } from 'react-native';
+import { useCallback } from 'react';
+
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
-import { BORDER_RADIUS, TOUCH_TARGETS } from '../constants';
 import type { SuggestionChip } from '../types';
-import { useEmptyStateColors } from '../useEmptyStateColors';
+import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from '../constants';
 import { useChipAnimations } from './useChipAnimations';
-import { SHADOW_OPACITY } from '../../../../../constants';
+import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -24,7 +24,6 @@ export interface ChipProps {
 
 export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
   const { triggerSelection } = useHapticFeedback();
-  const colors = useEmptyStateColors();
   const {
     scale,
     translateY,
@@ -41,12 +40,12 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     backgroundColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [colors.chipBackground, colors.chipBackgroundSelected]
+      ['#ffffff', '#047857']
     ),
     borderColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [colors.chipBorder, colors.chipBorderSelected]
+      [COLORS.stone200, '#047857']
     ),
     opacity: entranceOpacity.value,
     shadowOpacity: shadowOpacity.value,
@@ -60,7 +59,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     color: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [colors.chipText, colors.chipTextSelected]
+      [COLORS.stone700, '#ffffff']
     ),
   }));
 
@@ -72,8 +71,8 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
 
   return (
     <AnimatedPressable
-      accessibilityHint={`Double tap to fill in "${chip.fullName}"`}
-      accessibilityLabel={chip.fullName}
+      accessibilityHint={`Select ${chip.fullName} habit category`}
+      accessibilityLabel={`Select ${chip.fullName}`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
       style={[
@@ -88,9 +87,9 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
           minHeight: TOUCH_TARGETS.chipHeight,
           paddingHorizontal: 10,
           paddingVertical: 8,
-          shadowColor: colors.chipShadow,
+          shadowColor: '#1c1917',
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: SHADOW_OPACITY.minimal,
+          shadowOpacity: 0.08,
           shadowRadius: 16,
         },
       ]}

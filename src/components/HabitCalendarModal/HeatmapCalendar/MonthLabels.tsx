@@ -1,4 +1,6 @@
+
 import { View, Text } from 'react-native';
+
 import { format } from 'date-fns';
 
 interface MonthLabelsProps {

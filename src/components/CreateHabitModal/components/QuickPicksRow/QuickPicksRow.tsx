@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+
 import {
   AccessibilityInfo,
   FlatList,
@@ -6,11 +6,13 @@ import {
   Text,
   View,
 } from 'react-native';
+import { memo, useCallback } from 'react';
+
+import type { QuickPickTemplate, QuickPicksRowProps } from './types';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { HUBERMAN_PHASES } from '../../../../constants/hubermanPhases';
-import { QuickPickCard } from './QuickPickCard';
 import { QUICK_PICK_TEMPLATES } from './constants';
-import type { QuickPickTemplate, QuickPicksRowProps } from './types';
+import { QuickPickCard } from './QuickPickCard';
 
 const QuickPicksRowComponent = ({
   selectedTemplateId,

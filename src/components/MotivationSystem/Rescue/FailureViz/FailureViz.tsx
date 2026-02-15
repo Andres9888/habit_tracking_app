@@ -6,13 +6,14 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
 import { clsx } from 'clsx';
 
 import type { FailureVizProps } from './FailureViz.types';
-import { VizFieldsList } from './VizFieldsList';
 import { StreakLossPreview } from './StreakLossPreview';
+import { VizFieldsList } from './VizFieldsList';
 import { useFailureVizAnimation } from './useFailureVizAnimation';
 
 export function FailureViz({

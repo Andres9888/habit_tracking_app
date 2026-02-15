@@ -1,13 +1,16 @@
+
 import { useState } from 'react';
+
 import { format } from 'date-fns';
-import { getEmojiAndName } from '../DraggableHabit/DraggableHabit.hooks';
+
+import type { CalendarView, Habit, TrackingEntry } from './types';
+import type { Id } from '../../../convex/_generated/dataModel';
 import {
   calculateBestStreak,
   calculateCompletionPercentage,
 } from '../../utils/habitCalculations';
 import { buildScheduleLabel, getLatestMissedBadge } from './utils';
-import type { CalendarView, Habit, TrackingEntry } from './types';
-import type { Id } from '../../../convex/_generated/dataModel';
+import { getEmojiAndName } from '../DraggableHabit/DraggableHabit.hooks';
 
 interface UseHabitCalendarModalProps {
   habit: Habit | null;

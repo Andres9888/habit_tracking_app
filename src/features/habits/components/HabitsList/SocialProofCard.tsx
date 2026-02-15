@@ -6,6 +6,7 @@
  */
 
 import { Text, View } from 'react-native';
+
 import { SOCIAL_PROOF } from './constants';
 
 export function SocialProofCard() {

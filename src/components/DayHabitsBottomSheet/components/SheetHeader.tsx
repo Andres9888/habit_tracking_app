@@ -1,4 +1,6 @@
+
 import { Pressable, Text, View } from 'react-native';
+
 import { X } from 'lucide-react-native';
 
 interface SheetHeaderProps {

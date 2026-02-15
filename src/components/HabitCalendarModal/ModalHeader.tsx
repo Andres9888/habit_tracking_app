@@ -1,7 +1,9 @@
+
 import { View, Pressable, Text } from 'react-native';
-import { MoreVertical } from 'lucide-react-native';
+
+import { X, MoreVertical } from 'lucide-react-native';
+
 import { useThemeColors } from '../../theme/ThemeContext';
-import { ModalCloseButton } from '../ui/ModalCloseButton';
 
 interface ModalHeaderProps {
   name: string;
@@ -17,27 +19,25 @@ export function ModalHeader({ name, onClose, onEdit }: ModalHeaderProps) {
       <Pressable
         accessibilityLabel='Habit options'
         accessibilityRole='button'
-        className='h-11 w-11 items-center justify-center rounded-full'
-        style={({ pressed }) => ({
-          backgroundColor: pressed
-            ? isDark ? '#4B5563' : '#e7e5e4'
-            : isDark ? '#374151' : 'transparent',
-        })}
+        className='h-10 w-10 items-center justify-center rounded-full'
+        hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+        style={{ backgroundColor: isDark ? '#374151' : 'transparent' }}
         onPress={onEdit}
       >
         <MoreVertical color={colors.text.primary} size={20} />
       </Pressable>
-      <Text
-        className='flex-1 text-center text-xl font-bold'
-        numberOfLines={1}
-        style={{ color: colors.text.primary }}
+      <Text className='text-xl font-bold' style={{ color: colors.text.primary }}>{name}</Text>
+      <Pressable
+        accessibilityHint='Close this modal'
+        accessibilityLabel='Close'
+        accessibilityRole='button'
+        className='h-10 w-10 items-center justify-center rounded-full'
+        hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+        style={{ backgroundColor: isDark ? '#374151' : '#f5f5f4' }}
+        onPress={onClose}
       >
-        {name}
-      </Text>
-      <ModalCloseButton
-        label='Close habit calendar'
-        onClose={onClose}
-      />
+        <X color={isDark ? '#9CA3AF' : '#57534e'} size={24} strokeWidth={2} />
+      </Pressable>
     </View>
   );
 }

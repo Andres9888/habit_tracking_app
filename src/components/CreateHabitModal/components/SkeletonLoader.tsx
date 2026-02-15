@@ -4,6 +4,7 @@
  */
 
 import { View } from 'react-native';
+
 import { SkeletonLoader as BaseSkeletonLoader } from '../../SkeletonLoader';
 
 type SkeletonWidth = number | 'auto' | `${number}%`;

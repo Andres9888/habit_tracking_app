@@ -2,6 +2,7 @@
  * Sync Orchestrator Helpers Tests
  */
 
+import type { OfflineOperation } from '../../queue';
 import {
   operationToSyncItem,
   operationsToSyncItems,
@@ -10,7 +11,6 @@ import {
   shouldSkipSync,
   DEFAULT_ORCHESTRATOR_CONFIG,
 } from '../helpers';
-import type { OfflineOperation } from '../../queue';
 
 describe('Sync Orchestrator Helpers', () => {
   const createOperation = (

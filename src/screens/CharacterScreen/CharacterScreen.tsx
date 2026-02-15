@@ -1,7 +1,10 @@
+
 import { View, ScrollView } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+
+import type { CharacterScreenProps } from './types';
 import {
   ScreenHeader,
   CharacterCard,
@@ -10,7 +13,7 @@ import {
   AchievementsSection,
 } from './components';
 import { MOCK_CHARACTER_DATA } from './constants';
-import type { CharacterScreenProps } from './types';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 function CharacterScreenContent({ onBack }: CharacterScreenProps) {
   const characterData = MOCK_CHARACTER_DATA;

@@ -1,6 +1,8 @@
+
 import { useCallback, useRef } from 'react';
-import type { Id } from '../../../convex/_generated/dataModel';
+
 import type { HabitStatus } from './types';
+import type { Id } from '../../../convex/_generated/dataModel';
 
 interface UseToggleDayHandlerParams {
   weekStatus: HabitStatus[];

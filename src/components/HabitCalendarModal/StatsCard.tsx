@@ -1,4 +1,6 @@
+
 import { View, Text } from 'react-native';
+
 import { getEmojiAndName } from '../DraggableHabit/DraggableHabit.hooks';
 
 interface StatsCardProps {

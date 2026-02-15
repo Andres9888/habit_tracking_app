@@ -4,10 +4,12 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import type { ModalFooterProps } from './types';
 import Button from '../../../components/Button/Button';
 import { styles } from './styles';
-import type { ModalFooterProps } from './types';
 
 export function ModalFooter({
   customColor,

@@ -1,4 +1,6 @@
+
 import React from 'react';
+
 import type { RescueHabitData } from '../../RescueMode.types';
 import { AnimatedContent } from '../AnimatedContent';
 import { StreakAtRiskHeader } from '../StreakAtRiskHeader';

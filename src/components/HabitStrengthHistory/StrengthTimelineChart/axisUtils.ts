@@ -2,8 +2,8 @@
  * X-axis label utilities for StrengthTimelineChart
  */
 
-import type { StrengthSnapshot } from '../types';
 import type { ChartDimensions, XAxisLabel } from './types';
+import type { StrengthSnapshot } from '../types';
 
 /**
  * Generate X-axis labels based on history length

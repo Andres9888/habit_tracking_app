@@ -1,17 +1,19 @@
+
 import { useCallback } from 'react';
+
 import type { CreateHabitModalProps, HabitTemplate } from '../types';
-import { useHabitForm } from './useHabitForm';
-import { useScienceModal } from './useScienceModal';
-import { useTemplateBrowser } from './useTemplateBrowser';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
-import { extractTemplateDetails } from '../utils';
-import { checkReminderPermissions } from './useHabitReminders';
-import { useCreateHabitHandlers } from './useCreateHabitHandlers';
 import {
   useVisibilityReset,
   useHabitData,
   useModalCleanup,
 } from './useCreateHabitModalEffects';
+import { checkReminderPermissions } from './useHabitReminders';
+import { extractTemplateDetails } from '../utils';
+import { useCreateHabitHandlers } from './useCreateHabitHandlers';
+import { useHabitForm } from './useHabitForm';
+import { useScienceModal } from './useScienceModal';
+import { useTemplateBrowser } from './useTemplateBrowser';
 
 export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   const { visible, onClose, habitToEdit } = props;

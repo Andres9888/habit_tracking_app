@@ -1,4 +1,6 @@
+
 import { Animated, View } from 'react-native';
+
 import type { Category, CategoryFilter, HabitTemplate } from '../types';
 import { CategoryFilters } from './CategoryFilters';
 import { TemplateHero } from './TemplateHero';

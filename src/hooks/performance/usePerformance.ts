@@ -4,8 +4,9 @@
  */
 
 import { useContext } from 'react';
-import { PerformanceContext } from '../../contexts/PerformanceContext';
+
 import type { PerformanceContextValue } from '../../contexts/PerformanceContext';
+import { PerformanceContext } from '../../contexts/PerformanceContext';
 
 /**
  * Hook to access performance monitoring context.

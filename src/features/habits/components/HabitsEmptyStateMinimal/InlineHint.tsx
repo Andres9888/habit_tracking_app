@@ -10,7 +10,7 @@
 import { Pressable, Text, View } from 'react-native';
 
 import type { InlineHintProps } from './types';
-import { useEmptyStateColors } from './useEmptyStateColors';
+import { COLORS } from './constants';
 
 /**
  * Hint section with navigation links in a vertical stack layout
@@ -23,7 +23,6 @@ export function InlineHint({
   onBrowseTemplates,
   onCreateCustom,
 }: InlineHintProps) {
-  const colors = useEmptyStateColors();
   return (
     <View
       style={{
@@ -35,7 +34,7 @@ export function InlineHint({
       {/* Row 1: "or explore" text */}
       <Text
         style={{
-          color: colors.textSecondary,
+          color: COLORS.stone600,
           fontSize: 13,
           lineHeight: 18,
           marginBottom: 10,
@@ -58,30 +57,27 @@ export function InlineHint({
           accessibilityLabel='Browse habit templates'
           accessibilityRole='button'
           style={({ pressed }) => ({
-            alignItems: 'center',
             backgroundColor: pressed
-              ? colors.linkBackgroundPressed
-              : colors.linkBackground,
-            borderColor: colors.linkBorder,
+              ? COLORS.emerald100
+              : 'rgba(209, 250, 229, 0.5)',
+            borderColor: 'rgba(167, 243, 208, 0.8)',
             borderRadius: 9999,
             borderWidth: 1,
-            justifyContent: 'center',
-            minHeight: 44,
             opacity: pressed ? 0.9 : 1,
-            paddingHorizontal: 16,
-            paddingVertical: 12,
+            paddingHorizontal: 12,
+            paddingVertical: 6,
           })}
           onPress={onBrowseTemplates}
         >
           <Text
             style={{
-              color: colors.linkText,
+              color: COLORS.emerald700,
               fontSize: 13,
               fontWeight: '600',
               lineHeight: 18,
             }}
           >
-            📋 browse templates
+            📋 templates
           </Text>
         </Pressable>
 
@@ -90,30 +86,27 @@ export function InlineHint({
           accessibilityLabel='Create custom habit'
           accessibilityRole='button'
           style={({ pressed }) => ({
-            alignItems: 'center',
             backgroundColor: pressed
-              ? colors.linkBackgroundPressed
-              : colors.linkBackground,
-            borderColor: colors.linkBorder,
+              ? COLORS.emerald100
+              : 'rgba(209, 250, 229, 0.5)',
+            borderColor: 'rgba(167, 243, 208, 0.8)',
             borderRadius: 9999,
             borderWidth: 1,
-            justifyContent: 'center',
-            minHeight: 44,
             opacity: pressed ? 0.9 : 1,
-            paddingHorizontal: 16,
-            paddingVertical: 12,
+            paddingHorizontal: 12,
+            paddingVertical: 6,
           })}
           onPress={onCreateCustom}
         >
           <Text
             style={{
-              color: colors.linkText,
+              color: COLORS.emerald700,
               fontSize: 13,
               fontWeight: '600',
               lineHeight: 18,
             }}
           >
-            ✨ create custom
+            ✨ custom habit
           </Text>
         </Pressable>
       </View>

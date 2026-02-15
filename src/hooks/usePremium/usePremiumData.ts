@@ -8,13 +8,14 @@
  * then fetches customer info + offerings in parallel.
  */
 
-import { useEffect, useState, useRef } from 'react';
-import { isPurchasesAvailable, Purchases } from '../../lib/purchases';
 import type {
   PurchasesPackage,
   CustomerInfo,
   CustomerInfoUpdateListener,
 } from 'react-native-purchases';
+import { useEffect, useState, useRef } from 'react';
+
+import { isPurchasesAvailable, Purchases } from '../../lib/purchases';
 
 const MAX_RETRIES = 10;
 const RETRY_DELAY_MS = 500;

@@ -4,8 +4,9 @@
  */
 
 import { useCallback, useMemo } from 'react';
-import { getSentryReporter } from '../reporter/index';
+
 import type { SentryBreadcrumb } from '../types';
+import { getSentryReporter } from '../reporter/index';
 
 /** Get level for HTTP status code */
 function getLevelForStatus(statusCode?: number): 'info' | 'warning' | 'error' {

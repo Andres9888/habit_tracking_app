@@ -1,41 +1,22 @@
-/**
- * @module DraggableHabitCard
- *
- * Pure rendering layer for a single habit card.
- *
- * Receives fully-resolved props (animated values, colors, handlers) from
- * the parent {@link DraggableHabit} orchestrator and renders the visual
- * structure:
- *
- * ```
- * Swipeable (optional — only when onArchive is provided)
- *   └─ Pressable
- *       └─ Animated.View (card shell: fade, translateY, scale)
- *           ├─ Accent left border strip (entrance animation)
- *           ├─ StrengthFillBackground (watercolor gradient)
- *           ├─ Archive flash overlay
- *           ├─ Highlight glow border overlay
- *           └─ CardContent (header + progress bar + chain + week badge)
- * ```
- *
- * Wrapped in `React.memo` to avoid FlatList re-render cascades.
- */
+/* eslint-disable max-lines */
 
-import React, { memo, useMemo } from 'react';
+import React from 'react';
 import { Animated, Pressable, StyleSheet } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
+
 import ReAnimated from 'react-native-reanimated';
+import { Swipeable } from 'react-native-gesture-handler';
+
+import type { DraggableHabitCardProps } from './DraggableHabitCard.types';
 import { ArchiveAction } from './ArchiveAction';
 import { CardContent } from './CardContent';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
-import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
-import { buildCardStyle } from './cardStyles';
-import type { DraggableHabitCardProps } from './DraggableHabitCard.types';
 import { borderRadius } from '../../theme/spacing';
+import { buildCardStyle } from './cardStyles';
+import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
 
 export type { DraggableHabitCardProps } from './DraggableHabitCard.types';
 
-function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
+export function DraggableHabitCard(props: DraggableHabitCardProps) {
   const effectiveAccentColor = getEffectiveAccentColor(props.accentColor);
   const borderAccentColor = getBorderAccentColor(
     props.highContrastMode,
@@ -50,22 +31,13 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     translateY: props.translateY,
   });
 
-  // PERF: Memoize pressable style to prevent recreating function on every render
-  const pressableStyle = useMemo(
-    () =>
-      ({ pressed }: { pressed: boolean }) => ({
-        opacity: pressed ? 0.92 : 1,
-      }),
-    []
-  );
-
   const habitCard = (
     <ReAnimated.View style={props.entranceCardStyle}>
       <Pressable
-        accessibilityHint={`Tap to view details${props.onArchive ? ', swipe left to archive' : ''}${props.onLongPress ? ', long press to reorder' : ''}`}
+        accessibilityHint='Tap to view habit details, long press for quick actions'
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
-        style={pressableStyle}
+        style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
         onLongPress={props.handleLongPress}
         onPress={() => props.onPress?.(props.habit)}
         onPressIn={props.handlePressIn}
@@ -140,5 +112,3 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     </Swipeable>
   );
 }
-
-export const DraggableHabitCard = memo(DraggableHabitCardComponent);

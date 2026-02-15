@@ -4,11 +4,13 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { ChevronRight } from 'lucide-react-native';
+
 import Animated from 'react-native-reanimated';
-import type { VariantConfig } from './PremiumPaywall.types';
+import { ChevronRight } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { PremiumPaywallHandlers } from './usePremiumPaywall';
+import type { VariantConfig } from './PremiumPaywall.types';
 
 interface BenefitsCTAFooterProps {
   config: VariantConfig;

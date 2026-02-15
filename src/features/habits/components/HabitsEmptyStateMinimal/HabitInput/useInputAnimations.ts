@@ -3,6 +3,7 @@
  */
 
 import { useCallback, useState } from 'react';
+
 import {
   interpolateColor,
   useAnimatedStyle,
@@ -10,9 +11,9 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
-import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
-import { TIMING_CONFIGS } from '../animations';
 import { COLORS } from '../constants';
+import { TIMING_CONFIGS } from '../animations';
+import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
 
 interface UseInputAnimationsParams {
   onFocus?: () => void;

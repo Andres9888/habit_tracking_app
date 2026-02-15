@@ -1,8 +1,11 @@
+
 import { useCallback, useState } from 'react';
+
 import { useMutation } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
-import type { Id } from '../../../../convex/_generated/dataModel';
+
 import type { Habit } from '../types';
+import type { Id } from '../../../../convex/_generated/dataModel';
+import { api } from '../../../../convex/_generated/api';
 import { logInteraction } from '../../../lib/analytics/interactions';
 import { optimisticStore } from '../../../lib/optimistic';
 import { showGenericError } from '../../../utils/errorAlerts';

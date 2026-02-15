@@ -23,13 +23,13 @@
  * ```
  */
 
+import type { HabitsListProps } from './HabitsList.types';
+import { ENTRANCE_STAGGER_DELAY } from './constants';
+import { HabitsListContent } from './HabitsListContent';
 import { useHabitRenderItem } from '../../hooks/useHabitRenderItem';
-import { useHabitsListState } from './useHabitsListState';
 import { useHabitsListAnimations } from './useHabitsListAnimations';
 import { useHabitsListHandlers } from './useHabitsListHandlers';
-import { HabitsListContent } from './HabitsListContent';
-import { ENTRANCE_STAGGER_DELAY } from './constants';
-import type { HabitsListProps } from './HabitsList.types';
+import { useHabitsListState } from './useHabitsListState';
 
 export function HabitsList(props: HabitsListProps) {
   const { list, modals, onCreateHabitRequest } = props;

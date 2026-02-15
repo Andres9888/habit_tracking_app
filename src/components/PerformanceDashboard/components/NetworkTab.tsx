@@ -6,11 +6,12 @@
 
 import React, { useCallback } from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { StatusIndicator } from './StatusIndicator';
-import { StatRow } from './StatRow';
-import { tabStyles, valueStyles } from './tabStyles';
-import { networkStyles } from './NetworkTab.styles';
+
 import type { NetworkData } from '../types';
+import { StatRow } from './StatRow';
+import { StatusIndicator } from './StatusIndicator';
+import { networkStyles } from './NetworkTab.styles';
+import { tabStyles, valueStyles } from './tabStyles';
 
 interface NetworkTabProps {
   data: NetworkData;

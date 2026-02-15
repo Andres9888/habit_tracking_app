@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
 import type { SemanticColors } from '../../../theme/darkColors';

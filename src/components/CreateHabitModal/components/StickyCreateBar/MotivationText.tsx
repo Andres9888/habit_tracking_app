@@ -5,12 +5,10 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import { useThemeColors } from '../../../../theme/ThemeContext';
+
 import STRINGS from '../../../../constants/strings';
 
 export function MotivationText() {
-  const { colors } = useThemeColors();
-
   return (
     <View
       accessible
@@ -18,8 +16,8 @@ export function MotivationText() {
       accessibilityRole='text'
       className='mb-3 items-center'
     >
-      <Text className='text-[13px]' style={{ color: colors.text.secondary }}>
-        <Text className='font-semibold' style={{ color: '#059669' }}>
+      <Text className='text-[13px] text-stone-500'>
+        <Text className='font-semibold text-emerald-600'>
           {STRINGS.CREATE_HABIT.motivationHighlight}
         </Text>
         {STRINGS.CREATE_HABIT.motivationSuffix}

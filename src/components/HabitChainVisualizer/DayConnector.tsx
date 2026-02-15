@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Animated } from 'react-native';
+
 import type { DayConnectorProps } from './types';
 import { getStrengthConfig } from './strengthConfig';
 import { useDayConnectorAnimations } from './useDayConnectorAnimations';

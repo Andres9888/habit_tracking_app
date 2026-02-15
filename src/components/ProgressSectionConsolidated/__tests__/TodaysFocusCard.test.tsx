@@ -8,9 +8,11 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
-import { TodaysFocusCard } from '../TodaysFocusCard';
+
 import type { TodaysFocusCardProps } from '../TodaysFocusCardTypes';
+import { TodaysFocusCard } from '../TodaysFocusCard';
 
 // Mock useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({

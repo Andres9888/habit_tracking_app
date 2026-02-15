@@ -5,9 +5,11 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Lightbulb } from 'lucide-react-native';
-import { useAppTheme } from '../../../theme';
+
 import { tipsStyles } from '../styles';
+import { useAppTheme } from '../../../theme';
 
 interface TipsBoxProps {
   tips: string[];

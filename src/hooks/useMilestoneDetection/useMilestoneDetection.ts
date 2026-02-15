@@ -24,12 +24,13 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { getStrengthLevel } from '../../components/HabitStrengthIndicator';
+
 import type {
   MilestoneAchievement,
   UseMilestoneDetectionReturn,
 } from './types';
 import { checkMilestoneCrossed } from './utils';
+import { getStrengthLevel } from '../../components/HabitStrengthIndicator';
 
 export function useMilestoneDetection(
   habitId: string | undefined,

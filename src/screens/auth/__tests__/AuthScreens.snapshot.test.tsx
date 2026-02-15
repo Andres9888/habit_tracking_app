@@ -6,12 +6,12 @@
  */
 
 import React from 'react';
+
 import { render } from '@testing-library/react-native';
 
-// Import screens
-import WelcomeScreen from '../WelcomeScreen';
 import SignInScreen from '../SignInScreen';
 import SignUpScreen from '../SignUpScreen';
+import WelcomeScreen from '../WelcomeScreen';
 
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => {

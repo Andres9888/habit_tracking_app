@@ -9,8 +9,9 @@
  */
 
 import { renderHook } from '@testing-library/react-native';
-import { useHabitStrength } from '../useHabitStrength';
 import { subDays, format } from 'date-fns';
+
+import { useHabitStrength } from '../useHabitStrength';
 
 describe('useHabitStrength', () => {
   const now = new Date('2024-02-01T12:00:00Z');

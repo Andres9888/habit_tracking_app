@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+
 import { useSharedValue } from 'react-native-reanimated';
 import { safeParseNumber } from '../../utils/validation';
 

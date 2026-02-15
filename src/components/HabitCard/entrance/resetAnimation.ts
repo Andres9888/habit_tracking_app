@@ -3,6 +3,7 @@
  */
 
 import { cancelAnimation } from 'react-native-reanimated';
+
 import type { EntranceAnimationValues } from './types';
 
 export function createResetAnimation(values: EntranceAnimationValues) {

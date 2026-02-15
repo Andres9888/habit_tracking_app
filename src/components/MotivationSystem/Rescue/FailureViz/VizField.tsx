@@ -5,6 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -12,6 +13,7 @@ import Animated, {
   withTiming,
   withDelay,
 } from 'react-native-reanimated';
+
 import type { VizFieldProps } from './FailureViz.types';
 import { SPRING_GENTLE } from './FailureViz.constants';
 

@@ -1,10 +1,12 @@
+
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { Mic, Sparkles } from 'lucide-react-native';
 
-import { VoiceNotePlaybackUI } from '../../../Workshop/VoiceNotePlaybackUI';
 import type { Day1VoiceNoteData } from '../RescueMode.types';
+import { VoiceNotePlaybackUI } from '../../../Workshop/VoiceNotePlaybackUI';
 
 interface FeaturedVoiceNoteProps {
   voiceNote: Day1VoiceNoteData;

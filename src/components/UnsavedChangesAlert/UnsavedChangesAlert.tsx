@@ -3,14 +3,17 @@
  * UnsavedChangesAlert Component
  * Custom styled modal for confirming discard of unsaved changes
  */
+
 import { View, Text, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+
+import type { UnsavedChangesAlertProps } from './types';
 import { Modal } from '../Modal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { VARIANT_STYLES } from './constants';
-import type { UnsavedChangesAlertProps } from './types';
 
 export function UnsavedChangesAlert({
   visible,

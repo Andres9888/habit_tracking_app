@@ -4,7 +4,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
+
 import type { QuickTipProps } from './VisualizationGuide.types';
 
 export function QuickTip({ title, description, icon }: QuickTipProps) {

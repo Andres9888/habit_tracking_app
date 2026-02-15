@@ -4,14 +4,16 @@
 
 import React, { useCallback } from 'react';
 import { View, Text, Pressable, ActivityIndicator } from 'react-native';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 import { Plus } from 'lucide-react-native';
-import { SPRING_BUTTON } from '../../../animations';
+
 import { IMAGE_SIZE } from './types';
+import { SPRING_BUTTON } from '../../../animations';
 
 interface EmptyImageCellProps {
   index: number;

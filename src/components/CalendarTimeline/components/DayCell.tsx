@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { View, Pressable } from 'react-native';
+
 import { format } from 'date-fns';
 
 import type { DayCellProps } from '../CalendarTimeline.types';
-
 import {
   buildAccessibilityLabel,
   getAccessibilityHint,

@@ -4,8 +4,8 @@
 
 import { StyleSheet, Dimensions } from 'react-native';
 
-import { colors } from '../../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
+import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');

@@ -7,6 +7,7 @@
  */
 
 import { useMemo } from 'react';
+
 import type { HabitData } from './types';
 
 interface HabitWithTracking extends HabitData {

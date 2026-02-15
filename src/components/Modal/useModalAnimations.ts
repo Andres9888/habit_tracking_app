@@ -4,7 +4,9 @@
  */
 
 import { useEffect } from 'react';
+
 import { useSharedValue } from 'react-native-reanimated';
+
 import type { ModalVariant } from './Modal.types';
 import { SCREEN_HEIGHT } from './Modal.constants';
 import { runEnterAnimation, runExitAnimation } from './modalAnimationEffects';

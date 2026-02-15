@@ -7,8 +7,8 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import type { FocusState } from '../../TodaysFocusCardTypes';
+import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import { styles } from '../TodaysFocusCard.styles';
 
 export interface DismissButtonProps {

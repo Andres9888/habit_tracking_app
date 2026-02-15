@@ -1,11 +1,12 @@
-import * as Notifications from 'expo-notifications';
+
 import { Platform } from 'react-native';
+
+import * as Notifications from 'expo-notifications';
 
 import {
   ANDROID_AFFIRMATION_CHANNEL_ID,
   NOTIFICATION_TYPE_AFFIRMATION_DELIVERY,
 } from '../constants';
-
 import { getNextWeeklyOccurrence } from './weeklyUtils';
 
 export async function scheduleDailyNotification(

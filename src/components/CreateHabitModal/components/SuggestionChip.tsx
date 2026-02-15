@@ -1,7 +1,9 @@
-import { useRef } from 'react';
+
 import { Animated, Pressable, Text } from 'react-native';
-import { Motion } from '../../../constants/motion';
+import { useRef } from 'react';
+
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { Motion } from '../../../constants/motion';
 
 interface SuggestionChipProps {
   emoji: string | null;

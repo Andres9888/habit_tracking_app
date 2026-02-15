@@ -12,8 +12,9 @@
  * @see https://docs.revenuecat.com/docs/reactnative
  */
 
-import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { Platform } from 'react-native';
+
+import Constants, { ExecutionEnvironment } from 'expo-constants';
 import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 
 const API_KEYS = {

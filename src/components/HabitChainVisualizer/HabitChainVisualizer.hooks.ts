@@ -1,4 +1,6 @@
+
 import { parse, startOfDay } from 'date-fns';
+
 import type { HabitStatus } from './types';
 
 export const useHabitChainVisualizerLogic = (

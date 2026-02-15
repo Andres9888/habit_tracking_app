@@ -3,15 +3,16 @@
  */
 
 import { useMemo, useState } from 'react';
-import { DEFAULT_COLOR } from '../constants';
+
 import type { HabitDoc } from '../types';
-import { parseHabitName, parseReminderTime } from '../utils';
+import type { ReminderOption } from '../components/ReminderSelector';
 import {
   type HubermanPhase,
   getPhaseFromPreferredTime,
 } from '../../../constants/hubermanPhases';
-import type { ReminderOption } from '../components/ReminderSelector';
+import { DEFAULT_COLOR } from '../constants';
 import { getReminderOptionFromTime } from './reminderUtils';
+import { parseHabitName, parseReminderTime } from '../utils';
 
 const DEFAULT_SOUND = 'Default';
 

@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef } from 'react';
+
 import { Animated, Easing } from 'react-native';
+import { useCallback, useEffect, useRef } from 'react';
 
 interface UseSparkleBurstAnimationProps {
   color: string;

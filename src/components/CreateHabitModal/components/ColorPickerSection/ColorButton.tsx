@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+
 import {
   AccessibilityInfo,
   Animated,
@@ -6,11 +6,13 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import useHapticFeedback from '../../../../hooks/useHapticFeedback';
-import { getColorName } from '../../constants';
+import { memo, useCallback } from 'react';
+
 import type { ColorButtonProps } from './types';
-import { useColorButtonAnimations } from './useColorButtonAnimations';
+import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { ColorSwatch } from './ColorSwatch';
+import { getColorName } from '../../constants';
+import { useColorButtonAnimations } from './useColorButtonAnimations';
 
 /**
  * Individual color swatch button with selection animation

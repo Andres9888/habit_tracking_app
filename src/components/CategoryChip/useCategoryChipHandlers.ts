@@ -2,13 +2,14 @@
  * CategoryChip Press Handlers Hook
  */
 
-import { withSpring, type SharedValue } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { springs } from '@/theme/animations';
+import { withSpring, type SharedValue } from 'react-native-reanimated';
+
 import {
   CARD_PRESS_SCALE,
   CARD_REST_SCALE,
 } from '../../utils/animations/cardPressAnimation';
+import { springs } from '@/theme/animations';
 
 export function useCategoryChipHandlers(
   pressScale: SharedValue<number>,

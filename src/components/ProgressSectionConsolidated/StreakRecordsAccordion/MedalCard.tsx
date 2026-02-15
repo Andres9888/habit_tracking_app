@@ -2,11 +2,13 @@
  * MedalCard - Single medal display card for streak records
  */
 
-import React from 'react';
-import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
+import React from 'react';
 import type { ViewStyle } from 'react-native';
+import { View, Text } from 'react-native';
+
+import Animated from 'react-native-reanimated';
+
 import { MEDALS, MEDAL_COLORS } from './constants';
 import { formatDate } from './utils';
 

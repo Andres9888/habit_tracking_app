@@ -2,17 +2,19 @@
  * SheetContent - Inner content of the emoji picker sheet
  */
 
+import type { AnimatedStyle } from 'react-native-reanimated';
+import type { SharedValue } from 'react-native-reanimated';
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import { View, Text, Pressable } from 'react-native';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { CategoryPills } from '../CategoryPills';
 import { EmojiGrid } from '../EmojiGrid';
-import { styles } from './EmojiPickerSheet.styles';
 import { SearchBar } from './SearchBar';
 import { SuggestionsSection } from './SuggestionsSection';
-import type { AnimatedStyle } from 'react-native-reanimated';
-import type { ViewStyle } from 'react-native';
-import type { SharedValue } from 'react-native-reanimated';
+import { styles } from './EmojiPickerSheet.styles';
 
 interface SheetContentProps {
   habitName: string;

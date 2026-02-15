@@ -1,15 +1,16 @@
-import { colors } from '../../../theme/colors';
+
 import { StyleSheet, View } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const COLORS = [
-  colors.primary[600],
-  colors.primary[700],
+  '#059669',
+  '#047857',
   '#10B981',
-  colors.primary[700],
-  colors.primary[600],
+  '#047857',
+  '#059669',
   '#10B981',
-  colors.primary[700],
+  '#047857',
 ];
 
 function ChainLink({ delay, index }: { delay: number; index: number }) {

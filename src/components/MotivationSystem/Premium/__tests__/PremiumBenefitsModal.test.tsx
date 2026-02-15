@@ -20,7 +20,9 @@
  */
 
 import React from 'react';
+
 import { render, fireEvent } from '@testing-library/react-native';
+
 import { PremiumPaywall as PremiumBenefitsModal } from '../../../PremiumPaywall';
 
 // Mock expo-linear-gradient

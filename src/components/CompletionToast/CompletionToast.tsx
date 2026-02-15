@@ -5,18 +5,19 @@
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
+
 import Animated from 'react-native-reanimated';
+import { GestureDetector } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useAppTheme } from '../../theme';
-import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import type { CompletionToastProps } from './types';
-import { styles } from './styles';
 import { COLORS } from './constants';
-import { getStreakMessage } from './utils';
-import { useCompletionToastAnimations } from './useCompletionToastAnimations';
 import { StreakBadge } from './components';
+import { getStreakMessage } from './utils';
+import { styles } from './styles';
+import { useAppTheme } from '../../theme';
+import { useCompletionToastAnimations } from './useCompletionToastAnimations';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
 export function CompletionToast(props: CompletionToastProps) {
   const {

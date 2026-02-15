@@ -5,6 +5,8 @@
 
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import {
   Eye,
@@ -13,13 +15,13 @@ import {
   ChevronDown,
   ChevronUp,
 } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+
 import type { VisualizationGuideProps } from './VisualizationGuide.types';
-import { VISUALIZATION_TECHNIQUES } from './visualizationTechniques';
 import { GuideHeader } from './GuideHeader';
 import { KeyInsightBox } from './KeyInsightBox';
-import { VisualizationCard } from './VisualizationCard';
 import { QuickTip } from './QuickTip';
+import { VISUALIZATION_TECHNIQUES } from './visualizationTechniques';
+import { VisualizationCard } from './VisualizationCard';
 
 export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
   const [showAllTechniques, setShowAllTechniques] = useState(false);

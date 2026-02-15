@@ -1,5 +1,8 @@
+
 import { Text } from 'react-native';
+
 import { ChevronLeft } from 'lucide-react-native';
+
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface BackButtonProps {

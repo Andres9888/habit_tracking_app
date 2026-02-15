@@ -3,10 +3,10 @@
  */
 
 import { ScrollView, Text, View } from 'react-native';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import { useThemeColors } from '@/theme/ThemeContext';
-import type { Id } from '../../../../convex/_generated/dataModel';
+
 import type { HabitItem } from './HabitStats.types';
+import type { Id } from '../../../../convex/_generated/dataModel';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface HabitSelectorProps {
   habits: HabitItem[];
@@ -19,10 +19,9 @@ export function HabitSelector({
   selectedHabitId,
   onSelect,
 }: HabitSelectorProps) {
-  const { colors } = useThemeColors();
   return (
     <View className='gap-2'>
-      <Text className='text-xs font-semibold uppercase tracking-[2px]' style={{ color: colors.text.tertiary }}>
+      <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
         SELECT HABIT
       </Text>
       <ScrollView
@@ -36,13 +35,15 @@ export function HabitSelector({
             accessibilityLabel={`View stats for ${habit.name}`}
             accessibilityRole='button'
             accessibilityState={{ selected: selectedHabitId === habit._id }}
-            className='rounded-xl px-4 py-2'
-            style={{ backgroundColor: selectedHabitId === habit._id ? colors.gray[900] : colors.gray[100] }}
+            className={`rounded-xl px-4 py-2 ${
+              selectedHabitId === habit._id ? 'bg-stone-900' : 'bg-stone-100'
+            }`}
             onPress={() => onSelect(habit._id)}
           >
             <Text
-              className='text-sm font-medium'
-              style={{ color: selectedHabitId === habit._id ? colors.text.inverse : colors.text.primary }}
+              className={`text-sm font-medium ${
+                selectedHabitId === habit._id ? 'text-white' : 'text-stone-700'
+              }`}
             >
               {habit.name}
             </Text>

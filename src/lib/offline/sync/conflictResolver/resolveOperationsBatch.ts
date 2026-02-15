@@ -4,20 +4,20 @@
  * Batch resolution of offline operations using batch server state checker.
  */
 
-import type { OfflineOperation } from '../../queue';
-import {
-  buildBatchResult,
-  buildResolutionResult,
-  createEmptyBatchResult,
-} from './helpers';
-import { buildResultsFromStates, handleBatchError } from './batchHelpers';
-import { DEFAULT_CONFLICT_RESOLVER_CONFIG } from './resolveOperation';
 import type {
   BatchCompletionStateChecker,
   BatchConflictResolutionResult,
   ConflictEventListener,
   ConflictResolverConfig,
 } from './types';
+import type { OfflineOperation } from '../../queue';
+import {
+  buildBatchResult,
+  buildResolutionResult,
+  createEmptyBatchResult,
+} from './helpers';
+import { DEFAULT_CONFLICT_RESOLVER_CONFIG } from './resolveOperation';
+import { buildResultsFromStates, handleBatchError } from './batchHelpers';
 
 /** Resolve multiple operations using a batch server state checker */
 export async function resolveOperationsBatch(

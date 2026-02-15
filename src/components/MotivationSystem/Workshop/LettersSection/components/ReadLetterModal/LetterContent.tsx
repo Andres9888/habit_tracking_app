@@ -3,16 +3,18 @@
  * Displays the unlocked letter content with quote styling
  */
 
+import type { AnimatedStyle } from 'react-native-reanimated';
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import { View, Text, ScrollView } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { Calendar, Quote } from 'lucide-react-native';
-import { fontFamilies } from '@/theme/typography';
+
 import type { LetterData } from '../../LettersSection.types';
-import type { AnimatedStyle } from 'react-native-reanimated';
-import type { ViewStyle } from 'react-native';
 import { JustUnlockedBadge } from './JustUnlockedBadge';
 import { MotivationalFooter } from './MotivationalFooter';
+import { fontFamilies } from '@/theme/typography';
 
 interface LetterContentProps {
   letter: LetterData;

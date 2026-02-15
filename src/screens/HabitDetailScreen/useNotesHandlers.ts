@@ -4,8 +4,9 @@
  */
 
 import { useCallback } from 'react';
-import type { Id, Doc } from '../../../convex/_generated/dataModel';
+
 import type { Habit } from './HabitDetailScreen.types';
+import type { Id, Doc } from '../../../convex/_generated/dataModel';
 
 interface UseNotesHandlersProps {
   habit: Habit | null;

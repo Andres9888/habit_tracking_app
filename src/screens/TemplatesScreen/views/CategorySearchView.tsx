@@ -3,8 +3,9 @@
  */
 
 import { Pressable, View } from 'react-native';
+
+import type { CategorySearchViewProps } from './CategorySearchView.types';
 import Toast from '../../../components/Toast';
-import { styles } from '../../templates/templatesScreenStyles';
 import {
   CategoryHeader,
   FilterControls,
@@ -12,8 +13,8 @@ import {
   SearchBar,
   TemplateModals,
 } from '../components';
-import type { CategorySearchViewProps } from './CategorySearchView.types';
 import { TemplatesList } from './TemplatesList';
+import { styles } from '../../templates/templatesScreenStyles';
 
 export function CategorySearchView(p: CategorySearchViewProps) {
   const { handlers: h, filteredTemplates: templates } = p;

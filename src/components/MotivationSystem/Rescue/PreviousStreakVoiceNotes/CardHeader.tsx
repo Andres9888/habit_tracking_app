@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Flame, ChevronDown, ChevronUp, Mic } from 'lucide-react-native';
 
 interface CardHeaderProps {

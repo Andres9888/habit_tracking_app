@@ -5,12 +5,10 @@
  */
 
 import { View, Pressable, Animated } from 'react-native';
+
 import { format, parseISO } from 'date-fns';
-import { shadows } from '../../theme/spacing';
+
 import type { WeeklySummaryCardProps } from './types';
-import { useWeeklySummaryStats } from './useWeeklySummaryStats';
-import { useWeeklySummaryAnimations } from './useWeeklySummaryAnimations';
-import { getMotivationalMessage, getColorScheme } from './utils';
 import {
   CardHeader,
   CompletionRateDisplay,
@@ -18,6 +16,10 @@ import {
   BestDayCard,
   StreakHighlight,
 } from './components';
+import { getMotivationalMessage, getColorScheme } from './utils';
+import { shadows } from '../../theme/spacing';
+import { useWeeklySummaryAnimations } from './useWeeklySummaryAnimations';
+import { useWeeklySummaryStats } from './useWeeklySummaryStats';
 
 export function WeeklySummaryCard({
   weekStats,

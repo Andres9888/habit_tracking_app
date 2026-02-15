@@ -4,9 +4,11 @@
  */
 
 import React from 'react';
+
 import Animated from 'react-native-reanimated';
-import { layoutStyles } from '../styles';
+
 import { ModalCloseButton } from '../../ui/ModalCloseButton';
+import { layoutStyles } from '../styles';
 
 interface ModalHeaderProps {
   topInset: number;

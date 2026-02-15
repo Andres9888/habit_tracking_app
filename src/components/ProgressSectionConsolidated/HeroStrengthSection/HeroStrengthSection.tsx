@@ -12,10 +12,10 @@ import React, { useMemo } from 'react';
 import { View } from 'react-native';
 
 import type { HeroStrengthSectionProps } from '../types';
+import { LevelInfo } from './LevelInfo';
+import { StrengthRing } from './StrengthRing';
 import { getProgressToNextLevel } from '../types';
 import { useHeroAnimations } from './useHeroAnimations';
-import { StrengthRing } from './StrengthRing';
-import { LevelInfo } from './LevelInfo';
 
 export const HeroStrengthSection = React.memo(function HeroStrengthSection({
   strength,

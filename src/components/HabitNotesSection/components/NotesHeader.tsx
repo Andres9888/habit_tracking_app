@@ -1,7 +1,10 @@
+
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { StickyNote, Plus } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { StickyNote, Plus } from 'lucide-react-native';
+
 import { colors } from '../../../theme/colors';
 
 interface NotesHeaderProps {

@@ -4,6 +4,7 @@
  */
 
 import { Text } from 'react-native';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 interface HeroTitleProps {

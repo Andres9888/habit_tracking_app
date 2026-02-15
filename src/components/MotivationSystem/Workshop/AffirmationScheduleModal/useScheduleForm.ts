@@ -3,8 +3,10 @@
  * Manages form state for affirmation schedule configuration
  */
 
-import { useCallback, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+
+import type { AffirmationScheduleData } from './types';
 import {
   getNextAffirmationDeliveryRelativeTime,
   type AffirmationFrequency,
@@ -12,7 +14,6 @@ import {
 import { DEFAULT_DAYS_OF_WEEK } from './constants';
 import { parseTimeToDate, formatDateToTime } from './timeUtils';
 import { useScheduleHandlers } from './useScheduleHandlers';
-import type { AffirmationScheduleData } from './types';
 
 export interface UseScheduleFormOptions {
   initialSchedule?: AffirmationScheduleData;

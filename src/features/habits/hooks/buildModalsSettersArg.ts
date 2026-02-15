@@ -1,5 +1,6 @@
-import type { ModalVisibilityState } from './useModalVisibilityState';
+
 import type { HabitSelectionState } from './useHabitSelectionState';
+import type { ModalVisibilityState } from './useModalVisibilityState';
 
 /**
  * Builds the setters argument required by useHabitsModalsHandlers.

@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { StyleSheet, Pressable, type ViewStyle } from 'react-native';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
 import * as Haptics from 'expo-haptics';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
 interface ModalBackdropProps {
   disableBackdropClose: boolean;

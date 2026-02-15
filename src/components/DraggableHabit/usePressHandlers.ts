@@ -1,16 +1,10 @@
-/**
- * usePressHandlers — Touch interaction handlers for a habit card.
- *
- * Returns four callbacks:
- * - `handlePressIn` / `handlePressOut` — spring scale to 0.97/1.0 for press feedback
- * - `handleLongPress` — heavy haptic + forwards to parent drag handler
- * - `handleSwipeableOpen` — success haptic + archive flash + calls onArchive
- */
 
 import { Animated, Easing } from 'react-native';
+
 import * as Haptics from 'expo-haptics';
-import type { Id } from '../../../convex/_generated/dataModel';
+
 import type { Habit } from './types';
+import type { Id } from '../../../convex/_generated/dataModel';
 
 interface PressHandlersParams {
   cardScale: Animated.Value;
@@ -19,7 +13,6 @@ interface PressHandlersParams {
   onArchive?: (habitId: Id<'habits'>) => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
   triggerSelection: () => void;
-  triggerHeavyImpact: () => void;
 }
 
 export function usePressHandlers({
@@ -29,12 +22,10 @@ export function usePressHandlers({
   onArchive,
   onLongPress,
   triggerSelection,
-  triggerHeavyImpact,
 }: PressHandlersParams) {
   const handleLongPress = () => {
     if (!onLongPress) return;
-    // Use heavy impact for long press drag initiation
-    triggerHeavyImpact();
+    triggerSelection();
     onLongPress(habit);
   };
 

@@ -2,13 +2,14 @@
  * Tab indicator animation hook for TemplatesScreen
  */
 
+import type { LayoutChangeEvent } from 'react-native';
 import { useCallback } from 'react';
+
 import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import type { LayoutChangeEvent } from 'react-native';
 
 interface UseTabIndicatorOptions {
   reducedMotion: boolean;

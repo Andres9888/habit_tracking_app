@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import { AlertCircle } from 'lucide-react-native';
+
 import type { ErrorStateProps } from './types';
 
 export function ErrorState({ errorMessage, onRetry }: ErrorStateProps) {

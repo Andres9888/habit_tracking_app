@@ -3,6 +3,7 @@
  */
 
 import { useMemo } from 'react';
+
 import type { HeatmapData, MonthLabel } from './ComplianceHeatmap.types';
 import { MONTH_NAMES } from './ComplianceHeatmap.constants';
 

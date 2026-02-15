@@ -3,11 +3,13 @@
  */
 
 import { ScrollView, View } from 'react-native';
+
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import type { TemplateCustomizations } from '../TemplatesScreen.types';
 import CollapsibleCategorySection from '../../../components/CollapsibleCategorySection';
 import { styles } from '../../templates/templatesScreenStyles';
-import type { TemplateCustomizations } from '../TemplatesScreen.types';
 
 interface CategoryData {
   icon: string;

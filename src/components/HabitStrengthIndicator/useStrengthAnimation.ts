@@ -5,13 +5,15 @@
  * Animation: Progress bar fills with spring physics, emoji changes with scale bounce
  */
 
-import { useEffect, useRef } from 'react';
 import { AccessibilityInfo } from 'react-native';
+import { useEffect, useRef } from 'react';
+
 import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+
 import type { StrengthLevel, StrengthLevelConfig } from './types';
 import { animateLevelUp, animatePulse } from './animations';
 

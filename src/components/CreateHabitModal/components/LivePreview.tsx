@@ -1,5 +1,6 @@
-import { memo } from 'react';
+
 import { Text, View } from 'react-native';
+import { memo } from 'react';
 
 /**
  * V11 Live Preview Micro-Component

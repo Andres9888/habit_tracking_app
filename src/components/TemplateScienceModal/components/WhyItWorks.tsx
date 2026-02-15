@@ -4,9 +4,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
+import { scienceStyles } from '../styles';
 import { useAppTheme } from '../../../theme';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { scienceStyles, themedScienceStyles } from '../styles';
 
 interface WhyItWorksProps {
   whyItWorksText: string;
@@ -14,21 +14,18 @@ interface WhyItWorksProps {
 
 export function WhyItWorks({ whyItWorksText }: WhyItWorksProps) {
   const theme = useAppTheme();
-  const { colors, isDark } = useThemeColors();
-  const themed = themedScienceStyles(colors, isDark);
 
   return (
     <View
       accessible
       accessibilityRole='text'
-      style={[scienceStyles.whyItWorksContainer, themed.whyItWorksContainer]}
+      style={scienceStyles.whyItWorksContainer}
     >
       <View style={scienceStyles.whyItWorksHeader}>
         <Text style={scienceStyles.whyItWorksEmoji}>💡</Text>
         <Text
           style={[
             scienceStyles.whyItWorksTitle,
-            themed.whyItWorksTitle,
             { fontFamily: theme.custom.fontFamilies.primary.text },
           ]}
         >
@@ -38,7 +35,6 @@ export function WhyItWorks({ whyItWorksText }: WhyItWorksProps) {
       <Text
         style={[
           scienceStyles.whyItWorksText,
-          themed.whyItWorksText,
           { fontFamily: theme.custom.fontFamilies.primary.text },
         ]}
       >

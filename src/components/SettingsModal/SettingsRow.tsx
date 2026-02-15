@@ -1,13 +1,16 @@
 /* eslint-disable max-lines */
 /** SettingsRow - OPTIMIZED: AnimatedPressable, scale animation, haptics */
+
 import { ReactNode } from 'react';
 import { Switch, Text, View } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { ChevronRight } from 'lucide-react-native';
+
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
-import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface SettingsRowProps {
   icon: ReactNode;

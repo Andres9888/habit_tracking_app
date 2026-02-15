@@ -2,11 +2,13 @@
  * Handlers for navigation and filter reset operations
  */
 
-import { useCallback } from 'react';
 import type { FlatList } from 'react-native';
+import { useCallback } from 'react';
+
 import * as Haptics from 'expo-haptics';
-import type { Doc } from '../../../../convex/_generated/dataModel';
+
 import type { Category, SortOption } from '../../templates/constants';
+import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { ViewMode } from '../TemplatesScreen.types';
 
 interface UseNavigationHandlersOptions {

@@ -8,8 +8,9 @@
  */
 
 import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
-import { StreakMilestoneCelebration } from './StreakMilestoneCelebration';
+
 import { ShareCardGenerator } from '../ShareCardGenerator';
+import { StreakMilestoneCelebration } from './StreakMilestoneCelebration';
 import { useCelebrationHandlers } from './useCelebrationHandlers';
 
 interface StreakMilestoneContextValue {

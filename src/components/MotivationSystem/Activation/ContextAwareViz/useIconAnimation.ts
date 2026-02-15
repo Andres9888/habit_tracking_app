@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -10,8 +11,8 @@ import {
   withSequence,
 } from 'react-native-reanimated';
 
-import { SPRING_BOUNCY } from './constants';
 import type { VizType } from './types';
+import { SPRING_BOUNCY } from './constants';
 
 interface UseIconAnimationProps {
   vizType: VizType;

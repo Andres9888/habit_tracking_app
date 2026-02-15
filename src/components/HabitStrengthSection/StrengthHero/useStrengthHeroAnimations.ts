@@ -4,8 +4,8 @@
  * Manages animation state for the StrengthHero component.
  */
 
-import { useEffect, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
+import { useEffect, useState } from 'react';
 
 import { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 

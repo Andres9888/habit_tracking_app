@@ -6,22 +6,19 @@
  * with guards for cooldown (90 days) and minimum usage (5 completions).
  */
 
+import { Platform } from 'react-native';
+
 import * as StoreReview from 'expo-store-review';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
-import {
-  MIN_COMPLETIONS_FOR_RATING,
-  RATING_COOLDOWN_DAYS,
-} from '@/constants';
 
 const STORE_REVIEW_LAST_PROMPT_KEY = '@store_review_last_prompt';
 const STORE_REVIEW_COMPLETION_COUNT_KEY = '@store_review_completion_count';
 
 /** Minimum days between rating prompts */
-const COOLDOWN_DAYS = RATING_COOLDOWN_DAYS;
+const COOLDOWN_DAYS = 90;
 
 /** Minimum total completions before prompting */
-const MIN_COMPLETIONS = MIN_COMPLETIONS_FOR_RATING;
+const MIN_COMPLETIONS = 5;
 
 /** Streak milestones that should trigger a review prompt */
 const REVIEW_ELIGIBLE_MILESTONES = new Set([7, 14, 30]);
@@ -102,52 +99,6 @@ export async function maybeRequestReview(
   try {
     // Only prompt on specific milestones
     if (!REVIEW_ELIGIBLE_MILESTONES.has(milestoneDays)) {
-      return;
-    }
-
-    // Check platform support
-    if (Platform.OS === 'web') return;
-    const isAvailable = await StoreReview.isAvailableAsync();
-    if (!isAvailable) return;
-
-    // Check minimum completions
-    const completions = await getCompletionCount();
-    if (completions < MIN_COMPLETIONS) return;
-
-    // Check cooldown
-    const cooldownOk = await isCooldownExpired();
-    if (!cooldownOk) return;
-
-    // All checks passed — request review
-    await recordPromptShown();
-    await StoreReview.requestReview();
-  } catch {
-    // Silent fail — never break the app for a rating prompt
-  }
-}
-
-/**
- * Attempt to show the store review prompt after viewing positive analytics.
- *
- * Triggers when user views analytics with strong performance metrics.
- *
- * Guards:
- * - Average completion rate >= 70%
- * - At least 3 active habits
- * - At least 5 total completions
- * - At least 90 days since last prompt
- * - Store review must be available on the platform
- *
- * @param avgCompletionRate - Average completion rate (0-100)
- * @param totalHabits - Total number of habits
- */
-export async function maybeRequestReviewFromAnalytics(
-  avgCompletionRate: number,
-  totalHabits: number,
-): Promise<void> {
-  try {
-    // Only prompt on strong performance
-    if (avgCompletionRate < 70 || totalHabits < 3) {
       return;
     }
 

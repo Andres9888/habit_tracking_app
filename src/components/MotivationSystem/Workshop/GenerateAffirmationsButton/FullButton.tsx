@@ -5,13 +5,15 @@
  */
 
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import { View, Text, Pressable, GestureResponderEvent } from 'react-native';
+
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Sparkles } from 'lucide-react-native';
 import { clsx } from 'clsx';
+
 import { ButtonContent } from './ButtonContent';
-import type { ViewStyle } from 'react-native';
 
 interface FullButtonProps {
   isPremium: boolean;

@@ -2,11 +2,15 @@
  * OverviewStats - Grid of stat cards showing key metrics
  * OPTIMIZED: FadeInUp stagger animations
  */
+
 import React, { memo, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { spacing } from '../../../theme/spacing';
-import { StatCard } from './StatCard';
+
+import Animated, { FadeInUp } from 'react-native-reanimated';
+
 import type { AnalyticsOverviewStats } from '../AnalyticsScreen.types';
+import { StatCard } from './StatCard';
+import { spacing } from '../../../theme/spacing';
 
 interface OverviewStatsProps {
   stats: AnalyticsOverviewStats | undefined;
@@ -16,6 +20,8 @@ interface OverviewStatsProps {
 
 const formatStrengthPercentage = (strength: number) =>
   `${Math.round(strength)}%`;
+
+const anim = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
 
 export const OverviewStats = memo(function OverviewStats({
   stats,
@@ -35,12 +41,7 @@ export const OverviewStats = memo(function OverviewStats({
   }, [stats?.weakestHabit, onHabitPress]);
 
   return (
-    <View
-      accessible={false}
-      accessibilityLabel='Overview statistics'
-      accessibilityRole='summary'
-      style={styles.statsGrid}
-    >
+    <Animated.View entering={anim(0)} style={styles.statsGrid}>
       <StatCard
         loading={isLoading}
         title='Total Habits'
@@ -75,7 +76,7 @@ export const OverviewStats = memo(function OverviewStats({
         value={stats?.weakestHabit?.name ?? '-'}
         onPress={stats?.weakestHabit ? handleWeakestPress : undefined}
       />
-    </View>
+    </Animated.View>
   );
 });
 

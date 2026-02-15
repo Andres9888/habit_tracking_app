@@ -3,15 +3,17 @@
  */
 
 import React from 'react';
-import { View } from 'react-native';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
-import { useAppTheme } from '../../theme';
-import { STRENGTH_LEVEL_CONFIG } from '../HabitStrengthIndicator';
+import { View } from 'react-native';
+
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+
 import type { StrengthLevel } from '../HabitStrengthIndicator';
-import { styles } from './styles';
 import { MilestoneBadge } from './MilestoneBadge';
+import { STRENGTH_LEVEL_CONFIG } from '../HabitStrengthIndicator';
 import { StrengthDisplay } from './StrengthDisplay';
+import { styles } from './styles';
+import { useAppTheme } from '../../theme';
 
 interface MilestoneContentProps {
   level: StrengthLevel;

@@ -4,27 +4,30 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useThemeColors } from '../../../theme/ThemeContext';
+
 import type { TemplateInfoProps } from './types';
 
-const localStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   infoContainer: {
     flexDirection: 'row',
     gap: 12,
     marginTop: 8,
   },
   infoPill: {
+    backgroundColor: '#F3F4F6',
     borderRadius: 12,
     flex: 1,
     padding: 12,
   },
   infoPillLabel: {
+    color: '#78716c', // stone-500
     fontSize: 13,
     fontWeight: '600',
     marginBottom: 4,
     textTransform: 'uppercase',
   },
   infoPillValue: {
+    color: '#1c1917', // stone-900
     fontSize: 17,
     fontWeight: '700',
   },
@@ -39,25 +42,15 @@ const formatFrequency = (frequency: string): string => {
 };
 
 export function TemplateInfo({ category, frequency }: TemplateInfoProps) {
-  const { colors } = useThemeColors();
-
   return (
-    <View style={localStyles.infoContainer}>
-      <View style={[localStyles.infoPill, { backgroundColor: colors.gray[200] }]}>
-        <Text style={[localStyles.infoPillLabel, { color: colors.text.secondary }]}>
-          Category
-        </Text>
-        <Text style={[localStyles.infoPillValue, { color: colors.text.primary }]}>
-          {formatCategory(category)}
-        </Text>
+    <View style={styles.infoContainer}>
+      <View style={styles.infoPill}>
+        <Text style={styles.infoPillLabel}>Category</Text>
+        <Text style={styles.infoPillValue}>{formatCategory(category)}</Text>
       </View>
-      <View style={[localStyles.infoPill, { backgroundColor: colors.gray[200] }]}>
-        <Text style={[localStyles.infoPillLabel, { color: colors.text.secondary }]}>
-          Frequency
-        </Text>
-        <Text style={[localStyles.infoPillValue, { color: colors.text.primary }]}>
-          {formatFrequency(frequency)}
-        </Text>
+      <View style={styles.infoPill}>
+        <Text style={styles.infoPillLabel}>Frequency</Text>
+        <Text style={styles.infoPillValue}>{formatFrequency(frequency)}</Text>
       </View>
     </View>
   );

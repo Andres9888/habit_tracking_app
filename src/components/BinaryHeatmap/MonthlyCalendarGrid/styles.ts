@@ -6,9 +6,9 @@
 
 import { StyleSheet } from 'react-native';
 
+import { COLORS } from './colors';
 import { shadows } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
-import { COLORS } from './colors';
 
 export const styles = StyleSheet.create({
   container: {

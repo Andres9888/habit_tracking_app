@@ -2,11 +2,12 @@
  * Hook for EnhancedReminderSelector logic
  */
 
-import { useCallback, useMemo, useState } from 'react';
 import { AccessibilityInfo, Keyboard } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+
+import type { ReminderPreset } from './types';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { formatReminderTime } from '../../../../utils/notifications';
-import type { ReminderPreset } from './types';
 
 interface UseReminderSelectorParams {
   reminderTime: Date;

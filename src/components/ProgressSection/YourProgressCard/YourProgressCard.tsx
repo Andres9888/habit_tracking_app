@@ -6,9 +6,10 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Info } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
+import { Info } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import type { YourProgressCardProps } from '../types';
 import {
@@ -16,10 +17,10 @@ import {
   getNextLevel,
   calculateLevelProgress,
 } from './helpers';
-import { ProgressRing } from './ProgressRing';
+import { ActionableTip } from './ActionableTip';
 import { LevelInfo } from './LevelInfo';
 import { ProgressBar } from './ProgressBar';
-import { ActionableTip } from './ActionableTip';
+import { ProgressRing } from './ProgressRing';
 import { useProgressAnimations } from './useProgressAnimations';
 
 export function YourProgressCard({

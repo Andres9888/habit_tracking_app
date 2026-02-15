@@ -3,13 +3,14 @@
  * Combines camera and library pickers with choice dialog
  */
 
-import { useCallback } from 'react';
-import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
+import { useCallback } from 'react';
 
+import * as ImagePicker from 'expo-image-picker';
+
+import type { ImagePickerOptions, PickedImage } from './types';
 import { useCameraPicker } from './useCameraPicker';
 import { useLibraryPicker } from './useLibraryPicker';
-import type { ImagePickerOptions, PickedImage } from './types';
 
 interface UseHandlersParams {
   convertAsset: (asset: ImagePicker.ImagePickerAsset) => PickedImage;

@@ -1,12 +1,15 @@
 /** HabitsList Handlers Hook - Event handlers and callbacks */
+
 import { useCallback } from 'react';
+
 import { useMutation } from 'convex/react';
-import { api } from '../../../../../convex/_generated/api';
+
 import type { Id } from '../../../../../convex/_generated/dataModel';
-import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import type { UseHabitsListHandlersOptions } from './HabitsList.types';
+import { api } from '../../../../../convex/_generated/api';
 import { showCreateError } from '../../../../utils/errorAlerts';
 import { useHabitsListEffects } from './useHabitsListEffects';
-import type { UseHabitsListHandlersOptions } from './HabitsList.types';
+import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
 /**
  * Builds memoized HabitsList event handlers and wires supporting effects.

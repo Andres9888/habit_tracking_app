@@ -3,10 +3,12 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+
 import * as Haptics from 'expo-haptics';
+
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
-import { DEFAULT_ICON_COLOR, safeColor } from './constants';
 import type { TemplateCustomizations } from './types';
+import { DEFAULT_ICON_COLOR, safeColor } from './constants';
 
 interface UseTemplatePreviewProps {
   template: Doc<'templates'> | null;

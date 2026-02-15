@@ -4,17 +4,19 @@
 
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import * as Haptics from 'expo-haptics';
-import { VoiceNotePlaybackUI } from '../../Workshop/VoiceNotePlaybackUI';
-import { SPRING_BUTTON, formatDaysAgoText } from './constants';
-import { CardHeader } from './CardHeader';
+
 import type { StreakVoiceNoteCardProps } from './types';
+import { CardHeader } from './CardHeader';
+import { SPRING_BUTTON, formatDaysAgoText } from './constants';
+import { VoiceNotePlaybackUI } from '../../Workshop/VoiceNotePlaybackUI';
 
 export function StreakVoiceNoteCard({
   voiceNote,

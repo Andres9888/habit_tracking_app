@@ -6,6 +6,7 @@
 
 import { renderHook } from '@testing-library/react-native';
 
+import type { SuggestionChip } from '../types';
 import {
   getChipLabels,
   getTimeWindowFromHour,
@@ -15,7 +16,6 @@ import {
   type TimeBasedChipAnalyticsTracker,
   type TimeBasedChipEvent,
 } from '../analytics';
-import type { SuggestionChip } from '../types';
 
 describe('Time-Based Chip Analytics', () => {
   describe('getTimeWindowFromHour', () => {

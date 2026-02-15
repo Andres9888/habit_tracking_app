@@ -4,7 +4,9 @@
 
 import React from 'react';
 import { Animated } from 'react-native';
+
 import { Check } from 'lucide-react-native';
+
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
 import { colors } from '../../theme/colors';
 

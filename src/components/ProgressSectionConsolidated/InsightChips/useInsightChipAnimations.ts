@@ -5,6 +5,7 @@
  */
 
 import { useEffect } from 'react';
+
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -17,12 +18,12 @@ import {
   cancelAnimation,
 } from 'react-native-reanimated';
 
-import { Springs } from '../../../constants/motion';
 import {
   CHIP_STAGGER_DELAY,
   CHIP_ENTRANCE_DURATION,
   PULSE_DURATION,
 } from './constants';
+import { Springs } from '../../../constants/motion';
 
 interface UseInsightChipAnimationsProps {
   index: number;

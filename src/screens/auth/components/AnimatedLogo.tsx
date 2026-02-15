@@ -1,5 +1,7 @@
-import { useEffect } from 'react';
+
 import { View } from 'react-native';
+import { useEffect } from 'react';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,9 +10,8 @@ import Animated, {
   Easing,
   useReducedMotion,
 } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
-import { colors } from '../../../theme/colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 /**
  * Props for the AnimatedLogo component

@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View } from 'react-native';
+
 import { User, Brain, Heart } from 'lucide-react-native';
 
 import type { VizType, ColorClass } from './types';

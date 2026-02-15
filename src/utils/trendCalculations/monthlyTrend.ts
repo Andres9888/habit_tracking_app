@@ -5,8 +5,8 @@
  */
 
 import type { HabitTrackingEntry } from '../../features/habits/types';
-import { formatDateString } from '../dateUtils';
 import type { MonthOverMonthTrend } from './types';
+import { formatDateString } from '../dateUtils';
 
 /**
  * Calculate month-over-month completion trend

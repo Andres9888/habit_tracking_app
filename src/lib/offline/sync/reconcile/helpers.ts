@@ -4,12 +4,12 @@
  * Helper functions for extracting and grouping synced habits.
  */
 
-import type { Id } from '../../../../../convex/_generated/dataModel';
 import type {
   ProcessedOperation,
   ReconciliationResult,
   SyncedHabit,
 } from './types';
+import type { Id } from '../../../../../convex/_generated/dataModel';
 
 /**
  * Group successful operations by habit ID

@@ -7,6 +7,7 @@
 
 import { addDays, subDays } from 'date-fns';
 
+import type { StrengthSnapshot } from '../types';
 import {
   calculateCompletionRate,
   calculateDelta,
@@ -19,7 +20,6 @@ import {
   getStrengthLabel,
   isPerfectStreak,
 } from '../strengthUtils';
-import type { StrengthSnapshot } from '../types';
 
 describe('formatDateString', () => {
   it('formats date as YYYY-MM-DD', () => {

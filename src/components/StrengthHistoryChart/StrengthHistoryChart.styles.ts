@@ -1,4 +1,6 @@
+
 import { StyleSheet, Dimensions } from 'react-native';
+
 import { borderRadius } from '../../theme/spacing';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');

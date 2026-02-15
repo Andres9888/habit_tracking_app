@@ -2,6 +2,7 @@
  * Error Tracker Tests
  */
 
+import type { ClassifiedError } from '../../../offline/types';
 import {
   trackError,
   configureErrorTracker,
@@ -9,7 +10,6 @@ import {
   resetRateLimit,
 } from '../tracker/index';
 import { CATEGORY_SEVERITY_MAP } from '../types';
-import type { ClassifiedError } from '../../../offline/types';
 
 // Mock the Sentry modules
 jest.mock('../../init/index', () => ({ isSentryInitialized: jest.fn() }));

@@ -5,15 +5,17 @@
 
 import React, { useCallback } from 'react';
 import { View, Pressable, ActivityIndicator } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 import { Play, Pause, RotateCcw } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
-import { SPRING_BUTTON } from '../../../animations';
+
 import type { PlayPauseButtonProps } from './types';
+import { SPRING_BUTTON } from '../../../animations';
 
 export function PlayPauseButton({
   isPlaying,

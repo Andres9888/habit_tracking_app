@@ -12,12 +12,14 @@
  */
 
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+
 import * as Haptics from 'expo-haptics';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+
 import { OfflinePendingBanner, type OfflinePendingBannerProps } from '../OfflinePendingBanner';
+import { type ProcessingState } from '../OfflineQueueProcessor';
 import { useNetworkStatus } from '../../contexts/NetworkStatusContext';
 import { useOfflineQueue, type QueueStats } from '../../hooks/useOfflineQueue';
-import { type ProcessingState } from '../OfflineQueueProcessor';
 
 // Mock dependencies
 jest.mock('../../contexts/NetworkStatusContext');

@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import { Bell } from 'lucide-react-native';
+
 import type { AffirmationData } from '../AffirmationsSection.types';
 import { AffirmationItem } from './AffirmationItem';
 

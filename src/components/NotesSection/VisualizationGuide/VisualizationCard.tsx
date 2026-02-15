@@ -4,12 +4,14 @@
 
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Brain, ChevronDown, ChevronUp } from 'lucide-react-native';
+
 import * as Haptics from 'expo-haptics';
-import { TechniqueApproach } from './TechniqueApproach';
+import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
+import { Brain, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import type { VisualizationCardProps } from './VisualizationGuide.types';
+import { TechniqueApproach } from './TechniqueApproach';
 
 export function VisualizationCard({ technique }: VisualizationCardProps) {
   const [expanded, setExpanded] = useState(false);

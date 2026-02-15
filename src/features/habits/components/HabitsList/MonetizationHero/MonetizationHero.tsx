@@ -1,21 +1,12 @@
 /**
- * MonetizationHero — dark-themed premium upgrade card with progress bar.
- *
- * Part of the **monetization flow**: displays the user's free-tier slot usage
- * as an animated progress bar, a pulsing "Start Free Trial" CTA, and a
- * shimmering "Keep 3 habits free" label.
- *
- * All animations are driven by {@link useMonetizationAnimations} and respect
- * the `reduceMotion` preference.
- *
- * Performance: Uses Reanimated for smooth UI-thread animations
+ * MonetizationHero Component
+ * Premium upgrade card with animated progress and CTA
  */
 
-import { Pressable, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { useMonetizationAnimations } from './useMonetizationAnimations';
+import { Animated, Pressable, Text, View } from 'react-native';
+
 import type { MonetizationHeroProps } from './MonetizationHero.types';
-import { SHADOW_OPACITY, OPACITY } from '../../../../../constants';
+import { useMonetizationAnimations } from './useMonetizationAnimations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -26,7 +17,7 @@ export function MonetizationHero({
   onUpgradePress,
   reduceMotion = false,
 }: MonetizationHeroProps) {
-  const { progressStyle, ctaPulseStyle, shimmerStyle, trackWidth, handleTrackLayout } =
+  const { progress, ctaPulse, shimmer, trackWidth, handleTrackLayout } =
     useMonetizationAnimations({
       freeHabitLimit,
       habitSlotsUsed,
@@ -42,7 +33,7 @@ export function MonetizationHero({
         elevation: 4,
         shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: SHADOW_OPACITY.minimal,
+        shadowOpacity: 0.08,
         shadowRadius: 16,
       }}
     >
@@ -64,17 +55,15 @@ export function MonetizationHero({
           accessibilityLabel='Upgrade to premium for unlimited habits'
           accessibilityRole='button'
           className='flex-1 items-center rounded-full bg-[#6d28d9] px-5 py-3'
-          style={({ pressed }: { pressed: boolean }) => [
-            {
-              elevation: 6,
-              opacity: pressed ? 0.8 : 1,
-              shadowColor: '#312e81',
-              shadowOffset: { height: 8, width: 0 },
-              shadowOpacity: 0.32,
-              shadowRadius: 16,
-            },
-            ctaPulseStyle,
-          ]}
+          style={({ pressed }: { pressed: boolean }) => ({
+            elevation: 6,
+            opacity: pressed ? 0.8 : 1,
+            shadowColor: '#312e81',
+            shadowOffset: { height: 8, width: 0 },
+            shadowOpacity: 0.32,
+            shadowRadius: 16,
+            transform: [{ scale: ctaPulse }],
+          })}
           onPress={onUpgradePress}
         >
           <Text className='text-[17px] font-semibold leading-[22px] tracking-wide text-white'>
@@ -84,7 +73,7 @@ export function MonetizationHero({
         <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>
           <Animated.Text
             className='text-center text-[13px] font-semibold text-[#cbd5f5]'
-            style={shimmerStyle}
+            style={{ opacity: shimmer }}
           >
             Keep 3 habits free
           </Animated.Text>
@@ -105,7 +94,7 @@ export function MonetizationHero({
         >
           <Animated.View
             className='h-2 rounded-full bg-[#fbbf24]'
-            style={[{ maxWidth: trackWidth }, progressStyle]}
+            style={{ maxWidth: trackWidth, width: progress }}
           />
         </View>
         <Text className='text-[13px] font-medium text-[#fbbf24]'>

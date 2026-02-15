@@ -8,9 +8,11 @@
  */
 
 import { View } from 'react-native';
+
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
+
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
+import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 

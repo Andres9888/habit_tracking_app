@@ -7,6 +7,7 @@
 
 import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
+
 import type { DayData } from './types';
 import { COLORS } from './colors';
 import { styles } from './styles';

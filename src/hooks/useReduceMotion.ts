@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+
 import { Platform } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
 
 interface UseReduceMotionOptions {
   preference?: boolean;

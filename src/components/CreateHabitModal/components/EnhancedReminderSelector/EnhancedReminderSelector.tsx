@@ -13,17 +13,18 @@
  * - Haptic feedback on selection
  */
 
-import { memo } from 'react';
 import { View } from 'react-native';
-import { useReduceMotion } from '../../../../hooks/useReduceMotion';
-import { TimePickerModal } from '../TimePickerModal';
-import { NextReminderBadge } from '../NextReminderBadge';
-import { DEFAULT_PRESETS } from './constants';
-import { useReminderSelector } from './useReminderSelector';
-import { ToggleRow } from './ToggleRow';
-import { PresetButton } from './PresetButton';
-import { CustomTimeButton } from './CustomTimeButton';
+import { memo } from 'react';
+
 import type { EnhancedReminderSelectorProps } from './types';
+import { CustomTimeButton } from './CustomTimeButton';
+import { DEFAULT_PRESETS } from './constants';
+import { NextReminderBadge } from '../NextReminderBadge';
+import { PresetButton } from './PresetButton';
+import { TimePickerModal } from '../TimePickerModal';
+import { ToggleRow } from './ToggleRow';
+import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+import { useReminderSelector } from './useReminderSelector';
 
 function EnhancedReminderSelectorComponent({
   enabled,

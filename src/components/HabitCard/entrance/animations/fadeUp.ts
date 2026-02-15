@@ -4,6 +4,7 @@
  */
 
 import { withTiming, runOnJS, Easing } from 'react-native-reanimated';
+
 import type { EntranceAnimationValues } from '../types';
 import { TIMING, ACCENT_TARGET_WIDTH } from '../constants';
 

@@ -12,6 +12,7 @@
  */
 
 import React, { useEffect } from 'react';
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
