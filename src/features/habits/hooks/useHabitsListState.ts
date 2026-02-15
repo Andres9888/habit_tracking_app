@@ -1,3 +1,4 @@
+/* eslint-disable max-lines, max-lines-per-function */
 /**
  * HabitsListState Hook
  *
@@ -20,6 +21,7 @@ import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
+import { useCompletionSound } from '../../../hooks/useCompletionSound';
 import type { HabitsListState } from './types';
 
 const FREE_HABIT_LIMIT = 3;
@@ -37,12 +39,20 @@ export function useHabitsListState(): HabitsListState {
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
+  const completionSoundEnabled = settings?.completionSoundEnabled ?? false;
+  const completionSoundType = settings?.completionSoundType ?? 'chime';
   const dayShape = settings?.dayShape ?? 'square';
   const habitSortMode: HabitSortMode = settings?.habitSortMode ?? 'manual';
   const habitCompletionIcon = settings?.habitCompletionIcon ?? 'chain';
   const reduceMotionPreference = settings?.reduceMotion ?? false;
   const isPremiumUser = settings?.hasPremium ?? false;
   const showWeekCompletionBar = settings?.showWeekCompletionBar ?? true;
+
+  // Completion sound hook (premium feature)
+  const { playCompletionSound } = useCompletionSound({
+    soundEnabled: isPremiumUser && completionSoundEnabled,
+    soundType: completionSoundType,
+  });
 
   const weekDatesState = useHabitsWeekDates();
   const { today, extendedDateStrings } = weekDatesState;
@@ -82,15 +92,34 @@ export function useHabitsListState(): HabitsListState {
 
   // Wrap toggle mutation with optimistic update for immediate feedback
   // Pass isOnline for offline queue integration (T011)
-  const toggleHabit = useOptimisticToggleMutation(
+  const baseToggleHabit = useOptimisticToggleMutation(
     toggleHabitMutation,
     isCompleted,
     { isOnline }
   );
 
+  // Wrap toggleHabit to also play completion sound
+  const toggleHabit = useCallback(
+    async (args: { habitId: Habit['_id']; date: string }) => {
+      // Check if this will mark as completed (not already completed)
+      const currentlyCompleted = isCompleted(args.habitId, args.date);
+
+      // Call the original toggle function
+      await baseToggleHabit(args);
+
+      // Play sound if marking as complete (not uncompleting)
+      if (!currentlyCompleted) {
+        playCompletionSound();
+      }
+    },
+    [baseToggleHabit, isCompleted, playCompletionSound]
+  );
+
   return {
     canNavigateForward: weekDatesState.canNavigateForward,
     celebrationsEnabled,
+    completionSoundEnabled,
+    completionSoundType,
     contentPadding: { paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 },
     dayShape,
     freeHabitLimit: FREE_HABIT_LIMIT,

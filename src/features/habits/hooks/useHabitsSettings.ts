@@ -1,11 +1,14 @@
 import { useMemo } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import type { CompletionSoundType } from '../../../convex/settings/types';
 import type { HabitSettings } from '../types';
 
 export interface HabitsSettingsResult {
   settings: HabitSettings | undefined;
   celebrationsEnabled: boolean;
+  completionSoundEnabled: boolean;
+  completionSoundType: CompletionSoundType;
   reduceMotionPreference: boolean;
 }
 
@@ -20,6 +23,8 @@ export function useHabitsSettings(): HabitsSettingsResult {
   return useMemo(
     () => ({
       celebrationsEnabled: settings?.showMotivationalMessages ?? true,
+      completionSoundEnabled: settings?.completionSoundEnabled ?? false,
+      completionSoundType: settings?.completionSoundType ?? 'chime',
       reduceMotionPreference: settings?.reduceMotion ?? false,
       settings,
     }),

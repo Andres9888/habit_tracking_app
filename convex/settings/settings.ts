@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /**
  * Settings Convex queries and mutations
  */
@@ -28,6 +29,11 @@ export const get = query({
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
       celebrationsEnabled:
         settings?.celebrationsEnabled ?? DEFAULT_SETTINGS.celebrationsEnabled,
+      completionSoundEnabled:
+        settings?.completionSoundEnabled ??
+        DEFAULT_SETTINGS.completionSoundEnabled,
+      completionSoundType:
+        settings?.completionSoundType ?? DEFAULT_SETTINGS.completionSoundType,
       darkMode: normalizeDarkMode(settings?.darkMode),
       dayShape: settings?.dayShape ?? DEFAULT_SETTINGS.dayShape,
       habitCompletionIcon:
