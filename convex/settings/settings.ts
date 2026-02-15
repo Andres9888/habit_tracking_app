@@ -7,6 +7,7 @@ import { mutation, query } from '../_generated/server';
 import { normalizeDarkMode, normalizeHabitSortMode } from './normalizers';
 import { DEFAULT_SETTINGS } from './types';
 import { settingsReturnValidator, updateArgsValidator } from './validators';
+import { hasPremiumAccess } from '../subscriptions/premiumCheck';
 
 export const get = query({
   args: {},
@@ -83,6 +84,16 @@ export const update = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to update settings');
+    }
+
+    // SEC-005: Completion sounds are a premium feature
+    if (args.completionSoundEnabled === true) {
+      const isPremium = await hasPremiumAccess(ctx, identity.subject);
+      if (!isPremium) {
+        throw new Error(
+          'Premium required: Completion sounds are only available for premium users. Upgrade to unlock this feature.'
+        );
+      }
     }
 
     // SEC-001: Find existing settings for this user
