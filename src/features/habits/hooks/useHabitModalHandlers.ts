@@ -40,10 +40,14 @@ export function useHabitModalHandlers(
 
   const confirmPause = useCallback(async () => {
     if (!deps.habitToPause) return;
-    await deps.pauseHabit({ habitId: deps.habitToPause._id });
-    setters.setShowPauseModal(false);
-    setters.setHabitToPause(null);
-    setters.setIsHabitDetailOpen(false);
+    try {
+      await deps.pauseHabit({ habitId: deps.habitToPause._id });
+      setters.setShowPauseModal(false);
+      setters.setHabitToPause(null);
+      setters.setIsHabitDetailOpen(false);
+    } catch (error) {
+      if (__DEV__) console.error('Failed to pause habit:', error);
+    }
   }, [deps.habitToPause, deps.pauseHabit]);
 
   const openEditHabit = useCallback((habit: Habit | null) => {
@@ -69,16 +73,24 @@ export function useHabitModalHandlers(
   const onSettingsChange = useCallback(
     async (updates: Partial<HabitSettingsUpdate>) => {
       if (!deps.settings) return;
-      await deps.updateSettings({ ...deps.settings, ...updates });
+      try {
+        await deps.updateSettings({ ...deps.settings, ...updates });
+      } catch (error) {
+        if (__DEV__) console.error('Failed to update settings:', error);
+      }
     },
     [deps.settings, deps.updateSettings]
   );
 
   const onDeleteHabit = useCallback(
     async (habitId: Id<'habits'>) => {
-      await deps.removeHabit({ habitId });
-      setters.setIsHabitDetailOpen(false);
-      setters.setSelectedHabit(null);
+      try {
+        await deps.removeHabit({ habitId });
+        setters.setIsHabitDetailOpen(false);
+        setters.setSelectedHabit(null);
+      } catch (error) {
+        if (__DEV__) console.error('Failed to delete habit:', error);
+      }
     },
     [deps.removeHabit]
   );
