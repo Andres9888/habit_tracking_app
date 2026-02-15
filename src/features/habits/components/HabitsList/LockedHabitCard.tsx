@@ -29,8 +29,8 @@ export function LockedHabitCard({
     }
     Animated.parallel([
       Animated.spring(entranceScale, {
-        damping: 12,
-        stiffness: 140,
+        damping: 18,
+        stiffness: 150,
         toValue: 1,
         useNativeDriver: true,
       }),

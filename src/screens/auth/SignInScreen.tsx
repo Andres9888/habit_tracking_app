@@ -86,17 +86,17 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
     // Logo entrance
     logoScale.value = withDelay(
       50,
-      withSpring(1, { damping: 12, stiffness: 100 })
+      withSpring(1, { damping: 18, stiffness: 150 })
     );
-    logoOpacity.value = withDelay(50, withTiming(1, { duration: 400 }));
+    logoOpacity.value = withDelay(50, withTiming(1, { duration: 280 }));
 
-    // Header entrance
-    headerOpacity.value = withDelay(200, withTiming(1, { duration: 500 }));
-    headerTranslateY.value = withDelay(200, withSpring(0, { damping: 15 }));
+    // Header entrance (60ms stagger)
+    headerOpacity.value = withDelay(110, withTiming(1, { duration: 280 }));
+    headerTranslateY.value = withDelay(110, withSpring(0, { damping: 18, stiffness: 150 }));
 
-    // Content entrance
-    contentOpacity.value = withDelay(400, withTiming(1, { duration: 500 }));
-    contentTranslateY.value = withDelay(400, withSpring(0, { damping: 15 }));
+    // Content entrance (60ms stagger)
+    contentOpacity.value = withDelay(170, withTiming(1, { duration: 280 }));
+    contentTranslateY.value = withDelay(170, withSpring(0, { damping: 18, stiffness: 150 }));
 
     // Breathing animation
     breathe.value = withRepeat(

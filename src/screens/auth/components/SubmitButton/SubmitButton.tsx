@@ -33,13 +33,13 @@ export function SubmitButton({
 
   const handlePressIn = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(0.97, { damping: 15 });
+      scale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
     }
   };
 
   const handlePressOut = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(1, { damping: 15 });
+      scale.value = withSpring(1, { damping: 18, stiffness: 240 });
     }
   };
 
