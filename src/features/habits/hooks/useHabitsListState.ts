@@ -8,7 +8,7 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Habit, HabitSettings, HabitSortMode } from '../types';
@@ -115,12 +115,18 @@ export function useHabitsListState(): HabitsListState {
     [baseToggleHabit, isCompleted, playCompletionSound]
   );
 
+  // Stable content padding reference to avoid object re-creation every render
+  const contentPadding = useMemo(
+    () => ({ paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 }),
+    []
+  );
+
   return {
     canNavigateForward: weekDatesState.canNavigateForward,
     celebrationsEnabled,
     completionSoundEnabled,
     completionSoundType,
-    contentPadding: { paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 },
+    contentPadding,
     dayShape,
     freeHabitLimit: FREE_HABIT_LIMIT,
     habitCompletionIcon,
