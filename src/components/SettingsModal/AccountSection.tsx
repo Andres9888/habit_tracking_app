@@ -7,6 +7,7 @@ import { Alert, Linking, Platform, Share } from 'react-native';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { PremiumStatus } from './sections/PremiumStatus';
+import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
 const WHATS_NEW_URL = 'https://andres9888.github.io/chainday-landing/changelog.html';
@@ -34,7 +35,7 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
         onPress: () => {
           setIsSigningOut(true);
           void signOut()
-            .catch(() => Alert.alert('Error', 'Failed to sign out.'))
+            .catch(() => Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_OUT_FAILED))
             .finally(() => setIsSigningOut(false));
         },
         style: 'destructive',
