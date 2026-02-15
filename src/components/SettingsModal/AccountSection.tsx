@@ -6,8 +6,10 @@ import React, { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
+import { PremiumStatus } from './sections/PremiumStatus';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
+const WHATS_NEW_URL = 'https://andres9888.github.io/chainday-landing/changelog.html';
 const SUPPORT_EMAIL = 'support@chainday.app';
 const PRIVACY_URL =
   'https://andres9888.github.io/chainday-landing/privacy.html';
@@ -15,9 +17,11 @@ const TERMS_URL = 'https://andres9888.github.io/chainday-landing/terms.html';
 
 interface AccountSectionProps {
   isHighContrastActive: boolean;
+  isPremium?: boolean;
+  onPremiumUpsell?: () => void;
 }
 
-export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
+export function AccountSection({ isHighContrastActive, isPremium = false, onPremiumUpsell }: AccountSectionProps) {
   const { signOut } = useClerk();
   const { user } = useUser();
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -76,8 +80,18 @@ export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
     []
   );
 
+  const handleWhatsNew = useCallback(
+    () => void Linking.openURL(WHATS_NEW_URL),
+    []
+  );
+
   return (
     <>
+      <PremiumStatus
+        highContrast={isHighContrastActive}
+        isPremium={isPremium}
+        onUpgrade={onPremiumUpsell}
+      />
       <AccountInfo
         email={userEmail}
         highContrast={isHighContrastActive}
@@ -89,6 +103,7 @@ export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
         onRate={handleRateApp}
         onShare={handleShare}
         onSupport={openUrl(`mailto:${SUPPORT_EMAIL}?subject=Chain Day`)}
+        onWhatsNew={handleWhatsNew}
       />
       <LegalLinks
         highContrast={isHighContrastActive}
