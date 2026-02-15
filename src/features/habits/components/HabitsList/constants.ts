@@ -5,17 +5,17 @@
 export const PREMIUM_BENEFITS = [
   {
     description:
-      'Expand beyond the three core routines and organize every area of life.',
+      'Track every area of your life — health, learning, fitness, and more.',
     title: 'Unlimited habits',
   },
   {
     description:
-      'Flexible reminder schedules keep momentum without overwhelming you.',
+      'Gentle nudges at the right time to keep your streaks alive.',
     title: 'Smart reminders',
   },
   {
     description:
-      'Detailed insights reveal streak trends and habit pairings that stick.',
+      'See which habits stick, spot trends, and understand what drives your progress.',
     title: 'Deep insights',
   },
 ];
@@ -23,7 +23,7 @@ export const PREMIUM_BENEFITS = [
 export const SOCIAL_PROOF = {
   attribution: 'Maya - 42-day streak',
   quote:
-    'Upgrading unlocked the structure I needed. I finally track every routine and stay consistent.',
+    '"Upgrading gave me the structure I needed. I finally track every routine and stay consistent."',
 };
 
 // OPTIMIZED: Faster stagger for snappier feel (was 100ms)

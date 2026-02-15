@@ -185,21 +185,21 @@ interface PageData {
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    subtitle: 'Complete your habits daily to build unbreakable chains',
+    subtitle: 'Complete your habits daily and watch your chain grow — every link counts.',
     title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
   {
     id: 'strength',
     subtitle:
-      'Your habits get stronger over time — backed by behavioral science research',
+      'Your habits get stronger over time — backed by behavioral science.',
     title: 'Science-Backed Strength',
     Visual: StrengthMeter,
   },
   {
     id: 'templates',
-    subtitle: 'Choose from science-backed habit templates or create your own',
-    title: '200+ Templates to Start',
+    subtitle: 'Pick from science-backed templates or create your own in seconds.',
+    title: '200+ Ready-Made Templates',
     Visual: TemplateGrid,
   },
 ];
