@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
-/** NotesEmptyState - OPTIMIZED: Better animation, haptics, dark mode */
+/** NotesEmptyState - OPTIMIZED: Better animation, haptics, dark mode, Pressable for a11y */
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { StickyNote, Plus } from 'lucide-react-native';
 import Animated, {
   FadeIn,
@@ -16,7 +16,7 @@ interface NotesEmptyStateProps {
   onAddNote: () => void;
 }
 
-const AnimatedPressable = Animated.createAnimatedComponent(View);
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   const { colors, isDark } = useThemeColors();
@@ -41,7 +41,8 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   return (
     <Animated.View entering={FadeIn.duration(250)}>
       <AnimatedPressable
-        accessibilityLabel='Add your first note'
+        accessible
+        accessibilityLabel='Add your first note — record insights to learn what works best'
         accessibilityRole='button'
         style={[
           animatedStyle,
@@ -56,12 +57,9 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
             shadowRadius: 16,
           },
         ]}
-        onTouchCancel={handlePressOut}
-        onTouchEnd={() => {
-          handlePressOut();
-          handlePress();
-        }}
-        onTouchStart={handlePressIn}
+        onPress={handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
       >
         {/* Icon */}
         <View
