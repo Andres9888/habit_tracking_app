@@ -1,124 +1,142 @@
 /**
- * EmptyState - OPTIMIZED: animation (respects reduce-motion), dark mode, accessible
+ * EmptyState - Shown when user has no habits to analyze
+ * Uses design system tokens (no hardcoded colors or NativeWind)
  */
 import React from 'react';
-import { View, Text } from 'react-native';
-import { BarChart3, Sparkles } from 'lucide-react-native';
-import Animated from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { useReducedMotionEntry } from '../../../components/EmptyState/useReducedMotionEntry';
+import { View, Text, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import { colors } from '../../../theme/colors';
+import { typography } from '../../../theme/typography';
+import { spacing, borderRadius, shadows } from '../../../theme/spacing';
+
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export const EmptyState: React.FC = () => {
-  const { colors, isDark } = useThemeColors();
-  const { entry } = useReducedMotionEntry();
-
   return (
     <View
       accessible
-      accessibilityLabel='No analytics yet. Create habits and track them for a few days to unlock your insights dashboard.'
-      accessibilityRole='text'
-      style={{ alignItems: 'center', flex: 1, justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}
+      accessibilityLabel="No analytics data yet. Create habits and track them to see insights."
+      accessibilityRole="text"
+      style={emptyStyles.container}
     >
       {/* Illustration */}
-      <Animated.View
-        entering={entry(0)}
-        style={{
-          alignItems: 'center',
-          backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
-          borderRadius: 24,
-          height: 96,
-          justifyContent: 'center',
-          marginBottom: 24,
-          shadowColor: '#8b5cf6',
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
-          width: 96,
-        }}
-      >
-        <BarChart3 color={isDark ? '#C4B5FD' : '#8b5cf6'} size={48} strokeWidth={1.5} />
+      <Animated.View entering={anim(0)} style={emptyStyles.iconContainer}>
+        <Ionicons color={colors.primary[500]} name="bar-chart-outline" size={48} />
       </Animated.View>
 
       {/* Title */}
-      <Animated.Text
-        entering={entry(50)}
-        style={{
-          color: colors.text.primary,
-          fontSize: 22,
-          fontWeight: '700',
-          letterSpacing: -0.5,
-          marginBottom: 8,
-          textAlign: 'center',
-        }}
-      >
+      <Animated.Text entering={anim(50)} style={emptyStyles.title}>
         No Analytics Yet
       </Animated.Text>
 
       {/* Description */}
-      <Animated.Text
-        entering={entry(100)}
-        style={{
-          color: colors.text.secondary,
-          fontSize: 17,
-          lineHeight: 22,
-          marginBottom: 32,
-          maxWidth: 280,
-          textAlign: 'center',
-        }}
-      >
+      <Animated.Text entering={anim(100)} style={emptyStyles.description}>
         Create habits and track them for a few days to unlock your insights
         dashboard.
       </Animated.Text>
 
       {/* Steps Card */}
-      <Animated.View
-        entering={entry(150)}
-        style={{
-          backgroundColor: colors.card,
-          borderRadius: 16,
-          padding: 20,
-          shadowColor: colors.text.primary,
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
-          width: '100%',
-        }}
-      >
-        <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8, marginBottom: 12 }}>
-          <Sparkles color={isDark ? '#FCD34D' : '#F59E0B'} size={16} />
-          <Text style={{ color: isDark ? '#FCD34D' : '#D97706', fontSize: 13, fontWeight: '600' }}>
-            GET STARTED
-          </Text>
+      <Animated.View entering={anim(150)} style={emptyStyles.stepsCard}>
+        <View style={emptyStyles.stepsHeader}>
+          <Ionicons color={colors.streak[500]} name="sparkles" size={16} />
+          <Text style={emptyStyles.stepsLabel}>GET STARTED</Text>
         </View>
-        <View style={{ gap: 12 }}>
-          <StepItem colors={colors} number='1' text='Go to Home tab' />
-          <StepItem colors={colors} number='2' text='Create your first habit' />
-          <StepItem colors={colors} number='3' text='Track it daily' />
-          <StepItem colors={colors} number='4' text='Come back to see insights!' />
+        <View style={emptyStyles.stepsList}>
+          <StepItem number="1" text="Go to Home tab" />
+          <StepItem number="2" text="Create your first habit" />
+          <StepItem number="3" text="Track it daily" />
+          <StepItem number="4" text="Come back to see insights!" />
         </View>
       </Animated.View>
     </View>
   );
 };
 
-function StepItem({ number, text, colors }: { number: string; text: string; colors: { gray: Record<string, string>; text: { primary: string; secondary: string } } }) {
+function StepItem({ number, text }: { number: string; text: string }) {
   return (
-    <View style={{ alignItems: 'center', flexDirection: 'row', gap: 12 }}>
-      <View
-        style={{
-          alignItems: 'center',
-          backgroundColor: colors.gray[100],
-          borderRadius: 14,
-          height: 28,
-          justifyContent: 'center',
-          width: 28,
-        }}
-      >
-        <Text style={{ color: colors.text.secondary, fontSize: 13, fontWeight: '600' }}>
-          {number}
-        </Text>
+    <View accessibilityLabel={`Step ${number}: ${text}`} style={emptyStyles.stepRow}>
+      <View style={emptyStyles.stepBadge}>
+        <Text style={emptyStyles.stepNumber}>{number}</Text>
       </View>
-      <Text style={{ color: colors.text.primary, fontSize: 17 }}>{text}</Text>
+      <Text style={emptyStyles.stepText}>{text}</Text>
     </View>
   );
 }
+
+const emptyStyles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing['2xl'],
+  },
+  description: {
+    ...typography.body,
+    color: colors.text.secondary,
+    marginBottom: spacing.xl,
+    maxWidth: 280,
+    textAlign: 'center',
+  },
+  iconContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.primary[100],
+    borderRadius: borderRadius.xl,
+    height: 96,
+    justifyContent: 'center',
+    marginBottom: spacing.lg,
+    width: 96,
+    ...shadows.card,
+  },
+  stepsCard: {
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.large,
+    padding: spacing.base,
+    width: '100%',
+    ...shadows.card,
+  },
+  stepsHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  stepsLabel: {
+    ...typography.caption,
+    color: colors.streak[500],
+    fontWeight: '600',
+  },
+  stepsList: {
+    gap: spacing.md,
+  },
+  stepRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.md,
+  },
+  stepBadge: {
+    alignItems: 'center',
+    backgroundColor: colors.background,
+    borderRadius: borderRadius.full,
+    height: 28,
+    justifyContent: 'center',
+    width: 28,
+  },
+  stepNumber: {
+    ...typography.caption,
+    color: colors.text.secondary,
+    fontWeight: '600',
+  },
+  stepText: {
+    ...typography.body,
+    color: colors.text.primary,
+  },
+  title: {
+    ...typography.heading2,
+    color: colors.text.primary,
+    marginBottom: spacing.sm,
+    textAlign: 'center',
+  },
+});

@@ -7,6 +7,7 @@ import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../../theme/colors';
+import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 
 export const AnalyticsHeader: React.FC = () => {
@@ -45,17 +46,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   headerSubtitle: {
+    ...typography.body,
     color: colors.text.secondary,
-    fontSize: 17,
-    letterSpacing: -0.41,
-    lineHeight: 22,
     marginTop: spacing.xs,
   },
   headerTitle: {
+    ...typography.heading1,
     color: colors.text.primary,
-    fontSize: 28,
-    fontWeight: '700',
-    letterSpacing: 0.35,
-    lineHeight: 34,
   },
 });
