@@ -6,17 +6,14 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Lock } from 'lucide-react-native';
+import { formatLetterUnlockDate } from '../../../../../utils/dateFormat';
 
 interface LockedLetterViewProps {
   unlockAt: number;
 }
 
 export function LockedLetterView({ unlockAt }: LockedLetterViewProps) {
-  const unlockDateString = new Date(unlockAt).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+  const unlockDateString = formatLetterUnlockDate(unlockAt);
 
   return (
     <View className='flex-1 items-center justify-center px-8'>

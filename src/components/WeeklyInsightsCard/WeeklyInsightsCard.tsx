@@ -13,6 +13,7 @@ import { styles } from './WeeklyInsightsCard.styles';
 import { SummarySection } from './SummarySection';
 import { HabitListSection } from './HabitListSection';
 import { SuggestedActions } from './SuggestedActions';
+import { formatDate } from '../../utils/dateFormat';
 
 export default function WeeklyInsightsCard({
   insights,
@@ -88,7 +89,7 @@ export default function WeeklyInsightsCard({
       </AnimatedPressable>
 
       <Text style={styles.generatedDate}>
-        Generated {new Date(insights.generatedAt).toLocaleDateString()}
+        Generated {formatDate(insights.generatedAt)}
       </Text>
     </ScrollView>
   );

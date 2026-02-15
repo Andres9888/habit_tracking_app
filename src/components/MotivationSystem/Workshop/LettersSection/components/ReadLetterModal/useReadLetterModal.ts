@@ -10,6 +10,7 @@ import { SPRING_BOUNCY, SPRING_GENTLE } from '../../../../../animations';
 import { ONE_HOUR_MS, ONE_DAY_MS } from '../../LettersSection.constants';
 import type { LetterData } from '../../LettersSection.types';
 import { useReadLetterAnimations } from './useReadLetterAnimations';
+import { formatListDate } from '../../../../../utils/dateFormat';
 
 interface UseReadLetterModalParams {
   visible: boolean;
@@ -35,11 +36,7 @@ export function useReadLetterModal({
     ? Math.floor((Date.now() - letter.createdAt) / ONE_DAY_MS)
     : 0;
   const writtenDateString = letter
-    ? new Date(letter.createdAt).toLocaleDateString('en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      })
+    ? formatListDate(letter.createdAt)
     : '';
   const isLocked = letter ? letter.unlockAt > Date.now() : false;
 

@@ -8,6 +8,7 @@ import { Keyboard } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { MIN_CONTENT_LENGTH, ONE_DAY_MS } from '../../LettersSection.constants';
 import type { WriteLetterStep } from './WriteLetterModal.types';
+import { formatLetterUnlockDate } from '../../../../../utils/dateFormat';
 
 interface UseWriteLetterModalParams {
   visible: boolean;
@@ -46,12 +47,7 @@ export function useWriteLetterModal({
 
   // Calculate unlock date for preview
   const unlockDate = new Date(Date.now() + unlockDays * ONE_DAY_MS);
-  const unlockDateString = unlockDate.toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'long',
-    weekday: 'long',
-    year: 'numeric',
-  });
+  const unlockDateString = formatLetterUnlockDate(unlockDate.getTime());
 
   const handleNext = useCallback(() => {
     if (!canProceedToSchedule) return;

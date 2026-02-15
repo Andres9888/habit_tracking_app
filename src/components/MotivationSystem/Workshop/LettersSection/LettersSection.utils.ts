@@ -4,6 +4,7 @@
  */
 
 import { ONE_DAY_MS } from './LettersSection.constants';
+import { formatLocaleDate } from '../../../../utils/dateFormat';
 
 /**
  * Format timestamp as relative time
@@ -19,7 +20,7 @@ export function formatRelativeTime(timestamp: number): string {
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   if (days < 7) return `${days}d ago`;
-  return new Date(timestamp).toLocaleDateString();
+  return formatLocaleDate(timestamp);
 }
 
 /**

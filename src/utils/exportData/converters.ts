@@ -3,6 +3,7 @@
  */
 
 import type { ExportData } from './types';
+import { formatLocaleDate } from '../dateFormat';
 
 /**
  * Convert habit data to CSV format
@@ -28,7 +29,7 @@ export function convertToCSV(data: ExportData): string {
       Math.round(habit.strength).toString(),
       habit.currentStreak.toString(),
       habit.longestStreak.toString(),
-      new Date(habit.createdAt).toLocaleDateString(),
+      formatLocaleDate(habit.createdAt),
       totalCompletions.toString(),
     ];
   });

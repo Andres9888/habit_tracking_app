@@ -12,6 +12,7 @@ import { ProBadge } from './ProBadge';
 import { useHeaderAnimations } from './useHeaderAnimations';
 import { useHeaderHandlers } from './useHeaderHandlers';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { formatTodayHeader } from '../../../../utils/dateFormat';
 
 const ENTERING = FadeInDown.duration(280).springify().damping(18);
 
@@ -20,12 +21,6 @@ const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
 const DATE_STYLE = {
   fontFamily: 'System',
   letterSpacing: -0.76,
-};
-
-/** Format today's date as "Today · Mon D" per spec */
-const formatTodayDate = (): string => {
-  const now = new Date();
-  return `Today · ${now.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
 };
 
 // eslint-disable-next-line max-lines-per-function
@@ -106,7 +101,7 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
               className='text-[22px] font-bold'
               style={[{ color: themeColors.text.primary }, DATE_STYLE]}
             >
-              {formatTodayDate()}
+              {formatTodayHeader()}
             </Text>
             {showCompletionSummary && (
               <Text

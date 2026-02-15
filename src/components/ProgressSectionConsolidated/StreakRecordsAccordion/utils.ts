@@ -2,13 +2,14 @@
  * Utility functions for StreakRecordsAccordion
  */
 
+import { formatShortDate } from '../../../../utils/dateFormat';
+
 /**
- * Format date for display (e.g., "Dec 1")
+ * Format date for display (e.g., "Jan 15")
  */
 export function formatDate(dateString: string): string {
   try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+    return formatShortDate(dateString);
   } catch {
     return dateString;
   }
