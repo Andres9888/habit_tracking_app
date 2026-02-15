@@ -60,7 +60,12 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
 
   return (
     <SettingsSection highContrastMode={highContrast} title='Subscription'>
-      <AnimatedPressable onPress={onUpgrade}>
+      <AnimatedPressable
+        accessibilityHint='Opens premium upgrade screen'
+        accessibilityLabel='Upgrade to Premium'
+        accessibilityRole='button'
+        onPress={onUpgrade}
+      >
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
@@ -88,9 +93,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               backgroundColor: '#8b5cf6',
             }}
           >
-            <Text className='text-[13px] font-bold text-white'>
-              PRO
-            </Text>
+            <Text className='text-[13px] font-bold text-white'>PRO</Text>
           </View>
         </View>
       </AnimatedPressable>

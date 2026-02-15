@@ -7,6 +7,7 @@
 
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { CompletionSoundType } from '../../../../convex/settings/types';
+import type { ToggleMutationResult } from '../../../lib/optimistic';
 import type {
   Habit,
   HabitSettings,
