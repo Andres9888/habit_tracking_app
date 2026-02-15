@@ -65,7 +65,6 @@ export function useForgotPassword(): UseForgotPasswordReturn {
       setSuccess(true);
       setError(null);
     } catch (error_: unknown) {
-      if (__DEV__) console.error('Password reset error:', error_);
 
       if (!isMountedRef.current) return;
 

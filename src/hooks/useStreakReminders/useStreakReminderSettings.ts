@@ -42,7 +42,6 @@ export async function markFirstHabitCreated(): Promise<void> {
       await AsyncStorage.setItem(FIRST_HABIT_CREATED_KEY, String(Date.now()));
     }
   } catch (error) {
-    if (__DEV__) console.error('Failed to mark first habit created:', error);
   }
 }
 
@@ -89,7 +88,6 @@ export function useStreakReminderSettings() {
           });
         }
       } catch (error) {
-        if (__DEV__) console.error('Failed to update streak reminder setting:', error);
         setEnabledLocal(!value); // Revert on failure
       }
     },
@@ -108,7 +106,6 @@ export function useStreakReminderSettings() {
           });
         }
       } catch (error) {
-        if (__DEV__) console.error('Failed to update reminder time:', error);
         setReminderTimeLocal(previousTime); // Revert on failure
       }
     },

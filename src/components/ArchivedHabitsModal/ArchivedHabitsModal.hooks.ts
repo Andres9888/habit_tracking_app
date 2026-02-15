@@ -26,7 +26,6 @@ export const useArchivedHabitsModalLogic = () => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       return true;
     } catch (error) {
-      if (__DEV__) console.error('Failed to restore habit:', error);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       Alert.alert(
         'Error',
@@ -55,7 +54,6 @@ export const useArchivedHabitsModalLogic = () => {
                 Haptics.NotificationFeedbackType.Success
               );
             } catch (error) {
-              if (__DEV__) console.error('Failed to delete habit:', error);
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
               Alert.alert(
                 'Error',
@@ -85,7 +83,6 @@ export const useArchivedHabitsModalLogic = () => {
               await deleteAllArchivedMutation();
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             } catch (error) {
-              if (__DEV__) console.error('Failed to delete all archived:', error);
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
               Alert.alert('Error', 'Failed to delete archived habits. Please try again.');
             }

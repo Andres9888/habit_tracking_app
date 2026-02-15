@@ -81,35 +81,22 @@ export function RevenueCatPaywall({
         }}
         style={{ flex: 1 }}
         onDismiss={() => {
-          if (__DEV__) console.log('[RevenueCatPaywall] Dismissed');
           onClose();
         }}
         onPurchaseCancelled={() => {
-          if (__DEV__) console.log('[RevenueCatPaywall] Purchase cancelled');
         }}
         onPurchaseCompleted={({ customerInfo }) => {
-          if (__DEV__)
-            console.log(
-              '[RevenueCatPaywall] Purchase completed:',
-              customerInfo
-            );
           onPurchaseSuccess?.();
           onClose();
         }}
         onPurchaseError={({ error }) => {
-          if (__DEV__)
-            console.error('[RevenueCatPaywall] Purchase error:', error);
           Alert.alert('Purchase Failed', 'Your payment couldn\u2019t be processed. Please check your payment method and try again.');
         }}
         onRestoreCompleted={({ customerInfo }) => {
-          if (__DEV__)
-            console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
           onRestoreSuccess?.();
           onClose();
         }}
         onRestoreError={({ error }) => {
-          if (__DEV__)
-            console.error('[RevenueCatPaywall] Restore error:', error);
           Alert.alert('Restore Failed', 'We couldn\u2019t find your previous purchases. Please try again or contact support.');
         }}
       />

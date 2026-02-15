@@ -52,7 +52,6 @@ export function useImagePicker(): UseImagePickerReturn {
           return granted;
         }
       } catch (error_) {
-        if (__DEV__) console.error('Permission request error:', error_);
         setError('Failed to request permissions');
         return false;
       }

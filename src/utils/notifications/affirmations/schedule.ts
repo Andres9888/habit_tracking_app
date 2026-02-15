@@ -23,7 +23,6 @@ export async function scheduleAffirmationDelivery({
     // Validate time format
     const timeMatch = scheduledTime.match(/^([01]?[0-9]|2[0-3]):([0-5][0-9])$/);
     if (!timeMatch) {
-      if (__DEV__) console.warn(
         'scheduleAffirmationDelivery: invalid time format',
         scheduledTime
       );
@@ -61,7 +60,6 @@ export async function scheduleAffirmationDelivery({
       );
     } else {
       if (!daysOfWeek || daysOfWeek.length === 0) {
-        if (__DEV__) console.warn(
           'scheduleAffirmationDelivery: weekly frequency requires daysOfWeek'
         );
         return null;
@@ -77,7 +75,6 @@ export async function scheduleAffirmationDelivery({
       );
     }
 
-    if (__DEV__) console.info('scheduleAffirmationDelivery success', {
       affirmationId,
       frequency,
       notificationId,
@@ -86,7 +83,6 @@ export async function scheduleAffirmationDelivery({
 
     return notificationId;
   } catch (error) {
-    if (__DEV__) console.error('scheduleAffirmationDelivery failed', {
       affirmationId,
       error,
     });

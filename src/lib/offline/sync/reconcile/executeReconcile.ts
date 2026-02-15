@@ -29,7 +29,6 @@ export function emitEvent(
     try {
       listener(event);
     } catch (error) {
-      if (__DEV__) console.error('Error in reconciliation listener:', error);
     }
   }
 }

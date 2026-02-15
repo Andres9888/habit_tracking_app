@@ -102,7 +102,6 @@ export async function recoverTransaction<T>(
 
   // Validate recovered data
   if (!validator(recovered)) {
-    if (__DEV__) console.warn('[transactionWrite] Recovered data failed validation');
     await cleanupTransaction(key);
     return { data: null, recovered: false };
   }
@@ -112,7 +111,6 @@ export async function recoverTransaction<T>(
   await cleanupTransaction(key);
 
   // Log recovery - this is notable so using warn level for visibility
-  if (__DEV__) console.warn('[transactionWrite] Successfully recovered pending write');
   return { data: recovered, recovered: true };
 }
 

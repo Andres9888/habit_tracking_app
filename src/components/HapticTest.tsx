@@ -20,21 +20,16 @@ export function HapticTest() {
 
   const testHaptic = async (name: string, hapticFn: () => Promise<void>) => {
     const timestamp = new Date().toLocaleTimeString();
-    if (__DEV__) console.log(`🔵 [${timestamp}] Testing: ${name}`);
-    if (__DEV__) console.log('🔵 Platform:', Platform.OS);
-    if (__DEV__) console.log('🔵 Device:', Platform.Version);
 
     try {
       await hapticFn();
       const successMsg = `✅ ${name} - Success at ${timestamp}`;
-      if (__DEV__) console.log(successMsg);
       setLastResult(successMsg);
       setTestCount((prev) => prev + 1);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       const errorMsg = `❌ ${name} - FAILED: ${errorMessage}`;
-      if (__DEV__) console.error(errorMsg);
       setLastResult(errorMsg);
     }
   };
@@ -174,14 +169,12 @@ export function HapticTest() {
           mode='outlined'
           style={styles.button}
           onPress={async () => {
-            if (__DEV__) console.log('🔥 Starting rapid fire test...');
             for (let i = 0; i < 5; i++) {
               await testHaptic(`Rapid ${i + 1}`, () =>
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
               );
               await new Promise((resolve) => setTimeout(resolve, 200));
             }
-            if (__DEV__) console.log('🔥 Rapid fire test complete');
           }}
         >
           Rapid Fire (5x Light)

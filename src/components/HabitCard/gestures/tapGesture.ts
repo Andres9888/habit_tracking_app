@@ -87,7 +87,6 @@ export function createTapGesture(options: TapGestureOptions) {
         try {
           await toggleCompletionMutation({ date: today, habitId: id });
         } catch (error) {
-          if (__DEV__) console.error('Toggle completion failed:', error);
           showSyncError();
           // Revert optimistic state on error
           runOnJS(toggleOptimistic)();

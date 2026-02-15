@@ -73,7 +73,6 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
           state.setIsInSuccessCelebration(true);
         }
       } catch (error) {
-        if (__DEV__) console.error('Failed to create habit:', error);
         showCreateError(() => void handleQuickCreateHabit(habitName));
       }
     },

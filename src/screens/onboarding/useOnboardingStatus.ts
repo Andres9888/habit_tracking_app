@@ -28,14 +28,12 @@ export function useOnboardingStatus(isSignedIn: boolean) {
                 setComplete(true);
               })
               .catch((error) => {
-                if (__DEV__) console.warn('[useOnboardingStatus] Error saving status:', error);
                 // Still mark as complete even if save fails
                 setComplete(true);
               });
           }
         })
         .catch((error) => {
-          if (__DEV__) console.warn('[useOnboardingStatus] Error reading status:', error);
           // Default to not complete on read error
           setComplete(false);
         });

@@ -52,7 +52,6 @@ export const useCalendarHandlers = ({
       );
       toggleHabitMutation({ date, habitId: habit._id })
         .catch((error: unknown) => {
-          if (__DEV__) console.error('Failed to toggle habit:', error);
           Alert.alert('Error', ERROR_MESSAGES.DATA_OPS.TOGGLE_HABIT_FAILED);
         })
         .finally(() => setIsTogglingCalendar(false));

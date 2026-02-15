@@ -61,21 +61,12 @@ export async function initializePurchases(userId?: string): Promise<void> {
 
   // Skip in Expo Go - native stores unavailable
   if (isExpoGo()) {
-    if (__DEV__)
-      console.log(
-        '[Purchases] Expo Go detected - native stores unavailable, skipping'
-      );
     return;
   }
 
   const apiKey = Platform.OS === 'ios' ? API_KEYS.ios : API_KEYS.android;
 
   if (!apiKey) {
-    if (__DEV__)
-      console.warn(
-        '[Purchases] No API key configured for platform:',
-        Platform.OS
-      );
     return;
   }
 
@@ -92,7 +83,6 @@ export async function initializePurchases(userId?: string): Promise<void> {
 
     isInitialized = true;
   } catch (error) {
-    if (__DEV__) console.error('[Purchases] Failed to initialize:', error);
     // Don't throw - let app continue without purchases
     // This can happen in Expo Go or if SDK has issues
   }
@@ -112,15 +102,12 @@ export async function initializePurchases(userId?: string): Promise<void> {
 export async function identifyUser(userId: string): Promise<void> {
   if (Platform.OS === 'web') return;
   if (!isInitialized) {
-    if (__DEV__)
-      console.warn('[Purchases] SDK not initialized, skipping identify');
     return;
   }
 
   try {
     await Purchases.logIn(userId);
   } catch (error) {
-    if (__DEV__) console.error('[Purchases] Failed to identify user:', error);
   }
 }
 
@@ -143,7 +130,6 @@ export async function logoutPurchases(): Promise<void> {
   try {
     await Purchases.logOut();
   } catch (error) {
-    if (__DEV__) console.error('[Purchases] Failed to logout:', error);
   }
 }
 

@@ -59,8 +59,6 @@ export async function scheduleStreakFreezeNotification({
 
     return true;
   } catch (error) {
-    if (__DEV__)
-      console.warn('scheduleStreakFreezeNotification failed', { error, habitId });
     return false;
   }
 }
@@ -88,6 +86,5 @@ export async function cancelAllStreakFreezeNotifications(): Promise<void> {
         )
     );
   } catch (error) {
-    if (__DEV__) console.warn('cancelAllStreakFreezeNotifications failed', error);
   }
 }

@@ -78,7 +78,6 @@ export async function processItem(
 
       case 'voiceNote':
       case 'visionBoardImage': {
-        if (__DEV__) console.warn(
           `${item.type} offline sync not yet implemented - requires file re-upload`
         );
         return false;
@@ -86,12 +85,10 @@ export async function processItem(
 
       default: {
         const _exhaustiveCheck: never = item.type;
-        if (__DEV__) console.warn(`Unknown submission type: ${_exhaustiveCheck as string}`);
         return false;
       }
     }
   } catch (error) {
-    if (__DEV__) console.warn(`Failed to process ${item.type}:`, error);
     throw error;
   }
 }

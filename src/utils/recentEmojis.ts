@@ -43,7 +43,6 @@ export async function getRecentEmojis(): Promise<string[]> {
     const parsed = JSON.parse(stored) as unknown;
     return sanitizeRecentEmojis(parsed);
   } catch (error) {
-    if (__DEV__) console.error('Error reading recent emojis:', error);
     return [];
   }
 }
@@ -68,7 +67,6 @@ export async function addRecentEmoji(emoji: string): Promise<void> {
     const updated = [normalizedEmoji, ...filtered].slice(0, MAX_RECENT);
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (error) {
-    if (__DEV__) console.error('Error saving recent emoji:', error);
   }
 }
 
@@ -79,6 +77,5 @@ export async function clearRecentEmojis(): Promise<void> {
   try {
     await AsyncStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    if (__DEV__) console.error('Error clearing recent emojis:', error);
   }
 }

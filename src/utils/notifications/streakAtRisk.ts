@@ -74,11 +74,6 @@ export async function scheduleStreakAtRiskNotification({
 
     return true;
   } catch (error) {
-    if (__DEV__)
-      console.warn('scheduleStreakAtRiskNotification failed', {
-        error,
-        habitId,
-      });
     return false;
   }
 }
@@ -114,6 +109,5 @@ export async function cancelAllStreakAtRiskNotifications(): Promise<void> {
       )
     );
   } catch (error) {
-    if (__DEV__ && __DEV__) console.warn('cancelAllStreakAtRiskNotifications failed', error);
   }
 }

@@ -9,28 +9,6 @@ import type {
 } from './types';
 
 /**
- * Console logger for development
- * Logs all analytics events to console in development mode
- */
-class ConsoleTimeBasedChipAnalyticsTracker implements TimeBasedChipAnalyticsTracker {
-  private enabled: boolean;
-
-  constructor() {
-    this.enabled = __DEV__;
-  }
-
-  track(event: TimeBasedChipEvent): void {
-    if (!this.enabled) return;
-
-    if (__DEV__) // eslint-disable-next-line no-console
-    console.log('[Analytics] Time-Based Chips:', {
-      ...event,
-      timestamp: new Date(event.timestamp).toISOString(),
-    });
-  }
-}
-
-/**
  * No-op tracker for production when no analytics provider configured
  */
 class NoOpTimeBasedChipAnalyticsTracker implements TimeBasedChipAnalyticsTracker {
@@ -43,9 +21,7 @@ class NoOpTimeBasedChipAnalyticsTracker implements TimeBasedChipAnalyticsTracker
  * Global analytics tracker instance
  * Override with setTimeBasedChipAnalyticsTracker() to connect your analytics provider
  */
-let analyticsTracker: TimeBasedChipAnalyticsTracker = __DEV__
-  ? new ConsoleTimeBasedChipAnalyticsTracker()
-  : new NoOpTimeBasedChipAnalyticsTracker();
+let analyticsTracker: TimeBasedChipAnalyticsTracker = new NoOpTimeBasedChipAnalyticsTracker();
 
 /**
  * Set custom analytics tracker
@@ -63,6 +39,6 @@ export function trackTimeBasedChipEvent(event: TimeBasedChipEvent): void {
   try {
     analyticsTracker.track(event);
   } catch (error) {
-    if (__DEV__ && __DEV__) console.error('[Analytics] Error tracking time-based chip event:', error);
+    // Silently fail in production
   }
 }

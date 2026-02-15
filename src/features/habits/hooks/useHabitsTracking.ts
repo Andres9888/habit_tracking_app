@@ -70,7 +70,6 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       // Validate date string format
       const validation = validateDateString(dateString);
       if (!validation.isValid) {
-        if (__DEV__) console.warn(`Invalid date string: ${dateString}`, validation.error);
         return 'planned'; // Safe fallback
       }
 
@@ -93,7 +92,6 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
       // Guard against invalid Date objects
       if (Number.isNaN(date.getTime())) {
-        if (__DEV__) console.warn(`Invalid date created from: ${dateString}`);
         return 'planned';
       }
 

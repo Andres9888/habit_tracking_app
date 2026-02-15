@@ -28,12 +28,12 @@ export async function cancelAffirmationDelivery(
       )
     );
 
-    if (toCancel.length > 0 && __DEV__) console.info('cancelAffirmationDelivery: cancelled', {
+    if (toCancel.length > 0) {
         affirmationId,
         count: toCancel.length,
       });
+    }
   } catch (error) {
-    if (__DEV__) console.warn('cancelAffirmationDelivery failed', { affirmationId, error });
   }
 }
 
@@ -63,12 +63,12 @@ export async function cancelAllAffirmationDeliveriesForHabit(
       )
     );
 
-    if (toCancel.length > 0 && __DEV__) console.info('cancelAllAffirmationDeliveriesForHabit: cancelled', {
+    if (toCancel.length > 0) {
         count: toCancel.length,
         habitId,
       });
+    }
   } catch (error) {
-    if (__DEV__) console.warn('cancelAllAffirmationDeliveriesForHabit failed', {
       error,
       habitId,
     });

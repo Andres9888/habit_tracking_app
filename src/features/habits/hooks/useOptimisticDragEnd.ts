@@ -6,8 +6,6 @@ import { useCallback } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitSortMode } from '../types';
 import { optimisticStore } from '../../../lib/optimistic';
-import { showGenericError } from '../../../utils/errorAlerts';
-import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 
 type ReorderMutation = (args: { habitIds: Id<'habits'>[] }) => Promise<unknown>;
 
@@ -34,8 +32,6 @@ export function useOptimisticDragEnd(
         optimisticStore.confirm(operationId);
       } catch (error) {
         optimisticStore.fail(operationId, error as Error);
-        if (__DEV__) console.error('Failed to reorder habits:', error);
-        showGenericError(ERROR_MESSAGES.DATA_OPS.REORDER_HABITS_FAILED);
       }
     },
     [habitSortMode, reorderHabits, habits]

@@ -83,7 +83,6 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
         : createNewHabit(data));
       cleanup();
     } catch (error) {
-      if (__DEV__) console.error('Failed to save habit:', error);
     }
   }, [
     form.habitName,

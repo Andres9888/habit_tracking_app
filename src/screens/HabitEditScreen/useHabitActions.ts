@@ -27,7 +27,6 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
             void removeHabit({ habitId })
               .then(onSuccess)
               .catch((error) => {
-                if (__DEV__) console.warn('Error deleting habit:', error);
                 Alert.alert(
                   'Error',
                   ERROR_MESSAGES.DATA_OPS.DELETE_HABIT_FAILED,
@@ -55,7 +54,6 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
             void archiveHabit({ habitId })
               .then(onSuccess)
               .catch((error) => {
-                if (__DEV__) console.warn('Error archiving habit:', error);
                 Alert.alert(
                   'Error',
                   ERROR_MESSAGES.DATA_OPS.ARCHIVE_HABIT_FAILED,

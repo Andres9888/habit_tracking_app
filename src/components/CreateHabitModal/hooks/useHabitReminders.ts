@@ -77,7 +77,6 @@ export async function scheduleReminder({
 
     return scheduled;
   } catch (error) {
-    if (__DEV__) console.error('Failed to schedule reminder:', error);
     return false;
   }
 }
@@ -88,6 +87,5 @@ export async function cancelReminder(habitId: Id<'habits'>): Promise<void> {
   try {
     await cancelHabitReminder(habitId);
   } catch (error) {
-    if (__DEV__) console.error('Failed to cancel reminder:', error);
   }
 }

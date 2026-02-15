@@ -83,7 +83,6 @@ export function useCreateHabitHandlers() {
           : undefined,
       });
     } catch (error) {
-      if (__DEV__) console.error('Failed to edit habit:', error);
       throw error;
     }
   }
@@ -127,7 +126,6 @@ export function useCreateHabitHandlers() {
         });
       }
     } catch (error) {
-      if (__DEV__) console.error('Failed to create habit:', error);
       throw error;
     }
   }

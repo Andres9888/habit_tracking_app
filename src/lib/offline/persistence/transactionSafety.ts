@@ -127,7 +127,6 @@ export async function recoverFromPending<T>(
     const dataString = JSON.stringify(parsed.data);
     if (!verifyChecksum(dataString, parsed.checksum)) {
       // Corrupted, cleanup
-      if (__DEV__) console.warn('[transactionSafety] Corrupted pending write detected');
       await AsyncStorage.removeItem(pendingKey);
       return null;
     }

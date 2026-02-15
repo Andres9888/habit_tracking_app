@@ -31,12 +31,10 @@ export function ForceUpdateButton({
       setResult(
         `✅ ${response.previousStrength.toFixed(3)} → ${response.newStrength.toFixed(3)}`
       );
-      if (__DEV__) console.log('Force update result:', response);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       setResult(`❌ Error: ${errorMessage}`);
-      if (__DEV__) console.error('Force update error:', error);
     } finally {
       setLoading(false);
     }

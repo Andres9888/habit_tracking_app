@@ -54,7 +54,6 @@ export function useCameraPicker({
           error instanceof Error ? error.message : 'Failed to capture photo';
         setError(msg);
         setIsLoading(false);
-        if (__DEV__) console.error('Camera error:', error);
         return null;
       }
     },

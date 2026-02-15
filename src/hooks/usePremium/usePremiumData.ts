@@ -70,8 +70,6 @@ export function usePremiumData(): PremiumData {
           setPackages(offeringsResult.current?.availablePackages ?? null);
         }
       } catch (error_) {
-        if (__DEV__)
-          console.error('[usePremium] Failed to fetch data:', error_);
         if (isMounted) {
           setError('Failed to load subscription info');
         }
@@ -102,7 +100,6 @@ export function usePremiumData(): PremiumData {
         if (isMounted) setupListener();
       })
       .catch((error) => {
-        if (__DEV__) console.warn('[usePremium] Unexpected error during setup:', error);
       });
 
     return () => {

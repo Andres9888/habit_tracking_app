@@ -71,7 +71,6 @@ export function useGenerateButton({
       if (successTimerRef.current) clearTimeout(successTimerRef.current);
       successTimerRef.current = setTimeout(() => setShowSuccess(false), SUCCESS_FEEDBACK_DURATION);
     } catch (error) {
-      if (__DEV__) console.error('Failed to generate affirmations:', error);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
 
       Alert.alert(

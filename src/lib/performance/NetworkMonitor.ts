@@ -25,7 +25,6 @@ export class NetworkMonitor {
   ): NetworkTiming | null {
     const pending = this.pendingRequests.get(requestId);
     if (!pending) {
-      if (__DEV__) console.warn(`No pending request found for ID: ${requestId}`);
       return null;
     }
     const endTime = now();

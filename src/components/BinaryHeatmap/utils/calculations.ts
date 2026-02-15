@@ -58,7 +58,7 @@ export function getCellState(day: BinaryDay): BinaryCellState {
  *
  * @example
  * const stats = calculateBinaryGridStats(weeks);
- * console.log(`Completion rate: ${stats.completionRate}%`);
+ * const message = `Completion rate: ${stats.completionRate}%`;
  */
 export function calculateBinaryGridStats(
   weeks: (BinaryDay | null)[][]

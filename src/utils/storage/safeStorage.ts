@@ -48,17 +48,11 @@ export async function safeGetItem<T>(
 
     const parsed = JSON.parse(raw) as unknown;
     if (!validator(parsed)) {
-      if (__DEV__) {
-        console.warn(`[safeStorage] Invalid data shape for key "${key}", using fallback`);
-      }
       return fallback;
     }
 
     return parsed;
   } catch (error) {
-    if (__DEV__) {
-      console.warn(`[safeStorage] Failed to get item "${key}":`, error);
-    }
     return fallback;
   }
 }
@@ -79,9 +73,6 @@ export async function safeSetItem<T>(key: string, value: T): Promise<void> {
   try {
     await AsyncStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
-    if (__DEV__) {
-      console.error(`[safeStorage] Failed to set item "${key}":`, error);
-    }
     throw error;
   }
 }
@@ -101,9 +92,6 @@ export async function safeRemoveItem(key: string): Promise<void> {
   try {
     await AsyncStorage.removeItem(key);
   } catch (error) {
-    if (__DEV__) {
-      console.warn(`[safeStorage] Failed to remove item "${key}":`, error);
-    }
     // Don't throw - removal failures are non-critical
   }
 }
@@ -128,9 +116,6 @@ export async function safeGetString(
     const value = await AsyncStorage.getItem(key);
     return value ?? fallback;
   } catch (error) {
-    if (__DEV__) {
-      console.warn(`[safeStorage] Failed to get string "${key}":`, error);
-    }
     return fallback;
   }
 }
@@ -151,9 +136,6 @@ export async function safeSetString(key: string, value: string): Promise<void> {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (error) {
-    if (__DEV__) {
-      console.error(`[safeStorage] Failed to set string "${key}":`, error);
-    }
     // Don't throw - string storage failures are non-critical for UI state
   }
 }

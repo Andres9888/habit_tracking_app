@@ -101,7 +101,6 @@ export function useNotificationResponse(handlers: NotificationResponseHandler) {
         }
       })
       .catch((error) => {
-        if (__DEV__) console.warn('Error getting last notification response:', error);
       });
 
     return () => {

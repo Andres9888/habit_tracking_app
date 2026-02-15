@@ -66,7 +66,6 @@ export async function getScheduledAffirmationDeliveries(): Promise<
         };
       });
   } catch (error) {
-    if (__DEV__) console.error('getScheduledAffirmationDeliveries failed', error);
     return [];
   }
 }

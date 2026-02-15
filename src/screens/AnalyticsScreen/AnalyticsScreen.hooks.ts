@@ -93,7 +93,6 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
           [{ text: 'OK' }]
         );
       } catch (error) {
-        if (__DEV__) console.error('Export error:', error);
         Alert.alert(
           'Export Failed',
           error instanceof Error ? error.message : 'Unable to export data',

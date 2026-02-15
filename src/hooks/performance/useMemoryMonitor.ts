@@ -25,7 +25,7 @@ const DEFAULT_INTERVAL = 5000;
  * @example
  * ```tsx
  * function DataHeavyComponent() {
- *   const { formattedUsage, growth } = useMemoryMonitor({ onHighMemory: (usage) => console.warn(`High memory: ${usage}`) });
+ *   const { formattedUsage, growth } = useMemoryMonitor({ onHighMemory: (usage) => handleHighMemory(usage) });
  *   return <View><Text>Memory: {formattedUsage}</Text>{growth && growth > 0 && <Text>Growth: +{growth} bytes</Text>}</View>;
  * }
  * ```

@@ -53,7 +53,7 @@ export interface UseImageUploadReturn {
  * const { uploadImage, isUploading, error } = useImageUpload();
  * const result = await uploadImage(pickedImage);
  * if (result) {
- *   console.log('Uploaded:', result.storageId);
+ *   // Handle successful upload
  * }
  * ```
  */
@@ -82,10 +82,6 @@ export function useImageUpload(): UseImageUploadReturn {
       const ratio = MAX_IMAGE_DIMENSION / maxDimension;
       const newWidth = Math.round(image.width * ratio);
       const newHeight = Math.round(image.height * ratio);
-
-      if (__DEV__) {
-        console.log(`Resizing image from ${image.width}x${image.height} to ${newWidth}x${newHeight}`);
-      }
 
       // Resize using expo-image-manipulator
       const resizedImage = await ImageManipulator.manipulateAsync(
@@ -165,7 +161,6 @@ export function useImageUpload(): UseImageUploadReturn {
         setError(errorMessage);
         setIsUploading(false);
         setProgress(0);
-        if (__DEV__) console.error('Image upload error:', error_);
         return null;
       }
     },

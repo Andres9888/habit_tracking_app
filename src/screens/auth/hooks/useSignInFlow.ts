@@ -45,7 +45,6 @@ export function useSignInFlow() {
       }
     } catch (error: unknown) {
       const clerkError = error as { errors?: Array<{ message?: string }> };
-      if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert(
         'Error',
         clerkError.errors?.[0]?.message || ERROR_MESSAGES.AUTH.SIGN_IN_FAILED

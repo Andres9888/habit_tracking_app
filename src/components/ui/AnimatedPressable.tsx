@@ -38,7 +38,7 @@ export interface AnimatedPressableProps extends PressableProps {
  *
  * @example
  * ```tsx
- * <AnimatedPressable onPress={() => console.log('pressed')}>
+ * <AnimatedPressable onPress={() => handlePress()}>
  *   <Text>Press me</Text>
  * </AnimatedPressable>
  * ```
@@ -46,7 +46,7 @@ export interface AnimatedPressableProps extends PressableProps {
  * @example With custom config
  * ```tsx
  * <AnimatedPressable
- *   onPress={() => console.log('pressed')}
+ *   onPress={() => handlePress()}
  *   animationConfig={{ pressScale: 0.92 }}
  * >
  *   <Text>Press me harder</Text>

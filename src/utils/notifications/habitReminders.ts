@@ -21,7 +21,6 @@ export async function cancelHabitReminder(habitId: string): Promise<void> {
       )
     );
   } catch (error) {
-    if (__DEV__) console.warn('cancelHabitReminder failed', { error, habitId });
   }
 }
 
@@ -62,7 +61,6 @@ export async function scheduleHabitReminder({
 
     return true;
   } catch (error) {
-    if (__DEV__) console.error('scheduleHabitReminder failed', { error, habitId });
     return false;
   }
 }

@@ -53,7 +53,6 @@ export function OfflineProvider({
       const err =
         error instanceof Error ? error : new Error('Queue restoration failed');
       setRestorationError(err);
-      if (__DEV__) console.error('[OfflineProvider] Failed to restore queue:', err);
     } finally {
       isRestoringRef.current = false;
       setIsRestoring(false);

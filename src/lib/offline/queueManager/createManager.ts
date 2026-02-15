@@ -40,7 +40,6 @@ export function createOfflineQueueManager(
     for (const listener of listeners) listener();
     if (autoPersist) {
       saveQueueState(state).catch((error) => {
-        if (__DEV__) console.error('[OfflineQueueManager] Persist failed:', error);
       });
     }
   };

@@ -54,7 +54,6 @@ export function useImagePickerHandlers({
                 void pickFromCamera(options)
                   .then(resolve)
                   .catch((error) => {
-                    if (__DEV__) console.warn('Error picking from camera:', error);
                     resolve(null);
                   });
               },
@@ -65,7 +64,6 @@ export function useImagePickerHandlers({
                 void pickFromLibrary(options)
                   .then(resolve)
                   .catch((error) => {
-                    if (__DEV__) console.warn('Error picking from library:', error);
                     resolve(null);
                   });
               },

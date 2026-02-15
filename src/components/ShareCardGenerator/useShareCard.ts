@@ -69,11 +69,9 @@ export function useShareCard(data: ShareCardData) {
           UTI: 'public.png',
         });
       } else {
-        if (__DEV__) console.warn('Sharing is not available on this device');
         alert('Sharing is not available. Please save the image manually.');
       }
     } catch (error) {
-      if (__DEV__) console.error('Error sharing card:', error);
       alert(ERROR_MESSAGES.DATA_OPS.SHARE_CARD_FAILED);
     } finally {
       setIsGenerating(false);

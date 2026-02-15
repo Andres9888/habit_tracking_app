@@ -55,7 +55,6 @@ export function AffirmationEditorModal({
       await onSave(text.trim(), isPremium ? type : undefined);
       onClose();
     } catch (error) {
-      if (__DEV__) console.error('Failed to save affirmation:', error);
     }
   }, [canSave, isSaving, text, type, isPremium, onSave, onClose]);
 

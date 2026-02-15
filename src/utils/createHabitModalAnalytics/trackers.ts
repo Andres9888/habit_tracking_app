@@ -1,27 +1,6 @@
 import type { AnalyticsTracker, CreateHabitModalEvent } from './types';
 
 /**
- * Console logger for development
- * Logs all analytics events to console in development mode
- */
-class ConsoleAnalyticsTracker implements AnalyticsTracker {
-  private enabled: boolean;
-
-  constructor() {
-    this.enabled = __DEV__;
-  }
-
-  track(event: CreateHabitModalEvent): void {
-    if (!this.enabled) return;
-
-    if (__DEV__) console.log('[Analytics] Create Habit Modal V11:', {
-      timestamp: new Date().toISOString(),
-      ...event,
-    });
-  }
-}
-
-/**
  * No-op tracker for production when no analytics provider configured
  */
 class NoOpAnalyticsTracker implements AnalyticsTracker {
@@ -34,9 +13,7 @@ class NoOpAnalyticsTracker implements AnalyticsTracker {
  * Global analytics tracker instance
  * Override with setAnalyticsTracker() to connect your analytics provider
  */
-let analyticsTracker: AnalyticsTracker = __DEV__
-  ? new ConsoleAnalyticsTracker()
-  : new NoOpAnalyticsTracker();
+let analyticsTracker: AnalyticsTracker = new NoOpAnalyticsTracker();
 
 /**
  * Set custom analytics tracker
@@ -55,6 +32,5 @@ export function trackEvent(event: CreateHabitModalEvent): void {
     analyticsTracker.track(event);
   } catch (error) {
     // Silently fail - don't let analytics errors break the app
-    if (__DEV__ && __DEV__) console.error('[Analytics] Error tracking event:', error);
   }
 }

@@ -33,7 +33,6 @@ export async function configureAndroidChannel(): Promise<void> {
       vibrationPattern: [0, 250, 250, 250],
     });
   } catch (error) {
-    if (__DEV__) console.error('Failed to configure Android notification channel:', error);
   }
 }
 
@@ -55,7 +54,6 @@ export async function configureLetterUnlockChannel(): Promise<void> {
       vibrationPattern: [0, 250, 250, 250],
     });
   } catch (error) {
-    if (__DEV__) console.error('Failed to configure letter unlock channel:', error);
   }
 }
 
@@ -80,6 +78,5 @@ export async function configureAffirmationChannel(): Promise<void> {
       }
     );
   } catch (error) {
-    if (__DEV__) console.error('Failed to configure affirmation channel:', error);
   }
 }

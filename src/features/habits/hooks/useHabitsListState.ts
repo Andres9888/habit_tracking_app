@@ -42,11 +42,6 @@ export function useHabitsListState(): HabitsListState {
   const habitsFromQuery = habitsValidation.limited;
   const isHabitsLoading = habitsQuery === undefined;
 
-  // Warn if habits array was limited
-  if (habitsValidation.warning && __DEV__) {
-    console.warn('[useHabitsListState]', habitsValidation.warning);
-  }
-
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;

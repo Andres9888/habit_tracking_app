@@ -32,7 +32,6 @@ export const useOfflineBannerHandlers = ({
       void getStats()
         .then(setStats)
         .catch((error) => {
-          if (__DEV__) console.warn('Error getting queue stats:', error);
           setStats(null);
         });
     }

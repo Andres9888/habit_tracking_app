@@ -24,7 +24,7 @@ const DEFAULT_DROP_THRESHOLD = 45;
  * @example
  * ```tsx
  * function AnimatedComponent() {
- *   const { currentFPS, isJanking } = useFPSMonitor({ onFPSDrop: (fps) => console.warn(`FPS dropped to ${fps}`) });
+ *   const { currentFPS, isJanking } = useFPSMonitor({ onFPSDrop: (fps) => handleFPSDrop(fps) });
  *   return <View><Text>FPS: {currentFPS.toFixed(0)}</Text>{isJanking && <Text>Performance degraded!</Text>}</View>;
  * }
  * ```

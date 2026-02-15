@@ -16,14 +16,11 @@ export async function loadQueueIndex(): Promise<string[]> {
 
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) {
-      if (__DEV__)
-        console.warn('Queue index is not an array, resetting to empty');
       return [];
     }
 
     return parsed.filter((id): id is string => typeof id === 'string');
   } catch (error) {
-    if (__DEV__) console.warn('Failed to load queue index:', error);
     return [];
   }
 }
@@ -33,7 +30,6 @@ export async function saveQueueIndex(ids: string[]): Promise<void> {
   try {
     await AsyncStorage.setItem(QUEUE_INDEX_KEY, JSON.stringify(ids));
   } catch (error) {
-    if (__DEV__) console.warn('Failed to save queue index:', error);
     throw error;
   }
 }
@@ -49,13 +45,11 @@ export async function loadQueueItem(
 
     const parsed = JSON.parse(raw) as unknown;
     if (!isValidQueuedSubmission(parsed)) {
-      if (__DEV__) console.warn(`Queue item ${id} has invalid shape, skipping`);
       return null;
     }
 
     return parsed;
   } catch (error) {
-    if (__DEV__) console.warn(`Failed to load queue item ${id}:`, error);
     return null;
   }
 }
@@ -66,7 +60,6 @@ export async function saveQueueItem(item: QueuedSubmission): Promise<void> {
     const key = getItemKey(item.id);
     await AsyncStorage.setItem(key, JSON.stringify(item));
   } catch (error) {
-    if (__DEV__) console.warn(`Failed to save queue item ${item.id}:`, error);
     throw error;
   }
 }
@@ -77,7 +70,6 @@ export async function removeQueueItem(id: string): Promise<void> {
     const key = getItemKey(id);
     await AsyncStorage.removeItem(key);
   } catch (error) {
-    if (__DEV__) console.warn(`Failed to remove queue item ${id}:`, error);
   }
 }
 

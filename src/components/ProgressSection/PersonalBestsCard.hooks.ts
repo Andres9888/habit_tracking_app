@@ -18,7 +18,6 @@ export function usePulseAnimation(currentStreak: number) {
     void AccessibilityInfo.isReduceMotionEnabled()
       .then(setReduceMotion)
       .catch((error) => {
-        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
         setReduceMotion(false);
       });
   }, []);

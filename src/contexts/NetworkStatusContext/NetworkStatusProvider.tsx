@@ -64,7 +64,6 @@ export function NetworkStatusProvider({
           try {
             cb();
           } catch (error) {
-            if (__DEV__) console.warn('Callback error:', error);
           }
         }
       }
@@ -79,7 +78,6 @@ export function NetworkStatusProvider({
     void Network.getNetworkStateAsync()
       .then(handleStatusUpdate)
       .catch((error) => {
-        if (__DEV__) console.warn('Error getting initial network state:', error);
         setIsChecking(false);
       });
     const subscription = Network.addNetworkStateListener(handleStatusUpdate);
@@ -91,7 +89,6 @@ export function NetworkStatusProvider({
     try {
       handleStatusUpdate(await Network.getNetworkStateAsync());
     } catch (error) {
-      if (__DEV__) console.warn('Error refreshing network status:', error);
       setIsChecking(false);
     }
   }, [handleStatusUpdate]);

@@ -40,7 +40,6 @@ export async function getScheduledLetterUnlockNotifications(): Promise<
         };
       });
   } catch (error) {
-    if (__DEV__) console.error('getScheduledLetterUnlockNotifications failed', error);
     return [];
   }
 }

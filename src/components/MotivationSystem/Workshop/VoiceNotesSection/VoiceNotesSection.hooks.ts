@@ -26,10 +26,8 @@ export function useVoiceNotesSection({
 
   const recording = useAudioRecording({
     maxDurationSeconds: MAX_RECORDING_DURATION,
-    onError: (error) => { if (__DEV__) console.error('Recording error:', error); },
     onMaxDurationReached: () => recording.stopRecording(),
     onPermissionDenied: (canAskAgain) => {
-      if (__DEV__) console.log('Microphone permission denied, canAskAgain:', canAskAgain);
     },
     onRecordingComplete: async (uri, durationSeconds) => {
       const shouldMarkAsDay1 = isDay1Recording || voiceNoteCount === 0;

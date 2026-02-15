@@ -23,7 +23,6 @@ export function usePausedHabitsModalLogic() {
     try {
       await resumeHabit({ habitId });
     } catch (error) {
-      if (__DEV__) console.error('Error resuming habit:', error);
       if (Platform.OS === 'web') {
         alert('Failed to resume habit. Please try again.');
       }

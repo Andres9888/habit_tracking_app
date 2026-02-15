@@ -36,7 +36,6 @@ export function useRenderCount(
     if (log) {
       const count = renderCount.current;
       const message = `[Render] ${componentName}: #${count} (${renderDuration.toFixed(2)}ms)`;
-      if (count >= warnThreshold && __DEV__) console.warn(message);
     }
   });
 

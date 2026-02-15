@@ -32,7 +32,6 @@ export function useSeedHandlers(opts: UseSeedHandlersOptions) {
       setToastMessage('Templates loaded successfully!');
       setShowToast(true);
     } catch (error) {
-      if (__DEV__) console.error('Error seeding:', error);
       setToastMessage('Failed to load templates.');
       setShowToast(true);
     } finally {

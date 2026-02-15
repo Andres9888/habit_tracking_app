@@ -54,7 +54,6 @@ export function useTemplateBadge({ totalHabits, hasViewedTemplates }: UseTemplat
         setShowBadge(false);
       }
     } catch (error) {
-      if (__DEV__) console.error('Error checking badge visibility:', error);
       setShowBadge(false);
     }
   };
@@ -64,7 +63,6 @@ export function useTemplateBadge({ totalHabits, hasViewedTemplates }: UseTemplat
       await SecureStore.setItemAsync(BADGE_DISMISSED_KEY, 'true');
       setShowBadge(false);
     } catch (error) {
-      if (__DEV__) console.error('Error dismissing badge:', error);
     }
   };
 

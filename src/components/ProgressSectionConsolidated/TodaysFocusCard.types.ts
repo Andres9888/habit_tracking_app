@@ -68,7 +68,7 @@ export interface FocusStateConfig {
  *   habitAge={30}
  *   bestStreak={21}
  *   celebratedMilestones={[7, 14]}
- *   onMilestoneCelebrated={(milestone) => console.log(`Celebrated ${milestone}`)}
+ *   onMilestoneCelebrated={(milestone) => handleCelebration(milestone)}
  * />
  * ```
  */

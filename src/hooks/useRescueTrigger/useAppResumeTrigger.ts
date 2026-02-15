@@ -46,7 +46,6 @@ export function useAppResumeTrigger({
 
         const inQuiet = checkQuietHours();
         if (inQuiet) {
-          if (__DEV__) console.warn(
             '[useRescueTrigger] App resume in quiet hours, skipping trigger'
           );
           appStateRef.current = nextState;
@@ -56,7 +55,6 @@ export function useAppResumeTrigger({
         if (hours <= hoursBeforeEnd && hours > 0) {
           const habit = findHabitNeedingRescue(true);
           if (habit && !habitNeedingRescue) {
-            if (__DEV__) console.warn(
               `[useRescueTrigger] App resume trigger for habit: ${habit.name}`
             );
             setHabitNeedingRescue(habit.id);

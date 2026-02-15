@@ -59,7 +59,6 @@ export async function ensureNotificationPermissions(): Promise<boolean> {
 
     return false;
   } catch (error) {
-    if (__DEV__) console.error('ensureNotificationPermissions failed', error);
     return false;
   }
 }

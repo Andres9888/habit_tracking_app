@@ -72,7 +72,6 @@ export function useAffirmationEditor({
       try {
         await onDeleteAffirmation(affirmationId);
       } catch (error) {
-        if (__DEV__) console.error('Failed to delete affirmation:', error);
       }
     },
     [onDeleteAffirmation]

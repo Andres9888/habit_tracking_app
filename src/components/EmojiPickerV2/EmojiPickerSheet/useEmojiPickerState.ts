@@ -58,7 +58,6 @@ export function useEmojiPickerState(visible: boolean, habitName: string) {
       void getRecentEmojis()
         .then(setRecentEmojis)
         .catch((error) => {
-          if (__DEV__) console.warn('Error loading recent emojis:', error);
           setRecentEmojis([]);
         });
     }

@@ -44,7 +44,6 @@ export class PerformanceTimer {
   ): PerformanceMeasure | null {
     const startMark = this.marks.get(startMarkName);
     if (!startMark) {
-      if (__DEV__) console.warn(`Start mark "${startMarkName}" not found`);
       return null;
     }
     const endTimestamp = endMarkName
