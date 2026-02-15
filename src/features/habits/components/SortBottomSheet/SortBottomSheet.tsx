@@ -84,7 +84,7 @@ export function SortBottomSheet({
                 accessibilityLabel='Close'
                 accessibilityRole='button'
                 className='h-10 w-10 items-center justify-center rounded-full'
-                style={{ backgroundColor: isDark ? '#1f2937' : '#f5f5f4' }}
+                style={{ backgroundColor: isDark ? themeColors.gray[800] : themeColors.gray[100] }}
                 onPress={handleDismiss}
               >
                 <X color={themeColors.text.secondary} size={24} />
