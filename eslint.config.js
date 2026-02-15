@@ -116,8 +116,9 @@ export default tseslint.config(
       // 6. Type imports (keep separate)
 
       // Additional TypeScript safety
-      '@typescript-eslint/no-floating-promises': 'off',
-      '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-misused-promises': 'warn',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off', // RevenueCat SDK has type mismatches
 
       // React Native specific
       'react/self-closing-comp': 'off',
