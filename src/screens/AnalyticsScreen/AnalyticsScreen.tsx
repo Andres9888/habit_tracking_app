@@ -43,6 +43,10 @@ function AnalyticsScreenContent() {
     setShowExportMenu,
   } = useAnalyticsScreen();
 
+  // All React hooks must be called before any early returns
+  const rankedHabits = useMemo(() => overviewStats?.rankedHabits || [], [overviewStats?.rankedHabits]);
+  const hasNoHabits = overviewStats?.totalHabits === 0;
+
   // Show paywall modal if not premium user
   if (!isPremiumUser && showPaywall) {
     return (
@@ -58,9 +62,6 @@ function AnalyticsScreenContent() {
   if (isLoading) {
     return <AnalyticsScreenSkeleton />;
   }
-
-  const hasNoHabits = overviewStats?.totalHabits === 0;
-  const rankedHabits = useMemo(() => overviewStats?.rankedHabits || [], [overviewStats?.rankedHabits]);
 
   return (
     <ScrollView

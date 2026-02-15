@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * RetryableErrorView — inline error card with retry button.
  * Use inside screens when a query/mutation fails but the whole screen

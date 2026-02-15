@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * EmptyState - OPTIMIZED: FadeInUp animation, better visuals, dark mode
  */

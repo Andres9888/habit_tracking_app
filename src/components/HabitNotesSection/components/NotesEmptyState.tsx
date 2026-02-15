@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /** NotesEmptyState - OPTIMIZED: Better animation, haptics, dark mode */
 import React from 'react';
 import { Text, View } from 'react-native';

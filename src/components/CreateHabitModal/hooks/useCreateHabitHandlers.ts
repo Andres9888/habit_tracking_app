@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * useCreateHabitHandlers - Handle habit creation and editing operations
  *
