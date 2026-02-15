@@ -65,6 +65,9 @@ export function NextHabitSuggestion({
 
   return (
     <Pressable
+      accessibilityHint='Double tap to open this habit'
+      accessibilityLabel={`Next habit: ${habit.name ?? 'habit'}`}
+      accessibilityRole='button'
       onPress={() => onPress?.(habit)}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

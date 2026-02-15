@@ -82,7 +82,12 @@ export default function WeeklyInsightsCard({
         <SuggestedActions />
       </HabitListSection>
 
-      <AnimatedPressable style={styles.archiveButton} onPress={onArchivePress}>
+      <AnimatedPressable
+        accessibilityLabel='View past reports'
+        accessibilityRole='button'
+        style={styles.archiveButton}
+        onPress={onArchivePress}
+      >
         <Ionicons color={colors.text.secondary} name='archive' size={20} />
         <Text style={styles.archiveButtonText}>View Past Reports</Text>
       </AnimatedPressable>
