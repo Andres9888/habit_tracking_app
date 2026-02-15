@@ -61,6 +61,7 @@ function HabitCardComponent(props: HabitCardProps) {
           accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}. Swipe left for actions.`}
           accessibilityRole='button'
           accessibilityState={{ checked: habit.completed, disabled }}
+          testID='home-habit-toggle'
           style={[
             styles.card,
             {

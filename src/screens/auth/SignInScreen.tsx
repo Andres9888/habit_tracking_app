@@ -182,12 +182,14 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_apple'}
                 provider='apple'
+                testID='auth-sign-in-apple-button'
                 onPress={signInWithApple}
               />
               <SocialSignInButton
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_google'}
                 provider='google'
+                testID='auth-sign-in-google-button'
                 onPress={signInWithGoogle}
               />
             </View>
@@ -232,6 +234,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                 isLoading={isLoading}
                 label='Sign In'
                 loadingLabel='Signing in…'
+                testID='auth-sign-in-button'
                 onPress={handleSignIn}
               />
             </View>
