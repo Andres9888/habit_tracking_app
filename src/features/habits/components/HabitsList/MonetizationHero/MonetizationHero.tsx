@@ -6,6 +6,7 @@
 import { Animated, Pressable, Text, View } from 'react-native';
 import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
+import { SHADOW_OPACITY, OPACITY } from '../../../../../constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -32,7 +33,7 @@ export function MonetizationHero({
         elevation: 4,
         shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
+        shadowOpacity: SHADOW_OPACITY.minimal,
         shadowRadius: 16,
       }}
     >
@@ -56,10 +57,10 @@ export function MonetizationHero({
           className='flex-1 items-center rounded-full bg-[#6d28d9] px-5 py-3'
           style={({ pressed }: { pressed: boolean }) => ({
             elevation: 6,
-            opacity: pressed ? 0.8 : 1,
+            opacity: pressed ? OPACITY.strong : OPACITY.full,
             shadowColor: '#312e81',
             shadowOffset: { height: 8, width: 0 },
-            shadowOpacity: 0.32,
+            shadowOpacity: SHADOW_OPACITY.strong,
             shadowRadius: 16,
             transform: [{ scale: ctaPulse }],
           })}
