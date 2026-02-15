@@ -51,6 +51,9 @@ export function NameInputSection({
         />
         <Text className='mt-2 text-center text-[13px] text-stone-400'>
           {habitName.length}/50 characters
+          {habitName.length > 0 && habitName.trim().length < 2
+            ? ' · At least 2 characters required'
+            : ''}
         </Text>
       </Animated.View>
     </View>

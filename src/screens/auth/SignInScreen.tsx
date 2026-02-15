@@ -33,6 +33,7 @@ import {
   ForgotPasswordLink,
   ForgotPasswordModal,
   FormInput,
+  PasswordInput,
   SocialSignInButton,
   SubmitButton,
 } from './components';
@@ -210,12 +211,10 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                 onSubmitEditing={() => passwordRef.current?.focus()}
               />
 
-              <FormInput
+              <PasswordInput
                 ref={passwordRef}
-                secureTextEntry
                 autoComplete='password'
                 editable={!isAnyLoading}
-                label='Password'
                 labelRight={
                   <ForgotPasswordLink
                     onPress={() => setShowForgotPassword(true)}

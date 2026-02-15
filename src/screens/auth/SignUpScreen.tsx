@@ -10,6 +10,7 @@ import {
   AuthDivider,
   AuthError,
   FormInput,
+  PasswordInput,
   SignInLink,
   SocialSignInButton,
   SubmitButton,
@@ -139,13 +140,11 @@ export default function SignUpScreen({
                   onChangeText={setEmailAddress}
                   onSubmitEditing={() => passwordRef.current?.focus()}
                 />
-                <FormInput
+                <PasswordInput
                   ref={passwordRef}
-                  secureTextEntry
                   autoComplete='password-new'
                   editable={!isAnyLoading}
                   error={passwordError}
-                  label='Password'
                   placeholder='Create a password'
                   returnKeyType='go'
                   value={password}

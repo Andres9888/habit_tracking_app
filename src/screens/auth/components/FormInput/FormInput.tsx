@@ -11,10 +11,12 @@ interface FormInputProps extends TextInputProps {
   labelRight?: ReactNode;
   /** Optional validation error message to display */
   error?: string;
+  /** Show required field indicator (*) next to label */
+  required?: boolean;
 }
 
 export const FormInput = forwardRef(function FormInput(
-  { label, labelRight, error, onBlur, ...props }: FormInputProps,
+  { label, labelRight, error, required, onBlur, ...props }: FormInputProps,
   ref: Ref<TextInput>
 ) {
   const {
@@ -37,7 +39,10 @@ export const FormInput = forwardRef(function FormInput(
   return (
     <View className='gap-2'>
       <View className='flex-row items-center justify-between'>
-        <Text className='text-sm font-medium text-stone-600'>{label}</Text>
+        <Text className='text-sm font-medium text-stone-600'>
+          {label}
+          {required && <Text className='text-red-500'> *</Text>}
+        </Text>
         {labelRight}
       </View>
       <Animated.View
