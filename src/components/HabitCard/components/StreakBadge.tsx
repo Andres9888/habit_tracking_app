@@ -12,7 +12,8 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
-import { colors, milestoneColors } from '../../../theme/colors';
+import { milestoneColors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { streakStyles } from '../HabitCard.streakStyles';
 
 /** Design-system spring: damping 18, stiffness 150 */
@@ -51,6 +52,7 @@ function AnimatedStreakText({ children, streak }: { children: React.ReactNode; s
 
 export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
   const theme = useAppTheme();
+  const { colors: themeColors } = useThemeColors();
 
   if (currentStreak <= 0) {
     return (
@@ -58,14 +60,14 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
         <View
           style={[
             streakStyles.streakBadge,
-            { backgroundColor: colors.gray[100] },
+            { backgroundColor: themeColors.gray[100] },
           ]}
         >
           <Text style={streakStyles.streakFireIcon}>💪</Text>
           <Text
             style={[
               streakStyles.streakText,
-              { color: colors.gray[500] },
+              { color: themeColors.text.secondary },
             ]}
           >
             Start a Streak!
@@ -105,11 +107,11 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
               backgroundColor:
                 currentStreak >= bestStreak
                   ? milestoneColors.amberLight
-                  : colors.gray[100],
+                  : themeColors.gray[100],
               borderColor:
                 currentStreak >= bestStreak
                   ? milestoneColors.amberBorder
-                  : colors.border,
+                  : themeColors.border,
             },
           ]}
         >
@@ -121,7 +123,7 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
                 color:
                   currentStreak >= bestStreak
                     ? milestoneColors.amberText
-                    : colors.gray[500],
+                    : themeColors.text.secondary,
               },
             ]}
           >
