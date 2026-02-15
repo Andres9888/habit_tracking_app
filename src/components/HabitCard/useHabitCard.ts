@@ -125,7 +125,8 @@ export function useHabitCard(props: HabitCardProps) {
       habitState.completed,
       atRisk,
       theme,
-      themeColors.card
+      themeColors.card,
+      isDark
     ),
     bestStreak: habitState.bestStreak,
     borderRadius: theme.custom.borderRadius.large,

@@ -29,13 +29,13 @@ export const statusStyles = StyleSheet.create({
   checkmark: {
     alignItems: 'center',
     borderRadius: borderRadius.full,
-    height: 28,
+    height: 30,
     justifyContent: 'center',
-    width: 28,
+    width: 30,
   },
   checkmarkText: {
     color: colors.text.inverse,
-    fontSize: typography.bodySmall.fontSize,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   statusContainer: {

@@ -6,7 +6,8 @@
  * - Uncheck: 200ms scale 1→0.92→1 with soft tap
  */
 
-import { withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
+import { withSpring, withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
+import { springs } from '../../../theme/animations';
 
 interface CelebrationOptions {
   cardScale: SharedValue<number>;
@@ -43,18 +44,26 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
       rippleScale.value = 0;
       rippleOpacity.value = 0;
     } else {
-      // 240ms check animation: 1→1.15→1
-      checkmarkScale.value = withTiming(1.15, { duration: 120 }, () => {
-        'worklet';
-        checkmarkScale.value = withTiming(1, { duration: 120 });
+      // Satisfying spring completion — overshoot then settle
+      checkmarkScale.value = 0;
+      checkmarkScale.value = withSpring(1, {
+        ...springs.bouncy,
+        stiffness: 260,
+        damping: 12,
       });
-      checkmarkRotate.value = 0;
+      // Subtle celebratory rotation wiggle
+      checkmarkRotate.value = -8;
+      checkmarkRotate.value = withSpring(0, springs.button);
 
-      // Subtle ripple
+      // Expanding ripple with spring feel
       rippleScale.value = 0;
-      rippleOpacity.value = 0.2;
-      rippleScale.value = withTiming(1.5, { duration: 240 });
-      rippleOpacity.value = withTiming(0, { duration: 240 });
+      rippleOpacity.value = 0.3;
+      rippleScale.value = withSpring(2, {
+        ...springs.gentle,
+        stiffness: 120,
+        damping: 18,
+      });
+      rippleOpacity.value = withTiming(0, { duration: 350 });
     }
 
     runOnJS(setShowConfetti)(!reduceMotion);
@@ -75,13 +84,17 @@ export function createUncheckTrigger(
     'worklet';
     // Haptic feedback is handled by tapGesture onBegin
 
-    checkmarkScale.value = reduceMotion
-      ? 1
-      : withTiming(0.92, { duration: 100 }, () => {
-          'worklet';
-          checkmarkScale.value = withTiming(1, { duration: 100 });
-        });
-
-    checkmarkRotate.value = 0;
+    if (reduceMotion) {
+      checkmarkScale.value = 1;
+      checkmarkRotate.value = 0;
+    } else {
+      // Spring shrink-and-pop for uncheck
+      checkmarkScale.value = withSpring(0, {
+        ...springs.button,
+        stiffness: 300,
+        damping: 16,
+      });
+      checkmarkRotate.value = withSpring(8, springs.micro);
+    }
   };
 }

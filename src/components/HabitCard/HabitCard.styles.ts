@@ -77,7 +77,7 @@ const coreStyles = StyleSheet.create({
     letterSpacing: -0.41,
     lineHeight: 22,
   },
-  icon: { fontSize: 26 },
+  icon: { fontSize: 28 },
   // Streak text with proper contrast
   streakText: {
     color: REDESIGN_COLORS.streakText,

@@ -67,13 +67,15 @@ export function getBackgroundColor(
   completed: boolean,
   atRisk: boolean,
   theme: AppTheme,
-  cardColor?: string
+  cardColor?: string,
+  isDark?: boolean
 ): string {
   if (completed) {
-    return theme.custom.colors.primary[400] + '20'; // 20% opacity muted green
+    // Slightly stronger tint in dark mode for visibility
+    return theme.custom.colors.primary[400] + (isDark ? '28' : '18');
   }
   if (atRisk) {
-    return theme.custom.colors.warning[500] + '10'; // 10% opacity warning
+    return theme.custom.colors.warning[500] + (isDark ? '18' : '0C');
   }
   return cardColor ?? theme.custom.colors.light.card;
 }

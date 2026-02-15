@@ -49,7 +49,7 @@ export function createTapGesture(options: TapGestureOptions) {
     .onBegin(() => {
       if (disabled) return;
 
-      // Instant haptic feedback on touch
+      // Instant haptic feedback on touch — heavier for completion (satisfying thunk)
       if (completed) {
         runOnJS(() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
@@ -58,7 +58,7 @@ export function createTapGesture(options: TapGestureOptions) {
         })();
       } else {
         runOnJS(() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(
             () => {}
           );
         })();
