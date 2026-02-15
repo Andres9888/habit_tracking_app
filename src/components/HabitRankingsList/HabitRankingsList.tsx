@@ -67,11 +67,14 @@ export default function HabitRankingsList({
   return (
     <FlatList
       nestedScrollEnabled
+      removeClippedSubviews
       contentContainerStyle={styles.listContainer}
       data={habits}
       getItemLayout={getItemLayout}
+      initialNumToRender={10}
       ItemSeparatorComponent={ItemSeparator}
       keyExtractor={keyExtractor}
+      maxToRenderPerBatch={10}
       renderItem={renderItem}
       scrollEnabled={false}
       showsVerticalScrollIndicator={false}
