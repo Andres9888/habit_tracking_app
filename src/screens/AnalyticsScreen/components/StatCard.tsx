@@ -19,14 +19,17 @@ export const StatCard = memo(function StatCard({
     ? `${title}, loading`
     : `${title}: ${value}${subtitle ? `, ${subtitle}` : ''}`;
 
+  // When wrapped in AnimatedPressable, a11y is on the pressable — avoid double-announcing
+  const isInteractive = !!onPress && !loading;
+
   const content = (
     <View
-      accessible
+      accessible={!isInteractive}
       accessibilityHint={
-        onPress ? 'Double tap to view habit details' : undefined
+        !isInteractive && onPress ? 'Double tap to view habit details' : undefined
       }
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole={onPress ? 'button' : 'text'}
+      accessibilityLabel={!isInteractive ? accessibilityLabel : undefined}
+      accessibilityRole={!isInteractive ? (onPress ? 'button' : 'text') : undefined}
       style={styles.statCard}
     >
       {loading ? (
