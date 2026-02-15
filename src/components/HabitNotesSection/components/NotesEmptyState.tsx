@@ -23,11 +23,11 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.97, { damping: 15 });
+    scale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 15 });
+    scale.value = withSpring(1, { damping: 18, stiffness: 240 });
   };
 
   const handlePress = () => {

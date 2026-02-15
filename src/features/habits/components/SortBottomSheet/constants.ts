@@ -19,7 +19,7 @@ export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 export const SHEET_SPRING_CONFIG = {
   damping: 18,
   mass: 1,
-  stiffness: 120,
+  stiffness: 150,
 };
 
 /** Gesture threshold for dismissal */

@@ -53,10 +53,10 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         style={archiveStyle}
         onPress={handleArchive}
         onPressIn={() => {
-          archiveScale.value = withSpring(0.97, { damping: 15 });
+          archiveScale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
         }}
         onPressOut={() => {
-          archiveScale.value = withSpring(1, { damping: 15 });
+          archiveScale.value = withSpring(1, { damping: 18, stiffness: 240 });
         }}
       >
         <Archive color='#d97706' size={18} strokeWidth={2} />
@@ -75,10 +75,10 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         style={deleteStyle}
         onPress={handleDelete}
         onPressIn={() => {
-          deleteScale.value = withSpring(0.97, { damping: 15 });
+          deleteScale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
         }}
         onPressOut={() => {
-          deleteScale.value = withSpring(1, { damping: 15 });
+          deleteScale.value = withSpring(1, { damping: 18, stiffness: 240 });
         }}
       >
         <Trash2 color='#dc2626' size={18} strokeWidth={2} />
