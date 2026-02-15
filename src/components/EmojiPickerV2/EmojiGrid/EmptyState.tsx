@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
 import { Search } from 'lucide-react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -17,7 +17,9 @@ export function EmptyState() {
       <Text style={[styles.emptyStateTitle, { color: colors.text.primary }]}>
         No emojis found
       </Text>
-      <Text style={[styles.emptyStateSubtitle, { color: colors.text.tertiary }]}>
+      <Text
+        style={[styles.emptyStateSubtitle, { color: colors.text.tertiary }]}
+      >
         Try a different search term
       </Text>
     </Animated.View>
