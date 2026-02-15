@@ -1,7 +1,8 @@
 import type { SharedValue } from 'react-native-reanimated';
 import { withSpring, withTiming } from 'react-native-reanimated';
+import { SPRING_CONFIGS } from '@/utils/animations/helpers';
 
-const SPRING_CONFIG = { damping: 18, stiffness: 240 };
+const SPRING_CONFIG = SPRING_CONFIGS.entrance; // Design system: damping: 18, stiffness: 150
 
 interface ButtonHandlerConfig {
   scale: SharedValue<number>;

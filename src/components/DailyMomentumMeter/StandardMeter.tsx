@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Animated } from 'react-native';
+import { View, Text } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import type { ProgressColors, MotivationalMessage } from './types';
 
 interface StandardMeterProps {
@@ -8,10 +9,10 @@ interface StandardMeterProps {
   totalHabits: number;
   colors: ProgressColors;
   message: MotivationalMessage;
-  celebrationScale: Animated.Value;
-  glowOpacity: Animated.Value;
-  flameScale: Animated.Value;
-  progressWidth: Animated.AnimatedInterpolation<string | number>;
+  celebrationAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
+  glowAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
+  flameAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
+  progressAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
 }
 
 export function StandardMeter({
@@ -20,23 +21,25 @@ export function StandardMeter({
   totalHabits,
   colors,
   message,
-  celebrationScale,
-  glowOpacity,
-  flameScale,
-  progressWidth,
+  celebrationAnimatedStyle,
+  glowAnimatedStyle,
+  flameAnimatedStyle,
+  progressAnimatedStyle,
 }: StandardMeterProps) {
   return (
     <Animated.View
       className='flex-row items-center gap-4 rounded-2xl px-4 py-3'
-      style={{
-        backgroundColor: colors.bg,
-        elevation: percentage === 100 ? 4 : 0,
-        shadowColor: percentage === 100 ? colors.glow : 'transparent',
-        shadowOffset: { height: 0, width: 0 },
-        shadowOpacity: percentage === 100 ? 0.4 : 0,
-        shadowRadius: 16,
-        transform: [{ scale: celebrationScale }],
-      }}
+      style={[
+        {
+          backgroundColor: colors.bg,
+          elevation: percentage === 100 ? 4 : 0,
+          shadowColor: percentage === 100 ? colors.glow : 'transparent',
+          shadowOffset: { height: 0, width: 0 },
+          shadowOpacity: percentage === 100 ? 0.4 : 0,
+          shadowRadius: 16,
+        },
+        celebrationAnimatedStyle,
+      ]}
     >
       {/* Progress ring */}
       <View className='relative'>
@@ -50,10 +53,7 @@ export function StandardMeter({
               backgroundColor: percentage > 0 ? colors.fill : '#e7e5e4',
             }}
           >
-            <Animated.Text
-              className='text-lg'
-              style={{ transform: [{ scale: flameScale }] }}
-            >
+            <Animated.Text className='text-lg' style={flameAnimatedStyle}>
               {message.emoji}
             </Animated.Text>
           </View>
@@ -83,7 +83,7 @@ export function StandardMeter({
           >
             <Animated.View
               className='h-full rounded-full'
-              style={{ backgroundColor: colors.fill, width: progressWidth }}
+              style={[{ backgroundColor: colors.fill }, progressAnimatedStyle]}
             />
           </View>
         </View>
@@ -91,7 +91,7 @@ export function StandardMeter({
 
       {/* Celebration sparkles */}
       {percentage === 100 && (
-        <Animated.View style={{ opacity: glowOpacity }}>
+        <Animated.View style={glowAnimatedStyle}>
           <Text className='text-2xl'>🎉</Text>
         </Animated.View>
       )}

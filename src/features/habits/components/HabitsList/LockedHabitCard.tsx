@@ -32,7 +32,8 @@ export function LockedHabitCard({
     Animated.parallel([
       Animated.spring(entranceScale, {
         damping: 18,
-        stiffness: 150,
+        mass: 1,
+        stiffness: 150, // Design system standard
         toValue: 1,
         useNativeDriver: true,
       }),
@@ -52,7 +53,8 @@ export function LockedHabitCard({
     }
     Animated.spring(pressScale, {
       damping: 18,
-      stiffness: 240,
+      mass: 1,
+      stiffness: 150, // Design system standard
       toValue: 0.97,
       useNativeDriver: true,
     }).start();
@@ -65,7 +67,8 @@ export function LockedHabitCard({
     }
     Animated.spring(pressScale, {
       damping: 18,
-      stiffness: 240,
+      mass: 1,
+      stiffness: 150, // Design system standard
       toValue: 1,
       useNativeDriver: true,
     }).start();
