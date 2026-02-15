@@ -5,9 +5,14 @@
  * Handles SDK initialization, data fetching, and customer info listener.
  * Polls for SDK availability (handles race condition with PurchasesProvider),
  * then fetches customer info + offerings in parallel.
+ *
+ * Also queries the server-side subscription record as a fallback when the
+ * RevenueCat SDK is unavailable (e.g. Expo Go, network issues).
  */
 
 import { useEffect, useState, useRef } from 'react';
+import { useQuery } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import { isPurchasesAvailable, Purchases } from '../../lib/purchases';
 import type {
   PurchasesPackage,
@@ -18,12 +23,22 @@ import type {
 const MAX_RETRIES = 10;
 const RETRY_DELAY_MS = 500;
 
+/** Server-side subscription record shape (subset we care about) */
+interface ServerSubscription {
+  status: string;
+  hasBillingIssue?: boolean;
+  expiresAt?: number;
+  planType?: string;
+}
+
 interface PremiumData {
   customerInfo: CustomerInfo | null;
   packages: PurchasesPackage[] | null;
   isLoading: boolean;
   isLoadingOfferings: boolean;
   error: string | null;
+  /** Server-side subscription record — fallback when SDK unavailable */
+  serverSubscription: ServerSubscription | null | undefined;
   setCustomerInfo: (info: CustomerInfo) => void;
   setError: (error: string | null) => void;
 }
@@ -35,6 +50,12 @@ export function usePremiumData(): PremiumData {
   const [isLoadingOfferings, setIsLoadingOfferings] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const listenerRef = useRef<CustomerInfoUpdateListener | null>(null);
+
+  // Server-side fallback: always query so we can detect billing issues
+  // and provide premium status when SDK is unavailable
+  const serverSubscription = useQuery(
+    api.subscriptions.getCurrentUserSubscription
+  ) as ServerSubscription | null | undefined;
 
   useEffect(() => {
     let isMounted = true;
@@ -100,8 +121,8 @@ export function usePremiumData(): PremiumData {
       .then(() => {
         if (isMounted) setupListener();
       })
-      .catch((error) => {
-        if (__DEV__) console.warn('[usePremium] Unexpected error during setup:', error);
+      .catch((fetchError) => {
+        if (__DEV__) console.warn('[usePremium] Unexpected error during setup:', fetchError);
       });
 
     return () => {
@@ -119,6 +140,7 @@ export function usePremiumData(): PremiumData {
     isLoading,
     isLoadingOfferings,
     packages,
+    serverSubscription,
     setCustomerInfo,
     setError,
   };

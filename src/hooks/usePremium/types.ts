@@ -10,6 +10,7 @@ export type SubscriptionStatus =
   | 'free'
   | 'trialing'
   | 'active'
+  | 'past_due'
   | 'expired'
   | 'error';
 
@@ -22,6 +23,8 @@ export interface PremiumState {
   isLoading: boolean;
   /** Error message if any */
   error: string | null;
+  /** Whether there is a billing issue (payment failed, in grace period) */
+  hasBillingIssue: boolean;
 }
 
 export interface PremiumOfferings {

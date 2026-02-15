@@ -7,6 +7,7 @@ import { Alert, Linking, Platform, Share } from 'react-native';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { PremiumStatus } from './sections/PremiumStatus';
+import { usePremium } from '../../hooks/usePremium';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
@@ -23,6 +24,7 @@ interface AccountSectionProps {
 }
 
 export function AccountSection({ isHighContrastActive, isPremium = false, onPremiumUpsell }: AccountSectionProps) {
+  const { status, hasBillingIssue, managementUrl } = usePremium();
   const { signOut } = useClerk();
   const { user } = useUser();
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -89,9 +91,12 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
   return (
     <>
       <PremiumStatus
+        hasBillingIssue={hasBillingIssue}
         highContrast={isHighContrastActive}
         isPremium={isPremium}
+        managementUrl={managementUrl}
         onUpgrade={onPremiumUpsell}
+        status={status}
       />
       <AccountInfo
         email={userEmail}

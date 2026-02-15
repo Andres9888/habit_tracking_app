@@ -124,10 +124,10 @@ export const revokePremium = internalMutation({
         updatedAt: now,
       });
     }
-    // Only revoke premium access on EXPIRATION.
+    // Only revoke premium access on EXPIRATION or TRANSFER_OUT.
     // CANCELLATION means the user cancelled auto-renew but their current
     // billing period is still active — they should keep premium until it expires.
-    if (eventType === 'EXPIRATION') {
+    if (eventType === 'EXPIRATION' || eventType === 'TRANSFER_OUT') {
       await updateUserSettingsPremium(ctx, clerkId, false);
     }
   },

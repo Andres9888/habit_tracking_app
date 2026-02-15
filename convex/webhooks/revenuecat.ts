@@ -24,6 +24,7 @@ const GRANT_EVENTS = new Set([
 ]);
 const REVOKE_EVENTS = new Set(['CANCELLATION', 'EXPIRATION']);
 const BILLING_EVENTS = new Set(['BILLING_ISSUE']);
+const TRANSFER_EVENTS = new Set(['TRANSFER']);
 
 /**
  * Main webhook handler for RevenueCat events
@@ -83,6 +84,31 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
       await ctx.runMutation(internal.subscriptions.setBillingIssue, {
         clerkId: appUserId,
       });
+    } else if (TRANSFER_EVENTS.has(eventType)) {
+      // TRANSFER: subscription moved to a new user
+      // Revoke from old user (transferred_from) and grant to new user (transferred_to)
+      const transferredFrom: string | undefined =
+        event.transferred_from?.[0];
+      const transferredTo: string | undefined =
+        event.transferred_to?.[0];
+
+      if (transferredFrom) {
+        await ctx.runMutation(internal.subscriptions.revokePremium, {
+          clerkId: transferredFrom,
+          eventType: 'TRANSFER_OUT',
+        });
+      }
+      if (transferredTo) {
+        await ctx.runMutation(internal.subscriptions.grantPremium, {
+          clerkId: transferredTo,
+          eventType: 'TRANSFER_IN',
+          expiresAt: validatedExpiresAt,
+          isTrialing: false,
+          productId: event.product_id,
+          revenueCatId: event.original_app_user_id,
+          trialEndsAt: undefined,
+        });
+      }
     } else {
       // Unhandled event type — no action needed
     }

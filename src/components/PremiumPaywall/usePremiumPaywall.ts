@@ -31,6 +31,7 @@ export interface PremiumPaywallHandlers {
   handleStartTrial: () => Promise<void>;
   isLoadingOfferings: boolean;
   isProcessing: boolean;
+  isRestoring: boolean;
   monthlyPackage: PurchasesPackage | null;
   priceLabel: string | undefined;
   selectedPackage: PurchasesPackage | null;
@@ -95,7 +96,7 @@ export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePur
      
   }, [isProcessing, variant, selectedPackage, purchasePackage, onStartTrial, onClose, triggerSelection, triggerSuccess]);
 
-  const { handleRestorePurchases } = useRestorePurchases({ onClose, onRestorePurchases });
+  const { handleRestorePurchases, isRestoring } = useRestorePurchases({ onClose, onRestorePurchases });
 
   const priceLabel = selectedPackage
     ? `${selectedPackage.product.priceString}/${String(selectedPackage.packageType) === 'ANNUAL' ? 'year' : 'month'}`
@@ -111,6 +112,7 @@ export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePur
     handleStartTrial,
     isLoadingOfferings,
     isProcessing,
+    isRestoring,
     monthlyPackage,
     priceLabel,
     selectedPackage,
