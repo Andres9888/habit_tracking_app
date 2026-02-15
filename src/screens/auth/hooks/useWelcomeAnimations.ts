@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import {
   useSharedValue,
   useAnimatedStyle,
+  useReducedMotion,
   withDelay,
   withSpring,
 } from 'react-native-reanimated';
@@ -24,7 +25,21 @@ export function useWelcomeAnimations() {
   const buttonsOpacity = useSharedValue(0);
   const buttonsTranslateY = useSharedValue(15);
 
+  const reduceMotion = useReducedMotion();
+
   useEffect(() => {
+    if (reduceMotion) {
+      iconOpacity.value = 1;
+      iconScale.value = 1;
+      titleOpacity.value = 1;
+      titleTranslateY.value = 0;
+      subtitleOpacity.value = 1;
+      subtitleTranslateY.value = 0;
+      buttonsOpacity.value = 1;
+      buttonsTranslateY.value = 0;
+      return;
+    }
+
     // Stagger: 0, 60, 120, 180ms
     iconOpacity.value = withSpring(1, SPRING_CONFIG);
     iconScale.value = withSpring(1, SPRING_CONFIG);

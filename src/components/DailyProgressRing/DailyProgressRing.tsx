@@ -10,7 +10,9 @@ import { View, Text, Platform } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedProps,
+  useReducedMotion,
   withSpring,
+  withTiming,
   FadeIn,
 } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
@@ -39,13 +41,16 @@ function DailyProgressRingComponent({
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = useSharedValue(0);
+  const reduceMotion = useReducedMotion();
 
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
 
   useEffect(() => {
     const target = total > 0 ? completed / total : 0;
-    progress.value = withSpring(target, { damping: 18 });
-  }, [completed, total, progress]);
+    progress.value = reduceMotion
+      ? withTiming(target, { duration: 0 })
+      : withSpring(target, { damping: 18 });
+  }, [completed, total, progress, reduceMotion]);
 
   const animatedProps = useAnimatedProps(() => ({
     strokeDashoffset: circumference * (1 - progress.value),

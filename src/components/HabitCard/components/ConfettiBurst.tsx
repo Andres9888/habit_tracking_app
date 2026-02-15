@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withSequence,
   withSpring,
@@ -69,6 +70,8 @@ function Particle({ color, endX, endY, onComplete }: ParticleProps) {
 }
 
 export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
+  const reduceMotion = useReducedMotion();
+
   const particles = React.useMemo(() => {
     return Array.from({ length: PARTICLE_COUNT }, (_, i) => {
       const angle = (i / PARTICLE_COUNT) * Math.PI * 2;
@@ -83,7 +86,12 @@ export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
     });
   }, []);
 
+  // Skip confetti when reduce motion is on — purely decorative animation
   if (!active) return null;
+  if (reduceMotion) {
+    onComplete?.();
+    return null;
+  }
 
   return (
     <View pointerEvents='none' style={styles.container}>

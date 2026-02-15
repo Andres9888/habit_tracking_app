@@ -6,6 +6,7 @@
 import { useEffect } from 'react';
 import {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withSpring,
   withDelay,
@@ -22,7 +23,19 @@ export function useEmptyStateAnimations(variant: EmptyStateVariant) {
   const ctaOpacity = useSharedValue(0);
   const ctaTranslateY = useSharedValue(20);
 
+  const reduceMotion = useReducedMotion();
+
   useEffect(() => {
+    if (reduceMotion) {
+      iconOpacity.value = 1;
+      iconScale.value = 1;
+      headlineOpacity.value = 1;
+      descriptionOpacity.value = 1;
+      ctaOpacity.value = 1;
+      ctaTranslateY.value = 0;
+      return;
+    }
+
     // Icon: fade in and scale up
     iconOpacity.value = withSpring(1, SPRING_CONFIG);
     iconScale.value = withSpring(1, SPRING_CONFIG);
@@ -36,7 +49,7 @@ export function useEmptyStateAnimations(variant: EmptyStateVariant) {
     // CTA: fade in and slide up with delay
     ctaOpacity.value = withDelay(400, withSpring(1, SPRING_CONFIG));
     ctaTranslateY.value = withDelay(400, withSpring(0, SPRING_CONFIG));
-  }, [variant]);
+  }, [variant, reduceMotion]);
 
   const iconStyle = useAnimatedStyle(() => ({
     opacity: iconOpacity.value,

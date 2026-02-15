@@ -29,7 +29,20 @@ const {
 const inOutEase = Easing.inOut(Easing.ease);
 const outEase = Easing.out(Easing.ease);
 
-export function runAnimationSequence(anim: AnimationValues, strength: number) {
+export function runAnimationSequence(anim: AnimationValues, strength: number, reduceMotion = false) {
+  if (reduceMotion) {
+    // Show everything instantly without motion
+    anim.badgeScale.value = 1;
+    anim.glowOpacity.value = 0.6;
+    anim.labelOpacity.value = 1;
+    anim.percentageValue.value = strength;
+    anim.shareButtonTranslateY.value = 0;
+    anim.shareButtonOpacity.value = 1;
+    anim.continueButtonOpacity.value = 1;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    return;
+  }
+
   anim.badgeScale.value = withSequence(
     withSpring(1.3, {
       damping: BADGE_BOUNCE_DAMPING,

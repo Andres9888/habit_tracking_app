@@ -7,6 +7,7 @@ import {
   Easing,
   useAnimatedProps,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withDelay,
   withSequence,
@@ -30,8 +31,18 @@ export function useStrengthRingAnimation({
   const emojiScale = useSharedValue(1);
   const emojiOpacity = useSharedValue(1);
   const emojiRotation = useSharedValue(0);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    if (reduceMotion) {
+      animatedStrength.value = strength;
+      emojiScale.value = 1;
+      emojiOpacity.value = 1;
+      emojiRotation.value = 0;
+      previousLevelRef.current = levelLabel;
+      return;
+    }
+
     animatedStrength.value = withSpring(strength, {
       damping: 15,
       mass: 1,

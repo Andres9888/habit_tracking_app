@@ -6,10 +6,12 @@
 import { useEffect } from 'react';
 import {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withDelay,
   withSequence,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
 interface UseStreakAnimationOptions {
@@ -23,9 +25,15 @@ export function useStreakAnimation({
 }: UseStreakAnimationOptions) {
   const numberScale = useSharedValue(1);
   const barWidth = useSharedValue(0);
+  const reduceMotion = useReducedMotion();
 
   // Note: Shared values from Reanimated are stable and intentionally omitted from deps
   useEffect(() => {
+    if (reduceMotion) {
+      numberScale.value = 1;
+      barWidth.value = progress;
+      return;
+    }
     if (currentStreak > 0) {
       numberScale.value = withSequence(
         withSpring(1.08, { damping: 6 }),
@@ -34,7 +42,7 @@ export function useStreakAnimation({
     }
     barWidth.value = withDelay(150, withSpring(progress, { damping: 15 }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentStreak, progress]);
+  }, [currentStreak, progress, reduceMotion]);
 
   const numberAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: numberScale.value }],

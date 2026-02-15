@@ -10,6 +10,8 @@ import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  withTiming,
+  useReducedMotion,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
@@ -86,6 +88,7 @@ export function usePressAnimation(
   } = config;
 
   const scale = useSharedValue(1);
+  const reduceMotion = useReducedMotion();
 
   const triggerHaptic = useCallback(() => {
     if (enableHaptics && isHapticsSupported) {
@@ -98,14 +101,18 @@ export function usePressAnimation(
   const pressHandlers = useCallback(
     (): PressAnimationHandlers => ({
       onPressIn: () => {
-        scale.value = withSpring(pressScale, springConfig);
+        scale.value = reduceMotion
+          ? withTiming(pressScale, { duration: 0 })
+          : withSpring(pressScale, springConfig);
         triggerHaptic();
       },
       onPressOut: () => {
-        scale.value = withSpring(1, springConfig);
+        scale.value = reduceMotion
+          ? withTiming(1, { duration: 0 })
+          : withSpring(1, springConfig);
       },
     }),
-    [pressScale, springConfig, scale, triggerHaptic]
+    [pressScale, springConfig, scale, triggerHaptic, reduceMotion]
   )();
 
   const animatedStyle = useAnimatedStyle(() => ({

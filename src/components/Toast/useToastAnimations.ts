@@ -7,6 +7,7 @@ import { Gesture } from 'react-native-gesture-handler';
 import {
   useAnimatedStyle,
   useSharedValue,
+  useReducedMotion,
   withSpring,
   withTiming,
   runOnJS,
@@ -28,6 +29,7 @@ export function useToastAnimations({
 }: UseToastAnimationsParams) {
   const translateY = useSharedValue(100);
   const opacity = useSharedValue(0);
+  const reduceMotion = useReducedMotion();
   const haptic = useHapticFeedback();
 
   // Use ref for callback to prevent it from triggering useEffect re-runs
@@ -41,22 +43,26 @@ export function useToastAnimations({
         haptic.triggerLightImpact();
       }
 
-      translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
-      opacity.value = withTiming(0, { duration: 200 });
+      translateY.value = reduceMotion
+        ? withTiming(100, { duration: 0 })
+        : withSpring(100, { damping: 15, stiffness: 150 });
+      opacity.value = withTiming(0, { duration: reduceMotion ? 0 : 200 });
 
       if (onDismissRef.current) {
         setTimeout(() => {
           onDismissRef.current?.();
-        }, 250);
+        }, reduceMotion ? 0 : 250);
       }
     },
-    [translateY, opacity, haptic]
+    [translateY, opacity, haptic, reduceMotion]
   );
 
   useEffect(() => {
     if (visible) {
-      translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
-      opacity.value = withTiming(1, { duration: 200 });
+      translateY.value = reduceMotion
+        ? withTiming(0, { duration: 0 })
+        : withSpring(0, { damping: 15, stiffness: 150 });
+      opacity.value = withTiming(1, { duration: reduceMotion ? 0 : 200 });
 
       if (duration > 0 && onDismissRef.current) {
         const timer = setTimeout(() => {
@@ -65,8 +71,10 @@ export function useToastAnimations({
         return () => clearTimeout(timer);
       }
     } else {
-      translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
-      opacity.value = withTiming(0, { duration: 200 });
+      translateY.value = reduceMotion
+        ? withTiming(100, { duration: 0 })
+        : withSpring(100, { damping: 15, stiffness: 150 });
+      opacity.value = withTiming(0, { duration: reduceMotion ? 0 : 200 });
     }
   }, [visible, duration, translateY, opacity, handleDismiss]);
 

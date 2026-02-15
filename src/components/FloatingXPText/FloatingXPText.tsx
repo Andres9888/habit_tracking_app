@@ -15,6 +15,7 @@ import { StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
+  useReducedMotion,
   withTiming,
   Easing,
   runOnJS,
@@ -43,8 +44,19 @@ export function FloatingXPText({
 }: FloatingXPTextProps) {
   const translateY = useSharedValue(0);
   const opacity = useSharedValue(1);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    if (reduceMotion) {
+      // Skip float animation; just show briefly then complete
+      opacity.value = withTiming(0, { duration: 400 }, (finished) => {
+        if (finished && onComplete) {
+          runOnJS(onComplete)();
+        }
+      });
+      return;
+    }
+
     // Animate upward movement
     translateY.value = withTiming(-40, {
       duration: 800,

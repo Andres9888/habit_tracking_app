@@ -2,6 +2,7 @@ import { useEffect, useCallback, useRef } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withSpring,
   withTiming,
@@ -33,6 +34,7 @@ export function useDeleteToastAnimations({
   const translateY = useSharedValue(100);
   const opacity = useSharedValue(0);
   const progressWidth = useSharedValue(100);
+  const reduceMotion = useReducedMotion();
 
   // Use refs for callbacks to prevent them from triggering re-renders
   const onConfirmRef = useRef(onConfirm);
@@ -45,14 +47,16 @@ export function useDeleteToastAnimations({
   onDismissRef.current = onDismiss;
 
   const handleDismiss = useCallback(() => {
-    translateY.value = withSpring(100, springs.snappy);
-    opacity.value = withTiming(0, { duration: 200 });
+    translateY.value = reduceMotion
+      ? withTiming(100, { duration: 0 })
+      : withSpring(100, springs.snappy);
+    opacity.value = withTiming(0, { duration: reduceMotion ? 0 : 200 });
     progressWidth.value = 100;
 
     if (onDismissRef.current) {
-      setTimeout(() => onDismissRef.current?.(), 250);
+      setTimeout(() => onDismissRef.current?.(), reduceMotion ? 0 : 250);
     }
-  }, [translateY, opacity, progressWidth]);
+  }, [translateY, opacity, progressWidth, reduceMotion]);
 
   const handleUndo = useCallback(() => {
     onUndoRef.current?.();
@@ -67,8 +71,10 @@ export function useDeleteToastAnimations({
   useEffect(() => {
     if (visible) {
       progressWidth.value = 100;
-      translateY.value = withSpring(0, springs.snappy);
-      opacity.value = withTiming(1, { duration: 200 });
+      translateY.value = reduceMotion
+        ? withTiming(0, { duration: 0 })
+        : withSpring(0, springs.snappy);
+      opacity.value = withTiming(1, { duration: reduceMotion ? 0 : 200 });
       progressWidth.value = withTiming(0, {
         duration,
         easing: Easing.linear,
@@ -77,8 +83,10 @@ export function useDeleteToastAnimations({
       const timer = setTimeout(handleConfirm, duration);
       return () => clearTimeout(timer);
     } else {
-      translateY.value = withSpring(100, springs.snappy);
-      opacity.value = withTiming(0, { duration: 200 });
+      translateY.value = reduceMotion
+        ? withTiming(100, { duration: 0 })
+        : withSpring(100, springs.snappy);
+      opacity.value = withTiming(0, { duration: reduceMotion ? 0 : 200 });
     }
   }, [visible, duration, handleConfirm, translateY, opacity, progressWidth]);
 

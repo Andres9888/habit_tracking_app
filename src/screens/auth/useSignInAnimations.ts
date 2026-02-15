@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import {
   useSharedValue,
   useAnimatedStyle,
+  useReducedMotion,
   withDelay,
   withSpring,
   withTiming,
@@ -25,8 +26,20 @@ export function useSignInAnimations() {
   const headerTranslateY = useSharedValue(20);
   const contentOpacity = useSharedValue(0);
   const contentTranslateY = useSharedValue(30);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    if (reduceMotion) {
+      // Show everything instantly — no spring/slide animations
+      logoScale.value = 1;
+      logoOpacity.value = 1;
+      headerOpacity.value = 1;
+      headerTranslateY.value = 0;
+      contentOpacity.value = 1;
+      contentTranslateY.value = 0;
+      return;
+    }
+
     // Logo entrance
     logoScale.value = withSpring(1, SPRING_CONFIG);
     logoOpacity.value = withTiming(1, { duration: 280 });

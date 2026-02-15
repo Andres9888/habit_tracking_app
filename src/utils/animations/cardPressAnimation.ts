@@ -5,7 +5,11 @@
  * Design system: Scale to 0.97 with spring physics (damping: 18)
  */
 
-import { withSpring, type WithSpringConfig } from 'react-native-reanimated';
+import {
+  withSpring,
+  withTiming,
+  type WithSpringConfig,
+} from 'react-native-reanimated';
 
 /**
  * Standard card press scale value
@@ -34,12 +38,13 @@ export const CARD_PRESS_SPRING_CONFIG: WithSpringConfig = {
  */
 export function animateCardPress(
   scale: { value: number },
-  pressed: boolean
+  pressed: boolean,
+  reduceMotion = false
 ): void {
-  scale.value = withSpring(
-    pressed ? CARD_PRESS_SCALE : CARD_REST_SCALE,
-    CARD_PRESS_SPRING_CONFIG
-  );
+  const target = pressed ? CARD_PRESS_SCALE : CARD_REST_SCALE;
+  scale.value = reduceMotion
+    ? withTiming(target, { duration: 0 })
+    : withSpring(target, CARD_PRESS_SPRING_CONFIG);
 }
 
 /**
