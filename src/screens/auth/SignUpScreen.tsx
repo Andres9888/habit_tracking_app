@@ -113,12 +113,14 @@ export default function SignUpScreen({
                   disabled={isAnyLoading}
                   isLoading={oauthLoading === 'oauth_apple'}
                   provider='apple'
+                  testID='auth-sign-up-apple-button'
                   onPress={signInWithApple}
                 />
                 <SocialSignInButton
                   disabled={isAnyLoading}
                   isLoading={oauthLoading === 'oauth_google'}
                   provider='google'
+                  testID='auth-sign-up-google-button'
                   onPress={signInWithGoogle}
                 />
               </View>
@@ -163,6 +165,7 @@ export default function SignUpScreen({
                   isLoading={isLoading}
                   label='Create Account'
                   loadingLabel='Creating your account…'
+                  testID='auth-sign-up-button'
                   onPress={handleSignUp}
                 />
               </View>
