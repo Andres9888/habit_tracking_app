@@ -20,6 +20,7 @@ import {
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import * as SplashScreen from 'expo-splash-screen';
 
 import { api } from '../../../convex/_generated/api';
 import { colors } from '../../theme/colors';
@@ -111,7 +112,7 @@ const loadingStyles = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
-    backgroundColor: colors.light.background,
+    backgroundColor: '#F5F1ED', // Matches splash backgroundColor
     flex: 1,
     justifyContent: 'center',
   },
@@ -188,6 +189,17 @@ export function AuthGate() {
 
   const getOrCreateUserRef = useRef(getOrCreateUser);
   getOrCreateUserRef.current = getOrCreateUser;
+
+  // Hide splash screen when auth is loaded and we're ready to show content
+  // This ensures splash hides after auth + data are ready, not before
+  useEffect(() => {
+    const hideSplash = async () => {
+      if (isLoaded && onboardingComplete !== null) {
+        await SplashScreen.hideAsync();
+      }
+    };
+    hideSplash();
+  }, [isLoaded, onboardingComplete]);
 
   useEffect(() => {
     if (isSignedIn && isConvexReady) {
