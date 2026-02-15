@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from 'convex/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 
 interface UseSettingsModalLogicProps {
@@ -47,9 +47,22 @@ export const useSettingsModalLogic = ({
     setTimeout(() => setView('settings'), 300);
   };
 
+  // Debounce settings updates to prevent rapid-fire mutations
+  // when users toggle switches quickly
+  const pendingPatchRef = useRef<Record<string, unknown> | null>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const update = useCallback(
-    async (patch: Record<string, unknown>) => {
-      if (settings) await updateSettings({ ...settings, ...patch });
+    (patch: Record<string, unknown>) => {
+      pendingPatchRef.current = { ...pendingPatchRef.current, ...patch };
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = setTimeout(async () => {
+        const merged = pendingPatchRef.current;
+        pendingPatchRef.current = null;
+        if (settings && merged) {
+          await updateSettings({ ...settings, ...merged });
+        }
+      }, 300);
     },
     [settings, updateSettings]
   );

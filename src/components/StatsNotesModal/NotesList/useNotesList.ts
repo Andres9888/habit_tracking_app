@@ -57,6 +57,7 @@ export function useNotesList(initialHabitId?: Id<'habits'>) {
     : null;
 
   const handleDelete = async (noteId: Id<'notes'>) => {
+    if (deletingNoteId) return; // Prevent double-delete
     setDeletingNoteId(noteId);
     try {
       await deleteNote({ noteId });

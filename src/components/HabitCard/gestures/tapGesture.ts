@@ -30,6 +30,10 @@ interface TapGestureOptions {
   triggerUncheckAnimation: () => void;
 }
 
+/** Tracks last toggle time per habit to prevent rapid-fire mutations */
+const lastToggleTime = new Map<string, number>();
+const TOGGLE_THROTTLE_MS = 500;
+
 export function createTapGesture(options: TapGestureOptions) {
   const {
     id,
@@ -80,6 +84,12 @@ export function createTapGesture(options: TapGestureOptions) {
     })
     .onEnd(() => {
       if (disabled) return;
+
+      // Rate-limit: suppress rapid taps within throttle window
+      const now = Date.now();
+      const lastTime = lastToggleTime.get(id) ?? 0;
+      if (now - lastTime < TOGGLE_THROTTLE_MS) return;
+      lastToggleTime.set(id, now);
 
       // Optimistic UI update — instant visual toggle
       runOnJS(toggleOptimistic)();

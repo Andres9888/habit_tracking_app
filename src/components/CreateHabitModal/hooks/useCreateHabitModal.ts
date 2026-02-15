@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import type { CreateHabitModalProps, HabitTemplate } from '../types';
 import { useHabitForm } from './useHabitForm';
 import { useScienceModal } from './useScienceModal';
@@ -70,8 +70,15 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     triggerSuccess,
   });
 
+  // Double-submit prevention
+  const isSubmittingRef = useRef(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleCreate = useCallback(async () => {
     if (!form.habitName.trim() || !form.fullHabitName) return;
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
+    setIsSubmitting(true);
     try {
       const { hasReminders } = await checkReminderPermissions(
         form.remindersEnabled
@@ -84,6 +91,9 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
       cleanup();
     } catch (error) {
       if (__DEV__) console.error('Failed to save habit:', error);
+    } finally {
+      isSubmittingRef.current = false;
+      setIsSubmitting(false);
     }
   }, [
     form.habitName,
@@ -97,5 +107,5 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     cleanup,
   ]);
 
-  return { form, handleCreate, isEditMode, science, template };
+  return { form, handleCreate, isEditMode, isSubmitting, science, template };
 };
