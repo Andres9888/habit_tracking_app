@@ -6,6 +6,7 @@ import StatsOverview from './StatsOverview';
 import NotesList from './NotesList';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { StatsNotesHeader } from './StatsNotesHeader';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface StatsNotesModalProps {
   visible: boolean;
@@ -26,7 +27,7 @@ export default function StatsNotesModal({
 }: StatsNotesModalProps) {
   const [activeTab, setActiveTab] = useState<'stats' | 'notes'>('stats');
   const insets = useSafeAreaInsets();
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   return (
     <Modal

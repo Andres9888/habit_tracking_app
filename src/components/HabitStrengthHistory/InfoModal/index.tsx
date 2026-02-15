@@ -18,7 +18,7 @@ interface Props {
 
 export function HabitStrengthInfoModal({ visible, onClose }: Props) {
   const insets = useSafeAreaInsets();
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   return (
     <Modal
@@ -29,7 +29,7 @@ export function HabitStrengthInfoModal({ visible, onClose }: Props) {
     >
       <View
         className='flex-1'
-        style={{ backgroundColor: colors.background, paddingTop: insets.top || 16 }}
+        style={{ paddingTop: insets.top || 16, backgroundColor: colors.background }}
       >
         <Header onClose={onClose} />
         <Content />

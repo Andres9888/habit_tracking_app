@@ -16,6 +16,7 @@ import { ReadLetterHeader } from './ReadLetterHeader';
 import { ReadLetterFooter } from './ReadLetterFooter';
 import { LetterContent } from './LetterContent';
 import { LockedLetterView } from './LockedLetterView';
+import { useThemeColors } from '../../../../../../theme/ThemeContext';
 
 export function ReadLetterModal({
   visible,
@@ -24,6 +25,7 @@ export function ReadLetterModal({
   onMarkAsRead,
   reduceMotion = false,
 }: ReadLetterModalProps) {
+  const { colors, isDark } = useThemeColors();
   const hook = useReadLetterModal({
     letter,
     onMarkAsRead,
@@ -42,7 +44,7 @@ export function ReadLetterModal({
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className='flex-1'>
+      <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <LinearGradient
           className='absolute inset-0'
           colors={isDark ? [colors.background, colors.surface] : ['#f5f3ff', '#ffffff']}
