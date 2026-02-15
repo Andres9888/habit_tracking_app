@@ -9,6 +9,7 @@ import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import type { Habit } from './HabitDetailScreen.types';
+import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 interface UseCalendarHandlersProps {
   habit: Habit | null;
@@ -52,7 +53,7 @@ export const useCalendarHandlers = ({
       toggleHabitMutation({ date, habitId: habit._id })
         .catch((error: unknown) => {
           if (__DEV__) console.error('Failed to toggle habit:', error);
-          Alert.alert('Error', 'Failed to update habit. Please try again.');
+          Alert.alert('Error', ERROR_MESSAGES.DATA_OPS.TOGGLE_HABIT_FAILED);
         })
         .finally(() => setIsTogglingCalendar(false));
     },
