@@ -13,7 +13,8 @@
       "backgroundColor": "#059669"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/*",
+      "assets/sounds/*"
     ],
     "jsEngine": "hermes",
     "ios": {
