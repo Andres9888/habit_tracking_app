@@ -12,6 +12,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { colors, milestoneColors } from '../../../theme/colors';
 import { streakStyles } from '../HabitCard.streakStyles';
 
@@ -51,6 +52,7 @@ function AnimatedStreakText({ children, streak }: { children: React.ReactNode; s
 
 export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
   const theme = useAppTheme();
+  const { colors: themeColors, isDark } = useThemeColors();
 
   if (currentStreak <= 0) {
     return (
@@ -58,14 +60,14 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
         <View
           style={[
             streakStyles.streakBadge,
-            { backgroundColor: colors.gray[100] },
+            { backgroundColor: themeColors.gray[isDark ? 200 : 100] },
           ]}
         >
           <Text style={streakStyles.streakFireIcon}>💪</Text>
           <Text
             style={[
               streakStyles.streakText,
-              { color: colors.gray[500] },
+              { color: themeColors.text.secondary },
             ]}
           >
             Start a Streak!
