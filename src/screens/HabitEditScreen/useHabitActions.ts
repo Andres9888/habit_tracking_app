@@ -27,7 +27,11 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
               .then(onSuccess)
               .catch((error) => {
                 if (__DEV__) console.warn('Error deleting habit:', error);
-                Alert.alert('Error', 'Failed to delete habit. Please try again.');
+                Alert.alert(
+                  'Error',
+                  'Failed to delete habit. Please try again.',
+                  [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: () => void removeHabit({ habitId }).then(onSuccess) }]
+                );
               });
           },
           style: 'destructive',
@@ -51,7 +55,11 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
               .then(onSuccess)
               .catch((error) => {
                 if (__DEV__) console.warn('Error archiving habit:', error);
-                Alert.alert('Error', 'Failed to archive habit. Please try again.');
+                Alert.alert(
+                  'Error',
+                  'Failed to archive habit. Please try again.',
+                  [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: () => void archiveHabit({ habitId }).then(onSuccess) }]
+                );
               });
           },
           text: 'Archive',

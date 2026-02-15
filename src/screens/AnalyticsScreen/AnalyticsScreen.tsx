@@ -9,10 +9,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
-import {
-  ErrorBoundary,
-  ScreenErrorFallback,
-} from '../../components/ErrorBoundary';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 import { styles } from './AnalyticsScreen.styles';
 import {
@@ -127,16 +124,8 @@ function AnalyticsScreenContent() {
 
 export default function AnalyticsScreen() {
   return (
-    <ErrorBoundary
-      fallback={
-        <ScreenErrorFallback
-          screenName='Analytics'
-          error={null}
-          onRetry={() => {}}
-        />
-      }
-    >
+    <ScreenErrorBoundary screenName="Analytics">
       <AnalyticsScreenContent />
-    </ErrorBoundary>
+    </ScreenErrorBoundary>
   );
 }

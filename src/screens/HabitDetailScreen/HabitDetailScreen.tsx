@@ -4,10 +4,7 @@ import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  ErrorBoundary,
-  ScreenErrorFallback,
-} from '../../components/ErrorBoundary';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import {
   DetailHeader,
   DetailLoadingState,
@@ -114,26 +111,8 @@ function HabitDetailScreenContent({
 
 export default function HabitDetailScreen(props: HabitDetailScreenProps) {
   return (
-    <ErrorBoundary
-      fallback={
-        <Modal
-          transparent
-          animationType='slide'
-          visible={props.visible}
-          onRequestClose={props.onClose}
-        >
-          <View style={{ flex: 1, backgroundColor: 'black' }}>
-            <ScreenErrorFallback
-              screenName='Habit Details'
-              error={null}
-              onRetry={() => {}}
-              onGoBack={props.onClose}
-            />
-          </View>
-        </Modal>
-      }
-    >
+    <ScreenErrorBoundary screenName="Habit Details" onGoBack={props.onClose}>
       <HabitDetailScreenContent {...props} />
-    </ErrorBoundary>
+    </ScreenErrorBoundary>
   );
 }
