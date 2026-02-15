@@ -4,10 +4,13 @@ import './handler';
 // Re-export constants
 export {
   ANDROID_AFFIRMATION_CHANNEL_ID,
+  ANDROID_ANNOUNCEMENT_CHANNEL_ID,
   ANDROID_CHANNEL_ID,
   ANDROID_LETTER_CHANNEL_ID,
   NOTIFICATION_TYPE_AFFIRMATION_DELIVERY,
+  NOTIFICATION_TYPE_FEATURE_ANNOUNCEMENT,
   NOTIFICATION_TYPE_LETTER_UNLOCK,
+  NOTIFICATION_TYPE_STREAK_CELEBRATION,
 } from './constants';
 
 // Re-export permissions
@@ -61,6 +64,25 @@ export {
   scheduleStreakFreezeNotification,
 } from './streakFreeze';
 export type { ScheduleStreakFreezeParams } from './streakFreeze';
+
+// Re-export streak celebration notifications
+export {
+  isStreakMilestone,
+  sendStreakCelebrationNotification,
+  STREAK_MILESTONES,
+} from './streakCelebration';
+export type { ScheduleStreakCelebrationParams } from './streakCelebration';
+
+// Re-export feature announcement notifications
+export {
+  cancelFeatureAnnouncement,
+  configureAnnouncementChannel,
+  sendFeatureAnnouncement,
+} from './featureAnnouncement';
+export type { FeatureAnnouncementParams } from './featureAnnouncement';
+
+// Re-export test notification
+export { sendTestNotification } from './testNotification';
 
 // Re-export types
 export type {

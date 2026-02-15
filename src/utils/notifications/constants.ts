@@ -16,3 +16,18 @@ export const NOTIFICATION_TYPE_LETTER_UNLOCK = 'letterUnlock';
  * Used to differentiate from habit reminders and letter unlocks
  */
 export const NOTIFICATION_TYPE_AFFIRMATION_DELIVERY = 'affirmationDelivery';
+
+/**
+ * Notification type identifier for streak celebrations
+ */
+export const NOTIFICATION_TYPE_STREAK_CELEBRATION = 'streakCelebration';
+
+/**
+ * Notification type identifier for feature announcements
+ */
+export const NOTIFICATION_TYPE_FEATURE_ANNOUNCEMENT = 'featureAnnouncement';
+
+/**
+ * Android notification channel ID for feature announcements
+ */
+export const ANDROID_ANNOUNCEMENT_CHANNEL_ID = 'feature-announcements';

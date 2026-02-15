@@ -4,12 +4,13 @@
  * with time picker for reminder time.
  */
 
-import { useState } from 'react';
-import { Bell, Clock, Crown } from 'lucide-react-native';
+import { useCallback, useState } from 'react';
+import { Bell, BellRing, Clock, Crown } from 'lucide-react-native';
 import { Platform, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
+import { sendTestNotification } from '../../utils/notifications';
 
 interface StreakRemindersSectionProps {
   highContrastMode: boolean;
@@ -51,6 +52,15 @@ export function StreakRemindersSection({
   onPremiumUpsell,
 }: StreakRemindersSectionProps) {
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [testSent, setTestSent] = useState(false);
+
+  const handleTestNotification = useCallback(async () => {
+    const sent = await sendTestNotification();
+    if (sent) {
+      setTestSent(true);
+      setTimeout(() => setTestSent(false), 3000);
+    }
+  }, []);
 
   const handleTimeChange = (_event: unknown, selectedDate?: Date) => {
     if (Platform.OS === 'android') {
@@ -120,6 +130,15 @@ export function StreakRemindersSection({
           </Text>
         </View>
       )}
+      <SettingsRow
+        highContrastMode={highContrastMode}
+        icon={<BellRing color={testSent ? '#16a34a' : '#6366f1'} size={16} />}
+        iconBackgroundColor={testSent ? '#dcfce7' : '#e0e7ff'}
+        label={testSent ? 'Test sent! Check in ~2s' : 'Send Test Notification'}
+        showBorder={false}
+        type='navigation'
+        onPress={() => void handleTestNotification()}
+      />
     </SettingsSection>
   );
 }
