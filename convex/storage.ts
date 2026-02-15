@@ -57,16 +57,33 @@ export const getUrl = query({
 
 /**
  * Delete a file from storage
+ *
+ * SEC-008: Ownership verification — only delete files the user owns.
+ * Checks visionBoardImages and voiceNotes tables to confirm the
+ * authenticated user owns a record referencing this storageId.
  */
 export const deleteFile = mutation({
   args: {
     storageId: v.id('_storage'),
   },
   handler: async (ctx, args) => {
-    // SEC-002: Authentication check - prevent anonymous file deletion
+    // SEC-008: Authentication check - prevent anonymous file deletion
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to delete files');
+    }
+
+    // SEC-008: Ownership verification — ensure the file belongs to the caller.
+    // Check visionBoardImages for a record with this storageId owned by the user.
+    const visionImage = await ctx.db
+      .query('visionBoardImages')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+      .filter((q) => q.eq(q.field('storageId'), args.storageId))
+      .first();
+
+    if (!visionImage) {
+      // No matching record found — the user does not own this file
+      throw new Error('Not authorized to delete this file');
     }
 
     await ctx.storage.delete(args.storageId);

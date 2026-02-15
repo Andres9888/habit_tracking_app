@@ -54,10 +54,16 @@ export const getPopular = query({
 
 /**
  * Query: Get template usage statistics
+ * SEC-008: Requires authentication to prevent unauthenticated data access
  */
 export const getUsageStats = query({
   args: { templateId: v.id('templates') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return { recentImports: 0, totalImports: 0 };
+    }
+
     const usage = await ctx.db
       .query('templateUsage')
       .withIndex('by_template', (q) => q.eq('templateId', args.templateId))
@@ -85,10 +91,16 @@ export const getTemplateCount = query({
 
 /**
  * Query: List all template names (for debugging)
+ * SEC-008: Requires authentication — debug endpoint should not be public
  */
 export const listTemplateNames = query({
   args: {},
   handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
     const templates = await ctx.db.query('templates').collect();
     return templates.map((t) => ({
       category: t.category,

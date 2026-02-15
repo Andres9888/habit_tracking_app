@@ -53,9 +53,10 @@ export const get = query({
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) return null;
 
-    // Ownership check via parent habit
+    // SEC-008: Ownership check via record userId and parent habit
+    if (affirmation.userId && affirmation.userId !== identity.subject) return null;
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) return null;
+    if (!habit || habit.userId !== identity.subject) return null;
 
     return affirmation;
   },

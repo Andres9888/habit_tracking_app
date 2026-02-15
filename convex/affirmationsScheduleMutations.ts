@@ -31,9 +31,12 @@ export const scheduleDelivery = mutation({
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
 
-    // Ownership verification via parent habit
+    // SEC-008: Ownership verification via record userId and parent habit
+    if (affirmation.userId && affirmation.userId !== identity.subject) {
+      throw new Error('Not authorized to schedule this affirmation');
+    }
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to schedule this affirmation');
     }
 
@@ -76,8 +79,12 @@ export const updateNotificationId = mutation({
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
 
+    // SEC-008: Ownership verification via record userId and parent habit
+    if (affirmation.userId && affirmation.userId !== identity.subject) {
+      throw new Error('Not authorized to update this affirmation');
+    }
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to update this affirmation');
     }
     await ctx.db.patch(args.id, {
@@ -103,8 +110,12 @@ export const toggleSchedule = mutation({
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
 
+    // SEC-008: Ownership verification via record userId and parent habit
+    if (affirmation.userId && affirmation.userId !== identity.subject) {
+      throw new Error('Not authorized to toggle this affirmation schedule');
+    }
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to toggle this affirmation schedule');
     }
 
@@ -138,8 +149,12 @@ export const cancelSchedule = mutation({
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
 
+    // SEC-008: Ownership verification via record userId and parent habit
+    if (affirmation.userId && affirmation.userId !== identity.subject) {
+      throw new Error('Not authorized to cancel this affirmation schedule');
+    }
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to cancel this affirmation schedule');
     }
     await ctx.db.patch(args.id, {
@@ -170,8 +185,12 @@ export const recordDelivery = mutation({
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
 
+    // SEC-008: Ownership verification via record userId and parent habit
+    if (affirmation.userId && affirmation.userId !== identity.subject) {
+      throw new Error('Not authorized to record delivery for this affirmation');
+    }
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to record delivery for this affirmation');
     }
     await ctx.db.patch(args.id, {

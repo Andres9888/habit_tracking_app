@@ -32,9 +32,12 @@ export const updateCaption = mutation({
       throw new Error('Image not found');
     }
 
-    // SEC-001: Ownership verification via parent habit
+    // SEC-008: Ownership verification via record userId and parent habit
+    if (image.userId && image.userId !== identity.subject) {
+      throw new Error('Not authorized to update this image');
+    }
     const habit = await ctx.db.get(image.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to update this image');
     }
 
