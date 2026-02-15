@@ -7,14 +7,14 @@
 
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { useCallback, useRef } from 'react';
-import { Audio } from 'expo-sound';
+import { Audio } from 'expo-av';
 import type { CompletionSoundType } from '../convex/settings/types';
 
 // Sound file mappings - requires bundling with Metro
 const SOUND_ASSETS: Record<CompletionSoundType, NodeJS.Require> = {
-  chime: require('../assets/sounds/chime.wav'),
-  pop: require('../assets/sounds/pop.wav'),
-  success: require('../assets/sounds/success.wav'),
+  chime: require('../../assets/sounds/chime.wav'),
+  pop: require('../../assets/sounds/pop.wav'),
+  success: require('../../assets/sounds/success.wav'),
 };
 
 interface UseCompletionSoundOptions {
