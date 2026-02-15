@@ -7,6 +7,7 @@
 import { v } from 'convex/values';
 import { mutation } from './_generated/server';
 import { isValidTimeFormat, isValidDaysOfWeek } from './affirmations/index';
+import { requirePremium } from './subscriptions/premiumCheck';
 
 /**
  * Schedule delivery for an affirmation (Premium feature)
@@ -23,6 +24,9 @@ export const scheduleDelivery = mutation({
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to schedule affirmations');
     }
+
+    // SEC-005: Premium feature — Scheduled affirmation delivery requires premium
+    await requirePremium(ctx, identity.subject, 'Scheduled Affirmation Delivery');
 
     const affirmation = await ctx.db.get(args.id);
     if (!affirmation) throw new Error('Affirmation not found');
