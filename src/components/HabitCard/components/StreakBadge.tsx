@@ -3,15 +3,50 @@
  * Displays the current streak with fire emoji
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { View, Text } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSequence,
+  withSpring,
+} from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
 import { colors, milestoneColors } from '../../../theme/colors';
 import { streakStyles } from '../HabitCard.streakStyles';
 
+/** Design-system spring: damping 18, stiffness 150 */
+const STREAK_SPRING = { damping: 18, stiffness: 150 };
+const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
+
 interface StreakBadgeProps {
   currentStreak: number;
   bestStreak: number;
+}
+
+/**
+ * AnimatedStreakText — pops with a satisfying spring bounce when streak changes.
+ */
+function AnimatedStreakText({ children, streak }: { children: React.ReactNode; streak: number }) {
+  const scale = useSharedValue(1);
+  const prevStreak = useRef(streak);
+
+  useEffect(() => {
+    if (prevStreak.current !== streak && streak > 0) {
+      // Bounce: overshoot then settle
+      scale.value = withSequence(
+        withSpring(1.15, BOUNCE_SPRING),
+        withSpring(1, STREAK_SPRING)
+      );
+    }
+    prevStreak.current = streak;
+  }, [streak, scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return <Animated.View style={animatedStyle}>{children}</Animated.View>;
 }
 
 export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
@@ -42,22 +77,24 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
 
   return (
     <View style={streakStyles.streakRow}>
-      <View
-        style={[
-          streakStyles.streakBadge,
-          { backgroundColor: milestoneColors.amberLight },
-        ]}
-      >
-        <Text style={streakStyles.streakFireIcon}>🔥</Text>
-        <Text
+      <AnimatedStreakText streak={currentStreak}>
+        <View
           style={[
-            streakStyles.streakText,
-            { color: theme.custom.colors.warning[700] },
+            streakStyles.streakBadge,
+            { backgroundColor: milestoneColors.amberLight },
           ]}
         >
-          {currentStreak} Day{currentStreak === 1 ? '' : 's'} Streak
-        </Text>
-      </View>
+          <Text style={streakStyles.streakFireIcon}>🔥</Text>
+          <Text
+            style={[
+              streakStyles.streakText,
+              { color: theme.custom.colors.warning[700] },
+            ]}
+          >
+            {currentStreak} Day{currentStreak === 1 ? '' : 's'} Streak
+          </Text>
+        </View>
+      </AnimatedStreakText>
 
       {/* Best Streak Badge - Shows when approaching or at personal record */}
       {bestStreak > 0 && currentStreak >= bestStreak - 2 && (

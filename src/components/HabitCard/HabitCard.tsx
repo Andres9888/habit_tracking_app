@@ -13,6 +13,7 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import { CompletionToast } from '../CompletionToast';
+import { SuccessShimmer } from '../animations/SuccessShimmer';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
 import { useHabitCard } from './useHabitCard';
@@ -81,6 +82,7 @@ function HabitCardComponent(props: HabitCardProps) {
             strengthColor={habit.strengthColor}
             strengthFillStyle={habit.strengthFillStyle}
           />
+          <SuccessShimmer active={habit.showConfetti} />
           <Animated.View
             style={[
               styles.accentBar,
