@@ -3,6 +3,7 @@ import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { EditHeader } from './EditHeader';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
@@ -14,7 +15,7 @@ import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
 // eslint-disable-next-line max-lines-per-function
-export default function HabitEditScreen({
+function HabitEditScreenContent({
   visible,
   habitId,
   onClose,
@@ -22,9 +23,6 @@ export default function HabitEditScreen({
   const insets = useSafeAreaInsets();
   const state = useHabitEditScreen({ habitId, onClose });
   const { colors: themeColors } = useThemeColors();
-  // Modal pattern: return null when not visible — the modal simply doesn't mount
-  if (!visible || !habitId) return null;
-
   return (
     <Modal
       transparent
@@ -106,5 +104,15 @@ export default function HabitEditScreen({
         </View>
       </KeyboardAvoidingView>
     </Modal>
+  );
+}
+
+export default function HabitEditScreen(props: HabitEditScreenProps) {
+  if (!props.visible || !props.habitId) return null;
+
+  return (
+    <ScreenErrorBoundary screenName="Edit Habit" onGoBack={props.onClose}>
+      <HabitEditScreenContent {...props} />
+    </ScreenErrorBoundary>
   );
 }
