@@ -21,6 +21,9 @@
       "bundleIdentifier": "com.chainday.app",
       "buildNumber": "2",
       "usesAppleSignIn": true,
+      "associatedDomains": [
+        "applinks:chainday.app"
+      ],
       "infoPlist": {
         "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent."
       }
@@ -34,7 +37,31 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
       ],
-      "package": "com.chainday.app"
+      "package": "com.chainday.app",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "chainday.app",
+              "pathPrefix": "/habit"
+            },
+            {
+              "scheme": "https",
+              "host": "chainday.app",
+              "pathPrefix": "/share"
+            },
+            {
+              "scheme": "https",
+              "host": "chainday.app",
+              "pathPrefix": "/referral"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "bundler": "metro",
