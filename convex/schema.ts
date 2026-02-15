@@ -458,6 +458,12 @@ const applicationTables = {
 
     celebrationsEnabled: v.optional(v.boolean()),
 
+    // Completion sound settings (Premium feature)
+    completionSoundEnabled: v.optional(v.boolean()),
+    completionSoundType: v.optional(
+      v.union(v.literal('chime'), v.literal('pop'), v.literal('success'))
+    ),
+
     darkMode: v.optional(
       v.union(
         v.boolean(), // Backwards compatibility

@@ -100,6 +100,6 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     showPaywall,
     strengthDistribution,
     trendData,
-    weeklyInsights,
+    weeklyInsights: weeklyInsights ?? undefined,
   };
 };

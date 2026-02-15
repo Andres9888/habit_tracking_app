@@ -12,7 +12,6 @@ interface HabitContentProps {
   totalCount: number;
   cardStyle: AnimatedStyle<ViewStyle>;
   glowStyle: AnimatedStyle<ViewStyle>;
-  glowOpacity: AnimatedStyle<ViewStyle>;
 }
 
 export function HabitContent({
@@ -21,8 +20,8 @@ export function HabitContent({
   totalCount,
   cardStyle,
   glowStyle,
-  glowOpacity,
 }: HabitContentProps) {
+  if (!habit) return null;
   return (
     <Animated.View style={[styles.container, cardStyle]}>
       <Animated.View style={[styles.glow, glowStyle]} />
