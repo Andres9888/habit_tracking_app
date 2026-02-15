@@ -27,7 +27,7 @@ export function ErrorFallback({
 }: ErrorFallbackProps) {
   const retryCountRef = useRef(0);
   const [showLogout, setShowLogout] = useState(false);
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
   const styles = useStyles();
 
   const handleRetry = () => {

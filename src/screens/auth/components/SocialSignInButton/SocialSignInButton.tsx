@@ -34,6 +34,7 @@ export function SocialSignInButton({
   isLoading,
   onPress,
   provider,
+  testID,
 }: SocialSignInButtonProps) {
   const config = PROVIDER_CONFIG[provider];
   const reduceMotion = useReducedMotion();
@@ -45,13 +46,13 @@ export function SocialSignInButton({
 
   const handlePressIn = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(0.97, { damping: 15 });
+      scale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
     }
   };
 
   const handlePressOut = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(1, { damping: 15 });
+      scale.value = withSpring(1, { damping: 18, stiffness: 240 });
     }
   };
 
@@ -68,6 +69,7 @@ export function SocialSignInButton({
       accessibilityLabel={config.label}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
+      testID={testID || `auth-${provider}-button`}
       className={`flex-row items-center justify-center rounded-2xl border py-4 ${config.borderColor} ${config.bgColor} ${
         isDisabled ? 'opacity-40' : ''
       }`}

@@ -44,7 +44,7 @@ export function MonetizationHero({
           Ready for unlimited habits?
         </Text>
         <Text className='text-[17px] font-normal leading-[22px] text-[#cbd5f5]'>
-          Start a 7-day free trial to track every area of your life, get smart
+          Try free for 7 days — track every area of your life, get smart
           reminders, and unlock AI-powered insights.
         </Text>
       </View>
@@ -98,7 +98,7 @@ export function MonetizationHero({
         </View>
         <Text className='text-[13px] font-medium text-[#fbbf24]'>
           {hasReachedHabitLimit
-            ? "You're making great progress! Upgrade to track every area of your life."
+            ? "You're making great progress! Go unlimited to track every area of your life."
             : `${freeHabitLimit - habitSlotsUsed} free ${freeHabitLimit - habitSlotsUsed === 1 ? 'slot' : 'slots'} remaining. Premium unlocks unlimited habits.`}
         </Text>
       </View>

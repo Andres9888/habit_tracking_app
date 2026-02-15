@@ -3,7 +3,7 @@
  * Edit and Delete action buttons revealed on swipe
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Pressable, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { withSpring, type SharedValue } from 'react-native-reanimated';
@@ -18,7 +18,7 @@ interface SwipeActionsProps {
   onDelete?: () => void;
 }
 
-export function SwipeActions({
+export const SwipeActions = memo(function SwipeActions({
   name,
   translateX,
   actionsAnimatedStyle,
@@ -64,4 +64,4 @@ export function SwipeActions({
       </Pressable>
     </Animated.View>
   );
-}
+});

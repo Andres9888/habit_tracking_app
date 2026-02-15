@@ -41,7 +41,7 @@ export const TemplateList = ({
   showBottomShadow,
 }: TemplateListProps) => {
   const getItemLayout = useCallback(
-    (_: any, index: number) => ({
+    (_: unknown, index: number) => ({
       length: ITEM_HEIGHT,
       offset: ITEM_HEIGHT * index,
       index,

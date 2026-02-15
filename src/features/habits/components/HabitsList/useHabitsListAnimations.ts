@@ -5,6 +5,7 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
+import { LIST_HEADER_ANIMATION_DURATION_MS } from '@/constants';
 
 /**
  * Animated values and state setters used by the HabitsList entrance sequence.
@@ -60,7 +61,7 @@ export function useHabitsListAnimations(
   const handleSuccessTransitionComplete = useCallback(() => {
     setIsInSuccessCelebration(false);
     const config = {
-      duration: 350,
+      duration: LIST_HEADER_ANIMATION_DURATION_MS,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     };

@@ -1,18 +1,25 @@
 import { View, Text } from 'react-native';
 import { Search } from 'lucide-react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
-import { colors } from '../../../theme/colors';
 import { styles } from './styles';
 
 /**
  * Empty state shown when no emojis match search
  */
 export function EmptyState() {
+  const { colors } = useThemeColors();
+
   return (
-    <View style={styles.emptyState}>
-      <Search color={colors.gray[400]} size={48} />
-      <Text style={styles.emptyStateTitle}>No emojis found</Text>
-      <Text style={styles.emptyStateSubtitle}>Try a different search term</Text>
-    </View>
+    <Animated.View entering={FadeIn.duration(250)} style={styles.emptyState}>
+      <Search color={colors.text.tertiary} size={48} />
+      <Text style={[styles.emptyStateTitle, { color: colors.text.primary }]}>
+        No emojis found
+      </Text>
+      <Text style={[styles.emptyStateSubtitle, { color: colors.text.tertiary }]}>
+        Try a different search term
+      </Text>
+    </Animated.View>
   );
 }

@@ -7,12 +7,14 @@
 /* eslint-disable max-lines-per-function */
 import React, { useState, useEffect, useRef } from 'react';
 import {
+  Linking,
   Text,
   View,
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   TextInput,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,9 +25,6 @@ import Animated, {
   withDelay,
   withSpring,
   withTiming,
-  withRepeat,
-  Easing,
-  interpolate,
 } from 'react-native-reanimated';
 import {
   AuthDivider,
@@ -33,6 +32,7 @@ import {
   ForgotPasswordLink,
   ForgotPasswordModal,
   FormInput,
+  PasswordInput,
   SocialSignInButton,
   SubmitButton,
 } from './components';
@@ -79,39 +79,26 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
   const contentOpacity = useSharedValue(0);
   const contentTranslateY = useSharedValue(30);
 
-  // Breathing animation for logo
-  const breathe = useSharedValue(0);
-
   useEffect(() => {
     // Logo entrance
     logoScale.value = withDelay(
       50,
-      withSpring(1, { damping: 12, stiffness: 100 })
+      withSpring(1, { damping: 18, stiffness: 150 })
     );
-    logoOpacity.value = withDelay(50, withTiming(1, { duration: 400 }));
+    logoOpacity.value = withDelay(50, withTiming(1, { duration: 280 }));
 
-    // Header entrance
-    headerOpacity.value = withDelay(200, withTiming(1, { duration: 500 }));
-    headerTranslateY.value = withDelay(200, withSpring(0, { damping: 15 }));
+    // Header entrance (60ms stagger)
+    headerOpacity.value = withDelay(110, withTiming(1, { duration: 280 }));
+    headerTranslateY.value = withDelay(110, withSpring(0, { damping: 18, stiffness: 150 }));
 
-    // Content entrance
-    contentOpacity.value = withDelay(400, withTiming(1, { duration: 500 }));
-    contentTranslateY.value = withDelay(400, withSpring(0, { damping: 15 }));
-
-    // Breathing animation
-    breathe.value = withRepeat(
-      withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true
-    );
+    // Content entrance (60ms stagger)
+    contentOpacity.value = withDelay(170, withTiming(1, { duration: 280 }));
+    contentTranslateY.value = withDelay(170, withSpring(0, { damping: 18, stiffness: 150 }));
   }, []);
 
   const logoStyle = useAnimatedStyle(() => ({
     opacity: logoOpacity.value,
-    transform: [
-      { scale: logoScale.value },
-      { scale: interpolate(breathe.value, [0, 1], [1, 1.05]) },
-    ],
+    transform: [{ scale: logoScale.value }],
   }));
 
   const headerStyle = useAnimatedStyle(() => ({
@@ -166,7 +153,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           <Animated.View style={[styles.welcomeSection, headerStyle]}>
             <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
             <Text style={styles.welcomeSubtitle}>
-              Your habits are waiting. Let's keep the momentum going.
+              Your streak is waiting — let's keep the momentum going.
             </Text>
           </Animated.View>
 
@@ -181,12 +168,14 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_apple'}
                 provider='apple'
+                testID='auth-sign-in-apple-button'
                 onPress={signInWithApple}
               />
               <SocialSignInButton
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_google'}
                 provider='google'
+                testID='auth-sign-in-google-button'
                 onPress={signInWithGoogle}
               />
             </View>
@@ -210,12 +199,10 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                 onSubmitEditing={() => passwordRef.current?.focus()}
               />
 
-              <FormInput
+              <PasswordInput
                 ref={passwordRef}
-                secureTextEntry
                 autoComplete='password'
                 editable={!isAnyLoading}
-                label='Password'
                 labelRight={
                   <ForgotPasswordLink
                     onPress={() => setShowForgotPassword(true)}
@@ -231,8 +218,9 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
               <SubmitButton
                 disabled={!canSubmit || isAnyLoading}
                 isLoading={isLoading}
-                label='Continue'
-                loadingLabel='Signing in...'
+                label='Sign In'
+                loadingLabel='Signing in…'
+                testID='auth-sign-in-button'
                 onPress={handleSignIn}
               />
             </View>
@@ -241,7 +229,22 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           {/* Footer */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>
-              By continuing, you agree to our Terms & Privacy Policy
+              By continuing, you agree to our{' '}
+              <Text
+                accessibilityRole='link'
+                style={styles.footerLink}
+                onPress={() => void Linking.openURL('https://chainday.app/terms')}
+              >
+                Terms
+              </Text>
+              {' & '}
+              <Text
+                accessibilityRole='link'
+                style={styles.footerLink}
+                onPress={() => void Linking.openURL('https://chainday.app/privacy')}
+              >
+                Privacy Policy
+              </Text>
             </Text>
           </View>
         </ScrollView>
@@ -280,6 +283,10 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: 32,
     paddingHorizontal: 16,
+  },
+  footerLink: {
+    color: '#047857',
+    textDecorationLine: 'underline',
   },
   footerText: {
     color: '#a8a29e',
