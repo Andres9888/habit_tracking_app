@@ -1,7 +1,7 @@
-/** StatsNotesHeader - Header + tabs for StatsNotesModal */
+/** StatsNotesHeader - Header + tabs for StatsNotesModal (theme-aware) */
 import { Pressable, Text, View } from 'react-native';
-import { X } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 const anim = (delay: number) =>
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function StatsNotesHeader({ activeTab, onClose, onTabChange }: Props) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return (
     <>
@@ -29,15 +29,7 @@ export function StatsNotesHeader({ activeTab, onClose, onTabChange }: Props) {
         >
           Stats & Notes
         </Text>
-        <Pressable
-          accessibilityLabel='Close stats and notes'
-          accessibilityRole='button'
-          className='h-11 w-11 items-center justify-center rounded-full'
-          style={{ backgroundColor: isDark ? '#374151' : '#f5f5f4' }}
-          onPress={onClose}
-        >
-          <X color={isDark ? '#9CA3AF' : '#78716c'} size={24} strokeWidth={2} />
-        </Pressable>
+        <ModalCloseButton label='Close stats and notes' onClose={onClose} />
       </Animated.View>
       <Animated.View
         className='flex-row'

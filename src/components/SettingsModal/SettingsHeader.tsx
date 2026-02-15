@@ -1,10 +1,7 @@
-/** SettingsHeader - Theme-aware close button with spring press animation */
-import { X } from 'lucide-react-native';
+/** SettingsHeader - Theme-aware header with shared close button */
 import { Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { AnimatedPressable } from '../ui/AnimatedPressable';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { ModalCloseButton } from '../ui/ModalCloseButton';
 import type { SettingsColors } from './types';
 
 interface SettingsHeaderProps {
@@ -18,13 +15,6 @@ export function SettingsHeader({
   paddingTop,
   onClose,
 }: SettingsHeaderProps) {
-  const { colors: themeColors } = useThemeColors();
-
-  const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onClose();
-  };
-
   return (
     <Animated.View
       className='px-5 pb-4'
@@ -39,21 +29,7 @@ export function SettingsHeader({
         >
           Settings
         </Text>
-        <AnimatedPressable
-          accessibilityLabel='Close settings'
-          accessibilityRole='button'
-          style={{
-            height: 44,
-            width: 44,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 22,
-            backgroundColor: themeColors.surface,
-          }}
-          onPress={handlePress}
-        >
-          <X color={colors.icon} size={20} strokeWidth={2.5} />
-        </AnimatedPressable>
+        <ModalCloseButton label='Close settings' onClose={onClose} />
       </View>
     </Animated.View>
   );

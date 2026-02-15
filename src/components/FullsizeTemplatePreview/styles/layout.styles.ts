@@ -10,11 +10,10 @@ export const layoutStyles = StyleSheet.create({
   },
   closeButton: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-    borderRadius: 16,
-    height: 44,
+    borderRadius: 20,
+    height: 40,
     justifyContent: 'center',
-    width: 44,
+    width: 40,
   },
   confettiContainer: {
     bottom: 0,
