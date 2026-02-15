@@ -117,7 +117,19 @@ export function SettingsRow({
     </View>
   );
 
-  if (type === 'toggle' || type === 'info') return content;
+  if (type === 'toggle') {
+    return (
+      <View
+        accessibilityRole='switch'
+        accessibilityState={{ checked: value as boolean }}
+        accessibilityLabel={label}
+      >
+        {content}
+      </View>
+    );
+  }
+
+  if (type === 'info') return content;
 
   return (
     <AnimatedPressable

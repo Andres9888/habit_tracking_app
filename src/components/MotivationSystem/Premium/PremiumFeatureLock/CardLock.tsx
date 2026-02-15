@@ -14,6 +14,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { MotivationPremiumFeature } from './PremiumFeatureLock.types';
 import { FEATURE_META } from './featureMetadata';
 
@@ -33,6 +34,7 @@ export function CardLock({
   testID,
 }: CardLockProps) {
   const { triggerSelection } = useHapticFeedback({});
+  const { isDark } = useThemeColors();
   const meta = FEATURE_META[feature];
   const scale = useSharedValue(1);
 
@@ -64,12 +66,12 @@ export function CardLock({
       onPressOut={handlePressOut}
     >
       <Animated.View
-        className='overflow-hidden rounded-2xl border-2 border-violet-200'
+        className='overflow-hidden rounded-2xl border-2 border-violet-200 dark:border-violet-700'
         style={reduceMotion ? undefined : animatedStyle}
       >
         <LinearGradient
           className='absolute inset-0'
-          colors={['#f5f3ff', '#ffffff']}
+          colors={isDark ? ['#1e1b4b', '#1c1917'] : ['#f5f3ff', '#ffffff']}
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
         />
@@ -97,13 +99,13 @@ export function CardLock({
         </LinearGradient>
 
         <View className='px-4 py-3'>
-          <Text className='mb-2 text-sm text-stone-600'>
+          <Text className='mb-2 text-sm text-stone-600 dark:text-stone-300'>
             {meta.description}
           </Text>
           {showScience && (
-            <View className='flex-row items-start gap-2 rounded-lg bg-amber-50 px-3 py-2'>
-              <Sparkles className='mt-0.5 text-amber-500' size={14} />
-              <Text className='flex-1 text-xs italic text-amber-700'>
+            <View className='flex-row items-start gap-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 px-3 py-2'>
+              <Sparkles className='mt-0.5 text-amber-500 dark:text-amber-400' size={14} />
+              <Text className='flex-1 text-xs italic text-amber-700 dark:text-amber-300'>
                 {meta.scienceBasis}
               </Text>
             </View>

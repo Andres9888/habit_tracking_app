@@ -46,14 +46,14 @@ export function FeatureLimitBadge({
       onPress={handlePress}
     >
       <View
-        className={`flex-row items-center gap-1 rounded-full px-2 py-0.5 ${isAtLimit ? 'bg-amber-100' : 'bg-stone-100'}`}
+        className={`flex-row items-center gap-1 rounded-full px-2 py-0.5 ${isAtLimit ? 'bg-amber-100 dark:bg-amber-900/30' : 'bg-stone-100 dark:bg-stone-800'}`}
       >
         <Text
-          className={`text-xs font-medium ${isAtLimit ? 'text-amber-700' : 'text-stone-600'}`}
+          className={`text-xs font-medium ${isAtLimit ? 'text-amber-700 dark:text-amber-300' : 'text-stone-600 dark:text-stone-400'}`}
         >
           {current}/{limit} Free
         </Text>
-        {isAtLimit && <ChevronRight className='text-amber-600' size={12} />}
+        {isAtLimit && <ChevronRight className='text-amber-600 dark:text-amber-400' size={12} />}
       </View>
     </Pressable>
   );

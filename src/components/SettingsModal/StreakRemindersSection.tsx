@@ -110,12 +110,13 @@ export function StreakRemindersSection({
         <View style={{ paddingBottom: 12, paddingHorizontal: 16 }}>
           <Text
             style={{
-              color: '#78716c',
+              color: highContrastMode ? '#facc15' : undefined,
               fontSize: 13,
               lineHeight: 18,
             }}
+            className={highContrastMode ? '' : 'text-stone-500 dark:text-stone-400'}
           >
-            Get a reminder if you haven't completed a habit with an active
+            Get a reminder if you haven&apos;t completed a habit with an active
             streak by your chosen time.
           </Text>
         </View>
