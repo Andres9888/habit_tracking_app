@@ -51,7 +51,7 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
       return new Response('Invalid payload', { status: 400 });
     }
 
-    console.log('[RevenueCat] Processing event:', eventType, 'for:', appUserId);
+    // Event processing logged via Convex dashboard
 
     // Extract and validate timestamps from webhook
     const validatedExpiresAt = validateWebhookTimestamp(
@@ -84,8 +84,7 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
         clerkId: appUserId,
       });
     } else {
-      // Log unknown events but don't fail
-      console.log('[RevenueCat] Unhandled event type:', eventType);
+      // Unhandled event type — no action needed
     }
 
     // Always return 200 to acknowledge receipt

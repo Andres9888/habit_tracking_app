@@ -16,13 +16,8 @@ export async function updateUserSettingsPremium(
 
   if (settings) {
     await ctx.db.patch(settings._id, { hasPremium });
-    console.warn(
-      '[subscriptions] Updated hasPremium:',
-      hasPremium,
-      'for clerkId:',
-      clerkId
-    );
+    // Premium status updated successfully
   } else {
-    console.warn('[subscriptions] No settings found for clerkId:', clerkId);
+    console.error('[subscriptions] No settings found for clerkId:', clerkId);
   }
 }

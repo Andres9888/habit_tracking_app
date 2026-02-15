@@ -16,7 +16,7 @@ export const testDisplay = mutation({
       return { error: 'No habits found' };
     }
 
-    console.log(`Setting ${habit.name} to 50% strength for testing...`);
+    // Setting habit to 50% strength for testing
 
     await ctx.db.patch(habit._id, {
       strength: 0.5,
@@ -24,7 +24,7 @@ export const testDisplay = mutation({
       strengthUpdatedAt: Date.now(),
     });
 
-    console.log('✅ Done! Check your app - the first habit should show 50%');
+    // Done — check app for 50% display
 
     return {
       habitName: habit.name,

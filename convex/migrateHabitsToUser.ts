@@ -19,7 +19,7 @@ export const migrateHabitsToCurrentUser = mutation({
       .filter((q) => q.eq(q.field('userId'), undefined))
       .collect();
 
-    console.log(`Found ${habitsWithoutUser.length} habits without userId`);
+    // Migrating habits without userId
 
     // Update each habit to belong to current user
     for (const habit of habitsWithoutUser) {
