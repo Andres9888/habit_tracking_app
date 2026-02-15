@@ -6,7 +6,6 @@ import StatsOverview from './StatsOverview';
 import NotesList from './NotesList';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { StatsNotesHeader } from './StatsNotesHeader';
-import { useThemeColors } from '../../theme/ThemeContext';
 
 interface StatsNotesModalProps {
   visible: boolean;

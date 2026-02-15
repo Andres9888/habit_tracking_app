@@ -9,7 +9,6 @@ import { Target, X } from 'lucide-react-native';
 
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { WOOP_STEPS } from './WOOPExplainerModal.constants';
-import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface WOOPExplainerModalProps {
   visible: boolean;
