@@ -5,7 +5,7 @@
  * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import Animated, {
   type AnimatedStyle,
@@ -34,7 +34,7 @@ interface StatusIndicatorProps {
   chainRotate?: SharedValue<number>;
 }
 
-export function StatusIndicator({
+export const StatusIndicator = memo(function StatusIndicator({
   completed,
   atRisk,
   checkmarkAnimatedStyle,
@@ -93,4 +93,4 @@ export function StatusIndicator({
   }
 
   return null;
-}
+});

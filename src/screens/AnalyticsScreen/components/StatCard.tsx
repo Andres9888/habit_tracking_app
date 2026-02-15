@@ -1,20 +1,20 @@
 /**
  * StatCard - Displays a single statistic with optional emoji and interaction
  */
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import type { StatCardProps } from '../AnalyticsScreen.types';
 import { styles } from './StatCard.styles';
 
-export const StatCard: React.FC<StatCardProps> = ({
+export const StatCard = memo(function StatCard({
   title,
   value,
   subtitle,
   emoji,
   onPress,
   loading = false,
-}) => {
+}: StatCardProps) {
   const accessibilityLabel = loading
     ? `${title}, loading`
     : `${title}: ${value}${subtitle ? `, ${subtitle}` : ''}`;
@@ -67,4 +67,4 @@ export const StatCard: React.FC<StatCardProps> = ({
   }
 
   return content;
-};
+});

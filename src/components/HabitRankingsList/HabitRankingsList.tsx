@@ -34,7 +34,7 @@ export default function HabitRankingsList({
           item={item}
           rank={rank}
           rankBadge={getRankBadge(rank)}
-          onPress={() => handleHabitPress(item.id)}
+          onPress={handleHabitPress}
         />
       );
     },

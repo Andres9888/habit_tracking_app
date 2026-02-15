@@ -4,13 +4,13 @@
  * Three thin vertical lines that subtly pulse on first render.
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 const GRIP_LINE_COUNT = 3;
 const GRIP_LINE_COLOR = 'rgba(0, 0, 0, 0.10)';
 
-export function SwipeGripLines() {
+export const SwipeGripLines = memo(function SwipeGripLines() {
   return (
     <View
       accessibilityElementsHidden
@@ -22,7 +22,7 @@ export function SwipeGripLines() {
       ))}
     </View>
   );
-}
+});
 
 const gripStyles = StyleSheet.create({
   container: {

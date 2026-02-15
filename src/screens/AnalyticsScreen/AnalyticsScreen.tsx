@@ -3,7 +3,7 @@
  * AnalyticsScreen - Main analytics dashboard screen
  * Shows habit statistics, charts, and insights
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
@@ -63,6 +63,7 @@ function AnalyticsScreenContent() {
   }
 
   const hasNoHabits = overviewStats?.totalHabits === 0;
+  const rankedHabits = useMemo(() => overviewStats?.rankedHabits || [], [overviewStats?.rankedHabits]);
 
   return (
     <ScrollView
@@ -106,7 +107,7 @@ function AnalyticsScreenContent() {
 
       <Animated.View entering={FadeInDown.delay(460).springify().damping(18)}>
         <InsightsSections
-          rankedHabits={overviewStats?.rankedHabits || []}
+          rankedHabits={rankedHabits}
           weeklyInsights={weeklyInsights}
           onHabitPress={handleHabitPress}
         />

@@ -1,7 +1,7 @@
 /**
  * ChartSections - Analytics chart components (Strength, Trend, Heatmap)
  */
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
@@ -21,12 +21,12 @@ interface ChartSectionsProps {
   isLoading?: boolean;
 }
 
-export const ChartSections: React.FC<ChartSectionsProps> = ({
+export const ChartSections = memo(function ChartSections({
   strengthDistribution,
   trendData,
   complianceData,
   isLoading = false,
-}) => {
+}: ChartSectionsProps) {
   const strengthAccessibilityLabel = strengthDistribution
     ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
     : 'Loading chart';
@@ -73,7 +73,7 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
       </View>
     </>
   );
-};
+});
 
 const styles = StyleSheet.create({
   section: {
