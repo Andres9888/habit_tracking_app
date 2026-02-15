@@ -27,6 +27,7 @@ export function renderHabitsListEmpty(opts: RenderHabitsListEmptyOptions) {
       openCreateHabitScreen={handlers.handleAddHabitPress}
       openTemplatesScreen={modals.openTemplatesScreen}
       onQuickCreateHabit={handlers.handleQuickCreateHabit}
+      onQuickStart={handlers.handleQuickStart}
       onSuccessTransitionComplete={onTransitionComplete}
     />
   );

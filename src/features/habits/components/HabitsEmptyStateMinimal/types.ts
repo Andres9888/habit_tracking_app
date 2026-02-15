@@ -34,6 +34,9 @@ export interface HabitsEmptyStateMinimalProps {
 
   /** Callback when success transition completes (habit list should now show) */
   onSuccessTransitionComplete?: () => void;
+
+  /** Callback to create multiple habits at once (Quick Start) */
+  onQuickStart?: (habits: Array<{ name: string; emoji: string }>) => Promise<void>;
 }
 
 /**

@@ -26,6 +26,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import { api } from '../../../convex/_generated/api';
+import { trackAuthCompleted, trackOnboardingSkipped } from '../../lib/analytics/funnelEvents';
 import { colors } from '../../theme/colors';
 import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import { useConvexAuthReady } from '../../providers';
@@ -196,11 +197,19 @@ export function AuthGate() {
   const getOrCreateUserRef = useRef(getOrCreateUser);
   getOrCreateUserRef.current = getOrCreateUser;
 
+  const hasTrackedAuth = useRef(false);
+
   useEffect(() => {
     if (isSignedIn && isConvexReady) {
       getOrCreateUserRef.current().catch((error_: unknown) => {
         if (__DEV__) console.error('Failed to sync user:', error_);
       });
+
+      if (!hasTrackedAuth.current) {
+        hasTrackedAuth.current = true;
+        trackAuthCompleted('apple'); // Provider detected at sign-in time
+        trackOnboardingSkipped(); // Onboarding is auto-skipped
+      }
     }
   }, [isSignedIn, isConvexReady]);
 

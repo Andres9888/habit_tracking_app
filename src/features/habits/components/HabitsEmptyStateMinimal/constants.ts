@@ -80,6 +80,16 @@ export const NIGHT_CHIPS: SuggestionChip[] = [
 export const STATIC_CHIPS: SuggestionChip[] = SUGGESTION_CHIPS;
 
 /**
+ * Quick Start habits — 3 universally popular habits pre-populated for instant onboarding.
+ * Users can customize or delete after creation.
+ */
+export const QUICK_START_HABITS = [
+  { emoji: '🏃', name: 'Exercise' },
+  { emoji: '📚', name: 'Read' },
+  { emoji: '🧘', name: 'Meditate' },
+] as const;
+
+/**
  * Copy strings for the minimal empty state
  */
 export const COPY = {

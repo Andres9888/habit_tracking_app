@@ -103,11 +103,26 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
     []
   );
 
+  const handleQuickStart = useCallback(
+    async (habits_: Array<{ name: string; emoji: string }>) => {
+      for (const habit of habits_) {
+        await createHabit({
+          name: `${habit.emoji} ${habit.name}`,
+          notes: '',
+          remindersEnabled: false,
+        });
+      }
+      state.setIsInSuccessCelebration(true);
+    },
+    [createHabit, state],
+  );
+
   return {
     handleAddHabitPress,
     handleChangeHabitSortMode,
     handleDragBegin,
     handleQuickCreateHabit,
+    handleQuickStart,
     isReorderingEnabled: habitSortMode === 'manual',
     keyExtractor,
   };
