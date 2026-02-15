@@ -24,19 +24,19 @@ export const EmptyState: React.FC = () => {
         entering={entry(0)}
         style={{
           alignItems: 'center',
-          backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
+          backgroundColor: colors.gray[100],
           borderRadius: 24,
           height: 96,
           justifyContent: 'center',
           marginBottom: 24,
-          shadowColor: '#8b5cf6',
+          shadowColor: colors.primary[500],
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
           width: 96,
         }}
       >
-        <BarChart3 color={isDark ? '#C4B5FD' : '#8b5cf6'} size={48} strokeWidth={1.5} />
+        <BarChart3 color={colors.primary[500]} size={48} strokeWidth={1.5} />
       </Animated.View>
 
       {/* Title */}
@@ -85,8 +85,8 @@ export const EmptyState: React.FC = () => {
         }}
       >
         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8, marginBottom: 12 }}>
-          <Sparkles color={isDark ? '#FCD34D' : '#F59E0B'} size={16} />
-          <Text style={{ color: isDark ? '#FCD34D' : '#D97706', fontSize: 13, fontWeight: '600' }}>
+          <Sparkles color={colors.primary[400]} size={16} />
+          <Text style={{ color: colors.primary[400], fontSize: 13, fontWeight: '600' }}>
             GET STARTED
           </Text>
         </View>

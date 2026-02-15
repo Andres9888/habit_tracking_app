@@ -22,7 +22,7 @@ interface DangerZoneProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
-  const { isDark } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const archiveScale = useSharedValue(1);
   const deleteScale = useSharedValue(1);
 
@@ -58,11 +58,17 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
     );
   };
 
-  // Dark mode: use slightly lighter tinted backgrounds
-  const archiveBg = isDark ? '#422006' : '#FFFBEB';
-  const archiveBorder = isDark ? '#92400E' : '#FDE68A';
-  const deleteBg = isDark ? '#450A0A' : '#FEF2F2';
-  const deleteBorder = isDark ? '#991B1B' : '#FECACA';
+  // Warning colors (archive - amber)
+  const archiveBg = isDark ? 'rgba(66, 32, 6, 0.4)' : colors.gray[100];
+  const archiveBorder = isDark ? 'rgba(146, 64, 14, 0.5)' : colors.gray[200];
+  const archiveIconColor = isDark ? '#FBBF24' : '#D97706';
+  const archiveTextColor = isDark ? '#FBBF24' : '#B45309';
+  
+  // Destructive colors (delete - red)
+  const deleteBg = isDark ? 'rgba(69, 10, 10, 0.4)' : '#FEF2F2';
+  const deleteBorder = isDark ? 'rgba(153, 27, 27, 0.5)' : '#FECACA';
+  const deleteIconColor = '#DC2626';
+  const deleteTextColor = isDark ? '#F87171' : '#DC2626';
 
   const springConfig = { damping: 18, stiffness: 240 };
 
@@ -77,10 +83,10 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         onPressIn={() => { archiveScale.value = withSpring(0.97, springConfig); }}
         onPressOut={() => { archiveScale.value = withSpring(1, springConfig); }}
       >
-        <Archive color='#d97706' size={18} strokeWidth={2} />
+        <Archive color={archiveIconColor} size={18} strokeWidth={2} />
         <Text
           className='font-semibold'
-          style={{ fontSize: 17, letterSpacing: -0.41, color: isDark ? '#FBBF24' : '#B45309' }}
+          style={{ fontSize: 17, letterSpacing: -0.41, color: archiveTextColor }}
         >
           Archive Habit
         </Text>
@@ -95,10 +101,10 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         onPressIn={() => { deleteScale.value = withSpring(0.97, springConfig); }}
         onPressOut={() => { deleteScale.value = withSpring(1, springConfig); }}
       >
-        <Trash2 color='#dc2626' size={18} strokeWidth={2} />
+        <Trash2 color={deleteIconColor} size={18} strokeWidth={2} />
         <Text
           className='font-semibold'
-          style={{ fontSize: 17, letterSpacing: -0.41, color: isDark ? '#F87171' : '#DC2626' }}
+          style={{ fontSize: 17, letterSpacing: -0.41, color: deleteTextColor }}
         >
           Delete Habit
         </Text>

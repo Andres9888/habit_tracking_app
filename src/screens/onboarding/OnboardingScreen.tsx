@@ -245,6 +245,7 @@ interface OnboardingScreenProps {
 
 export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const { colors } = useThemeColors();
+  const styles = createStyles(colors);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
@@ -388,7 +389,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
               onPress={() => void handleComplete()}
             >
               {isLoading ? (
-                <ActivityIndicator color='#FFFFFF' />
+                <ActivityIndicator color={colors.text.inverse} />
               ) : (
                 <Text style={styles.ctaText}>
                   Let's Build Your First Habit →
@@ -413,7 +414,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
 
 // ─── Styles ──────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
+const createStyles = (colors: any) => StyleSheet.create({
   bottomContainer: {
     alignItems: 'center',
     gap: 24,
@@ -434,17 +435,17 @@ const styles = StyleSheet.create({
     width: 36,
   },
   chainLinkInner: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.text.inverse,
     borderRadius: 12,
     height: 36,
     width: 20,
   },
   container: {
-    backgroundColor: '#FAF8F5',
+    backgroundColor: colors.background,
     flex: 1,
   },
   ctaButton: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[500],
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 32,
@@ -458,7 +459,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   ctaText: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -472,7 +473,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   nextButton: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[500],
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 48,
@@ -483,7 +484,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
   },
   nextText: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -505,12 +506,12 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   skipText: {
-    color: '#6B7280',
+    color: colors.text.secondary,
     fontSize: 17,
     fontWeight: '500',
   },
   strengthBar: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[500],
     borderRadius: 8,
     height: 32,
   },
@@ -520,12 +521,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   strengthLabel: {
-    color: '#57534e',
+    color: colors.text.secondary,
     fontSize: 13,
     fontWeight: '500',
   },
   strengthLabelActive: {
-    color: '#047857',
+    color: colors.primary[600],
     fontWeight: '700',
   },
   strengthRow: {
@@ -534,7 +535,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   subtitle: {
-    color: '#6B7280',
+    color: colors.text.secondary,
     fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
@@ -552,7 +553,7 @@ const styles = StyleSheet.create({
   },
   templateItem: {
     alignItems: 'center',
-    backgroundColor: '#F0FDF4',
+    backgroundColor: colors.gray[100],
     borderRadius: 16,
     elevation: 2,
     height: 56,
@@ -564,7 +565,7 @@ const styles = StyleSheet.create({
     width: 56,
   },
   title: {
-    color: '#047857',
+    color: colors.primary[600],
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,

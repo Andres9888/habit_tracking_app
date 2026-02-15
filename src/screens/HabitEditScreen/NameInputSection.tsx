@@ -46,12 +46,12 @@ export function NameInputSection({
           className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
           maxLength={50}
           placeholder='e.g., Read 20 minutes daily'
-          placeholderTextColor={isDark ? colors.text.tertiary : '#a1a1aa'}
+          placeholderTextColor={colors.text.tertiary}
           returnKeyType='done'
           style={{
             lineHeight: 28,
             color: colors.text.primary,
-            backgroundColor: isDark ? colors.card : '#FFFFFF',
+            backgroundColor: colors.card,
             borderColor: colors.border,
           }}
           value={habitName}

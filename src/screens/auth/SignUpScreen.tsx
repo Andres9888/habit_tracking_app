@@ -5,7 +5,7 @@ import { ScrollView, View, KeyboardAvoidingView, Platform, TextInput } from 'rea
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import {
   AuthDivider,
   AuthError,
@@ -28,6 +28,7 @@ interface SignUpScreenProps {
 export default function SignUpScreen({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
+  const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
   const passwordRef = useRef<TextInput>(null);
   const {
@@ -69,8 +70,8 @@ export default function SignUpScreen({
     <View className='flex-1'>
       <LinearGradient
         colors={[
-          colors.light.background,
-          colors.light.gradientMid ?? '#f5f5f0',
+          colors.background,
+          colors.gray[100],
         ]}
         style={{ flex: 1 }}
       >

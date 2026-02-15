@@ -16,8 +16,8 @@ export function DetailHeader({
   onEdit,
 }: DetailHeaderProps) {
   const { colors, isDark } = useThemeColors();
-  const iconColor = isDark ? colors.text.secondary : '#57534e';
-  const textPrimary = isDark ? colors.text.primary : '#1c1917';
+  const iconColor = colors.text.secondary;
+  const textPrimary = colors.text.primary;
   const habitName = habit.icon
     ? (habit.name ?? '').replace(/^\p{Emoji}\s*/u, '')
     : (habit.name ?? 'Habit');
@@ -56,8 +56,8 @@ export function DetailHeader({
             className='mb-4 h-20 w-20 items-center justify-center rounded-2xl'
             style={{
               ...iconShadow,
-              backgroundColor: habit.iconColor || '#fef3c7',
-              shadowColor: habit.iconColor || '#f59e0b',
+              backgroundColor: habit.iconColor || colors.gray[100],
+              shadowColor: habit.iconColor || colors.primary[400],
             }}
           >
             <Text style={{ fontSize: 40 }}>{habit.icon}</Text>

@@ -26,6 +26,8 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
+import type { SemanticColors } from '../../theme/darkColors';
 import {
   AuthDivider,
   AuthError,
@@ -47,6 +49,8 @@ interface SignInScreenProps {
 }
 
 export default function SignInScreen(_props: SignInScreenProps = {}) {
+  const { colors: themeColors, isDark } = useThemeColors();
+  const styles = createStyles(themeColors);
   const insets = useSafeAreaInsets();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const passwordRef = useRef<TextInput>(null);
@@ -115,7 +119,10 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
     <View style={styles.container}>
       {/* Subtle gradient background */}
       <LinearGradient
-        colors={['#fafaf9', '#f5f5f4', '#fafaf9']}
+        colors={isDark 
+          ? [themeColors.background, themeColors.gray[100], themeColors.background]
+          : [themeColors.background, themeColors.gray[100], themeColors.background]
+        }
         locations={[0, 0.5, 1]}
         style={StyleSheet.absoluteFill}
       />
@@ -258,91 +265,92 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
   );
 }
 
-const styles = StyleSheet.create({
-  appName: {
-    color: '#1c1917',
-    fontSize: 22,
-    fontWeight: '700',
-    letterSpacing: -0.5,
-    textAlign: 'center',
-  },
-  authContent: {
-    gap: 24,
-  },
-  brandSection: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  container: {
-    backgroundColor: '#fafaf9',
-    flex: 1,
-  },
-  flex: {
-    flex: 1,
-  },
-  footer: {
-    marginTop: 32,
-    paddingHorizontal: 16,
-  },
-  footerLink: {
-    color: '#047857',
-    textDecorationLine: 'underline',
-  },
-  footerText: {
-    color: '#a8a29e',
-    fontSize: 13,
-    lineHeight: 18,
-    textAlign: 'center',
-  },
-  formSection: {
-    gap: 20,
-  },
-  logoContainer: {
-    marginBottom: 16,
-  },
-  logoEmoji: {
-    fontSize: 40,
-  },
-  logoGradient: {
-    alignItems: 'center',
-    borderRadius: 24,
-    elevation: 8,
-    height: 80,
-    justifyContent: 'center',
-    shadowColor: '#22c55e',
-    shadowOffset: { height: 8, width: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    width: 80,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: 24,
-  },
-  socialButtons: {
-    gap: 12,
-  },
-  tagline: {
-    color: '#57534e',
-    fontSize: 13,
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  welcomeSection: {
-    marginBottom: 32,
-  },
-  welcomeSubtitle: {
-    color: '#57534e',
-    fontSize: 17,
-    lineHeight: 24,
-    paddingHorizontal: 16,
-    textAlign: 'center',
-  },
-  welcomeTitle: {
-    color: '#1c1917',
-    fontSize: 28,
-    fontWeight: '700',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-});
+const createStyles = (colors: SemanticColors) =>
+  StyleSheet.create({
+    appName: {
+      color: colors.text.primary,
+      fontSize: 22,
+      fontWeight: '700',
+      letterSpacing: -0.5,
+      textAlign: 'center',
+    },
+    authContent: {
+      gap: 24,
+    },
+    brandSection: {
+      alignItems: 'center',
+      marginBottom: 32,
+    },
+    container: {
+      backgroundColor: colors.background,
+      flex: 1,
+    },
+    flex: {
+      flex: 1,
+    },
+    footer: {
+      marginTop: 32,
+      paddingHorizontal: 16,
+    },
+    footerLink: {
+      color: colors.primary[600],
+      textDecorationLine: 'underline',
+    },
+    footerText: {
+      color: colors.text.secondary,
+      fontSize: 13,
+      lineHeight: 18,
+      textAlign: 'center',
+    },
+    formSection: {
+      gap: 20,
+    },
+    logoContainer: {
+      marginBottom: 16,
+    },
+    logoEmoji: {
+      fontSize: 40,
+    },
+    logoGradient: {
+      alignItems: 'center',
+      borderRadius: 24,
+      elevation: 8,
+      height: 80,
+      justifyContent: 'center',
+      shadowColor: colors.primary[400],
+      shadowOffset: { height: 8, width: 0 },
+      shadowOpacity: 0.3,
+      shadowRadius: 16,
+      width: 80,
+    },
+    scrollContent: {
+      flexGrow: 1,
+      paddingHorizontal: 24,
+    },
+    socialButtons: {
+      gap: 12,
+    },
+    tagline: {
+      color: colors.text.tertiary,
+      fontSize: 13,
+      marginTop: 4,
+      textAlign: 'center',
+    },
+    welcomeSection: {
+      marginBottom: 32,
+    },
+    welcomeSubtitle: {
+      color: colors.text.tertiary,
+      fontSize: 17,
+      lineHeight: 24,
+      paddingHorizontal: 16,
+      textAlign: 'center',
+    },
+    welcomeTitle: {
+      color: colors.text.primary,
+      fontSize: 28,
+      fontWeight: '700',
+      marginBottom: 8,
+      textAlign: 'center',
+    },
+  });

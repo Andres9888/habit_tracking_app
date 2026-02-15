@@ -30,7 +30,7 @@ export function FilterControls({
 }: FilterControlsProps) {
   const { colors, isDark } = useThemeColors();
   const defaultIconColor = colors.text.primary;
-  const iconColor = showSortOptions ? '#fff' : defaultIconColor;
+  const iconColor = showSortOptions ? colors.text.inverse : defaultIconColor;
 
   return (
     <View style={styles.sortButtonWrapper}>
@@ -48,7 +48,7 @@ export function FilterControls({
           style={[
             styles.controlButtonText,
             { color: defaultIconColor },
-            showSortOptions && { color: '#fff' },
+            showSortOptions && { color: colors.text.inverse },
           ]}
         >
           {SORT_LABELS[sortOption]}
@@ -93,7 +93,7 @@ export function FilterControls({
                   {opt.label}
                 </Text>
                 {selected && (
-                  <Check color='#10B981' size={16} strokeWidth={2.5} />
+                  <Check color={colors.primary[400]} size={16} strokeWidth={2.5} />
                 )}
               </Pressable>
             );

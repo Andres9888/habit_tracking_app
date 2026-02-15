@@ -6,12 +6,12 @@
 import React, { useMemo } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
-import { styles } from './AnalyticsScreen.styles';
+import { createStyles } from './AnalyticsScreen.styles';
 import {
   AnalyticsHeader,
   EmptyState,
@@ -23,6 +23,9 @@ import {
 } from './components';
 
 function AnalyticsScreenContent() {
+  const { colors: themeColors } = useThemeColors();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
+
   const {
     refreshing,
     showPaywall,
@@ -67,9 +70,9 @@ function AnalyticsScreenContent() {
       contentContainerStyle={styles.contentContainer}
       refreshControl={
         <RefreshControl
-          colors={[colors.primary[500]]}
+          colors={[themeColors.primary[500]]}
           refreshing={refreshing}
-          tintColor={colors.primary[500]}
+          tintColor={themeColors.primary[500]}
           onRefresh={() => void onRefresh()}
         />
       }
