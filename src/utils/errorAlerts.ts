@@ -50,3 +50,23 @@ export function showRetryableError(message: string, onRetry?: () => void) {
   }
   Alert.alert('Error', message, buttons);
 }
+
+/**
+ * Show a network-specific error with retry option.
+ * Clear, non-technical messaging for connection issues.
+ *
+ * Created by Opus.
+ */
+export function showConnectionError(onRetry?: () => void) {
+  const buttons: Array<{ text: string; onPress?: () => void }> = [
+    { text: 'OK' },
+  ];
+  if (onRetry) {
+    buttons.unshift({ text: 'Tap to Retry', onPress: onRetry });
+  }
+  Alert.alert(
+    'No Connection',
+    'Check your internet connection and try again. Your data is safe — changes will sync when you're back online.',
+    buttons
+  );
+}

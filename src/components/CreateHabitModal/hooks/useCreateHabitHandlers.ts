@@ -3,12 +3,15 @@
  *
  * Extracted from useCreateHabitModal to separate mutation logic
  * from the main modal orchestration.
+ *
+ * Updated by Opus: added network error detection with clear user messaging.
  */
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { formatReminderTime } from '../../../utils/notifications';
 import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStreakReminderSettings';
 import { cancelReminder, scheduleReminder } from './useHabitReminders';
+import { isNetworkError } from '../../../lib/offline';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitData {
@@ -74,6 +77,11 @@ export function useCreateHabitHandlers() {
       });
     } catch (error) {
       if (__DEV__) console.error('Failed to edit habit:', error);
+      if (isNetworkError(error)) {
+        throw new Error(
+          'Could not save changes. Check your connection and try again.'
+        );
+      }
       throw error;
     }
   }
@@ -111,6 +119,11 @@ export function useCreateHabitHandlers() {
       }
     } catch (error) {
       if (__DEV__) console.error('Failed to create habit:', error);
+      if (isNetworkError(error)) {
+        throw new Error(
+          'Could not create habit. Check your connection and try again.'
+        );
+      }
       throw error;
     }
   }

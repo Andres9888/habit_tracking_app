@@ -84,6 +84,16 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
       cleanup();
     } catch (error) {
       if (__DEV__) console.error('Failed to save habit:', error);
+      const message =
+        error instanceof Error ? error.message : 'Something went wrong';
+      // Show user-facing alert with the improved network-aware message
+      // from useCreateHabitHandlers (Opus: network error detection)
+      const { Alert } = require('react-native');
+      Alert.alert(
+        isEditMode ? 'Save Failed' : 'Couldn\u2019t Create Habit',
+        message,
+        [{ text: 'OK' }]
+      );
     }
   }, [
     form.habitName,
