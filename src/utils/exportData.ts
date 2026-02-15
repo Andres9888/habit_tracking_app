@@ -5,9 +5,17 @@
 export {
   convertToCSV,
   convertToJSON,
+  convertFullExportToCSV,
+  convertFullExportToJSON,
   exportData,
   prepareExportData,
+  prepareFullExportData,
   showExportSuccess,
   showExportError,
 } from './exportData/index';
-export type { HabitData, ExportData, ToastResult } from './exportData/index';
+export type {
+  HabitData,
+  ExportData,
+  FullExportData,
+  ToastResult,
+} from './exportData/index';

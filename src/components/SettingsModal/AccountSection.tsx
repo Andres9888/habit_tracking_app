@@ -6,6 +6,7 @@ import React, { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
+import { DataExportRow } from './sections/DataExportRow';
 import { PremiumStatus } from './sections/PremiumStatus';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
@@ -99,6 +100,7 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
         isLoading={isSigningOut}
         onSignOut={handleSignOut}
       />
+      <DataExportRow highContrast={isHighContrastActive} />
       <AppActions
         highContrast={isHighContrastActive}
         onRate={handleRateApp}

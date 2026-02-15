@@ -2,7 +2,18 @@
  * Export data utilities - barrel exports
  */
 
-export { convertToCSV, convertToJSON } from './converters';
+export {
+  convertToCSV,
+  convertToJSON,
+  convertFullExportToCSV,
+  convertFullExportToJSON,
+} from './converters';
 export { exportData, showExportSuccess, showExportError } from './export';
 export { prepareExportData } from './prepareData';
-export type { HabitData, ExportData, ToastResult } from './types';
+export { prepareFullExportData } from './prepareFullExport';
+export type {
+  HabitData,
+  ExportData,
+  FullExportData,
+  ToastResult,
+} from './types';
