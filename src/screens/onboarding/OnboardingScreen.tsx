@@ -43,6 +43,7 @@ function ChainLink({
   index: number;
   reduceMotion: boolean;
 }) {
+  const { colors } = useThemeColors();
   const chainColors = [
     colors.primary[600],
     colors.primary[700],
@@ -90,6 +91,7 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
 // ─── Strength Meter ──────────────────────────────────────────────────
 
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
+  const { colors } = useThemeColors();
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
   return (
     <View style={styles.strengthContainer}>
@@ -109,7 +111,7 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
             style={[
               styles.strengthBar,
               {
-                backgroundColor: interpolateColor(i / 4),
+                backgroundColor: interpolateColor(i / 4, colors.primary),
                 opacity: 0.15 + i * 0.2125,
                 width: `${20 + i * 20}%`,
               },
@@ -129,10 +131,10 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-function interpolateColor(t: number): string {
-  if (t < 0.5) return colors.primary[400];
-  if (t < 0.75) return colors.primary[600];
-  return colors.primary[700];
+function interpolateColor(t: number, primary: Record<number, string>): string {
+  if (t < 0.5) return primary[400];
+  if (t < 0.75) return primary[600];
+  return primary[700];
 }
 
 // ─── Template Grid ───────────────────────────────────────────────────

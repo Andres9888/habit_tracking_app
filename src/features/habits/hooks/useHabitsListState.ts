@@ -116,12 +116,14 @@ export function useHabitsListState(): HabitsListState {
       const currentlyCompleted = isCompleted(args.habitId, args.date);
 
       // Call the original toggle function
-      await baseToggleHabit(args);
+      const result = await baseToggleHabit(args);
 
       // Play sound if marking as complete (not uncompleting)
       if (!currentlyCompleted) {
         playCompletionSound();
       }
+
+      return result;
     },
     [baseToggleHabit, isCompleted, playCompletionSound]
   );

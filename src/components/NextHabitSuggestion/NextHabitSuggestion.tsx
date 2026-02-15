@@ -75,7 +75,6 @@ export function NextHabitSuggestion({
         totalCount={totalCount}
         cardStyle={cardStyle}
         glowStyle={glowStyle}
-        glowOpacity={glowOpacity}
       />
     </Pressable>
   );
