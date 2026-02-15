@@ -32,6 +32,9 @@ export function BenefitsCTAFooter({
           {handlers.priceLabel ?? '$6.99/month'}
         </Text>
         <Text className='text-sm text-stone-500'>7-day free trial • Cancel anytime</Text>
+        <Text className='mt-1 text-xs text-emerald-700 font-medium'>
+          💡 Most users see results within 7 days
+        </Text>
       </View>
       <Pressable
         accessibilityHint='Opens subscription options'

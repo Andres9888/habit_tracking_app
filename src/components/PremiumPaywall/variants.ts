@@ -15,11 +15,11 @@ export const VARIANT_CONFIGS: Record<string, VariantConfig> = {
     showSocialProof: false,
   },
   benefits: {
-    ctaText: 'Start 7-Day Free Trial',
+    ctaText: 'Start My Free 7-Day Trial',
     gradientColors: ['#8b5cf6', '#7c3aed'] as const,
     heroSubtitle:
-      'Science-backed tools proven to 3x your habit retention.',
-    heroTitle: 'Unlock Your Full Motivation Toolkit',
+      'Science-backed tools proven to 3× your habit retention. Try free for 7 days.',
+    heroTitle: 'Make Your Habits Unbreakable',
     presentation: 'page-sheet',
     showPricingToggle: false,
     showSocialProof: true,

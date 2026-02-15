@@ -30,6 +30,37 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
+  valueProps: {
+    alignSelf: 'stretch',
+    gap: 12,
+    marginTop: 20,
+    paddingHorizontal: 8,
+  },
+  valuePropRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  valuePropText: {
+    color: '#44403c',
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '500',
+    lineHeight: 22,
+  },
+  socialProof: {
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 16,
+  },
+  starsRow: {
+    flexDirection: 'row',
+    gap: 2,
+  },
+  socialProofText: {
+    color: '#78716c',
+    fontSize: 13,
+  },
   iconContainer: {
     alignItems: 'center',
     backgroundColor: '#f5f5f4',

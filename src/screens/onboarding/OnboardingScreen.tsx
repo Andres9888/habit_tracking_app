@@ -188,21 +188,21 @@ interface PageData {
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    subtitle: 'Complete your habits daily and watch your chain grow — every link counts.',
+    subtitle: 'Users with visual streaks are 3× more likely to stick with their habits. Watch your chain grow — every link counts.',
     title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
   {
     id: 'strength',
     subtitle:
-      'Your habits get stronger over time — backed by behavioral science.',
-    title: 'Science-Backed Strength',
+      'Track how habits move from fragile to automatic — based on real behavioral science research.',
+    title: 'Watch Habits Get Stronger',
     Visual: StrengthMeter,
   },
   {
     id: 'templates',
-    subtitle: 'Pick from science-backed templates or create your own in seconds.',
-    title: '200+ Ready-Made Templates',
+    subtitle: 'Start with a proven template or create your own habit in under 30 seconds.',
+    title: 'Start in Seconds',
     Visual: TemplateGrid,
   },
 ];
@@ -379,6 +379,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
                 ? undefined
                 : FadeInDown.springify().damping(18)
             }
+            style={styles.ctaContainer}
           >
             <Pressable
               accessibilityLabel='Get started building your first habit'
@@ -391,10 +392,11 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
                 <ActivityIndicator color='#FFFFFF' />
               ) : (
                 <Text style={styles.ctaText}>
-                  Let's Build Your First Habit →
+                  Create My First Habit →
                 </Text>
               )}
             </Pressable>
+            <Text style={styles.ctaSubtext}>Free forever • No credit card needed</Text>
           </Animated.View>
         ) : (
           <Pressable
@@ -456,6 +458,14 @@ const styles = StyleSheet.create({
   },
   ctaButtonDisabled: {
     opacity: 0.7,
+  },
+  ctaContainer: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  ctaSubtext: {
+    color: '#78716c',
+    fontSize: 13,
   },
   ctaText: {
     color: '#FFFFFF',

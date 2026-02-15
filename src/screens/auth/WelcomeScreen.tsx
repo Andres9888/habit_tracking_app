@@ -7,8 +7,8 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated from 'react-native-reanimated';
-import { Link } from 'lucide-react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Link, Flame, Brain, Zap, Star } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import {
   AuthDivider,
@@ -65,8 +65,34 @@ export default function WelcomeScreen() {
             Chain Day
           </Animated.Text>
           <Animated.Text style={[styles.subtitle, subtitleStyle]}>
-            Build habits that stick
+            Build habits that stick — backed by science
           </Animated.Text>
+
+          {/* Value proposition bullets */}
+          <View style={styles.valueProps}>
+            <Animated.View entering={FadeInDown.delay(400).springify().damping(18)} style={styles.valuePropRow}>
+              <Flame color='#059669' size={18} />
+              <Text style={styles.valuePropText}>Don't Break the Chain — visual streaks that motivate</Text>
+            </Animated.View>
+            <Animated.View entering={FadeInDown.delay(500).springify().damping(18)} style={styles.valuePropRow}>
+              <Brain color='#059669' size={18} />
+              <Text style={styles.valuePropText}>Science-backed habit strength tracking</Text>
+            </Animated.View>
+            <Animated.View entering={FadeInDown.delay(600).springify().damping(18)} style={styles.valuePropRow}>
+              <Zap color='#059669' size={18} />
+              <Text style={styles.valuePropText}>Create your first habit in under 30 seconds</Text>
+            </Animated.View>
+          </View>
+
+          {/* Social proof */}
+          <Animated.View entering={FadeInDown.delay(700).springify().damping(18)} style={styles.socialProof}>
+            <View style={styles.starsRow}>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Star key={i} color='#fbbf24' fill='#fbbf24' size={14} />
+              ))}
+            </View>
+            <Text style={styles.socialProofText}>Loved by 10,000+ people building lasting habits</Text>
+          </Animated.View>
         </View>
 
         <Animated.View style={[styles.actionSection, buttonsStyle]}>
