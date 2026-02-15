@@ -5,6 +5,7 @@ import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import { useOptimisticStore } from '../../../lib/optimistic';
+import { validateDateString } from '../../../utils/validation';
 import type { HabitStatus } from '../types';
 
 export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
@@ -66,6 +67,13 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
   const getHabitStatus = useCallback(
     (habitId: string, dateString: string): HabitStatus => {
+      // Validate date string format
+      const validation = validateDateString(dateString);
+      if (!validation.isValid) {
+        if (__DEV__) console.warn(`Invalid date string: ${dateString}`, validation.error);
+        return 'planned'; // Safe fallback
+      }
+
       // Use the pre-built map (includes optimistic merges) for O(1) lookup
       const completedDates = completedDatesByHabit.get(habitId);
       if (completedDates?.has(dateString)) {
@@ -75,6 +83,12 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       const [year, month, day] = dateString.split('-').map(Number);
       const date = new Date(year, month - 1, day);
       date.setHours(0, 0, 0, 0);
+
+      // Guard against invalid Date objects
+      if (Number.isNaN(date.getTime())) {
+        if (__DEV__) console.warn(`Invalid date created from: ${dateString}`);
+        return 'planned';
+      }
 
       if (date < today) {
         return 'missed';

@@ -27,7 +27,34 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
   const { signOut } = useClerk();
   const { user } = useUser();
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const userEmail = user?.primaryEmailAddress?.emailAddress;
+
+  const handleDeleteAccount = useCallback(() => {
+    Alert.alert(
+      'Delete Account',
+      'This will permanently delete your account and all your data. This action cannot be undone.',
+      [
+        { style: 'cancel', text: 'Cancel' },
+        {
+          onPress: () => {
+            setIsDeletingAccount(true);
+            void (async () => {
+              try {
+                await user?.delete();
+              } catch {
+                Alert.alert('Error', 'Failed to delete account. Please try again or contact support.');
+              } finally {
+                setIsDeletingAccount(false);
+              }
+            })();
+          },
+          style: 'destructive',
+          text: 'Delete',
+        },
+      ]
+    );
+  }, [user]);
 
   const handleSignOut = useCallback(() => {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -97,7 +124,9 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
       <AccountInfo
         email={userEmail}
         highContrast={isHighContrastActive}
+        isDeletingAccount={isDeletingAccount}
         isLoading={isSigningOut}
+        onDeleteAccount={handleDeleteAccount}
         onSignOut={handleSignOut}
       />
       <AppActions

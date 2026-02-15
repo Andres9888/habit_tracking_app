@@ -13,6 +13,7 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import { CompletionToast } from '../CompletionToast';
+import { SuccessShimmer } from '../animations/SuccessShimmer';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
 import { useHabitCard } from './useHabitCard';
@@ -61,6 +62,7 @@ function HabitCardComponent(props: HabitCardProps) {
           accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}. Swipe left for actions.`}
           accessibilityRole='button'
           accessibilityState={{ checked: habit.completed, disabled }}
+          testID='home-habit-toggle'
           style={[
             styles.card,
             {
@@ -80,6 +82,7 @@ function HabitCardComponent(props: HabitCardProps) {
             strengthColor={habit.strengthColor}
             strengthFillStyle={habit.strengthFillStyle}
           />
+          <SuccessShimmer active={habit.showConfetti} />
           <Animated.View
             style={[
               styles.accentBar,
