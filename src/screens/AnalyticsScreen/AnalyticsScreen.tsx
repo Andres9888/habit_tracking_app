@@ -43,6 +43,9 @@ function AnalyticsScreenContent() {
     setShowExportMenu,
   } = useAnalyticsScreen();
 
+  const hasNoHabits = overviewStats?.totalHabits === 0;
+  const rankedHabits = useMemo(() => overviewStats?.rankedHabits || [], [overviewStats?.rankedHabits]);
+
   // Show paywall modal if not premium user
   if (!isPremiumUser && showPaywall) {
     return (
@@ -58,9 +61,6 @@ function AnalyticsScreenContent() {
   if (isLoading) {
     return <AnalyticsScreenSkeleton />;
   }
-
-  const hasNoHabits = overviewStats?.totalHabits === 0;
-  const rankedHabits = useMemo(() => overviewStats?.rankedHabits || [], [overviewStats?.rankedHabits]);
 
   return (
     <ScrollView

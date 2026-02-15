@@ -35,7 +35,12 @@ export const OverviewStats = memo(function OverviewStats({
   }, [stats?.weakestHabit, onHabitPress]);
 
   return (
-    <View style={styles.statsGrid}>
+    <View
+      accessible={false}
+      accessibilityLabel='Overview statistics'
+      accessibilityRole='summary'
+      style={styles.statsGrid}
+    >
       <StatCard
         loading={isLoading}
         title='Total Habits'

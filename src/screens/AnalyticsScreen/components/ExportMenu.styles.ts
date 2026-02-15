@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   exportMenuCancelText: {
     ...typography.body,
-    color: colors.error,
+    color: colors.text.secondary,
   },
   exportMenuItem: {
     alignItems: 'center',
