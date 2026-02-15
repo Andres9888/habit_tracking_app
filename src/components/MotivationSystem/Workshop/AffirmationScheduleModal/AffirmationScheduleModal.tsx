@@ -36,13 +36,17 @@ export function AffirmationScheduleModal({
   const handleSave = useCallback(() => {
     if (isSaving) return;
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    void onSave(form.getScheduleData()).then(() => onClose());
+    void onSave(form.getScheduleData()).then(() => onClose()).catch((error) => {
+      if (__DEV__) console.error('Failed to save affirmation schedule:', error);
+    });
   }, [isSaving, form, onSave, onClose]);
 
   const handleCancelSchedule = useCallback(() => {
     if (isSaving) return;
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    void onCancel().then(() => onClose());
+    void onCancel().then(() => onClose()).catch((error) => {
+      if (__DEV__) console.error('Failed to cancel affirmation schedule:', error);
+    });
   }, [isSaving, onCancel, onClose]);
 
   return (
