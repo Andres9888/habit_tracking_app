@@ -1,13 +1,14 @@
 /**
  * ExportMenu - Modal for selecting data export format
+ * Theme-aware with dark mode support
  */
 import React from 'react';
-import { View, Text, Pressable, Modal } from 'react-native';
+import { View, Text, Pressable, Modal, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme';
+import { spacing } from '../../../theme/spacing';
 import type { ExportFormat } from '../AnalyticsScreen.types';
-import { styles } from './ExportMenu.styles';
 
 interface ExportMenuProps {
   visible: boolean;
@@ -20,6 +21,8 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
   onClose,
   onExport,
 }) => {
+  const { colors: tc, isDark } = useThemeColors();
+
   return (
     <Modal
       transparent
@@ -33,23 +36,43 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
         style={styles.modalOverlay}
         onPress={onClose}
       >
-        <View style={styles.exportMenu}>
-          <Text style={styles.exportMenuTitle}>Choose Export Format</Text>
+        <View
+          style={[
+            styles.exportMenu,
+            {
+              backgroundColor: tc.surface,
+              borderTopColor: tc.border,
+              borderTopWidth: 1,
+            },
+          ]}
+        >
+          <Text style={[styles.exportMenuTitle, { color: tc.text.primary }]}>
+            Choose Export Format
+          </Text>
           <AnimatedPressable
             accessibilityHint='Exports data in spreadsheet format'
             accessibilityLabel='Export as CSV'
             accessibilityRole='button'
-            style={styles.exportMenuItem}
+            style={[
+              styles.exportMenuItem,
+              {
+                backgroundColor: isDark ? tc.gray[100] : tc.background,
+                borderColor: tc.cardBorder,
+                borderWidth: 1,
+              },
+            ]}
             onPress={() => onExport('csv')}
           >
             <Ionicons
-              color={colors.primary[500]}
+              color={isDark ? tc.primary[500] : tc.primary[600]}
               name='document-text-outline'
               size={24}
             />
             <View style={styles.exportMenuItemContent}>
-              <Text style={styles.exportMenuItemTitle}>CSV</Text>
-              <Text style={styles.exportMenuItemDescription}>
+              <Text style={[styles.exportMenuItemTitle, { color: tc.text.primary }]}>
+                CSV
+              </Text>
+              <Text style={[styles.exportMenuItemDescription, { color: tc.text.secondary }]}>
                 Spreadsheet format (Excel, Google Sheets)
               </Text>
             </View>
@@ -58,17 +81,26 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
             accessibilityHint='Exports data in developer-friendly format'
             accessibilityLabel='Export as JSON'
             accessibilityRole='button'
-            style={styles.exportMenuItem}
+            style={[
+              styles.exportMenuItem,
+              {
+                backgroundColor: isDark ? tc.gray[100] : tc.background,
+                borderColor: tc.cardBorder,
+                borderWidth: 1,
+              },
+            ]}
             onPress={() => onExport('json')}
           >
             <Ionicons
-              color={colors.primary[500]}
+              color={isDark ? tc.primary[500] : tc.primary[600]}
               name='code-outline'
               size={24}
             />
             <View style={styles.exportMenuItemContent}>
-              <Text style={styles.exportMenuItemTitle}>JSON</Text>
-              <Text style={styles.exportMenuItemDescription}>
+              <Text style={[styles.exportMenuItemTitle, { color: tc.text.primary }]}>
+                JSON
+              </Text>
+              <Text style={[styles.exportMenuItemDescription, { color: tc.text.secondary }]}>
                 Developer-friendly format
               </Text>
             </View>
@@ -79,10 +111,56 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
             style={styles.exportMenuCancel}
             onPress={onClose}
           >
-            <Text style={styles.exportMenuCancelText}>Cancel</Text>
+            <Text style={{ color: '#DC2626', fontSize: 17, fontWeight: '500' }}>
+              Cancel
+            </Text>
           </AnimatedPressable>
         </View>
       </Pressable>
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  exportMenu: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: spacing.lg,
+  },
+  exportMenuCancel: {
+    alignItems: 'center',
+    marginTop: spacing.sm,
+    paddingVertical: spacing.md,
+  },
+  exportMenuItem: {
+    alignItems: 'center',
+    borderRadius: 12,
+    flexDirection: 'row',
+    marginBottom: spacing.sm,
+    padding: spacing.md,
+  },
+  exportMenuItemContent: {
+    flex: 1,
+    marginLeft: spacing.md,
+  },
+  exportMenuItemDescription: {
+    fontSize: 13,
+    marginTop: 4,
+  },
+  exportMenuItemTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  exportMenuTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    marginBottom: spacing.md,
+    textAlign: 'center',
+  },
+  modalOverlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+});

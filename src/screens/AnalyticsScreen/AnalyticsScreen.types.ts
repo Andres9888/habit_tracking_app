@@ -18,8 +18,11 @@ export interface StatCardProps {
   value: string | number;
   subtitle?: string;
   emoji?: string;
+  trend?: 'up' | 'down' | null;
   onPress?: () => void;
   loading?: boolean;
+  /** Index for staggered entrance animation */
+  index?: number;
 }
 
 export interface AnalyticsOverviewStats {

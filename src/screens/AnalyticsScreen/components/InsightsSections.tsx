@@ -1,10 +1,11 @@
 /**
  * InsightsSections - Weekly insights and habit rankings sections
+ * Theme-aware with dark mode support
  */
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
-import { typography } from '../../../theme/typography';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme';
 import { spacing } from '../../../theme/spacing';
 import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
 import HabitRankingsList from '../../../components/HabitRankingsList';
@@ -17,15 +18,27 @@ interface InsightsSectionsProps {
   onHabitPress: (habitId: string) => void;
 }
 
+const anim = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
+
 export const InsightsSections: React.FC<InsightsSectionsProps> = ({
   weeklyInsights,
   rankedHabits,
   onHabitPress,
 }) => {
+  const { colors: tc } = useThemeColors();
+
+  const sectionTitleStyle = {
+    color: tc.text.primary,
+    fontSize: 20,
+    fontWeight: '700' as const,
+    letterSpacing: -0.5,
+    marginBottom: spacing.md,
+  };
+
   return (
     <>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Weekly Insights</Text>
+      <Animated.View entering={anim(0)} style={styles.section}>
+        <Text style={sectionTitleStyle}>Weekly Insights</Text>
         <WeeklyInsightsCard
           insights={weeklyInsights ?? null}
           onArchivePress={() => {
@@ -33,10 +46,10 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
           }}
           onHabitPress={onHabitPress}
         />
-      </View>
+      </Animated.View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Habit Rankings</Text>
+      <Animated.View entering={anim(60)} style={styles.section}>
+        <Text style={sectionTitleStyle}>Habit Rankings</Text>
         <HabitRankingsList
           habits={rankedHabits.map((h) => ({
             id: h.id,
@@ -49,7 +62,7 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
           }))}
           onHabitPress={onHabitPress}
         />
-      </View>
+      </Animated.View>
     </>
   );
 };
@@ -58,10 +71,5 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: spacing.xl,
     paddingHorizontal: spacing.lg,
-  },
-  sectionTitle: {
-    ...typography.heading3,
-    color: colors.text.primary,
-    marginBottom: spacing.md,
   },
 });
