@@ -1,4 +1,5 @@
-import { Animated, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
@@ -14,8 +15,6 @@ interface RewardCelebrationToastProps {
   visible: boolean;
 }
 
-const AnimatedContainer = Animated.createAnimatedComponent(View);
-
 export const RewardCelebrationToast = ({
   message,
   onDismiss,
@@ -24,16 +23,16 @@ export const RewardCelebrationToast = ({
   streak,
   visible,
 }: RewardCelebrationToastProps) => {
-  const { translateY, opacity } = useRewardToastAnimation(visible);
+  const { animatedStyle } = useRewardToastAnimation(visible);
   const { title, premiumCTA } = useRewardToastContent(streak);
   const { triggerLightImpact } = useHapticFeedback({});
 
   return (
-    <AnimatedContainer
+    <Animated.View
       accessibilityLiveRegion='polite'
       className='absolute bottom-6 left-4 right-4'
       pointerEvents='box-none'
-      style={{ opacity, transform: [{ translateY }] }}
+      style={animatedStyle}
     >
       <View className='rounded-3xl bg-white p-5 shadow-lg shadow-blue-100'>
         <Text className='text-[17px] font-bold leading-[24px] text-[#1c1917]'>
@@ -95,7 +94,7 @@ export const RewardCelebrationToast = ({
           </Text>
         </AnimatedPressable>
       </View>
-    </AnimatedContainer>
+    </Animated.View>
   );
 };
 

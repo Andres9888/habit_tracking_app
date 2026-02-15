@@ -1,15 +1,17 @@
 import { View, Text } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { AVATAR_GRADIENT, XP_GRADIENT, TROPHY_GRADIENT } from '../constants';
 import type { CharacterData } from '../types';
 
 interface CharacterCardProps {
   data: CharacterData;
+  achievementCount?: number;
 }
 
-export function CharacterCard({ data }: CharacterCardProps) {
+export function CharacterCard({ data, achievementCount }: CharacterCardProps) {
+  const trophyCount = achievementCount ?? data.recentAchievements?.length ?? 0;
   const xpToNextLevel = data.xpToNextLevel || 1; // Guard against 0
   const xpProgress = (data.xp / xpToNextLevel) * 100;
   const xpRemaining = xpToNextLevel - data.xp;
@@ -17,7 +19,6 @@ export function CharacterCard({ data }: CharacterCardProps) {
   return (
     <Animated.View
       className='mb-6 overflow-hidden rounded-3xl border border-stone-100 bg-white'
-      entering={FadeInDown.delay(60).springify().damping(18)}
       style={{
         shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
@@ -45,7 +46,7 @@ export function CharacterCard({ data }: CharacterCardProps) {
             </View>
             <View className='flex-col'>
               <View className='flex-row items-center gap-2'>
-                <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
+                <Text className='text-base font-semibold leading-6 tracking-[-0.3125px] text-[#101828]'>
                   Level {data.level}
                 </Text>
                 <Text className='text-lg'>✨</Text>
@@ -70,7 +71,7 @@ export function CharacterCard({ data }: CharacterCardProps) {
             >
               <Trophy color='white' size={20} />
               <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-white'>
-                10
+                {trophyCount}
               </Text>
             </LinearGradient>
           </View>
