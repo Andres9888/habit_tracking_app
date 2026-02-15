@@ -54,7 +54,7 @@ export function FloatingActionButton({
         className='absolute h-14 w-14 rounded-full'
         pointerEvents='none'
         style={{
-          backgroundColor: 'rgba(59,130,246,0.28)',
+          backgroundColor: 'rgba(5,150,105,0.28)',
           opacity: rippleOpacity,
           transform: [{ scale: rippleScale }],
         }}
