@@ -8,22 +8,19 @@ import {
 } from 'lucide-react-native';
 import { Dimensions } from 'react-native';
 
+import { springs } from '../../../../theme/animations';
 import type { SortOptionConfig } from './types';
 
 export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 /**
  * Spring configuration for bottom sheet animations
- * Using softer, more organic spring matching app's FadeInDown.springify().damping(18) pattern
+ * Uses unified bottomSheet spring from theme/animations for consistency
  */
-export const SHEET_SPRING_CONFIG = {
-  damping: 18,
-  mass: 1,
-  stiffness: 120,
-};
+export const SHEET_SPRING_CONFIG = springs.bottomSheet;
 
-/** Gesture threshold for dismissal */
-export const DISMISS_THRESHOLD = 100;
+/** Gesture threshold for dismissal — matches unified Modal system */
+export const DISMISS_THRESHOLD = 120;
 export const VELOCITY_THRESHOLD = 800;
 
 export const SORT_OPTIONS: SortOptionConfig[] = [

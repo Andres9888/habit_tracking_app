@@ -5,7 +5,7 @@
  */
 
 import React, { useCallback } from 'react';
-import { Pressable, Modal, Dimensions } from 'react-native';
+import { Pressable, Modal, Dimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -21,13 +21,13 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { springs } from '../../theme/animations';
 import type { QuickActionsSheetProps } from './types';
-import { useThemeColors } from '../../theme/ThemeContext';
 import { SheetHeader } from './SheetHeader';
 import { ActionsList } from './ActionsList';
 
-const DISMISS_THRESHOLD = 100;
-const VELOCITY_THRESHOLD = 500;
+const DISMISS_THRESHOLD = 120;
+const VELOCITY_THRESHOLD = 800;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export const QuickActionsSheet = ({
@@ -70,13 +70,10 @@ export const QuickActionsSheet = ({
         event.translationY > DISMISS_THRESHOLD ||
         velocityY > VELOCITY_THRESHOLD
       ) {
-        translateY.value = withSpring(SCREEN_HEIGHT, {
-          damping: 20,
-          stiffness: 150,
-        });
+        translateY.value = withSpring(SCREEN_HEIGHT, springs.bottomSheet);
         runOnJS(handleDismiss)();
       } else {
-        translateY.value = withSpring(0, { damping: 20, stiffness: 150 });
+        translateY.value = withSpring(0, springs.bottomSheet);
       }
     });
 
@@ -97,6 +94,7 @@ export const QuickActionsSheet = ({
 
   return (
     <Modal
+      statusBarTranslucent
       transparent
       animationType='none'
       visible={visible}
@@ -122,6 +120,13 @@ export const QuickActionsSheet = ({
           exiting={SlideOutDown.springify().damping(20).stiffness(200)}
           style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle]}
         >
+          {/* Pull indicator for consistent bottom sheet affordance */}
+          <View className='items-center py-2'>
+            <View
+              className='h-1 w-10 rounded-full'
+              style={{ backgroundColor: colors.gray?.[300] ?? '#d4d4d4' }}
+            />
+          </View>
           <SheetHeader
             habitIcon={habit.icon}
             habitName={habit.name}

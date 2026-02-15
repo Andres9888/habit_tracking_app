@@ -41,7 +41,8 @@ export function SortBottomSheet({
     >
       <View className='flex-1 justify-end'>
         <Pressable
-          accessible={false}
+          accessibilityLabel='Close'
+          accessibilityRole='button'
           className='absolute inset-0'
           onPress={handleDismiss}
         >

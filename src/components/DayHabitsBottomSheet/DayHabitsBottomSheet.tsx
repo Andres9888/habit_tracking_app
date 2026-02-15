@@ -8,7 +8,6 @@ import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { DragHandle, EmptyState, HabitList, SheetHeader } from './components';
 import { getSheetContainerStyle } from './styles';
 import type { DayHabitsBottomSheetProps } from './types';
-import { useThemeColors } from '../../theme/ThemeContext';
 import { useDayHabitsSheet } from './useDayHabitsSheet';
 import { useSheetAnimations } from './useSheetAnimations';
 
@@ -71,7 +70,8 @@ export function DayHabitsBottomSheet({
     >
       <View className='flex-1 justify-end'>
         <Pressable
-          accessible={false}
+          accessibilityLabel='Close'
+          accessibilityRole='button'
           className='absolute inset-0'
           onPress={handleBackdropPress}
         >
