@@ -1,6 +1,6 @@
 /**
  * Long Press Gesture Handler
- * Handles long-press for quick actions menu
+ * Handles long-press for quick actions menu with haptic feedback
  */
 
 import { Gesture } from 'react-native-gesture-handler';
@@ -12,6 +12,10 @@ interface LongPressGestureOptions {
   onLongPress?: () => void;
 }
 
+function triggerHeavyHaptic() {
+  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => {});
+}
+
 export function createLongPressGesture({
   disabled,
   onLongPress,
@@ -20,11 +24,7 @@ export function createLongPressGesture({
     .minDuration(500)
     .onStart(() => {
       if (onLongPress && !disabled) {
-        runOnJS(() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(
-            () => {}
-          );
-        })();
+        runOnJS(triggerHeavyHaptic)();
         runOnJS(onLongPress)();
       }
     });
