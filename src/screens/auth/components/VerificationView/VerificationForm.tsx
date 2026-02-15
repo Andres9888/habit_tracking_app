@@ -34,7 +34,7 @@ export function VerificationForm({
         keyboardType='number-pad'
         label='Verification code'
         maxLength={6}
-        placeholder='Enter 6-digit code'
+        placeholder='Enter the 6-digit code from your email'
         returnKeyType='go'
         value={code}
         onChangeText={onChangeCode}
