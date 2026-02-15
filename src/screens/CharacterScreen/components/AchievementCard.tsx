@@ -1,7 +1,8 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Achievement } from '../types';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface AchievementCardProps {
   achievement: Achievement;
@@ -12,31 +13,27 @@ export function AchievementCard({
   achievement,
   delay = 0,
 }: AchievementCardProps) {
+  const { colors } = useThemeColors();
+
   return (
     <Animated.View
-      className='flex-row items-center gap-4 rounded-3xl border border-stone-100 bg-white px-6 py-6'
       entering={FadeInDown.delay(delay).springify().damping(18)}
-      style={{
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
-      }}
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.card,
+          borderColor: colors.cardBorder,
+        },
+      ]}
     >
       <View className='h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm'>
         <Trophy color='#f59e0b' size={24} />
       </View>
       <View className='flex-1 flex-col'>
-        <Text
-          className='font-semibold text-[#1c1917]'
-          style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22 }}
-        >
+        <Text style={[styles.title, { color: colors.text.primary }]}>
           {achievement.title}
         </Text>
-        <Text
-          className='text-[#78716c]'
-          style={{ fontSize: 13, letterSpacing: -0.08, lineHeight: 18 }}
-        >
+        <Text style={[styles.description, { color: colors.text.secondary }]}>
           {achievement.description}
         </Text>
       </View>
@@ -44,3 +41,30 @@ export function AchievementCard({
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    borderRadius: 24,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 24,
+    shadowColor: '#1c1917',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+  },
+  description: {
+    fontSize: 13,
+    letterSpacing: -0.08,
+    lineHeight: 18,
+  },
+  title: {
+    fontSize: 17,
+    fontWeight: '600',
+    letterSpacing: -0.41,
+    lineHeight: 22,
+  },
+});

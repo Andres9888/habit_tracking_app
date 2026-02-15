@@ -1,4 +1,4 @@
-import { Pressable, View } from 'react-native';
+import { Pressable, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
@@ -12,6 +12,7 @@ import CustomModal from '../../../../components/Modal';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -22,6 +23,7 @@ export function TemplatesModalSection({
   showTemplatesScreen,
   closeTemplatesScreen,
 }: TemplatesModalSectionProps) {
+  const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
   const closeScale = useSharedValue(1);
 
@@ -49,8 +51,11 @@ export function TemplatesModalSection({
             accessibilityHint='Close the templates screen'
             accessibilityLabel='Close templates'
             accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md'
-            style={closeAnimatedStyle}
+            style={[
+              closeAnimatedStyle,
+              styles.closeButton,
+              { backgroundColor: colors.surface },
+            ]}
             onPress={handleClose}
             onPressIn={() => {
               closeScale.value = withSpring(0.9, {
@@ -62,10 +67,24 @@ export function TemplatesModalSection({
               closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
             }}
           >
-            <X color='#57534e' size={24} />
+            <X color={colors.text.primary} size={24} />
           </AnimatedPressable>
         </View>
       </View>
     </CustomModal>
   );
 }
+
+const styles = StyleSheet.create({
+  closeButton: {
+    alignItems: 'center',
+    borderRadius: 9999,
+    height: 40,
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    width: 40,
+  },
+});

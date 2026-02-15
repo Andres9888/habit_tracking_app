@@ -4,11 +4,12 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { HeroSectionProps } from '../HabitDetailScreen.types';
 import { useHeroAnimations } from './useHeroAnimations';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 const getStreakBadgeText = (streak: number): string => {
   if (streak >= 30) return `\u{1F31F} ${streak} day streak!`;
@@ -22,6 +23,7 @@ export function HeroSection({
   isCompletedToday,
   reduceMotion = false,
 }: HeroSectionProps) {
+  const { colors } = useThemeColors();
   const showStreakBadge = currentStreak >= 7;
   const { iconAnimatedStyle, badgeAnimatedStyle } = useHeroAnimations(
     showStreakBadge,
@@ -42,7 +44,9 @@ export function HeroSection({
         </Animated.View>
       )}
 
-      <Text className='text-xl font-bold text-stone-900'>{habit.name}</Text>
+      <Text style={[styles.title, { color: colors.text.primary }]}>
+        {habit.name}
+      </Text>
 
       {showStreakBadge && (
         <Animated.View
@@ -63,10 +67,25 @@ export function HeroSection({
       )}
 
       {habit.notes ? (
-        <Text className='mt-1 px-6 text-center text-sm text-stone-500'>
+        <Text
+          style={[styles.notes, { color: colors.text.secondary }]}
+        >
           {habit.notes}
         </Text>
       ) : null}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  notes: {
+    fontSize: 14,
+    marginTop: 4,
+    paddingHorizontal: 24,
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});

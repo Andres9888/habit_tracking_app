@@ -1,5 +1,5 @@
 import { ChevronRight, LayoutList } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -13,6 +13,7 @@ import {
   SORT_LABEL_MAP,
   SORT_ACCESSIBILITY_LABEL_MAP,
 } from './SortChip.constants';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SortChipProps {
   /**
@@ -52,6 +53,7 @@ export function SortChip({
   onPress,
   reduceMotion = false,
 }: SortChipProps) {
+  const { colors } = useThemeColors();
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
 
   // Animated value for button press scale
@@ -95,12 +97,12 @@ export function SortChip({
         accessibilityHint='Opens sort options'
         accessibilityLabel={accessibilityLabel}
         accessibilityRole='button'
-        className='flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3 active:bg-stone-100'
         style={[
           animatedStyle,
+          styles.container,
           {
-            borderColor: '#e7e5e4',
-            borderWidth: 1, // stone-200
+            backgroundColor: colors.gray[100],
+            borderColor: colors.border,
           },
         ]}
         onPress={handlePress}
@@ -109,22 +111,42 @@ export function SortChip({
       >
         {/* Left side: icon + label */}
         <View className='flex-row items-center gap-2'>
-          <LayoutList color='#78716c' size={18} strokeWidth={2} />
-          <Text className='text-[14px] font-semibold text-stone-700'>
+          <LayoutList color={colors.text.secondary} size={18} strokeWidth={2} />
+          <Text style={[styles.title, { color: colors.text.primary }]}>
             My Habits
           </Text>
         </View>
 
         {/* Right side: sort label + chevron */}
         <View className='flex-row items-center gap-1'>
-          <Text className='text-[13px] font-normal text-stone-500'>
+          <Text style={[styles.sortLabel, { color: colors.text.secondary }]}>
             {sortLabel}
           </Text>
-          <ChevronRight color='#a8a29e' size={16} strokeWidth={2} />
+          <ChevronRight color={colors.text.tertiary} size={16} strokeWidth={2} />
         </View>
       </AnimatedPressable>
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    borderRadius: 12,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  sortLabel: {
+    fontSize: 13,
+    fontWeight: '400',
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+});
 
 export default SortChip;

@@ -1,5 +1,6 @@
-import { Linking, Text, View } from 'react-native';
+import { Linking, Text, View, StyleSheet } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 const TERMS_URL = 'https://andres9888.github.io/chainday-landing/terms.html';
 const PRIVACY_URL =
@@ -9,6 +10,8 @@ const openTerms = () => void Linking.openURL(TERMS_URL);
 const openPrivacy = () => void Linking.openURL(PRIVACY_URL);
 
 export function LegalFooter() {
+  const { colors } = useThemeColors();
+
   return (
     <View className='flex-row items-center justify-center'>
       <AnimatedPressable
@@ -17,17 +20,33 @@ export function LegalFooter() {
         accessibilityRole='link'
         onPress={openTerms}
       >
-        <Text className='text-xs text-stone-600'>Terms</Text>
+        <Text style={[styles.text, { color: colors.text.secondary }]}>
+          Terms
+        </Text>
       </AnimatedPressable>
-      <Text className='mx-2 text-xs text-stone-600'>·</Text>
+      <Text style={[styles.separator, { color: colors.text.secondary }]}>
+        ·
+      </Text>
       <AnimatedPressable
         accessibilityHint='Open privacy policy in browser'
         accessibilityLabel='Privacy Policy'
         accessibilityRole='link'
         onPress={openPrivacy}
       >
-        <Text className='text-xs text-stone-600'>Privacy</Text>
+        <Text style={[styles.text, { color: colors.text.secondary }]}>
+          Privacy
+        </Text>
       </AnimatedPressable>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  separator: {
+    fontSize: 12,
+    marginHorizontal: 8,
+  },
+  text: {
+    fontSize: 12,
+  },
+});

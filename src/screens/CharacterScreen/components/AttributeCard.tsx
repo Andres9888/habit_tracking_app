@@ -1,7 +1,8 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { AttributeCardProps } from '../types';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 export function AttributeCard({
   icon,
@@ -12,20 +13,21 @@ export function AttributeCard({
   bgGradient,
   delay = 0,
 }: AttributeCardProps & { delay?: number }) {
+  const { colors } = useThemeColors();
   const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
 
   return (
     <Animated.View
-      className='overflow-hidden rounded-3xl border border-stone-100 bg-white'
       entering={FadeInDown.delay(delay).springify().damping(18)}
-      style={{
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
-      }}
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.card,
+          borderColor: colors.cardBorder,
+        },
+      ]}
     >
-      <View className='relative h-[110px]'>
+      <View style={styles.content}>
         <View
           className='absolute left-0 top-0 h-full opacity-60'
           style={{ width: `${percentage}%` }}
@@ -41,19 +43,26 @@ export function AttributeCard({
         <View className='flex-col gap-3 px-6 pt-6'>
           <View className='flex-row items-center justify-between'>
             <View className='flex-row items-center gap-3'>
-              <View className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md'>
+              <View
+                style={[
+                  styles.iconContainer,
+                  { backgroundColor: colors.surface },
+                ]}
+              >
                 {icon}
               </View>
-              <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
+              <Text style={[styles.name, { color: colors.text.primary }]}>
                 {name}
               </Text>
             </View>
-            <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
+            <Text style={[styles.value, { color: colors.text.primary }]}>
               {value}
             </Text>
           </View>
 
-          <View className='h-2 w-full overflow-hidden rounded-full bg-stone-100'>
+          <View
+            style={[styles.progressTrack, { backgroundColor: colors.gray[200] }]}
+          >
             <View style={{ width: `${percentage}%` }}>
               <LinearGradient
                 colors={gradientColors}
@@ -68,3 +77,48 @@ export function AttributeCard({
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 24,
+    borderWidth: 1,
+    overflow: 'hidden',
+    shadowColor: '#1c1917',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+  },
+  content: {
+    height: 110,
+    position: 'relative',
+  },
+  iconContainer: {
+    alignItems: 'center',
+    borderRadius: 9999,
+    height: 40,
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    width: 40,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '400',
+    letterSpacing: -0.3125,
+    lineHeight: 24,
+  },
+  progressTrack: {
+    borderRadius: 9999,
+    height: 8,
+    overflow: 'hidden',
+    width: '100%',
+  },
+  value: {
+    fontSize: 16,
+    fontWeight: '400',
+    letterSpacing: -0.3125,
+    lineHeight: 24,
+  },
+});

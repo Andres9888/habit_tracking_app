@@ -1,9 +1,10 @@
 import type { ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View, StyleSheet } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useFormInputAnimations } from './useFormInputAnimations';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface FormInputProps extends TextInputProps {
   label: string;
@@ -19,6 +20,7 @@ export const FormInput = forwardRef(function FormInput(
   { label, labelRight, error, required, onBlur, ...props }: FormInputProps,
   ref: Ref<TextInput>
 ) {
+  const { colors } = useThemeColors();
   const {
     animatedStyle,
     handleFocus,
@@ -39,27 +41,59 @@ export const FormInput = forwardRef(function FormInput(
   return (
     <View className='gap-2'>
       <View className='flex-row items-center justify-between'>
-        <Text className='text-sm font-medium text-stone-600'>
+        <Text style={[styles.label, { color: colors.text.secondary }]}>
           {label}
-          {required && <Text className='text-red-500'> *</Text>}
+          {required && <Text style={styles.required}> *</Text>}
         </Text>
         {labelRight}
       </View>
       <Animated.View
-        className={`overflow-hidden rounded-2xl border bg-white shadow-sm ${error ? 'border-red-500' : 'border-stone-200'}`}
-        style={animatedStyle}
+        className='overflow-hidden rounded-2xl shadow-sm'
+        style={[
+          animatedStyle,
+          styles.inputContainer,
+          {
+            backgroundColor: colors.surface,
+            borderColor: error ? '#ef4444' : colors.cardBorder,
+          },
+        ]}
       >
         <TextInput
           ref={ref}
           accessibilityLabel={label}
-          className='px-5 py-4 text-[17px] font-medium leading-[22px] text-stone-900'
-          placeholderTextColor='#a1a1aa'
+          placeholderTextColor={colors.text.tertiary}
+          style={[styles.input, { color: colors.text.primary }]}
           onBlur={handleBlurWrapper}
           onFocus={handleFocus}
           {...props}
         />
       </Animated.View>
-      {error && <Text className='px-1 text-sm text-red-500'>{error}</Text>}
+      {error && <Text style={styles.error}>{error}</Text>}
     </View>
   );
+});
+
+const styles = StyleSheet.create({
+  error: {
+    color: '#ef4444',
+    fontSize: 14,
+    paddingHorizontal: 4,
+  },
+  input: {
+    fontSize: 17,
+    fontWeight: '500',
+    lineHeight: 22,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  inputContainer: {
+    borderWidth: 1,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  required: {
+    color: '#ef4444',
+  },
 });

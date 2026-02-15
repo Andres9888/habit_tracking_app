@@ -3,21 +3,56 @@
  * Displays testimonial quote
  */
 
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { SOCIAL_PROOF } from './constants';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 export function SocialProofCard() {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='gap-3 rounded-3xl border border-stone-200 bg-stone-50/80 p-5'>
-      <Text className='text-[13px] font-medium uppercase tracking-[2px] text-stone-700'>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: `${colors.gray[100]}CC`,
+          borderColor: colors.border,
+        },
+      ]}
+    >
+      <Text style={[styles.label, { color: colors.text.primary }]}>
         Proven momentum
       </Text>
-      <Text className='text-[17px] font-normal leading-[22px] text-stone-800'>
+      <Text style={[styles.quote, { color: colors.text.primary }]}>
         "{SOCIAL_PROOF.quote}"
       </Text>
-      <Text className='text-[13px] font-normal text-stone-500'>
+      <Text style={[styles.attribution, { color: colors.text.secondary }]}>
         {SOCIAL_PROOF.attribution}
       </Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  attribution: {
+    fontSize: 13,
+    fontWeight: '400',
+  },
+  container: {
+    borderRadius: 24,
+    borderWidth: 1,
+    gap: 12,
+    padding: 20,
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: '500',
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+  },
+  quote: {
+    fontSize: 17,
+    fontWeight: '400',
+    lineHeight: 22,
+  },
+});

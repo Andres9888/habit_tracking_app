@@ -1,6 +1,7 @@
-import { Text } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { ChevronLeft } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface BackButtonProps {
   onPress: () => void;
@@ -13,6 +14,8 @@ export function BackButton({
   label = 'Back',
   testID = 'back-button',
 }: BackButtonProps) {
+  const { colors } = useThemeColors();
+
   return (
     <AnimatedPressable
       accessibilityHint='Go back to previous screen'
@@ -23,8 +26,17 @@ export function BackButton({
       testID={testID}
       onPress={onPress}
     >
-      <ChevronLeft color='#44403c' size={20} strokeWidth={2.5} />
-      <Text className='ml-1 font-medium text-stone-700'>{label}</Text>
+      <ChevronLeft color={colors.text.primary} size={20} strokeWidth={2.5} />
+      <Text style={[styles.label, { color: colors.text.primary }]}>
+        {label}
+      </Text>
     </AnimatedPressable>
   );
 }
+
+const styles = StyleSheet.create({
+  label: {
+    fontWeight: '500',
+    marginLeft: 4,
+  },
+});

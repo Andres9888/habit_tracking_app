@@ -1,4 +1,4 @@
-import { Alert, Pressable, Text, View } from 'react-native';
+import { Alert, Pressable, Text, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
@@ -11,6 +11,7 @@ import { X } from 'lucide-react-native';
 import CustomModal from '../../../../components/Modal';
 import { VisualizationExercise } from '../../../../components/VisualizationExercise';
 import type { VisualizationModalSectionProps } from './HabitsModals.types';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -28,6 +29,7 @@ export function VisualizationModalSection({
   showVisualizationExercise,
   closeVisualizationExercise,
 }: VisualizationModalSectionProps) {
+  const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
   const closeScale = useSharedValue(1);
 
@@ -46,15 +48,33 @@ export function VisualizationModalSection({
       visible={showVisualizationExercise}
       onClose={handleClose}
     >
-      <View className='flex-1 bg-white' style={{ paddingTop: insets.top + 16 }}>
-        <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
-          <Text className='text-lg font-bold text-stone-900'>Mental Boost</Text>
+      <View
+        className='flex-1'
+        style={[
+          { backgroundColor: colors.background },
+          { paddingTop: insets.top + 16 },
+        ]}
+      >
+        <View
+          style={[
+            styles.header,
+            {
+              borderBottomColor: colors.border,
+            },
+          ]}
+        >
+          <Text style={[styles.title, { color: colors.text.primary }]}>
+            Mental Boost
+          </Text>
           <AnimatedPressable
             accessibilityHint='Close the mental boost exercise'
             accessibilityLabel='Close mental boost'
             accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
-            style={closeAnimatedStyle}
+            style={[
+              closeAnimatedStyle,
+              styles.closeButton,
+              { backgroundColor: colors.gray[100] },
+            ]}
             onPress={handleClose}
             onPressIn={() => {
               closeScale.value = withSpring(0.9, {
@@ -66,7 +86,7 @@ export function VisualizationModalSection({
               closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
             }}
           >
-            <X color='#57534e' size={24} />
+            <X color={colors.text.primary} size={24} />
           </AnimatedPressable>
         </View>
         <View
@@ -83,3 +103,25 @@ export function VisualizationModalSection({
     </CustomModal>
   );
 }
+
+const styles = StyleSheet.create({
+  closeButton: {
+    alignItems: 'center',
+    borderRadius: 9999,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
+  },
+  header: {
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: 16,
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});

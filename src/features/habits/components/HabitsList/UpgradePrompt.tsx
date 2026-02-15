@@ -3,9 +3,10 @@
  * Modal overlay for upgrade CTA — optimized for trial conversion
  */
 
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View, StyleSheet } from 'react-native';
 import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface UpgradePromptProps {
   onClose: () => void;
@@ -18,12 +19,14 @@ export function UpgradePrompt({
   onUpgradePress,
   visible,
 }: UpgradePromptProps) {
+  const { colors } = useThemeColors();
+
   if (!visible) return null;
 
   return (
     <Animated.View
-      className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
       entering={FadeIn.duration(280)}
+      style={[styles.overlay, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}
     >
       <Pressable
         accessibilityHint='Tap outside to dismiss'
@@ -35,19 +38,20 @@ export function UpgradePrompt({
       <Animated.View
         className='w-full rounded-t-3xl px-6 py-8'
         entering={SlideInDown.duration(280).damping(18)}
+        style={{ backgroundColor: colors.card }}
       >
-        <LinearGradient
-          className='absolute inset-0 rounded-t-3xl'
-          colors={['#ffffff', 'rgba(255, 251, 235, 0.3)']}
-        />
         <View className='gap-4'>
           <View className='items-center pb-2'>
             <Text className='text-[32px]'>🚀</Text>
           </View>
-          <Text className='text-center text-[24px] font-bold tracking-tight text-stone-900'>
+          <Text
+            style={[styles.title, { color: colors.text.primary }]}
+          >
             You're on a roll! Ready for more?
           </Text>
-          <Text className='text-center text-[15px] font-normal leading-[20px] text-stone-500'>
+          <Text
+            style={[styles.subtitle, { color: colors.text.secondary }]}
+          >
             Track unlimited habits across all areas of your life. Premium
             members build stronger routines and stay consistent 2× longer.
           </Text>
@@ -78,11 +82,17 @@ export function UpgradePrompt({
             accessibilityHint='Dismiss this upgrade prompt'
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
-            className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+            style={[
+              styles.dismissButton,
+              {
+                backgroundColor: `${colors.surface}CC`,
+                borderColor: colors.border,
+              },
+              ({ pressed }) => ({ opacity: pressed ? 0.7 : 1 }),
+            ]}
             onPress={onClose}
           >
-            <Text className='text-[15px] font-normal text-stone-600'>
+            <Text style={[styles.dismissText, { color: colors.text.secondary }]}>
               Maybe later
             </Text>
           </Pressable>
@@ -91,3 +101,39 @@ export function UpgradePrompt({
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  dismissButton: {
+    alignItems: 'center',
+    borderRadius: 9999,
+    borderWidth: 2,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  dismissText: {
+    fontSize: 15,
+    fontWeight: '400',
+  },
+  overlay: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'flex-end',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 20,
+  },
+  subtitle: {
+    fontSize: 15,
+    fontWeight: '400',
+    lineHeight: 20,
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    letterSpacing: -0.5,
+    textAlign: 'center',
+  },
+});
