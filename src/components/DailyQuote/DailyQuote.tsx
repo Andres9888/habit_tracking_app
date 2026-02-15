@@ -5,10 +5,17 @@
 
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, {
+  FadeInDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { Quote, RefreshCw } from 'lucide-react-native';
 import { QUOTES } from './quotes';
 import { useThemeColors } from '../../theme/ThemeContext';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface DailyQuoteProps {
   /** Override the quote (optional) */
@@ -27,20 +34,26 @@ function getDayOfYear(): number {
   return Math.floor(diff / oneDay);
 }
 
+<<<<<<< HEAD
 export function DailyQuote({
   quote: overrideQuote,
   showRefresh,
   onRefresh,
 }: DailyQuoteProps) {
   const { colors } = useThemeColors();
+=======
+export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: DailyQuoteProps) {
+  const { colors, isDark } = useThemeColors();
+  const scale = useSharedValue(1);
+>>>>>>> 618ea1d3 (ui: polish home screen widgets — dark mode, consistent cards, animations)
 
   const quote = useMemo(() => {
     if (overrideQuote) return overrideQuote;
-    // Use day of year to select quote (consistent per day)
     const dayOfYear = getDayOfYear();
     return QUOTES[dayOfYear % QUOTES.length];
   }, [overrideQuote]);
 
+<<<<<<< HEAD
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -105,6 +118,84 @@ export function DailyQuote({
           </Pressable>
         )}
       </View>
+=======
+  const handlePressIn = () => {
+    if (onRefresh) scale.value = withSpring(0.98, { damping: 18 });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 18 });
+  };
+
+  const cardAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const styles = useMemo(() => StyleSheet.create({
+    author: {
+      color: colors.text.tertiary,
+      fontSize: 13,
+      fontWeight: '500',
+    },
+    container: {
+      backgroundColor: colors.card,
+      borderLeftColor: isDark ? colors.gray[400] : colors.gray[300],
+      borderLeftWidth: 3,
+      borderRadius: 16,
+      marginHorizontal: 16,
+      marginVertical: 8,
+      padding: 16,
+      shadowColor: '#000',
+      shadowOffset: { height: 4, width: 0 },
+      shadowOpacity: 0.08,
+      shadowRadius: 16,
+      elevation: 3,
+    },
+    footer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 10,
+    },
+    iconContainer: {
+      marginBottom: 8,
+    },
+    quoteText: {
+      color: colors.text.secondary,
+      fontSize: 15,
+      fontStyle: 'italic',
+      lineHeight: 22,
+    },
+    refreshButton: {
+      padding: 8,
+    },
+  }), [colors, isDark]);
+
+  return (
+    <Animated.View entering={FadeInDown.delay(60).duration(280).springify().damping(18)}>
+      <AnimatedPressable
+        style={[styles.container, cardAnimatedStyle]}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={onRefresh}
+        disabled={!onRefresh}
+      >
+        <View style={styles.iconContainer}>
+          <Quote color={colors.text.tertiary} size={16} />
+        </View>
+
+        <Text style={styles.quoteText}>"{quote.text}"</Text>
+
+        <View style={styles.footer}>
+          <Text style={styles.author}>— {quote.author}</Text>
+          {showRefresh && onRefresh && (
+            <View style={styles.refreshButton}>
+              <RefreshCw color={colors.text.tertiary} size={14} />
+            </View>
+          )}
+        </View>
+      </AnimatedPressable>
+>>>>>>> 618ea1d3 (ui: polish home screen widgets — dark mode, consistent cards, animations)
     </Animated.View>
   );
 }

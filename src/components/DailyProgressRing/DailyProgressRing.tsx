@@ -2,7 +2,7 @@
  * DailyProgressRing — Circular progress indicator for daily habit completion.
  *
  * Shows completed/total as an animated SVG ring with percentage text.
- * Design system: #059669 fill, #e7e5e4 track, springify().damping(18).
+ * Design system: #059669 fill, theme-aware track, springify().damping(18).
  */
 
 import { memo, useEffect } from 'react';
@@ -17,6 +17,7 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -39,7 +40,11 @@ function DailyProgressRingComponent({
   size = 64,
   strokeWidth = 6,
 }: DailyProgressRingProps): React.ReactElement {
+<<<<<<< HEAD
   const { colors: themeColors } = useThemeColors();
+=======
+  const { colors, isDark } = useThemeColors();
+>>>>>>> 618ea1d3 (ui: polish home screen widgets — dark mode, consistent cards, animations)
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = useSharedValue(0);
@@ -65,9 +70,15 @@ function DailyProgressRingComponent({
     strokeDashoffset: circumference * (1 - progress.value),
   }));
 
+<<<<<<< HEAD
   const scaleStyle = useAnimatedStyle(() => ({
     transform: [{ scale: ringScale.value }],
   }));
+=======
+  const trackColor = isDark ? colors.gray[300] : '#e7e5e4';
+  const progressColor = isDark ? '#34D399' : '#059669';
+  const textColor = isDark ? '#6EE7B7' : '#047857';
+>>>>>>> 618ea1d3 (ui: polish home screen widgets — dark mode, consistent cards, animations)
 
   return (
     <Animated.View
@@ -93,7 +104,11 @@ function DailyProgressRingComponent({
             cy={size / 2}
             fill='none'
             r={radius}
+<<<<<<< HEAD
             stroke={themeColors.border ?? '#e7e5e4'}
+=======
+            stroke={trackColor}
+>>>>>>> 618ea1d3 (ui: polish home screen widgets — dark mode, consistent cards, animations)
             strokeWidth={strokeWidth}
           />
           {/* Progress */}
@@ -104,8 +119,13 @@ function DailyProgressRingComponent({
             fill='none'
             origin={`${size / 2}, ${size / 2}`}
             r={radius}
+<<<<<<< HEAD
             rotation='-90'
             stroke={themeColors.primary?.[500] ?? '#059669'}
+=======
+            rotation="-90"
+            stroke={progressColor}
+>>>>>>> 618ea1d3 (ui: polish home screen widgets — dark mode, consistent cards, animations)
             strokeDasharray={circumference}
             strokeLinecap='round'
             strokeWidth={strokeWidth}
@@ -113,7 +133,11 @@ function DailyProgressRingComponent({
         </Svg>
         <Text
           style={{
+<<<<<<< HEAD
             color: themeColors.primary?.[700] ?? '#047857',
+=======
+            color: textColor,
+>>>>>>> 618ea1d3 (ui: polish home screen widgets — dark mode, consistent cards, animations)
             fontFamily: FONT_FAMILY,
             fontSize: 13,
             fontWeight: '700',

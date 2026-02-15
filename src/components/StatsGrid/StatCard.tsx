@@ -4,6 +4,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -33,6 +34,7 @@ export function StatCard({
   value,
   valueColor,
 }: StatCardProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(0.9);
   const opacity = useSharedValue(0);
 
@@ -40,7 +42,11 @@ export function StatCard({
     opacity.value = withDelay(delay, withTiming(1, { duration: 200 }));
     scale.value = withDelay(
       delay,
+<<<<<<< HEAD
       withSpring(1, { damping: 18, stiffness: 150 })
+=======
+      withSpring(1, { damping: 18, stiffness: 180 })
+>>>>>>> 618ea1d3 (ui: polish home screen widgets — dark mode, consistent cards, animations)
     );
   }, [delay, opacity, scale]);
 
@@ -63,7 +69,7 @@ export function StatCard({
         {value}
         {suffix && <Text className='text-xl'>{suffix}</Text>}
       </Text>
-      <Text className='mt-1 text-xs font-medium text-stone-500'>{label}</Text>
+      <Text className='mt-1 text-xs font-medium' style={{ color: colors.text.secondary }}>{label}</Text>
     </Animated.View>
   );
 }
