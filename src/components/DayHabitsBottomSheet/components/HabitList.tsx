@@ -53,7 +53,7 @@ export function HabitList({
   const keyExtractor = useCallback((item: Habit) => item._id, []);
 
   const getItemLayout = useCallback(
-    (_: any, index: number) => ({
+    (_: unknown, index: number) => ({
       length: ITEM_HEIGHT,
       offset: (ITEM_HEIGHT + ITEM_GAP) * index,
       index,

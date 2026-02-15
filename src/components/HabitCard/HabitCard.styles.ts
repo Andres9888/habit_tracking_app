@@ -46,7 +46,7 @@ const coreStyles = StyleSheet.create({
     marginHorizontal: spacing.md,
     padding: spacing.md,
   },
-  completedText: { opacity: 0.7 },
+  completedText: { opacity: 0.82 },
   container: {
     marginVertical: spacing.xs,
     minHeight: 76,

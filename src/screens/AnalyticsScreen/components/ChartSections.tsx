@@ -1,7 +1,7 @@
 /**
  * ChartSections - Analytics chart components (Strength, Trend, Heatmap)
  */
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
@@ -21,12 +21,12 @@ interface ChartSectionsProps {
   isLoading?: boolean;
 }
 
-export const ChartSections: React.FC<ChartSectionsProps> = ({
+export const ChartSections = memo(function ChartSections({
   strengthDistribution,
   trendData,
   complianceData,
   isLoading = false,
-}) => {
+}: ChartSectionsProps) {
   const strengthAccessibilityLabel = strengthDistribution
     ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
     : 'Loading chart';
@@ -59,13 +59,17 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
         </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>30-Day Trend</Text>
+      <View accessible accessibilityRole='none' style={styles.section}>
+        <Text accessibilityRole='header' style={styles.sectionTitle}>
+          30-Day Trend
+        </Text>
         <TrendLineChart data={trendData ?? null} onDataPointPress={undefined} />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Compliance Heatmap</Text>
+      <View accessible accessibilityRole='none' style={styles.section}>
+        <Text accessibilityRole='header' style={styles.sectionTitle}>
+          Compliance Heatmap
+        </Text>
         <ComplianceHeatmap
           data={complianceData ?? null}
           onDayPress={undefined}
@@ -73,7 +77,7 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
       </View>
     </>
   );
-};
+});
 
 const styles = StyleSheet.create({
   section: {

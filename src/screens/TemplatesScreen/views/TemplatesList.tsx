@@ -55,7 +55,7 @@ export function TemplatesList(props: TemplatesListProps) {
   const ITEM_HEIGHT = 88;
 
   const getItemLayout = useCallback(
-    (_: any, index: number) => ({
+    (_: unknown, index: number) => ({
       length: ITEM_HEIGHT,
       offset: ITEM_HEIGHT * index,
       index,

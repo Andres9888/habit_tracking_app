@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ArrowRight, Zap } from 'lucide-react-native';
+import type { ViewStyle } from 'react-native';
 import type { NextHabitSuggestionProps } from './types';
 import { styles } from './styles';
 
@@ -9,9 +10,9 @@ interface HabitContentProps {
   habit: NextHabitSuggestionProps['habit'];
   completedCount: number;
   totalCount: number;
-  cardStyle: any;
-  glowStyle: any;
-  glowOpacity: any;
+  cardStyle: AnimatedStyle<ViewStyle>;
+  glowStyle: AnimatedStyle<ViewStyle>;
+  glowOpacity: AnimatedStyle<ViewStyle>;
 }
 
 export function HabitContent({

@@ -12,7 +12,7 @@ export function HabitEditSkeleton() {
   return (
     <View
       accessible
-      accessibilityLabel='Loading habit editor'
+      accessibilityLabel='Loading habit editor...'
       accessibilityRole='progressbar'
       className='flex-1 px-5 pt-6'
       style={{ backgroundColor: pageBg }}

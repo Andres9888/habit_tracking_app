@@ -7,7 +7,7 @@ import { FlatList, Pressable, Text, View } from 'react-native';
 import { ChevronLeft, X } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { usePausedHabitsModalLogic } from './PausedHabitsModal.hooks';
 import { PausedHabitCard } from './PausedHabitCard';
 import { PausedEmptyState } from './PausedEmptyState';
@@ -24,6 +24,7 @@ export default function PausedHabitsModal({
   onBack,
 }: PausedHabitsModalProps) {
   const insets = useSafeAreaInsets();
+  const { colors: themeColors } = useThemeColors();
   const { pausedHabits, handleResume } = usePausedHabitsModalLogic();
 
   const renderItem = useCallback(
@@ -39,7 +40,7 @@ export default function PausedHabitsModal({
   );
 
   return (
-    <View className='flex-1' style={{ backgroundColor: '#FAF8F5' }}>
+    <View className='flex-1' style={{ backgroundColor: themeColors.background }}>
       <View style={{ paddingTop: insets.top + 8 }}>
         <Animated.View
           className='mb-6 flex-row items-center justify-between px-4'
@@ -48,24 +49,26 @@ export default function PausedHabitsModal({
           <Pressable
             accessibilityLabel='Back to settings'
             accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+            className='h-11 w-11 items-center justify-center rounded-full'
+            style={{ backgroundColor: themeColors.gray[100] }}
             onPress={onBack}
           >
-            <ChevronLeft color={colors.gray[500]} size={24} strokeWidth={2} />
+            <ChevronLeft color={themeColors.text.secondary} size={24} strokeWidth={2} />
           </Pressable>
           <Text
-            className='flex-1 text-center font-bold text-stone-900'
-            style={{ fontSize: 22 }}
+            className='flex-1 text-center font-bold'
+            style={{ fontSize: 22, color: themeColors.text.primary }}
           >
             Paused Habits
           </Text>
           <Pressable
             accessibilityLabel='Close'
             accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+            className='h-11 w-11 items-center justify-center rounded-full'
+            style={{ backgroundColor: themeColors.gray[100] }}
             onPress={onClose}
           >
-            <X color={colors.gray[500]} size={24} strokeWidth={2} />
+            <X color={themeColors.text.secondary} size={24} strokeWidth={2} />
           </Pressable>
         </Animated.View>
       </View>
