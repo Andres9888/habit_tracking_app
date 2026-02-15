@@ -79,40 +79,42 @@ function AnalyticsScreenContent() {
         <AnalyticsHeader />
       </Animated.View>
 
-      {hasNoHabits && (
+      {hasNoHabits ? (
         <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
           <EmptyState />
         </Animated.View>
+      ) : (
+        <>
+          <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
+            <OverviewStats
+              isLoading={isLoading}
+              stats={overviewStats}
+              onHabitPress={handleHabitPress}
+            />
+          </Animated.View>
+
+          <Animated.View entering={FadeInDown.delay(400).springify().damping(18)}>
+            <ChartSections
+              complianceData={complianceData}
+              isLoading={isLoading}
+              strengthDistribution={strengthDistribution}
+              trendData={trendData}
+            />
+          </Animated.View>
+
+          <Animated.View entering={FadeInDown.delay(460).springify().damping(18)}>
+            <InsightsSections
+              rankedHabits={rankedHabits}
+              weeklyInsights={weeklyInsights}
+              onHabitPress={handleHabitPress}
+            />
+          </Animated.View>
+
+          <Animated.View entering={FadeInDown.delay(520).springify().damping(18)}>
+            <ExportButton onPress={() => void handleExportPress()} />
+          </Animated.View>
+        </>
       )}
-
-      <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
-        <OverviewStats
-          isLoading={isLoading}
-          stats={overviewStats}
-          onHabitPress={handleHabitPress}
-        />
-      </Animated.View>
-
-      <Animated.View entering={FadeInDown.delay(400).springify().damping(18)}>
-        <ChartSections
-          complianceData={complianceData}
-          isLoading={isLoading}
-          strengthDistribution={strengthDistribution}
-          trendData={trendData}
-        />
-      </Animated.View>
-
-      <Animated.View entering={FadeInDown.delay(460).springify().damping(18)}>
-        <InsightsSections
-          rankedHabits={rankedHabits}
-          weeklyInsights={weeklyInsights}
-          onHabitPress={handleHabitPress}
-        />
-      </Animated.View>
-
-      <Animated.View entering={FadeInDown.delay(520).springify().damping(18)}>
-        <ExportButton onPress={() => void handleExportPress()} />
-      </Animated.View>
 
       <ExportMenu
         visible={showExportMenu}

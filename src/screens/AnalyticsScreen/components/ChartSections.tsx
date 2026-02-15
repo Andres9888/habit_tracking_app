@@ -59,13 +59,17 @@ export const ChartSections = memo(function ChartSections({
         </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>30-Day Trend</Text>
+      <View accessible accessibilityRole='none' style={styles.section}>
+        <Text accessibilityRole='header' style={styles.sectionTitle}>
+          30-Day Trend
+        </Text>
         <TrendLineChart data={trendData ?? null} onDataPointPress={undefined} />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Compliance Heatmap</Text>
+      <View accessible accessibilityRole='none' style={styles.section}>
+        <Text accessibilityRole='header' style={styles.sectionTitle}>
+          Compliance Heatmap
+        </Text>
         <ComplianceHeatmap
           data={complianceData ?? null}
           onDayPress={undefined}
