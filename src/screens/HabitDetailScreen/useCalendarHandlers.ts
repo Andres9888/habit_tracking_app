@@ -44,6 +44,11 @@ export const useCalendarHandlers = ({
       if (inputDate > todayDate) return;
 
       setIsTogglingCalendar(true);
+      Haptics.impactAsync(
+        wasCompleted
+          ? Haptics.ImpactFeedbackStyle.Light
+          : Haptics.ImpactFeedbackStyle.Medium
+      );
       toggleHabitMutation({ date, habitId: habit._id })
         .catch((error: unknown) => {
           if (__DEV__) console.error('Failed to toggle habit:', error);
@@ -55,12 +60,12 @@ export const useCalendarHandlers = ({
   );
 
   const handleSwipeDelete = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPendingDelete(true);
   }, [setPendingDelete]);
 
   const handleSwipeArchive = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPendingArchive(true);
   }, [setPendingArchive]);
 

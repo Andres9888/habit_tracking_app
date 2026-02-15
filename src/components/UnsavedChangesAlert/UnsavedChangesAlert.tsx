@@ -25,7 +25,7 @@ export function UnsavedChangesAlert({
   const styles = VARIANT_STYLES[variant];
 
   const handleDiscard = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     onDiscard();
   };
 

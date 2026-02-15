@@ -35,12 +35,12 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   }));
 
   const handleArchive = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     onArchive();
   };
 
   const handleDelete = () => {
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     onDelete();
   };
 
