@@ -53,7 +53,7 @@ export const show = query({
 
 export const fix = mutation({
   handler: async (ctx) => {
-    console.log('🔧 Forcing habit strength calculation...');
+    // Forcing habit strength calculation
 
     const habits = await ctx.db.query('habits').collect();
     let fixed = 0;
@@ -70,7 +70,7 @@ export const fix = mutation({
           strengthLevel: 'starting',
           strengthUpdatedAt: Date.now(),
         });
-        console.log(`  ${habit.name}: Set to 0% (no tracking data)`);
+        // Set to 0% — no tracking data
         continue;
       }
 
@@ -106,13 +106,11 @@ export const fix = mutation({
         strengthUpdatedAt: Date.now(),
       });
 
-      console.log(
-        `  ${habit.name}: ${(strength * 100).toFixed(1)}% (${level})`
-      );
+      // Strength calculated
       fixed++;
     }
 
-    console.log(`✅ Fixed ${fixed} habits`);
+    // Fix complete
     return { fixed, total: habits.length };
   },
 });

@@ -62,7 +62,7 @@ export function useCompletionSound({
       });
     } catch (error) {
       // Silently fail - sounds are non-critical UX enhancements
-      console.warn('Failed to play completion sound:', error);
+      if (__DEV__) console.warn('Failed to play completion sound:', error);
     }
   }, [soundEnabled, soundType]);
 
