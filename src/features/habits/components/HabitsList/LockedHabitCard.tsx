@@ -7,6 +7,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface LockedHabitCardProps {
   onUpgradePress: () => void;
@@ -17,6 +18,7 @@ export function LockedHabitCard({
   onUpgradePress,
   reduceMotion = false,
 }: LockedHabitCardProps) {
+  const { colors: themeColors, isDark } = useThemeColors();
   const entranceScale = useRef(new Animated.Value(0.94)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const pressScale = useRef(new Animated.Value(1)).current;
@@ -79,23 +81,32 @@ export function LockedHabitCard({
       onPressOut={handlePressOut}
     >
       <Animated.View
-        className='gap-4 rounded-3xl border border-dashed border-violet-200 p-5'
+        className='gap-4 rounded-3xl border border-dashed p-5'
         style={{
+          borderColor: isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(196, 181, 253, 1)',
           opacity,
           transform: [{ scale: entranceScale }, { scale: pressScale }],
         }}
       >
         <LinearGradient
           className='absolute inset-0 rounded-3xl'
-          colors={['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
+          colors={isDark
+            ? ['rgba(88, 28, 135, 0.2)', 'rgba(120, 53, 15, 0.1)']
+            : ['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
         />
         <View className='items-center gap-2'>
           <Text className='text-[24px]'>✨</Text>
           <View className='gap-1'>
-            <Text className='text-center text-[17px] font-semibold text-stone-800'>
+            <Text
+              className='text-center text-[17px] font-semibold'
+              style={{ color: themeColors.text.primary }}
+            >
               Ready to unlock more?
             </Text>
-            <Text className='text-center text-[13px] font-normal leading-[18px] text-stone-500'>
+            <Text
+              className='text-center text-[13px] font-normal leading-[18px]'
+              style={{ color: themeColors.text.secondary }}
+            >
               Start a 7-day free trial to track unlimited habits and get
               AI-powered insights. No credit card required.
             </Text>
