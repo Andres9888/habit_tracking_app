@@ -10,9 +10,12 @@ import type { StrengthLevel } from './types';
 export const getAllHabitsStrengthStats = query({
   args: {},
   handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return { averageStrength: 0, levelDistribution: { automatic: 0, building: 0, developing: 0, starting: 0, strong: 0 }, strongestHabit: null, totalHabits: 0, weakestHabit: null };
+
     const habits = await ctx.db
       .query('habits')
-      .filter((q) => q.neq(q.field('archived'), true))
+      .filter((q) => q.and(q.eq(q.field('userId'), identity.subject), q.neq(q.field('archived'), true)))
       .collect();
 
     const stats = {

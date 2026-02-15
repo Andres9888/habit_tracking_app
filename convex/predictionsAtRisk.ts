@@ -16,11 +16,14 @@ export const getHabitsAtRisk = query({
     threshold: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
     const threshold = args.threshold ?? 0.4;
 
     const habits = await ctx.db
       .query('habits')
-      .filter((q) => q.eq(q.field('archived'), false))
+      .filter((q) => q.and(q.eq(q.field('userId'), identity.subject), q.eq(q.field('archived'), false)))
       .collect();
 
     const atRiskHabits = [];
@@ -57,11 +60,16 @@ export const getHabitPrediction = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
     const habit = await ctx.db.get(args.habitId);
 
     if (!habit || habit.archived) {
       return null;
     }
+
+    if (habit.userId !== identity.subject) return null;
 
     const strength = habit.strength ?? 0;
     const accessibility = habit.accessibility ?? 1;

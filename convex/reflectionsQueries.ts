@@ -16,6 +16,13 @@ export const getByHabitAndDate = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    // Verify habit ownership
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit || habit.userId !== identity.subject) return null;
+
     return await ctx.db
       .query('reflections')
       .withIndex('by_habit_and_date', (q) =>
@@ -33,6 +40,13 @@ export const listByHabit = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    // Verify habit ownership
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit || habit.userId !== identity.subject) return [];
+
     const query = ctx.db
       .query('reflections')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -53,8 +67,12 @@ export const listRecent = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
     const limit = args.limit ?? 10;
-    return await ctx.db.query('reflections').order('desc').take(limit);
+    const reflections = await ctx.db.query('reflections').order('desc').collect();
+    return reflections.filter((r) => r.userId === identity.subject).slice(0, limit);
   },
   returns: reflectionsArrayValidator,
 });
