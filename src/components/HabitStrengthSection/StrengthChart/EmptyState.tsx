@@ -6,6 +6,8 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 import { CHART_HEIGHT } from '../constants';
 
@@ -13,15 +15,30 @@ import { CHART_HEIGHT } from '../constants';
  * Displays a message when chart has insufficient data.
  */
 export const EmptyState = React.memo(function EmptyState() {
+  const { colors } = useThemeColors();
+
   return (
-    <View
+    <Animated.View
       accessibilityLabel='No strength history available yet'
-      className='items-center justify-center'
-      style={{ height: CHART_HEIGHT }}
+      entering={FadeIn.duration(300)}
+      style={{
+        alignItems: 'center',
+        backgroundColor: colors.gray[50],
+        borderRadius: 12,
+        height: CHART_HEIGHT,
+        justifyContent: 'center',
+      }}
     >
-      <Text className='text-sm text-stone-400'>
+      <Text style={{ fontSize: 32, marginBottom: 8 }}>💪</Text>
+      <Text
+        style={{
+          color: colors.text.secondary,
+          fontSize: 14,
+          textAlign: 'center',
+        }}
+      >
         Complete more days to see your strength chart
       </Text>
-    </View>
+    </Animated.View>
   );
 });

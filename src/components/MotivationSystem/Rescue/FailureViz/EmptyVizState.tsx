@@ -6,19 +6,53 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
+
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyVizState() {
+  const { colors, isDark } = useThemeColors();
+
   return (
-    <View className='items-center justify-center py-6'>
-      <View className='mb-3 h-12 w-12 items-center justify-center rounded-full bg-rose-100'>
-        <AlertTriangle className='text-rose-500' size={24} />
-      </View>
-      <Text className='mb-2 text-center text-sm font-medium text-stone-600'>
+    <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 24 }}>
+      <Animated.View
+        entering={anim(0)}
+        style={{
+          alignItems: 'center',
+          backgroundColor: isDark ? '#3B1A1A' : '#FFF1F2',
+          borderRadius: 24,
+          height: 48,
+          justifyContent: 'center',
+          marginBottom: 12,
+          width: 48,
+        }}
+      >
+        <AlertTriangle color={isDark ? '#FCA5A5' : '#F43F5E'} size={24} />
+      </Animated.View>
+      <Animated.Text
+        entering={anim(60)}
+        style={{
+          color: colors.text.primary,
+          fontSize: 14,
+          fontWeight: '500',
+          marginBottom: 4,
+          textAlign: 'center',
+        }}
+      >
         Imagine how you'll feel if you skip
-      </Text>
-      <Text className='text-center text-xs text-stone-500'>
+      </Animated.Text>
+      <Animated.Text
+        entering={anim(120)}
+        style={{
+          color: colors.text.tertiary,
+          fontSize: 12,
+          textAlign: 'center',
+        }}
+      >
         Add failure visualization in the Motivation tab
-      </Text>
+      </Animated.Text>
     </View>
   );
 }

@@ -1,42 +1,62 @@
 /**
  * HabitRankingsList EmptyState
- * Standardized: FadeInUp animation, Lucide icon, proper typography
+ * Standardized: FadeInUp animation, Lucide icon, proper typography, dark mode
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { ListOrdered } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
+  const { colors, isDark } = useThemeColors();
+
   return (
-    <View className='items-center justify-center px-6 py-12'>
+    <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}>
       <Animated.View
-        className='mb-4 h-20 w-20 items-center justify-center rounded-2xl bg-violet-50'
         entering={anim(0)}
         style={{
+          alignItems: 'center',
+          backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
+          borderRadius: 16,
+          height: 80,
+          justifyContent: 'center',
+          marginBottom: 16,
           shadowColor: '#8b5cf6',
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
+          width: 80,
         }}
       >
-        <ListOrdered color='#8b5cf6' size={40} strokeWidth={1.5} />
+        <ListOrdered color={isDark ? '#C4B5FD' : '#8b5cf6'} size={40} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
-        className='mb-2 text-center font-bold text-stone-900'
         entering={anim(60)}
-        style={{ fontSize: 22, letterSpacing: -0.5 }}
+        style={{
+          color: colors.text.primary,
+          fontSize: 22,
+          fontWeight: '700',
+          letterSpacing: -0.5,
+          marginBottom: 8,
+          textAlign: 'center',
+        }}
       >
         No Habits to Rank Yet
       </Animated.Text>
       <Animated.Text
-        className='text-center text-[17px] leading-[22px] text-stone-500'
         entering={anim(120)}
-        style={{ maxWidth: 280 }}
+        style={{
+          color: colors.text.secondary,
+          fontSize: 17,
+          lineHeight: 22,
+          maxWidth: 280,
+          textAlign: 'center',
+        }}
       >
         Complete some habits to see your rankings here
       </Animated.Text>
