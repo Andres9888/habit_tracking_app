@@ -71,7 +71,7 @@ export const StatusIndicator = memo(function StatusIndicator({
         style={[
           styles.checkmark,
           { backgroundColor: theme.custom.colors.success },
-          checkmarkAnimatedStyle as any,
+          checkmarkAnimatedStyle as AnimatedStyle,
         ]}
       >
         <Text style={styles.checkmarkText}>✓</Text>

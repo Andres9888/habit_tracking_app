@@ -7,10 +7,7 @@ import { typography } from '../../theme/typography';
 
 interface StrengthProgressBarProps {
   strengthPercent: number;
-  strengthEmojiAnimatedStyle: AnimatedStyle<{
-    opacity: number;
-    transform: { scale: number; rotate: string }[];
-  }>;
+  strengthEmojiAnimatedStyle: AnimatedStyle;
   progressAnimatedStyle: AnimatedStyle;
 }
 
@@ -27,7 +24,7 @@ export function StrengthProgressBar({
           style={[
             { fontSize: typography.heading2.fontSize, textAlign: 'center' },
 
-            strengthEmojiAnimatedStyle as any,
+            strengthEmojiAnimatedStyle,
           ]}
         >
           {getStrengthEmoji(strengthPercent)}

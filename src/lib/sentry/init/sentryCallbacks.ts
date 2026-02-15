@@ -3,18 +3,15 @@
  * Event processing callbacks for Sentry initialization.
  */
 
+import type { ErrorEvent } from '@sentry/react-native';
 import type { SentryConfig } from '../types';
 
 type BreadcrumbData = Record<string, unknown>;
-type SentryEvent = {
-  breadcrumbs?: Array<{ data?: BreadcrumbData }>;
-  message?: string;
-};
 type Breadcrumb = { category?: string; data?: { url?: string } };
 
 /** Process event before sending - redact sensitive data */
 export function createBeforeSend(config: SentryConfig) {
-  return function beforeSend(event: SentryEvent): SentryEvent | null {
+  return function beforeSend(event: ErrorEvent): ErrorEvent | null {
     // Don't send in development unless explicitly enabled
     if (__DEV__ && !config.debug) {
       return null;

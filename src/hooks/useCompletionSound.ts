@@ -47,7 +47,7 @@ export function useCompletionSound({
 }: UseCompletionSoundOptions = {}) {
   // Use undefined instead of null to avoid type union issues
 
-  const soundRef = useRef<any>(undefined);
+  const soundRef = useRef<{ unloadAsync: () => Promise<void> } | undefined>(undefined);
 
   const playCompletionSound = useCallback(async () => {
     if (!soundEnabled) {

@@ -10,7 +10,7 @@
 import React, { memo } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import { CompletionToast } from '../CompletionToast';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -99,7 +99,7 @@ function HabitCardComponent(props: HabitCardProps) {
             completed={habit.completed}
             completionIcon={completionIcon}
             currentStreak={habit.currentStreak}
-            entranceContentStyle={habit.entrance.contentStyle as any}
+            entranceContentStyle={habit.entrance.contentStyle as AnimatedStyle}
             hasPendingOfflineOps={habit.hasPendingOfflineOps}
             icon={icon}
             name={name}
