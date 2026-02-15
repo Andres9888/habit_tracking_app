@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { SocialProofBadge } from '../SocialProofBadge';
 
 export function SignUpHeader() {
   return (
@@ -11,11 +12,12 @@ export function SignUpHeader() {
         Create account
       </Animated.Text>
       <Animated.Text
-        className='text-[17px] leading-[22px] text-stone-600'
+        className='mb-4 text-[17px] leading-[22px] text-stone-600'
         entering={FadeInDown.delay(50).springify().damping(18)}
       >
         Start your habit journey today
       </Animated.Text>
+      <SocialProofBadge delay={100} />
     </View>
   );
 }

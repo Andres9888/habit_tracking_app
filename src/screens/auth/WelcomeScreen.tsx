@@ -14,6 +14,8 @@ import {
   AuthDivider,
   AuthError,
   BackButton,
+  LegalFooter,
+  SocialProofBadge,
   SocialSignInButton,
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
@@ -59,7 +61,7 @@ export default function WelcomeScreen() {
       <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
         <View style={styles.heroSection}>
           <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <Link color='#1c1917' size={40} strokeWidth={2} />
+            <Link color='#ffffff' size={40} strokeWidth={2} />
           </Animated.View>
           <Animated.Text style={[styles.title, titleStyle]}>
             Chain Day
@@ -67,6 +69,7 @@ export default function WelcomeScreen() {
           <Animated.Text style={[styles.subtitle, subtitleStyle]}>
             Build habits that stick
           </Animated.Text>
+          <SocialProofBadge delay={240} />
         </View>
 
         <Animated.View style={[styles.actionSection, buttonsStyle]}>
@@ -109,6 +112,7 @@ export default function WelcomeScreen() {
             <Text style={styles.textLinkLabel}>Already have an account?</Text>
             <Text style={styles.textLinkAction}> Sign in</Text>
           </AnimatedPressable>
+          <LegalFooter />
         </Animated.View>
       </View>
     </View>

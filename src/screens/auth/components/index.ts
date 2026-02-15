@@ -13,6 +13,7 @@ export { ForgotPasswordLink } from './ForgotPasswordLink';
 export { ForgotPasswordModal } from './ForgotPasswordModal';
 export { FormInput } from './FormInput';
 export { HeroAnimation } from './HeroAnimation';
+export { LegalFooter } from './LegalFooter';
 export { PasswordInput } from './PasswordInput';
 export { PasswordStrengthBar } from './PasswordStrengthBar';
 export { SignInLink } from './SignInLink';

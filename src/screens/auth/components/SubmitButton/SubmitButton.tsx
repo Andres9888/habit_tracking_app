@@ -49,16 +49,17 @@ export function SubmitButton({
       accessibilityLabel={isLoading ? loadingLabel : label}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
-      className={`mt-4 flex-row items-center justify-center rounded-2xl bg-stone-900 py-4 shadow-lg ${
+      className={`mt-4 flex-row items-center justify-center rounded-2xl py-4 shadow-lg ${
         isDisabled ? 'opacity-40' : ''
       }`}
       disabled={isDisabled}
       style={[
         animatedStyle,
         {
-          shadowColor: '#1c1917',
+          backgroundColor: '#059669',
+          shadowColor: '#059669',
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
+          shadowOpacity: 0.2,
           shadowRadius: 16,
         },
       ]}

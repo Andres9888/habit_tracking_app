@@ -32,8 +32,8 @@ export const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4',
-    borderRadius: 16,
+    backgroundColor: '#059669',
+    borderRadius: 24,
     elevation: 4,
     height: 80,
     justifyContent: 'center',
