@@ -1,31 +1,31 @@
 /**
- * Empty state shown when no habits exist
- * Standardized: animation (respects reduce-motion), proper typography, dark mode, accessible
+ * Empty state shown when no habits exist for a selected day
+ * Dark mode: migrated to useThemeColors
  */
 
 import { View } from 'react-native';
 import { ClipboardList } from 'lucide-react-native';
-import Animated from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { useReducedMotionEntry } from '../../EmptyState/useReducedMotionEntry';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme';
+
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
-  const { colors } = useThemeColors();
-  const { entry } = useReducedMotionEntry();
+  const { colors, isDark } = useThemeColors();
 
   return (
     <View
       accessible
-      accessibilityLabel='No habits yet. Create your first habit to start tracking.'
-      accessibilityRole='text'
+      accessibilityLabel="No habits yet. Create your first habit to start tracking."
       style={{ alignItems: 'center', paddingHorizontal: 24, paddingVertical: 40 }}
     >
       <Animated.View
-        entering={entry(0)}
+        entering={anim(0)}
         style={{
           alignItems: 'center',
-          backgroundColor: colors.gray[100],
-          borderRadius: 12,
+          backgroundColor: isDark ? colors.gray[800] : colors.gray[100],
+          borderRadius: 16,
           height: 56,
           justifyContent: 'center',
           marginBottom: 16,
@@ -39,7 +39,7 @@ export function EmptyState() {
         <ClipboardList color={colors.text.tertiary} size={28} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
-        entering={entry(60)}
+        entering={anim(60)}
         style={{
           color: colors.text.primary,
           fontSize: 17,
@@ -51,7 +51,7 @@ export function EmptyState() {
         No Habits Yet
       </Animated.Text>
       <Animated.Text
-        entering={entry(120)}
+        entering={anim(120)}
         style={{
           color: colors.text.secondary,
           fontSize: 13,

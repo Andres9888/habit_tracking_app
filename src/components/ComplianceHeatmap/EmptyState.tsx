@@ -1,32 +1,32 @@
 /**
  * Empty state view for ComplianceHeatmap
- * Standardized: animation (respects reduce-motion), icon, dark mode, accessible
+ * Dark mode: migrated to useThemeColors
  */
 
 import React from 'react';
 import { View } from 'react-native';
 import { Grid3X3 } from 'lucide-react-native';
-import Animated from 'react-native-reanimated';
-import { useThemeColors } from '../../theme/ThemeContext';
-import { useReducedMotionEntry } from '../EmptyState/useReducedMotionEntry';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme';
+
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
   const { colors, isDark } = useThemeColors();
-  const { entry } = useReducedMotionEntry();
 
   return (
     <View
       accessible
-      accessibilityLabel='No compliance data yet. Complete habits daily to see your compliance heatmap.'
-      accessibilityRole='text'
+      accessibilityLabel="No compliance data yet. Complete habits daily to see your compliance heatmap."
       style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 40 }}
     >
       <Animated.View
-        entering={entry(0)}
+        entering={anim(0)}
         style={{
           alignItems: 'center',
-          backgroundColor: isDark ? '#1E3A5F' : '#EFF6FF',
-          borderRadius: 12,
+          backgroundColor: isDark ? colors.gray[800] : '#EFF6FF',
+          borderRadius: 16,
           height: 64,
           justifyContent: 'center',
           marginBottom: 16,
@@ -37,10 +37,10 @@ export function EmptyState() {
           width: 64,
         }}
       >
-        <Grid3X3 color={isDark ? '#93C5FD' : '#3b82f6'} size={32} strokeWidth={1.5} />
+        <Grid3X3 color={isDark ? '#60A5FA' : '#3b82f6'} size={32} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
-        entering={entry(60)}
+        entering={anim(60)}
         style={{
           color: colors.text.primary,
           fontSize: 22,
@@ -53,7 +53,7 @@ export function EmptyState() {
         No Compliance Data
       </Animated.Text>
       <Animated.Text
-        entering={entry(120)}
+        entering={anim(120)}
         style={{
           color: colors.text.secondary,
           fontSize: 17,

@@ -1,6 +1,11 @@
+/**
+ * Empty state for archived habits modal
+ * Dark mode: migrated to useThemeColors, added accessibility
+ */
+
 import { Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme/ThemeContext';
+import { useThemeColors } from '../../../theme';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -10,6 +15,8 @@ export function EmptyState() {
 
   return (
     <View
+      accessible
+      accessibilityLabel="All your habits are active. Archived habits will appear here."
       style={{
         alignItems: 'center',
         justifyContent: 'center',
@@ -18,19 +25,19 @@ export function EmptyState() {
       }}
     >
       {/* Illustration */}
-      <Animated.View
-        entering={anim(0)}
-        style={{
-          alignItems: 'center',
-          backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
-          borderRadius: 16,
-          height: 112,
-          justifyContent: 'center',
-          marginBottom: 24,
-          width: 128,
-        }}
-      >
-        <Text style={{ fontSize: 48 }}>🌱</Text>
+      <Animated.View entering={anim(0)} style={{ alignItems: 'center', marginBottom: 24 }}>
+        <View
+          style={{
+            alignItems: 'center',
+            backgroundColor: isDark ? colors.gray[800] : '#ecfdf5',
+            borderRadius: 16,
+            height: 112,
+            justifyContent: 'center',
+            width: 128,
+          }}
+        >
+          <Text style={{ fontSize: 48, marginTop: 8 }}>🌱</Text>
+        </View>
       </Animated.View>
 
       {/* Text Content */}
@@ -38,7 +45,7 @@ export function EmptyState() {
         entering={anim(60)}
         style={{
           color: colors.text.primary,
-          fontSize: 22,
+          fontSize: 24,
           fontWeight: '700',
           letterSpacing: -0.5,
           marginBottom: 8,
@@ -48,10 +55,10 @@ export function EmptyState() {
         Your Habits Are Thriving!
       </Animated.Text>
       <Animated.Text
-        entering={anim(120)}
+        entering={anim(90)}
         style={{
           color: colors.text.secondary,
-          fontSize: 15,
+          fontSize: 16,
           marginBottom: 4,
           textAlign: 'center',
         }}
@@ -59,56 +66,55 @@ export function EmptyState() {
         All your habits are active and growing.
       </Animated.Text>
       <Animated.Text
-        entering={anim(180)}
+        entering={anim(120)}
         style={{
           color: colors.text.secondary,
           fontSize: 14,
+          maxWidth: 300,
           marginBottom: 24,
-          maxWidth: 280,
           textAlign: 'center',
         }}
       >
-        When you need a break, swipe left on any habit to archive it here for
-        safekeeping.
+        When you need a break from a habit, swipe left to archive it here for safekeeping.
       </Animated.Text>
 
       {/* Pro Tip Card */}
       <Animated.View
-        entering={anim(240)}
+        entering={anim(150)}
         style={{
-          backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
-          borderColor: isDark ? '#065F46' : '#D1FAE5',
+          backgroundColor: isDark ? colors.gray[800] : '#ecfdf5',
+          borderColor: isDark ? colors.gray[700] : '#D1FAE5',
           borderRadius: 16,
           borderWidth: 1,
-          flexDirection: 'row',
-          gap: 12,
           maxWidth: 320,
           padding: 16,
           width: '100%',
         }}
       >
-        <Text style={{ fontSize: 24 }}>💚</Text>
-        <View style={{ flex: 1 }}>
-          <Text
-            style={{
-              color: isDark ? '#6EE7B7' : '#065F46',
-              fontSize: 14,
-              fontWeight: '500',
-              marginBottom: 4,
-            }}
-          >
-            Good to Know
-          </Text>
-          <Text
-            style={{
-              color: isDark ? '#A7F3D0' : '#047857',
-              fontSize: 12,
-              lineHeight: 18,
-            }}
-          >
-            Archiving preserves all your progress and streaks. Restore habits
-            anytime and pick up right where you left off!
-          </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
+          <Text style={{ fontSize: 24 }}>💚</Text>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: isDark ? colors.primary[300] : '#065F46',
+                fontSize: 14,
+                fontWeight: '500',
+                marginBottom: 4,
+              }}
+            >
+              Good to Know
+            </Text>
+            <Text
+              style={{
+                color: isDark ? colors.primary[400] : '#047857',
+                fontSize: 12,
+                lineHeight: 20,
+              }}
+            >
+              Archiving preserves all your progress and streaks. You can restore habits anytime and
+              pick up right where you left off!
+            </Text>
+          </View>
         </View>
       </Animated.View>
     </View>
