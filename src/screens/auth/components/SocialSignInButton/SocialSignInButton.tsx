@@ -21,7 +21,7 @@ const PROVIDER_CONFIG = {
     textColor: 'text-white',
   },
   google: {
-    bgColor: 'bg-white',
+    bgColor: 'bg-white dark:bg-gray-800',
     borderColor: 'border-stone-200',
     label: 'Continue with Google',
     spinnerColor: '#44403c',

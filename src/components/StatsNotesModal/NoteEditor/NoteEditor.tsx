@@ -5,7 +5,7 @@
  */
 
 import { Text, TextInput, View } from 'react-native';
-import { colors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HabitSelector } from './HabitSelector';
 import { NoteEditorActions } from './NoteEditorActions';
@@ -42,10 +42,12 @@ export default function NoteEditor({
     onSaveComplete: onSave,
   });
 
+  const { colors } = useThemeColors();
+
   return (
     <View className='gap-4'>
       <View className='gap-2'>
-        <Text className='text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
+        <Text className='text-xs font-semibold uppercase tracking-[2px]' style={{ color: colors.text.tertiary }}>
           {isEditing ? 'EDIT NOTE' : 'NEW NOTE'}
         </Text>
 
@@ -53,10 +55,11 @@ export default function NoteEditor({
           <>
             <TextInput
               accessibilityLabel='Note date'
-              className='w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
+              className='w-full rounded-2xl border px-4 py-3 text-sm font-medium'
               placeholder='YYYY-MM-DD'
-              placeholderTextColor={colors.gray[400]}
+              placeholderTextColor={colors.text.tertiary}
               returnKeyType='next'
+              style={{ borderColor: colors.border, backgroundColor: colors.card, color: colors.text.primary }}
               value={date}
               onChangeText={setDate}
             />
@@ -72,9 +75,10 @@ export default function NoteEditor({
         <TextInput
           multiline
           accessibilityLabel='Note body'
-          className='min-h-[120px] w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
+          className='min-h-[120px] w-full rounded-2xl border px-4 py-3 text-sm font-medium'
           placeholder='Write your note here...'
-          placeholderTextColor={colors.gray[400]}
+          placeholderTextColor={colors.text.tertiary}
+          style={{ borderColor: colors.border, backgroundColor: colors.card, color: colors.text.primary }}
           textAlignVertical='top'
           value={body}
           onChangeText={setBody}
@@ -83,8 +87,9 @@ export default function NoteEditor({
         <View className='flex-row justify-between'>
           <Text
             className={`text-xs ${
-              characterCount > 1000 ? 'text-red-500' : 'text-stone-500'
+              characterCount > 1000 ? 'text-red-500' : ''
             }`}
+            style={characterCount <= 1000 ? { color: colors.text.tertiary } : undefined}
           >
             {characterCount} / 1000 characters
           </Text>

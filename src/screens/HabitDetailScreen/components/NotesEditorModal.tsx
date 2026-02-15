@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { X } from 'lucide-react-native';
 import NoteEditor from '../../../components/StatsNotesModal/NoteEditor';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { NotesEditorModalProps } from '../HabitDetailScreen.types';
 
 export function NotesEditorModal({
@@ -24,26 +25,28 @@ export function NotesEditorModal({
   isOpen,
   onClose,
 }: NotesEditorModalProps) {
+  const { colors } = useThemeColors();
   return (
     <RNModal animationType='slide' visible={isOpen} onRequestClose={onClose}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1, backgroundColor: '#FAF8F5', paddingTop: insets.top + 16 }}
+        style={{ flex: 1, backgroundColor: colors.background, paddingTop: insets.top + 16 }}
       >
-        <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
+        <View className='flex-row items-center justify-between border-b px-5 pb-4' style={{ borderColor: colors.cardBorder }}>
           <Text
-            className='font-bold text-stone-900'
-            style={{ fontSize: 22, letterSpacing: -0.35 }}
+            className='font-bold'
+            style={{ fontSize: 22, letterSpacing: -0.35, color: colors.text.primary }}
           >
             {editingNote ? 'Edit Note' : 'New Note'}
           </Text>
           <Pressable
             accessibilityLabel='Close note editor'
             accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+            className='h-11 w-11 items-center justify-center rounded-full'
+            style={{ backgroundColor: colors.gray[100] }}
             onPress={onClose}
           >
-            <X color='#57534e' size={24} />
+            <X color={colors.text.secondary} size={24} />
           </Pressable>
         </View>
         <ScrollView

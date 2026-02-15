@@ -38,6 +38,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -48,6 +49,7 @@ interface SignInScreenProps {
 
 export default function SignInScreen(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useThemeColors();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const passwordRef = useRef<TextInput>(null);
   const {
@@ -125,10 +127,10 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
   }));
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Subtle gradient background */}
       <LinearGradient
-        colors={['#fafaf9', '#f5f5f4', '#fafaf9']}
+        colors={isDark ? [colors.background, colors.surface, colors.background] : ['#fafaf9', '#f5f5f4', '#fafaf9']}
         locations={[0, 0.5, 1]}
         style={StyleSheet.absoluteFill}
       />
@@ -157,15 +159,15 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
             </Animated.View>
 
             <Animated.View style={headerStyle}>
-              <Text style={styles.appName}>Chain Day</Text>
-              <Text style={styles.tagline}>Don't break the chain</Text>
+              <Text style={[styles.appName, { color: colors.text.primary }]}>Chain Day</Text>
+              <Text style={[styles.tagline, { color: colors.text.secondary }]}>Don't break the chain</Text>
             </Animated.View>
           </View>
 
           {/* Welcome Message */}
           <Animated.View style={[styles.welcomeSection, headerStyle]}>
-            <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
-            <Text style={styles.welcomeSubtitle}>
+            <Text style={[styles.welcomeTitle, { color: colors.text.primary }]}>Welcome back! 👋</Text>
+            <Text style={[styles.welcomeSubtitle, { color: colors.text.secondary }]}>
               Your habits are waiting. Let's keep the momentum going.
             </Text>
           </Animated.View>
@@ -240,7 +242,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 
           {/* Footer */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>
+            <Text style={[styles.footerText, { color: colors.text.tertiary }]}>
               By continuing, you agree to our Terms & Privacy Policy
             </Text>
           </View>

@@ -1,6 +1,7 @@
 /** VerificationForm - Form card with code input and submit */
 import { useCallback } from 'react';
 import { View } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { FormInput } from '../FormInput';
 import { SubmitButton } from '../SubmitButton';
 
@@ -18,10 +19,12 @@ export function VerificationForm({
   onVerify,
 }: Props) {
   const handleVerify = useCallback(() => void onVerify(code), [code, onVerify]);
+  const { colors } = useThemeColors();
 
   return (
     <View
-      className='rounded-2xl bg-white p-6'
+      className='rounded-2xl p-6'
+      style={{ backgroundColor: colors.card }}
       style={{
         elevation: 4,
         shadowColor: '#1c1917',

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { VerificationForm } from './VerificationForm';
 
 interface VerificationViewProps {
@@ -20,9 +21,10 @@ export function VerificationView({
 }: VerificationViewProps) {
   const [code, setCode] = useState('');
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
 
   return (
-    <View className='flex-1' style={{ backgroundColor: '#FAF8F5' }}>
+    <View className='flex-1' style={{ backgroundColor: colors.background }}>
       <View className='flex-1 px-6' style={{ paddingTop: insets.top + 24 }}>
         <Animated.View entering={anim(0)}>
           <Text
