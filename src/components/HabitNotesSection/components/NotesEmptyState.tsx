@@ -1,4 +1,4 @@
-/** NotesEmptyState - OPTIMIZED: Better animation, haptics, engaging illustration */
+/** NotesEmptyState - OPTIMIZED: Better animation, haptics, dark mode */
 import React from 'react';
 import { Text, View } from 'react-native';
 import { StickyNote, Plus } from 'lucide-react-native';
@@ -9,6 +9,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface NotesEmptyStateProps {
   onAddNote: () => void;
@@ -17,6 +18,7 @@ interface NotesEmptyStateProps {
 const AnimatedPressable = Animated.createAnimatedComponent(View);
 
 export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
+  const { colors, isDark } = useThemeColors();
   const scale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -40,11 +42,14 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
       <AnimatedPressable
         accessibilityLabel='Add your first note'
         accessibilityRole='button'
-        className='items-center rounded-2xl bg-amber-50 py-8'
         style={[
           animatedStyle,
           {
-            shadowColor: '#1c1917',
+            alignItems: 'center',
+            backgroundColor: isDark ? '#451A03' : '#FFFBEB',
+            borderRadius: 16,
+            paddingVertical: 32,
+            shadowColor: colors.text.primary,
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,
             shadowRadius: 16,
@@ -58,19 +63,49 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
         onTouchStart={handlePressIn}
       >
         {/* Icon */}
-        <View className='mb-3 h-14 w-14 items-center justify-center rounded-xl bg-amber-100'>
-          <StickyNote color='#d97706' size={28} strokeWidth={1.5} />
+        <View
+          style={{
+            alignItems: 'center',
+            backgroundColor: isDark ? '#78350F' : '#FDE68A',
+            borderRadius: 12,
+            height: 56,
+            justifyContent: 'center',
+            marginBottom: 12,
+            width: 56,
+          }}
+        >
+          <StickyNote color={isDark ? '#FCD34D' : '#D97706'} size={28} strokeWidth={1.5} />
         </View>
 
         {/* Text */}
-        <Text className='mb-1 text-center text-[17px] text-stone-600'>
+        <Text
+          style={{
+            color: colors.text.primary,
+            fontSize: 17,
+            marginBottom: 4,
+            textAlign: 'center',
+          }}
+        >
           Record insights to learn what works best
         </Text>
 
         {/* CTA */}
-        <View className='mt-3 flex-row items-center gap-1.5 rounded-full bg-amber-500 px-4 py-2'>
+        <View
+          style={{
+            alignItems: 'center',
+            backgroundColor: isDark ? '#D97706' : '#F59E0B',
+            borderRadius: 20,
+            flexDirection: 'row',
+            gap: 6,
+            marginTop: 12,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+          }}
+        >
           <Plus color='#ffffff' size={16} strokeWidth={2.5} />
-          <Text className='text-[13px] font-semibold text-white'>Add Note</Text>
+          <Text style={{ color: '#ffffff', fontSize: 13, fontWeight: '600' }}>
+            Add Note
+          </Text>
         </View>
       </AnimatedPressable>
     </Animated.View>

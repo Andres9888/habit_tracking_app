@@ -1,42 +1,62 @@
 /**
  * Empty state view for ComplianceHeatmap
- * Standardized: FadeInUp animation, icon, proper typography
+ * Standardized: FadeInUp animation, icon, proper typography, dark mode
  */
 
 import React from 'react';
 import { View } from 'react-native';
 import { Grid3X3 } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
+  const { colors, isDark } = useThemeColors();
+
   return (
-    <View className='items-center justify-center px-6 py-10'>
+    <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 40 }}>
       <Animated.View
-        className='mb-4 h-16 w-16 items-center justify-center rounded-xl bg-blue-50'
         entering={anim(0)}
         style={{
+          alignItems: 'center',
+          backgroundColor: isDark ? '#1E3A5F' : '#EFF6FF',
+          borderRadius: 12,
+          height: 64,
+          justifyContent: 'center',
+          marginBottom: 16,
           shadowColor: '#3b82f6',
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
+          width: 64,
         }}
       >
-        <Grid3X3 color='#3b82f6' size={32} strokeWidth={1.5} />
+        <Grid3X3 color={isDark ? '#93C5FD' : '#3b82f6'} size={32} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
-        className='mb-2 text-center font-bold text-stone-900'
         entering={anim(60)}
-        style={{ fontSize: 22, letterSpacing: -0.5 }}
+        style={{
+          color: colors.text.primary,
+          fontSize: 22,
+          fontWeight: '700',
+          letterSpacing: -0.5,
+          marginBottom: 8,
+          textAlign: 'center',
+        }}
       >
         No Compliance Data
       </Animated.Text>
       <Animated.Text
-        className='text-center text-[17px] leading-[22px] text-stone-500'
         entering={anim(120)}
-        style={{ maxWidth: 280 }}
+        style={{
+          color: colors.text.secondary,
+          fontSize: 17,
+          lineHeight: 22,
+          maxWidth: 280,
+          textAlign: 'center',
+        }}
       >
         Complete habits daily to see your compliance heatmap
       </Animated.Text>
