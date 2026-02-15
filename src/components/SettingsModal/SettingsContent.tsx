@@ -197,9 +197,7 @@ export function SettingsContent(p: SettingsContentProps) {
                             className='flex-1 flex-row items-center justify-center gap-1.5 rounded-lg px-2 py-2'
                             style={{
                               backgroundColor: selected
-                                ? isDark
-                                  ? '#374151'
-                                  : '#e5e7eb'
+                                ? themeColors.surface
                                 : 'transparent',
                             }}
                             onPress={() =>

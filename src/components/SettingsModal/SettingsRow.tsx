@@ -101,11 +101,11 @@ export function SettingsRow({
           {badge != null && badge > 0 && (
             <View
               className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
-              style={{ backgroundColor: isDark ? '#374151' : '#e7e5e4' }}
+              style={{ backgroundColor: colors.border }}
             >
               <Text
                 className='text-[12px] font-bold'
-                style={{ color: isDark ? '#9CA3AF' : '#57534e' }}
+                style={{ color: colors.value }}
               >
                 {badge}
               </Text>
@@ -117,7 +117,20 @@ export function SettingsRow({
     </View>
   );
 
-  if (type === 'toggle' || type === 'info') return content;
+  if (type === 'toggle') {
+    return (
+      <View
+        accessible
+        accessibilityLabel={`${label}, ${value ? 'on' : 'off'}`}
+        accessibilityRole="switch"
+        accessibilityState={{ checked: value as boolean }}
+      >
+        {content}
+      </View>
+    );
+  }
+
+  if (type === 'info') return content;
 
   return (
     <AnimatedPressable
