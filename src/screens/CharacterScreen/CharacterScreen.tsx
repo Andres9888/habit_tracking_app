@@ -2,6 +2,7 @@ import { View, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { useThemeColors } from '../../theme/ThemeContext';
 import {
   ScreenHeader,
   CharacterCard,
@@ -15,11 +16,16 @@ import type { CharacterScreenProps } from './types';
 function CharacterScreenContent({ onBack }: CharacterScreenProps) {
   const characterData = MOCK_CHARACTER_DATA;
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
 
   return (
-    <View className='flex-1 bg-white'>
-      <ScrollView className='flex-1'>
-        <View className='w-full px-6' style={{ paddingTop: insets.top + 12 }}>
+    <View
+      accessible
+      accessibilityLabel="Character screen"
+      style={{ flex: 1, backgroundColor: colors.background }}
+    >
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ width: '100%', paddingHorizontal: 24, paddingTop: insets.top + 12 }}>
           <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
             <ScreenHeader onBack={onBack} />
           </Animated.View>

@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
-import { Trophy } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { Achievement } from '../types';
 
 interface AchievementCardProps {
@@ -12,35 +12,44 @@ export function AchievementCard({
   achievement,
   delay = 0,
 }: AchievementCardProps) {
+  const { colors, isDark } = useThemeColors();
+
   return (
     <Animated.View
-      className='flex-row items-center gap-4 rounded-3xl border border-stone-100 bg-white px-6 py-6'
+      accessible
+      accessibilityLabel={`Achievement: ${achievement.title}. ${achievement.description}`}
       entering={FadeInDown.delay(delay).springify().damping(18)}
       style={{
-        shadowColor: '#1c1917',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 16,
+        borderRadius: 24,
+        borderWidth: 1,
+        borderColor: colors.border,
+        backgroundColor: colors.surface,
+        paddingHorizontal: 24,
+        paddingVertical: 24,
+        shadowColor: isDark ? '#000' : '#1c1917',
         shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
+        shadowOpacity: isDark ? 0.3 : 0.08,
         shadowRadius: 16,
+        elevation: 3,
       }}
     >
-      <View className='h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm'>
-        <Trophy color='#f59e0b' size={24} />
+      <View style={{
+        height: 48, width: 48, alignItems: 'center', justifyContent: 'center',
+        borderRadius: 24, backgroundColor: isDark ? 'rgba(245, 158, 11, 0.15)' : '#fff7ed',
+      }}>
+        <Text style={{ fontSize: 24 }}>{achievement.icon}</Text>
       </View>
-      <View className='flex-1 flex-col'>
-        <Text
-          className='font-semibold text-[#1c1917]'
-          style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22 }}
-        >
+      <View style={{ flex: 1 }}>
+        <Text style={{ fontWeight: '600', fontSize: 17, letterSpacing: -0.41, lineHeight: 22, color: colors.text.primary }}>
           {achievement.title}
         </Text>
-        <Text
-          className='text-[#78716c]'
-          style={{ fontSize: 13, letterSpacing: -0.08, lineHeight: 18 }}
-        >
+        <Text style={{ fontSize: 13, letterSpacing: -0.08, lineHeight: 18, color: colors.text.secondary }}>
           {achievement.description}
         </Text>
       </View>
-      <Text className='text-2xl'>{achievement.icon}</Text>
     </Animated.View>
   );
 }
