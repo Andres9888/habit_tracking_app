@@ -30,7 +30,7 @@ export const StatCard = memo(function StatCard({
       style={styles.statCard}
     >
       {loading ? (
-        <View accessibilityLabel='Loading' style={styles.statCardLoading}>
+        <View accessibilityLabel={`Loading ${title}...`} style={styles.statCardLoading}>
           <View style={styles.skeletonTitle} />
           <View style={styles.skeletonValue} />
           {subtitle && <View style={styles.skeletonSubtitle} />}

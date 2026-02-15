@@ -41,7 +41,7 @@ export function NameInputSection({
           accessibilityLabel='Habit name'
           className='w-full rounded-2xl border-2 border-stone-200 bg-white px-5 py-4 text-center text-[22px] font-medium text-stone-900'
           maxLength={50}
-          placeholder='e.g., Read for 20 minutes'
+          placeholder='e.g., Read 20 minutes daily'
           placeholderTextColor='#a1a1aa'
           returnKeyType='done'
           style={{ lineHeight: 28 }}
