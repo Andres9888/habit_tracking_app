@@ -8,7 +8,7 @@ import React, { memo } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 const GRIP_LINE_COUNT = 3;
-const GRIP_LINE_COLOR = 'rgba(0, 0, 0, 0.10)';
+const GRIP_LINE_COLOR = 'rgba(0, 0, 0, 0.18)';
 
 export const SwipeGripLines = memo(function SwipeGripLines() {
   return (
