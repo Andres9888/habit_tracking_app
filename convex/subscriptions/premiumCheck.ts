@@ -34,7 +34,7 @@ export async function hasPremiumAccess(
 ): Promise<boolean> {
   const settings = await ctx.db
     .query('userSettings')
-    .filter((q) => q.eq(q.field('userId'), userId))
+    .withIndex('by_userId', (q) => q.eq('userId', userId))
     .first();
 
   return settings?.hasPremium ?? false;

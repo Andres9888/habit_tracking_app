@@ -19,7 +19,7 @@ export const get = query({
     if (identity) {
       settings = await ctx.db
         .query('userSettings')
-        .filter((q) => q.eq(q.field('userId'), identity.subject))
+        .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
         .first();
     }
     // SEC-001: No fallback — return defaults if no user-specific settings exist
@@ -88,7 +88,7 @@ export const update = mutation({
     // SEC-001: Find existing settings for this user
     const existing = await ctx.db
       .query('userSettings')
-      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .first();
 
     const normalizedArgs = {
