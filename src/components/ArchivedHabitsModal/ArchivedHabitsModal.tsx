@@ -1,4 +1,5 @@
-import { ScrollView, View } from 'react-native';
+import { useCallback } from 'react';
+import { FlatList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
@@ -20,6 +21,24 @@ export default function ArchivedHabitsModal({
   const { archivedHabits, handleRestore, handlePermanentDelete, handleDeleteAll, isLoading } =
     useArchivedHabitsModalLogic();
 
+  const renderItem = useCallback(
+    ({ item, index }: { item: (typeof archivedHabits)[0]; index: number }) => (
+      <AnimatedHabitCard
+        habit={item}
+        index={index}
+        reducedMotion={reducedMotion}
+        onDelete={handlePermanentDelete}
+        onRestore={handleRestore}
+      />
+    ),
+    [reducedMotion, handlePermanentDelete, handleRestore]
+  );
+
+  const keyExtractor = useCallback(
+    (item: (typeof archivedHabits)[0]) => item._id,
+    []
+  );
+
   return (
     <>
       <ModalHeader insets={insets} onBack={onBack} onClose={onClose} />
@@ -29,30 +48,23 @@ export default function ArchivedHabitsModal({
         onDeleteAll={handleDeleteAll}
       />
 
-      <ScrollView
-        className='flex-1'
-        contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
-        showsVerticalScrollIndicator={false}
-      >
-        {isLoading ? (
-          <LoadingState />
-        ) : archivedHabits.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <View className='gap-3'>
-            {archivedHabits.map((habit, index) => (
-              <AnimatedHabitCard
-                key={habit._id}
-                habit={habit}
-                index={index}
-                reducedMotion={reducedMotion}
-                onDelete={handlePermanentDelete}
-                onRestore={handleRestore}
-              />
-            ))}
-          </View>
-        )}
-      </ScrollView>
+      {isLoading ? (
+        <LoadingState />
+      ) : (
+        <FlatList
+          className='flex-1'
+          contentContainerStyle={{ gap: 12, paddingBottom: insets.bottom + 16 }}
+          data={archivedHabits}
+          initialNumToRender={10}
+          keyExtractor={keyExtractor}
+          ListEmptyComponent={EmptyState}
+          maxToRenderPerBatch={10}
+          removeClippedSubviews
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          windowSize={5}
+        />
+      )}
     </>
   );
 }

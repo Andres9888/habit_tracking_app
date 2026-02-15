@@ -1,7 +1,9 @@
 /**
  * PausedHabitsModal - OPTIMIZED: Design system typography, animations, shadows
+ * Uses FlatList for virtualized rendering of paused habits.
  */
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useCallback } from 'react';
+import { FlatList, Pressable, Text, View } from 'react-native';
 import { ChevronLeft, X } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,6 +25,18 @@ export default function PausedHabitsModal({
 }: PausedHabitsModalProps) {
   const insets = useSafeAreaInsets();
   const { pausedHabits, handleResume } = usePausedHabitsModalLogic();
+
+  const renderItem = useCallback(
+    ({ item, index }: { item: (typeof pausedHabits)[0]; index: number }) => (
+      <PausedHabitCard habit={item} index={index} onResume={handleResume} />
+    ),
+    [handleResume]
+  );
+
+  const keyExtractor = useCallback(
+    (item: (typeof pausedHabits)[0]) => item._id,
+    []
+  );
 
   return (
     <View className='flex-1' style={{ backgroundColor: '#FAF8F5' }}>
@@ -55,26 +69,19 @@ export default function PausedHabitsModal({
           </Pressable>
         </Animated.View>
       </View>
-      <ScrollView
+      <FlatList
         className='flex-1 px-4'
-        contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
+        contentContainerStyle={{ gap: 12, paddingBottom: insets.bottom + 16 }}
+        data={pausedHabits}
+        initialNumToRender={10}
+        keyExtractor={keyExtractor}
+        ListEmptyComponent={PausedEmptyState}
+        maxToRenderPerBatch={10}
+        removeClippedSubviews
+        renderItem={renderItem}
         showsVerticalScrollIndicator={false}
-      >
-        {pausedHabits.length === 0 ? (
-          <PausedEmptyState />
-        ) : (
-          <View className='gap-3'>
-            {pausedHabits.map((habit, i) => (
-              <PausedHabitCard
-                key={habit._id}
-                habit={habit}
-                index={i}
-                onResume={handleResume}
-              />
-            ))}
-          </View>
-        )}
-      </ScrollView>
+        windowSize={5}
+      />
     </View>
   );
 }

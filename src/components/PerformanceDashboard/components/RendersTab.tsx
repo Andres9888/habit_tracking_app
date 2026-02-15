@@ -3,8 +3,8 @@
  * Component render performance and slow component detection.
  */
 
-import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { FlatList, Text, View } from 'react-native';
 import { StatusIndicator } from './StatusIndicator';
 import { StatRow } from './StatRow';
 import { tabStyles, valueStyles } from './tabStyles';
@@ -59,21 +59,34 @@ function ComponentsList({
   label: string;
   slow?: boolean;
 }) {
+  const renderItem = useCallback(
+    ({ item }: { item: RenderTiming }) => <ComponentRow component={item} />,
+    []
+  );
+
+  const keyExtractor = useCallback(
+    (_: RenderTiming, index: number) => `${index}`,
+    []
+  );
+
   return (
     <View style={rendersStyles.list}>
       <Text style={[tabStyles.historyLabel, slow && rendersStyles.slowLabel]}>
         {label}
       </Text>
-      <ScrollView
-        nestedScrollEnabled
-        style={[tabStyles.scrollView, rendersStyles.scrollView]}
-      >
-        {components.length === 0 ? (
-          <Text style={tabStyles.emptyText}>No renders tracked yet</Text>
-        ) : (
-          components.map((comp, i) => <ComponentRow key={i} component={comp} />)
-        )}
-      </ScrollView>
+      {components.length === 0 ? (
+        <Text style={tabStyles.emptyText}>No renders tracked yet</Text>
+      ) : (
+        <FlatList
+          nestedScrollEnabled
+          data={components}
+          initialNumToRender={8}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          style={[tabStyles.scrollView, rendersStyles.scrollView]}
+          windowSize={3}
+        />
+      )}
     </View>
   );
 }
