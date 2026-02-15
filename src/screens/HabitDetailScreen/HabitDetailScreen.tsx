@@ -20,6 +20,7 @@ import { useThemeColors } from '../../theme';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
 import { useNotesHandlers } from './useNotesHandlers';
+import { useAndroidBackButton } from '../../hooks/useAndroidBackButton';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
 
 // eslint-disable-next-line max-lines-per-function
@@ -59,6 +60,9 @@ function HabitDetailScreenContent({
     setIsNotesEditorOpen: screenState.setIsNotesEditorOpen,
     setIsNotesListOpen: screenState.setIsNotesListOpen,
   });
+
+  // Handle Android back button
+  useAndroidBackButton(visible, onClose);
 
   return (
     <Modal

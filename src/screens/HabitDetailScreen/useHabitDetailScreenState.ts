@@ -3,11 +3,12 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
  * useHabitDetailScreenState - State management for the habit detail screen
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
-import type { Id } from '../../../convex/_generated/dataModel';
+import type { Id, Doc } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
+import { useModalCleanup } from '../../hooks/useModalCleanup';
 
 interface UseHabitDetailScreenStateProps {
   habitCreatedAt: number | undefined;
@@ -88,16 +89,16 @@ export const useHabitDetailScreenState = ({
     ? habitNotes.find((n) => n._id === editingNoteId)
     : null;
 
-  // Create notesByDate map for quick lookup by date
-  const notesByDate = useMemo(() => {
-    const map: Record<string, string> = {};
-    habitNotes.forEach((note) => {
-      if (note.date) {
-        map[note.date] = note.body;
-      }
-    });
-    return map;
-  }, [habitNotes]);
+  // Clean up child modal states when parent closes
+  const cleanup = useCallback(() => {
+    setIsNotesEditorOpen(false);
+    setIsNotesListOpen(false);
+    setEditingNoteId(null);
+    setPendingDelete(false);
+    setPendingArchive(false);
+  }, []);
+
+  useModalCleanup(visible, cleanup);
 
   return {
     completedDates,
@@ -109,7 +110,6 @@ export const useHabitDetailScreenState = ({
     isNotesEditorOpen,
     isNotesListOpen,
     isTogglingCalendar,
-    notesByDate,
     pendingArchive,
     pendingDelete,
     setEditingNoteId,
