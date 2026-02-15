@@ -1,4 +1,5 @@
 /** PausedHabitCard - Individual paused habit with resume action */
+import { memo, useCallback } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
@@ -15,11 +16,15 @@ interface PausedHabitCardProps {
   onResume: (id: Id<'habits'>, name: string) => Promise<void>;
 }
 
-export function PausedHabitCard({
+export const PausedHabitCard = memo(function PausedHabitCard({
   habit,
   index,
   onResume,
 }: PausedHabitCardProps) {
+  const handleResume = useCallback(
+    () => onResume(habit._id, habit.name),
+    [onResume, habit._id, habit.name]
+  );
   return (
     <Animated.View
       className='gap-3 rounded-2xl bg-white p-4'
@@ -63,7 +68,7 @@ export function PausedHabitCard({
         accessibilityRole='button'
         className='items-center rounded-xl py-3 active:opacity-80'
         style={{ backgroundColor: '#059669' }}
-        onPress={() => onResume(habit._id, habit.name)}
+        onPress={handleResume}
       >
         <Text
           className='font-bold text-white'
@@ -74,4 +79,4 @@ export function PausedHabitCard({
       </Pressable>
     </Animated.View>
   );
-}
+});

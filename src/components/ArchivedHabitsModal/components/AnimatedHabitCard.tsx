@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useAnimatedHabitCard } from './AnimatedHabitCard.hooks';
@@ -14,13 +15,18 @@ const CARD_SHADOW = {
   shadowOpacity: 0.05,
 };
 
-export function AnimatedHabitCard({
+export const AnimatedHabitCard = memo(function AnimatedHabitCard({
   habit,
   index,
   reducedMotion,
   onRestore,
   onDelete,
 }: AnimatedHabitCardProps) {
+  const handleDelete = useCallback(
+    () => onDelete(habit._id, habit.name),
+    [onDelete, habit._id, habit.name]
+  );
+
   const {
     isRestoring,
     showSuccess,
@@ -67,11 +73,11 @@ export function AnimatedHabitCard({
             isRestoring={isRestoring}
             showSuccess={showSuccess}
             successIconStyle={successIconStyle}
-            onDeletePress={() => onDelete(habit._id, habit.name)}
+            onDeletePress={handleDelete}
             onRestorePress={handleRestorePress}
           />
         </View>
       </View>
     </Animated.View>
   );
-}
+});

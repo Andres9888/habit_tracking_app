@@ -2,6 +2,7 @@
  * Browse mode - View All tab content
  */
 
+import { useCallback } from 'react';
 import { FlatList, Pressable, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
@@ -30,7 +31,34 @@ interface BrowseAllTabProps {
 }
 
 export function BrowseAllTab(p: BrowseAllTabProps) {
-  const toggle = () => p.setResearchOnly((prev) => !prev);
+  const toggle = useCallback(() => p.setResearchOnly((prev) => !prev), [p.setResearchOnly]);
+
+  const renderItem = useCallback(
+    ({ item: t }: { item: Doc<'templates'> }) => (
+      <TemplateCard
+        key={t._id}
+        enableScrollReveal
+        animationIndex={0}
+        category={t.category}
+        description={t.description}
+        frequency={t.frequency}
+        icon={t.icon}
+        iconColor={t.iconColor}
+        id={t._id}
+        isImporting={p.importingTemplateId === t._id}
+        name={t.name}
+        popularityScore={t.popularityScore}
+        scientificLink={t.scientificLink}
+        scientificReference={t.scientificReference}
+        youtubeLink={t.youtubeLink}
+        onImport={() => p.handleTemplateImport(t._id)}
+        onPreview={() => p.handleTemplatePreview(t)}
+      />
+    ),
+    [p.importingTemplateId, p.handleTemplateImport, p.handleTemplatePreview]
+  );
+
+  const keyExtractor = useCallback((item: Doc<'templates'>) => item._id, []);
 
   return (
     <Animated.View style={[{ flex: 1 }, p.contentAnimatedStyle]}>
@@ -49,29 +77,9 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
         contentContainerStyle={styles.allTemplatesList}
         data={p.filteredTemplates}
         initialNumToRender={5}
-        keyExtractor={(item) => item._id}
+        keyExtractor={keyExtractor}
         maxToRenderPerBatch={5}
-        renderItem={({ item: t }) => (
-          <TemplateCard
-            key={t._id}
-            enableScrollReveal
-            animationIndex={0}
-            category={t.category}
-            description={t.description}
-            frequency={t.frequency}
-            icon={t.icon}
-            iconColor={t.iconColor}
-            id={t._id}
-            isImporting={p.importingTemplateId === t._id}
-            name={t.name}
-            popularityScore={t.popularityScore}
-            scientificLink={t.scientificLink}
-            scientificReference={t.scientificReference}
-            youtubeLink={t.youtubeLink}
-            onImport={() => p.handleTemplateImport(t._id)}
-            onPreview={() => p.handleTemplatePreview(t)}
-          />
-        )}
+        renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         windowSize={5}
       />

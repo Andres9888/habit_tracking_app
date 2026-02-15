@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import {
   useTemplateCardAnimations,
@@ -9,7 +9,7 @@ import type { TemplateCardProps } from './TemplateCard.types';
 import { getTemplateCardState } from './TemplateCard.helpers';
 import { TemplateCardRender } from './TemplateCardRender';
 
-export function TemplateCard(props: TemplateCardProps) {
+export const TemplateCard = memo(function TemplateCard(props: TemplateCardProps) {
   const {
     animationIndex = 0,
     isImported = false,
@@ -56,4 +56,4 @@ export function TemplateCard(props: TemplateCardProps) {
       shadowStyle={shadowStyle}
     />
   );
-}
+});
