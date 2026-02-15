@@ -24,7 +24,7 @@ import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTim
 import { useCompletionSound } from '../../../hooks/useCompletionSound';
 import type { HabitsListState } from './types';
 
-const FREE_HABIT_LIMIT = 3;
+import { FREE_HABIT_LIMIT } from '@/constants';
 
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);

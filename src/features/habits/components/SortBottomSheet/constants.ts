@@ -8,7 +8,10 @@ import {
 } from 'lucide-react-native';
 import { Dimensions } from 'react-native';
 
+import { DISMISS_THRESHOLD, VELOCITY_THRESHOLD } from '@/constants';
 import type { SortOptionConfig } from './types';
+
+export { DISMISS_THRESHOLD, VELOCITY_THRESHOLD };
 
 export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -21,10 +24,6 @@ export const SHEET_SPRING_CONFIG = {
   mass: 1,
   stiffness: 150,
 };
-
-/** Gesture threshold for dismissal */
-export const DISMISS_THRESHOLD = 100;
-export const VELOCITY_THRESHOLD = 800;
 
 export const SORT_OPTIONS: SortOptionConfig[] = [
   {
