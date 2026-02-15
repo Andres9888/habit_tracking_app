@@ -49,10 +49,12 @@ export function WriteStep({
         </Text>
         <TextInput
           accessibilityLabel='Letter title'
+          blurOnSubmit={false}
           className='rounded-xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-800'
           maxLength={MAX_TITLE_LENGTH}
           placeholder='e.g., "Keep Going" or "Remember Why"'
           placeholderTextColor='#a8a29e'
+          returnKeyType='next'
           value={title}
           onChangeText={onTitleChange}
         />

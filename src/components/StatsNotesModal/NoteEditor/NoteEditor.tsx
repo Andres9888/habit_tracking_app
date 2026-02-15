@@ -56,6 +56,7 @@ export default function NoteEditor({
               className='w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
               placeholder='YYYY-MM-DD'
               placeholderTextColor={colors.gray[400]}
+              returnKeyType='next'
               value={date}
               onChangeText={setDate}
             />

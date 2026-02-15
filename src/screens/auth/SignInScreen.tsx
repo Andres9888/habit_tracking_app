@@ -5,7 +5,7 @@
 
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
   View,
@@ -13,6 +13,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -48,6 +49,7 @@ interface SignInScreenProps {
 export default function SignInScreen(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const passwordRef = useRef<TextInput>(null);
   const {
     emailAddress,
     setEmailAddress,
@@ -195,17 +197,21 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
               <FormInput
                 autoCapitalize='none'
                 autoComplete='email'
+                blurOnSubmit={false}
                 editable={!isAnyLoading}
                 error={emailError}
                 keyboardType='email-address'
                 label='Email'
                 placeholder='your@email.com'
+                returnKeyType='next'
                 value={emailAddress}
                 onBlur={onEmailBlur}
                 onChangeText={setEmailAddress}
+                onSubmitEditing={() => passwordRef.current?.focus()}
               />
 
               <FormInput
+                ref={passwordRef}
                 secureTextEntry
                 autoComplete='password'
                 editable={!isAnyLoading}
@@ -216,8 +222,10 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                   />
                 }
                 placeholder='Enter your password'
+                returnKeyType='go'
                 value={password}
                 onChangeText={setPassword}
+                onSubmitEditing={handleSignIn}
               />
 
               <SubmitButton

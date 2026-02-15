@@ -10,6 +10,8 @@ import {
   Pressable,
   ScrollView,
   Modal as RNModal,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { X } from 'lucide-react-native';
 import NoteEditor from '../../../components/StatsNotesModal/NoteEditor';
@@ -24,7 +26,10 @@ export function NotesEditorModal({
 }: NotesEditorModalProps) {
   return (
     <RNModal animationType='slide' visible={isOpen} onRequestClose={onClose}>
-      <View className='flex-1' style={{ backgroundColor: '#FAF8F5', paddingTop: insets.top + 16 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1, backgroundColor: '#FAF8F5', paddingTop: insets.top + 16 }}
+      >
         <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
           <Text
             className='font-bold text-stone-900'
@@ -47,6 +52,7 @@ export function NotesEditorModal({
             padding: 20,
             paddingBottom: insets.bottom + 20,
           }}
+          keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >
           <NoteEditor
@@ -58,7 +64,7 @@ export function NotesEditorModal({
             onSave={onClose}
           />
         </ScrollView>
-      </View>
+      </KeyboardAvoidingView>
     </RNModal>
   );
 }
