@@ -6,6 +6,7 @@ import React, { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
+import { t } from '../../i18n';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
 const SUPPORT_EMAIL = 'support@chainday.app';
@@ -24,17 +25,17 @@ export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
   const userEmail = user?.primaryEmailAddress?.emailAddress;
 
   const handleSignOut = useCallback(() => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
-      { style: 'cancel', text: 'Cancel' },
+    Alert.alert(t('auth.signOut'), t('auth.signOutConfirm'), [
+      { style: 'cancel', text: t('common.cancel') },
       {
         onPress: () => {
           setIsSigningOut(true);
           void signOut()
-            .catch(() => Alert.alert('Error', 'Failed to sign out.'))
+            .catch(() => Alert.alert(t('common.error'), t('auth.failedSignOut')))
             .finally(() => setIsSigningOut(false));
         },
         style: 'destructive',
-        text: 'Sign Out',
+        text: t('auth.signOut'),
       },
     ]);
   }, [signOut]);
@@ -66,7 +67,7 @@ export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
         default: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${APP_STORE_URL}`,
         ios: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${APP_STORE_URL}`,
       }),
-      title: 'Chain Day — Build Better Habits',
+      title: t('settings.shareTitle'),
       url: Platform.OS === 'ios' ? APP_STORE_URL : undefined,
     });
   }, []);

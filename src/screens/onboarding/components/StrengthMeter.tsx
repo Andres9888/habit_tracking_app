@@ -1,7 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { t } from '../../../i18n';
 
-const STAGES = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
+const STAGE_KEYS = [
+  'strength.starting',
+  'strength.building',
+  'strength.developing',
+  'strength.strong',
+  'strength.automatic',
+] as const;
 
 function interpolateColor(t: number): string {
   if (t < 0.5) return '#10B981';
@@ -12,9 +19,9 @@ function interpolateColor(t: number): string {
 export function StrengthMeter() {
   return (
     <View style={styles.container}>
-      {STAGES.map((stage, i) => (
+      {STAGE_KEYS.map((key, i) => (
         <Animated.View
-          key={stage}
+          key={key}
           entering={FadeInDown.delay(400 + i * 200)
             .springify()
             .damping(18)}
@@ -31,7 +38,7 @@ export function StrengthMeter() {
             ]}
           />
           <Text style={[styles.label, i === 4 && styles.labelActive]}>
-            {stage}
+            {t(key)}
           </Text>
         </Animated.View>
       ))}

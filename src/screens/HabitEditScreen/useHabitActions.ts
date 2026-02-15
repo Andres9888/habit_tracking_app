@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { t } from '../../i18n';
 
 interface UseHabitActionsProps {
   habitId: Id<'habits'> | null;
@@ -17,21 +18,21 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
     if (!habitId) return;
 
     Alert.alert(
-      'Delete Habit',
+      t('habits.deleteConfirmTitle'),
       'This action cannot be undone. All your progress and history will be permanently deleted.',
       [
-        { style: 'cancel', text: 'Cancel' },
+        { style: 'cancel', text: t('common.cancel') },
         {
           onPress: () => {
             void removeHabit({ habitId })
               .then(onSuccess)
               .catch((error) => {
                 if (__DEV__) console.warn('Error deleting habit:', error);
-                Alert.alert('Error', 'Failed to delete habit. Please try again.');
+                Alert.alert(t('common.error'), t('habits.failedDelete'));
               });
           },
           style: 'destructive',
-          text: 'Delete',
+          text: t('common.delete'),
         },
       ]
     );
@@ -41,20 +42,20 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
     if (!habitId) return;
 
     Alert.alert(
-      'Archive Habit',
+      t('habits.archiveConfirmTitle'),
       'This habit will be hidden but your progress will be preserved. You can restore it anytime from Settings.',
       [
-        { style: 'cancel', text: 'Cancel' },
+        { style: 'cancel', text: t('common.cancel') },
         {
           onPress: () => {
             void archiveHabit({ habitId })
               .then(onSuccess)
               .catch((error) => {
                 if (__DEV__) console.warn('Error archiving habit:', error);
-                Alert.alert('Error', 'Failed to archive habit. Please try again.');
+                Alert.alert(t('common.error'), t('habits.failedArchive'));
               });
           },
-          text: 'Archive',
+          text: t('common.archive'),
         },
       ]
     );

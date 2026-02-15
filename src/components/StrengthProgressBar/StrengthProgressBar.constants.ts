@@ -6,44 +6,54 @@ import { colors } from '@/theme/colors';
 import { typography } from '@/theme/typography';
 
 import type { LevelConfig, SizeConfig } from './StrengthProgressBar.types';
+import { t } from '../../i18n';
 
-export const LEVELS: LevelConfig[] = [
-  {
-    color: colors.strength.starting,
-    colorBg: colors.strength.startingLight,
-    emoji: '🌱',
-    label: 'Starting',
-    threshold: 0,
-  },
-  {
-    color: colors.strength.building,
-    colorBg: colors.strength.buildingLight,
-    emoji: '🌿',
-    label: 'Building',
-    threshold: 20,
-  },
-  {
-    color: colors.strength.developing,
-    colorBg: colors.strength.developingLight,
-    emoji: '🌳',
-    label: 'Developing',
-    threshold: 40,
-  },
-  {
-    color: colors.strength.strong,
-    colorBg: colors.strength.strongLight,
-    emoji: '💪',
-    label: 'Strong',
-    threshold: 60,
-  },
-  {
-    color: colors.strength.automatic,
-    colorBg: colors.strength.automaticLight,
-    emoji: '⚡',
-    label: 'Automatic',
-    threshold: 80,
-  },
-];
+/**
+ * Build LEVELS with i18n labels. Called as a getter so translations
+ * resolve at render time (after locale is set).
+ */
+export function getLevels(): LevelConfig[] {
+  return [
+    {
+      color: colors.strength.starting,
+      colorBg: colors.strength.startingLight,
+      emoji: '🌱',
+      label: t('strength.starting'),
+      threshold: 0,
+    },
+    {
+      color: colors.strength.building,
+      colorBg: colors.strength.buildingLight,
+      emoji: '🌿',
+      label: t('strength.building'),
+      threshold: 20,
+    },
+    {
+      color: colors.strength.developing,
+      colorBg: colors.strength.developingLight,
+      emoji: '🌳',
+      label: t('strength.developing'),
+      threshold: 40,
+    },
+    {
+      color: colors.strength.strong,
+      colorBg: colors.strength.strongLight,
+      emoji: '💪',
+      label: t('strength.strong'),
+      threshold: 60,
+    },
+    {
+      color: colors.strength.automatic,
+      colorBg: colors.strength.automaticLight,
+      emoji: '⚡',
+      label: t('strength.automatic'),
+      threshold: 80,
+    },
+  ];
+}
+
+/** @deprecated Use getLevels() for i18n support. Kept for backward compat. */
+export const LEVELS: LevelConfig[] = getLevels();
 
 export const SIZE_CONFIG: Record<'compact' | 'default' | 'large', SizeConfig> =
   {
@@ -73,16 +83,18 @@ export const SIZE_CONFIG: Record<'compact' | 'default' | 'large', SizeConfig> =
 export const DIVIDER_POSITIONS = [20, 40, 60, 80];
 
 export function getCurrentLevel(strength: number): LevelConfig {
-  for (let i = LEVELS.length - 1; i >= 0; i--) {
-    if (strength >= LEVELS[i].threshold) {
-      return LEVELS[i];
+  const levels = getLevels();
+  for (let i = levels.length - 1; i >= 0; i--) {
+    if (strength >= levels[i].threshold) {
+      return levels[i];
     }
   }
-  return LEVELS[0];
+  return levels[0];
 }
 
 export function getNextLevel(strength: number): LevelConfig | null {
-  for (const level of LEVELS) {
+  const levels = getLevels();
+  for (const level of levels) {
     if (strength < level.threshold) {
       return level;
     }

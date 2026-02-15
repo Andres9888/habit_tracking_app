@@ -5,6 +5,7 @@ import { Alert } from 'react-native';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail, validatePassword } from '../../../utils/validation';
 import { getClerkErrorMessage } from '../utils/getClerkErrorMessage';
+import { t } from '../../../i18n';
 
 export function useSignUpFlow() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -50,7 +51,7 @@ export function useSignUpFlow() {
       setPendingVerification(true);
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', getClerkErrorMessage(error, 'Failed to sign up'));
+      Alert.alert(t('common.error'), getClerkErrorMessage(error, t('auth.failedSignUp')));
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +80,7 @@ export function useSignUpFlow() {
         await setActive({ session: attempt.createdSessionId });
       } else {
         if (__DEV__) console.error(JSON.stringify(attempt, null, 2));
-        Alert.alert('Error', 'Verification incomplete. Please try again.');
+        Alert.alert(t('common.error'), t('auth.verificationIncomplete'));
       }
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));

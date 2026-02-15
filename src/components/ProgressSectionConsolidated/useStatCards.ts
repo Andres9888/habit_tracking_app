@@ -8,6 +8,7 @@
 import { useMemo } from 'react';
 import type { StatItemConfig, DayInfo } from './StatsGridTypes';
 import { STAT_CARD_COLORS } from './StatsGridTypes';
+import { t } from '../../i18n';
 
 interface UseStatCardsArgs {
   currentStreak: number;
@@ -41,14 +42,14 @@ export function useStatCards({
         backgroundColor: STAT_CARD_COLORS.streak.bgHex,
         icon: '🔥',
         id: 'streak',
-        label: currentStreak === 1 ? 'Day Streak' : 'Day Streak',
+        label: t('streaks.dayStreak'),
         value: currentStreak === 1 ? '1' : `${currentStreak}`,
       },
       {
         backgroundColor: STAT_CARD_COLORS.monthly.bgHex,
         icon: '📅',
         id: 'monthly',
-        label: 'This Month',
+        label: t('streaks.thisMonth'),
         showTrend: monthlyChange !== undefined && monthlyChange !== 0,
         trend: monthlyChange,
         value: `${monthlyCompleted}/${monthlyTotal}`,

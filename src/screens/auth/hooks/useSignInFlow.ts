@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail } from '../../../utils/validation';
+import { t } from '../../../i18n';
 
 export function useSignInFlow() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -23,7 +24,7 @@ export function useSignInFlow() {
     // Validate email before submitting
     const emailResult = emailField.validateNow();
     if (!emailResult.isValid) {
-      Alert.alert('Validation Error', 'Please enter a valid email address');
+      Alert.alert(t('common.error'), t('auth.validationErrorEmail'));
       return;
     }
 
@@ -38,7 +39,7 @@ export function useSignInFlow() {
         await setActive({ session: signInAttempt.createdSessionId });
       } else {
         Alert.alert(
-          'Error',
+          t('common.error'),
           'Sign in incomplete. Please check your credentials.'
         );
       }
@@ -46,8 +47,8 @@ export function useSignInFlow() {
       const clerkError = error as { errors?: Array<{ message?: string }> };
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert(
-        'Error',
-        clerkError.errors?.[0]?.message || 'Failed to sign in'
+        t('common.error'),
+        clerkError.errors?.[0]?.message || t('auth.failedSignIn')
       );
     } finally {
       setIsLoading(false);

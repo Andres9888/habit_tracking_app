@@ -7,7 +7,8 @@
  * - Activity date/time formatting
  */
 
-import { format, parseISO, differenceInDays } from 'date-fns';
+import { parseISO, differenceInDays } from 'date-fns';
+import { i18nFormatDate, i18nFormatTime } from '../i18n';
 
 interface TrackingEntry {
   date: string;
@@ -84,14 +85,16 @@ export function calculateCompletionPercentage(
 
 /**
  * Format activity log date in "Sunday, October 19" format
+ * Uses i18n for locale-aware day and month names.
  */
 export function formatActivityDate(date: string): string {
-  return format(parseISO(date), 'EEEE, MMMM d');
+  return i18nFormatDate(parseISO(date));
 }
 
 /**
  * Format activity log time in "7:03 AM" format
+ * Uses i18n for locale-aware AM/PM.
  */
 export function formatActivityTime(timestamp: number): string {
-  return format(new Date(timestamp), 'h:mm a');
+  return i18nFormatTime(new Date(timestamp));
 }

@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { t } from '../../i18n';
 
 interface EditHeaderProps {
   paddingTop: number;
@@ -77,7 +78,7 @@ export function EditHeader({
           className={`font-semibold ${canSave && !isSaving ? 'text-white' : 'text-stone-500'}`}
           style={{ fontSize: 17, letterSpacing: -0.41 }}
         >
-          {isSaving ? 'Saving…' : 'Save'}
+          {isSaving ? t('common.saving') : t('common.save')}
         </Text>
       </AnimatedPressable>
     </Animated.View>
