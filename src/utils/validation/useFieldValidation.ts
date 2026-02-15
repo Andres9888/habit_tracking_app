@@ -102,7 +102,7 @@ export function useFieldValidation(
 
   // Validate a value and update state
   const performValidation = useCallback(
-    (valueToValidate: string) => {
+    (valueToValidate: string | undefined) => {
       const result = validate(valueToValidate);
       setIsValid(result.isValid);
       setHasBeenValidated(true);

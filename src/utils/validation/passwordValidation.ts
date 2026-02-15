@@ -4,7 +4,7 @@
 
 import type { ValidationResult } from './types';
 import { containsDangerousPatterns } from './security';
-import { MIN_PASSWORD_LENGTH } from '@/constants';
+import { MIN_PASSWORD_LENGTH } from '../../constants/app';
 
 /**
  * Validate password strength

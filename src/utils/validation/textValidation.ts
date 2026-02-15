@@ -8,7 +8,7 @@ import {
   MAX_HABIT_NAME_LENGTH,
   MAX_LONG_TEXT_LENGTH,
   MAX_SHORT_TEXT_LENGTH,
-} from '@/constants';
+} from '../../constants/app';
 
 /**
  * Validate and sanitize a habit name

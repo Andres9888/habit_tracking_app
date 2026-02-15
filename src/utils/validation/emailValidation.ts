@@ -4,7 +4,7 @@
 
 import type { ValidationResult } from './types';
 import { containsDangerousPatterns } from './security';
-import { MAX_EMAIL_LENGTH } from '@/constants';
+import { MAX_EMAIL_LENGTH } from '../../constants/app';
 
 /**
  * Validate email address format

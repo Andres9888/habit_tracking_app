@@ -24,7 +24,7 @@ export {
   MAX_HABIT_NAME_LENGTH,
   MAX_LONG_TEXT_LENGTH,
   MAX_SHORT_TEXT_LENGTH,
-} from '@/constants';
+} from '../../constants/app';
 
 // Re-export security utilities
 export { containsDangerousPatterns } from './security';

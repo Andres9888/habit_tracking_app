@@ -13,7 +13,7 @@ import { useHabitFormState } from './useHabitFormState';
 import { useHabitFormInit } from './useHabitFormInit';
 import { useHabitFormReset } from './useHabitFormReset';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
-import { validateHabitName } from '../../../utils/validation';
+import { validateHabitName } from '../../../utils/validation/textValidation';
 
 interface UseHabitFormOptions {
   habitToEdit?: HabitDoc | null;
