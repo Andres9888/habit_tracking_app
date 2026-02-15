@@ -36,7 +36,20 @@ export interface UseImageUploadReturn {
 }
 
 /**
- * Custom hook for uploading images to Convex file storage
+ * Custom hook for uploading images to Convex file storage.
+ * Handles the complete upload flow: getting signed URL, fetching local file,
+ * and uploading to storage.
+ *
+ * @returns Object containing upload function and state
+ *
+ * @example
+ * ```ts
+ * const { uploadImage, isUploading, error } = useImageUpload();
+ * const result = await uploadImage(pickedImage);
+ * if (result) {
+ *   console.log('Uploaded:', result.storageId);
+ * }
+ * ```
  */
 export function useImageUpload(): UseImageUploadReturn {
   const [isUploading, setIsUploading] = useState(false);

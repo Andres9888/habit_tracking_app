@@ -26,6 +26,21 @@ const NOOP = () => {
   // No-op when sounds disabled
 };
 
+/**
+ * Hook for playing completion sounds when marking habits as complete.
+ * Premium feature providing satisfying audio feedback.
+ *
+ * @param options - Configuration options
+ * @param options.soundEnabled - Whether sound playback is enabled (default: false)
+ * @param options.soundType - Which sound to play: 'chime', 'pop', or 'success' (default: 'chime')
+ * @returns Object containing the playCompletionSound function
+ *
+ * @example
+ * ```ts
+ * const { playCompletionSound } = useCompletionSound({ soundEnabled: true });
+ * await playCompletionSound();
+ * ```
+ */
 export function useCompletionSound({
   soundEnabled = false,
   soundType = 'chime',
