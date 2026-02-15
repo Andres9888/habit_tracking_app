@@ -1,5 +1,6 @@
 import { Alert, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -29,6 +30,7 @@ export function VisualizationModalSection({
   closeVisualizationExercise,
 }: VisualizationModalSectionProps) {
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
   const closeScale = useSharedValue(1);
 
   const closeAnimatedStyle = useAnimatedStyle(() => ({
@@ -46,14 +48,15 @@ export function VisualizationModalSection({
       visible={showVisualizationExercise}
       onClose={handleClose}
     >
-      <View className='flex-1 bg-white' style={{ paddingTop: insets.top + 16 }}>
+      <View className='flex-1' style={{ backgroundColor: colors.background, paddingTop: insets.top + 16 }}>
         <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
           <Text className='text-lg font-bold text-stone-900'>Mental Boost</Text>
           <AnimatedPressable
             accessibilityHint='Close the mental boost exercise'
             accessibilityLabel='Close mental boost'
             accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
+            className='h-10 w-10 items-center justify-center rounded-full'
+            style={{ backgroundColor: colors.gray[100] }}
             style={closeAnimatedStyle}
             onPress={handleClose}
             onPressIn={() => {

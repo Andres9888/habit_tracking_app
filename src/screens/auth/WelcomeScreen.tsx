@@ -20,11 +20,13 @@ import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
-import { styles } from './WelcomeScreen.styles';
+import { useThemedStyles } from '../../theme/useThemedStyles';
+import { createStyles } from './WelcomeScreen.styles';
 
 type AuthMode = 'welcome' | 'signin' | 'signup';
 
 export default function WelcomeScreen() {
+  const styles = useThemedStyles(createStyles);
   const [mode, setMode] = useState<AuthMode>('welcome');
   const insets = useSafeAreaInsets();
   const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, ViewProps, type StyleProp, type ViewStyle } from 'react-native';
 import clsx from 'clsx';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 export interface CardProps extends ViewProps {
   style?: StyleProp<ViewStyle>;
@@ -11,13 +12,17 @@ export function Card({
   className,
   ...props
 }: CardProps & { className?: string }) {
+  const { colors } = useThemeColors();
   return (
     <View
       className={clsx(
-        'rounded-xl border border-stone-200 bg-white shadow-sm',
+        'rounded-xl border shadow-sm',
         className
       )}
-      style={style}
+      style={[
+        { backgroundColor: colors.card, borderColor: colors.cardBorder },
+        style,
+      ]}
       {...props}
     />
   );
@@ -28,10 +33,11 @@ export function CardHeader({
   className,
   ...props
 }: ViewProps & { className?: string }) {
+  const { colors } = useThemeColors();
   return (
     <View
-      className={clsx('border-b border-stone-200 p-4', className)}
-      style={style}
+      className={clsx('p-4', className)}
+      style={[{ borderBottomWidth: 1, borderBottomColor: colors.border }, style]}
       {...props}
     />
   );

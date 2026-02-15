@@ -5,7 +5,7 @@
 
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Linking,
   Text,
@@ -18,6 +18,7 @@ import {
   TextInput,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   useSharedValue,
@@ -48,6 +49,20 @@ interface SignInScreenProps {
 
 export default function SignInScreen(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
+
+  const themedStyles = useMemo(
+    () => ({
+      appName: { color: colors.text.primary } as const,
+      container: { backgroundColor: colors.background } as const,
+      footerLink: { color: colors.primary[600] } as const,
+      footerText: { color: colors.text.tertiary } as const,
+      tagline: { color: colors.text.secondary } as const,
+      welcomeSubtitle: { color: colors.text.secondary } as const,
+      welcomeTitle: { color: colors.text.primary } as const,
+    }),
+    [colors],
+  );
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const passwordRef = useRef<TextInput>(null);
   const {
@@ -112,58 +127,58 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
   }));
 
   return (
-    <View style={styles.container}>
+    <View style={[staticStyles.container, themedStyles.container]}>
       {/* Subtle gradient background */}
       <LinearGradient
-        colors={['#fafaf9', '#f5f5f4', '#fafaf9']}
+        colors={[colors.background, colors.gray[100], colors.background]}
         locations={[0, 0.5, 1]}
         style={StyleSheet.absoluteFill}
       />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.flex}
+        style={staticStyles.flex}
       >
         <ScrollView
           contentContainerStyle={[
-            styles.scrollContent,
+            staticStyles.scrollContent,
             { paddingBottom: insets.bottom + 24, paddingTop: insets.top + 40 },
           ]}
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >
           {/* Logo & Brand */}
-          <View style={styles.brandSection}>
-            <Animated.View style={[styles.logoContainer, logoStyle]}>
+          <View style={staticStyles.brandSection}>
+            <Animated.View style={[staticStyles.logoContainer, logoStyle]}>
               <LinearGradient
                 colors={['#22c55e', '#16a34a']}
-                style={styles.logoGradient}
+                style={staticStyles.logoGradient}
               >
-                <Text style={styles.logoEmoji}>🔗</Text>
+                <Text style={staticStyles.logoEmoji}>🔗</Text>
               </LinearGradient>
             </Animated.View>
 
             <Animated.View style={headerStyle}>
-              <Text style={styles.appName}>Chain Day</Text>
-              <Text style={styles.tagline}>Don't break the chain</Text>
+              <Text style={[staticStyles.appName, themedStyles.appName]}>Chain Day</Text>
+              <Text style={[staticStyles.tagline, themedStyles.tagline]}>Don't break the chain</Text>
             </Animated.View>
           </View>
 
           {/* Welcome Message */}
-          <Animated.View style={[styles.welcomeSection, headerStyle]}>
-            <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
-            <Text style={styles.welcomeSubtitle}>
+          <Animated.View style={[staticStyles.welcomeSection, headerStyle]}>
+            <Text style={[staticStyles.welcomeTitle, themedStyles.welcomeTitle]}>Welcome back! 👋</Text>
+            <Text style={[staticStyles.welcomeSubtitle, themedStyles.welcomeSubtitle]}>
               Your streak is waiting — let's keep the momentum going.
             </Text>
           </Animated.View>
 
           {/* Auth Content */}
-          <Animated.View style={[styles.authContent, contentStyle]}>
+          <Animated.View style={[staticStyles.authContent, contentStyle]}>
             {oauthError && (
               <AuthError message={oauthError} onDismiss={clearError} />
             )}
 
-            <View style={styles.socialButtons}>
+            <View style={staticStyles.socialButtons}>
               <SocialSignInButton
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_apple'}
@@ -180,7 +195,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 
             <AuthDivider />
 
-            <View style={styles.formSection}>
+            <View style={staticStyles.formSection}>
               <FormInput
                 autoCapitalize='none'
                 autoComplete='email'
@@ -224,12 +239,12 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           </Animated.View>
 
           {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
+          <View style={staticStyles.footer}>
+            <Text style={[staticStyles.footerText, themedStyles.footerText]}>
               By continuing, you agree to our{' '}
               <Text
                 accessibilityRole='link'
-                style={styles.footerLink}
+                style={[staticStyles.footerLink, themedStyles.footerLink]}
                 onPress={() => void Linking.openURL('https://chainday.app/terms')}
               >
                 Terms
@@ -237,7 +252,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
               {' & '}
               <Text
                 accessibilityRole='link'
-                style={styles.footerLink}
+                style={[staticStyles.footerLink, themedStyles.footerLink]}
                 onPress={() => void Linking.openURL('https://chainday.app/privacy')}
               >
                 Privacy Policy
@@ -255,9 +270,8 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
   );
 }
 
-const styles = StyleSheet.create({
+const staticStyles = StyleSheet.create({
   appName: {
-    color: '#1c1917',
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.5,
@@ -271,7 +285,6 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   container: {
-    backgroundColor: '#fafaf9',
     flex: 1,
   },
   flex: {
@@ -282,11 +295,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   footerLink: {
-    color: '#047857',
     textDecorationLine: 'underline',
   },
   footerText: {
-    color: '#a8a29e',
     fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',
@@ -320,7 +331,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   tagline: {
-    color: '#57534e',
     fontSize: 13,
     marginTop: 4,
     textAlign: 'center',
@@ -329,14 +339,12 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   welcomeSubtitle: {
-    color: '#57534e',
     fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
     textAlign: 'center',
   },
   welcomeTitle: {
-    color: '#1c1917',
     fontSize: 28,
     fontWeight: '700',
     marginBottom: 8,

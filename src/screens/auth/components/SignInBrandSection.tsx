@@ -8,7 +8,8 @@ import { Link } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
-import { styles } from '../SignInScreen.styles';
+import { useThemedStyles } from '../../../theme/useThemedStyles';
+import { createStyles } from '../SignInScreen.styles';
 
 interface SignInBrandSectionProps {
   logoStyle: AnimatedStyle<ViewStyle>;
@@ -19,6 +20,7 @@ export function SignInBrandSection({
   logoStyle,
   headerStyle,
 }: SignInBrandSectionProps) {
+  const styles = useThemedStyles(createStyles);
   return (
     <>
       <View style={styles.brandSection}>
