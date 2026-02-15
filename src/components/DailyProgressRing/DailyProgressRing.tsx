@@ -6,7 +6,8 @@
  */
 
 import { memo, useEffect } from 'react';
-import { View, Text, Platform } from 'react-native';
+import { View, Text, Platform, AccessibilityInfo } from 'react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import Animated, {
   useSharedValue,
   useAnimatedProps,
@@ -38,6 +39,7 @@ function DailyProgressRingComponent({
   size = 64,
   strokeWidth = 6,
 }: DailyProgressRingProps): React.ReactElement {
+  const { colors: themeColors } = useThemeColors();
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = useSharedValue(0);
@@ -70,6 +72,10 @@ function DailyProgressRingComponent({
   return (
     <Animated.View entering={FadeIn.duration(280).springify().damping(18)} style={scaleStyle}>
       <View
+        accessible
+        accessibilityLabel={`${completed} of ${total} habits completed, ${percentage} percent`}
+        accessibilityRole="progressbar"
+        accessibilityValue={{ max: total, min: 0, now: completed }}
         style={{ alignItems: 'center', height: size, justifyContent: 'center', width: size }}
       >
         <Svg
@@ -83,7 +89,7 @@ function DailyProgressRingComponent({
             cy={size / 2}
             fill="none"
             r={radius}
-            stroke="#e7e5e4"
+            stroke={themeColors.border ?? '#e7e5e4'}
             strokeWidth={strokeWidth}
           />
           {/* Progress */}
@@ -95,7 +101,7 @@ function DailyProgressRingComponent({
             origin={`${size / 2}, ${size / 2}`}
             r={radius}
             rotation="-90"
-            stroke="#059669"
+            stroke={themeColors.primary?.[500] ?? '#059669'}
             strokeDasharray={circumference}
             strokeLinecap="round"
             strokeWidth={strokeWidth}
@@ -103,7 +109,7 @@ function DailyProgressRingComponent({
         </Svg>
         <Text
           style={{
-            color: '#047857',
+            color: themeColors.primary?.[700] ?? '#047857',
             fontFamily: FONT_FAMILY,
             fontSize: 13,
             fontWeight: '700',
