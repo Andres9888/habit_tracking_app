@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 /** HabitsHeader - OPTIMIZED: entry animation, contrast fix, clearer UX */
 
-import { View, Text } from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import { memo } from 'react';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTemplateBadge } from '../../hooks/useTemplateBadge';
@@ -14,11 +14,12 @@ import { useHeaderHandlers } from './useHeaderHandlers';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const ENTERING = FadeInDown.duration(280).springify().damping(18);
+const FONT_FAMILY = Platform.OS === 'ios' ? 'System' : 'Roboto';
 
 // FIXED: #78716c has 4.5:1+ contrast (was #C4BFB7 at 2.8:1)
-const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
+const STREAK_STYLE = { color: '#78716c', fontFamily: FONT_FAMILY };
 const DATE_STYLE = {
-  fontFamily: 'System',
+  fontFamily: FONT_FAMILY,
   letterSpacing: -0.76,
 };
 
