@@ -22,6 +22,7 @@ import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { useCompletionSound } from '../../../hooks/useCompletionSound';
+import { validateHabitsArray } from '../../../utils/validation';
 import type { HabitsListState } from './types';
 
 import { FREE_HABIT_LIMIT } from '@/constants';
@@ -33,8 +34,18 @@ export function useHabitsListState(): HabitsListState {
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
   const habitsQuery = useQuery(api.habits.list);
-  const habitsFromQuery = habitsQuery ?? [];
+  // Validate and limit habits array for performance (guards against 100+ habits edge case)
+  const habitsValidation = useMemo(
+    () => validateHabitsArray(habitsQuery ?? []),
+    [habitsQuery]
+  );
+  const habitsFromQuery = habitsValidation.limited;
   const isHabitsLoading = habitsQuery === undefined;
+
+  // Warn if habits array was limited
+  if (habitsValidation.warning && __DEV__) {
+    console.warn('[useHabitsListState]', habitsValidation.warning);
+  }
 
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
