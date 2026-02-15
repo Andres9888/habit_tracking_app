@@ -18,6 +18,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignUpFlow } from './hooks/useSignUpFlow';
+import { PasswordStrengthBar } from './components/PasswordStrengthBar';
 import { SignUpHeader } from './components/SignUpHeader';
 
 interface SignUpScreenProps {
@@ -140,18 +141,21 @@ export default function SignUpScreen({
                   onChangeText={setEmailAddress}
                   onSubmitEditing={() => passwordRef.current?.focus()}
                 />
-                <PasswordInput
-                  ref={passwordRef}
-                  autoComplete='password-new'
-                  editable={!isAnyLoading}
-                  error={passwordError}
-                  placeholder='Create a password'
-                  returnKeyType='go'
-                  value={password}
-                  onBlur={onPasswordBlur}
-                  onChangeText={setPassword}
-                  onSubmitEditing={handleSignUp}
-                />
+                <View>
+                  <PasswordInput
+                    ref={passwordRef}
+                    autoComplete='password-new'
+                    editable={!isAnyLoading}
+                    error={passwordError}
+                    placeholder='Create a password'
+                    returnKeyType='go'
+                    value={password}
+                    onBlur={onPasswordBlur}
+                    onChangeText={setPassword}
+                    onSubmitEditing={handleSignUp}
+                  />
+                  <PasswordStrengthBar password={password} />
+                </View>
                 <SubmitButton
                   disabled={
                     !emailAddress || !password || isAnyLoading || !isFormValid
