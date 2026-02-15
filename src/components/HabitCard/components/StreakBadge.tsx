@@ -18,7 +18,26 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
   const theme = useAppTheme();
 
   if (currentStreak <= 0) {
-    return null;
+    return (
+      <View style={streakStyles.streakRow}>
+        <View
+          style={[
+            streakStyles.streakBadge,
+            { backgroundColor: colors.gray[100] },
+          ]}
+        >
+          <Text style={streakStyles.streakFireIcon}>💪</Text>
+          <Text
+            style={[
+              streakStyles.streakText,
+              { color: colors.gray[500] },
+            ]}
+          >
+            Start a Streak!
+          </Text>
+        </View>
+      </View>
+    );
   }
 
   return (
