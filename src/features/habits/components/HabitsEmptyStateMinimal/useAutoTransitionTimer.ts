@@ -6,6 +6,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import { SharedValue, cancelAnimation } from 'react-native-reanimated';
+import { CELEBRATION_DELAY_MS } from '@/constants';
 
 interface UseAutoTransitionTimerParams {
   autoTransition: boolean;
@@ -16,7 +17,7 @@ interface UseAutoTransitionTimerParams {
   containerOpacity: SharedValue<number>;
 }
 
-const CELEBRATION_DELAY = 1800;
+const CELEBRATION_DELAY = CELEBRATION_DELAY_MS;
 
 export function useAutoTransitionTimer({
   autoTransition,
