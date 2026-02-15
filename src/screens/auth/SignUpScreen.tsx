@@ -158,8 +158,8 @@ export default function SignUpScreen({
                     !emailAddress || !password || isAnyLoading || !isFormValid
                   }
                   isLoading={isLoading}
-                  label='Create account'
-                  loadingLabel='Creating account...'
+                  label='Create Account'
+                  loadingLabel='Creating your account…'
                   onPress={handleSignUp}
                 />
               </View>

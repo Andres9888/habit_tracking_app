@@ -166,7 +166,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           <Animated.View style={[styles.welcomeSection, headerStyle]}>
             <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
             <Text style={styles.welcomeSubtitle}>
-              Your habits are waiting. Let's keep the momentum going.
+              Your streak is waiting — let's keep the momentum going.
             </Text>
           </Animated.View>
 
@@ -231,8 +231,8 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
               <SubmitButton
                 disabled={!canSubmit || isAnyLoading}
                 isLoading={isLoading}
-                label='Continue'
-                loadingLabel='Signing in...'
+                label='Sign In'
+                loadingLabel='Signing in…'
                 onPress={handleSignIn}
               />
             </View>
