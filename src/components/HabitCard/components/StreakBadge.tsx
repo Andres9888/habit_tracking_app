@@ -3,7 +3,7 @@
  * Displays the current streak with fire emoji
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import { useAppTheme } from '../../../theme';
 import { colors, milestoneColors } from '../../../theme/colors';
@@ -14,7 +14,7 @@ interface StreakBadgeProps {
   bestStreak: number;
 }
 
-export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
+export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
   const theme = useAppTheme();
 
   if (currentStreak <= 0) {
@@ -77,4 +77,4 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
       )}
     </View>
   );
-}
+});
