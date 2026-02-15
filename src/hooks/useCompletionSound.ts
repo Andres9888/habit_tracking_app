@@ -7,11 +7,11 @@
 
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { useCallback, useRef } from 'react';
-import { Audio } from 'expo-sound';
-import type { CompletionSoundType } from '../convex/settings/types';
+import { Audio } from 'expo-av';
+import type { CompletionSoundType } from '../../convex/settings/types';
 
 // Sound file mappings - requires bundling with Metro
-const SOUND_ASSETS: Record<CompletionSoundType, NodeJS.Require> = {
+const SOUND_ASSETS: Record<CompletionSoundType, any> = {
   chime: require('../assets/sounds/chime.wav'),
   pop: require('../assets/sounds/pop.wav'),
   success: require('../assets/sounds/success.wav'),
@@ -54,7 +54,7 @@ export function useCompletionSound({
       soundRef.current = sound;
 
       // Auto-cleanup after playback
-      sound.setOnPlaybackStatusUpdate((status) => {
+      sound.setOnPlaybackStatusUpdate((status: any) => {
         if (status.isLoaded && status.didJustFinish) {
           sound.unloadAsync();
           soundRef.current = undefined;

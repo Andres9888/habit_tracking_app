@@ -111,6 +111,7 @@ export function useHabitsListState(): HabitsListState {
       if (!currentlyCompleted) {
         playCompletionSound();
       }
+      return { success: true };
     },
     [baseToggleHabit, isCompleted, playCompletionSound]
   );

@@ -25,7 +25,7 @@ interface RetryButtonProps {
 export function RetryButton({ onRetry }: RetryButtonProps) {
   const { triggerMediumImpact } = useHapticFeedback();
   const scale = useSharedValue(1);
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

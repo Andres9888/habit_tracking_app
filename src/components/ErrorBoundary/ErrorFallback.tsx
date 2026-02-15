@@ -7,7 +7,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { RetryButton } from './RetryButton';
 import { SecondaryActions } from './SecondaryActions';
 import { SuggestionsCard } from './SuggestionsCard';
-import { getStyles } from './errorFallbackStyles';
+import { useStyles } from './errorFallbackStyles';
 
 const SUPPORT_EMAIL = 'support@chainday.app';
 const MAX_RETRIES = 3;
@@ -28,7 +28,7 @@ export function ErrorFallback({
   const retryCountRef = useRef(0);
   const [showLogout, setShowLogout] = useState(false);
   const colors = useThemeColors();
-  const styles = getStyles();
+  const styles = useStyles();
 
   const handleRetry = () => {
     retryCountRef.current += 1;

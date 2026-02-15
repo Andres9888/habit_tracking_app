@@ -44,7 +44,7 @@ export function showNetworkError() {
 }
 
 export function showRetryableError(message: string, onRetry?: () => void) {
-  const buttons = [{ text: 'OK' }];
+  const buttons: Array<{ text: string; onPress?: () => void }> = [{ text: 'OK' }];
   if (onRetry) {
     buttons.unshift({ text: 'Retry', onPress: onRetry });
   }

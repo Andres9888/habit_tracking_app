@@ -8,7 +8,6 @@ import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { DragHandle, EmptyState, HabitList, SheetHeader } from './components';
 import { getSheetContainerStyle } from './styles';
 import type { DayHabitsBottomSheetProps } from './types';
-import { useThemeColors } from '../../theme/ThemeContext';
 import { useDayHabitsSheet } from './useDayHabitsSheet';
 import { useSheetAnimations } from './useSheetAnimations';
 

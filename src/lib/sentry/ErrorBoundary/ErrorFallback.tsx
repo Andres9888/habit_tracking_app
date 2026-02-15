@@ -14,7 +14,7 @@ interface ErrorFallbackProps {
 }
 
 export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
 
   const styles = StyleSheet.create({
     button: {
