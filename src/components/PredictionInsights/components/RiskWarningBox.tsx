@@ -3,9 +3,10 @@ import { View, Text } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 
 import { styles } from '../PredictionInsights.styles';
+import type { AppTheme } from '../../../theme';
 
 interface RiskWarningBoxProps {
-  theme: any;
+  theme: AppTheme;
 }
 
 export function RiskWarningBox({ theme }: RiskWarningBoxProps) {

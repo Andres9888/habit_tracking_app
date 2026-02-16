@@ -3,9 +3,10 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text } from 'react-native';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
+import { InitializeHabitStrengthSkeleton } from '../SkeletonLoader';
 import { InitializeButton } from './InitializeButton';
 import { ResultDisplay } from './ResultDisplay';
 
@@ -58,12 +59,7 @@ export function InitializeHabitStrength() {
   };
 
   if (!habits) {
-    return (
-      <View className='items-center justify-center p-4'>
-        <ActivityIndicator size='large' />
-        <Text className='mt-2 text-sm text-stone-600'>Loading habits...</Text>
-      </View>
-    );
+    return <InitializeHabitStrengthSkeleton />;
   }
 
   return (

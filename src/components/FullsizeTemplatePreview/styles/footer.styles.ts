@@ -40,7 +40,7 @@ export const footerStyles = StyleSheet.create({
   },
   importButtonText: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
   },
   successButton: {
@@ -71,7 +71,7 @@ export const footerStyles = StyleSheet.create({
   },
   successButtonText: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
   },
   successButtonWrapper: {

@@ -1,52 +1,47 @@
 /**
  * LoadingState - Skeleton loader for archived habits
+ * Uses the central SkeletonLoader with gradient shimmer.
+ * Supports dark mode via useSkeletonTheme.
  */
 import React from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
-import { colors } from '../../../theme/colors';
+import { View, StyleSheet } from 'react-native';
 import { spacing } from '../../../theme/spacing';
+import { SkeletonLoader } from '../../SkeletonLoader';
+import { useSkeletonTheme } from '../../SkeletonLoader/useSkeletonTheme';
 
 export const LoadingState: React.FC = () => {
-  const shimmerAnim = React.useRef(new Animated.Value(0)).current;
-
-  React.useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(shimmerAnim, {
-          duration: 1200,
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shimmerAnim, {
-          duration: 1200,
-          toValue: 0,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, [shimmerAnim]);
-
-  const opacity = shimmerAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.3, 0.7],
-  });
-
+  const { surfaceBg, borderColor } = useSkeletonTheme();
   return (
     <View style={styles.container}>
       {[1, 2, 3].map((key) => (
-        <Animated.View key={key} style={[styles.cardSkeleton, { opacity }]}>
+        <View
+          key={key}
+          style={[
+            styles.cardSkeleton,
+            { backgroundColor: surfaceBg, borderColor },
+          ]}
+        >
           <View style={styles.header}>
-            <Animated.View style={[styles.emojiCircle, { opacity }]} />
+            <SkeletonLoader borderRadius={24} height={48} width={48} />
             <View style={styles.textBlock}>
-              <Animated.View style={[styles.nameSkeleton, { opacity }]} />
-              <Animated.View style={[styles.dateSkeleton, { opacity }]} />
+              <SkeletonLoader
+                borderRadius={4}
+                height={16}
+                style={{ marginBottom: spacing.xs }}
+                width={140}
+              />
+              <SkeletonLoader borderRadius={4} height={12} width={80} />
             </View>
           </View>
           <View style={styles.buttonRow}>
-            <Animated.View style={[styles.buttonSkeleton, { opacity }]} />
-            <Animated.View style={[styles.buttonSkeleton, { opacity }]} />
+            <View style={{ flex: 1 }}>
+              <SkeletonLoader borderRadius={8} height={40} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <SkeletonLoader borderRadius={8} height={40} />
+            </View>
           </View>
-        </Animated.View>
+        </View>
       ))}
     </View>
   );
@@ -58,15 +53,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     marginTop: spacing.md,
   },
-  buttonSkeleton: {
-    backgroundColor: colors.gray[200],
-    borderRadius: 8,
-    flex: 1,
-    height: 40,
-  },
   cardSkeleton: {
-    backgroundColor: colors.gray[50],
-    borderColor: colors.gray[200],
     borderRadius: 12,
     borderWidth: 1,
     marginBottom: spacing.md,
@@ -75,29 +62,10 @@ const styles = StyleSheet.create({
   container: {
     padding: spacing.md,
   },
-  dateSkeleton: {
-    backgroundColor: colors.gray[200],
-    borderRadius: 4,
-    height: 12,
-    width: 80,
-  },
-  emojiCircle: {
-    backgroundColor: colors.gray[200],
-    borderRadius: 24,
-    height: 48,
-    width: 48,
-  },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: spacing.sm,
-  },
-  nameSkeleton: {
-    backgroundColor: colors.gray[200],
-    borderRadius: 4,
-    height: 16,
-    marginBottom: spacing.xs,
-    width: 140,
   },
   textBlock: {
     flex: 1,
