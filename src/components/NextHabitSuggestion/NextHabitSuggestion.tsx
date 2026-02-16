@@ -6,9 +6,8 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { styles } from './styles';
-import Animated, {
+import { Pressable } from 'react-native';
+import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -16,7 +15,6 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { ArrowRight, Zap } from 'lucide-react-native';
 import type { NextHabitSuggestionProps } from './types';
 import { CompletedState } from './CompletedState';
 import { HabitContent } from './HabitContent';
