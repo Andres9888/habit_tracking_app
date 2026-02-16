@@ -1,12 +1,11 @@
 /**
  * SearchInput Component
- * Search input for filtering notes — dark mode aware
+ * Search input for filtering notes
  */
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { Search } from 'lucide-react-native';
-import { ThemedTextInput } from '@/components/ui/ThemedTextInput';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SearchInputProps {
@@ -18,19 +17,21 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   value,
   onChangeText,
 }) => {
-  const { isDark } = useThemeColors();
-
+  const { colors } = useThemeColors();
   return (
     <View className='relative'>
-      <ThemedTextInput
+      <TextInput
         accessibilityLabel='Search notes'
+        className='w-full rounded-2xl border py-3 pl-11 pr-4 text-sm font-medium'
         placeholder='Search notes...'
-        style={{ paddingLeft: 44 }}
+        placeholderTextColor={colors.text.tertiary}
+        returnKeyType='search'
+        style={{ borderColor: colors.border, backgroundColor: colors.card, color: colors.text.primary }}
         value={value}
         onChangeText={onChangeText}
       />
       <View className='absolute left-4 top-3.5'>
-        <Search color={isDark ? '#6B7280' : '#a8a29e'} size={18} strokeWidth={2} />
+        <Search color={colors.text.tertiary} size={18} strokeWidth={2} />
       </View>
     </View>
   );

@@ -57,7 +57,7 @@ export const EXIT_TRANSITION = {
   // Content fade out (faster than icon)
   content: {
     delay: 0,
-    duration: 250,
+    duration: 280,
   },
 
   // Total duration of exit animation
@@ -74,5 +74,5 @@ export const EXIT_TRANSITION = {
   },
 
   // Delay before triggering list transition
-  onCompleteDelay: 300,
+  onCompleteDelay: 280,
 } as const;
