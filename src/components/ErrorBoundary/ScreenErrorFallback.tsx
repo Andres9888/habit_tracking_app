@@ -2,17 +2,23 @@
 /**
  * ScreenErrorFallback - Lightweight error fallback for individual screens
  * Designed to prevent one screen crash from killing the entire app
+ * Supports categorized errors with user-friendly messages
  */
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../theme/ThemeContext';
+import type { ErrorCategory } from '../../lib/errors/errorTypes';
 
 interface ScreenErrorFallbackProps {
   screenName: string;
   error: Error | null;
   onRetry: () => void;
   onGoBack?: () => void;
+  errorCategory?: ErrorCategory;
+  userMessage?: string;
+  isRetryable?: boolean;
+  retryCount?: number;
 }
 
 export function ScreenErrorFallback({
@@ -98,22 +104,42 @@ export function ScreenErrorFallback({
     },
   });
 
+  const getErrorEmoji = () => {
+    switch (errorCategory) {
+      case 'network':
+        return '📡';
+      case 'auth':
+        return '🔐';
+      case 'server':
+        return '⚠️';
+      case 'permission':
+        return '🚫';
+      default:
+        return '😕';
+    }
+  };
+
+  const errorMessage = userMessage || `${screenName} encountered an error, but your data is safe.`;
+  const showRetry = isRetryable !== false;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.emoji}>😕</Text>
+      <Text style={styles.emoji}>{getErrorEmoji()}</Text>
       <Text style={styles.title}>Something went wrong</Text>
-      <Text style={styles.subtitle}>
-        {screenName} encountered an error, but your data is safe.
-      </Text>
+      <Text style={styles.subtitle}>{errorMessage}</Text>
 
-      <Pressable
-        accessibilityLabel='Retry loading screen'
-        accessibilityRole='button'
-        style={styles.primaryButton}
-        onPress={onRetry}
-      >
-        <Text style={styles.primaryButtonText}>Try Again</Text>
-      </Pressable>
+      {showRetry && (
+        <Pressable
+          accessibilityLabel='Retry loading screen'
+          accessibilityRole='button'
+          style={styles.primaryButton}
+          onPress={onRetry}
+        >
+          <Text style={styles.primaryButtonText}>
+            {retryCount && retryCount > 0 ? `Try Again (${retryCount})` : 'Try Again'}
+          </Text>
+        </Pressable>
+      )}
 
       {onGoBack && (
         <Pressable
