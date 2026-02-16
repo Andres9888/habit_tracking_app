@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { colors } from '../theme/colors';
+import { useThemeColors } from '../theme/ThemeContext';
 import { borderRadius } from '../theme/spacing';
 import { typography } from '@/theme/typography';
 import { useThemeColors } from '../theme/ThemeContext';

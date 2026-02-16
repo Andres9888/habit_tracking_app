@@ -18,7 +18,7 @@ export function useTypingAnimation({
   const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
   const clearTimeouts = useCallback(() => {
-    timeoutRefs.current.forEach(timeout => clearTimeout(timeout));
+    for (const timeout of timeoutRefs.current) clearTimeout(timeout);
     timeoutRefs.current = [];
   }, []);
 

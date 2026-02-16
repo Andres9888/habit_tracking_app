@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { CardHeader } from './CardHeader';
 import { NewRecordBadge } from './NewRecordBadge';
 import { StrengthProgressBar } from './StrengthProgressBar';
@@ -12,6 +13,7 @@ interface CardContentProps extends DraggableHabitCardProps {
 }
 
 export function CardContent(props: CardContentProps) {
+  const { colors: themeColors } = useThemeColors();
   return (
     <>
       <View className='pt-4'>
@@ -42,7 +44,7 @@ export function CardContent(props: CardContentProps) {
         ) : (
           <View
             className='mx-3 mb-3 h-[1.5px] rounded-full'
-            style={{ backgroundColor: '#f5f5f4' }}
+            style={{ backgroundColor: themeColors.gray[200] }}
           />
         )}
       </View>

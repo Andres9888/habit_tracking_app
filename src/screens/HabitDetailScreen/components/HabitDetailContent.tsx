@@ -12,6 +12,7 @@ import type { Habit } from '../../../features/habits/types';
 interface HabitDetailContentProps {
   habit: Habit;
   completedDates: Set<string>;
+  notesByDate?: Record<string, string>;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
@@ -50,6 +51,7 @@ function SectionLabel({
 export function HabitDetailContent({
   habit,
   completedDates,
+  notesByDate,
   onDayPress,
 }: HabitDetailContentProps) {
   const { colors, isDark } = useThemeColors();
@@ -114,6 +116,7 @@ export function HabitDetailContent({
             habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
             habitCreatedAt={habit.createdAt}
             habitId={habit._id}
+            notesByDate={notesByDate}
             onDayPress={onDayPress}
           />
         </ErrorBoundary>

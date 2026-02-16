@@ -37,10 +37,10 @@ export const useHabitDayToggleHandlers = ({
 
   const handlePress = useCallback(() => {
     // Haptic feedback: success when completing, light tap when uncompleting
-    if (!completed) {
-      triggerSuccess();
-    } else {
+    if (completed) {
       triggerLightImpact();
+    } else {
+      triggerSuccess();
     }
 
     Animated.sequence([
