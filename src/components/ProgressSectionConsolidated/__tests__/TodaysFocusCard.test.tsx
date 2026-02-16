@@ -28,7 +28,7 @@ jest.mock('react-native-reanimated', () => {
     View,
     Text,
     createAnimatedComponent: (Component: React.ComponentType) => {
-      const AnimatedComponent = React.forwardRef((props: any, ref: any) =>
+      const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) =>
         React.createElement(Component, { ...props, ref })
       );
       AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
@@ -45,8 +45,8 @@ jest.mock('react-native-reanimated', () => {
     withTiming: (value: number) => value,
     withDelay: (_delay: number, value: number) => value,
     withSpring: (value: number) => value,
-    withRepeat: (animation: any) => animation,
-    withSequence: (...animations: any[]) => animations[0],
+    withRepeat: (animation: unknown) => animation,
+    withSequence: (...animations: unknown[]) => animations[0],
     interpolate: (value: number, input: number[], output: number[]) =>
       output[0],
     Easing: {
@@ -64,7 +64,7 @@ jest.mock('expo-linear-gradient', () => {
   const { View } = require('react-native');
 
   return {
-    LinearGradient: ({ children, colors, ...props }: any) =>
+    LinearGradient: ({ children, colors, ...props }: unknown) =>
       React.createElement(
         View,
         { testID: 'linear-gradient', colors, ...props },

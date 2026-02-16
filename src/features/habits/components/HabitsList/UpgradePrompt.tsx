@@ -30,6 +30,7 @@ export function UpgradePrompt({
       style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.7)' : 'rgba(28,25,23,0.5)' }}
     >
       <Pressable
+        accessibilityHint='Tap outside to dismiss'
         accessibilityLabel='Close upgrade prompt'
         accessibilityRole='button'
         className='absolute inset-0'
@@ -37,7 +38,7 @@ export function UpgradePrompt({
       />
       <Animated.View
         className='w-full rounded-t-3xl px-6 py-8'
-        entering={SlideInDown.duration(280).damping(18)}
+        entering={SlideInDown.duration(ANIMATION_DURATION.medium).damping(ANIMATION_VALUES.springDamping)}
       >
         <LinearGradient
           className='absolute inset-0 rounded-t-3xl'
@@ -78,6 +79,7 @@ export function UpgradePrompt({
             </Text>
           </View>
           <Pressable
+            accessibilityHint='Start your 7-day free trial'
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
             className='items-center rounded-full px-5 py-4'
@@ -102,6 +104,7 @@ export function UpgradePrompt({
             </Text>
           </Pressable>
           <Pressable
+            accessibilityHint='Dismiss this upgrade prompt'
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
             className='items-center rounded-full border-2 px-5 py-3'

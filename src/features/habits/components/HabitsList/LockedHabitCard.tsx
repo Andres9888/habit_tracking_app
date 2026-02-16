@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * LockedHabitCard Component
  * Animated upgrade prompt card for free tier limit with dark mode
@@ -7,6 +8,7 @@ import { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { SCALE, ANIMATION_DURATION } from '../../../../constants';
 
 interface LockedHabitCardProps {
   onUpgradePress: () => void;
@@ -20,7 +22,7 @@ export function LockedHabitCard({
   const { colors, isDark } = useThemeColors();
   const entranceScale = useRef(new Animated.Value(0.94)).current;
   const opacity = useRef(new Animated.Value(0)).current;
-  const pressScale = useRef(new Animated.Value(1)).current;
+  const pressScale = useRef(new Animated.Value(SCALE.normal)).current;
 
   useEffect(() => {
     if (reduceMotion) {
@@ -30,15 +32,15 @@ export function LockedHabitCard({
     }
     Animated.parallel([
       Animated.spring(entranceScale, {
-        damping: 12,
-        stiffness: 140,
+        damping: 18,
+        stiffness: 150,
         toValue: 1,
         useNativeDriver: true,
       }),
       Animated.timing(opacity, {
-        duration: 260,
+        duration: ANIMATION_DURATION.extraLong,
         easing: Easing.out(Easing.cubic),
-        toValue: 1,
+        toValue: SCALE.normal,
         useNativeDriver: true,
       }),
     ]).start();
@@ -46,32 +48,33 @@ export function LockedHabitCard({
 
   const handlePressIn = () => {
     if (reduceMotion) {
-      pressScale.setValue(0.97);
+      pressScale.setValue(SCALE.pressLarge);
       return;
     }
     Animated.spring(pressScale, {
       damping: 18,
       stiffness: 240,
-      toValue: 0.97,
+      toValue: SCALE.pressLarge,
       useNativeDriver: true,
     }).start();
   };
 
   const handlePressOut = () => {
     if (reduceMotion) {
-      pressScale.setValue(1);
+      pressScale.setValue(SCALE.normal);
       return;
     }
     Animated.spring(pressScale, {
       damping: 18,
       stiffness: 240,
-      toValue: 1,
+      toValue: SCALE.normal,
       useNativeDriver: true,
     }).start();
   };
 
   return (
     <Pressable
+      accessibilityHint='Tap to start your free trial'
       accessibilityLabel='Upgrade to unlock unlimited habits'
       accessibilityRole='button'
       onPress={onUpgradePress}

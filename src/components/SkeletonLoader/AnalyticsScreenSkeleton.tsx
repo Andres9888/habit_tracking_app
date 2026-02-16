@@ -1,11 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import { SkeletonLoader } from './SkeletonLoader';
+import { useSkeletonTheme } from './useSkeletonTheme';
 import type { ReduceMotionProps } from './types';
 
-function StatCardSkeleton({ reduceMotion }: ReduceMotionProps) {
+function StatCardSkeleton({ reduceMotion, surfaceBg }: ReduceMotionProps & { surfaceBg: string }) {
   return (
-    <View className='m-1 flex-1 rounded-2xl bg-stone-50 p-4'>
+    <View className='m-1 flex-1 rounded-2xl p-4' style={{ backgroundColor: surfaceBg }}>
       <SkeletonLoader
         borderRadius={4}
         height={12}
@@ -32,9 +33,9 @@ function StatCardSkeleton({ reduceMotion }: ReduceMotionProps) {
   );
 }
 
-function ChartSkeleton({ reduceMotion }: ReduceMotionProps) {
+function ChartSkeleton({ reduceMotion, surfaceBg }: ReduceMotionProps & { surfaceBg: string }) {
   return (
-    <View className='mb-4 rounded-2xl bg-stone-50 p-4'>
+    <View className='mb-4 rounded-2xl p-4' style={{ backgroundColor: surfaceBg }}>
       <SkeletonLoader
         borderRadius={6}
         height={16}
@@ -62,8 +63,9 @@ function ChartSkeleton({ reduceMotion }: ReduceMotionProps) {
 export function AnalyticsScreenSkeleton({
   reduceMotion = false,
 }: ReduceMotionProps) {
+  const { pageBg, surfaceBg } = useSkeletonTheme();
   return (
-    <View className='flex-1 bg-stone-100 px-4 pt-16'>
+    <View className='flex-1 px-4 pt-16' style={{ backgroundColor: pageBg }}>
       <SkeletonLoader
         borderRadius={8}
         height={28}
@@ -79,13 +81,13 @@ export function AnalyticsScreenSkeleton({
         />
       </View>
       <View className='mb-4 flex-row flex-wrap'>
-        <StatCardSkeleton reduceMotion={reduceMotion} />
-        <StatCardSkeleton reduceMotion={reduceMotion} />
-        <StatCardSkeleton reduceMotion={reduceMotion} />
-        <StatCardSkeleton reduceMotion={reduceMotion} />
+        <StatCardSkeleton reduceMotion={reduceMotion} surfaceBg={surfaceBg} />
+        <StatCardSkeleton reduceMotion={reduceMotion} surfaceBg={surfaceBg} />
+        <StatCardSkeleton reduceMotion={reduceMotion} surfaceBg={surfaceBg} />
+        <StatCardSkeleton reduceMotion={reduceMotion} surfaceBg={surfaceBg} />
       </View>
-      <ChartSkeleton reduceMotion={reduceMotion} />
-      <ChartSkeleton reduceMotion={reduceMotion} />
+      <ChartSkeleton reduceMotion={reduceMotion} surfaceBg={surfaceBg} />
+      <ChartSkeleton reduceMotion={reduceMotion} surfaceBg={surfaceBg} />
     </View>
   );
 }

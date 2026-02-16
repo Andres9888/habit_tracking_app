@@ -12,6 +12,7 @@ import { BenefitsFeatureCard } from './BenefitsFeatureCard';
 import { BenefitsCTAFooter } from './BenefitsCTAFooter';
 import { MOTIVATION_FEATURES } from './motivationFeatures';
 import type { VariantConfig } from './PremiumPaywall.types';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 
 interface BenefitsVariantProps {
