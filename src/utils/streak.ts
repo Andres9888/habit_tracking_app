@@ -1,4 +1,5 @@
 import { format, parseISO } from 'date-fns';
+import { STREAK_MAX_LOOKBACK_DAYS } from '@/constants';
 
 /**
  * Compute a streak by starting at the most recent completed day (<= today)
@@ -31,7 +32,7 @@ export const computeCurrentStreakFromDates = (
   // Count consecutive days backward from the latest completion
   // Stop when a gap is found
   // Safety guard to avoid unexpected infinite loops
-  const maxLookbackDays = 400; // > 1 year
+  const maxLookbackDays = STREAK_MAX_LOOKBACK_DAYS;
   for (let i = 0; i < maxLookbackDays; i++) {
     const dateString = format(currentDate, 'yyyy-MM-dd');
     if (completedDates.has(dateString)) {

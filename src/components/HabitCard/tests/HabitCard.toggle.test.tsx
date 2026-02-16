@@ -111,7 +111,7 @@ const mockHapticsImpact = Haptics.impactAsync as jest.MockedFunction<
 >;
 
 describe('HabitCard Toggle and Haptic Integration', () => {
-  const mockHabitId = 'test_habit_123' as any;
+  const mockHabitId = 'test_habit_123' as unknown;
   const today = new Date().toISOString().split('T')[0];
 
   beforeEach(() => {
@@ -136,7 +136,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       // Should NOT call useQuery with getCompletionStatus args (per-card query removed)
       // The parent provides completion status via the `completed` prop from bulk tracking query
       const completionStatusCalls = mockUseQuery.mock.calls.filter(
-        (call: any[]) => call[1]?.habitId === mockHabitId && call[1]?.date
+        (call: unknown[]) => call[1]?.habitId === mockHabitId && call[1]?.date
       );
       expect(completionStatusCalls).toHaveLength(0);
     });
@@ -536,7 +536,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       const { getByText: getByText1 } = render(
         <HabitCard
           completed
-          id={'habit_1' as any}
+          id={'habit_1' as unknown}
           name='Habit 1'
           strength={60}
         />
@@ -550,7 +550,7 @@ describe('HabitCard Toggle and Haptic Integration', () => {
       const { getByText: getByText2 } = render(
         <HabitCard
           completed={false}
-          id={'habit_2' as any}
+          id={'habit_2' as unknown}
           name='Habit 2'
           strength={40}
         />
