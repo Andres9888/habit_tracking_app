@@ -1,3 +1,32 @@
+/**
+ * @file CreateHabitFormCentered.tsx
+ * @description Centered form layout for habit creation/editing.
+ *
+ * ## Architecture
+ * Purely presentational — all state is received via props. The form follows
+ * an "identity before behavior" pattern from habit formation psychology:
+ * the name input is prominently centered at the top, with optional
+ * customization (emoji, color, reminder) below.
+ *
+ * ## Layout
+ * ```
+ * ┌──────────────────────────────────┐
+ * │   "Name your new habit"          │  ← Title
+ * │   [ habit name input       ]     │  ← Primary input (centered, large)
+ * │   error / char counter / hint    │  ← Contextual helper text
+ * │                                  │
+ * │   ─── CUSTOMIZE ───              │  ← Section divider
+ * │   🎯  Emoji picker              │
+ * │   🎨  Color picker              │
+ * │   🔔  Reminder toggle + time    │
+ * └──────────────────────────────────┘
+ * ```
+ *
+ * ## Refactoring Opportunities
+ * - **REFACTOR**: The name input section (title + input + helper text) could be
+ *   extracted into a `HeroNameInput` component for reuse and testing.
+ */
+
 import { memo } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -6,9 +35,25 @@ import { ColorPickerSection } from './ColorPickerSection';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
 import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.types';
 
+// ── Component ────────────────────────────────────────────────────────
+
 /**
- * Centered habit creation form with optional fields.
- * Follows "identity before behavior" in habit formation psychology.
+ * Centered habit creation form with optional customization fields.
+ *
+ * @param habitName          - Current habit name value.
+ * @param onHabitNameChange  - Callback when the name input text changes.
+ * @param selectedEmoji      - Currently selected emoji for the habit icon.
+ * @param onEmojiSelect      - Callback when a new emoji is picked.
+ * @param colors             - Available color palette for the color picker.
+ * @param selectedColor      - Currently selected habit color.
+ * @param onColorSelect      - Callback when a new color is picked.
+ * @param reminderEnabled    - Whether the daily reminder toggle is on.
+ * @param reminderTime       - Selected reminder time (e.g., "09:00").
+ * @param onReminderToggle   - Callback to toggle the reminder on/off.
+ * @param onReminderTimeChange - Callback when the reminder time changes.
+ * @param onSubmit           - Called when the user submits via keyboard "done" key.
+ * @param autoFocus          - Whether to auto-focus the name input on mount.
+ * @param showNameError      - When true, shows the validation error for the name field.
  */
 const CreateHabitFormCenteredComponent = ({
   habitName,
@@ -28,9 +73,11 @@ const CreateHabitFormCenteredComponent = ({
 }: CreateHabitFormCenteredProps) => {
   const { colors: themeColors, isDark } = useThemeColors();
 
+  // ── Render ─────────────────────────────────────────────────────
+
   return (
     <View className='flex-1 px-6'>
-      {/* Centered top section - name input */}
+      {/* ── Name Input Section ─────────────────────────────────── */}
       <View
         className='items-center'
         style={{ marginBottom: 40, marginTop: 28 }}
@@ -65,7 +112,7 @@ const CreateHabitFormCenteredComponent = ({
           onSubmitEditing={Keyboard.dismiss}
         />
 
-        {/* Error message or character counter (only when typing) */}
+        {/* Contextual helper text — shows error, char count, or guidance */}
         {showNameError ? (
           <Text
             accessibilityLiveRegion='polite'
@@ -92,9 +139,9 @@ const CreateHabitFormCenteredComponent = ({
         )}
       </View>
 
-      {/* Optional fields section - scrollable */}
+      {/* ── Customization Section ──────────────────────────────── */}
       <View className='flex-1'>
-        {/* Section label */}
+        {/* Section divider label */}
         <Text
           className='mb-8 text-center text-xs font-semibold'
           style={{ letterSpacing: 1, color: themeColors.text.tertiary }}
@@ -102,7 +149,7 @@ const CreateHabitFormCenteredComponent = ({
           CUSTOMIZE
         </Text>
 
-        {/* Emoji picker */}
+        {/* Emoji picker — suggests relevant emojis based on habit name */}
         <EmojiPicker
           hideLabel
           habitName={habitName}
@@ -110,7 +157,7 @@ const CreateHabitFormCenteredComponent = ({
           onSelect={onEmojiSelect}
         />
 
-        {/* Color picker - preset colors only, no custom color picker */}
+        {/* Color picker — preset palette only (no custom hex input) */}
         <ColorPickerSection
           hideLabel
           colors={colors}
@@ -118,7 +165,7 @@ const CreateHabitFormCenteredComponent = ({
           onSelectColor={onColorSelect}
         />
 
-        {/* Reminder selector with presets and custom time */}
+        {/* Reminder toggle + time selector (presets + custom time picker) */}
         <EnhancedReminderSelector
           enabled={reminderEnabled}
           reminderTime={reminderTime}
@@ -130,4 +177,8 @@ const CreateHabitFormCenteredComponent = ({
   );
 };
 
+/**
+ * Memoized export — prevents re-renders when parent state changes
+ * but none of this component's props have changed.
+ */
 export const CreateHabitFormCentered = memo(CreateHabitFormCenteredComponent);

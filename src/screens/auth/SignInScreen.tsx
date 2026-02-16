@@ -1,6 +1,35 @@
 /**
- * SignInScreen - Premium sign in experience
- * Clean design with chain branding and smooth animations
+ * @file SignInScreen.tsx
+ * @description Premium sign-in experience with Chain Day branding and smooth entrance animations.
+ *
+ * ## Architecture
+ * - **Authentication logic** is fully delegated to two hooks:
+ *   - `useSignInFlow` — email/password state, validation, and Clerk sign-in.
+ *   - `useOAuthSignIn` — Google & Apple OAuth flows via Clerk.
+ * - **UI sub-components** (`FormInput`, `PasswordInput`, `SocialSignInButton`, etc.)
+ *   live in `./components/` and are stateless/presentational.
+ * - **Animations**: Three-stage entrance (logo → header → content) with 60ms staggers,
+ *   using `withSpring(damping: 18)` + `withTiming(280ms)`.
+ *
+ * ## State Flow
+ * ```
+ * ┌─────────────────────────────────────────┐
+ * │  isAnyLoading = isLoading || oauthLoading │
+ * │  (disables all inputs & buttons)          │
+ * └─────────────────────────────────────────┘
+ *
+ * Email/Password path:
+ *   type email → blur validates → type password → Submit → handleSignIn()
+ *
+ * OAuth path:
+ *   Tap Google/Apple → signInWithGoogle/Apple() → Clerk redirect
+ * ```
+ *
+ * ## Refactoring Opportunities
+ * - **REFACTOR**: The 6 shared-value + 3 animated-style blocks for entrance animations
+ *   could be extracted into a `useStaggeredEntrance(stages)` hook.
+ * - **REFACTOR**: `useScreenStyles()` re-creates the entire StyleSheet on every render;
+ *   consider `useMemo` or splitting static vs. dynamic styles.
  */
 
 /* eslint-disable max-lines */
@@ -37,19 +66,41 @@ import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { colors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
 
+// ── Types ────────────────────────────────────────────────────────────
+
 interface SignInScreenProps {
-  /** Auto-focus the email input on mount */
+  /** Auto-focus the email input on mount (used when deep-linking to sign-in). */
   autoFocusEmail?: boolean;
-  /** Callback when user wants to navigate to sign up */
+  /** Callback when user wants to navigate to sign up. */
   onNavigateToSignUp?: () => void;
 }
 
+// ── Main Content Component ───────────────────────────────────────────
+
+/**
+ * Inner sign-in screen (unwrapped from error boundary).
+ *
+ * Orchestrates:
+ * 1. **Brand header** — logo, app name, tagline.
+ * 2. **Welcome section** — motivational copy.
+ * 3. **Auth content** — OAuth buttons, divider, email/password form.
+ * 4. **Footer** — Terms & Privacy links.
+ * 5. **Forgot password modal** — toggled by `showForgotPassword` state.
+ */
 function SignInScreenContent(_props: SignInScreenProps = {}) {
   const { colors: themeColors, isDark } = useThemeColors();
   const styles = useScreenStyles();
   const insets = useSafeAreaInsets();
+
+  // ── State ──────────────────────────────────────────────────────
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+
+  /** Ref to the password input — used to advance focus from the email field. */
   const passwordRef = useRef<TextInput>(null);
+
+  // ── Hooks ──────────────────────────────────────────────────────
+
+  /** Email/password sign-in state and handlers from Clerk. */
   const {
     emailAddress,
     setEmailAddress,
@@ -61,6 +112,8 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
     handleSignIn,
     canSubmit,
   } = useSignInFlow();
+
+  /** OAuth (Google / Apple) sign-in state and handlers. */
   const {
     signInWithGoogle,
     signInWithApple,
@@ -69,9 +122,13 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
     clearError,
   } = useOAuthSignIn();
 
+  /** Unified loading flag — disables all interactive elements when any auth is in progress. */
   const isAnyLoading = isLoading || !!oauthLoading;
 
-  // Entrance animations
+  // ── Entrance Animations ────────────────────────────────────────
+  // Three-stage cascade: logo (50ms) → header (110ms) → content (170ms).
+  // Each stage combines opacity fade + spring translation/scale.
+
   const logoScale = useSharedValue(0.5);
   const logoOpacity = useSharedValue(0);
   const headerOpacity = useSharedValue(0);
@@ -79,22 +136,26 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
   const contentOpacity = useSharedValue(0);
   const contentTranslateY = useSharedValue(30);
 
+  /**
+   * Kicks off the three-stage entrance animation on mount.
+   * Delays are absolute (from mount), not relative to each other.
+   */
   useEffect(() => {
-    // Logo entrance
+    // Stage 1: Logo entrance (scale 0.5→1 + fade in)
     logoScale.value = withDelay(
       50,
       withSpring(1, { damping: 18, stiffness: 150 })
     );
     logoOpacity.value = withDelay(50, withTiming(1, { duration: 280 }));
 
-    // Header entrance (60ms stagger)
+    // Stage 2: Header entrance (60ms stagger from logo)
     headerOpacity.value = withDelay(110, withTiming(1, { duration: 280 }));
     headerTranslateY.value = withDelay(
       110,
       withSpring(0, { damping: 18, stiffness: 150 })
     );
 
-    // Content entrance (60ms stagger)
+    // Stage 3: Content entrance (60ms stagger from header)
     contentOpacity.value = withDelay(170, withTiming(1, { duration: 280 }));
     contentTranslateY.value = withDelay(
       170,
@@ -102,24 +163,29 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
     );
   }, []);
 
+  /** Animated style for the logo (scale + opacity). */
   const logoStyle = useAnimatedStyle(() => ({
     opacity: logoOpacity.value,
     transform: [{ scale: logoScale.value }],
   }));
 
+  /** Animated style for the header section (translateY + opacity). */
   const headerStyle = useAnimatedStyle(() => ({
     opacity: headerOpacity.value,
     transform: [{ translateY: headerTranslateY.value }],
   }));
 
+  /** Animated style for the auth content section (translateY + opacity). */
   const contentStyle = useAnimatedStyle(() => ({
     opacity: contentOpacity.value,
     transform: [{ translateY: contentTranslateY.value }],
   }));
 
+  // ── Render ─────────────────────────────────────────────────────
+
   return (
     <View style={styles.container}>
-      {/* Subtle gradient background */}
+      {/* Subtle warm gradient background */}
       <LinearGradient
         colors={['#fafaf9', '#f5f5f4', '#fafaf9']}
         locations={[0, 0.5, 1]}
@@ -138,7 +204,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >
-          {/* Logo & Brand */}
+          {/* ── Brand Section ─────────────────────────────────── */}
           <View style={styles.brandSection}>
             <Animated.View style={[styles.logoContainer, logoStyle]}>
               <LinearGradient
@@ -155,7 +221,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
             </Animated.View>
           </View>
 
-          {/* Welcome Message */}
+          {/* ── Welcome Message ────────────────────────────────── */}
           <Animated.View style={[styles.welcomeSection, headerStyle]}>
             <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
             <Text style={styles.welcomeSubtitle}>
@@ -163,12 +229,14 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
             </Text>
           </Animated.View>
 
-          {/* Auth Content */}
+          {/* ── Auth Content (OAuth + Form) ────────────────────── */}
           <Animated.View style={[styles.authContent, contentStyle]}>
+            {/* OAuth error banner (dismissible) */}
             {oauthError && (
               <AuthError message={oauthError} onDismiss={clearError} />
             )}
 
+            {/* Social sign-in buttons */}
             <View style={styles.socialButtons}>
               <SocialSignInButton
                 disabled={isAnyLoading}
@@ -188,6 +256,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
 
             <AuthDivider />
 
+            {/* Email / Password form */}
             <View style={styles.formSection}>
               <FormInput
                 autoCapitalize='none'
@@ -232,7 +301,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
             </View>
           </Animated.View>
 
-          {/* Footer */}
+          {/* ── Footer (Terms & Privacy) ──────────────────────── */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>
               By continuing, you agree to our{' '}
@@ -260,6 +329,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
         </ScrollView>
       </KeyboardAvoidingView>
 
+      {/* Forgot password modal — shown/hidden via state toggle */}
       <ForgotPasswordModal
         visible={showForgotPassword}
         onClose={() => setShowForgotPassword(false)}
@@ -268,6 +338,17 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
   );
 }
 
+// ── Styles ───────────────────────────────────────────────────────────
+
+/**
+ * Creates theme-aware styles for the sign-in screen.
+ *
+ * **Note**: This hook re-creates the StyleSheet on every render because
+ * `useThemeColors()` may change. This is acceptable for a screen-level
+ * component but could be optimized with `useMemo` if profiling shows issues.
+ *
+ * @returns A `StyleSheet` object with all sign-in screen styles.
+ */
 function useScreenStyles() {
   const { colors: themeColors } = useThemeColors();
   return StyleSheet.create({
@@ -360,6 +441,13 @@ function useScreenStyles() {
   });
 }
 
+// ── Public Export ─────────────────────────────────────────────────────
+
+/**
+ * Top-level `SignInScreen` export, wrapped in an error boundary.
+ * If the sign-in UI crashes, the boundary renders a fallback instead
+ * of a white screen, and the user can retry.
+ */
 export default function SignInScreen(props: SignInScreenProps) {
   return (
     <ScreenErrorBoundary screenName='Sign In'>
