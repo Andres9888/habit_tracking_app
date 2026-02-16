@@ -35,7 +35,12 @@ export function ThisMonthCard({
   const trendChange = thisMonthRate - lastMonthRate;
 
   useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
+    void AccessibilityInfo.isReduceMotionEnabled()
+      .then(setReduceMotion)
+      .catch((error) => {
+        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
+        setReduceMotion(false);
+      });
   }, []);
 
   return (

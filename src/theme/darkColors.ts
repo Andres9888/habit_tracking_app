@@ -51,7 +51,7 @@ export const darkColors = {
     // gray-50
     secondary: '#9CA3AF',
     // gray-400
-    tertiary: '#6B7280', // gray-900
+    tertiary: '#8E95A2', // WCAG AA 4.87:1 on dark card
   },
 } as const;
 
@@ -68,7 +68,7 @@ export const lightColors = {
     100: '#F5F1ED',
     200: '#DDD8D2',
     300: '#C4BFB7',
-    400: '#9C958D',
+    400: '#6E6660',
     500: '#6B6560',
     600: '#524D47',
     700: '#3D3833',
@@ -88,7 +88,7 @@ export const lightColors = {
     inverse: '#FFFFFF',
     primary: '#2D2A26',
     secondary: '#6B6560',
-    tertiary: '#9C958D',
+    tertiary: '#6E6660',
   },
 } as const;
 

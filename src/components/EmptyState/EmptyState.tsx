@@ -12,6 +12,7 @@ import React from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
+import { useThemeColors } from '../../theme/ThemeContext';
 import Button from '../Button/Button';
 import type { EmptyStateProps } from './types';
 import { VARIANT_CONFIG, QUICK_START_TEMPLATES } from './constants';
@@ -31,6 +32,7 @@ export function EmptyState({
   style,
 }: EmptyStateProps) {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
   const config = VARIANT_CONFIG[variant];
   const { iconStyle, headlineStyle, descriptionStyle, ctaStyle } =
     useEmptyStateAnimations(variant);
@@ -58,7 +60,7 @@ export function EmptyState({
         style={[
           theme.custom.typography.heading2,
           styles.headline,
-          { color: theme.custom.colors.gray[900] },
+          { color: colors.text.primary },
           headlineStyle,
         ]}
       >
@@ -70,7 +72,7 @@ export function EmptyState({
         style={[
           theme.custom.typography.body,
           styles.description,
-          { color: theme.custom.colors.gray[500] },
+          { color: colors.text.secondary },
           descriptionStyle,
         ]}
       >

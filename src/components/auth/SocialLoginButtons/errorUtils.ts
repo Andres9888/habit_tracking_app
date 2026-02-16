@@ -1,3 +1,5 @@
+import { ERROR_MESSAGES } from '../../../constants/errorMessages';
+
 interface ClerkError {
   errors?: Array<{
     code?: string;
@@ -17,7 +19,7 @@ export const getErrorMessage = (err: unknown): string | null => {
   const errorMessage = clerkError.errors?.[0]?.message;
 
   if (errorCode === 'session_exists') {
-    return 'You are already signed in. Please sign out and try again.';
+    return ERROR_MESSAGES.AUTH.SIGN_IN_ALREADY_SIGNED_IN;
   }
   if (errorCode === 'oauth_access_denied') {
     return 'Access was denied. Please try again or use a different sign-in method.';
@@ -29,8 +31,8 @@ export const getErrorMessage = (err: unknown): string | null => {
     return null;
   }
   if (clerkError.message?.includes('network')) {
-    return 'Network error. Please check your connection and try again.';
+    return ERROR_MESSAGES.NETWORK.CONNECTION_ISSUE;
   }
 
-  return errorMessage || 'An unexpected error occurred. Please try again.';
+  return errorMessage || ERROR_MESSAGES.UI.GENERIC_ERROR;
 };

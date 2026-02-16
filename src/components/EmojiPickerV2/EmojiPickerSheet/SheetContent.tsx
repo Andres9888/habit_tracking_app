@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CategoryPills } from '../CategoryPills';
 import { EmojiGrid } from '../EmojiGrid';
 import { styles } from './EmojiPickerSheet.styles';
@@ -50,6 +51,7 @@ export function SheetContent({
   onEmojiSelect,
   onNoIcon,
 }: SheetContentProps) {
+  const insets = useSafeAreaInsets();
   return (
     <>
       <View
@@ -94,7 +96,7 @@ export function SheetContent({
         onEmojiSelect={onEmojiSelect}
       />
 
-      <View style={styles.noIconContainer}>
+      <View style={[styles.noIconContainer, { paddingBottom: Math.max(insets.bottom, 16) }]}>
         <Pressable
           accessibilityLabel='Select no icon for this habit'
           accessibilityRole='button'

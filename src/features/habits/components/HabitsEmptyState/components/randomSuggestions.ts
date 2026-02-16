@@ -1,4 +1,6 @@
-export const MAX_SUGGESTIONS = 4;
+import { MAX_SUGGESTIONS } from '@/constants';
+
+export { MAX_SUGGESTIONS };
 
 export function pickRandomHabits<T>(habits: T[], count: number): T[] {
   const pool = [...habits];
