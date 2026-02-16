@@ -6,6 +6,7 @@ import { ScrollView, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import CollapsibleCategorySection from '../../../components/CollapsibleCategorySection';
+import { RecommendedSection } from '../components/RecommendedSection';
 import { styles } from '../../templates/templatesScreenStyles';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
 
@@ -54,6 +55,13 @@ export function BrowseCategoriesTab({
         contentContainerStyle={styles.browseContent}
         showsVerticalScrollIndicator={false}
       >
+        {/* Recommended templates based on user's habits */}
+        <RecommendedSection
+          importingTemplateId={importingTemplateId}
+          onImport={(templateId) => handleTemplateImport(templateId)}
+          onPreview={handleTemplatePreview}
+        />
+
         <View style={styles.categorySections}>
           {(categories ?? [])
             .filter((cat) => cat.id !== 'all')

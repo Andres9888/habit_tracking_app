@@ -23,6 +23,7 @@ import {
   TrialCountdownBanner,
   useTrialCountdown,
 } from '../../../../components/TrialCountdownBanner';
+import { HabitSuggestions } from '../HabitSuggestions';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
@@ -92,6 +93,9 @@ function HabitsListHeaderComponent(
           onUpgrade={props.onUpgradePress}
         />
       )}
+
+      {/* Smart Habit Suggestions */}
+      <HabitSuggestions />
     </View>
   );
 }
