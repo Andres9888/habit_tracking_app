@@ -8,14 +8,16 @@
  * Performance: 60fps target on iPhone SE
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { Modal } from '../Modal';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useCelebrationSound } from '../../hooks/useCelebrationSound';
 import type { MilestoneCelebrationProps } from './types';
 import { styles } from './styles';
 import { CONFETTI_COLORS, SCREEN_WIDTH } from './constants';
+import { CELEBRATION_TIERS } from './celebrationTiers';
 import { useMilestoneAnimations } from './useMilestoneAnimations';
 import { useMilestoneAnimatedStyles } from './useMilestoneAnimatedStyles';
 import { useConfetti } from './useConfetti';
@@ -32,6 +34,8 @@ export function MilestoneCelebration({
   onShare,
 }: MilestoneCelebrationProps) {
   const reduceMotion = useReduceMotion();
+  const tier = useMemo(() => CELEBRATION_TIERS[level], [level]);
+  const { playCelebrationSound } = useCelebrationSound();
 
   const animations = useMilestoneAnimations({
     reduceMotion,
@@ -40,7 +44,15 @@ export function MilestoneCelebration({
   });
 
   const animatedStyles = useMilestoneAnimatedStyles(animations);
-  const confettiRef = useConfetti({ reduceMotion, visible });
+  const confettiRef = useConfetti({
+    reduceMotion,
+    visible,
+    onStart: () => {
+      if (tier.playSound) {
+        playCelebrationSound(tier.soundType);
+      }
+    },
+  });
 
   useAccessibilityAnnouncement({
     habitName,
@@ -79,16 +91,16 @@ export function MilestoneCelebration({
         </View>
       </Modal>
 
-      {/* Confetti Animation - Only if Reduce Motion is disabled */}
-      {!reduceMotion && visible && (
+      {/* Confetti Animation - Proportional to milestone tier, respects Reduce Motion */}
+      {!reduceMotion && visible && tier.confettiCount > 0 && (
         <ConfettiCannon
           ref={confettiRef}
           fadeOut
           autoStart={false}
           colors={CONFETTI_COLORS}
-          count={100}
-          explosionSpeed={350}
-          fallSpeed={2500}
+          count={tier.confettiCount}
+          explosionSpeed={tier.explosionSpeed}
+          fallSpeed={tier.fallSpeed}
           origin={{ x: SCREEN_WIDTH / 2, y: 0 }}
         />
       )}

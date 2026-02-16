@@ -14,7 +14,14 @@ import { Modal } from '../../../Modal';
 import { AnimatedContent, ModalHeader, DoneButton } from './components';
 import { CelebrationScreenContent } from './CelebrationScreenContent';
 import { useCelebrationScreen } from './useCelebrationScreen';
+import { useIsDark } from '../../../../theme/ThemeContext';
 import type { CelebrationScreenProps } from './types';
+
+/** Dark mode and light mode gradient colors for celebration background */
+const GRADIENT_COLORS = {
+  light: ['#ecfdf5', '#fafaf9'] as [string, string],
+  dark: ['#064e3b', '#1c1917'] as [string, string],
+};
 
 export function CelebrationScreen(props: CelebrationScreenProps) {
   const {
@@ -26,6 +33,8 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
   } = props;
   const insets = useSafeAreaInsets();
   const state = useCelebrationScreen(props);
+  const isDark = useIsDark();
+  const gradientColors = isDark ? GRADIENT_COLORS.dark : GRADIENT_COLORS.light;
 
   if (!habit) return null;
 
@@ -43,7 +52,7 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
       >
         <LinearGradient
           className='absolute inset-0'
-          colors={['#ecfdf5', '#fafaf9']}
+          colors={gradientColors}
         />
         <ModalHeader onClose={onClose} />
         <CelebrationScreenContent
@@ -61,7 +70,7 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
           onReflectionSubmit={onReflectionSubmit}
         />
         <View
-          className='border-t border-emerald-100 bg-white px-4 pt-4'
+          className={`border-t px-4 pt-4 ${isDark ? 'border-emerald-800 bg-stone-900' : 'border-emerald-100 bg-white'}`}
           style={{ paddingBottom: Math.max(insets.bottom, 16) }}
         >
           <AnimatedContent

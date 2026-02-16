@@ -60,6 +60,36 @@ export const HapticPatterns = {
   },
 
   /**
+   * Legendary celebration — for 100+ day streaks and perfect weeks.
+   * Maximum intensity: extended rumble pattern with triumphant crescendo.
+   * Total duration ~900ms.
+   */
+  celebrationLegendary: async (): Promise<void> => {
+    // Rapid ascending drumroll
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    await wait(40);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    await wait(40);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    await wait(40);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    await wait(40);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await wait(60);
+    // Power crescendo
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await wait(80);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await wait(80);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await wait(100);
+    // Double success finale
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    await wait(150);
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  },
+
+  /**
    * Error notification — for failed actions, validation errors.
    */
   error: async (): Promise<void> => {

@@ -72,14 +72,20 @@ export function useCelebrationHaptics({
   const triggerStreakMilestone = useCallback(
     async (days: number) => {
       if (!active) return;
-      await safeRun(
-        days >= 30
-          ? HapticPatterns.celebrationMajor
-          : HapticPatterns.celebration
-      );
+      if (days >= 100) {
+        await safeRun(HapticPatterns.celebrationLegendary);
+      } else if (days >= 30) {
+        await safeRun(HapticPatterns.celebrationMajor);
+      } else {
+        await safeRun(HapticPatterns.celebration);
+      }
     },
     [active]
   );
+
+  const triggerPerfectWeek = useCallback(async () => {
+    if (active) await safeRun(HapticPatterns.celebrationLegendary);
+  }, [active]);
 
   const triggerUndo = useCallback(async () => {
     if (active) await safeRun(HapticPatterns.warning);
@@ -90,6 +96,7 @@ export function useCelebrationHaptics({
       triggerAllComplete,
       triggerCompletion,
       triggerFirstCompletion,
+      triggerPerfectWeek,
       triggerStreakMilestone,
       triggerUndo,
     }),
@@ -97,6 +104,7 @@ export function useCelebrationHaptics({
       triggerCompletion,
       triggerFirstCompletion,
       triggerAllComplete,
+      triggerPerfectWeek,
       triggerStreakMilestone,
       triggerUndo,
     ]
