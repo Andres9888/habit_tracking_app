@@ -15,7 +15,7 @@ import Animated, {
 
 import type { TimeRange, TimeRangeToggleProps } from './types';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { styles } from './TimeRangeToggle.styles';
+import { useThemedToggleStyles } from './TimeRangeToggle.styles';
 import {
   TIME_RANGES,
   getTimeRangeLabel,
@@ -37,6 +37,7 @@ const TimeRangeButton = memo(function TimeRangeButton({
   onPress,
   reduceMotion,
 }: TimeRangeButtonProps) {
+  const styles = useThemedToggleStyles();
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -47,11 +48,13 @@ const TimeRangeButton = memo(function TimeRangeButton({
   });
 
   const handlePressIn = useCallback(() => {
-    if (!reduceMotion) scale.value = withSpring(0.95, { damping: 18, stiffness: 240 });
+    if (!reduceMotion)
+      scale.value = withSpring(0.95, { damping: 18, stiffness: 240 });
   }, [reduceMotion, scale]);
 
   const handlePressOut = useCallback(() => {
-    if (!reduceMotion) scale.value = withSpring(1, { damping: 18, stiffness: 240 });
+    if (!reduceMotion)
+      scale.value = withSpring(1, { damping: 18, stiffness: 240 });
   }, [reduceMotion, scale]);
 
   const handlePress = useCallback(() => {
@@ -92,6 +95,7 @@ export const TimeRangeToggle = memo(function TimeRangeToggle({
   value,
   onChange,
 }: TimeRangeToggleProps) {
+  const styles = useThemedToggleStyles();
   const reduceMotion = useReduceMotion();
 
   const handleRangePress = useCallback(

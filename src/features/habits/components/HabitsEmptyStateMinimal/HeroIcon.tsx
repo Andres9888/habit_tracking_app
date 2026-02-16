@@ -9,7 +9,7 @@
  */
 
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -22,13 +22,14 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { BREATHING_ANIMATION, HERO_GLOW } from './animations';
-import { BORDER_RADIUS } from './constants';
+import { BORDER_RADIUS, COLORS } from './constants';
+import { SeedlingIcon } from './SeedlingIcon';
 import type { HeroIconProps } from './types';
 import { useEmptyStateColors } from './useEmptyStateColors';
 
 /** Default icon container size */
 const DEFAULT_SIZE = 80;
-/** Default emoji font size */
+/** Default SVG icon size */
 const DEFAULT_EMOJI_SIZE = 36;
 
 /**
@@ -36,7 +37,7 @@ const DEFAULT_EMOJI_SIZE = 36;
  *
  * @param animate - Whether to animate the breathing effect (default: true)
  * @param size - Icon container size in pixels (default: 80)
- * @param emojiSize - Emoji font size in pixels (default: 36)
+ * @param emojiSize - SVG icon size in pixels (default: 36)
  */
 export function HeroIcon({
   animate = true,
@@ -128,7 +129,7 @@ export function HeroIcon({
           top: 0,
         }}
       />
-      <Text style={{ fontSize: emojiSize }}>🌱</Text>
+      <SeedlingIcon size={emojiSize} />
     </Animated.View>
   );
 }

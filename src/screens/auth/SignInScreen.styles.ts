@@ -1,7 +1,89 @@
+/* eslint-disable max-lines */
 /** SignInScreen Styles - Type scale: 34/22/17/13, proper contrast, depth */
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 
+export function useSignInStyles() {
+  const { colors: themeColors, isDark } = useThemeColors();
+
+  return StyleSheet.create({
+    appName: {
+      color: themeColors.text.primary,
+      fontSize: 34,
+      fontWeight: '700',
+      letterSpacing: -1,
+      textAlign: 'center',
+    },
+    authContent: { gap: 24 },
+    brandSection: { alignItems: 'center', marginBottom: 40 },
+    container: { flex: 1 },
+    flex: { flex: 1 },
+    footer: { marginTop: 32, paddingHorizontal: 16 },
+    footerLink: {
+      color: themeColors.primary[700],
+      textDecorationLine: 'underline',
+    },
+    footerText: {
+      color: themeColors.text.secondary,
+      fontSize: 13,
+      lineHeight: 18,
+      textAlign: 'center',
+    },
+    formCard: {
+      backgroundColor: themeColors.card,
+      borderRadius: 16,
+      elevation: 4,
+      padding: 24,
+      shadowColor: themeColors.text.primary,
+      shadowOffset: { height: 4, width: 0 },
+      shadowOpacity: 0.08,
+      shadowRadius: 16,
+    },
+    formSection: { gap: 20 },
+    gradientBg: { backgroundColor: themeColors.background, flex: 1 },
+    iconContainer: {
+      alignItems: 'center',
+      backgroundColor: themeColors.primary[600],
+      borderRadius: 24,
+      elevation: 4,
+      height: 88,
+      justifyContent: 'center',
+      marginBottom: 20,
+      shadowColor: themeColors.text.primary,
+      shadowOffset: { height: 4, width: 0 },
+      shadowOpacity: 0.08,
+      shadowRadius: 16,
+      width: 88,
+    },
+    inputFocused: { borderColor: themeColors.primary[700], borderWidth: 2 },
+    scrollContent: { flexGrow: 1, paddingHorizontal: 24 },
+    socialButtons: { gap: 12 },
+    tagline: {
+      color: themeColors.text.secondary,
+      fontSize: 17,
+      marginTop: 6,
+      textAlign: 'center',
+    },
+    welcomeSection: { marginBottom: 32 },
+    welcomeSubtitle: {
+      color: themeColors.text.secondary,
+      fontSize: 17,
+      lineHeight: 24,
+      paddingHorizontal: 16,
+      textAlign: 'center',
+    },
+    welcomeTitle: {
+      color: themeColors.text.primary,
+      fontSize: 22,
+      fontWeight: '600',
+      marginBottom: 8,
+      textAlign: 'center',
+    },
+  });
+}
+
+/** @deprecated Use useSignInStyles() for dark mode support */
 export const styles = StyleSheet.create({
   appName: {
     color: '#1c1917',

@@ -73,7 +73,11 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
             width: 56,
           }}
         >
-          <StickyNote color={isDark ? '#FCD34D' : '#D97706'} size={28} strokeWidth={1.5} />
+          <StickyNote
+            color={isDark ? '#FCD34D' : '#D97706'}
+            size={28}
+            strokeWidth={1.5}
+          />
         </View>
 
         {/* Text */}
@@ -102,7 +106,13 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
           }}
         >
           <Plus color='#ffffff' size={16} strokeWidth={2.5} />
-          <Text style={{ color: '#ffffff', fontSize: 13, fontWeight: '600' }}>
+          <Text
+            style={{
+              color: colors.text.inverse,
+              fontSize: 13,
+              fontWeight: '600',
+            }}
+          >
             Add Note
           </Text>
         </View>

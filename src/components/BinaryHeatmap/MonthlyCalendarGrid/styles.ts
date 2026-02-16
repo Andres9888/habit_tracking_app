@@ -94,6 +94,13 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 1,
   },
+  streakCircle: {
+    borderRadius: 6,
+    bottom: 2,
+    height: 12,
+    position: 'absolute',
+    width: 12,
+  },
   todayText: {
     fontWeight: '700',
   },
