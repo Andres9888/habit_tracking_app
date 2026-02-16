@@ -18,7 +18,7 @@ import { View } from 'react-native';
 jest.mock('expo-blur', () => {
   const RealView = jest.requireActual('react-native').View;
   return {
-    BlurView: ({ children, ...props }: any) =>
+    BlurView: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) =>
       jest.requireActual('react').createElement(RealView, props, children),
   };
 });

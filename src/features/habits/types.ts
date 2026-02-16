@@ -1,4 +1,5 @@
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
+import type { CompletionSoundType } from '../../../convex/settings/types';
 import type { MilestoneAchievement } from '../../hooks/useMilestoneDetection';
 
 export type Habit = Doc<'habits'>;
@@ -34,6 +35,8 @@ export interface RewardToastData {
 export interface HabitSettings {
   appIcon: string;
   catTheme: boolean;
+  completionSoundEnabled: boolean;
+  completionSoundType: CompletionSoundType;
   dayShape: 'circle' | 'square';
   hasPremium: boolean;
   habitCompletionIcon: 'chain' | 'checkbox';

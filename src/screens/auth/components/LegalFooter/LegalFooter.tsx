@@ -12,6 +12,7 @@ export function LegalFooter() {
   return (
     <View className='flex-row items-center justify-center'>
       <AnimatedPressable
+        accessibilityHint='Open terms of service in browser'
         accessibilityLabel='Terms of Service'
         accessibilityRole='link'
         onPress={openTerms}
@@ -20,6 +21,7 @@ export function LegalFooter() {
       </AnimatedPressable>
       <Text className='mx-2 text-xs text-stone-600'>·</Text>
       <AnimatedPressable
+        accessibilityHint='Open privacy policy in browser'
         accessibilityLabel='Privacy Policy'
         accessibilityRole='link'
         onPress={openPrivacy}

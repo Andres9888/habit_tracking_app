@@ -30,7 +30,7 @@ try {
 const config = withNativeWind(baseConfig, { input: './global.css' });
 
 // Keep existing resolver customizations
-config.resolver.assetExts.push('ttf', 'otf', 'woff', 'woff2');
+config.resolver.assetExts.push('ttf', 'otf', 'woff', 'woff2', 'wav');
 config.resolver.sourceExts.push('jsx', 'js', 'ts', 'tsx', 'json');
 
 // Limit max workers to prevent resource exhaustion
