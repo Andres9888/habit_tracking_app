@@ -24,6 +24,7 @@ export function WriteLetterModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='slide'
       presentationStyle='pageSheet'
       visible={visible}

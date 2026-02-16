@@ -61,6 +61,7 @@ export function AffirmationEditorModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='slide'
       presentationStyle='pageSheet'
       visible={visible}

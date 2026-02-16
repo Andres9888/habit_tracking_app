@@ -52,6 +52,7 @@ export function MilestoneCelebration({
   return (
     <>
       <Modal
+        accessibilityViewIsModal
         backdropOpacity={0.6}
         style={styles.modalContent}
         variant='fullScreen'
