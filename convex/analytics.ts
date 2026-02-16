@@ -29,3 +29,6 @@ export { getComplianceData } from './analyticsCompliance';
 
 // Weekly insights
 export { getWeeklyInsights, generateWeeklyInsights } from './analyticsWeekly';
+
+// Global stats for social proof
+export { getGlobalStats } from './analyticsGlobal';

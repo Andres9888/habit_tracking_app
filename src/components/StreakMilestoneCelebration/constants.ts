@@ -14,7 +14,9 @@ export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
  */
 export const STREAK_MILESTONES = [
   { color: '#10b981', days: 7, emoji: '🎊', title: 'First Week — Amazing!' },
+  { color: '#06b6d4', days: 14, emoji: '🌟', title: 'Two Weeks — You're on Fire!' },
   { color: '#f59e0b', days: 30, emoji: '🏆', title: 'One Month Strong!' },
+  { color: '#ec4899', days: 60, emoji: '💎', title: 'Two Months — Unstoppable!' },
   { color: '#8b5cf6', days: 100, emoji: '👑', title: 'Welcome to the Century Club!' },
 ] as const;
 
@@ -63,8 +65,12 @@ export function checkStreakMilestoneCrossed(
 export const CONFETTI_COLORS = [
   '#10b981', // Emerald-500 (7-day)
   '#34d399', // Emerald-400
+  '#06b6d4', // Cyan-500 (14-day)
+  '#22d3ee', // Cyan-400
   '#f59e0b', // Amber-500 (30-day)
   '#fcd34d', // Amber-300
+  '#ec4899', // Pink-500 (60-day)
+  '#f9a8d4', // Pink-300
   '#8b5cf6', // Violet-500 (100-day)
   '#a78bfa', // Violet-400
   '#fef3c7', // Amber-100 (sparkle)

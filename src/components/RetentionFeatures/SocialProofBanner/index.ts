@@ -1,0 +1,1 @@
+export { SocialProofBanner } from './SocialProofBanner';
