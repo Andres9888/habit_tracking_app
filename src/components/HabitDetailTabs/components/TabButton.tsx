@@ -2,6 +2,7 @@
  * TabButton Component
  *
  * Individual tab button with press animation for HabitDetailTabs.
+ * Theme-aware with proper dark mode support.
  */
 
 import React, { useCallback } from 'react';
@@ -12,12 +13,14 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useFocusRing } from '../../../utils/accessibility';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 import type { TabButtonProps } from '../HabitDetailTabs.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function TabButton({ isActive, label, onPress }: TabButtonProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
@@ -33,6 +36,10 @@ export function TabButton({ isActive, label, onPress }: TabButtonProps) {
     scale.value = withSpring(1, { damping: 15, stiffness: 350 });
   }, [scale]);
 
+  // Theme-aware text colors
+  const activeTextColor = '#ffffff';
+  const inactiveTextColor = colors.text.secondary;
+
   return (
     <AnimatedPressable
       accessibilityLabel={`${label} tab`}
@@ -47,7 +54,7 @@ export function TabButton({ isActive, label, onPress }: TabButtonProps) {
     >
       <Text
         style={{
-          color: isActive ? '#ffffff' : '#78716c',
+          color: isActive ? activeTextColor : inactiveTextColor,
           fontSize: 13,
           fontWeight: '600',
         }}
