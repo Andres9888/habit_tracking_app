@@ -18,7 +18,7 @@ import { styles } from './styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const SPRING_CONFIG = { damping: 15, stiffness: 200 };
+const SPRING_CONFIG = { damping: 18, stiffness: 150 };
 
 interface TemplateChipProps {
   template: QuickStartTemplate;

@@ -1,5 +1,10 @@
 /**
- * renderHabitsListEmpty - Empty state renderer for HabitsList
+ * renderHabitsListEmpty — FlatList `ListEmptyComponent` factory.
+ *
+ * Returns a `HabitsEmptyStateMinimal` element shown when the user has no
+ * habits yet.  Provides quick-create and template entry points plus a
+ * success-transition callback that kicks off the list entrance animation
+ * after the first habit is created from the empty state.
  */
 
 import { HabitsEmptyStateMinimal } from '../HabitsEmptyStateMinimal';

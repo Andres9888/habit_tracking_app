@@ -64,16 +64,22 @@ export const easings = {
 /**
  * Spring Presets
  * All motion encodes hierarchy, state, or spatial relation.
+ * 
+ * Design System Standard: damping 18, stiffness 150
+ * This provides a consistent, snappy feel across all micro-interactions.
  */
 export const springs = {
+  /** Standard spring for all interactions - consistent feel */
+  standard: { damping: 18, stiffness: 150 },
+
   /** Bottom sheet enter/exit — higher damping for stable slide */
   bottomSheet: { damping: 26, stiffness: 300 },
 
   /** Bouncy — celebrations only */
   bouncy: { damping: 10, stiffness: 180 },
 
-  /** Button press/release — snappy feedback */
-  button: { damping: 18, stiffness: 240 },
+  /** Button press/release — snappy feedback (updated to match standard) */
+  button: { damping: 18, stiffness: 150 },
 
   /** Fast dismissal — minimal bounce */
   exit: { damping: 26, mass: 1, stiffness: 420 },
@@ -84,8 +90,8 @@ export const springs = {
   /** Direct manipulation snap-back */
   gesture: { damping: 20, mass: 1, stiffness: 450 },
 
-  /** Subtle micro-interactions */
-  micro: { damping: 15, stiffness: 400 },
+  /** Subtle micro-interactions (updated to match standard) */
+  micro: { damping: 18, stiffness: 150 },
 
   /** Attention pulse / glow */
   pulse: { damping: 12, stiffness: 250 },
@@ -93,8 +99,8 @@ export const springs = {
   /** Modal/sheet presentations */
   sheet: { damping: 20, stiffness: 200 },
 
-  /** Quick response with slight bounce */
-  snappy: { damping: 15, stiffness: 150 },
+  /** Quick response with slight bounce (same as standard) */
+  snappy: { damping: 18, stiffness: 150 },
 } as const;
 
 export type Duration = keyof typeof durations;

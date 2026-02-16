@@ -21,7 +21,7 @@ export function ScreenErrorFallback({
   onRetry,
   onGoBack,
 }: ScreenErrorFallbackProps) {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({

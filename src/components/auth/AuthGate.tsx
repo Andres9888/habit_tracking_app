@@ -214,18 +214,18 @@ export function AuthGate() {
   }
 
   // Determine which screen to show
-  const screenKey = !isSignedIn
-    ? 'welcome'
-    : !onboardingComplete
-      ? 'onboarding'
-      : 'app';
+  const screenKey = isSignedIn
+    ? onboardingComplete
+      ? 'app'
+      : 'onboarding'
+    : 'welcome';
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {screenKey === 'welcome' && (
         <Animated.View
           key="welcome"
-          entering={FadeIn.duration(300)}
+          entering={FadeInDown.duration(280).springify().damping(18)}
           exiting={FadeOut.duration(300)}
           style={{ flex: 1 }}
         >
@@ -235,7 +235,7 @@ export function AuthGate() {
       {screenKey === 'onboarding' && (
         <Animated.View
           key="onboarding"
-          entering={FadeIn.duration(300)}
+          entering={FadeInDown.duration(280).springify().damping(18)}
           exiting={FadeOut.duration(300)}
           style={{ flex: 1 }}
         >
@@ -245,7 +245,7 @@ export function AuthGate() {
       {screenKey === 'app' && (
         <Animated.View
           key="app"
-          entering={FadeIn.duration(300)}
+          entering={FadeInDown.duration(280).springify().damping(18)}
           style={{ flex: 1 }}
         >
           <HabitsApp />

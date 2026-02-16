@@ -14,7 +14,7 @@ import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ProgressBar, ToastContent } from './components';
-import { styles } from './styles';
+import { useToastStyles } from './styles';
 import type { DeleteUndoToastProps } from './types';
 import { useDeleteToastAnimations } from './useDeleteToastAnimations';
 
@@ -26,15 +26,17 @@ export function DeleteUndoToast({
   onUndo,
   onConfirm,
 }: DeleteUndoToastProps) {
+  const styles = useToastStyles();
   const insets = useSafeAreaInsets();
 
-  const { containerStyle, panGesture, progressStyle } = useDeleteToastAnimations({
-    duration,
-    onConfirm: onConfirm ?? (() => {}),
-    onDismiss,
-    onUndo: onUndo ?? (() => {}),
-    visible,
-  });
+  const { containerStyle, panGesture, progressStyle } =
+    useDeleteToastAnimations({
+      duration,
+      onConfirm: onConfirm ?? (() => {}),
+      onDismiss,
+      onUndo: onUndo ?? (() => {}),
+      visible,
+    });
 
   if (!visible) return null;
 

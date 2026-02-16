@@ -41,7 +41,7 @@ export function useCategoryChipAnimations({
     );
     chipTranslateX.value = withDelay(
       delay,
-      withSpring(0, { damping: 18, stiffness: 120 })
+      withSpring(0, { damping: 18, stiffness: 150 })
     );
   }, [animationIndex, chipOpacity, chipTranslateX]);
 
