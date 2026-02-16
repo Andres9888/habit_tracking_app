@@ -3,9 +3,12 @@
  *
  * Initializes RevenueCat SDK when user is authenticated.
  * Must be placed inside ClerkProvider and ConvexClerkProvider.
+ *
+ * Defers initialization to requestIdleCallback to avoid blocking
+ * critical app startup path.
  */
 
-import { useEffect } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { useUser } from '@clerk/clerk-expo';
 import {
   initializePurchases,
@@ -17,14 +20,27 @@ interface PurchasesProviderProps {
   children: React.ReactNode;
 }
 
-export function PurchasesProvider({ children }: PurchasesProviderProps) {
+function PurchasesProviderImpl({ children }: PurchasesProviderProps) {
   const { isSignedIn, user } = useUser();
+  const initRef = useRef(false);
 
-  // Initialize RevenueCat on mount (works for anonymous users too)
+  // Defer RevenueCat initialization to requestIdleCallback to avoid blocking
+  // the critical startup path. This improves Time to Interactive.
   useEffect(() => {
-    initializePurchases().catch((error) => {
-      if (__DEV__) console.warn('[PurchasesProvider] Failed to initialize:', error);
-    });
+    if (initRef.current) return;
+    initRef.current = true;
+
+    const initAsync = () => {
+      initializePurchases().catch((error) => {
+        if (__DEV__) console.warn('[PurchasesProvider] Failed to initialize:', error);
+      });
+    };
+
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(initAsync, { timeout: 5000 });
+    } else {
+      setTimeout(initAsync, 1000);
+    }
   }, []);
 
   // Identify user when they sign in
@@ -42,3 +58,9 @@ export function PurchasesProvider({ children }: PurchasesProviderProps) {
 
   return <>{children}</>;
 }
+
+/**
+ * Memoized PurchasesProvider to prevent unnecessary re-renders
+ * when parent providers update but PurchasesProvider logic hasn't changed.
+ */
+export const PurchasesProvider = memo(PurchasesProviderImpl);

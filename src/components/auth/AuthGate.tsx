@@ -11,7 +11,7 @@
 
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, memo } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -40,7 +40,11 @@ function ChainIcon() {
   );
 }
 
-function BrandedLoadingScreen() {
+/**
+ * BrandedLoadingScreen - Optimized splash screen
+ * Uses memoization to avoid unnecessary re-renders during auth state changes
+ */
+const BrandedLoadingScreen = memo(function BrandedLoadingScreenMemo() {
   const [timedOut, setTimedOut] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -99,7 +103,7 @@ function BrandedLoadingScreen() {
       </View>
     </View>
   );
-}
+});
 
 const loadingStyles = StyleSheet.create({
   appName: {

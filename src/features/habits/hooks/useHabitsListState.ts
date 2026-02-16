@@ -8,7 +8,7 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Habit, HabitSettings, HabitSortMode } from '../types';
@@ -26,6 +26,23 @@ import { validateHabitsArray } from '../../../utils/validation';
 import type { HabitsListState } from './types';
 
 import { FREE_HABIT_LIMIT } from '@/constants';
+
+// Lazy load settings with a slight delay to keep initial render fast.
+// Settings are non-critical for initial list render; defaults are applied
+// if not yet loaded. This parallelizes the settings fetch without blocking.
+function useSettingsWithFallback() {
+  const [shouldFetchSettings, setShouldFetchSettings] = useState(false);
+
+  // Start fetching settings after a brief delay (allows habits to render first)
+  useEffect(() => {
+    const timeoutId = setTimeout(() => setShouldFetchSettings(true), 0);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  // Only fire query when flag is set (or pass undefined to skip initially)
+  const settingsQuery = useQuery(shouldFetchSettings ? api.settings.get : null);
+  return settingsQuery;
+}
 
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
@@ -47,7 +64,8 @@ export function useHabitsListState(): HabitsListState {
     console.warn('[useHabitsListState]', habitsValidation.warning);
   }
 
-  const settingsQuery = useQuery(api.settings.get);
+  // Fetch settings with deferred query to avoid blocking initial render
+  const settingsQuery = useSettingsWithFallback();
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
   const completionSoundEnabled = settings?.completionSoundEnabled ?? false;

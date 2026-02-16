@@ -27,6 +27,7 @@ import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { OfflineProvider } from './providers/OfflineProvider';
+import { DeferredProvider } from './providers/DeferredProvider';
 import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
 
@@ -37,6 +38,13 @@ if (typeof requestIdleCallback === 'function') {
   requestIdleCallback(() => initSentry());
 } else {
   setTimeout(() => initSentry(), 0);
+}
+
+// Performance instrumentation
+if (__DEV__) {
+  import('./lib/performance').then(({ performanceMonitor }) => {
+    performanceMonitor.mark('app-init');
+  });
 }
 
 const clerkKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -59,9 +67,13 @@ function Providers({ children }: PropsWithChildren) {
                     <OfflineProvider>
                       <SyncStatusProvider>
                         <PurchasesProvider>
-                          <StreakMilestoneProvider>
-                            {children}
-                          </StreakMilestoneProvider>
+                          {/* Defer StreakMilestoneProvider initialization until app is interactive.
+                              This is non-critical for initial render and can be deferred ~1s. */}
+                          <DeferredProvider timeoutMs={1000}>
+                            <StreakMilestoneProvider>
+                              {children}
+                            </StreakMilestoneProvider>
+                          </DeferredProvider>
                         </PurchasesProvider>
                       </SyncStatusProvider>
                     </OfflineProvider>
