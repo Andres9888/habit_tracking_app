@@ -26,6 +26,7 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}
@@ -34,13 +35,20 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
       <View className='flex-1'>
         <LinearGradient
           className='absolute inset-0'
-          colors={isDark ? [colors.background, colors.surface] : ['#f5f3ff', '#ffffff', '#fafaf9']}
+          colors={
+            isDark
+              ? [colors.background, colors.surface]
+              : ['#f5f3ff', '#ffffff', '#fafaf9']
+          }
         />
         <Animated.View
           className='flex-row items-center justify-between border-b px-5 pb-4'
-          style={{ borderColor: colors.border, backgroundColor: isDark ? colors.surface : 'rgba(255,255,255,0.95)' }}
           entering={FadeIn.delay(100)}
-          style={{ paddingTop: insets.top + 8 }}
+          style={{
+            borderColor: colors.border,
+            backgroundColor: isDark ? colors.surface : 'rgba(255,255,255,0.95)',
+            paddingTop: insets.top + 8,
+          }}
         >
           <View className='flex-row items-center gap-3'>
             <View className='h-10 w-10 items-center justify-center rounded-xl'>
@@ -53,7 +61,10 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
               <Eye color='#ffffff' size={20} />
             </View>
             <View>
-              <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
+              <Text
+                className='text-lg font-bold'
+                style={{ color: colors.text.primary }}
+              >
                 Visualization Guide
               </Text>
               <Text className='text-xs' style={{ color: colors.text.tertiary }}>

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Account section for settings modal
  */
@@ -8,11 +9,11 @@ import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { DataExportRow } from './sections/DataExportRow';
 import { PremiumStatus } from './sections/PremiumStatus';
+import { FeedbackModal } from '../FeedbackModal';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
 const WHATS_NEW_URL = 'https://andres9888.github.io/chainday-landing/changelog.html';
-const SUPPORT_EMAIL = 'support@chainday.app';
 const PRIVACY_URL =
   'https://andres9888.github.io/chainday-landing/privacy.html';
 const TERMS_URL = 'https://andres9888.github.io/chainday-landing/terms.html';
@@ -27,7 +28,35 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
   const { signOut } = useClerk();
   const { user } = useUser();
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const userEmail = user?.primaryEmailAddress?.emailAddress;
+
+  const handleDeleteAccount = useCallback(() => {
+    Alert.alert(
+      'Delete Account',
+      'This will permanently delete your account and all your data. This action cannot be undone.',
+      [
+        { style: 'cancel', text: 'Cancel' },
+        {
+          onPress: () => {
+            setIsDeletingAccount(true);
+            void (async () => {
+              try {
+                await user?.delete();
+              } catch {
+                Alert.alert('Error', 'Failed to delete account. Please try again or contact support.');
+              } finally {
+                setIsDeletingAccount(false);
+              }
+            })();
+          },
+          style: 'destructive',
+          text: 'Delete',
+        },
+      ]
+    );
+  }, [user]);
 
   const handleSignOut = useCallback(() => {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -87,8 +116,20 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
     []
   );
 
+  const handleFeedback = useCallback(() => {
+    setShowFeedbackModal(true);
+  }, []);
+
   return (
     <>
+      <AccountInfo
+        email={userEmail}
+        highContrast={isHighContrastActive}
+        isDeletingAccount={isDeletingAccount}
+        isLoading={isSigningOut}
+        onDeleteAccount={handleDeleteAccount}
+        onSignOut={handleSignOut}
+      />
       <PremiumStatus
         highContrast={isHighContrastActive}
         isPremium={isPremium}
@@ -105,13 +146,17 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
         highContrast={isHighContrastActive}
         onRate={handleRateApp}
         onShare={handleShare}
-        onSupport={openUrl(`mailto:${SUPPORT_EMAIL}?subject=Chain Day`)}
+        onFeedback={handleFeedback}
         onWhatsNew={handleWhatsNew}
       />
       <LegalLinks
         highContrast={isHighContrastActive}
         onPrivacy={openUrl(PRIVACY_URL)}
         onTerms={openUrl(TERMS_URL)}
+      />
+      <FeedbackModal
+        visible={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
       />
     </>
   );

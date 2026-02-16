@@ -71,8 +71,12 @@ export const listRecent = query({
     if (!identity) return [];
 
     const limit = args.limit ?? 10;
-    const reflections = await ctx.db.query('reflections').order('desc').collect();
-    return reflections.filter((r) => r.userId === identity.subject).slice(0, limit);
+    const reflections = await ctx.db
+      .query('reflections')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+      .order('desc')
+      .take(limit);
+    return reflections;
   },
   returns: reflectionsArrayValidator,
 });

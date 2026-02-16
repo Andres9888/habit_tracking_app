@@ -2,21 +2,21 @@
 
 exports[`EnhancedReminderSelector Snapshots Disabled State renders in disabled state (collapsed) 1`] = `
 <View
-  className="mb-4"
+  className="mb-6"
   testID="enhanced-reminder-selector"
 >
   <View
-    className="flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3"
+    className="flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4"
     style={
       {
         "elevation": 1,
-        "shadowColor": "#000",
+        "shadowColor": "#2D2A26",
         "shadowOffset": {
           "height": 1,
           "width": 0,
         },
-        "shadowOpacity": 0.05,
-        "shadowRadius": 2,
+        "shadowOpacity": 0.04,
+        "shadowRadius": 3,
       }
     }
   >
@@ -24,16 +24,16 @@ exports[`EnhancedReminderSelector Snapshots Disabled State renders in disabled s
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-full bg-amber-100"
+        className="h-10 w-10 items-center justify-center rounded-full bg-amber-100"
       >
         <View
           color="#f59e0b"
-          size={16}
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
       <Text
-        className="text-sm font-medium text-stone-900"
+        className="text-base font-medium text-stone-900"
       >
         Daily Reminder
       </Text>
@@ -67,21 +67,21 @@ exports[`EnhancedReminderSelector Snapshots Disabled State renders in disabled s
 
 exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom time (no preset selected) 1`] = `
 <View
-  className="mb-4"
+  className="mb-6"
   testID="enhanced-reminder-selector"
 >
   <View
-    className="flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3"
+    className="flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4"
     style={
       {
         "elevation": 1,
-        "shadowColor": "#000",
+        "shadowColor": "#2D2A26",
         "shadowOffset": {
           "height": 1,
           "width": 0,
         },
-        "shadowOpacity": 0.05,
-        "shadowRadius": 2,
+        "shadowOpacity": 0.04,
+        "shadowRadius": 3,
       }
     }
   >
@@ -89,16 +89,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-full bg-amber-100"
+        className="h-10 w-10 items-center justify-center rounded-full bg-amber-100"
       >
         <View
           color="#f59e0b"
-          size={16}
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
       <Text
-        className="text-sm font-medium text-stone-900"
+        className="text-base font-medium text-stone-900"
       >
         Daily Reminder
       </Text>
@@ -128,14 +128,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
     />
   </View>
   <View
-    className="mt-3"
+    className="mt-4"
   >
     <View
-      className="mb-3 flex-row gap-2"
+      className="mb-4 flex-row gap-3"
       testID="preset-buttons"
     >
       <View
-        accessibilityLabel="Set reminder for 7 AM"
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -170,13 +170,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -185,25 +186,39 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌅
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            7 AM
+            7:00 AM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 12 PM"
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -238,13 +253,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -253,25 +269,39 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            ☀️
-          </Text>
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            12 PM
+            12:00 PM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 8 PM"
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -306,13 +336,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -321,20 +352,34 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌙
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            8 PM
+            8:00 PM
           </Text>
         </View>
       </View>
@@ -361,7 +406,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         }
       }
       accessible={true}
-      className="mb-3"
+      className="mb-4 flex-row items-center justify-center py-3"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -376,40 +421,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
       testID="custom-time-button"
     >
       <View
-        className="flex-row items-center justify-between rounded-xl border px-3.5 py-3"
-        style={
-          {
-            "backgroundColor": "#ECFDF5",
-            "borderColor": "#10B981",
-            "borderWidth": 2,
-          }
-        }
+        color="#059669"
+        size={16}
+        testID="lucide-icon-Clock"
+      />
+      <Text
+        className="ml-1.5 text-sm font-medium text-emerald-600"
       >
-        <View
-          className="flex-row items-center gap-2.5"
-        >
-          <View
-            color="#047857"
-            size={16}
-            testID="lucide-icon-Clock"
-          />
-          <Text
-            className="text-sm font-medium"
-            style={
-              {
-                "color": "#047857",
-              }
-            }
-          >
-            6:30 AM
-          </Text>
-        </View>
-        <View
-          color="#047857"
-          size={18}
-          testID="lucide-icon-ChevronRight"
-        />
-      </View>
+        6:30 AM
+      </Text>
+      <Text
+        className="ml-1 text-sm text-emerald-600"
+      >
+        (tap to change)
+      </Text>
     </View>
     <View
       className="items-center"
@@ -429,21 +454,21 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
 
 exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom time at midnight 1`] = `
 <View
-  className="mb-4"
+  className="mb-6"
   testID="enhanced-reminder-selector"
 >
   <View
-    className="flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3"
+    className="flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4"
     style={
       {
         "elevation": 1,
-        "shadowColor": "#000",
+        "shadowColor": "#2D2A26",
         "shadowOffset": {
           "height": 1,
           "width": 0,
         },
-        "shadowOpacity": 0.05,
-        "shadowRadius": 2,
+        "shadowOpacity": 0.04,
+        "shadowRadius": 3,
       }
     }
   >
@@ -451,16 +476,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-full bg-amber-100"
+        className="h-10 w-10 items-center justify-center rounded-full bg-amber-100"
       >
         <View
           color="#f59e0b"
-          size={16}
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
       <Text
-        className="text-sm font-medium text-stone-900"
+        className="text-base font-medium text-stone-900"
       >
         Daily Reminder
       </Text>
@@ -490,14 +515,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
     />
   </View>
   <View
-    className="mt-3"
+    className="mt-4"
   >
     <View
-      className="mb-3 flex-row gap-2"
+      className="mb-4 flex-row gap-3"
       testID="preset-buttons"
     >
       <View
-        accessibilityLabel="Set reminder for 7 AM"
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -532,13 +557,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -547,25 +573,39 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌅
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            7 AM
+            7:00 AM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 12 PM"
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -600,13 +640,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -615,25 +656,39 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            ☀️
-          </Text>
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            12 PM
+            12:00 PM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 8 PM"
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -668,13 +723,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -683,20 +739,34 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌙
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            8 PM
+            8:00 PM
           </Text>
         </View>
       </View>
@@ -723,7 +793,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
         }
       }
       accessible={true}
-      className="mb-3"
+      className="mb-4 flex-row items-center justify-center py-3"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -738,40 +808,20 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
       testID="custom-time-button"
     >
       <View
-        className="flex-row items-center justify-between rounded-xl border px-3.5 py-3"
-        style={
-          {
-            "backgroundColor": "#ECFDF5",
-            "borderColor": "#10B981",
-            "borderWidth": 2,
-          }
-        }
+        color="#059669"
+        size={16}
+        testID="lucide-icon-Clock"
+      />
+      <Text
+        className="ml-1.5 text-sm font-medium text-emerald-600"
       >
-        <View
-          className="flex-row items-center gap-2.5"
-        >
-          <View
-            color="#047857"
-            size={16}
-            testID="lucide-icon-Clock"
-          />
-          <Text
-            className="text-sm font-medium"
-            style={
-              {
-                "color": "#047857",
-              }
-            }
-          >
-            12:00 AM
-          </Text>
-        </View>
-        <View
-          color="#047857"
-          size={18}
-          testID="lucide-icon-ChevronRight"
-        />
-      </View>
+        12:00 AM
+      </Text>
+      <Text
+        className="ml-1 text-sm text-emerald-600"
+      >
+        (tap to change)
+      </Text>
     </View>
     <View
       className="items-center"
@@ -791,21 +841,21 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
 
 exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening preset selected 1`] = `
 <View
-  className="mb-4"
+  className="mb-6"
   testID="enhanced-reminder-selector"
 >
   <View
-    className="flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3"
+    className="flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4"
     style={
       {
         "elevation": 1,
-        "shadowColor": "#000",
+        "shadowColor": "#2D2A26",
         "shadowOffset": {
           "height": 1,
           "width": 0,
         },
-        "shadowOpacity": 0.05,
-        "shadowRadius": 2,
+        "shadowOpacity": 0.04,
+        "shadowRadius": 3,
       }
     }
   >
@@ -813,16 +863,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-full bg-amber-100"
+        className="h-10 w-10 items-center justify-center rounded-full bg-amber-100"
       >
         <View
           color="#f59e0b"
-          size={16}
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
       <Text
-        className="text-sm font-medium text-stone-900"
+        className="text-base font-medium text-stone-900"
       >
         Daily Reminder
       </Text>
@@ -852,14 +902,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
     />
   </View>
   <View
-    className="mt-3"
+    className="mt-4"
   >
     <View
-      className="mb-3 flex-row gap-2"
+      className="mb-4 flex-row gap-3"
       testID="preset-buttons"
     >
       <View
-        accessibilityLabel="Set reminder for 7 AM"
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -894,13 +944,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -909,25 +960,39 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌅
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            7 AM
+            7:00 AM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 12 PM"
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -962,13 +1027,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -977,25 +1043,39 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            ☀️
-          </Text>
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            12 PM
+            12:00 PM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 8 PM"
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -1030,13 +1110,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#ECFDF5",
               "borderColor": "#10B981",
               "borderWidth": 2,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -1045,20 +1126,34 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌙
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#059669",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#059669",
+                "color": "#047857",
               }
             }
           >
-            8 PM
+            8:00 PM
           </Text>
         </View>
       </View>
@@ -1085,7 +1180,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
         }
       }
       accessible={true}
-      className="mb-3"
+      className="mb-4 flex-row items-center justify-center py-3"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -1099,41 +1194,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
       onStartShouldSetResponder={[Function]}
       testID="custom-time-button"
     >
-      <View
-        className="flex-row items-center justify-between rounded-xl border px-3.5 py-3"
-        style={
-          {
-            "backgroundColor": "#ffffff",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1,
-          }
-        }
+      <Text
+        className="text-sm font-medium text-emerald-600"
       >
-        <View
-          className="flex-row items-center gap-2.5"
-        >
-          <View
-            color="#78716c"
-            size={16}
-            testID="lucide-icon-Clock"
-          />
-          <Text
-            className="text-sm font-medium"
-            style={
-              {
-                "color": "#1c1917",
-              }
-            }
-          >
-            Custom time...
-          </Text>
-        </View>
-        <View
-          color="#a8a29e"
-          size={18}
-          testID="lucide-icon-ChevronRight"
-        />
-      </View>
+        Pick a different time
+      </Text>
+      <Text
+        className="ml-1 text-emerald-600"
+      >
+        →
+      </Text>
     </View>
     <View
       className="items-center"
@@ -1153,21 +1223,21 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
 
 exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday preset selected 1`] = `
 <View
-  className="mb-4"
+  className="mb-6"
   testID="enhanced-reminder-selector"
 >
   <View
-    className="flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3"
+    className="flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4"
     style={
       {
         "elevation": 1,
-        "shadowColor": "#000",
+        "shadowColor": "#2D2A26",
         "shadowOffset": {
           "height": 1,
           "width": 0,
         },
-        "shadowOpacity": 0.05,
-        "shadowRadius": 2,
+        "shadowOpacity": 0.04,
+        "shadowRadius": 3,
       }
     }
   >
@@ -1175,16 +1245,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-full bg-amber-100"
+        className="h-10 w-10 items-center justify-center rounded-full bg-amber-100"
       >
         <View
           color="#f59e0b"
-          size={16}
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
       <Text
-        className="text-sm font-medium text-stone-900"
+        className="text-base font-medium text-stone-900"
       >
         Daily Reminder
       </Text>
@@ -1214,14 +1284,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
     />
   </View>
   <View
-    className="mt-3"
+    className="mt-4"
   >
     <View
-      className="mb-3 flex-row gap-2"
+      className="mb-4 flex-row gap-3"
       testID="preset-buttons"
     >
       <View
-        accessibilityLabel="Set reminder for 7 AM"
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -1256,13 +1326,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -1271,25 +1342,39 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌅
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            7 AM
+            7:00 AM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 12 PM"
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -1324,13 +1409,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#ECFDF5",
               "borderColor": "#10B981",
               "borderWidth": 2,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -1339,25 +1425,39 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            ☀️
-          </Text>
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#059669",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#059669",
+                "color": "#047857",
               }
             }
           >
-            12 PM
+            12:00 PM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 8 PM"
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -1392,13 +1492,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -1407,20 +1508,34 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌙
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            8 PM
+            8:00 PM
           </Text>
         </View>
       </View>
@@ -1447,7 +1562,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
         }
       }
       accessible={true}
-      className="mb-3"
+      className="mb-4 flex-row items-center justify-center py-3"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -1461,41 +1576,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
       onStartShouldSetResponder={[Function]}
       testID="custom-time-button"
     >
-      <View
-        className="flex-row items-center justify-between rounded-xl border px-3.5 py-3"
-        style={
-          {
-            "backgroundColor": "#ffffff",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1,
-          }
-        }
+      <Text
+        className="text-sm font-medium text-emerald-600"
       >
-        <View
-          className="flex-row items-center gap-2.5"
-        >
-          <View
-            color="#78716c"
-            size={16}
-            testID="lucide-icon-Clock"
-          />
-          <Text
-            className="text-sm font-medium"
-            style={
-              {
-                "color": "#1c1917",
-              }
-            }
-          >
-            Custom time...
-          </Text>
-        </View>
-        <View
-          color="#a8a29e"
-          size={18}
-          testID="lucide-icon-ChevronRight"
-        />
-      </View>
+        Pick a different time
+      </Text>
+      <Text
+        className="ml-1 text-emerald-600"
+      >
+        →
+      </Text>
     </View>
     <View
       className="items-center"
@@ -1515,21 +1605,21 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
 
 exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning preset selected 1`] = `
 <View
-  className="mb-4"
+  className="mb-6"
   testID="enhanced-reminder-selector"
 >
   <View
-    className="flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3"
+    className="flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4"
     style={
       {
         "elevation": 1,
-        "shadowColor": "#000",
+        "shadowColor": "#2D2A26",
         "shadowOffset": {
           "height": 1,
           "width": 0,
         },
-        "shadowOpacity": 0.05,
-        "shadowRadius": 2,
+        "shadowOpacity": 0.04,
+        "shadowRadius": 3,
       }
     }
   >
@@ -1537,16 +1627,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-full bg-amber-100"
+        className="h-10 w-10 items-center justify-center rounded-full bg-amber-100"
       >
         <View
           color="#f59e0b"
-          size={16}
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
       <Text
-        className="text-sm font-medium text-stone-900"
+        className="text-base font-medium text-stone-900"
       >
         Daily Reminder
       </Text>
@@ -1576,14 +1666,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
     />
   </View>
   <View
-    className="mt-3"
+    className="mt-4"
   >
     <View
-      className="mb-3 flex-row gap-2"
+      className="mb-4 flex-row gap-3"
       testID="preset-buttons"
     >
       <View
-        accessibilityLabel="Set reminder for 7 AM"
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -1618,13 +1708,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#ECFDF5",
               "borderColor": "#10B981",
               "borderWidth": 2,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -1633,25 +1724,39 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌅
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#059669",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#059669",
+                "color": "#047857",
               }
             }
           >
-            7 AM
+            7:00 AM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 12 PM"
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -1686,13 +1791,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -1701,25 +1807,39 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            ☀️
-          </Text>
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            12 PM
+            12:00 PM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 8 PM"
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -1754,13 +1874,14 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -1769,20 +1890,34 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌙
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            8 PM
+            8:00 PM
           </Text>
         </View>
       </View>
@@ -1809,7 +1944,7 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
         }
       }
       accessible={true}
-      className="mb-3"
+      className="mb-4 flex-row items-center justify-center py-3"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -1823,41 +1958,16 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
       onStartShouldSetResponder={[Function]}
       testID="custom-time-button"
     >
-      <View
-        className="flex-row items-center justify-between rounded-xl border px-3.5 py-3"
-        style={
-          {
-            "backgroundColor": "#ffffff",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1,
-          }
-        }
+      <Text
+        className="text-sm font-medium text-emerald-600"
       >
-        <View
-          className="flex-row items-center gap-2.5"
-        >
-          <View
-            color="#78716c"
-            size={16}
-            testID="lucide-icon-Clock"
-          />
-          <Text
-            className="text-sm font-medium"
-            style={
-              {
-                "color": "#1c1917",
-              }
-            }
-          >
-            Custom time...
-          </Text>
-        </View>
-        <View
-          color="#a8a29e"
-          size={18}
-          testID="lucide-icon-ChevronRight"
-        />
-      </View>
+        Pick a different time
+      </Text>
+      <Text
+        className="ml-1 text-emerald-600"
+      >
+        →
+      </Text>
     </View>
     <View
       className="items-center"
@@ -1877,21 +1987,21 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
 
 exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom presets 1`] = `
 <View
-  className="mb-4"
+  className="mb-6"
   testID="enhanced-reminder-selector"
 >
   <View
-    className="flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3"
+    className="flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4"
     style={
       {
         "elevation": 1,
-        "shadowColor": "#000",
+        "shadowColor": "#2D2A26",
         "shadowOffset": {
           "height": 1,
           "width": 0,
         },
-        "shadowOpacity": 0.05,
-        "shadowRadius": 2,
+        "shadowOpacity": 0.04,
+        "shadowRadius": 3,
       }
     }
   >
@@ -1899,16 +2009,16 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-full bg-amber-100"
+        className="h-10 w-10 items-center justify-center rounded-full bg-amber-100"
       >
         <View
           color="#f59e0b"
-          size={16}
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
       <Text
-        className="text-sm font-medium text-stone-900"
+        className="text-base font-medium text-stone-900"
       >
         Daily Reminder
       </Text>
@@ -1938,10 +2048,10 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
     />
   </View>
   <View
-    className="mt-3"
+    className="mt-4"
   >
     <View
-      className="mb-3 flex-row gap-2"
+      className="mb-4 flex-row gap-3"
       testID="preset-buttons"
     >
       <View
@@ -1980,13 +2090,14 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
         testID="preset-early"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#ECFDF5",
               "borderColor": "#10B981",
               "borderWidth": 2,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -1995,21 +2106,25 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌄
-          </Text>
-          <Text
-            className="text-xs font-medium"
-            style={
-              {
-                "color": "#059669",
+            <Text
+              className="text-base"
+            >
+              🌄
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#059669",
+                }
               }
-            }
-          >
-            5 AM
-          </Text>
+            >
+              5 AM
+            </Text>
+          </View>
         </View>
       </View>
       <View
@@ -2048,13 +2163,14 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
         testID="preset-late"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -2063,21 +2179,25 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌃
-          </Text>
-          <Text
-            className="text-xs font-medium"
-            style={
-              {
-                "color": "#57534e",
+            <Text
+              className="text-base"
+            >
+              🌃
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
               }
-            }
-          >
-            11 PM
-          </Text>
+            >
+              11 PM
+            </Text>
+          </View>
         </View>
       </View>
     </View>
@@ -2103,7 +2223,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
         }
       }
       accessible={true}
-      className="mb-3"
+      className="mb-4 flex-row items-center justify-center py-3"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -2117,41 +2237,16 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
       onStartShouldSetResponder={[Function]}
       testID="custom-time-button"
     >
-      <View
-        className="flex-row items-center justify-between rounded-xl border px-3.5 py-3"
-        style={
-          {
-            "backgroundColor": "#ffffff",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1,
-          }
-        }
+      <Text
+        className="text-sm font-medium text-emerald-600"
       >
-        <View
-          className="flex-row items-center gap-2.5"
-        >
-          <View
-            color="#78716c"
-            size={16}
-            testID="lucide-icon-Clock"
-          />
-          <Text
-            className="text-sm font-medium"
-            style={
-              {
-                "color": "#1c1917",
-              }
-            }
-          >
-            Custom time...
-          </Text>
-        </View>
-        <View
-          color="#a8a29e"
-          size={18}
-          testID="lucide-icon-ChevronRight"
-        />
-      </View>
+        Pick a different time
+      </Text>
+      <Text
+        className="ml-1 text-emerald-600"
+      >
+        →
+      </Text>
     </View>
     <View
       className="items-center"
@@ -2171,21 +2266,21 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
 
 exports[`EnhancedReminderSelector Snapshots Optional Props renders without next reminder badge 1`] = `
 <View
-  className="mb-4"
+  className="mb-6"
   testID="enhanced-reminder-selector"
 >
   <View
-    className="flex-row items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3"
+    className="flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4"
     style={
       {
         "elevation": 1,
-        "shadowColor": "#000",
+        "shadowColor": "#2D2A26",
         "shadowOffset": {
           "height": 1,
           "width": 0,
         },
-        "shadowOpacity": 0.05,
-        "shadowRadius": 2,
+        "shadowOpacity": 0.04,
+        "shadowRadius": 3,
       }
     }
   >
@@ -2193,16 +2288,16 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
       className="flex-row items-center gap-3"
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-full bg-amber-100"
+        className="h-10 w-10 items-center justify-center rounded-full bg-amber-100"
       >
         <View
           color="#f59e0b"
-          size={16}
+          size={18}
           testID="lucide-icon-Bell"
         />
       </View>
       <Text
-        className="text-sm font-medium text-stone-900"
+        className="text-base font-medium text-stone-900"
       >
         Daily Reminder
       </Text>
@@ -2232,14 +2327,14 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
     />
   </View>
   <View
-    className="mt-3"
+    className="mt-4"
   >
     <View
-      className="mb-3 flex-row gap-2"
+      className="mb-4 flex-row gap-3"
       testID="preset-buttons"
     >
       <View
-        accessibilityLabel="Set reminder for 7 AM"
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -2274,13 +2369,14 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
         testID="preset-morning"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -2289,25 +2385,39 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌅
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            7 AM
+            7:00 AM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 12 PM"
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -2342,13 +2452,14 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
         testID="preset-midday"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#ECFDF5",
               "borderColor": "#10B981",
               "borderWidth": 2,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -2357,25 +2468,39 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            ☀️
-          </Text>
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#059669",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#059669",
+                "color": "#047857",
               }
             }
           >
-            12 PM
+            12:00 PM
           </Text>
         </View>
       </View>
       <View
-        accessibilityLabel="Set reminder for 8 PM"
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
         accessibilityRole="button"
         accessibilityState={
           {
@@ -2410,13 +2535,14 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
         testID="preset-evening"
       >
         <View
-          className="items-center justify-center rounded-xl px-2 py-2.5"
+          className="items-center justify-center rounded-xl px-3"
           collapsable={false}
           style={
             {
               "backgroundColor": "#f5f5f4",
               "borderColor": "transparent",
               "borderWidth": 1,
+              "height": 48,
               "transform": [
                 {
                   "scale": 1,
@@ -2425,20 +2551,34 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
             }
           }
         >
-          <Text
-            className="mb-0.5 text-base"
+          <View
+            className="flex-row items-center gap-1.5"
           >
-            🌙
-          </Text>
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
           <Text
-            className="text-xs font-medium"
+            className="mt-0.5 text-xs"
             style={
               {
-                "color": "#57534e",
+                "color": "#a8a29e",
               }
             }
           >
-            8 PM
+            8:00 PM
           </Text>
         </View>
       </View>
@@ -2465,7 +2605,7 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
         }
       }
       accessible={true}
-      className="mb-3"
+      className="mb-4 flex-row items-center justify-center py-3"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -2479,41 +2619,16 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
       onStartShouldSetResponder={[Function]}
       testID="custom-time-button"
     >
-      <View
-        className="flex-row items-center justify-between rounded-xl border px-3.5 py-3"
-        style={
-          {
-            "backgroundColor": "#ffffff",
-            "borderColor": "#e7e5e4",
-            "borderWidth": 1,
-          }
-        }
+      <Text
+        className="text-sm font-medium text-emerald-600"
       >
-        <View
-          className="flex-row items-center gap-2.5"
-        >
-          <View
-            color="#78716c"
-            size={16}
-            testID="lucide-icon-Clock"
-          />
-          <Text
-            className="text-sm font-medium"
-            style={
-              {
-                "color": "#1c1917",
-              }
-            }
-          >
-            Custom time...
-          </Text>
-        </View>
-        <View
-          color="#a8a29e"
-          size={18}
-          testID="lucide-icon-ChevronRight"
-        />
-      </View>
+        Pick a different time
+      </Text>
+      <Text
+        className="ml-1 text-emerald-600"
+      >
+        →
+      </Text>
     </View>
   </View>
 </View>

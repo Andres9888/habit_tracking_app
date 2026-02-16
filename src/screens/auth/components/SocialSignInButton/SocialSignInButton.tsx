@@ -21,7 +21,7 @@ const PROVIDER_CONFIG = {
     textColor: 'text-white',
   },
   google: {
-    bgColor: 'bg-white',
+    bgColor: 'bg-white dark:bg-gray-800',
     borderColor: 'border-stone-200',
     label: 'Continue with Google',
     spinnerColor: '#44403c',
@@ -34,6 +34,7 @@ export function SocialSignInButton({
   isLoading,
   onPress,
   provider,
+  testID,
 }: SocialSignInButtonProps) {
   const config = PROVIDER_CONFIG[provider];
   const reduceMotion = useReducedMotion();
@@ -45,13 +46,13 @@ export function SocialSignInButton({
 
   const handlePressIn = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
+      scale.value = withSpring(0.97, { damping: 18, stiffness: 150 });
     }
   };
 
   const handlePressOut = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(1, { damping: 18, stiffness: 240 });
+      scale.value = withSpring(1, { damping: 18, stiffness: 150 });
     }
   };
 
@@ -68,6 +69,7 @@ export function SocialSignInButton({
       accessibilityLabel={config.label}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
+      testID={testID || `auth-${provider}-button`}
       className={`flex-row items-center justify-center rounded-2xl border py-4 ${config.borderColor} ${config.bgColor} ${
         isDisabled ? 'opacity-40' : ''
       }`}

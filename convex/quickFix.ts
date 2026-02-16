@@ -3,9 +3,9 @@
  * Run: npx convex run quickFix:testDisplay
  */
 
-import { mutation, query } from './_generated/server';
+import { internalMutation, internalQuery } from './_generated/server';
 
-export const testDisplay = mutation({
+export const testDisplay = internalMutation({
   handler: async (ctx) => {
     const habit = await ctx.db
       .query('habits')
@@ -34,7 +34,7 @@ export const testDisplay = mutation({
   },
 });
 
-export const checkToggle = query({
+export const checkToggle = internalQuery({
   handler: async (ctx) => {
     const habit = await ctx.db
       .query('habits')

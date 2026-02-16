@@ -4,8 +4,7 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable, Modal } from 'react-native';
-import { Eye, X, Sparkles, AlertTriangle } from 'lucide-react-native';
+import { Text, Pressable, Modal } from 'react-native';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 import type { DualVizExplainerModalProps } from '../DualVizSetup.types';
 import { ExplainerHeader } from './ExplainerHeader';
@@ -21,6 +20,7 @@ export function DualVizExplainerModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='fade'
       visible={visible}
@@ -45,7 +45,10 @@ export function DualVizExplainerModal({
           <ExplainerBreakdown />
 
           {/* Source */}
-          <Text className='text-center text-xs italic' style={{ color: colors.text.tertiary }}>
+          <Text
+            className='text-center text-xs italic'
+            style={{ color: colors.text.tertiary }}
+          >
             Source: Huberman Lab Podcast #55
           </Text>
         </Pressable>

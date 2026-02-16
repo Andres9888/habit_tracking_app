@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * RetryableErrorView — inline error card with retry button.
  * Use inside screens when a query/mutation fails but the whole screen
@@ -38,12 +39,12 @@ export function RetryableErrorView({
   title = 'Something went wrong',
   compact = false,
 }: RetryableErrorViewProps) {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
 
   const errorMessage =
     typeof error === 'string'
       ? error
-      : error?.message ?? 'An unexpected error occurred';
+      : (error?.message ?? 'An unexpected error occurred');
 
   const styles = StyleSheet.create({
     compact: {
@@ -112,8 +113,8 @@ export function RetryableErrorView({
           : `${errorMessage.slice(0, 120)}${errorMessage.length > 120 ? '…' : ''}`}
       </Text>
       <Pressable
-        accessibilityLabel="Retry"
-        accessibilityRole="button"
+        accessibilityLabel='Retry'
+        accessibilityRole='button'
         style={styles.retryButton}
         onPress={onRetry}
       >
@@ -122,7 +123,7 @@ export function RetryableErrorView({
       {onSecondaryAction && (
         <Pressable
           accessibilityLabel={secondaryLabel}
-          accessibilityRole="button"
+          accessibilityRole='button'
           style={styles.secondaryButton}
           onPress={onSecondaryAction}
         >

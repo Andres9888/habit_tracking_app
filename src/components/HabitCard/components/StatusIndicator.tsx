@@ -12,6 +12,7 @@ import Animated, {
   type SharedValue,
 } from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../HabitCard.styles';
 import { ChainLinkAnimation } from './ChainLinkAnimation';
 
@@ -44,6 +45,7 @@ export const StatusIndicator = memo(function StatusIndicator({
   chainRotate,
 }: StatusIndicatorProps) {
   const theme = useAppTheme();
+  const { colors: themeColors } = useThemeColors();
 
   if (completed) {
     // Chain link animation for chain icon type
@@ -92,5 +94,15 @@ export const StatusIndicator = memo(function StatusIndicator({
     );
   }
 
-  return null;
+  // Show empty circle for uncompleted state — provides a visible toggle target
+  // and meets 44x44px minimum touch target requirement
+  return (
+    <View
+      style={[
+        styles.checkCircle,
+        styles.checkCircleUnchecked,
+        { borderColor: themeColors.border },
+      ]}
+    />
+  );
 });

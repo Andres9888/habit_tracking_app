@@ -5,6 +5,7 @@
  * Reference: docs/specs/empty-habit-screen/minimal-redesign.md
  */
 
+import { colors } from '../../../../theme/colors';
 import type { SuggestionChip } from './types';
 
 /**
@@ -87,19 +88,31 @@ export const COPY = {
   // Secondary links
   browseTemplates: 'Browse templates',
 
+  // Templates bridge CTA
+  browseTemplatesCard: 'Not sure where to start? Browse 50+ habit templates →',
+
   createCustom: 'Create custom habit',
 
   // Primary CTA
   ctaButton: 'Start Building →',
 
+  // Dynamic CTA when chip/input is filled
+  ctaButtonDynamic: (habitName: string) => `Add "${habitName}" →`,
+
   // Question headline - line break after "thing" for rhythm
   headline: "What's one small thing\nyou want to do daily?",
 
-  // Input placeholder
-  inputPlaceholder: 'Type your habit...',
+  // Input placeholder - motivating and descriptive
+  inputPlaceholder: 'What habit do you want to build?',
+
+  // Motivational stat
+  motivationalStat:
+    'People who start with one small habit are 3× more likely to build lasting routines.',
+
   // Success state
   successHeadline: "You're growing!",
-  successSubtext: (habitName: string) => `"${habitName}" added — your chain starts now!`,
+  successSubtext: (habitName: string) =>
+    `"${habitName}" added — your chain starts now!`,
 } as const;
 
 /**
@@ -118,7 +131,7 @@ export const COLORS = {
   emerald500: '#10B981',
 
   // WCAG AA compliant primary action (5.21:1 contrast with white)
-  emerald700: '#047857',
+  emerald700: colors.primary[700],
 
   // Caret color
   emeraldCaret: '#10B981',
