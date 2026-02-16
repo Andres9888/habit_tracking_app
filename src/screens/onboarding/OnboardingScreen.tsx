@@ -28,6 +28,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { safeSetBoolean } from '@/utils/storage';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
@@ -246,7 +247,7 @@ interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
-export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
+function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   const { colors } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -586,3 +587,11 @@ const styles = StyleSheet.create({
 });
 
 export { ONBOARDING_KEY };
+
+export function OnboardingScreen(props: OnboardingScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Onboarding">
+      <OnboardingScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}

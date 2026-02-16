@@ -71,6 +71,7 @@ export function useCreateHabitHandlers() {
       await updateHabit({
         habitId: habitToEdit._id,
         icon: selectedEmoji ?? undefined,
+        color: selectedColor,
         iconColor: selectedColor,
         name: sanitizedName,
         notes: habitToEdit.notes ?? '',

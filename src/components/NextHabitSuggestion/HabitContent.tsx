@@ -7,7 +7,7 @@ import type { NextHabitSuggestionProps } from './types';
 import { styles } from './styles';
 
 interface HabitContentProps {
-  habit: NextHabitSuggestionProps['habit'];
+  habit: NonNullable<NextHabitSuggestionProps['habit']>;
   completedCount: number;
   totalCount: number;
   cardStyle: AnimatedStyle<ViewStyle>;
