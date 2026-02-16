@@ -22,7 +22,7 @@ export function ScrollRevealWrapper({
 
   const animation = reducedMotion
     ? FadeIn.duration(0)
-    : FadeInUp.duration(350).springify().damping(18).stiffness(120);
+    : FadeInUp.duration(350).springify().damping(18).stiffness(150);
 
   return <Animated.View entering={animation}>{children}</Animated.View>;
 }

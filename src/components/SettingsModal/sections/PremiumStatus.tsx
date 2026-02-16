@@ -2,6 +2,7 @@ import React from 'react';
 import { Linking, Text, View } from 'react-native';
 import { AlertTriangle, Crown, Zap } from 'lucide-react-native';
 import { SettingsSection } from '../SettingsSection';
+import { SettingsRow } from '../SettingsRow';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { SubscriptionStatus } from '../../../hooks/usePremium/types';
@@ -108,6 +109,15 @@ export function PremiumStatus({
             </Text>
           </View>
         </View>
+        <SettingsRow
+          highContrastMode={highContrast}
+          icon={<Settings color='#6366f1' size={16} />}
+          iconBackgroundColor='#e0e7ff'
+          label='Manage Subscription'
+          showBorder={false}
+          type='navigation'
+          onPress={handleManageSubscription}
+        />
       </SettingsSection>
     );
   }
@@ -117,7 +127,12 @@ export function PremiumStatus({
 
   return (
     <SettingsSection highContrastMode={highContrast} title='Subscription'>
-      <AnimatedPressable onPress={onUpgrade}>
+      <AnimatedPressable
+        accessibilityHint='Opens premium upgrade screen'
+        accessibilityLabel='Upgrade to Premium'
+        accessibilityRole='button'
+        onPress={onUpgrade}
+      >
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
@@ -147,9 +162,7 @@ export function PremiumStatus({
               backgroundColor: '#8b5cf6',
             }}
           >
-            <Text className='text-[13px] font-bold text-white'>
-              PRO
-            </Text>
+            <Text className='text-[13px] font-bold text-white'>PRO</Text>
           </View>
         </View>
       </AnimatedPressable>

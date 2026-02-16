@@ -59,17 +59,47 @@ export const ChartSections = memo(function ChartSections({
         </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>30-Day Trend</Text>
-        <TrendLineChart data={trendData ?? null} onDataPointPress={undefined} />
+      <View accessible accessibilityRole='none' style={styles.section}>
+        <Text
+          accessibilityLabel='30-Day Trend Chart'
+          accessibilityRole='header'
+          style={styles.sectionTitle}
+        >
+          30-Day Trend
+        </Text>
+        <View
+          accessible
+          accessibilityLabel={
+            trendData && trendData.length > 0
+              ? `Trend chart showing ${trendData.length} days of data. Latest average strength: ${Math.round(trendData.at(-1).averageStrength)}%`
+              : 'No trend data available'
+          }
+        >
+          <TrendLineChart data={trendData ?? null} onDataPointPress={undefined} />
+        </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Compliance Heatmap</Text>
-        <ComplianceHeatmap
-          data={complianceData ?? null}
-          onDayPress={undefined}
-        />
+      <View accessible accessibilityRole='none' style={styles.section}>
+        <Text
+          accessibilityLabel='Compliance Heatmap Chart'
+          accessibilityRole='header'
+          style={styles.sectionTitle}
+        >
+          Compliance Heatmap
+        </Text>
+        <View
+          accessible
+          accessibilityLabel={
+            complianceData && complianceData.length > 0
+              ? `Heatmap showing habit completion over ${complianceData.length} days`
+              : 'No compliance data available'
+          }
+        >
+          <ComplianceHeatmap
+            data={complianceData ?? null}
+            onDayPress={undefined}
+          />
+        </View>
       </View>
     </>
   );
