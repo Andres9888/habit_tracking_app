@@ -15,6 +15,7 @@ import {
   STREAK_MILESTONE_CONFIG,
   MILESTONE_CONFIG,
 } from './ShareCardGenerator.constants';
+import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 const FALLBACK_MESSAGE = 'Show up today, and future-you will thank you.';
 
@@ -76,7 +77,8 @@ export function useShareCard(data: ShareCardData) {
       });
     } catch (error) {
       if (__DEV__) console.error('Error sharing card:', error);
-      Alert.alert('Share failed', 'Could not generate share card. Please try again.');
+      alert(ERROR_MESSAGES.DATA_OPS.SHARE_CARD_FAILED);
+
     } finally {
       setIsGenerating(false);
     }

@@ -1,43 +1,14 @@
+/* eslint-disable max-lines */
 /**
  * StreakMilestoneProvider
  * Global provider for managing streak milestone celebrations
  */
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useMemo,
-  type ReactNode,
-} from 'react';
+import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { StreakMilestoneCelebration } from './StreakMilestoneCelebration';
 import { ShareCardGenerator } from '../ShareCardGenerator';
-import {
-  checkStreakMilestoneCrossed,
-  type StreakMilestone,
-} from './constants';
-import { persistMilestoneShown } from './useMilestoneCheck';
-import {
-  maybeRequestReview,
-  incrementCompletionCount,
-} from '../../utils/storeReview';
+import { useCelebrationHandlers } from './useCelebrationHandlers';
 
-interface CelebrationData {
-  milestone: StreakMilestone;
-  habitId: string;
-  habitName: string;
-  habitEmoji: string;
-  streakDays: number;
-}
-
-interface ShareCardData {
-  habitName: string;
-  streakCount: number;
-  milestoneDays: 7 | 30 | 100;
-  motivationalMessage: string;
-  userName: string;
-}
 
 interface StreakMilestoneContextValue {
   checkAndCelebrate: (
@@ -49,9 +20,8 @@ interface StreakMilestoneContextValue {
   ) => void;
 }
 
-const StreakMilestoneContext = createContext<StreakMilestoneContextValue | null>(
-  null
-);
+const StreakMilestoneContext =
+  createContext<StreakMilestoneContextValue | null>(null);
 
 interface StreakMilestoneProviderProps {
   children: ReactNode;
@@ -68,70 +38,16 @@ export function StreakMilestoneProvider({
   children,
   userName = '',
 }: StreakMilestoneProviderProps) {
-  const [celebrationData, setCelebrationData] = useState<CelebrationData | null>(
-    null
-  );
-  const [showShareCard, setShowShareCard] = useState(false);
-  const [shareData, setShareData] = useState<ShareCardData | null>(null);
+  const {
+    celebrationData,
+    shareData,
+    showShareCard,
+    checkAndCelebrate,
+    handleClose,
+    handleShare,
+    handleShareClose,
+  } = useCelebrationHandlers(userName);
 
-  const checkAndCelebrate = useCallback(
-    (
-      habitId: string,
-      habitName: string,
-      habitEmoji: string,
-      previousStreak: number,
-      currentStreak: number
-    ) => {
-      void incrementCompletionCount();
-
-      const milestone = checkStreakMilestoneCrossed(previousStreak, currentStreak);
-
-      if (milestone) {
-        setCelebrationData({
-          habitEmoji,
-          habitId,
-          habitName,
-          milestone,
-          streakDays: currentStreak,
-        });
-      }
-    },
-    []
-  );
-
-  const handleClose = useCallback(() => {
-    if (celebrationData) {
-      persistMilestoneShown(
-        celebrationData.habitId,
-        celebrationData.milestone.days,
-      );
-      setTimeout(() => {
-        void maybeRequestReview(celebrationData.milestone.days);
-      }, 500);
-    }
-    setCelebrationData(null);
-  }, [celebrationData]);
-
-  const handleShare = useCallback(() => {
-    if (celebrationData) {
-      const milestoneDays = celebrationData.milestone.days as 7 | 30 | 100;
-
-      setShareData({
-        habitName: celebrationData.habitName,
-        milestoneDays,
-        motivationalMessage: MILESTONE_MESSAGES[milestoneDays],
-        streakCount: celebrationData.streakDays,
-        userName,
-      });
-      setShowShareCard(true);
-    }
-  }, [celebrationData, userName]);
-
-  const handleShareClose = useCallback(() => {
-    setShowShareCard(false);
-    setShareData(null);
-    handleClose();
-  }, [handleClose]);
 
   const contextValue = useMemo<StreakMilestoneContextValue>(
     () => ({

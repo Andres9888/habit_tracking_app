@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Keyboard } from 'react-native';
+import type ViewShot from 'react-native-view-shot';
 import { Modal } from '../Modal';
 import { Button } from '../Button/Button';
 import { useShareCard } from './useShareCard';
@@ -51,13 +52,15 @@ export function ShareCardGenerator({
             showUserName={showUserName}
             streakCount={streakCount}
             userName={data.userName}
-            viewShotRef={viewShotRef as any}
+            viewShotRef={viewShotRef as React.RefObject<ViewShot>}
           />
         </View>
 
         <ScrollView
+          keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
           style={containerStyles.customizationSection}
+          onScrollBeginDrag={Keyboard.dismiss}
         >
           <PlatformSelector
             selectedPlatform={selectedPlatform}

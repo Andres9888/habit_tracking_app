@@ -12,8 +12,17 @@ export const updateHabitParameters = mutation({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to update habit parameters');
+    }
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
+
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to update this habit');
+    }
 
     if (
       args.habitDecayParam !== undefined &&
