@@ -89,14 +89,21 @@ export const COPY = {
 
   createCustom: 'Create custom habit',
 
-  // Primary CTA
-  ctaButton: 'Start Building →',
+  // Primary CTA — action-oriented, reduces friction
+  ctaButton: "Let's go! →",
 
-  // Question headline - line break after "thing" for rhythm
-  headline: "What's one small thing\nyou want to do daily?",
+  // Question headline — warm, low-pressure framing
+  headline: 'Start with just one habit',
 
   // Input placeholder - motivating and descriptive
-  inputPlaceholder: 'What habit do you want to build?',
+  inputPlaceholder: 'e.g. Drink water, Read 5 pages…',
+
+  // Progress hint shown when user types a habit name
+  progressHint: 'Step 1 of 1 — that\'s it!',
+
+  // Social proof line
+  socialProof: 'Most popular: 💧 Water · chosen by 68% of new users',
+
   // Success state
   successHeadline: "You're growing!",
   successSubtext: (habitName: string) => `"${habitName}" added — your chain starts now!`,

@@ -5,13 +5,16 @@
  */
 
 import { useRef } from 'react';
-import { TextInput } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useKeyboardVisible } from '../../../../hooks/useKeyboardVisible';
 import { ActionSection } from './ActionSection';
+import { AnimatedEntrance } from './AnimatedEntrance';
+import { ENTRANCE_DELAYS } from './animations';
 import { ChipsSection } from './ChipsSection';
+import { COLORS, COPY } from './constants';
 import { HeroSection } from './HeroSection';
 import { InputSection } from './InputSection';
 import { LoadingSkeleton } from './LoadingSkeleton';
@@ -88,6 +91,38 @@ export function HabitsEmptyStateMinimal({
         selectedIndex={flow.selectedChipIndex}
         onSelect={flow.handleChipSelect}
       />
+
+      {/* Social proof */}
+      {!isKeyboardVisible && (
+        <AnimatedEntrance delay={ENTRANCE_DELAYS.chips + 60}>
+          <Text
+            style={{
+              color: COLORS.stone400,
+              fontSize: 12,
+              marginTop: 8,
+              textAlign: 'center',
+            }}
+          >
+            {COPY.socialProof}
+          </Text>
+        </AnimatedEntrance>
+      )}
+
+      {/* Progress hint when typing */}
+      {flow.inputValue.trim().length > 0 && (
+        <View style={{ marginTop: 6 }}>
+          <Text
+            style={{
+              color: COLORS.emerald500,
+              fontSize: 12,
+              fontWeight: '600',
+              textAlign: 'center',
+            }}
+          >
+            {COPY.progressHint}
+          </Text>
+        </View>
+      )}
 
       <ActionSection
         errorMessage={flow.errorMessage}

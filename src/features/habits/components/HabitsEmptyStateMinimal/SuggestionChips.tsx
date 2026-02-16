@@ -50,17 +50,16 @@ export function SuggestionChips({
   );
 
   const row1 = chips.slice(0, 3);
-  const row2 = chips.slice(3, 5);
-  const row3 = chips.slice(5, 6);
+  const row2 = chips.slice(3, 6);
 
   const rowStyle = {
     flexDirection: 'row' as const,
-    gap: 6,
+    gap: 8,
     justifyContent: 'center' as const,
   };
 
   return (
-    <View style={{ alignItems: 'center', gap: 6, width: '100%' }}>
+    <View style={{ alignItems: 'center', gap: 8, width: '100%' }}>
       <View style={rowStyle}>
         {row1.map((chip, i) => (
           <Chip
@@ -77,22 +76,6 @@ export function SuggestionChips({
       <View style={rowStyle}>
         {row2.map((chip, i) => {
           const index = i + 3;
-          return (
-            <Chip
-              key={chip.label}
-              chip={chip}
-              index={index}
-              isSelected={selectedIndex === index}
-              staggerDelay={index * CHIP_STAGGER.delay}
-              onPress={() => handleChipSelect(index, chip)}
-            />
-          );
-        })}
-      </View>
-
-      <View style={{ ...rowStyle, flexWrap: 'wrap', gap: 8 }}>
-        {row3.map((chip, i) => {
-          const index = i + 5;
           return (
             <Chip
               key={chip.label}

@@ -9,12 +9,12 @@
  * Each element delayed by 100ms
  */
 export const ENTRANCE_DELAYS = {
-  chips: 300,
-  cta: 400,
-  headline: 100,
+  chips: 200,
+  cta: 280,
+  headline: 60,
   heroIcon: 0,
-  input: 200,
-  secondaryLinks: 500,
+  input: 120,
+  secondaryLinks: 350,
 } as const;
 
 /**
