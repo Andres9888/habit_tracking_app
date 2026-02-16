@@ -10,6 +10,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { Quote, RefreshCw } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { QUOTES } from './quotes';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface DailyQuoteProps {
   /** Override the quote (optional) */
@@ -30,12 +31,50 @@ function getDayOfYear(): number {
 
 export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: DailyQuoteProps) {
   const { colors } = useThemeColors();
-
+  
   const quote = useMemo(() => {
     if (overrideQuote) return overrideQuote;
     const dayOfYear = getDayOfYear();
     return QUOTES[dayOfYear % QUOTES.length];
   }, [overrideQuote]);
+
+  const styles = useMemo(() => StyleSheet.create({
+    author: {
+      color: colors.gray[500],
+      fontSize: 13,
+      fontWeight: '500',
+    },
+    container: {
+      backgroundColor: colors.gray[50],
+      borderLeftColor: colors.gray[400],
+      borderLeftWidth: 3,
+      borderRadius: 16,
+      marginHorizontal: 16,
+      marginVertical: 8,
+      padding: 16,
+    },
+    footer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 10,
+    },
+    iconContainer: {
+      marginBottom: 8,
+    },
+    quoteText: {
+      color: colors.gray[600],
+      fontSize: 15,
+      fontStyle: 'italic',
+      lineHeight: 22,
+    },
+    refreshButton: {
+      alignItems: 'center' as const,
+      height: 44,
+      justifyContent: 'center' as const,
+      width: 44,
+    },
+  }), [colors]);
 
   return (
     <Animated.View
