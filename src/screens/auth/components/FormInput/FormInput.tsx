@@ -3,6 +3,7 @@ import { forwardRef } from 'react';
 import { Text, TextInput, View, StyleSheet } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useFormInputAnimations } from './useFormInputAnimations';
 import { useThemeColors } from '@/theme/ThemeContext';
 

@@ -5,11 +5,12 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { X } from 'lucide-react-native';
 
 import CustomModal from '../../../../components/Modal';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
+import { useHaptics } from '../../../../utils/haptics/useHaptics';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -25,6 +26,8 @@ export function TemplatesModalSection({
 }: TemplatesModalSectionProps) {
   const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
+  const { trigger } = useHaptics();
   const closeScale = useSharedValue(1);
 
   const closeAnimatedStyle = useAnimatedStyle(() => ({
@@ -32,7 +35,7 @@ export function TemplatesModalSection({
   }));
 
   const handleClose = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    trigger('tap');
     closeTemplatesScreen();
   };
 
@@ -64,7 +67,7 @@ export function TemplatesModalSection({
               });
             }}
             onPressOut={() => {
-              closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
+              closeScale.value = withSpring(1, { damping: 18, stiffness: 150 });
             }}
           >
             <X color={colors.text.primary} size={24} />

@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { AttributeCardProps } from '../types';
 import { useThemeColors } from '@/theme/ThemeContext';
 
@@ -15,6 +16,7 @@ export function AttributeCard({
 }: AttributeCardProps & { delay?: number }) {
   const { colors } = useThemeColors();
   const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
+  const { colors } = useThemeColors();
 
   return (
     <Animated.View

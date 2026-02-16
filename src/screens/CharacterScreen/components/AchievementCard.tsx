@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { Achievement } from '../types';
 import { useThemeColors } from '@/theme/ThemeContext';
 

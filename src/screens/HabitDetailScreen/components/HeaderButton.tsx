@@ -7,6 +7,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { buttonShadow } from './DetailHeader.constants';
 import { useThemeColors } from '@/theme/ThemeContext';
 
@@ -21,6 +22,7 @@ interface HeaderButtonProps {
 export function HeaderButton({ onPress, icon, label }: HeaderButtonProps) {
   const { colors } = useThemeColors();
   const scale = useSharedValue(1);
+  const { colors } = useThemeColors();
   const animStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
@@ -42,10 +44,10 @@ export function HeaderButton({ onPress, icon, label }: HeaderButtonProps) {
       ]}
       onPress={handlePress}
       onPressIn={() => {
-        scale.value = withSpring(0.92, { damping: 18, stiffness: 240 });
+        scale.value = withSpring(0.92, { damping: 18, stiffness: 150 });
       }}
       onPressOut={() => {
-        scale.value = withSpring(1, { damping: 18, stiffness: 240 });
+        scale.value = withSpring(1, { damping: 18, stiffness: 150 });
       }}
     >
       {icon}

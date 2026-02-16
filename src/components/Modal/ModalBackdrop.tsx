@@ -28,7 +28,8 @@ export function ModalBackdrop({
 
   return (
     <Pressable
-      accessible={false}
+      accessibilityLabel={disableBackdropClose ? undefined : 'Close modal'}
+      accessibilityRole={disableBackdropClose ? undefined : 'button'}
       style={StyleSheet.absoluteFill}
       onPress={handlePress}
     >

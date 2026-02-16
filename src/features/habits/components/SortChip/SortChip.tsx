@@ -8,6 +8,7 @@ import Animated, {
   FadeInDown,
 } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { HabitSortMode } from '../../types';
 import {
   SORT_LABEL_MAP,
@@ -55,6 +56,7 @@ export function SortChip({
 }: SortChipProps) {
   const { colors } = useThemeColors();
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
+  const { colors } = useThemeColors();
 
   // Animated value for button press scale
   const buttonScale = useSharedValue(1);

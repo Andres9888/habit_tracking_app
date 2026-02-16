@@ -71,7 +71,7 @@ export const ChartSections = memo(function ChartSections({
           accessible
           accessibilityLabel={
             trendData && trendData.length > 0
-              ? `Trend chart showing ${trendData.length} days of data. Latest average strength: ${Math.round(trendData[trendData.length - 1].averageStrength)}%`
+              ? `Trend chart showing ${trendData.length} days of data. Latest average strength: ${Math.round(trendData.at(-1).averageStrength)}%`
               : 'No trend data available'
           }
         >

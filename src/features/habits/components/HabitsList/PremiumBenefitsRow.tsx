@@ -1,6 +1,8 @@
 /**
- * PremiumBenefitsRow Component
- * Displays list of premium benefits
+ * PremiumBenefitsRow — "Why members upgrade" card in the monetization flow.
+ *
+ * Renders the static list of benefits from {@link PREMIUM_BENEFITS} in a styled
+ * card.  Memoised to avoid re-renders since the content is constant.
  */
 
 import { Text, View, StyleSheet } from 'react-native';
