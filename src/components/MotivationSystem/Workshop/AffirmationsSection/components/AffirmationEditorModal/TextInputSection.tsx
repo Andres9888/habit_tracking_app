@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { clsx } from 'clsx';
 import { MAX_TEXT_LENGTH } from '../../AffirmationsSection.constants';
+import { sanitizeAffirmationText } from '../../../../../../utils/inputSanitization';
 
 interface TextInputSectionProps {
   text: string;
@@ -17,6 +18,11 @@ export function TextInputSection({
   text,
   onChangeText,
 }: TextInputSectionProps) {
+  const handleTextChange = (newText: string) => {
+    const sanitized = sanitizeAffirmationText(newText);
+    onChangeText(sanitized);
+  };
+
   return (
     <View className='mb-4'>
       <Text className='mb-2 text-xs font-semibold uppercase tracking-wide text-stone-400'>
@@ -32,7 +38,7 @@ export function TextInputSection({
         placeholderTextColor='#a8a29e'
         textAlignVertical='top'
         value={text}
-        onChangeText={onChangeText}
+        onChangeText={handleTextChange}
       />
       <View className='mt-2 flex-row items-center justify-between'>
         <Text className='text-xs text-stone-400'>

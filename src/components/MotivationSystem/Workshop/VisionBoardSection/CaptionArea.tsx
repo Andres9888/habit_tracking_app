@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, Pressable, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MAX_CAPTION_LENGTH, type VisionBoardImage } from './types';
+import { sanitizeMultilineText } from '../../../../utils/inputSanitization';
 
 interface CaptionAreaProps {
   isEditingCaption: boolean;
@@ -28,6 +29,12 @@ export function CaptionArea({
   image,
 }: CaptionAreaProps) {
   const insets = useSafeAreaInsets();
+
+  const handleCaptionChange = (text: string) => {
+    const sanitized = sanitizeMultilineText(text);
+    onChangeText(sanitized);
+  };
+
   if (isEditingCaption) {
     return (
       <View className='px-4 pt-4' style={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
@@ -40,7 +47,7 @@ export function CaptionArea({
             placeholder='Add a caption...'
             placeholderTextColor='#a8a29e'
             value={captionText}
-            onChangeText={onChangeText}
+            onChangeText={handleCaptionChange}
           />
           <View className='flex-row items-center justify-between'>
             <Text className='text-xs text-stone-400'>

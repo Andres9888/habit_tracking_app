@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { View, Text, TextInput, Keyboard } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
+import { sanitizeHabitName } from '../../utils/inputSanitization';
 
 interface NameInputSectionProps {
   habitName: string;
@@ -19,6 +20,11 @@ export function NameInputSection({
 }: NameInputSectionProps) {
   const { colors, isDark } = useThemeColors();
   const [isFocused, setIsFocused] = useState(false);
+
+  const handleTextChange = (text: string) => {
+    const sanitized = sanitizeHabitName(text);
+    onChangeText(sanitized);
+  };
 
   return (
     <View className='px-4'>
@@ -58,7 +64,7 @@ export function NameInputSection({
           }}
           value={habitName}
           onBlur={() => setIsFocused(false)}
-          onChangeText={onChangeText}
+          onChangeText={handleTextChange}
           onFocus={() => setIsFocused(true)}
           onSubmitEditing={Keyboard.dismiss}
         />

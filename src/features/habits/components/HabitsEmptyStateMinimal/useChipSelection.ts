@@ -3,6 +3,7 @@ import { useTimeBasedChipAnalytics } from './analytics';
 import type { SuggestionChip } from './types';
 import { getTimeBasedChips } from './utils';
 import { useTypingAnimation } from './useTypingAnimation';
+import { sanitizeHabitName } from '../../../../utils/inputSanitization';
 
 export function useChipSelection() {
   const analytics = useTimeBasedChipAnalytics();
@@ -40,16 +41,17 @@ export function useChipSelection() {
 
   const handleInputChange = useCallback(
     (text: string) => {
+      const sanitized = sanitizeHabitName(text);
       clearTimeouts();
-      setInputValue(text);
+      setInputValue(sanitized);
       if (selectedChipIndex !== null) {
         setSelectedChipIndex(null);
         setSelectedEmoji(null);
         selectedChipDataRef.current = null;
 
-        if (text.trim().length > 0) {
+        if (sanitized.trim().length > 0) {
           const chips = getTimeBasedChips();
-          analytics.trackManualInputAfterChipView(text, chips);
+          analytics.trackManualInputAfterChipView(sanitized, chips);
         }
       }
     },

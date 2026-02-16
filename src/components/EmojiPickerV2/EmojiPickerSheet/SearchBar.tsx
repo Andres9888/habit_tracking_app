@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { colors } from '../../../theme/colors';
 import { styles } from './EmojiPickerSheet.styles';
+import { sanitizeSearchQuery } from '../../../utils/inputSanitization';
 
 interface SearchBarProps {
   value: string;
@@ -44,6 +45,11 @@ export function SearchBar({
     searchFocusAnim.value = withTiming(0, { duration: 150 });
   }, [searchFocusAnim, setIsSearchFocused]);
 
+  const handleTextChange = useCallback((text: string) => {
+    const sanitized = sanitizeSearchQuery(text);
+    onChange(sanitized);
+  }, [onChange]);
+
   return (
     <View style={styles.searchContainer}>
       <Animated.View style={[styles.searchBar, animatedStyle]}>
@@ -60,7 +66,7 @@ export function SearchBar({
           style={styles.searchInput}
           value={value}
           onBlur={handleBlur}
-          onChangeText={onChange}
+          onChangeText={handleTextChange}
           onFocus={handleFocus}
         />
         {value.length > 0 && (

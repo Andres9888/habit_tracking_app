@@ -12,6 +12,10 @@ import {
   MAX_TITLE_LENGTH,
 } from '../../LettersSection.constants';
 import { WritingPrompts } from './WritingPrompts';
+import {
+  sanitizeLetterTitle,
+  sanitizeLetterContent,
+} from '../../../../../../utils/inputSanitization';
 
 interface WriteStepProps {
   title: string;
@@ -27,6 +31,16 @@ export function WriteStep({
   onContentChange,
 }: WriteStepProps) {
   const contentRef = useRef<TextInput>(null);
+
+  const handleTitleChange = (newTitle: string) => {
+    const sanitized = sanitizeLetterTitle(newTitle);
+    onTitleChange(sanitized);
+  };
+
+  const handleContentChange = (newContent: string) => {
+    const sanitized = sanitizeLetterContent(newContent);
+    onContentChange(sanitized);
+  };
 
   return (
     <ScrollView
@@ -58,7 +72,7 @@ export function WriteStep({
           placeholderTextColor='#a8a29e'
           returnKeyType='next'
           value={title}
-          onChangeText={onTitleChange}
+          onChangeText={handleTitleChange}
           onSubmitEditing={() => contentRef.current?.focus()}
         />
         <Text className='mt-1 text-right text-xs text-stone-400'>
@@ -83,7 +97,7 @@ I'm writing this because..."
           placeholderTextColor='#a8a29e'
           textAlignVertical='top'
           value={content}
-          onChangeText={onContentChange}
+          onChangeText={handleContentChange}
         />
         <View className='mt-2 flex-row items-center justify-between'>
           <Text className='text-xs text-stone-400'>

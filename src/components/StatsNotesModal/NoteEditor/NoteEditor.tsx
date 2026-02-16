@@ -13,6 +13,7 @@ import { HabitSelector } from './HabitSelector';
 import { NoteEditorActions } from './NoteEditorActions';
 import type { NoteEditorProps } from './types';
 import { useNoteEditor } from './useNoteEditor';
+import { sanitizeNotes } from '../../../utils/inputSanitization';
 
 export default function NoteEditor({
   noteId,
@@ -44,6 +45,11 @@ export default function NoteEditor({
     noteId,
     onSaveComplete: onSave,
   });
+
+  const handleBodyChange = (text: string) => {
+    const sanitized = sanitizeNotes(text);
+    setBody(sanitized);
+  };
 
   return (
     <View className='gap-4'>
@@ -83,7 +89,7 @@ export default function NoteEditor({
           placeholderTextColor={colors.gray[400]}
           textAlignVertical='top'
           value={body}
-          onChangeText={setBody}
+          onChangeText={handleBodyChange}
         />
 
         <View className='flex-row justify-between'>

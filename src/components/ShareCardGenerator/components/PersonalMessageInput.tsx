@@ -8,6 +8,7 @@ import { View, Text, TextInput } from 'react-native';
 import { useAppTheme } from '../../../theme';
 import { controlsStyles as styles } from '../styles';
 import { MESSAGE_MAX_LENGTH } from '../ShareCardGenerator.constants';
+import { sanitizeMultilineText } from '../../../utils/inputSanitization';
 
 interface PersonalMessageInputProps {
   value: string;
@@ -19,6 +20,11 @@ export function PersonalMessageInput({
   onChangeText,
 }: PersonalMessageInputProps) {
   const theme = useAppTheme();
+
+  const handleTextChange = (text: string) => {
+    const sanitized = sanitizeMultilineText(text);
+    onChangeText(sanitized);
+  };
 
   return (
     <View style={styles.optionGroup}>
@@ -43,7 +49,7 @@ export function PersonalMessageInput({
         ]}
         returnKeyType='done'
         value={value}
-        onChangeText={onChangeText}
+        onChangeText={handleTextChange}
       />
       <Text
         style={[

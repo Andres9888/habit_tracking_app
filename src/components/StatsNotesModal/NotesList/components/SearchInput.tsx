@@ -7,6 +7,7 @@ import React from 'react';
 import { View, TextInput } from 'react-native';
 import { Search } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { sanitizeSearchQuery } from '../../../../utils/inputSanitization';
 
 interface SearchInputProps {
   value: string;
@@ -18,6 +19,12 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   onChangeText,
 }) => {
   const { colors } = useThemeColors();
+
+  const handleTextChange = (text: string) => {
+    const sanitized = sanitizeSearchQuery(text);
+    onChangeText(sanitized);
+  };
+
   return (
     <View className='relative'>
       <TextInput
@@ -28,7 +35,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         returnKeyType='search'
         style={{ borderColor: colors.border, backgroundColor: colors.card, color: colors.text.primary }}
         value={value}
-        onChangeText={onChangeText}
+        onChangeText={handleTextChange}
       />
       <View className='absolute left-4 top-3.5'>
         <Search color={colors.text.tertiary} size={18} strokeWidth={2} />

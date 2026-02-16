@@ -8,6 +8,7 @@ import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from './styles';
 import type { NameInputProps } from './types';
+import { sanitizeHabitName } from '../../../utils/inputSanitization';
 
 export function NameInput({
   customName,
@@ -16,6 +17,11 @@ export function NameInput({
 }: NameInputProps) {
   const theme = useAppTheme();
   const { colors } = useThemeColors();
+
+  const handleNameChange = (text: string) => {
+    const sanitized = sanitizeHabitName(text);
+    onChangeName(sanitized);
+  };
 
   return (
     <View style={styles.section}>
@@ -45,7 +51,7 @@ export function NameInput({
           },
         ]}
         value={customName}
-        onChangeText={onChangeName}
+        onChangeText={handleNameChange}
       />
     </View>
   );
