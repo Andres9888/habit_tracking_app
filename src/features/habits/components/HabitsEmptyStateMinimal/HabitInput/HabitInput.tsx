@@ -56,6 +56,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
         />
         {showClearButton && (
           <Pressable
+            accessibilityHint='Clear the habit name input'
             accessibilityLabel='Clear input'
             accessibilityRole='button'
             hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}

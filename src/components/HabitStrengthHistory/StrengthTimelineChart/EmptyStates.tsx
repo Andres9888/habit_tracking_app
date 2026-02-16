@@ -1,42 +1,43 @@
 /**
  * Empty state components for StrengthTimelineChart
- * Dark mode aware via useThemeColors
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface EmptyStateProps {
   height: number;
 }
 
 export function NoDataState({ height }: EmptyStateProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return (
-    <View
+    <Animated.View
       accessible
       accessibilityLabel='Strength timeline chart - No data available yet'
+      entering={FadeIn.duration(300)}
       style={{
         alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: colors.gray[50],
         borderRadius: 12,
-        backgroundColor: isDark ? colors.gray[100] : colors.gray[50],
-        padding: 16,
         height,
+        justifyContent: 'center',
+        padding: 16,
       }}
     >
-      <Text style={{ fontSize: 14, color: colors.text.secondary }}>
+      <Text style={{ fontSize: 28, marginBottom: 6 }}>⚡</Text>
+      <Text style={{ color: colors.text.tertiary, fontSize: 14 }}>
         Building your strength history...
       </Text>
-    </View>
+    </Animated.View>
   );
 }
 
 export function BuildingHistoryState({ height }: EmptyStateProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return (
     <Animated.View
@@ -45,14 +46,21 @@ export function BuildingHistoryState({ height }: EmptyStateProps) {
       entering={FadeIn.duration(400)}
       style={{
         alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: colors.gray[50],
         borderRadius: 12,
-        backgroundColor: isDark ? colors.gray[100] : colors.gray[50],
-        padding: 16,
         height,
+        justifyContent: 'center',
+        padding: 16,
       }}
     >
-      <Text style={{ textAlign: 'center', fontSize: 14, color: colors.text.secondary }}>
+      <Text style={{ fontSize: 28, marginBottom: 6 }}>📈</Text>
+      <Text
+        style={{
+          color: colors.text.secondary,
+          fontSize: 14,
+          textAlign: 'center',
+        }}
+      >
         Keep going! Your strength chart will appear after a week of tracking.
       </Text>
     </Animated.View>

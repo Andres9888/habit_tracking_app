@@ -1,7 +1,7 @@
 /**
  * Template YouTube link update mutation
  */
-import { mutation } from '../_generated/server';
+import { internalMutation } from '../_generated/server';
 
 /**
  * YouTube links mapping for templates
@@ -51,7 +51,7 @@ const youtubeLinks: Record<string, string> = {
 /**
  * Mutation: Update existing templates with YouTube links
  */
-export const updateYoutubeLinks = mutation({
+export const updateYoutubeLinks = internalMutation({
   args: {},
   handler: async (ctx) => {
     let updatedCount = 0;

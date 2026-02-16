@@ -1,27 +1,46 @@
-/**
- * Empty state for smart suggestions
- * Dark mode aware via useThemeColors
- */
-
 import { Text, View } from 'react-native';
-import { useThemeColors } from '../../../../theme';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface EmptyStateProps {
   label: string;
 }
 
 export function EmptyState({ label }: EmptyStateProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return (
     <View style={{ marginBottom: 24 }}>
-      <Text style={{ marginBottom: 12, fontSize: 14, fontWeight: '600', color: colors.text.secondary }}>{label}</Text>
-      <View style={{ alignItems: 'center', borderRadius: 16, backgroundColor: isDark ? colors.gray[100] : colors.gray[50], paddingVertical: 24 }}>
-        <Text style={{ fontSize: 30 }}>🎯</Text>
-        <Text style={{ marginTop: 8, fontSize: 14, color: colors.text.secondary }}>
+      <Text
+        style={{
+          color: colors.text.secondary,
+          fontSize: 14,
+          fontWeight: '600',
+          marginBottom: 12,
+        }}
+      >
+        {label}
+      </Text>
+      <Animated.View
+        entering={FadeIn.duration(300)}
+        style={{
+          alignItems: 'center',
+          backgroundColor: colors.gray[50],
+          borderRadius: 16,
+          paddingVertical: 24,
+        }}
+      >
+        <Text style={{ fontSize: 32 }}>🎯</Text>
+        <Text
+          style={{
+            color: colors.text.secondary,
+            fontSize: 14,
+            marginTop: 8,
+          }}
+        >
           Create your own unique habit!
         </Text>
-      </View>
+      </Animated.View>
     </View>
   );
 }

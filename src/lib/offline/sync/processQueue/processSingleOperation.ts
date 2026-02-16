@@ -12,7 +12,7 @@ import type {
   ProcessSingleOptions,
 } from './types';
 import { checkAndResolveConflict } from './conflictCheck';
-import { executeSync, operationToSyncItem } from './executeSync';
+import { executeSync } from './executeSync';
 
 // Re-export for backward compatibility
 export { operationToSyncItem } from './executeSync';

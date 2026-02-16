@@ -1,14 +1,13 @@
 /**
  * EmptyState - Displayed when no trend data is available
- * Standardized: FadeInUp animation, icon, proper typography
- * Dark mode aware via useThemeColors
+ * Standardized: FadeInUp animation, icon, proper typography, dark mode
  */
 
 import React from 'react';
 import { View } from 'react-native';
 import { TrendingUp } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { useThemeColors } from '../../theme';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -21,30 +20,43 @@ export function EmptyState() {
       <Animated.View
         entering={anim(0)}
         style={{
-          marginBottom: 16,
-          height: 64,
-          width: 64,
           alignItems: 'center',
-          justifyContent: 'center',
+          backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
           borderRadius: 12,
-          backgroundColor: isDark ? '#064e3b' : '#ecfdf5',
+          height: 64,
+          justifyContent: 'center',
+          marginBottom: 16,
           shadowColor: '#10b981',
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: isDark ? 0.2 : 0.08,
+          shadowOpacity: 0.08,
           shadowRadius: 16,
+          width: 64,
         }}
       >
-        <TrendingUp color={isDark ? '#6ee7b7' : '#10b981'} size={32} strokeWidth={1.5} />
+        <TrendingUp color={isDark ? '#6EE7B7' : '#10b981'} size={32} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
         entering={anim(60)}
-        style={{ marginBottom: 8, textAlign: 'center', fontWeight: '700', color: colors.text.primary, fontSize: 22, letterSpacing: -0.5 }}
+        style={{
+          color: colors.text.primary,
+          fontSize: 22,
+          fontWeight: '700',
+          letterSpacing: -0.5,
+          marginBottom: 8,
+          textAlign: 'center',
+        }}
       >
         No Trend Data Yet
       </Animated.Text>
       <Animated.Text
         entering={anim(120)}
-        style={{ textAlign: 'center', fontSize: 17, lineHeight: 22, color: colors.text.secondary, maxWidth: 280 }}
+        style={{
+          color: colors.text.secondary,
+          fontSize: 17,
+          lineHeight: 22,
+          maxWidth: 280,
+          textAlign: 'center',
+        }}
       >
         Track habits for at least 7 days to see trends
       </Animated.Text>

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from 'convex/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 
 interface UseSettingsModalLogicProps {
@@ -32,6 +32,8 @@ export const useSettingsModalLogic = ({
   const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
   const [showGradientFill, setShowGradientFillState] = useState(true);
 
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     if (settings) {
       setDarkModeState(normalizeDarkModePreference(settings.darkMode));
@@ -42,9 +44,17 @@ export const useSettingsModalLogic = ({
     }
   }, [settings]);
 
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
+
   const handleClose = () => {
     onClose();
-    setTimeout(() => setView('settings'), 300);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(() => setView('settings'), 300);
   };
 
   const update = useCallback(

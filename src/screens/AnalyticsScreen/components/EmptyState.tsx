@@ -1,53 +1,70 @@
 /**
- * EmptyState - OPTIMIZED: FadeInUp animation, better visuals, engaging illustration
- * Dark mode aware via useThemeColors
+ * EmptyState - OPTIMIZED: animation (respects reduce-motion), dark mode, accessible
  */
 import React from 'react';
 import { View, Text } from 'react-native';
 import { BarChart3, Sparkles } from 'lucide-react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme';
-
-const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+import Animated from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { useReducedMotionEntry } from '../../../components/EmptyState/useReducedMotionEntry';
 
 export const EmptyState: React.FC = () => {
   const { colors, isDark } = useThemeColors();
+  const { entry } = useReducedMotionEntry();
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}>
+    <View
+      accessible
+      accessibilityLabel='No analytics yet. Create habits and track them for a few days to unlock your insights dashboard.'
+      accessibilityRole='text'
+      style={{ alignItems: 'center', flex: 1, justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}
+    >
       {/* Illustration */}
       <Animated.View
-        entering={anim(0)}
+        entering={entry(0)}
         style={{
-          marginBottom: 24,
-          height: 96,
-          width: 96,
           alignItems: 'center',
-          justifyContent: 'center',
+          backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
           borderRadius: 24,
-          backgroundColor: isDark ? '#2e1065' : '#f5f3ff',
+          height: 96,
+          justifyContent: 'center',
+          marginBottom: 24,
           shadowColor: '#8b5cf6',
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: isDark ? 0.2 : 0.08,
+          shadowOpacity: 0.08,
           shadowRadius: 16,
+          width: 96,
         }}
       >
-        <BarChart3 color={isDark ? '#a78bfa' : '#8b5cf6'} size={48} strokeWidth={1.5} />
+        <BarChart3 color={isDark ? '#C4B5FD' : '#8b5cf6'} size={48} strokeWidth={1.5} />
       </Animated.View>
 
       {/* Title */}
       <Animated.Text
-        entering={anim(50)}
-        style={{ marginBottom: 8, textAlign: 'center', fontWeight: '700', color: colors.text.primary, fontSize: 22, letterSpacing: -0.5 }}
+        entering={entry(50)}
+        style={{
+          color: colors.text.primary,
+          fontSize: 22,
+          fontWeight: '700',
+          letterSpacing: -0.5,
+          marginBottom: 8,
+          textAlign: 'center',
+        }}
       >
         No Analytics Yet
       </Animated.Text>
 
       {/* Description */}
       <Animated.Text
-        entering={anim(100)}
-        style={{ marginBottom: 32, textAlign: 'center', fontSize: 17, lineHeight: 22, color: colors.text.secondary, maxWidth: 280 }}
+        entering={entry(100)}
+        style={{
+          color: colors.text.secondary,
+          fontSize: 17,
+          lineHeight: 22,
+          marginBottom: 32,
+          maxWidth: 280,
+          textAlign: 'center',
+        }}
       >
         Create habits and track them for a few days to unlock your insights
         dashboard.
@@ -55,46 +72,53 @@ export const EmptyState: React.FC = () => {
 
       {/* Steps Card */}
       <Animated.View
-        entering={anim(150)}
+        entering={entry(150)}
         style={{
-          width: '100%',
-          borderRadius: 16,
           backgroundColor: colors.card,
+          borderRadius: 16,
           padding: 20,
-          shadowColor: isDark ? '#000' : '#1c1917',
+          shadowColor: colors.text.primary,
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: isDark ? 0.3 : 0.08,
+          shadowOpacity: 0.08,
           shadowRadius: 16,
+          width: '100%',
         }}
       >
-        <View style={{ marginBottom: 12, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <Sparkles color='#f59e0b' size={16} />
-          <Text style={{ fontSize: 13, fontWeight: '600', color: isDark ? '#fbbf24' : '#d97706' }}>
+        <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8, marginBottom: 12 }}>
+          <Sparkles color={isDark ? '#FCD34D' : '#F59E0B'} size={16} />
+          <Text style={{ color: isDark ? '#FCD34D' : '#D97706', fontSize: 13, fontWeight: '600' }}>
             GET STARTED
           </Text>
         </View>
         <View style={{ gap: 12 }}>
-          <StepItem colors={colors} isDark={isDark} number='1' text='Go to Home tab' />
-          <StepItem colors={colors} isDark={isDark} number='2' text='Create your first habit' />
-          <StepItem colors={colors} isDark={isDark} number='3' text='Track it daily' />
-          <StepItem colors={colors} isDark={isDark} number='4' text='Come back to see insights!' />
+          <StepItem colors={colors} number='1' text='Go to Home tab' />
+          <StepItem colors={colors} number='2' text='Create your first habit' />
+          <StepItem colors={colors} number='3' text='Track it daily' />
+          <StepItem colors={colors} number='4' text='Come back to see insights!' />
         </View>
       </Animated.View>
     </View>
   );
 };
 
-function StepItem({ number, text, colors, isDark }: { number: string; text: string; colors: any; isDark: boolean }) {
+function StepItem({ number, text, colors }: { number: string; text: string; colors: { gray: Record<string, string>; text: { primary: string; secondary: string } } }) {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-      <View style={{ height: 28, width: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: isDark ? colors.gray[200] : colors.gray[100] }}>
-        <Text style={{ fontSize: 13, fontWeight: '600', color: colors.text.secondary }}>
+    <View style={{ alignItems: 'center', flexDirection: 'row', gap: 12 }}>
+      <View
+        style={{
+          alignItems: 'center',
+          backgroundColor: colors.gray[100],
+          borderRadius: 14,
+          height: 28,
+          justifyContent: 'center',
+          width: 28,
+        }}
+      >
+        <Text style={{ color: colors.text.secondary, fontSize: 13, fontWeight: '600' }}>
           {number}
         </Text>
       </View>
-      <Text style={{ fontSize: 17, color: colors.text.primary }}>
-        {text}
-      </Text>
+      <Text style={{ color: colors.text.primary, fontSize: 17 }}>{text}</Text>
     </View>
   );
 }

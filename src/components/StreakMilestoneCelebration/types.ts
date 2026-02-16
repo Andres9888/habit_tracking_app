@@ -2,6 +2,7 @@
  * Types for StreakMilestoneCelebration component
  */
 
+import type { View } from 'react-native';
 import type { StreakMilestone } from './constants';
 
 export interface StreakMilestoneCelebrationProps {
@@ -41,7 +42,7 @@ export interface AchievementCardProps {
   habitEmoji?: string;
 
   /** View ref for screenshot capture */
-  viewRef?: React.RefObject<any>;
+  viewRef?: React.RefObject<View>;
 }
 
 export interface ConfettiAnimationProps {
