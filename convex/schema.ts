@@ -603,6 +603,38 @@ const applicationTables = {
     .index('by_habit', ['habitId'])
     .index('by_user', ['userId'])
     .index('by_habit_and_date', ['habitId', 'createdAt']),
+
+  // NPS (Net Promoter Score) Responses - App rating and user satisfaction tracking
+  // Scientific Basis:
+  // - NPS is industry-standard metric for user satisfaction and product-market fit
+  // - Timing matters: Ask after engagement (14 days or 30 completions) for accurate signal
+  // - Follow-up questions capture qualitative insights for product improvement
+  // Business Model:
+  // - Product development insights: Know what users love vs. what needs improvement
+  // - Retention indicator: NPS strongly correlates with user retention
+  // - Marketing: Promoters (9-10) are testimonial candidates
+  npsResponses: defineTable({
+    // Timestamp when response was submitted
+    createdAt: v.number(),
+
+    // Optional follow-up text response
+    // Promoters (9-10): "What do you love most?"
+    // Detractors (0-6): "How can we improve?"
+    // Passives (7-8): No follow-up
+    feedback: v.optional(v.string()),
+
+    // NPS score: 0-10 scale
+    // 0-6: Detractors (unhappy, may churn)
+    // 7-8: Passives (satisfied but not enthusiastic)
+    // 9-10: Promoters (will recommend to others)
+    score: v.number(),
+
+    // User who submitted the response
+    userId: v.string(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_createdAt', ['createdAt'])
+    .index('by_score', ['score']),
 };
 
 export default defineSchema({

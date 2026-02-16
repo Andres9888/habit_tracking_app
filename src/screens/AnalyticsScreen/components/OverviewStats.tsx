@@ -6,20 +6,35 @@ import React, { memo, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { spacing } from '../../../theme/spacing';
 import { StatCard } from './StatCard';
-import type { AnalyticsOverviewStats } from '../AnalyticsScreen.types';
+import type { AnalyticsOverviewStats, NPSAnalytics } from '../AnalyticsScreen.types';
 
 interface OverviewStatsProps {
   stats: AnalyticsOverviewStats | undefined;
   isLoading: boolean;
+  npsAnalytics: NPSAnalytics | undefined | null;
   onHabitPress: (habitId: string) => void;
 }
 
 const formatStrengthPercentage = (strength: number) =>
   `${Math.round(strength)}%`;
 
+const formatNPSScore = (score: number | null) => {
+  if (score === null) return 'N/A';
+  return score > 0 ? `+${score}` : `${score}`;
+};
+
+const getNPSEmoji = (score: number | null) => {
+  if (score === null) return '📊';
+  if (score >= 50) return '🚀'; // Excellent
+  if (score >= 20) return '👍'; // Good
+  if (score >= 0) return '😐'; // Neutral
+  return '⚠️'; // Needs improvement
+};
+
 export const OverviewStats = memo(function OverviewStats({
   stats,
   isLoading,
+  npsAnalytics,
   onHabitPress,
 }: OverviewStatsProps) {
   const handleStrongestPress = useCallback(() => {
@@ -75,6 +90,15 @@ export const OverviewStats = memo(function OverviewStats({
         value={stats?.weakestHabit?.name ?? '-'}
         onPress={stats?.weakestHabit ? handleWeakestPress : undefined}
       />
+      {npsAnalytics?.hasResponses && (
+        <StatCard
+          emoji={getNPSEmoji(npsAnalytics.npsScore)}
+          loading={isLoading}
+          subtitle={`${npsAnalytics.responseCount} ${npsAnalytics.responseCount === 1 ? 'response' : 'responses'}`}
+          title='App Rating (NPS)'
+          value={formatNPSScore(npsAnalytics.npsScore)}
+        />
+      )}
     </View>
   );
 });

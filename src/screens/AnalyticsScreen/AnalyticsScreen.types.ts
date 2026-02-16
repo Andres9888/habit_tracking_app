@@ -53,6 +53,15 @@ export interface RankedHabit {
 
 export type ExportFormat = 'csv' | 'json';
 
+export interface NPSAnalytics {
+  hasResponses: boolean;
+  npsScore: number | null;
+  responseCount: number;
+  totalDetractors: number;
+  totalPassives: number;
+  totalPromoters: number;
+}
+
 export interface UseAnalyticsScreenReturn {
   // State
   refreshing: boolean;
@@ -67,6 +76,7 @@ export interface UseAnalyticsScreenReturn {
   trendData: TrendData[] | undefined;
   complianceData: HeatmapData[] | undefined;
   weeklyInsights: WeeklyInsights | undefined;
+  npsAnalytics: NPSAnalytics | undefined | null;
 
   // Handlers
   onRefresh: () => Promise<void>;

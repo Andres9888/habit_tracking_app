@@ -36,6 +36,7 @@ function AnalyticsScreenContent() {
     trendData,
     complianceData,
     weeklyInsights,
+    npsAnalytics,
     onRefresh,
     handleHabitPress,
     handleExportPress,
@@ -96,6 +97,7 @@ function AnalyticsScreenContent() {
           >
             <OverviewStats
               isLoading={isLoading}
+              npsAnalytics={npsAnalytics}
               stats={overviewStats}
               onHabitPress={handleHabitPress}
             />

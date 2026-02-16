@@ -5,6 +5,8 @@
 
 import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
 import { RevenueCatPaywall } from '../../../components/RevenueCatPaywall';
+import { NPSSurveyModal } from '../../../components/NPSSurveyModal';
+import { useNPSSurvey } from '../../../components/NPSSurveyModal/useNPSSurvey';
 import { HabitsModals } from './HabitsModals';
 import WebToaster from './WebToaster';
 import { TOAST_DURATION_MS } from '@/constants';
@@ -25,6 +27,8 @@ export function HabitsAppOverlays({
   onPaywallClose,
   onPaywallSuccess,
 }: HabitsAppOverlaysProps) {
+  const { showSurvey, handleClose } = useNPSSurvey();
+
   return (
     <>
       <WebToaster />
@@ -46,6 +50,8 @@ export function HabitsAppOverlays({
         onPurchaseSuccess={onPaywallSuccess}
         onRestoreSuccess={onPaywallSuccess}
       />
+
+      <NPSSurveyModal visible={showSurvey} onClose={handleClose} />
     </>
   );
 }

@@ -29,6 +29,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const complianceData = useQuery(api.analytics.getComplianceData);
   const weeklyInsightsRaw = useQuery(api.analytics.getWeeklyInsights);
   const weeklyInsights = (weeklyInsightsRaw && 'weekOverWeekChange' in weeklyInsightsRaw ? weeklyInsightsRaw : undefined) as import('../../components/WeeklyInsightsCard').WeeklyInsights | undefined;
+  const npsAnalytics = useQuery(api.nps.getNPSAnalytics);
 
   const isLoading = !overviewStats;
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -116,6 +117,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     handleStartTrial,
     isLoading,
     isPremiumUser,
+    npsAnalytics,
     onRefresh,
     overviewStats,
     refreshing,
