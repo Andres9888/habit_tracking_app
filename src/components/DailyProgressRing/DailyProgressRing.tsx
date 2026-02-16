@@ -93,7 +93,7 @@ function DailyProgressRingComponent({
             cy={size / 2}
             fill='none'
             r={radius}
-            stroke={themeColors.border ?? '#e7e5e4'}
+            stroke={themeColors.border ?? themeColors.disabled}
             strokeWidth={strokeWidth}
           />
           {/* Progress */}
@@ -105,7 +105,7 @@ function DailyProgressRingComponent({
             origin={`${size / 2}, ${size / 2}`}
             r={radius}
             rotation='-90'
-            stroke={themeColors.primary?.[500] ?? '#059669'}
+            stroke={themeColors.primary?.[500] ?? themeColors.primary[600]}
             strokeDasharray={circumference}
             strokeLinecap='round'
             strokeWidth={strokeWidth}
@@ -113,7 +113,7 @@ function DailyProgressRingComponent({
         </Svg>
         <Text
           style={{
-            color: themeColors.primary?.[700] ?? '#047857',
+            color: themeColors.primary?.[700] ?? themeColors.primary[700],
             fontFamily: FONT_FAMILY,
             fontSize: 13,
             fontWeight: '700',

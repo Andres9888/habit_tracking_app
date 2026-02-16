@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
   } as ViewStyle,
   frequencyBadge: {
-    backgroundColor: '#f5f5f4', // overridden by useThemedStatsStyles
+    backgroundColor: '#FAF8F5', // overridden by useThemedStatsStyles
     borderRadius: STATS_CONFIG.BADGE_BORDER_RADIUS,
     paddingHorizontal: STATS_CONFIG.BADGE_PADDING_X,
     paddingVertical: STATS_CONFIG.BADGE_PADDING_Y,
@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
   } as TextStyle,
   settingsButton: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4', // overridden by useThemedStatsStyles
+    backgroundColor: '#FAF8F5', // overridden by useThemedStatsStyles
     borderRadius: STATS_CONFIG.SETTINGS_BUTTON_SIZE / 2,
     height: STATS_CONFIG.SETTINGS_BUTTON_SIZE,
     justifyContent: 'center',

@@ -71,6 +71,54 @@ export const darkColors = {
   /** Card border — slightly lighter than surface (gray-700) */
   cardBorder: '#374151',
 
+  /** Disabled/inactive elements */
+  disabled: '#4B5563',
+  disabledText: '#6B7280',
+
+  /** Error state colors */
+  error: '#F87171',
+  errorLight: '#7F1D1D',
+
+  /** Success state colors */
+  success: '#34D399',
+  successLight: '#064E3B',
+
+  /** Warning state colors */
+  warning: '#FBBF24',
+  warningLight: '#78350F',
+  warningText: '#FDE68A',
+
+  /** Info state */
+  info: '#60A5FA',
+  infoLight: '#1E3A5F',
+
+  /** Danger/destructive action color */
+  danger: '#F87171',
+  dangerMuted: '#991B1B',
+
+  /** Skeleton/placeholder loading */
+  skeleton: '#374151',
+  skeletonHighlight: '#4B5563',
+
+  /** Streak/progress gold */
+  streak: '#FBBF24',
+  streakLight: '#78350F',
+
+  /** Premium/purple accent */
+  premium: '#A78BFA',
+  premiumMuted: '#7C3AED',
+
+  /** Icon colors */
+  icon: {
+    default: '#9CA3AF',
+    muted: '#6B7280',
+    onColor: '#FFFFFF',
+  },
+
+  /** Surface variants */
+  surfaceMuted: '#111827',
+  surfaceElevated: '#374151',
+
   /**
    * Gray Scale (Inverted)
    *
@@ -147,6 +195,54 @@ export const lightColors = {
   /** Card border — same as general border */
   cardBorder: '#DDD8D2',
 
+  /** Disabled/inactive elements */
+  disabled: '#C4BFB7',
+  disabledText: '#A8A29E',
+
+  /** Error state colors */
+  error: '#DC2626',
+  errorLight: '#FEE2E2',
+
+  /** Success state colors */
+  success: '#15793C',
+  successLight: '#ECFDF5',
+
+  /** Warning state colors */
+  warning: '#D97706',
+  warningLight: '#FEF3CD',
+  warningText: '#92400E',
+
+  /** Info state */
+  info: '#3872B8',
+  infoLight: '#DBEAFE',
+
+  /** Danger/destructive action color */
+  danger: '#DC2626',
+  dangerMuted: '#B91C1C',
+
+  /** Skeleton/placeholder loading */
+  skeleton: '#E5E7EB',
+  skeletonHighlight: '#F3F4F6',
+
+  /** Streak/progress gold */
+  streak: '#D97706',
+  streakLight: '#FEF3CD',
+
+  /** Premium/purple accent */
+  premium: '#7C3AED',
+  premiumMuted: '#8B5CF6',
+
+  /** Icon colors */
+  icon: {
+    default: '#57534E',
+    muted: '#78716C',
+    onColor: '#FFFFFF',
+  },
+
+  /** Surface variants */
+  surfaceMuted: '#FAF8F5',
+  surfaceElevated: '#FFFFFF',
+
   /**
    * Gray Scale (Standard)
    *
@@ -218,6 +314,8 @@ export interface SemanticColors {
 
   /** Elevated surface color */
   surface: string;
+  surfaceMuted: string;
+  surfaceElevated: string;
 
   /** Card/container background */
   card: string;
@@ -262,5 +360,49 @@ export interface SemanticColors {
     700: string;
     800: string;
     900: string;
+  };
+
+  /** Error state colors */
+  error: string;
+  errorLight: string;
+
+  /** Success state colors */
+  success: string;
+  successLight: string;
+
+  /** Warning state colors */
+  warning: string;
+  warningLight: string;
+  warningText: string;
+
+  /** Info state */
+  info: string;
+  infoLight: string;
+
+  /** Danger/destructive */
+  danger: string;
+  dangerMuted: string;
+
+  /** Disabled states */
+  disabled: string;
+  disabledText: string;
+
+  /** Skeleton loading */
+  skeleton: string;
+  skeletonHighlight: string;
+
+  /** Streak/progress */
+  streak: string;
+  streakLight: string;
+
+  /** Premium/purple */
+  premium: string;
+  premiumMuted: string;
+
+  /** Icon colors */
+  icon: {
+    default: string;
+    muted: string;
+    onColor: string;
   };
 }

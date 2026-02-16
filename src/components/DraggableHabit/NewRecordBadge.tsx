@@ -13,12 +13,12 @@ export function NewRecordBadge({
   newRecordOpacity,
   newRecordScale,
 }: NewRecordBadgeProps) {
-  const { isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   return (
     <Animated.View
       className='mx-3 mb-3 flex-row items-center justify-center gap-1.5 rounded-full py-2'
       style={{
-        borderColor: isDark ? '#D97706' : '#fcd34d',
+        borderColor: colors.warningText,
         borderWidth: 1,
         opacity: newRecordOpacity,
         transform: [{ scale: newRecordScale }],
@@ -26,18 +26,18 @@ export function NewRecordBadge({
     >
       <LinearGradient
         className='absolute inset-0 rounded-full'
-        colors={isDark ? ['#451A03', '#78350F'] : ['#fef3c7', '#fffbeb']}
+        colors={[colors.warningLight, colors.text.inverse]}
         end={{ x: 1, y: 0 }}
         start={{ x: 0, y: 0 }}
       />
       <TrendingUp
-        color={isDark ? '#FBBF24' : '#d97706'}
+        color={colors.streak}
         size={16}
         strokeWidth={2.5}
       />
       <Text
         className='text-[13px] font-bold uppercase tracking-wide'
-        style={{ color: isDark ? '#FCD34D' : '#b45309' }}
+        style={{ color: colors.warningText }}
       >
         New Personal Record! 🎉
       </Text>

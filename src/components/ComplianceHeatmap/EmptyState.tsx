@@ -25,19 +25,19 @@ export function EmptyState() {
         entering={entry(0)}
         style={{
           alignItems: 'center',
-          backgroundColor: isDark ? '#1E3A5F' : '#EFF6FF',
+          backgroundColor: isDark ? colors.infoLight : colors.infoLight,
           borderRadius: 12,
           height: 64,
           justifyContent: 'center',
           marginBottom: 16,
-          shadowColor: '#3b82f6',
+          shadowColor: colors.info,
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
           width: 64,
         }}
       >
-        <Grid3X3 color={isDark ? '#93C5FD' : '#3b82f6'} size={32} strokeWidth={1.5} />
+        <Grid3X3 color={colors.info} size={32} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
         entering={entry(60)}

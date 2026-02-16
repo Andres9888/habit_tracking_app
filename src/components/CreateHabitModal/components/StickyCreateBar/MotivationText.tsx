@@ -19,7 +19,7 @@ export function MotivationText() {
       className='mb-3 items-center'
     >
       <Text className='text-[13px]' style={{ color: colors.text.secondary }}>
-        <Text className='font-semibold' style={{ color: '#059669' }}>
+        <Text className='font-semibold' style={{ color: colors.primary[600] }}>
           {STRINGS.CREATE_HABIT.motivationHighlight}
         </Text>
         {STRINGS.CREATE_HABIT.motivationSuffix}

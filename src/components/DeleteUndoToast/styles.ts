@@ -27,7 +27,7 @@ export function useToastStyles() {
     },
     iconContainer: {
       alignItems: 'center',
-      backgroundColor: isDark ? '#7F1D1D' : '#fee2e2',
+      backgroundColor: isDark ? colors.errorLight : '#fee2e2',
       borderRadius: borderRadius.medium,
       height: 36,
       justifyContent: 'center',
@@ -45,11 +45,11 @@ export function useToastStyles() {
       color: colors.text.secondary,
     },
     progressBar: {
-      backgroundColor: isDark ? '#EF4444' : '#dc2626',
+      backgroundColor: isDark ? colors.danger : '#dc2626',
       height: '100%',
     },
     progressContainer: {
-      backgroundColor: isDark ? '#7F1D1D' : '#fee2e2',
+      backgroundColor: isDark ? colors.errorLight : '#fee2e2',
       borderBottomLeftRadius: borderRadius.xl,
       borderBottomRightRadius: borderRadius.xl,
       height: 3,
@@ -69,7 +69,7 @@ export function useToastStyles() {
     },
     undoButton: {
       alignItems: 'center',
-      backgroundColor: isDark ? '#7F1D1D' : '#fee2e2',
+      backgroundColor: isDark ? colors.errorLight : '#fee2e2',
       borderRadius: borderRadius.medium,
       flexDirection: 'row',
       gap: 6,

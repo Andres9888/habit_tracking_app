@@ -10,7 +10,7 @@ interface ArchiveActionProps {
 }
 
 export function ArchiveAction({ dragX }: ArchiveActionProps) {
-  const { isDark } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const trans = dragX.interpolate({
     extrapolate: 'clamp',
     inputRange: [-100, 0],
@@ -37,7 +37,7 @@ export function ArchiveAction({ dragX }: ArchiveActionProps) {
       <View
         style={{
           alignItems: 'center',
-          backgroundColor: isDark ? '#D97706' : '#f59e0b',
+          backgroundColor: colors.streak,
           borderBottomRightRadius: borderRadius.xl,
           borderTopRightRadius: borderRadius.xl,
           height: '100%',
@@ -53,10 +53,10 @@ export function ArchiveAction({ dragX }: ArchiveActionProps) {
             transform: [{ scale: iconScale }],
           }}
         >
-          <Archive color='white' size={22} strokeWidth={2} />
+          <Archive color={colors.text.inverse} size={22} strokeWidth={2} />
           <Text
             style={{
-              color: 'white',
+              color: colors.text.inverse,
               fontSize: typography.tabBar.fontSize,
               fontWeight: '600',
               letterSpacing: 0.2,

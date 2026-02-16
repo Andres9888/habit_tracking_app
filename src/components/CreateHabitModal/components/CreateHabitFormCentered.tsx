@@ -48,12 +48,12 @@ const CreateHabitFormCenteredComponent = ({
           className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
           maxLength={50}
           placeholder='e.g., Read 20 minutes daily'
-          placeholderTextColor={isDark ? themeColors.text.tertiary : '#A8A29E'}
+          placeholderTextColor={isDark ? themeColors.text.tertiary : colors.disabledText}
           returnKeyType='done'
           style={{
             lineHeight: 28,
             color: themeColors.text.primary,
-            backgroundColor: isDark ? themeColors.card : '#FFFFFF',
+            backgroundColor: isDark ? themeColors.card : colors.text.inverse,
             borderColor: showNameError
               ? '#f87171'
               : isDark
@@ -71,7 +71,7 @@ const CreateHabitFormCenteredComponent = ({
             accessibilityLiveRegion='polite'
             accessibilityRole='alert'
             className='mt-3 text-sm font-medium'
-            style={{ color: '#ef4444' }}
+            style={{ color: colors.error }}
           >
             Give your habit a name (at least 2 characters)
           </Text>

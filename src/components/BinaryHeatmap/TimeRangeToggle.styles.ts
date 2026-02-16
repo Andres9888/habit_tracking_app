@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   buttonActive: {
     ...shadows.subtle,
-    backgroundColor: '#ffffff', // overridden by useThemedToggleStyles
+    backgroundColor: '#FFFFFF', // overridden by useThemedToggleStyles
     shadowOpacity: 0.1,
   },
   buttonText: {
@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     color: COLORS.TEXT_SECONDARY,
   },
   container: {
-    backgroundColor: '#f5f5f4', // overridden by useThemedToggleStyles
+    backgroundColor: '#FAF8F5', // overridden by useThemedToggleStyles
     borderRadius: borderRadius.small,
     flexDirection: 'row',
     padding: 2,

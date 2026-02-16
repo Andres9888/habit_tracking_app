@@ -49,7 +49,7 @@ export function StandardMeter({
           className='h-14 w-14 items-center justify-center rounded-full border-4'
           style={{
             backgroundColor: 'transparent',
-            borderColor: isDark ? themeColors.gray[200] : '#ffffff',
+            borderColor: isDark ? themeColors.gray[200] : colors.text.inverse,
           }}
         >
           <View
@@ -86,7 +86,7 @@ export function StandardMeter({
           <View
             className='h-1.5 overflow-hidden rounded-full'
             style={{
-              backgroundColor: isDark ? themeColors.gray[200] : '#ffffff',
+              backgroundColor: isDark ? themeColors.gray[200] : colors.text.inverse,
             }}
           >
             <Animated.View

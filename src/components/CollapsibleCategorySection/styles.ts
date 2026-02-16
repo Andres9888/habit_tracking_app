@@ -65,7 +65,7 @@ const baseStyles = StyleSheet.create({
 /** @deprecated Use useThemedStyles() for dark mode support */
 export const styles = {
   ...baseStyles,
-  countTextHabits: { color: '#78716c' },
+  countTextHabits: { color: '#6B6560' },
   countTextScience: { color: '#059669' },
 };
 

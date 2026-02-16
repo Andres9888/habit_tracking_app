@@ -55,7 +55,7 @@ export function ConvexConnectionGuard({ children }: PropsWithChildren) {
         </Text>
         <Text
           style={{
-            color: colors.textSecondary,
+            color: colors.text.secondary,
             fontSize: 16,
             marginBottom: 24,
             textAlign: 'center',

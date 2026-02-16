@@ -59,7 +59,7 @@ function StickyCreateBarComponent({
         colors={
           isDark
             ? ['transparent', `${themeColors.surface}E6`, themeColors.surface]
-            : ['transparent', 'rgba(250, 248, 245, 0.9)', '#FAF8F5']
+            : ['transparent', 'rgba(250, 248, 245, 0.9)', themeColors.surfaceMuted]
         }
         locations={[0, 0.4, 1]}
         pointerEvents='none'
@@ -67,7 +67,7 @@ function StickyCreateBarComponent({
       />
       <View
         className='px-4 pb-2'
-        style={{ backgroundColor: isDark ? themeColors.surface : '#FAF8F5' }}
+        style={{ backgroundColor: isDark ? themeColors.surface : themeColors.surfaceMuted }}
       >
         <MotivationText />
         <CreateButton
