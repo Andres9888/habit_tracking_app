@@ -11,6 +11,7 @@ import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useKeyboardVisible } from '../../../../hooks/useKeyboardVisible';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { ActionSection } from './ActionSection';
 import { ChipsSection } from './ChipsSection';
 import { HeroSection } from './HeroSection';
@@ -30,6 +31,7 @@ export function HabitsEmptyStateMinimal({
 }: HabitsEmptyStateMinimalProps) {
   const inputRef = useRef<TextInput>(null);
   const { isKeyboardVisible } = useKeyboardVisible();
+  const { isDark } = useThemeColors();
   const insets = useSafeAreaInsets();
 
   const animations = useKeyboardLayoutAnimations({
@@ -67,7 +69,9 @@ export function HabitsEmptyStateMinimal({
 
   return (
     <LinearGradient
-      colors={['#FAFAF9', '#F0FDF4', '#ECFDF5', '#F0FDF4', '#FAFAF9']}
+      colors={isDark
+        ? ['#111827', '#0C1F1A', '#0D2418', '#0C1F1A', '#111827']
+        : ['#FAFAF9', '#F0FDF4', '#ECFDF5', '#F0FDF4', '#FAFAF9']}
       locations={[0, 0.25, 0.5, 0.75, 1]}
       style={{ flex: 1, minHeight: '100%', width: '100%' }}
     >

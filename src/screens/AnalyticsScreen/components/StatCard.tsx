@@ -4,6 +4,7 @@
 import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { StatCardProps } from '../AnalyticsScreen.types';
 import { styles } from './StatCard.styles';
 
@@ -21,6 +22,7 @@ export const StatCard = memo(function StatCard({
 
   // When wrapped in AnimatedPressable, a11y is on the pressable — avoid double-announcing
   const isInteractive = !!onPress && !loading;
+  const { colors } = useThemeColors();
 
   const content = (
     <View
@@ -30,26 +32,26 @@ export const StatCard = memo(function StatCard({
       }
       accessibilityLabel={!isInteractive ? accessibilityLabel : undefined}
       accessibilityRole={!isInteractive ? (onPress ? 'button' : 'text') : undefined}
-      style={styles.statCard}
+      style={[styles.statCard, { backgroundColor: colors.surface, shadowColor: colors.text.primary }]}
     >
       {loading ? (
         <View accessibilityLabel={`Loading ${title}...`} style={styles.statCardLoading}>
-          <View style={styles.skeletonTitle} />
-          <View style={styles.skeletonValue} />
-          {subtitle && <View style={styles.skeletonSubtitle} />}
+          <View style={[styles.skeletonTitle, { backgroundColor: colors.border }]} />
+          <View style={[styles.skeletonValue, { backgroundColor: colors.border }]} />
+          {subtitle && <View style={[styles.skeletonSubtitle, { backgroundColor: colors.border }]} />}
         </View>
       ) : (
         <>
-          <Text style={styles.statCardTitle}>{title}</Text>
+          <Text style={[styles.statCardTitle, { color: colors.text.secondary }]}>{title}</Text>
           <View style={styles.statCardValueRow}>
             {emoji && (
               <Text accessibilityElementsHidden style={styles.statCardEmoji}>
                 {emoji}
               </Text>
             )}
-            <Text style={styles.statCardValue}>{value}</Text>
+            <Text style={[styles.statCardValue, { color: colors.text.primary }]}>{value}</Text>
           </View>
-          {subtitle && <Text style={styles.statCardSubtitle}>{subtitle}</Text>}
+          {subtitle && <Text style={[styles.statCardSubtitle, { color: colors.text.tertiary }]}>{subtitle}</Text>}
         </>
       )}
     </View>

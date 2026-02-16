@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
@@ -23,6 +24,7 @@ import {
 } from './components';
 
 function AnalyticsScreenContent() {
+  const { colors: themeColors } = useThemeColors();
   const {
     refreshing,
     showPaywall,
@@ -74,7 +76,7 @@ function AnalyticsScreenContent() {
           onRefresh={() => void onRefresh()}
         />
       }
-      style={styles.container}
+      style={[styles.container, { backgroundColor: themeColors.background }]}
     >
       <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
         <AnalyticsHeader />
