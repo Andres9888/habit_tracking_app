@@ -1,5 +1,5 @@
-/** Section label with animation — dark mode aware */
-import { Text } from 'react-native';
+/** Section label with animation — dark mode aware, with separator lines */
+import { View, Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
 
@@ -14,20 +14,23 @@ export function SectionLabel({
   delay,
   variant = 'default',
 }: SectionLabelProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const color = variant === 'danger' ? '#F87171' : colors.text.tertiary;
+  const borderColor = isDark ? colors.border : '#DDD8D2';
 
   return (
     <Animated.View
-      className='mb-4 mt-8'
+      className='mb-3 mt-6 flex-row items-center justify-center gap-2 px-4'
       entering={FadeInUp.delay(delay).springify().damping(18)}
     >
+      <View className='h-px flex-1' style={{ backgroundColor: borderColor }} />
       <Text
-        className='text-center font-semibold'
-        style={{ fontSize: 13, letterSpacing: 0.5, lineHeight: 18, color }}
+        className='text-[13px] font-semibold tracking-wider'
+        style={{ color }}
       >
         {text}
       </Text>
+      <View className='h-px flex-1' style={{ backgroundColor: borderColor }} />
     </Animated.View>
   );
 }

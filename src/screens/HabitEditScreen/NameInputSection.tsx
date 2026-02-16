@@ -3,6 +3,7 @@
  * 34px hero title, centered input with subtle border
  */
 
+import { useState } from 'react';
 import { View, Text, TextInput, Keyboard } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
@@ -17,6 +18,7 @@ export function NameInputSection({
   onChangeText,
 }: NameInputSectionProps) {
   const { colors, isDark } = useThemeColors();
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
     <View className='px-4'>
@@ -52,10 +54,12 @@ export function NameInputSection({
             lineHeight: 28,
             color: colors.text.primary,
             backgroundColor: isDark ? colors.card : '#FFFFFF',
-            borderColor: colors.border,
+            borderColor: isFocused ? colors.primary[600] : colors.border,
           }}
           value={habitName}
+          onBlur={() => setIsFocused(false)}
           onChangeText={onChangeText}
+          onFocus={() => setIsFocused(true)}
           onSubmitEditing={Keyboard.dismiss}
         />
         <Text
