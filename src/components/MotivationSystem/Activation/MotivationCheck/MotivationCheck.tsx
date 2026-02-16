@@ -58,6 +58,7 @@ export function MotivationCheck({
         </View>
         {showExplainer && onExplainerPress && (
           <Pressable
+            accessibilityHint='Learn what motivation check is and how it works'
             accessibilityLabel='Learn about motivation check'
             accessibilityRole='button'
             className='h-8 w-8 items-center justify-center rounded-lg'

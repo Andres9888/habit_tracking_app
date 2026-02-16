@@ -44,7 +44,7 @@ export function getProgressToNextLevel(strength: number): {
 
   const rangeSize = currentLevel.max - currentLevel.min;
   const progressInLevel = strength - currentLevel.min;
-  const progressPercent = Math.round((progressInLevel / rangeSize) * 100);
+  const progressPercent = rangeSize > 0 ? Math.round((progressInLevel / rangeSize) * 100) : 0;
   const pointsToNext = currentLevel.max - strength;
 
   return {
