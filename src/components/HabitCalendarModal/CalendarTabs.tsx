@@ -2,6 +2,11 @@
 /**
  * CalendarTabs Component
  * Tab switcher for Month vs Year (Heatmap) calendar views
+ * 
+ * UX improvements:
+ * - Added dark mode support via theme colors
+ * - Maintained smooth spring animations
+ * - Improved visual contrast and accessibility
  */
 
 import { useCallback, useEffect } from 'react';
@@ -12,6 +17,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { TabButton } from './TabButton';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 type CalendarView = 'month' | 'year';
 
@@ -24,6 +30,7 @@ const SPRING_CONFIG = { damping: 18, mass: 1, stiffness: 180 };
 const PADDING = 4;
 
 export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
+  const { colors, isDark } = useThemeColors();
   const containerWidth = useSharedValue(0);
   const indicatorX = useSharedValue(activeView === 'month' ? 0 : 1);
 
@@ -51,20 +58,26 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
     };
   });
 
+  // Theme-aware colors
+  const containerBg = isDark ? colors.gray[800] : colors.gray[100];
+  const indicatorBg = isDark ? colors.gray[700] : colors.card;
+  const shadowColor = colors.primary[300];
+
   return (
     <View
       accessibilityRole='tablist'
-      className='mb-4 rounded-lg bg-stone-100'
-      style={{ padding: PADDING }}
+      className='mb-4 rounded-lg'
+      style={{ backgroundColor: containerBg, padding: PADDING }}
       onLayout={handleLayout}
     >
       <Animated.View
-        className='absolute bottom-1 top-1 rounded-md bg-white'
+        className='absolute bottom-1 top-1 rounded-md'
         style={[
           indicatorStyle,
           {
+            backgroundColor: indicatorBg,
             elevation: 3,
-            shadowColor: '#059669',
+            shadowColor,
             shadowOffset: { height: 3, width: 0 },
             shadowOpacity: 0.12,
             shadowRadius: 8,

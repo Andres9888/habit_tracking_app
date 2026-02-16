@@ -1,6 +1,17 @@
+/**
+ * TabButton Component
+ * Tab button for calendar view switcher (Month/Year)
+ * 
+ * UX improvements:
+ * - Added dark mode support via theme colors
+ * - Increased touch target to 44pt minimum
+ * - Maintained haptic feedback
+ */
+
 import { useCallback } from 'react';
 import { Pressable, Text } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 type CalendarView = 'month' | 'year';
 
@@ -17,6 +28,7 @@ export function TabButton({
   activeView,
   onPress,
 }: TabButtonProps) {
+  const { colors } = useThemeColors();
   const isActive = activeView === view;
 
   const handlePress = useCallback(() => {
@@ -31,12 +43,13 @@ export function TabButton({
       accessibilityLabel={`${label} view`}
       accessibilityRole='tab'
       accessibilityState={{ selected: isActive }}
-      className='z-10 flex-1 items-center py-2'
+      className='z-10 flex-1 items-center justify-center'
+      style={{ minHeight: 44 }}
       onPress={handlePress}
     >
       <Text
         style={{
-          color: isActive ? '#059669' : '#78716c',
+          color: isActive ? colors.primary[600] : colors.text.secondary,
           fontSize: 13,
           fontWeight: '600',
         }}
