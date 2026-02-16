@@ -421,9 +421,10 @@ const applicationTables = {
 
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),
-  }).index('by_category', ['category']),
-  // Note: No index on popularityScore — it's optional and template count is small (~200)
-  // In-memory sorting in getPopular() is more efficient than index on optional field
+  })
+    .index('by_category', ['category'])
+    .index('by_createdAt', ['createdAt']),
+  // PERF: Added by_createdAt index to avoid full table scans when listing all templates
 
   // Track template usage analytics
   templateUsage: defineTable({

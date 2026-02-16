@@ -64,6 +64,7 @@ export function VisionBoardPreview({
 
   return (
     <RNModal
+      accessibilityViewIsModal
       statusBarTranslucent
       transparent
       animationType={reduceMotion ? 'none' : 'fade'}

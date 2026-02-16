@@ -19,7 +19,7 @@ import {
   View,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import { api } from '../../../convex/_generated/api';
 import { colors } from '../../theme/colors';
@@ -213,7 +213,7 @@ export function AuthGate() {
       {screenKey === 'welcome' && (
         <Animated.View
           key="welcome"
-          entering={FadeIn.duration(300)}
+          entering={FadeInDown.duration(280).springify().damping(18)}
           exiting={FadeOut.duration(300)}
           style={{ flex: 1 }}
         >
@@ -223,7 +223,7 @@ export function AuthGate() {
       {screenKey === 'onboarding' && (
         <Animated.View
           key="onboarding"
-          entering={FadeIn.duration(300)}
+          entering={FadeInDown.duration(280).springify().damping(18)}
           exiting={FadeOut.duration(300)}
           style={{ flex: 1 }}
         >
@@ -233,7 +233,7 @@ export function AuthGate() {
       {screenKey === 'app' && (
         <Animated.View
           key="app"
-          entering={FadeIn.duration(300)}
+          entering={FadeInDown.duration(280).springify().damping(18)}
           style={{ flex: 1 }}
         >
           <HabitsApp />

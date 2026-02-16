@@ -63,6 +63,7 @@ export default function TemplateScienceModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableBackdropClose={false}
       variant='fullScreen'
       visible={visible}
