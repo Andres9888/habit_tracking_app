@@ -6,10 +6,10 @@
 
 /**
  * Success state pop animation
- * Scale: 0.8 → 1.1 → 1.0 with bounce (0.4s)
+ * Scale: 0.8 → 1.1 → 1.0 with bounce
  */
 export const POP_ANIMATION = {
-  duration: 400,
+  duration: 280,
   finalScale: 1,
   initialScale: 0.8,
   overshootScale: 1.1,
@@ -46,16 +46,16 @@ export const CTA_TRANSFORMS = {
  * Gradient sweeps left-to-right when button becomes enabled
  */
 export const CTA_SHIMMER = {
-  duration: 600,
+  duration: 560,
   gradientOpacity: 0.3,
 } as const;
 
 /**
  * Chip stagger entrance animation
- * Each chip fades in and slides up with a 50ms delay between each
+ * Each chip fades in and slides up with a 60ms delay between each per design system
  */
 export const CHIP_STAGGER = {
-  delay: 50, // ms between each chip
-  duration: 400,
+  delay: 60, // ms between each chip
+  duration: 280,
   translateY: 10,
 } as const;

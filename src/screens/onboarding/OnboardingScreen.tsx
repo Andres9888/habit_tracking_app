@@ -336,7 +336,10 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
       // If storage fails, still proceed to avoid blocking user
       // They might see onboarding again on next launch, but that's acceptable
       if (__DEV__) {
-        console.error('[OnboardingScreen] Failed to save completion state:', error);
+        console.error(
+          '[OnboardingScreen] Failed to save completion state:',
+          error
+        );
       }
       onComplete();
     } finally {

@@ -54,7 +54,7 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
     );
     entranceTranslateY.value = withDelay(
       ENTRANCE_DELAY,
-      withSpring(0, { damping: 18, stiffness: 200 })
+      withSpring(0, { damping: 18, stiffness: 150 })
     );
 
     return () => {
