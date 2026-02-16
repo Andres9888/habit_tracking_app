@@ -46,6 +46,11 @@ export const styles = StyleSheet.create({
     shadowRadius: 16,
     width: 80,
   },
+  loadingContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
   primaryButton: {
     alignItems: 'center',
     backgroundColor: colors.primary[600],
