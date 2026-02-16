@@ -1,16 +1,9 @@
 /**
  * Skeleton loading constants for HabitStrengthHistory
+ * Re-exports from core SkeletonLoader for consistency.
  */
 
-/**
- * Skeleton colors matching the design system
- */
-export const SKELETON_COLORS = {
-  base: '#E7E5E4', // stone-200
-  highlight: '#F5F5F4', // stone-100
-} as const;
-
-/**
- * Shimmer animation duration in milliseconds
- */
-export const SHIMMER_DURATION = 1500;
+export {
+  SKELETON_COLORS_LIGHT as SKELETON_COLORS,
+  SHIMMER_DURATION,
+} from '../../SkeletonLoader/SkeletonLoader';

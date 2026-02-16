@@ -1,17 +1,26 @@
 /** Constants and helpers for HabitDetailScreen */
-import { colors } from '../../theme/colors';
+import { darkColors, lightColors } from '../../theme/darkColors';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { Doc } from '../../../convex/_generated/dataModel';
 
-export const DETAIL_BG_GRADIENT = [
-  colors.light.background,
-  colors.light.gradientMid,
-  colors.light.background,
+export const DETAIL_BG_GRADIENT_LIGHT = [
+  lightColors.background,
+  lightColors.gray[50],
+  lightColors.background,
 ] as const;
+
+export const DETAIL_BG_GRADIENT_DARK = [
+  darkColors.background,
+  darkColors.surface,
+  darkColors.background,
+] as const;
+
+/** @deprecated Use DETAIL_BG_GRADIENT_LIGHT/DARK with useThemeColors instead */
+export const DETAIL_BG_GRADIENT = DETAIL_BG_GRADIENT_LIGHT;
 
 /** Assemble props for HabitDetailModals from hook return values */
 export function buildModalsProps(
-  s: {
+  screenState: {
     editingNote: Doc<'notes'> | null | undefined;
     isNotesEditorOpen: boolean;
     isNotesListOpen: boolean;
@@ -20,28 +29,28 @@ export function buildModalsProps(
     setIsNotesListOpen: (v: boolean) => void;
     setPendingDelete: (v: boolean) => void;
   },
-  c: {
+  calendarHandlers: {
     handleConfirmArchive: () => void;
     handleConfirmDelete: () => void;
     handleUndoArchive: () => void;
     handleUndoDelete: () => void;
   },
-  n: { handleCloseNotesEditor: () => void },
+  notesHandlers: { handleCloseNotesEditor: () => void },
   insets: EdgeInsets
 ) {
   return {
-    editingNote: s.editingNote,
-    handleCloseNotesEditor: n.handleCloseNotesEditor,
-    handleConfirmArchive: c.handleConfirmArchive,
-    handleConfirmDelete: c.handleConfirmDelete,
-    handleUndoArchive: c.handleUndoArchive,
-    handleUndoDelete: c.handleUndoDelete,
+    editingNote: screenState.editingNote,
+    handleCloseNotesEditor: notesHandlers.handleCloseNotesEditor,
+    handleConfirmArchive: calendarHandlers.handleConfirmArchive,
+    handleConfirmDelete: calendarHandlers.handleConfirmDelete,
+    handleUndoArchive: calendarHandlers.handleUndoArchive,
+    handleUndoDelete: calendarHandlers.handleUndoDelete,
     insets,
-    isNotesEditorOpen: s.isNotesEditorOpen,
-    isNotesListOpen: s.isNotesListOpen,
-    pendingArchive: s.pendingArchive,
-    pendingDelete: s.pendingDelete,
-    setIsNotesListOpen: s.setIsNotesListOpen,
-    setPendingDelete: s.setPendingDelete,
+    isNotesEditorOpen: screenState.isNotesEditorOpen,
+    isNotesListOpen: screenState.isNotesListOpen,
+    pendingArchive: screenState.pendingArchive,
+    pendingDelete: screenState.pendingDelete,
+    setIsNotesListOpen: screenState.setIsNotesListOpen,
+    setPendingDelete: screenState.setPendingDelete,
   };
 }

@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   footer: { marginTop: 32, paddingHorizontal: 16 },
   footerLink: { color: '#047857', textDecorationLine: 'underline' },
   footerText: {
-    color: '#78716c',
+    color: '#57534e',
     fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',

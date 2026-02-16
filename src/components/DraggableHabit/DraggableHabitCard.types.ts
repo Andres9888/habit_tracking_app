@@ -31,6 +31,7 @@ export interface DraggableHabitCardProps {
   highContrastMode: boolean;
   highlightGlow: Animated.Value;
   iconPulse: Animated.Value;
+  isDark: boolean;
   isConnectedToNextWeek: boolean;
   isConnectedToPreviousWeek: boolean;
   isWeekComplete: boolean;
@@ -42,10 +43,12 @@ export interface DraggableHabitCardProps {
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
   showConnectors: boolean;
+  showGradientFill: boolean;
   showHabitStrengthPercentage: boolean;
   showNewRecord: boolean;
   streak: number;
   strengthEmojiAnimatedStyle: StrengthEmojiAnimatedStyle;
+  strengthFillStyle: AnimatedStyle;
   strengthPercent: number;
   progressAnimatedStyle: ProgressAnimatedStyle;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;

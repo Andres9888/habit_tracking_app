@@ -5,6 +5,7 @@
 
 import React, { useCallback } from 'react';
 import { View, Pressable, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -42,26 +43,13 @@ export function ViewerHeader({
   onDelete,
   isDeleting,
 }: ViewerHeaderProps) {
+  const insets = useSafeAreaInsets();
   const closeAnim = usePressAnimation();
   const editAnim = usePressAnimation();
   const deleteAnim = usePressAnimation();
 
   return (
-    <View className='flex-row items-center justify-between px-4 pb-4 pt-14'>
-      <AnimatedPressable
-        accessibilityLabel='Close image viewer'
-        accessibilityRole='button'
-        className='h-10 w-10 items-center justify-center rounded-full bg-white/10'
-        style={closeAnim.animatedStyle}
-        onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          onClose();
-        }}
-        onPressIn={closeAnim.handlePressIn}
-        onPressOut={closeAnim.handlePressOut}
-      >
-        <X className='text-white' size={24} />
-      </AnimatedPressable>
+    <View className='flex-row items-center justify-between px-4 pb-4' style={{ paddingTop: insets.top + 8 }}>
       <View className='flex-row gap-2'>
         <AnimatedPressable
           accessibilityLabel='Edit caption'
@@ -97,6 +85,20 @@ export function ViewerHeader({
           )}
         </AnimatedPressable>
       </View>
+      <AnimatedPressable
+        accessibilityLabel='Close image viewer'
+        accessibilityRole='button'
+        className='h-10 w-10 items-center justify-center rounded-full bg-white/10'
+        style={closeAnim.animatedStyle}
+        onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          onClose();
+        }}
+        onPressIn={closeAnim.handlePressIn}
+        onPressOut={closeAnim.handlePressOut}
+      >
+        <X className='text-white' size={24} />
+      </AnimatedPressable>
     </View>
   );
 }

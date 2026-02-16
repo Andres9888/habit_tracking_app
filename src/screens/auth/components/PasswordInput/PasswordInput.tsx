@@ -16,6 +16,7 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
       onChangeText,
       placeholder = 'Enter your password',
       error,
+      labelRight,
       ...props
     },
     ref
@@ -28,14 +29,17 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
 
     return (
       <View className='gap-2'>
-        <Text className='text-sm font-medium text-stone-500'>Password</Text>
+        <View className='flex-row items-center justify-between'>
+          <Text className='text-sm font-medium text-stone-600'>Password</Text>
+          {labelRight}
+        </View>
         <Animated.View
           className='relative flex-row items-center rounded-3xl border'
           style={[animatedStyle, errorStyle]}
         >
           <View className='pl-5'>
             <Lock
-              color='#78716c'
+              color='#57534e'
               size={20}
               strokeWidth={2}
               testID='password-lock-icon'
@@ -71,14 +75,14 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
           >
             {isSecure ? (
               <Eye
-                color='#78716c'
+                color='#57534e'
                 size={20}
                 strokeWidth={2}
                 testID='eye-icon'
               />
             ) : (
               <EyeOff
-                color='#78716c'
+                color='#57534e'
                 size={20}
                 strokeWidth={2}
                 testID='eye-off-icon'

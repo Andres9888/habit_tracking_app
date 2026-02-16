@@ -9,7 +9,7 @@ interface SignUpLinkProps {
 export function SignUpLink({ disabled, onPress }: SignUpLinkProps) {
   return (
     <View className='mt-6 flex-row items-center justify-center'>
-      <Text className='text-sm text-stone-500'>Don't have an account? </Text>
+      <Text className='text-sm text-stone-600'>Don't have an account? </Text>
       <AnimatedPressable
         accessibilityLabel='Create a new account'
         accessibilityRole='link'

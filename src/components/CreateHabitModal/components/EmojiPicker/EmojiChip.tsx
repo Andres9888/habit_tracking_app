@@ -29,8 +29,8 @@ function EmojiChipComponent({
   const handlePressIn = useCallback(() => {
     'worklet';
     if (reduceMotion) return;
-    // Quick press down to 96% scale
-    scale.value = withTiming(0.96, { duration: 50 });
+    // Quick press down to 97% scale
+    scale.value = withTiming(0.97, { duration: 50 });
   }, [scale, reduceMotion]);
 
   const handlePressOut = useCallback(() => {

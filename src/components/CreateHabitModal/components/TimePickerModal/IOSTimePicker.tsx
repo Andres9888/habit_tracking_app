@@ -7,6 +7,7 @@
 import { Modal, Pressable, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import type { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface IOSTimePickerProps {
   visible: boolean;
@@ -25,6 +26,8 @@ export function IOSTimePicker({
   onConfirm,
   onCancel,
 }: IOSTimePickerProps) {
+  const { colors, isDark } = useThemeColors();
+
   return (
     <Modal
       transparent
@@ -40,14 +43,14 @@ export function IOSTimePicker({
         onPress={onCancel}
       >
         <Pressable
-          accessibilityElementsHidden
-          importantForAccessibility='no-hide-descendants'
-          className='mx-6 w-full max-w-sm rounded-2xl bg-white p-5'
+          className='mx-6 w-full max-w-sm rounded-2xl p-5'
+          style={{ backgroundColor: colors.surface }}
           onPress={(e) => e.stopPropagation()}
         >
           <Text
             accessibilityRole='header'
-            className='mb-4 text-center text-lg font-semibold text-stone-900'
+            className='mb-4 text-center text-lg font-semibold'
+            style={{ color: colors.text.primary }}
           >
             {title}
           </Text>
@@ -61,7 +64,7 @@ export function IOSTimePicker({
               is24Hour={false}
               mode='time'
               testID='time-picker-ios'
-              textColor='#1c1917'
+              textColor={colors.text.primary}
               value={selectedTime}
               onChange={onTimeChange}
             />
@@ -71,10 +74,11 @@ export function IOSTimePicker({
             <Pressable
               accessibilityLabel='Cancel'
               accessibilityRole='button'
-              className='h-12 flex-1 items-center justify-center rounded-xl bg-stone-100 active:bg-stone-200'
+              className='h-12 flex-1 items-center justify-center rounded-xl'
+              style={{ backgroundColor: colors.gray[200] }}
               onPress={onCancel}
             >
-              <Text className='text-base font-semibold text-stone-700'>
+              <Text className='text-base font-semibold' style={{ color: colors.text.primary }}>
                 Cancel
               </Text>
             </Pressable>

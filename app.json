@@ -6,19 +6,25 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#059669"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "assets/*",
+      "assets/sounds/*"
+    ],
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.chainday.app",
-      "buildNumber": "2",
-      "usesAppleSignIn": true
+      "buildNumber": "5",
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -26,11 +32,16 @@
         "backgroundColor": "#FFFFFF"
       },
       "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
       ],
       "package": "com.chainday.app"
     },
+    "supportUrl": "https://chainday.app/support",
+    "privacyUrl": "https://chainday.app/privacy",
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
@@ -64,7 +75,8 @@
           "project": "react-native"
         }
       ],
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "./plugins/withPrivacyManifest"
     ]
   }
 }

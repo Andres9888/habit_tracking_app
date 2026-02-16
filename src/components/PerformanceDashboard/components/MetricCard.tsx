@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   value: {
     color: '#ffffff',
     fontFamily: 'monospace',
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '700',
   },
 });

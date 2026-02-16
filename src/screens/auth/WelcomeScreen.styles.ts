@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     opacity: 0.5,
   },
   container: {
-    backgroundColor: '#faf9f7',
+    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   content: {
@@ -61,7 +61,7 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   subtitle: {
-    color: '#78716c',
+    color: '#57534e',
     fontSize: 17,
     textAlign: 'center',
   },
@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   textLinkLabel: {
-    color: '#78716c',
+    color: '#57534e',
     fontSize: 15,
   },
   title: {

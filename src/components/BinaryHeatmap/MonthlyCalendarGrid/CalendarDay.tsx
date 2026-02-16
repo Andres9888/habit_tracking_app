@@ -30,16 +30,13 @@ export const CalendarDay = memo(function CalendarDay({
   // Guard against undefined day properties
   const showCompleted = Boolean(day?.isCompleted && day?.isCurrentMonth && !day?.isFuture);
   const isToday = Boolean(day?.isToday);
-  const isDisabled = Boolean(day?.isFuture || day?.isBeforeCreation);
-  const accessibilityLabel = `${day?.dateString ?? 'Unknown day'}${isToday ? ', today' : ''}${showCompleted ? ', completed' : ', not completed'}`;
 
   return (
     <Pressable
-      accessibilityHint={isDisabled ? undefined : 'Tap to toggle completion for this day'}
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={`Day ${day?.dayNumber ?? ''}${showCompleted ? ', completed' : ''}${isToday ? ', today' : ''}`}
       accessibilityRole='button'
-      accessibilityState={{ disabled: isDisabled }}
-      disabled={isDisabled}
+      accessibilityState={{ disabled: Boolean(day?.isFuture || day?.isBeforeCreation), selected: showCompleted }}
+      disabled={Boolean(day?.isFuture || day?.isBeforeCreation)}
       style={styles.dayWrapper}
       onPress={() => onPress(day?.dateString ?? '', Boolean(day?.isCompleted))}
     >
