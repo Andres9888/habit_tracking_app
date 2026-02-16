@@ -2,10 +2,14 @@
 /**
  * WelcomeScreen - Auth landing page
  * Clean design consistent with app style
+ *
+ * Performance optimizations:
+ * - Lazy loads SignInScreen and SignUpScreen when needed
+ * - Reduces initial bundle size for welcome screen
  */
 
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import React, { useState, lazy, Suspense } from 'react';
+import { Text, View, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import { Link } from 'lucide-react-native';
@@ -18,10 +22,13 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
-import SignInScreen from './SignInScreen';
-import SignUpScreen from './SignUpScreen';
 import { styles } from './WelcomeScreen.styles';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { colors } from '../../theme/colors';
+
+// Lazy load auth screens - only bundle when user wants to sign in/up
+const SignInScreen = lazy(() => import('./SignInScreen'));
+const SignUpScreen = lazy(() => import('./SignUpScreen'));
 
 type AuthMode = 'welcome' | 'signin' | 'signup';
 
@@ -36,7 +43,9 @@ function WelcomeScreenContent() {
   if (mode === 'signin') {
     return (
       <View style={styles.container}>
-        <SignInScreen />
+        <Suspense fallback={<View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary[600]} /></View>}>
+          <SignInScreen />
+        </Suspense>
         <View style={[styles.backButton, { top: insets.top + 8 }]}>
           <BackButton onPress={() => setMode('welcome')} />
         </View>
@@ -47,7 +56,9 @@ function WelcomeScreenContent() {
   if (mode === 'signup') {
     return (
       <View style={styles.container}>
-        <SignUpScreen />
+        <Suspense fallback={<View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary[600]} /></View>}>
+          <SignUpScreen />
+        </Suspense>
         <View style={[styles.backButton, { top: insets.top + 8 }]}>
           <BackButton onPress={() => setMode('welcome')} />
         </View>

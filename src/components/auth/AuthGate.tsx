@@ -7,11 +7,15 @@
  * OnboardingScreen for first-time users after sign-up,
  * HabitsApp for authenticated users.
  * Syncs user to Convex database on sign-in.
+ *
+ * Performance optimizations:
+ * - Lazy loads screens (only loads the one that's needed)
+ * - Reduces initial bundle size significantly
  */
 
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, lazy, Suspense } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -24,11 +28,13 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { api } from '../../../convex/_generated/api';
 import { colors } from '../../theme/colors';
 import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
-import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
-import { OnboardingScreen } from '../../screens/onboarding';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
-import WelcomeScreen from '../../screens/auth/WelcomeScreen';
+
+// Lazy load screens - only bundle what's needed
+const HabitsApp = lazy(() => import('../../features/habits/HabitsApp'));
+const WelcomeScreen = lazy(() => import('../../screens/auth/WelcomeScreen'));
+const OnboardingScreen = lazy(() => import('../../screens/onboarding/OnboardingScreen').then(module => ({ default: module.OnboardingScreen })));
 
 const LOADING_TIMEOUT_MS = 10_000;
 
@@ -178,6 +184,7 @@ const loadingStyles = StyleSheet.create({
     marginTop: 12,
   },
 });
+
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();
@@ -210,35 +217,37 @@ export function AuthGate() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {screenKey === 'welcome' && (
-        <Animated.View
-          key="welcome"
-          entering={FadeInDown.duration(280).springify().damping(18)}
-          exiting={FadeOut.duration(300)}
-          style={{ flex: 1 }}
-        >
-          <WelcomeScreen />
-        </Animated.View>
-      )}
-      {screenKey === 'onboarding' && (
-        <Animated.View
-          key="onboarding"
-          entering={FadeInDown.duration(280).springify().damping(18)}
-          exiting={FadeOut.duration(300)}
-          style={{ flex: 1 }}
-        >
-          <OnboardingScreen onComplete={markComplete} />
-        </Animated.View>
-      )}
-      {screenKey === 'app' && (
-        <Animated.View
-          key="app"
-          entering={FadeInDown.duration(280).springify().damping(18)}
-          style={{ flex: 1 }}
-        >
-          <HabitsApp />
-        </Animated.View>
-      )}
+      <Suspense fallback={<BrandedLoadingScreen />}>
+        {screenKey === 'welcome' && (
+          <Animated.View
+            key="welcome"
+            entering={FadeInDown.duration(280).springify().damping(18)}
+            exiting={FadeOut.duration(300)}
+            style={{ flex: 1 }}
+          >
+            <WelcomeScreen />
+          </Animated.View>
+        )}
+        {screenKey === 'onboarding' && (
+          <Animated.View
+            key="onboarding"
+            entering={FadeInDown.duration(280).springify().damping(18)}
+            exiting={FadeOut.duration(300)}
+            style={{ flex: 1 }}
+          >
+            <OnboardingScreen onComplete={markComplete} />
+          </Animated.View>
+        )}
+        {screenKey === 'app' && (
+          <Animated.View
+            key="app"
+            entering={FadeInDown.duration(280).springify().damping(18)}
+            style={{ flex: 1 }}
+          >
+            <HabitsApp />
+          </Animated.View>
+        )}
+      </Suspense>
     </GestureHandlerRootView>
   );
 }
