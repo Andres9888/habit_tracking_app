@@ -55,6 +55,6 @@ export function runSubtlePulse(scale: { value: number }) {
       duration: 100,
       easing: ReanimatedEasing.out(ReanimatedEasing.ease),
     }),
-    withSpring(1, { damping: 15, stiffness: 200 })
+    withSpring(1, { damping: 18, stiffness: 150 })
   );
 }

@@ -271,6 +271,9 @@ export const ANIMATION_VALUES = {
   /** Standard spring damping for animations */
   springDamping: 18,
 
+  /** Standard spring stiffness for animations (design system standard) */
+  springStiffness: 150,
+
   /** Default timing for interactive press animations */
   pressAnimationDuration: 50,
 

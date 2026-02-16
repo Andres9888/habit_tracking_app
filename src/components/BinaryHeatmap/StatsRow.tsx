@@ -21,7 +21,7 @@ import { StreakBadge } from './StreakBadge';
 
 const PRESS_SCALE = 0.95;
 const SETTINGS_ICON_SIZE = 18;
-const SPRING_CONFIG = { damping: 15, stiffness: 400 };
+const SPRING_CONFIG = { damping: 18, stiffness: 150 };
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const StatsRow = memo(function StatsRow({

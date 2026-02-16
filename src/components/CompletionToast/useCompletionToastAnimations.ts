@@ -50,10 +50,10 @@ export function useCompletionToastAnimations(
 
   useEffect(() => {
     if (visible) {
-      translateY.value = withSpring(0, { damping: 18, stiffness: 180 });
+      translateY.value = withSpring(0, { damping: 18, stiffness: 150 });
       opacity.value = withTiming(1, { duration: 280 });
       scale.value = withSequence(
-        withSpring(1.02, { damping: 18, stiffness: 200 }),
+        withSpring(1.02, { damping: 18, stiffness: 150 }),
         withSpring(1, { damping: 18, stiffness: 150 })
       );
       if (duration > 0 && onDismissRef.current) {
