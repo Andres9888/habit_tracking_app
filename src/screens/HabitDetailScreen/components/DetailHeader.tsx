@@ -26,7 +26,7 @@ export function DetailHeader({
     <View>
       <Animated.View
         className='flex-row items-center justify-between px-4 pb-2'
-        entering={FadeIn.duration(200).delay(50)}
+        entering={FadeInDown.duration(280).springify().damping(18)}
       >
         <HeaderButton
           icon={<X color={iconColor} size={22} strokeWidth={2.5} />}
