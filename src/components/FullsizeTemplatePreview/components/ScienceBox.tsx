@@ -13,7 +13,7 @@ import Animated, {
 import { ExternalLink } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { springs } from '@/theme/animations';
-import { scienceStyles } from '../styles';
+import { useScienceStyles } from '../styles';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -25,6 +25,7 @@ interface ScienceBoxProps {
 
 export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
   const theme = useAppTheme();
+  const scienceStyles = useScienceStyles();
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {

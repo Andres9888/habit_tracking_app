@@ -33,7 +33,7 @@ export function useToastStyles() {
     },
     iconContainer: {
       alignItems: 'center',
-      backgroundColor: isDark ? '#78350F' : '#fef3c7',
+      backgroundColor: colors.status.warning.bg,
       borderRadius: borderRadius.medium,
       height: 36,
       justifyContent: 'center',
@@ -47,11 +47,11 @@ export function useToastStyles() {
       color: colors.text.secondary,
     },
     progressBar: {
-      backgroundColor: isDark ? '#F59E0B' : '#d97706',
+      backgroundColor: colors.status.warning.text,
       height: '100%',
     },
     progressContainer: {
-      backgroundColor: isDark ? '#78350F' : '#fef3c7',
+      backgroundColor: colors.status.warning.bg,
       borderBottomLeftRadius: borderRadius.xl,
       borderBottomRightRadius: borderRadius.xl,
       height: 3,
@@ -60,7 +60,7 @@ export function useToastStyles() {
     },
     toast: {
       backgroundColor: colors.card,
-      borderColor: isDark ? '#92400E' : '#f5f5f4',
+      borderColor: colors.status.warning.border,
       borderRadius: borderRadius.xl,
       borderWidth: 1,
       ...shadows.alert,
@@ -71,7 +71,7 @@ export function useToastStyles() {
     },
     undoButton: {
       alignItems: 'center',
-      backgroundColor: isDark ? '#78350F' : '#fef3c7',
+      backgroundColor: colors.status.warning.bg,
       borderRadius: borderRadius.medium,
       flexDirection: 'row',
       gap: 6,
@@ -79,10 +79,10 @@ export function useToastStyles() {
       paddingVertical: 10,
     },
     undoButtonPressed: {
-      backgroundColor: isDark ? '#92400E' : '#fde68a',
+      backgroundColor: colors.chip.selectedBorder,
     },
     undoText: {
-      color: isDark ? '#FCD34D' : '#b45309',
+      color: colors.status.warning.text,
       fontSize: 13,
       fontWeight: '700',
       letterSpacing: 0.3,

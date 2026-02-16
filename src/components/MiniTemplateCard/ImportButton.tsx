@@ -6,7 +6,7 @@ import React from 'react';
 import { ActivityIndicator, Pressable, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check, Plus } from 'lucide-react-native';
-import { styles } from './MiniTemplateCard.styles';
+import { useStyles } from './MiniTemplateCard.styles';
 import { SUCCESS_COLOR } from './constants';
 
 interface ImportButtonProps {
@@ -28,6 +28,7 @@ export function ImportButton({
   checkmarkStyle,
   onImport,
 }: ImportButtonProps) {
+  const styles = useStyles();
   return (
     <Animated.View style={[styles.importButtonWrapper, importButtonStyle]}>
       <Pressable

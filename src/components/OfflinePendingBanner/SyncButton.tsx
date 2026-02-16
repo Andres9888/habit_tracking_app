@@ -2,10 +2,10 @@ import React from 'react';
 import { Pressable, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronDown, RefreshCw } from 'lucide-react-native';
-import { styles } from './OfflinePendingBanner.styles';
+import { useStyles } from './OfflinePendingBanner.styles';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface SyncButtonProps {
   showSyncButton: boolean;
@@ -24,6 +24,8 @@ export function SyncButton({
   chevronAnimatedStyle,
   onSyncPress,
 }: SyncButtonProps) {
+  const styles = useStyles();
+  const { colors } = useThemeColors();
   if (showSyncButton && isOnline && hasPendingItems && !isProcessing) {
     return (
       <Pressable
@@ -40,7 +42,7 @@ export function SyncButton({
 
   return (
     <Animated.View style={chevronAnimatedStyle}>
-      <ChevronDown color='#71717A' size={20} />
+      <ChevronDown color={colors.offline.subtitle} size={20} />
     </Animated.View>
   );
 }

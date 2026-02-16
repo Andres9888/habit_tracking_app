@@ -126,6 +126,36 @@ export const darkColors = {
     /** Tertiary text — low emphasis, WCAG AA 4.87:1 on dark card */
     tertiary: '#8E95A2',
   },
+
+  /** Status colors for contextual UI */
+  status: {
+    warning: { bg: '#78350F', text: '#FCD34D', border: '#92400E' },
+    error: { bg: '#7F1D1D', text: '#FCA5A5', border: '#991B1B' },
+    info: { bg: '#1E3A5F', text: '#93C5FD', border: '#1E40AF' },
+    success: { bg: '#064E3B', text: '#6EE7B7', border: '#065F46' },
+    tips: { bg: '#713F12', text: '#FDE68A', border: '#854D0E' },
+    strength: { text: '#A3E635', fill: '#A3E635' },
+  },
+
+  /** Chip/pill selection states */
+  chip: {
+    bg: '#1F2937',
+    border: '#374151',
+    text: '#9CA3AF',
+    selectedBg: '#064E3B',
+    selectedBorder: '#10B981',
+    selectedText: '#6EE7B7',
+    activeBg: '#059669',
+    activeText: '#FFFFFF',
+  },
+
+  /** Offline/sync banner colors */
+  offline: {
+    accent: '#38BDF8',
+    trackBg: '#374151',
+    title: '#F9FAFB',
+    subtitle: '#9CA3AF',
+  },
 } as const;
 
 /**
@@ -202,6 +232,36 @@ export const lightColors = {
     /** Tertiary text — low emphasis (gray-400), WCAG AA compliant */
     tertiary: '#6E6660',
   },
+
+  /** Status colors for contextual UI */
+  status: {
+    warning: { bg: '#fef3c7', text: '#b45309', border: '#fde68a' },
+    error: { bg: '#fee2e2', text: '#dc2626', border: '#fecaca' },
+    info: { bg: '#EFF6FF', text: '#2563EB', border: '#BFDBFE' },
+    success: { bg: '#ecfdf5', text: '#065f46', border: '#D1FAE5' },
+    tips: { bg: '#fefce8', text: '#713f12', border: '#fef08a' },
+    strength: { text: '#4D7A0A', fill: '#4D7A0A' },
+  },
+
+  /** Chip/pill selection states */
+  chip: {
+    bg: '#fafaf9',
+    border: '#e7e5e4',
+    text: '#78716c',
+    selectedBg: '#ECFDF5',
+    selectedBorder: '#10B981',
+    selectedText: '#047857',
+    activeBg: '#22C55E',
+    activeText: '#FFFFFF',
+  },
+
+  /** Offline/sync banner colors */
+  offline: {
+    accent: '#0EA5E9',
+    trackBg: '#E4E4E7',
+    title: '#27272A',
+    subtitle: '#71717A',
+  },
 } as const;
 
 /**
@@ -262,5 +322,49 @@ export interface SemanticColors {
     700: string;
     800: string;
     900: string;
+  };
+
+  /** Status colors for contextual UI (badges, banners, info boxes) */
+  status: {
+    /** Warning/amber — archive badges, caution notices */
+    warning: { bg: string; text: string; border: string };
+    /** Error/red — delete toasts, destructive actions */
+    error: { bg: string; text: string; border: string };
+    /** Info/blue — research links, informational banners */
+    info: { bg: string; text: string; border: string };
+    /** Success/green — completion states, positive feedback */
+    success: { bg: string; text: string; border: string };
+    /** Tips/yellow — pro tips, helpful hints */
+    tips: { bg: string; text: string; border: string };
+    /** Strength/lime — habit strength indicators */
+    strength: { text: string; fill: string };
+  };
+
+  /** Chip/pill selection states */
+  chip: {
+    /** Default chip background */
+    bg: string;
+    /** Default chip border */
+    border: string;
+    /** Default chip text */
+    text: string;
+    /** Selected chip background */
+    selectedBg: string;
+    /** Selected chip border */
+    selectedBorder: string;
+    /** Selected chip text */
+    selectedText: string;
+    /** Active/filled chip background (e.g. TimeOfDay selected) */
+    activeBg: string;
+    /** Active/filled chip text */
+    activeText: string;
+  };
+
+  /** Offline/sync banner colors */
+  offline: {
+    accent: string;
+    trackBg: string;
+    title: string;
+    subtitle: string;
   };
 }

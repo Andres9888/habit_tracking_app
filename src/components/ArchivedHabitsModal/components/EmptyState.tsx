@@ -23,7 +23,7 @@ export function EmptyState() {
         entering={anim(0)}
         style={{
           alignItems: 'center',
-          backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
+          backgroundColor: colors.status.success.bg,
           borderRadius: 16,
           height: 112,
           justifyContent: 'center',
@@ -77,8 +77,8 @@ export function EmptyState() {
       <Animated.View
         entering={anim(240)}
         style={{
-          backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
-          borderColor: isDark ? '#065F46' : '#D1FAE5',
+          backgroundColor: colors.status.success.bg,
+          borderColor: colors.status.success.border,
           borderRadius: 16,
           borderWidth: 1,
           flexDirection: 'row',
@@ -92,7 +92,7 @@ export function EmptyState() {
         <View style={{ flex: 1 }}>
           <Text
             style={{
-              color: isDark ? '#6EE7B7' : '#065F46',
+              color: colors.status.success.text,
               fontSize: 14,
               fontWeight: '500',
               marginBottom: 4,
@@ -102,7 +102,7 @@ export function EmptyState() {
           </Text>
           <Text
             style={{
-              color: isDark ? '#A7F3D0' : '#047857',
+              color: colors.primary[400],
               fontSize: 12,
               lineHeight: 18,
             }}

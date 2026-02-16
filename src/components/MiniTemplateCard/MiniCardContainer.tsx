@@ -9,7 +9,7 @@ import Animated from 'react-native-reanimated';
 
 import { CardHeader } from './CardHeader';
 import { ImportButton } from './ImportButton';
-import { styles } from './MiniTemplateCard.styles';
+import { useStyles } from './MiniTemplateCard.styles';
 import { SUCCESS_COLOR } from './constants';
 import type { MiniCardContainerProps } from './MiniCardContainer.types';
 
@@ -34,6 +34,7 @@ export function MiniCardContainer({
   onPressOut,
   onImport,
 }: MiniCardContainerProps) {
+  const styles = useStyles();
   return (
     <View>
       <AnimatedPressable

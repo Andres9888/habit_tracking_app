@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { styles } from './OfflinePendingBanner.styles';
+import { useStyles } from './OfflinePendingBanner.styles';
 import type { ProcessingState } from '../OfflineQueueProcessor';
 
 interface ProgressBarProps {
@@ -12,6 +12,7 @@ export function ProgressBar({
   isProcessing,
   processingState,
 }: ProgressBarProps) {
+  const styles = useStyles();
   if (!isProcessing || !processingState) return null;
 
   return (

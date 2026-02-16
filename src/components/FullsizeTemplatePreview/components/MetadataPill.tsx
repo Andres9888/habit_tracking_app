@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { heroStyles } from '../styles';
+import { useHeroStyles } from '../styles';
 
 interface MetadataPillProps {
   iconColor: string;
@@ -13,6 +13,7 @@ interface MetadataPillProps {
 }
 
 export function MetadataPill({ iconColor, children, icon }: MetadataPillProps) {
+  const heroStyles = useHeroStyles();
   return (
     <View
       style={[

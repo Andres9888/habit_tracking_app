@@ -6,7 +6,7 @@
 import React from 'react';
 import { View, Pressable } from 'react-native';
 
-import { styles } from './OfflinePendingBanner.styles';
+import { useStyles } from './OfflinePendingBanner.styles';
 import { useOfflineBannerState } from './useOfflineBannerState';
 import {
   useOfflineBannerAnimations,
@@ -28,6 +28,7 @@ export function OfflinePendingBanner({
   queueStats: externalStats,
   forceShow = false,
 }: OfflinePendingBannerProps) {
+  const styles = useStyles();
   const state = useOfflineBannerState({
     forceShow,
     processingState,

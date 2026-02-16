@@ -4,6 +4,7 @@ import { colors } from '@/theme/colors';
 import { shadows } from '@/theme/spacing';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface SuggestionChip {
   name: string;
@@ -33,6 +34,7 @@ interface ChipButtonProps {
 const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
   const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
+  const { colors: themeColors } = useThemeColors();
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {
@@ -65,8 +67,8 @@ const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
         className='mb-2 mr-2 flex-row items-center rounded-full bg-white px-3 py-2'
         style={{
           ...shadows.subtle,
-          borderColor: '#e7e5e4',
-          borderWidth: 1, // stone-200
+          borderColor: themeColors.chip.border,
+          borderWidth: 1,
         }}
         onPress={handlePress}
         onPressIn={handlePressIn}

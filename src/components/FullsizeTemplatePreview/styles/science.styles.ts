@@ -6,60 +6,65 @@ import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
-export const scienceStyles = StyleSheet.create({
-  researchLinkButton: {
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    backgroundColor: '#EFF6FF',
-    borderColor: '#BFDBFE',
-    borderRadius: borderRadius.medium,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 16,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-  },
-  researchLinkText: {
-    color: '#2563EB',
-    fontSize: typography.bodySmall.fontSize,
-    fontWeight: '600',
-  },
-  scienceBox: {
-    backgroundColor: '#f0fdf4',
-    borderColor: '#bbf7d0',
-    borderRadius: borderRadius.large,
-    borderWidth: 2,
-    marginHorizontal: 20,
-    marginTop: 24,
-    padding: 20,
-  },
-  scienceDivider: {
-    backgroundColor: '#bbf7d0',
-    height: 1,
-    marginBottom: 12,
-  },
-  scienceHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 12,
-  },
-  scienceIcon: {
-    fontSize: typography.heading2.fontSize,
-  },
-  scienceLabel: {
-    color: '#166534',
-    fontSize: typography.caption.fontSize,
-    fontWeight: '700',
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
-  },
-  scienceQuote: {
-    color: '#166534',
-    fontSize: 15,
-    fontStyle: 'italic',
-    lineHeight: 24,
-  },
-});
+export function useScienceStyles() {
+  const { colors } = useThemeColors();
+
+  return StyleSheet.create({
+    researchLinkButton: {
+      alignItems: 'center',
+      alignSelf: 'flex-start',
+      backgroundColor: colors.status.info.bg,
+      borderColor: colors.status.info.border,
+      borderRadius: borderRadius.medium,
+      borderWidth: 1,
+      flexDirection: 'row',
+      gap: 8,
+      marginTop: 16,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+    },
+    researchLinkText: {
+      color: colors.status.info.text,
+      fontSize: typography.bodySmall.fontSize,
+      fontWeight: '600',
+    },
+    scienceBox: {
+      backgroundColor: colors.status.success.bg,
+      borderColor: colors.status.success.border,
+      borderRadius: borderRadius.large,
+      borderWidth: 2,
+      marginHorizontal: 20,
+      marginTop: 24,
+      padding: 20,
+    },
+    scienceDivider: {
+      backgroundColor: colors.status.success.border,
+      height: 1,
+      marginBottom: 12,
+    },
+    scienceHeader: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: 8,
+      marginBottom: 12,
+    },
+    scienceIcon: {
+      fontSize: typography.heading2.fontSize,
+    },
+    scienceLabel: {
+      color: colors.status.success.text,
+      fontSize: typography.caption.fontSize,
+      fontWeight: '700',
+      letterSpacing: 0.8,
+      textTransform: 'uppercase',
+    },
+    scienceQuote: {
+      color: colors.status.success.text,
+      fontSize: 15,
+      fontStyle: 'italic',
+      lineHeight: 24,
+    },
+  });
+}

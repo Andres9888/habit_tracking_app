@@ -6,7 +6,8 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronRight, FlaskConical } from 'lucide-react-native';
-import { styles } from './MiniTemplateCard.styles';
+import { useStyles } from './MiniTemplateCard.styles';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface CardHeaderProps {
   icon: string;
@@ -23,6 +24,8 @@ export function CardHeader({
   chevronStyle,
   scienceBadgeStyle,
 }: CardHeaderProps) {
+  const styles = useStyles();
+  const { colors } = useThemeColors();
   return (
     <View style={styles.topRow}>
       <View style={styles.iconWrapper}>
@@ -44,7 +47,7 @@ export function CardHeader({
         accessibilityLabel='View details'
         style={[styles.chevronContainer, chevronStyle]}
       >
-        <ChevronRight color='#a8a29e' size={16} strokeWidth={2.5} />
+        <ChevronRight color={colors.text.tertiary} size={16} strokeWidth={2.5} />
       </Animated.View>
     </View>
   );

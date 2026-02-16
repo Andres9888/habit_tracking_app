@@ -8,7 +8,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
-import { footerStyles } from '../styles';
+import { useFooterStyles } from '../styles';
 import type { FooterSectionProps } from './FooterSection.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -30,6 +30,7 @@ export function FooterSection({
   onImport,
   onCustomize,
 }: FooterSectionProps) {
+  const footerStyles = useFooterStyles();
   return (
     <View style={footerStyles.footerGradientWrapper}>
       <LinearGradient

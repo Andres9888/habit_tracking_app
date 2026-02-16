@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
-import { styles } from './OfflinePendingBanner.styles';
+import { useStyles } from './OfflinePendingBanner.styles';
 import { TYPE_LABELS } from './constants';
 import { formatRelativeTime } from './utils';
 import type {
@@ -21,6 +21,7 @@ export function ExpandedStats({
   stats,
   expandAnimatedStyle,
 }: ExpandedStatsProps) {
+  const styles = useStyles();
   if (!stats) return null;
 
   return (

@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useAppTheme } from '../../../theme';
-import { heroStyles } from '../styles';
+import { useHeroStyles } from '../styles';
 
 interface DescriptionSectionProps {
   description: string;
@@ -13,6 +13,7 @@ interface DescriptionSectionProps {
 
 export function DescriptionSection({ description }: DescriptionSectionProps) {
   const theme = useAppTheme();
+  const heroStyles = useHeroStyles();
 
   return (
     <View style={heroStyles.descriptionSection}>

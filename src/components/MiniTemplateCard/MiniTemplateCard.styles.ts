@@ -2,13 +2,20 @@
  * Styles for MiniTemplateCard component
  */
 
-import { StyleSheet } from 'react-native';
-import { cardStyles } from './styles/cardStyles';
-import { importButtonStyles } from './styles/importButtonStyles';
+import { useCardStyles } from './styles/cardStyles';
+import { useImportButtonStyles } from './styles/importButtonStyles';
 import { headerStyles } from './styles/headerStyles';
 
-export const styles = StyleSheet.create({
-  ...cardStyles,
-  ...importButtonStyles,
-  ...headerStyles,
-});
+export function useStyles() {
+  const cardStyles = useCardStyles();
+  const importButtonStyles = useImportButtonStyles();
+
+  return {
+    ...cardStyles,
+    ...importButtonStyles,
+    ...headerStyles,
+  };
+}
+
+/** @deprecated Use useStyles() for dark mode support */
+export { useStyles as styles };

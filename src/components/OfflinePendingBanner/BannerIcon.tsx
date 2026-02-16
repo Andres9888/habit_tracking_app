@@ -1,7 +1,7 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 import { Cloud, CloudOff, RefreshCw, WifiOff } from 'lucide-react-native';
-import { styles } from './OfflinePendingBanner.styles';
+import { useStyles } from './OfflinePendingBanner.styles';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 
@@ -20,6 +20,7 @@ export function BannerIcon({
   pulseAnimatedStyle,
   spinAnimatedStyle,
 }: BannerIconProps) {
+  const styles = useStyles();
   return (
     <Animated.View style={[styles.iconContainer, pulseAnimatedStyle]}>
       {isOffline ? (

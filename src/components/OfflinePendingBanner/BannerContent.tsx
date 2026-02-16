@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { styles } from './OfflinePendingBanner.styles';
+import { useStyles } from './OfflinePendingBanner.styles';
 import type { ProcessingState } from '../OfflineQueueProcessor';
 
 interface BannerContentProps {
@@ -18,6 +18,7 @@ export function BannerContent({
   queueCount,
   processingState,
 }: BannerContentProps) {
+  const styles = useStyles();
   const title = isOffline
     ? "You're Offline"
     : isProcessing

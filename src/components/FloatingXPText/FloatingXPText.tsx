@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   coinText: {
     color: '#F59E0B',
     fontSize: 17,
-    fontWeight: '600', // Amber 500
+    fontWeight: '600',
     textShadowColor: '#F59E0B',
     textShadowOffset: { height: 0, width: 0 },
     textShadowRadius: 8,
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   xpText: {
     color: '#047857',
     fontSize: 17,
-    fontWeight: '600', // Green 700 (WCAG AA compliant text)
+    fontWeight: '600',
     textShadowColor: '#10B981',
     textShadowOffset: { height: 0, width: 0 },
     textShadowRadius: 8,

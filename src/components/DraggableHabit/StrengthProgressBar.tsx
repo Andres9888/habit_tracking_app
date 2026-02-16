@@ -42,7 +42,7 @@ export function StrengthProgressBar({
       <View className='flex-1 items-center'>
         <Text
           className='text-[13px] font-bold'
-          style={{ color: isDark ? '#A3E635' : '#4D7A0A', marginLeft: 12 }}
+          style={{ color: themeColors.status.strength.text, marginLeft: 12 }}
         >
           {displayPercent}%
         </Text>
@@ -74,7 +74,7 @@ export function StrengthProgressBar({
           <ReAnimated.View
             style={[
               {
-                backgroundColor: isDark ? '#A3E635' : '#4D7A0A',
+                backgroundColor: themeColors.status.strength.fill,
                 borderRadius: borderRadius.xs,
                 height: '100%',
               },

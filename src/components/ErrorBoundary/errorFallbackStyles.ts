@@ -28,7 +28,7 @@ export const useStyles = () => {
     },
     emoji: { fontSize: 48, marginBottom: 16 },
     errorMessage: {
-      color: isDark ? '#FCA5A5' : '#dc2626',
+      color: colors.status.error.text,
       fontFamily: 'monospace',
       fontSize: 13,
       marginTop: 24,
@@ -44,7 +44,7 @@ export const useStyles = () => {
     link: { padding: 8 },
     linkText: { color: colors.primary[600], fontSize: 13, fontWeight: '500' },
     logoutButton: {
-      backgroundColor: isDark ? '#B91C1C' : '#dc2626',
+      backgroundColor: colors.status.error.text,
       borderRadius: 12,
       paddingHorizontal: 24,
       paddingVertical: 12,

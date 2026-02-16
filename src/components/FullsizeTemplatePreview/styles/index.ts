@@ -3,7 +3,7 @@
  */
 
 export { layoutStyles } from './layout.styles';
-export { heroStyles } from './hero.styles';
-export { scienceStyles } from './science.styles';
-export { tipsStyles } from './tips.styles';
-export { footerStyles } from './footer.styles';
+export { useHeroStyles } from './hero.styles';
+export { useScienceStyles } from './science.styles';
+export { useTipsStyles } from './tips.styles';
+export { useFooterStyles } from './footer.styles';
