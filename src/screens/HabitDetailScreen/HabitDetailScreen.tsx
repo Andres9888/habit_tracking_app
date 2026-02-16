@@ -75,7 +75,13 @@ function HabitDetailScreenContent({
             className='flex-1'
           >
             <View className='flex-1 bg-black/50'>
-              <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
+              <View 
+                className='flex-1 overflow-hidden shadow-2xl'
+                style={{
+                  borderTopLeftRadius: 16,
+                  borderTopRightRadius: 16,
+                }}
+              >
                 <LinearGradient
                   colors={bgGradient as unknown as string[]}
                   locations={[0, 0.5, 1]}

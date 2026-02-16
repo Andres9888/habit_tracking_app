@@ -51,10 +51,12 @@ export function SortBottomSheet({
 
         <GestureDetector gesture={panGesture}>
           <Animated.View
-            className='rounded-t-3xl'
+            className='overflow-hidden'
             style={[
               {
                 backgroundColor: themeColors.card,
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
                 elevation: 20,
                 maxHeight: SCREEN_HEIGHT * SCREEN.maxHeightPercent,
                 paddingBottom: insets.bottom + 16,
@@ -84,8 +86,11 @@ export function SortBottomSheet({
                 accessibilityHint='Close sort options'
                 accessibilityLabel='Close'
                 accessibilityRole='button'
-                className='h-11 w-11 items-center justify-center rounded-full'
-                style={{ backgroundColor: isDark ? themeColors.gray[800] : themeColors.gray[100] }}
+                className='h-11 w-11 items-center justify-center'
+                style={{ 
+                  backgroundColor: isDark ? themeColors.gray[800] : themeColors.gray[100],
+                  borderRadius: 12,
+                }}
                 onPress={handleDismiss}
               >
                 <X color={themeColors.text.secondary} size={24} />

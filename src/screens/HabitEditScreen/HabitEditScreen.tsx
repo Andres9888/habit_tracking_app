@@ -38,8 +38,12 @@ function HabitEditScreenContent({
       >
         <View className='flex-1 bg-black/50'>
           <View
-            className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
-            style={{ backgroundColor: themeColors.background }}
+            className='flex-1 overflow-hidden shadow-2xl'
+            style={{ 
+              backgroundColor: themeColors.background,
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
+            }}
           >
             {state.isLoading ? (
               <View style={{ paddingTop: Math.max(insets.top + 4, 12) }}>

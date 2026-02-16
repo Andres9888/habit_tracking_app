@@ -61,8 +61,15 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
         <View className='flex-1 bg-black/50'>
           <GestureDetector gesture={panGesture}>
             <Animated.View
-              className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
-              style={[animatedStyle, { backgroundColor: colors.surface }]}
+              className='flex-1 overflow-hidden shadow-2xl'
+              style={[
+                animatedStyle, 
+                { 
+                  backgroundColor: colors.surface,
+                  borderTopLeftRadius: 16,
+                  borderTopRightRadius: 16,
+                }
+              ]}
             >
               <ModalHeader
                 habitName={form.habitName}

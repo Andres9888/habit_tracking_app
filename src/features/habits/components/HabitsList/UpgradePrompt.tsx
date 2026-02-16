@@ -41,12 +41,20 @@ export function UpgradePrompt({
         onPress={onClose}
       />
       <Animated.View
-        className='w-full rounded-t-3xl px-6 py-8'
+        className='w-full px-6 py-8'
         entering={SlideInDown.duration(ANIMATION_DURATION.medium).damping(ANIMATION_VALUES.springDamping)}
+        style={{
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+        }}
       >
         <LinearGradient
-          className='absolute inset-0 rounded-t-3xl'
+          className='absolute inset-0'
           colors={['#ffffff', 'rgba(255, 251, 235, 0.3)']}
+          style={{
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+          }}
         />
         <View className='gap-4'>
           <View className='items-center pb-2'>
@@ -68,15 +76,19 @@ export function UpgradePrompt({
             accessibilityHint='Start your 7-day free trial'
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
-            className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
-            style={({ pressed }) => ({ opacity: pressed ? OPACITY.strong : OPACITY.full })}
+            className='items-center px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
+            style={({ pressed }) => ({ 
+              opacity: pressed ? OPACITY.strong : OPACITY.full,
+              borderRadius: 12,
+            })}
             onPress={onUpgradePress}
           >
             <LinearGradient
-              className='absolute inset-0 rounded-full'
+              className='absolute inset-0'
               colors={['#7c3aed', '#4f46e5']}
               end={{ x: 1, y: 0 }}
               start={{ x: 0, y: 0 }}
+              style={{ borderRadius: 12 }}
             />
             <Text className='text-[17px] font-semibold text-white'>
               Start Free Trial →
@@ -86,8 +98,11 @@ export function UpgradePrompt({
             accessibilityHint='Dismiss this upgrade prompt'
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
-            className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
-            style={({ pressed }) => ({ opacity: pressed ? OPACITY.high : OPACITY.full })}
+            className='items-center border-2 border-stone-200 bg-white/80 px-5 py-3'
+            style={({ pressed }) => ({ 
+              opacity: pressed ? OPACITY.high : OPACITY.full,
+              borderRadius: 12,
+            })}
             onPress={onClose}
           >
             <Text className='text-[15px] font-normal text-stone-600'>

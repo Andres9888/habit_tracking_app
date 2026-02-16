@@ -79,8 +79,16 @@ export function DayHabitsBottomSheet({
 
         <GestureDetector gesture={panGesture}>
           <Animated.View
-            className='rounded-t-3xl'
-            style={[getSheetContainerStyle(insets.bottom), { backgroundColor: colors.surface }, sheetStyle]}
+            className='overflow-hidden'
+            style={[
+              getSheetContainerStyle(insets.bottom), 
+              { 
+                backgroundColor: colors.surface,
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+              }, 
+              sheetStyle
+            ]}
           >
             <DragHandle />
 

@@ -70,13 +70,18 @@ export function VisualizationModalSection({
             accessibilityHint='Close the mental boost exercise'
             accessibilityLabel='Close mental boost'
             accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full'
-            style={{ backgroundColor: colors.gray[100] }}
-            style={closeAnimatedStyle}
+            className='h-10 w-10 items-center justify-center'
+            style={[
+              closeAnimatedStyle,
+              { 
+                backgroundColor: colors.gray[100],
+                borderRadius: 12,
+              }
+            ]}
             onPress={handleClose}
             onPressIn={() => {
               closeScale.value = withSpring(0.9, {
-                damping: 15,
+                damping: 18,
                 stiffness: 200,
               });
             }}

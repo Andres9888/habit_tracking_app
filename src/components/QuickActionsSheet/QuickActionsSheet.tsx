@@ -117,10 +117,18 @@ export const QuickActionsSheet = ({
 
       <GestureDetector gesture={panGesture}>
         <Animated.View
-          className='absolute bottom-0 left-0 right-0 rounded-t-3xl shadow-xl'
+          className='absolute bottom-0 left-0 right-0 overflow-hidden shadow-xl'
           entering={SlideInDown.springify().damping(18).stiffness(150)}
           exiting={SlideOutDown.springify().damping(20).stiffness(200)}
-          style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle]}
+          style={[
+            { 
+              paddingBottom: insets.bottom + 16, 
+              backgroundColor: colors.surface,
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
+            }, 
+            sheetAnimatedStyle
+          ]}
         >
           <SheetHeader
             habitIcon={habit.icon}

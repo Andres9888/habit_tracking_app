@@ -41,8 +41,14 @@ export const EmojiPicker = memo(
       >
         <View className='flex-1 bg-black/50'>
           <View
-            className='overflow-hidden rounded-t-3xl shadow-2xl'
-            style={{ backgroundColor: colors.surface, height: '85%', marginTop: 'auto' }}
+            className='overflow-hidden shadow-2xl'
+            style={{ 
+              backgroundColor: colors.surface, 
+              height: '85%', 
+              marginTop: 'auto',
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
+            }}
           >
             <EmojiPickerHeader onClose={handlers.handleClose} />
 
