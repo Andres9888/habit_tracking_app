@@ -15,9 +15,9 @@ export const CATEGORY_COLORS: Record<string, CategoryColors> = {
   },
   andrew_huberman: {
     bg: '#ECFDF5',
-    bgSelected: '#059669',
+    bgSelected: colors.primary[600],
     border: '#A7F3D0',
-    text: '#047857',
+    text: colors.primary[700],
   },
   breathing: {
     bg: '#E0F2FE',
@@ -33,15 +33,15 @@ export const CATEGORY_COLORS: Record<string, CategoryColors> = {
   },
   financial: {
     bg: '#ECFDF5',
-    bgSelected: '#047857',
+    bgSelected: colors.primary[700],
     border: '#A7F3D0',
-    text: '#059669',
+    text: colors.primary[600],
   },
   health_fitness: {
     bg: '#D1FAE5',
-    bgSelected: '#047857',
+    bgSelected: colors.primary[700],
     border: '#6EE7B7',
-    text: '#047857',
+    text: colors.primary[700],
   },
   learning: {
     bg: '#F3E8FF',

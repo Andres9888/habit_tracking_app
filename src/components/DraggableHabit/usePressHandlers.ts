@@ -10,6 +10,7 @@ interface PressHandlersParams {
   onArchive?: (habitId: Id<'habits'>) => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
   triggerSelection: () => void;
+  triggerHeavyImpact: () => void;
 }
 
 export function usePressHandlers({
@@ -19,10 +20,12 @@ export function usePressHandlers({
   onArchive,
   onLongPress,
   triggerSelection,
+  triggerHeavyImpact,
 }: PressHandlersParams) {
   const handleLongPress = () => {
     if (!onLongPress) return;
-    triggerSelection();
+    // Use heavy impact for long press drag initiation
+    triggerHeavyImpact();
     onLongPress(habit);
   };
 

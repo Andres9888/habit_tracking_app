@@ -1,9 +1,25 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { memo } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { SparkleBurst } from '../microinteractions/SparkleBurst';
 import { DayConnector } from './DayConnector';
 import { HabitDayToggle } from './HabitDayToggle';
 import type { CompletionIcon, DayShape } from './types';
+
+const styles = StyleSheet.create({
+  connectorContainer: {
+    height: 3,
+    left: '50%',
+    marginLeft: 20,
+    marginTop: -1.5,
+    position: 'absolute',
+    right: -16,
+    top: '50%',
+    zIndex: -1,
+  },
+  dayConnector: {
+    flex: 1,
+  },
+});
 
 interface ChainDayItemProps {
   accentColor: string;
@@ -26,7 +42,7 @@ interface ChainDayItemProps {
   accessibilityLabel: string;
 }
 
-export const ChainDayItem: React.FC<ChainDayItemProps> = ({
+const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
   accentColor,
   activeBurst,
   celebrationsEnabled,
@@ -66,27 +82,17 @@ export const ChainDayItem: React.FC<ChainDayItemProps> = ({
       onComplete={onBurstComplete}
     />
     {showConnector && (
-      <View
-        pointerEvents='none'
-        style={{
-          height: 3,
-          left: '50%',
-          marginLeft: 20,
-          marginTop: -1.5,
-          position: 'absolute',
-          right: -16,
-          top: '50%',
-          zIndex: -1,
-        }}
-      >
+      <View pointerEvents='none' style={styles.connectorContainer}>
         <DayConnector
           visible
           accentColor={accentColor}
           baseColor={connectorColor}
           currentStreak={currentStreak}
-          style={{ flex: 1 }}
+          style={styles.dayConnector}
         />
       </View>
     )}
   </View>
 );
+
+export const ChainDayItem = memo(ChainDayItemComponent);
