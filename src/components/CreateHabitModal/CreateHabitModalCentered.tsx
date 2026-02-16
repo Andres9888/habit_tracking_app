@@ -12,6 +12,7 @@ import type { ScrollView as ScrollViewType } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { CreateHabitScrollContent } from './components/CreateHabitScrollContent';
 import { ModalHeader } from './components/ModalHeader';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
@@ -26,6 +27,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const scrollViewRef = useRef<ScrollViewType>(null);
   const [showNameError, setShowNameError] = useState(false);
+  const { colors } = useThemeColors();
   const { animatedStyle, panGesture } = useSwipeDismiss({ onClose });
 
   const callbacks = useCenteredFormCallbacks({

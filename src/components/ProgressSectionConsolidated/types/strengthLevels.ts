@@ -9,7 +9,7 @@ import type { LevelThreshold } from './data.types';
 export const STRENGTH_LEVELS: LevelThreshold[] = [
   {
     bgColor: '#ecfccb',
-    color: '#65a30d',
+    color: '#4D7A0A',
     description: 'Just getting started',
     emoji: '🌱',
     label: 'Starting Out',
