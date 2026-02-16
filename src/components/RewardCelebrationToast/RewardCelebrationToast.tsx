@@ -4,6 +4,7 @@ import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useRewardToastAnimation } from './useRewardToastAnimation';
 import { useRewardToastContent } from './useRewardToastContent';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface RewardCelebrationToastProps {
   message: string;
@@ -27,6 +28,19 @@ export const RewardCelebrationToast = ({
   const { translateY, opacity } = useRewardToastAnimation(visible);
   const { title, premiumCTA } = useRewardToastContent(streak);
   const { triggerLightImpact } = useHapticFeedback({});
+  const { colors, isDark } = useThemeColors();
+
+  const cardBg = isDark ? '#1F2937' : '#FFFFFF';
+  const cardShadow = isDark ? '#000000' : '#DBEAFE';
+  const titleColor = isDark ? '#F9FAFB' : '#1c1917';
+  const bodyColor = isDark ? '#D6D3D1' : '#44403C';
+  const ctaGradient: [string, string] = isDark
+    ? ['#1E1B4B', '#172554']
+    : ['#faf5ff', '#eff6ff'];
+  const ctaText = isDark ? '#A78BFA' : '#7c3aed';
+  const shareBorder = isDark ? '#4B5563' : '#d6d3d1';
+  const shareText = isDark ? '#D1D5DB' : '#57534E';
+  const dismissText = isDark ? '#9CA3AF' : '#78716C';
 
   return (
     <AnimatedContainer
@@ -35,21 +49,40 @@ export const RewardCelebrationToast = ({
       pointerEvents='box-none'
       style={{ opacity, transform: [{ translateY }] }}
     >
-      <View className='rounded-3xl bg-white p-5 shadow-lg shadow-blue-100'>
-        <Text className='text-[17px] font-bold leading-[24px] text-[#1c1917]'>
+      <View
+        className='rounded-3xl p-5'
+        style={{
+          backgroundColor: cardBg,
+          shadowColor: cardShadow,
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.3,
+          shadowRadius: 16,
+          elevation: 8,
+        }}
+      >
+        <Text
+          className='text-[17px] font-bold leading-[24px]'
+          style={{ color: titleColor }}
+        >
           {title}
         </Text>
-        <Text className='mt-2 text-[17px] leading-[22px] text-stone-700'>
+        <Text
+          className='mt-2 text-[17px] leading-[22px]'
+          style={{ color: bodyColor }}
+        >
           {message}
         </Text>
         <View className='mt-3 rounded-2xl p-3'>
           <LinearGradient
             className='absolute inset-0 rounded-2xl'
-            colors={['#faf5ff', '#eff6ff']}
+            colors={ctaGradient}
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
           />
-          <Text className='text-[13px] font-semibold text-[#7c3aed]'>
+          <Text
+            className='text-[13px] font-semibold'
+            style={{ color: ctaText }}
+          >
             ✨ {premiumCTA.benefit}
           </Text>
         </View>
@@ -57,13 +90,17 @@ export const RewardCelebrationToast = ({
           <AnimatedPressable
             accessibilityHint='Share this streak to motivate friends'
             accessibilityLabel='Share streak'
-            className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-4 py-2.5'
+            className='flex-1 items-center justify-center rounded-full px-4 py-2.5'
+            style={{ borderWidth: 1, borderColor: shareBorder }}
             onPress={() => {
               triggerLightImpact();
               onSecondaryAction();
             }}
           >
-            <Text className='text-[17px] font-semibold leading-[22px] text-stone-600'>
+            <Text
+              className='text-[17px] font-semibold leading-[22px]'
+              style={{ color: shareText }}
+            >
               Share
             </Text>
           </AnimatedPressable>
@@ -90,7 +127,10 @@ export const RewardCelebrationToast = ({
             onDismiss();
           }}
         >
-          <Text className='text-[13px] font-medium uppercase leading-[18px] tracking-wider text-stone-500'>
+          <Text
+            className='text-[13px] font-medium uppercase leading-[18px] tracking-wider'
+            style={{ color: dismissText }}
+          >
             Not now
           </Text>
         </AnimatedPressable>

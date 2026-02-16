@@ -14,15 +14,26 @@ interface Props {
 export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
   const { colors: themeColors, isDark } = useThemeColors();
 
+  // Premium badge colors
+  const crownBg = isDark ? '#422006' : '#fef3c7';
+  const crownIcon = isDark ? '#FBBF24' : '#f59e0b';
+  const activeBadgeBg = isDark ? '#422006' : '#fef3c7';
+  const activeBadgeText = isDark ? '#FBBF24' : '#f59e0b';
+
+  // Upgrade colors
+  const zapBg = isDark ? '#2E1065' : '#ede9fe';
+  const zapIcon = isDark ? '#A78BFA' : '#8b5cf6';
+  const proBadgeBg = isDark ? '#6D28D9' : '#8b5cf6';
+
   if (isPremium) {
     return (
       <SettingsSection highContrastMode={highContrast} title='Subscription'>
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-            style={{ backgroundColor: '#fef3c7' }}
+            style={{ backgroundColor: crownBg }}
           >
-            <Crown color='#f59e0b' size={16} />
+            <Crown color={crownIcon} size={16} />
           </View>
           <View className='flex-1'>
             <View className='flex-row items-center gap-2'>
@@ -34,13 +45,11 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               </Text>
               <View
                 className='rounded-full px-2 py-0.5'
-                style={{
-                  backgroundColor: isDark ? '#422006' : '#fef3c7',
-                }}
+                style={{ backgroundColor: activeBadgeBg }}
               >
                 <Text
                   className='text-[10px] font-bold uppercase'
-                  style={{ color: '#f59e0b' }}
+                  style={{ color: activeBadgeText }}
                 >
                   Active
                 </Text>
@@ -69,9 +78,9 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-            style={{ backgroundColor: '#ede9fe' }}
+            style={{ backgroundColor: zapBg }}
           >
-            <Zap color='#8b5cf6' size={16} />
+            <Zap color={zapIcon} size={16} />
           </View>
           <View className='flex-1'>
             <Text
@@ -89,9 +98,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
           </View>
           <View
             className='rounded-full px-3 py-1.5'
-            style={{
-              backgroundColor: '#8b5cf6',
-            }}
+            style={{ backgroundColor: proBadgeBg }}
           >
             <Text className='text-[13px] font-bold text-white'>PRO</Text>
           </View>

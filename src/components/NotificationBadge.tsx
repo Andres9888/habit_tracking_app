@@ -12,6 +12,7 @@ import Animated, {
 import { colors } from '../theme/colors';
 import { borderRadius } from '../theme/spacing';
 import { typography } from '@/theme/typography';
+import { useThemeColors } from '../theme/ThemeContext';
 
 interface NotificationBadgeProps {
   count?: number;
@@ -22,6 +23,7 @@ export function NotificationBadge({
   count = 1,
   visible = true,
 }: NotificationBadgeProps) {
+  const { colors: themeColors } = useThemeColors();
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 
@@ -60,7 +62,7 @@ export function NotificationBadge({
         {
           alignItems: 'center',
           backgroundColor: '#ef4444',
-          borderColor: '#FAF8F5',
+          borderColor: themeColors.background,
           borderRadius: borderRadius.full,
           borderWidth: 2,
           height: 18,

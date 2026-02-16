@@ -7,8 +7,9 @@ import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
-import { MEDALS, MEDAL_COLORS } from './constants';
+import { MEDALS, MEDAL_COLORS_LIGHT, MEDAL_COLORS_DARK } from './constants';
 import { formatDate } from './utils';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface MedalCardProps {
   record: {
@@ -32,10 +33,15 @@ export function MedalCard({
   reduceMotion,
   isForMeasurement = false,
 }: MedalCardProps) {
-  const colors = MEDAL_COLORS[index];
+  const { isDark } = useThemeColors();
+  const medalColors = isDark ? MEDAL_COLORS_DARK : MEDAL_COLORS_LIGHT;
+  const colors = medalColors[index];
   const medal = MEDALS[index];
   const positionLabel =
     index === 0 ? 'First' : index === 1 ? 'Second' : 'Third';
+
+  const nowBadgeBg = isDark ? '#78350F' : '#ffedd5';
+  const nowBadgeText = isDark ? '#FBBF24' : '#c2410c';
 
   const content = (
     <>
@@ -49,11 +55,11 @@ export function MedalCard({
       {isCurrentRecord && (
         <View
           className='mt-1 rounded-full px-1.5 py-0.5'
-          style={{ backgroundColor: '#ffedd5' }}
+          style={{ backgroundColor: nowBadgeBg }}
         >
           <Text
             className='text-[8px] font-semibold'
-            style={{ color: '#c2410c' }}
+            style={{ color: nowBadgeText }}
           >
             NOW 🔥
           </Text>
