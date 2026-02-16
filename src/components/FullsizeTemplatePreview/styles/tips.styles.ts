@@ -55,7 +55,7 @@ export const tipsStyles = StyleSheet.create({
   tipText: {
     color: '#713f12',
     flex: 1,
-    fontSize: 15,
+    fontSize: 13,
     lineHeight: 22,
   },
 });

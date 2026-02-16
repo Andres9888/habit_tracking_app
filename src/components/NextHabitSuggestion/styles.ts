@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
   },
   completedSubtitle: {
     color: '#059669',
-    fontSize: 14,
+    fontSize: 13,
   },
   habitIcon: {
     fontSize: 32,

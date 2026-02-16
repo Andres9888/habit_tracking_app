@@ -58,7 +58,7 @@ export const scienceStyles = StyleSheet.create({
   },
   scienceQuote: {
     color: '#166534',
-    fontSize: 15,
+    fontSize: 13,
     fontStyle: 'italic',
     lineHeight: 24,
   },

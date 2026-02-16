@@ -23,7 +23,7 @@ export const actionStyles = StyleSheet.create({
   },
   actionText: {
     color: '#FFFFFF',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '600',
   },
 });

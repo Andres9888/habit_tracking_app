@@ -14,7 +14,7 @@ export const searchStyles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 13,
   },
   searchSection: {
     paddingHorizontal: 20,

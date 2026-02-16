@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     gap: 12,
   },
   habitIcon: {
-    fontSize: 24,
+    fontSize: 22,
   },
   message: {
     flex: 1,

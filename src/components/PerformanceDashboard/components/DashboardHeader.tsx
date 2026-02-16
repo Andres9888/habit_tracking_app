@@ -52,7 +52,7 @@ export function DashboardHeader({
 const styles = StyleSheet.create({
   closeButton: {
     color: 'rgba(255,255,255,0.6)',
-    fontSize: 20,
+    fontSize: 13,
     fontWeight: '300',
     marginLeft: 8,
   },
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
   },
 });

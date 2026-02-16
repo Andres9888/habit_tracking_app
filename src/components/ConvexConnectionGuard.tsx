@@ -45,7 +45,7 @@ export function ConvexConnectionGuard({ children }: PropsWithChildren) {
         <Text
           style={{
             color: colors.text,
-            fontSize: 20,
+            fontSize: 17,
             fontWeight: '600',
             marginBottom: 12,
             textAlign: 'center',
@@ -56,7 +56,7 @@ export function ConvexConnectionGuard({ children }: PropsWithChildren) {
         <Text
           style={{
             color: colors.textSecondary,
-            fontSize: 16,
+            fontSize: 17,
             marginBottom: 24,
             textAlign: 'center',
           }}

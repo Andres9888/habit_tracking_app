@@ -43,7 +43,7 @@ export function EmptyState() {
           entering={anim(60)}
           style={{
             color: colors.text.secondary,
-            fontSize: 15,
+            fontSize: 13,
             textAlign: 'center',
           }}
         >

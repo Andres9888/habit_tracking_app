@@ -82,7 +82,7 @@ const coreStyles = StyleSheet.create({
   streakText: {
     color: REDESIGN_COLORS.streakText,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '600',
   },
   strengthFill: { bottom: 0, left: 0, position: 'absolute', top: 0 },

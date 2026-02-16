@@ -35,7 +35,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         <Text
           style={{
             color: accentColor,
-            fontSize: 14,
+            fontSize: 13,
             fontStyle: 'italic',
             textAlign: 'center',
           }}
@@ -72,7 +72,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         entering={anim(60)}
         style={{
           color: colors.text.primary,
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: '500',
           marginBottom: 4,
           textAlign: 'center',

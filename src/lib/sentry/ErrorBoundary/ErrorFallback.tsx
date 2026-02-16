@@ -25,7 +25,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
     },
     buttonText: {
       color: colors.text.inverse,
-      fontSize: 14,
+      fontSize: 13,
       fontWeight: '600',
     },
     container: {
@@ -55,7 +55,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
     },
     message: {
       color: colors.text.secondary,
-      fontSize: 14,
+      fontSize: 13,
       lineHeight: 20,
       marginBottom: 24,
       textAlign: 'center',

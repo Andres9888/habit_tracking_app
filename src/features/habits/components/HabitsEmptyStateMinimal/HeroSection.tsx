@@ -38,7 +38,7 @@ export function HeroSection({
           style={[
             {
               color: colors.textPrimary,
-              fontSize: 28,
+              fontSize: 34,
               fontWeight: '800',
               letterSpacing: -0.5,
               lineHeight: 34,

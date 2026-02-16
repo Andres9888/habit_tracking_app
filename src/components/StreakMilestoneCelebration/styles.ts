@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
   },
 
   habitEmoji: {
-    fontSize: 24,
+    fontSize: 22,
     marginRight: spacing.sm,
   },
 

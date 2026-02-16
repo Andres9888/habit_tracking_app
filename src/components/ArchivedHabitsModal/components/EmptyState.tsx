@@ -52,7 +52,7 @@ export function EmptyState() {
         entering={anim(120)}
         style={{
           color: colors.text.secondary,
-          fontSize: 15,
+          fontSize: 13,
           marginBottom: 4,
           textAlign: 'center',
         }}
@@ -63,7 +63,7 @@ export function EmptyState() {
         entering={anim(180)}
         style={{
           color: colors.text.secondary,
-          fontSize: 14,
+          fontSize: 13,
           marginBottom: 24,
           maxWidth: 280,
           textAlign: 'center',
@@ -88,12 +88,12 @@ export function EmptyState() {
           width: '100%',
         }}
       >
-        <Text style={{ fontSize: 24 }}>💚</Text>
+        <Text style={{ fontSize: 22 }}>💚</Text>
         <View style={{ flex: 1 }}>
           <Text
             style={{
               color: isDark ? '#6EE7B7' : '#065F46',
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: '500',
               marginBottom: 4,
             }}
@@ -103,7 +103,7 @@ export function EmptyState() {
           <Text
             style={{
               color: isDark ? '#A7F3D0' : '#047857',
-              fontSize: 12,
+              fontSize: 13,
               lineHeight: 18,
             }}
           >

@@ -14,7 +14,7 @@ export function EmptyState({ label }: EmptyStateProps) {
       <Text
         style={{
           color: colors.text.secondary,
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: '600',
           marginBottom: 12,
         }}
@@ -34,7 +34,7 @@ export function EmptyState({ label }: EmptyStateProps) {
         <Text
           style={{
             color: colors.text.secondary,
-            fontSize: 14,
+            fontSize: 13,
             marginTop: 8,
           }}
         >

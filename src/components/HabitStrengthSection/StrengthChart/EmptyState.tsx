@@ -33,7 +33,7 @@ export const EmptyState = React.memo(function EmptyState() {
       <Text
         style={{
           color: colors.text.secondary,
-          fontSize: 14,
+          fontSize: 13,
           textAlign: 'center',
         }}
       >

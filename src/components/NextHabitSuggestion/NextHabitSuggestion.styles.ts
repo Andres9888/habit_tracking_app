@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     padding: 20,
   },
   completedEmoji: { fontSize: 36, marginBottom: 8 },
-  completedSubtitle: { color: '#059669', fontSize: 14 },
+  completedSubtitle: { color: '#059669', fontSize: 13 },
   completedTitle: {
     color: '#065f46',
     fontSize: 17,

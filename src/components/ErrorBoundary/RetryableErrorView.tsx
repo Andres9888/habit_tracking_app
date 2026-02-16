@@ -82,7 +82,7 @@ export function RetryableErrorView({
     },
     retryText: {
       color: colors.text.inverse,
-      fontSize: 15,
+      fontSize: 13,
       fontWeight: '600',
     },
     secondaryButton: {
@@ -91,7 +91,7 @@ export function RetryableErrorView({
     },
     secondaryText: {
       color: colors.text.secondary,
-      fontSize: 15,
+      fontSize: 13,
       fontWeight: '500',
     },
     title: {

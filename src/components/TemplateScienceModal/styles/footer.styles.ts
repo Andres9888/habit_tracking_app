@@ -13,7 +13,7 @@ export const footerStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   backButtonText: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '600',
   },
   footer: {

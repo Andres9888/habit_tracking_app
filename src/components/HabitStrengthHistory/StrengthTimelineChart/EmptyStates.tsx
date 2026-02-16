@@ -29,7 +29,7 @@ export function NoDataState({ height }: EmptyStateProps) {
       }}
     >
       <Text style={{ fontSize: 28, marginBottom: 6 }}>⚡</Text>
-      <Text style={{ color: colors.text.tertiary, fontSize: 14 }}>
+      <Text style={{ color: colors.text.tertiary, fontSize: 13 }}>
         Building your strength history...
       </Text>
     </Animated.View>
@@ -57,7 +57,7 @@ export function BuildingHistoryState({ height }: EmptyStateProps) {
       <Text
         style={{
           color: colors.text.secondary,
-          fontSize: 14,
+          fontSize: 13,
           textAlign: 'center',
         }}
       >

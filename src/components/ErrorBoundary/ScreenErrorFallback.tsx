@@ -85,7 +85,7 @@ export function ScreenErrorFallback({
     },
     subtitle: {
       color: colors.text.secondary,
-      fontSize: 15,
+      fontSize: 13,
       lineHeight: 22,
       marginTop: 8,
       textAlign: 'center',

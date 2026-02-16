@@ -25,7 +25,7 @@ export const TemplateListEmpty = () => {
         entering={anim(60)}
         style={{
           color: colors.text.primary,
-          fontSize: 15,
+          fontSize: 13,
           fontWeight: '500',
           marginTop: 8,
         }}

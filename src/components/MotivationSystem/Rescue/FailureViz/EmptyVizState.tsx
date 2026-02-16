@@ -41,7 +41,7 @@ export function EmptyVizState() {
         entering={anim(60)}
         style={{
           color: colors.text.primary,
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: '500',
           marginBottom: 4,
           textAlign: 'center',

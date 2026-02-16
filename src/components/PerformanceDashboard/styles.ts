@@ -8,7 +8,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   closeButton: {
     color: 'rgba(255,255,255,0.6)',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '300',
     marginLeft: 8,
   },
@@ -77,7 +77,7 @@ export const styles = StyleSheet.create({
   },
   headerTitle: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
   },
   miniLabel: {

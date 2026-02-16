@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   actionLabel: {
     color: '#1c1917',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '600',
   },
   actionsList: {

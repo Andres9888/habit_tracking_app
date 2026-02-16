@@ -32,7 +32,7 @@ export function getCtaButtonStyle(
 export function getCtaTextStyle(color: string) {
   return {
     color,
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '600' as const,
   };
 }

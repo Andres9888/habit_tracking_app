@@ -73,12 +73,12 @@ export const styles = StyleSheet.create({
   },
   textLinkAction: {
     color: colors.primary[700],
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '600',
   },
   textLinkLabel: {
     color: '#57534e',
-    fontSize: 15,
+    fontSize: 13,
   },
   title: {
     color: '#1c1917',

@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     fontSize: typography.bodySmall.fontSize,
   },
   title: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '600',
     marginBottom: 4,
   },

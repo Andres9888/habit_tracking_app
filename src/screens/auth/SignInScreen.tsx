@@ -357,7 +357,7 @@ function useScreenStyles() {
     },
     welcomeTitle: {
       color: themeColors.text.primary,
-      fontSize: 28,
+      fontSize: 22,
       fontWeight: '700',
       marginBottom: 8,
       textAlign: 'center',

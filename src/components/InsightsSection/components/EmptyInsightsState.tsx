@@ -61,7 +61,7 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
           }}
         >
           <Calendar color={colors.text.tertiary} size={28} style={{ marginBottom: 8 }} />
-          <Text style={{ color: colors.text.secondary, fontSize: 14, textAlign: 'center' }}>
+          <Text style={{ color: colors.text.secondary, fontSize: 13, textAlign: 'center' }}>
             Keep tracking for insights
           </Text>
           <Text

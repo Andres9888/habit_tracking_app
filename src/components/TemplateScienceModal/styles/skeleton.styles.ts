@@ -32,7 +32,7 @@ export const skeletonStyles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 28,
     paddingHorizontal: 20,
-    paddingTop: 32,
+    paddingTop: 24,
   },
   skeletonPillRow: {
     flexDirection: 'row',

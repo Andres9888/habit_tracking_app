@@ -31,7 +31,7 @@ export const ReminderSection = ({
           className='mr-3 h-10 w-10 items-center justify-center rounded-full'
           style={{ backgroundColor: remindersEnabled ? '#DCFCE7' : '#F5F5F5' }}
         >
-          <Text style={{ fontSize: 18 }}>🔔</Text>
+          <Text style={{ fontSize: 17 }}>🔔</Text>
         </View>
 
         {/* Label and time - tappable when enabled */}
