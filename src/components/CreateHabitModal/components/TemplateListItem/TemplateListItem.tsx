@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef } from 'react';
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Microscope } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';

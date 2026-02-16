@@ -3,19 +3,56 @@
  * Displays the current streak with fire emoji
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { View, Text } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSequence,
+  withSpring,
+} from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
-import { colors, milestoneColors } from '../../../theme/colors';
+import { milestoneColors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { streakStyles } from '../HabitCard.streakStyles';
+
+/** Design-system spring: damping 18, stiffness 150 */
+const STREAK_SPRING = { damping: 18, stiffness: 150 };
+const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
 
 interface StreakBadgeProps {
   currentStreak: number;
   bestStreak: number;
 }
 
+/**
+ * AnimatedStreakText — pops with a satisfying spring bounce when streak changes.
+ */
+function AnimatedStreakText({ children, streak }: { children: React.ReactNode; streak: number }) {
+  const scale = useSharedValue(1);
+  const prevStreak = useRef(streak);
+
+  useEffect(() => {
+    if (prevStreak.current !== streak && streak > 0) {
+      // Bounce: overshoot then settle
+      scale.value = withSequence(
+        withSpring(1.15, BOUNCE_SPRING),
+        withSpring(1, STREAK_SPRING)
+      );
+    }
+    prevStreak.current = streak;
+  }, [streak, scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return <Animated.View style={animatedStyle}>{children}</Animated.View>;
+}
+
 export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
   const theme = useAppTheme();
+  const { colors: themeColors } = useThemeColors();
 
   if (currentStreak <= 0) {
     return (
@@ -23,14 +60,14 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
         <View
           style={[
             streakStyles.streakBadge,
-            { backgroundColor: colors.gray[100] },
+            { backgroundColor: themeColors.gray[100] },
           ]}
         >
           <Text style={streakStyles.streakFireIcon}>💪</Text>
           <Text
             style={[
               streakStyles.streakText,
-              { color: colors.gray[500] },
+              { color: themeColors.text.secondary },
             ]}
           >
             Start a Streak!
@@ -42,22 +79,24 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
 
   return (
     <View style={streakStyles.streakRow}>
-      <View
-        style={[
-          streakStyles.streakBadge,
-          { backgroundColor: milestoneColors.amberLight },
-        ]}
-      >
-        <Text style={streakStyles.streakFireIcon}>🔥</Text>
-        <Text
+      <AnimatedStreakText streak={currentStreak}>
+        <View
           style={[
-            streakStyles.streakText,
-            { color: theme.custom.colors.warning[700] },
+            streakStyles.streakBadge,
+            { backgroundColor: milestoneColors.amberLight },
           ]}
         >
-          {currentStreak} Day{currentStreak === 1 ? '' : 's'} Streak
-        </Text>
-      </View>
+          <Text style={streakStyles.streakFireIcon}>🔥</Text>
+          <Text
+            style={[
+              streakStyles.streakText,
+              { color: theme.custom.colors.warning[700] },
+            ]}
+          >
+            {currentStreak} Day{currentStreak === 1 ? '' : 's'} Streak
+          </Text>
+        </View>
+      </AnimatedStreakText>
 
       {/* Best Streak Badge - Shows when approaching or at personal record */}
       {bestStreak > 0 && currentStreak >= bestStreak - 2 && (
@@ -68,11 +107,11 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
               backgroundColor:
                 currentStreak >= bestStreak
                   ? milestoneColors.amberLight
-                  : colors.gray[100],
+                  : themeColors.gray[100],
               borderColor:
                 currentStreak >= bestStreak
                   ? milestoneColors.amberBorder
-                  : colors.border,
+                  : themeColors.border,
             },
           ]}
         >
@@ -84,7 +123,7 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
                 color:
                   currentStreak >= bestStreak
                     ? milestoneColors.amberText
-                    : colors.gray[500],
+                    : themeColors.text.secondary,
               },
             ]}
           >

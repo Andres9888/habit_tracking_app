@@ -3,11 +3,11 @@
  * This REPLACES old strength values with new calculations
  * Run this to fix habits that were initialized with the old formula
  */
-import { mutation } from './_generated/server';
+import { internalMutation } from './_generated/server';
 import { v } from 'convex/values';
 import { calculateNewStrength, getStrengthLevel } from './habitStrength';
 
-export const recalculateAllHabitsStrength = mutation({
+export const recalculateAllHabitsStrength = internalMutation({
   args: {
     force: v.optional(v.boolean()), // Set to true to recalculate even if strength exists
   },

@@ -1,10 +1,10 @@
-import { mutation } from './_generated/server';
+import { internalMutation } from './_generated/server';
 
 /**
  * One-time migration to add userId to existing habits
  * Run this once after adding authentication
  */
-export const migrateHabitsToCurrentUser = mutation({
+export const migrateHabitsToCurrentUser = internalMutation({
   args: {},
   handler: async (ctx) => {
     // Get authenticated user
