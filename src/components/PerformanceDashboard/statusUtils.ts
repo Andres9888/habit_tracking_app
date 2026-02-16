@@ -7,6 +7,7 @@ import type { StatusLevel } from './types';
 
 /** Get status level based on value vs threshold ratio */
 export function getStatusLevel(value: number, threshold: number): StatusLevel {
+  if (threshold === 0) return 'good';
   const ratio = value / threshold;
   if (ratio < 0.7) return 'good';
   if (ratio < 1) return 'warning';
