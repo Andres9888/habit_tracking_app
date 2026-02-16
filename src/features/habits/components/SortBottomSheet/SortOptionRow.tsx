@@ -4,6 +4,14 @@ import { Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import {
+  CHECK_ICON_SIZE,
+  CHECK_ICON_STROKE_WIDTH,
+  DARK_SURFACE_COLOR,
+  SORT_OPTION_ICON_SIZE,
+  SORT_OPTION_ICON_STROKE_WIDTH,
+  WHITE_ICON_COLOR,
+} from './constants';
 
 interface SortOptionRowProps {
   /**
@@ -61,8 +69,8 @@ export function SortOptionRow({
       style={{
         backgroundColor: selected
           ? isDark
-            ? themeColors.gray[800]
-            : (themeColors.primary[50] ?? '#ecfdf5')
+            ? DARK_SURFACE_COLOR
+            : '#ecfdf5'
           : 'transparent',
         borderColor: selected ? themeColors.primary[300] : 'transparent',
         borderWidth: selected ? 1 : 0,
