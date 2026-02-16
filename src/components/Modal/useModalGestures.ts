@@ -5,7 +5,7 @@
 
 import { Gesture } from 'react-native-gesture-handler';
 import { withSpring, runOnJS, type SharedValue } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { HapticPatterns } from '../../utils/haptics/patterns';
 import type { ModalVariant } from './Modal.types';
 import {
   SCREEN_HEIGHT,
@@ -52,7 +52,7 @@ export function useModalGestures({
           SCREEN_HEIGHT,
           BOTTOM_SHEET_SPRING_CONFIG
         );
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
+        runOnJS(HapticPatterns.tap)();
         runOnJS(onClose)();
       } else {
         translateY.value = withSpring(0, BOTTOM_SHEET_SPRING_CONFIG);
@@ -80,7 +80,7 @@ export function useModalGestures({
         // Dismiss
         fullScreenProgress.value = withSpring(0, EXIT_SPRING_CONFIG);
         fullScreenGestureY.value = withSpring(0, GESTURE_SPRING_CONFIG);
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
+        runOnJS(HapticPatterns.tap)();
         runOnJS(onClose)();
       } else {
         // Spring back

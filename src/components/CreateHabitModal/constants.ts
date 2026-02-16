@@ -10,20 +10,18 @@ export const EMOJIS = [
 ];
 
 /**
- * V8 Habit Colors - 12 vibrant colors for the color picker
+ * Habit colors - predefined 10-color palette for customization
  * Order matches design spec for visual flow
  */
 export const HABIT_COLORS = [
   '#EF4444', // Red
   '#F97316', // Orange
   '#FBBF24', // Amber
-  '#84CC16', // Lime
   '#10B981', // Emerald (default)
   '#14B8A6', // Teal
   '#06B6D4', // Cyan
   '#3B82F6', // Blue
   '#8B5CF6', // Violet
-  '#A855F7', // Purple
   '#EC4899', // Pink
   '#78716C', // Stone
 ] as const;
@@ -38,9 +36,7 @@ export const COLOR_NAMES: Record<string, string> = {
   '#8B5CF6': 'Violet',
   '#10B981': 'Emerald',
   '#14B8A6': 'Teal',
-  '#84CC16': 'Lime',
   '#78716C': 'Stone',
-  '#A855F7': 'Purple',
   '#EF4444': 'Red',
   '#EC4899': 'Pink',
   '#F97316': 'Orange',

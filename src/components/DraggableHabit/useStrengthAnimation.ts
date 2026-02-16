@@ -1,3 +1,16 @@
+/**
+ * useStrengthAnimation — Reanimated animations for the strength progress bar and emoji.
+ *
+ * Manages two animated styles:
+ * - `progressAnimatedStyle` — width percentage of the progress bar fill
+ * - `strengthEmojiAnimatedStyle` — scale/rotate/opacity of the tier emoji
+ *
+ * On first render, the bar animates from 0% with a delayed ease-in.
+ * On increases, a spring is used; on decreases, a quick ease-out.
+ * When the strength tier changes (e.g. 🌿→🌳), {@link runLevelUpAnimation}
+ * fires a dramatic shake + scale burst on the emoji.
+ */
+
 import { useRef, useEffect } from 'react';
 import {
   useSharedValue,

@@ -30,7 +30,7 @@ export interface PreviewContentHandlers {
 
 export interface PreviewContentProps {
   animatedStyles: PreviewContentAnimatedStyles;
-  confettiRef: React.RefObject<ConfettiCannon>;
+  confettiRef: React.RefObject<ConfettiCannon | null>;
   createPressHandlers: (
     scale: SharedValue<number>,
     scaleValue?: number

@@ -42,7 +42,7 @@ export function useTabIndicator({ reducedMotion }: UseTabIndicatorOptions) {
     (position: 0 | 1) => {
       tabIndicatorPosition.value = reducedMotion
         ? position
-        : withSpring(position, { damping: 18, stiffness: 240 });
+        : withSpring(position, { damping: 18, stiffness: 150 });
     },
     [reducedMotion, tabIndicatorPosition]
   );
