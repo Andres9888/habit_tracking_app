@@ -8,6 +8,7 @@ import { api } from '../../../convex/_generated/api';
 import { exportData, prepareExportData } from '../../utils/exportData';
 import { usePremium } from '../../hooks/usePremium/usePremium';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { maybeRequestReviewFromAnalytics } from '@/utils/storeReview';
 import type {
   ExportFormat,
   UseAnalyticsScreenReturn,
@@ -19,6 +20,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const [showPaywall, setShowPaywall] = useState(!isPremiumUser);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const { triggerLightImpact } = useHapticFeedback();
+  const hasCheckedReview = useRef(false);
 
   // Fetch analytics data from Convex
   const overviewStats = useQuery(api.analytics.getOverviewStats);

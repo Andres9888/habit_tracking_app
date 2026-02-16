@@ -1,5 +1,9 @@
 /**
- * renderHabitsListHeader - Header renderer for HabitsList
+ * renderHabitsListHeader — FlatList `ListHeaderComponent` factory.
+ *
+ * Builds a {@link HabitsListHeader} element that contains the summary stats,
+ * calendar timeline, offline indicator, and trial countdown banner.  Props are
+ * plucked from the full `HabitsListProps`, local UI state, and handler bag.
  */
 
 import { HabitsListHeader } from './HabitsListHeader';
