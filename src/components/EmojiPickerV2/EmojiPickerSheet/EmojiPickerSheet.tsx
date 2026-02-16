@@ -1,6 +1,35 @@
 /**
  * EmojiPickerSheet Component
- * Main orchestrator for the emoji picker bottom sheet
+ * 
+ * Bottom sheet modal for selecting habit emoji icons.
+ * 
+ * **Trigger:** Emoji button in CreateHabitModal or HabitEditScreen
+ * 
+ * **Display:**
+ * - Category tabs (Recent, Smileys, Animals, Food, etc.)
+ * - Search bar with suggestions based on habit name
+ * - Grid of emoji options
+ * - "No Icon" option to remove emoji
+ * - Swipe-down gesture indicator
+ * 
+ * **Actions:**
+ * - Select emoji (updates habit icon)
+ * - Search emojis by keyword
+ * - Browse by category
+ * - Select "No Icon" (removes emoji)
+ * - Swipe down or tap backdrop to close
+ * 
+ * **Modal Type:** React Native Modal with BlurView backdrop
+ * Custom bottom sheet (not using shared Modal component)
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true, animates up from bottom with blur backdrop
+ * - Closes: onClose via backdrop tap, swipe-down gesture, or emoji selection
+ * - Search focus: Expands search bar, hides category tabs
+ * 
+ * **Pattern:** Custom implementation with Reanimated for sheet animations
+ * Uses GestureDetector for swipe-to-dismiss
+ * Maintains pending emoji state for smooth selection feedback
  */
 
 import React, { memo } from 'react';

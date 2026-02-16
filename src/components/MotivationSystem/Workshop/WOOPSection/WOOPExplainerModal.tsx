@@ -1,6 +1,34 @@
 /**
  * WOOPExplainerModal Component
- * Shows explanation of the WOOP method
+ * 
+ * Informational modal explaining the WOOP method.
+ * 
+ * **Trigger:** Info/help icon in WOOP section of Motivation Workshop
+ * 
+ * **Display:**
+ * - Centered card overlay with backdrop
+ * - Header: "WOOP Method" with source attribution (Dr. Gabriele Oettingen, NYU)
+ * - Introduction text about effectiveness (doubles goal achievement)
+ * - Four WOOP steps with colored badges:
+ *   - W: Wish (what you want to achieve)
+ *   - O: Outcome (best result of achieving it)
+ *   - O: Obstacle (what might get in the way)
+ *   - P: Plan (IF obstacle, THEN action)
+ * - Implementation intention explanation box
+ * - Source citation
+ * 
+ * **Actions:**
+ * - Close modal (X button or backdrop tap)
+ * 
+ * **Modal Type:** React Native Modal (fade animation) with custom overlay
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true from WOOP help icon
+ * - Closes: onClose via close button or backdrop tap
+ * 
+ * **Pattern:** Custom center overlay (not using shared Modal component)
+ * Read-only informational content
+ * Source: "Rethinking Positive Thinking" (2014)
  */
 
 import React from 'react';

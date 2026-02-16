@@ -1,8 +1,43 @@
 /**
- * CreateHabitModalCentered - Full-screen modal for habit creation
- *
- * Matches HabitEditScreen presentation: transparent modal with dark overlay,
- * rounded top container, KeyboardAvoidingView, and swipe-to-dismiss.
+ * CreateHabitModalCentered Component
+ * 
+ * Full-screen modal for creating new habits or editing existing ones.
+ * 
+ * **Trigger:**
+ * - Create: + button in main navigation
+ * - Edit: Edit button in HabitCalendarModal or Settings
+ * 
+ * **Display:**
+ * - Header with "Create Habit" or habit name (edit mode), close/save buttons
+ * - Scrollable form with sections:
+ *   - Habit name (required, validated)
+ *   - Emoji picker button
+ *   - Schedule selector (daily/custom days)
+ *   - Reminder time picker
+ *   - Template science info (if from template)
+ * - Dark overlay backdrop
+ * - Keyboard-aware layout
+ * - Swipe-down to dismiss gesture
+ * 
+ * **Actions:**
+ * - Enter habit name (validation on save)
+ * - Select emoji (opens EmojiPickerSheet)
+ * - Configure schedule
+ * - Set reminder time (opens TimePickerModal)
+ * - Save habit (validates, creates/updates)
+ * - Close/cancel (discards changes)
+ * 
+ * **Modal Type:** React Native Modal (slide) with custom swipe-to-dismiss
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true, form resets (create) or loads habit data (edit)
+ * - Closes: onClose via X button, swipe gesture, or successful save
+ * - Validation: Shows name error if empty on save attempt
+ * 
+ * **Pattern:** Transparent modal with dark overlay and rounded-top container
+ * Uses KeyboardAvoidingView for iOS keyboard handling
+ * GestureDetector for swipe-to-dismiss with Reanimated
+ * Matches HabitEditScreen presentation style
  */
 
 import { useEffect, useRef, useState } from 'react';

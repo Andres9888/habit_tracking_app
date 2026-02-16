@@ -1,14 +1,43 @@
 /**
  * ActivationModal Component
- * Pre-habit notification modal that primes users for habit execution
- *
- * Part of the Motivation System - Activation phase
- * Story T7.1: Create `ActivationModal` component
- *
- * Scientific Basis:
+ * 
+ * Pre-habit notification modal that primes users for habit execution.
+ * 
+ * **Trigger:** 
+ * - Scheduled notification at habit reminder time
+ * - Manual activation from habit quick actions
+ * 
+ * **Display:**
+ * - Full-screen modal with stone-50 background
+ * - Header with close button
+ * - Habit card showing streak and completion stats
+ * - Motivation content sections:
+ *   - "Your Why" (featured, from user's vision board)
+ *   - WOOP IF-THEN reminder (implementation intentions)
+ *   - Cue/trigger reminder (habit cue system)
+ * - Action buttons at bottom
+ * 
+ * **Actions:**
+ * - Start Now (glowing primary button) - marks habit complete, closes modal
+ * - Snooze - reschedules notification, closes modal
+ * - Just 2 Min - commits to minimal version, closes modal
+ * 
+ * **Modal Type:** Shared Modal component with 'fullScreen' variant
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true from notification or manual trigger
+ * - Closes: onClose via any action button or close button
+ * - Returns habit data via callbacks (onStartNow, onSnooze, onJustTwoMin)
+ * 
+ * **Pattern:** Uses shared Modal (fullScreen variant)
+ * Part of Motivation System - Activation phase (T7.1)
+ * 
+ * **Scientific Basis:**
  * - Implementation intentions (Gollwitzer, 1999): 2-3x follow-through
- * - Andrew Huberman Dual Visualization: Show success OR failure based on motivation
+ * - Andrew Huberman Dual Visualization: Success OR failure based on motivation
  * - BJ Fogg's Tiny Habits: "Just 2 min" reduces activation energy
+ * 
+ * Respects reduce motion preference for animations
  */
 
 import React, { useCallback } from 'react';

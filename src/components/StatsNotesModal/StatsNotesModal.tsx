@@ -1,4 +1,35 @@
-/** StatsNotesModal - OPTIMIZED: Design system, Pressable, animations */
+/**
+ * StatsNotesModal Component
+ * 
+ * Overlay modal displaying global stats and notes across all habits.
+ * 
+ * **Trigger:** Stats icon in main navigation
+ * 
+ * **Display:**
+ * - Tab switcher: Stats / Notes
+ * - Stats tab: Overall completion metrics, streak stats, habit breakdown
+ * - Notes tab: All notes from all habits, chronological list
+ * - Card-style overlay with backdrop blur
+ * - Can open VisualizationModal from notes (nested modal)
+ * 
+ * **Actions:**
+ * - Switch between Stats/Notes tabs
+ * - View detailed notes
+ * - Open visualization modal (from notes)
+ * - Tap backdrop or X button to close
+ * 
+ * **Modal Type:** React Native Modal (transparent) with custom overlay card
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true, fades in with backdrop
+ * - Closes: onClose via backdrop tap or close button
+ * - Maintains tab state during session
+ * 
+ * **Pattern:** Custom overlay implementation (not using shared Modal component)
+ * Uses Pressable backdrop with stopPropagation on content card
+ * Card has shadow and rounded corners (16px)
+ * OPTIMIZED: Design system typography, Pressable for performance
+ */
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

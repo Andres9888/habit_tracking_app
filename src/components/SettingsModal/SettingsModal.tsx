@@ -1,6 +1,36 @@
 /* eslint-disable max-lines, max-lines-per-function */
 /**
  * SettingsModal Component
+ * 
+ * Full-screen modal for app-wide settings and preferences.
+ * 
+ * **Trigger:** Gear icon in main navigation
+ * 
+ * **Display:**
+ * - App preferences (dark mode, sounds, visual settings)
+ * - Habit display options (completion icon, day shape, gradient fill)
+ * - Premium features (streak reminders)
+ * - Navigation to archived/paused habits
+ * 
+ * **Actions:**
+ * - Toggle dark mode (Auto/Light/Dark)
+ * - Toggle completion sound and select sound type
+ * - Change habit completion icon (chain/checkmark)
+ * - Change day shape (square/circle)
+ * - Toggle gradient fill on habit cards
+ * - Configure streak reminders (Premium)
+ * - Navigate to archived habits (separate modal)
+ * - Close settings
+ * 
+ * **Modal Type:** React Native Modal (slide animation)
+ * 
+ * **Lifecycle:**
+ * - Opens: visible prop set to true
+ * - Closes: onClose callback via X button or back gesture
+ * - Sub-navigation: Can navigate to ArchivedHabitsModal (changes view state)
+ * 
+ * **Pattern:** Uses RN Modal directly (not shared Modal component)
+ * Has internal view state for navigating to archived habits sub-screen
  */
 
 import React from 'react';

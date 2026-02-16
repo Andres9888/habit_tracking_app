@@ -1,6 +1,42 @@
 /**
  * WriteLetterModal Component
- * Modal for writing a new letter to self
+ * 
+ * Multi-step modal for writing and scheduling future letters to self.
+ * 
+ * **Trigger:** "Write New Letter" button in Letters section
+ * 
+ * **Display:**
+ * Step 1 - Write:
+ * - Header with step indicator, close button
+ * - Letter title input
+ * - Letter content textarea (multi-line)
+ * - "Next" button (enabled when content entered)
+ * 
+ * Step 2 - Schedule:
+ * - Review title and content
+ * - Unlock date selector (days in future: 7, 30, 90, 180, 365)
+ * - Calculated unlock date preview
+ * - Back/Save buttons
+ * 
+ * **Actions:**
+ * - Write letter content and title
+ * - Navigate between write/schedule steps
+ * - Select unlock date (days in future)
+ * - Save letter (scheduled for future delivery)
+ * - Cancel/close (discards draft)
+ * 
+ * **Modal Type:** React Native Modal (slide, pageSheet) with KeyboardAvoidingView
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true, starts on write step
+ * - Step navigation: Next advances to schedule, Back returns to write
+ * - Closes: onClose via cancel, or onSave after successful save
+ * - Form resets on close
+ * 
+ * **Pattern:** Uses RN Modal with custom multi-step form
+ * Keyboard-aware for text input
+ * Two-step wizard: Write → Schedule
+ * Letters unlock after specified days for future motivation
  */
 
 import React from 'react';

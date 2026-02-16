@@ -1,9 +1,30 @@
 /**
  * PauseHabitModal Component
- * Based on UX Specification - Confirmation modal for pausing habits
- *
- * Shows a center alert modal with pause confirmation message
- * Explains that progress is preserved and habit can be resumed from Settings
+ * 
+ * Center alert confirmation dialog for pausing a habit.
+ * 
+ * **Trigger:** Long-press habit card → "Pause" option in quick actions
+ * 
+ * **Display:**
+ * - Centered alert dialog with backdrop
+ * - Habit name in title
+ * - Explanation: progress preserved, can resume from Settings
+ * - Two action buttons: Cancel, Pause Habit
+ * 
+ * **Actions:**
+ * - Cancel: Dismisses modal, no changes
+ * - Pause Habit: Confirms pause, hides habit from daily list
+ * 
+ * **Modal Type:** Shared Modal component with 'centerAlert' variant
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true from habit quick actions
+ * - Closes: onCancel (no change) or onConfirm (pauses habit)
+ * - Uses spring animations for enter/exit
+ * 
+ * **Pattern:** Uses shared Modal with centerAlert variant (scale + fade animation)
+ * Based on UX specification - explains pause behavior clearly
+ * Progress and strength are preserved when paused
  */
 
 import React from 'react';

@@ -1,7 +1,34 @@
 /**
  * TipQuickActionsSheet Component
- *
+ * 
  * Bottom sheet modal with contextual quick actions for habit tips.
+ * 
+ * **Trigger:** Tap tip card in progress section (Today/Focus Day/Motivation tips)
+ * 
+ * **Display:**
+ * - Sheet header with "Quick Actions" title and tip preview text
+ * - List of contextual actions based on tip type:
+ *   - Today tip: Review Progress, See Calendar, Adjust Schedule
+ *   - Focus Day tip: Mark [Day] Complete, Review Habit, Skip [Day]
+ *   - Motivation tip: Review Motivation, Edit Habit, View Science
+ * - Close button in header
+ * - Animated entrance for each action item (staggered)
+ * 
+ * **Actions:**
+ * - Select quick action (executes action, closes sheet)
+ * - Close sheet (tap X or backdrop)
+ * 
+ * **Modal Type:** Shared Modal component with 'bottomSheet' variant
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true when tip card tapped
+ * - Closes: onClose via action selection, close button, or backdrop tap
+ * - Actions dynamically generated based on tip type and context
+ * 
+ * **Pattern:** Uses shared Modal (bottomSheet variant)
+ * QuickAction items have icon, label, description
+ * Respects reduce motion preference for animations
+ * Haptic feedback on interactions
  */
 
 import React, { useMemo } from 'react';

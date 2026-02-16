@@ -1,5 +1,31 @@
 /**
- * AddImageModal Component - Modal for adding new image via camera or photo library
+ * AddImageModal Component
+ * 
+ * Center overlay modal for selecting image source for Vision Board.
+ * 
+ * **Trigger:** "Add Image" button in Vision Board section
+ * 
+ * **Display:**
+ * - Centered card overlay with backdrop
+ * - Header with icon, title "Add to Vision Board", close button
+ * - Two option buttons:
+ *   - Take Photo (camera icon)
+ *   - Choose from Library (image icon)
+ * - Cancel button at bottom
+ * 
+ * **Actions:**
+ * - Take Photo - Opens device camera, adds captured image
+ * - Choose from Library - Opens photo picker, adds selected image
+ * - Cancel/Close - Dismisses modal
+ * 
+ * **Modal Type:** React Native Modal (fade animation) with custom overlay
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true from vision board
+ * - Closes: onClose via any option selection, cancel, or backdrop tap
+ * 
+ * **Pattern:** Custom center overlay (not using shared Modal component)
+ * Pressable backdrop with stopPropagation on content card
  */
 
 import React from 'react';

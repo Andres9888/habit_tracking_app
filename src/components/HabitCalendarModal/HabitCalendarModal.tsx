@@ -1,3 +1,37 @@
+/**
+ * HabitCalendarModal Component
+ * 
+ * Full-screen modal displaying detailed habit statistics and calendar view.
+ * 
+ * **Trigger:** Tap habit card in main list
+ * 
+ * **Display:**
+ * - Header with habit name, edit button, close button
+ * - Status ribbon: Emoji, name, current streak, schedule, quick log button
+ * - Stats card: Current/best streak, completion percentage, recent miss badge
+ * - Calendar tabs: Month view (interactive calendar) or Heatmap (6-month history)
+ * - Activity log: Chronological list of completions and notes
+ * - Can open HabitEditScreen (nested modal)
+ * 
+ * **Actions:**
+ * - View habit completion history in calendar
+ * - Quick mark today as complete/incomplete
+ * - Switch between month and heatmap views
+ * - Edit habit (opens HabitEditScreen)
+ * - Navigate to motivation features (affirmations, vision board, cues)
+ * - Close modal
+ * 
+ * **Modal Type:** React Native Modal (slide animation) with SafeAreaView
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true via habit card tap
+ * - Closes: onClose via close button or back gesture
+ * - Can open nested HabitEditScreen modal
+ * 
+ * **Pattern:** Uses RN Modal directly with scrollable content
+ * Manages nested modal state for edit screen
+ * Full-height scrollable view with multiple sections
+ */
 import { Modal, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../theme/ThemeContext';

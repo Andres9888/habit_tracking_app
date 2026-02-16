@@ -12,6 +12,36 @@ import {
 import { LoadingState } from './components/LoadingState';
 import type { ArchivedHabitsModalProps } from './types';
 
+/**
+ * ArchivedHabitsModal Component
+ * 
+ * Full-screen view displaying all archived habits with restore/delete actions.
+ * 
+ * **Trigger:** "Archived Habits" button in SettingsModal
+ * 
+ * **Display:**
+ * - List of archived habits (virtualized FlatList)
+ * - Summary bar with total count and "Delete All" option
+ * - Each habit card shows: name, emoji, archive date
+ * - Empty state when no archived habits
+ * 
+ * **Actions:**
+ * - Restore individual habit (returns to active habits)
+ * - Permanently delete individual habit
+ * - Delete all archived habits (bulk action)
+ * - Back to settings
+ * - Close modal entirely
+ * 
+ * **Modal Type:** Rendered inside SettingsModal's RN Modal
+ * (Not a separate modal - view state change within SettingsModal)
+ * 
+ * **Lifecycle:**
+ * - Opens: When SettingsModal view state changes to 'archived'
+ * - Closes: onBack returns to settings view, onClose exits SettingsModal entirely
+ * 
+ * **Pattern:** Standalone component rendered conditionally, not using shared Modal
+ * Uses FlatList with virtualization for performance with many archived habits
+ */
 export default function ArchivedHabitsModal({
   onClose,
   onBack,

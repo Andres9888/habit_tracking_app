@@ -1,6 +1,34 @@
 /**
  * VisualizationModal Component
- * Modal wrapper for the visualization guide
+ * 
+ * Full-screen modal displaying the Visualization Guide.
+ * 
+ * **Trigger:** "Learn Visualization" button in Notes section
+ * 
+ * **Display:**
+ * - Gradient background (purple to white)
+ * - Header with Eye icon, "Visualization Guide" title, close button
+ * - Scrollable content showing VisualizationGuide component:
+ *   - Dual Visualization explanation (Huberman Protocol)
+ *   - Success visualization vs. Failure visualization
+ *   - When to use each type
+ *   - Scientific backing
+ * 
+ * **Actions:**
+ * - Scroll through guide content
+ * - Close modal (X button)
+ * 
+ * **Modal Type:** React Native Modal (slide animation) with gradient background
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true from notes section
+ * - Closes: onClose via close button or back gesture
+ * - Can be opened from StatsNotesModal (nested modal)
+ * 
+ * **Pattern:** Uses RN Modal with custom gradient background
+ * Wraps VisualizationGuide educational content
+ * Animated header entrance (FadeIn delay 100ms)
+ * Science-backed techniques: Dual Visualization (Huberman Protocol)
  */
 
 import React from 'react';

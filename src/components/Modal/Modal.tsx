@@ -1,6 +1,55 @@
 /**
- * Modal Component - Main orchestrator
- * Variants: Bottom Sheet, Full Screen, Center Alert
+ * Modal Component - Shared Base Modal
+ * 
+ * Reusable modal component with three variants and consistent behavior.
+ * 
+ * **Variants:**
+ * 1. `bottomSheet` - Slides up from bottom with swipe-to-dismiss
+ * 2. `fullScreen` - Full screen with vertical swipe gesture
+ * 3. `centerAlert` - Centered dialog with scale animation
+ * 
+ * **Common Features:**
+ * - Semi-transparent backdrop (configurable opacity)
+ * - Backdrop tap to close (optional)
+ * - Gesture-based dismissal (optional)
+ * - Reanimated-based animations
+ * - Respects system reduce motion preference
+ * - Status bar translucent for full-screen experience
+ * 
+ * **Architecture:**
+ * - `ModalBackdrop` - Animated backdrop with tap handler
+ * - `ModalContent` - Gesture-enabled content container
+ * - `useModalAnimations` - Hook managing animation values
+ * - `useModalGestures` - Hook managing pan gestures
+ * - `useModalStyles` - Hook deriving animated styles
+ * - `useReduceMotion` - Hook detecting accessibility preference
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true triggers enter animation
+ * - Closes: onClose callback, triggered by:
+ *   - Backdrop tap (if disableBackdropClose=false)
+ *   - Swipe gesture (if disableGestureClose=false)
+ *   - Hardware back button (Android)
+ *   - Close button in content (app-specific)
+ * 
+ * **Usage Pattern:**
+ * ```tsx
+ * <Modal variant="bottomSheet" visible={isOpen} onClose={handleClose}>
+ *   <YourContent />
+ * </Modal>
+ * ```
+ * 
+ * **Used by:**
+ * - PauseHabitModal (centerAlert)
+ * - TipQuickActionsSheet (bottomSheet)
+ * - TemplateScienceModal (fullScreen)
+ * - ActivationModal (fullScreen)
+ * - Many others - see modal component files for usage
+ * 
+ * **Not used by:**
+ * - SettingsModal (uses RN Modal directly for custom nav)
+ * - CreateHabitModal (uses RN Modal for custom swipe handling)
+ * - EmojiPickerSheet (custom implementation with BlurView)
  */
 
 import React from 'react';

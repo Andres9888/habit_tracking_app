@@ -1,6 +1,32 @@
 /**
- * PausedHabitsModal - OPTIMIZED: Design system typography, animations, shadows
- * Uses FlatList for virtualized rendering of paused habits.
+ * PausedHabitsModal Component
+ * 
+ * Full-screen view displaying all paused habits with resume action.
+ * 
+ * **Trigger:** "Paused Habits" button in SettingsModal
+ * 
+ * **Display:**
+ * - Header with back button (to settings), title, close button
+ * - List of paused habits (virtualized FlatList)
+ * - Each card shows: name, emoji, pause date
+ * - Empty state when no paused habits
+ * 
+ * **Actions:**
+ * - Resume individual habit (returns to active habits)
+ * - Back to settings (onBack)
+ * - Close modal entirely (onClose)
+ * 
+ * **Modal Type:** Rendered inside SettingsModal's RN Modal
+ * (Not a separate modal - view state change within SettingsModal)
+ * 
+ * **Lifecycle:**
+ * - Opens: When SettingsModal navigates to paused habits view
+ * - Closes: onBack returns to settings, onClose exits SettingsModal
+ * 
+ * **Pattern:** Standalone component rendered conditionally
+ * Uses FlatList with virtualization for performance
+ * Animated entrance with FadeInDown (280ms, spring damping 18)
+ * OPTIMIZED: Design system typography, animations, shadows
  */
 import { useCallback } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';

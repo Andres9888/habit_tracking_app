@@ -1,6 +1,42 @@
 /**
- * TemplateScienceModal - Main orchestration component
- * Displays scientific research and backing for habit templates
+ * TemplateScienceModal Component
+ * 
+ * Full-screen modal displaying scientific research and evidence for habit templates.
+ * 
+ * **Trigger:** 
+ * - Info button on template cards in TemplatesScreen
+ * - Auto-opens after selecting template (with confetti)
+ * 
+ * **Display:**
+ * - Dismiss indicator (swipe down)
+ * - Header with template name, share/close buttons
+ * - Hero section: Template emoji, name, tagline, reading time
+ * - "Why It Works" section with scientific evidence
+ * - Research links (opens in browser)
+ * - YouTube video links (opens YouTube)
+ * - Footer with "Use Template" button
+ * - Confetti overlay on template selection
+ * 
+ * **Actions:**
+ * - Scroll through research content
+ * - Share template (native share sheet)
+ * - Open research links (external browser)
+ * - Watch YouTube videos (external app)
+ * - Use template (creates habit, shows confetti)
+ * - Close modal (swipe down or X button)
+ * 
+ * **Modal Type:** Shared Modal component with 'fullScreen' variant
+ * 
+ * **Lifecycle:**
+ * - Opens: visible=true with template data
+ * - Closes: onClose via X button, back button, or swipe-down gesture
+ * - Loading state: Shows skeleton while template data loads
+ * - Confetti: Triggers on successful template use
+ * 
+ * **Pattern:** Uses shared Modal (fullScreen variant)
+ * Complex animations: scroll-based header shrink, button scales, parallax
+ * Hooks-based architecture: separate hooks for animations, handlers, styles
+ * Reading time calculated from template content
  */
 
 import React, { useMemo } from 'react';
