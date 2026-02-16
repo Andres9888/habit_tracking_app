@@ -1,7 +1,13 @@
 /* eslint-disable max-lines */
 /**
- * LockedHabitCard Component
- * Animated upgrade prompt card for free tier limit
+ * LockedHabitCard — inline upgrade nudge shown in the list footer.
+ *
+ * Part of the **monetization flow**: rendered by {@link HabitsListFooter} when
+ * a free-tier user has reached the habit limit.  Displays a dashed-border card
+ * with a "Start Free Trial" CTA.
+ *
+ * **Animations:** entrance spring (scale + fade) and press spring (scale).
+ * Both respect the `reduceMotion` preference.
  */
 
 import { useEffect, useRef } from 'react';
@@ -33,7 +39,8 @@ export function LockedHabitCard({
     Animated.parallel([
       Animated.spring(entranceScale, {
         damping: 18,
-        stiffness: 150,
+        mass: 1,
+        stiffness: 150, // Design system standard
         toValue: 1,
         useNativeDriver: true,
       }),
@@ -53,7 +60,8 @@ export function LockedHabitCard({
     }
     Animated.spring(pressScale, {
       damping: 18,
-      stiffness: 240,
+      mass: 1,
+      stiffness: 150,
       toValue: SCALE.pressLarge,
       useNativeDriver: true,
     }).start();
@@ -66,7 +74,8 @@ export function LockedHabitCard({
     }
     Animated.spring(pressScale, {
       damping: 18,
-      stiffness: 240,
+      mass: 1,
+      stiffness: 150,
       toValue: SCALE.normal,
       useNativeDriver: true,
     }).start();

@@ -5,7 +5,7 @@
 
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, type SharedValue } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { HapticPatterns } from '../../../utils/haptics/patterns';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { showSyncError } from '../../../utils/errorAlerts';
 import {
@@ -51,17 +51,9 @@ export function createTapGesture(options: TapGestureOptions) {
 
       // Instant haptic feedback on touch
       if (completed) {
-        runOnJS(() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
-            () => {}
-          );
-        })();
+        runOnJS(HapticPatterns.tap)();
       } else {
-        runOnJS(() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
-            () => {}
-          );
-        })();
+        runOnJS(HapticPatterns.toggle)();
       }
 
       // Standard card press animation with spring physics

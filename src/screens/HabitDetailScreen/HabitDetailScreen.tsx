@@ -62,6 +62,7 @@ function HabitDetailScreenContent({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}
@@ -89,6 +90,7 @@ function HabitDetailScreenContent({
                   <HabitDetailContent
                     completedDates={screenState.completedDates}
                     habit={habit}
+                    notesByDate={screenState.notesByDate}
                     onDayPress={calendarHandlers.handleCalendarDayPress}
                   />
                 </LinearGradient>
