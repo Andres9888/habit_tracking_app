@@ -1,7 +1,16 @@
 /**
  * useLoadAudio - Audio loading and unloading
  *
+ * ⚠️ NOTE: 130 LINES - Size justified by focused responsibility
+ *
  * Handles loading audio from URI and cleanup.
+ *
+ * Side Effects:
+ * - Configures audio mode (playback category)
+ * - Creates and loads expo-av Sound object
+ * - Subscribes to playback status updates
+ * - Unloads existing audio before loading new audio
+ * - Auto-plays if autoPlayOnLoad is true
  */
 
 import { useCallback } from 'react';

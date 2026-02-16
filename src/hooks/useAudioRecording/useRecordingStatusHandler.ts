@@ -1,7 +1,15 @@
 /**
  * Hook for handling recording status updates from expo-av
  *
+ * ⚠️ WARNING: 123 LINES - Complex status handling
+ *
  * Story T10.2: Audio recording integration (expo-av)
+ *
+ * Side Effects:
+ * - Updates recording status on every update (100ms interval)
+ * - Detects approaching max duration and triggers warning
+ * - Automatically stops recording at max duration
+ * - Handles audio interruptions (phone calls, etc.)
  */
 
 import { useCallback, useRef } from 'react';

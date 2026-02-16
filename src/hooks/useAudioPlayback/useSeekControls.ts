@@ -1,7 +1,14 @@
 /**
  * useSeekControls - Seek operations for audio playback
  *
+ * ⚠️ NOTE: 122 LINES - Multiple seek methods justified
+ *
  * Provides seeking functionality (progress, seconds, forward, backward).
+ *
+ * Side Effects:
+ * - Updates playback position via Sound.setPositionAsync
+ * - Updates status state to 'seeking' during operations
+ * - Clamps seek positions to [0, duration]
  */
 
 import { useCallback } from 'react';

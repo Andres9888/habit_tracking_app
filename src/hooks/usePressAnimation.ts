@@ -1,6 +1,8 @@
 /**
  * Reusable Press Animation Hook
  *
+ * ⚠️ NOTE: 154 LINES - Consider extracting haptic logic to separate hook
+ *
  * Provides smooth scale animation with optional haptic feedback for pressable components.
  * Automatically respects reduced motion accessibility preferences.
  *
@@ -9,6 +11,10 @@
  * - Optional haptic feedback (iOS & Android)
  * - Reduced motion support
  * - Customizable press scale and spring configuration
+ *
+ * Side Effects:
+ * - Triggers haptic feedback on press (if enabled)
+ * - Updates Reanimated shared value (no React re-render)
  *
  * @param config - Configuration options
  * @returns Object containing animated style and press handlers

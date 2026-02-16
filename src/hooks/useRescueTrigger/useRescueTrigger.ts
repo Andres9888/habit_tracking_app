@@ -1,6 +1,15 @@
 /**
  * useRescueTrigger Hook - Determines when to show Rescue Mode for at-risk habits
+ *
+ * ⚠️ NOTE: 105 LINES - Size justified by complex orchestration
+ *
  * Part of T8.6-T8.7: Rescue Mode trigger logic
+ *
+ * Side Effects:
+ * - Subscribes to app resume events
+ * - Runs scheduled checks every 15 minutes
+ * - Monitors midnight reset for new day
+ * - Filters habits based on eligibility criteria
  */
 
 import { useCallback, useRef, useState } from 'react';

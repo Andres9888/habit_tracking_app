@@ -1,5 +1,7 @@
 /**
  * Type definitions for the offline queue system
+ *
+ * ⚠️ NOTE: 111 LINES - Size expected for comprehensive type definitions
  */
 
 /** Submission types supported by the offline queue */

@@ -1,8 +1,17 @@
 /**
  * usePremiumActions Hook
  *
+ * ⚠️ WARNING: 116 LINES - Consider splitting purchase and restore flows
+ * Could extract: purchase logic, restore logic, error handling
+ *
  * Purchase, restore, and refresh actions for premium subscriptions.
  * Separated from data fetching for cleaner responsibility boundaries.
+ *
+ * Side Effects:
+ * - Initiates in-app purchase flow
+ * - Restores previous purchases
+ * - Syncs with Revenue Cat backend
+ * - Updates customer info state
  */
 
 import { useCallback, useEffect, useRef } from 'react';

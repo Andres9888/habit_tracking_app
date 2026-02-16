@@ -1,5 +1,8 @@
 /**
  * Draft Storage Operations - AsyncStorage-based persistence for drafts
+ *
+ * ⚠️ WARNING: 114 LINES - Consider splitting storage operations
+ * Could extract: saveDraft, getDraft, getAllDrafts, deleteDraft into separate files
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

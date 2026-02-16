@@ -3,9 +3,18 @@
 /**
  * usePremiumData Hook
  *
+ * ⚠️ WARNING: 126 LINES - Consider splitting data fetching logic
+ * Could extract: offerings fetch, customer info fetch, SDK polling
+ *
  * Handles SDK initialization, data fetching, and customer info listener.
  * Polls for SDK availability (handles race condition with PurchasesProvider),
  * then fetches customer info + offerings in parallel.
+ *
+ * Side Effects:
+ * - Polls Revenue Cat SDK availability every 100ms
+ * - Fetches offerings from Revenue Cat
+ * - Fetches customer info from Revenue Cat
+ * - Subscribes to customer info updates
  */
 
 import { useEffect, useState, useRef } from 'react';

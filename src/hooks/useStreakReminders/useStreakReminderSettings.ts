@@ -1,7 +1,16 @@
 /**
  * useStreakReminderSettings — Settings toggle + time picker state for streak reminders.
  *
+ * ⚠️ WARNING: 125 LINES - Consider splitting settings management
+ * Could extract: permission handling, settings persistence, time picker state
+ *
  * Manages the streakRemindersEnabled and streakReminderTime settings via Convex.
+ *
+ * Side Effects:
+ * - Requests notification permissions
+ * - Updates settings in Convex
+ * - Shows native time picker dialog (iOS/Android)
+ * - Schedules/cancels streak reminder notifications
  */
 
 import { useCallback, useState, useEffect } from 'react';

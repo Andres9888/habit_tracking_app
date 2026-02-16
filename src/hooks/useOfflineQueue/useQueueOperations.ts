@@ -1,5 +1,12 @@
 /**
  * Queue operations (enqueue, dequeue, markFailed)
+ *
+ * ⚠️ NOTE: 105 LINES - Size justified by focused queue operations
+ *
+ * Side Effects:
+ * - Writes to AsyncStorage on every enqueue/dequeue
+ * - Updates queue index
+ * - Removes expired items
  */
 
 import { useCallback } from 'react';

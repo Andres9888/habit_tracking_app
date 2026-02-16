@@ -2,12 +2,19 @@
  * useImagePicker Hook
  * Handles image selection from camera and library using expo-image-picker
  *
+ * ⚠️ NOTE: 105 LINES - Size justified as orchestrator hook
+ *
  * Features:
  * - Pick from photo library
  * - Capture from camera
  * - Permission handling with graceful fallback
  * - Configurable aspect ratio and quality
  * - Error handling with descriptive messages
+ *
+ * Side Effects:
+ * - Requests camera/library permissions
+ * - Opens native camera or photo library UI
+ * - Updates local state (isLoading, error)
  *
  * Story T12.2: Image picker integration for Vision Board
  */

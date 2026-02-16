@@ -1,6 +1,14 @@
 /**
  * useOfflineHabitMutations - Offline-aware habit mutations
  *
+ * ⚠️ WARNING: 300 LINES - CONSIDER SPLITTING
+ * This hook is quite large. Consider extracting into separate hooks:
+ * - useCreateHabit
+ * - useUpdateHabit
+ * - useArchiveHabit
+ * - usePauseHabit
+ * - useRemoveHabit
+ *
  * Wraps Convex habit mutations with offline queue support.
  * When offline, operations are queued for later sync.
  * When online, operations execute immediately with fallback to queue on error.

@@ -1,7 +1,15 @@
 /**
  * usePlaybackStatusHandler - Handles playback status updates
  *
+ * ⚠️ WARNING: 138 LINES - Consider splitting interruption logic
+ *
  * Processes status updates from expo-av and detects audio interruptions.
+ *
+ * Side Effects:
+ * - Updates playback status state on every status update
+ * - Triggers onFinish callback when playback completes
+ * - Triggers onError callback on playback errors
+ * - Triggers onInterrupted callback on audio interruptions
  */
 
 import { useCallback, useRef, useEffect } from 'react';

@@ -2,6 +2,8 @@
  * useImageUpload Hook
  * Handles uploading images to Convex file storage
  *
+ * ⚠️ NOTE: 191 LINES - Could extract resize logic to separate file/hook
+ *
  * Flow:
  * 1. Resize image to max dimensions (1200px) for memory/bandwidth optimization
  * 2. Get signed upload URL from Convex
@@ -11,6 +13,12 @@
  *
  * Story T12.3: Image upload to storage for Vision Board
  * App Store Compliance: Images resized to prevent memory issues and excessive bandwidth
+ *
+ * Side Effects:
+ * - Modifies local image files via expo-image-manipulator (resize)
+ * - Network request to generate upload URL
+ * - Network request to upload file
+ * - Updates local state (isUploading, progress, error)
  */
 
 import { useCallback, useState } from 'react';
