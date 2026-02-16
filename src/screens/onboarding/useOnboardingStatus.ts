@@ -1,37 +1,52 @@
 import { useCallback, useEffect, useState } from 'react';
-import { safeGetBoolean, safeSetBoolean } from '@/utils/storage';
+import { safeGetBoolean, safeGetString, safeSetBoolean, safeSetString } from '@/utils/storage';
 
 import { ONBOARDING_KEY } from './OnboardingScreen';
+import { trackOnboardingEvent } from './analytics';
+
+const ONBOARDING_PROGRESS_KEY = '@chainday_onboarding_progress';
 
 /**
  * Onboarding status hook.
  *
- * Auto-completes onboarding for new users so they land directly on the
- * habit creation empty state — the empty state IS the onboarding.
- * The old 3-screen carousel was skipped by most users; this removes
- * the friction entirely.
+ * CONVERSION-OPTIMIZED: Shows the 3-screen onboarding carousel to new users.
+ * The carousel builds desire and sets expectations before users hit the empty state.
+ * 
+ * Features:
+ * - Analytics tracking for each screen
+ * - Progress persistence for recovery
+ * - "Continue where you left off" on app restart
  */
 export function useOnboardingStatus(isSignedIn: boolean) {
   const [complete, setComplete] = useState<boolean | null>(null);
+  const [currentScreen, setCurrentScreen] = useState<number>(0);
+  const [recovered, setRecovered] = useState<boolean>(false);
 
   useEffect(() => {
     if (isSignedIn) {
       void safeGetBoolean(ONBOARDING_KEY, false)
-        .then((isComplete) => {
+        .then(async (isComplete) => {
           if (isComplete) {
             // Existing user — already completed onboarding before.
             setComplete(true);
           } else {
-            // New user — auto-complete onboarding, skip the carousel.
-            void safeSetBoolean(ONBOARDING_KEY, true)
-              .then(() => {
-                setComplete(true);
-              })
-              .catch((error) => {
-                if (__DEV__) console.warn('[useOnboardingStatus] Error saving status:', error);
-                // Still mark as complete even if save fails
-                setComplete(true);
+            // New user — check if they have in-progress onboarding to recover
+            const progressStr = await safeGetString(ONBOARDING_PROGRESS_KEY, '0');
+            const progress = parseInt(progressStr, 10) || 0;
+            
+            if (progress > 0) {
+              // User exited during onboarding — enable recovery
+              setCurrentScreen(progress);
+              setRecovered(true);
+              trackOnboardingEvent('onboarding_recovered', {
+                recovery_screen: progress,
               });
+            } else {
+              // Brand new user — start onboarding from beginning
+              trackOnboardingEvent('onboarding_started');
+            }
+            
+            setComplete(false);
           }
         })
         .catch((error) => {
@@ -42,9 +57,38 @@ export function useOnboardingStatus(isSignedIn: boolean) {
     }
   }, [isSignedIn]);
 
-  const markComplete = useCallback(() => {
-    setComplete(true);
+  const markComplete = useCallback(async () => {
+    try {
+      await safeSetBoolean(ONBOARDING_KEY, true);
+      // Clear progress tracking
+      await safeSetString(ONBOARDING_PROGRESS_KEY, '0');
+      setComplete(true);
+      
+      trackOnboardingEvent('onboarding_completed');
+    } catch (error) {
+      if (__DEV__) {
+        console.warn('[useOnboardingStatus] Error saving completion:', error);
+      }
+      // Still mark as complete even if save fails
+      setComplete(true);
+    }
   }, []);
 
-  return { complete, markComplete };
+  const saveProgress = useCallback(async (screenIndex: number) => {
+    try {
+      await safeSetString(ONBOARDING_PROGRESS_KEY, screenIndex.toString());
+    } catch (error) {
+      if (__DEV__) {
+        console.warn('[useOnboardingStatus] Error saving progress:', error);
+      }
+    }
+  }, []);
+
+  return { 
+    complete, 
+    markComplete,
+    currentScreen,
+    recovered,
+    saveProgress,
+  };
 }

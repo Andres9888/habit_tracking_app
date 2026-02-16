@@ -23,7 +23,7 @@ import {
   View,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { api } from '../../../convex/_generated/api';
 import { colors } from '../../theme/colors';
@@ -189,7 +189,13 @@ export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();
   const getOrCreateUser = useMutation(api.users.getOrCreateUser);
-  const { complete: onboardingComplete, markComplete } = useOnboardingStatus(
+  const { 
+    complete: onboardingComplete, 
+    markComplete,
+    currentScreen,
+    recovered,
+    saveProgress,
+  } = useOnboardingStatus(
     isSignedIn ?? false
   );
 
@@ -217,37 +223,40 @@ export function AuthGate() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Suspense fallback={<BrandedLoadingScreen />}>
-        {screenKey === 'welcome' && (
-          <Animated.View
-            key="welcome"
-            entering={FadeInDown.duration(280).springify().damping(18)}
-            exiting={FadeOut.duration(300)}
-            style={{ flex: 1 }}
-          >
-            <WelcomeScreen />
-          </Animated.View>
-        )}
-        {screenKey === 'onboarding' && (
-          <Animated.View
-            key="onboarding"
-            entering={FadeInDown.duration(280).springify().damping(18)}
-            exiting={FadeOut.duration(300)}
-            style={{ flex: 1 }}
-          >
-            <OnboardingScreen onComplete={markComplete} />
-          </Animated.View>
-        )}
-        {screenKey === 'app' && (
-          <Animated.View
-            key="app"
-            entering={FadeInDown.duration(280).springify().damping(18)}
-            style={{ flex: 1 }}
-          >
-            <HabitsApp />
-          </Animated.View>
-        )}
-      </Suspense>
+      {screenKey === 'welcome' && (
+        <Animated.View
+          key="welcome"
+          entering={FadeIn.duration(300)}
+          exiting={FadeOut.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <WelcomeScreen />
+        </Animated.View>
+      )}
+      {screenKey === 'onboarding' && (
+        <Animated.View
+          key="onboarding"
+          entering={FadeIn.duration(300)}
+          exiting={FadeOut.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <OnboardingScreen 
+            onComplete={markComplete}
+            initialScreen={currentScreen}
+            recovered={recovered}
+            saveProgress={saveProgress}
+          />
+        </Animated.View>
+      )}
+      {screenKey === 'app' && (
+        <Animated.View
+          key="app"
+          entering={FadeIn.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <HabitsApp />
+        </Animated.View>
+      )}
     </GestureHandlerRootView>
   );
 }

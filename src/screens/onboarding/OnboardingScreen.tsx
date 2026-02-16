@@ -3,6 +3,12 @@
  * 3-screen carousel shown once after first sign-up.
  * Screens: Chain visualization, Strength meter, Templates grid.
  * Sets AsyncStorage flag to prevent re-showing.
+ * 
+ * CONVERSION-OPTIMIZED:
+ * - Analytics tracking for every screen view
+ * - Recovery UI if user exited mid-flow
+ * - Compelling benefit-focused copy
+ * - Progress persistence
  */
 /* eslint-disable max-lines, max-lines-per-function */
 
@@ -10,7 +16,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { colors } from '../../theme/colors';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -30,6 +36,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { safeSetBoolean } from '@/utils/storage';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { trackOnboardingEvent } from './analytics';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
@@ -191,22 +198,22 @@ const PAGES: PageData[] = [
   {
     id: 'chain',
     subtitle:
-      'Complete your habits daily and watch your chain grow — every link counts.',
-    title: "Don't Break the Chain",
+      'See your progress visualized daily. Each completion adds a link. Breaking the chain? That's your accountability.',
+    title: "Never Miss a Day Again",
     Visual: ChainVisualization,
   },
   {
     id: 'strength',
     subtitle:
-      'Your habits get stronger over time — backed by behavioral science.',
-    title: 'Science-Backed Strength',
+      'Watch habits transform from hard to effortless. In just 66 days, what feels like work today becomes automatic.',
+    title: 'From Effort to Effortless',
     Visual: StrengthMeter,
   },
   {
     id: 'templates',
     subtitle:
-      'Pick from science-backed templates or create your own in seconds.',
-    title: '200+ Ready-Made Templates',
+      'Don't reinvent the wheel. Your first habit starts in 10 seconds with proven templates.',
+    title: 'Start With What Works',
     Visual: TemplateGrid,
   },
 ];
@@ -246,20 +253,59 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
 
 interface OnboardingScreenProps {
   onComplete: () => void;
+  initialScreen?: number;
+  recovered?: boolean;
+  saveProgress?: (screen: number) => Promise<void>;
 }
 
-function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
+function OnboardingScreenContent({ 
+  onComplete, 
+  initialScreen = 0,
+  recovered = false,
+  saveProgress,
+}: OnboardingScreenProps) {
   const { colors } = useThemeColors();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(initialScreen);
   const [isLoading, setIsLoading] = useState(false);
+  const [showRecoveryBanner, setShowRecoveryBanner] = useState(recovered);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
   const shouldReduceMotion = useReducedMotion();
+  const screenStartTimeRef = useRef<number>(Date.now());
+  const totalStartTimeRef = useRef<number>(Date.now());
+
+  // Track screen views
+  useEffect(() => {
+    const screenName = PAGES[currentIndex]?.id || 'unknown';
+    trackOnboardingEvent('onboarding_screen_viewed', {
+      screen_index: currentIndex,
+      screen_name: screenName,
+    });
+    screenStartTimeRef.current = Date.now();
+  }, [currentIndex]);
+
+  // Save progress when screen changes
+  useEffect(() => {
+    if (saveProgress && currentIndex > 0) {
+      void saveProgress(currentIndex);
+    }
+  }, [currentIndex, saveProgress]);
 
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
     setIsLoading(true);
     void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
+    
+    // Track completion with timing
+    const timeSpentMs = Date.now() - screenStartTimeRef.current;
+    const totalTimeMs = Date.now() - totalStartTimeRef.current;
+    trackOnboardingEvent('onboarding_screen_completed', {
+      screen_index: currentIndex,
+      screen_name: PAGES[currentIndex]?.id,
+      time_spent_ms: timeSpentMs,
+      total_time_ms: totalTimeMs,
+    });
+    
     try {
       // Mark onboarding as complete in AsyncStorage
       await safeSetBoolean(ONBOARDING_KEY, true);
@@ -277,12 +323,22 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [onComplete, isLoading]);
+  }, [onComplete, isLoading, currentIndex]);
 
   const handleSkip = useCallback(() => {
     void Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    
+    // Track skip with context
+    const totalTimeMs = Date.now() - totalStartTimeRef.current;
+    trackOnboardingEvent('onboarding_skipped', {
+      screen_index: currentIndex,
+      screen_name: PAGES[currentIndex]?.id,
+      skip_reason: 'user_action',
+      total_time_ms: totalTimeMs,
+    });
+    
     void handleComplete();
-  }, [handleComplete]);
+  }, [handleComplete, currentIndex]);
 
   const handleNext = useCallback(() => {
     void Haptics.impactAsync(ImpactFeedbackStyle.Light);
@@ -341,10 +397,30 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Recovery banner */}
+      {showRecoveryBanner && (
+        <Animated.View
+          entering={shouldReduceMotion ? undefined : FadeInDown.springify().damping(18)}
+          style={[styles.recoveryBanner, { top: insets.top + 12 }]}
+        >
+          <Text style={styles.recoveryText}>
+            👋 Welcome back! Continue where you left off
+          </Text>
+          <Pressable
+            accessibilityLabel='Dismiss recovery banner'
+            accessibilityRole='button'
+            hitSlop={12}
+            onPress={() => setShowRecoveryBanner(false)}
+          >
+            <Text style={styles.recoveryDismiss}>✕</Text>
+          </Pressable>
+        </Animated.View>
+      )}
+      
       {/* Skip button */}
       <Animated.View
         entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
-        style={[styles.skipContainer, { top: insets.top + 12 }]}
+        style={[styles.skipContainer, { top: showRecoveryBanner ? insets.top + 72 : insets.top + 12 }]}
       >
         <Pressable
           accessibilityLabel='Skip onboarding'
@@ -399,7 +475,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
                 <ActivityIndicator color='#FFFFFF' />
               ) : (
                 <Text style={styles.ctaText}>
-                  Let's Build Your First Habit →
+                  Start Your First Chain Now →
                 </Text>
               )}
             </Pressable>
@@ -501,6 +577,37 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 32,
   },
+  recoveryBanner: {
+    alignItems: 'center',
+    backgroundColor: colors.primary[50],
+    borderColor: colors.primary[200],
+    borderRadius: 12,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    left: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    position: 'absolute',
+    right: 24,
+    shadowColor: '#000',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    zIndex: 10,
+  },
+  recoveryDismiss: {
+    color: colors.primary[600],
+    fontSize: 17,
+    fontWeight: '600',
+    paddingLeft: 12,
+  },
+  recoveryText: {
+    color: colors.primary[700],
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '600',
+  },
   skipButton: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -596,3 +703,5 @@ export function OnboardingScreen(props: OnboardingScreenProps) {
     </ScreenErrorBoundary>
   );
 }
+
+export { trackOnboardingEvent } from './analytics';
