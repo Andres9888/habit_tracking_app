@@ -9,6 +9,7 @@ import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
 import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from '../constants';
 import type { SuggestionChip } from '../types';
 import { useChipAnimations } from './useChipAnimations';
+import { SHADOW_OPACITY } from '../../../../../constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -87,7 +88,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
           paddingVertical: 8,
           shadowColor: '#1c1917',
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
+          shadowOpacity: SHADOW_OPACITY.minimal,
           shadowRadius: 16,
         },
       ]}

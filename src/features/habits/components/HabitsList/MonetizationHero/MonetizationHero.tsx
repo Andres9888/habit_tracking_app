@@ -9,6 +9,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
+import { SHADOW_OPACITY, OPACITY } from '../../../../../constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -35,7 +36,7 @@ export function MonetizationHero({
         elevation: 4,
         shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
+        shadowOpacity: SHADOW_OPACITY.minimal,
         shadowRadius: 16,
       }}
     >
