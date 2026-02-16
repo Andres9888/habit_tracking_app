@@ -105,7 +105,7 @@ export function SettingsRow({
             >
               <Text
                 className='text-[12px] font-bold'
-                style={{ color: isDark ? '#D1D5DB' : '#57534e' }}
+                style={{ color: isDark ? '#9CA3AF' : '#57534e' }}
               >
                 {badge}
               </Text>

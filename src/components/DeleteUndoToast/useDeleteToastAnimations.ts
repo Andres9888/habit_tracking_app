@@ -43,6 +43,14 @@ export function useDeleteToastAnimations({
 
   const onDismissRef = useRef(onDismiss);
   onDismissRef.current = onDismiss;
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup dismiss timer on unmount
+  useEffect(() => {
+    return () => {
+      if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+    };
+  }, []);
 
   const handleDismiss = useCallback(() => {
     translateY.value = withSpring(100, springs.snappy);
@@ -50,7 +58,8 @@ export function useDeleteToastAnimations({
     progressWidth.value = 100;
 
     if (onDismissRef.current) {
-      setTimeout(() => onDismissRef.current?.(), 250);
+      if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+      dismissTimerRef.current = setTimeout(() => onDismissRef.current?.(), 250);
     }
   }, [translateY, opacity, progressWidth]);
 

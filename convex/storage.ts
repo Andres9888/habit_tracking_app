@@ -44,6 +44,12 @@ export const getUrl = query({
     storageId: v.id('_storage'),
   },
   handler: async (ctx, args) => {
+    // SEC-002: Authentication check - prevent anonymous access to file URLs
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to access files');
+    }
+
     return await ctx.storage.getUrl(args.storageId);
   },
   returns: v.union(v.string(), v.null()),
