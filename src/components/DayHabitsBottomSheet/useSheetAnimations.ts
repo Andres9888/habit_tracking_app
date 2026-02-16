@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
-import Animated, {
+import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,

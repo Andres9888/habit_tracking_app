@@ -12,7 +12,7 @@ export const networkStyles = StyleSheet.create({
   },
   requestInfo: { flex: 1, flexDirection: 'row', gap: 6 },
   requestMethod: {
-    color: '#22c55e',
+    color: '#15793C',
     fontFamily: 'monospace',
     fontSize: 10,
     fontWeight: '600',

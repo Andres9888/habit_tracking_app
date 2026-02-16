@@ -30,6 +30,7 @@ export const fullHabitValidator = v.object({
   habitDecayParam: v.optional(v.number()),
   habitGainParam: v.optional(v.number()),
   icon: v.optional(v.string()),
+  color: v.optional(v.string()),
   iconColor: v.optional(v.string()),
   identity: v.optional(v.string()),
   lastCompletedDate: v.optional(v.string()),

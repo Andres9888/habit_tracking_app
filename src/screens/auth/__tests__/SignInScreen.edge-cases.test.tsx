@@ -28,12 +28,12 @@ jest.mock('react-native-reanimated', () => {
     useAnimatedStyle: (callback: () => object) => callback(),
     withTiming: (toValue: number) => toValue,
     withSpring: (toValue: number) => toValue,
-    withRepeat: (animation: any) => animation,
-    withSequence: (...args: any[]) => args[args.length - 1],
+    withRepeat: (animation: unknown) => animation,
+    withSequence: (...args: unknown[]) => args[args.length - 1],
     runOnJS: (fn: Function) => fn,
     default: {
       ...Reanimated.default,
-      View: React.forwardRef((props: any, ref: any) => (
+      View: React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => (
         <View ref={ref} {...props} />
       )),
     },
@@ -71,7 +71,7 @@ jest.mock('../components', () => {
     ForgotPasswordModal: () => null,
     SuccessOverlay: ({ visible }: { visible: boolean }) =>
       visible ? <View testID='success-overlay' /> : null,
-    FormInput: React.forwardRef((props: any, ref: any) => (
+    FormInput: React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => (
       <View>
         <TextInput
           ref={ref}
@@ -87,7 +87,7 @@ jest.mock('../components', () => {
         {props.error && <Text testID='email-error-message'>{props.error}</Text>}
       </View>
     )),
-    PasswordInput: React.forwardRef((props: any, ref: any) => (
+    PasswordInput: React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => (
       <View>
         <TextInput
           ref={ref}
@@ -104,7 +104,7 @@ jest.mock('../components', () => {
         )}
       </View>
     )),
-    SubmitButton: (props: any) => (
+    SubmitButton: (props: Record<string, unknown>) => (
       <TouchableOpacity
         testID='submit-button'
         onPress={props.onPress}
@@ -311,7 +311,7 @@ describe('SignInScreen Edge Cases', () => {
       );
 
       // Create a pending promise to simulate long-running request
-      let resolvePromise: (value: any) => void;
+      let resolvePromise: (value: unknown) => void;
       mockSignInCreate.mockImplementation(
         () =>
           new Promise((resolve) => {
@@ -353,7 +353,7 @@ describe('SignInScreen Edge Cases', () => {
         <SignInScreen />
       );
 
-      let resolvePromise: (value: any) => void;
+      let resolvePromise: (value: unknown) => void;
       mockSignInCreate.mockImplementationOnce(
         () =>
           new Promise((resolve) => {

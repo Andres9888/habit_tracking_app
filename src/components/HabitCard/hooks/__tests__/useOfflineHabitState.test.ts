@@ -29,7 +29,7 @@ jest.mock('../../../../lib/offline/hooks/useOfflineQueue', () => {
   );
   return {
     ...actual,
-    useOfflineQueue: (opts?: { manager?: any }) =>
+    useOfflineQueue: (opts?: { manager?: unknown }) =>
       actual.useOfflineQueue({
         manager:
           opts?.manager ??
