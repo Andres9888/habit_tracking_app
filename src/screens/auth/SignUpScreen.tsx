@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
-import { spacing, borderRadius, shadows } from '../../theme/spacing';
+import { useThemeColors } from '../../theme/ThemeContext';
 import {
   AuthDivider,
   AuthError,
@@ -31,6 +31,7 @@ function SignUpScreenContent({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
+  const { colors: themeColors } = useThemeColors();
   const passwordRef = useRef<TextInput>(null);
   const {
     emailAddress,
@@ -83,9 +84,9 @@ function SignUpScreenContent({
           <ScrollView
             contentContainerStyle={{
               flexGrow: 1,
-              paddingBottom: insets.bottom + spacing.lg,
-              paddingHorizontal: spacing.lg,
-              paddingTop: insets.top + spacing.lg,
+              paddingBottom: insets.bottom + 24,
+              paddingHorizontal: 24,
+              paddingTop: insets.top + 24,
             }}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
@@ -100,10 +101,14 @@ function SignUpScreenContent({
             <Animated.View
               entering={FadeInUp.delay(100).springify().damping(18)}
               style={{
-                backgroundColor: '#ffffff',
-                borderRadius: borderRadius.large,
-                padding: spacing.lg,
-                ...shadows.floatingActionButton,
+                backgroundColor: themeColors.card,
+                borderRadius: 16,
+                elevation: 4,
+                padding: 24,
+                shadowColor: '#1c1917',
+                shadowOffset: { height: 4, width: 0 },
+                shadowOpacity: 0.08,
+                shadowRadius: 16,
               }}
             >
               <View className='gap-3'>
