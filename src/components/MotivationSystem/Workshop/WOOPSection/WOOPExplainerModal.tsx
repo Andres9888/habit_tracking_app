@@ -54,6 +54,7 @@ export function WOOPExplainerModal({
             </View>
             <Pressable
               accessibilityLabel='Close'
+              accessibilityRole='button'
               className='h-10 w-10 items-center justify-center rounded-full'
               style={{ backgroundColor: colors.gray[200] }}
               onPress={onClose}

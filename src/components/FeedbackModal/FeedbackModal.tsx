@@ -154,6 +154,10 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
             return (
               <TouchableOpacity
                 key={item.type}
+                accessibilityLabel={item.label}
+                accessibilityRole="button"
+                accessibilityState={{ selected: isSelected }}
+                accessibilityHint={`Select ${item.label} feedback type`}
                 style={[
                   styles.typeCard,
                   isSelected && styles.typeCardSelected,

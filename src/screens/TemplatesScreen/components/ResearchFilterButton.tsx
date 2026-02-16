@@ -25,6 +25,8 @@ export function ResearchFilterButton({
     <Pressable
       accessibilityLabel='Toggle research-only filter'
       accessibilityRole='button'
+      accessibilityState={{ selected: researchOnly }}
+      accessibilityHint={researchOnly ? 'Showing only research-backed habits' : 'Show research-backed habits only'}
       style={[styles.controlButton, researchOnly && styles.controlButtonActive]}
       onPress={onToggle}
     >

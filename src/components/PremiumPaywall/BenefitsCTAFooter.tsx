@@ -61,7 +61,13 @@ export function BenefitsCTAFooter({
           then {handlers.priceLabel} after trial
         </Text>
       )}
-      <Pressable className='mt-2 py-2' onPress={onRestore}>
+      <Pressable 
+        accessibilityLabel='Restore purchases'
+        accessibilityRole='button'
+        accessibilityHint='Restore previous premium purchase'
+        className='mt-2 py-2' 
+        onPress={onRestore}
+      >
         <Text className='text-center text-xs text-violet-600'>
           Already premium? Restore purchases
         </Text>
