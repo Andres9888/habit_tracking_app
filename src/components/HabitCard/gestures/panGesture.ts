@@ -10,7 +10,7 @@ import {
   runOnJS,
   type SharedValue,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { HapticPatterns } from '../../../utils/haptics/patterns';
 import { springs } from '../../../theme/animations';
 import { SWIPE_THRESHOLD, ACTION_WIDTH } from '../HabitCard.constants';
 
@@ -31,11 +31,7 @@ export function createPanGesture(
         : (v: number) => withSpring(v, springs.snappy);
       if (event.translationX < SWIPE_THRESHOLD) {
         translateX.value = snap(ACTION_WIDTH * -2);
-        runOnJS(() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
-            () => {}
-          );
-        })();
+        runOnJS(HapticPatterns.tap)();
       } else {
         translateX.value = snap(0);
       }

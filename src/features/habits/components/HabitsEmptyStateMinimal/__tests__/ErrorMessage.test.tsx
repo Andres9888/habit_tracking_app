@@ -99,8 +99,8 @@ describe('ErrorMessage', () => {
   });
 
   describe('Animation Constants', () => {
-    it('should have correct entrance duration (300ms)', () => {
-      expect(ERROR_ANIMATION.entranceDuration).toBe(300);
+    it('should have correct entrance duration (280ms per design system)', () => {
+      expect(ERROR_ANIMATION.entranceDuration).toBe(280);
     });
 
     it('should have correct shake duration (500ms)', () => {

@@ -1,7 +1,8 @@
+/* eslint-disable max-lines */
 /** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
 import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -25,6 +26,7 @@ function HabitEditScreenContent({
   const { colors: themeColors } = useThemeColors();
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}
@@ -44,7 +46,7 @@ function HabitEditScreenContent({
                 <HabitEditSkeleton />
               </View>
             ) : (
-              <>
+              <Animated.View entering={FadeIn.duration(300)} style={{ flex: 1 }}>
             <EditHeader
               canSave={state.habitName.trim().length >= 2}
               isSaving={state.isSaving}
@@ -100,7 +102,7 @@ function HabitEditScreenContent({
                 </Animated.View>
               </Pressable>
             </ScrollView>
-            </>
+            </Animated.View>
             )}
           </View>
         </View>

@@ -79,6 +79,7 @@ export function useHabitSaveHandler({
         difficulty,
         habitId,
         icon: selectedEmoji ?? undefined,
+        color: selectedColor,
         iconColor: selectedColor,
         name: fullName,
         remindersEnabled: enableReminders,

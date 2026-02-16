@@ -148,15 +148,12 @@ export const getById = query({
 });
 
 /**
- * Mutation: Seed initial templates (for setup/migration)
+ * Internal Mutation: Seed initial templates (for setup/migration)
+ * SEC: Internal only - run via Convex dashboard, not accessible to users
  */
-export const seedTemplates = mutation({
+export const seedTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
-    // SEC: Authentication check
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
-
     const now = Date.now();
     let _insertedCount = 0;
     let _skippedCount = 0;
@@ -1775,13 +1772,13 @@ export const dedupeTemplates = internalMutation({
  * Mutation: Seed additional science-backed templates (Phase 3.1)
  * 45 new habits covering: Physical Resilience, Cognitive, Nutrition, Digital Wellness, Social
  */
-export const seedAdditionalTemplates = mutation({
+/**
+ * Internal Mutation: Seed additional templates
+ * SEC: Internal only - run via Convex dashboard, not accessible to users
+ */
+export const seedAdditionalTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
-    // SEC: Authentication check
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
-
     const now = Date.now();
     let _insertedCount = 0;
     let _skippedCount = 0;
@@ -2504,13 +2501,13 @@ export const seedAdditionalTemplates = mutation({
  * Mutation: Seed new science-backed templates (Phase 3.2)
  * Unique habits covering: Dental Health, Bone Health, Hearing Health, Immune Support, Preventive Care, Goal Setting
  */
-export const seedNewScienceTemplates = mutation({
+/**
+ * Internal Mutation: Seed new science-backed templates
+ * SEC: Internal only - run via Convex dashboard, not accessible to users
+ */
+export const seedNewScienceTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
-    // SEC: Authentication check
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
-
     const now = Date.now();
     let _insertedCount = 0;
     let _skippedCount = 0;

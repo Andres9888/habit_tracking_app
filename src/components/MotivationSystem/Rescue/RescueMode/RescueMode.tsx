@@ -72,6 +72,7 @@ export function RescueMode({
 
   return (
     <Modal
+      accessibilityViewIsModal
       respectReduceMotion={!reduceMotion}
       variant='fullScreen'
       visible={visible}

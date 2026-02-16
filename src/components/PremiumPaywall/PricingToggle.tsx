@@ -25,7 +25,10 @@ export function PricingToggle({
   };
 
   return (
-    <View accessibilityRole='radiogroup' className='flex-row items-center justify-center gap-3'>
+    <View
+      accessibilityRole='radiogroup'
+      className='flex-row items-center justify-center gap-3'
+    >
       <Pressable
         accessibilityLabel={`Monthly, ${monthlyPackage?.product?.priceString ?? 'loading'} per month`}
         accessibilityRole='radio'

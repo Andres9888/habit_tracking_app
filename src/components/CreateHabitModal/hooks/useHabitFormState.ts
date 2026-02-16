@@ -32,7 +32,7 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     parsed.emoji
   );
   const [selectedColor, setSelectedColor] = useState(
-    habitToEdit?.iconColor ?? DEFAULT_COLOR
+    habitToEdit?.color ?? habitToEdit?.iconColor ?? DEFAULT_COLOR
   );
   const [isColorPickerVisible, setColorPickerVisible] = useState(false);
   const [remindersEnabled, setRemindersEnabled] = useState(

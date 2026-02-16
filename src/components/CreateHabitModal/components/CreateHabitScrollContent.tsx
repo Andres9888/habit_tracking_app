@@ -28,7 +28,7 @@ export function CreateHabitScrollContent({
       keyboardShouldPersistTaps='handled'
       showsVerticalScrollIndicator={false}
     >
-      <Pressable onPress={Keyboard.dismiss}>
+      <Pressable accessible={false} onPress={Keyboard.dismiss}>
         <CreateHabitFormCentered
           autoFocus
           colors={HABIT_COLORS}

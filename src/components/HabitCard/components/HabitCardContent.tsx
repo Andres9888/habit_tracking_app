@@ -9,17 +9,13 @@
 
 import React, { memo } from 'react';
 import { View, Text } from 'react-native';
-import Animated, {
-  type AnimatedStyle,
-  type SharedValue,
-} from 'react-native-reanimated';
-import type { AppTheme } from '../../../theme';
+import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { StrengthProgressBar } from '../../StrengthProgressBar/StrengthProgressBar';
 import { PendingSyncBadge } from '../../SyncStatus';
 import { styles } from '../HabitCard.styles';
 import { streakStyles } from '../HabitCard.streakStyles';
-import { StatusIndicator, type CompletionIconType } from './StatusIndicator';
+import { StatusIndicator } from './StatusIndicator';
 import { StreakBadge } from './StreakBadge';
 
 const DIFFICULTY_CONFIG = {
@@ -106,7 +102,6 @@ function HabitCardContentComponent({
           />
         </View>
       </View>
-
       <StreakBadge bestStreak={bestStreak} currentStreak={currentStreak} />
       {difficulty && (
         <View
@@ -138,7 +133,6 @@ function HabitCardContentComponent({
         pointerEvents='none'
         style={[streakStyles.rippleOverlay, rippleAnimatedStyle]}
       />
-
       <View style={styles.bottomRow}>
         <StrengthProgressBar
           showEmoji

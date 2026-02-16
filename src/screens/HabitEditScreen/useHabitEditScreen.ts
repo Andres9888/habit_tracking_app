@@ -28,13 +28,13 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
 
   useEffect(() => {
     if (habit) {
-      const parts = habit.name.split(' ');
-      const emoji = parts[0];
+      const parts = (habit.name ?? '').split(' ');
+      const emoji = parts[0] ?? '💪';
       const name = parts.slice(1).join(' ');
 
-      setHabitName(name || habit.name);
+      setHabitName(name || habit.name || '');
       setSelectedEmoji(emoji || '💪');
-      setSelectedColor(habit.iconColor || '#DBEAFE');
+      setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
       setDifficulty(habit.difficulty || 'medium');

@@ -156,7 +156,10 @@ const applicationTables = {
     // Habit Edit Screen fields
     icon: v.optional(v.string()),
 
-    // Emoji icon
+    // Accent color used for habit card border/icon background
+    color: v.optional(v.string()),
+
+    // Emoji icon background color (legacy, retained for compatibility)
     iconColor: v.optional(v.string()),
 
     // Identity - who you are becoming (James Clear's identity-based habits)
@@ -422,7 +425,10 @@ const applicationTables = {
 
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),
-  }).index('by_category', ['category']),
+  })
+    .index('by_category', ['category'])
+    .index('by_createdAt', ['createdAt']),
+  // PERF: Added by_createdAt index to avoid full table scans when listing all templates
 
   // Track template usage analytics
   templateUsage: defineTable({
