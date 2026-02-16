@@ -8,7 +8,10 @@ import {
 } from 'lucide-react-native';
 import { Dimensions } from 'react-native';
 
+
 import type { SortOptionConfig } from './types';
+
+
 
 export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -19,12 +22,8 @@ export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 export const SHEET_SPRING_CONFIG = {
   damping: 18,
   mass: 1,
-  stiffness: 120,
+  stiffness: 150,
 };
-
-/** Gesture threshold for dismissal */
-export const DISMISS_THRESHOLD = 100;
-export const VELOCITY_THRESHOLD = 800;
 
 export const SORT_OPTIONS: SortOptionConfig[] = [
   {
@@ -92,3 +91,5 @@ export const SORT_OPTIONS: SortOptionConfig[] = [
 
 /** Quick pick chips - a subset of options for fast access */
 export const QUICK_PICK_OPTIONS = SORT_OPTIONS.filter((opt) => opt.chipLabel);
+
+export {DISMISS_THRESHOLD, VELOCITY_THRESHOLD} from '@/constants';

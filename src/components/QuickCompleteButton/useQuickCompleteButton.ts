@@ -4,7 +4,7 @@ import { getTodayString } from '../../utils/getLocalDateString';
  * Manages state and animations for the QuickCompleteButton
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   useSharedValue,
   withSequence,
@@ -38,6 +38,17 @@ export function useQuickCompleteButton({
   const checkScale = useSharedValue(completedToday ? 1 : 0);
   const checkRotation = useSharedValue(completedToday ? 0 : -90);
 
+  const confettiTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const toggleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (confettiTimeoutRef.current) clearTimeout(confettiTimeoutRef.current);
+      if (toggleTimeoutRef.current) clearTimeout(toggleTimeoutRef.current);
+    };
+  }, []);
+
   const { buttonAnimatedStyle, checkAnimatedStyle } =
     useQuickCompleteAnimations({
       buttonScale,
@@ -61,7 +72,7 @@ export function useQuickCompleteButton({
     Haptics.impactAsync(
       localCompleted
         ? Haptics.ImpactFeedbackStyle.Light
-        : Haptics.ImpactFeedbackStyle.Heavy
+        : Haptics.ImpactFeedbackStyle.Medium
     );
     buttonScale.value = withSequence(
       withTiming(0.96, { duration: 80 }),
@@ -86,7 +97,8 @@ export function useQuickCompleteButton({
       });
       if (!reduceMotion) {
         setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 700);
+        if (confettiTimeoutRef.current) clearTimeout(confettiTimeoutRef.current);
+        confettiTimeoutRef.current = setTimeout(() => setShowConfetti(false), 700);
       }
       onComplete?.();
     }
@@ -99,7 +111,8 @@ export function useQuickCompleteButton({
       checkRotation.value = wasCompleted ? 0 : -90;
       if (__DEV__) console.error('Failed to toggle completion:', error);
     } finally {
-      setTimeout(() => setIsToggling(false), 300);
+      if (toggleTimeoutRef.current) clearTimeout(toggleTimeoutRef.current);
+      toggleTimeoutRef.current = setTimeout(() => setIsToggling(false), 300);
     }
   };
 

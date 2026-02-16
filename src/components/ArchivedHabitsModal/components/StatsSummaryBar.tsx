@@ -1,10 +1,12 @@
 import { Text, View } from 'react-native';
+import { AnimatedPressable } from '../../ui';
 
 interface StatsSummaryBarProps {
   habitCount: number;
+  onDeleteAll?: () => void;
 }
 
-export function StatsSummaryBar({ habitCount }: StatsSummaryBarProps) {
+export function StatsSummaryBar({ habitCount, onDeleteAll }: StatsSummaryBarProps) {
   if (habitCount === 0) return null;
 
   return (
@@ -15,6 +17,16 @@ export function StatsSummaryBar({ habitCount }: StatsSummaryBarProps) {
           {habitCount} archived habit{habitCount === 1 ? '' : 's'}
         </Text>
       </View>
+      {habitCount > 1 && onDeleteAll && (
+        <AnimatedPressable
+          accessibilityLabel='Delete all archived habits'
+          accessibilityRole='button'
+          className='rounded-lg bg-red-50 px-3 py-1.5'
+          onPress={onDeleteAll}
+        >
+          <Text className='text-xs font-semibold text-red-500'>Delete All</Text>
+        </AnimatedPressable>
+      )}
     </View>
   );
 }

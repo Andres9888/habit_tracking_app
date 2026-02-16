@@ -21,7 +21,7 @@ describe('useTrialCountdown', () => {
       isTrialActive: false,
       expirationDate: null,
       isLoading: false,
-    } as any);
+    } as unknown);
 
     const { result } = renderHook(() => useTrialCountdown());
 
@@ -38,7 +38,7 @@ describe('useTrialCountdown', () => {
       isTrialActive: true,
       expirationDate: futureDate,
       isLoading: false,
-    } as any);
+    } as unknown);
 
     const { result } = renderHook(() => useTrialCountdown());
 

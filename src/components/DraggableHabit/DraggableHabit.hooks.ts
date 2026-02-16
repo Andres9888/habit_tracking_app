@@ -14,12 +14,7 @@ export const getEmojiAndName = (
   return { emoji: '', name: fullName };
 };
 
-interface Habit {
-  icon?: string;
-  iconColor?: string;
-  name: string;
-  [key: string]: any;
-}
+import type { Habit } from './types';
 
 // Premium accent colors - deeper, more sophisticated tones
 const ACCENT_COLORS = [
@@ -50,8 +45,8 @@ export const useDraggableHabitLogic = (habit: Habit) => {
   const { emoji: extractedEmoji, name } = getEmojiAndName(habit.name);
   const emoji = habit.icon || extractedEmoji;
 
-  // Use iconColor if available, otherwise pick based on name
-  const accentColor = habit.iconColor || pickAccentColor(name || habit.name);
+  // Use explicit habit color when available, then legacy iconColor, then deterministic fallback
+  const accentColor = habit.color || habit.iconColor || pickAccentColor(name || habit.name);
 
   return {
     accentColor,
