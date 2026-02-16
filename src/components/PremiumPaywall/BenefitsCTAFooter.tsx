@@ -57,6 +57,7 @@ export function BenefitsCTAFooter({
         accessibilityLabel={config.ctaText}
         accessibilityRole='button'
         disabled={!handlers.priceLabel || handlers.isProcessing}
+
         onPress={onStartTrial}
         onPressIn={handlers.handleButtonPressIn}
         onPressOut={handlers.handleButtonPressOut}

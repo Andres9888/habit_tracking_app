@@ -119,7 +119,7 @@ export const QuickActionsSheet = ({
           className='absolute bottom-0 left-0 right-0 rounded-t-3xl shadow-xl'
           entering={SlideInDown.springify().damping(18).stiffness(150)}
           exiting={SlideOutDown.springify().damping(20).stiffness(200)}
-          style={[{ backgroundColor: colors.surface, paddingBottom: insets.bottom + 16 }, sheetAnimatedStyle]}
+          style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle]}
         >
           <SheetHeader
             habitIcon={habit.icon}

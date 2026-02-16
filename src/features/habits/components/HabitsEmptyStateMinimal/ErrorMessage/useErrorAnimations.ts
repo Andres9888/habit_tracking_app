@@ -74,9 +74,11 @@ export function useErrorAnimations({
     }
     shakeSequence.push(withTiming(0, { duration: segmentDuration }));
 
-    setTimeout(() => {
+    const shakeTimer = setTimeout(() => {
       translateX.value = withSequence(...shakeSequence);
     }, entranceDuration);
+
+    return () => clearTimeout(shakeTimer);
   }, [opacity, shouldReduceMotion, translateX, translateY]);
 
   useEffect(() => {

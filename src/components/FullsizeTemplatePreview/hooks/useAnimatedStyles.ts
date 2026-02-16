@@ -120,7 +120,6 @@ export const useAnimatedStyles = (props: UseAnimatedStylesProps) => {
     backdropStyle,
     checkmarkAnimatedStyle,
     closeButtonAnimatedOpacityStyle,
-    closeButtonStyle,
     contentStyle,
     customizeButtonStyle,
     iconAnimatedStyle,

@@ -9,14 +9,14 @@ export const STRINGS = {
   CREATE_HABIT: {
     close: 'Close',
     colorLabel: 'Color',
-    createAction: 'Create habit',
+    createAction: 'Create Habit',
     customColor: 'Custom color',
     iconLabel: 'Icon',
     motivationHighlight: 'Start your streak today',
-    motivationSuffix: ' — consistency is key \u{1F525}',
-    nameHelper: 'Tip: Be specific — time, trigger, place.',
+    motivationSuffix: ' — consistency is key 🔥',
+    nameHelper: 'Tip: Be specific — include a time, trigger, or place.',
     nameLabel: 'Habit name',
-    namePlaceholder: 'e.g., Read 10 minutes',
+    namePlaceholder: 'e.g., Read 10 minutes daily',
     // V9 additions
 orCreateYourOwn: 'or create your own',
     
@@ -37,11 +37,11 @@ reminderAnnouncementWithTime: (label: string, time: string) =>
 
     templateCTA: 'Browse curated habits',
 
-    templateHeroSubtitle: 'Browse curated routines and auto‑fill details.',
+    templateHeroSubtitle: 'Browse curated routines and auto-fill the details.',
 
     title: 'Create Habit',
     templateHeroTitle: 'Start from Template',
-    templatePrompt: 'Prefer a ready-made routine?',
+    templatePrompt: 'Want a ready-made routine?',
   },
 } as const;
 

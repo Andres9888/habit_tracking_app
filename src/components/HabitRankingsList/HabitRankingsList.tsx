@@ -34,7 +34,7 @@ export default function HabitRankingsList({
           item={item}
           rank={rank}
           rankBadge={getRankBadge(rank)}
-          onPress={() => handleHabitPress(item.id)}
+          onPress={handleHabitPress}
         />
       );
     },
@@ -47,7 +47,7 @@ export default function HabitRankingsList({
   const ITEM_HEIGHT = 72;
 
   const getItemLayout = useCallback(
-    (_: any, index: number) => ({
+    (_: unknown, index: number) => ({
       length: ITEM_HEIGHT,
       offset: ITEM_HEIGHT * index,
       index,
@@ -67,11 +67,14 @@ export default function HabitRankingsList({
   return (
     <FlatList
       nestedScrollEnabled
+      removeClippedSubviews
       contentContainerStyle={styles.listContainer}
       data={habits}
       getItemLayout={getItemLayout}
+      initialNumToRender={10}
       ItemSeparatorComponent={ItemSeparator}
       keyExtractor={keyExtractor}
+      maxToRenderPerBatch={10}
       renderItem={renderItem}
       scrollEnabled={false}
       showsVerticalScrollIndicator={false}

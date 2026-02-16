@@ -42,6 +42,7 @@ export function PricingToggle({
           borderWidth: isAnnual ? 1 : 2,
           borderColor: isAnnual ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.4)',
         }}
+
         onPress={() => handleToggle(false)}
       >
         <Text className='text-xs text-white/60'>Monthly</Text>
@@ -56,6 +57,7 @@ export function PricingToggle({
           borderWidth: isAnnual ? 2 : 1,
           borderColor: isAnnual ? '#34D399' : 'rgba(255,255,255,0.1)',
         }}
+
         onPress={() => handleToggle(true)}
       >
         {savingsPercent && savingsPercent > 0 && (

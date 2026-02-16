@@ -80,7 +80,7 @@ export function DayHabitsBottomSheet({
         <GestureDetector gesture={panGesture}>
           <Animated.View
             className='rounded-t-3xl'
-            style={[getSheetContainerStyle(insets.bottom), sheetStyle, { backgroundColor: colors.surface }]}
+            style={[getSheetContainerStyle(insets.bottom), { backgroundColor: colors.surface }, sheetStyle]}
           >
             <DragHandle />
 

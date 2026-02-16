@@ -27,9 +27,7 @@ export const getWeeklyInsights = query({
     // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      return {
-        generatedAt: new Date().toISOString(),
-      };
+      return null;
     }
 
     // SEC-001: Query only current user's habits to prevent cross-user data leakage

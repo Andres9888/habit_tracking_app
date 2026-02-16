@@ -57,6 +57,7 @@ export function SocialProofSection({ dark = false }: { dark?: boolean }) {
       </View>
       <Text className='text-center text-xs' style={{ color: subtleColor }}>
         Trusted by 10,000+ users building lasting habits
+
       </Text>
     </View>
   );

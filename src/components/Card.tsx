@@ -2,13 +2,13 @@ import React from 'react';
 import { View, ViewProps } from 'react-native';
 import clsx from 'clsx';
 
-export type CardProps = ViewProps;
+export type CardProps = ViewProps & { className?: string };
 
 export function Card({
   style,
   className,
   ...props
-}: CardProps & { className?: string }) {
+}: CardProps) {
   return (
     <View
       className={clsx(
