@@ -126,6 +126,34 @@ export const darkColors = {
     /** Tertiary text — low emphasis, WCAG AA 4.87:1 on dark card */
     tertiary: '#8E95A2',
   },
+
+  /**
+   * Accent Colors
+   *
+   * Semantic accents for specific UI features (templates, records, archive, strength).
+   */
+  accent: {
+    /** Violet — templates/premium features */
+    violet: '#a78bfa',
+    /** Violet light — tinted backgrounds */
+    violetMuted: 'rgba(139, 92, 246, 0.15)',
+    /** Amber — archive swipe action */
+    amber: '#D97706',
+    /** Amber light — record badge border */
+    amberBorder: '#D97706',
+    /** Amber text — record badge text */
+    amberText: '#FCD34D',
+    /** Amber icon — record badge icon */
+    amberIcon: '#FBBF24',
+    /** Amber gradient start — record badge bg */
+    amberGradientStart: '#451A03',
+    /** Amber gradient end — record badge bg */
+    amberGradientEnd: '#78350F',
+    /** Lime — strength progress bar */
+    lime: '#A3E635',
+    /** High-contrast border for accessibility */
+    highContrastBorder: '#facc15',
+  },
 } as const;
 
 /**
@@ -202,6 +230,34 @@ export const lightColors = {
     /** Tertiary text — low emphasis (gray-400), WCAG AA compliant */
     tertiary: '#6E6660',
   },
+
+  /**
+   * Accent Colors
+   *
+   * Semantic accents for specific UI features (templates, records, archive, strength).
+   */
+  accent: {
+    /** Violet — templates/premium features */
+    violet: '#7c3aed',
+    /** Violet muted — tinted backgrounds */
+    violetMuted: 'rgba(139, 92, 246, 0.08)',
+    /** Amber — archive swipe action */
+    amber: '#f59e0b',
+    /** Amber light — record badge border */
+    amberBorder: '#fcd34d',
+    /** Amber text — record badge text */
+    amberText: '#b45309',
+    /** Amber icon — record badge icon */
+    amberIcon: '#d97706',
+    /** Amber gradient start — record badge bg */
+    amberGradientStart: '#fef3c7',
+    /** Amber gradient end — record badge bg */
+    amberGradientEnd: '#fffbeb',
+    /** Lime — strength progress bar */
+    lime: '#4D7A0A',
+    /** High-contrast border for accessibility */
+    highContrastBorder: '#facc15',
+  },
 } as const;
 
 /**
@@ -239,6 +295,20 @@ export interface SemanticColors {
 
   /** Border color for dividers and separators */
   border: string;
+
+  /** Accent colors for specific UI features */
+  accent: {
+    violet: string;
+    violetMuted: string;
+    amber: string;
+    amberBorder: string;
+    amberText: string;
+    amberIcon: string;
+    amberGradientStart: string;
+    amberGradientEnd: string;
+    lime: string;
+    highContrastBorder: string;
+  };
 
   /** Primary brand color scale */
   primary: {

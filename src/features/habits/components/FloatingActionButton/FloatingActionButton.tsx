@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react-native';
 import { Animated, Pressable } from 'react-native';
 import { useFocusRing } from '../../../../utils/accessibility';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useFABAnimations } from './useFABAnimations';
 import { useFABHandlers } from './useFABHandlers';
 import type { FloatingActionButtonProps } from './types';
@@ -16,6 +17,7 @@ export function FloatingActionButton({
     celebrationsEnabled,
     reduceMotionPreference
   );
+  const { colors: themeColors } = useThemeColors();
   const { focusStyle, focusHandlers } = useFocusRing();
 
   const { handlePress } = useFABHandlers({
@@ -59,7 +61,7 @@ export function FloatingActionButton({
           transform: [{ scale: rippleScale }],
         }}
       />
-      <Plus color='#ffffff' size={24} strokeWidth={2.5} />
+      <Plus color={themeColors.text.inverse} size={24} strokeWidth={2.5} />
     </AnimatedPressable>
   );
 }

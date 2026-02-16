@@ -75,7 +75,7 @@ export function SortOptionRow({
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       >
-        <Icon color='#ffffff' size={20} strokeWidth={2.25} />
+        <Icon color={themeColors.text.inverse} size={20} strokeWidth={2.25} />
       </LinearGradient>
 
       <View className='flex-1'>
@@ -98,7 +98,7 @@ export function SortOptionRow({
           className='h-6 w-6 items-center justify-center rounded-full'
           style={{ backgroundColor: themeColors.primary[500] }}
         >
-          <Check color='#ffffff' size={14} strokeWidth={2.5} />
+          <Check color={themeColors.text.inverse} size={14} strokeWidth={2.5} />
         </View>
       )}
     </Pressable>

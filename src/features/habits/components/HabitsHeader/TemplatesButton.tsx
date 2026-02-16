@@ -9,6 +9,7 @@ interface TemplatesButtonProps {
   animatedStyle: AnimatedStyle<ViewStyle>;
   showBadge: boolean;
   isDark: boolean;
+  violetColor: string;
   onPress: () => void;
   onPressIn: () => void;
   onPressOut: () => void;
@@ -18,6 +19,7 @@ export function TemplatesButton({
   animatedStyle,
   showBadge,
   isDark,
+  violetColor,
   onPress,
   onPressIn,
   onPressOut,
@@ -40,7 +42,7 @@ export function TemplatesButton({
           onPressOut={onPressOut}
         >
           <BookOpen
-            color={isDark ? '#a78bfa' : '#7c3aed'}
+            color={violetColor}
             size={18}
             strokeWidth={2.25}
           />

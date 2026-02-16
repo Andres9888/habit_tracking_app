@@ -34,7 +34,7 @@ export function SettingsRow({
   showBorder = true,
   highContrastMode = false,
 }: SettingsRowProps) {
-  const { isDark } = useThemeColors();
+  const { isDark, colors: themeColors } = useThemeColors();
   const colors = getSettingsRowColors(highContrastMode, isDark);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
@@ -60,7 +60,7 @@ export function SettingsRow({
         className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
         style={{
           backgroundColor: iconBackgroundColor,
-          borderColor: highContrastMode ? '#facc15' : 'transparent',
+          borderColor: highContrastMode ? themeColors.accent.highContrastBorder : 'transparent',
           borderWidth: highContrastMode ? 2 : 0,
         }}
       >
@@ -101,11 +101,11 @@ export function SettingsRow({
           {badge != null && badge > 0 && (
             <View
               className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
-              style={{ backgroundColor: isDark ? '#374151' : '#e7e5e4' }}
+              style={{ backgroundColor: themeColors.gray[200] }}
             >
               <Text
                 className='text-[12px] font-bold'
-                style={{ color: isDark ? '#9CA3AF' : '#57534e' }}
+                style={{ color: themeColors.text.secondary }}
               >
                 {badge}
               </Text>

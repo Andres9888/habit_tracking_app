@@ -16,6 +16,7 @@ import Animated from 'react-native-reanimated';
 import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
 import { SHADOW_OPACITY, OPACITY } from '../../../../../constants';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -26,6 +27,7 @@ export function MonetizationHero({
   onUpgradePress,
   reduceMotion = false,
 }: MonetizationHeroProps) {
+  const { colors: themeColors } = useThemeColors();
   const { progressStyle, ctaPulseStyle, shimmerStyle, trackWidth, handleTrackLayout } =
     useMonetizationAnimations({
       freeHabitLimit,
@@ -38,7 +40,7 @@ export function MonetizationHero({
     <View
       className='overflow-hidden rounded-3xl p-6'
       style={{
-        backgroundColor: '#1c1917',
+        backgroundColor: themeColors.gray[900],
         elevation: 4,
         shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
