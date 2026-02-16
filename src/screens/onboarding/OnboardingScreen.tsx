@@ -10,7 +10,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { colors } from '../../theme/colors';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -30,6 +30,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { safeSetBoolean } from '@/utils/storage';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { useOnboardingExperiment } from './useOnboardingExperiment';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
@@ -187,7 +188,8 @@ interface PageData {
   Visual: (props: { reduceMotion: boolean }) => React.JSX.Element;
 }
 
-const PAGES: PageData[] = [
+/** Full 3-screen onboarding (Variant A — control) */
+const PAGES_FULL: PageData[] = [
   {
     id: 'chain',
     subtitle:
@@ -211,18 +213,24 @@ const PAGES: PageData[] = [
   },
 ];
 
+/** Shortened 2-screen onboarding (Variant B) — skips strength meter */
+const PAGES_SHORT: PageData[] = [PAGES_FULL[0], PAGES_FULL[2]];
+
+// Default for components that need a static reference
+const PAGES = PAGES_FULL;
+
 // ─── Dot Indicators ──────────────────────────────────────────────────
 
-function DotIndicators({ currentIndex }: { currentIndex: number }) {
+function DotIndicators({ currentIndex, total }: { currentIndex: number; total: number }) {
   const { colors } = useThemeColors();
   return (
     <View
       accessible
-      accessibilityLabel={`Page ${currentIndex + 1} of ${PAGES.length}`}
+      accessibilityLabel={`Page ${currentIndex + 1} of ${total}`}
       accessibilityRole='tablist'
       style={styles.dotsContainer}
     >
-      {PAGES.map((_, i) => (
+      {Array.from({ length: total }, (_, i) => (
         <Animated.View
           key={i}
           accessibilityLabel={`Page ${i + 1}${i === currentIndex ? ', current' : ''}`}
@@ -255,6 +263,12 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
   const shouldReduceMotion = useReducedMotion();
+  const { ready: experimentReady, variant, trackCompleted } = useOnboardingExperiment();
+
+  const pages = useMemo(
+    () => (variant === 'B' ? PAGES_SHORT : PAGES_FULL),
+    [variant]
+  );
 
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
@@ -263,6 +277,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
     try {
       // Mark onboarding as complete in AsyncStorage
       await safeSetBoolean(ONBOARDING_KEY, true);
+      trackCompleted();
       onComplete();
     } catch (error) {
       // If storage fails, still proceed to avoid blocking user
@@ -286,13 +301,13 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
 
   const handleNext = useCallback(() => {
     void Haptics.impactAsync(ImpactFeedbackStyle.Light);
-    if (currentIndex < PAGES.length - 1) {
+    if (currentIndex < pages.length - 1) {
       flatListRef.current?.scrollToIndex({
         animated: true,
         index: currentIndex + 1,
       });
     }
-  }, [currentIndex]);
+  }, [currentIndex, pages.length]);
 
   const onViewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -306,7 +321,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
     viewAreaCoveragePercentThreshold: 50,
   }).current;
 
-  const isLastPage = currentIndex === PAGES.length - 1;
+  const isLastPage = currentIndex === pages.length - 1;
 
   const renderPage = useCallback(
     ({ item }: { item: PageData }) => (
@@ -363,7 +378,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
         horizontal
         pagingEnabled
         bounces={false}
-        data={PAGES}
+        data={pages}
         getItemLayout={(_, index) => ({
           index,
           length: SCREEN_WIDTH,
@@ -378,7 +393,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
 
       {/* Bottom section */}
       <View style={styles.bottomContainer}>
-        <DotIndicators currentIndex={currentIndex} />
+        <DotIndicators currentIndex={currentIndex} total={pages.length} />
 
         {isLastPage ? (
           <Animated.View
