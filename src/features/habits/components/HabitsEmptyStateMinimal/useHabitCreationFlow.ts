@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { Keyboard, TextInput } from 'react-native';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useChipSelection } from './useChipSelection';
+import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 
 interface UseHabitCreationFlowParams {
   onQuickCreateHabit: (habitName: string) => Promise<void>;
@@ -41,7 +42,7 @@ export function useHabitCreationFlow({
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : 'Failed to create habit. Please try again.'
+          : ERROR_MESSAGES.DATA_OPS.CREATE_HABIT_FAILED
       );
     }
   }, [chipSelection, isCreating, onQuickCreateHabit, triggerSuccess]);

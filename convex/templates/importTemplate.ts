@@ -3,6 +3,13 @@
  */
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
+import {
+  validateHabitName,
+  validateColor,
+  validateTimeFormat,
+  requireValid,
+  MAX_HABIT_NAME_LENGTH,
+} from '../lib/inputValidation';
 
 /**
  * Mutation: Import a template to create a new habit
@@ -31,6 +38,33 @@ export const importTemplate = mutation({
       throw new Error('Template not found');
     }
 
+    // SEC-003: Input validation - name customization
+    let validatedName = template.name;
+    if (args.customizations?.name !== undefined) {
+      const nameResult = validateHabitName(args.customizations.name);
+      validatedName = requireValid(nameResult, args.customizations.name);
+      if (!validatedName) {
+        throw new Error('Custom habit name cannot be empty');
+      }
+      if (validatedName.length > MAX_HABIT_NAME_LENGTH) {
+        throw new Error(`Custom habit name cannot exceed ${MAX_HABIT_NAME_LENGTH} characters`);
+      }
+    }
+
+    // SEC-003: Input validation - iconColor customization
+    let validatedIconColor = template.iconColor;
+    if (args.customizations?.iconColor !== undefined) {
+      const iconColorResult = validateColor(args.customizations.iconColor, 'Icon color');
+      validatedIconColor = requireValid(iconColorResult, args.customizations.iconColor) ?? template.iconColor;
+    }
+
+    // SEC-003: Input validation - reminderTime customization
+    let validatedReminderTime = args.customizations?.reminderTime;
+    if (validatedReminderTime !== undefined) {
+      const reminderTimeResult = validateTimeFormat(validatedReminderTime, 'Reminder time');
+      validatedReminderTime = requireValid(reminderTimeResult, validatedReminderTime);
+    }
+
     // Get max order to place new habit at the end (filtered by current user)
     const userHabits = await ctx.db
       .query('habits')
@@ -52,13 +86,13 @@ export const importTemplate = mutation({
       currentStreak: 0,
       frequency: template.frequency,
       icon: template.icon,
-      iconColor: args.customizations?.iconColor || template.iconColor,
-      name: args.customizations?.name || template.name,
+      iconColor: validatedIconColor,
+      name: validatedName,
       notes:
         template.description + '\n\nSource: ' + template.scientificReference,
       order: maxOrder + 1,
-      remindersEnabled: !!args.customizations?.reminderTime,
-      reminderTime: args.customizations?.reminderTime,
+      remindersEnabled: !!validatedReminderTime,
+      reminderTime: validatedReminderTime,
       strength: 0,
       strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),

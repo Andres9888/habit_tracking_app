@@ -29,12 +29,23 @@ export function useCompletionToastAnimations(
   const scale = useSharedValue(0.9);
   const onDismissRef = useRef(onDismiss);
   onDismissRef.current = onDismiss;
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup dismiss timer on unmount
+  useEffect(() => {
+    return () => {
+      if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+    };
+  }, []);
 
   const handleDismiss = useCallback(() => {
     translateY.value = withSpring(100, { damping: 18, stiffness: 150 });
     opacity.value = withTiming(0, { duration: 280 });
     scale.value = withTiming(0.9, { duration: 280 });
-    if (onDismissRef.current) setTimeout(() => onDismissRef.current?.(), 300);
+    if (onDismissRef.current) {
+      if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+      dismissTimerRef.current = setTimeout(() => onDismissRef.current?.(), 300);
+    }
   }, [translateY, opacity, scale]);
 
   useEffect(() => {
