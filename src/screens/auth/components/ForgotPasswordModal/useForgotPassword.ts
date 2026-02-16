@@ -1,5 +1,5 @@
 import { useSignIn } from '@clerk/clerk-expo';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 
 interface UseForgotPasswordReturn {
@@ -27,6 +27,14 @@ export function useForgotPassword(): UseForgotPasswordReturn {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
   const clearError = useCallback(() => setError(null), []);
 
   const handleResetPassword = useCallback(async () => {
@@ -53,10 +61,13 @@ export function useForgotPassword(): UseForgotPasswordReturn {
         strategy: 'reset_password_email_code',
       });
 
+      if (!isMountedRef.current) return;
       setSuccess(true);
       setError(null);
     } catch (error_: unknown) {
       if (__DEV__) console.error('Password reset error:', error_);
+
+      if (!isMountedRef.current) return;
 
       // Handle common errors
       const clerkError = error_ as { errors?: Array<{ code?: string; message?: string }> };
@@ -74,7 +85,9 @@ export function useForgotPassword(): UseForgotPasswordReturn {
       }
       setSuccess(false);
     } finally {
-      setIsLoading(false);
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
     }
   }, [email, signIn]);
 
