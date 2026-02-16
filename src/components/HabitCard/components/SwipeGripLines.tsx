@@ -6,11 +6,12 @@
  * FIXED: Use theme-aware color so grip lines are visible in dark mode.
  */
 
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 const GRIP_LINE_COUNT = 3;
+const GRIP_LINE_KEYS = Array.from({ length: GRIP_LINE_COUNT }, (_, i) => i);
 
 export const SwipeGripLines = memo(function SwipeGripLines() {
   const { colors: themeColors } = useThemeColors();
@@ -19,14 +20,19 @@ export const SwipeGripLines = memo(function SwipeGripLines() {
     ? themeColors.text.tertiary + '30'
     : 'rgba(0, 0, 0, 0.18)';
 
+  const gripLineStyle = useMemo(
+    () => [gripStyles.line, { backgroundColor: gripColor }],
+    [gripColor]
+  );
+
   return (
     <View
       accessibilityElementsHidden
       importantForAccessibility='no-hide-descendants'
       style={gripStyles.container}
     >
-      {Array.from({ length: GRIP_LINE_COUNT }).map((_, i) => (
-        <View key={i} style={[gripStyles.line, { backgroundColor: gripColor }]} />
+      {GRIP_LINE_KEYS.map((i) => (
+        <View key={i} style={gripLineStyle} />
       ))}
     </View>
   );

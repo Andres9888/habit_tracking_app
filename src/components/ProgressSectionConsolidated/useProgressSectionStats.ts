@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { getLocalDateString } from '@/utils/getLocalDateString';
 /**
  * useProgressSectionStats Hook
