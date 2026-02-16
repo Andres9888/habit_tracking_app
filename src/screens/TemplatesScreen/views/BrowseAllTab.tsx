@@ -8,7 +8,7 @@ import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import TemplateCard from '../../../components/TemplateCard';
 import type { SortOption } from '../../templates/constants';
 import { styles } from '../../templates/templatesScreenStyles';
-import { FilterControls } from '../components';
+import { FilterControls, TemplatesListEmpty } from '../components';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
 
 interface BrowseAllTabProps {
@@ -50,6 +50,15 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
         data={p.filteredTemplates}
         initialNumToRender={5}
         keyExtractor={(item) => item._id}
+        ListEmptyComponent={
+          <TemplatesListEmpty
+            hasActiveFilters={p.researchOnly || p.sortOption !== 'popular'}
+            onResetFilters={() => {
+              p.setResearchOnly(false);
+              p.handleSelectSortOption('popular');
+            }}
+          />
+        }
         maxToRenderPerBatch={5}
         renderItem={({ item: t }) => (
           <TemplateCard

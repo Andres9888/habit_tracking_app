@@ -51,7 +51,7 @@ export function CardContainer({
   return (
     <AnimatedPressable
       accessible
-      accessibilityHint='Tap to preview, or tap Import Habit to add to your habits'
+      accessibilityHint='Tap to preview, or tap Add to My Habits to import'
       accessibilityLabel={`${name} template. ${description}`}
       accessibilityRole='button'
       style={[

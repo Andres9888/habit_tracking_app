@@ -45,6 +45,7 @@ export function SearchBar({
         <AnimatedPressable
           accessibilityLabel='Clear search'
           accessibilityRole='button'
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
           onPress={onClear}
         >
           <X color={placeholderColor} size={18} strokeWidth={2.25} />

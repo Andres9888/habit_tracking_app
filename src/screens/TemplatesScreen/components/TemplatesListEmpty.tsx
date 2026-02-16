@@ -20,8 +20,8 @@ export function TemplatesListEmpty({
     <View style={styles.emptyStateWrapper}>
       <EmptyState
         hideCTA
-        description='Try adjusting filters or search keywords.'
-        headline='No habits match your filters'
+        description='Try different keywords, remove filters, or browse by category to find what you need.'
+        headline='No habits found'
         icon='🔍'
       />
       {hasActiveFilters && (

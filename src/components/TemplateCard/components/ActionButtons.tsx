@@ -68,7 +68,7 @@ export function ActionButtons({
         variant='primary'
         onPress={onImportPress}
       >
-        {isLocked ? 'Unlock with Pro' : 'Import Habit'}
+        {isLocked ? 'Unlock with Pro' : 'Add to My Habits'}
       </Button>
     </View>
   );
