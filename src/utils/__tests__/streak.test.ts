@@ -17,8 +17,8 @@ describe('streak', () => {
     });
 
     it('returns 0 for null/undefined completion set', () => {
-      expect(computeCurrentStreakFromDates(null as any, today)).toBe(0);
-      expect(computeCurrentStreakFromDates(undefined as any, today)).toBe(0);
+      expect(computeCurrentStreakFromDates(null as unknown, today)).toBe(0);
+      expect(computeCurrentStreakFromDates(undefined as unknown, today)).toBe(0);
     });
 
     it('returns 1 for single completion today', () => {

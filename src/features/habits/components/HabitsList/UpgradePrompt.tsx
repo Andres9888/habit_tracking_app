@@ -8,6 +8,7 @@ import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
+
 interface UpgradePromptProps {
   onClose: () => void;
   onUpgradePress: () => void;
@@ -28,8 +29,10 @@ export function UpgradePrompt({
       className='absolute inset-0 z-20 items-center justify-end'
       entering={FadeIn.duration(280)}
       style={{ backgroundColor: colors.gray[900] + '80' }}
+
     >
       <Pressable
+        accessibilityHint='Tap outside to dismiss'
         accessibilityLabel='Close upgrade prompt'
         accessibilityRole='button'
         className='absolute inset-0'
@@ -37,7 +40,7 @@ export function UpgradePrompt({
       />
       <Animated.View
         className='w-full rounded-t-3xl px-6 py-8'
-        entering={SlideInDown.duration(280).damping(18)}
+        entering={SlideInDown.duration(ANIMATION_DURATION.medium).damping(ANIMATION_VALUES.springDamping)}
       >
         <LinearGradient
           className='absolute inset-0 rounded-t-3xl'
@@ -72,6 +75,7 @@ export function UpgradePrompt({
             </Text>
           </View>
           <Pressable
+            accessibilityHint='Start your 7-day free trial'
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
             className='items-center rounded-full px-5 py-4'
@@ -83,6 +87,7 @@ export function UpgradePrompt({
               shadowOpacity: 0.25,
               shadowRadius: 16,
             })}
+
             onPress={onUpgradePress}
           >
             <LinearGradient
@@ -99,6 +104,7 @@ export function UpgradePrompt({
             </Text>
           </Pressable>
           <Pressable
+            accessibilityHint='Dismiss this upgrade prompt'
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
             className='items-center rounded-full border-2 px-5 py-3'
@@ -107,6 +113,7 @@ export function UpgradePrompt({
               borderColor: colors.gray[200],
               opacity: pressed ? 0.7 : 1,
             })}
+
             onPress={onClose}
           >
             <Text

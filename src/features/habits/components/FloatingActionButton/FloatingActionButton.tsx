@@ -47,6 +47,7 @@ export function FloatingActionButton({
       accessibilityLabel='Add habit'
       accessibilityRole='button'
       className='h-14 w-14 items-center justify-center rounded-full shadow-lg'
+
       {...focusHandlers}
       style={[
         animatedStyle,
@@ -60,6 +61,7 @@ export function FloatingActionButton({
         pointerEvents='none'
         style={{
           backgroundColor: colors.secondary[400] + '47', // ~28% opacity
+
           opacity: rippleOpacity,
           transform: [{ scale: rippleScale }],
         }}

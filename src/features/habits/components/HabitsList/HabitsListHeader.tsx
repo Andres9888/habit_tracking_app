@@ -4,6 +4,7 @@
 
 /* eslint-disable max-lines-per-function */
 
+import React, { memo } from 'react';
 import { Animated, View } from 'react-native';
 import { HabitsHeader } from '../HabitsHeader';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
@@ -15,7 +16,7 @@ import {
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
-export function HabitsListHeader(
+function HabitsListHeaderComponent(
   props: HabitsListHeaderProps
 ): React.ReactElement {
   const computed = useHabitsListHeaderComputed({
@@ -84,3 +85,5 @@ export function HabitsListHeader(
     </View>
   );
 }
+
+export const HabitsListHeader = memo(HabitsListHeaderComponent);
