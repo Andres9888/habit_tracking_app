@@ -3,9 +3,11 @@ import { Text, View } from 'react-native';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { PasswordResetSuccessProps } from './types';
 
 export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
+  const { colors } = useThemeColors();
   return (
     <View className='gap-4 py-2'>
       <Animated.View
@@ -36,7 +38,8 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
           accessibilityHint='Closes this dialog and returns to sign in'
           accessibilityLabel='Close modal'
           accessibilityRole='button'
-          className='items-center rounded-2xl bg-stone-900 py-4 active:bg-stone-800'
+          className='items-center rounded-2xl py-4'
+          style={{ backgroundColor: colors.gray[900] }}
           style={{
             shadowColor: '#1c1917',
             shadowOffset: { height: 4, width: 0 },

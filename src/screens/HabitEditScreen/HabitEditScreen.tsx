@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
 import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
