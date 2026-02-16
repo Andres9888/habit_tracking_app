@@ -10,6 +10,7 @@ import Animated from 'react-native-reanimated';
 import { Check, Eye } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Button from '../../Button/Button';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 import type { ActionButtonsProps } from './ActionButtons.types';
@@ -25,6 +26,8 @@ export function ActionButtons({
   onPreview,
   showPreviewCTA,
 }: ActionButtonsProps) {
+  const { colors: themeColors } = useThemeColors();
+
   if (isImported) {
     return (
       <Animated.View style={[styles.successButton, checkmarkStyle]}>
@@ -39,10 +42,10 @@ export function ActionButtons({
       {showPreviewCTA && onPreview && (
         <Button
           accessibilityLabel={`Preview ${name} habit`}
-          icon={<Eye color='#57534e' size={18} />}
+          icon={<Eye color={themeColors.text.secondary} size={18} />}
           size='medium'
-          style={styles.previewButton}
-          textStyle={styles.previewButtonText}
+          style={[styles.previewButton, { backgroundColor: themeColors.surface }]}
+          textStyle={{ color: themeColors.text.secondary }}
           variant='primary'
           onPress={(e: GestureResponderEvent) => {
             e.stopPropagation();
@@ -79,12 +82,11 @@ export const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   previewButton: {
-    backgroundColor: '#f5f5f4',
     borderRadius: borderRadius.medium,
     flex: 1,
     paddingVertical: spacing.md,
   },
-  previewButtonText: { color: '#57534e' },
+  previewButtonText: {},
   successButton: {
     alignItems: 'center',
     backgroundColor: '#22c55e',

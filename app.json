@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.chainday.app",
-      "buildNumber": "2",
+      "buildNumber": "7",
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent."
@@ -40,6 +40,8 @@
       ],
       "package": "com.chainday.app"
     },
+    "supportUrl": "https://chainday.app/support",
+    "privacyUrl": "https://chainday.app/privacy",
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
@@ -74,7 +76,8 @@
         }
       ],
       "@sentry/react-native",
-      "./plugins/withPrivacyManifest"
+      "./plugins/withPrivacyManifest.cjs",
+      "@react-native-community/datetimepicker"
     ]
   }
 }

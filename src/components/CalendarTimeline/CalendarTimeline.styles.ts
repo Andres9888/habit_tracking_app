@@ -26,8 +26,21 @@ export const HIGH_CONTRAST_COLORS: CalendarColors = {
   secondaryText: '#facc15',
 };
 
-export const getColors = (highContrastMode: boolean): CalendarColors => {
-  return highContrastMode ? HIGH_CONTRAST_COLORS : DEFAULT_COLORS;
+export const getColors = (highContrastMode: boolean, isDark = false): CalendarColors => {
+  if (highContrastMode) return HIGH_CONTRAST_COLORS;
+  if (isDark) {
+    return {
+      currentDayBackground: '#F9FAFB',
+      currentDayText: '#111827',
+      dayBackground: '#1F2937',
+      dayBorder: '#374151',
+      dayText: '#E5E7EB',
+      icon: '#D1D5DB',
+      primaryText: '#F9FAFB',
+      secondaryText: '#9CA3AF',
+    };
+  }
+  return DEFAULT_COLORS;
 };
 
 /** Color values for completion status dots */

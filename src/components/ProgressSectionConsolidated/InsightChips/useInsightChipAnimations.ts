@@ -59,7 +59,7 @@ export function useInsightChipAnimations({
     );
     translateX.value = withDelay(
       delay,
-      withSpring(0, { damping: 18, stiffness: 120 })
+      withSpring(0, { damping: 18, stiffness: 150 })
     );
   }, [index, reduceMotion, opacity, translateX]);
 

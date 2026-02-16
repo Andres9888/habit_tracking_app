@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import {
   AuthDivider,
   AuthError,
@@ -20,15 +21,17 @@ import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignUpFlow } from './hooks/useSignUpFlow';
 import { PasswordStrengthBar } from './components/PasswordStrengthBar';
 import { SignUpHeader } from './components/SignUpHeader';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignUpScreenProps {
   onNavigateToSignIn?: () => void;
 }
 
-export default function SignUpScreen({
+function SignUpScreenContent({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
+  const { colors: themeColors } = useThemeColors();
   const passwordRef = useRef<TextInput>(null);
   const {
     emailAddress,
@@ -98,7 +101,7 @@ export default function SignUpScreen({
             <Animated.View
               entering={FadeInUp.delay(100).springify().damping(18)}
               style={{
-                backgroundColor: '#ffffff',
+                backgroundColor: themeColors.card,
                 borderRadius: 16,
                 elevation: 4,
                 padding: 24,
@@ -186,5 +189,13 @@ export default function SignUpScreen({
         </KeyboardAvoidingView>
       </LinearGradient>
     </View>
+  );
+}
+
+export default function SignUpScreen(props: SignUpScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Sign Up">
+      <SignUpScreenContent {...props} />
+    </ScreenErrorBoundary>
   );
 }

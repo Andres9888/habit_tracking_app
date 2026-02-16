@@ -11,6 +11,10 @@ export const COLORS = {
   TEXT_PRIMARY: '#1c1917',
   TEXT_SECONDARY: '#78716c',
   TEXT_TERTIARY: '#a8a29e',
+  // Green colors for streak calendar
+  GREEN_COMPLETED: '#047857', // primary green
+  GREEN_COMPLETED_LIGHT: '#059669', // button green
+  GREEN_EMPTY: '#d1fae5', // empty circle for missed days
 };
 
 /**

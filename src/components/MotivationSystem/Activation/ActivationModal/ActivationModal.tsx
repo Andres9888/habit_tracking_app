@@ -63,6 +63,7 @@ export function ActivationModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       respectReduceMotion={!reduceMotion}
       variant='fullScreen'
       visible={visible}
