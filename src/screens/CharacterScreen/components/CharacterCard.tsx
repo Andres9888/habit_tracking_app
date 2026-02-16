@@ -11,8 +11,9 @@ interface CharacterCardProps {
 }
 
 export function CharacterCard({ data }: CharacterCardProps) {
-  const xpProgress = (data.xp / data.xpToNextLevel) * 100;
-  const xpRemaining = data.xpToNextLevel - data.xp;
+  const xpToNextLevel = data.xpToNextLevel || 1; // Guard against 0
+  const xpProgress = (data.xp / xpToNextLevel) * 100;
+  const xpRemaining = xpToNextLevel - data.xp;
 
   return (
     <Animated.View

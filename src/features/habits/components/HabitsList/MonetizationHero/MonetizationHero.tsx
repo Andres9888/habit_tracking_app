@@ -42,21 +42,22 @@ export function MonetizationHero({
           Ready for unlimited habits?
         </Text>
         <Text className='text-[17px] font-normal leading-[22px] text-[#cbd5f5]'>
-          Start a 7-day free trial to track every area of your life, get smart
+          Try free for 7 days — track every area of your life, get smart
           reminders, and unlock AI-powered insights.
         </Text>
       </View>
       <View className='flex-row items-center gap-3'>
         <AnimatedPressable
+          accessibilityHint='Start your 7-day free trial'
           accessibilityLabel='Upgrade to premium for unlimited habits'
           accessibilityRole='button'
           className='flex-1 items-center rounded-full bg-[#6d28d9] px-5 py-3'
           style={({ pressed }: { pressed: boolean }) => ({
             elevation: 6,
-            opacity: pressed ? 0.8 : 1,
+            opacity: pressed ? OPACITY.strong : OPACITY.full,
             shadowColor: '#312e81',
             shadowOffset: { height: 8, width: 0 },
-            shadowOpacity: 0.32,
+            shadowOpacity: SHADOW_OPACITY.strong,
             shadowRadius: 16,
             transform: [{ scale: ctaPulse }],
           })}
@@ -95,7 +96,7 @@ export function MonetizationHero({
         </View>
         <Text className='text-[13px] font-medium text-[#fbbf24]'>
           {hasReachedHabitLimit
-            ? "You're making great progress! Upgrade to track every area of your life."
+            ? "You're making great progress! Go unlimited to track every area of your life."
             : `${freeHabitLimit - habitSlotsUsed} free ${freeHabitLimit - habitSlotsUsed === 1 ? 'slot' : 'slots'} remaining. Premium unlocks unlimited habits.`}
         </Text>
       </View>

@@ -57,7 +57,7 @@ export function SwipeableActionButton({
   );
 
   const handleSwipeableOpen = () => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     swipeableRef.current?.close();
     onSwipeAction?.();
   };

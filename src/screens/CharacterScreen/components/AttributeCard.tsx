@@ -13,7 +13,7 @@ export function AttributeCard({
   bgGradient,
   delay = 0,
 }: AttributeCardProps & { delay?: number }) {
-  const percentage = (value / maxValue) * 100;
+  const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
 
   return (
     <Animated.View
