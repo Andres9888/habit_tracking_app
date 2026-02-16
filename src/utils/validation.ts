@@ -1,7 +1,12 @@
 /* eslint-disable max-lines */
 /**
  * Input Validation Utilities
- * Defensive guards for edge cases
+ *
+ * Defensive guards for edge cases in user input.
+ * Mirrors backend validation to provide real-time feedback.
+ *
+ * @module validation
+ * @category Validation
  */
 
 const MAX_HABIT_NAME_LENGTH = 200;
@@ -9,8 +14,26 @@ const MIN_HABIT_NAME_LENGTH = 1;
 const MAX_HABITS_RENDER_LIMIT = 500; // Performance guard
 
 /**
- * Validate and sanitize habit name
- * Guards against: empty strings, very long strings, whitespace-only
+ * Validate and sanitize habit name.
+ * Guards against: null/undefined, empty strings, very long strings, whitespace-only.
+ *
+ * @param name - The habit name to validate
+ * @returns Validation result with isValid, sanitized name, and optional error
+ * @returns.isValid - Whether the name passes validation
+ * @returns.sanitized - Sanitized name (trimmed, truncated if too long)
+ * @returns.error - Error message if validation failed
+ *
+ * @example
+ * validateHabitName('Morning Exercise')
+ * // { isValid: true, sanitized: 'Morning Exercise' }
+ *
+ * @example
+ * validateHabitName('   ')
+ * // { isValid: false, sanitized: '', error: 'Habit name cannot be empty' }
+ *
+ * @example
+ * validateHabitName('A'.repeat(300))
+ * // { isValid: false, sanitized: 'AAAA...', error: 'Habit name must be 200 characters or less' }
  */
 export function validateHabitName(name: string): {
   isValid: boolean;
@@ -54,8 +77,25 @@ export function validateHabitName(name: string): {
 }
 
 /**
- * Validate date string format and range
- * Guards against: invalid formats, future dates (beyond reasonable range), very old dates
+ * Validate date string format and range.
+ * Guards against: invalid formats, future dates (beyond 2 years), very old dates (beyond 5 years).
+ *
+ * @param dateString - Date string in YYYY-MM-DD format
+ * @returns Validation result with isValid and optional error
+ * @returns.isValid - Whether the date passes validation
+ * @returns.error - Error message if validation failed
+ *
+ * @example
+ * validateDateString('2024-01-15')
+ * // { isValid: true }
+ *
+ * @example
+ * validateDateString('2024-13-01')
+ * // { isValid: false, error: 'Date components out of valid range' }
+ *
+ * @example
+ * validateDateString('not-a-date')
+ * // { isValid: false, error: 'Invalid date format. Expected YYYY-MM-DD' }
  */
 export function validateDateString(dateString: string): {
   isValid: boolean;
@@ -124,7 +164,22 @@ export function validateDateString(dateString: string): {
 }
 
 /**
- * Validate habits array size for performance
+ * Validate habits array size for performance.
+ * Guards against non-arrays and provides truncation warning for large arrays.
+ *
+ * @param habits - Array of habits to validate
+ * @returns Validation result with isValid, limited array, and optional warning
+ * @returns.isValid - Whether the array is valid (even if truncated)
+ * @returns.limited - Original array or truncated copy if too large
+ * @returns.warning - Warning message if array was truncated
+ *
+ * @example
+ * validateHabitsArray([{id: '1'}, {id: '2'}])
+ * // { isValid: true, limited: [{id: '1'}, {id: '2'}] }
+ *
+ * @example
+ * validateHabitsArray(largeArrayOf500Plus)
+ * // { isValid: true, limited: [...500 items], warning: 'Too many habits...' }
  */
 export function validateHabitsArray<T>(habits: T[]): {
   isValid: boolean;
@@ -154,7 +209,20 @@ export function validateHabitsArray<T>(habits: T[]): {
 }
 
 /**
- * Safe number parsing with bounds
+ * Safe number parsing with bounds checking.
+ * Parses a value to a number with fallback and optional min/max constraints.
+ *
+ * @param value - Value to parse as number
+ * @param defaultValue - Fallback value if parsing fails
+ * @param min - Optional minimum bound
+ * @param max - Optional maximum bound
+ * @returns Parsed number within bounds, or defaultValue if parsing fails
+ *
+ * @example
+ * safeParseNumber('42', 0) // 42
+ * safeParseNumber('invalid', 0) // 0
+ * safeParseNumber(100, 0, 0, 50) // 50 (capped at max)
+ * safeParseNumber(-10, 0, 0, 50) // 0 (floored at min)
  */
 export function safeParseNumber(
   value: unknown,
