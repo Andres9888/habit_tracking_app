@@ -12,6 +12,9 @@ import {
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import type { HabitSortMode } from '../../types';
 import {
+  BACKDROP_FADE_IN_DURATION_MS,
+  BACKDROP_FADE_OUT_DURATION_MS,
+  BACKDROP_VISIBLE_OPACITY,
   DISMISS_THRESHOLD,
   SCREEN_HEIGHT,
   SHEET_SPRING_CONFIG,
@@ -39,13 +42,19 @@ export function useSortBottomSheet({
   useEffect(() => {
     if (visible) {
       backdropOpacity.value = reduceMotion
-        ? 0.4
-        : withTiming(0.4, { duration: 300, easing: Easing.out(Easing.cubic) });
+        ? BACKDROP_VISIBLE_OPACITY
+        : withTiming(BACKDROP_VISIBLE_OPACITY, {
+            duration: BACKDROP_FADE_IN_DURATION_MS,
+            easing: Easing.out(Easing.cubic),
+          });
       translateY.value = reduceMotion ? 0 : withSpring(0, SHEET_SPRING_CONFIG);
     } else {
       backdropOpacity.value = reduceMotion
         ? 0
-        : withTiming(0, { duration: 250, easing: Easing.in(Easing.cubic) });
+        : withTiming(0, {
+            duration: BACKDROP_FADE_OUT_DURATION_MS,
+            easing: Easing.in(Easing.cubic),
+          });
       translateY.value = reduceMotion
         ? SCREEN_HEIGHT
         : withSpring(SCREEN_HEIGHT, SHEET_SPRING_CONFIG);

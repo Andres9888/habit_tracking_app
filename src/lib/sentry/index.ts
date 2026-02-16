@@ -1,6 +1,14 @@
 /**
  * Sentry Integration Module
- * Central export for all Sentry-related functionality.
+ *
+ * Central export for all Sentry-related functionality:
+ * - Error tracking and monitoring
+ * - Performance reporting
+ * - User context and breadcrumbs
+ * - React integration hooks
+ *
+ * @module sentry
+ * @category Error Tracking / Monitoring
  */
 
 // Initialization - call early in app lifecycle

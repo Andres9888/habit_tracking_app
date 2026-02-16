@@ -13,8 +13,8 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   // This reduces the Convex query argument payload from ~4KB to ~50 bytes
   // Sort to handle arrays in either chronological or reverse order
   const queryArgs = useMemo(() => {
-    const first = extendedDateStrings[0];
-    const last = extendedDateStrings.at(-1);
+    const first = extendedDateStrings?.[0];
+    const last = extendedDateStrings?.at(-1);
     const startDate = first && last && first < last ? first : last;
     const endDate = first && last && first < last ? last : first;
     return startDate && endDate
@@ -42,7 +42,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
     // Then, apply optimistic updates
     for (const [key, toCompleted] of optimisticStore.pendingToggles) {
-      const [habitId, date] = key.split(':');
+      const [habitId = '', date = ''] = key.split(':');
       if (!map.has(habitId)) {
         map.set(habitId, new Set<string>());
       }
@@ -80,7 +80,14 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
         return 'done';
       }
 
-      const [year, month, day] = dateString.split('-').map(Number);
+      const parts = dateString.split('-').map(Number);
+      const year = parts[0] ?? 0;
+      const month = parts[1] ?? 1;
+      const day = parts[2] ?? 1;
+      if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) {
+        if (__DEV__) console.warn(`Non-numeric date parts: ${dateString}`);
+        return 'planned';
+      }
       const date = new Date(year, month - 1, day);
       date.setHours(0, 0, 0, 0);
 

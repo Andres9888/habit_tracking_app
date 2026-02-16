@@ -29,11 +29,11 @@ export function TabButton({ isActive, label, onPress }: TabButtonProps) {
   }));
 
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.96, { damping: 15, stiffness: 350 });
+    scale.value = withSpring(0.96, { damping: 18, stiffness: 150 });
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, { damping: 15, stiffness: 350 });
+    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
   }, [scale]);
 
   // Theme-aware text colors
