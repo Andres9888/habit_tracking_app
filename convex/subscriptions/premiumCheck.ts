@@ -8,6 +8,7 @@
  * premium status across all mutations.
  */
 
+import type { Id } from '../_generated/dataModel';
 import type { QueryCtx } from '../_generated/server';
 
 /**
@@ -34,7 +35,7 @@ export async function hasPremiumAccess(
 ): Promise<boolean> {
   const settings = await ctx.db
     .query('userSettings')
-    .filter((q) => q.eq(q.field('userId'), userId))
+    .withIndex('by_userId', (q) => q.eq('userId', userId))
     .first();
 
   return settings?.hasPremium ?? false;
@@ -75,7 +76,7 @@ export async function requirePremium(
 export async function canAddVoiceNote(
   ctx: QueryCtx,
   userId: string,
-  habitId: string
+  habitId: Id<"habits">
 ): Promise<{ allowed: boolean; reason?: string }> {
   const hasPremium = await hasPremiumAccess(ctx, userId);
   if (hasPremium) {
@@ -111,7 +112,7 @@ export async function canAddVoiceNote(
 export async function canAddVisionBoardImage(
   ctx: QueryCtx,
   userId: string,
-  habitId: string
+  habitId: Id<"habits">
 ): Promise<{ allowed: boolean; reason?: string }> {
   const hasPremium = await hasPremiumAccess(ctx, userId);
   if (hasPremium) {

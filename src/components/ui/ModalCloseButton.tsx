@@ -4,7 +4,7 @@
  * Provides a consistent, theme-aware close button with spring press feedback.
  * Used across all modals (Settings, StatsNotes, TemplatePreview, etc.)
  *
- * Design system: 40×40, borderRadius 20, surface background, X icon size 20
+ * Design system: 44×44 (Apple HIG minimum), rounded-full, surface background, X icon size 24
  */
 
 import { X } from 'lucide-react-native';
@@ -17,7 +17,7 @@ interface ModalCloseButtonProps {
   onClose: () => void;
   /** Accessibility label override */
   label?: string;
-  /** Icon size override (default 20) */
+  /** Icon size override (default 24) */
   iconSize?: number;
   /** Whether to trigger haptic feedback (default true) */
   haptic?: boolean;
@@ -26,7 +26,7 @@ interface ModalCloseButtonProps {
 export function ModalCloseButton({
   onClose,
   label = 'Close',
-  iconSize = 20,
+  iconSize = 24,
   haptic = true,
 }: ModalCloseButtonProps) {
   const { colors } = useThemeColors();
@@ -43,11 +43,11 @@ export function ModalCloseButton({
       accessibilityLabel={label}
       accessibilityRole="button"
       style={{
-        height: 40,
-        width: 40,
+        height: 44,
+        width: 44,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 20,
+        borderRadius: 22,
         backgroundColor: colors.surface,
       }}
       onPress={handlePress}

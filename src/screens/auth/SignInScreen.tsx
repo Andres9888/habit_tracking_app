@@ -39,6 +39,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -47,7 +48,7 @@ interface SignInScreenProps {
   onNavigateToSignUp?: () => void;
 }
 
-export default function SignInScreen(_props: SignInScreenProps = {}) {
+function SignInScreenContent(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
 
@@ -183,12 +184,14 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_apple'}
                 provider='apple'
+                testID='auth-sign-in-apple-button'
                 onPress={signInWithApple}
               />
               <SocialSignInButton
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_google'}
                 provider='google'
+                testID='auth-sign-in-google-button'
                 onPress={signInWithGoogle}
               />
             </View>
@@ -233,6 +236,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                 isLoading={isLoading}
                 label='Sign In'
                 loadingLabel='Signing in…'
+                testID='auth-sign-in-button'
                 onPress={handleSignIn}
               />
             </View>
@@ -351,3 +355,11 @@ const staticStyles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default function SignInScreen(props: SignInScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Sign In">
+      <SignInScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}

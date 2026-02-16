@@ -22,10 +22,11 @@ import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
 import { useThemedStyles } from '../../theme/useThemedStyles';
 import { createStyles } from './WelcomeScreen.styles';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 type AuthMode = 'welcome' | 'signin' | 'signup';
 
-export default function WelcomeScreen() {
+function WelcomeScreenContent() {
   const styles = useThemedStyles(createStyles);
   const [mode, setMode] = useState<AuthMode>('welcome');
   const insets = useSafeAreaInsets();
@@ -114,5 +115,13 @@ export default function WelcomeScreen() {
         </Animated.View>
       </View>
     </View>
+  );
+}
+
+export default function WelcomeScreen() {
+  return (
+    <ScreenErrorBoundary screenName="Welcome">
+      <WelcomeScreenContent />
+    </ScreenErrorBoundary>
   );
 }
