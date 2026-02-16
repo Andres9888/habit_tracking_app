@@ -1,7 +1,7 @@
 import { View, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import {
   ScreenHeader,
   CharacterCard,
@@ -43,21 +43,10 @@ function CharacterScreenContent({ onBack }: CharacterScreenProps) {
   );
 }
 
-export default function CharacterScreen(props: CharacterScreenProps) {
+export default function CharacterScreen({ onBack }: CharacterScreenProps) {
   return (
-    <ErrorBoundary
-      fallback={
-        <View className='flex-1 bg-white'>
-          <ScreenErrorFallback
-            screenName="Character"
-            error={null}
-            onRetry={() => {}}
-            onGoBack={props.onBack}
-          />
-        </View>
-      }
-    >
-      <CharacterScreenContent {...props} />
-    </ErrorBoundary>
+    <ScreenErrorBoundary screenName="Character" onGoBack={onBack}>
+      <CharacterScreenContent onBack={onBack} />
+    </ScreenErrorBoundary>
   );
 }

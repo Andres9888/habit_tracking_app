@@ -3,9 +3,10 @@ import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
-import { colors } from '../../theme/colors';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { EditHeader } from './EditHeader';
+import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
 import { DangerZone } from './DangerZone';
@@ -21,9 +22,7 @@ function HabitEditScreenContent({
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const state = useHabitEditScreen({ habitId, onClose });
-  // Modal pattern: return null when not visible — the modal simply doesn't mount
-  if (!visible || !habitId) return null;
-
+  const { colors: themeColors } = useThemeColors();
   return (
     <Modal
       transparent
@@ -38,8 +37,14 @@ function HabitEditScreenContent({
         <View className='flex-1 bg-black/50'>
           <View
             className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
-            style={{ backgroundColor: colors.light.background }}
+            style={{ backgroundColor: themeColors.background }}
           >
+            {state.isLoading ? (
+              <View style={{ paddingTop: Math.max(insets.top + 4, 12) }}>
+                <HabitEditSkeleton />
+              </View>
+            ) : (
+              <>
             <EditHeader
               canSave={state.habitName.trim().length >= 2}
               isSaving={state.isSaving}
@@ -83,7 +88,7 @@ function HabitEditScreenContent({
                 </Animated.View>
                 <SectionLabel delay={340} text='DANGER ZONE' variant='danger' />
                 <Animated.View
-                  className='mx-4 rounded-2xl bg-red-50/50 p-4'
+                  className='mx-4 rounded-2xl p-4'
                   entering={FadeInUp.delay(400).springify().damping(18)}
                 >
                   <DangerZone
@@ -93,6 +98,8 @@ function HabitEditScreenContent({
                 </Animated.View>
               </Pressable>
             </ScrollView>
+            </>
+            )}
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -101,27 +108,11 @@ function HabitEditScreenContent({
 }
 
 export default function HabitEditScreen(props: HabitEditScreenProps) {
+  if (!props.visible || !props.habitId) return null;
+
   return (
-    <ErrorBoundary
-      fallback={
-        <Modal
-          transparent
-          animationType="slide"
-          visible={props.visible}
-          onRequestClose={props.onClose}
-        >
-          <View style={{ flex: 1, backgroundColor: colors.light.background }}>
-            <ScreenErrorFallback
-              screenName="Edit Habit"
-              error={null}
-              onRetry={() => {}}
-              onGoBack={props.onClose}
-            />
-          </View>
-        </Modal>
-      }
-    >
+    <ScreenErrorBoundary screenName="Edit Habit" onGoBack={props.onClose}>
       <HabitEditScreenContent {...props} />
-    </ErrorBoundary>
+    </ScreenErrorBoundary>
   );
 }

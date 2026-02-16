@@ -19,6 +19,7 @@ import {
   View,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { api } from '../../../convex/_generated/api';
 import { colors } from '../../theme/colors';
@@ -200,25 +201,44 @@ export function AuthGate() {
     return <BrandedLoadingScreen />;
   }
 
-  if (!isSignedIn) {
-    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <WelcomeScreen />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (!onboardingComplete) {
-    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <OnboardingScreen onComplete={markComplete} />
-      </GestureHandlerRootView>
-    );
-  }
+  // Determine which screen to show
+  const screenKey = !isSignedIn
+    ? 'welcome'
+    : !onboardingComplete
+      ? 'onboarding'
+      : 'app';
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <HabitsApp />
+      {screenKey === 'welcome' && (
+        <Animated.View
+          key="welcome"
+          entering={FadeIn.duration(300)}
+          exiting={FadeOut.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <WelcomeScreen />
+        </Animated.View>
+      )}
+      {screenKey === 'onboarding' && (
+        <Animated.View
+          key="onboarding"
+          entering={FadeIn.duration(300)}
+          exiting={FadeOut.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <OnboardingScreen onComplete={markComplete} />
+        </Animated.View>
+      )}
+      {screenKey === 'app' && (
+        <Animated.View
+          key="app"
+          entering={FadeIn.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <HabitsApp />
+        </Animated.View>
+      )}
     </GestureHandlerRootView>
   );
 }
