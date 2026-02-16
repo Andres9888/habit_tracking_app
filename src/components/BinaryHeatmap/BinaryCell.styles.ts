@@ -18,6 +18,16 @@ export const styles = StyleSheet.create({
     height: CELL_SIZE,
     width: CELL_SIZE,
   },
+  checkmarkContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+  },
+  checkmarkText: {
+    fontSize: 8,
+    fontWeight: '700',
+    lineHeight: 8,
+  },
   futureCell: {
     opacity: 0.4,
   },

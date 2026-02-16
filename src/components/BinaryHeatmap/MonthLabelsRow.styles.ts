@@ -1,27 +1,28 @@
 /**
  * Styles for MonthLabelsRow Component
+ *
+ * Note: Colors that need theme awareness should be applied at runtime.
+ * This file contains only layout-related styles.
  */
 
 import { StyleSheet } from 'react-native';
 
-import { CELL_GAP, COLORS, MONTH_LABEL } from './constants';
+import { MONTH_LABEL } from './constants';
 
 export const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     height: MONTH_LABEL.HEIGHT,
-    marginBottom: CELL_GAP,
+    marginBottom: 3,
     position: 'relative',
   },
   labelContainer: {
-    height: MONTH_LABEL.HEIGHT,
-    justifyContent: 'flex-end',
     position: 'absolute',
     top: 0,
+    height: MONTH_LABEL.HEIGHT,
+    alignItems: 'flex-start',
   },
   labelText: {
-    color: COLORS.TEXT_SECONDARY,
-    fontSize: MONTH_LABEL.FONT_SIZE,
+    fontSize: 10,
     fontWeight: '500',
   },
 });

@@ -1,7 +1,10 @@
 /**
  * MonthLabelsRow Component
  *
- * Renders the month labels row above the binary heatmap grid.
+ * Renders month labels row above binary heatmap grid.
+ *
+ * UX Improvements:
+ * - Theme-aware colors for dark mode visibility
  */
 
 import React, { memo } from 'react';
@@ -11,6 +14,7 @@ import type { BinaryMonthLabel } from './types';
 import { CELL_SIZE, CELL_GAP, MONTH_LABEL } from './constants';
 import { styles } from './MonthLabelsRow.styles';
 import { getFullMonthName } from './MonthLabelsRow.helpers';
+import { useHeatmapColors } from './themeAwareColors';
 
 export interface MonthLabelsRowProps {
   monthLabels: BinaryMonthLabel[];
@@ -21,6 +25,7 @@ export const MonthLabelsRow = memo(function MonthLabelsRow({
   monthLabels,
   gridWidth,
 }: MonthLabelsRowProps) {
+  const colors = useHeatmapColors();
   const cellUnit = CELL_SIZE + CELL_GAP;
 
   if (monthLabels.length === 0) {
@@ -62,7 +67,7 @@ export const MonthLabelsRow = memo(function MonthLabelsRow({
               accessible
               accessibilityLabel={`${getFullMonthName(monthLabel.label)} column`}
               accessibilityRole='text'
-              style={styles.labelText}
+              style={[styles.labelText, { color: colors.textSecondary }]}
             >
               {monthLabel.label}
             </Text>

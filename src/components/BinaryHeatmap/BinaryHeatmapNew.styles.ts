@@ -1,11 +1,13 @@
 /**
  * Styles for BinaryHeatmapNew Component
+ *
+ * Note: Colors that need theme awareness are now provided at runtime
+ * via useHeatmapColors() hook. This file contains only layout-related styles.
  */
 
 import { StyleSheet } from 'react-native';
 
 import {
-  COLORS,
   CELL_SIZE,
   CELL_GAP,
   DAY_LABEL_WIDTH,
@@ -21,7 +23,6 @@ export const styles = StyleSheet.create({
     width: CELL_SIZE,
   },
   container: {
-    backgroundColor: COLORS.CARD_BACKGROUND,
     borderRadius: 12,
     padding: 16,
   },
@@ -35,7 +36,6 @@ export const styles = StyleSheet.create({
     width: DAY_LABEL_WIDTH,
   },
   dayLabelText: {
-    color: COLORS.TEXT_SECONDARY,
     fontSize: 10,
     fontWeight: '500',
     textAlign: 'right',
@@ -56,12 +56,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   headerTitle: {
-    color: COLORS.TEXT_PRIMARY,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
   monthLabel: {
-    color: COLORS.TEXT_SECONDARY,
     fontSize: 10,
     position: 'absolute',
   },

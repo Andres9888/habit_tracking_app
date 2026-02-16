@@ -1,28 +1,18 @@
 /**
  * StatsRow Component
  *
- * Displays habit statistics in a row format below the heatmap.
+ * Displays statistics row below the heatmap with frequency, streak, and settings button.
+ *
+ * UX Improvements:
+ * - Theme-aware colors for dark mode visibility
  */
 
-import React, { memo, useCallback } from 'react';
-import { View, Text, Pressable, Platform } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  useReducedMotion,
-} from 'react-native-reanimated';
-import { Settings } from 'lucide-react-native';
+import React, { memo } from 'react';
+import { View, Text } from 'react-native';
 
 import type { StatsRowProps } from './types';
-import { COLORS } from './constants';
-import { useThemedStatsStyles } from './StatsRow.styles';
-import { StreakBadge } from './StreakBadge';
-
-const PRESS_SCALE = 0.95;
-const SETTINGS_ICON_SIZE = 18;
-const SPRING_CONFIG = { damping: 18, stiffness: 150 };
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+import { styles } from './StatsRow.styles';
+import { useHeatmapColors } from './themeAwareColors';
 
 export const StatsRow = memo(function StatsRow({
   frequency,
@@ -30,76 +20,70 @@ export const StatsRow = memo(function StatsRow({
   habitColor,
   onSettingsPress,
 }: StatsRowProps) {
-  const styles = useThemedStatsStyles();
-  const shouldReduceMotion = useReducedMotion();
-  const settingsScale = useSharedValue(1);
-
-  const handleSettingsPressIn = useCallback(() => {
-    if (!shouldReduceMotion) {
-      settingsScale.value = withSpring(PRESS_SCALE, SPRING_CONFIG);
-    }
-  }, [settingsScale, shouldReduceMotion]);
-
-  const handleSettingsPressOut = useCallback(() => {
-    if (!shouldReduceMotion) {
-      settingsScale.value = withSpring(1, SPRING_CONFIG);
-    }
-  }, [settingsScale, shouldReduceMotion]);
-
-  const settingsAnimatedStyle = useAnimatedStyle(() => {
-    'worklet';
-    return {
-      transform: [{ scale: settingsScale.value ?? 1 }],
-    };
-  });
+  const colors = useHeatmapColors();
 
   return (
     <View
       accessible
-      accessibilityLabel='Habit statistics'
-      accessibilityRole='none'
+      accessibilityLabel={`Habit frequency: ${frequency}. Current streak: ${currentStreak}`}
+      accessibilityRole='text'
       style={styles.container}
     >
-      <View style={styles.badgesContainer}>
+      <Text style={[styles.frequency, { color: colors.textSecondary }]}>
+        {frequency}
+      </Text>
+
+      <View style={styles.streakContainer}>
+        <Text style={[styles.streakLabel, { color: colors.textSecondary }]}>
+          Streak:
+        </Text>
         <View
-          accessible
-          accessibilityLabel={`Frequency: ${frequency}`}
-          accessibilityRole='text'
-          style={styles.frequencyBadge}
-        >
-          <Text style={styles.frequencyText}>{frequency}</Text>
-        </View>
-        {currentStreak > 0 && (
-          <StreakBadge currentStreak={currentStreak} habitColor={habitColor} />
-        )}
-      </View>
-      {onSettingsPress && (
-        <AnimatedPressable
-          accessible
-          accessibilityHint='Opens habit settings and options'
-          accessibilityLabel='Habit settings'
-          accessibilityRole='button'
-          hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
-          style={({ focused }: { focused: boolean }) => [
-            styles.settingsButton,
-            settingsAnimatedStyle,
-            Platform.OS === 'web' && focused && styles.webFocus,
+          style={[
+            styles.streakBadge,
+            {
+              backgroundColor: habitColor,
+              marginLeft: 4,
+            },
           ]}
-          testID='stats-row-settings-button'
-          onPress={onSettingsPress}
-          onPressIn={handleSettingsPressIn}
-          onPressOut={handleSettingsPressOut}
         >
-          <Settings
-            color={COLORS.TEXT_SECONDARY}
-            size={SETTINGS_ICON_SIZE}
-            strokeWidth={2}
-            testID='settings-icon'
-          />
-        </AnimatedPressable>
+          <Text
+            style={[
+              styles.streakNumber,
+              {
+                color: getTextColorForBackground(habitColor),
+              },
+            ]}
+          >
+            {currentStreak}
+          </Text>
+        </View>
+      </View>
+
+      {onSettingsPress && (
+        <Text
+          accessible
+          accessibilityLabel='Settings'
+          accessibilityRole='button'
+          style={[styles.frequency, { color: colors.textPrimary }]}
+          onPress={onSettingsPress}
+        >
+          ⚙️
+        </Text>
       )}
     </View>
   );
 });
+
+/**
+ * Determine appropriate text color based on background color
+ */
+function getTextColorForBackground(backgroundColor: string): string {
+  const hex = backgroundColor.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance < 0.5 ? '#FFFFFF' : '#000000';
+}
 
 export default StatsRow;

@@ -3,6 +3,9 @@
  * TimeRangeToggle Component
  *
  * A segmented control for switching between time ranges (3m, 6m, 1y).
+ *
+ * UX Improvements:
+ * - Theme-aware colors for dark mode visibility
  */
 
 import React, { memo, useCallback } from 'react';

@@ -4,37 +4,41 @@
 
 import { StyleSheet } from 'react-native';
 
-import { COLORS, TOOLTIP } from './constants';
+import { TOOLTIP } from './constants';
 
 export const styles = StyleSheet.create({
   arrow: {
-    alignSelf: 'center',
-    borderLeftColor: 'transparent',
-    borderLeftWidth: TOOLTIP.ARROW_SIZE,
-    borderRightColor: 'transparent',
-    borderRightWidth: TOOLTIP.ARROW_SIZE,
-    borderTopColor: COLORS.TOOLTIP_BACKGROUND,
-    borderTopWidth: TOOLTIP.ARROW_SIZE,
-    bottom: -TOOLTIP.ARROW_SIZE,
-    height: 0,
     position: 'absolute',
+    bottom: -TOOLTIP.ARROW_SIZE,
+    left: '50%',
+    marginLeft: -TOOLTIP.ARROW_SIZE,
     width: 0,
+    height: 0,
+    borderLeftWidth: TOOLTIP.ARROW_SIZE,
+    borderLeftColor: 'transparent',
+    borderRightWidth: TOOLTIP.ARROW_SIZE,
+    borderRightColor: 'transparent',
+    borderTopWidth: TOOLTIP.ARROW_SIZE,
+    borderTopColor: '#1c1917', // Will be overridden by theme-aware color
   },
   backdrop: {
-    backgroundColor: 'transparent',
     flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   tooltip: {
-    alignItems: 'center',
-    backgroundColor: COLORS.TOOLTIP_BACKGROUND,
-    borderRadius: TOOLTIP.BORDER_RADIUS,
+    position: 'absolute',
     paddingHorizontal: TOOLTIP.PADDING_X,
     paddingVertical: TOOLTIP.PADDING_Y,
-    position: 'absolute',
-    transform: [{ translateX: -50 }],
+    borderRadius: TOOLTIP.BORDER_RADIUS,
+    minWidth: 100,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   tooltipText: {
-    color: COLORS.TOOLTIP_TEXT,
     fontSize: TOOLTIP.FONT_SIZE,
     fontWeight: '500',
   },

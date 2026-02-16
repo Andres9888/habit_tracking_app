@@ -1,5 +1,8 @@
 /**
  * Styles for BinaryHeatmapGrid Component
+ *
+ * Note: Colors that need theme awareness should be applied at runtime.
+ * This file contains only layout-related styles.
  */
 
 import { StyleSheet } from 'react-native';
@@ -8,7 +11,6 @@ import {
   CELL_SIZE,
   CELL_GAP,
   DAY_LABEL_WIDTH,
-  COLORS,
   MONTH_LABEL,
 } from './constants';
 
@@ -29,7 +31,6 @@ export const styles = StyleSheet.create({
     width: DAY_LABEL_WIDTH,
   },
   dayLabelText: {
-    color: COLORS.TEXT_SECONDARY,
     fontSize: 10,
     fontWeight: '500',
     paddingRight: 4,

@@ -1,7 +1,12 @@
 /**
  * HeatmapTooltip Component
  *
- * Tooltip that displays date and status information on hover/long-press.
+ * Tooltip that displays date and status information on tap/long-press.
+ *
+ * UX Improvements:
+ * - Theme-aware colors for dark mode visibility
+ * - Enhanced accessibility labels
+ * - Smooth animations with reduced motion support
  */
 
 import React, { memo, useEffect } from 'react';
@@ -17,6 +22,7 @@ import type { HeatmapTooltipProps } from './types';
 import { formatTooltipText } from './utils';
 import { TOOLTIP } from './constants';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useHeatmapColors } from './themeAwareColors';
 import { styles } from './HeatmapTooltip.styles';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -31,6 +37,7 @@ export const HeatmapTooltip = memo(function HeatmapTooltip({
   const scale = useSharedValue(0.9);
   const reduceMotion = useReduceMotion();
   const animationDuration = reduceMotion ? 0 : 150;
+  const colors = useHeatmapColors();
 
   useEffect(() => {
     if (visible) {
@@ -77,10 +84,17 @@ export const HeatmapTooltip = memo(function HeatmapTooltip({
           accessibilityLabel={tooltipText}
           accessibilityLiveRegion='polite'
           accessibilityRole='alert'
-          style={[styles.tooltip, tooltipStyle, animatedStyle]}
+          style={[
+            styles.tooltip,
+            tooltipStyle,
+            animatedStyle,
+            { backgroundColor: colors.tooltipBackground },
+          ]}
         >
-          <Text style={styles.tooltipText}>{tooltipText}</Text>
-          <View style={styles.arrow} />
+          <Text style={[styles.tooltipText, { color: colors.tooltipText }]}>
+            {tooltipText}
+          </Text>
+          <View style={[styles.arrow, { borderTopColor: colors.tooltipBackground }]} />
         </AnimatedView>
       </Pressable>
     </Modal>

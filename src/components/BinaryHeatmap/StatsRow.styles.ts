@@ -1,89 +1,43 @@
 /**
  * Styles for StatsRow Component
+ *
+ * Note: Colors that need theme awareness should be applied at runtime.
+ * This file contains only layout-related styles.
  */
 
-import {
-  StyleSheet,
-  Platform,
-  type ViewStyle,
-  type TextStyle,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import { COLORS, FOCUS } from './constants';
-import { typography } from '@/theme/typography';
-import { useThemeColors } from '@/theme/ThemeContext';
-
-const STATS_CONFIG = {
-  BADGE_BORDER_RADIUS: 8,
-  BADGE_PADDING_X: 12,
-  BADGE_PADDING_Y: 6,
-  SETTINGS_BUTTON_SIZE: 36,
-} as const;
+import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
-  badgesContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-  } as ViewStyle,
   container: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 16,
-    paddingVertical: 4,
-  } as ViewStyle,
-  frequencyBadge: {
-    backgroundColor: '#f5f5f4', // overridden by useThemedStatsStyles
-    borderRadius: STATS_CONFIG.BADGE_BORDER_RADIUS,
-    paddingHorizontal: STATS_CONFIG.BADGE_PADDING_X,
-    paddingVertical: STATS_CONFIG.BADGE_PADDING_Y,
-  } as ViewStyle,
-  frequencyText: {
-    color: COLORS.TEXT_PRIMARY,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+  },
+  frequency: {
     fontSize: typography.caption.fontSize,
-    fontWeight: '600',
-  } as TextStyle,
-  settingsButton: {
+  },
+  separator: {
+    marginHorizontal: 8,
+  },
+  streakContainer: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4', // overridden by useThemedStatsStyles
-    borderRadius: STATS_CONFIG.SETTINGS_BUTTON_SIZE / 2,
-    height: STATS_CONFIG.SETTINGS_BUTTON_SIZE,
-    justifyContent: 'center',
-    width: STATS_CONFIG.SETTINGS_BUTTON_SIZE,
-    ...(Platform.OS === 'web' ? { cursor: 'pointer' } : {}),
-  } as ViewStyle,
-  streakBadge: {
-    alignItems: 'center',
-    borderRadius: STATS_CONFIG.BADGE_BORDER_RADIUS,
     flexDirection: 'row',
-    gap: 4,
-    paddingHorizontal: STATS_CONFIG.BADGE_PADDING_X,
-    paddingVertical: STATS_CONFIG.BADGE_PADDING_Y,
-  } as ViewStyle,
-  streakText: {
+  },
+  streakLabel: {
     fontSize: typography.caption.fontSize,
     fontWeight: '600',
-  } as TextStyle,
-  webFocus: {
-    outlineColor: FOCUS.RING_COLOR,
-    outlineOffset: FOCUS.RING_OFFSET,
-    outlineStyle: 'solid',
-    outlineWidth: FOCUS.RING_WIDTH,
-  } as ViewStyle,
+  },
+  streakNumber: {
+    fontSize: typography.caption.fontSize,
+    fontWeight: '600',
+  },
+  streakBadge: {
+    borderRadius: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
 });
-
-export function useThemedStatsStyles() {
-  const { colors } = useThemeColors();
-  return {
-    ...styles,
-    frequencyBadge: {
-      ...styles.frequencyBadge,
-      backgroundColor: colors.gray[100],
-    },
-    settingsButton: {
-      ...styles.settingsButton,
-      backgroundColor: colors.gray[100],
-    },
-  };
-}

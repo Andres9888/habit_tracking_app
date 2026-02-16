@@ -80,7 +80,13 @@ export const TIME_RANGE_CONFIG = {
 } as const;
 
 /**
- * Default colors (using design system tokens)
+ * Default colors (deprecated - use themeAwareColors.ts instead)
+ *
+ * These hardcoded colors are retained for backwards compatibility but should not
+ * be used in new code. Use useHeatmapColors() hook instead to get theme-aware
+ * colors that adapt to light/dark mode.
+ *
+ * @deprecated Use useHeatmapColors() from themeAwareColors.ts instead
  */
 export const COLORS = {
   /** Card background */

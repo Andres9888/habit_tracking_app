@@ -3,16 +3,30 @@
  */
 
 import type { BinaryCellState, BinaryCellProps } from './types';
-import { COLORS } from './constants';
+import type { HeatmapColors } from './themeAwareColors';
 
 /**
- * Determines the background color for a cell based on its state.
+ * Determines to background color for a cell based on its state.
+ *
+ * @param cellState - The state of the cell (done, missed, today, etc.)
+ * @param day - The day data containing completion status
+ * @param habitColor - The habit's accent color (hex)
+ * @param colors - Theme-aware colors from useHeatmapColors()
+ * @returns Background color string (hex)
  */
 export function getBackgroundColor(
   cellState: BinaryCellState,
   day: NonNullable<BinaryCellProps['day']>,
-  habitColor: string
+  habitColor: string,
+  colors?: HeatmapColors
 ): string {
+  // Use theme-aware colors if provided, otherwise fall back to constants
+  const themeColors = colors || {
+    cellEmpty: '#e7e5e4',
+    cellFuture: '#f5f5f4',
+    cellBeforeCreation: '#fafaf9',
+  };
+
   switch (cellState) {
     case 'done': {
       return habitColor;
@@ -21,16 +35,16 @@ export function getBackgroundColor(
       return day.completed ? habitColor : 'transparent';
     }
     case 'missed': {
-      return COLORS.CELL_EMPTY;
+      return themeColors.cellEmpty;
     }
     case 'future': {
-      return COLORS.CELL_FUTURE;
+      return themeColors.cellFuture;
     }
     case 'beforeCreation': {
-      return COLORS.CELL_BEFORE_CREATION;
+      return themeColors.cellBeforeCreation;
     }
     default: {
-      return COLORS.CELL_EMPTY;
+      return themeColors.cellEmpty;
     }
   }
 }

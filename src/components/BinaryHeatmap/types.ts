@@ -6,6 +6,7 @@
  */
 
 import type { Id } from '../../../convex/_generated/dataModel';
+import type { ViewStyle, TextStyle } from 'react-native';
 
 /**
  * Time range options for the heatmap display
@@ -203,4 +204,17 @@ export interface StatsRowProps {
 
   /** Callback when settings button is pressed */
   onSettingsPress?: () => void;
+}
+
+/**
+ * Theme-aware styles for TimeRangeToggle component
+ */
+export interface ThemedToggleStyles {
+  button: ViewStyle;
+  buttonActive: ViewStyle;
+  buttonText: TextStyle;
+  buttonTextActive: TextStyle;
+  buttonTextInactive: TextStyle;
+  container: ViewStyle;
+  webFocus?: ViewStyle;
 }

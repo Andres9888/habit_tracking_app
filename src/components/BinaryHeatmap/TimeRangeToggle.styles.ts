@@ -1,63 +1,73 @@
 /**
  * Styles for TimeRangeToggle Component
+ *
+ * Colors that need theme awareness are provided at runtime
+ * via useThemedToggleStyles() hook.
  */
 
 import { StyleSheet } from 'react-native';
+import { useMemo } from 'react';
 
-import { shadows, borderRadius } from '../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography } from '../../theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { COLORS, FOCUS } from './constants';
+import type { ThemedToggleStyles } from './types';
 
-export const styles = StyleSheet.create({
+export const baseStyles = StyleSheet.create({
   button: {
+    flex: 1,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     alignItems: 'center',
-    borderRadius: borderRadius.small,
     justifyContent: 'center',
-    minWidth: 32,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  buttonActive: {
-    ...shadows.subtle,
-    backgroundColor: '#ffffff', // overridden by useThemedToggleStyles
-    shadowOpacity: 0.1,
+    borderRadius: 8,
   },
   buttonText: {
     fontSize: typography.tabBar.fontSize,
     fontWeight: '500',
   },
-  buttonTextActive: {
-    color: COLORS.TEXT_PRIMARY,
-  },
-  buttonTextInactive: {
-    color: COLORS.TEXT_SECONDARY,
-  },
   container: {
-    backgroundColor: '#f5f5f4', // overridden by useThemedToggleStyles
-    borderRadius: borderRadius.small,
     flexDirection: 'row',
+    borderRadius: 10,
     padding: 2,
   },
   webFocus: {
-    outlineColor: FOCUS.RING_COLOR,
-    outlineOffset: FOCUS.RING_OFFSET,
+    outlineWidth: 2,
     outlineStyle: 'solid',
-    outlineWidth: FOCUS.RING_WIDTH,
+    outlineColor: '#2563eb',
   },
 });
 
-export function useThemedToggleStyles() {
+/**
+ * Hook to get theme-aware styles for the TimeRangeToggle component
+ */
+export function useThemedToggleStyles(): ThemedToggleStyles {
   const { colors } = useThemeColors();
-  return {
-    ...styles,
-    buttonActive: {
-      ...styles.buttonActive,
-      backgroundColor: colors.card,
-    },
-    container: {
-      ...styles.container,
-      backgroundColor: colors.gray[100],
-    },
-  };
+
+  return useMemo(() => {
+    return {
+      button: baseStyles.button,
+      buttonActive: {
+        backgroundColor: colors.cardBorder,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+      },
+      buttonText: baseStyles.buttonText,
+      buttonTextActive: {
+        color: colors.text.primary,
+        fontWeight: '600',
+      },
+      buttonTextInactive: {
+        color: colors.text.tertiary,
+        fontWeight: '400',
+      },
+      container: {
+        ...baseStyles.container,
+        backgroundColor: colors.gray[200],
+      },
+      webFocus: baseStyles.webFocus,
+    };
+  }, [colors]);
 }
