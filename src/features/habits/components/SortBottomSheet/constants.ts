@@ -9,7 +9,10 @@ import {
 import { Dimensions } from 'react-native';
 
 import { springs } from '../../../../theme/animations';
+import { DISMISS_THRESHOLD, VELOCITY_THRESHOLD } from '@/constants';
 import type { SortOptionConfig } from './types';
+
+export { DISMISS_THRESHOLD, VELOCITY_THRESHOLD };
 
 export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -18,10 +21,6 @@ export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
  * Uses unified bottomSheet spring from theme/animations for consistency
  */
 export const SHEET_SPRING_CONFIG = springs.bottomSheet;
-
-/** Gesture threshold for dismissal — matches unified Modal system */
-export const DISMISS_THRESHOLD = 120;
-export const VELOCITY_THRESHOLD = 800;
 
 export const SORT_OPTIONS: SortOptionConfig[] = [
   {

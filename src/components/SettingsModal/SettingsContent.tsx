@@ -252,7 +252,11 @@ export function SettingsContent(p: SettingsContentProps) {
           </SettingsSection>
         </Animated.View>
         <Animated.View entering={anim(150)}>
-          <AccountSection isHighContrastActive={hc} />
+          <AccountSection
+            isHighContrastActive={hc}
+            isPremium={p.isPremium}
+            onPremiumUpsell={p.onPremiumUpsell}
+          />
         </Animated.View>
       </View>
       <View className='items-center pb-8 pt-4'>
@@ -260,7 +264,13 @@ export function SettingsContent(p: SettingsContentProps) {
           className='text-center text-[13px] leading-[18px]'
           style={{ color: colors.versionText }}
         >
-          Chain Day v1.0.0
+          Chain Day v1.0.0 (1)
+        </Text>
+        <Text
+          className='mt-1 text-center text-[11px]'
+          style={{ color: colors.versionText, opacity: 0.6 }}
+        >
+          Made with ❤️ for better habits
         </Text>
       </View>
     </ScrollView>

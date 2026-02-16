@@ -10,7 +10,7 @@ export function InitializeHabitStrengthSkeleton() {
   return (
     <View
       accessible
-      accessibilityLabel='Loading habits'
+      accessibilityLabel='Loading your habits and strength data...'
       accessibilityRole='progressbar'
       className='items-center justify-center p-4'
     >
