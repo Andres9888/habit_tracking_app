@@ -29,7 +29,12 @@ export function ProgressBar({
           {daysToNext} {daysToNext === 1 ? 'day' : 'days'}
         </Text>
       </View>
-      <View className='h-2 overflow-hidden rounded-full bg-stone-100'>
+      <View
+        accessible
+        accessibilityLabel={`${daysToNext} ${daysToNext === 1 ? 'day' : 'days'} until ${next.days}-day milestone`}
+        accessibilityRole="progressbar"
+        className='h-2 overflow-hidden rounded-full bg-stone-100'
+      >
         <Animated.View
           className={`h-full rounded-full ${next.barColor}`}
           style={barAnimatedStyle}

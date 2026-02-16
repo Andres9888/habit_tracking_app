@@ -22,7 +22,10 @@ export function NameInput({
       <Text
         style={[
           styles.label,
-          { fontFamily: theme.custom.fontFamilies.primary.text },
+          {
+            color: colors.text.secondary,
+            fontFamily: theme.custom.fontFamilies.primary.text,
+          },
         ]}
       >
         Habit Name

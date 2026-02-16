@@ -9,6 +9,7 @@ import { api } from '../../../../convex/_generated/api';
 import { formatReminderTime } from '../../../utils/notifications';
 import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStreakReminderSettings';
 import { cancelReminder, scheduleReminder } from './useHabitReminders';
+import { validateHabitName } from '../../../utils/validation';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitData {
@@ -42,35 +43,47 @@ export function useCreateHabitHandlers() {
     dayPhase,
     reminderSound,
   }: EditHabitData): Promise<void> {
+    // Validate habit name
+    const validation = validateHabitName(fullHabitName);
+    if (!validation.isValid) {
+      throw new Error(validation.error ?? 'Invalid habit name');
+    }
+    const sanitizedName = validation.sanitized;
+
     let finalHasReminders = hasReminders;
 
-    if (hasReminders) {
-      const scheduled = await scheduleReminder({
-        habitId: habitToEdit._id,
-        habitName: fullHabitName,
-        reminderTime,
-      });
-      if (!scheduled) {
-        finalHasReminders = false;
+    try {
+      if (hasReminders) {
+        const scheduled = await scheduleReminder({
+          habitId: habitToEdit._id,
+          habitName: sanitizedName,
+          reminderTime,
+        });
+        if (!scheduled) {
+          finalHasReminders = false;
+          await cancelReminder(habitToEdit._id);
+        }
+      } else {
         await cancelReminder(habitToEdit._id);
       }
-    } else {
-      await cancelReminder(habitToEdit._id);
-    }
 
-    await updateHabit({
-      habitId: habitToEdit._id,
-      icon: selectedEmoji ?? undefined,
-      iconColor: selectedColor,
-      name: fullHabitName,
-      notes: habitToEdit.notes ?? '',
-      preferredTime: dayPhase ?? undefined,
-      remindersEnabled: finalHasReminders,
-      reminderSound: finalHasReminders ? (reminderSound ?? undefined) : undefined,
-      reminderTime: finalHasReminders
-        ? formatReminderTime(reminderTime)
-        : undefined,
-    });
+      await updateHabit({
+        habitId: habitToEdit._id,
+        icon: selectedEmoji ?? undefined,
+        iconColor: selectedColor,
+        name: sanitizedName,
+        notes: habitToEdit.notes ?? '',
+        preferredTime: dayPhase ?? undefined,
+        remindersEnabled: finalHasReminders,
+        reminderSound: finalHasReminders ? (reminderSound ?? undefined) : undefined,
+        reminderTime: finalHasReminders
+          ? formatReminderTime(reminderTime)
+          : undefined,
+      });
+    } catch (error) {
+      if (__DEV__) console.error('Failed to edit habit:', error);
+      throw error;
+    }
   }
 
   async function handleCreate({
@@ -82,26 +95,38 @@ export function useCreateHabitHandlers() {
     dayPhase,
     reminderSound,
   }: HabitData): Promise<void> {
-    const habitId = await createHabit({
-      icon: selectedEmoji ?? undefined,
-      iconColor: selectedColor,
-      name: fullHabitName,
-      notes: '',
-      preferredTime: dayPhase ?? undefined,
-      remindersEnabled: hasReminders,
-      reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
-      reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
-    });
+    // Validate habit name
+    const validation = validateHabitName(fullHabitName);
+    if (!validation.isValid) {
+      throw new Error(validation.error ?? 'Invalid habit name');
+    }
+    const sanitizedName = validation.sanitized;
 
-    // Mark first habit creation for deferred notification permission request
-    void markFirstHabitCreated();
-
-    if (hasReminders && habitId) {
-      await scheduleReminder({
-        habitId,
-        habitName: fullHabitName,
-        reminderTime,
+    try {
+      const habitId = await createHabit({
+        icon: selectedEmoji ?? undefined,
+        iconColor: selectedColor,
+        name: sanitizedName,
+        notes: '',
+        preferredTime: dayPhase ?? undefined,
+        remindersEnabled: hasReminders,
+        reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
+        reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
       });
+
+      // Mark first habit creation for deferred notification permission request
+      void markFirstHabitCreated();
+
+      if (hasReminders && habitId) {
+        await scheduleReminder({
+          habitId,
+          habitName: sanitizedName,
+          reminderTime,
+        });
+      }
+    } catch (error) {
+      if (__DEV__) console.error('Failed to create habit:', error);
+      throw error;
     }
   }
 
