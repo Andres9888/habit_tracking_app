@@ -14,7 +14,7 @@ exports[`TimePickerModal Snapshots Android Platform renders Android picker (no m
   </Text>
   <Text>
     Value: 
-    2024-06-14T16:00:00.000Z
+    2024-06-14T18:00:00.000Z
   </Text>
 </View>
 `;
@@ -84,7 +84,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening tim
         }
       }
       accessible={true}
-      className="mx-6 w-full max-w-sm rounded-2xl bg-white p-5"
+      className="mx-6 w-full max-w-sm rounded-2xl p-5"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -96,10 +96,20 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening tim
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#EDEAE5",
+        }
+      }
     >
       <Text
         accessibilityRole="header"
-        className="mb-4 text-center text-lg font-semibold text-stone-900"
+        className="mb-4 text-center text-lg font-semibold"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
       >
         Set Reminder Time
       </Text>
@@ -120,7 +130,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening tim
           </Text>
           <Text>
             Value: 
-            2024-06-15T00:00:00.000Z
+            2024-06-15T02:00:00.000Z
           </Text>
         </View>
       </View>
@@ -148,7 +158,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening tim
             }
           }
           accessible={true}
-          className="h-12 flex-1 items-center justify-center rounded-xl bg-stone-100 active:bg-stone-200"
+          className="h-12 flex-1 items-center justify-center rounded-xl"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -160,9 +170,19 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening tim
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#DDD8D2",
+            }
+          }
         >
           <Text
-            className="text-base font-semibold text-stone-700"
+            className="text-base font-semibold"
+            style={
+              {
+                "color": "#2D2A26",
+              }
+            }
           >
             Cancel
           </Text>
@@ -274,7 +294,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning tim
         }
       }
       accessible={true}
-      className="mx-6 w-full max-w-sm rounded-2xl bg-white p-5"
+      className="mx-6 w-full max-w-sm rounded-2xl p-5"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -286,10 +306,20 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning tim
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#EDEAE5",
+        }
+      }
     >
       <Text
         accessibilityRole="header"
-        className="mb-4 text-center text-lg font-semibold text-stone-900"
+        className="mb-4 text-center text-lg font-semibold"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
       >
         Set Reminder Time
       </Text>
@@ -310,7 +340,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning tim
           </Text>
           <Text>
             Value: 
-            2024-06-14T11:00:00.000Z
+            2024-06-14T13:00:00.000Z
           </Text>
         </View>
       </View>
@@ -338,7 +368,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning tim
             }
           }
           accessible={true}
-          className="h-12 flex-1 items-center justify-center rounded-xl bg-stone-100 active:bg-stone-200"
+          className="h-12 flex-1 items-center justify-center rounded-xl"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -350,9 +380,19 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning tim
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#DDD8D2",
+            }
+          }
         >
           <Text
-            className="text-base font-semibold text-stone-700"
+            className="text-base font-semibold"
+            style={
+              {
+                "color": "#2D2A26",
+              }
+            }
           >
             Cancel
           </Text>
@@ -464,7 +504,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom ti
         }
       }
       accessible={true}
-      className="mx-6 w-full max-w-sm rounded-2xl bg-white p-5"
+      className="mx-6 w-full max-w-sm rounded-2xl p-5"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -476,10 +516,20 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom ti
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#EDEAE5",
+        }
+      }
     >
       <Text
         accessibilityRole="header"
-        className="mb-4 text-center text-lg font-semibold text-stone-900"
+        className="mb-4 text-center text-lg font-semibold"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
       >
         Select Time
       </Text>
@@ -500,7 +550,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom ti
           </Text>
           <Text>
             Value: 
-            2024-06-14T16:00:00.000Z
+            2024-06-14T18:00:00.000Z
           </Text>
         </View>
       </View>
@@ -528,7 +578,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom ti
             }
           }
           accessible={true}
-          className="h-12 flex-1 items-center justify-center rounded-xl bg-stone-100 active:bg-stone-200"
+          className="h-12 flex-1 items-center justify-center rounded-xl"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -540,9 +590,19 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom ti
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#DDD8D2",
+            }
+          }
         >
           <Text
-            className="text-base font-semibold text-stone-700"
+            className="text-base font-semibold"
+            style={
+              {
+                "color": "#2D2A26",
+              }
+            }
           >
             Cancel
           </Text>
@@ -654,7 +714,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default t
         }
       }
       accessible={true}
-      className="mx-6 w-full max-w-sm rounded-2xl bg-white p-5"
+      className="mx-6 w-full max-w-sm rounded-2xl p-5"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -666,10 +726,20 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default t
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#EDEAE5",
+        }
+      }
     >
       <Text
         accessibilityRole="header"
-        className="mb-4 text-center text-lg font-semibold text-stone-900"
+        className="mb-4 text-center text-lg font-semibold"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
       >
         Set Reminder Time
       </Text>
@@ -690,7 +760,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default t
           </Text>
           <Text>
             Value: 
-            2024-06-14T16:00:00.000Z
+            2024-06-14T18:00:00.000Z
           </Text>
         </View>
       </View>
@@ -718,7 +788,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default t
             }
           }
           accessible={true}
-          className="h-12 flex-1 items-center justify-center rounded-xl bg-stone-100 active:bg-stone-200"
+          className="h-12 flex-1 items-center justify-center rounded-xl"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -730,9 +800,19 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default t
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#DDD8D2",
+            }
+          }
         >
           <Text
-            className="text-base font-semibold text-stone-700"
+            className="text-base font-semibold"
+            style={
+              {
+                "color": "#2D2A26",
+              }
+            }
           >
             Cancel
           </Text>
@@ -844,7 +924,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (
         }
       }
       accessible={true}
-      className="mx-6 w-full max-w-sm rounded-2xl bg-white p-5"
+      className="mx-6 w-full max-w-sm rounded-2xl p-5"
       collapsable={false}
       focusable={true}
       onBlur={[Function]}
@@ -856,10 +936,20 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#EDEAE5",
+        }
+      }
     >
       <Text
         accessibilityRole="header"
-        className="mb-4 text-center text-lg font-semibold text-stone-900"
+        className="mb-4 text-center text-lg font-semibold"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
       >
         Set Reminder Time
       </Text>
@@ -880,7 +970,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (
           </Text>
           <Text>
             Value: 
-            2024-06-14T10:30:00.000Z
+            2024-06-14T12:30:00.000Z
           </Text>
         </View>
       </View>
@@ -908,7 +998,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (
             }
           }
           accessible={true}
-          className="h-12 flex-1 items-center justify-center rounded-xl bg-stone-100 active:bg-stone-200"
+          className="h-12 flex-1 items-center justify-center rounded-xl"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -920,9 +1010,19 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#DDD8D2",
+            }
+          }
         >
           <Text
-            className="text-base font-semibold text-stone-700"
+            className="text-base font-semibold"
+            style={
+              {
+                "color": "#2D2A26",
+              }
+            }
           >
             Cancel
           </Text>

@@ -1,5 +1,9 @@
 /**
- * renderHabitsListFooter - Footer renderer for HabitsList
+ * renderHabitsListFooter — FlatList `ListFooterComponent` factory.
+ *
+ * Renders a {@link HabitsListFooter} which conditionally shows a
+ * {@link LockedHabitCard} when the free-tier user has reached the habit limit.
+ * For premium users or users below the limit, the footer is `null`.
  */
 
 import { HabitsListFooter } from './HabitsListFooter';
