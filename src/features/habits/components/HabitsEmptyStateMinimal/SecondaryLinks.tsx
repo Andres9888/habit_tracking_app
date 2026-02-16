@@ -9,8 +9,9 @@
 
 import { Pressable, Text, View } from 'react-native';
 
-import { COLORS, COPY, TOUCH_TARGETS } from './constants';
+import { COPY, TOUCH_TARGETS } from './constants';
 import type { SecondaryLinksProps } from './types';
+import { useEmptyStateColors } from './useEmptyStateColors';
 
 /**
  * Secondary navigation links for templates and custom creation
@@ -19,6 +20,8 @@ export function SecondaryLinks({
   onBrowseTemplates,
   onCreateCustom,
 }: SecondaryLinksProps) {
+  const colors = useEmptyStateColors();
+
   return (
     <View
       style={{
@@ -45,7 +48,7 @@ export function SecondaryLinks({
       >
         <Text
           style={{
-            color: COLORS.stone500,
+            color: colors.textSecondary,
             fontSize: 13,
             fontWeight: '400',
           }}
@@ -57,7 +60,7 @@ export function SecondaryLinks({
       {/* Dot separator */}
       <Text
         style={{
-          color: COLORS.stone500,
+          color: colors.textSecondary,
           fontSize: 13,
         }}
       >
@@ -80,7 +83,7 @@ export function SecondaryLinks({
       >
         <Text
           style={{
-            color: COLORS.stone500,
+            color: colors.textSecondary,
             fontSize: 13,
             fontWeight: '400',
           }}

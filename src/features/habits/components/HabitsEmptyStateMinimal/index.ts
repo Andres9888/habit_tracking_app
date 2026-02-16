@@ -41,7 +41,6 @@ export type {
 export {
   SUGGESTION_CHIPS,
   COPY,
-  COLORS,
   TOUCH_TARGETS,
   BORDER_RADIUS,
 } from './constants';

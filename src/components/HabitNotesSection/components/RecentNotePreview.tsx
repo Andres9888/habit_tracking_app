@@ -33,7 +33,7 @@ export function RecentNotePreview({ note, onEdit }: RecentNotePreviewProps) {
         </Text>
         <Edit3 color={colors.text.tertiary} size={14} />
       </View>
-      <Text className='text-sm leading-5" numberOfLines={3} style={{ color: colors.text.primary }}>
+      <Text numberOfLines={3} style={{ color: colors.text.primary, fontSize: 14, lineHeight: 20 }}>
         {note.body}
       </Text>
     </Pressable>

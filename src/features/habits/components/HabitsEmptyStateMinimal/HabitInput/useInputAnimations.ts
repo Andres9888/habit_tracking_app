@@ -12,7 +12,7 @@ import {
 
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
 import { TIMING_CONFIGS } from '../animations';
-import { COLORS } from '../constants';
+import { useEmptyStateColors } from '../useEmptyStateColors';
 
 interface UseInputAnimationsParams {
   onFocus?: () => void;
@@ -23,6 +23,7 @@ export function useInputAnimations({
   onFocus,
   onBlur,
 }: UseInputAnimationsParams) {
+  const colors = useEmptyStateColors();
   const [isFocused, setIsFocused] = useState(false);
   const focusProgress = useSharedValue(0);
   const { triggerLightImpact } = useHapticFeedback();
@@ -44,7 +45,7 @@ export function useInputAnimations({
     borderColor: interpolateColor(
       focusProgress.value,
       [0, 1],
-      [COLORS.stone200, COLORS.blue500]
+      [colors.inputBorder, colors.inputBorderFocused]
     ),
     shadowOpacity: focusProgress.value * 0.15,
   }));

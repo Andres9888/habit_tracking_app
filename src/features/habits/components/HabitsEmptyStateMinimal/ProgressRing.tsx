@@ -20,7 +20,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { PROGRESS_RING } from './animations';
-import { COLORS } from './constants';
+import { useEmptyStateColors } from './useEmptyStateColors';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -44,6 +44,7 @@ export function ProgressRing({
   size = PROGRESS_RING.size,
   onComplete,
 }: ProgressRingProps) {
+  const colors = useEmptyStateColors();
   const shouldReduceMotion = useReducedMotion();
 
   // Use ref for callback to prevent it from triggering useEffect re-runs
@@ -102,7 +103,7 @@ export function ProgressRing({
           cy={center}
           fill="none"
           r={radius}
-          stroke={COLORS.stone200}
+          stroke={colors.inputBorder}
           strokeWidth={strokeWidth}
         />
 
@@ -114,7 +115,7 @@ export function ProgressRing({
           fill="none"
           origin={`${center}, ${center}`}
           r={radius}
-          stroke={COLORS.emerald500}
+          stroke={colors.ctaBackground}
           strokeDasharray={circumference}
           strokeDashoffset={circumference}
           strokeWidth={strokeWidth}

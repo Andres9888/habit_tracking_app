@@ -6,14 +6,16 @@
 
 import { View } from 'react-native';
 
-import { COLORS } from '../constants';
+import { useEmptyStateColors } from '../useEmptyStateColors';
 
 export function ClearIcon() {
+  const colors = useEmptyStateColors();
+
   return (
     <View
       style={{
         alignItems: 'center',
-        backgroundColor: COLORS.stone200,
+        backgroundColor: colors.inputBorder,
         borderRadius: 12,
         height: 20,
         justifyContent: 'center',
@@ -22,7 +24,7 @@ export function ClearIcon() {
     >
       <View
         style={{
-          backgroundColor: COLORS.stone400,
+          backgroundColor: colors.inputPlaceholder,
           height: 2,
           position: 'absolute',
           transform: [{ rotate: '45deg' }],
@@ -31,7 +33,7 @@ export function ClearIcon() {
       />
       <View
         style={{
-          backgroundColor: COLORS.stone400,
+          backgroundColor: colors.inputPlaceholder,
           height: 2,
           position: 'absolute',
           transform: [{ rotate: '-45deg' }],
