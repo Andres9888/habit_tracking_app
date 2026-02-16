@@ -1,10 +1,17 @@
 /**
- * UpgradePrompt Component
- * Modal overlay for upgrade CTA — optimized for trial conversion
+ * UpgradePrompt — full-screen modal overlay for trial conversion.
+ *
+ * Part of the **monetization flow**: shown by {@link HabitsListModals} when
+ * `upgradePromptVisible` is true (typically after the user tries to exceed
+ * the free-tier habit limit).
+ *
+ * Features a slide-in card with headline, value prop, pricing pill, primary
+ * CTA ("Start Free Trial"), and a dismissive secondary button ("Maybe later").
+ * The backdrop is tappable to dismiss.
  */
 
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
 
@@ -24,7 +31,7 @@ export function UpgradePrompt({
   return (
     <Animated.View
       className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
-      entering={FadeIn.duration(ANIMATION_DURATION.medium)}
+      entering={FadeInDown.duration(280).springify().damping(18)}
     >
       <Pressable
         accessibilityHint='Tap outside to dismiss'

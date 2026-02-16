@@ -1,8 +1,6 @@
 /* eslint-disable max-lines */
 /**
  * Batch Resolution Helpers
- *
- * Helper functions for batch conflict resolution.
  */
 
 import type { OfflineOperation } from '../../queue';
@@ -20,14 +18,14 @@ import type {
   ServerCompletionState,
 } from './types';
 
-/** Build results from server state map */
+export { handleBatchError } from './batchErrorHandler';
+
 export function buildResultsFromStates(
   operations: OfflineOperation<'toggleCompletion'>[],
   serverStates: Map<string, boolean>,
   onEvent?: ConflictEventListener
 ): BatchConflictResolutionResult {
   const results: ConflictResolutionResult[] = [];
-
   for (const operation of operations) {
     const { habitId, date, toCompleted } = operation.payload;
     const key = createHabitDateKey(habitId, date);
@@ -79,7 +77,6 @@ export function buildResultsFromStates(
         );
       }
     }
-
     results.push(
       buildResolutionResult(
         operation.id,
@@ -90,37 +87,5 @@ export function buildResultsFromStates(
       )
     );
   }
-
-  return buildBatchResult(results);
-}
-
-/** Handle batch error with fail-safe sync */
-export function handleBatchError(
-  operations: OfflineOperation<'toggleCompletion'>[],
-  error: unknown,
-  onEvent?: ConflictEventListener
-): BatchConflictResolutionResult {
-  const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-  if (onEvent && operations.length > 0) {
-    onEvent(
-      createConflictEvent('conflict:error', {
-        date: operations[0].payload.date,
-        error: error instanceof Error ? error : new Error(errorMessage),
-        habitId: operations[0].payload.habitId,
-        operationId: 'batch',
-      })
-    );
-  }
-
-  const results = operations.map((op) =>
-    buildResolutionResult(
-      op.id,
-      op.payload,
-      undefined,
-      'sync',
-      `Batch server check failed: ${errorMessage} - proceeding with sync`
-    )
-  );
   return buildBatchResult(results);
 }

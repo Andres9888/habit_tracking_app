@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * UnsavedChangesAlert Component
  * Custom styled modal for confirming discard of unsaved changes
@@ -43,6 +44,7 @@ export function UnsavedChangesAlert({
 
   return (
     <Modal
+      accessibilityViewIsModal
       backdropOpacity={0.6}
       variant='centerAlert'
       visible={visible}

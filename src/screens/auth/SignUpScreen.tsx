@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import {
   AuthDivider,
   AuthError,
@@ -30,6 +31,7 @@ function SignUpScreenContent({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
+  const { colors: themeColors } = useThemeColors();
   const passwordRef = useRef<TextInput>(null);
   const {
     emailAddress,
@@ -99,7 +101,7 @@ function SignUpScreenContent({
             <Animated.View
               entering={FadeInUp.delay(100).springify().damping(18)}
               style={{
-                backgroundColor: '#ffffff',
+                backgroundColor: themeColors.card,
                 borderRadius: 16,
                 elevation: 4,
                 padding: 24,

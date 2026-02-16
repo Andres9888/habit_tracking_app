@@ -28,12 +28,10 @@ export async function cancelLetterUnlockNotification(
       )
     );
 
-    if (toCancel.length > 0) {
-      if (__DEV__) console.info('cancelLetterUnlockNotification: cancelled', {
+    if (toCancel.length > 0 && __DEV__) console.info('cancelLetterUnlockNotification: cancelled', {
         count: toCancel.length,
         letterId,
       });
-    }
   } catch (error) {
     if (__DEV__) console.warn('cancelLetterUnlockNotification failed', { error, letterId });
   }
