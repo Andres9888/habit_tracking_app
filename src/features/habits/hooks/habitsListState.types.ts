@@ -17,7 +17,6 @@ import type {
 } from '../types';
 
 /** Result of toggling a habit completion */
-export type ToggleMutationResult = { success: boolean; error?: string };
 
 export interface HabitsListState {
   celebrationsEnabled: boolean;

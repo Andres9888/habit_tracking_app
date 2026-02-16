@@ -65,6 +65,7 @@ export interface DraggableHabitCardProps {
   newRecordScale: Animated.Value;
   onArchive?: (habitId: Id<'habits'>) => void;
   onPress?: (habit: Habit) => void;
+  onLongPress?: () => void;
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
   showConnectors: boolean;

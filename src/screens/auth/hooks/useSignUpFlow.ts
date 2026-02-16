@@ -3,7 +3,7 @@ import { useSignUp } from '@clerk/clerk-expo';
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
-import { validateEmail, validatePassword } from '../../../utils/validation';
+import { validateEmail, validatePassword } from '../../../utils/validation/index';
 import { getClerkErrorMessage } from '../utils/getClerkErrorMessage';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 

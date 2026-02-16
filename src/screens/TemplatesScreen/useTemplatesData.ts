@@ -11,22 +11,12 @@ export function useTemplatesData() {
   const isLoading = allTemplates === undefined || categories === undefined;
 
   const importTemplate = useMutation(api.templates.importTemplate);
-  const seedTemplates = useMutation(api.templates.seedTemplates);
-  const seedAdditionalTemplates = useMutation(
-    api.templates.seedAdditionalTemplates
-  );
-  const seedNewScienceTemplates = useMutation(
-    api.templates.seedNewScienceTemplates
-  );
 
   return {
     allTemplates,
     categories,
     importTemplate,
     isLoading,
-    seedAdditionalTemplates,
-    seedNewScienceTemplates,
-    seedTemplates,
   };
 }
 

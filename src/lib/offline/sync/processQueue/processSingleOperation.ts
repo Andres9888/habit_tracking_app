@@ -76,7 +76,7 @@ export async function processSingleOperation(
 
   if (operation.type === 'toggleCompletion') {
     const conflictResult = await checkAndResolveConflict(
-      operation,
+      operation as OfflineOperation<"toggleCompletion">,
       deps,
       options
     );

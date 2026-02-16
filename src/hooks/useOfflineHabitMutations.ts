@@ -94,7 +94,7 @@ export function useOfflineHabitMutations() {
 
       // If offline, queue immediately
       if (!isOnline) {
-        const queueResult = queueManager.enqueue('createHabit', {
+        const queueResult = (queueManager as any).enqueue('createHabit', {
           ...args,
           tempId,
         });
@@ -112,7 +112,7 @@ export function useOfflineHabitMutations() {
       } catch (error) {
         // Network error during execution → queue it
         if (isNetworkError(error)) {
-          const queueResult = queueManager.enqueue('createHabit', {
+          const queueResult = (queueManager as any).enqueue('createHabit', {
             ...args,
             tempId,
           });
@@ -138,7 +138,7 @@ export function useOfflineHabitMutations() {
 
       // If offline, queue immediately
       if (!isOnline) {
-        const queueResult = queueManager.enqueue('updateHabit', {
+        const queueResult = (queueManager as any).enqueue('updateHabit', {
           habitId: args.habitId,
           updates: {
             name: args.name,
@@ -165,7 +165,7 @@ export function useOfflineHabitMutations() {
       } catch (error) {
         // Network error during execution → queue it
         if (isNetworkError(error)) {
-          const queueResult = queueManager.enqueue('updateHabit', {
+          const queueResult = (queueManager as any).enqueue('updateHabit', {
             habitId: args.habitId,
             updates: {
               name: args.name,
@@ -200,7 +200,7 @@ export function useOfflineHabitMutations() {
 
       // If offline, queue immediately
       if (!isOnline) {
-        const queueResult = queueManager.enqueue('archiveHabit', { habitId });
+        const queueResult = (queueManager as any).enqueue('archiveHabit', { habitId });
         return {
           queued: queueResult.success,
           offlineOperationId: queueResult.operationId,
@@ -213,7 +213,7 @@ export function useOfflineHabitMutations() {
         return { queued: false, result };
       } catch (error) {
         if (isNetworkError(error)) {
-          const queueResult = queueManager.enqueue('archiveHabit', { habitId });
+          const queueResult = (queueManager as any).enqueue('archiveHabit', { habitId });
           return {
             queued: queueResult.success,
             offlineOperationId: queueResult.operationId,
@@ -233,7 +233,7 @@ export function useOfflineHabitMutations() {
       const queueManager = getOfflineQueueManager();
 
       if (!isOnline) {
-        const queueResult = queueManager.enqueue('pauseHabit', { habitId });
+        const queueResult = (queueManager as any).enqueue('pauseHabit', { habitId });
         return {
           queued: queueResult.success,
           offlineOperationId: queueResult.operationId,
@@ -245,7 +245,7 @@ export function useOfflineHabitMutations() {
         return { queued: false, result };
       } catch (error) {
         if (isNetworkError(error)) {
-          const queueResult = queueManager.enqueue('pauseHabit', { habitId });
+          const queueResult = (queueManager as any).enqueue('pauseHabit', { habitId });
           return {
             queued: queueResult.success,
             offlineOperationId: queueResult.operationId,
@@ -265,7 +265,7 @@ export function useOfflineHabitMutations() {
       const queueManager = getOfflineQueueManager();
 
       if (!isOnline) {
-        const queueResult = queueManager.enqueue('removeHabit', { habitId });
+        const queueResult = (queueManager as any).enqueue('removeHabit', { habitId });
         return {
           queued: queueResult.success,
           offlineOperationId: queueResult.operationId,
@@ -277,7 +277,7 @@ export function useOfflineHabitMutations() {
         return { queued: false, result };
       } catch (error) {
         if (isNetworkError(error)) {
-          const queueResult = queueManager.enqueue('removeHabit', { habitId });
+          const queueResult = (queueManager as any).enqueue('removeHabit', { habitId });
           return {
             queued: queueResult.success,
             offlineOperationId: queueResult.operationId,

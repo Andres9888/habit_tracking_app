@@ -24,7 +24,7 @@ export function extractUniqueHabitIds(
 
   for (const op of operations) {
     if (op.type === 'toggleCompletion') {
-      habitIds.add(op.payload.habitId);
+      habitIds.add((op as OfflineOperation<"toggleCompletion">).payload.habitId);
     }
   }
 
@@ -41,7 +41,7 @@ export function groupOperationsByHabit(
 
   for (const op of operations) {
     if (op.type === 'toggleCompletion') {
-      const habitId = op.payload.habitId;
+      const habitId = (op as OfflineOperation<"toggleCompletion">).payload.habitId;
       const existing = grouped.get(habitId) || [];
       existing.push(op);
       grouped.set(habitId, existing);

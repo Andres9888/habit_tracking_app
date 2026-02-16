@@ -65,3 +65,5 @@ export const ChainLinkIcon: React.FC<ChainLinkIconProps> = ({
     </View>
   );
 };
+
+export default ChainLinkIcon;

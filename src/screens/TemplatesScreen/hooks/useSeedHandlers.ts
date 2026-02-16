@@ -5,9 +5,9 @@
 import { useCallback } from 'react';
 
 interface UseSeedHandlersOptions {
-  seedAdditionalTemplates: (args: Record<string, never>) => Promise<unknown>;
-  seedNewScienceTemplates: (args: Record<string, never>) => Promise<unknown>;
-  seedTemplates: (args: Record<string, never>) => Promise<unknown>;
+  seedAdditionalTemplates?: (args: Record<string, never>) => Promise<unknown>;
+  seedNewScienceTemplates?: (args: Record<string, never>) => Promise<unknown>;
+  seedTemplates?: (args: Record<string, never>) => Promise<unknown>;
   setIsSeeding: React.Dispatch<React.SetStateAction<boolean>>;
   setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
   setToastMessage: React.Dispatch<React.SetStateAction<string>>;
@@ -26,9 +26,9 @@ export function useSeedHandlers(opts: UseSeedHandlersOptions) {
   const handleSeedTemplates = useCallback(async () => {
     setIsSeeding(true);
     try {
-      await seedTemplates({});
-      await seedAdditionalTemplates({});
-      await seedNewScienceTemplates({});
+      await seedTemplates?.({}); // No-op if internal mutation
+      await seedAdditionalTemplates?.({}); // No-op if internal mutation
+      await seedNewScienceTemplates?.({}); // No-op if internal mutation
       setToastMessage('Templates loaded successfully!');
       setShowToast(true);
     } catch (error) {

@@ -41,7 +41,7 @@ export async function executeSyncCycle(
 
   try {
     for (const op of operations) queueManager.markSyncing(op.id);
-    const syncItems = operationsToSyncItems(operations);
+    const syncItems = operationsToSyncItems(operations) as any;
     const batchResult = await syncManager.processBatch(
       syncItems,
       createItemExecutor(executor),

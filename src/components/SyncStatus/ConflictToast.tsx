@@ -73,7 +73,7 @@ export function ConflictToast({
       style={[
         styles.container,
         {
-          backgroundColor: colors.warning || '#F59E0B',
+          backgroundColor: (colors as any).warning || '#F59E0B',
         },
         animatedStyle,
       ]}

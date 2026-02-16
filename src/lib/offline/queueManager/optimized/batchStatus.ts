@@ -46,7 +46,7 @@ export function createMarkFailedBatch(
     };
 
     const now = Date.now();
-    const newOperations: OfflineOperation<'toggleCompletion'>[] =
+    const newOperations =
       state.operations.map((op) => {
         if (idsToUpdate.has(op.id)) {
           result.succeeded.push(op.id);

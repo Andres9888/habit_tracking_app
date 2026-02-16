@@ -4,6 +4,7 @@
  */
 
 import type {
+  OfflineOperation,
   OfflineQueueState,
   QueueEvent,
   QueueOperationOptions,
@@ -35,7 +36,7 @@ export function createEnqueue(
     const existingIdx = state.operations.findIndex(
       (op) =>
         op.type === 'toggleCompletion' &&
-        getToggleDedupeKey(op.payload.habitId, op.payload.date) === dedupeKey
+        getToggleDedupeKey((op as OfflineOperation<"toggleCompletion">).payload.habitId, (op as OfflineOperation<"toggleCompletion">).payload.date) === dedupeKey
     );
 
     if (existingIdx !== -1 && !allowDuplicate) {

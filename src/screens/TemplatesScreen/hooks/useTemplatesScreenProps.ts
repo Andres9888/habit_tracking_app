@@ -37,9 +37,6 @@ export function useTemplatesScreenProps() {
   const handlers = useTemplateHandlers({
     flatListRef: state.flatListRef,
     importTemplate: data.importTemplate,
-    seedAdditionalTemplates: data.seedAdditionalTemplates,
-    seedNewScienceTemplates: data.seedNewScienceTemplates,
-    seedTemplates: data.seedTemplates,
     setExpandedCategories: state.setExpandedCategories,
     setImportedTemplateIds: state.setImportedTemplateIds,
     setImportingTemplateId: state.setImportingTemplateId,

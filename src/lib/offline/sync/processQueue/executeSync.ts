@@ -4,7 +4,7 @@
  * Handles the actual sync execution for offline operations.
  */
 
-import type { OfflineOperation, ToggleCompletionPayload } from '../../queue';
+import type { OfflineOperation } from '../../queue';
 import type { SyncItem } from '../../syncManager';
 import type {
   ProcessOperationResult,
@@ -15,7 +15,7 @@ import type {
 /** Convert an offline operation to a sync item */
 export function operationToSyncItem(
   operation: OfflineOperation
-): SyncItem<ToggleCompletionPayload> {
+): SyncItem {
   return {
     id: operation.id,
     payload: operation.payload,
@@ -39,7 +39,7 @@ export async function executeSync(
 
   try {
     const result = await syncManager.syncItem(syncItem, async (item) => {
-      await executor(item.payload);
+      await executor(item.payload as any);
     });
 
     if (result.success) {

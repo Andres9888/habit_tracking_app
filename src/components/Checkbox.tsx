@@ -8,7 +8,7 @@ import { Text, View, ViewStyle } from 'react-native';
 import { clsx } from 'clsx';
 
 import { useHapticFeedback } from '../hooks/useHapticFeedback';
-import { AnimatedPressable } from 'ui';
+import { AnimatedPressable } from './ui/AnimatedPressable';
 
 type CheckboxSize = 'sm' | 'md' | 'lg';
 type CheckboxVariant = 'primary' | 'success' | 'neutral' | 'danger';
@@ -37,8 +37,7 @@ const variantClasses = {
   success: 'bg-green-600 border-green-600',
 };
 
-export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
-  {
+export const Checkbox: React.FC<CheckboxProps> = function Checkbox({
     checked = false,
     disabled = false,
     indeterminate = false,
@@ -47,9 +46,7 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
     onPress,
     style,
     accessibilityLabel,
-  },
-  ref
-) {
+  }) {
   const { triggerLightImpact } = useHapticFeedback();
   const isIndeterminate = indeterminate && !checked;
   const isActive = checked || isIndeterminate;
@@ -61,7 +58,6 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
 
   return (
     <AnimatedPressable
-      ref={ref}
       accessibilityHint='Double tap to toggle this checkbox'
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='checkbox'
@@ -89,6 +85,6 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
       </View>
     </AnimatedPressable>
   );
-});
+};
 
 export default Checkbox;

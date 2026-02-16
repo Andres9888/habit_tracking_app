@@ -20,7 +20,8 @@ export function buildOperationIndex(
     byId.set(op.id, i);
 
     if (op.type === 'toggleCompletion') {
-      const key = `toggle:${op.payload.habitId}:${op.payload.date}`;
+      const typed = op as OfflineOperation<'toggleCompletion'>;
+      const key = `toggle:${typed.payload.habitId}:${typed.payload.date}`;
       byDedupeKey.set(key, op.id);
     }
   }

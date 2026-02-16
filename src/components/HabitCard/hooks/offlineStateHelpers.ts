@@ -7,8 +7,15 @@
 
 import type {
   OfflineOperation,
-  PendingToggleOperation,
-} from '../../../lib/offline';
+} from '../../../lib/offline/queue';
+
+/**
+ * Pending toggle operation for UI display
+ */
+export interface PendingToggleOperation {
+  date: string;
+  toCompleted: boolean;
+}
 
 /**
  * Filter operations for a specific habit
@@ -16,20 +23,19 @@ import type {
 export function filterPendingForHabit(
   operations: OfflineOperation[],
   habitId: string
-): OfflineOperation[] {
+): OfflineOperation<'toggleCompletion'>[] {
   return operations.filter(
-    (op) =>
+    (op): op is OfflineOperation<'toggleCompletion'> =>
       op.type === 'toggleCompletion' &&
-      op.payload.habitId === habitId &&
       (op.status === 'pending' || op.status === 'syncing')
-  );
+  ).filter(op => op.payload.habitId === habitId);
 }
 
 /**
  * Convert offline operations to PendingToggleOperation format
  */
 export function toPendingToggleOps(
-  operations: OfflineOperation[]
+  operations: OfflineOperation<'toggleCompletion'>[]
 ): PendingToggleOperation[] {
   return operations.map((op) => ({
     date: op.payload.date,
