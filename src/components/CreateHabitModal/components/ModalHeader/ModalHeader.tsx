@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCallback } from 'react';
 import STRINGS from '../../../../constants/strings';
 import { X } from 'lucide-react-native';
-import { colors } from '../../../../theme/colors';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { useShakeAnimation } from './useShakeAnimation';
 import { DoneButton } from './DoneButton';
@@ -23,6 +23,7 @@ export const ModalHeader = ({
   onValidationError,
 }: ModalHeaderProps) => {
   const insets = useSafeAreaInsets();
+  const { colors: themeColors } = useThemeColors();
   const canSave = habitName.trim().length > 0;
   const { triggerSelection, triggerWarning } = useHapticFeedback();
   const { shakeValue, triggerShake } = useShakeAnimation(
@@ -57,7 +58,7 @@ export const ModalHeader = ({
         })}
         onPress={onClose}
       >
-        <X color={colors.gray[500]} size={24} strokeWidth={2} />
+        <X color={themeColors.text.secondary} size={24} strokeWidth={2} />
       </Pressable>
 
       <View className='flex-1' />

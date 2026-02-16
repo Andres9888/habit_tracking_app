@@ -46,6 +46,7 @@ export default function TemplatePreviewModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableBackdropClose={isImporting}
       variant='fullScreen'
       visible={visible}

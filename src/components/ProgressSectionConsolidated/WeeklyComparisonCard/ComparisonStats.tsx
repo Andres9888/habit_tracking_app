@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 import type { WeekOverWeekTrend } from '../../../utils/trendCalculations';
 
@@ -21,6 +22,7 @@ export function ComparisonStats({ trend }: ComparisonStatsProps) {
     lastWeekCompleted,
     lastWeekRate,
   } = trend;
+  const { colors } = useThemeColors();
 
   return (
     <View className='mb-3 flex-row items-center gap-4'>
@@ -38,19 +40,39 @@ export function ComparisonStats({ trend }: ComparisonStatsProps) {
 
       {/* VS Indicator */}
       <View className='items-center'>
-        <Text className='text-xs font-medium text-stone-400'>vs</Text>
+        <Text
+          className='text-xs font-medium'
+          style={{ color: colors.text.tertiary }}
+        >
+          vs
+        </Text>
       </View>
 
       {/* Last Week */}
-      <View className='flex-1 rounded-xl bg-stone-50 p-3'>
-        <Text className='mb-1 text-xs text-stone-500'>Last Week</Text>
+      <View
+        className='flex-1 rounded-xl p-3'
+        style={{ backgroundColor: colors.gray[50] }}
+      >
+        <Text className='mb-1 text-xs' style={{ color: colors.text.tertiary }}>
+          Last Week
+        </Text>
         <View className='flex-row items-baseline gap-1'>
-          <Text className='text-xl font-bold text-stone-700'>
+          <Text
+            className='text-xl font-bold'
+            style={{ color: colors.text.primary }}
+          >
             {lastWeekCompleted}
           </Text>
-          <Text className='text-xs text-stone-500'>/ 7</Text>
+          <Text className='text-xs' style={{ color: colors.text.tertiary }}>
+            / 7
+          </Text>
         </View>
-        <Text className='mt-0.5 text-xs text-stone-500'>{lastWeekRate}%</Text>
+        <Text
+          className='mt-0.5 text-xs'
+          style={{ color: colors.text.tertiary }}
+        >
+          {lastWeekRate}%
+        </Text>
       </View>
     </View>
   );

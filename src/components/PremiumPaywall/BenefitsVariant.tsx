@@ -45,6 +45,7 @@ export function BenefitsVariant({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType={reduceMotion ? 'fade' : 'slide'}
       presentationStyle='pageSheet'
       testID={testID}

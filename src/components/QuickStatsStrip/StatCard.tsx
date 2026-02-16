@@ -40,11 +40,11 @@ export function StatCard({
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.95, { damping: 18, stiffness: 240 });
+    scale.value = withSpring(0.95, { damping: 18, stiffness: 150 });
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 18, stiffness: 240 });
+    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
   };
 
   const handlePress = () => {
