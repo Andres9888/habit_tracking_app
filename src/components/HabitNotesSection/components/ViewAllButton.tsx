@@ -3,6 +3,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface ViewAllButtonProps {
   noteCount: number;
@@ -15,17 +16,20 @@ export function ViewAllButton({ noteCount, onPress }: ViewAllButtonProps) {
     onPress();
   };
 
+  const { colors } = useThemeColors();
+
   return (
     <AnimatedPressable
       accessibilityLabel={`View all ${noteCount} notes`}
       accessibilityRole='button'
-      className='flex-row items-center justify-center gap-1 rounded-xl border border-dashed border-stone-200 bg-white py-3 active:bg-stone-50'
+      className='flex-row items-center justify-center gap-1 rounded-xl border border-dashed py-3'
+      style={{ borderColor: colors.border, backgroundColor: colors.card }}
       onPress={handlePress}
     >
-      <Text className='text-sm font-medium text-stone-600'>
+      <Text className='text-sm font-medium' style={{ color: colors.text.secondary }}>
         View all ({noteCount})
       </Text>
-      <ChevronRight className='text-stone-400' size={16} />
+      <ChevronRight color={colors.text.tertiary} size={16} />
     </AnimatedPressable>
   );
 }

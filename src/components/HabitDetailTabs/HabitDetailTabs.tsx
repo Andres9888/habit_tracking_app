@@ -3,6 +3,7 @@
  *
  * Tab bar navigation for the Habit Detail screen.
  * Uses a pill/segment control style with smooth sliding animation.
+ * Theme-aware with proper dark mode support.
  */
 
 import { triggerHaptic } from '@/utils/haptics';
@@ -15,6 +16,7 @@ import Animated, {
   useDerivedValue,
 } from 'react-native-reanimated';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { TabType, HabitDetailTabsProps } from './HabitDetailTabs.types';
 import {
   TABS,
@@ -28,6 +30,7 @@ export function HabitDetailTabs({
   activeTab,
   onTabChange,
 }: HabitDetailTabsProps) {
+  const { colors, isDark } = useThemeColors();
   const containerWidth = useSharedValue(0);
   const indicatorPosition = useSharedValue(
     TABS.findIndex((t) => t.id === activeTab)
@@ -72,20 +75,28 @@ export function HabitDetailTabs({
     [activeTab, onTabChange]
   );
 
+  // Theme-aware colors
+  const containerBgColor = isDark ? colors.gray[700] : colors.gray[100];
+  const pillBgColor = colors.primary[500];
+  const pillShadowColor = colors.primary[300];
+
   return (
     <View
       accessibilityRole='tablist'
       className='mx-4 my-3'
       onLayout={handleLayout}
     >
-      <View className='relative rounded-xl bg-stone-100 p-1'>
+      <View
+        className='relative rounded-xl p-1'
+        style={{ backgroundColor: containerBgColor }}
+      >
         <Animated.View
           className='absolute bottom-1 top-1 rounded-lg shadow-sm'
           style={[
             pillStyle,
             {
-              backgroundColor: '#059669',
-              shadowColor: '#059669',
+              backgroundColor: pillBgColor,
+              shadowColor: pillShadowColor,
               shadowOffset: { height: 3, width: 0 },
               shadowOpacity: 0.15,
               shadowRadius: 8,
