@@ -55,13 +55,13 @@ export function ActionButtons({
           ]}
           onPress={handleShare}
         >
-          <Text style={styles.primaryButtonText}>Share 🎉</Text>
+          <Text style={styles.primaryButtonText}>Share Achievement 🎉</Text>
         </AnimatedPressable>
       )}
 
       <AnimatedPressable
         accessible
-        accessibilityLabel="Continue"
+        accessibilityLabel="Keep going"
         accessibilityRole="button"
         style={[
           styles.secondaryButton,

@@ -38,6 +38,11 @@ export function ContentSection({
         {milestone.title}
       </Animated.Text>
 
+      {/* Subtitle */}
+      <Animated.Text style={[styles.subtitle, contentAnimatedStyle]}>
+        You've built an incredible habit!
+      </Animated.Text>
+
       {/* Content */}
       <Animated.View style={contentAnimatedStyle}>
         {/* Streak Count */}
@@ -56,7 +61,7 @@ export function ContentSection({
         </View>
 
         {/* Habit Info */}
-        <View style={styles.habitRow}>
+        <View style={[styles.habitRow, { justifyContent: 'center' }]}>
           <Text style={styles.habitEmoji}>{habitEmoji}</Text>
           <Text
             numberOfLines={1}

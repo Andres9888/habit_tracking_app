@@ -64,6 +64,7 @@ export function FooterSection({
           ) : (
             <AnimatedPressable
               accessible
+              accessibilityHint='Add this habit template to your list'
               accessibilityLabel={`Import ${templateName} habit`}
               accessibilityRole='button'
               disabled={isImporting}
@@ -85,6 +86,7 @@ export function FooterSection({
           {!isImported && (
             <AnimatedPressable
               accessible
+              accessibilityHint='Customize habit details before adding'
               accessibilityLabel='Customize habit before importing'
               accessibilityRole='button'
               disabled={isImporting}

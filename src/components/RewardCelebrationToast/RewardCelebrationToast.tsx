@@ -80,7 +80,7 @@ export const RewardCelebrationToast = ({
             className='flex-1 items-center justify-center rounded-full px-4 py-2.5'
             style={{ borderWidth: 1, borderColor: colors.gray[300] }}
             onPress={() => {
-              triggerSelection();
+              triggerLightImpact();
               onSecondaryAction();
             }}
           >
@@ -97,7 +97,7 @@ export const RewardCelebrationToast = ({
             className='flex-1 items-center justify-center rounded-full px-4 py-2.5'
             style={{ backgroundColor: '#7c3aed' }}
             onPress={() => {
-              triggerSelection();
+              triggerLightImpact();
               onPrimaryAction();
             }}
           >

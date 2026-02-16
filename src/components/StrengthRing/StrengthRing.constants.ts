@@ -23,7 +23,7 @@ export const LEVELS: Record<string, LevelInfo> = {
     label: 'Developing',
   },
   starting: {
-    color: '#65a30d', // lime-600
+    color: '#4D7A0A', // lime-600
     colorLight: '#ecfccb', // lime-100
     emoji: '🌱',
     label: 'Starting',
@@ -48,7 +48,7 @@ export const SIZE_CONFIG: Record<string, SizeConfig> = {
 export const TREND_CONFIG = {
   down: { color: '#ef4444', symbol: '↓' }, // red-500
   stable: { color: '#78716c', symbol: '→' }, // stone-500
-  up: { color: '#22c55e', symbol: '↑' }, // green-500
+  up: { color: '#15793C', symbol: '↑' }, // green-500
 };
 
 /** Get level info based on strength percentage */

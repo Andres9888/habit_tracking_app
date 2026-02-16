@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * StreakMilestoneCelebration Component
  * Full-screen celebration modal for streak milestones (7, 30, 100 days)
@@ -67,23 +68,47 @@ export function StreakMilestoneCelebration({
       } else {
         badgeScale.value = withSequence(
           withSpring(1.2, SPRING_CONFIG),
-          withDelay(ANIMATION_TIMING.BADGE_SETTLE_DELAY, withSpring(1, SPRING_CONFIG))
+          withDelay(
+            ANIMATION_TIMING.BADGE_SETTLE_DELAY,
+            withSpring(1, SPRING_CONFIG)
+          )
         );
         badgeRotate.value = withSpring(0, SPRING_CONFIG);
         titleOpacity.value = withDelay(
           ANIMATION_TIMING.TITLE_DELAY,
-          withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION, easing: Easing.out(Easing.cubic) })
+          withTiming(1, {
+            duration: ANIMATION_TIMING.CONTENT_FADE_DURATION,
+            easing: Easing.out(Easing.cubic),
+          })
         );
-        titleTranslateY.value = withDelay(ANIMATION_TIMING.TITLE_DELAY, withSpring(0, SPRING_CONFIG));
+        titleTranslateY.value = withDelay(
+          ANIMATION_TIMING.TITLE_DELAY,
+          withSpring(0, SPRING_CONFIG)
+        );
         contentOpacity.value = withDelay(
           ANIMATION_TIMING.TITLE_DELAY + 100,
-          withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION, easing: Easing.out(Easing.cubic) })
+          withTiming(1, {
+            duration: ANIMATION_TIMING.CONTENT_FADE_DURATION,
+            easing: Easing.out(Easing.cubic),
+          })
         );
         const buttonBaseDelay = ANIMATION_TIMING.TITLE_DELAY + 200;
-        shareButtonOpacity.value = withDelay(buttonBaseDelay, withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION }));
-        shareButtonTranslateY.value = withDelay(buttonBaseDelay, withSpring(0, SPRING_CONFIG));
-        continueButtonOpacity.value = withDelay(buttonBaseDelay + ANIMATION_TIMING.BUTTON_STAGGER, withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION }));
-        continueButtonTranslateY.value = withDelay(buttonBaseDelay + ANIMATION_TIMING.BUTTON_STAGGER, withSpring(0, SPRING_CONFIG));
+        shareButtonOpacity.value = withDelay(
+          buttonBaseDelay,
+          withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION })
+        );
+        shareButtonTranslateY.value = withDelay(
+          buttonBaseDelay,
+          withSpring(0, SPRING_CONFIG)
+        );
+        continueButtonOpacity.value = withDelay(
+          buttonBaseDelay + ANIMATION_TIMING.BUTTON_STAGGER,
+          withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION })
+        );
+        continueButtonTranslateY.value = withDelay(
+          buttonBaseDelay + ANIMATION_TIMING.BUTTON_STAGGER,
+          withSpring(0, SPRING_CONFIG)
+        );
       }
       AccessibilityInfo.announceForAccessibility(
         `Congratulations! ${milestone.title} You've maintained a ${streakDays} day streak for ${habitName}!`
@@ -106,13 +131,18 @@ export function StreakMilestoneCelebration({
   }, [visible]);
 
   const badgeAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: badgeScale.value }, { rotate: `${badgeRotate.value}deg` }],
+    transform: [
+      { scale: badgeScale.value },
+      { rotate: `${badgeRotate.value}deg` },
+    ],
   }));
   const titleAnimatedStyle = useAnimatedStyle(() => ({
     opacity: titleOpacity.value,
     transform: [{ translateY: titleTranslateY.value }],
   }));
-  const contentAnimatedStyle = useAnimatedStyle(() => ({ opacity: contentOpacity.value }));
+  const contentAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: contentOpacity.value,
+  }));
   const shareButtonAnimatedStyle = useAnimatedStyle(() => ({
     opacity: shareButtonOpacity.value,
     transform: [{ translateY: shareButtonTranslateY.value }],
@@ -124,7 +154,13 @@ export function StreakMilestoneCelebration({
 
   return (
     <>
-      <Modal backdropOpacity={0.7} style={styles.modalContent} variant="fullScreen" visible={visible} onClose={onClose}>
+      <Modal
+        backdropOpacity={0.7}
+        style={styles.modalContent}
+        variant='fullScreen'
+        visible={visible}
+        onClose={onClose}
+      >
         <View style={styles.container}>
           <View style={[styles.card, { backgroundColor: colors.card }]}>
             <BadgeSection animatedStyle={badgeAnimatedStyle} milestone={milestone} />

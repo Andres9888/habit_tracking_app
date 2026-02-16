@@ -29,6 +29,27 @@ const safeRun = async (fn: () => Promise<void>) => {
   }
 };
 
+/**
+ * Enhanced haptic feedback hook for celebrations and milestones.
+ * Provides various triggers for different celebration scenarios with
+ * automatic Respect for Reduced Motion accessibility settings.
+ *
+ * @param options - Configuration options
+ * @param options.isEnabled - Whether haptics are enabled (default: true)
+ * @param options.preference - Override for reduced motion preference
+ * @returns Object containing various haptic trigger functions
+ *
+ * @example
+ * ```ts
+ * const { triggerCompletion, triggerStreakMilestone } = useCelebrationHaptics();
+ *
+ * // Trigger on habit completion
+ * await triggerCompletion();
+ *
+ * // Trigger on milestone (e.g., 30 day streak)
+ * await triggerStreakMilestone(30);
+ * ```
+ */
 export function useCelebrationHaptics({
   isEnabled = true,
   preference,

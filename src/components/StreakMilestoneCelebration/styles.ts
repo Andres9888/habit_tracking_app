@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Styles for StreakMilestoneCelebration component
  * Uses design system: 34/22/17/13 typography, 16px border-radius, shadows
@@ -48,6 +49,12 @@ export const styles = StyleSheet.create({
     ...shadows.floatingActionButton,
   },
 
+  // Action buttons
+  actionsContainer: {
+    gap: spacing.md,
+    width: '100%',
+  },
+
   habitEmoji: {
     fontSize: 24,
     marginRight: spacing.sm,
@@ -84,12 +91,31 @@ export const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 
+  // Streak count badge
+  streakBadge: {
+    alignItems: 'center',
+    backgroundColor: colors.gray[100],
+    flexDirection: 'row',
+    borderRadius: borderRadius.full,
+    marginBottom: spacing.xl,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.sm,
+  },
+
   secondaryButton: {
     alignItems: 'center',
     backgroundColor: 'transparent',
     borderRadius: borderRadius.medium,
     borderWidth: 1.5,
     paddingVertical: spacing.base,
+  },
+
+  // Subtitle (17pt - body)
+  subtitle: {
+    ...typography.body,
+    color: colors.text.secondary,
+    marginBottom: spacing.base,
+    textAlign: 'center',
   },
 
   secondaryButtonText: {
