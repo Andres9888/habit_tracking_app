@@ -50,7 +50,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
           `Notes for ${dateString}`,
           note,
           [
-            { text: 'OK', style: 'default' },
+            { text: 'Got It', style: 'default' },
             {
               text: 'Edit Note',
               onPress: () => onDayPress?.(dateString, isCompleted),

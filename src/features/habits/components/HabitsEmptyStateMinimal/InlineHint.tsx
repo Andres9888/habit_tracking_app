@@ -81,7 +81,7 @@ export function InlineHint({
               lineHeight: 18,
             }}
           >
-            📋 templates
+            📋 browse templates
           </Text>
         </Pressable>
 
@@ -113,7 +113,7 @@ export function InlineHint({
               lineHeight: 18,
             }}
           >
-            ✨ custom habit
+            ✨ create custom
           </Text>
         </Pressable>
       </View>
