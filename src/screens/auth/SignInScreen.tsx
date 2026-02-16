@@ -318,7 +318,7 @@ function useScreenStyles() {
       marginBottom: 16,
     },
     logoEmoji: {
-      fontSize: 40,
+      fontSize: 34,
     },
     logoGradient: {
       alignItems: 'center',
@@ -357,7 +357,7 @@ function useScreenStyles() {
     },
     welcomeTitle: {
       color: themeColors.text.primary,
-      fontSize: 28,
+      fontSize: 22,
       fontWeight: '700',
       marginBottom: 8,
       textAlign: 'center',

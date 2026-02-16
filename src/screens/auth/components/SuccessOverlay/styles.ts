@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   },
   checkmarkText: {
     color: '#ffffff',
-    fontSize: 40,
+    fontSize: 34,
     fontWeight: 'bold',
   },
   content: {

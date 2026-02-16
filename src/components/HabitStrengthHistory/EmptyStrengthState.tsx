@@ -41,7 +41,7 @@ export function EmptyStrengthState({
       testID='habit-strength-history-empty'
     >
       <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ color: colors.text.primary, fontSize: 16, fontWeight: '600' }}>
+        <Text style={{ color: colors.text.primary, fontSize: 17, fontWeight: '600' }}>
           Strength History
         </Text>
         <Pressable
@@ -82,7 +82,7 @@ export function EmptyStrengthState({
         <Text
           style={{
             color: colors.text.primary,
-            fontSize: 16,
+            fontSize: 17,
             fontWeight: '600',
             marginBottom: 4,
             textAlign: 'center',
@@ -90,7 +90,7 @@ export function EmptyStrengthState({
         >
           Ready to Build Strength
         </Text>
-        <Text style={{ color: colors.text.secondary, fontSize: 14, textAlign: 'center' }}>
+        <Text style={{ color: colors.text.secondary, fontSize: 13, textAlign: 'center' }}>
           {message}
         </Text>
       </View>

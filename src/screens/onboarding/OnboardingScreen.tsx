@@ -549,7 +549,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   templateEmoji: {
-    fontSize: 28,
+    fontSize: 22,
   },
   templateGrid: {
     flexDirection: 'row',

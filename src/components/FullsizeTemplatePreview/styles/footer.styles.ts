@@ -13,7 +13,7 @@ export const footerStyles = StyleSheet.create({
   },
   customizeLinkText: {
     color: '#6B7280',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '600',
   },
   footer: {

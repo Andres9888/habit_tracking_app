@@ -63,7 +63,7 @@ export function AccessibleErrorMessage({
     >
       <AccessibleText
         scalingType="body"
-        style={[{ fontSize: 14, color: '#B53030' }, textStyle]}
+        style={[{ fontSize: 13, color: '#B53030' }, textStyle]}
       >
         {message}
       </AccessibleText>
