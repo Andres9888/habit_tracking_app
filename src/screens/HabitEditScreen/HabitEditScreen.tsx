@@ -23,7 +23,7 @@ function HabitEditScreenContent({
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const state = useHabitEditScreen({ habitId, onClose });
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   return (
     <Modal
       accessibilityViewIsModal
@@ -92,6 +92,14 @@ function HabitEditScreenContent({
                 <Animated.View
                   className='mx-4 rounded-2xl p-4'
                   entering={FadeInUp.delay(400).springify().damping(18)}
+                  style={{
+                    backgroundColor: themeColors.card,
+                    elevation: 4,
+                    shadowColor: isDark ? '#000000' : '#1c1917',
+                    shadowOffset: { height: 4, width: 0 },
+                    shadowOpacity: isDark ? 0.3 : 0.08,
+                    shadowRadius: 16,
+                  }}
                 >
                   <DangerZone
                     onArchive={state.handleArchive}
