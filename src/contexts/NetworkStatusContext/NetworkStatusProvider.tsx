@@ -3,7 +3,7 @@
  * Provides network connectivity status throughout the app
  */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import * as Network from 'expo-network';
 import type {
   NetworkStatus,
@@ -94,14 +94,17 @@ export function NetworkStatusProvider({
     };
   }, []);
 
-  const value: NetworkStatusContextValue = {
-    isChecking,
-    isOnline,
-    onOffline: onOfflineCallback,
-    onOnline: onOnlineCallback,
-    refresh,
-    status,
-  };
+  const value: NetworkStatusContextValue = useMemo(
+    () => ({
+      isChecking,
+      isOnline,
+      onOffline: onOfflineCallback,
+      onOnline: onOnlineCallback,
+      refresh,
+      status,
+    }),
+    [isChecking, isOnline, onOfflineCallback, onOnlineCallback, refresh, status]
+  );
 
   return (
     <NetworkStatusContext.Provider value={value}>
