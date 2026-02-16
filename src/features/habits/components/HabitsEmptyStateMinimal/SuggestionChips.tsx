@@ -8,7 +8,7 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
-import { View } from 'react-native';
+import { InteractionManager, View } from 'react-native';
 
 import { useTimeBasedChipAnalytics } from './analytics';
 import { CHIP_STAGGER } from './animations';
@@ -30,7 +30,11 @@ export function SuggestionChips({
 
   useEffect(() => {
     displayTimestampRef.current = Date.now();
-    analytics.trackChipsDisplayed(chips);
+    // Defer analytics tracking to avoid blocking initial render
+    const task = InteractionManager.runAfterInteractions(() => {
+      analytics.trackChipsDisplayed(chips);
+    });
+    return () => task.cancel();
   }, [chips, analytics]);
 
   const handleChipSelect = useCallback(

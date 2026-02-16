@@ -15,6 +15,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { InteractionManager } from 'react-native';
 import { getOfflineQueueManager } from '../../lib/offline';
 import type { OfflineContextValue, OfflineProviderProps } from './types';
 
@@ -60,13 +61,18 @@ export function OfflineProvider({
     }
   }, []);
 
-  // Auto-restore on mount
+  // Auto-restore on mount (deferred to avoid blocking initial render)
   useEffect(() => {
     if (skipAutoRestore) {
       setIsRestored(true);
       return;
     }
-    restoreQueue();
+    // Defer AsyncStorage restoration until after interactions complete
+    // This keeps the initial render fast and smooth
+    const task = InteractionManager.runAfterInteractions(() => {
+      restoreQueue();
+    });
+    return () => task.cancel();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skipAutoRestore]);
 

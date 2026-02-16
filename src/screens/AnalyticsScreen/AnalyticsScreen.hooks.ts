@@ -2,7 +2,7 @@
  * Business logic hooks for AnalyticsScreen
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { Alert } from 'react-native';
+import { Alert, InteractionManager } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { exportData, prepareExportData } from '../../utils/exportData';
@@ -34,6 +34,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Maybe request review after viewing positive stats (once per session)
+  // Deferred to avoid blocking screen render
   useEffect(() => {
     if (
       !hasCheckedReview.current &&
@@ -43,12 +44,16 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
       complianceData.length > 0
     ) {
       hasCheckedReview.current = true;
-      // Calculate average completion rate from heatmap data
-      const avgCompletionRate =
-        complianceData.reduce((sum, day) => sum + day.completionRate, 0) /
-        complianceData.length;
-      const totalHabits = overviewStats.totalHabits || 0;
-      void maybeRequestReviewFromAnalytics(avgCompletionRate, totalHabits);
+      // Defer non-critical review check until after interactions
+      const task = InteractionManager.runAfterInteractions(() => {
+        // Calculate average completion rate from heatmap data
+        const avgCompletionRate =
+          complianceData.reduce((sum, day) => sum + day.completionRate, 0) /
+          complianceData.length;
+        const totalHabits = overviewStats.totalHabits || 0;
+        void maybeRequestReviewFromAnalytics(avgCompletionRate, totalHabits);
+      });
+      return () => task.cancel();
     }
   }, [isLoading, overviewStats, complianceData]);
 

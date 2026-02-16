@@ -5,7 +5,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
+import { View, Text, Pressable, AccessibilityInfo, InteractionManager } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Info } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
@@ -34,12 +34,16 @@ export function YourProgressCard({
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
-    void AccessibilityInfo.isReduceMotionEnabled()
-      .then(setReduceMotion)
-      .catch((error) => {
-        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
-        setReduceMotion(false);
-      });
+    // Defer accessibility check to avoid blocking initial render
+    const task = InteractionManager.runAfterInteractions(() => {
+      void AccessibilityInfo.isReduceMotionEnabled()
+        .then(setReduceMotion)
+        .catch((error) => {
+          if (__DEV__) console.warn('Error checking reduce motion setting:', error);
+          setReduceMotion(false);
+        });
+    });
+    return () => task.cancel();
   }, []);
 
   const { animatedStrength, emojiAnimatedStyle } = useProgressAnimations(

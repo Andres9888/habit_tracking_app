@@ -76,14 +76,21 @@ export function NetworkStatusProvider({
   );
 
   useEffect(() => {
-    void Network.getNetworkStateAsync()
-      .then(handleStatusUpdate)
-      .catch((error) => {
-        if (__DEV__) console.warn('Error getting initial network state:', error);
-        setIsChecking(false);
-      });
+    // Defer initial network check to avoid blocking render
+    // Use requestAnimationFrame for quick deferral (next frame vs next idle)
+    const handle = requestAnimationFrame(() => {
+      void Network.getNetworkStateAsync()
+        .then(handleStatusUpdate)
+        .catch((error) => {
+          if (__DEV__) console.warn('Error getting initial network state:', error);
+          setIsChecking(false);
+        });
+    });
     const subscription = Network.addNetworkStateListener(handleStatusUpdate);
-    return () => subscription.remove();
+    return () => {
+      cancelAnimationFrame(handle);
+      subscription.remove();
+    };
   }, [handleStatusUpdate]);
 
   const refresh = useCallback(async () => {
