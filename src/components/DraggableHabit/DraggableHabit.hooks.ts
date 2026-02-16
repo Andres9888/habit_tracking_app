@@ -1,4 +1,14 @@
-// Extract emoji from habit name (if present)
+/**
+ * @module DraggableHabit.hooks
+ *
+ * Habit display logic: emoji extraction, deterministic accent color picking,
+ * and the {@link useDraggableHabitLogic} hook that combines them.
+ */
+
+/**
+ * Extract a leading emoji from a habit name, e.g. "💪 Push-ups" → { emoji: "💪", name: "Push-ups" }.
+ * Returns empty emoji if the name doesn't start with one.
+ */
 export const getEmojiAndName = (
   fullName: string
 ): { emoji: string; name: string } => {
@@ -14,14 +24,9 @@ export const getEmojiAndName = (
   return { emoji: '', name: fullName };
 };
 
-interface Habit {
-  icon?: string;
-  iconColor?: string;
-  name: string;
-  [key: string]: any;
-}
+import type { Habit } from './types';
 
-// Premium accent colors - deeper, more sophisticated tones
+/** Premium accent color palette — deterministically assigned per habit name. */
 const ACCENT_COLORS = [
   '#2563eb', // blue-600 - 20% deeper (was #3b82f6)
   '#ea580c', // orange-600 - richer (was #f97316)
@@ -32,6 +37,7 @@ const ACCENT_COLORS = [
   '#ca8a04', // yellow-600 - golden (was #eab308)
 ];
 
+/** Pick an accent color deterministically from a string (sum of char codes mod palette length). */
 const pickAccentColor = (input: string): string => {
   if (!input) {
     return ACCENT_COLORS[0];
@@ -45,13 +51,15 @@ const pickAccentColor = (input: string): string => {
   return ACCENT_COLORS[codeSum % ACCENT_COLORS.length];
 };
 
+/**
+ * Derives display properties for a habit: resolved emoji, cleaned name, and accent color.
+ * Color priority: explicit `habit.color` > legacy `iconColor` > deterministic from name.
+ */
 export const useDraggableHabitLogic = (habit: Habit) => {
-  // Use icon field if available, otherwise extract from name
   const { emoji: extractedEmoji, name } = getEmojiAndName(habit.name);
   const emoji = habit.icon || extractedEmoji;
-
-  // Use iconColor if available, otherwise pick based on name
-  const accentColor = habit.iconColor || pickAccentColor(name || habit.name);
+  const accentColor =
+    habit.color || habit.iconColor || pickAccentColor(name || habit.name);
 
   return {
     accentColor,

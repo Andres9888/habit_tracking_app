@@ -1,28 +1,46 @@
 /**
  * SwipeGripLines Component
  * Subtle grip lines on the trailing edge of HabitCard to hint swipe-to-delete.
- * Three thin vertical lines that subtly pulse on first render.
+ * Three thin vertical lines with improved visibility for discoverability.
+ *
+ * FIXED: Use theme-aware color so grip lines are visible in dark mode.
+ * IMPROVED: Increased opacity for better discoverability (audit item #6).
  */
 
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 const GRIP_LINE_COUNT = 3;
-const GRIP_LINE_COLOR = 'rgba(0, 0, 0, 0.10)';
+const GRIP_LINE_KEYS = Array.from({ length: GRIP_LINE_COUNT }, (_, i) => i);
 
-export function SwipeGripLines() {
+export const SwipeGripLines = memo(function SwipeGripLines() {
+  const { colors: themeColors, isDark } = useThemeColors();
+  // Increased opacity from ~19% (30) to ~30% (4D) for better discoverability
+  // Dark mode gets slightly higher opacity since backgrounds are darker
+  const gripColor = themeColors.text?.tertiary
+    ? themeColors.text.tertiary + (isDark ? '55' : '4D')
+    : isDark
+      ? 'rgba(255, 255, 255, 0.28)'
+      : 'rgba(0, 0, 0, 0.25)';
+
+  const gripLineStyle = useMemo(
+    () => [gripStyles.line, { backgroundColor: gripColor }],
+    [gripColor]
+  );
+
   return (
     <View
       accessibilityElementsHidden
       importantForAccessibility='no-hide-descendants'
       style={gripStyles.container}
     >
-      {Array.from({ length: GRIP_LINE_COUNT }).map((_, i) => (
-        <View key={i} style={gripStyles.line} />
+      {GRIP_LINE_KEYS.map((i) => (
+        <View key={i} style={gripLineStyle} />
       ))}
     </View>
   );
-}
+});
 
 const gripStyles = StyleSheet.create({
   container: {
@@ -34,7 +52,6 @@ const gripStyles = StyleSheet.create({
     paddingVertical: 16,
   },
   line: {
-    backgroundColor: GRIP_LINE_COLOR,
     borderRadius: 1,
     height: 20,
     width: 2,

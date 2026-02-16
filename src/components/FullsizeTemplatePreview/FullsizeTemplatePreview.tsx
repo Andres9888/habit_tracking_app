@@ -64,6 +64,7 @@ export default function FullsizeTemplatePreview({
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableBackdropClose={isImporting}
       variant='fullScreen'
       visible={visible}
@@ -71,7 +72,6 @@ export default function FullsizeTemplatePreview({
     >
       <PreviewContent
         animatedStyles={animatedStyles}
-        closeButtonScale={closeButtonScale}
         confettiRef={successAnimations.confettiRef}
         createPressHandlers={createPressHandlers}
         customizeButtonScale={customizeButtonScale}

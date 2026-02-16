@@ -61,15 +61,15 @@ export function AffirmationModals({
           affirmationText={schedulingAffirmation.text}
           initialSchedule={{
             daysOfWeek: schedulingAffirmation.daysOfWeek,
-            frequency: schedulingAffirmation.frequency,
-            isScheduleEnabled: schedulingAffirmation.isScheduleEnabled,
+            frequency: schedulingAffirmation.frequency ?? 'daily',
+            isScheduleEnabled: schedulingAffirmation.isScheduleEnabled ?? false,
             scheduledTime: schedulingAffirmation.scheduledTime,
           }}
           isSaving={isScheduleSaving}
           visible={isScheduleModalOpen}
           onCancel={onCancelSchedule}
           onClose={onCloseScheduleModal}
-          onSave={onSaveSchedule as (schedule: any) => Promise<void>}
+          onSave={onSaveSchedule}
         />
       )}
     </>

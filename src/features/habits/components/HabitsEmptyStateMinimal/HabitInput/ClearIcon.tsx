@@ -14,7 +14,7 @@ export function ClearIcon() {
       style={{
         alignItems: 'center',
         backgroundColor: COLORS.stone200,
-        borderRadius: 10,
+        borderRadius: 12,
         height: 20,
         justifyContent: 'center',
         width: 20,

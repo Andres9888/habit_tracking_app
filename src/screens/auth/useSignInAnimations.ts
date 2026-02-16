@@ -15,7 +15,7 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
-const SPRING_CONFIG = { damping: 18, stiffness: 120 };
+const SPRING_CONFIG = { damping: 18, stiffness: 150 };
 const STAGGER = 60;
 
 export function useSignInAnimations() {

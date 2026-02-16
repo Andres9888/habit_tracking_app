@@ -1,6 +1,8 @@
+/* eslint-disable max-lines */
 import React from 'react';
 import { View } from 'react-native';
 import { SkeletonLoader } from './SkeletonLoader';
+import { useSkeletonTheme } from './useSkeletonTheme';
 import type { ReduceMotionProps } from './types';
 
 function HeaderSection({ reduceMotion }: ReduceMotionProps) {
@@ -32,9 +34,9 @@ function HeaderSection({ reduceMotion }: ReduceMotionProps) {
   );
 }
 
-function ChartSection({ reduceMotion }: ReduceMotionProps) {
+function ChartSection({ reduceMotion, cardBg }: ReduceMotionProps & { cardBg: string }) {
   return (
-    <View className='mb-4 rounded-2xl bg-white p-4'>
+    <View className='mb-4 rounded-2xl p-4' style={{ backgroundColor: cardBg }}>
       <SkeletonLoader
         borderRadius={4}
         height={14}
@@ -73,9 +75,9 @@ function ChartSection({ reduceMotion }: ReduceMotionProps) {
   );
 }
 
-function CalendarSection({ reduceMotion }: ReduceMotionProps) {
+function CalendarSection({ reduceMotion, cardBg }: ReduceMotionProps & { cardBg: string }) {
   return (
-    <View className='rounded-2xl bg-white p-4'>
+    <View className='rounded-2xl p-4' style={{ backgroundColor: cardBg }}>
       <SkeletonLoader
         borderRadius={4}
         height={14}
@@ -113,16 +115,18 @@ function CalendarSection({ reduceMotion }: ReduceMotionProps) {
 export function HabitDetailSkeleton({
   reduceMotion = false,
 }: ReduceMotionProps) {
+  const { pageBg, cardBg } = useSkeletonTheme();
   return (
     <View
       accessible
-      accessibilityLabel='Loading habit details'
+      accessibilityLabel='Loading your habit details...'
       accessibilityRole='progressbar'
-      className='flex-1 bg-stone-100 px-4 pt-6'
+      className='flex-1 px-4 pt-6'
+      style={{ backgroundColor: pageBg }}
     >
       <HeaderSection reduceMotion={reduceMotion} />
-      <ChartSection reduceMotion={reduceMotion} />
-      <CalendarSection reduceMotion={reduceMotion} />
+      <ChartSection cardBg={cardBg} reduceMotion={reduceMotion} />
+      <CalendarSection cardBg={cardBg} reduceMotion={reduceMotion} />
     </View>
   );
 }

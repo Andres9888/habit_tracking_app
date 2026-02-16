@@ -1,26 +1,61 @@
 /**
  * Semantic Color Tokens
- * Extended color groups for specific UI contexts
+ * Frontend Redesign Spec 2026-02-14
  *
- * Color Role Separation (avoid "green means everything"):
- * - Primary/CTA: Emerald (#059669/#10B981) — brand buttons, main actions
- * - Success: Green-500 (#22c55e) — checkmarks, completions, positive states
- * - Streak/Progress: Amber/Gold (#F59E0B) — chains, streaks, momentum
- * - Strength: Uses its own gradient scale (lime → teal → cyan) in core.ts
- * - Info: Blue (#3B82F6) — informational states
+ * ## Color Role Separation
+ *
+ * Our design system uses distinct colors for different semantic purposes:
+ *
+ * - **Primary/CTA**: Forest green (#059669/#047857) — brand identity, main action buttons
+ * - **Success**: Green (#15793C) — checkmarks, task completions, positive confirmations
+ * - **Streak/Progress**: Burnished gold (#8B6208) — habit chains, streaks, momentum indicators
+ * - **Info**: Blue (#3872B8) — informational messages, help text, neutral notices
+ *
+ * This separation prevents semantic confusion (e.g., "success" vs "primary action").
+ *
+ * ## Warm Minimal Aesthetic
+ *
+ * The warm palette creates an organic, calm feel through earth-toned neutrals.
+ * These colors form the foundation for backgrounds, cards, and text.
  */
 
 /**
  * Warm Stone Palette
- * Used by global.css, tailwind.config.js, and HabitCard
- * Provides the warm, inviting neutral tones that distinguish
- * the app from standard cool-gray Tailwind defaults.
+ *
+ * Provides warm, organic neutral tones for the warm-minimal aesthetic.
+ * These are the most commonly used colors in the app.
+ *
+ * @example
+ * ```tsx
+ * import { warmPalette } from '@/theme/colors';
+ *
+ * // Background for main screen
+ * <View style={{ backgroundColor: warmPalette.background }} />
+ *
+ * // Card surface
+ * <View style={{
+ *   backgroundColor: warmPalette.cardBg,
+ *   borderColor: warmPalette.border
+ * }} />
+ *
+ * // Text
+ * <Text style={{ color: warmPalette.foreground }}>Hello</Text>
+ * ```
  */
 export const warmPalette = {
-  background: '#FAF8F5', // Warm stone background — single source of truth with core.ts
-  border: '#E5E2DE',
-  cardBg: '#f0eeeb', // Warm stone card — single source of truth with core.ts light.card
+  /** Canvas (L0) — warm parchment base for entire app */
+  background: '#F5F1ED',
+
+  /** Border color for cards, dividers, separators */
+  border: '#DDD8D2',
+
+  /** Surface (L1) — subtle lift for cards and elevated elements */
+  cardBg: '#EDEAE5',
+
+  /** Primary text color — high contrast for readability */
   foreground: '#2D2A26',
+
+  /** Neutral disabled/inactive state */
   neutral: '#C4BFB7',
 } as const;
 

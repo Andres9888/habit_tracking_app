@@ -16,7 +16,15 @@ export const statusStyles = StyleSheet.create({
     borderWidth: 2,
     height: 28,
     justifyContent: 'center',
+    // 44x44 minimum touch target via padding (28 + 8*2 = 44)
+    padding: 0,
     width: 28,
+  },
+  checkCircleTouchTarget: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 44,
+    minWidth: 44,
   },
   checkCircleCompleted: {
     backgroundColor: REDESIGN_COLORS.accent,
@@ -32,6 +40,7 @@ export const statusStyles = StyleSheet.create({
     height: 28,
     justifyContent: 'center',
     width: 28,
+    // Parent checkCircleTouchTarget provides 44px hit area
   },
   checkmarkText: {
     color: colors.text.inverse,
