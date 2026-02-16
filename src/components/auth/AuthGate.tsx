@@ -1,4 +1,3 @@
-/* eslint-disable max-lines, max-lines-per-function */
 /**
  * AuthGate Component
  *
@@ -7,183 +6,22 @@
  * OnboardingScreen for first-time users after sign-up,
  * HabitsApp for authenticated users.
  * Syncs user to Convex database on sign-in.
- *
- * Performance optimizations:
- * - Lazy loads screens (only loads the one that's needed)
- * - Reduces initial bundle size significantly
  */
 
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
-import { useCallback, useEffect, useRef, useState, lazy, Suspense } from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { useEffect, useRef } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import { api } from '../../../convex/_generated/api';
-import { colors } from '../../theme/colors';
-import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
+import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
+import { OnboardingScreen } from '../../screens/onboarding';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
+import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 
-// Lazy load screens - only bundle what's needed
-const HabitsApp = lazy(() => import('../../features/habits/HabitsApp'));
-const WelcomeScreen = lazy(() => import('../../screens/auth/WelcomeScreen'));
-const OnboardingScreen = lazy(() => import('../../screens/onboarding/OnboardingScreen').then(module => ({ default: module.OnboardingScreen })));
-
-const LOADING_TIMEOUT_MS = 10_000;
-
-function ChainIcon() {
-  return (
-    <View style={loadingStyles.iconContainer}>
-      <Text style={loadingStyles.iconText}>🔗</Text>
-    </View>
-  );
-}
-
-function BrandedLoadingScreen() {
-  const [timedOut, setTimedOut] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    timerRef.current = setTimeout(() => {
-      setTimedOut(true);
-    }, LOADING_TIMEOUT_MS);
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
-
-  const handleRetry = useCallback(() => {
-    setTimedOut(false);
-    timerRef.current = setTimeout(() => {
-      setTimedOut(true);
-    }, LOADING_TIMEOUT_MS);
-  }, []);
-
-  return (
-    <View style={loadingStyles.container}>
-      <View style={loadingStyles.content}>
-        <ChainIcon />
-        <Text style={loadingStyles.appName}>Chain Day</Text>
-
-        {timedOut ? (
-          <View style={loadingStyles.errorCard}>
-            <Text style={loadingStyles.errorTitle}>
-              Taking longer than expected
-            </Text>
-            <Text style={loadingStyles.errorDescription}>
-              We're having trouble connecting. Check your internet connection
-              and try again.
-            </Text>
-            <Pressable
-              accessibilityLabel='Try Again'
-              accessibilityRole='button'
-              style={loadingStyles.retryButton}
-              onPress={handleRetry}
-            >
-              <Text style={loadingStyles.retryButtonText}>Try Again</Text>
-            </Pressable>
-          </View>
-        ) : (
-          <View style={loadingStyles.shimmerContainer}>
-            <SkeletonLoader borderRadius={4} height={4} width={120} />
-          </View>
-        )}
-      </View>
-
-      {/* Ghost habit cards preview */}
-      <View style={loadingStyles.cardsPreview}>
-        <HabitCardSkeleton />
-        <HabitCardSkeleton />
-      </View>
-    </View>
-  );
-}
-
-const loadingStyles = StyleSheet.create({
-  appName: {
-    color: colors.primary[700],
-    fontSize: 22,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-    marginBottom: 32,
-  },
-  container: {
-    alignItems: 'center',
-    backgroundColor: colors.light.background,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  content: {
-    alignItems: 'center',
-  },
-  errorCard: {
-    alignItems: 'center',
-    backgroundColor: colors.light.card,
-    borderColor: colors.border,
-    borderRadius: 16,
-    borderWidth: 1,
-    marginHorizontal: 24,
-    marginTop: 8,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-  },
-  errorDescription: {
-    color: colors.text.secondary,
-    fontSize: 13,
-    lineHeight: 20,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  errorTitle: {
-    color: colors.text.primary,
-    fontSize: 17,
-    fontWeight: '600',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  iconContainer: {
-    alignItems: 'center',
-    backgroundColor: colors.primary[100],
-    borderRadius: 24,
-    height: 64,
-    justifyContent: 'center',
-    marginBottom: 16,
-    width: 64,
-  },
-  iconText: {
-    fontSize: 28,
-  },
-  retryButton: {
-    backgroundColor: colors.primary[600],
-    borderRadius: 12,
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-  },
-  retryButtonText: {
-    color: colors.text.inverse,
-    fontSize: 17,
-    fontWeight: '600',
-  },
-  cardsPreview: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 24,
-  },
-  shimmerContainer: {
-    marginTop: 12,
-  },
-});
+import { AnimatedScreen } from './AnimatedScreen';
+import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -193,6 +31,9 @@ export function AuthGate() {
     isSignedIn ?? false
   );
 
+  // Store the mutation in a ref so the effect below never re-fires when the
+  // Convex mutation reference changes. Without this, the closure inside
+  // useEffect would capture a stale `getOrCreateUser` on re-renders.
   const getOrCreateUserRef = useRef(getOrCreateUser);
   getOrCreateUserRef.current = getOrCreateUser;
 
@@ -208,46 +49,33 @@ export function AuthGate() {
     return <BrandedLoadingScreen />;
   }
 
-  // Determine which screen to show
-  const screenKey = isSignedIn
-    ? onboardingComplete
-      ? 'app'
-      : 'onboarding'
-    : 'welcome';
+  // State machine: auth status + onboarding determine which screen to show.
+  //   not signed in        → 'welcome'  (sign-in / sign-up)
+  //   signed in, new user  → 'onboarding'
+  //   signed in, returning → 'app'
+  const screenKey = !isSignedIn
+    ? 'welcome'
+    : !onboardingComplete
+      ? 'onboarding'
+      : 'app';
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Suspense fallback={<BrandedLoadingScreen />}>
-        {screenKey === 'welcome' && (
-          <Animated.View
-            key="welcome"
-            entering={FadeInDown.duration(280).springify().damping(18)}
-            exiting={FadeOut.duration(300)}
-            style={{ flex: 1 }}
-          >
-            <WelcomeScreen />
-          </Animated.View>
-        )}
-        {screenKey === 'onboarding' && (
-          <Animated.View
-            key="onboarding"
-            entering={FadeInDown.duration(280).springify().damping(18)}
-            exiting={FadeOut.duration(300)}
-            style={{ flex: 1 }}
-          >
-            <OnboardingScreen onComplete={markComplete} />
-          </Animated.View>
-        )}
-        {screenKey === 'app' && (
-          <Animated.View
-            key="app"
-            entering={FadeInDown.duration(280).springify().damping(18)}
-            style={{ flex: 1 }}
-          >
-            <HabitsApp />
-          </Animated.View>
-        )}
-      </Suspense>
+      {screenKey === 'welcome' && (
+        <AnimatedScreen key="welcome">
+          <WelcomeScreen />
+        </AnimatedScreen>
+      )}
+      {screenKey === 'onboarding' && (
+        <AnimatedScreen key="onboarding">
+          <OnboardingScreen onComplete={markComplete} />
+        </AnimatedScreen>
+      )}
+      {screenKey === 'app' && (
+        <AnimatedScreen key="app" noExit>
+          <HabitsApp />
+        </AnimatedScreen>
+      )}
     </GestureHandlerRootView>
   );
 }
