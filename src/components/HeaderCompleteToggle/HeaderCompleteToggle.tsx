@@ -12,6 +12,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Check, Circle } from 'lucide-react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { MiniConfettiBurst } from './MiniConfettiBurst';
 import { useHeaderToggle } from './useHeaderToggle';
 import { styles } from './styles';
@@ -26,6 +27,7 @@ export function HeaderCompleteToggle({
   onComplete,
   onUncomplete,
 }: HeaderCompleteToggleProps) {
+  const { isDark } = useThemeColors();
   const { isToggling, localCompleted, showConfetti, buttonScale, handlePress } =
     useHeaderToggle({
       completedToday,
@@ -61,7 +63,9 @@ export function HeaderCompleteToggle({
         className={`flex-row items-center gap-1.5 rounded-full px-3 py-1.5 ${
           localCompleted
             ? 'bg-emerald-500 shadow-sm'
-            : 'border-2 border-emerald-400 bg-emerald-50'
+            : isDark
+              ? 'border-2 border-emerald-600 bg-emerald-950'
+              : 'border-2 border-emerald-400 bg-emerald-50'
         } `}
         disabled={isToggling}
         style={buttonAnimatedStyle}
@@ -74,8 +78,8 @@ export function HeaderCompleteToggle({
           </>
         ) : (
           <>
-            <Circle className='text-emerald-500' size={14} strokeWidth={2} />
-            <Text className='text-xs font-semibold text-emerald-600'>
+            <Circle className={isDark ? 'text-emerald-400' : 'text-emerald-500'} size={14} strokeWidth={2} />
+            <Text className={`text-xs font-semibold ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>
               Mark Done
             </Text>
           </>

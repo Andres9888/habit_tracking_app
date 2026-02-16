@@ -60,7 +60,7 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
         <View
           style={[
             streakStyles.streakBadge,
-            { backgroundColor: themeColors.gray[isDark ? 200 : 100] },
+            { backgroundColor: isDark ? themeColors.gray[800] : themeColors.gray[100] },
           ]}
         >
           <Text style={streakStyles.streakFireIcon}>💪</Text>

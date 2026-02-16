@@ -94,15 +94,16 @@ export const StatusIndicator = memo(function StatusIndicator({
     );
   }
 
-  // Show empty circle for uncompleted state — provides a visible toggle target
-  // and meets 44x44px minimum touch target requirement
+  // Show empty circle for uncompleted state — wrapped in 44x44 touch target
   return (
-    <View
-      style={[
-        styles.checkCircle,
-        styles.checkCircleUnchecked,
-        { borderColor: themeColors.border },
-      ]}
-    />
+    <View style={styles.checkCircleTouchTarget}>
+      <View
+        style={[
+          styles.checkCircle,
+          styles.checkCircleUnchecked,
+          { borderColor: themeColors.border },
+        ]}
+      />
+    </View>
   );
 });
