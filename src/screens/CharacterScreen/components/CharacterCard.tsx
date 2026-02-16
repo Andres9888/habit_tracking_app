@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { View, Text } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';

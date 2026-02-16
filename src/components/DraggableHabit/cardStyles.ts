@@ -1,5 +1,8 @@
 /**
- * Card style utilities for DraggableHabitCard
+ * @module cardStyles
+ *
+ * Builds the outer card Animated style object (background, border, shadow, transforms).
+ * Week-complete cards get a green tint and stronger shadow.
  */
 
 import type { Animated } from 'react-native';

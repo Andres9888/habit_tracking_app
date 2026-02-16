@@ -3,7 +3,7 @@
  * Run this once to populate strength values for habits that don't have them yet
  * Uses recalculateHabitStrength which simulates the new formula day-by-day
  */
-import { mutation } from './_generated/server';
+import { internalMutation } from './_generated/server';
 import { v } from 'convex/values';
 import { calculateNewStrength, getStrengthLevel } from './habitStrength';
 
@@ -13,7 +13,7 @@ function startOfDay(date: Date): Date {
   return result;
 }
 
-export const initializeAllHabitsStrength = mutation({
+export const initializeAllHabitsStrength = internalMutation({
   args: {},
   handler: async (ctx) => {
     const habits = await ctx.db

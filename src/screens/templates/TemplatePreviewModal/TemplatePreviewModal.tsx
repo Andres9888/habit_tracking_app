@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
 import Modal from '../../../components/Modal';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { ModalHeader } from './ModalHeader';
 import { ModalFooter } from './ModalFooter';
 import { TemplatePreview } from './TemplatePreview';
@@ -37,18 +38,21 @@ export default function TemplatePreviewModal({
     handleTimeChange,
   } = useTemplatePreview({ onClose, onImport, template });
 
+  const { colors } = useThemeColors();
+
   if (!template) return null;
 
   const isImporting = importingTemplateId === template._id;
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableBackdropClose={isImporting}
       variant='fullScreen'
       visible={visible}
       onClose={handleClose}
     >
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <ModalHeader disabled={isImporting} onClose={handleClose} />
 
         <ScrollView

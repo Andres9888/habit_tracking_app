@@ -3,10 +3,10 @@
  * Run this to bypass the UI: npx convex run testStrength:forceInitialize
  */
 
-import { mutation, query } from './_generated/server';
+import { internalMutation, internalQuery } from './_generated/server';
 import { calculateHabitStrength, getStrengthLevel } from './habitStrength';
 
-export const forceInitialize = mutation({
+export const forceInitialize = internalMutation({
   handler: async (ctx) => {
     // Starting manual initialization
 
@@ -87,7 +87,7 @@ export const forceInitialize = mutation({
   },
 });
 
-export const checkStatus = query({
+export const checkStatus = internalQuery({
   handler: async (ctx) => {
     const habits = await ctx.db
       .query('habits')
