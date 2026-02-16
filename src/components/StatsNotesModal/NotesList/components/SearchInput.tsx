@@ -22,6 +22,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       className='w-full rounded-2xl border border-stone-200 bg-white py-3 pl-11 pr-4 text-sm font-medium text-stone-900'
       placeholder='Search notes...'
       placeholderTextColor='#a8a29e'
+      returnKeyType='search'
       value={value}
       onChangeText={onChangeText}
     />

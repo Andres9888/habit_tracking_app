@@ -2,9 +2,11 @@
  * SwipeGripLines Component
  * Subtle grip lines on the trailing edge of HabitCard to hint swipe-to-delete.
  * Three thin vertical lines that subtly pulse on first render.
+ *
+ * FIXED: Use theme-aware color so grip lines are visible in dark mode.
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
@@ -25,7 +27,7 @@ export function SwipeGripLines() {
       ))}
     </View>
   );
-}
+});
 
 const gripStyles = StyleSheet.create({
   container: {

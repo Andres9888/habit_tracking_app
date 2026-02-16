@@ -10,14 +10,14 @@ import { PremiumPaywall as PremiumBenefitsModal } from '../../../PremiumPaywall'
 
 // Mock expo-blur
 jest.mock('expo-blur', () => ({
-  BlurView: ({ children, ...props }: any) => (
+  BlurView: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <mock-blur-view {...props}>{children}</mock-blur-view>
   ),
 }));
 
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => ({
-  LinearGradient: ({ children, ...props }: any) => (
+  LinearGradient: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <mock-linear-gradient {...props}>{children}</mock-linear-gradient>
   ),
 }));
@@ -28,22 +28,22 @@ jest.mock('react-native-reanimated', () => {
   return {
     default: {
       View,
-      createAnimatedComponent: (component: any) => component,
+      createAnimatedComponent: (component: unknown) => component,
     },
-    useSharedValue: (initial: any) => ({ value: initial }),
+    useSharedValue: (initial: unknown) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
-    withTiming: (value: any) => value,
-    withSpring: (value: any) => value,
-    withRepeat: (value: any) => value,
-    withSequence: (...args: any) => args[0],
-    Easing: { inOut: () => (v: any) => v, ease: (v: any) => v },
+    withTiming: (value: unknown) => value,
+    withSpring: (value: unknown) => value,
+    withRepeat: (value: unknown) => value,
+    withSequence: (...args: unknown) => args[0],
+    Easing: { inOut: () => (v: unknown) => v, ease: (v: unknown) => v },
     FadeIn: {},
     FadeOut: {},
     SlideInDown: {},
     SlideOutDown: {},
     interpolate: jest.fn(),
     Extrapolation: { CLAMP: 'clamp' },
-    runOnJS: (fn: any) => fn,
+    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
   };
 });
 

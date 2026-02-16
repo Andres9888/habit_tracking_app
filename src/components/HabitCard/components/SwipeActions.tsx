@@ -25,7 +25,7 @@ interface SwipeActionsProps {
 }
 
 /** Animated pressable action button with spring scale feedback */
-function ActionButton({
+function SwipeActions({
   accessibilityLabel,
   icon,
   label,
@@ -113,4 +113,4 @@ export function SwipeActions({
       </View>
     </Animated.View>
   );
-}
+});

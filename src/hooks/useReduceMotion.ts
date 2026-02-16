@@ -25,6 +25,20 @@ try {
   AccessibilityInfo = null;
 }
 
+/**
+ * Hook to detect and respond to the system's Reduce Motion accessibility setting.
+ * When enabled, animations should be disabled or minimized for user comfort.
+ *
+ * @param options - Configuration options
+ * @param options.preference - Optional override to force reduced motion on/off
+ * @returns boolean indicating whether motion should be reduced
+ *
+ * @example
+ * ```ts
+ * const reduceMotion = useReduceMotion();
+ * const animation = reduceMotion ? 0 : 1;
+ * ```
+ */
 export const useReduceMotion = ({ preference }: UseReduceMotionOptions = {}) => {
   const [systemReduceMotion, setSystemReduceMotion] = useState(false);
 
