@@ -14,7 +14,7 @@ interface ErrorFallbackProps {
 }
 
 export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
 
   const styles = StyleSheet.create({
     button: {
@@ -80,7 +80,12 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
         {__DEV__ && error && (
           <Text style={styles.errorDetail}>{error.message}</Text>
         )}
-        <Pressable style={styles.button} onPress={onRetry}>
+        <Pressable
+          accessibilityLabel='Try again'
+          accessibilityRole='button'
+          style={styles.button}
+          onPress={onRetry}
+        >
           <Text style={styles.buttonText}>Try Again</Text>
         </Pressable>
       </View>

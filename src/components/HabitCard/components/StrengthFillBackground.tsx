@@ -4,7 +4,7 @@
  * Layers: main wash + diagonal band + bottom pool.
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -16,7 +16,7 @@ interface StrengthFillBackgroundProps {
   isDark?: boolean;
 }
 
-export function StrengthFillBackground({
+export const StrengthFillBackground = memo(function StrengthFillBackground({
   strengthFillStyle,
   strengthColor,
   isDark = false,
@@ -60,4 +60,4 @@ export function StrengthFillBackground({
       />
     </Animated.View>
   );
-}
+});

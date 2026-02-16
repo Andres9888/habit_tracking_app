@@ -16,7 +16,6 @@ import { ReadLetterHeader } from './ReadLetterHeader';
 import { ReadLetterFooter } from './ReadLetterFooter';
 import { LetterContent } from './LetterContent';
 import { LockedLetterView } from './LockedLetterView';
-import { useThemeColors } from '../../../../../../theme/ThemeContext';
 
 export function ReadLetterModal({
   visible,
@@ -33,12 +32,12 @@ export function ReadLetterModal({
     visible,
   });
 
-  const { colors, isDark } = useThemeColors();
 
   if (!letter) return null;
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='fade'
       presentationStyle='fullScreen'
       visible={visible}

@@ -8,7 +8,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export function SuggestionsCard() {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
 
   const styles = StyleSheet.create({
     card: {
@@ -38,9 +38,7 @@ export function SuggestionsCard() {
     <View style={styles.card}>
       <Text style={styles.title}>Things to try:</Text>
       <Text style={styles.item}>{'\u2022'} Close and reopen the app</Text>
-      <Text style={styles.item}>
-        {'\u2022'} Check your internet connection
-      </Text>
+      <Text style={styles.item}>{'\u2022'} Check your internet connection</Text>
       <Text style={styles.item}>
         {'\u2022'} Make sure the app is up to date
       </Text>

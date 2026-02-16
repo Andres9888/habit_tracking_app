@@ -17,8 +17,8 @@ describe('streak', () => {
     });
 
     it('returns 0 for null/undefined completion set', () => {
-      expect(computeCurrentStreakFromDates(null as any, today)).toBe(0);
-      expect(computeCurrentStreakFromDates(undefined as any, today)).toBe(0);
+      expect(computeCurrentStreakFromDates(null as unknown, today)).toBe(0);
+      expect(computeCurrentStreakFromDates(undefined as unknown, today)).toBe(0);
     });
 
     it('returns 1 for single completion today', () => {
@@ -33,7 +33,7 @@ describe('streak', () => {
 
     it('returns 0 for completion older than yesterday', () => {
       const completedDates = new Set([formatDate(subDays(today, 5))]);
-      expect(computeCurrentStreakFromDates(completedDates, today)).toBe(1);
+      expect(computeCurrentStreakFromDates(completedDates, today)).toBe(0);
     });
 
     it('calculates streak for consecutive days', () => {
@@ -96,9 +96,9 @@ describe('streak', () => {
       expect(computeCurrentStreakFromDates(completedDates, today)).toBe(3);
     });
 
-    it('treats isolated old completion as 1-day streak', () => {
+    it('treats isolated old completion as broken streak (0)', () => {
       const completedDates = new Set([formatDate(subDays(today, 50))]);
-      expect(computeCurrentStreakFromDates(completedDates, today)).toBe(1);
+      expect(computeCurrentStreakFromDates(completedDates, today)).toBe(0);
     });
 
     it('counts from most recent completion, not today', () => {

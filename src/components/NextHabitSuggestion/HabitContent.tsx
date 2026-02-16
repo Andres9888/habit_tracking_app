@@ -1,17 +1,17 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ArrowRight, Zap } from 'lucide-react-native';
+import type { ViewStyle } from 'react-native';
 import type { NextHabitSuggestionProps } from './types';
 import { styles } from './styles';
 
 interface HabitContentProps {
-  habit: NextHabitSuggestionProps['habit'];
+  habit: NonNullable<NextHabitSuggestionProps['habit']>;
   completedCount: number;
   totalCount: number;
-  cardStyle: any;
-  glowStyle: any;
-  glowOpacity: any;
+  cardStyle: AnimatedStyle<ViewStyle>;
+  glowStyle: AnimatedStyle<ViewStyle>;
 }
 
 export function HabitContent({
@@ -20,15 +20,15 @@ export function HabitContent({
   totalCount,
   cardStyle,
   glowStyle,
-  glowOpacity,
 }: HabitContentProps) {
+  if (!habit) return null;
   return (
     <Animated.View style={[styles.container, cardStyle]}>
       <Animated.View style={[styles.glow, glowStyle]} />
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={styles.badge}>
-            <Zap color="#f59e0b" size={12} strokeWidth={2.5} />
+            <Zap color='#f59e0b' size={12} strokeWidth={2.5} />
             <Text style={styles.badgeText}>Focus on</Text>
           </View>
           <Text style={styles.progress}>
@@ -43,7 +43,7 @@ export function HabitContent({
             </Text>
             <Text style={styles.habitHint}>Tap to mark complete</Text>
           </View>
-          <ArrowRight color="#a8a29e" size={20} />
+          <ArrowRight color='#a8a29e' size={20} />
         </View>
       </View>
     </Animated.View>

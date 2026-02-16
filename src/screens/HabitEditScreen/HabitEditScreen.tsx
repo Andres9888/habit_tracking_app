@@ -1,8 +1,10 @@
+/* eslint-disable max-lines */
 /** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
 import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { EditHeader } from './EditHeader';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
@@ -14,7 +16,7 @@ import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
 // eslint-disable-next-line max-lines-per-function
-export default function HabitEditScreen({
+function HabitEditScreenContent({
   visible,
   habitId,
   onClose,
@@ -22,11 +24,9 @@ export default function HabitEditScreen({
   const insets = useSafeAreaInsets();
   const state = useHabitEditScreen({ habitId, onClose });
   const { colors: themeColors } = useThemeColors();
-  // Modal pattern: return null when not visible — the modal simply doesn't mount
-  if (!visible || !habitId) return null;
-
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}
@@ -46,7 +46,7 @@ export default function HabitEditScreen({
                 <HabitEditSkeleton />
               </View>
             ) : (
-              <>
+              <Animated.View entering={FadeIn.duration(300)} style={{ flex: 1 }}>
             <EditHeader
               canSave={state.habitName.trim().length >= 2}
               isSaving={state.isSaving}
@@ -90,7 +90,7 @@ export default function HabitEditScreen({
                 </Animated.View>
                 <SectionLabel delay={340} text='DANGER ZONE' variant='danger' />
                 <Animated.View
-                  className='mx-4 rounded-2xl bg-red-50/50 p-4'
+                  className='mx-4 rounded-2xl p-4'
                   entering={FadeInUp.delay(400).springify().damping(18)}
                 >
                   <DangerZone
@@ -100,11 +100,21 @@ export default function HabitEditScreen({
                 </Animated.View>
               </Pressable>
             </ScrollView>
-            </>
+            </Animated.View>
             )}
           </View>
         </View>
       </KeyboardAvoidingView>
     </Modal>
+  );
+}
+
+export default function HabitEditScreen(props: HabitEditScreenProps) {
+  if (!props.visible || !props.habitId) return null;
+
+  return (
+    <ScreenErrorBoundary screenName="Edit Habit" onGoBack={props.onClose}>
+      <HabitEditScreenContent {...props} />
+    </ScreenErrorBoundary>
   );
 }

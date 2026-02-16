@@ -12,7 +12,6 @@ import { WriteLetterFooter } from './WriteLetterFooter';
 import { useThemeColors } from '../../../../../../theme/ThemeContext';
 import { WriteStep } from './WriteStep';
 import { ScheduleStep } from './ScheduleStep';
-import { useThemeColors } from '../../../../../../theme/ThemeContext';
 
 export function WriteLetterModal({
   visible,
@@ -25,6 +24,7 @@ export function WriteLetterModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='slide'
       presentationStyle='pageSheet'
       visible={visible}

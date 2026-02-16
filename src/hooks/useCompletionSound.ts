@@ -7,14 +7,14 @@
 
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { useCallback, useRef } from 'react';
-import { Audio } from 'expo-sound';
-import type { CompletionSoundType } from '../convex/settings/types';
+import { Audio } from 'expo-av';
+import type { CompletionSoundType } from '../../convex/settings/types';
 
 // Sound file mappings - requires bundling with Metro
-const SOUND_ASSETS: Record<CompletionSoundType, NodeJS.Require> = {
-  chime: require('../assets/sounds/chime.wav'),
-  pop: require('../assets/sounds/pop.wav'),
-  success: require('../assets/sounds/success.wav'),
+const SOUND_ASSETS: Record<CompletionSoundType, number> = {
+  chime: require('../../assets/sounds/chime.wav'),
+  pop: require('../../assets/sounds/pop.wav'),
+  success: require('../../assets/sounds/success.wav'),
 };
 
 interface UseCompletionSoundOptions {
@@ -26,13 +26,28 @@ const NOOP = () => {
   // No-op when sounds disabled
 };
 
+/**
+ * Hook for playing completion sounds when marking habits as complete.
+ * Premium feature providing satisfying audio feedback.
+ *
+ * @param options - Configuration options
+ * @param options.soundEnabled - Whether sound playback is enabled (default: false)
+ * @param options.soundType - Which sound to play: 'chime', 'pop', or 'success' (default: 'chime')
+ * @returns Object containing the playCompletionSound function
+ *
+ * @example
+ * ```ts
+ * const { playCompletionSound } = useCompletionSound({ soundEnabled: true });
+ * await playCompletionSound();
+ * ```
+ */
 export function useCompletionSound({
   soundEnabled = false,
   soundType = 'chime',
 }: UseCompletionSoundOptions = {}) {
   // Use undefined instead of null to avoid type union issues
 
-  const soundRef = useRef<any>(undefined);
+  const soundRef = useRef<Audio.Sound | undefined>(undefined);
 
   const playCompletionSound = useCallback(async () => {
     if (!soundEnabled) {
@@ -54,15 +69,17 @@ export function useCompletionSound({
       soundRef.current = sound;
 
       // Auto-cleanup after playback
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-          soundRef.current = undefined;
+      sound.setOnPlaybackStatusUpdate(
+        (status: { isLoaded: boolean; didJustFinish?: boolean }) => {
+          if (status.isLoaded && status.didJustFinish) {
+            sound.unloadAsync();
+            soundRef.current = undefined;
+          }
         }
-      });
+      );
     } catch (error) {
       // Silently fail - sounds are non-critical UX enhancements
-      console.warn('Failed to play completion sound:', error);
+      if (__DEV__) console.warn('Failed to play completion sound:', error);
     }
   }, [soundEnabled, soundType]);
 

@@ -3,7 +3,7 @@
  * The writing step of the letter modal
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { View, Text, TextInput, ScrollView } from 'react-native';
 import { Sparkles } from 'lucide-react-native';
 import { clsx } from 'clsx';
@@ -26,6 +26,8 @@ export function WriteStep({
   onTitleChange,
   onContentChange,
 }: WriteStepProps) {
+  const contentRef = useRef<TextInput>(null);
+
   return (
     <ScrollView
       className='flex-1'
@@ -57,6 +59,7 @@ export function WriteStep({
           returnKeyType='next'
           value={title}
           onChangeText={onTitleChange}
+          onSubmitEditing={() => contentRef.current?.focus()}
         />
         <Text className='mt-1 text-right text-xs text-stone-400'>
           {title.length}/{MAX_TITLE_LENGTH}
@@ -69,6 +72,7 @@ export function WriteStep({
           Your Letter
         </Text>
         <TextInput
+          ref={contentRef}
           multiline
           accessibilityLabel='Letter content'
           className='min-h-[200px] rounded-xl border-2 border-violet-200 bg-white px-4 py-3 text-base text-stone-800'

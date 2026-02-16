@@ -31,11 +31,11 @@ export function ImageSourceOption({
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
+    scale.value = withSpring(0.97, { damping: 18, stiffness: 150 });
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
   }, [scale]);
 
   const animatedStyle = useAnimatedStyle(() => ({

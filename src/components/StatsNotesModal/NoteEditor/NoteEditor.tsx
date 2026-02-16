@@ -4,8 +4,10 @@
  * Form for creating and editing notes with optional habit linking.
  */
 
+import { useRef } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { colors } from '@/theme/colors';
+import { AccessibleErrorMessage } from '@/components/ui/AccessibleErrorMessage';
 
 import { HabitSelector } from './HabitSelector';
 import { NoteEditorActions } from './NoteEditorActions';
@@ -20,6 +22,7 @@ export default function NoteEditor({
   onCancel,
   onSave,
 }: NoteEditorProps) {
+  const bodyRef = useRef<TextInput>(null);
   const {
     body,
     setBody,
@@ -53,12 +56,14 @@ export default function NoteEditor({
           <>
             <TextInput
               accessibilityLabel='Note date'
+              blurOnSubmit={false}
               className='w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
               placeholder='YYYY-MM-DD'
               placeholderTextColor={colors.gray[400]}
               returnKeyType='next'
               value={date}
               onChangeText={setDate}
+              onSubmitEditing={() => bodyRef.current?.focus()}
             />
 
             <HabitSelector
@@ -70,6 +75,7 @@ export default function NoteEditor({
         )}
 
         <TextInput
+          ref={bodyRef}
           multiline
           accessibilityLabel='Note body'
           className='min-h-[120px] w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-900'
@@ -85,12 +91,13 @@ export default function NoteEditor({
             className={`text-xs ${
               characterCount > 1000 ? 'text-red-500' : 'text-stone-500'
             }`}
+            maxFontSizeMultiplier={2}
           >
             {characterCount} / 1000 characters
           </Text>
         </View>
 
-        {error ? <Text className='text-sm text-red-500'>{error}</Text> : null}
+        <AccessibleErrorMessage message={error} urgency="polite" />
       </View>
 
       <NoteEditorActions
