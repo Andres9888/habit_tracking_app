@@ -3,4 +3,5 @@ export interface SocialSignInButtonProps {
   onPress: () => void;
   isLoading: boolean;
   disabled?: boolean;
+  testID?: string;
 }

@@ -52,6 +52,7 @@ declare module 'react-native-purchases' {
     message: string;
     code: string;
     underlyingErrorMessage?: string;
+    userCancelled: boolean;
   }
 
   export type CustomerInfoUpdateListener = (info: CustomerInfo) => void;
@@ -77,10 +78,13 @@ declare module 'react-native-purchases' {
   }
 
   interface PurchasesStatic {
-    configure(apiKey: string, appUserID?: string | null): void;
+    configure(config: { apiKey: string; appUserID?: string | null }): void;
     getOfferings(): Promise<{ current: { availablePackages: PurchasesPackage[] } | null }>;
     purchasePackage(pkg: PurchasesPackage): Promise<{ customerInfo: CustomerInfo }>;
     getCustomerInfo(): Promise<CustomerInfo>;
+    logIn(userId: string): Promise<{ customerInfo: CustomerInfo; created: boolean }>;
+    logOut(): Promise<CustomerInfo>;
+    restorePurchases(): Promise<CustomerInfo>;
     setLogLevel(level: LOG_LEVEL): void;
     addCustomerInfoUpdateListener(listener: CustomerInfoUpdateListener): void;
     removeCustomerInfoUpdateListener(listener: CustomerInfoUpdateListener): void;

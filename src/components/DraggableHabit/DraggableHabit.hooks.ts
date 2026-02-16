@@ -14,12 +14,7 @@ export const getEmojiAndName = (
   return { emoji: '', name: fullName };
 };
 
-interface Habit {
-  icon?: string;
-  iconColor?: string;
-  name: string;
-  [key: string]: unknown;
-}
+import type { Habit } from './types';
 
 // Premium accent colors - deeper, more sophisticated tones
 const ACCENT_COLORS = [
