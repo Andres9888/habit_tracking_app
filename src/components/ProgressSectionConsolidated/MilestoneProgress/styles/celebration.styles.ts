@@ -1,35 +1,38 @@
 import { StyleSheet } from 'react-native';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '@/theme/darkColors';
 
-export const celebrationStyles = StyleSheet.create({
-  celebrationContainer: {
-    alignItems: 'center',
-    backgroundColor: '#fefce8', // amber-50
-    borderColor: '#fbbf24', // amber-400
-    borderWidth: 1,
-  },
-  celebrationContent: {
-    alignItems: 'center',
-    padding: 8,
-  },
-  celebrationEmoji: {
-    fontSize: 32,
-    marginBottom: 4,
-  },
-  celebrationSubtext: {
-    color: '#92400e', // amber-800
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  celebrationTitle: {
-    color: '#78350f', // amber-900
-    fontSize: typography.body.fontSize,
-    fontWeight: '700',
-    marginBottom: 2,
-  },
-  nextMilestoneText: {
-    color: '#92400e', // amber-800
-    fontSize: typography.caption.fontSize,
-    marginTop: 8,
-  },
-});
+export function getCelebrationStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    celebrationContainer: {
+      alignItems: 'center',
+      backgroundColor: colors.primary[100],
+      borderColor: colors.primary[300],
+      borderWidth: 1,
+    },
+    celebrationContent: {
+      alignItems: 'center',
+      padding: 8,
+    },
+    celebrationEmoji: {
+      fontSize: 32,
+      marginBottom: 4,
+    },
+    celebrationSubtext: {
+      color: colors.primary[600],
+      fontSize: 13,
+      fontWeight: '500',
+    },
+    celebrationTitle: {
+      color: colors.primary[700],
+      fontSize: typography.body.fontSize,
+      fontWeight: '700',
+      marginBottom: 2,
+    },
+    nextMilestoneText: {
+      color: colors.primary[600],
+      fontSize: typography.caption.fontSize,
+      marginTop: 8,
+    },
+  });
+}

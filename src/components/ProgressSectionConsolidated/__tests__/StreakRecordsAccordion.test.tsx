@@ -49,6 +49,14 @@ jest.mock('react-native-reanimated', () => {
     },
   };
 
+  const createAnimationBuilder = () => ({
+    duration: function (ms: number) { return this; },
+    delay: function (ms: number) { return this; },
+    springify: function () { return this; },
+    damping: function (value: number) { return this; },
+    withCallback: function () { return this; },
+  });
+
   return {
     __esModule: true,
     default: Animated,
@@ -74,6 +82,7 @@ jest.mock('react-native-reanimated', () => {
       inOut: () => () => 0,
       ease: () => 0,
     },
+    FadeInUp: createAnimationBuilder(),
   };
 });
 

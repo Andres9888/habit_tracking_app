@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { styles } from './MilestoneProgress.styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { getCelebrationStyles } from './styles/celebration.styles';
 import { MILESTONES } from '../MilestoneProgressTypes';
 import type { Milestone } from '../MilestoneProgressTypes';
 import type { AnimatedStyle } from 'react-native-reanimated';
@@ -22,6 +23,8 @@ export const CelebrationState = React.memo(function CelebrationState({
   currentStreak,
   nextMilestone,
 }: CelebrationStateProps) {
+  const { colors } = useThemeColors();
+  const styles = getCelebrationStyles(colors);
   const hitMilestone = MILESTONES.find((m) => m.days === currentStreak);
 
   return (

@@ -10,6 +10,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { StatCardProps } from './StatsGridTypes';
 import { useStatCardAnimation } from './useStatCardAnimation';
 import { StatCardTrendBadge } from './StatCardTrendBadge';
@@ -24,6 +25,7 @@ export const StatCard = React.memo(function StatCard({
   onPress,
   onHapticFeedback,
 }: StatCardProps) {
+  const { colors } = useThemeColors();
   const { containerStyle, handlePressIn, handlePressOut } =
     useStatCardAnimation({
       index,
@@ -62,7 +64,10 @@ export const StatCard = React.memo(function StatCard({
       >
         <View className='flex-row items-center'>
           <Text className='text-base'>{config.icon}</Text>
-          <Text className='ml-1.5 text-base font-bold text-stone-900'>
+          <Text
+            className='ml-1.5 text-base font-bold'
+            style={{ color: colors.text.primary }}
+          >
             {config.value}
           </Text>
           <StatCardTrendBadge
@@ -71,7 +76,12 @@ export const StatCard = React.memo(function StatCard({
             trend={config.trend}
           />
         </View>
-        <Text className='mt-0.5 text-xs text-stone-500'>{config.label}</Text>
+        <Text
+          className='mt-0.5 text-xs'
+          style={{ color: colors.text.secondary }}
+        >
+          {config.label}
+        </Text>
       </View>
     </AnimatedPressable>
   );

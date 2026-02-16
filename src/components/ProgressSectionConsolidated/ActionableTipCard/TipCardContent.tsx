@@ -8,7 +8,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import { COLORS } from './constants';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { getThemeCorrectedColors } from './constants';
 
 interface TipCardContentProps {
   tip: string;
@@ -21,10 +22,16 @@ export function TipCardContent({
   subtitle,
   isInteractive,
 }: TipCardContentProps) {
+  const { colors } = useThemeColors();
+  const COLORS = getThemeCorrectedColors(colors);
+
   return (
     <View
-      className='flex-row items-center gap-3 rounded-xl border border-violet-100 p-3'
-      style={{ backgroundColor: COLORS.cardBackground }}
+      className='flex-row items-center gap-3 rounded-xl border p-3'
+      style={{
+        backgroundColor: COLORS.cardBackground,
+        borderColor: COLORS.borderColor,
+      }}
     >
       {/* Icon Container */}
       <View

@@ -14,6 +14,7 @@ import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { shadows } from '../../theme/spacing';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { ActionableTipCard } from './ActionableTipCard';
 import { MilestoneProgress } from './MilestoneProgress';
 import { StatsGrid } from './StatsGrid';
@@ -37,6 +38,7 @@ export function ProgressSectionConsolidated({
   onTipPress,
   onTipQuickAction,
 }: ProgressSectionConsolidatedProps) {
+  const { colors } = useThemeColors();
   const {
     actionableTip,
     bestDayData,
@@ -61,8 +63,8 @@ export function ProgressSectionConsolidated({
         className='overflow-hidden rounded-2xl p-4'
         style={{
           ...shadows.card,
-          backgroundColor: '#ffffff',
-          borderColor: 'rgba(214, 211, 209, 0.6)', // stone-300/60
+          backgroundColor: colors.card,
+          borderColor: colors.border,
           borderWidth: 1,
         }}
       >
