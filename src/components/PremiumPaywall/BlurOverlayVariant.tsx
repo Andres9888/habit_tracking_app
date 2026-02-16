@@ -66,12 +66,12 @@ export function BlurOverlayVariant({
             showsVerticalScrollIndicator={false}
           >
             <BlurOverlayHero config={config} />
+            {config.showSocialProof && <SocialProofSection dark />}
             {isAnalytics ? (
               <AnalyticsFeatureList />
             ) : (
               <MotivationFeatureList triggeredByFeature={triggeredByFeature} />
             )}
-            {config.showSocialProof && <SocialProofSection dark />}
             {config.showPricingToggle && (
               <View className='mb-4'>
                 <PricingToggle

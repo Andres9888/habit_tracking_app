@@ -58,6 +58,7 @@ export function BenefitsVariant({
           contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
         >
+          {config.showSocialProof && <SocialProofSection />}
           {sortedFeatures.map((feature) => (
             <BenefitsFeatureCard
               key={feature.id}
@@ -65,7 +66,6 @@ export function BenefitsVariant({
               isHighlighted={feature.id === triggeredByFeature}
             />
           ))}
-          {config.showSocialProof && <SocialProofSection />}
         </ScrollView>
         <BenefitsCTAFooter
           config={config}

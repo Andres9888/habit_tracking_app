@@ -28,10 +28,13 @@ export function BenefitsCTAFooter({
   return (
     <View className='absolute bottom-0 left-0 right-0 border-t border-stone-200 bg-white px-4 pb-8 pt-4'>
       <View className='mb-3 items-center'>
-        <Text className='text-2xl font-bold text-stone-800'>
-          {handlers.priceLabel ?? '$6.99/month'}
+        <Text className='text-sm font-medium text-emerald-700'>
+          Free for 7 days
         </Text>
-        <Text className='text-sm text-stone-500'>7-day free trial • Cancel anytime</Text>
+        <Text className='text-2xl font-bold text-stone-800'>
+          {handlers.priceLabel ? `then ${handlers.priceLabel}` : 'Loading...'}
+        </Text>
+        <Text className='text-xs text-stone-400'>Cancel anytime during trial — no charge</Text>
       </View>
       <Pressable
         accessibilityHint='Opens subscription options'
@@ -56,12 +59,7 @@ export function BenefitsCTAFooter({
           </LinearGradient>
         </Animated.View>
       </Pressable>
-      {handlers.priceLabel && (
-        <Text className='mt-2 text-center text-xs text-stone-500'>
-          then {handlers.priceLabel} after trial
-        </Text>
-      )}
-      <Pressable className='mt-2 py-2' onPress={onRestore}>
+      <Pressable className='mt-3 py-2' onPress={onRestore}>
         <Text className='text-center text-xs text-violet-600'>
           Already premium? Restore purchases
         </Text>
