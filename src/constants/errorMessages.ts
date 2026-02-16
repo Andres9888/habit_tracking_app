@@ -21,46 +21,46 @@ export const ERROR_MESSAGES = {
   // ============================================
   AUTH: {
     // Sign in errors
-    SIGN_IN_FAILED: 'Failed to sign in. Please try again.',
-    SIGN_IN_INVALID_EMAIL: 'Please enter a valid email address',
-    SIGN_IN_NETWORK: 'Please check your internet connection and try again.',
+    SIGN_IN_FAILED: 'Couldn\'t sign you in. Try again in a moment.',
+    SIGN_IN_INVALID_EMAIL: 'That email address doesn\'t look right',
+    SIGN_IN_NETWORK: 'No internet connection. Check your connection and try again.',
     SIGN_IN_CANCELLED: 'Sign in was cancelled.',
-    SIGN_IN_ALREADY_SIGNED_IN: 'You are already signed in.',
+    SIGN_IN_ALREADY_SIGNED_IN: 'You\'re already signed in.',
     SIGN_IN_EXTERNAL_ACCOUNT_EXISTS:
-      'This account is already linked to another user. Please sign in with your original account.',
+      'That account is linked to another user. Try signing in with your original account.',
     SIGN_IN_EXTERNAL_ACCOUNT_NOT_FOUND:
-      'Unable to verify your account. Please try again.',
+      'Couldn\'t verify your account. Try again in a moment.',
     SIGN_IN_EMAIL_NOT_FOUND:
-      "We couldn't retrieve your email. Please try a different sign-in method.",
+      "Couldn't find your email. Try a different sign-in method.",
 
     // Sign up errors
-    SIGN_UP_FAILED: 'Failed to sign up. Please try again.',
-    SIGN_UP_EMAIL_EXISTS: 'An account with this email already exists.',
+    SIGN_UP_FAILED: 'Couldn\'t create your account. Try again in a moment.',
+    SIGN_UP_EMAIL_EXISTS: 'An account with that email already exists.',
     SIGN_UP_VERIFICATION_INCOMPLETE:
-      'Verification incomplete. Please try again.',
-    SIGN_UP_WEAK_PASSWORD: 'Password is too weak. Please use a stronger password.',
+      'Couldn\'t verify your account. Try again in a moment.',
+    SIGN_UP_WEAK_PASSWORD: 'That password is too weak. Try something stronger.',
 
     // Sign out errors
-    SIGN_OUT_FAILED: 'Failed to sign out. Please try again.',
+    SIGN_OUT_FAILED: 'Couldn\'t sign you out. Try again in a moment.',
 
     // Password reset
-    PASSWORD_RESET_FAILED: 'Failed to send reset email. Please try again.',
+    PASSWORD_RESET_FAILED: 'Couldn\'t send reset email. Try again in a moment.',
     PASSWORD_RESET_EMAIL_SENT:
-      'If an account exists with this email, you will receive a reset link.',
+      'If an account exists with that email, you\'ll receive a reset link.',
 
     // General auth
-    SESSION_EXPIRED: 'Your session has expired. Please sign in again.',
-    UNAUTHENTICATED: 'Please sign in to continue.',
+    SESSION_EXPIRED: 'Your session expired. Sign in again to continue.',
+    UNAUTHENTICATED: 'Sign in to continue.',
   },
 
   // ============================================
   // NETWORK ERRORS
   // ============================================
   NETWORK: {
-    CONNECTION_ISSUE: 'Please check your internet connection and try again.',
-    CONNECTION_TIMEOUT: 'Connection timed out. Please try again.',
-    SERVER_ERROR: 'Server is temporarily unavailable. Please try again later.',
-    FETCH_FAILED: 'Failed to connect to server. Please try again.',
+    CONNECTION_ISSUE: 'No internet connection. Check your connection and try again.',
+    CONNECTION_TIMEOUT: 'Taking too long to connect. Check your connection and try again.',
+    SERVER_ERROR: 'Our servers are taking a quick break. Try again in a moment.',
+    FETCH_FAILED: 'Couldn\'t reach the server. Check your connection and try again.',
   },
 
   // ============================================
@@ -69,39 +69,39 @@ export const ERROR_MESSAGES = {
   DATA_OPS: {
     // Generic operations
     SAVE_FAILED:
-      "Your changes couldn't be saved. Please check your connection and try again.",
+      "Couldn't save your changes. Check your connection and try again.",
     CREATE_FAILED:
-      'Something went wrong. Please check your connection and try again.',
-    DELETE_FAILED: "We couldn't complete the action. Please try again.",
-    UPDATE_FAILED: 'Failed to update. Please try again.',
-    LOAD_FAILED: 'Failed to load data. Please try again.',
+      'Something went wrong while creating. Check your connection and try again.',
+    DELETE_FAILED: "Couldn't complete that. Try again in a moment.",
+    UPDATE_FAILED: 'Couldn\'t update. Try again in a moment.',
+    LOAD_FAILED: 'Couldn\'t load that. Check your connection and try again.',
 
     // Habit-specific
-    CREATE_HABIT_FAILED: 'Couldn\'t create habit. Please check your connection and try again.',
+    CREATE_HABIT_FAILED: 'Couldn\'t create your habit. Check your connection and try again.',
     SAVE_HABIT_FAILED:
-      "Your changes couldn't be saved. Please check your connection and try again.",
+      "Couldn't save your habit. Check your connection and try again.",
     DELETE_HABIT_FAILED:
-      'Failed to delete habit. Please try again.',
+      'Couldn\'t delete that habit. Try again in a moment.',
     ARCHIVE_HABIT_FAILED:
-      'Failed to archive habit. Please try again.',
+      'Couldn\'t archive that habit. Try again in a moment.',
     TOGGLE_HABIT_FAILED:
-      'Failed to update habit. Please try again.',
-    REORDER_HABITS_FAILED: 'Failed to reorder habits. Please try again.',
+      'Couldn\'t update that habit. Try again in a moment.',
+    REORDER_HABITS_FAILED: 'Couldn\'t reorder your habits. Try again in a moment.',
 
     // Note-specific
-    SAVE_NOTE_FAILED: 'Failed to save note. Please try again.',
-    DELETE_NOTE_FAILED: 'Failed to delete note. Please try again.',
+    SAVE_NOTE_FAILED: 'Couldn\'t save your note. Try again in a moment.',
+    DELETE_NOTE_FAILED: 'Couldn\'t delete that note. Try again in a moment.',
 
     // Template-specific
     IMPORT_TEMPLATE_FAILED:
-      'Failed to import template. Please try again.',
-    LOAD_TEMPLATES_FAILED: 'Failed to load templates.',
+      'Couldn\'t import that template. Try again in a moment.',
+    LOAD_TEMPLATES_FAILED: 'Couldn\'t load templates. Check your connection and try again.',
 
     // Image/media-specific
-    UPLOAD_IMAGE_FAILED: 'Failed to upload image. Please try again.',
-    DELETE_IMAGE_FAILED: "We couldn't remove the image. Please try again.",
-    IMAGE_NOT_FOUND: 'Image not found.',
-    SHARE_CARD_FAILED: 'Failed to share card. Please try again.',
+    UPLOAD_IMAGE_FAILED: 'Couldn\'t upload that image. Try again in a moment.',
+    DELETE_IMAGE_FAILED: "Couldn't remove that image. Try again in a moment.",
+    IMAGE_NOT_FOUND: 'That image couldn\'t be found.',
+    SHARE_CARD_FAILED: 'Couldn\'t share that card. Try again in a moment.',
   },
 
   // ============================================
@@ -165,19 +165,19 @@ export const ERROR_MESSAGES = {
   // SYNC ERRORS
   // ============================================
   SYNC: {
-    FAILED: 'Sync failed. Your data will retry when you\'re back online.',
-    OFFLINE_SAVE: 'Your habit will be saved when you\'re back online.',
+    FAILED: 'Couldn\'t sync right now. Your data is safe and will sync when you\'re back online.',
+    OFFLINE_SAVE: 'Saved locally. Will sync when you\'re back online.',
   },
 
   // ============================================
   // UI/GENERIC ERRORS
   // ============================================
   UI: {
-    GENERIC_ERROR: 'An unexpected error occurred. Please try again.',
-    SOMETHING_WENT_WRONG: 'Something went wrong. Please try again.',
-    TRY_AGAIN: 'Please try again.',
-    RETRY_FAILED: 'Retry failed. Please try again.',
-    LOADING_FAILED: 'Failed to load. Please try again.',
+    GENERIC_ERROR: 'Something unexpected happened. Try again in a moment.',
+    SOMETHING_WENT_WRONG: 'Something went wrong. Try again in a moment.',
+    TRY_AGAIN: 'Try again',
+    RETRY_FAILED: 'Still having trouble. Try again in a moment.',
+    LOADING_FAILED: 'Couldn\'t load that. Check your connection and try again.',
   },
 } as const;
 
