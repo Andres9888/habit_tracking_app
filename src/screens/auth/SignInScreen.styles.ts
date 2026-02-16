@@ -1,7 +1,8 @@
 /* eslint-disable max-lines */
 /** SignInScreen Styles - Type scale: 34/22/17/13, proper contrast, depth */
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle } from 'react-native';
 import { colors } from '../../theme/colors';
+import { typography } from '@/theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export function useSignInStyles() {
@@ -9,12 +10,10 @@ export function useSignInStyles() {
 
   return StyleSheet.create({
     appName: {
+      ...typography.displayLarge,
       color: themeColors.text.primary,
-      fontSize: 34,
-      fontWeight: '700',
-      letterSpacing: -1,
       textAlign: 'center',
-    },
+    } as TextStyle,
     authContent: { gap: 24 },
     brandSection: { alignItems: 'center', marginBottom: 40 },
     container: { flex: 1 },
@@ -25,11 +24,10 @@ export function useSignInStyles() {
       textDecorationLine: 'underline',
     },
     footerText: {
+      ...typography.caption,
       color: themeColors.text.secondary,
-      fontSize: 13,
-      lineHeight: 18,
       textAlign: 'center',
-    },
+    } as TextStyle,
     formCard: {
       backgroundColor: themeColors.card,
       borderRadius: 16,
@@ -60,38 +58,35 @@ export function useSignInStyles() {
     scrollContent: { flexGrow: 1, paddingHorizontal: 24 },
     socialButtons: { gap: 12 },
     tagline: {
+      ...typography.body,
       color: themeColors.text.secondary,
-      fontSize: 17,
       marginTop: 6,
       textAlign: 'center',
-    },
+    } as TextStyle,
     welcomeSection: { marginBottom: 32 },
     welcomeSubtitle: {
+      ...typography.body,
       color: themeColors.text.secondary,
-      fontSize: 17,
       lineHeight: 24,
       paddingHorizontal: 16,
       textAlign: 'center',
-    },
+    } as TextStyle,
     welcomeTitle: {
+      ...typography.heading1,
       color: themeColors.text.primary,
-      fontSize: 22,
-      fontWeight: '600',
       marginBottom: 8,
       textAlign: 'center',
-    },
+    } as TextStyle,
   });
 }
 
 /** @deprecated Use useSignInStyles() for dark mode support */
 export const styles = StyleSheet.create({
   appName: {
+    ...typography.displayLarge,
     color: '#1c1917',
-    fontSize: 34,
-    fontWeight: '700',
-    letterSpacing: -1,
     textAlign: 'center',
-  },
+  } as TextStyle,
   authContent: { gap: 24 },
   brandSection: { alignItems: 'center', marginBottom: 40 },
   container: { flex: 1 },
@@ -99,11 +94,10 @@ export const styles = StyleSheet.create({
   footer: { marginTop: 32, paddingHorizontal: 16 },
   footerLink: { color: colors.primary[700], textDecorationLine: 'underline' },
   footerText: {
+    ...typography.caption,
     color: '#57534e',
-    fontSize: 13,
-    lineHeight: 18,
     textAlign: 'center',
-  },
+  } as TextStyle,
   formCard: {
     backgroundColor: '#ffffff',
     borderRadius: 16,
@@ -134,24 +128,23 @@ export const styles = StyleSheet.create({
   scrollContent: { flexGrow: 1, paddingHorizontal: 24 },
   socialButtons: { gap: 12 },
   tagline: {
+    ...typography.body,
     color: '#57534e',
-    fontSize: 17,
     marginTop: 6,
     textAlign: 'center',
-  },
+  } as TextStyle,
   welcomeSection: { marginBottom: 32 },
   welcomeSubtitle: {
+    ...typography.body,
     color: '#57534e',
-    fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
     textAlign: 'center',
-  },
+  } as TextStyle,
   welcomeTitle: {
+    ...typography.heading1,
     color: '#1c1917',
-    fontSize: 22,
-    fontWeight: '600',
     marginBottom: 8,
     textAlign: 'center',
-  },
+  } as TextStyle,
 });

@@ -40,7 +40,12 @@ export const list = query({
         .collect();
     }
 
-    return await ctx.db.query('templates').order('desc').collect();
+    // PERF: Use by_createdAt index for ordered scan instead of full table scan
+    return await ctx.db
+      .query('templates')
+      .withIndex('by_createdAt')
+      .order('desc')
+      .collect();
   },
 });
 
@@ -85,7 +90,12 @@ export const getPopular = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
     const limit = args.limit || 10;
-    const templates = await ctx.db.query('templates').collect();
+    
+    // PERF: Fetch all templates but with index scan
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_createdAt')
+      .collect();
 
     // In-memory sort is more efficient than index on optional field
     // Template count is small (~200), so this performs well
@@ -151,7 +161,10 @@ export const getUsageStats = query({
 export const getTemplateCount = query({
   args: {},
   handler: async (ctx) => {
-    const templates = await ctx.db.query('templates').collect();
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_createdAt')
+      .collect();
     return { count: templates.length, hasTemplates: templates.length > 0 };
   },
 });
@@ -173,7 +186,10 @@ export const getTemplateCount = query({
 export const listTemplateNames = query({
   args: {},
   handler: async (ctx) => {
-    const templates = await ctx.db.query('templates').collect();
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_createdAt')
+      .collect();
     return templates.map((t) => ({
       category: t.category,
       createdAt: t.createdAt,

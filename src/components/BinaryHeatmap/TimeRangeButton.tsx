@@ -35,11 +35,11 @@ export const TimeRangeButton = memo(function TimeRangeButton({
   });
 
   const handlePressIn = useCallback(() => {
-    if (!reduceMotion) scale.value = withSpring(0.95, { damping: 15 });
+    if (!reduceMotion) scale.value = withSpring(0.95, { damping: 18 });
   }, [reduceMotion, scale]);
 
   const handlePressOut = useCallback(() => {
-    if (!reduceMotion) scale.value = withSpring(1, { damping: 15 });
+    if (!reduceMotion) scale.value = withSpring(1, { damping: 18 });
   }, [reduceMotion, scale]);
 
   const handlePress = useCallback(() => {

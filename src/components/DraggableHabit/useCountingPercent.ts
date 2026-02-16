@@ -1,6 +1,12 @@
 /**
- * useCountingPercent - Animates a percentage number counting up/down
- * Uses Reanimated shared values for smooth 60fps counting animation
+ * useCountingPercent — Animates a percentage number counting up/down at 60 fps.
+ *
+ * Uses a Reanimated shared value with `useDerivedValue` to bridge the
+ * animated value back to React state (`display`) for text rendering.
+ * First render gets a delayed 800 ms ease; subsequent changes are 500 ms.
+ *
+ * @param target - Target percentage (0–100)
+ * @returns The current rounded integer for display (e.g. "73")
  */
 
 import { useState, useEffect, useRef } from 'react';

@@ -1,3 +1,11 @@
+/**
+ * CardHeader — Top row of a habit card: icon (with pulse), title, phase tag, chevron.
+ *
+ * Uses a 5-column grid where the icon occupies column 1 and the title overlay
+ * spans columns 2–5 via absolute positioning (see {@link TITLE_OVERLAY_STYLE}).
+ * Optionally shows "Best: N days" subtitle when the best streak exceeds current.
+ */
+
 import React from 'react';
 import { Animated, View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';

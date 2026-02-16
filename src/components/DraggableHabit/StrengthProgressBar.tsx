@@ -1,3 +1,15 @@
+/**
+ * StrengthProgressBar — Visualises habit strength as an animated segmented bar.
+ *
+ * Layout (same 5-column grid as CardHeader):
+ * - Column 1: Animated tier emoji (🌱→🌿→🌳→💪→⚡)
+ * - Columns 2–4: Progress bar with dividers at 20/40/60/80%
+ * - Column 5: Animated counting percentage text
+ *
+ * All animations are driven by Reanimated styles passed in from
+ * {@link useStrengthAnimation} and {@link useCountingPercent}.
+ */
+
 import React from 'react';
 import { View, Text } from 'react-native';
 import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
