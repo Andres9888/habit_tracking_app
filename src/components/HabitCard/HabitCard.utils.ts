@@ -1,13 +1,21 @@
 /**
  * HabitCard Utility Functions
- * Helper functions for strength-related calculations
+ *
+ * Pure helper functions for deriving visual properties from habit state.
+ * All functions are side-effect-free and safe to call from any context.
  */
 
 import type { AppTheme } from '../../theme';
 import { getStrengthLevel } from '../HabitStrengthIndicator';
 
 /**
- * Get the color associated with a habit's strength level
+ * Maps a numeric strength (0–100) to the corresponding theme color.
+ *
+ * Strength levels: starting → building → developing → strong → automatic
+ *
+ * @param strength - Habit strength percentage (0–100)
+ * @param theme - Current app theme (provides color tokens)
+ * @returns Hex color string from `theme.custom.colors.strength.*`
  */
 export function getStrengthColor(strength: number, theme: AppTheme): string {
   const level = getStrengthLevel(strength);
@@ -34,7 +42,12 @@ export function getStrengthColor(strength: number, theme: AppTheme): string {
 }
 
 /**
- * Get the emoji associated with a habit's strength level for visual reinforcement
+ * Maps a numeric strength (0–100) to an emoji for visual reinforcement.
+ *
+ * 🌱 starting → 🌿 building → 🌳 developing → 💪 strong → ⚡ automatic
+ *
+ * @param strength - Habit strength percentage (0–100)
+ * @returns Emoji string representing the growth stage
  */
 export function getStrengthEmoji(strength: number): string {
   const level = getStrengthLevel(strength);
@@ -61,7 +74,15 @@ export function getStrengthEmoji(strength: number): string {
 }
 
 /**
- * Get the background color for the card based on state
+ * Determines the card background color based on completion and risk state.
+ *
+ * Priority: completed (muted green 20%) > atRisk (warning 10%) > default card color.
+ *
+ * @param completed - Whether the habit is completed today
+ * @param atRisk - Whether the habit is flagged at-risk (prediction < 40%)
+ * @param theme - Current app theme
+ * @param cardColor - Optional override from theme context (e.g. dark mode)
+ * @returns Hex color string (may include alpha suffix)
  */
 export function getBackgroundColor(
   completed: boolean,

@@ -1,13 +1,20 @@
+/**
+ * useHabitCardState — Manages completion and streak state for HabitCard.
+ *
+ * **Data flow:**
+ * 1. Receives server state via props (from parent's bulk tracking query)
+ * 2. Optionally merges with offline pending operations via {@link useOfflineHabitState}
+ * 3. Layers optimistic local state on top for instant visual feedback
+ * 4. Resets optimistic state when server catches up (ref-based comparison)
+ *
+ * This avoids per-card Convex subscriptions — the parent provides completion
+ * status from a single bulk query, reducing WebSocket subscriptions from N to 1.
+ *
+ * @see docs/offline-habit-sync.md T013 — Offline state integration
+ */
+
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getLocalDateString } from '@/utils/getLocalDateString';
-/**
- * useHabitCardState Hook
- *
- * Manages completion and streak state for HabitCard,
- * integrating server data with offline queue operations.
- *
- * @see docs/offline-habit-sync.md T013 - Offline state integration
- */
 
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';

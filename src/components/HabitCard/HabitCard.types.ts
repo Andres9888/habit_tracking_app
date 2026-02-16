@@ -1,9 +1,13 @@
 /**
- * HabitCard Types
- * Type definitions for the HabitCard component
+ * HabitCard Type Definitions
  *
- * @see docs/offline-habit-sync.md T013 - Offline state support
- * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
+ * All types consumed by HabitCard.tsx and its sub-hooks.
+ * Organized by concern:
+ *   1. Shared types (CompletionIconType)
+ *   2. Component props (HabitCardProps)
+ *
+ * @see docs/offline-habit-sync.md T013 — Offline state support
+ * @see docs/offline-habit-sync.md T014 — Chain animation for offline completions
  */
 
 import type { ViewStyle } from 'react-native';
@@ -11,9 +15,23 @@ import type { Id } from '../../../convex/_generated/dataModel';
 import type { TrackingRecord } from '../../lib/offline';
 import type { HabitCardEntranceVariant } from './useHabitCardEntrance';
 
-/** Completion icon type - chain link for visual "chain building" or checkbox */
+// ─── Shared Types ────────────────────────────────────────────────────────────
+
+/**
+ * Visual style for the completion indicator.
+ * - `'chain'` — Chain-link icon with linking animation ("don't break the chain")
+ * - `'checkbox'` — Traditional checkmark with scale/rotate animation
+ */
 export type CompletionIconType = 'chain' | 'checkbox';
 
+// ─── Component Props ─────────────────────────────────────────────────────────
+
+/**
+ * Props for the HabitCard component.
+ *
+ * **Required:** `id`, `name`, `strength`
+ * **Optional:** everything else has sensible defaults.
+ */
 export interface HabitCardProps {
   /** Habit ID */
   id: Id<'habits'>;

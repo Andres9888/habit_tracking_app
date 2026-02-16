@@ -1,6 +1,16 @@
 /**
  * HabitCard Streak Styles
- * StyleSheet definitions for streak badges
+ *
+ * Visual tiers for the streak badge row beneath the habit name.
+ *
+ * **Streak tier → visual mapping:**
+ * - 0 days: "Start a Streak!" prompt (gray badge, 💪 icon)
+ * - 1+ days: Active streak (amber badge, 🔥 icon, bounce animation)
+ * - Near best: Best-streak badge appears when within 2 days of record (🏅)
+ * - New record: Amber highlight on best-streak badge ("New Record!")
+ *
+ * **Ripple overlay:** Centered 40px circle used for the tap-feedback ripple
+ * animation on the streak area (animated via useRippleAnimatedStyle).
  */
 
 import { StyleSheet } from 'react-native';

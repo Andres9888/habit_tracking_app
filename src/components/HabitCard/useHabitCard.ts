@@ -1,9 +1,25 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
 /**
- * useHabitCard Hook - Core orchestration logic
+ * useHabitCard — Core orchestration hook for the HabitCard component.
  *
- * @see docs/offline-habit-sync.md T013 - Offline state integration
+ * This is the "brain" of HabitCard. It composes several specialized hooks
+ * and returns a single object that HabitCard.tsx renders against:
+ *
+ * **Composed hooks (in order of invocation):**
+ * 1. {@link useHabitCardValues} — Shared animation values & React state (translateX, scale, confetti, etc.)
+ * 2. {@link useHabitCardState} — Completion, streak, and offline-sync state
+ * 3. {@link useStreakMilestoneIntegration} — Fires global milestone celebrations on streak thresholds
+ * 4. {@link useHabitCardEntrance} — Card mount/entrance animations
+ * 5. {@link useHabitCardAnimations} — Completion celebration & checkmark animations
+ * 6. {@link useHabitCardGestures} — Tap, pan, long-press gesture composition
+ * 7. {@link useHabitCardEffects} — Side-effects syncing props → animated values
+ *
+ * **Return shape:** A flat object containing all derived state, animated styles,
+ * gesture handlers, and callbacks the component needs. See the `return` block
+ * at the bottom for the full contract.
+ *
+ * @see docs/offline-habit-sync.md T013 — Offline state integration
  */
 
 import { useCallback } from 'react';

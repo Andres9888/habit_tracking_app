@@ -1,6 +1,12 @@
 /**
- * HabitCard Gestures Hook
- * Combines pan, tap, and long-press gestures for the HabitCard
+ * useHabitCardGestures — Composes pan, tap, and long-press into a single gesture.
+ *
+ * **Gesture composition (via `Gesture.Race`):**
+ * - **Long press** (500ms) — Opens quick-actions menu; wins the race first.
+ * - **Tap + Pan** (simultaneous) — Tap toggles completion; pan reveals swipe actions.
+ *   Running simultaneously lets the user start a swipe mid-tap without conflict.
+ *
+ * Each gesture factory lives in `./gestures/` for testability.
  */
 
 import { Gesture } from 'react-native-gesture-handler';

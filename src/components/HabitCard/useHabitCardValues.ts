@@ -1,7 +1,9 @@
 /**
- * useHabitCardValues Hook
+ * useHabitCardValues — Initializes shared animation values and React state for HabitCard.
  *
- * Manages shared animation values for HabitCard.
+ * Groups two kinds of state:
+ * - **Reanimated shared values** (translateX, cardScale, strengthFillWidth) — driven on the UI thread
+ * - **React state** (showFloatingXP, showConfetti, showCompletionToast, etc.) — triggers re-renders for overlay components
  */
 
 import { useState } from 'react';

@@ -1,3 +1,11 @@
+/**
+ * ConfettiBurst Component
+ *
+ * Renders 8 particles that burst outward in a circle when `active` is true.
+ * Each particle springs to its target position then fades out.
+ * The first particle's fade-out completion triggers `onComplete`.
+ */
+
 import React from 'react';
 import { View } from 'react-native';
 import Animated, {

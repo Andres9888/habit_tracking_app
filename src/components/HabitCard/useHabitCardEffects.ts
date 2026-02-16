@@ -1,5 +1,10 @@
 /**
- * useHabitCardEffects - Side effect synchronization for HabitCard
+ * useHabitCardEffects — Syncs React props → Reanimated shared values.
+ *
+ * Two effects:
+ * 1. **Strength fill** — When `strength` prop changes, spring-animates the fill width.
+ * 2. **Checkmark state** — When `completed` changes, snaps scale/rotate to target
+ *    (no animation here; celebration animations are triggered separately by gestures).
  */
 
 import { useEffect } from 'react';

@@ -1,3 +1,10 @@
+/**
+ * HabitCardContent Props
+ *
+ * Props passed from the parent HabitCard to the inner content layout.
+ * All animation values are pre-built animated styles or shared values.
+ */
+
 import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
 import type { AppTheme } from '../../../theme';
 import type { CompletionIconType } from './StatusIndicator';

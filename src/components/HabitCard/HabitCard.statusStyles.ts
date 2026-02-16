@@ -1,6 +1,16 @@
 /**
  * HabitCard Status Styles
- * Check circles, streak badges, and warning indicators
+ *
+ * Visual styles for the right-side status column of each card.
+ * Maps completion state → visual treatment:
+ *
+ * | State       | Style                          | Element            |
+ * |-------------|--------------------------------|--------------------|
+ * | Completed   | Green filled circle + ✓/🔗     | checkCircleCompleted |
+ * | Unchecked   | Transparent circle, gray border| checkCircleUnchecked |
+ * | At Risk     | Warning badge with ⚠️          | warningBadge       |
+ * | Streak > 0  | Amber badge with 🔥           | streakBadgeCompleted |
+ * | No streak   | Transparent badge              | streakBadgeUnchecked |
  */
 
 import { StyleSheet } from 'react-native';
@@ -10,6 +20,7 @@ import { fontFamilies, typography } from '@/theme/typography';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 
 export const statusStyles = StyleSheet.create({
+  // ─── Check Circle (completion indicator) ────────────────────────────────
   checkCircle: {
     alignItems: 'center',
     borderRadius: borderRadius.full,
@@ -47,6 +58,7 @@ export const statusStyles = StyleSheet.create({
     fontSize: typography.bodySmall.fontSize,
     fontWeight: 'bold',
   },
+  // ─── Status Container & Streak Badges ────────────────────────────────────
   statusContainer: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -76,6 +88,7 @@ export const statusStyles = StyleSheet.create({
   streakTextUnchecked: {
     color: REDESIGN_COLORS.neutral,
   },
+  // ─── At-Risk Warning ─────────────────────────────────────────────────────
   warningBadge: {
     alignItems: 'center',
     borderRadius: borderRadius.medium,

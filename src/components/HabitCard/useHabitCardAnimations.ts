@@ -1,8 +1,16 @@
 /**
- * HabitCard Animations Hook
- * Manages completion celebration and animated styles
+ * useHabitCardAnimations — Manages completion celebration and animated styles.
  *
- * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
+ * **Lifecycle:**
+ * 1. Creates shared values for checkmark scale/rotate, ripple scale/opacity
+ * 2. Builds trigger functions via {@link createCelebrationTrigger} and {@link createUncheckTrigger}
+ * 3. Builds animated style hooks for card, actions, checkmark, and ripple
+ * 4. Returns triggers + animated styles + raw shared values (for chain reuse)
+ *
+ * The checkmark and chain-link animations share the same shared values
+ * (`checkmarkScale`/`checkmarkRotate`); only the rendered icon differs (T014).
+ *
+ * @see docs/offline-habit-sync.md T014 — Chain animation for offline completions
  */
 
 import { useEffect, useRef } from 'react';

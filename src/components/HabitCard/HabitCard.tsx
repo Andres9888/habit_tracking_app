@@ -1,9 +1,25 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
 /**
- * HabitCard Component - Display individual habit with tracking and animations
+ * HabitCard Component
  *
- * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
+ * The primary UI element on the home screen — each habit is represented as a
+ * swipeable, tappable card that shows name, icon, streak, strength progress,
+ * and completion state.
+ *
+ * **Responsibilities:**
+ * - Renders the visual card (accent bar, strength fill, content, grip lines)
+ * - Delegates all state/logic to {@link useHabitCard}
+ * - Wraps card in {@link GestureDetector} for tap/pan/long-press
+ * - Displays celebratory overlays (confetti, floating XP, completion toast)
+ *
+ * **Props contract:** See {@link HabitCardProps} for the full interface.
+ * Only `id`, `name`, and `strength` are required; everything else has defaults.
+ *
+ * @see HabitCard.types.ts — Full prop definitions
+ * @see useHabitCard.ts — Orchestration hook
+ * @see docs/offline-habit-sync.md T014 — Chain animation for offline completions
+ *
  * ACCESSIBILITY: Focus state support added per UI audit (2026-02-07)
  */
 
@@ -29,6 +45,12 @@ import {
 
 export type { HabitCardProps } from './HabitCard.types';
 
+/**
+ * HabitCard — memoized wrapper around the card UI.
+ *
+ * Destructures display-only props locally; delegates all derived state,
+ * animations, gestures, and side-effects to {@link useHabitCard}.
+ */
 function HabitCardComponent(props: HabitCardProps) {
   const {
     name,

@@ -1,10 +1,17 @@
 /**
  * HabitCard Gesture Types
+ *
+ * Options passed to {@link useHabitCardGestures} and forwarded to
+ * individual gesture factories (tap, pan, long-press).
  */
 
 import type { SharedValue } from 'react-native-reanimated';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
+/**
+ * Full options bag for gesture composition.
+ * Contains shared values, callbacks, and state needed by all three gesture handlers.
+ */
 export interface UseHabitCardGesturesOptions {
   id: Id<'habits'>;
   name: string;

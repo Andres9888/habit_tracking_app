@@ -1,9 +1,13 @@
 /**
  * HabitCard Core Styles
+ *
  * Implements home-screen-redesign-spec.md:
  * - MinHeight: 76px | Border-radius: 16px (cards)
  * - Card surface: #FFFFFF | Border: 1px #E5E2DE
- * OPTIMIZED: SF Pro font, deeper shadows, proper contrast
+ * - SF Pro font, 4px/16px shadows at 0.08 opacity
+ *
+ * Merged with {@link statusStyles} at export time so consumers
+ * import a single `styles` object.
  *
  * ACCESSIBILITY: Uses shared focus ring system (src/utils/accessibility/focusRing.ts)
  */
@@ -18,6 +22,7 @@ export { actionStyles } from './HabitCard.actionStyles';
 export { REDESIGN_COLORS } from './HabitCard.colors';
 
 const coreStyles = StyleSheet.create({
+  // ─── Layout & Positioning ──────────────────────────────────────────────────
   accentBar: { bottom: 0, left: 0, position: 'absolute', top: 0 },
   bottomRow: {
     alignItems: 'center',
@@ -25,6 +30,7 @@ const coreStyles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginTop: 2,
   },
+  // ─── Card Surface ────────────────────────────────────────────────────────
   card: {
     backgroundColor: REDESIGN_COLORS.cardSurface,
     borderColor: REDESIGN_COLORS.neutral,
@@ -46,6 +52,7 @@ const coreStyles = StyleSheet.create({
     marginHorizontal: spacing.md,
     padding: spacing.md,
   },
+  // ─── State Modifiers ─────────────────────────────────────────────────────
   completedText: { opacity: 0.55, textDecorationLine: 'line-through' as const },
   container: {
     marginVertical: spacing.xs,
@@ -54,6 +61,7 @@ const coreStyles = StyleSheet.create({
   },
   content: { flex: 1, justifyContent: 'center', padding: spacing.base },
   disabled: { opacity: 0.5 },
+  // ─── Typography & Content ────────────────────────────────────────────────
   habitInfo: {
     alignItems: 'center',
     flex: 1,
@@ -78,7 +86,7 @@ const coreStyles = StyleSheet.create({
     lineHeight: 22,
   },
   icon: { fontSize: 26 },
-  // Streak text with proper contrast
+  // ─── Streak & Strength ──────────────────────────────────────────────────
   streakText: {
     color: REDESIGN_COLORS.streakText,
     fontFamily: fontFamilies.primary.text,
