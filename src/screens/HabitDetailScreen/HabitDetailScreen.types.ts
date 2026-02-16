@@ -23,12 +23,14 @@ export interface WeekDayData {
 
 export interface HabitDetailScreenProps {
   habit: Habit | null;
+  isPremium?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
   onClose: () => void;
   onDelete?: (habitId: Id<'habits'>) => void;
   onEdit?: (habit: Habit) => void;
   onOpenCalendar?: (habit: Habit) => void;
   onPause?: (habitId: Id<'habits'>) => void;
+  onPremiumRequired?: () => void;
   tracking?: HabitTrackingEntry[];
   visible: boolean;
 }

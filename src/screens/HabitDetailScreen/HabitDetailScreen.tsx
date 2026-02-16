@@ -25,10 +25,12 @@ import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
 // eslint-disable-next-line max-lines-per-function
 function HabitDetailScreenContent({
   habit,
+  isPremium = false,
   onArchive,
   onClose,
   onDelete,
   onEdit,
+  onPremiumRequired,
   tracking = [],
   visible,
 }: HabitDetailScreenProps) {
@@ -90,8 +92,10 @@ function HabitDetailScreenContent({
                   <HabitDetailContent
                     completedDates={screenState.completedDates}
                     habit={habit}
+                    isPremium={isPremium}
                     notesByDate={screenState.notesByDate}
                     onDayPress={calendarHandlers.handleCalendarDayPress}
+                    onPremiumRequired={onPremiumRequired}
                   />
                 </LinearGradient>
               </View>
