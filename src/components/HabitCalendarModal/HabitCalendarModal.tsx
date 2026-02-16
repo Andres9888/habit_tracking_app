@@ -1,5 +1,6 @@
 import { Modal, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { StatsCard } from './StatsCard';
 import { ActivityLog } from './ActivityLog';
 import { CalendarTabs } from './CalendarTabs';
@@ -7,6 +8,7 @@ import { ModalHeader } from './ModalHeader';
 import { StatusRibbon } from './StatusRibbon';
 import HeatmapCalendar from './HeatmapCalendar';
 import HabitCalendarView from '../HabitCalendarView';
+import HabitEditScreen from '../../screens/HabitEditScreen';
 import { useHabitCalendarModal } from './useHabitCalendarModal';
 import type { HabitCalendarModalProps } from './types';
 
@@ -18,12 +20,11 @@ export default function HabitCalendarModal({
   tracking,
   toggleHabit,
   onOpenMotivationTab,
-  onEdit,
 }: HabitCalendarModalProps) {
+  const { colors } = useThemeColors();
   const state = useHabitCalendarModal({
     habit,
     onClose,
-    onEdit,
     onOpenMotivationTab,
     toggleHabit,
     tracking,
@@ -33,12 +34,8 @@ export default function HabitCalendarModal({
 
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
-      <SafeAreaView className='flex-1 bg-[#F8F5F1]'>
-        <ModalHeader
-          name={state.name}
-          onClose={onClose}
-          onEdit={state.handleEditPress}
-        />
+      <SafeAreaView className='flex-1' style={{ backgroundColor: colors.background }}>
+        <ModalHeader name={state.name} onClose={onClose} onEdit={state.handleEditPress} />
 
         <ScrollView className='px-4' showsVerticalScrollIndicator={false}>
           <StatusRibbon
@@ -67,22 +64,11 @@ export default function HabitCalendarModal({
           </View>
 
           <View className='mt-8'>
-            <CalendarTabs
-              activeView={state.calendarView}
-              onViewChange={state.setCalendarView}
-            />
+            <CalendarTabs activeView={state.calendarView} onViewChange={state.setCalendarView} />
             {state.calendarView === 'month' ? (
-              <HabitCalendarView
-                habitId={habit._id}
-                toggleHabit={toggleHabit}
-                tracking={tracking}
-              />
+              <HabitCalendarView habitId={habit._id} toggleHabit={toggleHabit} tracking={tracking} />
             ) : (
-              <HeatmapCalendar
-                habitId={habit._id}
-                monthsToShow={6}
-                tracking={tracking}
-              />
+              <HeatmapCalendar habitId={habit._id} monthsToShow={6} tracking={tracking} />
             )}
           </View>
 
@@ -91,6 +77,15 @@ export default function HabitCalendarModal({
           </View>
         </ScrollView>
       </SafeAreaView>
+
+      <HabitEditScreen
+        habitId={habit._id}
+        visible={state.showEditScreen}
+        onClose={state.handleCloseEdit}
+        onOpenAffirmationsEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
+        onOpenCueEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
+        onOpenVisionBoard={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
+      />
     </Modal>
   );
 }

@@ -13,6 +13,7 @@
 import { httpAction } from '../_generated/server';
 import { internal } from '../_generated/api';
 import { verifyRevenueCatSignature } from './revenuecatSignature';
+import { validateWebhookTimestamp } from '../subscriptions/premiumCheck';
 
 // RevenueCat webhook event types we handle
 const GRANT_EVENTS = new Set([
@@ -42,25 +43,36 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     const payload = JSON.parse(body);
     const event = payload.event;
     const eventType = event?.type;
-    const appUserId = payload.app_user_id; // This is the Clerk user ID
+    // app_user_id is nested inside the event object, NOT at the payload root
+    const appUserId: string | undefined = event?.app_user_id;
 
     if (!eventType || !appUserId) {
       console.error('[RevenueCat] Missing event type or app_user_id');
       return new Response('Invalid payload', { status: 400 });
     }
 
-    console.log('[RevenueCat] Processing event:', eventType, 'for:', appUserId);
+    // Event processing logged via Convex dashboard
+
+    // Extract and validate timestamps from webhook
+    const validatedExpiresAt = validateWebhookTimestamp(
+      event.expiration_at_ms,
+      'expiration_at_ms'
+    );
+    const validatedTrialEndsAt = validateWebhookTimestamp(
+      event.trial_end_at_ms,
+      'trial_end_at_ms'
+    );
 
     // Route to appropriate handler based on event type
     if (GRANT_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.grantPremium, {
         clerkId: appUserId,
         eventType,
-        expiresAt: event.expiration_at_ms,
-        isTrialing: event.is_trial_period === true,
+        expiresAt: validatedExpiresAt,
+        isTrialing: event.period_type === 'TRIAL',
         productId: event.product_id,
-        revenueCatId: event.app_user_id,
-        trialEndsAt: event.trial_end_at_ms,
+        revenueCatId: event.original_app_user_id,
+        trialEndsAt: validatedTrialEndsAt,
       });
     } else if (REVOKE_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.revokePremium, {
@@ -72,21 +84,26 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
         clerkId: appUserId,
       });
     } else {
-      // Log unknown events but don't fail
-      console.log('[RevenueCat] Unhandled event type:', eventType);
+      // Unhandled event type — no action needed
     }
 
     // Always return 200 to acknowledge receipt
-    return new Response(JSON.stringify({ received: true }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 200,
-    });
+    return Response.json(
+      { received: true },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+      }
+    );
   } catch (error) {
     console.error('[RevenueCat] Webhook error:', error);
     // Return 500 so RevenueCat retries failed events
-    return new Response(JSON.stringify({ error: 'Processing error' }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 500,
-    });
+    return Response.json(
+      { error: 'Processing error' },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 500,
+      }
+    );
   }
 });

@@ -16,7 +16,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { SKELETON_COLORS, SHIMMER_DURATION } from './constants';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
+import {
+  SKELETON_COLORS_LIGHT,
+  SKELETON_COLORS_DARK,
+  SHIMMER_DURATION,
+} from '../../../../../components/SkeletonLoader/SkeletonLoader';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -33,6 +38,8 @@ export function ShimmerSkeleton({
   borderRadius = 8,
   style,
 }: ShimmerSkeletonProps) {
+  const { isDark } = useThemeColors();
+  const SKELETON_COLORS = isDark ? SKELETON_COLORS_DARK : SKELETON_COLORS_LIGHT;
   const shimmerPosition = useSharedValue(0);
 
   useEffect(() => {

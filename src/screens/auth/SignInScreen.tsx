@@ -5,14 +5,17 @@
 
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
+  Linking,
   Text,
   View,
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
+  TextInput,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -22,9 +25,6 @@ import Animated, {
   withDelay,
   withSpring,
   withTiming,
-  withRepeat,
-  Easing,
-  interpolate,
 } from 'react-native-reanimated';
 import {
   AuthDivider,
@@ -32,11 +32,13 @@ import {
   ForgotPasswordLink,
   ForgotPasswordModal,
   FormInput,
+  PasswordInput,
   SocialSignInButton,
   SubmitButton,
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -45,9 +47,10 @@ interface SignInScreenProps {
   onNavigateToSignUp?: () => void;
 }
 
-export default function SignInScreen(_props: SignInScreenProps = {}) {
+function SignInScreenContent(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const passwordRef = useRef<TextInput>(null);
   const {
     emailAddress,
     setEmailAddress,
@@ -77,39 +80,26 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
   const contentOpacity = useSharedValue(0);
   const contentTranslateY = useSharedValue(30);
 
-  // Breathing animation for logo
-  const breathe = useSharedValue(0);
-
   useEffect(() => {
     // Logo entrance
     logoScale.value = withDelay(
       50,
-      withSpring(1, { damping: 12, stiffness: 100 })
+      withSpring(1, { damping: 18, stiffness: 150 })
     );
-    logoOpacity.value = withDelay(50, withTiming(1, { duration: 400 }));
+    logoOpacity.value = withDelay(50, withTiming(1, { duration: 280 }));
 
-    // Header entrance
-    headerOpacity.value = withDelay(200, withTiming(1, { duration: 500 }));
-    headerTranslateY.value = withDelay(200, withSpring(0, { damping: 15 }));
+    // Header entrance (60ms stagger)
+    headerOpacity.value = withDelay(110, withTiming(1, { duration: 280 }));
+    headerTranslateY.value = withDelay(110, withSpring(0, { damping: 18, stiffness: 150 }));
 
-    // Content entrance
-    contentOpacity.value = withDelay(400, withTiming(1, { duration: 500 }));
-    contentTranslateY.value = withDelay(400, withSpring(0, { damping: 15 }));
-
-    // Breathing animation
-    breathe.value = withRepeat(
-      withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true
-    );
+    // Content entrance (60ms stagger)
+    contentOpacity.value = withDelay(170, withTiming(1, { duration: 280 }));
+    contentTranslateY.value = withDelay(170, withSpring(0, { damping: 18, stiffness: 150 }));
   }, []);
 
   const logoStyle = useAnimatedStyle(() => ({
     opacity: logoOpacity.value,
-    transform: [
-      { scale: logoScale.value },
-      { scale: interpolate(breathe.value, [0, 1], [1, 1.05]) },
-    ],
+    transform: [{ scale: logoScale.value }],
   }));
 
   const headerStyle = useAnimatedStyle(() => ({
@@ -164,7 +154,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           <Animated.View style={[styles.welcomeSection, headerStyle]}>
             <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
             <Text style={styles.welcomeSubtitle}>
-              Your habits are waiting. Let's keep the momentum going.
+              Your streak is waiting — let's keep the momentum going.
             </Text>
           </Animated.View>
 
@@ -179,12 +169,14 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_apple'}
                 provider='apple'
+                testID='auth-sign-in-apple-button'
                 onPress={signInWithApple}
               />
               <SocialSignInButton
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_google'}
                 provider='google'
+                testID='auth-sign-in-google-button'
                 onPress={signInWithGoogle}
               />
             </View>
@@ -195,36 +187,41 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
               <FormInput
                 autoCapitalize='none'
                 autoComplete='email'
+                blurOnSubmit={false}
                 editable={!isAnyLoading}
                 error={emailError}
                 keyboardType='email-address'
                 label='Email'
                 placeholder='your@email.com'
+                returnKeyType='next'
                 value={emailAddress}
                 onBlur={onEmailBlur}
                 onChangeText={setEmailAddress}
+                onSubmitEditing={() => passwordRef.current?.focus()}
               />
 
-              <FormInput
-                secureTextEntry
+              <PasswordInput
+                ref={passwordRef}
                 autoComplete='password'
                 editable={!isAnyLoading}
-                label='Password'
                 labelRight={
                   <ForgotPasswordLink
                     onPress={() => setShowForgotPassword(true)}
                   />
                 }
                 placeholder='Enter your password'
+                returnKeyType='go'
                 value={password}
                 onChangeText={setPassword}
+                onSubmitEditing={handleSignIn}
               />
 
               <SubmitButton
                 disabled={!canSubmit || isAnyLoading}
                 isLoading={isLoading}
-                label='Continue'
-                loadingLabel='Signing in...'
+                label='Sign In'
+                loadingLabel='Signing in…'
+                testID='auth-sign-in-button'
                 onPress={handleSignIn}
               />
             </View>
@@ -233,7 +230,22 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           {/* Footer */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>
-              By continuing, you agree to our Terms & Privacy Policy
+              By continuing, you agree to our{' '}
+              <Text
+                accessibilityRole='link'
+                style={styles.footerLink}
+                onPress={() => void Linking.openURL('https://chainday.app/terms')}
+              >
+                Terms
+              </Text>
+              {' & '}
+              <Text
+                accessibilityRole='link'
+                style={styles.footerLink}
+                onPress={() => void Linking.openURL('https://chainday.app/privacy')}
+              >
+                Privacy Policy
+              </Text>
             </Text>
           </View>
         </ScrollView>
@@ -250,7 +262,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
 const styles = StyleSheet.create({
   appName: {
     color: '#1c1917',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.5,
     textAlign: 'center',
@@ -273,9 +285,13 @@ const styles = StyleSheet.create({
     marginTop: 32,
     paddingHorizontal: 16,
   },
+  footerLink: {
+    color: '#047857',
+    textDecorationLine: 'underline',
+  },
   footerText: {
     color: '#a8a29e',
-    fontSize: 12,
+    fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',
   },
@@ -308,8 +324,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   tagline: {
-    color: '#78716c',
-    fontSize: 14,
+    color: '#57534e',
+    fontSize: 13,
     marginTop: 4,
     textAlign: 'center',
   },
@@ -318,7 +334,7 @@ const styles = StyleSheet.create({
   },
   welcomeSubtitle: {
     color: '#57534e',
-    fontSize: 16,
+    fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
     textAlign: 'center',
@@ -331,3 +347,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default function SignInScreen(props: SignInScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Sign In">
+      <SignInScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}

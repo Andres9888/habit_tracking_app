@@ -1,24 +1,40 @@
 /** TemplatesLoadingState - Shimmer animation, stagger, shadows */
 import { View, Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { ShimmerBox } from './ShimmerBox';
 import { SkeletonCard } from './SkeletonCard';
 
 export function TemplatesLoadingState() {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='flex-1 bg-[#FAF8F5]'>
-      <View className='px-5 pb-4 pt-6'>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <View style={{ paddingHorizontal: 20, paddingBottom: 16, paddingTop: 24 }}>
         <Text
-          className='font-semibold text-stone-900'
-          style={{ fontSize: 22, letterSpacing: -0.35 }}
+          style={{
+            color: colors.text.primary,
+            fontSize: 22,
+            fontWeight: '600',
+            letterSpacing: -0.35,
+          }}
         >
-          Browse Templates
+          Import Habits
         </Text>
-        <Text className='mt-1 text-[17px] text-stone-500'>
+        <Text
+          style={{
+            color: colors.text.secondary,
+            fontSize: 17,
+            marginTop: 4,
+          }}
+        >
           Science-backed habits to get you started
         </Text>
       </View>
-      <Animated.View className='mx-5 mb-4' entering={FadeIn.duration(300)}>
+      <Animated.View
+        entering={FadeIn.duration(300)}
+        style={{ marginHorizontal: 20, marginBottom: 16 }}
+      >
         <ShimmerBox height={48} style={{ borderRadius: 24 }} width='100%' />
       </Animated.View>
       {[0, 1, 2, 3].map((i) => (
