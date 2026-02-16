@@ -2,6 +2,27 @@
 /**
  * AnalyticsScreen - Main analytics dashboard screen
  * Shows habit statistics, charts, and insights
+ * 
+ * ## Navigation Entry Points
+ * - Accessed from HabitsApp bottom navigation (Analytics tab)
+ * - Shows paywall for non-premium users
+ * 
+ * ## State Management
+ * - `useAnalyticsScreen` hook: all screen state and handlers
+ * - Components receive data via props (overviewStats, trendData, etc.)
+ * 
+ * ## Props Contract
+ * No external props - uses internal hooks for state
+ * 
+ * ## Sections (top to bottom)
+ * 1. AnalyticsHeader - title and period selector
+ * 2. EmptyState - shown when user has no habits
+ * 3. OverviewStats - total habits, completion rate, current streak
+ * 4. ChartSections - strength distribution, compliance trends
+ * 5. InsightsSections - weekly insights and ranked habits
+ * 6. ExportButton - exports data to CSV/JSON
+ * 
+ * @flag UNDER_150_LINES - Screen is well-structured at 148 lines
  */
 import React, { useMemo } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';

@@ -1,6 +1,29 @@
 /**
  * SignInScreen - Premium sign in experience
  * Clean design with chain branding and smooth animations
+ * 
+ * ## Navigation Entry Points
+ * - Accessed from WelcomeScreen when user taps "Sign in"
+ * - Used as lazy-loaded component in AuthGate auth flow
+ * 
+ * ## State Management
+ * - `useSignInFlow` hook: manages email/password form state, validation, submission
+ * - `useOAuthSignIn` hook: handles Google/Apple OAuth sign-in
+ * - Local state: `showForgotPassword` (Modal visibility)
+ * 
+ * ## Props Contract
+ * @interface SignInScreenProps
+ * @property {boolean} [autoFocusEmail] - Auto-focus the email input on mount
+ * @property {() => void} [onNavigateToSignUp] - Callback when user wants to navigate to sign up
+ * 
+ * ## Performance Notes
+ * - Animations use react-native-reanimated with 60ms stagger
+ * - Logo entrance: 50ms delay, 280ms duration
+ * - Header entrance: 110ms delay
+ * - Content entrance: 170ms delay
+ * 
+ * @flag OVER_300_LINES - Screen has 374 lines. Consider splitting into smaller components
+ * (e.g., form section, social buttons section, brand section as separate files)
  */
 
 /* eslint-disable max-lines */
@@ -76,6 +99,10 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
 
   const isAnyLoading = isLoading || !!oauthLoading;
 
+  // ═══════════════════════════════════════════════════════════════════
+  // ANIMATION SETUP - Entrance animations with staggered delays
+  // ═══════════════════════════════════════════════════════════════════
+
   // Entrance animations
   const logoScale = useSharedValue(0.5);
   const logoOpacity = useSharedValue(0);
@@ -107,6 +134,10 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
     );
   }, []);
 
+  // ═══════════════════════════════════════════════════════════════════
+  // ANIMATION STYLES - Animated styles for entrance effects
+  // ═══════════════════════════════════════════════════════════════════
+
   const logoStyle = useAnimatedStyle(() => ({
     opacity: logoOpacity.value,
     transform: [{ scale: logoScale.value }],
@@ -121,6 +152,10 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
     opacity: contentOpacity.value,
     transform: [{ translateY: contentTranslateY.value }],
   }));
+
+  // ═══════════════════════════════════════════════════════════════════
+  // RENDER - Main UI layout with gradient, scroll view, and form
+  // ═══════════════════════════════════════════════════════════════════
 
   return (
     <View style={styles.container}>

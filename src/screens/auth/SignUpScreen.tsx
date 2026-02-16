@@ -1,5 +1,32 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
+/**
+ * SignUpScreen - Account creation with email verification
+ * 
+ * ## Navigation Entry Points
+ * - Accessed from WelcomeScreen when user taps "Create Free Account"
+ * - Lazy-loaded in AuthGate auth flow
+ * - Transitions to VerificationView after successful sign-up
+ * 
+ * ## State Management
+ * - `useSignUpFlow` hook: manages email/password form, validation, submission
+ * - `useOAuthSignIn` hook: handles Google/Apple OAuth sign-in
+ * - Local state: pendingVerification (switches to VerificationView)
+ * 
+ * ## Props Contract
+ * @interface SignUpScreenProps
+ * @property {() => void} [onNavigateToSignIn] - Callback when user wants to navigate to sign in
+ * 
+ * ## User Flow
+ * 1. User enters email + password (with strength indicator)
+ * 2. User submits form → creates Clerk account
+ * 3. App shows VerificationView → user enters verification code
+ * 4. On success → AuthGate transitions to OnboardingScreen
+ * 
+ * @flag OVER_200_LINES - Screen has 201 lines. Consider extracting:
+ * - SignUpHeader to own component file
+ * - Form card styles to .styles.ts
+ */
 import { useRef } from 'react';
 import { ScrollView, View, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';

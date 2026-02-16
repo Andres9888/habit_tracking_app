@@ -1,5 +1,29 @@
 /* eslint-disable max-lines */
-/** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
+/**
+ * HabitEditScreen - Edit existing habit (name, color, emoji, reminders)
+ * Bottom sheet modal matching Create modal style
+ * 
+ * ## Navigation Entry Points
+ * - Opened as Modal from HabitDetailScreen when user taps edit
+ * 
+ * ## State Management
+ * - `useHabitEditScreen` hook: all form state (name, color, emoji, reminders)
+ * - Handles save, archive, delete actions
+ * 
+ * ## Props Contract
+ * @interface HabitEditScreenProps
+ * @property {boolean} visible - Modal visibility
+ * @property {string} habitId - ID of habit being edited
+ * @property {() => void} onClose - Callback to close the modal
+ * 
+ * ## UI Sections
+ * 1. EditHeader - Cancel/Save buttons, loading state
+ * 2. NameInputSection - Habit name input
+ * 3. CustomizeSection - Color picker, emoji picker, reminder toggle
+ * 4. DangerZone - Archive and Delete buttons
+ * 
+ * @flag UNDER_150_LINES - Screen is well-structured at 128 lines
+ */
 import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';

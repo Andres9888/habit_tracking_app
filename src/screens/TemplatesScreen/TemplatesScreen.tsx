@@ -1,6 +1,28 @@
 /**
- * Templates Screen - Main orchestration component
- * Browse and import science-backed habit templates
+ * TemplatesScreen - Browse and import science-backed habit templates
+ * Main orchestration component that delegates to sub-views
+ * 
+ * ## Navigation Entry Points
+ * - Accessed from HabitsApp (Templates modal or tab)
+ * 
+ * ## State Management
+ * - `useTemplatesScreenProps` hook: all state, data, handlers
+ * - Delegates to BrowseView or CategorySearchView based on state
+ * 
+ * ## Props Contract
+ * No external props - uses internal hooks for state
+ * 
+ * ## View Modes
+ * - BrowseView: Default view showing categories with expandable template lists
+ * - CategorySearchView: Search results or category drilling
+ * 
+ * ## Sub-components
+ * - BrowseView: Main browse tab interface
+ * - CategorySearchView: Search + category detail interface
+ * - TemplatesEmptyState: Shown when no templates exist
+ * - TemplatesLoadingState: Loading skeleton
+ * 
+ * @flag UNDER_120_LINES - Screen is well-structured at 102 lines (orchestration only)
  */
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';

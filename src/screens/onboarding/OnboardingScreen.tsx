@@ -1,9 +1,36 @@
 /**
- * Onboarding Screen Component
- * 3-screen carousel shown once after first sign-up.
- * Screens: Chain visualization, Strength meter, Templates grid.
- * Sets AsyncStorage flag to prevent re-showing.
+ * OnboardingScreen - 3-screen carousel shown once after first sign-up
+ * 
+ * ## Navigation Entry Points
+ * - Accessed from AuthGate when user first signs up (before HabitsApp)
+ * - Sets AsyncStorage flag (@chainday_onboarding_complete) to prevent re-showing
+ * 
+ * ## State Management
+ * - Local state: currentIndex (FlatList page), isLoading (completion state)
+ * - useCallback for handlers: handleComplete, handleSkip, handleNext
+ * - FlatList with onViewableItemsChanged for page tracking
+ * 
+ * ## Props Contract
+ * @interface OnboardingScreenProps
+ * @property {() => void} onComplete - Callback when onboarding is finished
+ * 
+ * ## Screen Content (3 pages)
+ * 1. Chain visualization - animated chain links demonstrating streak concept
+ * 2. Strength meter - behavioral science stages visualization  
+ * 3. Template grid - preview of available habit templates
+ * 
+ * ## Performance Notes
+ * - Uses useReducedMotion hook for accessibility
+ * - Lazy loads animations via react-native-reanimated
+ * - Dot indicators show current page (accessible)
+ * 
+ * @flag OVER_300_LINES - Screen has 598 lines. Needs significant refactoring:
+ * - Extract each page (ChainVisualization, StrengthMeter, TemplateGrid) to separate files
+ * - Extract DotIndicators component to own file
+ * - Move styles to dedicated .styles.ts file
+ * - Consider extracting page data to constants file
  */
+
 /* eslint-disable max-lines, max-lines-per-function */
 
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -34,7 +61,9 @@ import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
 
-// ─── Chain Visualization ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// CHAIN VISUALIZATION - Animated chain links (Page 1)
+// ═══════════════════════════════════════════════════════════════════
 
 function ChainLink({
   delay,
@@ -90,7 +119,9 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-// ─── Strength Meter ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// STRENGTH METER - Behavioral science stages (Page 2)
+// ═══════════════════════════════════════════════════════════════════
 
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   const { colors } = useThemeColors();
@@ -139,7 +170,9 @@ function interpolateColor(t: number, primary: Record<number, string>): string {
   return primary[700];
 }
 
-// ─── Template Grid ───────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// TEMPLATE GRID - Preview of available templates (Page 3)
+// ═══════════════════════════════════════════════════════════════════
 
 const TEMPLATE_ICONS = [
   '🧘',
@@ -178,7 +211,9 @@ function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-// ─── Page Data ───────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// PAGE DATA - Configuration for onboarding carousel pages
+// ═══════════════════════════════════════════════════════════════════
 
 interface PageData {
   id: string;
@@ -211,7 +246,9 @@ const PAGES: PageData[] = [
   },
 ];
 
-// ─── Dot Indicators ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// DOT INDICATORS - Page position indicator component
+// ═══════════════════════════════════════════════════════════════════
 
 function DotIndicators({ currentIndex }: { currentIndex: number }) {
   const { colors } = useThemeColors();
@@ -242,7 +279,9 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
   );
 }
 
-// ─── Main Component ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// MAIN COMPONENT - OnboardingScreenContent orchestration
+// ═══════════════════════════════════════════════════════════════════
 
 interface OnboardingScreenProps {
   onComplete: () => void;
@@ -419,7 +458,9 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   );
 }
 
-// ─── Styles ──────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// STYLES - Component styling definitions
+// ═══════════════════════════════════════════════════════════════════
 
 const styles = StyleSheet.create({
   bottomContainer: {

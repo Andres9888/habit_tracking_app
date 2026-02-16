@@ -1,11 +1,27 @@
 /* eslint-disable max-lines */
 /**
- * WelcomeScreen - Auth landing page
- * Clean design consistent with app style
- *
- * Performance optimizations:
- * - Lazy loads SignInScreen and SignUpScreen when needed
- * - Reduces initial bundle size for welcome screen
+ * WelcomeScreen - Auth landing page / entry point
+ * 
+ * ## Navigation Entry Points
+ * - Primary entry for unauthenticated users (from AuthGate)
+ * - Shows sign-in/sign-up options or lazy-loads those screens
+ * 
+ * ## State Management
+ * - Local state: mode ('welcome' | 'signin' | 'signup')
+ * - `useOAuthSignIn` hook: handles social sign-in
+ * - `useWelcomeAnimations` hook: entrance animations
+ * 
+ * ## User Flow
+ * 1. User sees welcome page with Chain Day branding
+ * 2. User can: Sign in with Apple/Google, Create account, or Sign in with email
+ * 3. Selecting sign-in/sign-up lazy-loads that screen
+ * 
+ * ## Performance Optimizations
+ * - Lazy loads SignInScreen and SignUpScreen (reduces initial bundle)
+ * - Uses React.lazy and Suspense for code splitting
+ * - AnimatedPressable for button interactions
+ * 
+ * @flag UNDER_150_LINES - Screen is well-structured at 136 lines
  */
 
 import React, { useState, lazy, Suspense } from 'react';

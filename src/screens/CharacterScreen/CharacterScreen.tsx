@@ -1,3 +1,29 @@
+/**
+ * CharacterScreen - Gamification profile showing user progress
+ * Displays avatar, attributes, stats, and achievements
+ * 
+ * ## Navigation Entry Points
+ * - Accessed from HabitsApp (likely via profile or character tab)
+ * 
+ * ## State Management
+ * - Uses MOCK_CHARACTER_DATA for demo/development
+ * - Components receive data via props (characterData.attributes, etc.)
+ * 
+ * ## Props Contract
+ * @interface CharacterScreenProps
+ * @property {() => void} onBack - Navigation callback to go back
+ * 
+ * ## Sections (top to bottom)
+ * 1. ScreenHeader - back button and title
+ * 2. CharacterCard - avatar and level display
+ * 3. AttributesSection - user attributes (e.g., consistency, streak)
+ * 4. StatsSection - numerical statistics
+ * 5. AchievementsSection - recent achievement badges
+ * 
+ * @flag UNDER_60_LINES - Screen is minimal at 52 lines (mostly imports/wiring)
+ * @flag USES_MOCK_DATA - Currently uses MOCK_CHARACTER_DATA instead of real data
+ */
+
 import { View, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

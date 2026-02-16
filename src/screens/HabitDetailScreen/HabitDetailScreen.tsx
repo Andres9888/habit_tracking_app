@@ -1,5 +1,36 @@
 /* eslint-disable max-lines */
-/** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
+/**
+ * HabitDetailScreen - Detailed view of a single habit
+ * Shows calendar, completion history, notes, and actions
+ * 
+ * ## Navigation Entry Points
+ * - Opened as Modal from HabitsList when user taps a habit
+ * - Receives habit object and tracking data via props
+ * 
+ * ## State Management
+ * - `useHabitDetailScreenState` hook: calendar dates, completion state, modals
+ * - `useCalendarHandlers` hook: archive/delete/calendar toggle actions
+ * - `useNotesHandlers` hook: note editing and viewing
+ * 
+ * ## Props Contract
+ * @interface HabitDetailScreenProps
+ * @property {Habit} habit - The habit object to display
+ * @property {() => void} [onArchive] - Callback when habit is archived
+ * @property {() => void} onClose - Callback to close the modal
+ * @property {() => void} [onDelete] - Callback when habit is deleted
+ * @property {() => void} [onEdit] - Callback to edit habit
+ * @property {TrackingEntry[]} [tracking] - Array of tracking entries
+ * @property {boolean} visible - Modal visibility
+ * 
+ * ## UI Structure
+ * - Full-screen modal with rounded top corners
+ * - LinearGradient background (light/dark based on theme)
+ * - DetailHeader: habit name, edit button, close button
+ * - HabitDetailContent: calendar grid, notes list
+ * - HabitDetailModals: archive/delete confirmations, notes editor
+ * 
+ * @flag UNDER_150_LINES - Screen is well-structured at 124 lines
+ */
 import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
