@@ -31,6 +31,8 @@ export function renderHabitsListHeader({
     onPreviousWeek,
     onUpgradeIntent,
   } = props;
+  const showSearchBar = list.habits.length >= 5;
+
   return (
     <HabitsListHeader
       calendarOpacity={state.calendarOpacity}
@@ -45,14 +47,18 @@ export function renderHabitsListHeader({
       openSettings={modals.openSettings}
       openTemplatesScreen={modals.openTemplatesScreen}
       reduceMotionPreference={list.reduceMotionPreference}
+      searchQuery={state.searchQuery}
+      showSearchBar={showSearchBar}
       showWeekCompletionBar={list.showWeekCompletionBar}
       weekDates={weekDates}
       weekDateStrings={list.weekDateStrings}
       onAddHabitPress={handlers.handleAddHabitPress}
+      onClearSearch={state.handleClearSearch}
       onDayPress={state.handleDayPress}
       onNextWeek={onNextWeek}
       onOpenSortSheet={state.handleOpenSortSheet}
       onPreviousWeek={onPreviousWeek}
+      onSearchChange={state.setSearchQuery}
       onUpgradePress={onUpgradeIntent}
     />
   );

@@ -27,6 +27,7 @@ export function useHabitsListState() {
   const [isInSuccessCelebration, setIsInSuccessCelebration] = useState(false);
   const [shouldTriggerHabitEntrance, setShouldTriggerHabitEntrance] =
     useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const seenHabitIdsRef = useRef<Set<string>>(new Set());
 
@@ -51,12 +52,14 @@ export function useHabitsListState() {
   const handleHabitEntranceComplete = useCallback((habitId: Id<'habits'>) => {
     seenHabitIdsRef.current.add(habitId);
   }, []);
+  const handleClearSearch = useCallback(() => setSearchQuery(''), []);
 
   return {
     calendarOpacity,
     calendarTranslateY,
     habitRowOpacity,
     habitRowTranslateY,
+    handleClearSearch,
     handleCloseDaySheet,
     handleCloseSortSheet,
     handleDayPress,
@@ -68,10 +71,12 @@ export function useHabitsListState() {
     isInSuccessCelebration,
     isSortSheetOpen,
     justCreatedHabitId,
+    searchQuery,
     seenHabitIdsRef,
     selectedDay,
     setIsInSuccessCelebration,
     setJustCreatedHabitId,
+    setSearchQuery,
     setShouldTriggerHabitEntrance,
     shouldTriggerHabitEntrance,
   };

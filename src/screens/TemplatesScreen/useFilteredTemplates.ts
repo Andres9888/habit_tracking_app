@@ -3,6 +3,7 @@
  */
 
 import { useMemo } from 'react';
+import { useDebounce } from '../../hooks/useDebounce';
 import type { Doc } from '../../../convex/_generated/dataModel';
 import type { Category, SortOption } from '../templates/constants';
 
@@ -69,6 +70,9 @@ export function useFilteredTemplates(
   searchQuery: string,
   sortOption: SortOption
 ) {
+  // Debounce search query to reduce re-renders (150ms for smooth UX)
+  const debouncedSearchQuery = useDebounce(searchQuery, 150);
+
   return useMemo(() => {
     if (!allTemplates) return [];
 
@@ -77,13 +81,14 @@ export function useFilteredTemplates(
       data = data.filter((t) => t.category === selectedCategory);
     if (researchOnly) data = data.filter((t) => Boolean(t.scientificLink));
 
-    const safeSearchQuery = (searchQuery ?? '').trim();
+    const safeSearchQuery = (debouncedSearchQuery ?? '').trim();
     if (safeSearchQuery) {
       const query = safeSearchQuery.toLowerCase();
       data = data.filter(
         (t) =>
           (t.name || '').toLowerCase().includes(query) ||
-          (t.description || '').toLowerCase().includes(query)
+          (t.description || '').toLowerCase().includes(query) ||
+          (t.category || '').toLowerCase().includes(query)
       );
     }
 
@@ -97,5 +102,5 @@ export function useFilteredTemplates(
     };
 
     return data.sort(sorter[sortOption]);
-  }, [allTemplates, selectedCategory, researchOnly, searchQuery, sortOption]);
+  }, [allTemplates, selectedCategory, researchOnly, debouncedSearchQuery, sortOption]);
 }

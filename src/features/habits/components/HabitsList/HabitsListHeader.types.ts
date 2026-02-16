@@ -21,12 +21,16 @@ export interface HabitsListHeaderProps {
   headerTranslateY: Animated.Value;
   calendarOpacity: Animated.Value;
   calendarTranslateY: Animated.Value;
+  searchQuery: string;
+  showSearchBar: boolean;
   getHabitStatus: (habitId: string, dateString: string) => string;
   onAddHabitPress: () => void;
+  onClearSearch: () => void;
   onDayPress: (date: Date) => void;
   onNextWeek: () => void;
   onPreviousWeek: () => void;
   onOpenSortSheet: () => void;
+  onSearchChange: (query: string) => void;
   onUpgradePress: () => void;
   openSettings: () => void;
   openTemplatesScreen: () => void;

@@ -23,6 +23,7 @@ import {
   TrialCountdownBanner,
   useTrialCountdown,
 } from '../../../../components/TrialCountdownBanner';
+import { HabitsSearchBar } from './HabitsSearchBar';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
@@ -64,6 +65,15 @@ function HabitsListHeaderComponent(
           totalHabits={computed.totalHabits}
         />
       </Animated.View>
+      
+      {/* Search Bar (shown when habits >= 5) */}
+      <HabitsSearchBar
+        value={props.searchQuery}
+        visible={props.showSearchBar}
+        onChangeText={props.onSearchChange}
+        onClear={props.onClearSearch}
+      />
+      
       {computed.shouldShowTimeline && (
         <Animated.View
           style={{

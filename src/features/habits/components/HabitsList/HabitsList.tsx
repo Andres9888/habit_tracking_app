@@ -27,6 +27,7 @@ import { useHabitRenderItem } from '../../hooks/useHabitRenderItem';
 import { useHabitsListState } from './useHabitsListState';
 import { useHabitsListAnimations } from './useHabitsListAnimations';
 import { useHabitsListHandlers } from './useHabitsListHandlers';
+import { useFilteredHabits } from './useFilteredHabits';
 import { HabitsListContent } from './HabitsListContent';
 import { ENTRANCE_STAGGER_DELAY } from './constants';
 import type { HabitsListProps } from './HabitsList.types';
@@ -35,6 +36,11 @@ export function HabitsList(props: HabitsListProps) {
   const { list, modals, onCreateHabitRequest } = props;
 
   const state = useHabitsListState();
+  const filteredHabits = useFilteredHabits(list.habits, state.searchQuery);
+  
+  // Create a modified list object with filtered habits
+  const listWithFilteredHabits = { ...list, habits: filteredHabits };
+  
   const { handleSuccessTransitionComplete } = useHabitsListAnimations({
     ...state,
     setIsInSuccessCelebration: state.setIsInSuccessCelebration,
@@ -42,7 +48,7 @@ export function HabitsList(props: HabitsListProps) {
   });
 
   const handlers = useHabitsListHandlers({
-    list,
+    list: listWithFilteredHabits,
     onCreateHabitRequest,
     onSettingsChange: modals.onSettingsChange,
     state: {
@@ -76,11 +82,14 @@ export function HabitsList(props: HabitsListProps) {
     weekDateStrings: list.weekDateStrings,
   });
 
+  // Pass modified props with filtered habits
+  const propsWithFilteredHabits = { ...props, list: listWithFilteredHabits };
+
   return (
     <HabitsListContent
       handlers={handlers}
       handleSuccessTransitionComplete={handleSuccessTransitionComplete}
-      props={props}
+      props={propsWithFilteredHabits}
       renderItem={renderItem}
       state={state}
     />
