@@ -2,9 +2,9 @@
  * HabitsList Constants
  */
 
-import { ENTRANCE_STAGGER_DELAY } from '@/constants';
 
-export { ENTRANCE_STAGGER_DELAY };
+
+
 
 export const PREMIUM_BENEFITS = [
   {
@@ -29,3 +29,5 @@ export const SOCIAL_PROOF = {
   quote:
     '"Upgrading gave me the structure I needed. I finally track every routine and stay consistent."',
 };
+
+export {ENTRANCE_STAGGER_DELAY} from '@/constants';

@@ -2,6 +2,7 @@ import React from 'react';
 import { Animated, View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { PhaseTag } from '../PhaseTag';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { getIconBackground } from './colorUtils';
 import type { CardColors, Habit } from './types';
 import {
@@ -35,6 +36,7 @@ export function CardHeader({
   showHabitStrengthPercentage,
   streak,
 }: CardHeaderProps) {
+  const { colors: themeColors } = useThemeColors();
   const iconBg = getIconBackground(
     accentColor,
     highContrastMode,
@@ -83,7 +85,7 @@ export function CardHeader({
         {showBestStreak && (
           <Text
             className='mt-0.5 text-[13px] font-medium'
-            style={{ color: '#a8a29e' }}
+            style={{ color: themeColors.text.tertiary }}
           >
             Best: {bestStreak} days
           </Text>

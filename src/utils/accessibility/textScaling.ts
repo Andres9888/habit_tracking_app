@@ -9,7 +9,7 @@
  * - Prevents infinite scaling that breaks layouts
  * - Use on layout-sensitive text (buttons, badges, fixed-width components)
  */
-export const MAX_FONT_SIZE_MULTIPLIER = 2.0;
+export const MAX_FONT_SIZE_MULTIPLIER = 2;
 
 /**
  * More permissive multiplier for body text
@@ -30,12 +30,14 @@ export function getMaxFontSizeMultiplier(
   type: 'body' | 'ui' | 'strict' = 'ui'
 ): number {
   switch (type) {
-    case 'body':
+    case 'body': {
       return MAX_FONT_SIZE_MULTIPLIER_BODY;
-    case 'strict':
+    }
+    case 'strict': {
       return MAX_FONT_SIZE_MULTIPLIER_STRICT;
-    case 'ui':
-    default:
+    }
+    default: {
       return MAX_FONT_SIZE_MULTIPLIER;
+    }
   }
 }

@@ -53,7 +53,13 @@ export const InsightChip = React.memo(function InsightChip({
     >
       <View
         className='relative rounded-xl px-3 py-2.5'
-        style={{ backgroundColor: colors.card, borderColor, borderWidth: 1, minHeight: 56, minWidth: 90 }}
+        style={{
+          backgroundColor: colors.card,
+          borderColor,
+          borderWidth: 1,
+          minHeight: 56,
+          minWidth: 90,
+        }}
       >
         {chip.hasPulse && (
           <Animated.View
@@ -66,9 +72,19 @@ export const InsightChip = React.memo(function InsightChip({
         <View className='flex-row items-center gap-2'>
           <Text className='text-lg'>{chip.icon}</Text>
           <View>
-            <Text style={{ color: colors.text.primary, fontSize: 16, fontWeight: 'bold' }}>
+            <Text
+              className='text-base font-bold'
+              style={{ color: colors.text.primary }}
+            >
               {chip.value}
             </Text>
+            <Text
+              className='text-[10px]'
+              style={{ color: colors.text.tertiary }}
+            >
+              {chip.label}
+            </Text>
+            <Text style={{ color: colors.text.primary, fontSize: 16, fontWeight: 'bold' }}>
             <Text style={{ color: colors.text.tertiary, fontSize: 10 }}>{chip.label}</Text>
           </View>
         </View>

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * WeeklyPatternChart Component
  *
@@ -10,7 +11,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import { useThemeColors } from '../../../theme/ThemeContext';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { DayBar } from './DayBar';
@@ -79,7 +80,10 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
     <View className='mb-4'>
       {/* Header */}
       <View className='mb-2 flex-row items-center justify-between'>
-        <Text className='text-sm font-semibold' style={{ color: colors.text.primary }}>
+        <Text
+          className='text-sm font-semibold'
+          style={{ color: colors.text.primary }}
+        >
           Weekly Pattern
         </Text>
         {onSeeAllPress && (
@@ -102,7 +106,12 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
         accessibilityLabel={accessibilitySummary}
         accessibilityRole='image'
         className='flex-row items-end justify-between rounded-xl px-2'
-        style={{ backgroundColor: colors.gray[50], height: CHART_HEIGHT, paddingBottom: 0, paddingTop: 8 }}
+        style={{
+          backgroundColor: colors.gray[50],
+          height: CHART_HEIGHT,
+          paddingBottom: 0,
+          paddingTop: 8,
+        }}
       >
         {dayStats.map((day, index) => (
           <DayBar
@@ -122,10 +131,16 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
       <View className='mt-2 flex-row items-center justify-center gap-4'>
         <View className='flex-row items-center gap-1'>
           <View className='h-2 w-2 rounded-sm bg-emerald-500' />
-          <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>Best</Text>
+          <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>
+            Best
+          </Text>
         </View>
         <View className='flex-row items-center gap-1'>
           <View className='h-2 w-2 rounded-sm bg-amber-400' />
+          <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>
+            Focus
+          </Text>
+          <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>Best</Text>
           <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>Focus</Text>
         </View>
       </View>

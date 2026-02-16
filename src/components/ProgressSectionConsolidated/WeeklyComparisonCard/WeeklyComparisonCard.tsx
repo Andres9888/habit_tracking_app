@@ -43,7 +43,7 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
   const absoluteChange = Math.abs(rateChange);
 
   const handleInfoPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onInfoPress?.();
   };
 
@@ -60,7 +60,10 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
       {/* Header */}
       <View className='mb-3 flex-row items-center justify-between'>
         <View className='flex-row items-center gap-2'>
-          <Text className='text-sm font-semibold' style={{ color: colors.text.primary }}>
+          <Text
+            className='text-sm font-semibold'
+            style={{ color: colors.text.primary }}
+          >
             Weekly Comparison
           </Text>
           {onInfoPress && (
@@ -70,7 +73,10 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
               hitSlop={8}
               onPress={handleInfoPress}
             >
-              <View className='h-4 w-4 items-center justify-center rounded-full' style={{ backgroundColor: colors.gray[100] }}>
+              <View
+                className='h-4 w-4 items-center justify-center rounded-full'
+                style={{ backgroundColor: colors.gray[100] }}
+              >
                 <Info color={colors.text.tertiary} size={10} />
               </View>
             </Pressable>
@@ -83,6 +89,13 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
       <ComparisonStats trend={trend} />
 
       {/* Message */}
+      <View
+        className='border-t pt-3'
+        style={{ borderColor: colors.cardBorder }}
+      >
+        <Text className='text-xs' style={{ color: colors.text.tertiary }}>
+          {message}
+        </Text>
       <View className='border-t pt-3' style={{ borderColor: colors.cardBorder }}>
         <Text className='text-xs' style={{ color: colors.text.tertiary }}>{message}</Text>
       </View>
