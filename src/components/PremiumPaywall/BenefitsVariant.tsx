@@ -3,12 +3,14 @@
  */
 
 import React from 'react';
-import { View, ScrollView, Modal } from 'react-native';
+import { View, ScrollView, Modal, Text } from 'react-native';
 import { SocialProofSection } from './SocialProofSection';
 import { BenefitsHeader } from './BenefitsHeader';
 import { BenefitsHero } from './BenefitsHero';
 import { BenefitsFeatureCard } from './BenefitsFeatureCard';
 import { BenefitsCTAFooter } from './BenefitsCTAFooter';
+import { PricingToggle } from './PricingToggle';
+import { FreePremiumComparison } from './FreePremiumComparison';
 import { MOTIVATION_FEATURES } from './motivationFeatures';
 import type { VariantConfig } from './PremiumPaywall.types';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -58,6 +60,23 @@ export function BenefitsVariant({
           contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
         >
+          {/* Pricing selection */}
+          <View className='mb-6'>
+            <PricingToggle
+              light
+              annualPackage={handlers.annualPackage}
+              monthlyPackage={handlers.monthlyPackage}
+              onPackageChange={handlers.setSelectedPackage}
+            />
+          </View>
+
+          {/* Free vs Premium comparison */}
+          <FreePremiumComparison />
+
+          {/* What's included section */}
+          <Text className='mb-3 mt-2 text-center text-base font-bold text-stone-800'>
+            What&apos;s Included in Premium
+          </Text>
           {sortedFeatures.map((feature) => (
             <BenefitsFeatureCard
               key={feature.id}

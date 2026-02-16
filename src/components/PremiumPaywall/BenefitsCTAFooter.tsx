@@ -29,9 +29,9 @@ export function BenefitsCTAFooter({
     <View className='absolute bottom-0 left-0 right-0 border-t border-stone-200 bg-white px-4 pb-8 pt-4'>
       <View className='mb-3 items-center'>
         <Text className='text-2xl font-bold text-stone-800'>
-          {handlers.priceLabel ?? '$6.99/month'}
+          {handlers.priceLabel ?? '$29.99/year'}
         </Text>
-        <Text className='text-sm text-stone-500'>7-day free trial • Cancel anytime</Text>
+        <Text className='text-sm text-stone-500'>7-day free trial · Cancel anytime</Text>
       </View>
       <Pressable
         accessibilityHint='Opens subscription options'
@@ -61,9 +61,15 @@ export function BenefitsCTAFooter({
           then {handlers.priceLabel} after trial
         </Text>
       )}
-      <Pressable className='mt-2 py-2' onPress={onRestore}>
-        <Text className='text-center text-xs text-violet-600'>
-          Already premium? Restore purchases
+      <Pressable
+        accessibilityLabel='Restore purchases'
+        accessibilityRole='button'
+        className='mt-3 min-h-[44px] items-center justify-center rounded-lg border border-violet-200 bg-violet-50 py-3'
+        testID='paywall-restore-purchases-button'
+        onPress={onRestore}
+      >
+        <Text className='text-sm font-medium text-violet-700'>
+          Restore Purchases
         </Text>
       </Pressable>
     </View>

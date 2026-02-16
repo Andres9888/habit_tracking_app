@@ -4,10 +4,11 @@
  */
 
 import React from 'react';
-import { View, ScrollView, Modal } from 'react-native';
+import { View, ScrollView, Modal, Text } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { SocialProofSection } from './SocialProofSection';
 import { PricingToggle } from './PricingToggle';
+import { FreePremiumComparison } from './FreePremiumComparison';
 import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 import { BlurOverlayHeader } from './BlurOverlayHeader';
 import { BlurOverlayHero } from './BlurOverlayHero';
@@ -66,6 +67,13 @@ export function BlurOverlayVariant({
             showsVerticalScrollIndicator={false}
           >
             <BlurOverlayHero config={config} />
+            {/* Free vs Premium comparison */}
+            <FreePremiumComparison dark />
+
+            {/* What's included */}
+            <Text className='mb-3 mt-2 text-center text-base font-bold text-white'>
+              What&apos;s Included in Premium
+            </Text>
             {isAnalytics ? (
               <AnalyticsFeatureList />
             ) : (

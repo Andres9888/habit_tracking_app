@@ -20,7 +20,7 @@ export const VARIANT_CONFIGS: Record<string, VariantConfig> = {
     heroSubtitle: 'Science-backed tools proven to 3x your habit retention.',
     heroTitle: 'Unlock Your Full Motivation Toolkit',
     presentation: 'page-sheet',
-    showPricingToggle: false,
+    showPricingToggle: true,
     showSocialProof: true,
   },
   motivation: {
