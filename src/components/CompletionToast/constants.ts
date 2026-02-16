@@ -9,6 +9,6 @@ export const DISMISS_THRESHOLD = 50;
 export const COLORS = {
   streakBadgeBg: 'rgba(251, 146, 60, 0.15)',
   streakTextColor: '#EA580C',
-  successGreen: '#10B981',
+  successGreen: '#22c55e',
   white: '#FFFFFF',
 } as const;

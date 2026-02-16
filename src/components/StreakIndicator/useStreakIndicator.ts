@@ -60,7 +60,7 @@ export function useStreakIndicator({
     if (currentStreak === 0) return theme.custom.colors.gray[400];
     if (currentMilestone === 100) return theme.custom.colors.info;
     if (currentMilestone === 30) return theme.custom.colors.warning[500];
-    return theme.custom.colors.primary[500];
+    return theme.custom.colors.streak[500];
   };
 
   const getAccessibilityLabel = () => {

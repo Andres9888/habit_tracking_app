@@ -3,7 +3,7 @@
  * Task 5: ColorPicker with 36px swatches and box-shadow selection
  *
  * Tests:
- * - 12 color swatches render in single row layout
+ * - predefined palette swatches render in rows
  * - Selection state with scale(1.15) animation and white border ring
  * - Haptic feedback on color selection
  * - Accessible color name labels for VoiceOver
@@ -37,7 +37,7 @@ describe('ColorPickerSection - V9 Redesign', () => {
 
   const defaultProps = {
     colors: HABIT_COLORS,
-    selectedColor: HABIT_COLORS[4], // Emerald (default)
+    selectedColor: HABIT_COLORS[3], // Emerald (default)
     onSelectColor: mockOnSelectColor,
     onCustomPress: mockOnCustomPress,
   };
@@ -52,11 +52,11 @@ describe('ColorPickerSection - V9 Redesign', () => {
       expect(getByText('Color')).toBeDefined();
     });
 
-    it('should render all 12 color swatches', () => {
+    it('should render all predefined color swatches', () => {
       const { getAllByRole } = render(<ColorPickerSection {...defaultProps} />);
       const buttons = getAllByRole('button');
-      // 12 colors + 1 custom color button = 13
-      expect(buttons.length).toBe(13);
+      // palette colors + 1 custom color button
+      expect(buttons.length).toBe(HABIT_COLORS.length + 1);
     });
 
     it('should render each color with correct testID', () => {
@@ -204,14 +204,14 @@ describe('ColorPickerSection - V9 Redesign', () => {
   });
 
   describe('Color Constants', () => {
-    it('should have exactly 12 colors in HABIT_COLORS', () => {
-      expect(HABIT_COLORS.length).toBe(12);
+    it('should have exactly 10 colors in HABIT_COLORS', () => {
+      expect(HABIT_COLORS.length).toBe(10);
     });
 
     it('should have correct colors in correct order', () => {
       expect(HABIT_COLORS[0]).toBe('#EF4444'); // Red
-      expect(HABIT_COLORS[4]).toBe('#10B981'); // Emerald (default)
-      expect(HABIT_COLORS[11]).toBe('#78716C'); // Stone
+      expect(HABIT_COLORS[3]).toBe('#10B981'); // Emerald (default)
+      expect(HABIT_COLORS[9]).toBe('#78716C'); // Stone
     });
 
     it('should have human-readable names for all colors', () => {

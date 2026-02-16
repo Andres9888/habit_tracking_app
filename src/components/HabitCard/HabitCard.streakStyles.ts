@@ -26,7 +26,7 @@ export const streakStyles = StyleSheet.create({
     fontWeight: '600',
   },
   rippleOverlay: {
-    backgroundColor: colors.primary[500],
+    backgroundColor: colors.streak[500],
     borderRadius: borderRadius.xl,
     height: 40,
     left: '50%',

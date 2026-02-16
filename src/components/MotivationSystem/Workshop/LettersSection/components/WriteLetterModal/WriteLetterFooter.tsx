@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronRight, Lock } from 'lucide-react-native';
 import { clsx } from 'clsx';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { WriteLetterStep } from './WriteLetterModal.types';
 
 interface WriteLetterFooterProps {
@@ -29,9 +30,10 @@ export function WriteLetterFooter({
   const isWriteStep = step === 'write';
   const isDisabled = isWriteStep ? !canProceed : !canSave || isSaving;
   const isEnabled = isWriteStep ? canProceed : canSave && !isSaving;
+  const insets = useSafeAreaInsets();
 
   return (
-    <View className='border-t border-stone-100 px-4 pb-8 pt-4'>
+    <View className='border-t border-stone-100 px-4 pt-4' style={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
       {isWriteStep ? (
         <Pressable
           accessibilityLabel='Continue to schedule'

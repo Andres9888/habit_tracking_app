@@ -7,6 +7,12 @@ export const settingsReturnValidator = v.object({
   appIcon: v.string(),
   catTheme: v.boolean(),
   celebrationsEnabled: v.boolean(),
+  completionSoundEnabled: v.boolean(),
+  completionSoundType: v.union(
+    v.literal('chime'),
+    v.literal('pop'),
+    v.literal('success')
+  ),
   darkMode: v.union(v.literal('system'), v.literal('light'), v.literal('dark')),
   dayShape: v.union(v.literal('circle'), v.literal('square')),
   habitCompletionIcon: v.union(v.literal('chain'), v.literal('checkbox')),
@@ -27,6 +33,7 @@ export const settingsReturnValidator = v.object({
   showCharacterScreen: v.boolean(),
   showConsistency: v.boolean(),
   showEmojis: v.boolean(),
+  showGradientFill: v.boolean(),
   showMotivationalMessages: v.boolean(),
   showNotesStats: v.boolean(),
   showStreaks: v.boolean(),
@@ -40,6 +47,10 @@ export const updateArgsValidator = {
   appIcon: v.optional(v.string()),
   catTheme: v.boolean(),
   celebrationsEnabled: v.optional(v.boolean()),
+  completionSoundEnabled: v.optional(v.boolean()),
+  completionSoundType: v.optional(
+    v.union(v.literal('chime'), v.literal('pop'), v.literal('success'))
+  ),
   darkMode: v.union(
     v.literal('system'),
     v.literal('light'),
@@ -69,6 +80,7 @@ export const updateArgsValidator = {
   showCharacterScreen: v.optional(v.boolean()),
   showConsistency: v.boolean(),
   showEmojis: v.boolean(),
+  showGradientFill: v.optional(v.boolean()),
   showMotivationalMessages: v.boolean(),
   showNotesStats: v.optional(v.boolean()),
   showStreaks: v.boolean(),
