@@ -77,15 +77,15 @@ jest.mock('react-native-reanimated', () => {
     },
     default: {
       View,
-      createAnimatedComponent: (Component: any) => Component,
+      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
       addWhitelistedNativeProps: jest.fn(),
     },
     addWhitelistedNativeProps: jest.fn(),
-    useSharedValue: (initial: any) => ({ value: initial }),
-    useAnimatedStyle: (callback: any) => callback(),
-    runOnJS: (fn: any) => fn,
-    withSpring: (value: any) => value,
-    withTiming: (value: any) => value,
+    useSharedValue: (initial: unknown) => ({ value: initial }),
+    useAnimatedStyle: (callback: unknown) => callback(),
+    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
+    withSpring: (value: unknown) => value,
+    withTiming: (value: unknown) => value,
   };
 });
 
@@ -94,7 +94,7 @@ jest.mock('react-native-gesture-handler', () => {
   const View = require('react-native').View;
 
   return {
-    GestureDetector: ({ children }: any) => children,
+    GestureDetector: ({ children }: unknown) => children,
     Gesture: {
       Pan: () => ({
         onStart: () => ({}),

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines, max-lines-per-function */
 /**
  * SettingsModal Component
  */
@@ -18,9 +19,13 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsModalProps } from './types';
 
 function SettingsModalContent({
+  completionSoundEnabled = false,
+  completionSoundType = 'chime',
   dayShape = 'square',
   habitCompletionIcon = 'chain',
   isHighContrastActive = false,
+  onChangeCompletionSoundEnabled = () => {},
+  onChangeCompletionSoundType = () => {},
   onChangeDayShape = () => {},
   onChangeHabitCompletionIcon = () => {},
   onClose,
@@ -84,7 +89,10 @@ function SettingsModalContent({
               onClose={handleClose}
             />
             <SettingsContent
+              archivedHabitsCount={archivedHabitsCount}
               colors={colors}
+              completionSoundEnabled={completionSoundEnabled}
+              completionSoundType={completionSoundType}
               darkModePreference={darkModePreference}
               dayShape={dayShape}
               habitCompletionIcon={habitCompletionIcon}
@@ -93,12 +101,13 @@ function SettingsModalContent({
               showGradientFill={showGradientFill}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
+              onChangeCompletionSoundEnabled={onChangeCompletionSoundEnabled}
+              onChangeCompletionSoundType={onChangeCompletionSoundType}
               onChangeDarkModePreference={setDarkModePreference}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
               onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
-              archivedHabitsCount={archivedHabitsCount}
               onOpenArchivedHabits={() => setView('archived')}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
@@ -115,15 +124,15 @@ export default function SettingsModal(props: SettingsModalProps) {
     <ErrorBoundary
       fallback={
         <Modal
-          animationType="slide"
+          animationType='slide'
           visible={props.visible}
           onRequestClose={props.onClose}
         >
           <ScreenErrorFallback
-            screenName="Settings"
             error={null}
-            onRetry={() => {}}
+            screenName='Settings'
             onGoBack={props.onClose}
+            onRetry={() => {}}
           />
         </Modal>
       }

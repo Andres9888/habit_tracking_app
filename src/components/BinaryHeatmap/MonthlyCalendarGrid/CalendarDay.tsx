@@ -29,8 +29,12 @@ export const CalendarDay = memo(function CalendarDay({
   onPress,
 }: CalendarDayProps) {
   // Guard against undefined day properties
-  const showCompleted = Boolean(day?.isCompleted && day?.isCurrentMonth && !day?.isFuture);
-  const showMissed = Boolean(day?.isMissed && day?.isCurrentMonth && !day?.isFuture);
+  const showCompleted = Boolean(
+    day?.isCompleted && day?.isCurrentMonth && !day?.isFuture
+  );
+  const showMissed = Boolean(
+    day?.isMissed && day?.isCurrentMonth && !day?.isFuture
+  );
   const isToday = Boolean(day?.isToday);
 
   // Determine circle style based on completion status
@@ -54,6 +58,12 @@ export const CalendarDay = memo(function CalendarDay({
 
   return (
     <Pressable
+      accessibilityLabel={`Day ${day?.dayNumber ?? ''}${showCompleted ? ', completed' : ''}${isToday ? ', today' : ''}`}
+      accessibilityRole='button'
+      accessibilityState={{
+        disabled: Boolean(day?.isFuture || day?.isBeforeCreation),
+        selected: showCompleted,
+      }}
       disabled={Boolean(day?.isFuture || day?.isBeforeCreation)}
       style={styles.dayWrapper}
       onPress={() => onPress(day?.dateString ?? '', Boolean(day?.isCompleted))}

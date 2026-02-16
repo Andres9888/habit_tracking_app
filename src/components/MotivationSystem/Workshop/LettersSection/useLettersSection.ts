@@ -1,9 +1,10 @@
+/* eslint-disable max-lines */
 /**
  * useLettersSection Hook
  * State management for the LettersSection component
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { LetterData, LettersSectionProps } from './LettersSection.types';
 
 type UseLettersSectionParams = Pick<
@@ -31,6 +32,14 @@ export function useLettersSection(props: UseLettersSectionParams) {
   const [isReadModalOpen, setIsReadModalOpen] = useState(false);
   const [selectedLetter, setSelectedLetter] = useState<LetterData | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
 
   const unreadCount = letters.filter(
     (l) => !l.isRead && l.unlockAt <= Date.now()
@@ -67,7 +76,8 @@ export function useLettersSection(props: UseLettersSectionParams) {
 
   const handleCloseReadModal = useCallback(() => {
     setIsReadModalOpen(false);
-    setTimeout(() => setSelectedLetter(null), 300);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(() => setSelectedLetter(null), 300);
   }, []);
 
   const handleMarkAsRead = useCallback(

@@ -2,31 +2,46 @@
  * BrandedLoadingSkeleton - Replaces the spinner in AuthGate's loading screen
  * Shows branded Chain Day shimmer while auth initializes
  * Layout: chain icon, app name shimmer, 3 habit card placeholders
+ * Supports dark mode via useSkeletonTheme.
  */
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SkeletonLoader } from './SkeletonLoader';
 import { HabitCardSkeleton } from './HabitCardSkeleton';
+import { useSkeletonTheme } from './useSkeletonTheme';
 
-function ChainIcon() {
+function ChainIcon({ isDark }: { isDark: boolean }) {
   return (
-    <View style={styles.iconContainer}>
+    <View
+      style={[
+        styles.iconContainer,
+        { backgroundColor: isDark ? '#064E3B' : '#ecfdf5' },
+      ]}
+    >
       <Text style={styles.iconText}>🔗</Text>
     </View>
   );
 }
 
 export function BrandedLoadingSkeleton() {
+  const { pageBg, isDark } = useSkeletonTheme();
   return (
     <View
       accessible
       accessibilityLabel='Loading Chain Day'
       accessibilityRole='progressbar'
-      style={styles.container}
+      style={[styles.container, { backgroundColor: pageBg }]}
     >
       <View style={styles.header}>
-        <ChainIcon />
-        <Text style={styles.appName}>Chain Day</Text>
+        <ChainIcon isDark={isDark} />
+        <Text
+          style={[
+            styles.appName,
+            { color: isDark ? '#F9FAFB' : '#1c1917' },
+          ]}
+        >
+          Chain Day
+        </Text>
         {/* Subtle shimmer bar below title */}
         <View style={styles.shimmerBar}>
           <SkeletonLoader borderRadius={4} height={4} width={120} />
@@ -45,7 +60,6 @@ export function BrandedLoadingSkeleton() {
 
 const styles = StyleSheet.create({
   appName: {
-    color: '#1c1917',
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.35,
@@ -57,7 +71,6 @@ const styles = StyleSheet.create({
     paddingTop: 32,
   },
   container: {
-    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   header: {
@@ -66,7 +79,6 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#ecfdf5',
     borderRadius: 20,
     height: 64,
     justifyContent: 'center',

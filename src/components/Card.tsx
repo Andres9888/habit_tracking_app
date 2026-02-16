@@ -1,21 +1,23 @@
-import React from "react";
-import { View, ViewProps } from "react-native";
-import clsx from "clsx";
+import React from 'react';
+import { View, ViewProps } from 'react-native';
+import clsx from 'clsx';
+import { useThemeColors } from '../theme/ThemeContext';
 
-export interface CardProps extends ViewProps {}
+export type CardProps = ViewProps & { className?: string };
 
 export function Card({
   style,
   className,
   ...props
-}: CardProps & { className?: string }) {
+}: CardProps) {
+  const { colors } = useThemeColors();
   return (
     <View
       className={clsx(
-        "rounded-xl border border-stone-200 bg-white shadow-sm",
+        'rounded-xl border shadow-sm',
         className
       )}
-      style={style}
+      style={[{ backgroundColor: colors.card, borderColor: colors.cardBorder }, style]}
       {...props}
     />
   );
@@ -26,10 +28,11 @@ export function CardHeader({
   className,
   ...props
 }: ViewProps & { className?: string }) {
+  const { colors } = useThemeColors();
   return (
     <View
-      className={clsx("border-b border-stone-200 p-4", className)}
-      style={style}
+      className={clsx('border-b p-4', className)}
+      style={[{ borderColor: colors.border }, style]}
       {...props}
     />
   );
@@ -40,7 +43,7 @@ export function CardContent({
   className,
   ...props
 }: ViewProps & { className?: string }) {
-  return <View className={clsx("p-4", className)} style={style} {...props} />;
+  return <View className={clsx('p-4', className)} style={style} {...props} />;
 }
 
 export default Card;

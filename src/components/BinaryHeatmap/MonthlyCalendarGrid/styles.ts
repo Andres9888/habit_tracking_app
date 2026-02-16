@@ -73,9 +73,9 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.BORDER,
     borderRadius: 16,
     borderWidth: 1,
-    height: 36,
+    height: 44,
     justifyContent: 'center',
-    width: 36,
+    width: 44,
   },
   navButtons: {
     flexDirection: 'row',
