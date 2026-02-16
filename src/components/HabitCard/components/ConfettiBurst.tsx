@@ -18,11 +18,15 @@ const CONFETTI_COLORS = [
   colors.error,
   colors.premium[500],
 ];
-const PARTICLE_COUNT = 8;
+const DEFAULT_PARTICLE_COUNT = 8;
 
 interface ConfettiBurstProps {
   active: boolean;
   onComplete: () => void;
+  /** Number of confetti particles (8 = small, 16 = medium, 24 = large) */
+  particleCount?: number;
+  /** Reduce motion accessibility setting */
+  reduceMotion?: boolean;
 }
 
 interface ParticleProps {
@@ -68,10 +72,15 @@ function Particle({ color, endX, endY, onComplete }: ParticleProps) {
   );
 }
 
-export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
+export function ConfettiBurst({ 
+  active, 
+  onComplete,
+  particleCount = DEFAULT_PARTICLE_COUNT,
+  reduceMotion = false,
+}: ConfettiBurstProps) {
   const particles = React.useMemo(() => {
-    return Array.from({ length: PARTICLE_COUNT }, (_, i) => {
-      const angle = (i / PARTICLE_COUNT) * Math.PI * 2;
+    return Array.from({ length: particleCount }, (_, i) => {
+      const angle = (i / particleCount) * Math.PI * 2;
       const distance = 40 + Math.random() * 20;
 
       return {
@@ -81,9 +90,19 @@ export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
         id: i,
       };
     });
-  }, []);
+  }, [particleCount]);
 
-  if (!active) return null;
+  // Skip confetti animation if reduce motion is enabled
+  if (!active || reduceMotion) {
+    if (reduceMotion && active) {
+      // Still trigger completion callback for reduce motion users
+      React.useEffect(() => {
+        const timer = setTimeout(onComplete, 100);
+        return () => clearTimeout(timer);
+      }, [onComplete]);
+    }
+    return null;
+  }
 
   return (
     <View pointerEvents='none' style={styles.container}>

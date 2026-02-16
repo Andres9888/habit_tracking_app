@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, useColorScheme } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Modal } from '../../../Modal';
@@ -26,8 +26,18 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
   } = props;
   const insets = useSafeAreaInsets();
   const state = useCelebrationScreen(props);
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
   if (!habit) return null;
+
+  // Dark mode gradient colors
+  const gradientColors = isDark 
+    ? ['#064e3b', '#1c1917'] // dark emerald → dark stone
+    : ['#ecfdf5', '#fafaf9']; // light emerald → light stone
+  
+  const borderColor = isDark ? 'border-emerald-800' : 'border-emerald-100';
+  const backgroundColor = isDark ? 'bg-stone-900' : 'bg-white';
 
   return (
     <Modal
@@ -43,7 +53,7 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
       >
         <LinearGradient
           className='absolute inset-0'
-          colors={['#ecfdf5', '#fafaf9']}
+          colors={gradientColors}
         />
         <ModalHeader onClose={onClose} />
         <CelebrationScreenContent
@@ -61,7 +71,7 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
           onReflectionSubmit={onReflectionSubmit}
         />
         <View
-          className='border-t border-emerald-100 bg-white px-4 pt-4'
+          className={`border-t ${borderColor} ${backgroundColor} px-4 pt-4`}
           style={{ paddingBottom: Math.max(insets.bottom, 16) }}
         >
           <AnimatedContent

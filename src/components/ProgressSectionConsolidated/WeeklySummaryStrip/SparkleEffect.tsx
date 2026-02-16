@@ -4,8 +4,9 @@
  * Renders a subtle sparkle animation for perfect week celebration.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Text } from 'react-native';
+import * as Haptics from 'expo-haptics';
 
 import Animated, {
   Easing,
@@ -36,9 +37,15 @@ export const SparkleEffect = React.memo(function SparkleEffect({
 }: SparkleEffectProps) {
   const sparkleOpacity = useSharedValue(0);
   const sparkleScale = useSharedValue(1);
+  const hasTriggeredHaptic = useRef(false);
 
   useEffect(() => {
     if (isActive && !reduceMotion) {
+      // Trigger haptic feedback on first perfect week achievement
+      if (!hasTriggeredHaptic.current) {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        hasTriggeredHaptic.current = true;
+      }
       // Continuous subtle sparkle animation
       sparkleOpacity.value = withRepeat(
         withSequence(
@@ -72,6 +79,7 @@ export const SparkleEffect = React.memo(function SparkleEffect({
     } else {
       sparkleOpacity.value = 0;
       sparkleScale.value = 1;
+      hasTriggeredHaptic.current = false;
     }
   }, [isActive, reduceMotion, sparkleOpacity, sparkleScale]);
 

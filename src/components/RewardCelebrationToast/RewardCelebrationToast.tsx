@@ -1,4 +1,4 @@
-import { Animated, Text, View } from 'react-native';
+import { Animated, Text, View, useColorScheme } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
@@ -27,6 +27,21 @@ export const RewardCelebrationToast = ({
   const { translateY, opacity } = useRewardToastAnimation(visible);
   const { title, premiumCTA } = useRewardToastContent(streak);
   const { triggerLightImpact } = useHapticFeedback({});
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  // Dark mode color configurations
+  const cardBg = isDark ? 'bg-stone-800' : 'bg-white';
+  const titleColor = isDark ? 'text-stone-100' : 'text-[#1c1917]';
+  const messageColor = isDark ? 'text-stone-300' : 'text-stone-700';
+  const shadowColor = isDark ? 'shadow-stone-900' : 'shadow-blue-100';
+  const gradientColors = isDark
+    ? ['#312e81', '#1e3a8a'] as const // dark purple → dark blue
+    : ['#faf5ff', '#eff6ff'] as const; // light purple → light blue
+  const benefitColor = isDark ? 'text-purple-300' : 'text-[#7c3aed]';
+  const borderColor = isDark ? 'border-stone-600' : 'border-[#d6d3d1]';
+  const secondaryTextColor = isDark ? 'text-stone-300' : 'text-stone-600';
+  const dismissColor = isDark ? 'text-stone-400' : 'text-stone-500';
 
   return (
     <AnimatedContainer
@@ -35,21 +50,21 @@ export const RewardCelebrationToast = ({
       pointerEvents='box-none'
       style={{ opacity, transform: [{ translateY }] }}
     >
-      <View className='rounded-3xl bg-white p-5 shadow-lg shadow-blue-100'>
-        <Text className='text-[17px] font-bold leading-[24px] text-[#1c1917]'>
+      <View className={`rounded-3xl ${cardBg} p-5 shadow-lg ${shadowColor}`}>
+        <Text className={`text-[17px] font-bold leading-[24px] ${titleColor}`}>
           {title}
         </Text>
-        <Text className='mt-2 text-[17px] leading-[22px] text-stone-700'>
+        <Text className={`mt-2 text-[17px] leading-[22px] ${messageColor}`}>
           {message}
         </Text>
         <View className='mt-3 rounded-2xl p-3'>
           <LinearGradient
             className='absolute inset-0 rounded-2xl'
-            colors={['#faf5ff', '#eff6ff']}
+            colors={gradientColors}
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
           />
-          <Text className='text-[13px] font-semibold text-[#7c3aed]'>
+          <Text className={`text-[13px] font-semibold ${benefitColor}`}>
             ✨ {premiumCTA.benefit}
           </Text>
         </View>
@@ -57,13 +72,13 @@ export const RewardCelebrationToast = ({
           <AnimatedPressable
             accessibilityHint='Share this streak to motivate friends'
             accessibilityLabel='Share streak'
-            className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-4 py-2.5'
+            className={`flex-1 items-center justify-center rounded-full border ${borderColor} px-4 py-2.5`}
             onPress={() => {
               triggerLightImpact();
               onSecondaryAction();
             }}
           >
-            <Text className='text-[17px] font-semibold leading-[22px] text-stone-600'>
+            <Text className={`text-[17px] font-semibold leading-[22px] ${secondaryTextColor}`}>
               Share
             </Text>
           </AnimatedPressable>
@@ -90,7 +105,7 @@ export const RewardCelebrationToast = ({
             onDismiss();
           }}
         >
-          <Text className='text-[13px] font-medium uppercase leading-[18px] tracking-wider text-stone-500'>
+          <Text className={`text-[13px] font-medium uppercase leading-[18px] tracking-wider ${dismissColor}`}>
             Not now
           </Text>
         </AnimatedPressable>
