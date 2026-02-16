@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Animated, Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated from 'react-native-reanimated';
@@ -30,13 +30,21 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     translateY: props.translateY,
   });
 
+  // PERF: Memoize pressable style to prevent recreating function on every render
+  const pressableStyle = useMemo(
+    () => ({ pressed }: { pressed: boolean }) => ({
+      opacity: pressed ? 0.92 : 1,
+    }),
+    []
+  );
+
   const habitCard = (
     <ReAnimated.View style={props.entranceCardStyle}>
       <Pressable
         accessibilityHint={`Tap to view details${props.onArchive ? ', swipe left to archive' : ''}${props.onLongPress ? ', long press to reorder' : ''}`}
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
-        style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
+        style={pressableStyle}
         onLongPress={props.handleLongPress}
         onPress={() => props.onPress?.(props.habit)}
         onPressIn={props.handlePressIn}
