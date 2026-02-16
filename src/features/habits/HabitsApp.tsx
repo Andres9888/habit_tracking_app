@@ -1,19 +1,16 @@
 /**
  * HabitsApp - Main habits screen
- * Orchestrates the habits list, modals, overlays, and floating action button
+ * Orchestrates the habits list, modals, overlays, and floating action button.
  */
 
+import { useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
-
-const styles = StyleSheet.create({
-  flex1: { flex: 1 },
-});
-
 import { HabitsList } from './components/HabitsList';
 import FloatingActionButton from './components/FloatingActionButton';
 import { SyncStatusOverlays } from './components/SyncStatusOverlays';
@@ -22,6 +19,23 @@ import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 
+const styles = StyleSheet.create({
+  fabContainer: {
+    bottom: 32,
+    position: 'absolute',
+    right: 24,
+  },
+  flex1: { flex: 1 },
+});
+
+/**
+ * HabitsAppContent — the core orchestrator for the habits screen.
+ *
+ * Composes list state, modal state, haptic feedback, and premium/paywall
+ * handlers into a single render tree. Delegates each concern to dedicated
+ * hooks (`useHabitsApp`, `useHabitsAppHandlers`, `useHapticFeedback`) so
+ * this component remains a thin wiring layer.
+ */
 function HabitsAppContent() {
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
@@ -47,9 +61,16 @@ function HabitsAppContent() {
     triggerWarning,
   });
 
+  /** Wrapper for the FAB — delegates to `handleCreateHabitRequest` (async). */
+  const onFabPress = useCallback((): void => {
+    void handleCreateHabitRequest();
+  }, [handleCreateHabitRequest]);
+
   const showHabitsSkeleton = list.isHabitsLoading && list.habits.length === 0;
 
   return (
+    // GestureHandlerRootView is required here for swipe gestures inside HabitsList.
+    // AuthGate also wraps one; react-native-gesture-handler supports nesting safely.
     <GestureHandlerRootView style={styles.flex1}>
       <View style={[styles.flex1, { backgroundColor: colors.background }]}>
         <SyncStatusOverlays />
@@ -58,29 +79,27 @@ function HabitsAppContent() {
           <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
         ) : (
           <Animated.View entering={FadeIn.duration(300)} style={styles.flex1}>
-          <HabitsList
-            canNavigateForward={list.canNavigateForward}
-            list={list}
-            modals={modals}
-            upgradePromptVisible={upgradePromptVisible}
-            weekDates={list.weekDates}
-            onCreateHabitRequest={handleCreateHabitRequest}
-            onNextWeek={list.handleNextWeek}
-            onPreviousWeek={list.handlePreviousWeek}
-            onUpgradeConfirm={handleUpgradeConfirm}
-            onUpgradeDismiss={handleUpgradeDismiss}
-            onUpgradeIntent={handleUpgradeIntent}
-          />
+            <HabitsList
+              canNavigateForward={list.canNavigateForward}
+              list={list}
+              modals={modals}
+              upgradePromptVisible={upgradePromptVisible}
+              weekDates={list.weekDates}
+              onCreateHabitRequest={handleCreateHabitRequest}
+              onNextWeek={list.handleNextWeek}
+              onPreviousWeek={list.handlePreviousWeek}
+              onUpgradeConfirm={handleUpgradeConfirm}
+              onUpgradeDismiss={handleUpgradeDismiss}
+              onUpgradeIntent={handleUpgradeIntent}
+            />
           </Animated.View>
         )}
 
         {list.habits.length > 0 && (
-          <View className='absolute bottom-8 right-6'>
+          <View style={styles.fabContainer}>
             <FloatingActionButton
               celebrationsEnabled={list.celebrationsEnabled}
-              openCreateHabitScreen={(): void => {
-                void handleCreateHabitRequest();
-              }}
+              openCreateHabitScreen={onFabPress}
               reduceMotionPreference={list.reduceMotionPreference}
             />
           </View>
@@ -98,6 +117,7 @@ function HabitsAppContent() {
   );
 }
 
+/** Top-level export wrapped in an error boundary. */
 export function HabitsApp() {
   return (
     <ScreenErrorBoundary screenName="Habits">
