@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { InfoCard } from './InfoCard';
 import { TipsSection } from './TipsSection';
+import { TierLegend } from './TierLegend';
 
 interface Props {
   visible: boolean;
@@ -60,7 +61,7 @@ function Header({ onClose }: { onClose: () => void }) {
 }
 
 function Content() {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   return (
     <ScrollView
       className='flex-1 px-4'
@@ -70,32 +71,35 @@ function Content() {
         Habit Strength shows how ingrained your habit has become. It's based on
         the proven exponential smoothing algorithm.
       </Text>
+
+      <TierLegend />
+
       <InfoCard
-        bgColor='#ecfdf5'
+        bgColor={isDark ? '#064E3B' : '#ecfdf5'}
         description='Each completion increases strength by 5% of the remaining gap to 100%.'
-        descriptionColor='#059669'
+        descriptionColor={isDark ? '#6EE7B7' : '#059669'}
         Icon={TrendingUp}
-        iconColor='#059669'
+        iconColor={isDark ? '#6EE7B7' : '#059669'}
         title='When You Complete'
-        titleColor='#047857'
+        titleColor={isDark ? '#A7F3D0' : '#047857'}
       />
       <InfoCard
-        bgColor='#fef2f2'
+        bgColor={isDark ? '#450A0A' : '#fef2f2'}
         description='Missing a day reduces strength by 5%. Consistent misses weaken the habit.'
-        descriptionColor='#dc2626'
+        descriptionColor={isDark ? '#FCA5A5' : '#dc2626'}
         Icon={TrendingDown}
-        iconColor='#dc2626'
+        iconColor={isDark ? '#FCA5A5' : '#dc2626'}
         title='When You Miss'
-        titleColor='#b91c1c'
+        titleColor={isDark ? '#FECACA' : '#b91c1c'}
       />
       <InfoCard
-        bgColor='#fffbeb'
+        bgColor={isDark ? '#451A03' : '#fffbeb'}
         description='With perfect consistency, it takes 60-90 days to reach near 100% strength.'
-        descriptionColor='#d97706'
+        descriptionColor={isDark ? '#FCD34D' : '#d97706'}
         Icon={Target}
-        iconColor='#d97706'
+        iconColor={isDark ? '#FCD34D' : '#d97706'}
         title='Building to 100%'
-        titleColor='#b45309'
+        titleColor={isDark ? '#FDE68A' : '#b45309'}
       />
       <TipsSection />
     </ScrollView>

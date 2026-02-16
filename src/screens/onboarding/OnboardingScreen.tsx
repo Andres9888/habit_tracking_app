@@ -94,12 +94,18 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
 
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   const { colors } = useThemeColors();
-  const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
+  const stages = [
+    { label: 'Starting', emoji: '🌱' },
+    { label: 'Building', emoji: '🌿' },
+    { label: 'Developing', emoji: '🌳' },
+    { label: 'Strong', emoji: '💪' },
+    { label: 'Automatic', emoji: '⚡' },
+  ];
   return (
     <View style={styles.strengthContainer}>
       {stages.map((stage, i) => (
         <Animated.View
-          key={stage}
+          key={stage.label}
           entering={
             reduceMotion
               ? undefined
@@ -109,6 +115,9 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
           }
           style={styles.strengthRow}
         >
+          <Text style={{ fontSize: 16, width: 24, textAlign: 'center' }}>
+            {stage.emoji}
+          </Text>
           <View
             style={[
               styles.strengthBar,
@@ -125,7 +134,7 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
               i === 4 && styles.strengthLabelActive,
             ]}
           >
-            {stage}
+            {stage.label}
           </Text>
         </Animated.View>
       ))}
@@ -198,7 +207,7 @@ const PAGES: PageData[] = [
   {
     id: 'strength',
     subtitle:
-      'Your habits get stronger over time — backed by behavioral science.',
+      'Watch your habits grow from 🌱 Starting to ⚡ Automatic — backed by behavioral science.',
     title: 'Science-Backed Strength',
     Visual: StrengthMeter,
   },

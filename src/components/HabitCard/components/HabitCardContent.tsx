@@ -12,6 +12,7 @@ import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { StrengthProgressBar } from '../../StrengthProgressBar/StrengthProgressBar';
+import { StrengthTooltip } from '../../StrengthProgressBar/StrengthTooltip';
 import { PendingSyncBadge } from '../../SyncStatus';
 import { styles } from '../HabitCard.styles';
 import { streakStyles } from '../HabitCard.streakStyles';
@@ -76,13 +77,15 @@ function HabitCardContentComponent({
         style={[streakStyles.rippleOverlay, rippleAnimatedStyle]}
       />
       <View style={styles.bottomRow}>
-        <StrengthProgressBar
-          showEmoji
-          showNextLevel
-          showPercentage
-          size='compact'
-          strength={strength}
-        />
+        <StrengthTooltip strength={strength}>
+          <StrengthProgressBar
+            showEmoji
+            showNextLevel
+            showPercentage
+            size='compact'
+            strength={strength}
+          />
+        </StrengthTooltip>
       </View>
     </Animated.View>
   );
