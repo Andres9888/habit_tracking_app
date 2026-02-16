@@ -53,5 +53,9 @@ const styles = StyleSheet.create({
   headerTitle: {
     ...typography.heading1,
     color: colors.text.primary,
+    fontSize: 28,
+    fontWeight: '700',
+    letterSpacing: 0.35,
+    lineHeight: 34,
   },
 });

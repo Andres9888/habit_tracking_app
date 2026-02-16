@@ -7,9 +7,15 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MAX_RECENT_EMOJIS } from '@/constants';
 
 const STORAGE_KEY = '@habit_app:recent_emojis';
-const MAX_RECENT = 10;
+
+/**
+ * Maintains max of MAX_RECENT_EMOJIS emojis
+ * @deprecated Use MAX_RECENT_EMOJIS directly from constants
+ */
+const MAX_RECENT = MAX_RECENT_EMOJIS;
 
 function sanitizeRecentEmojis(value: unknown): string[] {
   if (!Array.isArray(value)) {

@@ -1,5 +1,5 @@
 /**
- * EmptyState - OPTIMIZED: FadeInUp animation, better visuals, engaging illustration
+ * EmptyState - OPTIMIZED: animation (respects reduce-motion), dark mode, accessible
  */
 import React from 'react';
 import { View, Text } from 'react-native';
@@ -11,20 +11,34 @@ const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export const EmptyState: React.FC = () => {
+  const { colors, isDark } = useThemeColors();
+  const { entry } = useReducedMotionEntry();
+
   return (
-    <View className='flex-1 items-center justify-center px-6 py-12'>
+    <View
+      accessible
+      accessibilityLabel='No analytics yet. Create habits and track them for a few days to unlock your insights dashboard.'
+      accessibilityRole='text'
+      style={{ alignItems: 'center', flex: 1, justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}
+    >
       {/* Illustration */}
       <Animated.View
-        className='mb-6 h-24 w-24 items-center justify-center rounded-3xl bg-violet-50'
-        entering={anim(0)}
+        entering={entry(0)}
         style={{
+          alignItems: 'center',
+          backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
+          borderRadius: 24,
+          height: 96,
+          justifyContent: 'center',
+          marginBottom: 24,
           shadowColor: '#8b5cf6',
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
+          width: 96,
         }}
       >
-        <BarChart3 color='#8b5cf6' size={48} strokeWidth={1.5} />
+        <BarChart3 color={isDark ? '#C4B5FD' : '#8b5cf6'} size={48} strokeWidth={1.5} />
       </Animated.View>
 
       {/* Title */}
@@ -48,13 +62,16 @@ export const EmptyState: React.FC = () => {
 
       {/* Steps Card */}
       <Animated.View
-        className='w-full rounded-2xl bg-white p-5'
-        entering={anim(150)}
+        entering={entry(150)}
         style={{
-          shadowColor: '#1c1917',
+          backgroundColor: colors.card,
+          borderRadius: 16,
+          padding: 20,
+          shadowColor: colors.text.primary,
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
+          width: '100%',
         }}
       >
         <View className='mb-3 flex-row items-center gap-2'>
@@ -63,18 +80,18 @@ export const EmptyState: React.FC = () => {
             GET STARTED
           </Text>
         </View>
-        <View className='gap-3'>
-          <StepItem number='1' text='Go to Home tab' />
-          <StepItem number='2' text='Create your first habit' />
-          <StepItem number='3' text='Track it daily' />
-          <StepItem number='4' text='Come back to see insights!' />
+        <View style={{ gap: 12 }}>
+          <StepItem colors={colors} number='1' text='Go to Home tab' />
+          <StepItem colors={colors} number='2' text='Create your first habit' />
+          <StepItem colors={colors} number='3' text='Track it daily' />
+          <StepItem colors={colors} number='4' text='Come back to see insights!' />
         </View>
       </Animated.View>
     </View>
   );
 };
 
-function StepItem({ number, text }: { number: string; text: string }) {
+function StepItem({ number, text, colors }: { number: string; text: string; colors: { gray: Record<string, string>; text: { primary: string; secondary: string } } }) {
   return (
     <View className='flex-row items-center gap-3'>
       <View className='h-7 w-7 items-center justify-center rounded-full bg-stone-100'>

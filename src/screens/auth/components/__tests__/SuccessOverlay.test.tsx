@@ -10,8 +10,8 @@ jest.mock('react-native-reanimated', () => {
     useAnimatedStyle: (callback: () => object) => callback(),
     withTiming: (toValue: number) => toValue,
     withSpring: (toValue: number) => toValue,
-    withDelay: (_: number, animation: any) => animation,
-    withSequence: (...args: any[]) => args[args.length - 1],
+    withDelay: (_: number, animation: unknown) => animation,
+    withSequence: (...args: unknown[]) => args[args.length - 1],
     runOnJS: (fn: Function) => fn,
   };
 });

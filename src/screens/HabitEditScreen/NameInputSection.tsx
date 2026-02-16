@@ -1,5 +1,5 @@
 /**
- * NameInputSection - Matches Create modal style
+ * NameInputSection - Dark mode aware
  * 34px hero title, centered input with subtle border
  */
 
@@ -16,6 +16,8 @@ export function NameInputSection({
   habitName,
   onChangeText,
 }: NameInputSectionProps) {
+  const { colors, isDark } = useThemeColors();
+
   return (
     <View className='px-4'>
       {/* Hero Title - 34px bold centered like Create modal */}
@@ -38,8 +40,8 @@ export function NameInputSection({
           accessibilityLabel='Habit name'
           className='w-full rounded-2xl border-2 border-stone-200 bg-white px-5 py-4 text-center font-medium text-stone-900'
           maxLength={50}
-          placeholder='e.g., Read for 20 minutes'
-          placeholderTextColor='#a1a1aa'
+          placeholder='e.g., Read 20 minutes daily'
+          placeholderTextColor={isDark ? colors.text.tertiary : '#a1a1aa'}
           returnKeyType='done'
           style={typography.heading2}
           value={habitName}
@@ -48,6 +50,9 @@ export function NameInputSection({
         />
         <Text style={typography.caption} className='mt-2 text-center text-stone-400'>
           {habitName.length}/50 characters
+          {habitName.length > 0 && habitName.trim().length < 2
+            ? ' · At least 2 characters required'
+            : ''}
         </Text>
       </Animated.View>
     </View>

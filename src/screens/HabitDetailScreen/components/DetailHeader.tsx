@@ -1,10 +1,11 @@
-/** DetailHeader - Optimized: AnimatedPressable, fixed letter spacing, unified shadows */
+/** DetailHeader - Dark mode + a11y optimized */
 import React from 'react';
 import { View, Text } from 'react-native';
 import { X, Edit3 } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { typography } from '../../../theme/typography';
 import { HeaderCompleteToggle } from '../../../components/HeaderCompleteToggle';
+import { useThemeColors } from '../../../theme';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
 import { iconShadow, streakShadow } from './DetailHeader.constants';
 import { HeaderButton } from './HeaderButton';
@@ -15,6 +16,9 @@ export function DetailHeader({
   onClose,
   onEdit,
 }: DetailHeaderProps) {
+  const { colors, isDark } = useThemeColors();
+  const iconColor = isDark ? colors.text.secondary : '#57534e';
+  const textPrimary = isDark ? colors.text.primary : '#1c1917';
   const habitName = habit.icon
     ? (habit.name ?? '').replace(/^\p{Emoji}\s*/u, '')
     : (habit.name ?? 'Habit');
@@ -26,7 +30,7 @@ export function DetailHeader({
         entering={FadeIn.duration(200).delay(50)}
       >
         <HeaderButton
-          icon={<X color='#57534e' size={22} strokeWidth={2.5} />}
+          icon={<X color={iconColor} size={22} strokeWidth={2.5} />}
           label='Close'
           onPress={onClose}
         />
@@ -38,7 +42,7 @@ export function DetailHeader({
             habitName={habit.name}
           />
           <HeaderButton
-            icon={<Edit3 color='#57534e' size={20} strokeWidth={2.5} />}
+            icon={<Edit3 color={iconColor} size={20} strokeWidth={2.5} />}
             label='Edit habit'
             onPress={onEdit}
           />

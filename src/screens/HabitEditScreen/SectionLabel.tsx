@@ -1,4 +1,4 @@
-/** Section label with animation */
+/** Section label with animation — dark mode aware */
 import { Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { typography } from '../../theme/typography';
@@ -14,7 +14,9 @@ export function SectionLabel({
   delay,
   variant = 'default',
 }: SectionLabelProps) {
-  const color = variant === 'danger' ? 'text-red-400' : 'text-stone-500';
+  const { colors } = useThemeColors();
+  const color = variant === 'danger' ? '#F87171' : colors.text.tertiary;
+
   return (
     <Animated.View
       className='mb-4 mt-8'
