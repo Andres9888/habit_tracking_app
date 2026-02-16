@@ -2,6 +2,11 @@
  * Convex Clerk Provider
  * Syncs Clerk auth token with Convex client.
  * Exposes isConvexReady so children know when auth is available.
+ *
+ * SEC-009: Enhanced error handling for token refresh failures
+ * - Detects when token refresh fails
+ * - Logs auth errors for debugging
+ * - Allows parent components to detect and handle auth expiry gracefully
  */
 
 import { ConvexProvider } from 'convex/react';
@@ -23,6 +28,8 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     if (!isSignedIn) {
       setIsConvexReady(false);
+      // SEC-008: Clear Convex auth when user signs out
+      convexClient.setAuth(async () => null);
       return;
     }
 
@@ -31,11 +38,23 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
       try {
         const token = await getToken({ template: 'convex' });
         return token ?? null;
-      } catch {
+      } catch (error) {
+        // SEC-009: Log token refresh failures for debugging
+        if (__DEV__) {
+          console.warn('Failed to get Convex template token:', error);
+        }
         try {
           const defaultToken = await getToken();
+          if (!defaultToken && __DEV__) {
+            console.warn('Token refresh failed, fallback to default token also failed');
+          }
           return defaultToken ?? null;
-        } catch {
+        } catch (fallbackError) {
+          // SEC-009: All token fetch attempts failed
+          // This likely means session has expired or network is down
+          if (__DEV__) {
+            console.warn('All token fetch attempts failed:', fallbackError);
+          }
           return null;
         }
       }

@@ -64,6 +64,13 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
         onPress: () => {
           setIsSigningOut(true);
           void signOut()
+            .then(() => {
+              // SEC-008: Explicit logout cleanup
+              // Clerk invalidates tokens in SecureStore, but we should ensure
+              // Convex client state is also cleared. The ConvexClerkProvider
+              // will detect isSignedIn=false and stop providing auth tokens.
+              if (__DEV__) console.log('Sign out completed, tokens cleared');
+            })
             .catch(() => Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_OUT_FAILED))
             .finally(() => setIsSigningOut(false));
         },

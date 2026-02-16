@@ -31,10 +31,21 @@ export const generateAffirmations = action({
     habitId: v.id('habits'), // 1-5, default 3
   },
   handler: async (ctx, args): Promise<GeneratedAffirmation[]> => {
+    // SEC-007: Authentication check for AI actions
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to generate affirmations');
+    }
+
     const count = Math.min(Math.max(args.count ?? 3, 1), 5);
 
     const habit = await ctx.runQuery(api.habits.get, { habitId: args.habitId });
     if (!habit) throw new Error('Habit not found');
+
+    // SEC-007: Ownership verification — user must own the habit
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to generate affirmations for this habit');
+    }
 
     const existingAffirmations = await ctx.runQuery(
       api.affirmations.listByHabit,
@@ -102,6 +113,19 @@ export const generateAndSaveAffirmations = action({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args): Promise<string[]> => {
+    // SEC-007: Authentication check for AI actions
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to generate and save affirmations');
+    }
+
+    // SEC-007: Ownership verification before generating
+    const habit = await ctx.runQuery(api.habits.get, { habitId: args.habitId });
+    if (!habit) throw new Error('Habit not found');
+    if (habit.userId !== identity.subject) {
+      throw new Error('Not authorized to generate affirmations for this habit');
+    }
+
     const generated = await ctx.runAction(
       api.affirmations.generateAffirmations,
       { count: args.count, habitId: args.habitId }
