@@ -31,7 +31,7 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
   const habitCard = (
     <ReAnimated.View style={props.entranceCardStyle}>
       <Pressable
-        accessibilityHint='Tap to view habit details, long press for quick actions'
+        accessibilityHint={`Tap to view details${props.onArchive ? ', swipe left to archive' : ''}${props.onLongPress ? ', long press to reorder' : ''}`}
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
         style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}

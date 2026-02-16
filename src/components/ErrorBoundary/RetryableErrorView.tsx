@@ -38,7 +38,7 @@ export function RetryableErrorView({
   title = 'Something went wrong',
   compact = false,
 }: RetryableErrorViewProps) {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
 
   const errorMessage =
     typeof error === 'string'

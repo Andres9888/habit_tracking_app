@@ -12,7 +12,7 @@ export const MILESTONE_MESSAGES: Record<number, ContextualMessageData> = {
   },
   3: {
     emoji: '💪',
-    message: '3 days strong — your habit is taking shape!',
+    message: "3 days strong — your habit is taking shape!",
     type: 'celebrate',
   },
   7: {
@@ -32,7 +32,7 @@ export const MILESTONE_MESSAGES: Record<number, ContextualMessageData> = {
   },
   30: {
     emoji: '💎',
-    message: 'One month! You're in the top 1% of habit builders.',
+    message: "One month! You're in the top 1% of habit builders.",
     type: 'celebrate',
   },
 };

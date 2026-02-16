@@ -21,6 +21,7 @@ export const colors = {
   },
 
   error: '#B53030', // WCAG AA 5.45:1 on #F5F1ED
+  errorLight: '#FEE2E2', // Light error tint for badges/backgrounds
 
   // Neutral Grays (warm stone-based)
   gray: {

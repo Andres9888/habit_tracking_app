@@ -20,6 +20,14 @@ export const listByHabit = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    // SEC: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    // SEC: Ownership verification — ensure habit belongs to user
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit || habit.userId !== identity.subject) return [];
+
     return await ctx.db
       .query('visionBoardItems')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -47,6 +55,16 @@ export const create = mutation({
     title: v.string(),
   },
   handler: async (ctx, args) => {
+    // SEC: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error('Not authenticated');
+
+    // SEC: Ownership verification — ensure habit belongs to user
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit || habit.userId !== identity.subject) {
+      throw new Error('Habit not found');
+    }
+
     // SEC-003: Input validation - title (short text with XSS protection)
     const titleResult = validateShortText(
       args.title,
@@ -74,6 +92,7 @@ export const create = mutation({
       habitId: args.habitId,
       title: title.trim(),
       updatedAt: now,
+      userId: identity.subject,
     });
   },
   returns: v.id('visionBoardItems'),
@@ -86,8 +105,18 @@ export const update = mutation({
     title: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SEC: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error('Not authenticated');
+
     const existing = await ctx.db.get(args.id);
     if (!existing) {
+      throw new Error('Vision board item not found');
+    }
+
+    // SEC: Ownership verification — ensure item belongs to user's habit
+    const habit = await ctx.db.get(existing.habitId);
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Vision board item not found');
     }
 
@@ -132,8 +161,18 @@ export const remove = mutation({
     id: v.id('visionBoardItems'),
   },
   handler: async (ctx, args) => {
+    // SEC: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error('Not authenticated');
+
     const existing = await ctx.db.get(args.id);
     if (!existing) {
+      throw new Error('Vision board item not found');
+    }
+
+    // SEC: Ownership verification — ensure item belongs to user's habit
+    const habit = await ctx.db.get(existing.habitId);
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Vision board item not found');
     }
 
