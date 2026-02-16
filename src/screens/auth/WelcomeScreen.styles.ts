@@ -3,8 +3,9 @@
  * Colors are applied at runtime via useThemeColors().
  */
 
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle } from 'react-native';
 import { colors } from '../../theme/colors';
+import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   actionSection: {
@@ -61,7 +62,7 @@ export const styles = StyleSheet.create({
   subtitle: {
     fontSize: 17,
     textAlign: 'center',
-  },
+  } as TextStyle,
   textLink: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -70,7 +71,7 @@ export const styles = StyleSheet.create({
   textLinkAction: {
     color: colors.primary[700],    fontSize: 15,
     fontWeight: '600',
-  },
+  } as TextStyle,
   textLinkLabel: {
     fontSize: 15,
   },
@@ -79,5 +80,5 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: -0.5,
     textAlign: 'center',
-  },
+  } as TextStyle,
 });

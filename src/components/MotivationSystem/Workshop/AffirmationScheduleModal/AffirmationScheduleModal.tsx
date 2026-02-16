@@ -51,6 +51,7 @@ export function AffirmationScheduleModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='slide'
       presentationStyle='pageSheet'
       visible={visible}

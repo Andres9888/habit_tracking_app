@@ -5,7 +5,7 @@
 
 import { useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
@@ -78,7 +78,7 @@ function HabitsAppContent() {
         {showHabitsSkeleton ? (
           <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
         ) : (
-          <Animated.View entering={FadeIn.duration(300)} style={styles.flex1}>
+          <Animated.View entering={FadeInDown.duration(280).springify().damping(18)} style={styles.flex1}>
             <HabitsList
               canNavigateForward={list.canNavigateForward}
               list={list}
