@@ -1,5 +1,10 @@
 # Chain Day 🔗
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Expo SDK](https://img.shields.io/badge/Expo%20SDK-54-blue)](https://expo.dev)
+[![React Native](https://img.shields.io/badge/React%20Native-0.81-blue)](https://reactnative.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org)
+
 **Don't break the chain.** A habit tracking app that makes consistency visible.
 
 Built with React Native, Expo, and Convex.

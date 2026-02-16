@@ -8,6 +8,7 @@ import Animated, {
   FadeInDown,
 } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { HabitSortMode } from '../../types';
 import {
   SORT_LABEL_MAP,
@@ -53,6 +54,7 @@ export function SortChip({
   reduceMotion = false,
 }: SortChipProps) {
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
+  const { colors } = useThemeColors();
 
   // Animated value for button press scale
   const buttonScale = useSharedValue(1);
@@ -95,12 +97,13 @@ export function SortChip({
         accessibilityHint='Opens sort options'
         accessibilityLabel={accessibilityLabel}
         accessibilityRole='button'
-        className='flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3 active:bg-stone-100'
+        className='flex-row items-center justify-between rounded-xl px-4 py-3'
         style={[
           animatedStyle,
           {
-            borderColor: '#e7e5e4',
-            borderWidth: 1, // stone-200
+            backgroundColor: colors.gray[50],
+            borderColor: colors.border,
+            borderWidth: 1,
           },
         ]}
         onPress={handlePress}
@@ -109,18 +112,18 @@ export function SortChip({
       >
         {/* Left side: icon + label */}
         <View className='flex-row items-center gap-2'>
-          <LayoutList color='#78716c' size={18} strokeWidth={2} />
-          <Text className='text-[14px] font-semibold text-stone-700'>
+          <LayoutList color={colors.text.secondary} size={18} strokeWidth={2} />
+          <Text className='text-[14px] font-semibold' style={{ color: colors.text.primary }}>
             My Habits
           </Text>
         </View>
 
         {/* Right side: sort label + chevron */}
         <View className='flex-row items-center gap-1'>
-          <Text className='text-[13px] font-normal text-stone-500'>
+          <Text className='text-[13px] font-normal' style={{ color: colors.text.tertiary }}>
             {sortLabel}
           </Text>
-          <ChevronRight color='#a8a29e' size={16} strokeWidth={2} />
+          <ChevronRight color={colors.text.tertiary} size={16} strokeWidth={2} />
         </View>
       </AnimatedPressable>
     </Animated.View>

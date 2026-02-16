@@ -1,6 +1,6 @@
 /** TemplatesLoadingState - Shimmer animation, stagger, shadows */
 import { View, Text } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { ShimmerBox } from './ShimmerBox';
 import { SkeletonCard } from './SkeletonCard';
@@ -32,7 +32,7 @@ export function TemplatesLoadingState() {
         </Text>
       </View>
       <Animated.View
-        entering={FadeIn.duration(300)}
+        entering={FadeInDown.duration(280).springify().damping(18)}
         style={{ marginHorizontal: 20, marginBottom: 16 }}
       >
         <ShimmerBox height={48} style={{ borderRadius: 24 }} width='100%' />

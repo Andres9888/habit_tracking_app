@@ -5,6 +5,7 @@
  */
 
 import { Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { useHabitStats } from './useHabitStats';
 import { EmptyState } from './EmptyState';
 import { HabitSelector } from './HabitSelector';
@@ -20,6 +21,7 @@ export default function HabitStats() {
     selectedHabit,
     habitStats,
   } = useHabitStats();
+  const { colors } = useThemeColors();
 
   if (habits.length === 0) {
     return <EmptyState />;
@@ -27,7 +29,7 @@ export default function HabitStats() {
 
   return (
     <View className='gap-4'>
-      <Text className='text-lg font-semibold text-stone-900'>
+      <Text className='text-lg font-semibold' style={{ color: colors.text.primary }}>
         Per-Habit Stats
       </Text>
 
@@ -45,16 +47,16 @@ export default function HabitStats() {
           />
 
           {/* Weekly bar chart */}
-          <View className='rounded-2xl bg-stone-50 p-4'>
-            <Text className='mb-3 text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
+          <View className='rounded-2xl p-4' style={{ backgroundColor: colors.gray[50] }}>
+            <Text className='mb-3 text-xs font-semibold uppercase tracking-[2px]' style={{ color: colors.text.tertiary }}>
               LAST 7 DAYS
             </Text>
             <WeeklyBarChart data={habitStats.weeklyData} />
           </View>
 
           {/* 30-day trend line chart */}
-          <View className='rounded-2xl bg-stone-50 p-4'>
-            <Text className='mb-3 text-xs font-semibold uppercase tracking-[2px] text-stone-500'>
+          <View className='rounded-2xl p-4' style={{ backgroundColor: colors.gray[50] }}>
+            <Text className='mb-3 text-xs font-semibold uppercase tracking-[2px]' style={{ color: colors.text.tertiary }}>
               30-DAY TREND
             </Text>
             <TrendLineChart data={habitStats.completionData} />
