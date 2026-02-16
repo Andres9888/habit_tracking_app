@@ -4,6 +4,7 @@ interface ClerkError {
   errors?: Array<{
     code?: string;
     message?: string;
+    longMessage?: string;
   }>;
   message?: string;
 }
@@ -17,22 +18,36 @@ export const getErrorMessage = (err: unknown): string | null => {
   const clerkError = err as ClerkError;
   const errorCode = clerkError.errors?.[0]?.code;
   const errorMessage = clerkError.errors?.[0]?.message;
+  const longMessage = clerkError.errors?.[0]?.longMessage;
 
-  if (errorCode === 'session_exists') {
-    return ERROR_MESSAGES.AUTH.SIGN_IN_ALREADY_SIGNED_IN;
-  }
-  if (errorCode === 'oauth_access_denied') {
-    return 'Access was denied. Please try again or use a different sign-in method.';
-  }
-  if (
-    errorMessage?.includes('cancelled') ||
-    errorMessage?.includes('canceled')
-  ) {
+  // User cancelled - don't show error
+  if (errorCode === 'oauth_access_denied' || errorCode === 'user_cancelled') {
     return null;
   }
-  if (clerkError.message?.includes('network')) {
-    return ERROR_MESSAGES.NETWORK.CONNECTION_ISSUE;
+
+  // Already signed in
+  if (errorCode === 'session_exists' || errorCode === 'identifier_already_signed_in') {
+    return ERROR_MESSAGES.AUTH.SIGN_IN_ALREADY_SIGNED_IN;
   }
 
-  return errorMessage || ERROR_MESSAGES.UI.GENERIC_ERROR;
+  // Network error
+  if (clerkError.message?.includes('network') || errorCode === 'network_error') {
+    return ERROR_MESSAGES.AUTH.SIGN_IN_NETWORK;
+  }
+
+  // External account issues
+  if (errorCode === 'external_account_not_found') {
+    return ERROR_MESSAGES.AUTH.SIGN_IN_EXTERNAL_ACCOUNT_NOT_FOUND;
+  }
+  if (errorCode === 'external_account_exists') {
+    return ERROR_MESSAGES.AUTH.SIGN_IN_EXTERNAL_ACCOUNT_EXISTS;
+  }
+
+  // Email not found
+  if (errorCode === 'email_address_not_found') {
+    return ERROR_MESSAGES.AUTH.SIGN_IN_EMAIL_NOT_FOUND;
+  }
+
+  // Generic fallback - prefer long message if available
+  return longMessage || errorMessage || ERROR_MESSAGES.AUTH.SIGN_IN_FAILED;
 };

@@ -44,7 +44,7 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
               try {
                 await user?.delete();
               } catch {
-                Alert.alert('Error', 'Failed to delete account. Please try again or contact support.');
+                Alert.alert("Couldn't delete account", 'Please try again or contact us at support@chainday.app.');
               } finally {
                 setIsDeletingAccount(false);
               }
@@ -64,7 +64,7 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
         onPress: () => {
           setIsSigningOut(true);
           void signOut()
-            .catch(() => Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_OUT_FAILED))
+            .catch(() => Alert.alert('Sign out issue', "Couldn't sign you out. Please try again."))
             .finally(() => setIsSigningOut(false));
         },
         style: 'destructive',

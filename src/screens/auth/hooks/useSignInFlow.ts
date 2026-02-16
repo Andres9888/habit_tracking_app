@@ -6,6 +6,36 @@ import { useFieldValidation } from '../../../utils/validation/useFieldValidation
 import { validateEmail } from '../../../utils/validation';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 
+// Map Clerk error codes to friendly messages
+const getSignInErrorMessage = (error: unknown): string => {
+  const clerkError = error as {
+    errors?: Array<{
+      code?: string;
+      message?: string;
+      longMessage?: string;
+    }>;
+  };
+  const firstError = clerkError.errors?.[0];
+  const errorCode = firstError?.code;
+
+  // Specific error handling based on Clerk error codes
+  if (errorCode === 'form_identifier_not_found') {
+    return "We couldn't find an account with that email. Would you like to create one?";
+  }
+  if (errorCode === 'form_password_incorrect') {
+    return "That password doesn't look right. Please check and try again.";
+  }
+  if (errorCode === 'session_too_long') {
+    return 'Your session is too long. Please sign in again.';
+  }
+  if (errorCode === 'too_many_attempts') {
+    return ERROR_MESSAGES.AUTH.SIGN_IN_RATE_LIMITED;
+  }
+
+  // Fall back to Clerk's message or default
+  return firstError?.longMessage || firstError?.message || ERROR_MESSAGES.AUTH.SIGN_IN_FAILED;
+};
+
 export function useSignInFlow() {
   const { signIn, setActive, isLoaded } = useSignIn();
   const [password, setPassword] = useState('');
@@ -24,7 +54,7 @@ export function useSignInFlow() {
     // Validate email before submitting
     const emailResult = emailField.validateNow();
     if (!emailResult.isValid) {
-      Alert.alert('Validation Error', ERROR_MESSAGES.AUTH.SIGN_IN_INVALID_EMAIL);
+      Alert.alert('Check your email', ERROR_MESSAGES.AUTH.SIGN_IN_INVALID_EMAIL);
       return;
     }
 
@@ -39,16 +69,15 @@ export function useSignInFlow() {
         await setActive({ session: signInAttempt.createdSessionId });
       } else {
         Alert.alert(
-          'Error',
-          'Sign in incomplete. Please check your credentials.'
+          'Something went wrong',
+          'Sign in incomplete. Please check your credentials and try again.'
         );
       }
     } catch (error: unknown) {
-      const clerkError = error as { errors?: Array<{ message?: string }> };
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert(
-        'Error',
-        clerkError.errors?.[0]?.message || ERROR_MESSAGES.AUTH.SIGN_IN_FAILED
+        "Couldn't sign in",
+        getSignInErrorMessage(error)
       );
     } finally {
       setIsLoading(false);

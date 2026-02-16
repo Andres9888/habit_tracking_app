@@ -14,7 +14,7 @@ import { ERROR_MESSAGES } from '../constants/errorMessages';
  */
 export function showSaveError(onRetry?: () => void) {
   Alert.alert(
-    'Save Failed',
+    "Couldn't save your changes",
     ERROR_MESSAGES.DATA_OPS.SAVE_FAILED,
     onRetry
       ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
@@ -28,7 +28,7 @@ export function showSaveError(onRetry?: () => void) {
  */
 export function showCreateError(onRetry?: () => void) {
   Alert.alert(
-    "Couldn't Create Habit",
+    "Couldn't create habit",
     ERROR_MESSAGES.DATA_OPS.CREATE_HABIT_FAILED,
     onRetry
       ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
@@ -42,7 +42,7 @@ export function showCreateError(onRetry?: () => void) {
  */
 export function showSyncError(onRetry?: () => void) {
   Alert.alert(
-    'Sync Failed',
+    'Sync issue',
     ERROR_MESSAGES.SYNC.FAILED,
     onRetry
       ? [{ text: 'OK' }, { text: 'Retry Now', onPress: onRetry }]
@@ -57,7 +57,7 @@ export function showSyncError(onRetry?: () => void) {
  */
 export function showGenericError(message?: string, onRetry?: () => void) {
   Alert.alert(
-    'Something Went Wrong',
+    'Something went wrong',
     message || ERROR_MESSAGES.UI.GENERIC_ERROR,
     onRetry
       ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
@@ -71,7 +71,7 @@ export function showGenericError(message?: string, onRetry?: () => void) {
  */
 export function showNetworkError(onRetry?: () => void) {
   Alert.alert(
-    'Connection Issue',
+    'Connection problem',
     ERROR_MESSAGES.NETWORK.CONNECTION_ISSUE,
     onRetry
       ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
@@ -91,5 +91,28 @@ export function showRetryableError(message: string, onRetry?: () => void) {
     onRetry
       ? [{ text: 'Cancel', style: 'cancel' as const }, { text: 'Retry', onPress: onRetry }]
       : [{ text: 'OK' }]
+  );
+}
+
+/**
+ * Show an alert for operations taking too long (>5 seconds).
+ * @param onKeepWaiting - Optional callback to keep waiting
+ * @param onCancel - Optional callback to cancel the operation
+ */
+export function showTimeoutWarning(onKeepWaiting?: () => void, onCancel?: () => void) {
+  const buttons = [];
+  if (onCancel) {
+    buttons.push({ text: 'Cancel', style: 'cancel' as const, onPress: onCancel });
+  }
+  if (onKeepWaiting) {
+    buttons.push({ text: 'Keep Waiting', onPress: onKeepWaiting });
+  } else {
+    buttons.push({ text: 'OK' });
+  }
+
+  Alert.alert(
+    'Taking longer than usual',
+    "This is taking a while. You can continue using the app — we'll keep trying in the background.",
+    buttons
   );
 }
