@@ -7,6 +7,7 @@
 /* eslint-disable max-lines, max-lines-per-function */
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { colors } from '../../theme/colors';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
@@ -28,6 +29,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { safeSetBoolean } from '@/utils/storage';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
@@ -227,7 +229,8 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
           style={[
             styles.dot,
             {
-              backgroundColor: i === currentIndex ? colors.primary[600] : colors.gray[300],
+              backgroundColor:
+                i === currentIndex ? colors.primary[600] : colors.gray[300],
               width: i === currentIndex ? 24 : 8,
             },
           ]}
@@ -243,7 +246,7 @@ interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
-export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
+function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   const { colors } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -263,7 +266,10 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
       // If storage fails, still proceed to avoid blocking user
       // They might see onboarding again on next launch, but that's acceptable
       if (__DEV__) {
-        console.error('[OnboardingScreen] Failed to save completion state:', error);
+        console.error(
+          '[OnboardingScreen] Failed to save completion state:',
+          error
+        );
       }
       onComplete();
     } finally {
@@ -332,7 +338,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Skip button */}
       <Animated.View
         entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
@@ -446,7 +452,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ctaButton: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 32,
@@ -482,7 +488,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   nextButton: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 48,
@@ -520,7 +526,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   strengthBar: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 8,
     height: 32,
   },
@@ -535,7 +541,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   strengthLabelActive: {
-    color: '#047857',
+    color: colors.primary[700],
     fontWeight: '700',
   },
   strengthRow: {
@@ -574,7 +580,7 @@ const styles = StyleSheet.create({
     width: 56,
   },
   title: {
-    color: '#047857',
+    color: colors.primary[700],
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,
@@ -590,3 +596,11 @@ const styles = StyleSheet.create({
 });
 
 export { ONBOARDING_KEY };
+
+export function OnboardingScreen(props: OnboardingScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Onboarding">
+      <OnboardingScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}

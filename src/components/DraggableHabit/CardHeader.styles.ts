@@ -1,5 +1,8 @@
+/** Style helpers for CardHeader — icon container, title overlay, and chevron color. */
+
 import { ViewStyle } from 'react-native';
 
+/** Build the icon container style with accent-tinted shadow and high-contrast border. */
 export function getIconContainerStyle(
   iconBg: string,
   accentColor: string,

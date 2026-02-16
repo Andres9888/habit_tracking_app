@@ -1,5 +1,9 @@
 /**
- * HabitsListHeader Types
+ * HabitsListHeader Types — props accepted by the memoised header component.
+ *
+ * Animated values are passed as `Animated.Value` refs so the header can
+ * participate in the parent's staggered entrance sequence without owning
+ * the animation lifecycle.
  */
 
 import type { Animated } from 'react-native';

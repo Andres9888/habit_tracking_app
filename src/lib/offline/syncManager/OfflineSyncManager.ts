@@ -3,12 +3,8 @@
  * Offline Sync Manager
  */
 
-import {
-  createCircuitBreaker,
-  DEFAULT_CIRCUIT_CONFIG,
-  type CircuitBreaker,
-} from '../circuitBreaker';
-import { calculateDelay, DEFAULT_RETRY_STRATEGY } from '../retryStrategy';
+import type { CircuitBreaker } from '../circuitBreaker';
+import { calculateDelay } from '../retryStrategy';
 import type { RetryStrategy, SyncEventType, SyncStatus } from '../types';
 import type {
   OfflineSyncManagerConfig,
@@ -21,6 +17,7 @@ import type {
 import { processItem } from './processItem';
 import { processBatch as processBatchFn } from './processBatch';
 import { emitSyncEvent } from './emitSyncEvent';
+import { createSyncCircuit } from './createSyncCircuit';
 
 export class OfflineSyncManager {
   private circuitBreaker: CircuitBreaker;
@@ -31,30 +28,12 @@ export class OfflineSyncManager {
   private lastSyncAt?: number;
 
   constructor(config: OfflineSyncManagerConfig = {}) {
-    this.retryStrategy = { ...DEFAULT_RETRY_STRATEGY, ...config.retryStrategy };
-    this.circuitBreaker = createCircuitBreaker({
-      ...DEFAULT_CIRCUIT_CONFIG,
-      ...config.circuitBreaker,
-    });
-    this.circuitBreaker.subscribe(({ state }) => {
-      switch (state) {
-        case 'open': {
-          this.emit('circuit:open');
-          break;
-        }
-        case 'closed': {
-          this.emit('circuit:close');
-          break;
-        }
-        case 'half-open': {
-          {
-            this.emit('circuit:half-open');
-            // No default
-          }
-          break;
-        }
-      }
-    });
+    const { circuitBreaker, retryStrategy } = createSyncCircuit(
+      config,
+      this.emit.bind(this)
+    );
+    this.circuitBreaker = circuitBreaker;
+    this.retryStrategy = retryStrategy;
   }
 
   getStatus(): SyncStatus {
