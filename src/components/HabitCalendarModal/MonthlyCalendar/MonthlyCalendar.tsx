@@ -14,7 +14,7 @@ import {
   isSameDay,
   startOfToday,
 } from 'date-fns';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { MonthNavigator } from './MonthNavigator';
 import { DayNamesRow } from './DayNamesRow';
@@ -40,12 +40,15 @@ export function MonthlyCalendar({
   const firstDayOfWeek = getDay(monthStart);
   const emptyDays = Array.from({ length: firstDayOfWeek }, (_, i) => i);
 
-  const isCompleted = (date: Date) => {
-    const dateString = format(date, 'yyyy-MM-dd');
-    return tracking.some(
-      (t) => t.habitId === habitId && t.date === dateString && t.completed
-    );
-  };
+  const completedDates = useMemo(() => {
+    const set = new Set<string>();
+    for (const t of tracking) {
+      if (t.habitId === habitId && t.completed) set.add(t.date);
+    }
+    return set;
+  }, [habitId, tracking]);
+
+  const isCompleted = (date: Date) => completedDates.has(format(date, 'yyyy-MM-dd'));
 
   const goToPreviousMonth = () => {
     const newDate = new Date(currentDate);

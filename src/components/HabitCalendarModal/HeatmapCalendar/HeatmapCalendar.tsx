@@ -1,5 +1,6 @@
 import { subMonths } from 'date-fns';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { MonthLabels } from './MonthLabels';
 import { DayRow } from './DayRow';
 import { DISPLAY_DAYS } from './utils';
@@ -10,6 +11,7 @@ export default function HeatmapCalendar({
   tracking,
   monthsToShow = 6,
 }: HeatmapCalendarProps) {
+  const { colors } = useThemeColors();
   const today = new Date();
 
   const months = Array.from({ length: monthsToShow }, (_, i) =>
@@ -22,8 +24,13 @@ export default function HeatmapCalendar({
       .map((t) => t.date)
   );
 
+  const hasData = completedDates.size > 0;
+
   return (
-    <View className='rounded-xl bg-stone-50 px-4 py-3'>
+    <View
+      className='rounded-xl px-4 py-3'
+      style={{ backgroundColor: colors.card }}
+    >
       <MonthLabels months={months} />
       {DISPLAY_DAYS.map(({ dayOfWeek, label }) => (
         <DayRow
@@ -35,6 +42,14 @@ export default function HeatmapCalendar({
           today={today}
         />
       ))}
+      {!hasData && (
+        <Text
+          className='py-4 text-center text-sm'
+          style={{ color: colors.text.tertiary }}
+        >
+          No completions yet — start your streak!
+        </Text>
+      )}
     </View>
   );
 }

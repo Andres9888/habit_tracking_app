@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface HeatmapDotProps {
   isCompleted: boolean;
@@ -6,15 +7,19 @@ interface HeatmapDotProps {
 }
 
 export function HeatmapDot({ isCompleted, isFuture }: HeatmapDotProps) {
+  const { colors, isDark } = useThemeColors();
+
   const backgroundColor = isFuture
-    ? '#e7e5e4'
+    ? colors.gray[200]
     : isCompleted
-      ? '#10b981'
-      : '#d6d3d1';
+      ? colors.primary[500]
+      : isDark
+        ? colors.gray[400]
+        : colors.gray[300];
 
   return (
     <View
-      className='h-1.5 w-1.5 rounded-full'
+      className='h-3 w-3 rounded-full'
       style={{ backgroundColor }}
     />
   );

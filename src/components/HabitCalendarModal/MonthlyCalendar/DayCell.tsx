@@ -1,5 +1,6 @@
 import { View, Text, Pressable } from 'react-native';
 import { format } from 'date-fns';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface DayCellProps {
   date: Date;
@@ -9,6 +10,8 @@ interface DayCellProps {
 }
 
 export function DayCell({ date, isToday, hasCompletion, onToggle }: DayCellProps) {
+  const { colors, isDark } = useThemeColors();
+
   return (
     <Pressable
       accessibilityHint={`Double tap to toggle completion for ${format(date, 'MMMM d')}`}
@@ -22,19 +25,33 @@ export function DayCell({ date, isToday, hasCompletion, onToggle }: DayCellProps
     >
       <View className='relative items-center'>
         {isToday ? (
-          <View className='h-11 w-11 items-center justify-center rounded-full bg-stone-900'>
-            <Text className='text-base font-bold text-white'>{format(date, 'd')}</Text>
+          <View
+            className='h-11 w-11 items-center justify-center rounded-full'
+            style={{ backgroundColor: isDark ? colors.gray[100] : colors.gray[900] }}
+          >
+            <Text
+              className='text-base font-bold'
+              style={{ color: isDark ? colors.gray[900] : colors.gray[50] }}
+            >
+              {format(date, 'd')}
+            </Text>
           </View>
         ) : (
           <View className='h-11 items-center justify-center'>
-            <Text className='text-base font-semibold text-stone-900'>
+            <Text
+              className='text-base font-semibold'
+              style={{ color: colors.text.primary }}
+            >
               {format(date, 'd')}
             </Text>
           </View>
         )}
 
         {hasCompletion && (
-          <View className='absolute -bottom-1 h-1 w-1 rounded-full bg-blue-500' />
+          <View
+            className='absolute -bottom-1 h-1 w-1 rounded-full'
+            style={{ backgroundColor: colors.primary[500] }}
+          />
         )}
       </View>
     </Pressable>

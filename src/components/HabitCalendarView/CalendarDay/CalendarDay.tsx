@@ -1,6 +1,6 @@
 import { format, isToday } from 'date-fns';
-import clsx from 'clsx';
 import { Pressable, Text, View } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { HabitStatus } from '../HabitCalendarView.hooks';
 
 interface CalendarDayProps {
@@ -8,32 +8,6 @@ interface CalendarDayProps {
   status: HabitStatus;
   onPress: () => void;
 }
-
-const STATUS_STYLES: Record<
-  HabitStatus,
-  { container: string; indicator: string; text: string }
-> = {
-  done: {
-    container: 'border-transparent bg-emerald-100',
-    indicator: 'bg-emerald-500',
-    text: 'text-emerald-700',
-  },
-  missed: {
-    container: 'border-transparent bg-rose-50',
-    indicator: 'bg-rose-400',
-    text: 'text-rose-500',
-  },
-  planned: {
-    container: 'border-emerald-200 bg-emerald-50',
-    indicator: 'bg-emerald-500',
-    text: 'text-emerald-600',
-  },
-  upcoming: {
-    container: 'border-stone-200 bg-white',
-    indicator: 'bg-stone-300 opacity-60',
-    text: 'text-stone-400',
-  },
-};
 
 const STATUS_LABELS: Record<HabitStatus, string> = {
   done: 'Completed day',
@@ -43,9 +17,45 @@ const STATUS_LABELS: Record<HabitStatus, string> = {
 };
 
 export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
+  const { colors, isDark } = useThemeColors();
   const isCurrentDay = isToday(date);
-  const { container, indicator, text } = STATUS_STYLES[status];
   const isDisabled = status === 'upcoming';
+
+  const getStatusStyles = () => {
+    switch (status) {
+      case 'done':
+        return {
+          bg: isDark ? 'rgba(16,185,129,0.15)' : colors.primary[100],
+          border: 'transparent',
+          dot: colors.primary[500],
+          text: colors.primary[700],
+        };
+      case 'missed':
+        return {
+          bg: isDark ? 'rgba(244,63,94,0.1)' : '#FFF1F2',
+          border: 'transparent',
+          dot: '#FB7185',
+          text: '#FB7185',
+        };
+      case 'planned':
+        return {
+          bg: isDark ? 'rgba(16,185,129,0.08)' : '#ECFDF5',
+          border: colors.primary[500],
+          dot: colors.primary[500],
+          text: colors.primary[600],
+        };
+      case 'upcoming':
+      default:
+        return {
+          bg: isDark ? colors.gray[800] : colors.gray[50],
+          border: colors.gray[200],
+          dot: colors.gray[300],
+          text: colors.text.tertiary,
+        };
+    }
+  };
+
+  const styles = getStatusStyles();
 
   return (
     <Pressable
@@ -66,16 +76,26 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
       }}
     >
       <View
-        className={clsx(
-          'w-full flex-1 items-center justify-center rounded-lg border bg-white px-0.5 py-1',
-          container,
-          isCurrentDay && 'border-emerald-400'
-        )}
+        className='w-full flex-1 items-center justify-center rounded-lg px-0.5 py-1'
+        style={{
+          backgroundColor: styles.bg,
+          borderColor: isCurrentDay ? colors.primary[400] : styles.border,
+          borderWidth: isCurrentDay || status === 'planned' ? 1.5 : 1,
+        }}
       >
-        <Text className={clsx('text-sm font-semibold', text)}>
+        <Text
+          className='text-sm font-semibold'
+          style={{ color: styles.text }}
+        >
           {format(date, 'd')}
         </Text>
-        <View className={clsx('mt-1 h-1.5 w-1.5 rounded-full', indicator)} />
+        <View
+          className='mt-1 h-1.5 w-1.5 rounded-full'
+          style={{
+            backgroundColor: styles.dot,
+            opacity: status === 'upcoming' ? 0.6 : 1,
+          }}
+        />
       </View>
     </Pressable>
   );
