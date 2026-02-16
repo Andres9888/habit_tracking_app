@@ -11,8 +11,8 @@ import {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { TIMING_CONFIGS } from '../animations';
-import { COLORS } from '../constants';
 
 interface UseInputAnimationsParams {
   onFocus?: () => void;
@@ -26,6 +26,10 @@ export function useInputAnimations({
   const [isFocused, setIsFocused] = useState(false);
   const focusProgress = useSharedValue(0);
   const { triggerLightImpact } = useHapticFeedback();
+  const { colors } = useThemeColors();
+
+  const borderDefault = colors.border;
+  const borderFocused = '#3B82F6'; // blue-500 focus ring works in both modes
 
   const handleFocus = useCallback(() => {
     setIsFocused(true);
@@ -44,7 +48,7 @@ export function useInputAnimations({
     borderColor: interpolateColor(
       focusProgress.value,
       [0, 1],
-      [COLORS.stone200, COLORS.blue500]
+      [borderDefault, borderFocused]
     ),
     shadowOpacity: focusProgress.value * 0.15,
   }));

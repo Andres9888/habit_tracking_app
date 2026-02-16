@@ -6,13 +6,16 @@
 
 import { Pressable, Text } from 'react-native';
 
-import { ERROR_COLORS } from './constants';
+import { ERROR_COLORS_LIGHT, ERROR_COLORS_DARK } from './constants';
 
 interface DismissButtonProps {
   onPress: () => void;
+  isDark?: boolean;
 }
 
-export function DismissButton({ onPress }: DismissButtonProps) {
+export function DismissButton({ onPress, isDark = false }: DismissButtonProps) {
+  const errorColors = isDark ? ERROR_COLORS_DARK : ERROR_COLORS_LIGHT;
+
   return (
     <Pressable
       accessibilityHint='Tap to dismiss the error message'
@@ -27,7 +30,7 @@ export function DismissButton({ onPress }: DismissButtonProps) {
     >
       <Text
         style={{
-          color: ERROR_COLORS.dismissText,
+          color: errorColors.dismissText,
           fontSize: 17,
           fontWeight: '500',
           lineHeight: 22,

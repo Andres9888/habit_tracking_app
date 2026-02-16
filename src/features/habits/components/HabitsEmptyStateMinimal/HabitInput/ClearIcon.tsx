@@ -6,14 +6,18 @@
 
 import { View } from 'react-native';
 
-import { COLORS } from '../constants';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 export function ClearIcon() {
+  const { colors, isDark } = useThemeColors();
+  const bgColor = isDark ? colors.gray[300] : colors.gray[200];
+  const lineColor = isDark ? colors.gray[500] : colors.gray[400];
+
   return (
     <View
       style={{
         alignItems: 'center',
-        backgroundColor: COLORS.stone200,
+        backgroundColor: bgColor,
         borderRadius: 12,
         height: 20,
         justifyContent: 'center',
@@ -22,7 +26,7 @@ export function ClearIcon() {
     >
       <View
         style={{
-          backgroundColor: COLORS.stone400,
+          backgroundColor: lineColor,
           height: 2,
           position: 'absolute',
           transform: [{ rotate: '45deg' }],
@@ -31,7 +35,7 @@ export function ClearIcon() {
       />
       <View
         style={{
-          backgroundColor: COLORS.stone400,
+          backgroundColor: lineColor,
           height: 2,
           position: 'absolute',
           transform: [{ rotate: '-45deg' }],

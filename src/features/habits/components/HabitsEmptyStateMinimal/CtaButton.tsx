@@ -8,17 +8,19 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 
+import { useThemeColors } from '@/theme/ThemeContext';
 import { CTA_SHIMMER } from './animations';
 import { COPY } from './constants';
 import type { CtaButtonProps } from './types';
 import { useCtaButtonAnimations } from './useCtaButtonAnimations';
-import { getCtaButtonStyle, ctaTextStyle } from './CtaButton.styles';
+import { getCtaButtonStyle, getCtaTextStyle } from './CtaButton.styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
   const isDisabled = disabled || isLoading;
+  const { colors } = useThemeColors();
 
   const { animatedStyle, handlePressIn, handlePressOut, shimmerAnimatedStyle } =
     useCtaButtonAnimations({ disabled: !!disabled, isLoading: !!isLoading });
@@ -38,7 +40,7 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
       accessibilityRole='button'
       accessibilityState={{ disabled: isDisabled }}
       disabled={isDisabled}
-      style={[animatedStyle, getCtaButtonStyle(!!isDisabled)]}
+      style={[animatedStyle, getCtaButtonStyle(!!isDisabled, colors)]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -59,9 +61,9 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
         testID='cta-shimmer-overlay'
       />
       {isLoading ? (
-        <ActivityIndicator color='#ffffff' size='small' />
+        <ActivityIndicator color={colors.text.inverse} size='small' />
       ) : (
-        <Text style={ctaTextStyle}>{COPY.ctaButton}</Text>
+        <Text style={getCtaTextStyle(colors)}>{COPY.ctaButton}</Text>
       )}
     </AnimatedPressable>
   );

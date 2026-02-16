@@ -1,15 +1,12 @@
 /**
  * SuccessIcon - Icon container with progress ring and particle burst
- *
- * Displays the success emoji surrounded by visual effects.
- * The progress ring shows countdown to auto-transition.
  */
 
 import { Text, View, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 
+import { useThemeColors } from '@/theme/ThemeContext';
 import { PROGRESS_RING, PARTICLE_BURST } from './animations';
-import { COLORS } from './constants';
 import { ParticleBurst } from './ParticleBurst';
 import { ProgressRing } from './ProgressRing';
 
@@ -28,6 +25,9 @@ export function SuccessIcon({
   ringStyle,
   burstStyle,
 }: SuccessIconProps) {
+  const { colors, isDark } = useThemeColors();
+  const successBg = isDark ? colors.primary[100] : '#D1FAE5';
+
   return (
     <Animated.View
       style={[
@@ -41,7 +41,6 @@ export function SuccessIcon({
         },
       ]}
     >
-      {/* Progress Ring - Behind the icon, shows countdown */}
       {autoTransition && (
         <Animated.View
           style={[
@@ -60,7 +59,6 @@ export function SuccessIcon({
         </Animated.View>
       )}
 
-      {/* Particle Burst - Positioned behind icon */}
       <Animated.View
         style={[
           burstStyle,
@@ -77,11 +75,10 @@ export function SuccessIcon({
         />
       </Animated.View>
 
-      {/* Success Icon Emoji */}
       <View
         style={{
           alignItems: 'center',
-          backgroundColor: COLORS.successBackground,
+          backgroundColor: successBg,
           borderRadius: 48,
           height: 96,
           justifyContent: 'center',

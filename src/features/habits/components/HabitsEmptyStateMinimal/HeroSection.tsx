@@ -1,7 +1,8 @@
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
-import { COLORS, COPY } from './constants';
+import { COPY } from './constants';
 import { HeroIcon } from './HeroIcon';
 
 interface HeroSectionProps {
@@ -15,6 +16,8 @@ export function HeroSection({
   heroAnimatedStyle,
   headlineAnimatedStyle,
 }: HeroSectionProps) {
+  const { colors } = useThemeColors();
+
   return (
     <Animated.View
       style={{
@@ -33,7 +36,7 @@ export function HeroSection({
         <Animated.Text
           style={[
             {
-              color: COLORS.stone800,
+              color: colors.text.primary,
               fontWeight: '700',
               lineHeight: 32,
               marginTop: 16,

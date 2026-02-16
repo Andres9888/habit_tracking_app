@@ -9,7 +9,7 @@
 
 import { Pressable, Text, View } from 'react-native';
 
-import { COLORS } from './constants';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { InlineHintProps } from './types';
 
 /**
@@ -23,6 +23,16 @@ export function InlineHint({
   onBrowseTemplates,
   onCreateCustom,
 }: InlineHintProps) {
+  const { colors, isDark } = useThemeColors();
+
+  const pillBg = isDark
+    ? `rgba(${hexToRgb(colors.primary[100])}, 0.3)`
+    : 'rgba(209, 250, 229, 0.5)';
+  const pillBgPressed = isDark ? colors.primary[100] : '#D1FAE5';
+  const pillBorder = isDark
+    ? `rgba(${hexToRgb(colors.primary[300])}, 0.4)`
+    : 'rgba(167, 243, 208, 0.8)';
+
   return (
     <View
       style={{
@@ -34,7 +44,7 @@ export function InlineHint({
       {/* Row 1: "or explore" text */}
       <Text
         style={{
-          color: COLORS.stone600,
+          color: colors.text.tertiary,
           fontSize: 13,
           lineHeight: 18,
           marginBottom: 10,
@@ -57,10 +67,8 @@ export function InlineHint({
           accessibilityLabel='Browse habit templates'
           accessibilityRole='button'
           style={({ pressed }) => ({
-            backgroundColor: pressed
-              ? COLORS.emerald100
-              : 'rgba(209, 250, 229, 0.5)',
-            borderColor: 'rgba(167, 243, 208, 0.8)',
+            backgroundColor: pressed ? pillBgPressed : pillBg,
+            borderColor: pillBorder,
             borderRadius: 9999,
             borderWidth: 1,
             opacity: pressed ? 0.9 : 1,
@@ -71,7 +79,7 @@ export function InlineHint({
         >
           <Text
             style={{
-              color: COLORS.emerald700,
+              color: colors.primary[isDark ? 500 : 700],
               fontSize: 13,
               fontWeight: '600',
               lineHeight: 18,
@@ -86,10 +94,8 @@ export function InlineHint({
           accessibilityLabel='Create custom habit'
           accessibilityRole='button'
           style={({ pressed }) => ({
-            backgroundColor: pressed
-              ? COLORS.emerald100
-              : 'rgba(209, 250, 229, 0.5)',
-            borderColor: 'rgba(167, 243, 208, 0.8)',
+            backgroundColor: pressed ? pillBgPressed : pillBg,
+            borderColor: pillBorder,
             borderRadius: 9999,
             borderWidth: 1,
             opacity: pressed ? 0.9 : 1,
@@ -100,7 +106,7 @@ export function InlineHint({
         >
           <Text
             style={{
-              color: COLORS.emerald700,
+              color: colors.primary[isDark ? 500 : 700],
               fontSize: 13,
               fontWeight: '600',
               lineHeight: 18,
@@ -112,4 +118,11 @@ export function InlineHint({
       </View>
     </View>
   );
+}
+
+/** Convert hex color to r, g, b string for use in rgba() */
+function hexToRgb(hex: string): string {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) return '0, 0, 0';
+  return `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`;
 }

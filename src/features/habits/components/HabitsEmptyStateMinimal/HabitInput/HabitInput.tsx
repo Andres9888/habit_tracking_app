@@ -5,14 +5,15 @@
 import { forwardRef, useMemo } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { CHARACTER_LIMIT, COLORS, COPY } from '../constants';
+import { useThemeColors } from '@/theme/ThemeContext';
+import { CHARACTER_LIMIT, COPY } from '../constants';
 import type { HabitInputProps } from '../types';
 import { ClearIcon } from './ClearIcon';
 import { getCharacterCounterColor } from './helpers';
 import { useInputAnimations } from './useInputAnimations';
 import {
   getContainerStyle,
-  inputTextStyle,
+  getInputTextStyle,
   clearButtonPressedStyle,
   characterCounterStyle,
 } from './inputStyles';
@@ -24,6 +25,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     { value, onChangeText, onFocus, onBlur, onSubmitEditing, onClear },
     ref
   ) {
+    const { colors, isDark } = useThemeColors();
     const { isFocused, containerStyle, handleFocus, handleBlur } =
       useInputAnimations({ onBlur, onFocus });
 
@@ -35,7 +37,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     );
 
     return (
-      <AnimatedView style={[containerStyle, getContainerStyle({ isFocused })]}>
+      <AnimatedView style={[containerStyle, getContainerStyle({ isFocused, colors, isDark })]}>
         <TextInput
           ref={ref}
           accessibilityHint={`Type a habit you want to track daily, maximum ${CHARACTER_LIMIT.max} characters`}
@@ -44,10 +46,10 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           autoCorrect={false}
           maxLength={CHARACTER_LIMIT.max}
           placeholder={COPY.inputPlaceholder}
-          placeholderTextColor={COLORS.stone400}
+          placeholderTextColor={colors.text.tertiary}
           returnKeyType='done'
-          selectionColor={COLORS.emeraldCaret}
-          style={inputTextStyle}
+          selectionColor={colors.primary[500]}
+          style={getInputTextStyle(colors)}
           value={value}
           onBlur={handleBlur}
           onChangeText={onChangeText}

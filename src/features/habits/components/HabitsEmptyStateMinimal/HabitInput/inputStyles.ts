@@ -3,33 +3,48 @@
  */
 
 import { ViewStyle, TextStyle } from 'react-native';
-import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from '../constants';
+import { BORDER_RADIUS, TOUCH_TARGETS } from '../constants';
+import type { SemanticColors } from '@/theme/darkColors';
 
 interface ContainerStyleParams {
   isFocused: boolean;
+  colors?: SemanticColors;
+  isDark?: boolean;
 }
 
 export function getContainerStyle({
   isFocused,
+  colors,
+  isDark,
 }: ContainerStyleParams): ViewStyle {
   return {
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: isDark ? (colors?.card ?? '#1F2937') : '#ffffff',
     borderRadius: BORDER_RADIUS.input,
     borderWidth: 2,
     elevation: isFocused ? 2 : 0,
     flexDirection: 'row',
     height: TOUCH_TARGETS.inputHeight,
     paddingHorizontal: 20,
-    shadowColor: COLORS.blue500,
+    shadowColor: '#3B82F6',
     shadowOffset: { height: 0, width: 0 },
     shadowRadius: 8,
     width: '100%',
   };
 }
 
+export function getInputTextStyle(colors?: SemanticColors): TextStyle {
+  return {
+    color: colors?.text.primary ?? '#1C1917',
+    flex: 1,
+    fontSize: 17,
+    fontWeight: '500',
+  };
+}
+
+/** @deprecated Use getInputTextStyle(colors) instead */
 export const inputTextStyle: TextStyle = {
-  color: COLORS.stone800,
+  color: '#1C1917',
   flex: 1,
   fontSize: 17,
   fontWeight: '500',

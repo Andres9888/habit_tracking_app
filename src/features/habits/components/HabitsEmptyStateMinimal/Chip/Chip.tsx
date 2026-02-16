@@ -6,7 +6,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
-import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from '../constants';
+import { useThemeColors } from '@/theme/ThemeContext';
+import { BORDER_RADIUS, TOUCH_TARGETS } from '../constants';
 import type { SuggestionChip } from '../types';
 import { useChipAnimations } from './useChipAnimations';
 import { SHADOW_OPACITY } from '../../../../../constants';
@@ -23,6 +24,7 @@ export interface ChipProps {
 
 export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
   const { triggerSelection } = useHapticFeedback();
+  const { colors, isDark } = useThemeColors();
   const {
     scale,
     translateY,
@@ -35,16 +37,22 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     animatePressScale,
   } = useChipAnimations({ isSelected, staggerDelay });
 
+  const chipBgDefault = isDark ? colors.card : '#ffffff';
+  const chipBorderDefault = colors.border;
+  const chipTextDefault = isDark ? colors.text.primary : colors.gray[700];
+  const selectedBg = colors.primary[700];
+  const selectedBorder = colors.primary[700];
+
   const animatedStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      ['#ffffff', '#047857']
+      [chipBgDefault, selectedBg]
     ),
     borderColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [COLORS.stone200, '#047857']
+      [chipBorderDefault, selectedBorder]
     ),
     opacity: entranceOpacity.value,
     shadowOpacity: shadowOpacity.value,
@@ -58,7 +66,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     color: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [COLORS.stone700, '#ffffff']
+      [chipTextDefault, '#ffffff']
     ),
   }));
 
@@ -86,7 +94,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
           minHeight: TOUCH_TARGETS.chipHeight,
           paddingHorizontal: 10,
           paddingVertical: 8,
-          shadowColor: '#1c1917',
+          shadowColor: isDark ? '#000000' : '#1c1917',
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: SHADOW_OPACITY.minimal,
           shadowRadius: 16,
