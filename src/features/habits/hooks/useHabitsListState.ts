@@ -8,7 +8,7 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Habit, HabitSettings, HabitSortMode } from '../types';
@@ -22,9 +22,10 @@ import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { useCompletionSound } from '../../../hooks/useCompletionSound';
+import { validateHabitsArray } from '../../../utils/validation';
 import type { HabitsListState } from './types';
 
-const FREE_HABIT_LIMIT = 3;
+import { FREE_HABIT_LIMIT } from '@/constants';
 
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
@@ -33,8 +34,18 @@ export function useHabitsListState(): HabitsListState {
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
   const habitsQuery = useQuery(api.habits.list);
-  const habitsFromQuery = habitsQuery ?? [];
+  // Validate and limit habits array for performance (guards against 100+ habits edge case)
+  const habitsValidation = useMemo(
+    () => validateHabitsArray(habitsQuery ?? []),
+    [habitsQuery]
+  );
+  const habitsFromQuery = habitsValidation.limited;
   const isHabitsLoading = habitsQuery === undefined;
+
+  // Warn if habits array was limited
+  if (habitsValidation.warning && __DEV__) {
+    console.warn('[useHabitsListState]', habitsValidation.warning);
+  }
 
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
@@ -105,14 +116,22 @@ export function useHabitsListState(): HabitsListState {
       const currentlyCompleted = isCompleted(args.habitId, args.date);
 
       // Call the original toggle function
-      await baseToggleHabit(args);
+      const result = await baseToggleHabit(args);
 
       // Play sound if marking as complete (not uncompleting)
       if (!currentlyCompleted) {
         playCompletionSound();
       }
+
+      return result;
     },
     [baseToggleHabit, isCompleted, playCompletionSound]
+  );
+
+  // Stable content padding reference to avoid object re-creation every render
+  const contentPadding = useMemo(
+    () => ({ paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 }),
+    []
   );
 
   return {
@@ -120,7 +139,7 @@ export function useHabitsListState(): HabitsListState {
     celebrationsEnabled,
     completionSoundEnabled,
     completionSoundType,
-    contentPadding: { paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 },
+    contentPadding,
     dayShape,
     freeHabitLimit: FREE_HABIT_LIMIT,
     habitCompletionIcon,

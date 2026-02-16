@@ -5,6 +5,7 @@
 
 import React, { useCallback } from 'react';
 import { Pressable, Text, View, StyleSheet } from 'react-native';
+
 import Animated from 'react-native-reanimated';
 import { withSpring, type SharedValue } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,7 +22,7 @@ interface SwipeActionsProps {
   onDelete?: () => void;
 }
 
-export function SwipeActions({
+export const SwipeActions = memo(function SwipeActions({
   name,
   translateX,
   actionsAnimatedStyle,
@@ -91,4 +92,5 @@ const localStyles = StyleSheet.create({
   pressed: {
     opacity: 0.7,
   },
+
 });
