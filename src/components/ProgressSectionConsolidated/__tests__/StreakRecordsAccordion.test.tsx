@@ -33,50 +33,6 @@ jest.mock('../../../hooks/useHapticFeedback', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const React = require('react');
-  const { View, Pressable } = require('react-native');
-
-  const Animated = {
-    View,
-    Text: require('react-native').Text,
-    createAnimatedComponent: (Component: React.ComponentType) => {
-      const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) =>
-        React.createElement(Component, { ...props, ref })
-      );
-      AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
-      return AnimatedComponent;
-    },
-  };
-
-  return {
-    __esModule: true,
-    default: Animated,
-    ...Animated,
-    useSharedValue: (initialValue: number) => ({ value: initialValue }),
-    useAnimatedStyle: () => ({}),
-    withTiming: (value: number) => value,
-    withDelay: (_delay: number, value: number) => value,
-    withSpring: (value: number) => value,
-    withRepeat: (value: number) => value,
-    withSequence: (...values: number[]) => values[0],
-    interpolate: (
-      value: number,
-      inputRange: number[],
-      outputRange: number[]
-    ) => {
-      const ratio = (value - inputRange[0]) / (inputRange[1] - inputRange[0]);
-      return outputRange[0] + ratio * (outputRange[1] - outputRange[0]);
-    },
-    runOnJS: (fn: Function) => fn,
-    Easing: {
-      out: () => () => 0,
-      inOut: () => () => 0,
-      ease: () => 0,
-    },
-  };
-});
-
 // Mock Ionicons
 jest.mock('@expo/vector-icons', () => {
   const React = require('react');

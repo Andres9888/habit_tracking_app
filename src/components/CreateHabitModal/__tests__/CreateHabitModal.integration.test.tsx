@@ -60,34 +60,6 @@ jest.mock('../../../hooks/useHapticFeedback', () => ({
 }));
 
 // Mock Reanimated for animations
-jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
-
-  const springify = () => ({
-    damping: () => ({
-      stiffness: () => ({}),
-    }),
-  });
-
-  const mock = {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    FadeIn: { duration: () => ({ delay: () => ({}) }) },
-    FadeInUp: { duration: () => ({ delay: () => ({}) }) },
-    FadeOut: { duration: () => ({}) },
-    LinearTransition: {
-      duration: () => ({}),
-      springify,
-    },
-    default: {
-      View,
-      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
-      addWhitelistedNativeProps: jest.fn(),
-    },
-    addWhitelistedNativeProps: jest.fn(),
-  };
-  return mock;
-});
-
 // Mock EmojiPickerSheet
 jest.mock('../../EmojiPickerV2', () => ({
   EmojiPickerSheet: jest.fn(() => null),

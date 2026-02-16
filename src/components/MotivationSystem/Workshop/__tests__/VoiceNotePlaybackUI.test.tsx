@@ -45,27 +45,6 @@ jest.mock('clsx', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
-  return {
-    default: {
-      View,
-      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
-    },
-    useSharedValue: (initial: unknown) => ({ value: initial }),
-    useAnimatedStyle: () => ({}),
-    withSpring: (value: unknown) => value,
-    withTiming: (value: unknown) => value,
-    interpolate: (value: number, input: number[], output: number[]) =>
-      output[0],
-    Extrapolation: {
-      CLAMP: 'clamp',
-    },
-    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
-    View,
-  };
-});
-
 // Mock useAudioPlayback hook
 const mockLoadAudio = jest.fn();
 const mockPlay = jest.fn();

@@ -28,54 +28,6 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const React = require('react');
-  const { View, Pressable, Text } = require('react-native');
-
-  const AnimatedView = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-    return React.createElement(View, { ...props, ref });
-  });
-  AnimatedView.displayName = 'AnimatedView';
-
-  const AnimatedText = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-    return React.createElement(Text, { ...props, ref });
-  });
-  AnimatedText.displayName = 'AnimatedText';
-
-  const createAnimatedComponent = (Component: React.ComponentType<Record<string, unknown>>) => {
-    const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-      return React.createElement(Component, { ...props, ref });
-    });
-    AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
-    return AnimatedComponent;
-  };
-
-  const Animated = {
-    View: AnimatedView,
-    Text: AnimatedText,
-    createAnimatedComponent,
-  };
-
-  return {
-    ...Animated,
-    default: Animated,
-    useAnimatedStyle: () => ({}),
-    useSharedValue: (initial: number) => ({ value: initial }),
-    withSpring: (value: number) => value,
-    withDelay: (_delay: number, value: number) => value,
-    withSequence: (...values: number[]) => values[0],
-    withTiming: (value: number) => value,
-    withRepeat: (value: number) => value,
-    Easing: {
-      out: () => (x: number) => x,
-      inOut: () => (x: number) => x,
-      ease: (x: number) => x,
-    },
-    interpolate: () => 0,
-    runOnJS: (fn: Function) => fn,
-  };
-});
-
 // Mock react-native-confetti-cannon
 jest.mock('react-native-confetti-cannon', () => {
   const React = require('react');

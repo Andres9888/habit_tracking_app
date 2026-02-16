@@ -23,17 +23,6 @@ import { type ProcessingState } from '../OfflineQueueProcessor';
 jest.mock('../../contexts/NetworkStatusContext');
 jest.mock('../../hooks/useOfflineQueue');
 jest.mock('expo-haptics');
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  return {
-    ...Reanimated,
-    default: {
-      ...Reanimated.default,
-      call: () => {},
-    },
-  };
-});
-
 // Mock components
 jest.mock('lucide-react-native', () => ({
   Wifi: () => 'WifiIcon',

@@ -16,24 +16,6 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { HabitStrengthHistory } from '../HabitStrengthHistory';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-
-  Reanimated.useReducedMotion = jest.fn(() => false);
-
-  Reanimated.FadeIn = {
-    duration: jest.fn(() => ({})),
-  };
-
-  Reanimated.FadeInUp = {
-    duration: jest.fn(() => ({
-      delay: jest.fn(() => ({})),
-    })),
-  };
-
-  return Reanimated;
-});
-
 // Mock lucide-react-native icons
 jest.mock('lucide-react-native', () => {
   const React = require('react');

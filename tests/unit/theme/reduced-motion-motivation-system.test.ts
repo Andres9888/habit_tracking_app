@@ -9,19 +9,6 @@ jest.mock('@/hooks/useReduceMotion', () => ({
   useReduceMotion: () => mockUseReduceMotion(),
 }));
 
-// Mock reanimated
-jest.mock('react-native-reanimated', () => {
-  const actual = jest.requireActual('react-native-reanimated/mock');
-  return {
-    ...actual,
-    useSharedValue: jest.fn((initial: number) => ({ value: initial })),
-    useAnimatedStyle: jest.fn(() => ({})),
-    withSpring: jest.fn((value: number) => value),
-    withTiming: jest.fn((value: number) => value),
-    withDelay: jest.fn((_delay: number, value: number) => value),
-  };
-});
-
 import React from 'react';
 
 // Helper to test each AnimatedSection variant

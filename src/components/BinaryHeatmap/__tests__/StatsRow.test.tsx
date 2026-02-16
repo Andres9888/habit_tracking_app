@@ -18,12 +18,6 @@ jest.mock('lucide-react-native', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.useReducedMotion = jest.fn(() => false);
-  return Reanimated;
-});
-
 describe('StatsRow', () => {
   const defaultProps = {
     frequency: 'Daily',

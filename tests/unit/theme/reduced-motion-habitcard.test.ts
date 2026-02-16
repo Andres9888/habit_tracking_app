@@ -9,24 +9,20 @@ import {
 } from '@/components/HabitCard/animations/celebrationAnimation';
 import { createPanGesture } from '@/components/HabitCard/gestures/panGesture';
 
-// Mock reanimated
-jest.mock('react-native-reanimated', () => {
-  const actual = jest.requireActual('react-native-reanimated/mock');
-  return {
-    ...actual,
-    withTiming: jest.fn((value: number, config?: { duration: number }) => ({
-      __type: 'timing',
-      duration: config?.duration,
-      value,
-    })),
-    withSpring: jest.fn((value: number, config?: object) => ({
-      __type: 'spring',
-      config,
-      value,
-    })),
-    runOnJS: jest.fn((fn: () => void) => fn),
-  };
-});
+// Override specific reanimated mocks for reduced-motion introspection
+// The global jest.setup.js mock covers the base; we just need withTiming/withSpring
+// to return metadata objects so we can assert animation config.
+const Reanimated = jest.requireMock('react-native-reanimated');
+Reanimated.withTiming = jest.fn((value: number, config?: { duration: number }) => ({
+  __type: 'timing',
+  duration: config?.duration,
+  value,
+}));
+Reanimated.withSpring = jest.fn((value: number, config?: object) => ({
+  __type: 'spring',
+  config,
+  value,
+}));
 
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn().mockResolvedValue(undefined),

@@ -145,24 +145,6 @@ jest.mock('clsx', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
-  return {
-    default: {
-      View,
-      createAnimatedComponent: (Component: React.ComponentType) => Component,
-    },
-    useSharedValue: (initial: unknown) => ({ value: initial }),
-    useAnimatedStyle: () => ({}),
-    withSpring: (value: unknown) => value,
-    withTiming: (value: unknown) => value,
-    withSequence: (...values: unknown[]) => values[values.length - 1],
-    interpolate: () => 0,
-    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
-    View,
-  };
-});
-
 // Mock notifications utilities
 jest.mock('@/utils/notifications', () => ({
   scheduleAffirmationDelivery: jest

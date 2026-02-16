@@ -12,13 +12,6 @@ import { render, screen } from '@testing-library/react-native';
 import { PendingSyncBadge } from '../PendingSyncBadge';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.default.addWhitelistedNativeProps = jest.fn();
-  Reanimated.default.addWhitelistedUIProps = jest.fn();
-  return Reanimated;
-});
-
 // Mock lucide-react-native
 jest.mock('lucide-react-native', () => ({
   Cloud: () => 'Cloud',

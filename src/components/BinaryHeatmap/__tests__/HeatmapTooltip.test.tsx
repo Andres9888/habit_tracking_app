@@ -11,21 +11,6 @@ import { COLORS, TOOLTIP } from '../constants';
 import type { BinaryDay } from '../types';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.default.call = () => {};
-  return {
-    ...Reanimated,
-    useReducedMotion: () => false,
-    useAnimatedStyle: (fn: () => object) => fn(),
-    useSharedValue: (initial: number) => ({ value: initial }),
-    withTiming: (value: number) => value,
-    withSpring: (value: number) => value,
-    runOnJS: (fn: Function) => fn,
-    FadeIn: { duration: () => ({ delay: () => ({}) }) },
-  };
-});
-
 // Mock useReduceMotion hook
 const mockUseReduceMotion = jest.fn(() => false);
 jest.mock('../../../hooks/useReduceMotion', () => ({

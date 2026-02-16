@@ -39,23 +39,6 @@ jest.mock('clsx', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
-  return {
-    default: {
-      View,
-      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
-    },
-    useSharedValue: (initial: unknown) => ({ value: initial }),
-    useAnimatedStyle: () => ({}),
-    withSpring: (value: unknown) => value,
-    withTiming: (value: unknown) => value,
-    withDelay: (_delay: unknown, value: unknown) => value,
-    withSequence: (...values: unknown[]) => values[values.length - 1],
-    View,
-  };
-});
-
 describe('FailureViz', () => {
   const mockVisualization: FailureVisualizationData = {
     failureBody: 'Heavy, sluggish, stuck in bed',

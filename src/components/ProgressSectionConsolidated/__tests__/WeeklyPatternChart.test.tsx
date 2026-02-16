@@ -11,31 +11,6 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { WeeklyPatternChart } from '../WeeklyPatternChart';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const { View, Text } = require('react-native');
-
-  const Animated = {
-    View,
-    Text,
-    createAnimatedComponent: (Component: React.ComponentType) => Component,
-  };
-
-  return {
-    __esModule: true,
-    default: Animated,
-    ...Animated,
-    useSharedValue: (initialValue: number) => ({ value: initialValue }),
-    useAnimatedStyle: () => ({}),
-    withTiming: (value: number) => value,
-    withDelay: (_delay: number, value: number) => value,
-    withSpring: (value: number) => value,
-    Easing: {
-      out: () => () => 0,
-      cubic: () => 0,
-    },
-  };
-});
-
 // Mock useReduceMotion hook
 jest.mock('../../../hooks/useReduceMotion', () => ({
   useReduceMotion: jest.fn(() => false),

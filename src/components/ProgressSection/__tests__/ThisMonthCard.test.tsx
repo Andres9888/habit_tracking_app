@@ -14,25 +14,6 @@ jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockImplementation(
 );
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const { View } = require('react-native');
-
-  return {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    createAnimatedComponent: (Component: React.ComponentType) => Component,
-    useSharedValue: (initialValue: number) => ({ value: initialValue }),
-    useAnimatedStyle: () => ({}),
-    withDelay: (_: number, value: number) => value,
-    withSpring: (value: number) => value,
-    withTiming: (value: number) => value,
-    FadeIn: {
-      delay: () => ({
-        duration: () => ({}),
-      }),
-    },
-  };
-});
-
 describe('ThisMonthCard', () => {
   const createDayStats = (
     day: string,

@@ -33,21 +33,6 @@ const mockWithTiming = jest.fn((value, config, callback) => {
   return value;
 });
 
-jest.mock('react-native-reanimated', () => {
-  const { TextInput, View } = require('react-native');
-  return {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    default: {
-      View,
-      createAnimatedComponent: (Component: typeof TextInput) => Component,
-      addWhitelistedNativeProps: jest.fn(),
-    },
-    useAnimatedStyle: () => ({}),
-    useSharedValue: (initial: number) => ({ value: initial }),
-    withTiming: mockWithTiming,
-  };
-});
-
 describe('HabitNameField - V11 Validation Logic', () => {
   const mockOnChange = jest.fn();
 

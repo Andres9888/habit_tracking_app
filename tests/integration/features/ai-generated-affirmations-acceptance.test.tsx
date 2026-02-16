@@ -39,22 +39,6 @@ jest.mock('expo-haptics', () => ({
   },
 }));
 
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.default.call = () => {};
-  return {
-    ...Reanimated,
-    useAnimatedStyle: () => ({}),
-    useSharedValue: (value: number) => ({ value }),
-    withSpring: (value: number) => value,
-    withTiming: (value: number) => value,
-    withRepeat: (value: number) => value,
-    withSequence: (...args: number[]) => args[0],
-    runOnJS: (fn: Function) => fn,
-    interpolate: (value: number) => value,
-  };
-});
-
 jest.mock('@/utils/notifications', () => ({
   formatDaysOfWeek: jest.fn(() => 'Mon, Wed, Fri'),
   getNextAffirmationDeliveryRelativeTime: jest.fn(() => 'Tomorrow at 8:00 AM'),

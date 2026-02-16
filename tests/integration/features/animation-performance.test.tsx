@@ -167,67 +167,6 @@ jest.mock('clsx', () => ({
 }));
 
 // Mock react-native-reanimated with animation tracking
-jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
-  const tracker = animationCallTracker;
-
-  return {
-    default: {
-      View,
-      createAnimatedComponent: (Component: any) => Component,
-    },
-    useSharedValue: (initial: any) => {
-      tracker.useSharedValueCalls++;
-      return { value: initial };
-    },
-    useAnimatedStyle: (fn: () => any) => {
-      try {
-        return fn();
-      } catch {
-        return {};
-      }
-    },
-    withSpring: (value: any, config?: any) => {
-      tracker.withSpringCalls.push(config);
-      return value;
-    },
-    withTiming: (value: any, config?: any, callback?: any) => {
-      tracker.withTimingCalls.push(config);
-      return value;
-    },
-    withDelay: (delay: number, animation: any) => {
-      tracker.withDelayCalls.push(delay);
-      return animation;
-    },
-    withSequence: (...values: any[]) => {
-      tracker.withSequenceCalls++;
-      return values[values.length - 1];
-    },
-    withRepeat: (animation: any, count?: number, reverse?: boolean) => {
-      tracker.withRepeatCalls++;
-      return animation;
-    },
-    interpolate: (value: number, input: number[], output: number[]) => {
-      const idx = input.findIndex((i) => i >= value);
-      if (idx === -1) return output[output.length - 1];
-      if (idx === 0) return output[0];
-      const ratio = (value - input[idx - 1]) / (input[idx] - input[idx - 1]);
-      return output[idx - 1] + ratio * (output[idx] - output[idx - 1]);
-    },
-    runOnJS: (fn: any) => {
-      tracker.runOnJSCalls++;
-      return (...args: any[]) => fn(...args);
-    },
-    Extrapolation: { CLAMP: 'clamp' },
-    Easing: {
-      out: (fn: any) => fn,
-      in: (fn: any) => fn,
-      cubic: (x: number) => x,
-    },
-    View,
-  };
-});
-
 // Mock react-native-safe-area-context
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 44, bottom: 34, left: 0, right: 0 }),

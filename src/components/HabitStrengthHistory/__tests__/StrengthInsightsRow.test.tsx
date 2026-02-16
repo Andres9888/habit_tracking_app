@@ -15,22 +15,6 @@ import { render } from '@testing-library/react-native';
 import { StrengthInsightsRow } from '../StrengthInsightsRow';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-
-  // Mock useReducedMotion to return false by default
-  Reanimated.useReducedMotion = jest.fn(() => false);
-
-  // Mock FadeIn entering animation
-  Reanimated.FadeIn = {
-    delay: jest.fn(() => ({
-      duration: jest.fn(() => ({})),
-    })),
-  };
-
-  return Reanimated;
-});
-
 // Mock lucide-react-native icons
 jest.mock('lucide-react-native', () => {
   const React = require('react');
