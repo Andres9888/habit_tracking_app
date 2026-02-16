@@ -3,7 +3,7 @@
  * Horizontal progress bar showing habit strength with level indicators
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import type { StrengthProgressBarProps } from './StrengthProgressBar.types';
 import {
@@ -17,7 +17,7 @@ import { styles } from './StrengthProgressBar.styles';
 import { ProgressBarBottomRow } from './ProgressBarBottomRow';
 import { ProgressBarRow } from './ProgressBarRow';
 
-export const StrengthProgressBar = ({
+export const StrengthProgressBar = memo(({
   showDividers = true,
   showEmoji = true,
   showLabel = false,
@@ -69,7 +69,7 @@ export const StrengthProgressBar = ({
       />
     </View>
   );
-};
+});
 
 export type { StrengthProgressBarProps } from './StrengthProgressBar.types';
 export default StrengthProgressBar;

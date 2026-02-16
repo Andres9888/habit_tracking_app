@@ -7,7 +7,6 @@ import {
 
 /**
  * Reflections queries
- * SEC-001: All queries require authentication and ownership verification
  */
 
 /** Get a reflection for a specific habit and date */
@@ -17,20 +16,12 @@ export const getByHabitAndDate = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
-    // SEC-001: Authentication check - require user to be logged in
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return null;
-    }
+    if (!identity) return null;
 
-    // SEC-001: Ownership verification via habit
+    // Verify habit ownership
     const habit = await ctx.db.get(args.habitId);
-    if (!habit) {
-      return null;
-    }
-    if (habit.userId !== identity.subject) {
-      throw new Error('Not authorized to access reflections for this habit');
-    }
+    if (!habit || habit.userId !== identity.subject) return null;
 
     return await ctx.db
       .query('reflections')
@@ -49,31 +40,23 @@ export const listByHabit = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    // SEC-001: Authentication check - require user to be logged in
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
-    }
+    if (!identity) return [];
 
-    // SEC-001: Ownership verification via habit
+    // Verify habit ownership
     const habit = await ctx.db.get(args.habitId);
-    if (!habit) {
-      return [];
-    }
-    if (habit.userId !== identity.subject) {
-      throw new Error('Not authorized to access reflections for this habit');
-    }
+    if (!habit || habit.userId !== identity.subject) return [];
 
-    const q = ctx.db
+    const query = ctx.db
       .query('reflections')
-      .withIndex('by_habit', (query) => query.eq('habitId', args.habitId))
+      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
       .order('desc');
 
     if (args.limit) {
-      return await q.take(args.limit);
+      return await query.take(args.limit);
     }
 
-    return await q.collect();
+    return await query.collect();
   },
   returns: reflectionsArrayValidator,
 });
@@ -84,29 +67,16 @@ export const listRecent = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    // SEC-001: Authentication check - require user to be logged in
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
-    }
+    if (!identity) return [];
 
-    // SEC-001: Only return reflections for authenticated user's habits
     const limit = args.limit ?? 10;
-    const userHabits = await ctx.db
-      .query('habits')
-      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-      .collect();
-
-    const habitIds = new Set(userHabits.map((h) => h._id));
-
-    const allReflections = await ctx.db
+    const reflections = await ctx.db
       .query('reflections')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
       .order('desc')
-      .take(limit * 3); // Get more to account for filtering
-
-    return allReflections
-      .filter((r) => habitIds.has(r.habitId))
-      .slice(0, limit);
+      .take(limit);
+    return reflections;
   },
   returns: reflectionsArrayValidator,
 });

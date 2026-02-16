@@ -22,7 +22,7 @@ jest.mock('../../../../components/Modal', () => {
   const { View } = require('react-native');
   return {
     __esModule: true,
-    default: ({ children, visible }: any) =>
+    default: ({ children, visible }: { children: React.ReactNode; visible: boolean }) =>
       visible ? <View>{children}</View> : null,
   };
 });
@@ -256,7 +256,7 @@ describe('ForgotPasswordModal', () => {
       );
 
       // Create a promise that won't resolve immediately
-      let resolvePromise: any;
+      let resolvePromise: (value: unknown) => void;
       const pendingPromise = new Promise((resolve) => {
         resolvePromise = resolve;
       });
@@ -389,7 +389,7 @@ describe('ForgotPasswordModal', () => {
         <ForgotPasswordModal visible={true} onClose={mockOnClose} />
       );
 
-      let resolvePromise: any;
+      let resolvePromise: (value: unknown) => void;
       const pendingPromise = new Promise((resolve) => {
         resolvePromise = resolve;
       });

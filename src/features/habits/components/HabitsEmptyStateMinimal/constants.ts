@@ -90,16 +90,16 @@ export const COPY = {
   createCustom: 'Create custom habit',
 
   // Primary CTA
-  ctaButton: 'Start my journey →',
+  ctaButton: 'Start Building →',
 
   // Question headline - line break after "thing" for rhythm
   headline: "What's one small thing\nyou want to do daily?",
 
-  // Input placeholder
-  inputPlaceholder: 'Type your habit...',
+  // Input placeholder - motivating and descriptive
+  inputPlaceholder: 'What habit do you want to build?',
   // Success state
   successHeadline: "You're growing!",
-  successSubtext: (habitName: string) => `"${habitName}" added to your habits`,
+  successSubtext: (habitName: string) => `"${habitName}" added — your chain starts now!`,
 } as const;
 
 /**
