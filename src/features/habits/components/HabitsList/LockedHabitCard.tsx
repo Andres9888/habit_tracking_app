@@ -53,7 +53,7 @@ export function LockedHabitCard({
     }
     Animated.spring(pressScale, {
       damping: 18,
-      stiffness: 240,
+      stiffness: 150,
       toValue: SCALE.pressLarge,
       useNativeDriver: true,
     }).start();
@@ -66,7 +66,7 @@ export function LockedHabitCard({
     }
     Animated.spring(pressScale, {
       damping: 18,
-      stiffness: 240,
+      stiffness: 150,
       toValue: SCALE.normal,
       useNativeDriver: true,
     }).start();
