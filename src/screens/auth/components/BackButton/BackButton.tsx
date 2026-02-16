@@ -18,6 +18,7 @@ export function BackButton({
 
   return (
     <AnimatedPressable
+      accessibilityHint='Go back to previous screen'
       accessibilityLabel={label}
       accessibilityRole='button'
       className='-ml-2 flex-row items-center p-2'
