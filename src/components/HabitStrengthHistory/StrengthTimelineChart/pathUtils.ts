@@ -38,7 +38,7 @@ export function generateAreaPath(
   path += ` L ${points[0].x} ${points[0].y}`;
   path += generateBezierCurves(points);
 
-  const lastPoint = points.at(-1)!;
+  const lastPoint = points.at(-1) ?? points[0];
   path += ` L ${lastPoint.x} ${bottomY}`;
   path += ' Z';
 
@@ -84,7 +84,7 @@ export function generateChartPaths(
   const linePath = generateLinePath(strengthHistory, dimensions);
   const lastPoint = dataToSvg(
     strengthHistory.length - 1,
-    strengthHistory.at(-1)!.strength,
+    strengthHistory.at(-1)?.strength ?? 0,
     strengthHistory.length,
     dimensions
   );

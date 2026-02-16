@@ -1,5 +1,6 @@
 /**
  * Shared styles for TemplatePreviewModal
+ * Note: dark mode colors are applied inline via useThemeColors()
  */
 
 import { StyleSheet } from 'react-native';
@@ -7,11 +8,10 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
     borderRadius: 16,
-    height: 40,
+    height: 44,
     justifyContent: 'center',
-    width: 40,
+    width: 44,
   },
   colorOption: {
     borderRadius: 16,
@@ -24,7 +24,6 @@ export const styles = StyleSheet.create({
     gap: 12,
   },
   container: {
-    backgroundColor: '#FAFAF9',
     flex: 1,
   },
   content: {
@@ -43,8 +42,7 @@ export const styles = StyleSheet.create({
     zIndex: 10,
   },
   headerTitle: {
-    color: '#111827',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.5,
   },
@@ -69,13 +67,12 @@ export const styles = StyleSheet.create({
   input: {
     borderRadius: 12,
     borderWidth: 1,
-    fontSize: 16,
+    fontSize: 17,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   label: {
-    color: '#374151',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
     marginBottom: 8,
   },

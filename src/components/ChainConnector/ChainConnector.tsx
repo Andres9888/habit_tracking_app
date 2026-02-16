@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { shadows } from '../../theme/spacing';
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
 
@@ -16,6 +17,7 @@ import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
  * - White circle: 24px diameter with shadow
  */
 export const ChainConnector: React.FC = () => {
+  const { colors: themeColors } = useThemeColors();
   return (
     <View
       style={{
@@ -28,7 +30,7 @@ export const ChainConnector: React.FC = () => {
       {/* Vertical connecting line */}
       <View
         style={{
-          backgroundColor: '#a8a29e',
+          backgroundColor: themeColors.gray[300],
           height: '100%',
           position: 'absolute',
           width: 3, // stone-400
@@ -40,7 +42,7 @@ export const ChainConnector: React.FC = () => {
         style={{
           ...shadows.subtle,
           alignItems: 'center',
-          backgroundColor: 'white',
+          backgroundColor: themeColors.card,
           borderRadius: 12,
           height: 24,
           justifyContent: 'center',
@@ -49,7 +51,11 @@ export const ChainConnector: React.FC = () => {
           zIndex: 1, // Ensure icon appears above the line
         }}
       >
-        <ChainLinkIcon color='#57534e' size={16} variant='stroke' />
+        <ChainLinkIcon
+          color={themeColors.text.secondary}
+          size={16}
+          variant='stroke'
+        />
       </View>
     </View>
   );

@@ -1,12 +1,16 @@
 /**
- * Types for offline support utilities
+ * Offline Support Types
  *
- * This module defines types for:
- * - Error classification and retry logic
- * - Circuit breaker pattern
- * - Sync status and events
+ * Core type definitions for offline support functionality:
+ * - Error classification for intelligent retry decisions
+ * - Circuit breaker pattern for service protection
+ * - Retry strategies with exponential backoff
+ * - Sync status for UI display
  *
  * For offline queue types, see ./queue/index.ts
+ *
+ * @module offline/types
+ * @category Offline Support
  */
 
 /**

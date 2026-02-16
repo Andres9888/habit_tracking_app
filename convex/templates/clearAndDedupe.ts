@@ -2,14 +2,14 @@
  * Template clear and deduplication mutations
  */
 import { v } from 'convex/values';
-import { mutation } from '../_generated/server';
+import { internalMutation } from '../_generated/server';
 import type { Id } from '../_generated/dataModel';
 import { normalizeTemplateName, pickBestTemplate } from './helpers';
 
 /**
  * Mutation: Clear all templates (for cleanup/reset)
  */
-export const clearTemplates = mutation({
+export const clearTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const templates = await ctx.db.query('templates').collect();
@@ -26,7 +26,7 @@ export const clearTemplates = mutation({
  * - Re-points templateUsage.templateId to the kept template
  * - Deletes extra templates
  */
-export const dedupeTemplates = mutation({
+export const dedupeTemplates = internalMutation({
   args: { dryRun: v.optional(v.boolean()) },
   handler: async (ctx, args) => {
     const dryRun = args.dryRun ?? false;

@@ -8,6 +8,12 @@ import { showCreateError } from '../../../../utils/errorAlerts';
 import { useHabitsListEffects } from './useHabitsListEffects';
 import type { UseHabitsListHandlersOptions } from './HabitsList.types';
 
+/**
+ * Builds memoized HabitsList event handlers and wires supporting effects.
+ *
+ * Keeps imperative UI concerns (quick-create, sort changes, drag haptics)
+ * isolated from presentation components.
+ */
 export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
   const { list, onSettingsChange, onCreateHabitRequest, state } = options;
   const {
@@ -34,12 +40,22 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
     shouldTriggerHabitEntrance: state.shouldTriggerHabitEntrance,
   });
 
+  /** Persists a new sort mode to user settings via the `onSettingsChange` callback. */
   const handleChangeHabitSortMode = useCallback(
     (value: typeof habitSortMode) =>
       void onSettingsChange({ habitSortMode: value }),
     [onSettingsChange]
   );
 
+  /**
+   * Creates a habit inline (without opening the full creation screen).
+   *
+   * **Side-effects:**
+   * - If the free-tier limit is reached, opens the create-habit upgrade flow instead.
+   * - On success, sets `justCreatedHabitId` (triggers highlight) and
+   *   `isInSuccessCelebration` (triggers celebration animation).
+   * - On failure, shows an error alert with a retry callback.
+   */
   const handleQuickCreateHabit = useCallback(
     async (habitName: string) => {
       if (!isPremiumUser && hasReachedHabitLimit) {
@@ -58,7 +74,7 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
         }
       } catch (error) {
         if (__DEV__) console.error('Failed to create habit:', error);
-        showCreateError();
+        showCreateError(() => void handleQuickCreateHabit(habitName));
       }
     },
     [
@@ -70,14 +86,17 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
     ]
   );
 
+  /** Opens the full habit-creation screen via the parent callback. */
   const handleAddHabitPress = useCallback(
     () => onCreateHabitRequest(),
     [onCreateHabitRequest]
   );
+  /** Fires a selection haptic when the user begins dragging a habit row. */
   const handleDragBegin = useCallback(
     () => triggerSelection(),
     [triggerSelection]
   );
+  /** Stable key extractor for the FlatList; falls back to index if `_id` is missing. */
   const keyExtractor = useCallback(
     (habit: (typeof habits)[number], index: number) =>
       habit._id ?? `habit-${index}`,

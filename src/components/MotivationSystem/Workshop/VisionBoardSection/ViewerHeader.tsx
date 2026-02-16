@@ -5,6 +5,7 @@
 
 import React, { useCallback } from 'react';
 import { View, Pressable, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -18,10 +19,10 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 function usePressAnimation() {
   const scale = useSharedValue(1);
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.9, { damping: 15, stiffness: 300 });
+    scale.value = withSpring(0.9, { damping: 18, stiffness: 150 });
   }, [scale]);
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
   }, [scale]);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -42,12 +43,13 @@ export function ViewerHeader({
   onDelete,
   isDeleting,
 }: ViewerHeaderProps) {
+  const insets = useSafeAreaInsets();
   const closeAnim = usePressAnimation();
   const editAnim = usePressAnimation();
   const deleteAnim = usePressAnimation();
 
   return (
-    <View className='flex-row items-center justify-between px-4 pb-4 pt-14'>
+    <View className='flex-row items-center justify-between px-4 pb-4' style={{ paddingTop: insets.top + 8 }}>
       <View className='flex-row gap-2'>
         <AnimatedPressable
           accessibilityLabel='Edit caption'

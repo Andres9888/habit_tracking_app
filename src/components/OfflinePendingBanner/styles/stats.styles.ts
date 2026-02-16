@@ -14,7 +14,7 @@ export const statsStyles = StyleSheet.create({
   },
   statsDot: {
     backgroundColor: '#A1A1AA',
-    borderRadius: 3,
+    borderRadius: 4,
     height: 6,
     marginRight: 8,
     width: 6,

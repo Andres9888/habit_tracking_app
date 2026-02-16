@@ -4,7 +4,7 @@
  * The celebration card shown after habit creation
  */
 
-import { Animated, Pressable, Text, View } from 'react-native';
+import { Animated, Pressable, Text } from 'react-native';
 
 interface SuccessCardProps {
   cardOpacity: Animated.Value;
