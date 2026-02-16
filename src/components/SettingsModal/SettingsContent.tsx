@@ -19,6 +19,7 @@ import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
 import { AboutSection } from './sections';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { LanguagePicker } from '../../i18n/LanguagePicker';
 import type { SettingsContentProps } from './types';
 
 const anim = (delay: number) => FadeInDown.delay(delay).springify().damping(18);
@@ -155,6 +156,7 @@ export function SettingsContent(p: SettingsContentProps) {
               value={p.showGradientFill}
               onToggle={(v) => void p.onChangeShowGradientFill(v)}
             />
+            <LanguagePicker />
           </SettingsSection>
         </Animated.View>
 

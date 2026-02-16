@@ -14,6 +14,7 @@
  * - Provider chain optimized to minimize blocking
  */
 
+import './i18n/i18n'; // Initialize i18n before anything else
 import '../global.css';
 
 import { ClerkProvider } from '@clerk/clerk-expo';
