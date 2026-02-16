@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import type {
   LayoutChangeEvent,
   NativeScrollEvent,
@@ -24,6 +25,9 @@ interface TemplateListProps {
   showBottomShadow: boolean;
 }
 
+// Fixed height for getItemLayout optimization (TemplateListItem height)
+const ITEM_HEIGHT = 88;
+
 export const TemplateList = ({
   isLoading,
   templates,
@@ -35,38 +39,84 @@ export const TemplateList = ({
   onLayout,
   showTopShadow,
   showBottomShadow,
-}: TemplateListProps) => (
-  <View className='relative max-h-[300px]'>
-    {isLoading ? (
-      <TemplateListSkeleton />
-    ) : templates.length === 0 ? (
-      <TemplateListEmpty />
-    ) : (
+}: TemplateListProps) => {
+  const getItemLayout = useCallback(
+    (_: unknown, index: number) => ({
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index,
+    }),
+    []
+  );
+
+  const renderItem = useCallback(
+    ({ item, index }: { item: HabitTemplate; index: number }) => (
+      <TemplateListItem
+        index={index}
+        template={item}
+        onSelect={onSelectTemplate}
+        onViewScience={onViewScience}
+      />
+    ),
+    [onSelectTemplate, onViewScience]
+  );
+
+  const keyExtractor = useCallback((item: HabitTemplate) => item._id, []);
+
+  const listFooterComponent = useCallback(
+    () => <TemplateListFooter onClose={onClose} />,
+    [onClose]
+  );
+
+  if (isLoading) {
+    return (
+      <View className='relative max-h-[300px]'>
+        <TemplateListSkeleton />
+        <TemplateListShadows
+          showBottom={showBottomShadow}
+          showTop={showTopShadow}
+        />
+      </View>
+    );
+  }
+
+  if (templates.length === 0) {
+    return (
+      <View className='relative max-h-[300px]'>
+        <TemplateListEmpty />
+        <TemplateListShadows
+          showBottom={showBottomShadow}
+          showTop={showTopShadow}
+        />
+      </View>
+    );
+  }
+
+  return (
+    <View className='relative max-h-[300px]'>
       <FlatList
         nestedScrollEnabled
         showsVerticalScrollIndicator
         accessibilityLabel='Habit templates list'
         accessibilityRole='list'
         data={templates}
-        keyExtractor={(item) => item._id}
-        ListFooterComponent={() => <TemplateListFooter onClose={onClose} />}
-        renderItem={({ item, index }) => (
-          <TemplateListItem
-            index={index}
-            template={item}
-            onSelect={onSelectTemplate}
-            onViewScience={onViewScience}
-          />
-        )}
+        getItemLayout={getItemLayout}
+        initialNumToRender={8}
+        keyExtractor={keyExtractor}
+        ListFooterComponent={listFooterComponent}
+        maxToRenderPerBatch={8}
+        removeClippedSubviews
+        renderItem={renderItem}
         scrollEventThrottle={16}
+        windowSize={5}
         onContentSizeChange={onContentSizeChange}
         onLayout={onLayout}
         onScroll={onScroll}
       />
-    )}
-    <TemplateListShadows
-      showBottom={showBottomShadow}
-      showTop={showTopShadow}
-    />
-  </View>
-);
+      <TemplateListShadows
+        showBottom={showBottomShadow}
+        showTop={showTopShadow}
+      />
+    </View>
+  );
+};

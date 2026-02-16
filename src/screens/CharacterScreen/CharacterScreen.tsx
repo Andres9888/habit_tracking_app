@@ -1,7 +1,7 @@
 import { View, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import {
   ScreenHeader,
   CharacterCard,
@@ -12,7 +12,7 @@ import {
 import { MOCK_CHARACTER_DATA } from './constants';
 import type { CharacterScreenProps } from './types';
 
-export default function CharacterScreen({ onBack }: CharacterScreenProps) {
+function CharacterScreenContent({ onBack }: CharacterScreenProps) {
   const characterData = MOCK_CHARACTER_DATA;
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
@@ -41,5 +41,13 @@ export default function CharacterScreen({ onBack }: CharacterScreenProps) {
         </View>
       </ScrollView>
     </View>
+  );
+}
+
+export default function CharacterScreen({ onBack }: CharacterScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Character" onGoBack={onBack}>
+      <CharacterScreenContent onBack={onBack} />
+    </ScreenErrorBoundary>
   );
 }

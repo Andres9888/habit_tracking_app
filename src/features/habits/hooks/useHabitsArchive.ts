@@ -5,6 +5,8 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 import { logInteraction } from '../../../lib/analytics/interactions';
 import { optimisticStore } from '../../../lib/optimistic';
+import { showGenericError } from '../../../utils/errorAlerts';
+import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 
 interface ArchiveUndoState {
   visible: boolean;
@@ -57,7 +59,8 @@ export function useHabitsArchive(habits: Habit[]): UseHabitsArchiveResult {
         // Rollback on failure
         optimisticStore.fail(operationId, error as Error);
         setArchiveUndo({ habitId: null, habitName: '', visible: false });
-        throw error;
+        if (__DEV__) console.error('[useHabitsArchive] Archive failed:', error);
+        showGenericError(ERROR_MESSAGES.DATA_OPS.ARCHIVE_HABIT_FAILED);
       }
     },
     [archiveHabitMutation, habits]
@@ -80,7 +83,8 @@ export function useHabitsArchive(habits: Habit[]): UseHabitsArchiveResult {
         logInteraction('habit_archive_undone', { habitId, habitName });
       } catch (error) {
         optimisticStore.fail(operationId, error as Error);
-        throw error;
+        if (__DEV__) console.error('[useHabitsArchive] Undo failed:', error);
+        showGenericError('Failed to undo archive. Please try again.');
       }
     }
     setArchiveUndo({ habitId: null, habitName: '', visible: false });

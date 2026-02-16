@@ -50,6 +50,7 @@ export function VisualizationModalSection({
         <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
           <Text className='text-lg font-bold text-stone-900'>Mental Boost</Text>
           <AnimatedPressable
+            accessibilityHint='Close the mental boost exercise'
             accessibilityLabel='Close mental boost'
             accessibilityRole='button'
             className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
@@ -62,7 +63,7 @@ export function VisualizationModalSection({
               });
             }}
             onPressOut={() => {
-              closeScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+              closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
             }}
           >
             <X color='#57534e' size={24} />

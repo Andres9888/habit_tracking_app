@@ -1,21 +1,24 @@
 /**
  * HabitCardSkeleton - Loading skeleton for habit cards
+ * Supports dark mode via useSkeletonTheme.
  */
 import React from 'react';
 import { View } from 'react-native';
 import { shadows } from '../../theme/spacing';
 import { SkeletonLoader } from './SkeletonLoader';
+import { useSkeletonTheme } from './useSkeletonTheme';
 import type { ReduceMotionProps } from './types';
 
 export function HabitCardSkeleton({ reduceMotion = false }: ReduceMotionProps) {
+  const { surfaceBg, borderColor, shadowColor, shadowOpacity } = useSkeletonTheme();
   return (
     <View
       className='mb-5 overflow-hidden rounded-3xl p-5'
       style={{
         ...shadows.card,
-        backgroundColor: '#fafaf9',
-        shadowColor: '#44403c',
-        shadowOpacity: 0.08,
+        backgroundColor: surfaceBg,
+        shadowColor,
+        shadowOpacity,
       }}
     >
       <View className='mb-4 flex-row items-center gap-3'>
@@ -46,7 +49,7 @@ export function HabitCardSkeleton({ reduceMotion = false }: ReduceMotionProps) {
           width={60}
         />
       </View>
-      <View className='mb-4 h-[1px]' style={{ backgroundColor: '#e7e5e4' }} />
+      <View className='mb-4 h-[1px]' style={{ backgroundColor: borderColor }} />
       <View className='flex-row items-center justify-between'>
         {[0, 1, 2, 3, 4, 5, 6].map((i) => (
           <SkeletonLoader
