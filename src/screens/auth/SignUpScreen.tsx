@@ -10,6 +10,7 @@ import {
   AuthDivider,
   AuthError,
   FormInput,
+  PasswordInput,
   SignInLink,
   SocialSignInButton,
   SubmitButton,
@@ -17,13 +18,15 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignUpFlow } from './hooks/useSignUpFlow';
+import { PasswordStrengthBar } from './components/PasswordStrengthBar';
 import { SignUpHeader } from './components/SignUpHeader';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignUpScreenProps {
   onNavigateToSignIn?: () => void;
 }
 
-export default function SignUpScreen({
+function SignUpScreenContent({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
@@ -111,12 +114,14 @@ export default function SignUpScreen({
                   disabled={isAnyLoading}
                   isLoading={oauthLoading === 'oauth_apple'}
                   provider='apple'
+                  testID='auth-sign-up-apple-button'
                   onPress={signInWithApple}
                 />
                 <SocialSignInButton
                   disabled={isAnyLoading}
                   isLoading={oauthLoading === 'oauth_google'}
                   provider='google'
+                  testID='auth-sign-up-google-button'
                   onPress={signInWithGoogle}
                 />
               </View>
@@ -139,27 +144,29 @@ export default function SignUpScreen({
                   onChangeText={setEmailAddress}
                   onSubmitEditing={() => passwordRef.current?.focus()}
                 />
-                <FormInput
-                  ref={passwordRef}
-                  secureTextEntry
-                  autoComplete='password-new'
-                  editable={!isAnyLoading}
-                  error={passwordError}
-                  label='Password'
-                  placeholder='Create a password'
-                  returnKeyType='go'
-                  value={password}
-                  onBlur={onPasswordBlur}
-                  onChangeText={setPassword}
-                  onSubmitEditing={handleSignUp}
-                />
+                <View>
+                  <PasswordInput
+                    ref={passwordRef}
+                    autoComplete='password-new'
+                    editable={!isAnyLoading}
+                    error={passwordError}
+                    placeholder='Create a password'
+                    returnKeyType='go'
+                    value={password}
+                    onBlur={onPasswordBlur}
+                    onChangeText={setPassword}
+                    onSubmitEditing={handleSignUp}
+                  />
+                  <PasswordStrengthBar password={password} />
+                </View>
                 <SubmitButton
                   disabled={
                     !emailAddress || !password || isAnyLoading || !isFormValid
                   }
                   isLoading={isLoading}
-                  label='Create account'
-                  loadingLabel='Creating account...'
+                  label='Create Account'
+                  loadingLabel='Creating your account…'
+                  testID='auth-sign-up-button'
                   onPress={handleSignUp}
                 />
               </View>
@@ -180,5 +187,13 @@ export default function SignUpScreen({
         </KeyboardAvoidingView>
       </LinearGradient>
     </View>
+  );
+}
+
+export default function SignUpScreen(props: SignUpScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Sign Up">
+      <SignUpScreenContent {...props} />
+    </ScreenErrorBoundary>
   );
 }

@@ -8,7 +8,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export function SuggestionsCard() {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
 
   const styles = StyleSheet.create({
     card: {

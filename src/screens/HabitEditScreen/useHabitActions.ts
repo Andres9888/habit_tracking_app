@@ -5,6 +5,7 @@ import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { t } from '../../i18n';
 
+
 interface UseHabitActionsProps {
   habitId: Id<'habits'> | null;
   onSuccess: () => void;
@@ -29,6 +30,7 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
               .catch((error) => {
                 if (__DEV__) console.warn('Error deleting habit:', error);
                 Alert.alert(t('common.error'), t('habits.failedDelete'));
+
               });
           },
           style: 'destructive',
@@ -53,6 +55,7 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
               .catch((error) => {
                 if (__DEV__) console.warn('Error archiving habit:', error);
                 Alert.alert(t('common.error'), t('habits.failedArchive'));
+
               });
           },
           text: t('common.archive'),

@@ -41,6 +41,7 @@ export const STRINGS = {
     get title() { return t('habits.createHabit'); },
     get templateHeroTitle() { return t('templates.heroTitle'); },
     get templatePrompt() { return t('templates.prompt'); },
+
   },
 } as const;
 

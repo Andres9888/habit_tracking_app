@@ -38,9 +38,8 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
         />
         <Animated.View
           className='flex-row items-center justify-between border-b px-5 pb-4'
-          style={{ borderColor: colors.border, backgroundColor: isDark ? colors.surface : 'rgba(255,255,255,0.95)' }}
           entering={FadeIn.delay(100)}
-          style={{ paddingTop: insets.top + 8 }}
+          style={{ borderColor: colors.border, backgroundColor: isDark ? colors.surface : 'rgba(255,255,255,0.95)', paddingTop: insets.top + 8 }}
         >
           <View className='flex-row items-center gap-3'>
             <View className='h-10 w-10 items-center justify-center rounded-xl'>

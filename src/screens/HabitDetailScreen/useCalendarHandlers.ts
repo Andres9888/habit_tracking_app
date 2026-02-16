@@ -11,6 +11,7 @@ import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezo
 import type { Habit } from './HabitDetailScreen.types';
 import { t } from '../../i18n';
 
+
 interface UseCalendarHandlersProps {
   habit: Habit | null;
   isTogglingCalendar: boolean;
@@ -45,10 +46,16 @@ export const useCalendarHandlers = ({
       if (inputDate > todayDate) return;
 
       setIsTogglingCalendar(true);
+      Haptics.impactAsync(
+        wasCompleted
+          ? Haptics.ImpactFeedbackStyle.Light
+          : Haptics.ImpactFeedbackStyle.Medium
+      );
       toggleHabitMutation({ date, habitId: habit._id })
         .catch((error: unknown) => {
           if (__DEV__) console.error('Failed to toggle habit:', error);
           Alert.alert(t('common.error'), t('habits.failedUpdate'));
+
         })
         .finally(() => setIsTogglingCalendar(false));
     },
@@ -56,12 +63,12 @@ export const useCalendarHandlers = ({
   );
 
   const handleSwipeDelete = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPendingDelete(true);
   }, [setPendingDelete]);
 
   const handleSwipeArchive = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPendingArchive(true);
   }, [setPendingArchive]);
 

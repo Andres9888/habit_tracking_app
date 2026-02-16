@@ -6,6 +6,7 @@ import { useFieldValidation } from '../../../utils/validation/useFieldValidation
 import { validateEmail } from '../../../utils/validation';
 import { t } from '../../../i18n';
 
+
 export function useSignInFlow() {
   const { signIn, setActive, isLoaded } = useSignIn();
   const [password, setPassword] = useState('');
@@ -25,6 +26,7 @@ export function useSignInFlow() {
     const emailResult = emailField.validateNow();
     if (!emailResult.isValid) {
       Alert.alert(t('common.error'), t('auth.validationErrorEmail'));
+
       return;
     }
 
@@ -49,6 +51,7 @@ export function useSignInFlow() {
       Alert.alert(
         t('common.error'),
         clerkError.errors?.[0]?.message || t('auth.failedSignIn')
+
       );
     } finally {
       setIsLoading(false);

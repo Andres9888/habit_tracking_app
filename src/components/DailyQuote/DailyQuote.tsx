@@ -68,7 +68,10 @@ export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: Dai
       lineHeight: 22,
     },
     refreshButton: {
-      padding: 4,
+      alignItems: 'center' as const,
+      height: 44,
+      justifyContent: 'center' as const,
+      width: 44,
     },
   }), [colors]);
 
@@ -83,7 +86,13 @@ export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: Dai
       <View style={styles.footer}>
         <Text style={styles.author}>— {quote.author}</Text>
         {showRefresh && onRefresh && (
-          <Pressable style={styles.refreshButton} onPress={onRefresh}>
+          <Pressable
+            accessibilityLabel='Refresh quote'
+            accessibilityRole='button'
+            hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
+            style={styles.refreshButton}
+            onPress={onRefresh}
+          >
             <RefreshCw color={colors.gray[400]} size={14} />
           </Pressable>
         )}

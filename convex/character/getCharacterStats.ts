@@ -22,17 +22,13 @@ export const getCharacterStats = query({
 
       const habits = await ctx.db
         .query('habits')
-        .filter((q) =>
-          q.and(
-            q.eq(q.field('userId'), userId),
-            q.neq(q.field('archived'), true)
-          )
-        )
+        .withIndex('by_userId', (q) => q.eq('userId', userId))
+        .filter((q) => q.neq(q.field('archived'), true))
         .collect();
 
       const allTracking = await ctx.db
         .query('tracking')
-        .filter((q) => q.eq(q.field('userId'), userId))
+        .withIndex('by_user_and_date', (q) => q.eq('userId', userId))
         .collect();
 
       const { habitStreaks, maxStreak } = calculateHabitStreaks(

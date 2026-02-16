@@ -8,6 +8,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { MailOpen, X } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../../../../theme/ThemeContext';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
@@ -24,9 +25,10 @@ export function ReadLetterHeader({
   onClose,
 }: ReadLetterHeaderProps) {
   const { colors } = useThemeColors();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View className='flex-row items-center justify-between px-4 pb-4 pt-14'>
+    <View className='flex-row items-center justify-between px-4 pb-4' style={{ paddingTop: insets.top + 8 }}>
       <View className='flex-1' />
       <View className='flex-row items-center gap-2'>
         <Animated.View style={envelopeAnimatedStyle}>

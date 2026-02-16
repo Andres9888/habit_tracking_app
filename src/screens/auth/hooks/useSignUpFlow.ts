@@ -7,6 +7,7 @@ import { validateEmail, validatePassword } from '../../../utils/validation';
 import { getClerkErrorMessage } from '../utils/getClerkErrorMessage';
 import { t } from '../../../i18n';
 
+
 export function useSignUpFlow() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [pendingVerification, setPendingVerification] = useState(false);
@@ -52,6 +53,7 @@ export function useSignUpFlow() {
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert(t('common.error'), getClerkErrorMessage(error, t('auth.failedSignUp')));
+
     } finally {
       setIsLoading(false);
     }
@@ -81,12 +83,13 @@ export function useSignUpFlow() {
       } else {
         if (__DEV__) console.error(JSON.stringify(attempt, null, 2));
         Alert.alert(t('common.error'), t('auth.verificationIncomplete'));
+
       }
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert(
         'Error',
-        getClerkErrorMessage(error, 'Failed to verify email')
+        getClerkErrorMessage(error, ERROR_MESSAGES.AUTH.SIGN_UP_VERIFICATION_INCOMPLETE)
       );
     } finally {
       setIsLoading(false);
