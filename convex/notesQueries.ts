@@ -4,23 +4,20 @@ import { notesArrayValidator, nullableNoteValidator } from './notes/types';
 
 /**
  * Notes queries - list, search, get
- *
- * PERF FIX: Filter by userId for security and performance
  */
 
 export const list = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
-    }
+    if (!identity) return [];
 
-    return await ctx.db
+    const notes = await ctx.db
       .query('notes')
-      .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
       .order('desc')
       .collect();
+    return notes;
   },
   returns: notesArrayValidator,
 });
@@ -32,13 +29,11 @@ export const search = query({
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
-    }
+    if (!identity) return [];
 
     let notes = await ctx.db
       .query('notes')
-      .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
       .order('desc')
       .collect();
 
@@ -63,7 +58,13 @@ export const get = query({
     noteId: v.id('notes'),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.noteId);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const note = await ctx.db.get(args.noteId);
+    if (!note) return null;
+    if (note.userId && note.userId !== identity.subject) return null;
+    return note;
   },
   returns: nullableNoteValidator,
 });

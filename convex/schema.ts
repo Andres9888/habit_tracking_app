@@ -295,6 +295,7 @@ const applicationTables = {
   })
     .index('by_date', ['date'])
     .index('by_habit', ['habitId'])
+    .index('by_user', ['userId'])
     .index('by_user_and_date', ['userId', 'date']),
 
   // Quick Reflection - Post-habit completion feedback (BJ Fogg's Tiny Habits)
@@ -323,6 +324,7 @@ const applicationTables = {
   })
     .index('by_habit', ['habitId'])
     .index('by_habit_and_date', ['habitId', 'date'])
+    .index('by_user', ['userId'])
     .index('by_user_and_date', ['userId', 'date']),
 
   // Subscriptions - RevenueCat webhook-driven subscription state
@@ -459,6 +461,12 @@ const applicationTables = {
 
     celebrationsEnabled: v.optional(v.boolean()),
 
+    // Completion sound settings (Premium feature)
+    completionSoundEnabled: v.optional(v.boolean()),
+    completionSoundType: v.optional(
+      v.union(v.literal('chime'), v.literal('pop'), v.literal('success'))
+    ),
+
     darkMode: v.optional(
       v.union(
         v.boolean(), // Backwards compatibility
@@ -514,7 +522,7 @@ const applicationTables = {
     // Backwards compatibility
     useDyslexicFont: v.optional(v.boolean()),
     userId: v.optional(v.string()),
-  }),
+  }).index('by_userId', ['userId']),
 
   // Vision Board Images - Photo grid of motivational images (Story T12)
   // Scientific Basis:

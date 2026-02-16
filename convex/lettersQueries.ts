@@ -12,6 +12,12 @@ import { letterObjectValidator, letterStatsValidator } from './letters/index';
 export const listByHabit = query({
   args: { habitId: v.id('habits'), limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit || habit.userId !== identity.subject) return [];
+
     const q = ctx.db
       .query('letters')
       .withIndex('by_habit', (query) => query.eq('habitId', args.habitId))
@@ -27,6 +33,12 @@ export const listByHabit = query({
 export const getUnreadUnlocked = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit || habit.userId !== identity.subject) return [];
+
     const now = Date.now();
     const letters = await ctx.db
       .query('letters')
@@ -39,32 +51,29 @@ export const getUnreadUnlocked = query({
 
 /**
  * Get all letters that are about to unlock (within next 24 hours)
- *
- * PERF FIX: Added userId filter when neither habitId nor userId arg is provided
  */
 export const getUpcomingUnlocks = query({
-  args: { habitId: v.optional(v.id('habits')), userId: v.optional(v.string()) },
+  args: { habitId: v.optional(v.id('habits')) },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
     const now = Date.now();
     const in24Hours = now + 24 * 60 * 60 * 1000;
     let letters;
 
     if (args.habitId) {
+      const habit = await ctx.db.get(args.habitId);
+      if (!habit || habit.userId !== identity.subject) return [];
+
       letters = await ctx.db
         .query('letters')
         .withIndex('by_habit', (q) => q.eq('habitId', args.habitId!))
         .collect();
     } else {
-      // Get authenticated user's letters
-      const identity = await ctx.auth.getUserIdentity();
-      const userId = args.userId ?? identity?.subject;
-      if (!userId) {
-        return [];
-      }
-
       letters = await ctx.db
         .query('letters')
-        .withIndex('by_user', (q) => q.eq('userId', userId))
+        .withIndex('by_user', (q) => q.eq('userId', identity.subject))
         .collect();
     }
 
@@ -81,7 +90,18 @@ export const getUpcomingUnlocks = query({
  */
 export const get = query({
   args: { letterId: v.id('letters') },
-  handler: async (ctx, args) => await ctx.db.get(args.letterId),
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const letter = await ctx.db.get(args.letterId);
+    if (!letter) return null;
+
+    // Ownership check
+    if (letter.userId && letter.userId !== identity.subject) return null;
+
+    return letter;
+  },
   returns: v.union(v.null(), letterObjectValidator),
 });
 
@@ -91,6 +111,12 @@ export const get = query({
 export const countByHabit = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return 0;
+
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit || habit.userId !== identity.subject) return 0;
+
     const letters = await ctx.db
       .query('letters')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -106,6 +132,12 @@ export const countByHabit = query({
 export const getStats = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return { locked: 0, read: 0, total: 0, unlocked: 0, unread: 0 };
+
+    const habit = await ctx.db.get(args.habitId);
+    if (!habit || habit.userId !== identity.subject) return { locked: 0, read: 0, total: 0, unlocked: 0, unread: 0 };
+
     const now = Date.now();
     const letters = await ctx.db
       .query('letters')

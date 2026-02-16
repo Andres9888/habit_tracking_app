@@ -14,21 +14,15 @@ import {
 
 /**
  * Get compliance data for heatmap (90 days)
- *
- * PERF FIX: Replaced N+1 query pattern with single batch query.
- * OLD: One query per habit (O(n) queries) → NEW: One query for all user data (O(1))
- * Also filters by userId to:
- * 1. Only fetch user's own habits (security)
- * 2. Use index for faster queries
  */
 export const getComplianceData = query({
   args: {},
   handler: async (ctx) => {
+    // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
-    }
+    if (!identity) return [];
 
+    // SEC-001: Query only current user's habits to prevent cross-user data leakage
     const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
@@ -36,11 +30,15 @@ export const getComplianceData = query({
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
     const habitIds = activeHabits.map((h) => h._id);
 
-    // PERF: Fetch all trackings for user in one query instead of looping per habit
-    const trackings: Doc<'tracking'>[] = await ctx.db
-      .query('tracking')
-      .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
-      .collect();
+    // Get all trackings for these habits
+    const trackings: Doc<'tracking'>[] = [];
+    for (const habitId of habitIds) {
+      const habitTrackings = await ctx.db
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
+        .collect();
+      trackings.push(...habitTrackings);
+    }
 
     // Build heatmap data for last 90 days
     const heatmapData: Array<{

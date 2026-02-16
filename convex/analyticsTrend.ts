@@ -10,18 +10,15 @@ import { getDateString, getDaysAgo } from './analytics/index';
 
 /**
  * Get 30-day trend data for line chart
- *
- * PERF FIX: Replaced N+1 query pattern with single batch query.
- * Also filters by userId for security and performance.
  */
 export const get30DayTrend = query({
   args: {},
   handler: async (ctx) => {
+    // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
-    }
+    if (!identity) return [];
 
+    // SEC-001: Query only current user's habits to prevent cross-user data leakage
     const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
@@ -29,11 +26,15 @@ export const get30DayTrend = query({
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
     const habitIds = activeHabits.map((h) => h._id);
 
-    // PERF: Fetch all trackings for user in one query instead of looping per habit
-    const trackings: Doc<'tracking'>[] = await ctx.db
-      .query('tracking')
-      .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
-      .collect();
+    // Get all trackings for these habits
+    const trackings: Doc<'tracking'>[] = [];
+    for (const habitId of habitIds) {
+      const habitTrackings = await ctx.db
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
+        .collect();
+      trackings.push(...habitTrackings);
+    }
 
     // Build trend data for last 30 days
     const trendData: Array<{ date: string; averageStrength: number }> = [];

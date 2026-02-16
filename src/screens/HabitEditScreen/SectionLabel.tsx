@@ -1,6 +1,7 @@
-/** Section label with animation */
+/** Section label with animation — dark mode aware */
 import { Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme';
 
 interface SectionLabelProps {
   text: string;
@@ -13,15 +14,17 @@ export function SectionLabel({
   delay,
   variant = 'default',
 }: SectionLabelProps) {
-  const color = variant === 'danger' ? 'text-red-400' : 'text-stone-500';
+  const { colors } = useThemeColors();
+  const color = variant === 'danger' ? '#F87171' : colors.text.tertiary;
+
   return (
     <Animated.View
       className='mb-4 mt-8'
       entering={FadeInUp.delay(delay).springify().damping(18)}
     >
       <Text
-        className={`text-center font-semibold ${color}`}
-        style={{ fontSize: 13, letterSpacing: 0.5, lineHeight: 18 }}
+        className='text-center font-semibold'
+        style={{ fontSize: 13, letterSpacing: 0.5, lineHeight: 18, color }}
       >
         {text}
       </Text>

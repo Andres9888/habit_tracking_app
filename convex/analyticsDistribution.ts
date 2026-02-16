@@ -8,27 +8,44 @@ import { query } from './_generated/server';
 
 /**
  * Get strength distribution for donut chart
- *
- * PERF FIX: Filter by userId to:
- * 1. Only fetch user's own habits (security)
- * 2. Use by_userId index for faster queries
- * 3. Scale linearly with user data, not total DB size
  */
 export const getStrengthDistribution = query({
   args: {},
   handler: async (ctx) => {
+    // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       return {
-        automatic: { count: 0, emoji: '⚡', percentage: 0 },
-        building: { count: 0, emoji: '🌿', percentage: 0 },
-        developing: { count: 0, emoji: '🌳', percentage: 0 },
-        starting: { count: 0, emoji: '🌱', percentage: 0 },
-        strong: { count: 0, emoji: '💪', percentage: 0 },
+        automatic: {
+          count: 0,
+          emoji: '⚡',
+          percentage: 0,
+        },
+        building: {
+          count: 0,
+          emoji: '🌿',
+          percentage: 0,
+        },
+        developing: {
+          count: 0,
+          emoji: '🌳',
+          percentage: 0,
+        },
+        starting: {
+          count: 0,
+          emoji: '🌱',
+          percentage: 0,
+        },
+        strong: {
+          count: 0,
+          emoji: '💪',
+          percentage: 0,
+        },
         total: 0,
       };
     }
 
+    // SEC-001: Query only current user's habits to prevent cross-user data leakage
     const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
