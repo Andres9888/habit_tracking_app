@@ -8,10 +8,10 @@ import type { HeatmapData } from '../../components/ComplianceHeatmap/ComplianceH
 import type { WeeklyInsights } from '../../components/WeeklyInsightsCard';
 
 // Re-export canonical chart types for consumers
-export type { StrengthDistributionData };
-export type { TrendData as TrendDataPoint };
-export type { HeatmapData as ComplianceDay };
-export type { WeeklyInsights };
+export type { StrengthDistributionData } from '../../components/StrengthDistributionChart/StrengthDistributionChart.types';
+export type { TrendData as TrendDataPoint } from '../../components/TrendLineChart/types';
+export type { HeatmapData as ComplianceDay } from '../../components/ComplianceHeatmap/ComplianceHeatmap.types';
+export type { WeeklyInsights } from '../../components/WeeklyInsightsCard';
 
 export interface StatCardProps {
   title: string;

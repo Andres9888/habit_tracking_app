@@ -11,7 +11,7 @@ import { colors } from '@/theme/colors';
  */
 export function getGradientColors(baseColor: string): [string, string, string] {
   const gradientMap: Record<string, [string, string, string]> = {
-    [colors.strength.starting]: ['#bef264', '#65a30d', '#4d7c0f'],
+    [colors.strength.starting]: ['#bef264', '#4D7A0A', '#4d7c0f'],
     [colors.strength.building]: ['#86efac', '#16a34a', '#15803d'],
     [colors.strength.developing]: ['#5eead4', '#0d9488', '#0f766e'],
     [colors.strength.strong]: ['#67e8f9', '#0891b2', '#0e7490'],

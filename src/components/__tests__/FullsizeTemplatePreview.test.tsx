@@ -32,18 +32,18 @@ jest.mock('react-native-reanimated', () => {
   const React = require('react');
   const { View, Pressable, Text } = require('react-native');
 
-  const AnimatedView = React.forwardRef((props: any, ref: any) => {
+  const AnimatedView = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
     return React.createElement(View, { ...props, ref });
   });
   AnimatedView.displayName = 'AnimatedView';
 
-  const AnimatedText = React.forwardRef((props: any, ref: any) => {
+  const AnimatedText = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
     return React.createElement(Text, { ...props, ref });
   });
   AnimatedText.displayName = 'AnimatedText';
 
-  const createAnimatedComponent = (Component: React.ComponentType<any>) => {
-    const AnimatedComponent = React.forwardRef((props: any, ref: any) => {
+  const createAnimatedComponent = (Component: React.ComponentType<Record<string, unknown>>) => {
+    const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
       return React.createElement(Component, { ...props, ref });
     });
     AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
@@ -79,7 +79,7 @@ jest.mock('react-native-reanimated', () => {
 // Mock react-native-confetti-cannon
 jest.mock('react-native-confetti-cannon', () => {
   const React = require('react');
-  return React.forwardRef((props: any, ref: any) => {
+  return React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
     React.useImperativeHandle(ref, () => ({
       start: jest.fn(),
     }));
@@ -101,7 +101,7 @@ jest.mock('../Modal', () => {
 jest.mock('../Button/Button', () => {
   const React = require('react');
   const { Pressable, Text } = require('react-native');
-  return function MockButton({ children, onPress, testID }: any) {
+  return function MockButton({ children, onPress, testID }: unknown) {
     return React.createElement(
       Pressable,
       { onPress, testID },
@@ -760,7 +760,7 @@ describe('FullsizeTemplatePreview', () => {
     it('renders tips section when tips are provided', () => {
       const template = createMockTemplate();
       // Add tips to the template
-      (template as any).tips = [
+      (template as unknown).tips = [
         'Start with just 2 minutes and gradually increase',
         'Practice at the same time each day',
         'Use a timer to stay focused',
@@ -784,7 +784,7 @@ describe('FullsizeTemplatePreview', () => {
 
     it('does not render tips section when tips array is empty', () => {
       const template = createMockTemplate();
-      (template as any).tips = [];
+      (template as unknown).tips = [];
 
       const { queryByText } = render(
         <FullsizeTemplatePreview
@@ -818,7 +818,7 @@ describe('FullsizeTemplatePreview', () => {
 
     it('renders numbered tips with correct order', () => {
       const template = createMockTemplate();
-      (template as any).tips = ['First tip', 'Second tip'];
+      (template as unknown).tips = ['First tip', 'Second tip'];
 
       const { getByText } = render(
         <FullsizeTemplatePreview
@@ -838,7 +838,7 @@ describe('FullsizeTemplatePreview', () => {
 
     it('has accessible tips section with count', () => {
       const template = createMockTemplate();
-      (template as any).tips = ['Tip one', 'Tip two', 'Tip three'];
+      (template as unknown).tips = ['Tip one', 'Tip two', 'Tip three'];
 
       const { getByLabelText } = render(
         <FullsizeTemplatePreview

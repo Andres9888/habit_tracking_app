@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * NextHabitSuggestion Component
  * Shows the next incomplete habit to focus on
@@ -5,8 +6,8 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-import Animated, {
+import { Pressable } from 'react-native';
+import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -17,6 +18,8 @@ import Animated, {
 import { ArrowRight, Zap } from 'lucide-react-native';
 import { useThemeColors } from '../../theme';
 import type { NextHabitSuggestionProps } from './types';
+import { CompletedState } from './CompletedState';
+import { HabitContent } from './HabitContent';
 
 export function NextHabitSuggestion({
   habit,
@@ -88,6 +91,9 @@ export function NextHabitSuggestion({
 
   return (
     <Pressable
+      accessibilityHint='Double tap to open this habit'
+      accessibilityLabel={`Next habit: ${habit.name ?? 'habit'}`}
+      accessibilityRole='button'
       onPress={() => onPress?.(habit)}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
