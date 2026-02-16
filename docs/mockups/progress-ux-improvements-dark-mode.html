@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Section UX Improvements - Dark Mode Support</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'SF Pro', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 34px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            font-size: 17px;
+            margin-bottom: 40px;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 900px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .panel.dark {
+            background: #1c1917;
+            color: #f5f5f4;
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .panel.dark .panel-header {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .panel-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1c1917;
+        }
+        
+        .panel.dark .panel-title {
+            color: #f5f5f4;
+        }
+        
+        .badge {
+            background: #ef4444;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .badge.new {
+            background: #10b981;
+        }
+        
+        /* Progress Card */
+        .progress-card {
+            background: white;
+            border: 1px solid rgba(214, 211, 209, 0.6);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .panel.dark .progress-card {
+            background: #292524;
+            border-color: #44403c;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .strength-ring {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#047857 0% 75%, #e5e5e5 75% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .strength-ring::before {
+            content: '';
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .panel.dark .strength-ring::before {
+            background: #292524;
+        }
+        
+        .strength-value {
+            position: relative;
+            z-index: 1;
+            font-size: 17px;
+            font-weight: 700;
+            color: #1c1917;
+        }
+        
+        .panel.dark .strength-value {
+            color: #f5f5f4;
+        }
+        
+        .stats-grid-right {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .stat-card {
+            background: #fff7ed;
+            border-radius: 12px;
+            padding: 12px;
+            min-height: 60px;
+        }
+        
+        .stat-card.streak { background: #fff7ed; }
+        .stat-card.monthly { background: #f5f3ff; }
+        .stat-card.best { background: #ecfdf5; }
+        .stat-card.focus { background: #fffbeb; }
+        
+        .panel.dark .stat-card.streak { background: #3f2316; }
+        .panel.dark .stat-card.monthly { background: #2d1f47; }
+        .panel.dark .stat-card.best { background: #052e20; }
+        .panel.dark .stat-card.focus { background: #3d2a0d; }
+        
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        
+        .stat-icon {
+            font-size: 16px;
+        }
+        
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1c1917;
+        }
+        
+        .panel.dark .stat-value {
+            color: #f5f5f4;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #78716c;
+            margin-top: 2px;
+        }
+        
+        .panel.dark .stat-label {
+            color: #a8a29e;
+        }
+        
+        .stat-sublabel {
+            font-size: 11px;
+            color: #a8a29e;
+            margin-top: 2px;
+        }
+        
+        .panel.dark .stat-sublabel {
+            color: #78716c;
+        }
+        
+        /* Milestone Progress */
+        .milestone-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e7e5e4;
+        }
+        
+        .panel.dark .milestone-section {
+            border-top-color: #44403c;
+        }
+        
+        .milestone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .milestone-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1c1917;
+        }
+        
+        .panel.dark .milestone-title {
+            color: #f5f5f4;
+        }
+        
+        .milestone-days {
+            font-size: 12px;
+            color: #78716c;
+        }
+        
+        .panel.dark .milestone-days {
+            color: #a8a29e;
+        }
+        
+        .milestone-name {
+            font-size: 11px;
+            color: #a8a29e;
+            margin-bottom: 8px;
+        }
+        
+        .panel.dark .milestone-name {
+            color: #78716c;
+        }
+        
+        .progress-bar-container {
+            position: relative;
+            height: 8px;
+            background: #f5f5f4;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .panel.dark .progress-bar-container {
+            background: #44403c;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: 4px;
+            width: 60%;
+        }
+        
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #a8a29e;
+        }
+        
+        .panel.dark .progress-labels {
+            color: #78716c;
+        }
+        
+        .progress-labels .current {
+            color: #1c1917;
+            font-weight: 600;
+        }
+        
+        .panel.dark .progress-labels .current {
+            color: #f5f5f4;
+        }
+        
+        /* Weekly Summary */
+        .weekly-summary {
+            background: white;
+            border: 1px solid #e7e5e4;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .panel.dark .weekly-summary {
+            background: #292524;
+            border-color: #44403c;
+        }
+        
+        .weekly-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .weekly-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1c1917;
+        }
+        
+        .panel.dark .weekly-title {
+            color: #f5f5f4;
+        }
+        
+        .weekly-comparison {
+            font-size: 13px;
+            color: #78716c;
+        }
+        
+        .panel.dark .weekly-comparison {
+            color: #a8a29e;
+        }
+        
+        .days-row {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .day-cell {
+            flex: 1;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            background: #10b981;
+            color: white;
+        }
+        
+        .day-cell.missed {
+            background: #e7e5e4;
+            color: #78716c;
+        }
+        
+        .panel.dark .day-cell.missed {
+            background: #44403c;
+            color: #a8a29e;
+        }
+        
+        /* Streak Records Accordion */
+        .accordion {
+            background: white;
+            border: 1px solid #e7e5e4;
+            border-radius: 12px;
+            margin-top: 12px;
+        }
+        
+        .panel.dark .accordion {
+            background: #292524;
+            border-color: #44403c;
+        }
+        
+        .accordion-header {
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .accordion-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #44403c;
+        }
+        
+        .panel.dark .accordion-title {
+            color: #d6d3d1;
+        }
+        
+        .accordion-preview {
+            font-size: 12px;
+            color: #78716c;
+        }
+        
+        .panel.dark .accordion-preview {
+            color: #a8a29e;
+        }
+        
+        /* Feature List */
+        .features {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 40px;
+        }
+        
+        .features h2 {
+            font-size: 22px;
+            color: #1c1917;
+            margin-bottom: 24px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .feature {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .feature-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .feature-content h3 {
+            font-size: 17px;
+            color: #1c1917;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .feature-content p {
+            font-size: 14px;
+            color: #44403c;
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: #f5f5f4;
+            border: 1px solid #e7e5e4;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            color: #1c1917;
+            overflow-x: auto;
+        }
+        
+        .keyword { color: #be185d; }
+        .string { color: #047857; }
+        .comment { color: #78716c; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Progress Section UX Improvements</h1>
+        <p class="subtitle">🌙 Dark Mode Support + Label Clarity + Accessibility Enhancements</p>
+        
+        <div class="comparison">
+            <!-- Before (Light Mode Only) -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Before</h2>
+                    <span class="badge">Light Mode Only</span>
+                </div>
+                
+                <div class="progress-card">
+                    <div class="stats-grid">
+                        <div class="strength-ring">
+                            <span class="strength-value">75%</span>
+                        </div>
+                        <div class="stats-grid-right">
+                            <div class="stat-card streak">
+                                <div class="stat-card-header">
+                                    <span class="stat-icon">🔥</span>
+                                    <span class="stat-value">14</span>
+                                </div>
+                                <div class="stat-label">Day Streak</div>
+                            </div>
+                            <div class="stat-card monthly">
+                                <div class="stat-card-header">
+                                    <span class="stat-icon">📅</span>
+                                    <span class="stat-value">18/21</span>
+                                </div>
+                                <div class="stat-label">This Month</div>
+                            </div>
+                            <div class="stat-card best">
+                                <div class="stat-card-header">
+                                    <span class="stat-icon">🏆</span>
+                                    <span class="stat-value">Tue</span>
+                                </div>
+                                <div class="stat-label">Best Day (87%)</div>
+                            </div>
+                            <div class="stat-card focus">
+                                <div class="stat-card-header">
+                                    <span class="stat-icon">⚡</span>
+                                    <span class="stat-value">Sat</span>
+                                </div>
+                                <div class="stat-label">Focus Day (45%)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="milestone-section">
+                        <div class="milestone-header">
+                            <span class="milestone-title">Next Milestone: 21 Days ⭐</span>
+                            <span class="milestone-days">7 days away</span>
+                        </div>
+                        <div class="milestone-name">Habit Builder</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill"></div>
+                        </div>
+                        <div class="progress-labels">
+                            <span>7</span>
+                            <span class="current">14 days</span>
+                            <span>21</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="weekly-summary">
+                    <div class="weekly-header">
+                        <span class="weekly-title">This Week</span>
+                        <span class="weekly-comparison">5/7 vs 4/7 ↑</span>
+                    </div>
+                    <div class="days-row">
+                        <div class="day-cell">✓</div>
+                        <div class="day-cell">✓</div>
+                        <div class="day-cell missed">✕</div>
+                        <div class="day-cell">✓</div>
+                        <div class="day-cell">✓</div>
+                        <div class="day-cell missed">✕</div>
+                        <div class="day-cell">✓</div>
+                    </div>
+                </div>
+                
+                <div class="accordion">
+                    <div class="accordion-header">
+                        <span class="accordion-title">Streak Records</span>
+                        <span class="accordion-preview">🥇6 🥈5 🥉3</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- After (Dark Mode Support) -->
+            <div class="panel dark">
+                <div class="panel-header">
+                    <h2 class="panel-title">After</h2>
+                    <span class="badge new">Dark Mode ✓</span>
+                </div>
+                
+                <div class="progress-card">
+                    <div class="stats-grid">
+                        <div class="strength-ring">
+                            <span class="strength-value">75%</span>
+                        </div>
+                        <div class="stats-grid-right">
+                            <div class="stat-card streak">
+                                <div class="stat-card-header">
+                                    <span class="stat-icon">🔥</span>
+                                    <span class="stat-value">14</span>
+                                </div>
+                                <div class="stat-label">Current Streak</div>
+                            </div>
+                            <div class="stat-card monthly">
+                                <div class="stat-card-header">
+                                    <span class="stat-icon">📅</span>
+                                    <span class="stat-value">18/21</span>
+                                </div>
+                                <div class="stat-label">Completed This Month</div>
+                            </div>
+                            <div class="stat-card best">
+                                <div class="stat-card-header">
+                                    <span class="stat-icon">🏆</span>
+                                    <span class="stat-value">Tue</span>
+                                </div>
+                                <div class="stat-label">Best Day</div>
+                                <div class="stat-sublabel">87% completion</div>
+                            </div>
+                            <div class="stat-card focus">
+                                <div class="stat-card-header">
+                                    <span class="stat-icon">⚡</span>
+                                    <span class="stat-value">Sat</span>
+                                </div>
+                                <div class="stat-label">Focus Day</div>
+                                <div class="stat-sublabel">45% completion</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="milestone-section">
+                        <div class="milestone-header">
+                            <span class="milestone-title">Next Milestone: 21 Days ⭐</span>
+                            <span class="milestone-days">7 days away</span>
+                        </div>
+                        <div class="milestone-name">Habit Builder</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill"></div>
+                        </div>
+                        <div class="progress-labels">
+                            <span>7</span>
+                            <span class="current">14 days</span>
+                            <span>21</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="weekly-summary">
+                    <div class="weekly-header">
+                        <span class="weekly-title">This Week</span>
+                        <span class="weekly-comparison">5/7 vs 4/7 ↑</span>
+                    </div>
+                    <div class="days-row">
+                        <div class="day-cell">✓</div>
+                        <div class="day-cell">✓</div>
+                        <div class="day-cell missed">✕</div>
+                        <div class="day-cell">✓</div>
+                        <div class="day-cell">✓</div>
+                        <div class="day-cell missed">✕</div>
+                        <div class="day-cell">✓</div>
+                    </div>
+                </div>
+                
+                <div class="accordion">
+                    <div class="accordion-header">
+                        <span class="accordion-title">Streak Records</span>
+                        <span class="accordion-preview">🥇6 🥈5 🥉3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="features">
+            <h2>✨ What's Improved</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <div class="feature-icon">🌙</div>
+                    <div class="feature-content">
+                        <h3>Dark Mode Support</h3>
+                        <p>All Progress components now adapt to system dark mode. Theme-aware colors maintain WCAG AA contrast ratios in both modes.</p>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-content">
+                        <h3>Clearer Labels</h3>
+                        <p>"This Month" → "Completed This Month" and percentages moved to sub-labels for better hierarchy and clarity.</p>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">♿</div>
+                    <div class="feature-content">
+                        <h3>Enhanced Accessibility</h3>
+                        <p>Improved VoiceOver labels include all context (streak count, percentages, completion rates) for screen reader users.</p>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-content">
+                        <h3>Theme Integration</h3>
+                        <p>Uses <code>useThemeColors()</code> hook throughout, ensuring consistent theming with rest of the app.</p>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h3>Visual Hierarchy</h3>
+                        <p>Sub-labels provide context without cluttering. Current streak gets bold emphasis in progress labels.</p>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content">
+                        <h3>Semantic Colors</h3>
+                        <p>Dark mode stat cards use darker variants that maintain brand identity while reducing eye strain.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-block">
+<span class="comment">// Before: Hardcoded colors</span>
+<span class="keyword">style</span>={{ <span class="keyword">backgroundColor</span>: <span class="string">'#ffffff'</span>, <span class="keyword">borderColor</span>: <span class="string">'rgba(214, 211, 209, 0.6)'</span> }}
+
+<span class="comment">// After: Theme-aware</span>
+<span class="keyword">const</span> { colors, isDark } = <span class="keyword">useThemeColors</span>();
+<span class="keyword">style</span>={{ <span class="keyword">backgroundColor</span>: colors.card, <span class="keyword">borderColor</span>: colors.border }}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
