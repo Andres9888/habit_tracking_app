@@ -60,8 +60,8 @@ jest.mock('react-native-reanimated', () => {
     withTiming: (value: number) => value,
     withDelay: (_delay: number, value: number) => value,
     withSpring: (value: number) => value,
-    withRepeat: (animation: any) => animation,
-    withSequence: (...animations: any[]) => animations[0],
+    withRepeat: (animation: unknown) => animation,
+    withSequence: (...animations: unknown[]) => animations[0],
     Easing: {
       out: () => () => 0,
       inOut: () => () => 0,
@@ -101,9 +101,9 @@ jest.mock('lucide-react-native', () => {
   const { View } = require('react-native');
 
   return {
-    TrendingUp: (props: any) =>
+    TrendingUp: (props: Record<string, unknown>) =>
       React.createElement(View, { testID: 'trending-up-icon', ...props }),
-    TrendingDown: (props: any) =>
+    TrendingDown: (props: Record<string, unknown>) =>
       React.createElement(View, { testID: 'trending-down-icon', ...props }),
   };
 });

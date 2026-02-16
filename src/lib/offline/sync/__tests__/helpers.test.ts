@@ -20,7 +20,7 @@ describe('Sync Orchestrator Helpers', () => {
     id: `op_${Date.now()}_${Math.random()}`,
     payload: {
       date: '2026-01-30',
-      habitId: 'habit_123' as any,
+      habitId: 'habit_123' as unknown,
       toCompleted: true,
     },
     retryCount: 0,

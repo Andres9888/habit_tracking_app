@@ -1,9 +1,9 @@
-import type { ReactNode } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import type { ReactNode, Ref } from 'react';
+import { forwardRef } from 'react';
+import { Text, TextInput, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useFormInputAnimations } from './useFormInputAnimations';
-import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface FormInputProps extends TextInputProps {
   label: string;
@@ -11,16 +11,14 @@ interface FormInputProps extends TextInputProps {
   labelRight?: ReactNode;
   /** Optional validation error message to display */
   error?: string;
+  /** Show required field indicator (*) next to label */
+  required?: boolean;
 }
 
-export function FormInput({
-  label,
-  labelRight,
-  error,
-  onBlur,
-  ...props
-}: FormInputProps) {
-  const { colors, isDark } = useThemeColors();
+export const FormInput = forwardRef(function FormInput(
+  { label, labelRight, error, required, onBlur, ...props }: FormInputProps,
+  ref: Ref<TextInput>
+) {
   const {
     animatedStyle,
     handleFocus,
@@ -39,65 +37,29 @@ export function FormInput({
   };
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.labelRow}>
-        <Text style={[styles.label, { color: colors.text.secondary }]}>
+    <View className='gap-2'>
+      <View className='flex-row items-center justify-between'>
+        <Text className='text-sm font-medium text-stone-600'>
           {label}
+          {required && <Text className='text-red-500'> *</Text>}
         </Text>
         {labelRight}
       </View>
       <Animated.View
-        style={[
-          styles.inputContainer,
-          {
-            backgroundColor: isDark ? colors.surface : '#ffffff',
-            borderColor: error ? '#ef4444' : colors.border,
-          },
-          animatedStyle,
-        ]}
+        className={`overflow-hidden rounded-2xl border bg-white shadow-sm ${error ? 'border-red-500' : 'border-stone-200'}`}
+        style={animatedStyle}
       >
         <TextInput
+          ref={ref}
           accessibilityLabel={label}
-          placeholderTextColor={colors.text.tertiary}
-          style={[styles.input, { color: colors.text.primary }]}
+          className='px-5 py-4 text-[17px] font-medium leading-[22px] text-stone-900'
+          placeholderTextColor='#a1a1aa'
           onBlur={handleBlurWrapper}
           onFocus={handleFocus}
           {...props}
         />
       </Animated.View>
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {error && <Text className='px-1 text-sm text-red-500'>{error}</Text>}
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  errorText: {
-    color: '#ef4444',
-    fontSize: 14,
-    paddingHorizontal: 4,
-  },
-  input: {
-    fontSize: 17,
-    fontWeight: '500',
-    lineHeight: 22,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  inputContainer: {
-    borderRadius: 16,
-    borderWidth: 1,
-    overflow: 'hidden',
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  labelRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  wrapper: {
-    gap: 8,
-  },
 });

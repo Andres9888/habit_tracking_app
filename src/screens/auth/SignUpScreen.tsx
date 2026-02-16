@@ -1,13 +1,16 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import { ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { useRef } from 'react';
+import { ScrollView, View, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors } from '../../theme/colors';
 import {
   AuthDivider,
   AuthError,
   FormInput,
+  PasswordInput,
   SignInLink,
   SocialSignInButton,
   SubmitButton,
@@ -15,18 +18,19 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignUpFlow } from './hooks/useSignUpFlow';
+import { PasswordStrengthBar } from './components/PasswordStrengthBar';
 import { SignUpHeader } from './components/SignUpHeader';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignUpScreenProps {
   onNavigateToSignIn?: () => void;
 }
 
-export default function SignUpScreen({
+function SignUpScreenContent({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
-  const { colors, isDark } = useThemeColors();
+  const passwordRef = useRef<TextInput>(null);
   const {
     emailAddress,
     setEmailAddress,
@@ -62,13 +66,15 @@ export default function SignUpScreen({
     );
   }
 
-  const gradientColors: [string, string] = isDark
-    ? [colors.background, colors.surface]
-    : [colors.background, colors.surface];
-
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <LinearGradient colors={gradientColors} style={{ flex: 1 }}>
+    <View className='flex-1'>
+      <LinearGradient
+        colors={[
+          colors.light.background,
+          colors.light.gradientMid ?? '#f5f5f0',
+        ]}
+        style={{ flex: 1 }}
+      >
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}
@@ -89,70 +95,78 @@ export default function SignUpScreen({
               <AuthError message={oauthError} onDismiss={clearError} />
             )}
 
-            {/* Form card with depth */}
+            {/* OPTIMIZED: Form card with depth matching SignIn */}
             <Animated.View
               entering={FadeInUp.delay(100).springify().damping(18)}
               style={{
-                backgroundColor: isDark ? colors.card : '#ffffff',
-                borderColor: colors.cardBorder,
+                backgroundColor: '#ffffff',
                 borderRadius: 16,
-                borderWidth: isDark ? 1 : 0,
                 elevation: 4,
                 padding: 24,
-                shadowColor: isDark ? '#000000' : '#1c1917',
+                shadowColor: '#1c1917',
                 shadowOffset: { height: 4, width: 0 },
-                shadowOpacity: isDark ? 0.3 : 0.08,
+                shadowOpacity: 0.08,
                 shadowRadius: 16,
               }}
             >
-              <View style={{ gap: 12 }}>
+              <View className='gap-3'>
                 <SocialSignInButton
                   disabled={isAnyLoading}
                   isLoading={oauthLoading === 'oauth_apple'}
                   provider='apple'
+                  testID='auth-sign-up-apple-button'
                   onPress={signInWithApple}
                 />
                 <SocialSignInButton
                   disabled={isAnyLoading}
                   isLoading={oauthLoading === 'oauth_google'}
                   provider='google'
+                  testID='auth-sign-up-google-button'
                   onPress={signInWithGoogle}
                 />
               </View>
 
               <AuthDivider />
 
-              <View style={{ gap: 24 }}>
+              <View className='gap-6'>
                 <FormInput
                   autoCapitalize='none'
                   autoComplete='email'
+                  blurOnSubmit={false}
                   editable={!isAnyLoading}
                   error={emailError}
                   keyboardType='email-address'
                   label='Email'
                   placeholder='Enter your email'
+                  returnKeyType='next'
                   value={emailAddress}
                   onBlur={onEmailBlur}
                   onChangeText={setEmailAddress}
+                  onSubmitEditing={() => passwordRef.current?.focus()}
                 />
-                <FormInput
-                  secureTextEntry
-                  autoComplete='password-new'
-                  editable={!isAnyLoading}
-                  error={passwordError}
-                  label='Password'
-                  placeholder='Create a password'
-                  value={password}
-                  onBlur={onPasswordBlur}
-                  onChangeText={setPassword}
-                />
+                <View>
+                  <PasswordInput
+                    ref={passwordRef}
+                    autoComplete='password-new'
+                    editable={!isAnyLoading}
+                    error={passwordError}
+                    placeholder='Create a password'
+                    returnKeyType='go'
+                    value={password}
+                    onBlur={onPasswordBlur}
+                    onChangeText={setPassword}
+                    onSubmitEditing={handleSignUp}
+                  />
+                  <PasswordStrengthBar password={password} />
+                </View>
                 <SubmitButton
                   disabled={
                     !emailAddress || !password || isAnyLoading || !isFormValid
                   }
                   isLoading={isLoading}
-                  label='Create account'
-                  loadingLabel='Creating account...'
+                  label='Create Account'
+                  loadingLabel='Creating your account…'
+                  testID='auth-sign-up-button'
                   onPress={handleSignUp}
                 />
               </View>
@@ -173,5 +187,13 @@ export default function SignUpScreen({
         </KeyboardAvoidingView>
       </LinearGradient>
     </View>
+  );
+}
+
+export default function SignUpScreen(props: SignUpScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Sign Up">
+      <SignUpScreenContent {...props} />
+    </ScreenErrorBoundary>
   );
 }

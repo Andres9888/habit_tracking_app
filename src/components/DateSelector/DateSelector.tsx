@@ -35,7 +35,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
         <Pressable
           accessibilityLabel='Previous week'
           accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6] active:bg-stone-200'
+          className='h-11 w-11 items-center justify-center rounded-full bg-[#f3f4f6] active:bg-stone-200'
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onPreviousWeek}
         >
@@ -50,7 +50,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           accessibilityLabel='Next week'
           accessibilityRole='button'
           accessibilityState={{ disabled: !canNavigateForward }}
-          className={`h-8 w-8 items-center justify-center rounded-full bg-[#f3f4f6] active:bg-stone-200 ${canNavigateForward ? '' : 'opacity-40'}`}
+          className={`h-11 w-11 items-center justify-center rounded-full bg-[#f3f4f6] active:bg-stone-200 ${canNavigateForward ? '' : 'opacity-40'}`}
           disabled={!canNavigateForward}
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onNextWeek}

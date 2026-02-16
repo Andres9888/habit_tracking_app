@@ -47,8 +47,8 @@ jest.mock('react-native-reanimated', () => {
     withTiming: (value: number) => value,
     withDelay: (_delay: number, value: number) => value,
     withSpring: (value: number) => value,
-    withRepeat: (animation: any) => animation,
-    withSequence: (...animations: any[]) => animations[0],
+    withRepeat: (animation: unknown) => animation,
+    withSequence: (...animations: unknown[]) => animations[0],
     Easing: {
       out: () => () => 0,
       inOut: () => () => 0,
@@ -66,7 +66,7 @@ jest.mock('@expo/vector-icons', () => {
   const { View } = require('react-native');
 
   return {
-    Ionicons: (props: any) =>
+    Ionicons: (props: Record<string, unknown>) =>
       React.createElement(View, { testID: `ionicon-${props.name}`, ...props }),
   };
 });

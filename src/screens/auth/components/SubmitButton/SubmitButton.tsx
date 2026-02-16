@@ -1,11 +1,10 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface SubmitButtonProps {
   label: string;
@@ -13,6 +12,7 @@ interface SubmitButtonProps {
   isLoading: boolean;
   disabled?: boolean;
   onPress: () => void;
+  testID?: string;
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -23,9 +23,9 @@ export function SubmitButton({
   isLoading,
   disabled = false,
   onPress,
+  testID,
 }: SubmitButtonProps) {
   const isDisabled = isLoading || disabled;
-  const { isDark } = useThemeColors();
   const reduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
 
@@ -35,88 +35,50 @@ export function SubmitButton({
 
   const handlePressIn = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(0.97, { damping: 15 });
+      scale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
     }
   };
 
   const handlePressOut = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(1, { damping: 15 });
+      scale.value = withSpring(1, { damping: 18, stiffness: 240 });
     }
   };
 
   return (
     <AnimatedPressable
+      accessibilityHint='Double tap to submit this form'
       accessibilityLabel={isLoading ? loadingLabel : label}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
+      testID={testID}
+      className={`mt-4 flex-row items-center justify-center rounded-2xl bg-stone-900 py-4 shadow-lg ${
+        isDisabled ? 'opacity-40' : ''
+      }`}
       disabled={isDisabled}
       style={[
-        styles.button,
-        {
-          backgroundColor: isDark ? '#E5E7EB' : '#1c1917',
-          opacity: isDisabled ? 0.4 : 1,
-          shadowColor: isDark ? '#000000' : '#1c1917',
-        },
         animatedStyle,
+        {
+          shadowColor: '#1c1917',
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
+        },
       ]}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <Text
-        style={[
-          styles.label,
-          { color: isDark ? '#111827' : '#ffffff' },
-        ]}
-      >
+      <Text className='text-[17px] font-semibold text-white'>
         {isLoading ? loadingLabel : label}
       </Text>
-      <View style={styles.iconContainer}>
+      <View className='ml-2 w-5 items-center justify-center'>
         {isLoading ? (
-          <ActivityIndicator
-            color={isDark ? '#111827' : '#FFFFFF'}
-            size='small'
-          />
+          <ActivityIndicator color='#FFFFFF' size='small' />
         ) : (
-          <Text
-            style={[
-              styles.arrow,
-              { color: isDark ? '#111827' : '#ffffff' },
-            ]}
-          >
-            →
-          </Text>
+          <Text className='text-lg text-white'>→</Text>
         )}
       </View>
     </AnimatedPressable>
   );
 }
-
-const styles = StyleSheet.create({
-  arrow: {
-    fontSize: 18,
-  },
-  button: {
-    alignItems: 'center',
-    borderRadius: 16,
-    elevation: 4,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 16,
-    paddingVertical: 16,
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-  },
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 8,
-    width: 20,
-  },
-  label: {
-    fontSize: 17,
-    fontWeight: '600',
-  },
-});

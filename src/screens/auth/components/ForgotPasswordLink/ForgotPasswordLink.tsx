@@ -11,6 +11,7 @@ export function ForgotPasswordLink({ onPress }: ForgotPasswordLinkProps) {
 
   return (
     <AnimatedPressable
+      accessibilityHint='Navigate to password reset screen'
       accessibilityLabel='Forgot password?'
       accessibilityRole='button'
       hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}

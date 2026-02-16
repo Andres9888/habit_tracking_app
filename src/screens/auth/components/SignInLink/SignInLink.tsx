@@ -21,6 +21,7 @@ export function SignInLink({
         Already have an account?{' '}
       </Text>
       <AnimatedPressable
+        accessibilityHint='Navigate to sign in screen'
         accessibilityLabel='Sign in to existing account'
         accessibilityRole='link'
         accessibilityState={{ disabled }}

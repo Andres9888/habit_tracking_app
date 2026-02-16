@@ -9,15 +9,19 @@
 import * as StoreReview from 'expo-store-review';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import {
+  MIN_COMPLETIONS_FOR_RATING,
+  RATING_COOLDOWN_DAYS,
+} from '@/constants';
 
 const STORE_REVIEW_LAST_PROMPT_KEY = '@store_review_last_prompt';
 const STORE_REVIEW_COMPLETION_COUNT_KEY = '@store_review_completion_count';
 
 /** Minimum days between rating prompts */
-const COOLDOWN_DAYS = 90;
+const COOLDOWN_DAYS = RATING_COOLDOWN_DAYS;
 
 /** Minimum total completions before prompting */
-const MIN_COMPLETIONS = 5;
+const MIN_COMPLETIONS = MIN_COMPLETIONS_FOR_RATING;
 
 /** Streak milestones that should trigger a review prompt */
 const REVIEW_ELIGIBLE_MILESTONES = new Set([7, 14, 30]);
