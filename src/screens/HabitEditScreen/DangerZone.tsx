@@ -70,7 +70,7 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   const deleteIconColor = '#DC2626';
   const deleteTextColor = isDark ? '#F87171' : '#DC2626';
 
-  const springConfig = { damping: 18, stiffness: 240 };
+  const springConfig = { damping: 18, stiffness: 150 };
 
   return (
     <View className='flex-col gap-3'>

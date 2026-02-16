@@ -65,7 +65,7 @@ export const createStyles = (colors: SemanticColors) => StyleSheet.create({
     color: colors.text.tertiary,
     fontSize: 17,
     textAlign: 'center',
-  },
+  } as TextStyle,
   textLink: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -75,7 +75,7 @@ export const createStyles = (colors: SemanticColors) => StyleSheet.create({
     color: colors.primary[600],
     fontSize: 15,
     fontWeight: '600',
-  },
+  } as TextStyle,
   textLinkLabel: {
     color: colors.text.tertiary,
     fontSize: 15,
@@ -86,5 +86,5 @@ export const createStyles = (colors: SemanticColors) => StyleSheet.create({
     fontWeight: '700',
     letterSpacing: -0.5,
     textAlign: 'center',
-  },
+  } as TextStyle,
 });

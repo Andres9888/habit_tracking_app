@@ -26,7 +26,7 @@ export function DetailHeader({
     <View>
       <Animated.View
         className='flex-row items-center justify-between px-4 pb-2'
-        entering={FadeIn.duration(200).delay(50)}
+        entering={FadeInDown.duration(280).springify().damping(18)}
       >
         <HeaderButton
           icon={<X color={iconColor} size={22} strokeWidth={2.5} />}
@@ -65,7 +65,12 @@ export function DetailHeader({
         )}
         <Text
           className='text-center font-bold'
-          style={{ fontSize: 34, letterSpacing: -0.5, lineHeight: 41, color: textPrimary }}
+          style={{
+            fontSize: 34,
+            letterSpacing: -0.5,
+            lineHeight: 41,
+            color: textPrimary,
+          }}
         >
           {habitName}
         </Text>

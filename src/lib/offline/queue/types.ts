@@ -19,9 +19,14 @@ export type OfflineOperationStatus =
 
 /**
  * Types of operations that can be queued offline
- * MVP scope: only habit completion toggling
  */
-export type OfflineOperationType = 'toggleCompletion';
+export type OfflineOperationType = 
+  | 'toggleCompletion'
+  | 'createHabit'
+  | 'updateHabit'
+  | 'archiveHabit'
+  | 'pauseHabit'
+  | 'removeHabit';
 
 /**
  * Payload for toggle completion operation
@@ -36,10 +41,85 @@ export interface ToggleCompletionPayload {
 }
 
 /**
- * Union of all offline operation payloads
- * Extensible for future offline operations (archive, pause, etc.)
+ * Payload for create habit operation
  */
-export type OfflineOperationPayload = ToggleCompletionPayload;
+export interface CreateHabitPayload {
+  /** Temporary local ID for optimistic updates (format: temp_{timestamp}_{random}) */
+  tempId: string;
+  /** Habit name */
+  name: string;
+  /** Optional icon/emoji */
+  icon?: string;
+  /** Optional color */
+  color?: string;
+  /** Optional icon color */
+  iconColor?: string;
+  /** Optional notes */
+  notes?: string;
+  /** Optional preferred time */
+  preferredTime?: string;
+  /** Whether reminders are enabled */
+  remindersEnabled?: boolean;
+  /** Optional reminder time */
+  reminderTime?: string;
+  /** Optional reminder sound */
+  reminderSound?: string;
+}
+
+/**
+ * Payload for update habit operation
+ */
+export interface UpdateHabitPayload {
+  /** ID of the habit being updated */
+  habitId: Id<'habits'>;
+  /** Updated fields */
+  updates: {
+    name?: string;
+    icon?: string;
+    color?: string;
+    iconColor?: string;
+    notes?: string;
+    preferredTime?: string;
+    remindersEnabled?: boolean;
+    reminderTime?: string;
+    reminderSound?: string;
+  };
+}
+
+/**
+ * Payload for archive habit operation
+ */
+export interface ArchiveHabitPayload {
+  /** ID of the habit being archived */
+  habitId: Id<'habits'>;
+}
+
+/**
+ * Payload for pause habit operation
+ */
+export interface PauseHabitPayload {
+  /** ID of the habit being paused */
+  habitId: Id<'habits'>;
+}
+
+/**
+ * Payload for remove habit operation
+ */
+export interface RemoveHabitPayload {
+  /** ID of the habit being removed */
+  habitId: Id<'habits'>;
+}
+
+/**
+ * Union of all offline operation payloads
+ */
+export type OfflineOperationPayload = 
+  | ToggleCompletionPayload
+  | CreateHabitPayload
+  | UpdateHabitPayload
+  | ArchiveHabitPayload
+  | PauseHabitPayload
+  | RemoveHabitPayload;
 
 /**
  * A single offline operation in the queue
@@ -59,6 +139,16 @@ export interface OfflineOperation<
   /** Operation payload (type depends on operation type) */
   payload: T extends 'toggleCompletion'
     ? ToggleCompletionPayload
+    : T extends 'createHabit'
+    ? CreateHabitPayload
+    : T extends 'updateHabit'
+    ? UpdateHabitPayload
+    : T extends 'archiveHabit'
+    ? ArchiveHabitPayload
+    : T extends 'pauseHabit'
+    ? PauseHabitPayload
+    : T extends 'removeHabit'
+    ? RemoveHabitPayload
     : OfflineOperationPayload;
 
   /** Current status of the operation */
@@ -81,6 +171,11 @@ export interface OfflineOperation<
 }
 
 /**
- * Typed helper for toggle completion operations
+ * Typed helpers for specific operations
  */
 export type ToggleCompletionOperation = OfflineOperation<'toggleCompletion'>;
+export type CreateHabitOperation = OfflineOperation<'createHabit'>;
+export type UpdateHabitOperation = OfflineOperation<'updateHabit'>;
+export type ArchiveHabitOperation = OfflineOperation<'archiveHabit'>;
+export type PauseHabitOperation = OfflineOperation<'pauseHabit'>;
+export type RemoveHabitOperation = OfflineOperation<'removeHabit'>;

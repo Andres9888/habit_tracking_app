@@ -46,8 +46,12 @@ function AnalyticsScreenContent() {
     setShowExportMenu,
   } = useAnalyticsScreen();
 
+  // All React hooks must be called before any early returns
+  const rankedHabits = useMemo(
+    () => overviewStats?.rankedHabits || [],
+    [overviewStats?.rankedHabits]
+  );
   const hasNoHabits = overviewStats?.totalHabits === 0;
-  const rankedHabits = useMemo(() => overviewStats?.rankedHabits || [], [overviewStats?.rankedHabits]);
 
   // Show paywall modal if not premium user
   if (!isPremiumUser && showPaywall) {
@@ -76,7 +80,7 @@ function AnalyticsScreenContent() {
           onRefresh={() => void onRefresh()}
         />
       }
-      style={styles.container}
+      style={[styles.container, { backgroundColor: themeColors.background }]}
     >
       <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
         <AnalyticsHeader />
@@ -88,7 +92,9 @@ function AnalyticsScreenContent() {
         </Animated.View>
       ) : (
         <>
-          <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
+          <Animated.View
+            entering={FadeInDown.delay(340).springify().damping(18)}
+          >
             <OverviewStats
               isLoading={isLoading}
               stats={overviewStats}
@@ -96,7 +102,9 @@ function AnalyticsScreenContent() {
             />
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(400).springify().damping(18)}>
+          <Animated.View
+            entering={FadeInDown.delay(400).springify().damping(18)}
+          >
             <ChartSections
               complianceData={complianceData}
               isLoading={isLoading}
@@ -105,7 +113,9 @@ function AnalyticsScreenContent() {
             />
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(460).springify().damping(18)}>
+          <Animated.View
+            entering={FadeInDown.delay(460).springify().damping(18)}
+          >
             <InsightsSections
               rankedHabits={rankedHabits}
               weeklyInsights={weeklyInsights}
@@ -113,7 +123,9 @@ function AnalyticsScreenContent() {
             />
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(520).springify().damping(18)}>
+          <Animated.View
+            entering={FadeInDown.delay(520).springify().damping(18)}
+          >
             <ExportButton onPress={() => void handleExportPress()} />
           </Animated.View>
         </>
@@ -130,7 +142,7 @@ function AnalyticsScreenContent() {
 
 export default function AnalyticsScreen() {
   return (
-    <ScreenErrorBoundary screenName="Analytics">
+    <ScreenErrorBoundary screenName='Analytics'>
       <AnalyticsScreenContent />
     </ScreenErrorBoundary>
   );

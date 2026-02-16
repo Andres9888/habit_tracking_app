@@ -6,8 +6,9 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
-import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from '../constants';
+import { BORDER_RADIUS, TOUCH_TARGETS } from '../constants';
 import type { SuggestionChip } from '../types';
+import { useEmptyStateColors } from '../useEmptyStateColors';
 import { useChipAnimations } from './useChipAnimations';
 import { SHADOW_OPACITY } from '../../../../../constants';
 
@@ -23,6 +24,7 @@ export interface ChipProps {
 
 export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
   const { triggerSelection } = useHapticFeedback();
+  const colors = useEmptyStateColors();
   const {
     scale,
     translateY,
@@ -39,12 +41,12 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     backgroundColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      ['#ffffff', '#047857']
+      [colors.chipBackground, colors.chipBackgroundSelected]
     ),
     borderColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [COLORS.stone200, '#047857']
+      [colors.chipBorder, colors.chipBorderSelected]
     ),
     opacity: entranceOpacity.value,
     shadowOpacity: shadowOpacity.value,
@@ -58,7 +60,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     color: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [COLORS.stone700, '#ffffff']
+      [colors.chipText, colors.chipTextSelected]
     ),
   }));
 
@@ -70,8 +72,8 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
 
   return (
     <AnimatedPressable
-      accessibilityHint={`Select ${chip.fullName} habit category`}
-      accessibilityLabel={`Select ${chip.fullName}`}
+      accessibilityHint={`Double tap to fill in "${chip.fullName}"`}
+      accessibilityLabel={chip.fullName}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
       style={[
@@ -86,7 +88,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
           minHeight: TOUCH_TARGETS.chipHeight,
           paddingHorizontal: 10,
           paddingVertical: 8,
-          shadowColor: '#1c1917',
+          shadowColor: colors.chipShadow,
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: SHADOW_OPACITY.minimal,
           shadowRadius: 16,

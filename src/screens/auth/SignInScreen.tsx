@@ -41,6 +41,8 @@ import {
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -94,11 +96,17 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
 
     // Header entrance (60ms stagger)
     headerOpacity.value = withDelay(110, withTiming(1, { duration: 280 }));
-    headerTranslateY.value = withDelay(110, withSpring(0, { damping: 18, stiffness: 150 }));
+    headerTranslateY.value = withDelay(
+      110,
+      withSpring(0, { damping: 18, stiffness: 150 })
+    );
 
     // Content entrance (60ms stagger)
     contentOpacity.value = withDelay(170, withTiming(1, { duration: 280 }));
-    contentTranslateY.value = withDelay(170, withSpring(0, { damping: 18, stiffness: 150 }));
+    contentTranslateY.value = withDelay(
+      170,
+      withSpring(0, { damping: 18, stiffness: 150 })
+    );
   }, []);
 
   const logoStyle = useAnimatedStyle(() => ({
@@ -177,14 +185,14 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
                 isLoading={oauthLoading === 'oauth_apple'}
                 provider='apple'
                 testID='auth-sign-in-apple-button'
-                onPress={signInWithApple}
+                onPress={() => void signInWithApple()}
               />
               <SocialSignInButton
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_google'}
                 provider='google'
                 testID='auth-sign-in-google-button'
-                onPress={signInWithGoogle}
+                onPress={() => void signInWithGoogle()}
               />
             </View>
 
@@ -220,7 +228,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
                 returnKeyType='go'
                 value={password}
                 onChangeText={setPassword}
-                onSubmitEditing={handleSignIn}
+                onSubmitEditing={() => void handleSignIn()}
               />
 
               <SubmitButton
@@ -229,7 +237,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
                 label='Sign In'
                 loadingLabel='Signing in…'
                 testID='auth-sign-in-button'
-                onPress={handleSignIn}
+                onPress={() => void handleSignIn()}
               />
             </View>
           </Animated.View>
@@ -241,7 +249,9 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
               <Text
                 accessibilityRole='link'
                 style={styles.footerLink}
-                onPress={() => void Linking.openURL('https://chainday.app/terms')}
+                onPress={() =>
+                  void Linking.openURL('https://chainday.app/terms')
+                }
               >
                 Terms
               </Text>
@@ -249,7 +259,9 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
               <Text
                 accessibilityRole='link'
                 style={styles.footerLink}
-                onPress={() => void Linking.openURL('https://chainday.app/privacy')}
+                onPress={() =>
+                  void Linking.openURL('https://chainday.app/privacy')
+                }
               >
                 Privacy Policy
               </Text>
@@ -358,7 +370,7 @@ const createStyles = (colors: SemanticColors) =>
 
 export default function SignInScreen(props: SignInScreenProps) {
   return (
-    <ScreenErrorBoundary screenName="Sign In">
+    <ScreenErrorBoundary screenName='Sign In'>
       <SignInScreenContent {...props} />
     </ScreenErrorBoundary>
   );

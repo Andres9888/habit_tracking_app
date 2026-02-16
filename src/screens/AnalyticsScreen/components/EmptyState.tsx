@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * EmptyState - OPTIMIZED: animation (respects reduce-motion), dark mode, accessible
  */

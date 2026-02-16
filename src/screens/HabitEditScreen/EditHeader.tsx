@@ -9,6 +9,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
+import { colors } from '../../theme/colors';
 
 interface EditHeaderProps {
   paddingTop: number;
@@ -74,10 +75,10 @@ export function EditHeader({
         ]}
         onPress={handleSave}
         onPressIn={() => {
-          scale.value = withSpring(0.95, { damping: 18, stiffness: 240 });
+          scale.value = withSpring(0.95, { damping: 18, stiffness: 150 });
         }}
         onPressOut={() => {
-          scale.value = withSpring(1, { damping: 18, stiffness: 240 });
+          scale.value = withSpring(1, { damping: 18, stiffness: 150 });
         }}
       >
         {isSaving && <ActivityIndicator color={colors.text.inverse} size='small' />}
