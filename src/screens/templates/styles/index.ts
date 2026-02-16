@@ -2,21 +2,23 @@
  * Templates Screen Styles
  *
  * Styles are organized by domain for maintainability.
- * The combined `styles` export maintains backward compatibility.
+ * Use createTemplateStyles(themeColors) for dark mode support.
  */
 
-export { browseStyles } from './browseStyles';
+import type { SemanticColors } from '../../../theme/darkColors';
+
+export { browseStyles, createBrowseStyles } from './browseStyles';
 export { categoryStyles } from './categoryStyles';
-export { controlStyles } from './controlStyles';
-export { customizeStyles } from './customizeStyles';
-export { formStyles } from './formStyles';
+export { controlStyles, createControlStyles } from './controlStyles';
+export { customizeStyles, createCustomizeStyles } from './customizeStyles';
+export { formStyles, createFormStyles } from './formStyles';
 export { gridStyles } from './gridStyles';
-export { layoutStyles } from './layoutStyles';
-export { previewStyles } from './previewStyles';
+export { layoutStyles, createLayoutStyles } from './layoutStyles';
+export { previewStyles, createPreviewStyles } from './previewStyles';
 export { scrollStyles } from './scrollStyles';
-export { searchStyles } from './searchStyles';
-export { skeletonStyles } from './skeletonStyles';
-export { sortStyles } from './sortStyles';
+export { searchStyles, createSearchStyles } from './searchStyles';
+export { skeletonStyles, createSkeletonStyles } from './skeletonStyles';
+export { sortStyles, createSortStyles } from './sortStyles';
 export { tabStyles } from './tabStyles';
 
 // Import for combined styles
@@ -34,7 +36,17 @@ import { skeletonStyles } from './skeletonStyles';
 import { sortStyles } from './sortStyles';
 import { tabStyles } from './tabStyles';
 
-// Combined styles export for backward compatibility
+import { createBrowseStyles } from './browseStyles';
+import { createControlStyles } from './controlStyles';
+import { createCustomizeStyles } from './customizeStyles';
+import { createFormStyles } from './formStyles';
+import { createLayoutStyles } from './layoutStyles';
+import { createPreviewStyles } from './previewStyles';
+import { createSearchStyles } from './searchStyles';
+import { createSkeletonStyles } from './skeletonStyles';
+import { createSortStyles } from './sortStyles';
+
+/** @deprecated Use createTemplateStyles(themeColors) for dark mode */
 export const styles = {
   ...browseStyles,
   ...categoryStyles,
@@ -50,3 +62,22 @@ export const styles = {
   ...sortStyles,
   ...tabStyles,
 } as const;
+
+/** Create theme-aware template styles */
+export function createTemplateStyles(tc: SemanticColors) {
+  return {
+    ...createBrowseStyles(tc),
+    ...categoryStyles,
+    ...createControlStyles(tc),
+    ...createCustomizeStyles(tc),
+    ...createFormStyles(tc),
+    ...gridStyles,
+    ...createLayoutStyles(tc),
+    ...createPreviewStyles(tc),
+    ...scrollStyles,
+    ...createSearchStyles(tc),
+    ...createSkeletonStyles(tc),
+    ...createSortStyles(tc),
+    ...tabStyles,
+  };
+}

@@ -2,7 +2,7 @@
  * HeroAnimation - Animated growth journey for auth screens
  */
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -15,7 +15,8 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { AnimatedDot } from './AnimatedDot';
-import { styles } from './HeroAnimation.styles';
+import { createStyles } from './HeroAnimation.styles';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const STAGES = [
   { emoji: '🌱', label: 'Start' },
@@ -24,6 +25,8 @@ const STAGES = [
 ];
 
 export function HeroAnimation() {
+  const { colors: themeColors } = useThemeColors();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const progress = useSharedValue(0);
   const scale = useSharedValue(1);
 

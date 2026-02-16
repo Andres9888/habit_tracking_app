@@ -4,7 +4,7 @@
  * Clean design consistent with app style
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
@@ -20,14 +20,17 @@ import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
-import { styles } from './WelcomeScreen.styles';
+import { createStyles } from './WelcomeScreen.styles';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 type AuthMode = 'welcome' | 'signin' | 'signup';
 
 function WelcomeScreenContent() {
   const [mode, setMode] = useState<AuthMode>('welcome');
   const insets = useSafeAreaInsets();
+  const { colors: themeColors } = useThemeColors();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =
     useOAuthSignIn();
   const { iconStyle, titleStyle, subtitleStyle, buttonsStyle } =
@@ -60,7 +63,7 @@ function WelcomeScreenContent() {
       <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
         <View style={styles.heroSection}>
           <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <Link color='#1c1917' size={40} strokeWidth={2} />
+            <Link color={themeColors.authHeading} size={40} strokeWidth={2} />
           </Animated.View>
           <Animated.Text style={[styles.title, titleStyle]}>
             Chain Day

@@ -1,16 +1,17 @@
-import { colors } from '../../../theme/colors';
+import { colors, useThemeColors } from '../../../theme/colors';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const STAGES = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
 
 function interpolateColor(t: number): string {
-  if (t < 0.5) return '#10B981';
+  if (t < 0.5) return colors.primary[500];
   if (t < 0.75) return colors.primary[600];
   return colors.primary[700];
 }
 
 export function StrengthMeter() {
+  const themeColors = useThemeColors();
   return (
     <View style={styles.container}>
       {STAGES.map((stage, i) => (
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   label: {
-    color: '#6B7280',
+    color: themeColors.gray[500],
     fontSize: 13,
     fontWeight: '500',
   },

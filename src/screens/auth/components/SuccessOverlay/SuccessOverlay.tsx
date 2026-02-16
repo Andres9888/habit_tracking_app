@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
 import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { SuccessOverlayProps } from './types';
 import { useSuccessOverlayAnimations } from './useSuccessOverlayAnimations';
 
@@ -18,6 +20,8 @@ export function SuccessOverlay({
   visible,
   onAnimationComplete,
 }: SuccessOverlayProps) {
+  const { colors: themeColors } = useThemeColors();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const { overlayStyle, checkmarkStyle, ringStyle, textStyle } =
     useSuccessOverlayAnimations(visible, onAnimationComplete);
 

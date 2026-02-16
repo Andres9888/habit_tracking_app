@@ -2,6 +2,7 @@
  * Sort dropdown filter control component
  */
 
+import { useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Check, ChevronDown, SlidersHorizontal } from 'lucide-react-native';
@@ -11,7 +12,7 @@ import {
   SORT_OPTIONS,
   type SortOption,
 } from '../../templates/constants';
-import { styles } from '../../templates/templatesScreenStyles';
+import { createTemplateStyles } from '../../templates/templatesScreenStyles';
 
 interface FilterControlsProps {
   onResearchToggle: () => void;
@@ -29,8 +30,9 @@ export function FilterControls({
   sortOption,
 }: FilterControlsProps) {
   const { colors, isDark } = useThemeColors();
+  const styles = useMemo(() => createTemplateStyles(colors), [colors]);
   const defaultIconColor = colors.text.primary;
-  const iconColor = showSortOptions ? '#fff' : defaultIconColor;
+  const iconColor = showSortOptions ? colors.filterActiveText : defaultIconColor;
 
   return (
     <View style={styles.sortButtonWrapper}>
@@ -48,7 +50,7 @@ export function FilterControls({
           style={[
             styles.controlButtonText,
             { color: defaultIconColor },
-            showSortOptions && { color: '#fff' },
+            showSortOptions && { color: colors.filterActiveText },
           ]}
         >
           {SORT_LABELS[sortOption]}
@@ -66,7 +68,6 @@ export function FilterControls({
           entering={FadeIn.duration(150)}
           style={[
             styles.sortDropdown,
-            isDark && { backgroundColor: colors.card, borderColor: colors.border },
           ]}
         >
           {SORT_OPTIONS.map((opt) => {
@@ -93,7 +94,7 @@ export function FilterControls({
                   {opt.label}
                 </Text>
                 {selected && (
-                  <Check color='#10B981' size={16} strokeWidth={2.5} />
+                  <Check color={colors.primary[500]} size={16} strokeWidth={2.5} />
                 )}
               </Pressable>
             );

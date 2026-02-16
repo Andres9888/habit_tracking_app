@@ -396,7 +396,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
               onPress={() => void handleComplete()}
             >
               {isLoading ? (
-                <ActivityIndicator color='#FFFFFF' />
+                <ActivityIndicator color={colors.text.inverse} />
               ) : (
                 <Text style={styles.ctaText}>
                   Let's Build Your First Habit →
@@ -442,13 +442,13 @@ const styles = StyleSheet.create({
     width: 36,
   },
   chainLinkInner: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     borderRadius: 12,
     height: 36,
     width: 20,
   },
   container: {
-    backgroundColor: '#FAF8F5',
+    backgroundColor: colors.gray[50],
     flex: 1,
   },
   ctaButton: {
@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     paddingHorizontal: 32,
     paddingVertical: 16,
-    shadowColor: '#000',
+    shadowColor: colors.text.primary,
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   ctaText: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -485,13 +485,13 @@ const styles = StyleSheet.create({
     elevation: 4,
     paddingHorizontal: 48,
     paddingVertical: 16,
-    shadowColor: '#000',
+    shadowColor: colors.text.primary,
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
   nextText: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   skipText: {
-    color: '#6B7280',
+    color: colors.gray[500],
     fontSize: 17,
     fontWeight: '500',
   },
@@ -528,7 +528,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   strengthLabel: {
-    color: '#57534e',
+    color: colors.text.secondary,
     fontSize: 13,
     fontWeight: '500',
   },
@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   subtitle: {
-    color: '#6B7280',
+    color: colors.gray[500],
     fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
@@ -560,12 +560,12 @@ const styles = StyleSheet.create({
   },
   templateItem: {
     alignItems: 'center',
-    backgroundColor: '#F0FDF4',
+    backgroundColor: colors.primary[100],
     borderRadius: 16,
     elevation: 2,
     height: 56,
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: colors.text.primary,
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,

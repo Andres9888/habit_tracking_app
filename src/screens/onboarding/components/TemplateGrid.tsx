@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 const TEMPLATE_ICONS = [
   '🧘',
@@ -17,6 +18,7 @@ const TEMPLATE_ICONS = [
 ];
 
 export function TemplateGrid() {
+  const { colors: themeColors } = useThemeColors();
   return (
     <View style={styles.grid}>
       {TEMPLATE_ICONS.map((emoji, i) => (
@@ -25,7 +27,7 @@ export function TemplateGrid() {
           entering={FadeIn.delay(300 + i * 60)
             .springify()
             .damping(18)}
-          style={styles.item}
+          style={[styles.item, { backgroundColor: themeColors.primary[100], shadowColor: themeColors.text.primary }]}
         >
           <Text style={styles.emoji}>{emoji}</Text>
         </Animated.View>
@@ -47,12 +49,10 @@ const styles = StyleSheet.create({
   },
   item: {
     alignItems: 'center',
-    backgroundColor: '#F0FDF4',
     borderRadius: 16,
     elevation: 2,
     height: 56,
     justifyContent: 'center',
-    shadowColor: '#000',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,

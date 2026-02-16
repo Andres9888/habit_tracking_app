@@ -27,7 +27,7 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
     const { animatedStyle, handleFocus, handleBlur } =
       usePasswordInputAnimations();
 
-    const errorStyle = error ? { borderColor: '#ef4444', borderWidth: 1 } : {};
+    const errorStyle = error ? { borderColor: themeColors.error, borderWidth: 1 } : {};
     const iconColor = isDark ? themeColors.text.secondary : '#57534e';
 
     return (

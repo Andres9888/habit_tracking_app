@@ -1,18 +1,19 @@
-import { colors } from '../../../theme/colors';
+import { colors, useThemeColors } from '../../../theme/colors';
 import { StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const COLORS = [
   colors.primary[600],
   colors.primary[700],
-  '#10B981',
+  colors.primary[500],
   colors.primary[700],
   colors.primary[600],
-  '#10B981',
+  colors.primary[500],
   colors.primary[700],
 ];
 
 function ChainLink({ delay, index }: { delay: number; index: number }) {
+  const themeColors = useThemeColors();
   return (
     <Animated.View
       entering={FadeInDown.delay(delay).springify().damping(18)}
@@ -21,7 +22,7 @@ function ChainLink({ delay, index }: { delay: number; index: number }) {
         { backgroundColor: COLORS[index % COLORS.length] },
       ]}
     >
-      <View style={styles.chainLinkInner} />
+      <View style={[styles.chainLinkInner, { backgroundColor: themeColors.card }]} />
     </Animated.View>
   );
 }
@@ -50,7 +51,6 @@ const styles = StyleSheet.create({
     width: 36,
   },
   chainLinkInner: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     height: 36,
     width: 20,

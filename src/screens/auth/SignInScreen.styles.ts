@@ -1,7 +1,6 @@
 /* eslint-disable max-lines */
 /** SignInScreen Styles - Type scale: 34/22/17/13, proper contrast, depth */
 import { StyleSheet } from 'react-native';
-import { colors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export function useSignInStyles() {
@@ -83,8 +82,8 @@ export function useSignInStyles() {
   });
 }
 
-/** @deprecated Use useSignInStyles() for dark mode support */
-export const styles = StyleSheet.create({
+/** @deprecated — consumers migrated to useSignInStyles() */
+const _deprecated = StyleSheet.create({
   appName: {
     color: '#1c1917',
     fontSize: 34,

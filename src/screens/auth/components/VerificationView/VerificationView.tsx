@@ -74,7 +74,7 @@ export function VerificationView({
           entering={anim(180)}
           style={{ alignItems: 'center', marginTop: 24 }}
         >
-          <Text style={{ color: '#78716c', fontSize: 15 }}>
+          <Text style={{ color: colors.text.secondary, fontSize: 15 }}>
             Didn't receive the code?
           </Text>
           <Pressable
@@ -91,7 +91,7 @@ export function VerificationView({
           >
             <Text
               style={{
-                color: cooldown > 0 ? '#a8a29e' : colors.primary[700],
+                color: cooldown > 0 ? colors.text.tertiary : colors.primary[700],
                 fontSize: 15,
                 fontWeight: '600',
               }}
