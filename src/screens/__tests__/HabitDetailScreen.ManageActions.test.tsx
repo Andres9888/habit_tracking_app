@@ -59,7 +59,7 @@ jest.mock('../../../convex/_generated/api', () => ({
 
 // Mock icons
 jest.mock('lucide-react-native', () => {
-  const MockIcon = ({ testID, ...props }: any) => null;
+  const MockIcon = ({ testID, ...props }: unknown) => null;
   return {
     X: MockIcon,
     Edit3: MockIcon,
@@ -92,7 +92,7 @@ const mockAlert = jest.spyOn(Alert, 'alert');
 
 describe('HabitDetailScreen - Manage Actions (Story 1.9.4)', () => {
   const mockHabit = {
-    _id: 'test-habit-id' as any,
+    _id: 'test-habit-id' as unknown,
     _creationTime: Date.now(),
     name: 'Test Habit',
     icon: '🎯',

@@ -2,7 +2,6 @@ import { Animated, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { useThemeColors } from '../../theme/ThemeContext';
 import { useRewardToastAnimation } from './useRewardToastAnimation';
 import { useRewardToastContent } from './useRewardToastContent';
 
@@ -27,8 +26,7 @@ export const RewardCelebrationToast = ({
 }: RewardCelebrationToastProps) => {
   const { translateY, opacity } = useRewardToastAnimation(visible);
   const { title, premiumCTA } = useRewardToastContent(streak);
-  const { triggerSelection, triggerLightImpact } = useHapticFeedback({});
-  const { colors } = useThemeColors();
+  const { triggerLightImpact } = useHapticFeedback({});
 
   return (
     <AnimatedContainer
@@ -37,11 +35,11 @@ export const RewardCelebrationToast = ({
       pointerEvents='box-none'
       style={{ opacity, transform: [{ translateY }] }}
     >
-      <View className='rounded-3xl p-5 shadow-lg' style={{ backgroundColor: colors.card }}>
-        <Text className='text-[17px] font-bold leading-[24px]' style={{ color: colors.text.primary }}>
+      <View className='rounded-3xl bg-white p-5 shadow-lg shadow-blue-100'>
+        <Text className='text-[17px] font-bold leading-[24px] text-[#1c1917]'>
           {title}
         </Text>
-        <Text className='mt-2 text-[17px] leading-[22px]' style={{ color: colors.text.secondary }}>
+        <Text className='mt-2 text-[17px] leading-[22px] text-stone-700'>
           {message}
         </Text>
         <View className='mt-3 rounded-2xl p-3'>
@@ -59,14 +57,13 @@ export const RewardCelebrationToast = ({
           <AnimatedPressable
             accessibilityHint='Share this streak to motivate friends'
             accessibilityLabel='Share streak'
-            className='flex-1 items-center justify-center rounded-full border px-4 py-2.5'
-            style={{ borderColor: colors.border }}
+            className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-4 py-2.5'
             onPress={() => {
-              triggerSelection();
+              triggerLightImpact();
               onSecondaryAction();
             }}
           >
-            <Text className='text-[17px] font-semibold leading-[22px]' style={{ color: colors.text.secondary }}>
+            <Text className='text-[17px] font-semibold leading-[22px] text-stone-600'>
               Share
             </Text>
           </AnimatedPressable>
@@ -76,7 +73,7 @@ export const RewardCelebrationToast = ({
             className='flex-1 items-center justify-center rounded-full px-4 py-2.5'
             style={{ backgroundColor: '#7c3aed' }}
             onPress={() => {
-              triggerSelection();
+              triggerLightImpact();
               onPrimaryAction();
             }}
           >
@@ -93,7 +90,7 @@ export const RewardCelebrationToast = ({
             onDismiss();
           }}
         >
-          <Text className='text-[13px] font-medium uppercase leading-[18px] tracking-wider' style={{ color: colors.text.tertiary }}>
+          <Text className='text-[13px] font-medium uppercase leading-[18px] tracking-wider text-stone-500'>
             Not now
           </Text>
         </AnimatedPressable>

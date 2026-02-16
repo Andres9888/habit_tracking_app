@@ -21,7 +21,7 @@ export function ConfettiAnimation({
   active,
   onComplete,
 }: ConfettiAnimationProps) {
-  const confettiRef = useRef<any>(null);
+  const confettiRef = useRef<ConfettiCannon>(null);
   const reduceMotion = useReduceMotion();
 
   useEffect(() => {

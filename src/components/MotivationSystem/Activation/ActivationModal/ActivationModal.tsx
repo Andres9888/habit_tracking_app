@@ -68,7 +68,7 @@ export function ActivationModal({
       visible={visible}
       onClose={onClose}
     >
-      <View className='flex-1 bg-stone-50' style={{ paddingTop: insets.top }}>
+      <View accessibilityViewIsModal className='flex-1 bg-stone-50' style={{ paddingTop: insets.top }}>
         <ActivationModalHeader onClose={onClose} />
         <ActivationModalContent
           habit={habit}

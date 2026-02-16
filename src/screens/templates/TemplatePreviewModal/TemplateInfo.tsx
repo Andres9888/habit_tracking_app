@@ -4,10 +4,10 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { TemplateInfoProps } from './types';
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   infoContainer: {
     flexDirection: 'row',
     gap: 12,
@@ -40,15 +40,24 @@ const formatFrequency = (frequency: string): string => {
 
 export function TemplateInfo({ category, frequency }: TemplateInfoProps) {
   const { colors } = useThemeColors();
+
   return (
-    <View style={styles.infoContainer}>
-      <View style={[styles.infoPill, { backgroundColor: colors.gray[100] }]}>
-        <Text style={[styles.infoPillLabel, { color: colors.text.secondary }]}>Category</Text>
-        <Text style={[styles.infoPillValue, { color: colors.text.primary }]}>{formatCategory(category)}</Text>
+    <View style={localStyles.infoContainer}>
+      <View style={[localStyles.infoPill, { backgroundColor: colors.gray[200] }]}>
+        <Text style={[localStyles.infoPillLabel, { color: colors.text.secondary }]}>
+          Category
+        </Text>
+        <Text style={[localStyles.infoPillValue, { color: colors.text.primary }]}>
+          {formatCategory(category)}
+        </Text>
       </View>
-      <View style={[styles.infoPill, { backgroundColor: colors.gray[100] }]}>
-        <Text style={[styles.infoPillLabel, { color: colors.text.secondary }]}>Frequency</Text>
-        <Text style={[styles.infoPillValue, { color: colors.text.primary }]}>{formatFrequency(frequency)}</Text>
+      <View style={[localStyles.infoPill, { backgroundColor: colors.gray[200] }]}>
+        <Text style={[localStyles.infoPillLabel, { color: colors.text.secondary }]}>
+          Frequency
+        </Text>
+        <Text style={[localStyles.infoPillValue, { color: colors.text.primary }]}>
+          {formatFrequency(frequency)}
+        </Text>
       </View>
     </View>
   );

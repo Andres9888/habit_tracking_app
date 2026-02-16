@@ -3,7 +3,6 @@ import { forwardRef } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useFormInputAnimations } from './useFormInputAnimations';
 
 interface FormInputProps extends TextInputProps {
@@ -12,10 +11,12 @@ interface FormInputProps extends TextInputProps {
   labelRight?: ReactNode;
   /** Optional validation error message to display */
   error?: string;
+  /** Show required field indicator (*) next to label */
+  required?: boolean;
 }
 
 export const FormInput = forwardRef(function FormInput(
-  { label, labelRight, error, onBlur, ...props }: FormInputProps,
+  { label, labelRight, error, required, onBlur, ...props }: FormInputProps,
   ref: Ref<TextInput>
 ) {
   const {
@@ -35,24 +36,24 @@ export const FormInput = forwardRef(function FormInput(
     onBlur?.(e);
   };
 
-  const { colors } = useThemeColors();
-
   return (
     <View className='gap-2'>
       <View className='flex-row items-center justify-between'>
-        <Text className='text-sm font-medium' style={{ color: colors.text.secondary }}>{label}</Text>
+        <Text className='text-sm font-medium text-stone-600'>
+          {label}
+          {required && <Text className='text-red-500'> *</Text>}
+        </Text>
         {labelRight}
       </View>
       <Animated.View
-        className={`overflow-hidden rounded-2xl border shadow-sm ${error ? 'border-red-500' : ''}`}
-        style={[animatedStyle, { borderColor: error ? undefined : colors.border, backgroundColor: colors.card }]}
+        className={`overflow-hidden rounded-2xl border bg-white shadow-sm ${error ? 'border-red-500' : 'border-stone-200'}`}
+        style={animatedStyle}
       >
         <TextInput
           ref={ref}
           accessibilityLabel={label}
-          className='px-5 py-4 text-[17px] font-medium leading-[22px]'
-          placeholderTextColor={colors.text.tertiary}
-          style={{ color: colors.text.primary }}
+          className='px-5 py-4 text-[17px] font-medium leading-[22px] text-stone-900'
+          placeholderTextColor='#a1a1aa'
           onBlur={handleBlurWrapper}
           onFocus={handleFocus}
           {...props}

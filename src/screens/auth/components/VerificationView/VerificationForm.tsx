@@ -37,9 +37,11 @@ export function VerificationForm({
         keyboardType='number-pad'
         label='Verification code'
         maxLength={6}
-        placeholder='Enter 6-digit code'
+        placeholder='Enter the 6-digit code from your email'
+        returnKeyType='go'
         value={code}
         onChangeText={onChangeCode}
+        onSubmitEditing={handleVerify}
       />
       <View className='mt-6'>
         <SubmitButton

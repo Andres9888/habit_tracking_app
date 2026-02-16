@@ -13,7 +13,7 @@ export function SecondaryActions({
   onOpenSettings,
   onContactSupport,
 }: SecondaryActionsProps) {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
 
   const styles = StyleSheet.create({
     actions: { flexDirection: 'row', gap: 16, marginTop: 16 },

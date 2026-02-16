@@ -1,6 +1,6 @@
 /**
  * NotesListModal Component
- * Modal for displaying habit notes
+ * Modal for displaying habit notes — dark mode aware
  */
 
 import React from 'react';
@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { X } from 'lucide-react-native';
 import NotesList from '../../../components/StatsNotesModal/NotesList';
-import { useThemeColors } from '../../../theme/ThemeContext';
+import { useThemeColors } from '../../../theme';
 import type { NotesListModalProps } from '../HabitDetailScreen.types';
 
 export function NotesListModal({
@@ -22,20 +22,35 @@ export function NotesListModal({
   isOpen,
   onClose,
 }: NotesListModalProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+
   return (
     <RNModal animationType='slide' visible={isOpen} onRequestClose={onClose}>
-      <View className='flex-1' style={{ backgroundColor: colors.background, paddingTop: insets.top + 16 }}>
-        <View className='flex-row items-center justify-between border-b px-5 pb-4' style={{ borderColor: colors.cardBorder }}>
-          <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>Notes</Text>
+      <View
+        className='flex-1'
+        style={{
+          backgroundColor: colors.background,
+          paddingTop: insets.top + 16,
+        }}
+      >
+        <View
+          className='flex-row items-center justify-between px-5 pb-4'
+          style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
+        >
+          <Text
+            className='text-lg font-bold'
+            style={{ color: colors.text.primary }}
+          >
+            Notes
+          </Text>
           <Pressable
             accessibilityLabel='Close notes'
             accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full'
-            style={{ backgroundColor: colors.gray[100] }}
+            className='h-11 w-11 items-center justify-center rounded-full active:opacity-70'
+            style={{ backgroundColor: isDark ? colors.gray[200] : colors.gray[100] }}
             onPress={onClose}
           >
-            <X color={colors.text.secondary} size={24} />
+            <X color={isDark ? colors.text.secondary : '#57534e'} size={24} />
           </Pressable>
         </View>
         <ScrollView
@@ -44,7 +59,6 @@ export function NotesListModal({
             padding: 20,
             paddingBottom: insets.bottom + 20,
           }}
-          keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >
           <NotesList hideHabitFilter initialHabitId={habitId} />

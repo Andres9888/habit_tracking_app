@@ -22,8 +22,8 @@ jest.mock('../../utils/notifications', () => ({
 }));
 
 describe('useLetterNotification', () => {
-  const mockHabitId = 'habit123' as any;
-  const mockLetterId = 'letter456' as any;
+  const mockHabitId = 'habit123' as unknown;
+  const mockLetterId = 'letter456' as unknown;
   const mockOnSuccess = jest.fn();
   const mockOnError = jest.fn();
 
@@ -78,7 +78,7 @@ describe('useLetterNotification', () => {
         })
       );
 
-      let letterId: any;
+      let letterId: unknown;
       await act(async () => {
         letterId = await result.current.createLetterWithNotification({
           content: 'Dear future me...',
@@ -182,7 +182,7 @@ describe('useLetterNotification', () => {
         })
       );
 
-      let letterId: any;
+      let letterId: unknown;
       await act(async () => {
         letterId = await result.current.createLetterWithNotification({
           content: 'Test',
@@ -210,7 +210,7 @@ describe('useLetterNotification', () => {
         })
       );
 
-      let letterId: any;
+      let letterId: unknown;
       await act(async () => {
         letterId = await result.current.createLetterWithNotification({
           content: 'Test',

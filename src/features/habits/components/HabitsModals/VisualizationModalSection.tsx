@@ -66,7 +66,7 @@ export function VisualizationModalSection({
               });
             }}
             onPressOut={() => {
-              closeScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+              closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
             }}
           >
             <X color={colors.text.secondary} size={24} />

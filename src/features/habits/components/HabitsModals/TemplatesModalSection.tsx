@@ -62,7 +62,7 @@ export function TemplatesModalSection({
               });
             }}
             onPressOut={() => {
-              closeScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+              closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
             }}
           >
             <X color='#57534e' size={24} />

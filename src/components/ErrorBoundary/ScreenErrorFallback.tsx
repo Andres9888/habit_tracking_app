@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 interface ScreenErrorFallbackProps {
@@ -20,7 +21,8 @@ export function ScreenErrorFallback({
   onRetry,
   onGoBack,
 }: ScreenErrorFallbackProps) {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
+  const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     container: {
@@ -28,7 +30,9 @@ export function ScreenErrorFallback({
       backgroundColor: colors.background,
       flex: 1,
       justifyContent: 'center',
+      paddingBottom: insets.bottom,
       paddingHorizontal: 24,
+      paddingTop: insets.top,
     },
     emoji: {
       fontSize: 64,
