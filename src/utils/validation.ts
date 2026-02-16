@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Input Validation Utilities
  * Defensive guards for edge cases
@@ -162,7 +163,7 @@ export function safeParseNumber(
   max?: number
 ): number {
   const parsed =
-    typeof value === 'number' ? value : parseFloat(String(value));
+    typeof value === 'number' ? value : Number.parseFloat(String(value));
 
   if (Number.isNaN(parsed) || !Number.isFinite(parsed)) {
     return defaultValue;

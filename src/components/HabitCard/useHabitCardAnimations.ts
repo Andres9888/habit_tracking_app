@@ -5,6 +5,7 @@
  * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
  */
 
+import { useEffect, useRef } from 'react';
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import {
   createCelebrationTrigger,
@@ -40,6 +41,15 @@ export function useHabitCardAnimations({
   const checkmarkRotate = useSharedValue(0);
   const rippleScale = useSharedValue(0);
   const rippleOpacity = useSharedValue(0);
+  
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const triggerCompletionCelebration = createCelebrationTrigger({
     cardScale,
@@ -51,6 +61,7 @@ export function useHabitCardAnimations({
     setShowConfetti,
     setShowFloatingXP,
     setXPPosition,
+    timeoutRef,
   });
 
   const triggerUncheckAnimation = createUncheckTrigger(

@@ -7,6 +7,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 
@@ -16,16 +17,20 @@ interface ScienceBoxProps {
 
 export function ScienceBox({ scientificReference }: ScienceBoxProps) {
   const theme = useAppTheme();
+  const { colors, isDark } = useThemeColors();
 
   return (
-    <View style={styles.scienceBox}>
+    <View style={[styles.scienceBox, isDark && {
+      backgroundColor: colors.primary[100],
+      borderColor: colors.primary[300],
+    }]}>
       <View style={styles.scienceHeader}>
         <Text style={styles.scienceIcon}>🔬</Text>
-        <Text style={styles.scienceHeaderText}>Science Behind This Habit</Text>
+        <Text style={[styles.scienceHeaderText, { color: isDark ? colors.primary[400] : '#166534' }]}>Science Behind This Habit</Text>
       </View>
       <Text
         numberOfLines={2}
-        style={[theme.custom.typography.caption, styles.scienceText]}
+        style={[theme.custom.typography.caption, styles.scienceText, { color: isDark ? colors.primary[500] : '#166534' }]}
       >
         {scientificReference}
       </Text>
@@ -50,7 +55,6 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   scienceHeaderText: {
-    color: '#166534',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -58,7 +62,6 @@ export const styles = StyleSheet.create({
     fontSize: typography.bodySmall.fontSize,
   },
   scienceText: {
-    color: '#166534',
     flex: 1,
     fontStyle: 'italic',
     lineHeight: 16,

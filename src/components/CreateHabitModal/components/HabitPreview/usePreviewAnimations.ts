@@ -48,7 +48,7 @@ export const usePreviewAnimations = (
   // Trigger spring animation when content changes
   useEffect(() => {
     if (!isEmpty) {
-      Animated.sequence([
+      const iconAnimation = Animated.sequence([
         Animated.spring(iconScale, {
           friction: 8,
           tension: 180,
@@ -61,9 +61,10 @@ export const usePreviewAnimations = (
           toValue: 1,
           useNativeDriver: true,
         }),
-      ]).start();
+      ]);
+      iconAnimation.start();
 
-      Animated.sequence([
+      const contentAnimation = Animated.sequence([
         Animated.spring(contentScale, {
           friction: 10,
           tension: 200,
@@ -76,7 +77,14 @@ export const usePreviewAnimations = (
           toValue: 1,
           useNativeDriver: true,
         }),
-      ]).start();
+      ]);
+      contentAnimation.start();
+
+      // Cleanup animations on unmount or when dependencies change
+      return () => {
+        iconAnimation.stop();
+        contentAnimation.stop();
+      };
     }
   }, [
     habitName,

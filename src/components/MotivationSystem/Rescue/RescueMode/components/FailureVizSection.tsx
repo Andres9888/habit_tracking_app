@@ -28,14 +28,15 @@ export function FailureVizSection({
   reduceMotion,
   visible,
 }: FailureVizSectionProps) {
-  const idx =
+  // Calculate stagger delay index based on how many sections appear before this one
+  const animationIndex =
     (hasStreak ? 1 : 0) +
     (hasWhy ? 1 : 0) +
     (hasVoiceNote ? 1 : 0) +
     (hasPreviousStreakNotes ? 1 : 0);
 
   return (
-    <AnimatedContent index={idx} reduceMotion={reduceMotion} visible={visible}>
+    <AnimatedContent index={animationIndex} reduceMotion={reduceMotion} visible={visible}>
       <View className='mt-4'>
         <FailureViz
           reduceMotion={reduceMotion}

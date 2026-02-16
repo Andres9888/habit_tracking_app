@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
+import { colors } from '../../../theme/colors';
 
 /**
  * Props for the AnimatedLogo component
