@@ -15,10 +15,10 @@ export function KeyInsightBox() {
       entering={FadeInDown.delay(100).springify().damping(18)}
     >
       <LinearGradient
-        colors={['#fffbeb', '#fefce8']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
         className='absolute inset-0 rounded-2xl'
+        colors={['#fffbeb', '#fefce8']}
+        end={{ x: 1, y: 0 }}
+        start={{ x: 0, y: 0 }}
       />
       <View className='h-10 w-10 items-center justify-center rounded-xl bg-amber-100'>
         <Zap className='text-amber-600' size={20} />

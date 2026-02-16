@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * useStrengthAnimation Hook
  * Handles progress bar and emoji animations
@@ -64,8 +65,8 @@ export function useStrengthAnimation(
       // Satisfying spring animation when strength increases
       progressWidth.value = withSpring(clampedStrength, {
         damping: 12,
-        stiffness: 80,
         mass: 0.8,
+        stiffness: 80,
       });
     } else {
       // Decreasing - quick ease out

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -39,10 +40,10 @@ export const ActionItem = ({
     >
       {highlighted && (
         <LinearGradient
-          colors={['#f5f3ff', '#e0e7ff']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
           className='absolute inset-0 rounded-xl'
+          colors={['#f5f3ff', '#e0e7ff']}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
         />
       )}
       <View
@@ -54,10 +55,10 @@ export const ActionItem = ({
       >
         {highlighted && (
           <LinearGradient
-            colors={['#7c3aed', '#4f46e5']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
             className='absolute inset-0 rounded-xl'
+            colors={['#7c3aed', '#4f46e5']}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0 }}
           />
         )}
         {icon}

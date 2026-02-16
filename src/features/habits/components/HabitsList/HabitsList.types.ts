@@ -20,6 +20,18 @@ export interface HabitsListProps {
   onPreviousWeek: () => void;
 }
 
+export interface HabitsListContentProps {
+  props: HabitsListProps;
+  state: ReturnType<typeof import('./useHabitsListState').useHabitsListState>;
+  handlers: ReturnType<
+    typeof import('./useHabitsListHandlers').useHabitsListHandlers
+  >;
+  renderItem: ReturnType<
+    typeof import('../../hooks/useHabitRenderItem').useHabitRenderItem
+  >;
+  handleSuccessTransitionComplete: () => void;
+}
+
 export interface UseHabitsListHandlersOptions {
   list: HabitsListProps['list'];
   onSettingsChange: HabitsListProps['modals']['onSettingsChange'];

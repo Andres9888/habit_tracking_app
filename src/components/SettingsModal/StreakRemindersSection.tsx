@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * StreakRemindersSection — Settings toggle for streak reminder notifications
  * with time picker for reminder time.
@@ -21,23 +22,23 @@ interface StreakRemindersSectionProps {
 }
 
 function timeStringToDate(time: string): Date {
-  const [h, m] = time.split(':').map(Number);
-  const d = new Date();
-  d.setHours(h || 20, m || 0, 0, 0);
-  return d;
+  const [hours, minutes] = time.split(':').map(Number);
+  const date = new Date();
+  date.setHours(hours || 20, minutes || 0, 0, 0);
+  return date;
 }
 
 function dateToTimeString(date: Date): string {
-  const h = date.getHours().toString().padStart(2, '0');
-  const m = date.getMinutes().toString().padStart(2, '0');
-  return `${h}:${m}`;
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
 }
 
 function formatDisplayTime(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const ampm = (h || 0) >= 12 ? 'PM' : 'AM';
-  const hour12 = (h || 0) % 12 || 12;
-  return `${hour12}:${(m || 0).toString().padStart(2, '0')} ${ampm}`;
+  const [hours, minutes] = time.split(':').map(Number);
+  const ampm = (hours || 0) >= 12 ? 'PM' : 'AM';
+  const hour12 = (hours || 0) % 12 || 12;
+  return `${hour12}:${(minutes || 0).toString().padStart(2, '0')} ${ampm}`;
 }
 
 export function StreakRemindersSection({
@@ -83,7 +84,7 @@ export function StreakRemindersSection({
             onPress={() => setShowTimePicker(!showTimePicker)}
           />
           {showTimePicker && (
-            <View style={{ paddingHorizontal: 16, paddingBottom: 8 }}>
+            <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
               <DateTimePicker
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 mode='time'
@@ -106,7 +107,7 @@ export function StreakRemindersSection({
         </>
       )}
       {!enabled && (
-        <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
+        <View style={{ paddingBottom: 12, paddingHorizontal: 16 }}>
           <Text
             style={{
               color: '#78716c',

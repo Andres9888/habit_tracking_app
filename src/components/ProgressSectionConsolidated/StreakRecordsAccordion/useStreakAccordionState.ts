@@ -3,6 +3,7 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
+import type { LayoutChangeEvent } from 'react-native';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { usePulseAnimation } from './usePulseAnimation';
@@ -37,7 +38,7 @@ export function useStreakAccordionState({
       reduceMotion,
     });
 
-  const handleContentLayout = useCallback((event: any) => {
+  const handleContentLayout = useCallback((event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
     if (height > 0) {
       setContentHeight(height);
@@ -68,10 +69,10 @@ export function useStreakAccordionState({
   );
 
   return {
+    accessibilityLabel,
     chevronAnimatedStyle,
     contentAnimatedStyle,
     handleContentLayout,
-    accessibilityLabel,
     handleToggle,
     hasContentMeasured,
     hasRecords,

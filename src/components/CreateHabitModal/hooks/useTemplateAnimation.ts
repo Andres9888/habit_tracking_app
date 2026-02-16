@@ -49,5 +49,5 @@ export const useTemplateAnimation = () => {
     anim.setValue(0);
   }, [anim]);
 
-  return { anim, chevronRotation, translateY, animateOpen, animateClose, resetAnimation };
+  return { anim, animateClose, animateOpen, chevronRotation, resetAnimation, translateY };
 };

@@ -123,6 +123,7 @@ import type * as streakUtils_index from "../streakUtils/index.js";
 import type * as streakUtils_types from "../streakUtils/types.js";
 import type * as streakUtils_updateStreak from "../streakUtils/updateStreak.js";
 import type * as streakUtils from "../streakUtils.js";
+import type * as subscriptions_helpers from "../subscriptions/helpers.js";
 import type * as subscriptions from "../subscriptions.js";
 import type * as templates_clearAndDedupe from "../templates/clearAndDedupe.js";
 import type * as templates_helpers from "../templates/helpers.js";
@@ -137,7 +138,6 @@ import type * as tracking_getCompletionStatus from "../tracking/getCompletionSta
 import type * as tracking_helpers from "../tracking/helpers.js";
 import type * as tracking_index from "../tracking/index.js";
 import type * as tracking_strengthUpdater from "../tracking/strengthUpdater.js";
-import type * as tracking_toggleCompletion from "../tracking/toggleCompletion.js";
 import type * as tracking from "../tracking.js";
 import type * as users from "../users.js";
 import type * as visionBoard from "../visionBoard.js";
@@ -279,6 +279,7 @@ declare const fullApi: ApiFromModules<{
   "streakUtils/types": typeof streakUtils_types;
   "streakUtils/updateStreak": typeof streakUtils_updateStreak;
   streakUtils: typeof streakUtils;
+  "subscriptions/helpers": typeof subscriptions_helpers;
   subscriptions: typeof subscriptions;
   "templates/clearAndDedupe": typeof templates_clearAndDedupe;
   "templates/helpers": typeof templates_helpers;
@@ -293,7 +294,6 @@ declare const fullApi: ApiFromModules<{
   "tracking/helpers": typeof tracking_helpers;
   "tracking/index": typeof tracking_index;
   "tracking/strengthUpdater": typeof tracking_strengthUpdater;
-  "tracking/toggleCompletion": typeof tracking_toggleCompletion;
   tracking: typeof tracking;
   users: typeof users;
   visionBoard: typeof visionBoard;

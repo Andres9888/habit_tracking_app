@@ -8,7 +8,7 @@ import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import TemplateCard from '../../../components/TemplateCard';
 import type { SortOption } from '../../templates/constants';
 import { styles } from '../../templates/templatesScreenStyles';
-import { FilterControls, ResearchFilterButton } from '../components';
+import { FilterControls } from '../components';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
 
 interface BrowseAllTabProps {
@@ -43,13 +43,9 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
           onSelectSort={p.handleSelectSortOption}
           onToggleSortOptions={() => p.setShowSortOptions((prev) => !prev)}
         />
-        <ResearchFilterButton
-          label='Science-Backed'
-          researchOnly={p.researchOnly}
-          onToggle={toggle}
-        />
       </View>
       <FlatList
+        removeClippedSubviews
         contentContainerStyle={styles.allTemplatesList}
         data={p.filteredTemplates}
         keyboardDismissMode='on-drag'

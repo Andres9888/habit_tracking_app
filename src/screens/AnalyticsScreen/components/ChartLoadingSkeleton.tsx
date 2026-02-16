@@ -1,44 +1,29 @@
 /**
  * ChartLoadingSkeleton - Loading state for analytics charts
+ * Uses the central SkeletonLoader with gradient shimmer.
  */
 import React from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
-import { colors } from '../../../theme/colors';
+import { View, StyleSheet } from 'react-native';
 import { spacing } from '../../../theme/spacing';
+import { SkeletonLoader } from '../../../components/SkeletonLoader';
 
 export const ChartLoadingSkeleton: React.FC = () => {
-  const shimmerAnim = React.useRef(new Animated.Value(0)).current;
-
-  React.useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(shimmerAnim, {
-          duration: 1000,
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shimmerAnim, {
-          duration: 1000,
-          toValue: 0,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, [shimmerAnim]);
-
-  const opacity = shimmerAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.3, 0.6],
-  });
-
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.titleSkeleton, { opacity }]} />
+      <SkeletonLoader borderRadius={4} height={20} width={180} />
       <View style={styles.chartArea}>
-        <Animated.View style={[styles.chartBar, { height: 120, opacity }]} />
-        <Animated.View style={[styles.chartBar, { height: 80, opacity }]} />
-        <Animated.View style={[styles.chartBar, { height: 150, opacity }]} />
-        <Animated.View style={[styles.chartBar, { height: 100, opacity }]} />
+        <View style={{ flex: 1 }}>
+          <SkeletonLoader borderRadius={4} height={120} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <SkeletonLoader borderRadius={4} height={80} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <SkeletonLoader borderRadius={4} height={150} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <SkeletonLoader borderRadius={4} height={100} />
+        </View>
       </View>
     </View>
   );
@@ -53,19 +38,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginTop: spacing.md,
   },
-  chartBar: {
-    backgroundColor: colors.border,
-    borderRadius: 4,
-    flex: 1,
-  },
   container: {
     marginBottom: spacing.xl,
     paddingHorizontal: spacing.lg,
-  },
-  titleSkeleton: {
-    backgroundColor: colors.border,
-    borderRadius: 4,
-    height: 20,
-    width: 180,
   },
 });

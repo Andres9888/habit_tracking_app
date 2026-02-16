@@ -24,7 +24,17 @@ import {
 export const getWeeklyInsights = query({
   args: {},
   handler: async (ctx) => {
-    const habits = await ctx.db.query('habits').collect();
+    // SEC-001: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return null;
+    }
+
+    // SEC-001: Query only current user's habits to prevent cross-user data leakage
+    const habits = await ctx.db
+      .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
+      .collect();
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
     const oneWeekAgo = new Date();
@@ -33,16 +43,12 @@ export const getWeeklyInsights = query({
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
     // Single query: fetch ALL tracking records for the user
-    const identity = await ctx.auth.getUserIdentity();
-    let trackings: Doc<'tracking'>[] = [];
-    if (identity) {
-      trackings = await ctx.db
-        .query('tracking')
-        .withIndex('by_user_and_date', (q: any) =>
-          q.eq('userId', identity.subject)
-        )
-        .collect();
-    }
+    const trackings = await ctx.db
+      .query('tracking')
+      .withIndex('by_user_and_date', (q: any) =>
+        q.eq('userId', identity.subject)
+      )
+      .collect();
 
     // Batch streak computation — single pass over tracking data
     const habitIds = activeHabits.map((h) => h._id);

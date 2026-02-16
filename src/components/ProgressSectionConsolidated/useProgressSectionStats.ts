@@ -8,8 +8,17 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
 import { useMemo } from 'react';
 
 // Tracking data passed in - may be Convex docs or minimal records
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TrackingRecord = any;
+ 
+import type { Id } from '../../../convex/_generated/dataModel';
+
+type TrackingRecord = {
+  _id: Id<'tracking'>;
+  _creationTime: number;
+  userId?: string;
+  habitId: Id<'habits'>;
+  date: string;
+  completed: boolean;
+};
 import {
   calculateCurrentStreak,
   calculateDayOfWeekStats,

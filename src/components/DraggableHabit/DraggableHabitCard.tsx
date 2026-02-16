@@ -1,9 +1,11 @@
+/* eslint-disable max-lines */
 import React from 'react';
 import { Animated, Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated from 'react-native-reanimated';
 import { ArchiveAction } from './ArchiveAction';
 import { CardContent } from './CardContent';
+import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
 import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
 import { buildCardStyle } from './cardStyles';
 import type { DraggableHabitCardProps } from './DraggableHabitCard.types';
@@ -17,7 +19,6 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
     props.highContrastMode,
     props.accentColor
   );
-
   const cardStyle = buildCardStyle({
     cardScale: props.cardScale,
     colors: props.colors,
@@ -30,7 +31,7 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
   const habitCard = (
     <ReAnimated.View style={props.entranceCardStyle}>
       <Pressable
-        accessibilityHint='Tap to view habit details, long press for quick actions'
+        accessibilityHint={`Tap to view details${props.onArchive ? ', swipe left to archive' : ''}${props.onLongPress ? ', long press to reorder' : ''}`}
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
         style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
@@ -58,6 +59,13 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
             className='flex-1'
             style={props.entranceContentStyle}
           >
+            {props.showGradientFill && (
+              <StrengthFillBackground
+                isDark={props.isDark}
+                strengthColor={effectiveAccentColor}
+                strengthFillStyle={props.strengthFillStyle}
+              />
+            )}
             <Animated.View
               pointerEvents='none'
               style={{

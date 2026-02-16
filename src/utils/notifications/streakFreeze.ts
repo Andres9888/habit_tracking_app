@@ -38,13 +38,13 @@ export async function scheduleStreakFreezeNotification({
 
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: `❄️ Use a Streak Freeze?`,
         body: `Your ${currentStreak}-day streak on ${habitEmoji} ${habitName} is about to break — use a streak freeze?`,
         data: {
           habitId,
           type: 'streakFreeze',
         },
         sound: 'default',
+        title: `❄️ Use a Streak Freeze?`,
       },
       identifier: `${STREAK_FREEZE_PREFIX}${habitId}`,
       trigger: {

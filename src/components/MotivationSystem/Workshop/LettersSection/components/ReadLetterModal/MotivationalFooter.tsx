@@ -27,10 +27,10 @@ export function MotivationalFooter({
     >
       <View className='flex-row items-start gap-3 rounded-xl p-4'>
         <LinearGradient
-          colors={['#f5f3ff', '#fff1f2']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
           className='absolute inset-0 rounded-xl'
+          colors={['#f5f3ff', '#fff1f2']}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
         />
         <View className='h-8 w-8 items-center justify-center rounded-full bg-violet-100'>
           <Heart className='text-violet-500' fill='#8b5cf6' size={16} />

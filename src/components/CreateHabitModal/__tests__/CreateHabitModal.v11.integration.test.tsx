@@ -77,15 +77,15 @@ jest.mock('react-native-reanimated', () => {
     },
     default: {
       View,
-      createAnimatedComponent: (Component: any) => Component,
+      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
       addWhitelistedNativeProps: jest.fn(),
     },
     addWhitelistedNativeProps: jest.fn(),
-    useSharedValue: (initial: any) => ({ value: initial }),
-    useAnimatedStyle: (callback: any) => callback(),
-    runOnJS: (fn: any) => fn,
-    withSpring: (value: any) => value,
-    withTiming: (value: any) => value,
+    useSharedValue: (initial: unknown) => ({ value: initial }),
+    useAnimatedStyle: (callback: unknown) => callback(),
+    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
+    withSpring: (value: unknown) => value,
+    withTiming: (value: unknown) => value,
   };
 });
 
@@ -94,7 +94,7 @@ jest.mock('react-native-gesture-handler', () => {
   const View = require('react-native').View;
 
   return {
-    GestureDetector: ({ children }: any) => children,
+    GestureDetector: ({ children }: unknown) => children,
     Gesture: {
       Pan: () => ({
         onStart: () => ({}),
@@ -157,7 +157,7 @@ jest
   .spyOn(AccessibilityInfo, 'announceForAccessibility')
   .mockImplementation(jest.fn());
 
-import CreateHabitModal from '../CreateHabitModal';
+import CreateHabitModal from '../CreateHabitModalCentered';
 
 describe('CreateHabitModal V11 Integration Tests', () => {
   const mockOnClose = jest.fn();
@@ -233,9 +233,13 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should update all preview elements simultaneously', async () => {
-      const { getByPlaceholderText, getAllByTestId, getByTestId, getByText, getAllByText } = render(
-        <CreateHabitModal {...defaultProps} />
-      );
+      const {
+        getByPlaceholderText,
+        getAllByTestId,
+        getByTestId,
+        getByText,
+        getAllByText,
+      } = render(<CreateHabitModal {...defaultProps} />);
 
       // 1. Set name
       const input = getByPlaceholderText('e.g., Read 10 minutes');
@@ -696,9 +700,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should handle rapid emoji selection changes', async () => {
-      const { getAllByTestId } = render(
-        <CreateHabitModal {...defaultProps} />
-      );
+      const { getAllByTestId } = render(<CreateHabitModal {...defaultProps} />);
 
       // Select multiple emojis quickly
       const emoji1 = getAllByTestId('emoji-chip-🎯')[0];
@@ -716,9 +718,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should handle rapid color selection changes', async () => {
-      const { getByTestId } = render(
-        <CreateHabitModal {...defaultProps} />
-      );
+      const { getByTestId } = render(<CreateHabitModal {...defaultProps} />);
 
       // Select multiple colors quickly
       const color1 = getByTestId('color-swatch-22C55E');

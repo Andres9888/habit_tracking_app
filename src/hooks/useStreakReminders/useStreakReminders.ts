@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * useStreakReminders — Smart scheduling of streak-at-risk notifications.
  *
@@ -98,10 +99,10 @@ export function useStreakReminders({
           : globalTime;
 
       await scheduleStreakAtRiskNotification({
+        currentStreak: habit.currentStreak,
+        habitEmoji: habit.habitEmoji,
         habitId: habit.habitId,
         habitName: habit.habitName,
-        habitEmoji: habit.habitEmoji,
-        currentStreak: habit.currentStreak,
         hour: time.hour,
         minute: time.minute,
       });
@@ -110,10 +111,10 @@ export function useStreakReminders({
       if (isPremium && habit.currentStreak >= 3) {
         const freezeHour = (time.hour + 1) % 24;
         await scheduleStreakFreezeNotification({
+          currentStreak: habit.currentStreak,
+          habitEmoji: habit.habitEmoji || '🔥',
           habitId: habit.habitId,
           habitName: habit.habitName,
-          habitEmoji: habit.habitEmoji || '🔥',
-          currentStreak: habit.currentStreak,
           hour: freezeHour,
           minute: time.minute,
         });

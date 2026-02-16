@@ -2,7 +2,7 @@
  * VisionBoardSection Hooks - State management for the Vision Board feature
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import { MAX_IMAGES, type VisionBoardImage } from './types';
 import { useImageUploader } from './useImageUploader';
@@ -32,6 +32,15 @@ export function useVisionBoardState(props: UseVisionBoardStateProps) {
     null
   );
 
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
+
   const hasImages = imageCount > 0;
   const canAddMore = imageCount < MAX_IMAGES;
 
@@ -49,7 +58,8 @@ export function useVisionBoardState(props: UseVisionBoardStateProps) {
 
   const handleCloseViewer = useCallback(() => {
     setIsViewerOpen(false);
-    setTimeout(() => setSelectedImage(null), 300);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(() => setSelectedImage(null), 300);
   }, []);
 
   const handleUpdateCaption = useCallback(
@@ -74,10 +84,10 @@ export function useVisionBoardState(props: UseVisionBoardStateProps) {
     handleCloseViewer,
     handleDeleteImage,
     handleSectionPress,
-    hasImages,
     handleUpdateCaption,
-    isAddModalOpen,
     handleViewImage,
+    hasImages,
+    isAddModalOpen,
     isLoading,
     isViewerOpen,
     selectedImage,

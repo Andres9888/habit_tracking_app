@@ -9,7 +9,7 @@
  * Accessibility: Announces "Meditation habit, 65% strength, Strong level"
  */
 
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { useAppTheme } from '../../theme';
 
 import type { HabitStrengthIndicatorProps } from './types';
@@ -20,7 +20,7 @@ import { CompactIndicator } from './CompactIndicator';
 import { FullIndicator } from './FullIndicator';
 import { GraphIndicator } from './GraphIndicator';
 
-export default function HabitStrengthIndicator({
+function HabitStrengthIndicatorComponent({
   strength,
   strengthLevel,
   variant = 'compact',
@@ -41,7 +41,7 @@ export default function HabitStrengthIndicator({
     strength,
   });
 
-  const strengthColorFn = () => getStrengthColor(level, theme);
+  const strengthColorFn = useMemo(() => () => getStrengthColor(level, theme), [level, theme]);
 
   const variantProps = {
     config,
@@ -68,3 +68,5 @@ export default function HabitStrengthIndicator({
 
   return null;
 }
+
+export default memo(HabitStrengthIndicatorComponent);

@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Check, BellOff } from 'lucide-react-native';
 import { clsx } from 'clsx';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ScheduleFooterProps {
   isEnabled: boolean;
@@ -24,9 +25,10 @@ export function ScheduleFooter({
   onCancel,
 }: ScheduleFooterProps) {
   const isDisabled = isSaving || (!isEnabled && !hasExistingSchedule);
+  const insets = useSafeAreaInsets();
 
   return (
-    <View className='border-t border-stone-100 px-4 pb-8 pt-4'>
+    <View className='border-t border-stone-100 px-4 pt-4' style={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
       <Pressable
         accessibilityLabel={
           isEnabled ? 'Save schedule' : 'Disable scheduled delivery'

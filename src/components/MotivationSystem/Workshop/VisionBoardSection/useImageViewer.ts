@@ -5,6 +5,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
 import type { VisionBoardImage } from './types';
+import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 
 interface UseImageViewerProps {
   image: VisionBoardImage | null;
@@ -57,6 +58,7 @@ export function useImageViewer({
               onClose();
             } catch (error) {
               if (__DEV__) console.error('Failed to delete:', error);
+              Alert.alert('Delete Failed', ERROR_MESSAGES.DATA_OPS.DELETE_IMAGE_FAILED);
             } finally {
               setIsDeleting(false);
             }

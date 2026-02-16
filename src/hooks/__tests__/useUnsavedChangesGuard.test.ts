@@ -46,7 +46,7 @@ describe('useUnsavedChangesGuard', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (Platform.OS as any) = 'ios';
+    (Platform.OS as unknown) = 'ios';
   });
 
   describe('hasUnsavedChanges', () => {
@@ -485,7 +485,7 @@ describe('useUnsavedChangesGuard', () => {
 
   describe('Android back button interception', () => {
     beforeEach(() => {
-      (Platform.OS as any) = 'android';
+      (Platform.OS as unknown) = 'android';
     });
 
     it('does not add listener when interceptBackButton is false', () => {
@@ -516,7 +516,7 @@ describe('useUnsavedChangesGuard', () => {
     });
 
     it('does not add listener on iOS even when interceptBackButton is true', () => {
-      (Platform.OS as any) = 'ios';
+      (Platform.OS as unknown) = 'ios';
 
       renderHook(() =>
         useUnsavedChangesGuard({

@@ -1,7 +1,7 @@
 /**
  * Business logic hooks for AnalyticsScreen
  */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
@@ -23,14 +23,24 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const strengthDistribution = useQuery(api.analytics.getStrengthDistribution);
   const trendData = useQuery(api.analytics.get30DayTrend);
   const complianceData = useQuery(api.analytics.getComplianceData);
-  const weeklyInsights = useQuery(api.analytics.getWeeklyInsights);
+  const weeklyInsightsRaw = useQuery(api.analytics.getWeeklyInsights);
+  const weeklyInsights = (weeklyInsightsRaw && 'weekOverWeekChange' in weeklyInsightsRaw ? weeklyInsightsRaw : undefined) as import('../../components/WeeklyInsightsCard').WeeklyInsights | undefined;
 
   const isLoading = !overviewStats;
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup refresh timer on unmount
+  useEffect(() => {
+    return () => {
+      if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+    };
+  }, []);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     // Convex queries automatically refresh
-    setTimeout(() => setRefreshing(false), 1000);
+    if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+    refreshTimerRef.current = setTimeout(() => setRefreshing(false), 1000);
   }, []);
 
   const handleHabitPress = useCallback((_habitId: string) => {
@@ -76,21 +86,21 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
 
   return {
     complianceData,
-    isLoading,
-    handleExportPress,
-    isPremiumUser,
     handleExport,
-    onRefresh,
+    handleExportPress,
     handleHabitPress,
-    refreshing,
     handleStartTrial,
-    showExportMenu,
+    isLoading,
+    isPremiumUser,
+    onRefresh,
     overviewStats,
-    showPaywall,
+    refreshing,
     setShowExportMenu,
     setShowPaywall,
+    showExportMenu,
+    showPaywall,
     strengthDistribution,
     trendData,
-    weeklyInsights,
+    weeklyInsights: weeklyInsights ?? undefined,
   };
 };

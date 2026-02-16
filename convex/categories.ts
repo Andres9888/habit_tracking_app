@@ -23,15 +23,12 @@ export const list = query({
     }
 
     // Extract unique categories from templates
-    const uniqueCategories = Array.from(
-      new Set(templates.map((template) => template.category))
-    ).sort();
+    const uniqueCategories = [
+      ...new Set(templates.map((template) => template.category)),
+    ].sort();
 
     // Define category metadata (icon and label for each category)
-    const categoryMetadata: Record<
-      string,
-      { icon: string; label: string }
-    > = {
+    const categoryMetadata: Record<string, { icon: string; label: string }> = {
       andrew_huberman: { icon: '🔬', label: 'Huberman' },
       breathing: { icon: '🌬️', label: 'Breathing' },
       creativity: { icon: '🎨', label: 'Creativity' },
@@ -52,7 +49,9 @@ export const list = query({
     const categories = uniqueCategories.map((categoryId) => {
       const metadata = categoryMetadata[categoryId] || {
         icon: '📌',
-        label: categoryId.charAt(0).toUpperCase() + categoryId.slice(1).replace(/_/g, ' '),
+        label:
+          categoryId.charAt(0).toUpperCase() +
+          categoryId.slice(1).replaceAll('_', ' '),
       };
 
       return {
@@ -63,10 +62,6 @@ export const list = query({
     });
 
     // Always include 'All' as the first category (alphabetical properties)
-    return [
-      { icon: '✨', id: 'all' as const, label: 'All' },
-      ...categories,
-    ];
+    return [{ icon: '✨', id: 'all' as const, label: 'All' }, ...categories];
   },
 });
-

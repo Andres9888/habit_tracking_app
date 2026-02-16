@@ -5,7 +5,7 @@
  * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import Animated, {
   type AnimatedStyle,
@@ -34,7 +34,7 @@ interface StatusIndicatorProps {
   chainRotate?: SharedValue<number>;
 }
 
-export function StatusIndicator({
+export const StatusIndicator = memo(function StatusIndicator({
   completed,
   atRisk,
   checkmarkAnimatedStyle,
@@ -52,7 +52,7 @@ export function StatusIndicator({
         <View
           style={[
             styles.checkmark,
-            { backgroundColor: theme.custom.colors.primary[500] },
+            { backgroundColor: theme.custom.colors.success },
           ]}
         >
           <ChainLinkAnimation
@@ -70,8 +70,8 @@ export function StatusIndicator({
       <Animated.View
         style={[
           styles.checkmark,
-          { backgroundColor: theme.custom.colors.primary[500] },
-          checkmarkAnimatedStyle as any,
+          { backgroundColor: theme.custom.colors.success },
+          checkmarkAnimatedStyle as AnimatedStyle,
         ]}
       >
         <Text style={styles.checkmarkText}>✓</Text>
@@ -92,5 +92,14 @@ export function StatusIndicator({
     );
   }
 
-  return null;
-}
+  // Show empty circle for uncompleted state — provides a visible toggle target
+  // and meets 44x44px minimum touch target requirement
+  return (
+    <View
+      style={[
+        styles.checkCircle,
+        styles.checkCircleUnchecked,
+      ]}
+    />
+  );
+});

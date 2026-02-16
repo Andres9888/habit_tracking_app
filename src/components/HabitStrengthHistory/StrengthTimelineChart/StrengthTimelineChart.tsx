@@ -32,7 +32,7 @@ export function StrengthTimelineChart({
   const chartColor = useMemo(() => {
     if (habitColor) return habitColor;
     if (strengthHistory.length > 0)
-      return getStrengthColor(strengthHistory.at(-1)!.strength);
+      return getStrengthColor(strengthHistory.at(-1)?.strength ?? 0);
     return DEFAULT_CHART_COLOR;
   }, [habitColor, strengthHistory]);
 

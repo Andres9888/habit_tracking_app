@@ -4,12 +4,17 @@
  * Timeout and event emission utilities for conflict resolution.
  */
 
-import type { CompletionStateChecker, ConflictEventListener } from './types';
+import type { Id } from '../../../../../convex/_generated/dataModel';
+import type {
+  CompletionStateChecker,
+  ConflictEventListener,
+  ConflictResolution,
+} from './types';
 import { createConflictEvent } from './helpers';
 
 export async function checkWithTimeout(
   check: CompletionStateChecker,
-  habitId: any,
+  habitId: Id<'habits'>,
   date: string,
   timeout: number
 ): Promise<boolean | null> {
@@ -26,9 +31,9 @@ export async function checkWithTimeout(
 
 export function emitConflictEvents(
   opId: string,
-  habitId: any,
+  habitId: Id<'habits'>,
   date: string,
-  resolution: any,
+  resolution: ConflictResolution,
   reason: string,
   onEvent: ConflictEventListener
 ): void {
