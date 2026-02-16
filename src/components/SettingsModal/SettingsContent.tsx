@@ -10,6 +10,7 @@ import {
   Sun,
   Volume2,
   Lock,
+  Download,
 } from 'lucide-react-native';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -262,10 +263,20 @@ export function SettingsContent(p: SettingsContentProps) {
               icon={<BookOpen color='#78716c' size={16} />}
               iconBackgroundColor='#e7e5e4'
               label='Archived Habits'
-              showBorder={false}
               type='navigation'
               onPress={p.onOpenArchivedHabits}
             />
+            {p.onExportData && (
+              <SettingsRow
+                highContrastMode={hc}
+                icon={<Download color='#3b82f6' size={16} />}
+                iconBackgroundColor='#dbeafe'
+                label='Export Data'
+                showBorder={false}
+                type='navigation'
+                onPress={p.onExportData}
+              />
+            )}
           </SettingsSection>
         </Animated.View>
 

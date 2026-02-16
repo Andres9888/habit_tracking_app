@@ -70,6 +70,7 @@ export interface SettingsContentProps {
   onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
+  onExportData?: () => void;
   showGradientFill: boolean;
   // Streak reminders
   streakRemindersEnabled: boolean;

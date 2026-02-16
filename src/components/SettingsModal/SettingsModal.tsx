@@ -3,7 +3,7 @@
  * SettingsModal Component
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, View } from 'react-native';
 import { useQuery } from 'convex/react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -15,6 +15,7 @@ import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
 import { SettingsHeader } from './SettingsHeader';
 import { SettingsContent } from './SettingsContent';
+import { ExportDataSheet, useDataExport } from '../ExportDataSheet';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsModalProps } from './types';
 
@@ -55,6 +56,10 @@ function SettingsModalContent({
   const colors = getSettingsColors(isHighContrastActive, isDark);
   const archivedHabits = useQuery(api.habits.listArchived);
   const archivedHabitsCount = archivedHabits?.length ?? 0;
+  
+  // Export data state
+  const [exportSheetVisible, setExportSheetVisible] = useState(false);
+  const { exportCSV, exportJSON } = useDataExport();
 
   if (!visible) return null;
 
@@ -110,6 +115,7 @@ function SettingsModalContent({
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
               onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
+              onExportData={() => setExportSheetVisible(true)}
               onOpenArchivedHabits={() => setView('archived')}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
@@ -117,6 +123,12 @@ function SettingsModalContent({
           </>
         )}
       </View>
+      <ExportDataSheet
+        visible={exportSheetVisible}
+        onClose={() => setExportSheetVisible(false)}
+        onExportCSV={exportCSV}
+        onExportJSON={exportJSON}
+      />
     </Modal>
   );
 }
