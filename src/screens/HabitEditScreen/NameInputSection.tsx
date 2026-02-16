@@ -1,5 +1,5 @@
 /**
- * NameInputSection - Matches Create modal style
+ * NameInputSection - Dark mode aware
  * 34px hero title, centered input with subtle border
  */
 
@@ -64,6 +64,9 @@ export function NameInputSection({
           style={{ fontSize: 13, color: colors.text.tertiary }}
         >
           {habitName.length}/50 characters
+          {habitName.length > 0 && habitName.trim().length < 2
+            ? ' · At least 2 characters required'
+            : ''}
         </Text>
       </Animated.View>
     </View>

@@ -1,4 +1,4 @@
-/** EditHeader - X button left, Save button right (like Create modal) */
+/** EditHeader - Dark mode aware */
 import { View, Pressable, Text, Keyboard, ActivityIndicator } from 'react-native';
 import { X } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
@@ -78,10 +78,10 @@ export function EditHeader({
         ]}
         onPress={handleSave}
         onPressIn={() => {
-          scale.value = withSpring(0.95, { damping: 15 });
+          scale.value = withSpring(0.95, { damping: 18, stiffness: 240 });
         }}
         onPressOut={() => {
-          scale.value = withSpring(1, { damping: 15 });
+          scale.value = withSpring(1, { damping: 18, stiffness: 240 });
         }}
       >
         {isSaving && <ActivityIndicator color='#ffffff' size='small' />}

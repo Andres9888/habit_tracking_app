@@ -1,12 +1,10 @@
 /**
- * DangerZone Component
+ * DangerZone Component — Dark mode aware
  *
- * Destructive actions section for habit management.
- * Provides archive (recoverable) and delete (permanent) options
- * with appropriate visual warnings.
+ * Destructive actions with confirmation dialogs.
  */
 
-import { View, Text, Pressable } from 'react-native';
+import { Alert, View, Text, Pressable } from 'react-native';
 import { Trash2, Archive } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, {
@@ -38,12 +36,26 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
 
   const handleArchive = () => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    onArchive();
+    Alert.alert(
+      'Archive Habit',
+      'This habit will be hidden from your daily list. You can restore it later from Settings.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Archive', style: 'destructive', onPress: onArchive },
+      ],
+    );
   };
 
   const handleDelete = () => {
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    onDelete();
+    Alert.alert(
+      'Delete Habit',
+      'This will permanently delete this habit and all its history. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: onDelete },
+      ],
+    );
   };
 
   // Dark mode: muted tinted backgrounds; light mode: standard tinted backgrounds
@@ -72,12 +84,8 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
           },
         ]}
         onPress={handleArchive}
-        onPressIn={() => {
-          archiveScale.value = withSpring(0.97, { damping: 15 });
-        }}
-        onPressOut={() => {
-          archiveScale.value = withSpring(1, { damping: 15 });
-        }}
+        onPressIn={() => { archiveScale.value = withSpring(0.97, springConfig); }}
+        onPressOut={() => { archiveScale.value = withSpring(1, springConfig); }}
       >
         <Archive color={archiveIconColor} size={18} strokeWidth={2} />
         <Text
@@ -105,12 +113,8 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
           },
         ]}
         onPress={handleDelete}
-        onPressIn={() => {
-          deleteScale.value = withSpring(0.97, { damping: 15 });
-        }}
-        onPressOut={() => {
-          deleteScale.value = withSpring(1, { damping: 15 });
-        }}
+        onPressIn={() => { deleteScale.value = withSpring(0.97, springConfig); }}
+        onPressOut={() => { deleteScale.value = withSpring(1, springConfig); }}
       >
         <Trash2 color={deleteIconColor} size={18} strokeWidth={2} />
         <Text

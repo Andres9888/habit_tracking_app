@@ -3,8 +3,10 @@ import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { EditHeader } from './EditHeader';
+import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
 import { DangerZone } from './DangerZone';
@@ -13,7 +15,7 @@ import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
 // eslint-disable-next-line max-lines-per-function
-export default function HabitEditScreen({
+function HabitEditScreenContent({
   visible,
   habitId,
   onClose,
@@ -21,9 +23,7 @@ export default function HabitEditScreen({
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
   const state = useHabitEditScreen({ habitId, onClose });
-  // Modal pattern: return null when not visible — the modal simply doesn't mount
-  if (!visible || !habitId) return null;
-
+  const { colors: themeColors } = useThemeColors();
   return (
     <Modal
       transparent
@@ -40,6 +40,12 @@ export default function HabitEditScreen({
             className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
             style={{ backgroundColor: colors.background }}
           >
+            {state.isLoading ? (
+              <View style={{ paddingTop: Math.max(insets.top + 4, 12) }}>
+                <HabitEditSkeleton />
+              </View>
+            ) : (
+              <>
             <EditHeader
               canSave={state.habitName.trim().length >= 2}
               isSaving={state.isSaving}
@@ -94,9 +100,21 @@ export default function HabitEditScreen({
                 </Animated.View>
               </Pressable>
             </ScrollView>
+            </>
+            )}
           </View>
         </View>
       </KeyboardAvoidingView>
     </Modal>
+  );
+}
+
+export default function HabitEditScreen(props: HabitEditScreenProps) {
+  if (!props.visible || !props.habitId) return null;
+
+  return (
+    <ScreenErrorBoundary screenName="Edit Habit" onGoBack={props.onClose}>
+      <HabitEditScreenContent {...props} />
+    </ScreenErrorBoundary>
   );
 }

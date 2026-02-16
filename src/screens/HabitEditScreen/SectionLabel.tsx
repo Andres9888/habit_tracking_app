@@ -1,4 +1,4 @@
-/** Section label with animation */
+/** Section label with animation — dark mode aware */
 import { Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
