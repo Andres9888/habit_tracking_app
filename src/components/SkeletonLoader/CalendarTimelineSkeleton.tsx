@@ -4,15 +4,17 @@
 import React from 'react';
 import { View } from 'react-native';
 import { SkeletonLoader } from './SkeletonLoader';
+import { useSkeletonTheme } from './useSkeletonTheme';
 import type { ReduceMotionProps } from './types';
 
 export function CalendarTimelineSkeleton({
   reduceMotion = false,
 }: ReduceMotionProps) {
+  const { surfaceBg } = useSkeletonTheme();
   return (
     <View
       className='rounded-2xl pb-3 pt-1'
-      style={{ backgroundColor: '#fafaf9' }}
+      style={{ backgroundColor: surfaceBg }}
     >
       <View className='mb-3 flex-row items-center justify-between px-2'>
         <SkeletonLoader

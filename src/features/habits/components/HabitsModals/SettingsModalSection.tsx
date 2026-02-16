@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import SettingsModal from '../../../../components/SettingsModal';
 import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders';
 import { usePremium } from '../../../../hooks/usePremium';
@@ -22,6 +23,8 @@ export function SettingsModalSection({
   return (
     <SettingsModal
       celebrationsEnabled={celebrationsEnabled}
+      completionSoundEnabled={settings?.completionSoundEnabled ?? false}
+      completionSoundType={settings?.completionSoundType ?? 'chime'}
       dayShape={settings?.dayShape ?? 'square'}
       habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
       isHighContrastActive={settings?.highContrastMode ?? false}
@@ -32,6 +35,12 @@ export function SettingsModalSection({
       streakRemindersEnabled={streakReminders.enabled}
       streakReminderTime={streakReminders.reminderTime}
       visible={showSettings}
+      onChangeCompletionSoundEnabled={(value) =>
+        onSettingsChange({ completionSoundEnabled: value })
+      }
+      onChangeCompletionSoundType={(value) =>
+        onSettingsChange({ completionSoundType: value })
+      }
       onChangeDayShape={(value) => onSettingsChange({ dayShape: value })}
       onChangeHabitCompletionIcon={(value) =>
         onSettingsChange({ habitCompletionIcon: value })
