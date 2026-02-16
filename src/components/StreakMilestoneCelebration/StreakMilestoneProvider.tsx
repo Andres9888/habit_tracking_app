@@ -1,10 +1,38 @@
 /* eslint-disable max-lines */
 /**
- * StreakMilestoneProvider
- * Global provider for managing streak milestone celebrations
+ * StreakMilestoneProvider - Global Context for Streak Celebrations
  *
- * Exposes a trigger function that can be called from anywhere
- * when a habit completion might cross a milestone threshold
+ * Provides a global context for managing streak milestone celebrations
+ * (7, 30, 100 days) across the app. Renders celebration modals and
+ * share card generators when milestones are reached.
+ *
+ * **Key Features:**
+ * - Detects milestone crossings (7, 30, 100 day streaks)
+ * - Displays celebration modal with confetti animation
+ * - Generates shareable achievement cards
+ * - Persists shown milestones to avoid duplicate celebrations
+ *
+ * **Usage Pattern:**
+ * ```tsx
+ * // In app root
+ * <StreakMilestoneProvider userName="John">
+ *   <App />
+ * </StreakMilestoneProvider>
+ *
+ * // In any habit completion handler
+ * const { checkAndCelebrate } = useStreakMilestone();
+ * checkAndCelebrate(habitId, habitName, emoji, prevStreak, newStreak);
+ * ```
+ *
+ * **Architecture Note:**
+ * This provider is located in src/components/StreakMilestoneCelebration/
+ * but follows the React Context provider pattern. For consistency, it
+ * should ideally be extracted to src/contexts/StreakMilestoneContext/
+ * with the celebration UI remaining in src/components/.
+ * File move deferred to avoid breaking changes.
+ *
+ * @see constants.ts for STREAK_MILESTONES and milestone utilities
+ * @see useMilestoneCheck.ts for milestone detection logic
  */
 
 import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
@@ -12,7 +40,19 @@ import { StreakMilestoneCelebration } from './StreakMilestoneCelebration';
 import { ShareCardGenerator } from '../ShareCardGenerator';
 import { useCelebrationHandlers } from './useCelebrationHandlers';
 
+/**
+ * Context value for streak milestone celebrations
+ */
 interface StreakMilestoneContextValue {
+  /**
+   * Check if a milestone was crossed and trigger celebration if so
+   *
+   * @param habitId - Unique habit identifier
+   * @param habitName - Display name of the habit
+   * @param habitEmoji - Emoji icon for the habit
+   * @param previousStreak - Streak count before latest completion
+   * @param currentStreak - Streak count after latest completion
+   */
   checkAndCelebrate: (
     habitId: string,
     habitName: string,
@@ -25,12 +65,35 @@ interface StreakMilestoneContextValue {
 const StreakMilestoneContext =
   createContext<StreakMilestoneContextValue | null>(null);
 
+/**
+ * Props for StreakMilestoneProvider component
+ */
 interface StreakMilestoneProviderProps {
+  /** React children to render */
   children: ReactNode;
-  /** User name for share cards */
+  /** User name to display on share cards */
   userName?: string;
 }
 
+/**
+ * StreakMilestoneProvider Component
+ *
+ * Provider component that manages global celebration state and renders
+ * celebration modals and share card generators when milestones are reached.
+ *
+ * @param props - Component props
+ * @param props.children - Child components to render
+ * @param props.userName - User name to display on share cards (default: '')
+ *
+ * @example
+ * ```tsx
+ * <StreakMilestoneProvider userName={user?.firstName || ''}>
+ *   <NavigationContainer>
+ *     <AppNavigator />
+ *   </NavigationContainer>
+ * </StreakMilestoneProvider>
+ * ```
+ */
 export function StreakMilestoneProvider({
   children,
   userName = '',
@@ -82,7 +145,38 @@ export function StreakMilestoneProvider({
 }
 
 /**
- * Hook to access streak milestone celebration trigger
+ * useStreakMilestone Hook
+ *
+ * Access the streak milestone celebration trigger function.
+ * Use this hook to programmatically check for and trigger milestone
+ * celebrations when a habit completion occurs.
+ *
+ * @throws Error if used outside StreakMilestoneProvider
+ *
+ * @returns Context value with checkAndCelebrate function
+ *
+ * @example
+ * ```tsx
+ * function HabitCompletionButton() {
+ *   const { checkAndCelebrate } = useStreakMilestone();
+ *
+ *   const handleComplete = async () => {
+ *     const prevStreak = habit.currentStreak;
+ *     await completeHabit();
+ *     const newStreak = habit.currentStreak + 1;
+ *
+ *     checkAndCelebrate(
+ *       habit._id,
+ *       habit.name,
+ *       habit.emoji,
+ *       prevStreak,
+ *       newStreak
+ *     );
+ *   };
+ *
+ *   return <Button onPress={handleComplete}>Complete</Button>;
+ * }
+ * ```
  */
 export function useStreakMilestone(): StreakMilestoneContextValue {
   const context = useContext(StreakMilestoneContext);

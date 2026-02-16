@@ -1,11 +1,17 @@
 /**
- * SyncStatusContext Defaults
+ * SyncStatusContext Default Values
+ *
+ * Default context values used before SyncStatusProvider mounts
+ * and for createContext initialization.
+ *
+ * The defaults assume an idle state with no sync activity.
+ * triggerSync will reject if called before provider mounts.
  */
 
 import type { SyncStatus, SyncStatusContextValue } from './types';
 
 /**
- * Default sync status
+ * Default sync status (idle, no pending operations)
  */
 export const defaultSyncStatus: SyncStatus = {
   hasPendingOperations: false,
@@ -19,12 +25,15 @@ export const defaultSyncStatus: SyncStatus = {
 };
 
 /**
- * Noop unsubscribe function for default context
+ * No-op function for callback unsubscribe
  */
 const noop = (): void => {};
 
 /**
- * Default context value (throws on method calls if used without provider)
+ * Default context value
+ *
+ * Used as initial value before provider mounts or if used outside provider.
+ * triggerSync will reject with error if called before provider mounts.
  */
 export const defaultContextValue: SyncStatusContextValue = {
   onSyncComplete: () => noop,

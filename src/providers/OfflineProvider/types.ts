@@ -1,22 +1,28 @@
 /**
  * OfflineProvider Types
  *
- * Types for the offline queue provider and context.
+ * Type definitions for offline queue restoration provider.
+ * Provides context for monitoring queue restoration state during app startup.
+ *
+ * @see OfflineProvider.tsx for provider implementation
+ * @see docs/offline-habit-sync.md for offline architecture details
  */
 
 import type { ReactNode } from 'react';
 
 /**
- * Value provided by the OfflineProvider context
+ * Context value provided by OfflineProvider
+ *
+ * Exposes restoration state and manual restoration trigger.
  */
 export interface OfflineContextValue {
-  /** Whether the queue has been restored from storage */
+  /** Whether the offline queue has been successfully restored from AsyncStorage */
   isRestored: boolean;
-  /** Whether restoration is currently in progress */
+  /** Whether queue restoration is currently in progress */
   isRestoring: boolean;
   /** Error that occurred during restoration, if any */
   restorationError: Error | null;
-  /** Manually trigger queue restoration (useful after auth changes) */
+  /** Manually trigger queue restoration (useful after auth changes or errors) */
   restoreQueue: () => Promise<void>;
 }
 
@@ -24,7 +30,8 @@ export interface OfflineContextValue {
  * Props for the OfflineProvider component
  */
 export interface OfflineProviderProps {
+  /** React children to render */
   children: ReactNode;
-  /** Skip auto-restoration on mount (useful for testing) */
+  /** Skip automatic restoration on mount (useful for testing scenarios) */
   skipAutoRestore?: boolean;
 }

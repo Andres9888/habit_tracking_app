@@ -1,6 +1,28 @@
 /**
- * StreakMilestoneCelebration - Barrel Export
- * Streak milestone celebration system (7, 30, 100 days)
+ * StreakMilestoneCelebration Module - Barrel Export
+ *
+ * Streak milestone celebration system for 7, 30, and 100 day achievements.
+ * Includes provider for global celebration state, celebration modal UI,
+ * confetti animations, and share card generation.
+ *
+ * **Quick Start:**
+ * ```tsx
+ * // 1. Add provider to app root
+ * <StreakMilestoneProvider userName={user.firstName}>
+ *   <App />
+ * </StreakMilestoneProvider>
+ *
+ * // 2. Trigger celebrations from habit completion
+ * const { checkAndCelebrate } = useStreakMilestone();
+ * checkAndCelebrate(habitId, name, emoji, prevStreak, newStreak);
+ * ```
+ *
+ * **Architecture Note:**
+ * This module contains both UI components and a React Context provider.
+ * Ideally, the provider should be extracted to src/contexts/StreakMilestoneContext/
+ * for consistency with other context providers. File move deferred.
+ *
+ * @module StreakMilestoneCelebration
  */
 
 // Main component
