@@ -12,7 +12,7 @@ import { springs } from '../../../../theme/animations';
 import { DISMISS_THRESHOLD, VELOCITY_THRESHOLD } from '@/constants';
 import type { SortOptionConfig } from './types';
 
-export { DISMISS_THRESHOLD, VELOCITY_THRESHOLD };
+
 
 export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -88,3 +88,5 @@ export const SORT_OPTIONS: SortOptionConfig[] = [
 
 /** Quick pick chips - a subset of options for fast access */
 export const QUICK_PICK_OPTIONS = SORT_OPTIONS.filter((opt) => opt.chipLabel);
+
+export {DISMISS_THRESHOLD, VELOCITY_THRESHOLD} from '@/constants';
