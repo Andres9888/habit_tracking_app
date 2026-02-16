@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { VerificationForm } from './VerificationForm';
+import { colors } from "../../../../theme/colors";
 
 interface VerificationViewProps {
   emailAddress: string;
@@ -27,6 +29,7 @@ export function VerificationView({
   const [code, setCode] = useState('');
   const [cooldown, setCooldown] = useState(RESEND_COOLDOWN_S);
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
 
   // Countdown timer for resend cooldown
   useEffect(() => {
@@ -42,7 +45,7 @@ export function VerificationView({
   }, [cooldown, onResend]);
 
   return (
-    <View className='flex-1' style={{ backgroundColor: '#FAF8F5' }}>
+    <View className='flex-1' style={{ backgroundColor: colors.background }}>
       <View className='flex-1 px-6' style={{ paddingTop: insets.top + 24 }}>
         <Animated.View entering={anim(0)}>
           <Text
@@ -90,7 +93,7 @@ export function VerificationView({
           >
             <Text
               style={{
-                color: cooldown > 0 ? '#a8a29e' : '#047857',
+                color: cooldown > 0 ? '#a8a29e' : colors.primary[700],
                 fontSize: 15,
                 fontWeight: '600',
               }}

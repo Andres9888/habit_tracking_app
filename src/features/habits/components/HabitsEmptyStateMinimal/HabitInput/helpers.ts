@@ -2,20 +2,25 @@
  * Helper functions for HabitInput
  */
 
-import { COLORS, CHARACTER_LIMIT } from '../constants';
+import { CHARACTER_LIMIT } from '../constants';
 
 /**
  * Get character counter color based on length
- * - Default (stone-400): under warning threshold
- * - Warning (amber-500): 35+ characters
- * - Error (red-500): 45+ characters
+ * - Default: under warning threshold
+ * - Warning: 35+ characters
+ * - Error: 45+ characters
  */
-export function getCharacterCounterColor(length: number): string {
+export function getCharacterCounterColor(
+  length: number,
+  normalColor: string,
+  warningColor: string,
+  errorColor: string
+): string {
   if (length >= CHARACTER_LIMIT.errorThreshold) {
-    return COLORS.red500;
+    return errorColor;
   }
   if (length >= CHARACTER_LIMIT.warningThreshold) {
-    return COLORS.amber500;
+    return warningColor;
   }
-  return COLORS.stone400;
+  return normalColor;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * UnsavedChangesAlert Component
  * Custom styled modal for confirming discard of unsaved changes

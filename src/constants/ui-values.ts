@@ -274,6 +274,6 @@ export const ANIMATION_VALUES = {
   /** Default timing for interactive press animations */
   pressAnimationDuration: 50,
 
-  /** Stagger duration for list item entrance animations */
-  staggerDuration: 100,
+  /** Stagger duration for list item entrance animations (matches durations.stagger) */
+  staggerDuration: 60,
 } as const;

@@ -16,7 +16,7 @@ import { Settings } from 'lucide-react-native';
 
 import type { StatsRowProps } from './types';
 import { COLORS } from './constants';
-import { styles } from './StatsRow.styles';
+import { useThemedStatsStyles } from './StatsRow.styles';
 import { StreakBadge } from './StreakBadge';
 
 const PRESS_SCALE = 0.95;
@@ -30,6 +30,7 @@ export const StatsRow = memo(function StatsRow({
   habitColor,
   onSettingsPress,
 }: StatsRowProps) {
+  const styles = useThemedStatsStyles();
   const shouldReduceMotion = useReducedMotion();
   const settingsScale = useSharedValue(1);
 
