@@ -1,4 +1,3 @@
-import type { ViewStyle, TextStyle } from 'react-native';
 import { useAppTheme } from '../../theme';
 import type {
   ButtonSize,

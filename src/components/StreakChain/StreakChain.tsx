@@ -7,7 +7,7 @@ import { spacing, borderRadius } from '../../theme/spacing';
 import { fontFamilies } from '../../theme/typography';
 import { durations } from '../../theme/animations';
 import { useStreakChainLogic } from './StreakChain.hooks';
-import type { DayStatus, StreakChainProps } from './StreakChain.types';
+import type { StreakChainProps } from './StreakChain.types';
 
 // Re-export types for backwards compatibility
 export type { DayStatus, StreakChainProps } from './StreakChain.types';

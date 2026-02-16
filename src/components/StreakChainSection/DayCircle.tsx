@@ -87,6 +87,10 @@ export function DayCircle({
       ? palette.primary[600]
       : colors.text.tertiary;
 
+  const a11yLabel = isToday
+    ? `${label}, today${todayCompleted ? ', completed' : ', not yet completed'}`
+    : `${label}${completed ? ', completed' : ', not completed'}`;
+
   return (
     <Animated.View style={[localStyles.wrapper, animatedStyle]}>
       <View
