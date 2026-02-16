@@ -34,7 +34,7 @@ export function HeroSection({
         <Animated.View
           className='mb-3 h-20 w-20 items-center justify-center rounded-2xl shadow-lg'
           style={[
-            { backgroundColor: habit.color ?? habit.iconColor || '#fef3c7' },
+            { backgroundColor: (habit.color ?? habit.iconColor) || '#fef3c7' },
             iconAnimatedStyle,
           ]}
         >

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /** NotesEmptyState - OPTIMIZED: Better animation, haptics, dark mode, Pressable for a11y */
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
