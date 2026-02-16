@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
 
 import type { CalendarColors } from '../CalendarTimeline.types';
 
@@ -20,6 +21,15 @@ export const WeekNavigationHeader: React.FC<WeekNavigationHeaderProps> = ({
   canNavigateForward,
   colors,
 }) => {
+  const handlePreviousWeek = () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onPreviousWeek?.();
+  };
+
+  const handleNextWeek = () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onNextWeek?.();
+  };
   return (
     <View className='mb-2.5 flex-row items-center justify-between'>
       <Pressable
@@ -27,7 +37,7 @@ export const WeekNavigationHeader: React.FC<WeekNavigationHeaderProps> = ({
         accessibilityRole='button'
         className='h-11 w-11 items-center justify-center rounded-full'
         hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
-        onPress={onPreviousWeek}
+        onPress={handlePreviousWeek}
       >
         <ChevronLeft color={colors.icon} size={18} strokeWidth={2} />
       </Pressable>
@@ -46,7 +56,7 @@ export const WeekNavigationHeader: React.FC<WeekNavigationHeaderProps> = ({
         className={`h-11 w-11 items-center justify-center rounded-full ${canNavigateForward ? '' : 'opacity-40'}`}
         disabled={!canNavigateForward}
         hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
-        onPress={onNextWeek}
+        onPress={handleNextWeek}
       >
         <ChevronRight color={colors.icon} size={18} strokeWidth={2} />
       </Pressable>

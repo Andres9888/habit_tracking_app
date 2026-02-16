@@ -8,6 +8,7 @@ import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react-native';
 import { format, isValid } from 'date-fns';
+import * as Haptics from 'expo-haptics';
 import { COLORS } from './colors';
 import { styles } from './styles';
 
@@ -34,6 +35,16 @@ export const MonthNavigation = memo(function MonthNavigation({
   onPreviousMonth,
   onNextMonth,
 }: MonthNavigationProps) {
+  const handlePreviousMonth = () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onPreviousMonth();
+  };
+
+  const handleNextMonth = () => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onNextMonth();
+  };
+
   return (
     <View style={styles.navigation}>
       <Pressable
@@ -53,7 +64,7 @@ export const MonthNavigation = memo(function MonthNavigation({
           accessibilityRole='button'
           style={styles.navButton}
           hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
-          onPress={onPreviousMonth}
+          onPress={handlePreviousMonth}
         >
           <ChevronLeft color={COLORS.TEXT_SECONDARY} size={20} />
         </Pressable>
@@ -62,7 +73,7 @@ export const MonthNavigation = memo(function MonthNavigation({
           accessibilityRole='button'
           style={styles.navButton}
           hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
-          onPress={onNextMonth}
+          onPress={handleNextMonth}
         >
           <ChevronRight color={COLORS.TEXT_SECONDARY} size={20} />
         </Pressable>
