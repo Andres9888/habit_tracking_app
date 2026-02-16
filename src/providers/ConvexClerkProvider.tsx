@@ -31,11 +31,13 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
       try {
         const token = await getToken({ template: 'convex' });
         return token ?? null;
-      } catch {
+      } catch (error) {
+        if (__DEV__) console.warn('[ConvexClerkProvider] Failed to get Convex template token, trying default:', error);
         try {
           const defaultToken = await getToken();
           return defaultToken ?? null;
-        } catch {
+        } catch (fallbackError) {
+          if (__DEV__) console.error('[ConvexClerkProvider] Failed to get auth token:', fallbackError);
           return null;
         }
       }

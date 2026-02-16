@@ -35,7 +35,9 @@ function HabitDayToggleRowComponent({
 
     try {
       await onToggle();
-    } catch {
+    } catch (error) {
+      if (__DEV__) console.error('Toggle habit failed:', error);
+      // Revert optimistic UI on error
       animateCheckbox(isCompleted);
     } finally {
       setIsToggling(false);

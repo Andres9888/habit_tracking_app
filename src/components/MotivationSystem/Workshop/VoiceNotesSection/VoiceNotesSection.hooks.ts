@@ -37,7 +37,8 @@ export function useVoiceNotesSection({
         await onSaveRecording(uri, durationSeconds, shouldMarkAsDay1);
         recording.reset();
         setIsDay1Recording(false);
-      } catch {
+      } catch (error) {
+        if (__DEV__) console.error('Failed to save voice note recording:', error);
         Alert.alert('Error', 'Failed to save recording. Please try again.');
       }
     },

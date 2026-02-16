@@ -36,7 +36,8 @@ export function useRestorePurchases({ onClose, onRestorePurchases }: UseRestoreP
           { text: 'OK' },
         ]);
       }
-    } catch {
+    } catch (error) {
+      if (__DEV__) console.error('Failed to restore purchases:', error);
       triggerError?.();
       Alert.alert('Restore Failed', 'Please try again or contact support.', [{ text: 'OK' }]);
     } finally {

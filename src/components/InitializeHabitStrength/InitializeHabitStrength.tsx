@@ -41,7 +41,8 @@ export function InitializeHabitStrength() {
         try {
           await recalculate({ habitId: habit._id });
           updated++;
-        } catch {
+        } catch (error) {
+          if (__DEV__) console.error(`Failed to recalculate strength for habit ${habit._id}:`, error);
           failed++;
         }
       }
