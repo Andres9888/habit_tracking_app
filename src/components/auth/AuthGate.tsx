@@ -28,6 +28,7 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { api } from '../../../convex/_generated/api';
 import { colors } from '../../theme/colors';
 import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
+import { TabNavigator } from '../../navigation';
 import { useConvexAuthReady } from '../../providers';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
 
@@ -217,37 +218,35 @@ export function AuthGate() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Suspense fallback={<BrandedLoadingScreen />}>
-        {screenKey === 'welcome' && (
-          <Animated.View
-            key="welcome"
-            entering={FadeInDown.duration(280).springify().damping(18)}
-            exiting={FadeOut.duration(300)}
-            style={{ flex: 1 }}
-          >
-            <WelcomeScreen />
-          </Animated.View>
-        )}
-        {screenKey === 'onboarding' && (
-          <Animated.View
-            key="onboarding"
-            entering={FadeInDown.duration(280).springify().damping(18)}
-            exiting={FadeOut.duration(300)}
-            style={{ flex: 1 }}
-          >
-            <OnboardingScreen onComplete={markComplete} />
-          </Animated.View>
-        )}
-        {screenKey === 'app' && (
-          <Animated.View
-            key="app"
-            entering={FadeInDown.duration(280).springify().damping(18)}
-            style={{ flex: 1 }}
-          >
-            <HabitsApp />
-          </Animated.View>
-        )}
-      </Suspense>
+      {screenKey === 'welcome' && (
+        <Animated.View
+          key="welcome"
+          entering={FadeInDown.duration(280).springify().damping(18)}
+          exiting={FadeOut.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <WelcomeScreen />
+        </Animated.View>
+      )}
+      {screenKey === 'onboarding' && (
+        <Animated.View
+          key="onboarding"
+          entering={FadeInDown.duration(280).springify().damping(18)}
+          exiting={FadeOut.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <OnboardingScreen onComplete={markComplete} />
+        </Animated.View>
+      )}
+      {screenKey === 'app' && (
+        <Animated.View
+          key="app"
+          entering={FadeInDown.duration(280).springify().damping(18)}
+          style={{ flex: 1 }}
+        >
+          <TabNavigator />
+        </Animated.View>
+      )}
     </GestureHandlerRootView>
   );
 }
