@@ -18,7 +18,7 @@ jest.mock('react-native-safe-area-context', () => ({
 jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(false);
 jest.spyOn(AccessibilityInfo, 'addEventListener').mockReturnValue({
   remove: jest.fn(),
-} as any);
+} as unknown);
 
 const mockItems = [
   {

@@ -9,6 +9,7 @@
 
 import { memo, useEffect } from 'react';
 import { View, Text, Platform } from 'react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import Animated, {
   useSharedValue,
   useAnimatedProps,
@@ -60,6 +61,7 @@ function DailyProgressRingComponent({
   size = 64,
   strokeWidth = 6,
 }: DailyProgressRingProps): React.ReactElement {
+  const { colors: themeColors } = useThemeColors();
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = useSharedValue(0);
@@ -104,16 +106,12 @@ function DailyProgressRingComponent({
           containerAnimatedStyle,
         ]}
       >
-        <Svg
-          height={size}
-          style={{ position: 'absolute' }}
-          width={size}
-        >
+        <Svg height={size} style={{ position: 'absolute' }} width={size}>
           {/* Track */}
           <Circle
             cx={size / 2}
             cy={size / 2}
-            fill="none"
+            fill='none'
             r={radius}
             stroke={palette.track}
             strokeWidth={strokeWidth}
@@ -123,13 +121,13 @@ function DailyProgressRingComponent({
             animatedProps={animatedProps}
             cx={size / 2}
             cy={size / 2}
-            fill="none"
+            fill='none'
             origin={`${size / 2}, ${size / 2}`}
             r={radius}
             rotation="-90"
             stroke={isComplete ? palette.completedStroke : palette.stroke}
             strokeDasharray={circumference}
-            strokeLinecap="round"
+            strokeLinecap='round'
             strokeWidth={strokeWidth}
           />
         </Svg>

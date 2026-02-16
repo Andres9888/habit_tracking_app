@@ -4,12 +4,22 @@
  * Dark mode aware — badge backgrounds adapt to theme.
  */
 
-import React from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { View, Text } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSequence,
+  withSpring,
+} from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
 import { milestoneColors } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { streakStyles } from '../HabitCard.streakStyles';
+
+/** Design-system spring: damping 18, stiffness 150 */
+const STREAK_SPRING = { damping: 18, stiffness: 150 };
+const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
 
 interface StreakBadgeProps {
   currentStreak: number;
@@ -38,7 +48,26 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
   const palette = isDark ? BADGE_COLORS.dark : BADGE_COLORS.light;
 
   if (currentStreak <= 0) {
-    return null;
+    return (
+      <View style={streakStyles.streakRow}>
+        <View
+          style={[
+            streakStyles.streakBadge,
+            { backgroundColor: themeColors.gray[100] },
+          ]}
+        >
+          <Text style={streakStyles.streakFireIcon}>💪</Text>
+          <Text
+            style={[
+              streakStyles.streakText,
+              { color: themeColors.text.secondary },
+            ]}
+          >
+            Start a Streak!
+          </Text>
+        </View>
+      </View>
+    );
   }
 
   const isRecord = currentStreak >= bestStreak;
@@ -54,13 +83,21 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
         <Text style={streakStyles.streakFireIcon}>🔥</Text>
         <Text
           style={[
-            streakStyles.streakText,
-            { color: theme.custom.colors.warning[700] },
+            streakStyles.streakBadge,
+            { backgroundColor: milestoneColors.amberLight },
           ]}
         >
-          {currentStreak} Day{currentStreak === 1 ? '' : 's'} Streak
-        </Text>
-      </View>
+          <Text style={streakStyles.streakFireIcon}>🔥</Text>
+          <Text
+            style={[
+              streakStyles.streakText,
+              { color: theme.custom.colors.warning[700] },
+            ]}
+          >
+            {currentStreak} Day{currentStreak === 1 ? '' : 's'} Streak
+          </Text>
+        </View>
+      </AnimatedStreakText>
 
       {/* Best Streak Badge - Shows when approaching or at personal record */}
       {bestStreak > 0 && currentStreak >= bestStreak - 2 && (
@@ -94,4 +131,4 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
       )}
     </View>
   );
-}
+});

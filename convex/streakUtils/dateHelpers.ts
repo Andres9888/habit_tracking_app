@@ -17,7 +17,10 @@ export function differenceInDays(date1: Date, date2: Date): number {
   d2.setHours(0, 0, 0, 0);
 
   const diffMs = d1.getTime() - d2.getTime();
-  return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  // Use Math.round to handle DST transitions correctly.
+  // On spring-forward, consecutive midnight-to-midnight is 23 hours;
+  // Math.floor(23/24) would incorrectly return 0 instead of 1.
+  return Math.round(diffMs / (1000 * 60 * 60 * 24));
 }
 
 /**
