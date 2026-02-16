@@ -1,5 +1,5 @@
 /** StatsNotesHeader - Header + tabs for StatsNotesModal (theme-aware) */
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -25,7 +25,11 @@ export function StatsNotesHeader({ activeTab, onClose, onTabChange }: Props) {
       >
         <Text
           className='font-bold'
-          style={{ fontSize: 22, letterSpacing: -0.35, color: colors.text.primary }}
+          style={{
+            fontSize: 22,
+            letterSpacing: -0.35,
+            color: colors.text.primary,
+          }}
         >
           Stats & Notes
         </Text>
@@ -43,7 +47,11 @@ export function StatsNotesHeader({ activeTab, onClose, onTabChange }: Props) {
             accessibilityRole='tab'
             accessibilityState={{ selected: activeTab === tab }}
             className='flex-1 items-center py-3'
-            style={activeTab === tab ? { borderBottomWidth: 2, borderBottomColor: '#047857' } : undefined}
+            style={
+              activeTab === tab
+                ? { borderBottomWidth: 2, borderBottomColor: '#047857' }
+                : undefined
+            }
             onPress={() => onTabChange(tab)}
           >
             <Text

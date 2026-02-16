@@ -2,7 +2,7 @@
  * HabitInput Styles - Extracted style definitions
  */
 
-import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { ViewStyle, TextStyle } from 'react-native';
 import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from '../constants';
 
 interface ContainerStyleParams {

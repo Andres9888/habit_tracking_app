@@ -49,7 +49,7 @@ jest.mock('lucide-react-native', () => ({
 
 // Mock clsx
 jest.mock('clsx', () => ({
-  clsx: (...args: any[]) => args.filter(Boolean).join(' '),
+  clsx: (...args: unknown[]) => args.filter(Boolean).join(' '),
 }));
 
 // Mock react-native-reanimated
@@ -58,22 +58,22 @@ jest.mock('react-native-reanimated', () => {
   return {
     default: {
       View,
-      createAnimatedComponent: (Component: any) => Component,
+      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
     },
-    useSharedValue: (initial: any) => ({ value: initial }),
+    useSharedValue: (initial: unknown) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
-    withSpring: (value: any) => value,
-    withTiming: (value: any, _config?: any, _callback?: any) => value,
-    withDelay: (_delay: any, value: any) => value,
-    withSequence: (...values: any[]) => values[values.length - 1],
-    withRepeat: (value: any) => value,
-    runOnJS: (fn: any) => fn,
+    withSpring: (value: unknown) => value,
+    withTiming: (value: unknown, _config?: unknown, _callback?: unknown) => value,
+    withDelay: (_delay: unknown, value: unknown) => value,
+    withSequence: (...values: unknown[]) => values[values.length - 1],
+    withRepeat: (value: unknown) => value,
+    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
     Extrapolation: { CLAMP: 'clamp' },
-    interpolate: (value: any, inputRange: any, outputRange: any) =>
+    interpolate: (value: unknown, inputRange: unknown, outputRange: unknown) =>
       outputRange[0],
     Easing: {
-      out: (fn: any) => fn,
-      in: (fn: any) => fn,
+      out: (fn: (...args: unknown[]) => unknown) => fn,
+      in: (fn: (...args: unknown[]) => unknown) => fn,
       cubic: (x: number) => x,
     },
     View,
@@ -87,13 +87,13 @@ jest.mock('react-native-safe-area-context', () => ({
 
 // Mock the Modal component
 jest.mock('../../../Modal', () => ({
-  Modal: ({ children, visible, onClose }: any) =>
+  Modal: ({ children, visible, onClose }: unknown) =>
     visible ? <>{children}</> : null,
 }));
 
 // Mock QuickReflection to isolate CelebrationScreen tests
 jest.mock('../QuickReflection', () => ({
-  QuickReflection: ({ selectedEmoji, onEmojiSelect, onNoteChange }: any) => {
+  QuickReflection: ({ selectedEmoji, onEmojiSelect, onNoteChange }: unknown) => {
     const { View, Text, Pressable, TextInput } = require('react-native');
     return (
       <View testID='quick-reflection'>

@@ -65,7 +65,7 @@ describe('OfflineQueueManager', () => {
 
   describe('enqueue', () => {
     const samplePayload = {
-      habitId: 'habit_123' as any,
+      habitId: 'habit_123' as unknown,
       date: '2026-01-30',
       toCompleted: true,
     };
@@ -136,12 +136,12 @@ describe('OfflineQueueManager', () => {
 
     it('returns first pending operation', () => {
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
       manager.enqueue('toggleCompletion', {
-        habitId: 'h2' as any,
+        habitId: 'h2' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -153,12 +153,12 @@ describe('OfflineQueueManager', () => {
 
     it('skips non-pending operations', () => {
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
       manager.enqueue('toggleCompletion', {
-        habitId: 'h2' as any,
+        habitId: 'h2' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -179,12 +179,12 @@ describe('OfflineQueueManager', () => {
 
     it('removes and returns first pending operation', () => {
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
       manager.enqueue('toggleCompletion', {
-        habitId: 'h2' as any,
+        habitId: 'h2' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -203,7 +203,7 @@ describe('OfflineQueueManager', () => {
 
     it('removes operation by ID', () => {
       const result = manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -216,12 +216,12 @@ describe('OfflineQueueManager', () => {
   describe('clear', () => {
     it('removes all operations', () => {
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
       manager.enqueue('toggleCompletion', {
-        habitId: 'h2' as any,
+        habitId: 'h2' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -234,7 +234,7 @@ describe('OfflineQueueManager', () => {
 
   describe('status transitions', () => {
     const samplePayload = {
-      habitId: 'habit_123' as any,
+      habitId: 'habit_123' as unknown,
       date: '2026-01-30',
       toCompleted: true,
     };
@@ -299,17 +299,17 @@ describe('OfflineQueueManager', () => {
     it('calculates correct counts by status', () => {
       // Add 3 operations
       const r1 = manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
       const r2 = manager.enqueue('toggleCompletion', {
-        habitId: 'h2' as any,
+        habitId: 'h2' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
       manager.enqueue('toggleCompletion', {
-        habitId: 'h3' as any,
+        habitId: 'h3' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -329,7 +329,7 @@ describe('OfflineQueueManager', () => {
     it('tracks oldest pending operation', () => {
       const beforeFirst = Date.now();
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -345,7 +345,7 @@ describe('OfflineQueueManager', () => {
       manager.subscribe((e) => events.push(e));
 
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -358,14 +358,14 @@ describe('OfflineQueueManager', () => {
     it('emits operation:updated on replace', () => {
       const events: QueueEvent[] = [];
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
 
       manager.subscribe((e) => events.push(e));
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: false,
       });
@@ -375,7 +375,7 @@ describe('OfflineQueueManager', () => {
 
     it('emits operation:removed on dequeue', () => {
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -389,7 +389,7 @@ describe('OfflineQueueManager', () => {
 
     it('emits operation:synced on markCompleted', () => {
       const result = manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -403,7 +403,7 @@ describe('OfflineQueueManager', () => {
 
     it('emits operation:failed on markFailed', () => {
       const result = manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -417,7 +417,7 @@ describe('OfflineQueueManager', () => {
 
     it('emits queue:cleared on clear', () => {
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -434,7 +434,7 @@ describe('OfflineQueueManager', () => {
       const unsub = manager.subscribe((e) => events.push(e));
 
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -442,7 +442,7 @@ describe('OfflineQueueManager', () => {
 
       unsub();
       manager.enqueue('toggleCompletion', {
-        habitId: 'h2' as any,
+        habitId: 'h2' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });
@@ -488,7 +488,7 @@ describe('OfflineQueueManager', () => {
       const AsyncStorage = require('@react-native-async-storage/async-storage');
 
       manager.enqueue('toggleCompletion', {
-        habitId: 'h1' as any,
+        habitId: 'h1' as unknown,
         date: '2026-01-30',
         toCompleted: true,
       });

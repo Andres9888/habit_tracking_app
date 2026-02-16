@@ -22,7 +22,6 @@ import * as Haptics from 'expo-haptics';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { QuickActionsSheetProps } from './types';
-import { useThemeColors } from '../../theme/ThemeContext';
 import { SheetHeader } from './SheetHeader';
 import { ActionsList } from './ActionsList';
 
