@@ -20,12 +20,13 @@ import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignUpFlow } from './hooks/useSignUpFlow';
 import { PasswordStrengthBar } from './components/PasswordStrengthBar';
 import { SignUpHeader } from './components/SignUpHeader';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignUpScreenProps {
   onNavigateToSignIn?: () => void;
 }
 
-export default function SignUpScreen({
+function SignUpScreenContent({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
@@ -186,5 +187,13 @@ export default function SignUpScreen({
         </KeyboardAvoidingView>
       </LinearGradient>
     </View>
+  );
+}
+
+export default function SignUpScreen(props: SignUpScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Sign Up">
+      <SignUpScreenContent {...props} />
+    </ScreenErrorBoundary>
   );
 }

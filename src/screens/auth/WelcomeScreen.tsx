@@ -21,10 +21,11 @@ import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
 import { styles } from './WelcomeScreen.styles';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 type AuthMode = 'welcome' | 'signin' | 'signup';
 
-export default function WelcomeScreen() {
+function WelcomeScreenContent() {
   const [mode, setMode] = useState<AuthMode>('welcome');
   const insets = useSafeAreaInsets();
   const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =
@@ -112,5 +113,13 @@ export default function WelcomeScreen() {
         </Animated.View>
       </View>
     </View>
+  );
+}
+
+export default function WelcomeScreen() {
+  return (
+    <ScreenErrorBoundary screenName="Welcome">
+      <WelcomeScreenContent />
+    </ScreenErrorBoundary>
   );
 }

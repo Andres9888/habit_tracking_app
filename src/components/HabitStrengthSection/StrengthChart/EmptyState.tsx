@@ -9,7 +9,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { Activity } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 import { CHART_HEIGHT } from '../constants';
 

@@ -58,8 +58,8 @@ function HabitCardComponent(props: HabitCardProps) {
       <GestureDetector gesture={habit.composedGesture}>
         <Animated.View
           accessible
-          accessibilityHint='Tap to toggle completion. Swipe left for edit and delete options.'
-          accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}. Swipe left for actions.`}
+          accessibilityHint='Tap to toggle completion. Swipe left to reveal edit and delete actions.'
+          accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}`}
           accessibilityRole='button'
           accessibilityState={{ checked: habit.completed, disabled }}
           testID='home-habit-toggle'
