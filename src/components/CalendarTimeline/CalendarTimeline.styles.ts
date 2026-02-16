@@ -51,6 +51,14 @@ export const COMPLETION_DOT_COLORS: Record<CompletionStatus, string> = {
   partial: '#f59e0b', // amber-500
 };
 
+/** Dark mode color values for completion status dots */
+export const COMPLETION_DOT_COLORS_DARK: Record<CompletionStatus, string> = {
+  complete: '#34d399', // emerald-400
+  future: '#374151', // gray-700
+  none: '#4B5563', // gray-600
+  partial: '#fbbf24', // amber-400
+};
+
 /** Size values for completion status dots */
 export const COMPLETION_DOT_SIZES: Record<CompletionStatus, number> = {
   complete: 8,
@@ -59,15 +67,29 @@ export const COMPLETION_DOT_SIZES: Record<CompletionStatus, number> = {
   partial: 6,
 };
 
-/** Today highlight colors */
+/** Today highlight colors (light mode) */
 export const TODAY_HIGHLIGHT = {
   background: '#fffbeb', // amber-50
   border: '#f59e0b', // amber-500
   text: '#b45309', // amber-700
 };
 
+/** Today highlight colors (dark mode) */
+export const TODAY_HIGHLIGHT_DARK = {
+  background: '#78350f', // amber-900
+  border: '#f59e0b', // amber-500
+  text: '#fef3c7', // amber-100
+};
+
 /** Future date color */
 export const FUTURE_DATE_TEXT_COLOR = '#d6d3d1'; // stone-300
+
+/** Future date color (dark mode) */
+export const FUTURE_DATE_TEXT_COLOR_DARK = '#4B5563'; // gray-600
+
+/** Chain connector color for streaks */
+export const CHAIN_CONNECTOR_COLOR = '#10b981'; // emerald-500
+export const CHAIN_CONNECTOR_COLOR_DARK = '#34d399'; // emerald-400
 
 /** Container shadow styling */
 export const CONTAINER_SHADOW = {

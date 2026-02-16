@@ -41,6 +41,7 @@ export interface CompletionDotProps {
   status: CompletionStatus;
   reduceMotion?: boolean;
   isToday?: boolean;
+  isDark?: boolean;
 }
 
 export interface DayCellProps {
@@ -55,6 +56,7 @@ export interface DayCellProps {
   onDayPress?: (date: Date) => void;
   isDayPressEnabled: boolean;
   disableFutureDayPress: boolean;
+  isDark?: boolean;
 }
 
 export interface CalendarColors {
