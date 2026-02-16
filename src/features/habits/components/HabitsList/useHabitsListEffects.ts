@@ -4,12 +4,10 @@
 
 import { useEffect } from 'react';
 import type { Id } from '../../../../../convex/_generated/dataModel';
-
-/** Duration to highlight a newly created habit before clearing */
-const NEW_HABIT_HIGHLIGHT_MS = 3000;
-
-/** Brief delay before triggering entrance animation to allow layout */
-const ENTRANCE_ANIMATION_DELAY_MS = 50;
+import {
+  ENTRANCE_ANIMATION_DELAY_MS,
+  NEW_HABIT_HIGHLIGHT_MS,
+} from '@/constants';
 
 /**
  * Inputs required to manage HabitsList lifecycle side effects.

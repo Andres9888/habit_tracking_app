@@ -18,11 +18,13 @@ import {
   ForgotPasswordLink,
   ForgotPasswordModal,
   FormInput,
+  PasswordInput,
   SocialSignInButton,
   SubmitButton,
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -31,9 +33,10 @@ interface SignInScreenProps {
   onNavigateToSignUp?: () => void;
 }
 
-export default function SignInScreen(_props: SignInScreenProps = {}) {
+function SignInScreenContent(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const passwordRef = useRef<TextInput>(null);
   const {
     emailAddress,
     setEmailAddress,
@@ -54,6 +57,46 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
   } = useOAuthSignIn();
 
   const isAnyLoading = isLoading || !!oauthLoading;
+
+  // Entrance animations
+  const logoScale = useSharedValue(0.5);
+  const logoOpacity = useSharedValue(0);
+  const headerOpacity = useSharedValue(0);
+  const headerTranslateY = useSharedValue(20);
+  const contentOpacity = useSharedValue(0);
+  const contentTranslateY = useSharedValue(30);
+
+  useEffect(() => {
+    // Logo entrance
+    logoScale.value = withDelay(
+      50,
+      withSpring(1, { damping: 18, stiffness: 150 })
+    );
+    logoOpacity.value = withDelay(50, withTiming(1, { duration: 280 }));
+
+    // Header entrance (60ms stagger)
+    headerOpacity.value = withDelay(110, withTiming(1, { duration: 280 }));
+    headerTranslateY.value = withDelay(110, withSpring(0, { damping: 18, stiffness: 150 }));
+
+    // Content entrance (60ms stagger)
+    contentOpacity.value = withDelay(170, withTiming(1, { duration: 280 }));
+    contentTranslateY.value = withDelay(170, withSpring(0, { damping: 18, stiffness: 150 }));
+  }, []);
+
+  const logoStyle = useAnimatedStyle(() => ({
+    opacity: logoOpacity.value,
+    transform: [{ scale: logoScale.value }],
+  }));
+
+  const headerStyle = useAnimatedStyle(() => ({
+    opacity: headerOpacity.value,
+    transform: [{ translateY: headerTranslateY.value }],
+  }));
+
+  const contentStyle = useAnimatedStyle(() => ({
+    opacity: contentOpacity.value,
+    transform: [{ translateY: contentTranslateY.value }],
+  }));
 
   return (
     <View style={{ flex: 1 }}>
@@ -127,6 +170,16 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
               </Animated.Text>
             </View>
 
+          {/* Welcome Message */}
+          <Animated.View style={[styles.welcomeSection, headerStyle]}>
+            <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
+            <Text style={styles.welcomeSubtitle}>
+              Your streak is waiting — let's keep the momentum going.
+            </Text>
+          </Animated.View>
+
+          {/* Auth Content */}
+          <Animated.View style={[styles.authContent, contentStyle]}>
             {oauthError && (
               <AuthError message={oauthError} onDismiss={clearError} />
             )}
@@ -226,5 +279,102 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
         onClose={() => setShowForgotPassword(false)}
       />
     </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  appName: {
+    color: '#1c1917',
+    fontSize: 22,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    textAlign: 'center',
+  },
+  authContent: {
+    gap: 24,
+  },
+  brandSection: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  container: {
+    backgroundColor: '#fafaf9',
+    flex: 1,
+  },
+  flex: {
+    flex: 1,
+  },
+  footer: {
+    marginTop: 32,
+    paddingHorizontal: 16,
+  },
+  footerLink: {
+    color: '#047857',
+    textDecorationLine: 'underline',
+  },
+  footerText: {
+    color: '#a8a29e',
+    fontSize: 13,
+    lineHeight: 18,
+    textAlign: 'center',
+  },
+  formSection: {
+    gap: 20,
+  },
+  logoContainer: {
+    marginBottom: 16,
+  },
+  logoEmoji: {
+    fontSize: 40,
+  },
+  logoGradient: {
+    alignItems: 'center',
+    borderRadius: 24,
+    elevation: 8,
+    height: 80,
+    justifyContent: 'center',
+    shadowColor: '#22c55e',
+    shadowOffset: { height: 8, width: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    width: 80,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+  },
+  socialButtons: {
+    gap: 12,
+  },
+  tagline: {
+    color: '#57534e',
+    fontSize: 13,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  welcomeSection: {
+    marginBottom: 32,
+  },
+  welcomeSubtitle: {
+    color: '#57534e',
+    fontSize: 17,
+    lineHeight: 24,
+    paddingHorizontal: 16,
+    textAlign: 'center',
+  },
+  welcomeTitle: {
+    color: '#1c1917',
+    fontSize: 28,
+    fontWeight: '700',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+});
+
+export default function SignInScreen(props: SignInScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Sign In">
+      <SignInScreenContent {...props} />
+    </ScreenErrorBoundary>
   );
 }

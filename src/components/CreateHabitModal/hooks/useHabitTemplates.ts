@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import type { Category, HabitTemplate } from '../types';
+import type { Category } from '../types';
 
 export const useHabitTemplates = (category: Category) => {
   const templates = useQuery(api.templates.list, {});

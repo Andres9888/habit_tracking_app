@@ -3,6 +3,7 @@ import { Pressable, Text } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { ViewStyle } from 'react-native';
+import { SHADOW_OPACITY } from '../../../../constants';
 
 interface AddHabitButtonProps {
   animatedStyle: AnimatedStyle<ViewStyle>;
@@ -39,7 +40,7 @@ export function AddHabitButton({
             elevation: 3,
             shadowColor: '#1c1917',
             shadowOffset: { height: 4, width: 0 },
-            shadowOpacity: 0.08,
+            shadowOpacity: SHADOW_OPACITY.minimal,
             shadowRadius: 16,
           }}
         >
