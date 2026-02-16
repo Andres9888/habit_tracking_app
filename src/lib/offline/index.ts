@@ -1,12 +1,15 @@
 /**
  * Offline Support Module
  *
- * Comprehensive offline support with:
+ * Comprehensive offline support for the habit tracking app:
  * - Error classification for intelligent retry decisions
  * - Circuit breaker pattern to prevent service hammering
  * - Smart retry strategies with exponential backoff
  * - Offline queue for habit operations while disconnected
  * - React context for easy integration
+ *
+ * @module offline
+ * @category Infrastructure / Offline Support
  */
 
 // Core Types (error classification, circuit breaker, retry, sync status)

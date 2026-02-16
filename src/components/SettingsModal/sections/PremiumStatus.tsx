@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Text, View, Linking } from 'react-native';
 import { Crown, Zap, ExternalLink } from 'lucide-react-native';
 import { SettingsSection } from '../SettingsSection';
+import { SettingsRow } from '../SettingsRow';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
@@ -41,7 +42,7 @@ export function PremiumStatus({ highContrast, isPremium, isTrialActive, expirati
         : 'All features unlocked';
 
     return (
-      <SettingsSection highContrastMode={highContrast} title='Subscription'>
+      <SettingsSection highContrastMode={highContrast} title='Premium'>
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'

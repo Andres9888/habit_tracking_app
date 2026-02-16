@@ -2,7 +2,8 @@
  * CtaButton styles
  */
 
-import type { ViewStyle } from 'react-native';
+import type { ViewStyle, TextStyle } from 'react-native';
+import { typography } from '@/theme/typography';
 import { BORDER_RADIUS, TOUCH_TARGETS } from './constants';
 
 export function getCtaButtonStyle(
@@ -29,10 +30,9 @@ export function getCtaButtonStyle(
   };
 }
 
-export function getCtaTextStyle(color: string) {
+export function getCtaTextStyle(color: string): TextStyle {
   return {
+    ...typography.button,
     color,
-    fontSize: 15,
-    fontWeight: '600' as const,
   };
 }

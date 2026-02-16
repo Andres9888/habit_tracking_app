@@ -1,9 +1,10 @@
 /**
  * SwipeGripLines Component
  * Subtle grip lines on the trailing edge of HabitCard to hint swipe-to-delete.
- * Three thin vertical lines that subtly pulse on first render.
+ * Three thin vertical lines with improved visibility for discoverability.
  *
  * FIXED: Use theme-aware color so grip lines are visible in dark mode.
+ * IMPROVED: Increased opacity for better discoverability (audit item #6).
  */
 
 import React, { memo, useMemo } from 'react';
@@ -14,11 +15,14 @@ const GRIP_LINE_COUNT = 3;
 const GRIP_LINE_KEYS = Array.from({ length: GRIP_LINE_COUNT }, (_, i) => i);
 
 export const SwipeGripLines = memo(function SwipeGripLines() {
-  const { colors: themeColors } = useThemeColors();
-  // Use theme text tertiary with low opacity for grip lines
+  const { colors: themeColors, isDark } = useThemeColors();
+  // Increased opacity from ~19% (30) to ~30% (4D) for better discoverability
+  // Dark mode gets slightly higher opacity since backgrounds are darker
   const gripColor = themeColors.text?.tertiary
-    ? themeColors.text.tertiary + '30'
-    : 'rgba(0, 0, 0, 0.18)';
+    ? themeColors.text.tertiary + (isDark ? '55' : '4D')
+    : isDark
+      ? 'rgba(255, 255, 255, 0.28)'
+      : 'rgba(0, 0, 0, 0.25)';
 
   const gripLineStyle = useMemo(
     () => [gripStyles.line, { backgroundColor: gripColor }],
