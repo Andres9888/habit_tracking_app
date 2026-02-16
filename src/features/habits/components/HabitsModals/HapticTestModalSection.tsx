@@ -14,6 +14,7 @@ export function HapticTestModalSection({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='slide'
       visible={showHapticTest}
       onRequestClose={closeHapticTest}

@@ -44,6 +44,7 @@ export const SuccessAnimation = ({
 
   return (
     <Modal transparent animationType='none' visible={visible} onRequestClose={handleComplete}>
+      accessibilityViewIsModal
       <Animated.View
         className='flex-1 items-center justify-center bg-black/50'
         style={{ opacity: animatedValues.backdropOpacity }}

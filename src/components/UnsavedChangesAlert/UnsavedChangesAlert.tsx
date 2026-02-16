@@ -44,6 +44,7 @@ export function UnsavedChangesAlert({
 
   return (
     <Modal
+      accessibilityViewIsModal
       backdropOpacity={0.6}
       variant='centerAlert'
       visible={visible}

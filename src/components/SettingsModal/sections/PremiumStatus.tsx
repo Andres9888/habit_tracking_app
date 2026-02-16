@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Crown, Zap } from 'lucide-react-native';
+import { Linking, Platform, Text, View } from 'react-native';
+import { Crown, Zap, Settings } from 'lucide-react-native';
 import { SettingsSection } from '../SettingsSection';
+import { SettingsRow } from '../SettingsRow';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
@@ -27,7 +28,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
 
   if (isPremium) {
     return (
-      <SettingsSection highContrastMode={highContrast} title='Subscription'>
+      <SettingsSection highContrastMode={highContrast} title='Premium'>
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
@@ -63,6 +64,15 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
             </Text>
           </View>
         </View>
+        <SettingsRow
+          highContrastMode={highContrast}
+          icon={<Settings color='#6366f1' size={16} />}
+          iconBackgroundColor='#e0e7ff'
+          label='Manage Subscription'
+          showBorder={false}
+          type='navigation'
+          onPress={handleManageSubscription}
+        />
       </SettingsSection>
     );
   }

@@ -1,5 +1,13 @@
 /**
- * HabitsListModals - Bottom sheets and prompts for HabitsList
+ * HabitsListModals — overlay layer for the HabitsList screen.
+ *
+ * Manages three modal surfaces:
+ * 1. **UpgradePrompt** — full-screen CTA shown when the user hits the free-tier limit.
+ * 2. **SortBottomSheet** — lets the user pick a habit sort mode (manual, alpha, etc.).
+ * 3. **DayHabitsBottomSheet** — shows habit completion status for a tapped calendar day.
+ *
+ * Visibility is driven by state from `useHabitsListState` (sheets) and
+ * `upgradePromptVisible` (upgrade prompt, controlled by the parent screen).
  */
 
 import { SortBottomSheet } from '../SortBottomSheet';
