@@ -17,10 +17,16 @@ export const HABIT_SORT_MODE_OPTIONS = [
 ] as const;
 export type HabitSortMode = (typeof HABIT_SORT_MODE_OPTIONS)[number];
 
+// Completion sound options (Premium feature)
+export const COMPLETION_SOUND_OPTIONS = ['chime', 'pop', 'success'] as const;
+export type CompletionSoundType = (typeof COMPLETION_SOUND_OPTIONS)[number];
+
 export const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
   catTheme: true,
   celebrationsEnabled: true,
+  completionSoundEnabled: false,
+  completionSoundType: 'chime' as CompletionSoundType,
   darkMode: 'system' as DarkModePreference,
   dayShape: 'square' as const,
   habitCompletionIcon: 'chain' as const,
@@ -33,6 +39,7 @@ export const DEFAULT_SETTINGS = {
   showCharacterScreen: true,
   showConsistency: true,
   showEmojis: true,
+  showGradientFill: true,
   showMotivationalMessages: true,
   showNotesStats: true,
   showStreaks: true,

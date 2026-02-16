@@ -41,7 +41,7 @@ jest.mock('react-native-reanimated', () => {
     View,
     Text: require('react-native').Text,
     createAnimatedComponent: (Component: React.ComponentType) => {
-      const AnimatedComponent = React.forwardRef((props: any, ref: any) =>
+      const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) =>
         React.createElement(Component, { ...props, ref })
       );
       AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;

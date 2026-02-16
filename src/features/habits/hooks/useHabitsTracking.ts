@@ -5,20 +5,24 @@ import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import { useOptimisticStore } from '../../../lib/optimistic';
+import { validateDateString } from '../../../utils/validation';
 import type { HabitStatus } from '../types';
 
 export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   // Use startDate/endDate range instead of sending all 365 date strings
   // This reduces the Convex query argument payload from ~4KB to ~50 bytes
-  const startDate = extendedDateStrings[0];
-  const endDate = extendedDateStrings.at(-1);
-  const tracking =
-    useQuery(
-      api.habits.getTracking,
-      startDate && endDate
-        ? { endDate, startDate }
-        : { dates: extendedDateStrings }
-    ) ?? [];
+  // Sort to handle arrays in either chronological or reverse order
+  const queryArgs = useMemo(() => {
+    const first = extendedDateStrings?.[0];
+    const last = extendedDateStrings?.at(-1);
+    const startDate = first && last && first < last ? first : last;
+    const endDate = first && last && first < last ? last : first;
+    return startDate && endDate
+      ? { endDate, startDate }
+      : { dates: extendedDateStrings };
+  }, [extendedDateStrings]);
+
+  const tracking = useQuery(api.habits.getTracking, queryArgs) ?? [];
 
   // Get optimistic state for immediate feedback
   const optimisticStore = useOptimisticStore();
@@ -33,19 +37,19 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       if (!map.has(entry.habitId)) {
         map.set(entry.habitId, new Set<string>());
       }
-      map.get(entry.habitId)!.add(entry.date);
+      map.get(entry.habitId)?.add(entry.date);
     }
 
     // Then, apply optimistic updates
     for (const [key, toCompleted] of optimisticStore.pendingToggles) {
-      const [habitId, date] = key.split(':');
+      const [habitId = '', date = ''] = key.split(':');
       if (!map.has(habitId)) {
         map.set(habitId, new Set<string>());
       }
       if (toCompleted) {
-        map.get(habitId)!.add(date);
+        map.get(habitId)?.add(date);
       } else {
-        map.get(habitId)!.delete(date);
+        map.get(habitId)?.delete(date);
       }
     }
 
@@ -63,15 +67,35 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
   const getHabitStatus = useCallback(
     (habitId: string, dateString: string): HabitStatus => {
+      // Validate date string format
+      const validation = validateDateString(dateString);
+      if (!validation.isValid) {
+        if (__DEV__) console.warn(`Invalid date string: ${dateString}`, validation.error);
+        return 'planned'; // Safe fallback
+      }
+
       // Use the pre-built map (includes optimistic merges) for O(1) lookup
       const completedDates = completedDatesByHabit.get(habitId);
       if (completedDates?.has(dateString)) {
         return 'done';
       }
 
-      const [year, month, day] = dateString.split('-').map(Number);
+      const parts = dateString.split('-').map(Number);
+      const year = parts[0] ?? 0;
+      const month = parts[1] ?? 1;
+      const day = parts[2] ?? 1;
+      if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) {
+        if (__DEV__) console.warn(`Non-numeric date parts: ${dateString}`);
+        return 'planned';
+      }
       const date = new Date(year, month - 1, day);
       date.setHours(0, 0, 0, 0);
+
+      // Guard against invalid Date objects
+      if (Number.isNaN(date.getTime())) {
+        if (__DEV__) console.warn(`Invalid date created from: ${dateString}`);
+        return 'planned';
+      }
 
       if (date < today) {
         return 'missed';

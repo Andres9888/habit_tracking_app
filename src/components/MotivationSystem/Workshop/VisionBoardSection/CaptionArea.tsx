@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, Pressable, TextInput } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MAX_CAPTION_LENGTH, type VisionBoardImage } from './types';
 
 interface CaptionAreaProps {
@@ -26,9 +27,10 @@ export function CaptionArea({
   isSaving,
   image,
 }: CaptionAreaProps) {
+  const insets = useSafeAreaInsets();
   if (isEditingCaption) {
     return (
-      <View className='px-4 pb-10 pt-4'>
+      <View className='px-4 pt-4' style={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
         <View className='gap-3'>
           <TextInput
             autoFocus
@@ -70,7 +72,7 @@ export function CaptionArea({
   }
 
   return (
-    <View className='px-4 pb-10 pt-4'>
+    <View className='px-4 pt-4' style={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
       <View className='min-h-[48px] items-center justify-center'>
         {image.caption ? (
           <Text className='text-center text-base text-white'>

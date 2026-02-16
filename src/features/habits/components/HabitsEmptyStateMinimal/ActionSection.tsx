@@ -12,7 +12,7 @@ interface ActionSectionProps {
   errorMessage: string | null;
   isKeyboardVisible: boolean;
   secondaryLinksAnimatedStyle: AnimatedStyle;
-  onCreateHabit: () => void | Promise<void>;
+  onCreateHabit: () => void;
   onDismissError: () => void;
   onBrowseTemplates?: () => void;
   onCreateCustom?: () => void;
@@ -35,6 +35,7 @@ export function ActionSection({
         <AnimatedEntrance delay={ENTRANCE_DELAYS.cta}>
           <CtaButton
             disabled={!inputValue.trim()}
+            inputValue={inputValue}
             isLoading={isCreating}
             onPress={onCreateHabit}
           />
@@ -45,24 +46,20 @@ export function ActionSection({
         <ErrorMessage message={errorMessage} onDismiss={onDismissError} />
       )}
 
-      {isKeyboardVisible ? (
+      <Animated.View
+        accessibilityElementsHidden={isKeyboardVisible}
+        importantForAccessibility={
+          isKeyboardVisible ? 'no-hide-descendants' : 'auto'
+        }
+        style={secondaryLinksAnimatedStyle}
+      >
         <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>
           <InlineHint
-            compact
             onBrowseTemplates={onBrowseTemplates ?? (() => {})}
             onCreateCustom={onCreateCustom ?? (() => {})}
           />
         </AnimatedEntrance>
-      ) : (
-        <Animated.View style={secondaryLinksAnimatedStyle}>
-          <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>
-            <InlineHint
-              onBrowseTemplates={onBrowseTemplates ?? (() => {})}
-              onCreateCustom={onCreateCustom ?? (() => {})}
-            />
-          </AnimatedEntrance>
-        </Animated.View>
-      )}
+      </Animated.View>
     </>
   );
 }

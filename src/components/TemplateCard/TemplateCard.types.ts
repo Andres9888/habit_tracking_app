@@ -4,7 +4,8 @@
  * Type definitions for the TemplateCard component
  */
 
-import type { ViewStyle } from 'react-native';
+import type { GestureResponderEvent, ViewStyle } from 'react-native';
+import type { AnimatedStyle } from 'react-native-reanimated';
 
 export interface TemplateCardProps {
   /** Animation index for staggered entrance */
@@ -101,12 +102,12 @@ export type TemplateCardRenderProps = Pick<
   reducedMotion: boolean;
   isLocked: boolean;
   iconColor: string;
-  containerStyle: any;
-  glowStyle: any;
-  shadowStyle: any;
-  checkmarkStyle: any;
+  containerStyle: AnimatedStyle<ViewStyle>;
+  glowStyle: AnimatedStyle<ViewStyle>;
+  shadowStyle: AnimatedStyle<ViewStyle>;
+  checkmarkStyle: AnimatedStyle<ViewStyle>;
   handleCardPress: () => void;
-  handleImportPress: (e?: any) => void;
+  handleImportPress: (e: GestureResponderEvent) => void;
   handlePressIn: () => void;
   handlePressOut: () => void;
 };

@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Check } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ReadLetterFooterProps {
   isLocked: boolean;
@@ -14,8 +15,9 @@ interface ReadLetterFooterProps {
 }
 
 export function ReadLetterFooter({ isLocked, onClose }: ReadLetterFooterProps) {
+  const insets = useSafeAreaInsets();
   return (
-    <View className='border-t border-stone-100 px-4 pb-10 pt-4'>
+    <View className='border-t border-stone-100 px-4 pt-4' style={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
       <Pressable
         accessibilityLabel='Close and return'
         accessibilityRole='button'

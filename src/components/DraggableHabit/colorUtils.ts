@@ -1,7 +1,19 @@
+/**
+ * @module colorUtils
+ *
+ * Color derivation for habit cards. Handles high-contrast mode,
+ * icon backgrounds, streak badge colors, and accent fallbacks.
+ */
+
 import type { CardColors } from './types';
 
+/** Fallback accent when no habit-specific color is set (violet-500). */
 const DEFAULT_ACCENT_COLOR = '#8b5cf6';
 
+/**
+ * Return the full {@link CardColors} token set based on accessibility mode.
+ * High-contrast mode uses a dark background with yellow accents for WCAG AAA.
+ */
 export function getCardColors(highContrastMode: boolean): CardColors {
   if (highContrastMode) {
     return {
@@ -24,6 +36,7 @@ export function getCardColors(highContrastMode: boolean): CardColors {
   };
 }
 
+/** Map an accent color to a soft pastel background for the icon container. */
 export function getIconBackground(
   accentColor: string,
   highContrastMode: boolean,
@@ -42,6 +55,7 @@ export function getIconBackground(
   return colorMap[accentColor] || 'rgba(254, 249, 195, 0.85)'; // yellow-100 default
 }
 
+/** Tiered badge colors that intensify as the streak grows (7 → 14 → 30+). */
 export function getStreakBadgeColors(streak: number): {
   bg: string;
   glow: string;
@@ -52,12 +66,14 @@ export function getStreakBadgeColors(streak: number): {
   return { bg: '#c2410c', glow: '#c2410c' }; // Default orange-700
 }
 
+/** Resolve accent color with a fallback to the default violet. */
 export function getEffectiveAccentColor(
   accentColor: string | undefined
 ): string {
   return accentColor || DEFAULT_ACCENT_COLOR;
 }
 
+/** Get the left accent border color (yellow in high-contrast, accent otherwise). */
 export function getBorderAccentColor(
   highContrastMode: boolean,
   accentColor: string | undefined

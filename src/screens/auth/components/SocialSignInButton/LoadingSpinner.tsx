@@ -34,7 +34,7 @@ export function LoadingSpinner({ color }: LoadingSpinnerProps) {
         animatedStyle,
         {
           borderColor: color,
-          borderRadius: 10,
+          borderRadius: 12,
           borderTopColor: 'transparent',
           borderWidth: 2,
           height: 20,
