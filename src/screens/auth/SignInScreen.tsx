@@ -40,6 +40,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -48,7 +49,7 @@ interface SignInScreenProps {
   onNavigateToSignUp?: () => void;
 }
 
-export default function SignInScreen(_props: SignInScreenProps = {}) {
+function SignInScreenContent(_props: SignInScreenProps = {}) {
   const { colors: themeColors, isDark } = useThemeColors();
   const styles = createStyles(themeColors);
   const insets = useSafeAreaInsets();
@@ -354,3 +355,11 @@ const createStyles = (colors: SemanticColors) =>
       textAlign: 'center',
     },
   });
+
+export default function SignInScreen(props: SignInScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Sign In">
+      <SignInScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}

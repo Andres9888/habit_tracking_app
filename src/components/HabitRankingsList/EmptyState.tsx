@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { ListOrdered } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
@@ -18,8 +18,8 @@ export function EmptyState() {
   return (
     <View
       accessible
-      accessibilityLabel="No habits to rank yet"
-      accessibilityRole="text"
+      accessibilityLabel='No habits to rank yet'
+      accessibilityRole='text'
       style={styles.container}
     >
       <Animated.View entering={anim(0)} style={styles.iconContainer}>
