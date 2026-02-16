@@ -101,8 +101,14 @@ export function SettingsRow({
       {type === 'navigation' && (
         <View className='flex-row items-center gap-2'>
           {badge != null && badge > 0 && (
-            <View className='min-w-[22px] items-center justify-center rounded-full bg-stone-200 px-1.5 py-0.5'>
-              <Text className='text-[12px] font-bold text-stone-600'>
+            <View
+              className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
+              style={{ backgroundColor: isDark ? '#374151' : '#e7e5e4' }}
+            >
+              <Text
+                className='text-[12px] font-bold'
+                style={{ color: isDark ? '#9CA3AF' : '#57534e' }}
+              >
                 {badge}
               </Text>
             </View>

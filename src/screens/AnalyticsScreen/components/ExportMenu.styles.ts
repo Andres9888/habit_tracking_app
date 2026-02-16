@@ -4,13 +4,13 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
-import { spacing } from '../../../theme/spacing';
+import { spacing, borderRadius } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   exportMenu: {
     backgroundColor: colors.surface,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: borderRadius.xl,
+    borderTopRightRadius: borderRadius.xl,
     padding: spacing.lg,
   },
   exportMenuCancel: {
@@ -20,12 +20,12 @@ export const styles = StyleSheet.create({
   },
   exportMenuCancelText: {
     ...typography.body,
-    color: colors.error,
+    color: colors.text.secondary,
   },
   exportMenuItem: {
     alignItems: 'center',
     backgroundColor: colors.background,
-    borderRadius: 12,
+    borderRadius: borderRadius.button,
     flexDirection: 'row',
     marginBottom: spacing.sm,
     padding: spacing.md,
