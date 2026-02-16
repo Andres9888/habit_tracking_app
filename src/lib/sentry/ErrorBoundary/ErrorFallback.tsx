@@ -114,14 +114,13 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
   return (
     <View accessibilityRole='alert' style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.emoji}>😕</Text>
+        <Text style={styles.emoji}>😊</Text>
         <Text accessibilityRole='header' style={styles.title}>
-          We hit a bump
+          Oops! Something went wrong
         </Text>
-        <Text style={styles.safetyNote}>Your data is safe.</Text>
+        <Text style={styles.safetyNote}>Don't worry — your data is safe.</Text>
         <Text style={styles.message}>
-          Something unexpected happened, but nothing was lost. Try refreshing
-          the app.
+          We encountered an issue, but nothing was lost. Try refreshing the app.
         </Text>
         {__DEV__ && error && (
           <Text style={styles.errorDetail}>{error.message}</Text>
