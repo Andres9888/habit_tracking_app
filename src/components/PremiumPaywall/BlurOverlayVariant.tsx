@@ -8,6 +8,7 @@ import { View, ScrollView, Modal } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { SocialProofSection } from './SocialProofSection';
 import { PricingToggle } from './PricingToggle';
+import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 import { BlurOverlayHeader } from './BlurOverlayHeader';
 import { BlurOverlayHero } from './BlurOverlayHero';
 import { BlurOverlayActions } from './BlurOverlayActions';
@@ -20,7 +21,7 @@ import type { VariantConfig } from './PremiumPaywall.types';
 interface BlurOverlayVariantProps {
   variant: 'motivation' | 'analytics';
   config: VariantConfig;
-  handlers: any;
+  handlers: PremiumPaywallHandlers;
   triggeredByFeature?: string;
   reduceMotion: boolean;
   testID?: string;

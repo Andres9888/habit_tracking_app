@@ -6,7 +6,12 @@
  * - Uncheck: 200ms scale 1→0.92→1 with soft tap
  */
 
-import { withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
+import { withSpring, withSequence, withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
+
+/** Design-system spring: damping 18, stiffness 150 */
+const COMPLETION_SPRING = { damping: 18, stiffness: 150 };
+/** Slightly bouncier for the overshoot pop */
+const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
 
 interface CelebrationOptions {
   cardScale: SharedValue<number>;
@@ -43,18 +48,23 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
       rippleScale.value = 0;
       rippleOpacity.value = 0;
     } else {
-      // 240ms check animation: 1→1.15→1
-      checkmarkScale.value = withTiming(1.15, { duration: 120 }, () => {
-        'worklet';
-        checkmarkScale.value = withTiming(1, { duration: 120 });
-      });
-      checkmarkRotate.value = 0;
+      // Spring-based check animation: 0→1.2 (bounce) → 1 (settle)
+      // Uses spring physics for a premium, organic feel
+      checkmarkScale.value = withSequence(
+        withSpring(1.2, BOUNCE_SPRING),
+        withSpring(1, COMPLETION_SPRING)
+      );
+      // Subtle rotation morph during pop-in
+      checkmarkRotate.value = withSequence(
+        withSpring(-8, BOUNCE_SPRING),
+        withSpring(0, COMPLETION_SPRING)
+      );
 
-      // Subtle ripple
+      // Ripple with spring for softer falloff
       rippleScale.value = 0;
-      rippleOpacity.value = 0.2;
-      rippleScale.value = withTiming(1.5, { duration: 240 });
-      rippleOpacity.value = withTiming(0, { duration: 240 });
+      rippleOpacity.value = 0.25;
+      rippleScale.value = withSpring(1.8, COMPLETION_SPRING);
+      rippleOpacity.value = withTiming(0, { duration: 300 });
     }
 
     runOnJS(setShowConfetti)(!reduceMotion);

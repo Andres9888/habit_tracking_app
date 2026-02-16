@@ -1,12 +1,13 @@
+/* eslint-disable max-lines-per-function */
 /**
  * Settings Convex queries and mutations
  */
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
-import { RATE_LIMITS, rateLimit } from '../lib/rateLimiter';
 import { normalizeDarkMode, normalizeHabitSortMode } from './normalizers';
 import { DEFAULT_SETTINGS } from './types';
 import { settingsReturnValidator, updateArgsValidator } from './validators';
+import { hasPremiumAccess } from '../subscriptions/premiumCheck';
 
 export const get = query({
   args: {},
@@ -19,7 +20,7 @@ export const get = query({
     if (identity) {
       settings = await ctx.db
         .query('userSettings')
-        .filter((q) => q.eq(q.field('userId'), identity.subject))
+        .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
         .first();
     }
     // SEC-001: No fallback — return defaults if no user-specific settings exist
@@ -29,6 +30,11 @@ export const get = query({
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
       celebrationsEnabled:
         settings?.celebrationsEnabled ?? DEFAULT_SETTINGS.celebrationsEnabled,
+      completionSoundEnabled:
+        settings?.completionSoundEnabled ??
+        DEFAULT_SETTINGS.completionSoundEnabled,
+      completionSoundType:
+        settings?.completionSoundType ?? DEFAULT_SETTINGS.completionSoundType,
       darkMode: normalizeDarkMode(settings?.darkMode),
       dayShape: settings?.dayShape ?? DEFAULT_SETTINGS.dayShape,
       habitCompletionIcon:
@@ -80,13 +86,20 @@ export const update = mutation({
       throw new Error('Unauthenticated: Must be logged in to update settings');
     }
 
-    // SEC-004: Rate limiting
-    await rateLimit(ctx.db, identity.subject, RATE_LIMITS.settingsUpdate);
+    // SEC-005: Completion sounds are a premium feature
+    if (args.completionSoundEnabled === true) {
+      const isPremium = await hasPremiumAccess(ctx, identity.subject);
+      if (!isPremium) {
+        throw new Error(
+          'Premium required: Completion sounds are only available for premium users. Upgrade to unlock this feature.'
+        );
+      }
+    }
 
     // SEC-001: Find existing settings for this user
     const existing = await ctx.db
       .query('userSettings')
-      .filter((q) => q.eq(q.field('userId'), identity.subject))
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .first();
 
     const normalizedArgs = {

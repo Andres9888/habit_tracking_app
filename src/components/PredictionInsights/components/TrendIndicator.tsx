@@ -4,11 +4,12 @@ import { TrendingUp, TrendingDown, Activity } from 'lucide-react-native';
 
 import { styles } from '../PredictionInsights.styles';
 import type { TrendDirection } from '../PredictionInsights.types';
+import type { AppTheme } from '../../../theme';
 
 interface TrendIndicatorProps {
   trend: TrendDirection;
   change: number;
-  theme: any;
+  theme: AppTheme;
 }
 
 const TREND_CONFIG = {

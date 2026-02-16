@@ -2,10 +2,11 @@ import React from 'react';
 import { View, Text } from 'react-native';
 
 import { styles } from '../PredictionInsights.styles';
+import type { AppTheme } from '../../../theme';
 
 interface SuggestedActionsProps {
   suggestions: string[];
-  theme: any;
+  theme: AppTheme;
 }
 
 export function SuggestedActions({

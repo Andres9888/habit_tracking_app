@@ -28,7 +28,7 @@ export const create = mutation({
     // Get all existing habits for this user to determine next order value
     const allHabits = await ctx.db
       .query('habits')
-      .filter((q) => q.eq(q.field('userId'), userId))
+      .withIndex('by_userId', (q) => q.eq('userId', userId))
       .collect();
 
     // SEC-004: Hard limit on habits per user
