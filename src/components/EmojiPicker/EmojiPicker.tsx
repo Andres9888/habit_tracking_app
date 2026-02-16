@@ -33,6 +33,7 @@ export const EmojiPicker = memo(
 
     return (
       <Modal
+        accessibilityViewIsModal
         transparent
         animationType='slide'
         visible={visible}

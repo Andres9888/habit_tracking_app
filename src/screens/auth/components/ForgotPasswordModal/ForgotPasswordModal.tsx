@@ -45,6 +45,7 @@ export function ForgotPasswordModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableBackdropClose={isLoading}
       disableGestureClose={isLoading}
       variant='centerAlert'

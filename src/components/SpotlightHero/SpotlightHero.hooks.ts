@@ -64,11 +64,11 @@ export function useSpotlightAnimations(animationDelay: number) {
   }));
 
   const handlePressIn = () => {
-    pressScale.value = withSpring(0.98, { damping: 15, stiffness: 200 });
+    pressScale.value = withSpring(0.98, { damping: 18, stiffness: 150 });
   };
 
   const handlePressOut = () => {
-    pressScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+    pressScale.value = withSpring(1, { damping: 18, stiffness: 150 });
   };
 
   return {
