@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /** SignInScreen Styles - Type scale: 34/22/17/13, proper contrast, depth */
 import { StyleSheet } from 'react-native';
 import type { SemanticColors } from '../../theme/darkColors';

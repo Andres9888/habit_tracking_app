@@ -43,7 +43,9 @@ export const MonthNavigation = memo(function MonthNavigation({
         style={styles.monthButton}
       >
         <Calendar color={COLORS.TEXT_SECONDARY} size={16} />
-        <Text style={styles.monthText}>{safeFormat(currentMonth, 'MMM yyyy', 'Month')}</Text>
+        <Text style={styles.monthText}>
+          {safeFormat(currentMonth, 'MMM yyyy', 'Month')}
+        </Text>
       </Pressable>
       <View style={styles.navButtons}>
         <Pressable

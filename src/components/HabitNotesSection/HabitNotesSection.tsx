@@ -8,6 +8,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { clsx } from 'clsx';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 import type { HabitNotesSectionProps } from './types';
 import {
@@ -24,12 +25,14 @@ function SectionCard({
   children: React.ReactNode;
   className?: string;
 }) {
+  const { colors } = useThemeColors();
   return (
     <View
       className={clsx(
-        'rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50',
+        'rounded-2xl p-4 shadow-sm',
         className
       )}
+      style={{ backgroundColor: colors.card }}
     >
       {children}
     </View>

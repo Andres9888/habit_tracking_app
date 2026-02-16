@@ -9,7 +9,8 @@ import { View, Text, Pressable } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { useAppTheme } from '../../theme';
-import { styles } from './styles';
+import { useThemeColors } from '../../theme/ThemeContext';
+import { styles, themedAtRiskStyles } from './styles';
 import { HabitCard } from './HabitCard';
 import type { HabitsAtRiskWidgetProps, AtRiskHabit } from './types';
 
@@ -20,12 +21,15 @@ export function HabitsAtRiskWidget({ onHabitPress }: HabitsAtRiskWidgetProps) {
     threshold: 0.4,
   });
 
+  const { colors: themeColors } = useThemeColors();
+  const themed = themedAtRiskStyles(themeColors);
+
   if (!atRiskHabits || atRiskHabits.length === 0) {
     return null;
   }
 
   return (
-    <View style={[styles.container, { borderColor: '#FCD34D' }]}>
+    <View style={[styles.container, themed.container]}>
       <View style={styles.header}>
         <Text
           style={[styles.title, { color: theme.custom.colors.warning[700] }]}

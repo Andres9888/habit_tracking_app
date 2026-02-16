@@ -6,11 +6,12 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { X } from 'lucide-react-native';
 
 import CustomModal from '../../../../components/Modal';
 import { VisualizationExercise } from '../../../../components/VisualizationExercise';
+import { useHaptics } from '../../../../utils/haptics/useHaptics';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { VisualizationModalSectionProps } from './HabitsModals.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -32,13 +33,15 @@ export function VisualizationModalSection({
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
   const closeScale = useSharedValue(1);
+  const { colors } = useThemeColors();
+  const { trigger } = useHaptics();
 
   const closeAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: closeScale.value }],
   }));
 
   const handleClose = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    trigger('tap');
     closeVisualizationExercise();
   };
 
@@ -66,10 +69,10 @@ export function VisualizationModalSection({
               });
             }}
             onPressOut={() => {
-              closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
+              closeScale.value = withSpring(1, { damping: 18, stiffness: 150 });
             }}
           >
-            <X color='#57534e' size={24} />
+            <X color={colors.text.secondary} size={24} />
           </AnimatedPressable>
         </View>
         <View
