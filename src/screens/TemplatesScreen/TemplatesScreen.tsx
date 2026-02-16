@@ -3,7 +3,7 @@
  * Browse and import science-backed habit templates
  */
 
-import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesLoadingState } from './components/TemplatesLoadingState';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
@@ -101,8 +101,8 @@ function TemplatesScreenContent() {
 
 export default function TemplatesScreen() {
   return (
-    <ErrorBoundary>
+    <ScreenErrorBoundary screenName="Templates">
       <TemplatesScreenContent />
-    </ErrorBoundary>
+    </ScreenErrorBoundary>
   );
 }

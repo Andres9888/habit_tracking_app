@@ -8,7 +8,7 @@ import type { MotivationFeatureItem } from './PremiumPaywall.types';
 export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
   {
     accentColor: '#14b8a6',
-    description: 'Record audio motivation from your most inspired moments',
+    description: 'Capture your voice when motivation peaks — replay it when you need it most.',
     freeLimit: '1 recording',
     icon: Mic,
     id: 'voiceNotes',
@@ -19,7 +19,7 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
   },
   {
     accentColor: '#8b5cf6',
-    description: 'Write time-locked messages that unlock in the future',
+    description: 'Write messages to your future self that unlock at the perfect moment.',
     freeLimit: 'Not available',
     icon: Mail,
     id: 'letters',
@@ -30,7 +30,7 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
   },
   {
     accentColor: '#d946ef',
-    description: 'Create a visual collection of your motivation',
+    description: 'Pin images that inspire you — see your "why" every day.',
     freeLimit: 'Not available',
     icon: Image,
     id: 'visionBoard',
@@ -41,7 +41,7 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
   },
   {
     accentColor: '#f59e0b',
-    description: 'Add as many daily affirmations as you need',
+    description: 'Build the mindset that sticks — unlimited daily affirmations.',
     freeLimit: '2 affirmations',
     icon: Sparkles,
     id: 'affirmations',
@@ -52,7 +52,7 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
   },
   {
     accentColor: '#ef4444',
-    description: 'Get interventions when your streak is at risk',
+    description: 'Smart alerts when your streak is at risk — never lose progress again.',
     freeLimit: 'Not available',
     icon: Shield,
     id: 'rescueMode',
@@ -63,7 +63,7 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
   },
   {
     accentColor: '#10b981',
-    description: 'Full Huberman protocol with Body/Mind/Emotion breakdown',
+    description: 'Full Huberman protocol — visualize Body, Mind, and Emotion together.',
     freeLimit: 'Basic visualization',
     icon: Eye,
     id: 'advancedViz',

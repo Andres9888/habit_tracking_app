@@ -31,14 +31,14 @@ jest.mock('react-native-reanimated', () => {
     useAnimatedStyle: (callback: () => object) => callback(),
     withTiming: (toValue: number) => toValue,
     withSpring: (toValue: number) => toValue,
-    withRepeat: (animation: any) => animation,
-    withSequence: (...args: any[]) => args[args.length - 1],
-    withDelay: (delay: number, animation: any) => animation,
+    withRepeat: (animation: unknown) => animation,
+    withSequence: (...args: unknown[]) => args[args.length - 1],
+    withDelay: (delay: number, animation: unknown) => animation,
     runOnJS: (fn: Function) => fn,
     Easing: { bezier: () => (t: number) => t },
     default: {
       ...Reanimated.default,
-      View: React.forwardRef((props: any, ref: any) => (
+      View: React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => (
         <View ref={ref} {...props} />
       )),
     },
@@ -97,7 +97,7 @@ jest.mock('../components', () => {
       ) : null,
     SuccessOverlay: ({ visible }: { visible: boolean }) =>
       visible ? <View testID="success-overlay" /> : null,
-    FormInput: React.forwardRef((props: any, ref: any) => (
+    FormInput: React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => (
       <View>
         <TextInput
           ref={ref}
@@ -115,7 +115,7 @@ jest.mock('../components', () => {
         )}
       </View>
     )),
-    PasswordInput: React.forwardRef((props: any, ref: any) => (
+    PasswordInput: React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => (
       <View>
         <TextInput
           ref={ref}
@@ -133,7 +133,7 @@ jest.mock('../components', () => {
         )}
       </View>
     )),
-    SubmitButton: (props: any) => (
+    SubmitButton: (props: Record<string, unknown>) => (
       <TouchableOpacity
         testID="submit-button"
         onPress={props.disabled ? undefined : props.onPress}
@@ -286,7 +286,7 @@ describe('SignInScreen Integration Tests', () => {
     });
 
     it('shows loading state during authentication', async () => {
-      let resolvePromise: (value: any) => void;
+      let resolvePromise: (value: unknown) => void;
       mockSignInCreate.mockImplementation(
         () => new Promise((resolve) => { resolvePromise = resolve; })
       );

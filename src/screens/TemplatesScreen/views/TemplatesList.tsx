@@ -3,9 +3,8 @@
  */
 
 import { useCallback, useRef } from 'react';
-import { FlatList, RefreshControl, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
-import { colors } from '../../../theme/colors';
 import { styles } from '../../templates/templatesScreenStyles';
 import { ScrollShadows, TemplatesListEmpty } from '../components';
 import { useScrollShadows } from '../useScrollShadows';
@@ -20,9 +19,7 @@ interface TemplatesListProps {
   selectedCategory: string;
   onImport: (templateId: Id<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
-  onRefresh: () => Promise<void>;
   onResetFilters: () => void;
-  refreshing: boolean;
 }
 
 export function TemplatesList(props: TemplatesListProps) {
@@ -34,9 +31,7 @@ export function TemplatesList(props: TemplatesListProps) {
     selectedCategory,
     onImport,
     onPreview,
-    onRefresh,
     onResetFilters,
-    refreshing,
   } = props;
 
   const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
@@ -56,20 +51,26 @@ export function TemplatesList(props: TemplatesListProps) {
     [importingTemplateId, onImport, onPreview]
   );
 
+  // Fixed height for getItemLayout optimization
+  const ITEM_HEIGHT = 88;
+
+  const getItemLayout = useCallback(
+    (_: unknown, index: number) => ({
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index,
+    }),
+    []
+  );
+
   return (
     <View style={styles.listWrapper}>
       <FlatList
         ref={flatListRef}
         contentContainerStyle={styles.listContent}
         data={filteredTemplates}
-        refreshControl={
-          <RefreshControl
-            colors={[colors.primary[500]]}
-            refreshing={refreshing}
-            tintColor={colors.primary[500]}
-            onRefresh={() => void onRefresh()}
-          />
-        }
+        getItemLayout={getItemLayout}
+        initialNumToRender={8}
         keyExtractor={(item) => item._id}
         ListEmptyComponent={
           <TemplatesListEmpty
@@ -77,9 +78,12 @@ export function TemplatesList(props: TemplatesListProps) {
             onResetFilters={onResetFilters}
           />
         }
+        maxToRenderPerBatch={8}
+        removeClippedSubviews
         renderItem={renderItem}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
+        windowSize={5}
         onContentSizeChange={scrollShadows.handleContentSizeChange}
         onLayout={scrollShadows.handleLayout}
         onScroll={scrollShadows.handleScroll}

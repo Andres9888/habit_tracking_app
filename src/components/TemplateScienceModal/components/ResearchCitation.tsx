@@ -3,8 +3,8 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { View, Text, Pressable, type ViewStyle } from 'react-native';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ExternalLink } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { scienceStyles } from '../styles';
@@ -12,13 +12,18 @@ import { AnimatedBorderBox } from './AnimatedBorderBox';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
+interface PressHandlers {
+  onPressIn: () => void;
+  onPressOut: () => void;
+}
+
 interface ResearchCitationProps {
   baseColor: string;
   scientificReference: string;
   scientificLink?: string;
-  linkButtonAnimatedStyle: any;
+  linkButtonAnimatedStyle: AnimatedStyle<ViewStyle>;
   onLinkPress?: () => void;
-  pressHandlers: any;
+  pressHandlers: PressHandlers;
 }
 
 export function ResearchCitation({

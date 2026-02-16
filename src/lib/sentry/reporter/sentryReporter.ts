@@ -11,7 +11,7 @@ import type {
 } from '../types';
 import type { PerformanceIssue } from '../../../contexts/PerformanceContext/types';
 import { isSentryInitialized } from '../init/index';
-import { createTransactionWrapper } from './types';
+import { createTransactionWrapper, type SentrySpanInternal } from './types';
 
 /** Create the Sentry reporter instance */
 export function createSentryReporter(): SentryReporter {
@@ -79,7 +79,7 @@ export function createSentryReporter(): SentryReporter {
     startTransaction(name: TransactionName) {
       if (!isSentryInitialized()) return null;
       const transaction = Sentry.startSpan({ name, op: 'app' }, (span) => span);
-      return createTransactionWrapper(transaction);
+      return createTransactionWrapper(transaction as unknown as SentrySpanInternal);
     },
   };
 }
