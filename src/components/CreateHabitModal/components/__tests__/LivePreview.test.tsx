@@ -148,9 +148,7 @@ describe('LivePreview Component - V11', () => {
         backgroundColor: '#3b82f6',
       });
 
-      rerender(
-        <LivePreview emoji='📖' color='#ef4444' habitName='Read' />
-      );
+      rerender(<LivePreview emoji='📖' color='#ef4444' habitName='Read' />);
 
       emojiContainer = getByText('📖').parent;
       expect(emojiContainer?.props.style).toMatchObject({
@@ -216,7 +214,7 @@ describe('LivePreview Component - V11', () => {
 
   describe('Component Structure', () => {
     it('should have correct CSS classes for styling', () => {
-      const { container } = render(
+      const { UNSAFE_root: container } = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
@@ -228,7 +226,7 @@ describe('LivePreview Component - V11', () => {
     });
 
     it('should apply shadow styling to preview card', () => {
-      const { container } = render(
+      const { UNSAFE_root: container } = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
@@ -239,7 +237,7 @@ describe('LivePreview Component - V11', () => {
     });
 
     it('should use correct spacing (mb-3 mt-3)', () => {
-      const { container } = render(
+      const { UNSAFE_root: container } = render(
         <LivePreview emoji='📖' color='#3b82f6' habitName='Read' />
       );
 
@@ -299,11 +297,7 @@ describe('LivePreview Component - V11', () => {
   describe('Integration Scenarios', () => {
     it('should reflect complete habit configuration', () => {
       const { getByText } = render(
-        <LivePreview
-          emoji='💪'
-          color='#ef4444'
-          habitName='Morning workout'
-        />
+        <LivePreview emoji='💪' color='#ef4444' habitName='Morning workout' />
       );
 
       expect(getByText('💪')).toBeTruthy();
@@ -355,13 +349,15 @@ describe('LivePreview Component - V11', () => {
       }
 
       // Should not crash and final state should be correct
-      expect(() => rerender(
-        <LivePreview
-          emoji='📖'
-          color='#3b82f6'
-          habitName={'Read' + 'a'.repeat(49)}
-        />
-      )).not.toThrow();
+      expect(() =>
+        rerender(
+          <LivePreview
+            emoji='📖'
+            color='#3b82f6'
+            habitName={'Read' + 'a'.repeat(49)}
+          />
+        )
+      ).not.toThrow();
     });
   });
 });

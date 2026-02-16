@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Eye, Sparkles, Target } from 'lucide-react-native';
 
 interface GuideHeaderProps {
@@ -14,9 +15,15 @@ interface GuideHeaderProps {
 export function GuideHeader({ habitName }: GuideHeaderProps) {
   return (
     <Animated.View
-      className='overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700 p-5'
+      className='overflow-hidden rounded-2xl p-5'
       entering={FadeInDown.delay(50).springify().damping(18)}
     >
+      <LinearGradient
+        className='absolute inset-0 rounded-2xl'
+        colors={['#7c3aed', '#4f46e5', '#7e22ce']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
+      />
       <View className='flex-row items-start gap-3'>
         <View className='h-12 w-12 items-center justify-center rounded-2xl bg-white/20'>
           <Eye className='text-white' size={24} />

@@ -7,54 +7,54 @@ import type { ContextualMessageData, MessageType } from './types';
 export const MILESTONE_MESSAGES: Record<number, ContextualMessageData> = {
   1: {
     emoji: '🌱',
-    message: 'Day 1 complete! Build that momentum!',
+    message: 'Day 1 — the hardest step is done!',
     type: 'motivation',
   },
   3: {
     emoji: '💪',
-    message: '3 days strong! Habit forming!',
+    message: '3 days strong — your habit is taking shape!',
     type: 'celebrate',
   },
   7: {
     emoji: '🔥',
-    message: "A full week! You're on fire!",
+    message: "A full week! You're officially on fire!",
     type: 'celebrate',
   },
   14: {
     emoji: '⭐',
-    message: 'Two weeks! Incredible consistency!',
+    message: 'Two weeks of consistency — this is real!',
     type: 'celebrate',
   },
   21: {
     emoji: '👑',
-    message: 'Three weeks! Habit is forming!',
+    message: '21 days — science says this is a habit now!',
     type: 'celebrate',
   },
   30: {
     emoji: '💎',
-    message: 'One month! Legendary streak!',
+    message: "One month! You're in the top 1% of habit builders.",
     type: 'celebrate',
   },
 };
 
 export const MESSAGE_STYLES: Record<
   MessageType,
-  { bgColor: string; textColor: string }
+  { borderColor: string; textColor: string }
 > = {
   celebrate: {
-    bgColor: 'bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200',
+    borderColor: 'border-emerald-200',
     textColor: 'text-emerald-700',
   },
   motivation: {
-    bgColor: 'bg-gradient-to-r from-violet-50 to-purple-50 border-violet-200',
+    borderColor: 'border-violet-200',
     textColor: 'text-violet-700',
   },
   record: {
-    bgColor: 'bg-gradient-to-r from-amber-100 to-yellow-100 border-amber-200',
+    borderColor: 'border-amber-200',
     textColor: 'text-amber-700',
   },
   start: {
-    bgColor: 'bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200',
+    borderColor: 'border-orange-200',
     textColor: 'text-orange-700',
   },
 };

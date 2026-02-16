@@ -41,7 +41,7 @@ export function useTemplateListItemAnimations(
     );
     entranceTranslateY.value = withDelay(
       delay,
-      withSpring(0, { damping: 18, stiffness: 200 })
+      withSpring(0, { damping: 18, stiffness: 150 })
     );
 
     return () => {

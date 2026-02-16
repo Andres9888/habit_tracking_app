@@ -2,17 +2,16 @@
  * SignInFormSection - Social buttons, email/password form, and submit
  */
 
-import React from 'react';
-import { View } from 'react-native';
+import React, { useRef } from 'react';
+import { TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import {
-  AuthDivider,
-  AuthError,
-  ForgotPasswordLink,
-  FormInput,
-  SocialSignInButton,
-  SubmitButton,
-} from './index';
+import { AuthDivider } from './AuthDivider';
+import { AuthError } from './AuthError';
+import { ForgotPasswordLink } from './ForgotPasswordLink';
+import { FormInput } from './FormInput';
+import { PasswordInput } from './PasswordInput';
+import { SocialSignInButton } from './SocialSignInButton';
+import { SubmitButton } from './SubmitButton';
 import { styles } from '../SignInScreen.styles';
 import type { SignInFormSectionProps } from './SignInFormSection.types';
 
@@ -37,6 +36,8 @@ export function SignInFormSection(props: SignInFormSectionProps) {
     onForgotPassword,
   } = props;
 
+  const passwordRef = useRef<TextInput>(null);
+
   return (
     <Animated.View style={[styles.authContent, contentStyle]}>
       {oauthError && <AuthError message={oauthError} onDismiss={clearError} />}
@@ -59,24 +60,28 @@ export function SignInFormSection(props: SignInFormSectionProps) {
         <FormInput
           autoCapitalize='none'
           autoComplete='email'
+          blurOnSubmit={false}
           editable={!isAnyLoading}
           error={emailError ?? undefined}
           keyboardType='email-address'
           label='Email'
           placeholder='your@email.com'
+          returnKeyType='next'
           value={emailAddress}
           onBlur={onEmailBlur}
           onChangeText={setEmailAddress}
+          onSubmitEditing={() => passwordRef.current?.focus()}
         />
-        <FormInput
-          secureTextEntry
+        <PasswordInput
+          ref={passwordRef}
           autoComplete='password'
           editable={!isAnyLoading}
-          label='Password'
           labelRight={<ForgotPasswordLink onPress={onForgotPassword} />}
           placeholder='Enter your password'
+          returnKeyType='go'
           value={password}
           onChangeText={setPassword}
+          onSubmitEditing={handleSignIn}
         />
         <SubmitButton
           disabled={!canSubmit || isAnyLoading}

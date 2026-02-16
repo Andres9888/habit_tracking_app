@@ -92,7 +92,7 @@ describe('HabitsEmptyStateMinimal', () => {
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
       // Check for inline hint base text
-      expect(getByText('or type a habit above to get started')).toBeDefined();
+      expect(getByText('or explore')).toBeDefined();
       expect(getByText('📋 templates')).toBeDefined();
       expect(getByText('✨ custom')).toBeDefined();
 
@@ -119,7 +119,7 @@ describe('HabitsEmptyStateMinimal', () => {
   });
 
   describe('Chip Selection', () => {
-    it('should populate input when chip is selected', () => {
+    it('should populate input when chip is selected', async () => {
       const { getByText, getByDisplayValue } = render(
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
@@ -128,34 +128,42 @@ describe('HabitsEmptyStateMinimal', () => {
       const waterChip = getByText('Water');
       fireEvent.press(waterChip);
 
-      // Input should now contain "Drink water"
-      expect(getByDisplayValue('Drink water')).toBeDefined();
+      // Input should now contain "Drink water" (wait for typing animation)
+      await waitFor(() => {
+        expect(getByDisplayValue('Drink water')).toBeDefined();
+      });
     });
 
-    it('should update input when different chip is selected', () => {
+    it('should update input when different chip is selected', async () => {
       const { getByText, getByDisplayValue } = render(
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
       // First select "Water"
       fireEvent.press(getByText('Water'));
-      expect(getByDisplayValue('Drink water')).toBeDefined();
+      await waitFor(() => {
+        expect(getByDisplayValue('Drink water')).toBeDefined();
+      });
 
       // Then select "Walk"
       fireEvent.press(getByText('Walk'));
-      expect(getByDisplayValue('Walk 5 minutes')).toBeDefined();
+      await waitFor(() => {
+        expect(getByDisplayValue('Walk 5 minutes')).toBeDefined();
+      });
     });
 
-    it('should populate input with correct full name for each chip', () => {
+    it('should populate input with correct full name for each chip', async () => {
       const { getByText, getByDisplayValue } = render(
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
 
-      // Test each chip
-      SUGGESTION_CHIPS.forEach((chip) => {
+      // Test each chip (wait for typing animation)
+      for (const chip of SUGGESTION_CHIPS) {
         fireEvent.press(getByText(chip.label));
-        expect(getByDisplayValue(chip.fullName)).toBeDefined();
-      });
+        await waitFor(() => {
+          expect(getByDisplayValue(chip.fullName)).toBeDefined();
+        });
+      }
     });
   });
 
@@ -182,7 +190,7 @@ describe('HabitsEmptyStateMinimal', () => {
       expect(ctaButton.props.accessibilityState?.disabled).toBe(false);
     });
 
-    it('should enable CTA when chip is selected', () => {
+    it('should enable CTA when chip is selected', async () => {
       const { getByText, getByLabelText } = render(
         <HabitsEmptyStateMinimal {...defaultProps} />
       );
@@ -190,8 +198,11 @@ describe('HabitsEmptyStateMinimal', () => {
       // Select a chip
       fireEvent.press(getByText('Water'));
 
-      const ctaButton = getByLabelText(COPY.ctaButton);
-      expect(ctaButton.props.accessibilityState?.disabled).toBe(false);
+      // Wait for typing animation to start
+      await waitFor(() => {
+        const ctaButton = getByLabelText(COPY.ctaButton);
+        expect(ctaButton.props.accessibilityState?.disabled).toBe(false);
+      });
     });
 
     it('should not call onQuickCreateHabit when CTA is disabled', () => {
@@ -516,17 +527,17 @@ describe('HabitsEmptyStateMinimal', () => {
 
   describe('Chip Stagger Animation', () => {
     it('should have correct stagger delay constant values', () => {
-      // Per spec: 50ms between each chip, 400ms duration, 10px translateY
-      expect(CHIP_STAGGER.delay).toBe(50);
-      expect(CHIP_STAGGER.duration).toBe(400);
+      // Per design system: 60ms between each chip, 280ms duration, 10px translateY
+      expect(CHIP_STAGGER.delay).toBe(60);
+      expect(CHIP_STAGGER.duration).toBe(280);
       expect(CHIP_STAGGER.translateY).toBe(10);
     });
 
     it('should calculate stagger delays correctly for all chips', () => {
-      // Row 1 (Water, Walk, Write): indices 0, 1, 2 -> delays 0, 50, 100ms
-      // Row 2 (Breathe, Read): indices 3, 4 -> delays 150, 200ms
-      // Row 3 (Stretch): index 5 -> delay 250ms
-      const expectedDelays = [0, 50, 100, 150, 200, 250];
+      // Row 1 (Water, Walk, Write): indices 0, 1, 2 -> delays 0, 60, 120ms
+      // Row 2 (Breathe, Read): indices 3, 4 -> delays 180, 240ms
+      // Row 3 (Stretch): index 5 -> delay 300ms
+      const expectedDelays = [0, 60, 120, 180, 240, 300];
 
       SUGGESTION_CHIPS.forEach((_, index) => {
         const calculatedDelay = index * CHIP_STAGGER.delay;
@@ -536,13 +547,13 @@ describe('HabitsEmptyStateMinimal', () => {
 
     it('should add base entrance delay to stagger', () => {
       // Total delay = ENTRANCE_DELAYS.chips + (index * CHIP_STAGGER.delay)
-      const baseDelay = ENTRANCE_DELAYS.chips; // 300ms per constants
-      expect(baseDelay).toBe(300);
+      const baseDelay = ENTRANCE_DELAYS.chips; // 180ms per design system
+      expect(baseDelay).toBe(180);
 
-      // First chip: 300 + 0 = 300ms
-      expect(baseDelay + 0 * CHIP_STAGGER.delay).toBe(300);
-      // Last chip: 300 + 250 = 550ms
-      expect(baseDelay + 5 * CHIP_STAGGER.delay).toBe(550);
+      // First chip: 180 + 0 = 180ms
+      expect(baseDelay + 0 * CHIP_STAGGER.delay).toBe(180);
+      // Last chip: 180 + 300 = 480ms
+      expect(baseDelay + 5 * CHIP_STAGGER.delay).toBe(480);
     });
 
     it('should render all 6 chips for staggered animation', () => {
@@ -635,7 +646,7 @@ describe('HabitsEmptyStateMinimal', () => {
     it('should have correct keyboard layout constants', () => {
       expect(KEYBOARD_LAYOUT.compactHeroSize).toBe(60);
       expect(KEYBOARD_LAYOUT.compactHeadlineFontSize).toBe(20);
-      expect(KEYBOARD_LAYOUT.transitionDuration).toBe(300);
+      expect(KEYBOARD_LAYOUT.transitionDuration).toBe(280);
       expect(KEYBOARD_LAYOUT.topPadding).toBe(100);
     });
 
@@ -671,7 +682,7 @@ describe('HabitsEmptyStateMinimal', () => {
       );
 
       // Check for inline hint base text
-      expect(getByText('or type a habit above to get started')).toBeDefined();
+      expect(getByText('or explore')).toBeDefined();
       expect(getByText('📋 templates')).toBeDefined();
 
       // Check for accessible links

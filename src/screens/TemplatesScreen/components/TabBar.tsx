@@ -1,11 +1,12 @@
 /**
- * Tab bar component with animated indicator
+ * Tab bar component with animated indicator (theme-aware)
  */
 
 import { Pressable, Text, type LayoutChangeEvent } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { styles } from '../../templates/templatesScreenStyles';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { BrowseTab } from '../TemplatesScreen.types';
 
 interface TabBarProps {
@@ -27,6 +28,8 @@ export function TabBar({
   tabBarAnimatedStyle,
   tabIndicatorStyle,
 }: TabBarProps) {
+  const { colors, isDark } = useThemeColors();
+
   const handleCategoriesPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onTabPress('categories');
@@ -37,12 +40,27 @@ export function TabBar({
     onTabPress('all');
   };
 
+  // Theme-aware active colors
+  const activeColor = colors.primary[400];
+  const activeTextColor = colors.primary[700];
+  const indicatorBgColor = isDark ? colors.gray[700] : colors.card;
+  const indicatorShadowColor = colors.primary[300];
+
   return (
     <Animated.View
-      style={[styles.tabBar, tabBarAnimatedStyle]}
+      style={[styles.tabBar, { backgroundColor: colors.surface }, tabBarAnimatedStyle]}
       onLayout={onLayout}
     >
-      <Animated.View style={[styles.tabIndicator, tabIndicatorStyle]} />
+      <Animated.View 
+        style={[
+          styles.tabIndicator, 
+          { 
+            backgroundColor: indicatorBgColor,
+            shadowColor: indicatorShadowColor,
+          }, 
+          tabIndicatorStyle
+        ]} 
+      />
       <Pressable
         accessible
         accessibilityLabel={`Categories tab, ${categoriesCount} categories`}
@@ -54,7 +72,8 @@ export function TabBar({
         <Text
           style={[
             styles.tabText,
-            activeTab === 'categories' && styles.tabTextActive,
+            { color: colors.text.secondary },
+            activeTab === 'categories' && [styles.tabTextActive, { color: activeTextColor }],
           ]}
         >
           Categories
@@ -62,7 +81,8 @@ export function TabBar({
         <Text
           style={[
             styles.tabCount,
-            activeTab === 'categories' && styles.tabCountActive,
+            { color: colors.text.tertiary },
+            activeTab === 'categories' && [styles.tabCountActive, { color: activeColor }],
           ]}
         >
           {categoriesCount}
@@ -77,14 +97,19 @@ export function TabBar({
         onPress={handleAllPress}
       >
         <Text
-          style={[styles.tabText, activeTab === 'all' && styles.tabTextActive]}
+          style={[
+            styles.tabText,
+            { color: colors.text.secondary },
+            activeTab === 'all' && [styles.tabTextActive, { color: activeTextColor }],
+          ]}
         >
           View All
         </Text>
         <Text
           style={[
             styles.tabCount,
-            activeTab === 'all' && styles.tabCountActive,
+            { color: colors.text.tertiary },
+            activeTab === 'all' && [styles.tabCountActive, { color: activeColor }],
           ]}
         >
           {allCount}

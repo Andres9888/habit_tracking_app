@@ -75,12 +75,12 @@ export const useTemplateBrowserHandlers = ({
   }, [setHasScrolledPastHero, setIsOpen, setIsVisible]);
 
   return {
-    openBrowser,
     closeBrowser,
     handleHeroPress,
     handleMainScroll,
     handleReminderPress,
     handleTemplateSelect,
+    openBrowser,
     resetVisibility,
   };
 };

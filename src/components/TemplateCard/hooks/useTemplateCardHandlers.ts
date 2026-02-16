@@ -4,19 +4,26 @@
  * Press event handlers for TemplateCard
  */
 
-import { withSpring, withTiming } from 'react-native-reanimated';
+import { withTiming } from 'react-native-reanimated';
+import {
+  CARD_PRESS_SCALE,
+  CARD_PRESS_SPRING_CONFIG,
+  CARD_REST_SCALE,
+  pressCard,
+  releaseCard,
+} from '../../../utils/animations/cardPressAnimation';
 
 export function useTemplateCardHandlers(
   pressScale: { value: number },
   shadowOpacity: { value: number }
 ) {
   const handlePressIn = () => {
-    pressScale.value = withSpring(0.97, { damping: 15, stiffness: 200 });
+    pressCard(pressScale);
     shadowOpacity.value = withTiming(0.12, { duration: 120 });
   };
 
   const handlePressOut = () => {
-    pressScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+    releaseCard(pressScale);
     shadowOpacity.value = withTiming(0.06, { duration: 200 });
   };
 

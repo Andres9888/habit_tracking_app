@@ -1,32 +1,31 @@
+/* eslint-disable max-lines, max-lines-per-function */
 /**
  * SettingsModal Component
- *
- * Full-screen modal for app settings. Manages navigation between:
- * - Main settings view (visual preferences, account)
- * - Archived habits sub-view
- *
- * Provides controls for:
- * - Visual preferences (progress bar, icons, shapes)
- * - Habit management (archived habits)
- * - Account actions (sign out, delete)
- *
- * Supports high contrast mode for accessibility.
  */
 
 import React from 'react';
 import { Modal, View } from 'react-native';
+import { useQuery } from 'convex/react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { api } from '../../../convex/_generated/api';
+import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
+import { SettingsModalSkeleton } from '../SkeletonLoader';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
 import { SettingsHeader } from './SettingsHeader';
 import { SettingsContent } from './SettingsContent';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsModalProps } from './types';
 
-export default function SettingsModal({
+function SettingsModalContent({
+  completionSoundEnabled = false,
+  completionSoundType = 'chime',
   dayShape = 'square',
   habitCompletionIcon = 'chain',
   isHighContrastActive = false,
+  onChangeCompletionSoundEnabled = () => {},
+  onChangeCompletionSoundType = () => {},
   onChangeDayShape = () => {},
   onChangeHabitCompletionIcon = () => {},
   onClose,
@@ -34,22 +33,35 @@ export default function SettingsModal({
   streakRemindersEnabled = false,
   streakReminderTime = '20:00',
   isPremium = false,
+  isLoading = false,
   onToggleStreakReminders = () => {},
   onChangeStreakReminderTime = () => {},
   onPremiumUpsell,
 }: SettingsModalProps) {
-  const { view, setView, handleClose } = useSettingsModalLogic({
+  const {
+    darkModePreference,
+    setDarkModePreference,
+    showGradientFill,
+    setShowGradientFill,
+    view,
+    setView,
+    handleClose,
+  } = useSettingsModalLogic({
     onClose,
     visible,
   });
   const insets = useSafeAreaInsets();
-  const colors = getSettingsColors(isHighContrastActive);
+  const { isDark } = useThemeColors();
+  const colors = getSettingsColors(isHighContrastActive, isDark);
+  const archivedHabits = useQuery(api.habits.listArchived);
+  const archivedHabitsCount = archivedHabits?.length ?? 0;
 
   if (!visible) return null;
 
   if (view === 'archived') {
     return (
       <Modal
+        accessibilityViewIsModal
         animationType='slide'
         visible={visible}
         onRequestClose={handleClose}
@@ -64,31 +76,71 @@ export default function SettingsModal({
 
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={handleClose}>
+      accessibilityViewIsModal
       <View
         className='flex-1 bg-background'
         style={{ backgroundColor: colors.background }}
       >
-        <SettingsHeader
-          colors={colors}
-          paddingTop={insets.top + 8}
-          onClose={handleClose}
-        />
-        <SettingsContent
-          colors={colors}
-          dayShape={dayShape}
-          habitCompletionIcon={habitCompletionIcon}
-          isHighContrastActive={isHighContrastActive}
-          isPremium={isPremium}
-          streakRemindersEnabled={streakRemindersEnabled}
-          streakReminderTime={streakReminderTime}
-          onChangeDayShape={onChangeDayShape}
-          onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
-          onChangeStreakReminderTime={onChangeStreakReminderTime}
-          onOpenArchivedHabits={() => setView('archived')}
-          onPremiumUpsell={onPremiumUpsell}
-          onToggleStreakReminders={onToggleStreakReminders}
-        />
+        {isLoading ? (
+          <SettingsModalSkeleton />
+        ) : (
+          <>
+            <SettingsHeader
+              colors={colors}
+              paddingTop={insets.top + 8}
+              onClose={handleClose}
+            />
+            <SettingsContent
+              archivedHabitsCount={archivedHabitsCount}
+              colors={colors}
+              completionSoundEnabled={completionSoundEnabled}
+              completionSoundType={completionSoundType}
+              darkModePreference={darkModePreference}
+              dayShape={dayShape}
+              habitCompletionIcon={habitCompletionIcon}
+              isHighContrastActive={isHighContrastActive}
+              isPremium={isPremium}
+              showGradientFill={showGradientFill}
+              streakRemindersEnabled={streakRemindersEnabled}
+              streakReminderTime={streakReminderTime}
+              onChangeCompletionSoundEnabled={onChangeCompletionSoundEnabled}
+              onChangeCompletionSoundType={onChangeCompletionSoundType}
+              onChangeDarkModePreference={setDarkModePreference}
+              onChangeDayShape={onChangeDayShape}
+              onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
+              onChangeShowGradientFill={setShowGradientFill}
+              onChangeStreakReminderTime={onChangeStreakReminderTime}
+              onOpenArchivedHabits={() => setView('archived')}
+              onPremiumUpsell={onPremiumUpsell}
+              onToggleStreakReminders={onToggleStreakReminders}
+            />
+          </>
+        )}
       </View>
     </Modal>
+  );
+}
+
+export default function SettingsModal(props: SettingsModalProps) {
+  return (
+    <ErrorBoundary
+      fallback={
+        <Modal
+          accessibilityViewIsModal
+          animationType='slide'
+          visible={props.visible}
+          onRequestClose={props.onClose}
+        >
+          <ScreenErrorFallback
+            error={null}
+            screenName='Settings'
+            onGoBack={props.onClose}
+            onRetry={() => {}}
+          />
+        </Modal>
+      }
+    >
+      <SettingsModalContent {...props} />
+    </ErrorBoundary>
   );
 }

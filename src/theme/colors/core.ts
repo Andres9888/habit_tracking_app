@@ -1,117 +1,193 @@
 /**
  * Core Color Palette - Habit Tracking App
- * Based on UX Specification Section 5.1
+ * Frontend Redesign Spec 2026-02-14
  *
- * All colors match exact hex values from design spec
- * WCAG 2.1 Level AA compliant where applicable
+ * ## Design Philosophy
+ *
+ * **Warm Minimal** — earth-toned, restrained, organic aesthetic
+ * - **Single saturated color**: Forest green (primary.600 #059669)
+ * - **Neutral foundation**: Warm stone grays (#F5F1ED → #1A1816)
+ * - **Accent sparingly**: Burnished gold streak color (≤10% visible area)
+ * - **WCAG 2.1 Level AA compliant** for all text/background combinations
+ *
+ * ## Color Naming Convention
+ *
+ * ### Scale Numbers (50-900)
+ * - **50**: Lightest shade — muted surfaces, subtle backgrounds
+ * - **100-200**: Light shades — backgrounds, cards, borders
+ * - **300-400**: Medium shades — disabled states, placeholders
+ * - **500-600**: Base shades — primary usage, buttons, CTAs
+ * - **700-900**: Dark shades — text, headings, high contrast
+ *
+ * ### Semantic Prefixes
+ * - `primary.*`: Forest green brand color
+ * - `gray.*`: Warm stone neutrals
+ * - `streak.*`: Burnished gold for momentum
+ * - `strength.*`: Habit progress levels
+ * - `premium.*`: Subscription tier purple
+ *
+ * ### Suffixes
+ * - `Light`: Tinted background (e.g., `errorLight`, `warningLight`)
+ * - No suffix: Primary usage
+ *
+ * @example
+ * ```tsx
+ * import { colors } from '@/theme/colors';
+ *
+ * // Buttons use primary.600
+ * <Button backgroundColor={colors.primary[600]} />
+ *
+ * // Text on colored surfaces uses primary.700 (higher contrast)
+ * <Text color={colors.primary[700]}>Forest Green Text</Text>
+ *
+ * // Backgrounds use light.background
+ * <View style={{ backgroundColor: colors.light.background }} />
+ *
+ * // Cards use light.card with borders
+ * <View style={{
+ *   backgroundColor: colors.light.card,
+ *   borderColor: colors.border
+ * }} />
+ * ```
  */
 
 export const colors = {
-  // Convenience aliases for common usage (defaults to light mode)
-  background: '#faf9f7',
+  // Convenience aliases (light mode defaults)
+  background: '#F5F1ED',
 
-  border: '#e7e5e4',
+  border: '#DDD8D2',
 
   // Dark Mode (Future)
   dark: {
     background: '#111827',
-    // Gray-800
     card: '#374151',
-    // Gray-900
-    surface: '#1F2937', // Gray-700 with glow
+    surface: '#1F2937',
   },
 
-  error: '#EF4444',
+  error: '#B53030', // WCAG AA 5.45:1 on #F5F1ED
+  errorLight: '#FEE2E2', // Light error tint for badges/backgrounds
 
-  // Neutral Grays (iOS-inspired)
+  // Neutral Grays (warm stone-based)
   gray: {
-    50: '#faf9f7', // Background, cards in dark mode
-    100: '#f5f5f4', // Card backgrounds
-    200: '#E5E7EB', // Borders, dividers
-    300: '#D1D5DB', // Disabled elements
-    400: '#6B7280', // Placeholder text (WCAG AA compliant)
-    500: '#78716c', // Secondary text (stone-500)
-    600: '#4B5563', // Body text
-    700: '#374151', // Headings
-    800: '#1F2937', // Very dark text
-    900: '#111827', // Pure black alternative
+    50: '#FAF8F5', // Muted surfaces
+    100: '#F5F1ED', // Background
+    200: '#DDD8D2', // Borders, dividers
+    300: '#C4BFB7', // Disabled elements (WCAG-exempt per 1.4.3)
+    400: '#6E6660', // Placeholder text, tertiary — WCAG AA 4.69:1 on card
+    500: '#6B6560', // Secondary text (5.1:1 on #F5F1ED)
+    600: '#524D47', // Body text
+    700: '#3D3833', // Headings
+    800: '#2D2A26', // Primary text
+    900: '#1A1816', // Pure black alternative
   },
 
-  // Red - errors, delete confirmations
-  info: '#3B82F6',
+  info: '#3872B8',
 
-  // Background & Surfaces
+  // Background & Surfaces (layered planes)
   light: {
-    background: '#faf9f7', // Warm stone background
-    card: '#ffffff', // Pure white cards for contrast
-    gradientMid: '#f5f3f0', // Slightly darker warm stone for depth gradients
-    surface: '#ffffff', // White surface for elevated elements
-    surfaceMuted: '#fafaf9', // stone-50 for subtle sections
+    background: '#F5F1ED', // Canvas (L0) — warm parchment
+    card: '#EDEAE5', // Surface (L1) — subtle lift
+    gradientMid: '#F0EDE8', // Depth gradient midpoint
+    surface: '#EDEAE5', // Elevated elements (L1)
+    surfaceMuted: '#FAF8F5', // Subtle section differentiation
   },
 
-  // Premium Colors (Monetization & Premium Features)
+  // Premium Colors
   premium: {
-    400: '#a78bfa', // Lighter violet, hover states
-    500: '#8b5cf6', // Standard violet-500
-    600: '#7c3aed', // Violet-600 - primary premium color
-    700: '#6d28d9', // Darker violet, pressed states
+    400: '#7B52C4', // WCAG AA 5.46:1 with white text
+    500: '#8563C7',
+    600: '#6D3AC7',
+    700: '#5A2DA8',
   },
 
-  // Primary Colors (Growth & Progress)
+  // Primary Colors (Forest Green — single saturated color)
+  // Design system: #047857 (text), #059669 (buttons)
   primary: {
-    100: '#D1FAE5', // Very light emerald, muted accent backgrounds
-    300: '#86EFAC', // Very light, decorative/confetti
+    100: '#D1FAE5', // Light tinted backgrounds
+    300: '#6EE7B7', // Decorative, confetti
     400: '#34D399', // Lighter, hover states
-    500: '#10B981', // Emerald green - main brand color
-    600: '#059669', // Darker, pressed states
-    700: '#047857', // Very dark, high contrast text
+    500: '#10B981', // Success indicators, focus rings
+    600: '#059669', // Buttons, CTA fills
+    700: '#047857', // High-contrast text on colored surfaces
   },
 
   // Secondary Colors (Trust & Calm)
   secondary: {
-    100: '#dbeafe', // Very light blue, selected state backgrounds
-    400: '#60A5FA', // Lighter, info states
-    500: '#3B82F6', // Bright blue - science/analytics theme
-    600: '#2563EB', // Darker, pressed
+    100: '#dbeafe',
+    400: '#60A5FA',
+    500: '#3B82F6',
+    600: '#2563EB',
   },
 
-  // Habit Strength Level Colors (Gradient: lime → green → teal → cyan → emerald)
+  // Streak & Progress — burnished gold (accent, ≤10% visible area)
+  streak: {
+    100: '#FEF3CD', // Streak background tint
+    300: '#E8B94D', // Light gold accents
+    500: '#8B6208', // Primary streak color — WCAG AA 4.92:1 on streak.100
+    600: '#936A08', // Streak badges, flames — WCAG AA 4.88:1 with white
+    700: '#7D5907', // Dark gold, high-contrast text — WCAG AA 6.36:1 with white
+  },
+
+  /**
+   * Habit Strength Level Colors
+   *
+   * Maps to habit formation stages based on completion percentage.
+   * Each level has a base color + light tinted background variant.
+   *
+   * Progression stages:
+   * - **Starting** (0-20%): Lime green — early momentum
+   * - **Developing** (20-40%): Teal — gaining traction
+   * - **Building** (40-60%): Green — steady progress
+   * - **Strong** (60-80%): Cyan — well-established
+   * - **Automatic** (80-100%): Forest green — ingrained habit (matches primary.600)
+   *
+   * All color/background pairs meet WCAG AA contrast requirements.
+   *
+   * @example
+   * ```tsx
+   * import { colors } from '@/theme/colors';
+   *
+   * const getStrengthColor = (percentage: number) => {
+   *   if (percentage >= 80) return colors.strength.automatic;
+   *   if (percentage >= 60) return colors.strength.strong;
+   *   if (percentage >= 40) return colors.strength.building;
+   *   if (percentage >= 20) return colors.strength.developing;
+   *   return colors.strength.starting;
+   * };
+   *
+   * <ProgressRing
+   *   color={colors.strength.building}
+   *   backgroundColor={colors.strength.buildingLight}
+   * />
+   * ```
+   */
   strength: {
-    automatic: '#059669', // 80-100% - Emerald-600
-    automaticLight: '#d1fae5', // Emerald-100
-    building: '#16a34a', // 20-40% - Green-600
-    buildingLight: '#dcfce7', // Green-100
-    developing: '#0d9488', // 40-60% - Teal-600
-    developingLight: '#ccfbf1', // Teal-100
-    starting: '#65a30d', // 0-20% - Lime-600
-    startingLight: '#ecfccb', // Lime-100
-    strong: '#0891b2', // 60-80% - Cyan-600
-    strongLight: '#cffafe', // Cyan-100
+    automatic: '#059669', // 80-100% — matches primary.600
+    automaticLight: '#D4F0E2',
+    building: '#16a34a',
+    buildingLight: '#dcfce7',
+    developing: '#0d9488',
+    developingLight: '#ccfbf1',
+    starting: '#4D7A0A', // WCAG AA 4.72:1 on startingLight
+    startingLight: '#ecfccb',
+    strong: '#0891b2',
+    strongLight: '#cffafe',
   },
 
-  // Semantic Colors
-  success: '#10B981',
+  success: '#15793C', // WCAG AA 4.88:1 on #F5F1ED
 
-  surface: '#faf9f7',
-
-  // Text Colors
+  // Semantic text aliases consumed across app components
   text: {
-    // Gray-400 - Placeholder, disabled text
     inverse: '#FFFFFF',
-    primary: '#1F2937',
-    // Gray-800 - Headings and important text
-    secondary: '#78716c',
-    // Gray-500 - Secondary text, labels
-    tertiary: '#6B7280', // White text on dark backgrounds
+    primary: '#2D2A26',
+    secondary: '#6B6560',
+    tertiary: '#6E6660', // WCAG AA 5.01:1 on #F5F1ED, 4.69:1 on card
   },
 
-  // Matches primary green
-  warning: {
-    100: '#fef3c7', // Very light amber, suggestion backgrounds
-    300: '#fcd34d', // Light amber, suggestion borders
-    500: '#F59E0B', // Amber - habits at risk
-    700: '#D97706', // Darker for text (better contrast)
-  }, // Gray-200
+  surface: '#EDEAE5',
+
+  warning: '#9A5504', // WCAG AA 5.08:1 on #F5F1ED
+  warningLight: '#FEF3CD',
 } as const;
 
 export type ColorPalette = typeof colors;

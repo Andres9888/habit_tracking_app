@@ -1,5 +1,10 @@
 /**
- * HabitsList Types
+ * HabitsList Types — shared interfaces for the HabitsList component tree.
+ *
+ * `HabitsListProps` is the top-level contract; `HabitsListContentProps` and
+ * `UseHabitsListHandlersOptions` are internal wiring interfaces that reference
+ * return types of the co-located hooks via `ReturnType<typeof …>` to stay in sync
+ * automatically.
  */
 
 import type { Id } from '../../../../../convex/_generated/dataModel';
@@ -18,6 +23,18 @@ export interface HabitsListProps {
   weekDates: Date[];
   onNextWeek: () => void;
   onPreviousWeek: () => void;
+}
+
+export interface HabitsListContentProps {
+  props: HabitsListProps;
+  state: ReturnType<typeof import('./useHabitsListState').useHabitsListState>;
+  handlers: ReturnType<
+    typeof import('./useHabitsListHandlers').useHabitsListHandlers
+  >;
+  renderItem: ReturnType<
+    typeof import('../../hooks/useHabitRenderItem').useHabitRenderItem
+  >;
+  handleSuccessTransitionComplete: () => void;
 }
 
 export interface UseHabitsListHandlersOptions {

@@ -21,7 +21,7 @@ export function ConfettiAnimation({
   active,
   onComplete,
 }: ConfettiAnimationProps) {
-  const confettiRef = useRef<any>(null);
+  const confettiRef = useRef<ConfettiCannon>(null);
   const reduceMotion = useReduceMotion();
 
   useEffect(() => {
@@ -47,11 +47,11 @@ export function ConfettiAnimation({
   return (
     <ConfettiCannon
       ref={confettiRef}
+      fadeOut
       autoStart={false}
       colors={CONFETTI_COLORS}
       count={150}
       explosionSpeed={400}
-      fadeOut
       fallSpeed={2800}
       origin={{ x: SCREEN_WIDTH / 2, y: -20 }}
       onAnimationEnd={onComplete}

@@ -1,12 +1,14 @@
 /**
  * Business logic hooks for AnalyticsScreen
  */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { exportData, prepareExportData } from '../../utils/exportData';
 import { usePremium } from '../../hooks/usePremium/usePremium';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { maybeRequestReviewFromAnalytics } from '@/utils/storeReview';
 import type {
   ExportFormat,
   UseAnalyticsScreenReturn,
@@ -17,6 +19,8 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const { isPremium: isPremiumUser } = usePremium();
   const [showPaywall, setShowPaywall] = useState(!isPremiumUser);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const { triggerLightImpact } = useHapticFeedback();
+  const hasCheckedReview = useRef(false);
 
   // Skip all analytics queries when the paywall is shown — avoids 5 unnecessary
   // Convex subscriptions for free users, reducing backend load and speeding up
@@ -46,10 +50,12 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const isLoading = shouldFetch && !overviewStats;
 
   const onRefresh = useCallback(async () => {
+    triggerLightImpact(); // Haptic feedback when pull-to-refresh activates
     setRefreshing(true);
     // Convex queries automatically refresh
-    setTimeout(() => setRefreshing(false), 1000);
-  }, []);
+    if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+    refreshTimerRef.current = setTimeout(() => setRefreshing(false), 1000);
+  }, [triggerLightImpact]);
 
   const handleHabitPress = useCallback((_habitId: string) => {
     // TODO: navigate to habit detail
@@ -94,21 +100,21 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
 
   return {
     complianceData,
-    isLoading,
-    handleExportPress,
-    isPremiumUser,
     handleExport,
-    onRefresh,
+    handleExportPress,
     handleHabitPress,
-    refreshing,
     handleStartTrial,
-    showExportMenu,
+    isLoading,
+    isPremiumUser,
+    onRefresh,
     overviewStats,
-    showPaywall,
+    refreshing,
     setShowExportMenu,
     setShowPaywall,
+    showExportMenu,
+    showPaywall,
     strengthDistribution,
     trendData,
-    weeklyInsights,
+    weeklyInsights: weeklyInsights ?? undefined,
   };
 };

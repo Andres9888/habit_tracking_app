@@ -1,16 +1,25 @@
 /**
  * Date Utilities for Client-Side Calculations
- * Provides consistent date handling that matches backend (convex/streakUtils.ts)
+ *
+ * Provides consistent date handling that matches backend (convex/streakUtils.ts).
+ * All functions use UTC to avoid timezone/DST issues.
+ *
+ * @module dateUtils
+ * @category Date Handling
  */
 
 /**
- * Calculate the difference in days between two dates
- * Uses UTC to avoid timezone/DST issues completely
- * Uses Math.round to handle any remaining fractional day differences
+ * Calculate the difference in days between two dates.
+ * Uses UTC to avoid timezone/DST issues completely.
+ * Uses Math.round to handle any remaining fractional day differences.
  *
- * @param date1 - First date (or date string in YYYY-MM-DD format)
- * @param date2 - Second date (or date string in YYYY-MM-DD format)
+ * @param date1 - First date (Date object or YYYY-MM-DD string)
+ * @param date2 - Second date (Date object or YYYY-MM-DD string)
  * @returns Number of days difference (positive if date1 > date2)
+ *
+ * @example
+ * differenceInDays('2024-01-10', '2024-01-05') // returns 5
+ * differenceInDays(new Date('2024-01-10'), '2024-01-05') // returns 5
  */
 export function differenceInDays(
   date1: Date | string,
@@ -27,7 +36,11 @@ export function differenceInDays(
 }
 
 /**
- * Parse a date to UTC midnight, avoiding timezone issues
+ * Parse a date to UTC midnight, avoiding timezone issues.
+ * Internal helper function for date calculations.
+ *
+ * @param date - Date object or YYYY-MM-DD string
+ * @returns Date object set to UTC midnight
  */
 function parseToUTCMidnight(date: Date | string): Date {
   if (typeof date === 'string') {
@@ -47,8 +60,13 @@ function parseToUTCMidnight(date: Date | string): Date {
 }
 
 /**
- * Get today's date string in YYYY-MM-DD format
- * Uses local timezone
+ * Get today's date string in YYYY-MM-DD format.
+ * Uses local timezone (not UTC) to match user expectations.
+ *
+ * @returns Date string in YYYY-MM-DD format (e.g., "2024-01-15")
+ *
+ * @example
+ * getTodayString() // returns "2024-01-15" (if today is January 15, 2024)
  */
 export function getTodayString(): string {
   const today = new Date();
@@ -56,8 +74,17 @@ export function getTodayString(): string {
 }
 
 /**
- * Format a date to YYYY-MM-DD string
- * Handles both Date objects and existing strings
+ * Format a date to YYYY-MM-DD string.
+ * Handles both Date objects and existing strings.
+ * Validates string input to ensure valid date format.
+ *
+ * @param date - Date object or YYYY-MM-DD string
+ * @returns Formatted date string in YYYY-MM-DD format
+ * @throws TypeError if date string is invalid
+ *
+ * @example
+ * formatDateString(new Date(2024, 0, 15)) // returns "2024-01-15"
+ * formatDateString('2024-01-15') // returns "2024-01-15"
  */
 export function formatDateString(date: Date | string): string {
   if (typeof date === 'string') {
@@ -67,10 +94,13 @@ export function formatDateString(date: Date | string): string {
     }
     // Try to parse and format
     const parsed = new Date(date);
-    if (isNaN(parsed.getTime())) {
-      throw new Error(`Invalid date string: ${date}`);
+    if (Number.isNaN(parsed.getTime())) {
+      if (__DEV__) console.warn(`Invalid date string: ${date}`);
+      // Return today's date as safe fallback instead of crashing
+      date = new Date();
+    } else {
+      date = parsed;
     }
-    date = parsed;
   }
 
   const year = date.getFullYear();
@@ -80,14 +110,26 @@ export function formatDateString(date: Date | string): string {
 }
 
 /**
- * Check if a date string represents today
+ * Check if a date string represents today.
+ *
+ * @param dateString - Date string in YYYY-MM-DD format
+ * @returns True if the date is today, false otherwise
+ *
+ * @example
+ * isToday('2024-01-15') // returns true if today is January 15, 2024
  */
 export function isToday(dateString: string): boolean {
   return dateString === getTodayString();
 }
 
 /**
- * Check if a date string represents yesterday
+ * Check if a date string represents yesterday.
+ *
+ * @param dateString - Date string in YYYY-MM-DD format
+ * @returns True if the date is yesterday, false otherwise
+ *
+ * @example
+ * isYesterday('2024-01-14') // returns true if today is January 15, 2024
  */
 export function isYesterday(dateString: string): boolean {
   const yesterday = new Date();

@@ -9,6 +9,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { VoiceNotePlaybackUI } from '../../Workshop/VoiceNotePlaybackUI';
 import { SPRING_BUTTON, formatDaysAgoText } from './constants';
@@ -43,9 +44,15 @@ export function StreakVoiceNoteCard({
 
   return (
     <Animated.View
-      className='mb-3 overflow-hidden rounded-xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50'
+      className='mb-3 overflow-hidden rounded-xl border border-amber-200'
       style={animatedStyle}
     >
+      <LinearGradient
+        className='absolute inset-0'
+        colors={['#fffbeb', '#ffedd5']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
+      />
       <Pressable
         accessibilityLabel={`Voice note from day ${voiceNote.streakAtRecording}, recorded ${daysAgoText}`}
         accessibilityRole='button'

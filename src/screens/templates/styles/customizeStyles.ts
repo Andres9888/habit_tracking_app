@@ -6,7 +6,7 @@ export const customizeStyles = StyleSheet.create({
   },
   customizeSubtitle: {
     backgroundColor: '#f3f4f6',
-    borderRadius: 6,
+    borderRadius: 8,
     color: '#78716c',
     fontSize: 10,
     fontWeight: '500',

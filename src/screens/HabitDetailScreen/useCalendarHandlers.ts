@@ -5,11 +5,11 @@
 
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
-import { useMutation } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
 import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import type { Habit } from './HabitDetailScreen.types';
+import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 interface UseCalendarHandlersProps {
   habit: Habit | null;
@@ -32,7 +32,7 @@ export const useCalendarHandlers = ({
   setPendingArchive,
   setPendingDelete,
 }: UseCalendarHandlersProps) => {
-  const toggleHabitMutation = useMutation(api.habits.toggleHabit);
+  const toggleHabitMutation = useToggleHabitWithTimezone();
 
   const handleCalendarDayPress = useCallback(
     (date: string, wasCompleted: boolean): void => {
@@ -45,10 +45,15 @@ export const useCalendarHandlers = ({
       if (inputDate > todayDate) return;
 
       setIsTogglingCalendar(true);
+      Haptics.impactAsync(
+        wasCompleted
+          ? Haptics.ImpactFeedbackStyle.Light
+          : Haptics.ImpactFeedbackStyle.Medium
+      );
       toggleHabitMutation({ date, habitId: habit._id })
         .catch((error: unknown) => {
           if (__DEV__) console.error('Failed to toggle habit:', error);
-          Alert.alert('Error', 'Failed to update habit. Please try again.');
+          Alert.alert('Error', ERROR_MESSAGES.DATA_OPS.TOGGLE_HABIT_FAILED);
         })
         .finally(() => setIsTogglingCalendar(false));
     },
@@ -56,12 +61,12 @@ export const useCalendarHandlers = ({
   );
 
   const handleSwipeDelete = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPendingDelete(true);
   }, [setPendingDelete]);
 
   const handleSwipeArchive = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPendingArchive(true);
   }, [setPendingArchive]);
 

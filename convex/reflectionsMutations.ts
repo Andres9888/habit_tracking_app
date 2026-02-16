@@ -4,7 +4,7 @@ import {
   DATE_FORMAT_REGEX,
   emojiValidator,
   MAX_REFLECTION_NOTE_LENGTH,
-} from './reflections';
+} from './reflections/types';
 import {
   validateLongText,
   validateEmoji,
