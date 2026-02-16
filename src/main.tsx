@@ -24,19 +24,37 @@ class ErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className='m-4 rounded-md border border-red-300 bg-red-50 p-4 text-red-800'>
-          <h2 className='mb-2 font-semibold'>Something went wrong</h2>
-          <pre className='whitespace-pre-wrap text-sm'>
-            {String(this.state.error)}
-          </pre>
-          <button
-            aria-label='Reload application'
-            className='mt-3 rounded bg-stone-800 px-3 py-1 text-white'
-            type='button'
-            onClick={() => window.location.reload()}
-          >
-            Reload
-          </button>
+        <div
+          aria-label='An error occurred in the application'
+          className='flex min-h-screen items-center justify-center bg-stone-50 p-4'
+          role='alert'
+        >
+          <div className='max-w-md text-center'>
+            <div className='mb-4 text-5xl'>😕</div>
+            <h2 className='mb-2 text-2xl font-semibold text-stone-900'>
+              We hit a bump
+            </h2>
+            <p className='mb-2 font-semibold text-stone-900'>
+              Your data is safe.
+            </p>
+            <p className='mb-6 text-sm leading-relaxed text-stone-600'>
+              Something unexpected happened, but nothing was lost. Try reloading
+              the app.
+            </p>
+            {__DEV__ && (
+              <pre className='mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-left text-xs text-red-700'>
+                {String(this.state.error)}
+              </pre>
+            )}
+            <button
+              aria-label='Reload application'
+              className='rounded-xl bg-stone-900 px-6 py-3 font-semibold text-white transition-colors hover:bg-stone-800'
+              type='button'
+              onClick={() => window.location.reload()}
+            >
+              Reload App
+            </button>
+          </div>
         </div>
       );
     }
