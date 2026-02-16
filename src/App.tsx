@@ -29,6 +29,7 @@ import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { OfflineProvider } from './providers/OfflineProvider';
 import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
+import { useAnalytics } from './lib/analytics/hooks';
 
 // Initialize Sentry after first frame to avoid blocking app launch.
 // requestIdleCallback (or setTimeout fallback) defers this work until
@@ -77,6 +78,9 @@ function Providers({ children }: PropsWithChildren) {
 }
 
 export default function App() {
+  // Initialize analytics (deep links, sessions, lifecycle)
+  useAnalytics();
+
   return (
     <Providers>
       <AuthGate />
