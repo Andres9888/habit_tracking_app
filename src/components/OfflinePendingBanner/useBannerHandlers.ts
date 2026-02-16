@@ -29,7 +29,12 @@ export const useOfflineBannerHandlers = ({
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     if (!isExpanded && !externalStats) {
-      void getStats().then(setStats);
+      void getStats()
+        .then(setStats)
+        .catch((error) => {
+          if (__DEV__) console.warn('Error getting queue stats:', error);
+          setStats(null);
+        });
     }
 
     setIsExpanded(!isExpanded);

@@ -46,6 +46,7 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
         />
       </View>
       <FlatList
+        removeClippedSubviews
         contentContainerStyle={styles.allTemplatesList}
         data={p.filteredTemplates}
         initialNumToRender={5}

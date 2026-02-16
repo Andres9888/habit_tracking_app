@@ -77,7 +77,7 @@ function formatBytes(bytes: number): string {
 }
 
 function getMemoryBarColor(usage: number): string {
-  const ratio = usage / MAX_MEMORY;
+  const ratio = MAX_MEMORY > 0 ? usage / MAX_MEMORY : 0;
   if (ratio < 0.5) return '#22c55e';
   if (ratio < 0.75) return '#f59e0b';
   return '#ef4444';
