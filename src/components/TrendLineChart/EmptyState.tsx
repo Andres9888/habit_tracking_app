@@ -31,6 +31,7 @@ export function EmptyState() {
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: isDark ? 0.3 : 0.08,
           shadowRadius: 16,
+          width: 64,
         }}
       >
         <TrendingUp color={isDark ? '#6EE7B7' : '#10b981'} size={32} strokeWidth={1.5} />

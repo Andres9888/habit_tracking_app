@@ -3,7 +3,7 @@
  * Dark mode aware via useThemeColors
  */
 
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { BarChart2 } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
@@ -30,6 +30,7 @@ export function EmptyState() {
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: isDark ? 0.3 : 0.08,
           shadowRadius: 16,
+          width: 64,
         }}
       >
         <BarChart2 color={isDark ? '#FBBF24' : '#f59e0b'} size={32} strokeWidth={1.5} />

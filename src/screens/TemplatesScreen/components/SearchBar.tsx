@@ -5,6 +5,7 @@
 import { TextInput, View } from 'react-native';
 import { Search, X } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 
 interface SearchBarProps {
@@ -20,14 +21,23 @@ export function SearchBar({
   placeholder = 'Search habits...',
   value,
 }: SearchBarProps) {
+  const { colors, isDark } = useThemeColors();
+  const placeholderColor = colors.text.tertiary;
+
   return (
-    <View style={styles.searchBar}>
-      <Search color='#a8a29e' size={18} strokeWidth={2.25} />
+    <View
+      style={[
+        styles.searchBar,
+        isDark && { backgroundColor: colors.card, borderColor: colors.border },
+      ]}
+    >
+      <Search color={placeholderColor} size={18} strokeWidth={2.25} />
       <TextInput
         accessibilityLabel='Search habits'
         placeholder={placeholder}
-        placeholderTextColor='#a8a29e'
-        style={styles.searchInput}
+        placeholderTextColor={placeholderColor}
+        returnKeyType='search'
+        style={[styles.searchInput, { color: colors.text.primary }]}
         value={value}
         onChangeText={onChangeText}
       />
@@ -37,7 +47,7 @@ export function SearchBar({
           accessibilityRole='button'
           onPress={onClear}
         >
-          <X color='#a8a29e' size={18} strokeWidth={2.25} />
+          <X color={placeholderColor} size={18} strokeWidth={2.25} />
         </AnimatedPressable>
       ) : null}
     </View>

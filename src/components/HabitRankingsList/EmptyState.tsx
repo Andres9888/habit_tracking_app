@@ -50,3 +50,34 @@ export function EmptyState() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing['2xl'],
+  },
+  description: {
+    ...typography.body,
+    color: colors.text.secondary,
+    maxWidth: 280,
+    textAlign: 'center',
+  },
+  iconContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.primary[100],
+    borderRadius: borderRadius.large,
+    height: 80,
+    justifyContent: 'center',
+    marginBottom: spacing.base,
+    width: 80,
+    ...shadows.card,
+  },
+  title: {
+    ...typography.heading2,
+    color: colors.text.primary,
+    marginBottom: spacing.sm,
+    textAlign: 'center',
+  },
+});

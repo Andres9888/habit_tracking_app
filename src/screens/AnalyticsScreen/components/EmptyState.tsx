@@ -31,6 +31,7 @@ export const EmptyState: React.FC = () => {
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: isDark ? 0.2 : 0.08,
           shadowRadius: 16,
+          width: 96,
         }}
       >
         <BarChart3 color={isDark ? '#A78BFA' : '#8b5cf6'} size={48} strokeWidth={1.5} />
@@ -67,6 +68,7 @@ export const EmptyState: React.FC = () => {
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: isDark ? 0.3 : 0.08,
           shadowRadius: 16,
+          width: '100%',
         }}
       >
         <View style={{ marginBottom: 12, flexDirection: 'row', alignItems: 'center', gap: 8 }}>

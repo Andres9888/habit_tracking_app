@@ -4,10 +4,11 @@
 
 import type { ValidationResult } from './types';
 import { containsDangerousPatterns } from './security';
-
-export const MAX_HABIT_NAME_LENGTH = 100;
-export const MAX_LONG_TEXT_LENGTH = 5000;
-export const MAX_SHORT_TEXT_LENGTH = 500;
+import {
+  MAX_HABIT_NAME_LENGTH,
+  MAX_LONG_TEXT_LENGTH,
+  MAX_SHORT_TEXT_LENGTH,
+} from '@/constants';
 
 /**
  * Validate and sanitize a habit name
