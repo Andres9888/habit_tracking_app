@@ -10,6 +10,8 @@ export interface WeeklyComparisonCardProps {
   trend: WeekOverWeekTrend;
   /** Optional callback when info button is pressed */
   onInfoPress?: () => void;
+  /** Optional callback when share button is pressed (only shown for positive trends) */
+  onSharePress?: () => void;
 }
 
 export interface TrendStyle {

@@ -35,18 +35,18 @@ export function useShareCard(data: ShareCardData) {
   const gradient = GRADIENT_PRESETS[selectedGradient];
 
   const getPlatformCaption = (platform: SharePlatform): string => {
-    const baseMessage = `Just reached ${milestoneConfig.label} level (${data.strengthPercentage}%) with my ${data.habitName} habit!`;
+    const baseMessage = `Just reached ${milestoneConfig.label} level (${data.strengthPercentage}%) with my ${data.habitName} habit! ${milestoneConfig.emoji}`;
 
     switch (platform) {
       case 'instagram-story':
       case 'instagram-feed': {
-        return `${baseMessage}\n\nBuilding better habits with science-backed tracking\n\n#HabitTracking #AtomicHabits #BehaviorChange #SelfImprovement #Productivity\n\n${APP_STORE_LINK}`;
+        return `${baseMessage}\n\n✨ Building better habits with science-backed tracking\n🧠 Research shows it takes 66 days to form a habit\n📊 Track progress, build streaks, transform your life\n\n#ChainDay #HabitTracking #AtomicHabits #BehaviorChange #SelfImprovement #Productivity #GoodHabits #PersonalGrowth\n\nDownload Chain Day: ${APP_STORE_LINK}`;
       }
       case 'twitter': {
-        return `${baseMessage}\n\nTracking habits with science ${APP_STORE_LINK}\n\n#HabitTracking #Productivity`;
+        return `${baseMessage}\n\n🧠 Science-backed habit tracking that actually works\n📊 66 days to build automatic habits\n\nDownload Chain Day: ${APP_STORE_LINK}\n\n#HabitTracking #Productivity #AtomicHabits`;
       }
       case 'facebook': {
-        return `${baseMessage}\n\nI've been using this amazing habit tracking app that uses real behavioral science to help build lasting habits. Check it out!\n\n${APP_STORE_LINK}`;
+        return `${baseMessage}\n\nI've been using Chain Day — a habit tracking app built on real behavioral science (66-day habit formation research). It helps you:\n\n✅ Build consistent habits\n📈 Track your progress visually\n🎯 Stay motivated with milestones\n🏆 Achieve your goals\n\nThe science-backed approach really works! After ${data.strengthPercentage}% completion on my ${data.habitName} habit, I can feel the difference.\n\nCheck it out: ${APP_STORE_LINK}`;
       }
       default: {
         return baseMessage;

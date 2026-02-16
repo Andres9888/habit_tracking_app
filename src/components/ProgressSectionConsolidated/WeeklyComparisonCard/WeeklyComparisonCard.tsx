@@ -26,10 +26,12 @@ import type { WeeklyComparisonCardProps } from './types';
 import { getTrendStyle, getMessage } from './helpers';
 import { TrendBadge } from './TrendBadge';
 import { ComparisonStats } from './ComparisonStats';
+import { WeeklyShareButton } from './WeeklyShareButton';
 
 export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
   trend,
   onInfoPress,
+  onSharePress,
 }: WeeklyComparisonCardProps) {
   const { thisWeekCompleted, thisWeekTotal, thisWeekRate, rateChange } = trend;
   const { colors } = useThemeColors();
@@ -97,6 +99,11 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
           {message}
         </Text>
       </View>
+
+      {/* Share Button - shown for significant positive trends */}
+      {onSharePress && (
+        <WeeklyShareButton rateChange={rateChange} onPress={onSharePress} />
+      )}
     </Animated.View>
   );
 });

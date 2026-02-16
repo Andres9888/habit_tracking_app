@@ -3,7 +3,7 @@
  * AnalyticsScreen - Main analytics dashboard screen
  * Shows habit statistics, charts, and insights
  */
-import React, { useMemo } from 'react';
+import React, { useMemo, Suspense } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
@@ -12,6 +12,7 @@ import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
+import { useAnalyticsShare } from './hooks/useAnalyticsShare';
 import { styles } from './AnalyticsScreen.styles';
 import {
   AnalyticsHeader,
@@ -20,8 +21,13 @@ import {
   ChartSections,
   InsightsSections,
   ExportButton,
+  ShareProgressButton,
   ExportMenu,
 } from './components';
+
+const ShareCardGenerator = React.lazy(
+  () => import('../../components/ShareCardGenerator')
+);
 
 function AnalyticsScreenContent() {
   const { colors: themeColors } = useThemeColors();
@@ -44,6 +50,15 @@ function AnalyticsScreenContent() {
     setShowPaywall,
     setShowExportMenu,
   } = useAnalyticsScreen();
+
+  // Share functionality
+  const {
+    shareData,
+    showShareCard,
+    handleSharePress,
+    handleShareClose,
+    canShare,
+  } = useAnalyticsShare(overviewStats, ''); // TODO: Get user name from context/auth
 
   // All React hooks must be called before any early returns
   const rankedHabits = useMemo(
@@ -127,6 +142,8 @@ function AnalyticsScreenContent() {
           >
             <ExportButton onPress={() => void handleExportPress()} />
           </Animated.View>
+
+          {canShare && <ShareProgressButton onPress={handleSharePress} />}
         </>
       )}
 
@@ -135,6 +152,17 @@ function AnalyticsScreenContent() {
         onClose={() => setShowExportMenu(false)}
         onExport={(format) => void handleExport(format)}
       />
+
+      {/* Share Card Modal */}
+      {shareData && (
+        <Suspense fallback={null}>
+          <ShareCardGenerator
+            data={shareData}
+            visible={showShareCard}
+            onClose={handleShareClose}
+          />
+        </Suspense>
+      )}
     </ScrollView>
   );
 }
