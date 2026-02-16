@@ -8,9 +8,15 @@
 import { v } from 'convex/values';
 import { internalMutation, query } from './_generated/server';
 
+/**
+ * List articles - INTENTIONALLY PUBLIC
+ * Articles are educational content meant to be accessible to all users,
+ * including those not logged in. No authentication required.
+ */
 export const list = query({
   args: { category: v.optional(v.string()) },
   handler: async (ctx, args) => {
+    // SEC-PUBLIC: This query is intentionally public for educational content
     const articlesQuery = ctx.db.query('articles');
 
     if (args.category !== undefined) {
