@@ -1,9 +1,10 @@
 {
   "expo": {
-    "name": "ChainDay",
+    "name": "Chain Day - Habit Tracker",
     "slug": "chainday",
     "scheme": "habit-tracker",
     "version": "1.0.0",
+    "description": "Chain Day helps you build habits that actually stick using the proven 'don't break the chain' method. Track your daily streaks, stay motivated, and transform your life one day at a time. Perfect for building morning routines, fitness habits, learning new skills, meditation, reading, journaling, and any habit you want to make automatic. Features unlimited habits, visual streak tracking, smart reminders, detailed statistics, flexible scheduling, dark mode, and privacy-first design. No ads, no aggressive paywalls—just simple, powerful habit tracking. Whether you're trying to exercise daily, read more, learn a language, or build any positive habit, Chain Day makes it simple, visual, and motivating. Download today and start your first streak!",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
