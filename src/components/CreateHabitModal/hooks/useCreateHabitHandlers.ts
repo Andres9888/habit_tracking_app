@@ -2,8 +2,39 @@
 /**
  * useCreateHabitHandlers - Handle habit creation and editing operations
  *
- * Extracted from useCreateHabitModal to separate mutation logic
- * from the main modal orchestration.
+ * @description
+ * Provides mutation handlers for creating and editing habits.
+ * Handles validation, reminder scheduling, and API calls.
+ *
+ * @role Mutation Handler
+ * This hook orchestrates the final save action. It:
+ * 1. Validates habit name (sanitization + security)
+ * 2. Schedules/cancels reminders based on user settings
+ * 3. Calls Convex mutations (create or update)
+ * 4. Handles errors gracefully
+ *
+ * @flow Create Habit
+ * 1. Validate habit name → sanitize input
+ * 2. Call createHabit mutation → get habitId
+ * 3. Mark first habit created (for onboarding)
+ * 4. Schedule reminder if enabled
+ *
+ * @flow Edit Habit
+ * 1. Validate habit name → sanitize input
+ * 2. Update/cancel existing reminder
+ * 3. Call updateHabit mutation
+ *
+ * @security
+ * All habit names are validated and sanitized before saving:
+ * - Max length enforced (100 chars)
+ * - Control characters stripped
+ * - Invalid characters rejected
+ *
+ * @see {@link validateHabitName} - Validation logic
+ * @see {@link scheduleReminder} - Reminder scheduling
+ * @see {@link useCreateHabitModal} - Calling hook
+ *
+ * @module CreateHabitModal/hooks
  */
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';

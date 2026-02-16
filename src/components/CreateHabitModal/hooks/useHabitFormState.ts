@@ -1,5 +1,34 @@
 /**
  * useHabitFormState - State management for habit form
+ *
+ * @description
+ * Manages all useState calls for the habit form fields.
+ * Initializes state from `habitToEdit` when in edit mode.
+ *
+ * @role State Container
+ * This hook is the raw state layer. It:
+ * 1. Creates useState for each form field
+ * 2. Initializes from habitToEdit (if provided)
+ * 3. Returns state values + setters
+ * 4. Provides parsed habit name (emoji + text)
+ *
+ * @fields
+ * - habitName: Text portion of habit name (no emoji)
+ * - selectedEmoji: Emoji icon (null if none)
+ * - selectedColor: Hex color code for habit
+ * - isColorPickerVisible: Color picker modal state
+ * - remindersEnabled: Whether reminders are active
+ * - reminderTime: Date object for scheduled reminder
+ * - showTimePicker: Time picker modal state
+ * - reminderSound: Sound name for notification
+ * - frequency: Habit frequency string
+ * - dayPhase: Huberman phase (morning/afternoon/evening)
+ * - reminderOption: Quick reminder preset selection
+ *
+ * @see {@link useHabitForm} - Parent hook that uses this
+ * @see {@link useHabitFormInit} - Initializes state from habitToEdit
+ *
+ * @module CreateHabitModal/hooks
  */
 
 import { useMemo, useState } from 'react';

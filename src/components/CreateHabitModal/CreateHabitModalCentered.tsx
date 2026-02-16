@@ -1,8 +1,29 @@
 /**
- * CreateHabitModalCentered - Full-screen modal for habit creation
+ * CreateHabitModalCentered - Full-screen modal for habit creation and editing
  *
- * Matches HabitEditScreen presentation: transparent modal with dark overlay,
- * rounded top container, KeyboardAvoidingView, and swipe-to-dismiss.
+ * @description
+ * Main entry point for the habit creation flow. Presents a full-screen modal with:
+ * - Dark overlay background
+ * - Rounded top container with swipe-to-dismiss
+ * - Keyboard-aware layout that adjusts for on-screen keyboard
+ * - Form sections for name, emoji, color, and reminders
+ *
+ * @flow
+ * 1. User opens modal → `useCreateHabitModal` orchestrates initialization
+ * 2. Form state managed by `useHabitForm` (name, emoji, color, reminders)
+ * 3. User fills in fields → Callbacks from `useCenteredFormCallbacks`
+ * 4. User saves → Validation → `handleCreate` → API mutation
+ * 5. Success → Haptic feedback → Modal closes → Form resets
+ *
+ * @architecture
+ * - Presentation: This component (modal shell + gesture handling)
+ * - Form logic: `useHabitForm` (state management)
+ * - Actions: `useCreateHabitHandlers` (create/edit mutations)
+ * - Callbacks: `useCenteredFormCallbacks` (user interactions)
+ *
+ * @see {@link useCreateHabitModal} - Main orchestration hook
+ * @see {@link useHabitForm} - Form state and validation
+ * @see {@link CreateHabitScrollContent} - Scrollable form content
  */
 
 import { useEffect, useRef, useState } from 'react';

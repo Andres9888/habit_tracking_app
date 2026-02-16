@@ -1,7 +1,35 @@
 /**
- * useCenteredFormCallbacks Hook
+ * useCenteredFormCallbacks - Memoized form event handlers
  *
- * Provides memoized form callbacks for CreateHabitModalCentered.
+ * @description
+ * Provides memoized callbacks for user interactions in the modal.
+ * Prevents unnecessary re-renders by using useCallback.
+ *
+ * @role Event Handler Provider
+ * This hook creates stable callback references for:
+ * - Name field changes (with error clearing)
+ * - Emoji selection
+ * - Color selection
+ * - Reminder toggle (with auto-scroll)
+ * - Reminder time changes
+ * - Form submission
+ * - Validation error handling (with haptics)
+ *
+ * @optimization
+ * All callbacks are memoized with useCallback to prevent:
+ * - Child component re-renders
+ * - Lost focus in text inputs
+ * - Animation jank
+ *
+ * @ux Enhancements
+ * - Auto-scrolls to reminder section when enabled
+ * - Clears name error when user starts typing
+ * - Provides haptic feedback on validation errors
+ *
+ * @see {@link useHabitForm} - Form state these callbacks modify
+ * @see {@link CreateHabitModalCentered} - Component that uses these
+ *
+ * @module CreateHabitModal/hooks
  */
 
 import { useCallback, type RefObject } from 'react';

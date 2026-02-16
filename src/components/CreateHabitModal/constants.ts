@@ -1,6 +1,20 @@
+/**
+ * Default emoji shown when creating a new habit
+ * Represents strength and building habits
+ */
 export const DEFAULT_EMOJI = '💪';
+
+/**
+ * Default habit color (Emerald green)
+ * Emerald is the brand color and V8 default
+ */
 export const DEFAULT_COLOR = '#10B981'; // Emerald - V8 default
 
+/**
+ * Available emoji picker options for habit icons
+ * Covers common habit categories: health, productivity, mindfulness, learning
+ * Uses Set to remove duplicates from the space-separated string
+ */
 export const EMOJIS = [
   ...new Set(
     '💪 🧘 📖 💧 🎨 🏃 🍎 🥗 ☕ 💤 🎯 ✍️ 🚴 🧠 🎵 🌞 🌙 ⚡ 🔥 🌱 🏋️ 🚶 🧘‍♀️ 🎨 📝 💼 📚 🎓 💡 🏆'.split(
@@ -51,7 +65,20 @@ export const getColorName = (hex: string): string => {
   return COLOR_NAMES[hex.toUpperCase()] || COLOR_NAMES[hex] || hex;
 };
 
-/** @deprecated Use HABIT_COLORS instead - kept for backward compatibility */
+/**
+ * @deprecated Use HABIT_COLORS instead - kept for backward compatibility
+ * Legacy export that will be removed in a future version
+ */
 export const COLORS = HABIT_COLORS;
 
+/**
+ * Regular expression to extract emoji and name from full habit name
+ *
+ * @example
+ * "💪 Morning workout" → ["💪 Morning workout", "💪", "Morning workout"]
+ * "Read daily" → null (no emoji prefix)
+ *
+ * @pattern Matches: (emoji) + (space) + (any text)
+ * Uses Unicode emoji property to match any emoji character
+ */
 export const HABIT_NAME_REGEX = /^(\p{Emoji})\s+(.+)$/u;

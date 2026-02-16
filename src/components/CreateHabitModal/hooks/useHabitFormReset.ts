@@ -1,5 +1,30 @@
 /**
  * useHabitFormReset - Reset habit form to default state
+ *
+ * @description
+ * Provides a memoized function to reset all form fields to their defaults.
+ * Used when modal closes or when switching from edit to create mode.
+ *
+ * @role Reset Handler
+ * This hook creates a single `resetForm` function that:
+ * 1. Clears all input fields
+ * 2. Resets to default color/emoji/sound
+ * 3. Disables reminders
+ * 4. Closes modals (color picker, time picker)
+ * 5. Uses smart default for reminder time
+ *
+ * @defaults
+ * - habitName: "" (empty)
+ * - selectedEmoji: null (no emoji)
+ * - selectedColor: #10B981 (emerald)
+ * - remindersEnabled: false
+ * - reminderSound: "Default"
+ * - reminderTime: Smart default (morning/midday/evening based on current time)
+ *
+ * @see {@link getSmartReminderDefault} - Time-aware default reminder
+ * @see {@link useHabitForm} - Parent hook that uses this
+ *
+ * @module CreateHabitModal/hooks
  */
 
 import { useCallback } from 'react';

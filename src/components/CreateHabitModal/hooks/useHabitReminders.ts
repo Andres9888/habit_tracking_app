@@ -1,8 +1,30 @@
 /**
  * useHabitReminders - Handle reminder scheduling and cancellation
  *
- * Extracted from useCreateHabitModal to separate reminder-specific logic
- * from the main modal orchestration.
+ * @description
+ * Provides utilities for managing habit reminder notifications.
+ * Handles permission checks, scheduling, and cancellation.
+ *
+ * @role Reminder Manager
+ * This module manages the reminder lifecycle:
+ * 1. Check notification permissions
+ * 2. Schedule daily reminders for habits
+ * 3. Cancel reminders when disabled
+ * 4. Show platform-appropriate alerts
+ *
+ * @platform Platform-Specific Behavior
+ * - **iOS/Android**: Full reminder support with permissions
+ * - **Web**: Reminders disabled (saves settings but doesn't schedule)
+ *
+ * @permissions
+ * On mobile, prompts user for notification permissions if not granted.
+ * If denied, habit is saved but reminders are disabled.
+ *
+ * @see {@link scheduleHabitReminder} - Low-level scheduling
+ * @see {@link ensureNotificationPermissions} - Permission check
+ * @see {@link useCreateHabitHandlers} - Calls these functions
+ *
+ * @module CreateHabitModal/hooks
  */
 import { Alert, Platform } from 'react-native';
 import {

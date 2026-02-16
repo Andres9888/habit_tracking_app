@@ -1,5 +1,40 @@
 /**
- * useHabitForm - Main habit form hook
+ * useHabitForm - Main habit form state and validation hook
+ *
+ * @description
+ * Manages all form state for habit creation/editing. Provides:
+ * - Form field values (name, emoji, color, reminders)
+ * - Validation (habit name with debounced feedback)
+ * - Setters for updating form fields
+ * - Computed values (fullHabitName = emoji + name)
+ * - Form initialization from `habitToEdit`
+ * - Form reset functionality
+ *
+ * @role Form State Manager
+ * This hook is the single source of truth for all form data. It:
+ * 1. Initializes state from `habitToEdit` (if editing)
+ * 2. Provides validated setters for each field
+ * 3. Computes derived values (e.g., fullHabitName)
+ * 4. Exposes reset function to clear form
+ *
+ * @architecture
+ * - State: `useHabitFormState` - Raw useState calls for each field
+ * - Init: `useHabitFormInit` - Populate from habitToEdit on mount
+ * - Reset: `useHabitFormReset` - Return all fields to defaults
+ * - Validation: `useFieldValidation` - Debounced validation for habit name
+ * - Sync: `useReminderOptionSync` - Keep reminder fields in sync
+ *
+ * @validation
+ * Habit name is validated with debouncing (500ms):
+ * - Min length: 1 character
+ * - Max length: 100 characters
+ * - Allowed chars: letters, numbers, punctuation, emojis
+ * - Error shown after blur (not while typing)
+ *
+ * @see {@link useHabitFormState} - State management
+ * @see {@link useFieldValidation} - Validation logic
+ *
+ * @module CreateHabitModal/hooks
  */
 
 /* eslint-disable max-lines */

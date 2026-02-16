@@ -1,7 +1,34 @@
 /**
- * HeroNameInput Component
+ * HeroNameInput - Hero-styled text input for habit name with validation
  *
- * Hero-styled text input for habit name with validation feedback.
+ * @description
+ * Large, prominent text input field for habit name. Provides:
+ * - Character count with visual warning near limit
+ * - Validation feedback (success/warning states)
+ * - Haptic feedback when max length reached
+ * - Smooth animations for label and validation
+ *
+ * @features
+ * - **Character limit**: 50 characters max
+ * - **Visual warning**: Shows when >40 characters (80% full)
+ * - **Haptic feedback**: Warning vibration at max length
+ * - **Auto-focus**: Focuses input on mount (if autoFocus=true)
+ * - **Animated feedback**: Label and validation messages fade in/out
+ *
+ * @validation States
+ * - **Success** (green): Valid habit name entered
+ * - **Warning** (amber): Approaching or at character limit
+ * - **Default** (gray): No validation state
+ *
+ * @animations
+ * - Label opacity fades in when component mounts
+ * - Validation message slides up and fades in
+ * - Character count changes color near limit
+ *
+ * @see {@link useHeroNameInputAnimations} - Animation logic
+ * @see {@link MAX_LENGTH} - Character limit constant
+ *
+ * @module CreateHabitModal/components/HeroNameInput
  */
 
 import { useEffect, useRef } from 'react';
