@@ -1,6 +1,7 @@
 import React from 'react';
 import { Animated, View, Text } from 'react-native';
 import { Archive } from 'lucide-react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
 import { typography } from '@/theme/typography';
 
@@ -9,6 +10,7 @@ interface ArchiveActionProps {
 }
 
 export function ArchiveAction({ dragX }: ArchiveActionProps) {
+  const { isDark } = useThemeColors();
   const trans = dragX.interpolate({
     extrapolate: 'clamp',
     inputRange: [-100, 0],
@@ -35,7 +37,7 @@ export function ArchiveAction({ dragX }: ArchiveActionProps) {
       <View
         style={{
           alignItems: 'center',
-          backgroundColor: '#f59e0b',
+          backgroundColor: isDark ? '#D97706' : '#f59e0b',
           borderBottomRightRadius: borderRadius.xl,
           borderTopRightRadius: borderRadius.xl,
           height: '100%',

@@ -47,7 +47,13 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  dismissButton: { alignItems: 'center' as const, height: 44, justifyContent: 'center' as const, marginLeft: 4, width: 44 },
+  dismissButton: {
+    alignItems: 'center' as const,
+    height: 44,
+    justifyContent: 'center' as const,
+    marginLeft: 4,
+    width: 44,
+  },
   dismissText: { color: '#6b7280', fontSize: 17 },
   text: { color: '#1f2937', flex: 1, fontSize: 13, fontWeight: '500' },
   upgradeButton: {

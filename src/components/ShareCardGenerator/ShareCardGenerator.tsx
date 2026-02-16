@@ -52,6 +52,7 @@ export function ShareCardGenerator({
 
   return (
     <Modal variant='fullScreen' visible={visible} onClose={onClose}>
+      accessibilityViewIsModal
       <View style={containerStyles.container}>
         <ShareCardHeader onClose={onClose} />
 
