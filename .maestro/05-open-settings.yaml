@@ -1,0 +1,26 @@
+appId: com.chainday.app
+---
+# Smoke Test 5: Can Open Settings
+# Verifies settings screen opens and displays key sections
+
+- launchApp
+- assertVisible: "Chain Day"
+
+# Open settings
+- tapOn:
+    id: "settings-button"
+- assertVisible: "Settings"
+
+# Verify key settings sections are visible
+- assertVisible: "Theme"
+- assertVisible: "Notifications"
+- assertVisible: "Account"
+
+# Test navigation within settings (if tabs exist)
+- scroll
+
+# Close settings
+- tapOn:
+    text: "Close"
+- assertNotVisible: "Settings"
+- assertVisible: "Chain Day"

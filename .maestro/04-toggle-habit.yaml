@@ -1,0 +1,35 @@
+appId: com.chainday.app
+---
+# Smoke Test 4: Can Toggle a Habit Complete
+# Verifies habit completion toggle functionality
+
+- launchApp
+- assertVisible: "Chain Day"
+
+# Create a test habit first
+- tapOn:
+    id: "fab-button"
+- tapOn:
+    id: "habit-name-input"
+- inputText: "Toggle Test Habit"
+- tapOn:
+    text: "Save"
+
+# Wait for habit to appear
+- assertVisible: "Toggle Test Habit"
+
+# Toggle habit complete (tap the checkbox/circle)
+- tapOn:
+    id: "habit-checkbox-Toggle Test Habit"
+
+# Verify completion indicator appears
+- assertVisible:
+    id: "habit-completed-Toggle Test Habit"
+
+# Toggle again to uncomplete
+- tapOn:
+    id: "habit-checkbox-Toggle Test Habit"
+
+# Verify completion indicator is gone
+- assertNotVisible:
+    id: "habit-completed-Toggle Test Habit"

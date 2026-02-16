@@ -1,0 +1,23 @@
+appId: com.chainday.app
+---
+# Smoke Test 2: Can Navigate Between Modals
+# Verifies modal navigation (Settings, Templates) works correctly
+
+- launchApp
+- assertVisible: "Chain Day"
+
+# Open Settings modal
+- tapOn: 
+    id: "settings-button"
+- assertVisible: "Settings"
+
+# Close Settings
+- tapOn:
+    text: "Close"
+- assertNotVisible: "Settings"
+
+# Test FAB menu if it exists
+- tapOn:
+    id: "fab-button"
+- assertVisible:
+    id: "create-habit-button"

@@ -1,0 +1,29 @@
+appId: com.chainday.app
+---
+# Smoke Test 3: Can Create a Habit
+# Verifies the habit creation flow works end-to-end
+
+- launchApp
+- assertVisible: "Chain Day"
+
+# Open create habit screen via FAB
+- tapOn:
+    id: "fab-button"
+- assertVisible: "Create Habit"
+
+# Fill in habit name
+- tapOn:
+    id: "habit-name-input"
+- inputText: "E2E Test Habit"
+
+# Fill in description (optional)
+- tapOn:
+    id: "habit-description-input"
+- inputText: "Created by Maestro E2E test"
+
+# Save the habit
+- tapOn:
+    text: "Save"
+
+# Verify habit appears in list
+- assertVisible: "E2E Test Habit"

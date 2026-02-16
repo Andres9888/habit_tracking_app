@@ -1,0 +1,8 @@
+appId: com.chainday.app
+---
+# Smoke Test 1: App Launches Without Crash
+# Verifies the app can start successfully and display the main screen
+
+- launchApp
+- assertVisible: "Chain Day"
+- assertVisible: "🔗"
