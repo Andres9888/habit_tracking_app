@@ -30,8 +30,14 @@ import { OfflineProvider } from './providers/OfflineProvider';
 import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
 
-// Initialize Sentry as early as possible
-initSentry();
+// Initialize Sentry after first frame to avoid blocking app launch.
+// requestIdleCallback (or setTimeout fallback) defers this work until
+// the main thread is idle, keeping the first paint fast.
+if (typeof requestIdleCallback === 'function') {
+  requestIdleCallback(() => initSentry());
+} else {
+  setTimeout(() => initSentry(), 0);
+}
 
 const clerkKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 if (!clerkKey) {

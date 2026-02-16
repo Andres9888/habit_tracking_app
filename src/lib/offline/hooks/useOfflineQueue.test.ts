@@ -58,7 +58,7 @@ describe('useOfflineQueue', () => {
 
   describe('enqueue', () => {
     const samplePayload = {
-      habitId: 'habit_123' as any,
+      habitId: 'habit_123' as unknown,
       date: '2026-01-30',
       toCompleted: true,
     };
@@ -139,7 +139,7 @@ describe('useOfflineQueue', () => {
 
   describe('markCompleted', () => {
     const samplePayload = {
-      habitId: 'habit_123' as any,
+      habitId: 'habit_123' as unknown,
       date: '2026-01-30',
       toCompleted: true,
     };
@@ -214,7 +214,7 @@ describe('useOfflineQueue', () => {
 
   describe('markFailed', () => {
     const samplePayload = {
-      habitId: 'habit_123' as any,
+      habitId: 'habit_123' as unknown,
       date: '2026-01-30',
       toCompleted: true,
     };
@@ -281,12 +281,12 @@ describe('useOfflineQueue', () => {
 
       act(() => {
         result.current.enqueue({
-          habitId: 'h1' as any,
+          habitId: 'h1' as unknown,
           date: '2026-01-30',
           toCompleted: true,
         });
         result.current.enqueue({
-          habitId: 'h2' as any,
+          habitId: 'h2' as unknown,
           date: '2026-01-30',
           toCompleted: true,
         });
@@ -308,7 +308,7 @@ describe('useOfflineQueue', () => {
 
       act(() => {
         result.current.enqueue({
-          habitId: 'h1' as any,
+          habitId: 'h1' as unknown,
           date: '2026-01-30',
           toCompleted: true,
         });
@@ -326,7 +326,7 @@ describe('useOfflineQueue', () => {
 
   describe('subscribe', () => {
     const samplePayload = {
-      habitId: 'habit_123' as any,
+      habitId: 'habit_123' as unknown,
       date: '2026-01-30',
       toCompleted: true,
     };
@@ -392,7 +392,7 @@ describe('useOfflineQueue', () => {
       act(() => {
         result.current.enqueue({
           ...samplePayload,
-          habitId: 'h2' as any,
+          habitId: 'h2' as unknown,
         });
       });
 
@@ -409,7 +409,7 @@ describe('useOfflineQueue', () => {
 
       act(() => {
         result.current.enqueue({
-          habitId: 'h1' as any,
+          habitId: 'h1' as unknown,
           date: '2026-01-30',
           toCompleted: true,
         });
@@ -426,7 +426,7 @@ describe('useOfflineQueue', () => {
       // Directly modify the manager outside of the hook
       act(() => {
         manager.enqueue('toggleCompletion', {
-          habitId: 'h1' as any,
+          habitId: 'h1' as unknown,
           date: '2026-01-30',
           toCompleted: true,
         });

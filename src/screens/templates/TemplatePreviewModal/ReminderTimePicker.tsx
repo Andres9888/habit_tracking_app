@@ -23,7 +23,6 @@ const localStyles = StyleSheet.create({
     paddingVertical: 14,
   },
   timeText: {
-    color: '#1c1917', // stone-900
     fontSize: 17,
     fontWeight: '600',
   },
@@ -37,6 +36,7 @@ export function ReminderTimePicker({
   onTogglePicker,
 }: ReminderTimePickerProps) {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
 
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -55,7 +55,10 @@ export function ReminderTimePicker({
       <Text
         style={[
           baseStyles.label,
-          { fontFamily: theme.custom.fontFamilies.primary.text },
+          {
+            color: colors.text.secondary,
+            fontFamily: theme.custom.fontFamilies.primary.text,
+          },
         ]}
       >
         Reminder Time
@@ -75,17 +78,20 @@ export function ReminderTimePicker({
         style={[
           localStyles.timePickerButton,
           {
-            backgroundColor: theme.custom.colors.light.background,
-            borderColor: theme.custom.colors.gray[200],
+            backgroundColor: colors.gray[50],
+            borderColor: colors.gray[200],
           },
         ]}
         onPress={handlePress}
       >
-        <Clock color='#6B7280' size={20} />
+        <Clock color={colors.text.tertiary} size={20} />
         <Text
           style={[
             localStyles.timeText,
-            { fontFamily: theme.custom.fontFamilies.primary.text },
+            {
+              color: colors.text.primary,
+              fontFamily: theme.custom.fontFamilies.primary.text,
+            },
           ]}
         >
           {reminderTime.toLocaleTimeString('en-US', {

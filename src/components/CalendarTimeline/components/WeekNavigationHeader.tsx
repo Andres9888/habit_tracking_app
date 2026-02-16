@@ -25,7 +25,7 @@ export const WeekNavigationHeader: React.FC<WeekNavigationHeaderProps> = ({
       <Pressable
         accessibilityLabel='Previous week'
         accessibilityRole='button'
-        className='h-9 w-7 items-center justify-center rounded-full'
+        className='h-11 w-11 items-center justify-center rounded-full'
         hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
         onPress={onPreviousWeek}
       >
@@ -43,7 +43,7 @@ export const WeekNavigationHeader: React.FC<WeekNavigationHeaderProps> = ({
         accessibilityLabel='Next week'
         accessibilityRole='button'
         accessibilityState={{ disabled: !canNavigateForward }}
-        className={`h-9 w-7 items-center justify-center rounded-full ${canNavigateForward ? '' : 'opacity-40'}`}
+        className={`h-11 w-11 items-center justify-center rounded-full ${canNavigateForward ? '' : 'opacity-40'}`}
         disabled={!canNavigateForward}
         hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
         onPress={onNextWeek}

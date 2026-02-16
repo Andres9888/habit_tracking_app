@@ -26,6 +26,7 @@ export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
         return (
           <Pressable
             key={option.value}
+            accessibilityHint={`Select ${option.chipLabel} sort option`}
             accessibilityLabel={option.chipLabel}
             accessibilityRole='radio'
             accessibilityState={{ checked: isSelected }}

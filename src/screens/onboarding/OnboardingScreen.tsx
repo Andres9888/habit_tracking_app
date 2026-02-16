@@ -6,7 +6,7 @@
  */
 /* eslint-disable max-lines, max-lines-per-function */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useThemeColors } from '../../theme/ThemeContext';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
@@ -27,7 +27,8 @@ import Animated, {
   useReducedMotion,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { spacing, borderRadius, shadows } from '../../theme/spacing';
+import { safeSetBoolean } from '@/utils/storage';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
@@ -43,14 +44,15 @@ function ChainLink({
   index: number;
   reduceMotion: boolean;
 }) {
-  const colors = [
-    '#059669',
-    '#047857',
-    '#10B981',
-    '#047857',
-    '#059669',
-    '#10B981',
-    '#047857',
+  const { colors } = useThemeColors();
+  const chainColors = [
+    colors.primary[600],
+    colors.primary[700],
+    colors.primary[400],
+    colors.primary[700],
+    colors.primary[600],
+    colors.primary[400],
+    colors.primary[700],
   ];
   return (
     <Animated.View
@@ -62,7 +64,7 @@ function ChainLink({
       style={[
         styles.chainLink,
         {
-          backgroundColor: colors[index % colors.length],
+          backgroundColor: chainColors[index % chainColors.length],
           transform: [{ rotate: '0deg' }], // Uniform rotation (placeholder for future alternating style)
         },
       ]}
@@ -90,6 +92,7 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
 // ─── Strength Meter ──────────────────────────────────────────────────
 
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
+  const { colors } = useThemeColors();
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
   return (
     <View style={styles.strengthContainer}>
@@ -109,7 +112,7 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
             style={[
               styles.strengthBar,
               {
-                backgroundColor: interpolateColor(i / 4),
+                backgroundColor: interpolateColor(i / 4, colors.primary),
                 opacity: 0.15 + i * 0.2125,
                 width: `${20 + i * 20}%`,
               },
@@ -129,10 +132,10 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-function interpolateColor(t: number): string {
-  if (t < 0.5) return '#10B981';
-  if (t < 0.75) return '#059669';
-  return '#047857';
+function interpolateColor(t: number, primary: Record<number, string>): string {
+  if (t < 0.5) return primary[400];
+  if (t < 0.75) return primary[600];
+  return primary[700];
 }
 
 // ─── Template Grid ───────────────────────────────────────────────────
@@ -186,21 +189,21 @@ interface PageData {
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    subtitle: 'Complete your habits daily to build unbreakable chains',
+    subtitle: 'Complete your habits daily and watch your chain grow — every link counts.',
     title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
   {
     id: 'strength',
     subtitle:
-      'Your habits get stronger over time — backed by behavioral science research',
+      'Your habits get stronger over time — backed by behavioral science.',
     title: 'Science-Backed Strength',
     Visual: StrengthMeter,
   },
   {
     id: 'templates',
-    subtitle: 'Choose from science-backed habit templates or create your own',
-    title: '200+ Templates to Start',
+    subtitle: 'Pick from science-backed templates or create your own in seconds.',
+    title: '200+ Ready-Made Templates',
     Visual: TemplateGrid,
   },
 ];
@@ -208,6 +211,7 @@ const PAGES: PageData[] = [
 // ─── Dot Indicators ──────────────────────────────────────────────────
 
 function DotIndicators({ currentIndex }: { currentIndex: number }) {
+  const { colors } = useThemeColors();
   return (
     <View
       accessible
@@ -224,7 +228,7 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
           style={[
             styles.dot,
             {
-              backgroundColor: i === currentIndex ? '#059669' : '#D1D5DB',
+              backgroundColor: i === currentIndex ? colors.primary[600] : colors.gray[300],
               width: i === currentIndex ? 24 : 8,
             },
           ]}
@@ -240,7 +244,8 @@ interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
-export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
+function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
+  const { colors } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
@@ -252,7 +257,15 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
     setIsLoading(true);
     void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
     try {
-      await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
+      // Mark onboarding as complete in AsyncStorage
+      await safeSetBoolean(ONBOARDING_KEY, true);
+      onComplete();
+    } catch (error) {
+      // If storage fails, still proceed to avoid blocking user
+      // They might see onboarding again on next launch, but that's acceptable
+      if (__DEV__) {
+        console.error('[OnboardingScreen] Failed to save completion state:', error);
+      }
       onComplete();
     } finally {
       setIsLoading(false);
@@ -556,3 +569,11 @@ const styles = StyleSheet.create({
 });
 
 export { ONBOARDING_KEY };
+
+export function OnboardingScreen(props: OnboardingScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Onboarding">
+      <OnboardingScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}
