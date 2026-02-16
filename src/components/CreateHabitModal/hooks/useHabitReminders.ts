@@ -8,6 +8,7 @@ import { Alert, Platform } from 'react-native';
 import {
   cancelHabitReminder,
   ensureNotificationPermissions,
+  generateNotificationCopy,
   scheduleHabitReminder,
 } from '../../../utils/notifications';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -60,12 +61,20 @@ export async function scheduleReminder({
   if (Platform.OS === 'web') return true;
 
   try {
+    // Generate motivating notification copy
+    // New habits start with streak 0, so copy will be encouraging for starting
+    const { title, body } = generateNotificationCopy({
+      habitName,
+      currentStreak: 0, // New habit, no streak yet
+      style: 'motivating',
+    });
+
     const scheduled = await scheduleHabitReminder({
-      body: 'Time to check in on your habit progress!',
+      body,
       habitId,
       reminderTime,
       skipPermissionCheck: true,
-      title: habitName,
+      title,
     });
 
     if (!scheduled) {

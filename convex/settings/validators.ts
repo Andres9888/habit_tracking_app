@@ -28,6 +28,11 @@ export const settingsReturnValidator = v.object({
   ),
   hasPremium: v.boolean(),
   highContrastMode: v.boolean(),
+  notificationStyle: v.union(
+    v.literal('motivating'),
+    v.literal('neutral'),
+    v.literal('urgent')
+  ),
   reduceMotion: v.boolean(),
   showCalendarView: v.boolean(),
   showCharacterScreen: v.boolean(),
@@ -75,6 +80,13 @@ export const updateArgsValidator = {
   ),
   hasPremium: v.optional(v.boolean()),
   highContrastMode: v.optional(v.boolean()),
+  notificationStyle: v.optional(
+    v.union(
+      v.literal('motivating'),
+      v.literal('neutral'),
+      v.literal('urgent')
+    )
+  ),
   reduceMotion: v.optional(v.boolean()),
   showCalendarView: v.boolean(),
   showCharacterScreen: v.optional(v.boolean()),

@@ -498,6 +498,16 @@ const applicationTables = {
 
     hasPremium: v.optional(v.boolean()),
     highContrastMode: v.optional(v.boolean()),
+
+    // Notification style preference
+    notificationStyle: v.optional(
+      v.union(
+        v.literal('motivating'),
+        v.literal('neutral'),
+        v.literal('urgent')
+      )
+    ),
+
     reduceMotion: v.optional(v.boolean()),
 
     showCalendarView: v.boolean(),

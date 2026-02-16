@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from 'convex/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
+import type { NotificationStyle } from '../../utils/notifications';
 
 interface UseSettingsModalLogicProps {
   visible: boolean;
@@ -31,6 +32,8 @@ export const useSettingsModalLogic = ({
   const [highContrastMode, setHighContrastModeState] = useState(false);
   const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
   const [showGradientFill, setShowGradientFillState] = useState(true);
+  const [notificationStyle, setNotificationStyleState] =
+    useState<NotificationStyle>('motivating');
 
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -41,6 +44,7 @@ export const useSettingsModalLogic = ({
       setHighContrastModeState(settings.highContrastMode);
       setUseDyslexicFontState(settings.useDyslexicFont);
       setShowGradientFillState(settings.showGradientFill);
+      setNotificationStyleState(settings.notificationStyle);
     }
   }, [settings]);
 
@@ -84,14 +88,20 @@ export const useSettingsModalLogic = ({
     setShowGradientFillState(value);
     await update({ showGradientFill: value });
   };
+  const setNotificationStyle = async (value: NotificationStyle) => {
+    setNotificationStyleState(value);
+    await update({ notificationStyle: value });
+  };
 
   return {
     darkModePreference,
     handleClose,
     highContrastMode,
+    notificationStyle,
     reduceMotion,
     setDarkModePreference,
     setHighContrastMode,
+    setNotificationStyle,
     setReduceMotion,
     setShowGradientFill,
     setUseDyslexicFont,

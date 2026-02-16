@@ -21,7 +21,16 @@ export {
   createDateFromTimeString,
   formatReminderTime,
   getDefaultReminderTime,
+  normalizeDSTTime,
+  validateReminderTime,
 } from './timeUtils';
+
+// Re-export notification copy generator
+export {
+  generateNotificationCopy,
+  validateCustomMessage,
+} from './copy';
+export type { NotificationStyle } from './copy';
 
 // Re-export relative time utilities (separate to avoid circular deps)
 export {

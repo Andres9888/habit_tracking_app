@@ -103,5 +103,69 @@ export function parseTimeString(time: string): {
   };
 }
 
+/**
+ * Normalize reminder time to avoid DST edge cases
+ *
+ * DST transitions can cause issues with scheduled notifications:
+ * - Spring forward (2am → 3am): Times between 2-3am don't exist
+ * - Fall back (2am → 1am): Times between 1-2am occur twice
+ *
+ * This function detects potential DST issues and adjusts times safely.
+ */
+export function normalizeDSTTime(date: Date): Date {
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  // DST transitions typically happen at 2am
+  // Avoid scheduling notifications during the DST transition window (1am-3am)
+  // This is a conservative approach that works across most timezones
+  const isDSTRiskWindow = hours >= 1 && hours <= 3;
+
+  if (isDSTRiskWindow) {
+    // Shift to 9am as safe default
+    const safeCopy = new Date(date);
+    safeCopy.setHours(9, 0, 0, 0);
+
+    if (__DEV__) {
+      console.warn(
+        `Reminder time ${hours}:${minutes.toString().padStart(2, '0')} is in DST risk window (1am-3am). Adjusted to 9:00 AM for reliability.`
+      );
+    }
+
+    return safeCopy;
+  }
+
+  return date;
+}
+
+/**
+ * Validate that a reminder time is sensible
+ * Returns error message if invalid, null if valid
+ */
+export function validateReminderTime(date: Date): string | null {
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+    return 'Invalid time';
+  }
+
+  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+    return 'Time out of valid range';
+  }
+
+  // Warn about very early morning times (potential user error)
+  if (hours >= 0 && hours <= 4) {
+    return null; // Valid but unusual - let user decide
+  }
+
+  // Warn about very late night (potential user error)
+  if (hours >= 23) {
+    return null; // Valid but unusual - let user decide
+  }
+
+  return null;
+}
+
 // Note: formatRelativeTime and getNextReminderRelativeTime are in ./relativeTimeFormatter.ts
 // Import them directly from there to avoid circular dependencies

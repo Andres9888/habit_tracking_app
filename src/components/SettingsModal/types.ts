@@ -71,6 +71,11 @@ export interface SettingsContentProps {
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
   showGradientFill: boolean;
+  // Notification preferences
+  notificationStyle: 'motivating' | 'neutral' | 'urgent';
+  onChangeNotificationStyle: (
+    value: 'motivating' | 'neutral' | 'urgent'
+  ) => void | Promise<void>;
   // Streak reminders
   streakRemindersEnabled: boolean;
   streakReminderTime: string;

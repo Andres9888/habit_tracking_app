@@ -4,6 +4,10 @@ export interface ScheduleHabitReminderParams {
   body: string;
   reminderTime: Date;
   skipPermissionCheck?: boolean;
+  /** Optional: Current streak to generate motivating copy (if body is auto-generated) */
+  currentStreak?: number;
+  /** Optional: Custom message from user (overrides auto-generated body) */
+  customMessage?: string;
 }
 
 export interface ScheduleLetterUnlockParams {

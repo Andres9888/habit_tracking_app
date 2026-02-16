@@ -16,6 +16,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { StreakRemindersSection } from './StreakRemindersSection';
+import { NotificationPreferencesSection } from './NotificationPreferencesSection';
 import { AccountSection } from './AccountSection';
 import { AboutSection } from './sections';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -240,8 +241,17 @@ export function SettingsContent(p: SettingsContentProps) {
           </SettingsSection>
         </Animated.View>
 
-        {/* Notifications Section */}
+        {/* Notification Preferences */}
         <Animated.View entering={anim(180)}>
+          <NotificationPreferencesSection
+            highContrastMode={hc}
+            notificationStyle={p.notificationStyle}
+            onChangeNotificationStyle={p.onChangeNotificationStyle}
+          />
+        </Animated.View>
+
+        {/* Streak Reminders Section */}
+        <Animated.View entering={anim(240)}>
           <StreakRemindersSection
             enabled={p.streakRemindersEnabled}
             highContrastMode={hc}
@@ -254,7 +264,7 @@ export function SettingsContent(p: SettingsContentProps) {
         </Animated.View>
 
         {/* Data Section - Habit management */}
-        <Animated.View entering={anim(240)}>
+        <Animated.View entering={anim(300)}>
           <SettingsSection highContrastMode={hc} title='Data'>
             <SettingsRow
               badge={p.archivedHabitsCount}
@@ -270,7 +280,7 @@ export function SettingsContent(p: SettingsContentProps) {
         </Animated.View>
 
         {/* About Section - Version info */}
-        <Animated.View entering={anim(300)}>
+        <Animated.View entering={anim(360)}>
           <AboutSection
             buildNumber='1'
             highContrast={hc}

@@ -46,6 +46,8 @@ export const get = query({
       hasPremium: settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium,
       highContrastMode:
         settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
+      notificationStyle:
+        settings?.notificationStyle ?? DEFAULT_SETTINGS.notificationStyle,
       reduceMotion: settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
       showCalendarView:
         settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,

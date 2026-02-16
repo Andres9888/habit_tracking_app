@@ -21,6 +21,14 @@ export type HabitSortMode = (typeof HABIT_SORT_MODE_OPTIONS)[number];
 export const COMPLETION_SOUND_OPTIONS = ['chime', 'pop', 'success'] as const;
 export type CompletionSoundType = (typeof COMPLETION_SOUND_OPTIONS)[number];
 
+// Notification style options
+export const NOTIFICATION_STYLE_OPTIONS = [
+  'motivating',
+  'neutral',
+  'urgent',
+] as const;
+export type NotificationStyle = (typeof NOTIFICATION_STYLE_OPTIONS)[number];
+
 export const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
   catTheme: true,
@@ -34,6 +42,7 @@ export const DEFAULT_SETTINGS = {
   hasPremium: false,
   // Forced to light - dark mode not yet implemented
   highContrastMode: false,
+  notificationStyle: 'motivating' as NotificationStyle,
   reduceMotion: false,
   showCalendarView: true,
   showCharacterScreen: true,

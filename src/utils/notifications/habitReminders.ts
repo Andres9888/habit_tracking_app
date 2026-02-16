@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import { configureAndroidChannel } from './channels';
 import { ANDROID_CHANNEL_ID } from './constants';
 import { ensureNotificationPermissions } from './permissions';
+import { normalizeDSTTime } from './timeUtils';
 import type { ScheduleHabitReminderParams } from './types';
 
 export async function cancelHabitReminder(habitId: string): Promise<void> {
@@ -45,6 +46,9 @@ export async function scheduleHabitReminder({
 
     await cancelHabitReminder(habitId);
 
+    // Normalize time to avoid DST edge cases
+    const normalizedTime = normalizeDSTTime(reminderTime);
+
     await Notifications.scheduleNotificationAsync({
       content: {
         body,
@@ -54,8 +58,8 @@ export async function scheduleHabitReminder({
       },
       trigger: {
         ...(Platform.OS === 'android' ? { channelId: ANDROID_CHANNEL_ID } : {}),
-        hour: reminderTime.getHours(),
-        minute: reminderTime.getMinutes(),
+        hour: normalizedTime.getHours(),
+        minute: normalizedTime.getMinutes(),
         type: Notifications.SchedulableTriggerInputTypes.DAILY,
       },
     });

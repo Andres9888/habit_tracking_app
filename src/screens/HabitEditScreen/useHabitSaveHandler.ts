@@ -1,12 +1,13 @@
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
-import { useMutation } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import {
   cancelHabitReminder,
   ensureNotificationPermissions,
   formatReminderTime,
+  generateNotificationCopy,
   scheduleHabitReminder,
 } from '../../utils/notifications';
 import { showSaveError } from '../../utils/errorAlerts';
@@ -33,6 +34,13 @@ export function useHabitSaveHandler({
   const updateHabit = useMutation(api.habits.update);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Get current streak for motivating notification copy
+  const habit = useQuery(
+    api.habits.getById,
+    habitId ? { habitId } : 'skip'
+  );
+  const currentStreak = habit?.currentStreak ?? 0;
+
   const handleSave = useCallback(async () => {
     if (!habitId || !habitName.trim() || isSaving) return;
 
@@ -52,12 +60,19 @@ export function useHabitSaveHandler({
         enableReminders = hasPermission;
 
         if (hasPermission) {
+          // Generate motivating copy based on current streak
+          const { title, body } = generateNotificationCopy({
+            habitName: fullName,
+            currentStreak,
+            style: 'motivating',
+          });
+
           const scheduled = await scheduleHabitReminder({
-            body: 'Time to check in on your habit progress!',
+            body,
             habitId: String(habitId),
             reminderTime,
             skipPermissionCheck: true,
-            title: fullName,
+            title,
           });
           enableReminders = scheduled;
         }

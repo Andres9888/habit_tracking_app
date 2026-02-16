@@ -43,6 +43,8 @@ function SettingsModalContent({
     setDarkModePreference,
     showGradientFill,
     setShowGradientFill,
+    notificationStyle,
+    setNotificationStyle,
     view,
     setView,
     handleClose,
@@ -98,6 +100,7 @@ function SettingsModalContent({
               habitCompletionIcon={habitCompletionIcon}
               isHighContrastActive={isHighContrastActive}
               isPremium={isPremium}
+              notificationStyle={notificationStyle}
               showGradientFill={showGradientFill}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
@@ -106,6 +109,7 @@ function SettingsModalContent({
               onChangeDarkModePreference={setDarkModePreference}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
+              onChangeNotificationStyle={setNotificationStyle}
               onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
