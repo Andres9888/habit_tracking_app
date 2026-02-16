@@ -2,6 +2,7 @@
 /** HabitsHeader - OPTIMIZED: entry animation, contrast fix, clearer UX */
 
 import { View, Text } from 'react-native';
+import { Crown } from 'lucide-react-native';
 import { memo } from 'react';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTemplateBadge } from '../../hooks/useTemplateBadge';
@@ -77,9 +78,16 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
 
   const rightSection = (
     <View className='flex-row items-center gap-2'>
-      {!isPremiumUser && onUpgradePress && (
+      {!isPremiumUser && onUpgradePress ? (
         <ProBadge onPress={onUpgradePress} />
-      )}
+      ) : isPremiumUser ? (
+        <View
+          accessibilityLabel='Premium subscriber'
+          className='h-7 w-7 items-center justify-center rounded-full bg-amber-100'
+        >
+          <Crown color='#f59e0b' size={14} />
+        </View>
+      ) : null}
       {iconGroup}
     </View>
   );

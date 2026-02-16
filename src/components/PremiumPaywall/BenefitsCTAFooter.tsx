@@ -29,7 +29,7 @@ export function BenefitsCTAFooter({
     <View className='absolute bottom-0 left-0 right-0 border-t border-stone-200 bg-white px-4 pb-8 pt-4'>
       <View className='mb-3 items-center'>
         <Text className='text-2xl font-bold text-stone-800'>
-          {handlers.priceLabel ?? '$6.99/month'}
+          {handlers.priceLabel ?? ''}
         </Text>
         <Text className='text-sm text-stone-500'>7-day free trial • Cancel anytime</Text>
       </View>

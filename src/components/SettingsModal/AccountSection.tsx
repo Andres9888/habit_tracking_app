@@ -8,6 +8,7 @@ import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { PremiumStatus } from './sections/PremiumStatus';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
+import { usePremium } from '../../hooks/usePremium';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
 const WHATS_NEW_URL = 'https://andres9888.github.io/chainday-landing/changelog.html';
@@ -25,6 +26,7 @@ interface AccountSectionProps {
 export function AccountSection({ isHighContrastActive, isPremium = false, onPremiumUpsell }: AccountSectionProps) {
   const { signOut } = useClerk();
   const { user } = useUser();
+  const { isTrialActive, expirationDate, managementUrl } = usePremium();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const userEmail = user?.primaryEmailAddress?.emailAddress;
@@ -116,8 +118,11 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
   return (
     <>
       <PremiumStatus
+        expirationDate={expirationDate}
         highContrast={isHighContrastActive}
         isPremium={isPremium}
+        isTrialActive={isTrialActive}
+        managementUrl={managementUrl}
         onUpgrade={onPremiumUpsell}
       />
       <AccountInfo

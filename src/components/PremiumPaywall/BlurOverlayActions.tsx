@@ -45,8 +45,14 @@ export function BlurOverlayActions({ config, handlers, onStartTrial, onRestore }
             then {handlers.priceLabel} after trial • Cancel anytime
           </Text>
         )}
-        <Pressable disabled={handlers.isProcessing} onPress={onRestore}>
-          <Text className='text-xs text-white/60'>Restore Purchases</Text>
+        <Pressable
+          accessibilityLabel='Restore previous purchases'
+          accessibilityRole='button'
+          className='min-h-[44px] items-center justify-center'
+          disabled={handlers.isProcessing}
+          onPress={onRestore}
+        >
+          <Text className='text-sm text-white/80 underline'>Restore Purchases</Text>
         </Pressable>
       </View>
     </>

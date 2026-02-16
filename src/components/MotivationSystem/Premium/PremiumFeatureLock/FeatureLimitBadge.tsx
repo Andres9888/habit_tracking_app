@@ -38,10 +38,9 @@ export function FeatureLimitBadge({
 
   return (
     <Pressable
-      accessibilityHint={isAtLimit ? 'Tap to upgrade for unlimited' : undefined}
+      accessibilityHint='Tap to upgrade for unlimited'
       accessibilityLabel={`${current} of ${limit} free used`}
-      accessibilityRole={isAtLimit ? 'button' : 'text'}
-      disabled={!isAtLimit}
+      accessibilityRole='button'
       testID={testID}
       onPress={handlePress}
     >
