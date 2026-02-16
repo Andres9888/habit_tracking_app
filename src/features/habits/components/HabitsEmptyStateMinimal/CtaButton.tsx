@@ -3,11 +3,12 @@
  */
 
 import { useCallback } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
+import { AccessibleText } from '../../../../components/ui/AccessibleText';
+import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { CTA_SHIMMER } from './animations';
 import { COPY } from './constants';
 import type { CtaButtonProps } from './types';
@@ -21,15 +22,16 @@ const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 export function CtaButton({ disabled, isLoading, onPress, inputValue }: CtaButtonProps & { inputValue?: string }) {
   const isDisabled = disabled || isLoading;
   const colors = useEmptyStateColors();
+  const { trigger } = useHaptics();
 
   const { animatedStyle, handlePressIn, handlePressOut, shimmerAnimatedStyle } =
     useCtaButtonAnimations({ disabled: !!disabled, isLoading: !!isLoading });
 
   const handlePress = useCallback(() => {
     if (disabled || isLoading) return;
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    trigger('tap');
     onPress();
-  }, [disabled, isLoading, onPress]);
+  }, [disabled, isLoading, onPress, trigger]);
 
   return (
     <AnimatedPressable
@@ -70,11 +72,11 @@ export function CtaButton({ disabled, isLoading, onPress, inputValue }: CtaButto
       {isLoading ? (
         <ActivityIndicator color={colors.ctaText} size='small' />
       ) : (
-        <Text style={getCtaTextStyle(colors.ctaText)}>
+        <AccessibleText scalingType="ui" style={getCtaTextStyle(colors.ctaText)}>
           {inputValue?.trim()
             ? COPY.ctaButtonDynamic(inputValue.trim())
             : COPY.ctaButton}
-        </Text>
+        </AccessibleText>
       )}
     </AnimatedPressable>
   );

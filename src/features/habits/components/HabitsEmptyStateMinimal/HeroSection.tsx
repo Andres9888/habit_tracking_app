@@ -1,5 +1,5 @@
-import { Text } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
+import { AccessibleText } from '../../../../components/ui/AccessibleText';
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
 import { COPY } from './constants';
@@ -54,7 +54,8 @@ export function HeroSection({
       </AnimatedEntrance>
 
       <AnimatedEntrance delay={ENTRANCE_DELAYS.headline + 50}>
-        <Text
+        <AccessibleText
+          scalingType="body"
           style={{
             color: colors.textSecondary,
             fontSize: 13,
@@ -66,7 +67,7 @@ export function HeroSection({
           }}
         >
           {COPY.motivationalStat}
-        </Text>
+        </AccessibleText>
       </AnimatedEntrance>
     </Animated.View>
   );

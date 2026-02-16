@@ -3,9 +3,10 @@
  */
 
 import React from 'react';
-import { Text, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { X, Share2 } from 'lucide-react-native';
+import { AccessibleText } from '../../ui/AccessibleText';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { headerStyles, themedHeaderStyles } from '../styles';
@@ -42,7 +43,8 @@ export const ModalHeader = ({
       </AnimatedPressable>
 
       <Animated.View style={headerTitleAnimatedStyle}>
-        <Text
+        <AccessibleText
+          scalingType="strict"
           numberOfLines={1}
           style={[
             themed.headerTitle,
@@ -50,7 +52,7 @@ export const ModalHeader = ({
           ]}
         >
           {templateName}
-        </Text>
+        </AccessibleText>
       </Animated.View>
 
       <AnimatedPressable
