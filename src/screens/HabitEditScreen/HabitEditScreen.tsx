@@ -89,7 +89,7 @@ function HabitEditScreenContent({
                 </Animated.View>
                 <SectionLabel delay={340} text='DANGER ZONE' variant='danger' />
                 <Animated.View
-                  className='mx-4 rounded-2xl bg-red-50/50 p-4'
+                  className='mx-4 rounded-2xl p-4'
                   entering={FadeInUp.delay(400).springify().damping(18)}
                 >
                   <DangerZone

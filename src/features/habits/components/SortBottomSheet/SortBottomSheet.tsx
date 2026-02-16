@@ -83,7 +83,7 @@ export function SortBottomSheet({
                 accessibilityHint='Close sort options'
                 accessibilityLabel='Close'
                 accessibilityRole='button'
-                className='h-10 w-10 items-center justify-center rounded-full'
+                className='h-11 w-11 items-center justify-center rounded-full'
                 style={{ backgroundColor: isDark ? '#1f2937' : '#f5f5f4' }}
                 onPress={handleDismiss}
               >
