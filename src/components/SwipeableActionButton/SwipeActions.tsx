@@ -1,13 +1,15 @@
 /**
  * SwipeActions - Right swipe action panel
+ * Now with progressive haptic feedback at swipe thresholds
  */
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Text, Pressable, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import type { Swipeable } from 'react-native-gesture-handler';
 import { styles } from './styles';
 import type { SwipeColors } from './types';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 interface SwipeActionsProps {
   dragX: Animated.AnimatedInterpolation<number>;
@@ -32,6 +34,39 @@ export function SwipeActions({
   onSwipeAction,
   SwipeIcon,
 }: SwipeActionsProps) {
+  const reduceMotion = useReduceMotion();
+  const threshold50Triggered = useRef(false);
+  const threshold80Triggered = useRef(false);
+
+  // Progressive haptic feedback at swipe thresholds
+  useEffect(() => {
+    if (reduceMotion) return;
+
+    const listenerId = dragX.addListener(({ value }) => {
+      const progress = Math.abs(value) / 120; // 120 is full swipe distance
+
+      // Trigger medium impact at 50%
+      if (progress >= 0.5 && !threshold50Triggered.current) {
+        threshold50Triggered.current = true;
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } else if (progress < 0.5) {
+        threshold50Triggered.current = false;
+      }
+
+      // Trigger heavy impact at 80%
+      if (progress >= 0.8 && !threshold80Triggered.current) {
+        threshold80Triggered.current = true;
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+      } else if (progress < 0.8) {
+        threshold80Triggered.current = false;
+      }
+    });
+
+    return () => {
+      dragX.removeListener(listenerId);
+    };
+  }, [dragX, reduceMotion]);
+
   const trans = dragX.interpolate({
     extrapolate: 'clamp',
     inputRange: [-120, 0],
@@ -61,7 +96,7 @@ export function SwipeActions({
         accessibilityRole='button'
         style={[styles.swipeActionInner, { backgroundColor: swipeColors.bg }]}
         onPress={() => {
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
           swipeableRef.current?.close();
           onSwipeAction?.();
         }}

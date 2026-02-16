@@ -1,9 +1,10 @@
+/* eslint-disable max-lines */
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
 import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import {
   DetailHeader,
   DetailLoadingState,
@@ -11,9 +12,11 @@ import {
   HabitDetailModals,
 } from './components';
 import {
-  DETAIL_BG_GRADIENT,
+  DETAIL_BG_GRADIENT_LIGHT,
+  DETAIL_BG_GRADIENT_DARK,
   buildModalsProps,
 } from './HabitDetailScreen.constants';
+import { useThemeColors } from '../../theme';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
 import { useNotesHandlers } from './useNotesHandlers';
@@ -30,6 +33,8 @@ function HabitDetailScreenContent({
   visible,
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
+  const { isDark } = useThemeColors();
+  const bgGradient = isDark ? DETAIL_BG_GRADIENT_DARK : DETAIL_BG_GRADIENT_LIGHT;
   const screenState = useHabitDetailScreenState({
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
@@ -57,6 +62,7 @@ function HabitDetailScreenContent({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}
@@ -71,7 +77,7 @@ function HabitDetailScreenContent({
             <View className='flex-1 bg-black/50'>
               <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
                 <LinearGradient
-                  colors={DETAIL_BG_GRADIENT}
+                  colors={bgGradient as unknown as string[]}
                   locations={[0, 0.5, 1]}
                   style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
                 >
@@ -84,6 +90,7 @@ function HabitDetailScreenContent({
                   <HabitDetailContent
                     completedDates={screenState.completedDates}
                     habit={habit}
+                    notesByDate={screenState.notesByDate}
                     onDayPress={calendarHandlers.handleCalendarDayPress}
                   />
                 </LinearGradient>
@@ -93,7 +100,12 @@ function HabitDetailScreenContent({
           <HabitDetailModals
             habitId={habit._id}
             habitName={habit.name}
-            {...buildModalsProps(screenState, calendarHandlers, notesHandlers, insets)}
+            {...buildModalsProps(
+              screenState,
+              calendarHandlers,
+              notesHandlers,
+              insets
+            )}
           />
         </>
       ) : (
@@ -105,26 +117,8 @@ function HabitDetailScreenContent({
 
 export default function HabitDetailScreen(props: HabitDetailScreenProps) {
   return (
-    <ErrorBoundary
-      fallback={
-        <Modal
-          transparent
-          animationType="slide"
-          visible={props.visible}
-          onRequestClose={props.onClose}
-        >
-          <View style={{ flex: 1, backgroundColor: 'black' }}>
-            <ScreenErrorFallback
-              screenName="Habit Details"
-              error={null}
-              onRetry={() => {}}
-              onGoBack={props.onClose}
-            />
-          </View>
-        </Modal>
-      }
-    >
+    <ScreenErrorBoundary screenName="Habit Details" onGoBack={props.onClose}>
       <HabitDetailScreenContent {...props} />
-    </ErrorBoundary>
+    </ScreenErrorBoundary>
   );
 }

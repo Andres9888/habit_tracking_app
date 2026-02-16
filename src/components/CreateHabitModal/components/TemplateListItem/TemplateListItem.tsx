@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Microscope } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
@@ -17,7 +18,7 @@ interface TemplateListItemProps {
   onViewScience: (template: HabitTemplate) => void;
 }
 
-export const TemplateListItem = ({
+const TemplateListItemComponent = ({
   index = 0,
   template,
   onSelect,
@@ -100,3 +101,5 @@ export const TemplateListItem = ({
     </Animated.View>
   );
 };
+
+export const TemplateListItem = memo(TemplateListItemComponent);

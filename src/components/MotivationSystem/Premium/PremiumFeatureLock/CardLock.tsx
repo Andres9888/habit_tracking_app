@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * CardLock Component
  * Standalone feature explanation card with upgrade CTA
@@ -6,7 +7,7 @@
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Crown, ChevronRight, Sparkles } from 'lucide-react-native';
+import { Sparkles } from 'lucide-react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -15,6 +16,7 @@ import Animated, {
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import type { MotivationPremiumFeature } from './PremiumFeatureLock.types';
 import { FEATURE_META } from './featureMetadata';
+import { CardLockHeader } from './CardLockHeader';
 
 interface CardLockProps {
   feature: MotivationPremiumFeature;
@@ -39,15 +41,12 @@ export function CardLock({
     triggerSelection();
     onUpgrade();
   }, [onUpgrade, triggerSelection]);
-
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
-
   const handlePressIn = useCallback(() => {
     scale.value = withTiming(0.98, { duration: 100 });
   }, [scale]);
-
   const handlePressOut = useCallback(() => {
     scale.value = withTiming(1, { duration: 100 });
   }, [scale]);
@@ -72,29 +71,7 @@ export function CardLock({
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
         />
-        <LinearGradient
-          className='flex-row items-center gap-3 px-4 py-3'
-          colors={['#8b5cf6', '#7c3aed']}
-          end={{ x: 1, y: 0 }}
-          start={{ x: 0, y: 0 }}
-        >
-          <View className='h-10 w-10 items-center justify-center rounded-full bg-white/20'>
-            <Crown color='#ffffff' size={20} />
-          </View>
-          <View className='flex-1'>
-            <Text className='text-base font-bold text-white'>{meta.title}</Text>
-            {meta.freeLimit && (
-              <Text className='text-xs text-violet-100'>
-                Free: {meta.freeLimit}
-              </Text>
-            )}
-          </View>
-          <View className='flex-row items-center gap-1'>
-            <Text className='text-sm font-medium text-white'>Upgrade</Text>
-            <ChevronRight color='#ffffff' size={16} />
-          </View>
-        </LinearGradient>
-
+        <CardLockHeader meta={meta} />
         <View className='px-4 py-3'>
           <Text className='mb-2 text-sm text-stone-600'>
             {meta.description}

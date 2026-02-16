@@ -16,7 +16,9 @@ export const DoneButton = ({ onPress }: DoneButtonProps) => {
       className='h-11 items-center justify-center rounded-full px-5'
       onPress={onPress}
     >
-      <Text className='text-base font-semibold text-blue-600'>Done</Text>
+      <Text className='text-base font-semibold' style={{ color: '#059669' }}>
+        Done
+      </Text>
     </AnimatedPressable>
   );
 };
