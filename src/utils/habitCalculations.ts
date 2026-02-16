@@ -10,7 +10,7 @@
  * @category Statistics
  */
 
-import { format, parseISO, differenceInDays } from 'date-fns';
+import { format, getDay, parseISO, differenceInDays, addDays } from 'date-fns';
 
 interface TrackingEntry {
   date: string;
@@ -18,10 +18,36 @@ interface TrackingEntry {
 }
 
 /**
+ * Check whether every day in a gap between two dates falls on a rest day.
+ *
+ * @param startDate - Start date (exclusive — the day after is checked first)
+ * @param endDate - End date (exclusive)
+ * @param restDays - Array of day-of-week numbers (0=Sun … 6=Sat)
+ * @returns true if all intermediate days are rest days
+ */
+function isGapAllRestDays(
+  startDate: Date,
+  endDate: Date,
+  restDays: number[]
+): boolean {
+  if (!restDays || restDays.length === 0) return false;
+  let cursor = addDays(startDate, 1);
+  while (cursor < endDate) {
+    if (!restDays.includes(getDay(cursor))) return false;
+    cursor = addDays(cursor, 1);
+  }
+  return true;
+}
+
+/**
  * Calculate the all-time best streak for a habit.
  * Returns the longest consecutive sequence of completed days in the entire history.
  *
+ * **Rest days** are transparently skipped — a gap consisting entirely of rest
+ * days does not break the streak.
+ *
  * @param tracking - Array of tracking entries with date and completed status
+ * @param restDays - Optional array of rest-day numbers (0=Sun … 6=Sat)
  * @returns Maximum consecutive days completed (0 if none)
  *
  * @example
@@ -34,7 +60,10 @@ interface TrackingEntry {
  * ];
  * calculateBestStreak(tracking); // returns 3
  */
-export function calculateBestStreak(tracking: TrackingEntry[]): number {
+export function calculateBestStreak(
+  tracking: TrackingEntry[],
+  restDays: number[] = []
+): number {
   if (tracking.length === 0) return 0;
 
   const completedDates = tracking
@@ -61,8 +90,15 @@ export function calculateBestStreak(tracking: TrackingEntry[]): number {
       currentStreak++;
       maxStreak = Math.max(maxStreak, currentStreak);
     } else if (daysDiff > 1) {
-      // Gap in tracking, reset streak
-      currentStreak = 1;
+      // Check if every day in the gap is a rest day
+      if (restDays.length > 0 && isGapAllRestDays(prevDate, currDate, restDays)) {
+        // Gap is all rest days — streak continues
+        currentStreak++;
+        maxStreak = Math.max(maxStreak, currentStreak);
+      } else {
+        // Real gap — reset streak
+        currentStreak = 1;
+      }
     }
     // If daysDiff === 0 (same day), keep current streak (shouldn't happen with unique dates)
   }

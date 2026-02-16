@@ -193,6 +193,10 @@ const applicationTables = {
 
     reminderTime: v.optional(v.string()),
 
+    // Rest Days — days of week (0=Sun..6=Sat) that don't break streaks.
+    // Free users: max 1 rest day; Premium: unlimited.
+    restDays: v.optional(v.array(v.number())),
+
     resumedAt: v.optional(v.number()),
 
     // Habit Strength System (Klein et al., 2011; Zhang et al., 2021)

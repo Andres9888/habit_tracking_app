@@ -117,6 +117,9 @@ export const MIN_COMPLETIONS_FOR_RATING = 5;
 /** Maximum days to look back for streak calculation (> 1 year) */
 export const STREAK_MAX_LOOKBACK_DAYS = 400;
 
+/** Maximum rest days a free-tier user can configure per habit. */
+export const FREE_TIER_MAX_REST_DAYS = 1;
+
 // ============================================================================
 // INPUT CHARACTER LIMITS (UI Feedback Thresholds)
 // ============================================================================

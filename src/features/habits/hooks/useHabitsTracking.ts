@@ -7,6 +7,7 @@ import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import { useOptimisticStore } from '../../../lib/optimistic';
 import { validateDateString } from '../../../utils/validation';
 import type { HabitStatus } from '../types';
+import { getDay, parseISO } from 'date-fns';
 
 export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   // Use startDate/endDate range instead of sending all 365 date strings
@@ -57,16 +58,16 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   }, [tracking, optimisticStore.pendingToggles]);
 
   const getStreak = useCallback(
-    (habitId: string) => {
+    (habitId: string, restDays: number[] = []) => {
       const completedDates = completedDatesByHabit.get(habitId);
       if (!completedDates) return 0;
-      return computeCurrentStreakFromDates(completedDates, today);
+      return computeCurrentStreakFromDates(completedDates, today, restDays);
     },
     [completedDatesByHabit, today]
   );
 
   const getHabitStatus = useCallback(
-    (habitId: string, dateString: string): HabitStatus => {
+    (habitId: string, dateString: string, restDays: number[] = []): HabitStatus => {
       // Validate date string format
       const validation = validateDateString(dateString);
       if (!validation.isValid) {
@@ -98,6 +99,10 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
       }
 
       if (date < today) {
+        // Rest days in the past are not "missed" — they're intentional off-days
+        if (restDays.length > 0 && restDays.includes(getDay(date))) {
+          return 'planned';
+        }
         return 'missed';
       }
       return 'planned';
