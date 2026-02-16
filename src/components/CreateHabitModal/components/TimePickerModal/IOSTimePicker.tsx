@@ -59,11 +59,13 @@ export function IOSTimePicker({
           <View
             accessibilityLabel='Time picker wheel'
             className='mb-5 items-center'
+            style={isDark ? { backgroundColor: colors.gray[800], borderRadius: 12 } : undefined}
           >
             <DateTimePicker
               display='spinner'
               is24Hour={false}
               mode='time'
+              style={isDark ? { width: '100%', backgroundColor: colors.gray[800] } : undefined}
               testID='time-picker-ios'
               textColor={colors.text.primary}
               value={selectedTime}
@@ -76,10 +78,15 @@ export function IOSTimePicker({
               accessibilityLabel='Cancel'
               accessibilityRole='button'
               className='h-12 flex-1 items-center justify-center rounded-xl'
-              style={{ backgroundColor: colors.gray[200] }}
+              style={{ 
+                backgroundColor: isDark ? colors.gray[700] : colors.gray[200],
+              }}
               onPress={onCancel}
             >
-              <Text className='text-base font-semibold' style={{ color: colors.text.primary }}>
+              <Text 
+                className='text-base font-semibold' 
+                style={{ color: colors.text.primary }}
+              >
                 Cancel
               </Text>
             </Pressable>

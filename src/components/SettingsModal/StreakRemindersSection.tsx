@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Bell, Clock, Crown } from 'lucide-react-native';
 import { Platform, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import {
@@ -35,6 +36,7 @@ export function StreakRemindersSection({
   onPremiumUpsell,
 }: StreakRemindersSectionProps) {
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const { colors, isDark } = useThemeColors();
 
   const handleTimeChange = (_event: unknown, selectedDate?: Date) => {
     if (Platform.OS === 'android') setShowTimePicker(false);
@@ -64,10 +66,20 @@ export function StreakRemindersSection({
             onPress={() => setShowTimePicker(!showTimePicker)}
           />
           {showTimePicker && (
-            <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
+            <View 
+              style={{ 
+                paddingBottom: 8, 
+                paddingHorizontal: 16,
+                backgroundColor: isDark ? colors.gray[800] : undefined,
+                borderRadius: 12,
+                marginHorizontal: 16,
+              }}
+            >
               <DateTimePicker
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 mode='time'
+                style={isDark ? { backgroundColor: colors.gray[800] } : undefined}
+                textColor={isDark ? colors.text.primary : undefined}
                 value={timeStringToDate(reminderTime)}
                 onChange={handleTimeChange}
               />
@@ -88,7 +100,7 @@ export function StreakRemindersSection({
       )}
       {!enabled && (
         <View style={{ paddingBottom: 12, paddingHorizontal: 16 }}>
-          <Text style={{ color: '#78716c', fontSize: 13, lineHeight: 18 }}>
+          <Text style={{ color: colors.text.secondary, fontSize: 13, lineHeight: 18 }}>
             Get a reminder if you haven't completed a habit with an active
             streak by your chosen time.
           </Text>

@@ -37,7 +37,7 @@ export function ReminderTimePicker({
   onTogglePicker,
 }: ReminderTimePickerProps) {
   const theme = useAppTheme();
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -79,8 +79,8 @@ export function ReminderTimePicker({
         style={[
           localStyles.timePickerButton,
           {
-            backgroundColor: colors.gray[50],
-            borderColor: colors.gray[200],
+            backgroundColor: isDark ? colors.gray[800] : colors.gray[50],
+            borderColor: isDark ? colors.gray[700] : colors.gray[200],
           },
         ]}
         onPress={handlePress}
@@ -108,6 +108,8 @@ export function ReminderTimePicker({
           display='spinner'
           is24Hour={false}
           mode='time'
+          style={isDark ? { backgroundColor: colors.gray[800] } : undefined}
+          textColor={isDark ? colors.text.primary : undefined}
           value={reminderTime}
           onChange={handleChange}
         />

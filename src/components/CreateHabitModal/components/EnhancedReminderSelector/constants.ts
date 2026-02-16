@@ -31,3 +31,6 @@ export const DEFAULT_PRESETS: ReminderPreset[] = [
     time: '8:00 PM',
   },
 ];
+
+/** Most popular reminder time - shown in smart suggestion UI */
+export const POPULAR_REMINDER_TIME = '8:00 AM';

@@ -4,6 +4,7 @@
  * Features:
  * - Toggle row with bell icon and switch
  * - Quick preset buttons (Morning/Midday/Evening)
+ * - Smart suggestion showing popular reminder time
  * - Custom time button that opens native TimePickerModal
  * - Selected preset shows green border
  * - Custom time shows green border when set
@@ -18,11 +19,12 @@ import { View } from 'react-native';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import { TimePickerModal } from '../TimePickerModal';
 import { NextReminderBadge } from '../NextReminderBadge';
-import { DEFAULT_PRESETS } from './constants';
+import { DEFAULT_PRESETS, POPULAR_REMINDER_TIME } from './constants';
 import { useReminderSelector } from './useReminderSelector';
 import { ToggleRow } from './ToggleRow';
 import { PresetButton } from './PresetButton';
 import { CustomTimeButton } from './CustomTimeButton';
+import { SmartSuggestion } from './SmartSuggestion';
 import type { EnhancedReminderSelectorProps } from './types';
 
 function EnhancedReminderSelectorComponent({
@@ -64,6 +66,8 @@ function EnhancedReminderSelectorComponent({
               />
             ))}
           </View>
+
+          <SmartSuggestion suggestedTime={POPULAR_REMINDER_TIME} />
 
           <CustomTimeButton
             customTimeLabel={customTimeLabel}

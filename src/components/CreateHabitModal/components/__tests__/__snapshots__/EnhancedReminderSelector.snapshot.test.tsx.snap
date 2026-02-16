@@ -385,6 +385,38 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
       </View>
     </View>
     <View
+      accessibilityLabel="Most users set reminders at 8:00 AM"
+      accessibilityRole="text"
+      className="mb-3 flex-row items-center justify-center gap-1.5"
+    >
+      <View
+        color="#6B6560"
+        size={12}
+        testID="lucide-icon-TrendingUp"
+      />
+      <Text
+        className="text-xs"
+        style={
+          {
+            "color": "#6B6560",
+          }
+        }
+      >
+        Most users set reminders at
+         
+        <Text
+          className="font-semibold"
+          style={
+            {
+              "color": "#10B981",
+            }
+          }
+        >
+          8:00 AM
+        </Text>
+      </Text>
+    </View>
+    <View
       accessibilityHint="Opens time picker"
       accessibilityLabel="Custom time set to 6:30 AM. Double tap to change."
       accessibilityRole="button"
@@ -770,6 +802,38 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom ti
           </Text>
         </View>
       </View>
+    </View>
+    <View
+      accessibilityLabel="Most users set reminders at 8:00 AM"
+      accessibilityRole="text"
+      className="mb-3 flex-row items-center justify-center gap-1.5"
+    >
+      <View
+        color="#6B6560"
+        size={12}
+        testID="lucide-icon-TrendingUp"
+      />
+      <Text
+        className="text-xs"
+        style={
+          {
+            "color": "#6B6560",
+          }
+        }
+      >
+        Most users set reminders at
+         
+        <Text
+          className="font-semibold"
+          style={
+            {
+              "color": "#10B981",
+            }
+          }
+        >
+          8:00 AM
+        </Text>
+      </Text>
     </View>
     <View
       accessibilityHint="Opens time picker"
@@ -1159,6 +1223,38 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening p
       </View>
     </View>
     <View
+      accessibilityLabel="Most users set reminders at 8:00 AM"
+      accessibilityRole="text"
+      className="mb-3 flex-row items-center justify-center gap-1.5"
+    >
+      <View
+        color="#6B6560"
+        size={12}
+        testID="lucide-icon-TrendingUp"
+      />
+      <Text
+        className="text-xs"
+        style={
+          {
+            "color": "#6B6560",
+          }
+        }
+      >
+        Most users set reminders at
+         
+        <Text
+          className="font-semibold"
+          style={
+            {
+              "color": "#10B981",
+            }
+          }
+        >
+          8:00 AM
+        </Text>
+      </Text>
+    </View>
+    <View
       accessibilityHint="Opens time picker"
       accessibilityLabel="Set a custom reminder time"
       accessibilityRole="button"
@@ -1539,6 +1635,38 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday pr
           </Text>
         </View>
       </View>
+    </View>
+    <View
+      accessibilityLabel="Most users set reminders at 8:00 AM"
+      accessibilityRole="text"
+      className="mb-3 flex-row items-center justify-center gap-1.5"
+    >
+      <View
+        color="#6B6560"
+        size={12}
+        testID="lucide-icon-TrendingUp"
+      />
+      <Text
+        className="text-xs"
+        style={
+          {
+            "color": "#6B6560",
+          }
+        }
+      >
+        Most users set reminders at
+         
+        <Text
+          className="font-semibold"
+          style={
+            {
+              "color": "#10B981",
+            }
+          }
+        >
+          8:00 AM
+        </Text>
+      </Text>
     </View>
     <View
       accessibilityHint="Opens time picker"
@@ -1923,6 +2051,38 @@ exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning p
       </View>
     </View>
     <View
+      accessibilityLabel="Most users set reminders at 8:00 AM"
+      accessibilityRole="text"
+      className="mb-3 flex-row items-center justify-center gap-1.5"
+    >
+      <View
+        color="#6B6560"
+        size={12}
+        testID="lucide-icon-TrendingUp"
+      />
+      <Text
+        className="text-xs"
+        style={
+          {
+            "color": "#6B6560",
+          }
+        }
+      >
+        Most users set reminders at
+         
+        <Text
+          className="font-semibold"
+          style={
+            {
+              "color": "#10B981",
+            }
+          }
+        >
+          8:00 AM
+        </Text>
+      </Text>
+    </View>
+    <View
       accessibilityHint="Opens time picker"
       accessibilityLabel="Set a custom reminder time"
       accessibilityRole="button"
@@ -2200,6 +2360,38 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom p
           </View>
         </View>
       </View>
+    </View>
+    <View
+      accessibilityLabel="Most users set reminders at 8:00 AM"
+      accessibilityRole="text"
+      className="mb-3 flex-row items-center justify-center gap-1.5"
+    >
+      <View
+        color="#6B6560"
+        size={12}
+        testID="lucide-icon-TrendingUp"
+      />
+      <Text
+        className="text-xs"
+        style={
+          {
+            "color": "#6B6560",
+          }
+        }
+      >
+        Most users set reminders at
+         
+        <Text
+          className="font-semibold"
+          style={
+            {
+              "color": "#10B981",
+            }
+          }
+        >
+          8:00 AM
+        </Text>
+      </Text>
     </View>
     <View
       accessibilityHint="Opens time picker"
@@ -2582,6 +2774,38 @@ exports[`EnhancedReminderSelector Snapshots Optional Props renders without next 
           </Text>
         </View>
       </View>
+    </View>
+    <View
+      accessibilityLabel="Most users set reminders at 8:00 AM"
+      accessibilityRole="text"
+      className="mb-3 flex-row items-center justify-center gap-1.5"
+    >
+      <View
+        color="#6B6560"
+        size={12}
+        testID="lucide-icon-TrendingUp"
+      />
+      <Text
+        className="text-xs"
+        style={
+          {
+            "color": "#6B6560",
+          }
+        }
+      >
+        Most users set reminders at
+         
+        <Text
+          className="font-semibold"
+          style={
+            {
+              "color": "#10B981",
+            }
+          }
+        >
+          8:00 AM
+        </Text>
+      </Text>
     </View>
     <View
       accessibilityHint="Opens time picker"
