@@ -60,6 +60,7 @@ export function VisionBoardSection({
             hasImages={state.hasImages}
             imageCount={imageCount}
             isPremium={isPremium}
+            onUpgrade={onPremiumRequired}
           />
           {!state.hasImages && (
             <Text className='text-sm text-stone-500'>
@@ -72,15 +73,13 @@ export function VisionBoardSection({
             sectionIndex={sectionIndex}
             shouldAnimate={shouldAnimate}
           />
-          {isPremium && (
-            <ImageGrid
-              images={images}
-              isUploading={state.isLoading}
-              onAddImage={() => state.setIsAddModalOpen(true)}
-              onViewImage={state.handleViewImage}
-            />
-          )}
-          {isPremium && !state.hasImages && !state.isLoading && (
+          <ImageGrid
+            images={images}
+            isUploading={state.isLoading}
+            onAddImage={() => state.setIsAddModalOpen(true)}
+            onViewImage={state.handleViewImage}
+          />
+          {!state.hasImages && !state.isLoading && (
             <AddFirstImageButton
               onPress={() => state.setIsAddModalOpen(true)}
             />

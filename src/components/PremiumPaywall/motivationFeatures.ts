@@ -31,10 +31,10 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
   {
     accentColor: '#d946ef',
     description: 'Pin images that inspire you — see your "why" every day.',
-    freeLimit: 'Not available',
+    freeLimit: '4 images per habit',
     icon: Image,
     id: 'visionBoard',
-    premiumValue: '4 images per habit',
+    premiumValue: 'Unlimited habits with boards',
     scienceFact: 'Personal images create stronger emotional connections',
     subtitle: 'Visual goal reinforcement',
     title: 'Vision Board',

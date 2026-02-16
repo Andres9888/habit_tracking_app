@@ -20,6 +20,8 @@ export const FREE_TIER_LIMITS = {
   VOICE_NOTES_PER_HABIT: 1,
   /** Vision board: 4 images per habit */
   VISION_BOARD_IMAGES_PER_HABIT: 4,
+  /** Affirmations: 2 free per habit */
+  AFFIRMATIONS_PER_HABIT: 2,
 } as const;
 
 /**
@@ -128,6 +130,42 @@ export async function canAddVisionBoardImage(
     return {
       allowed: false,
       reason: `Free tier limited to ${FREE_TIER_LIMITS.VISION_BOARD_IMAGES_PER_HABIT} vision board images per habit. Upgrade to premium for unlimited images.`,
+    };
+  }
+
+  return { allowed: true };
+}
+
+/**
+ * Check if user can add more affirmations to a habit
+ *
+ * Free tier: 2 affirmations per habit
+ * Premium: unlimited (up to MAX_AFFIRMATIONS_PER_HABIT)
+ *
+ * @param ctx - Convex query context
+ * @param userId - The user's ID
+ * @param habitId - The habit ID
+ * @returns true if user can add more affirmations
+ */
+export async function canAddAffirmation(
+  ctx: QueryCtx,
+  userId: string,
+  habitId: Id<'habits'>
+): Promise<{ allowed: boolean; reason?: string }> {
+  const hasPremium = await hasPremiumAccess(ctx, userId);
+  if (hasPremium) {
+    return { allowed: true };
+  }
+
+  const existingAffirmations = await ctx.db
+    .query('affirmations')
+    .withIndex('by_habit', (q) => q.eq('habitId', habitId))
+    .collect();
+
+  if (existingAffirmations.length >= FREE_TIER_LIMITS.AFFIRMATIONS_PER_HABIT) {
+    return {
+      allowed: false,
+      reason: `Free tier limited to ${FREE_TIER_LIMITS.AFFIRMATIONS_PER_HABIT} affirmations per habit. Upgrade to premium for unlimited affirmations.`,
     };
   }
 

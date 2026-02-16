@@ -15,6 +15,7 @@ import {
   validateShortText,
   requireValid,
 } from './lib/inputValidation';
+import { canAddAffirmation } from './subscriptions/premiumCheck';
 
 /**
  * Create a new affirmation for a habit
@@ -44,6 +45,12 @@ export const create = mutation({
     // SEC-001: Ownership verification - verify user owns the habit
     if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to add affirmations to this habit');
+    }
+
+    // SEC-005: Premium feature access control - check free tier limit
+    const premiumCheck = await canAddAffirmation(ctx, identity.subject, args.habitId);
+    if (!premiumCheck.allowed) {
+      throw new Error(premiumCheck.reason || 'Premium required for additional affirmations');
     }
 
     const existing = await ctx.db

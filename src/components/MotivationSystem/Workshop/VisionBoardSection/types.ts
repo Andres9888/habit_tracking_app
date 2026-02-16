@@ -49,6 +49,9 @@ export interface VisionBoardSectionProps {
 /** Maximum images per habit (4-image grid as per spec) */
 export const MAX_IMAGES = 4;
 
+/** Free tier limit: 4 images per habit (matches backend FREE_TIER_LIMITS.VISION_BOARD_IMAGES_PER_HABIT) */
+export const FREE_TIER_LIMIT = 4;
+
 /** Maximum caption length (matching Convex validation) */
 export const MAX_CAPTION_LENGTH = 200;
 

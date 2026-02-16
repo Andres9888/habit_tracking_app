@@ -46,6 +46,7 @@ export function useVisionBoardState(props: UseVisionBoardStateProps) {
 
   const { handleAddImage, isLoading } = useImageUploader({
     canAddMore,
+    imageCount,
     isPremium,
     onAddImage,
     onPremiumRequired,
@@ -76,8 +77,10 @@ export function useVisionBoardState(props: UseVisionBoardStateProps) {
   }, [selectedImage, onDeleteImage]);
 
   const handleSectionPress = useCallback(() => {
-    if (!isPremium) onPremiumRequired();
-  }, [isPremium, onPremiumRequired]);
+    // Only trigger premium gate if at free tier limit
+    // This allows free users to interact with the section
+    // (premium gate will be shown when trying to add 5th image)
+  }, []);
 
   return {
     handleAddImage,

@@ -32,6 +32,7 @@ export const FEATURE_META: Record<MotivationPremiumFeature, FeatureMeta> = {
   },
   visionBoard: {
     description: 'Pin images that inspire you — see your "why" every day.',
+    freeLimit: '4 images per habit',
     scienceBasis: 'Personal images create stronger emotional connections',
     title: 'Vision Board',
   },

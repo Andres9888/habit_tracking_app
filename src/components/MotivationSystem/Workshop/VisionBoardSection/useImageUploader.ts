@@ -9,11 +9,12 @@ import * as Haptics from 'expo-haptics';
 import { useImagePicker } from '../../../../hooks/useImagePicker';
 import { useImageUpload } from '../../../../hooks/useImageUpload';
 import type { Id } from '../../../../../convex/_generated/dataModel';
-import { MAX_IMAGES } from './types';
+import { MAX_IMAGES, FREE_TIER_LIMIT } from './types';
 import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 
 interface UseImageUploaderProps {
   isPremium: boolean;
+  imageCount: number;
   canAddMore: boolean;
   onAddImage: (storageId: Id<'_storage'>, caption?: string) => Promise<void>;
   onPremiumRequired: () => void;
@@ -21,6 +22,7 @@ interface UseImageUploaderProps {
 
 export function useImageUploader({
   isPremium,
+  imageCount,
   canAddMore,
   onAddImage,
   onPremiumRequired,
@@ -37,10 +39,13 @@ export function useImageUploader({
 
   const handleAddImage = useCallback(
     async (source: 'camera' | 'library') => {
-      if (!isPremium) {
+      // Check free tier limit before premium gate
+      if (!isPremium && imageCount >= FREE_TIER_LIMIT) {
         onPremiumRequired();
         return;
       }
+      
+      // Check max images limit (for premium users)
       if (!canAddMore) {
         Alert.alert(
           'Vision Board Full',
@@ -89,3 +94,4 @@ export function useImageUploader({
 
   return { handleAddImage, isLoading };
 }
+
