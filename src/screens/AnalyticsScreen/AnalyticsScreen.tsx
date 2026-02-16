@@ -15,6 +15,7 @@ import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 import { styles } from './AnalyticsScreen.styles';
 import {
   AnalyticsHeader,
+  AnalyticsUpsellBanner,
   EmptyState,
   OverviewStats,
   ChartSections,
@@ -51,18 +52,6 @@ function AnalyticsScreenContent() {
     [overviewStats?.rankedHabits]
   );
   const hasNoHabits = overviewStats?.totalHabits === 0;
-
-  // Show paywall modal if not premium user
-  if (!isPremiumUser && showPaywall) {
-    return (
-      <PremiumPaywall
-        visible
-        variant='analytics'
-        onClose={() => setShowPaywall(false)}
-        onStartTrial={handleStartTrial}
-      />
-    );
-  }
 
   if (isLoading) {
     return <AnalyticsScreenSkeleton />;
@@ -101,32 +90,44 @@ function AnalyticsScreenContent() {
             />
           </Animated.View>
 
-          <Animated.View
-            entering={FadeInDown.delay(400).springify().damping(18)}
-          >
-            <ChartSections
-              complianceData={complianceData}
-              isLoading={isLoading}
-              strengthDistribution={strengthDistribution}
-              trendData={trendData}
-            />
-          </Animated.View>
+          {isPremiumUser ? (
+            <>
+              <Animated.View
+                entering={FadeInDown.delay(400).springify().damping(18)}
+              >
+                <ChartSections
+                  complianceData={complianceData}
+                  isLoading={isLoading}
+                  strengthDistribution={strengthDistribution}
+                  trendData={trendData}
+                />
+              </Animated.View>
 
-          <Animated.View
-            entering={FadeInDown.delay(460).springify().damping(18)}
-          >
-            <InsightsSections
-              rankedHabits={rankedHabits}
-              weeklyInsights={weeklyInsights}
-              onHabitPress={handleHabitPress}
-            />
-          </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(460).springify().damping(18)}
+              >
+                <InsightsSections
+                  rankedHabits={rankedHabits}
+                  weeklyInsights={weeklyInsights}
+                  onHabitPress={handleHabitPress}
+                />
+              </Animated.View>
 
-          <Animated.View
-            entering={FadeInDown.delay(520).springify().damping(18)}
-          >
-            <ExportButton onPress={() => void handleExportPress()} />
-          </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(520).springify().damping(18)}
+              >
+                <ExportButton onPress={() => void handleExportPress()} />
+              </Animated.View>
+            </>
+          ) : (
+            <Animated.View
+              entering={FadeInDown.delay(400).springify().damping(18)}
+            >
+              <AnalyticsUpsellBanner
+                onUpgrade={() => setShowPaywall(true)}
+              />
+            </Animated.View>
+          )}
         </>
       )}
 
@@ -134,6 +135,14 @@ function AnalyticsScreenContent() {
         visible={showExportMenu}
         onClose={() => setShowExportMenu(false)}
         onExport={(format) => void handleExport(format)}
+      />
+
+      {/* Premium paywall modal — triggered by upsell banner */}
+      <PremiumPaywall
+        variant='analytics'
+        visible={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        onStartTrial={handleStartTrial}
       />
     </ScrollView>
   );

@@ -3,7 +3,7 @@
  * Orchestrates the habits list, modals, overlays, and floating action button.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -15,9 +15,11 @@ import { HabitsList } from './components/HabitsList';
 import FloatingActionButton from './components/FloatingActionButton';
 import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { HabitsAppOverlays } from './components/HabitsAppOverlays';
+import { StreakMilestoneModal } from '../../components/StreakMilestoneModal';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { useStreakMilestoneUpsell } from '../../hooks/useStreakMilestoneUpsell';
 
 const styles = StyleSheet.create({
   fabContainer: {
@@ -44,6 +46,25 @@ function HabitsAppContent() {
     preference: list.reduceMotionPreference,
   });
 
+  // Calculate max streak across all habits for milestone upsell
+  const maxStreak = useMemo(
+    () =>
+      list.habits.reduce(
+        (max, habit) => Math.max(max, list.getStreak(habit._id)),
+        0
+      ),
+    [list.habits, list.getStreak]
+  );
+
+  const {
+    pendingMilestone,
+    dismissMilestone,
+    acceptMilestone,
+  } = useStreakMilestoneUpsell({
+    currentStreak: maxStreak,
+    isPremium: list.isPremiumUser,
+  });
+
   const {
     handleCreateHabitRequest,
     handlePaywallClose,
@@ -60,6 +81,15 @@ function HabitsAppContent() {
     triggerSelection,
     triggerWarning,
   });
+
+  /** Handle streak milestone CTA — opens paywall */
+  const handleMilestoneAccept = useCallback(() => {
+    const shouldOpen = acceptMilestone();
+    if (shouldOpen) {
+      // Small delay so milestone modal closes first
+      setTimeout(() => handleUpgradeIntent(), 200);
+    }
+  }, [acceptMilestone, handleUpgradeIntent]);
 
   /** Wrapper for the FAB — delegates to `handleCreateHabitRequest` (async). */
   const onFabPress = useCallback((): void => {
@@ -112,6 +142,19 @@ function HabitsAppContent() {
           onPaywallClose={handlePaywallClose}
           onPaywallSuccess={handlePaywallSuccess}
         />
+
+        {/* Streak milestone celebration with premium upsell */}
+        {pendingMilestone && (
+          <StreakMilestoneModal
+            visible={!!pendingMilestone}
+            emoji={pendingMilestone.emoji}
+            title={pendingMilestone.title}
+            message={pendingMilestone.message}
+            ctaText={pendingMilestone.ctaText}
+            onAccept={handleMilestoneAccept}
+            onDismiss={dismissMilestone}
+          />
+        )}
       </View>
     </GestureHandlerRootView>
   );

@@ -16,7 +16,8 @@ import type {
 export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const [refreshing, setRefreshing] = useState(false);
   const { isPremium: isPremiumUser } = usePremium();
-  const [showPaywall, setShowPaywall] = useState(!isPremiumUser);
+  // Don't auto-show paywall; let users see basic stats first
+  const [showPaywall, setShowPaywall] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const { triggerLightImpact } = useHapticFeedback();
 

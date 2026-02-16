@@ -170,7 +170,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 highContrastMode={hc}
                 icon={<Lock color='#f59e0b' size={16} />}
                 iconBackgroundColor='#fef3c7'
-                label='Unlock satisfying sounds when completing habits'
+                label='Hear a satisfying sound each time you complete a habit ✨'
                 showBorder={false}
                 type='navigation'
                 onPress={p.onPremiumUpsell}
