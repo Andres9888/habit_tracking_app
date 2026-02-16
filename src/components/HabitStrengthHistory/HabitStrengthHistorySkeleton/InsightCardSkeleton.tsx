@@ -8,6 +8,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { SkeletonLoader } from '../../SkeletonLoader/SkeletonLoader';
+import { useSkeletonTheme } from '../../SkeletonLoader/useSkeletonTheme';
 
 interface InsightCardSkeletonProps {
   index: number;
@@ -18,9 +19,11 @@ export function InsightCardSkeleton({
   index,
   reduceMotion = false,
 }: InsightCardSkeletonProps) {
+  const { surfaceBg } = useSkeletonTheme();
   return (
     <View
-      className='flex-1 flex-row items-center gap-2 rounded-lg bg-stone-50 px-3 py-2.5'
+      className='flex-1 flex-row items-center gap-2 rounded-lg px-3 py-2.5'
+      style={{ backgroundColor: surfaceBg }}
       testID={`skeleton-insight-${index}`}
     >
       <SkeletonLoader

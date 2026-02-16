@@ -1,11 +1,13 @@
+/* eslint-disable max-lines */
 /**
  * NextHabitSuggestion Component
  * Shows the next incomplete habit to focus on
+ * Reduces decision fatigue by highlighting one habit at a time
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import Animated, {
+import { Pressable } from 'react-native';
+import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -13,10 +15,9 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { ArrowRight, Zap } from 'lucide-react-native';
 import type { NextHabitSuggestionProps } from './types';
-import { styles } from './NextHabitSuggestion.styles';
 import { CompletedState } from './CompletedState';
+import { HabitContent } from './HabitContent';
 
 export function NextHabitSuggestion({
   habit,
@@ -27,6 +28,7 @@ export function NextHabitSuggestion({
   const scale = useSharedValue(1);
   const glowOpacity = useSharedValue(0.3);
 
+  // Subtle pulsing glow
   React.useEffect(() => {
     glowOpacity.value = withRepeat(
       withSequence(
@@ -38,47 +40,43 @@ export function NextHabitSuggestion({
     );
   }, []);
 
+  const handlePressIn = () => {
+    scale.value = withSpring(0.98);
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1);
+  };
+
   const cardStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
-  const glowStyle = useAnimatedStyle(() => ({ opacity: glowOpacity.value }));
 
-  if (!habit) return <CompletedState totalCount={totalCount} />;
+  const glowStyle = useAnimatedStyle(() => ({
+    opacity: glowOpacity.value,
+  }));
+
+  // All habits complete
+  if (!habit) {
+    return <CompletedState totalCount={totalCount} />;
+  }
 
   return (
     <Pressable
+      accessibilityHint='Double tap to open this habit'
+      accessibilityLabel={`Next habit: ${habit.name ?? 'habit'}`}
+      accessibilityRole='button'
       onPress={() => onPress?.(habit)}
-      onPressIn={() => {
-        scale.value = withSpring(0.98);
-      }}
-      onPressOut={() => {
-        scale.value = withSpring(1);
-      }}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
     >
-      <Animated.View style={[styles.container, cardStyle]}>
-        <Animated.View style={[styles.glow, glowStyle]} />
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <View style={styles.badge}>
-              <Zap color='#f59e0b' size={12} strokeWidth={2.5} />
-              <Text style={styles.badgeText}>Focus on</Text>
-            </View>
-            <Text style={styles.progress}>
-              {completedCount}/{totalCount}
-            </Text>
-          </View>
-          <View style={styles.habitRow}>
-            <Text style={styles.habitIcon}>{habit.icon || '📝'}</Text>
-            <View style={styles.habitInfo}>
-              <Text numberOfLines={1} style={styles.habitName}>
-                {habit.name}
-              </Text>
-              <Text style={styles.habitHint}>Tap to mark complete</Text>
-            </View>
-            <ArrowRight color='#a8a29e' size={20} />
-          </View>
-        </View>
-      </Animated.View>
+      <HabitContent
+        habit={habit}
+        completedCount={completedCount}
+        totalCount={totalCount}
+        cardStyle={cardStyle}
+        glowStyle={glowStyle}
+      />
     </Pressable>
   );
 }

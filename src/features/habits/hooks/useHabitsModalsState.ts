@@ -1,5 +1,10 @@
+/* eslint-disable max-lines */
 /**
  * HabitsModalsState Hook
+ *
+ * State hook for habits modals with offline support.
+ * Integrates optimistic updates and offline queue for habit toggling.
+ *
  * @see docs/offline-habit-sync.md T011
  */
 
@@ -21,7 +26,6 @@ import {
   useSyncAllHabitStates,
 } from './modalsStateHelpers';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
-import { useWrappedMutations } from './useWrappedMutations';
 import type { HabitsModalsState } from './types';
 
 interface UseHabitsModalsStateProps {
@@ -37,6 +41,7 @@ export function useHabitsModalsState({
   const selection = useHabitSelectionState();
   const { settings, celebrationsEnabled, reduceMotionPreference } =
     useHabitsSettings();
+
   const {
     pauseHabit,
     removeHabit,
@@ -46,31 +51,48 @@ export function useHabitsModalsState({
     isOnline,
   } = useHabitMutations();
   const { milestone, clearMilestone } = useHabitMilestones(habits, false);
+
   const { tracking, getStreak, isCompleted } = useHabitsTracking(
     generateDateStrings(365),
     getTodayMidnight()
   );
 
-  const {
-    wrappedToggleHabit,
-    wrappedPauseHabit,
-    wrappedRemoveHabit,
-    wrappedUpdateSettings,
-    handleArchive,
-  } = useWrappedMutations(
-    toggleHabit,
-    pauseHabit,
-    removeHabit,
-    updateSettings,
-    archiveHabit
+  // Wrap toggle mutation as plain async function
+  const wrappedToggleHabit = useCallback(
+    async (args: { habitId: Id<'habits'>; date: string }) => {
+      await toggleHabit(args);
+    },
+    [toggleHabit]
   );
 
+  // Wrap toggle mutation with optimistic update + offline queue support (T011)
   const optimisticToggleHabit = useOptimisticToggleMutation(
     wrappedToggleHabit,
     isCompleted,
     { isOnline }
   );
+
   useSyncAllHabitStates(habits, selection);
+
+  // Wrap mutations as plain async functions to match handler type signatures
+  const wrappedPauseHabit = useCallback(
+    async (args: { habitId: Id<'habits'> }) => {
+      await pauseHabit(args);
+    },
+    [pauseHabit]
+  );
+  const wrappedRemoveHabit = useCallback(
+    async (args: { habitId: Id<'habits'> }) => {
+      await removeHabit(args);
+    },
+    [removeHabit]
+  );
+  const wrappedUpdateSettings = useCallback(
+    async (s: Parameters<typeof updateSettings>[0]) => {
+      await updateSettings(s);
+    },
+    [updateSettings]
+  );
 
   const handlers = useHabitsModalsHandlers(
     buildModalsSettersArg(visibility, selection),
@@ -85,6 +107,13 @@ export function useHabitsModalsState({
     }
   );
 
+  const handleArchive = useCallback(
+    async (habitId: Id<'habits'>) => {
+      await archiveHabit({ habitId });
+    },
+    [archiveHabit]
+  );
+
   const onChangeCelebrationsEnabled = useCallback(
     async (value: boolean) =>
       handlers.onSettingsChange({ showMotivationalMessages: value }),
@@ -93,6 +122,7 @@ export function useHabitsModalsState({
 
   const handleToggleHabit = useCallback(
     async (args: { habitId: Id<'habits'>; date: string }) => {
+      // Use optimistic toggle with offline queue support
       await optimisticToggleHabit(args);
     },
     [optimisticToggleHabit]

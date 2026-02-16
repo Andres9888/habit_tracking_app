@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colors.text.inverse,
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
   },
   card: {
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   description: {
     color: colors.text.secondary,
-    fontSize: 14,
+    fontSize: 13,
     lineHeight: 20,
     marginBottom: 20,
     textAlign: 'center',

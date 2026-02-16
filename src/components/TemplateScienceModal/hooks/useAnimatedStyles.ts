@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Animated style definitions for TemplateScienceModal
  */

@@ -1,8 +1,9 @@
+/* eslint-disable max-lines */
 /** HabitsHeader - OPTIMIZED: entry animation, contrast fix, clearer UX */
 
 import { View, Text } from 'react-native';
 import { memo } from 'react';
-import Animated from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTemplateBadge } from '../../hooks/useTemplateBadge';
 import { DailyProgressRing } from '../../../../components/DailyProgressRing';
 import type { HabitsHeaderProps } from './types';
@@ -11,12 +12,21 @@ import { ProBadge } from './ProBadge';
 import { useHeaderAnimations } from './useHeaderAnimations';
 import { useHeaderHandlers } from './useHeaderHandlers';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import {
-  ENTERING,
-  STREAK_STYLE,
-  DATE_STYLE,
-  formatTodayDate,
-} from './headerHelpers';
+
+const ENTERING = FadeInDown.duration(280).springify().damping(18);
+
+// FIXED: #78716c has 4.5:1+ contrast (was #C4BFB7 at 2.8:1)
+const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
+const DATE_STYLE = {
+  fontFamily: 'System',
+  letterSpacing: -0.76,
+};
+
+/** Format today's date as "Today · Mon D" per spec */
+const formatTodayDate = (): string => {
+  const now = new Date();
+  return `Today · ${now.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
+};
 
 // eslint-disable-next-line max-lines-per-function
 function HabitsHeaderComponent(props: HabitsHeaderProps) {
@@ -74,6 +84,7 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
     </View>
   );
 
+  // Empty state: show minimal header with icon group (templates accessible)
   if (totalHabits === 0 && !forceShow) {
     return (
       <Animated.View className='gap-2 px-4' entering={ENTERING}>
@@ -85,6 +96,7 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
   }
 
   return (
+    // OPTIMIZED: FadeInDown entry animation
     <Animated.View className='gap-2 px-4' entering={ENTERING}>
       <View className='flex-row items-center justify-between'>
         <View className='flex-1 flex-row items-center gap-3'>

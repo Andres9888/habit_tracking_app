@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Sync Orchestrator - Coordinates offline queue sync with network detection.
  */

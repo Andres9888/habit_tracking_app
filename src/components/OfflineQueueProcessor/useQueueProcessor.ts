@@ -1,8 +1,11 @@
-import { useCallback, useRef, useState } from 'react';
+/* eslint-disable max-lines */
+import { useCallback, useRef, useState, useMemo } from 'react';
+import { useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import { useNetworkStatus } from '../../contexts/NetworkStatusContext';
 import { useOfflineQueue } from '../../hooks/useOfflineQueue';
 import { executeQueueProcessing } from './processQueue';
-import { useMutations } from './useMutations';
+import type { Mutations } from './processItem';
 import {
   INITIAL_PROCESSING_STATE,
   type ProcessingState,
@@ -25,12 +28,29 @@ export function useQueueProcessor(
   const { isOnline } = useNetworkStatus();
   const { getRetryableItems, dequeue, markFailed, hasQueuedItems } =
     useOfflineQueue();
-  const mutations = useMutations();
+
+  const upsertReflection = useMutation(api.reflections.upsert);
+  const createLetter = useMutation(api.letters.create);
+  const createAffirmation = useMutation(api.affirmations.create);
+  const updateHabit = useMutation(api.habits.update);
+
   const [processingState, setProcessingState] = useState<ProcessingState>(
     INITIAL_PROCESSING_STATE
   );
+
   const isProcessingRef = useRef(false);
   const lastProcessTimeRef = useRef(0);
+
+  const mutations = useMemo(
+    () =>
+      ({
+        createAffirmation,
+        createLetter,
+        updateHabit,
+        upsertReflection,
+      }) as Mutations,
+    [createAffirmation, createLetter, updateHabit, upsertReflection]
+  );
 
   const updateState = useCallback(
     (updates: Partial<ProcessingState>) => {
@@ -45,14 +65,17 @@ export function useQueueProcessor(
 
   const processQueue = useCallback(async () => {
     if (isProcessingRef.current) return;
+
     const now = Date.now();
     if (now - lastProcessTimeRef.current < minProcessingIntervalMs) return;
     if (!isOnline) return;
+
     const items = await getRetryableItems();
     if (items.length === 0) return;
 
     isProcessingRef.current = true;
     lastProcessTimeRef.current = now;
+
     updateState({
       failedCount: 0,
       isProcessing: true,
@@ -77,6 +100,7 @@ export function useQueueProcessor(
       processedCount,
       progress: 1,
     });
+
     isProcessingRef.current = false;
     callbacks.onProcessingComplete?.(processedCount, failedCount);
   }, [

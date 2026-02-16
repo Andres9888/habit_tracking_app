@@ -3,7 +3,7 @@
  * Run this once to populate strength values for habits that don't have them yet
  * Uses recalculateHabitStrength which simulates the new formula day-by-day
  */
-import { mutation } from './_generated/server';
+import { internalMutation } from './_generated/server';
 import { v } from 'convex/values';
 import { calculateNewStrength, getStrengthLevel } from './habitStrength';
 
@@ -13,7 +13,7 @@ function startOfDay(date: Date): Date {
   return result;
 }
 
-export const initializeAllHabitsStrength = mutation({
+export const initializeAllHabitsStrength = internalMutation({
   args: {},
   handler: async (ctx) => {
     const habits = await ctx.db
@@ -21,7 +21,7 @@ export const initializeAllHabitsStrength = mutation({
       .filter((q) => q.neq(q.field('archived'), true))
       .collect();
 
-    console.log(`🔄 Initializing strength for ${habits.length} habits...`);
+    // Initializing strength for all habits
 
     let initialized = 0;
     let skipped = 0;
@@ -29,7 +29,7 @@ export const initializeAllHabitsStrength = mutation({
     for (const habit of habits) {
       // Skip if already has strength
       if (habit.strength !== undefined) {
-        console.log(`  ⏭️  Skipping ${habit.name} - already has strength`);
+        // Skip — already has strength
         skipped++;
         continue;
       }
@@ -40,7 +40,7 @@ export const initializeAllHabitsStrength = mutation({
         .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
         .collect();
 
-      console.log(`  ▸ Found ${tracking.length} tracking entries`);
+      // Processing tracking entries
 
       if (tracking.length === 0) {
         // No tracking data = start at 0
@@ -49,7 +49,7 @@ export const initializeAllHabitsStrength = mutation({
           strengthLevel: 'starting',
           strengthUpdatedAt: Date.now(),
         });
-        console.log(`  ✅ ${habit.name}: 0% (starting) - no tracking data`);
+        // Set to 0% — no tracking data
         initialized++;
         continue;
       }
@@ -97,15 +97,11 @@ export const initializeAllHabitsStrength = mutation({
         strengthUpdatedAt: Date.now(),
       });
 
-      console.log(
-        `  ✅ ${habit.name}: ${currentStrength.toFixed(1)}% (${strengthLevel})`
-      );
+      // Strength calculated
       initialized++;
     }
 
-    console.log(
-      `\n✨ Complete! Initialized: ${initialized}, Skipped: ${skipped}`
-    );
+    // Complete
 
     return {
       initialized,

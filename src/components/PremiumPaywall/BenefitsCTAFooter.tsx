@@ -37,6 +37,7 @@ export function BenefitsCTAFooter({
         accessibilityHint='Opens subscription options'
         accessibilityLabel={config.ctaText}
         accessibilityRole='button'
+        testID='paywall-start-trial-button'
         disabled={!handlers.priceLabel}
         onPress={onStartTrial}
         onPressIn={handlers.handleButtonPressIn}
