@@ -18,6 +18,8 @@ import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { useDeepLinking } from '../../hooks/useDeepLinking';
+import type { Id } from '../../../convex/_generated/dataModel';
 
 const styles = StyleSheet.create({
   fabContainer: {
@@ -65,6 +67,26 @@ function HabitsAppContent() {
   const onFabPress = useCallback((): void => {
     void handleCreateHabitRequest();
   }, [handleCreateHabitRequest]);
+
+  // Deep linking support
+  useDeepLinking({
+    onOpenHabitDetail: useCallback((habitId: Id<'habits'>) => {
+      const habit = list.habits.find(h => h._id === habitId);
+      if (habit) {
+        modals.openHabitDetail(habit);
+      }
+    }, [list.habits, modals]),
+    onOpenAnalytics: useCallback(() => {
+      // Analytics screen will be added to modal system
+      // For now, log that deep link was received
+      if (__DEV__) {
+        console.log('[DeepLink] Analytics screen requested');
+      }
+    }, []),
+    onOpenSettings: useCallback(() => {
+      modals.openSettings();
+    }, [modals]),
+  });
 
   const showHabitsSkeleton = list.isHabitsLoading && list.habits.length === 0;
 

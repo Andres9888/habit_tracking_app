@@ -2,7 +2,7 @@
   "expo": {
     "name": "ChainDay",
     "slug": "chainday",
-    "scheme": "habit-tracker",
+    "scheme": "chainday",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
