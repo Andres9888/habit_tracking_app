@@ -16,6 +16,18 @@ export const MOCK_CHARACTER_DATA: CharacterData = {
       id: '1',
       title: 'Week Warrior',
     },
+    {
+      description: 'Completed your first habit',
+      icon: '🌟',
+      id: '2',
+      title: 'First Step',
+    },
+    {
+      description: 'Maintained a 3-day streak',
+      icon: '🔥',
+      id: '3',
+      title: 'On Fire',
+    },
   ],
   stats: {
     activeHabits: 3,
@@ -23,6 +35,7 @@ export const MOCK_CHARACTER_DATA: CharacterData = {
     totalPower: 69,
   },
   title: 'Habit Hero',
+  totalAchievements: 10,
   xp: 69,
   xpToNextLevel: 100,
 };
@@ -30,21 +43,25 @@ export const MOCK_CHARACTER_DATA: CharacterData = {
 export const ATTRIBUTE_CONFIGS = {
   energy: {
     bgGradient: ['#fef9c2', '#fff7ed'] as const,
+    description: 'Gained from active habits',
     gradientColors: ['#f0b100', '#ff6900'] as const,
     iconColor: '#f0b100',
   },
   strength: {
     bgGradient: ['#ffedd4', '#fffbeb'] as const,
+    description: 'Built through consistency',
     gradientColors: ['#ff6900', '#fe9a00'] as const,
     iconColor: '#ff6900',
   },
   vitality: {
     bgGradient: ['#ffe2e2', '#fdf2f8'] as const,
+    description: 'Grows with health habits',
     gradientColors: ['#fb2c36', '#f6339a'] as const,
     iconColor: '#fb2c36',
   },
   wisdom: {
     bgGradient: ['#f3e8ff', '#eef2ff'] as const,
+    description: 'Earned from learning habits',
     gradientColors: ['#ad46ff', '#615fff'] as const,
     iconColor: '#ad46ff',
   },

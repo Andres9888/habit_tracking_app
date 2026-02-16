@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { View, Text } from 'react-native';
-import { Trophy } from 'lucide-react-native';
+import { Trophy, Sparkles } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -75,17 +75,23 @@ export function CharacterCard({ data }: CharacterCardProps) {
             >
               <Trophy color='white' size={20} />
               <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-white'>
-                10
+                {data.totalAchievements || 10}
               </Text>
             </LinearGradient>
           </View>
         </View>
 
+        {/* XP Progress Section */}
         <View className='flex-col gap-2'>
           <View className='flex-row items-center justify-between'>
-            <Text className='text-sm font-normal leading-5 tracking-[-0.15px]' style={{ color: colors.text.secondary }}>
-              Experience
-            </Text>
+            <View className='flex-row items-center gap-2'>
+              <Text className='text-sm font-normal leading-5 tracking-[-0.15px]' style={{ color: colors.text.secondary }}>
+                Experience
+              </Text>
+              <View className='h-4 w-4 items-center justify-center rounded-full' style={{ backgroundColor: colors.gray[200] }}>
+                <Text className='text-[10px]'>ℹ️</Text>
+              </View>
+            </View>
             <Text className='text-sm font-normal leading-5 tracking-[-0.15px]' style={{ color: colors.text.primary }}>
               {data.xp}/{data.xpToNextLevel} XP
             </Text>
@@ -103,6 +109,22 @@ export function CharacterCard({ data }: CharacterCardProps) {
           <Text className='text-center text-xs font-normal leading-4' style={{ color: colors.text.tertiary }}>
             {xpRemaining} XP to Level {data.level + 1}
           </Text>
+        </View>
+
+        {/* Next Level Preview */}
+        <View 
+          className='flex-row items-center gap-3 rounded-2xl px-4 py-3'
+          style={{ backgroundColor: colors.gray[100] }}
+        >
+          <Sparkles color='#ad46ff' size={20} />
+          <View className='flex-1'>
+            <Text className='text-xs font-semibold leading-4 tracking-[-0.08px]' style={{ color: colors.text.primary }}>
+              Next: New Achievement Badge
+            </Text>
+            <Text className='text-xs leading-4 tracking-[-0.08px]' style={{ color: colors.text.tertiary }}>
+              Complete habits to gain XP
+            </Text>
+          </View>
         </View>
       </View>
     </Animated.View>

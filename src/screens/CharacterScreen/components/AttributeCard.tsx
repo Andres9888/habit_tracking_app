@@ -5,13 +5,14 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import type { AttributeCardProps } from '../types';
 
 export function AttributeCard({
-  icon,
-  name,
-  value,
-  maxValue,
-  gradientColors,
   bgGradient,
   delay = 0,
+  description,
+  gradientColors,
+  icon,
+  maxValue,
+  name,
+  value,
 }: AttributeCardProps & { delay?: number }) {
   const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
   const { colors } = useThemeColors();
@@ -29,7 +30,7 @@ export function AttributeCard({
         shadowRadius: 16,
       }}
     >
-      <View className='relative h-[110px]'>
+      <View className='relative h-[120px]'>
         <View
           className='absolute left-0 top-0 h-full opacity-60'
           style={{ width: `${percentage}%` }}
@@ -48,9 +49,16 @@ export function AttributeCard({
               <View className='h-10 w-10 items-center justify-center rounded-full shadow-md' style={{ backgroundColor: colors.card }}>
                 {icon}
               </View>
-              <Text className='text-base font-normal leading-6 tracking-[-0.3125px]' style={{ color: colors.text.primary }}>
-                {name}
-              </Text>
+              <View className='flex-col'>
+                <Text className='text-base font-normal leading-6 tracking-[-0.3125px]' style={{ color: colors.text.primary }}>
+                  {name}
+                </Text>
+                {description && (
+                  <Text className='text-xs leading-4 tracking-[-0.08px]' style={{ color: colors.text.tertiary }}>
+                    {description}
+                  </Text>
+                )}
+              </View>
             </View>
             <Text className='text-base font-normal leading-6 tracking-[-0.3125px]' style={{ color: colors.text.primary }}>
               {value}

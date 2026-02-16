@@ -3,12 +3,13 @@ export interface CharacterScreenProps {
 }
 
 export interface AttributeCardProps {
+  bgGradient: readonly [string, string];
+  description?: string;
+  gradientColors: readonly [string, string];
   icon: React.ReactNode;
+  maxValue: number;
   name: string;
   value: number;
-  maxValue: number;
-  gradientColors: readonly [string, string];
-  bgGradient: readonly [string, string];
 }
 
 export interface StatCardProps {
@@ -43,6 +44,7 @@ export interface CharacterData {
   recentAchievements: Achievement[];
   stats: CharacterStats;
   title: string;
+  totalAchievements?: number;
   xp: number;
   xpToNextLevel: number;
 }

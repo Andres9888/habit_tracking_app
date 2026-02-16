@@ -3,6 +3,7 @@ export { AchievementsSection } from './AchievementsSection';
 export { AttributeCard } from './AttributeCard';
 export { AttributesSection } from './AttributesSection';
 export { CharacterCard } from './CharacterCard';
+export { InfoBanner } from './InfoBanner';
 export { ScreenHeader } from './ScreenHeader';
 export { StatCard } from './StatCard';
 export { StatsSection } from './StatsSection';

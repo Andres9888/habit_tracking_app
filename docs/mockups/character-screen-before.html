@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Character Screen - BEFORE</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px;
+    }
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: white;
+      border-radius: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+      position: relative;
+    }
+    .status-bar {
+      height: 44px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .content {
+      height: calc(100% - 44px);
+      overflow-y: auto;
+      padding: 12px 24px 40px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+    }
+    .title {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.35px;
+      color: #1c1917;
+    }
+    .card {
+      background: white;
+      border: 1px solid #e7e5e4;
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .character-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .avatar-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .avatar {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #ad46ff, #f6339a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      box-shadow: 0 4px 12px rgba(173,70,255,0.3);
+    }
+    .level-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .level {
+      font-size: 16px;
+      color: #1c1917;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #78716c;
+    }
+    .trophy-badge {
+      background: linear-gradient(90deg, #ff8c00, #ff6900);
+      padding: 10px 16px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-size: 16px;
+    }
+    .xp-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .xp-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+    .xp-bar {
+      height: 12px;
+      background: #e7e5e4;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .xp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ad46ff, #f6339a);
+      width: 69%;
+    }
+    .xp-hint {
+      text-align: center;
+      font-size: 12px;
+      color: #a8a29e;
+    }
+    .section-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.41px;
+      color: #1c1917;
+      margin-bottom: 12px;
+    }
+    .attribute-card {
+      position: relative;
+      height: 110px;
+      border-radius: 24px;
+      border: 1px solid #e7e5e4;
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .attribute-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      opacity: 0.6;
+    }
+    .attribute-content {
+      position: relative;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .attribute-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .attribute-name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .attribute-icon {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .attribute-bar {
+      height: 8px;
+      background: #e7e5e4;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .attribute-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+    .stats-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      flex: 1;
+      background: white;
+      border: 1px solid #e7e5e4;
+      border-radius: 24px;
+      padding: 20px 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .stat-emoji {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1c1917;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #78716c;
+    }
+    .achievement-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: white;
+      border: 1px solid #e7e5e4;
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .achievement-icon {
+      width: 48px;
+      height: 48px;
+      background: #fff7ed;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .achievement-text {
+      flex: 1;
+    }
+    .achievement-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.41px;
+      color: #1c1917;
+      margin-bottom: 4px;
+    }
+    .achievement-desc {
+      font-size: 13px;
+      color: #78716c;
+    }
+    .badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(220, 38, 38, 0.1);
+      color: #dc2626;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="badge">BEFORE</div>
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>📶 📡 🔋</span>
+    </div>
+    <div class="content">
+      <div class="header">
+        <div class="back-btn">←</div>
+        <div class="title">Character</div>
+      </div>
+
+      <!-- NO INFO BANNER - User has no idea what this is -->
+
+      <div class="card">
+        <div class="character-header">
+          <div class="avatar-section">
+            <div class="avatar">🦸</div>
+            <div class="level-info">
+              <div class="level">Level 1 <span>✨</span></div>
+              <div class="subtitle">Habit Hero</div>
+            </div>
+          </div>
+          <!-- Trophy count with NO context -->
+          <div class="trophy-badge">
+            🏆 <span>10</span>
+          </div>
+        </div>
+        <div class="xp-section">
+          <div class="xp-label">
+            <span style="color: #78716c;">Experience</span>
+            <span style="color: #1c1917;">69/100 XP</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill"></div>
+          </div>
+          <div class="xp-hint">31 XP to Level 2</div>
+          <!-- NO explanation of what leveling up unlocks -->
+        </div>
+      </div>
+
+      <div class="section-title">Attributes</div>
+      <!-- NO explanation of what attributes do -->
+      <div class="attribute-card">
+        <div class="attribute-bg" style="background: linear-gradient(90deg, #ffe2e2, #fdf2f8); width: 27%;"></div>
+        <div class="attribute-content">
+          <div class="attribute-header">
+            <div class="attribute-name">
+              <div class="attribute-icon">❤️</div>
+              <span style="color: #1c1917;">Vitality</span>
+            </div>
+            <span style="color: #1c1917;">27</span>
+          </div>
+          <div class="attribute-bar">
+            <div class="attribute-fill" style="background: linear-gradient(90deg, #fb2c36, #f6339a); width: 27%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="attribute-card">
+        <div class="attribute-bg" style="background: linear-gradient(90deg, #ffedd4, #fffbeb); width: 34%;"></div>
+        <div class="attribute-content">
+          <div class="attribute-header">
+            <div class="attribute-name">
+              <div class="attribute-icon">💪</div>
+              <span style="color: #1c1917;">Strength</span>
+            </div>
+            <span style="color: #1c1917;">34</span>
+          </div>
+          <div class="attribute-bar">
+            <div class="attribute-fill" style="background: linear-gradient(90deg, #ff6900, #fe9a00); width: 34%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-emoji">🔥</div>
+          <div class="stat-value">7</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-emoji">⚡</div>
+          <div class="stat-value">69</div>
+          <div class="stat-label">Total Power</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-emoji">🎯</div>
+          <div class="stat-value">3</div>
+          <div class="stat-label">Active Habits</div>
+        </div>
+      </div>
+
+      <div class="section-title">Recent Achievements</div>
+      <div class="achievement-card">
+        <div class="achievement-icon">🏆</div>
+        <div class="achievement-text">
+          <div class="achievement-title">Week Warrior</div>
+          <div class="achievement-desc">Complete all habits for 7 days</div>
+        </div>
+        <span style="font-size: 24px;">🏆</span>
+      </div>
+      <!-- Only 1 achievement shown -->
+    </div>
+  </div>
+</body>
+</html>
