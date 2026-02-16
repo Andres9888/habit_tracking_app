@@ -37,6 +37,7 @@ export function ImageViewerModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='fade'
       presentationStyle='fullScreen'
       visible={visible}

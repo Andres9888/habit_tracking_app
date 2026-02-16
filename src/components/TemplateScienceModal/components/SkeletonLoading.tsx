@@ -22,6 +22,7 @@ export const SkeletonLoading = ({ visible, onClose }: SkeletonLoadingProps) => {
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableBackdropClose={false}
       variant='fullScreen'
       visible={visible}

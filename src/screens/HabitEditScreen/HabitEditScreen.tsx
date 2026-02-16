@@ -26,6 +26,7 @@ function HabitEditScreenContent({
   const { colors: themeColors } = useThemeColors();
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}
