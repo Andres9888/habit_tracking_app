@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '../../theme/darkColors';
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFF',
     borderRadius: 12,
     borderWidth: 1,
     marginHorizontal: 16,
@@ -53,3 +53,12 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
+
+export function themedAtRiskStyles(colors: SemanticColors) {
+  return {
+    container: {
+      backgroundColor: colors.card,
+      borderColor: colors.cardBorder,
+    },
+  } as const;
+}

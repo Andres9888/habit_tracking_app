@@ -9,11 +9,11 @@ import { typography } from '../../theme/typography';
 export const styles = StyleSheet.create({
   // Compact variant (list view)
   compactBar: {
-    borderRadius: 2,
+    borderRadius: 4,
     height: '100%',
   },
   compactBarContainer: {
-    borderRadius: 2,
+    borderRadius: 4,
     flex: 1,
     height: 4,
     overflow: 'hidden',

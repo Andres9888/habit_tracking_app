@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Pressable, type PressableProps } from 'react-native';
+import { Pressable, type PressableProps, type GestureResponderEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
   usePressAnimation,
@@ -70,7 +70,7 @@ export function AnimatedPressable({
   });
 
   const handlePressIn = React.useCallback(
-    (event: any) => {
+    (event: GestureResponderEvent) => {
       if (!disableAnimation) {
         pressHandlers.onPressIn();
       }
@@ -80,7 +80,7 @@ export function AnimatedPressable({
   );
 
   const handlePressOut = React.useCallback(
-    (event: any) => {
+    (event: GestureResponderEvent) => {
       if (!disableAnimation) {
         pressHandlers.onPressOut();
       }
@@ -89,10 +89,17 @@ export function AnimatedPressable({
     [disableAnimation, pressHandlers, onPressOut]
   );
 
+  // Default hitSlop for Apple HIG 44pt minimum touch target
+  // Only apply if not already specified by the consumer
+  const defaultHitSlop = pressableProps.hitSlop
+    ? undefined
+    : { top: 10, bottom: 10, left: 10, right: 10 };
+
   return (
     <AnimatedPressableBase
       {...pressableProps}
       {...(disableFocusRing ? {} : focusHandlers)}
+      hitSlop={pressableProps.hitSlop ?? defaultHitSlop}
       style={[style, !disableAnimation && animatedStyle, focusStyle]}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

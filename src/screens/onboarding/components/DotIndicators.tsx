@@ -7,10 +7,18 @@ interface DotIndicatorsProps {
 
 export function DotIndicators({ count, currentIndex }: DotIndicatorsProps) {
   return (
-    <View style={styles.container}>
+    <View
+      accessible
+      accessibilityLabel={`Page ${currentIndex + 1} of ${count}`}
+      accessibilityRole='tablist'
+      style={styles.container}
+    >
       {Array.from({ length: count }, (_, i) => (
         <View
           key={i}
+          accessibilityLabel={`Page ${i + 1}${i === currentIndex ? ', current' : ''}`}
+          accessibilityRole='tab'
+          accessibilityState={{ selected: i === currentIndex }}
           style={[
             styles.dot,
             {

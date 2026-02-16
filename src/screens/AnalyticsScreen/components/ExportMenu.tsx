@@ -22,6 +22,7 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
 }) => {
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='fade'
       visible={visible}

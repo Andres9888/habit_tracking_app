@@ -20,7 +20,7 @@ const mockGetLastNotificationResponseAsync = jest.fn();
 const mockRemove = jest.fn();
 
 jest.mock('expo-notifications', () => ({
-  addNotificationResponseReceivedListener: (handler: any) => {
+  addNotificationResponseReceivedListener: (handler: unknown) => {
     mockAddNotificationResponseReceivedListener(handler);
     return { remove: mockRemove };
   },
@@ -109,7 +109,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -147,7 +147,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -176,7 +176,7 @@ describe('useNotificationResponse', () => {
         notification: {
           request: {
             content: {
-              data: undefined as any,
+              data: undefined as unknown,
               title: 'Generic notification',
               body: null,
               sound: 'default',
@@ -194,7 +194,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -235,7 +235,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -276,7 +276,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -317,7 +317,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -379,7 +379,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -434,7 +434,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -540,7 +540,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -585,7 +585,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -630,7 +630,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -675,7 +675,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },
@@ -735,7 +735,7 @@ describe('useNotificationResponse', () => {
             trigger: {
               type: 'push',
               payload: {},
-            } as any,
+            } as unknown,
           },
           date: Date.now(),
         },

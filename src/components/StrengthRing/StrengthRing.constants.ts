@@ -23,7 +23,7 @@ export const LEVELS: Record<string, LevelInfo> = {
     label: 'Developing',
   },
   starting: {
-    color: '#65a30d', // lime-600
+    color: '#4D7A0A', // lime-600
     colorLight: '#ecfccb', // lime-100
     emoji: '🌱',
     label: 'Starting',
@@ -40,7 +40,7 @@ export const BACKGROUND_COLOR = '#e5e7eb'; // stone-200
 
 export const SIZE_CONFIG: Record<string, SizeConfig> = {
   large: { fontSize: 24, ringSize: 96, strokeWidth: 10 },
-  medium: { fontSize: 18, ringSize: 72, strokeWidth: 8 },
+  medium: { fontSize: 17, ringSize: 72, strokeWidth: 8 },
   small: { fontSize: 13, ringSize: 48, strokeWidth: 5 },
   tiny: { fontSize: 10, ringSize: 32, strokeWidth: 4 },
 };
@@ -48,7 +48,7 @@ export const SIZE_CONFIG: Record<string, SizeConfig> = {
 export const TREND_CONFIG = {
   down: { color: '#ef4444', symbol: '↓' }, // red-500
   stable: { color: '#78716c', symbol: '→' }, // stone-500
-  up: { color: '#22c55e', symbol: '↑' }, // green-500
+  up: { color: '#15793C', symbol: '↑' }, // green-500
 };
 
 /** Get level info based on strength percentage */

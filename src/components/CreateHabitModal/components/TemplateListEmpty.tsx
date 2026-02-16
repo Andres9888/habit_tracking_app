@@ -1,19 +1,47 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
-export const TemplateListEmpty = () => (
-  <View
-    accessibilityLabel='No habits found in this category. Try selecting a different category.'
-    accessibilityRole='text'
-    className='items-center justify-center py-12'
-  >
-    <Text accessibilityElementsHidden className='text-2xl'>
-      🔍
-    </Text>
-    <Text className='mt-2 text-[15px] font-medium text-stone-800'>
-      No habits in this category
-    </Text>
-    <Text className='mt-1 text-[13px] font-normal text-stone-500'>
-      Try selecting a different category
-    </Text>
-  </View>
-);
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
+
+export const TemplateListEmpty = () => {
+  const { colors } = useThemeColors();
+
+  return (
+    <View
+      accessibilityLabel='No habits found in this category. Try selecting a different category.'
+      accessibilityRole='text'
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 48,
+      }}
+    >
+      <Animated.Text entering={anim(0)} style={{ fontSize: 32 }}>
+        🔍
+      </Animated.Text>
+      <Animated.Text
+        entering={anim(60)}
+        style={{
+          color: colors.text.primary,
+          fontSize: 15,
+          fontWeight: '500',
+          marginTop: 8,
+        }}
+      >
+        No habits in this category
+      </Animated.Text>
+      <Animated.Text
+        entering={anim(120)}
+        style={{
+          color: colors.text.secondary,
+          fontSize: 13,
+          marginTop: 4,
+        }}
+      >
+        Try selecting a different category
+      </Animated.Text>
+    </View>
+  );
+};

@@ -100,7 +100,7 @@ export const COLORS = {
 
   // stone-300
   /** Positive delta color */
-  positive: '#22c55e',
+  positive: '#15793C',
 
   // red-500
   /** Ring track color */
