@@ -2,11 +2,14 @@
  * Weekly bar chart for HabitStats
  */
 
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Text, View } from 'react-native';
 import Svg, { Rect, Text as SvgText } from 'react-native-svg';
 import { colors } from '@/theme/colors';
 import type { ChartDataItem } from './HabitStats.types';
+
+/** Parse YYYY-MM-DD as local date using date-fns parseISO (handles TZ correctly) */
+const parseDate = (d: string) => parseISO(d);
 
 interface WeeklyBarChartProps {
   data: ChartDataItem[];
@@ -48,15 +51,15 @@ export function WeeklyBarChart({ data }: WeeklyBarChartProps) {
                 x={x + barWidth / 2}
                 y={CHART_HEIGHT - 5}
               >
-                {format(new Date(item.date), 'EEE')[0]}
+                {format(parseDate(item.date), 'EEE')[0]}
               </SvgText>
             </View>
           );
         })}
       </Svg>
       <Text className='mt-2 text-xs text-stone-500'>
-        {format(new Date(data[0].date), 'MMM d')} -{' '}
-        {format(new Date(data.at(-1)?.date ?? data[0].date), 'MMM d')}
+        {format(parseDate(data[0].date), 'MMM d')} -{' '}
+        {format(parseDate(data.at(-1)?.date ?? data[0].date), 'MMM d')}
       </Text>
     </View>
   );

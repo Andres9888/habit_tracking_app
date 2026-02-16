@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Edit3 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import type { Doc } from '../../../../convex/_generated/dataModel';
@@ -25,7 +25,7 @@ export function RecentNotePreview({ note, onEdit }: RecentNotePreviewProps) {
     >
       <View className='mb-2 flex-row items-center justify-between'>
         <Text className='text-xs font-medium text-stone-500'>
-          {format(new Date(note.date), 'MMM d, yyyy')}
+          {format(parseISO(note.date), 'MMM d, yyyy')}
         </Text>
         <Edit3 className='text-stone-400' size={14} />
       </View>

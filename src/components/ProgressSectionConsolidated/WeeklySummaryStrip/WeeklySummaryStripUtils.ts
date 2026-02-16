@@ -18,8 +18,9 @@ export function getDayVisualState(
   day: WeekDayData,
   today: Date
 ): DayVisualState {
-  const dayDate = new Date(day.date);
-  dayDate.setHours(0, 0, 0, 0);
+  // Parse YYYY-MM-DD as local date (not UTC) to avoid off-by-one timezone bugs
+  const [year, month, dayNum] = day.date.split('-').map(Number);
+  const dayDate = new Date(year, month - 1, dayNum);
   const todayStart = new Date(today);
   todayStart.setHours(0, 0, 0, 0);
 

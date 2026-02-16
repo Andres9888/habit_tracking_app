@@ -21,7 +21,9 @@ export function useComplianceHeatmap(data: HeatmapData[] | null) {
     const weeksData: HeatmapData[][] = [];
     let currentWeek: HeatmapData[] = [];
 
-    const firstDate = new Date(data[0].date);
+    // Parse YYYY-MM-DD as local date to avoid UTC timezone off-by-one
+    const [fy, fm, fd] = data[0].date.split('-').map(Number);
+    const firstDate = new Date(fy, fm - 1, fd);
     const firstDayOfWeek = firstDate.getDay();
 
     // Add empty cells for days before the first data point
@@ -58,8 +60,8 @@ export function useComplianceHeatmap(data: HeatmapData[] | null) {
     for (const [weekIndex, week] of weeks.entries()) {
       const validDay = week.find((day) => day.date);
       if (validDay) {
-        const date = new Date(validDay.date);
-        const month = date.getMonth();
+        // Parse YYYY-MM-DD as local date to avoid UTC timezone off-by-one
+        const month = parseInt(validDay.date.split('-')[1], 10) - 1;
         if (month !== currentMonth) {
           currentMonth = month;
           labels.push({

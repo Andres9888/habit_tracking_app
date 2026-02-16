@@ -57,8 +57,9 @@ export default function TrendLineChart({ data }: TrendLineChartProps) {
     const index = Math.round(label);
     const item = chartData[index];
     if (!item) return '';
-    const date = new Date(item.date);
-    return `${date.getMonth() + 1}/${date.getDate()}`;
+    // Parse YYYY-MM-DD as local date to avoid UTC timezone off-by-one
+    const [, m, d] = item.date.split('-').map(Number);
+    return `${m}/${d}`;
   };
 
   return (

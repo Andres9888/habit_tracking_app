@@ -1,9 +1,56 @@
 import { addDays, eachDayOfInterval, format, startOfDay, subMonths } from 'date-fns';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AppState, type AppStateStatus } from 'react-native';
+
+/**
+ * Returns today's date, refreshed when the app resumes from background
+ * or when a midnight boundary is crossed. Prevents stale date bugs
+ * when the app stays open overnight.
+ */
+function useLiveToday() {
+  const [today, setToday] = useState(() => startOfDay(new Date()));
+  const todayRef = useRef(today);
+
+  useEffect(() => {
+    const handleAppStateChange = (nextState: AppStateStatus) => {
+      if (nextState === 'active') {
+        const now = startOfDay(new Date());
+        if (now.getTime() !== todayRef.current.getTime()) {
+          todayRef.current = now;
+          setToday(now);
+        }
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    // Also check on a 60s interval for apps left in foreground overnight
+    const interval = setInterval(() => {
+      const now = startOfDay(new Date());
+      if (now.getTime() !== todayRef.current.getTime()) {
+        todayRef.current = now;
+        setToday(now);
+      }
+    }, 60_000);
+
+    return () => {
+      subscription.remove();
+      clearInterval(interval);
+    };
+  }, []);
+
+  return today;
+}
 
 export function useHabitsWeekDates() {
-  const today = useMemo(() => startOfDay(new Date()), []);
+  const today = useLiveToday();
   const [weekAnchor, setWeekAnchor] = useState(today);
+
+  // When the day rolls over (e.g., midnight), reset the anchor to today
+  // so the user sees the current week, not yesterday's
+  useEffect(() => {
+    setWeekAnchor(today);
+  }, [today]);
 
   const weekDates = useMemo(
     () => Array.from({ length: 5 }, (_, index) => addDays(weekAnchor, index - 4)),

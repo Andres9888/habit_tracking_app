@@ -25,10 +25,16 @@ export function calculateDayOfWeekStats(
   }
 
   // Get the start date (habit creation or first tracking entry)
+  // Parse YYYY-MM-DD as local date to avoid UTC timezone off-by-one
+  const parseLocalDate = (dateStr: string): Date => {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  };
+
   const startDate = habitCreatedAt
     ? new Date(habitCreatedAt)
     : tracking.length > 0
-      ? new Date(tracking.at(-1)?.date ?? Date.now())
+      ? parseLocalDate(tracking.at(-1)?.date ?? getLocalDateString())
       : new Date();
 
   const today = new Date();

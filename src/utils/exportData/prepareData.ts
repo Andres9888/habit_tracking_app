@@ -23,9 +23,15 @@ interface OverviewStats {
 function calculateStreaks(
   completions: Array<{ date: string; completed: boolean }>
 ) {
+  // Parse YYYY-MM-DD as local date to avoid UTC timezone off-by-one
+  const parseLocal = (d: string): Date => {
+    const [y, m, dd] = d.split('-').map(Number);
+    return new Date(y, m - 1, dd);
+  };
+
   const sortedCompletions = completions
     .filter((c) => c.completed)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    .sort((a, b) => a.date.localeCompare(b.date));
 
   let currentStreak = 0;
   let longestStreak = 0;
@@ -33,7 +39,7 @@ function calculateStreaks(
   let lastDate: Date | null = null;
 
   for (const completion of sortedCompletions) {
-    const completionDate = new Date(completion.date);
+    const completionDate = parseLocal(completion.date);
 
     if (lastDate === null) {
       tempStreak = 1;

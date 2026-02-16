@@ -2,7 +2,7 @@
  * 30-day trend line chart for HabitStats
  */
 
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Text, View } from 'react-native';
 import Svg, { Line, Circle, Text as SvgText } from 'react-native-svg';
 import { colors } from '@/theme/colors';
@@ -86,8 +86,8 @@ export function TrendLineChart({ data }: TrendLineChartProps) {
         </SvgText>
       </Svg>
       <Text className='mt-2 text-xs text-stone-500'>
-        {format(new Date(data[0].date), 'MMM d')} -{' '}
-        {format(new Date(data.at(-1)?.date ?? data[0].date), 'MMM d')}
+        {format(parseISO(data[0].date), 'MMM d')} -{' '}
+        {format(parseISO(data.at(-1)?.date ?? data[0].date), 'MMM d')}
       </Text>
     </View>
   );
