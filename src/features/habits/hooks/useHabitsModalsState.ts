@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * HabitsModalsState Hook
  *
@@ -58,7 +59,9 @@ export function useHabitsModalsState({
 
   // Wrap toggle mutation as plain async function
   const wrappedToggleHabit = useCallback(
-    async (args: { habitId: Id<'habits'>; date: string }) => { await toggleHabit(args); },
+    async (args: { habitId: Id<'habits'>; date: string }) => {
+      await toggleHabit(args);
+    },
     [toggleHabit]
   );
 
@@ -73,15 +76,21 @@ export function useHabitsModalsState({
 
   // Wrap mutations as plain async functions to match handler type signatures
   const wrappedPauseHabit = useCallback(
-    async (args: { habitId: Id<'habits'> }) => { await pauseHabit(args); },
+    async (args: { habitId: Id<'habits'> }) => {
+      await pauseHabit(args);
+    },
     [pauseHabit]
   );
   const wrappedRemoveHabit = useCallback(
-    async (args: { habitId: Id<'habits'> }) => { await removeHabit(args); },
+    async (args: { habitId: Id<'habits'> }) => {
+      await removeHabit(args);
+    },
     [removeHabit]
   );
   const wrappedUpdateSettings = useCallback(
-    async (s: Parameters<typeof updateSettings>[0]) => { await updateSettings(s); },
+    async (s: Parameters<typeof updateSettings>[0]) => {
+      await updateSettings(s);
+    },
     [updateSettings]
   );
 
@@ -99,7 +108,9 @@ export function useHabitsModalsState({
   );
 
   const handleArchive = useCallback(
-    async (habitId: Id<'habits'>) => { await archiveHabit({ habitId }); },
+    async (habitId: Id<'habits'>) => {
+      await archiveHabit({ habitId });
+    },
     [archiveHabit]
   );
 
