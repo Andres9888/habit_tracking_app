@@ -37,6 +37,7 @@ export function ReadLetterModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='fade'
       presentationStyle='fullScreen'
       visible={visible}

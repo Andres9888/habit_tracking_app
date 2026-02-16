@@ -12,6 +12,7 @@ interface SubmitButtonProps {
   isLoading: boolean;
   disabled?: boolean;
   onPress: () => void;
+  testID?: string;
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -22,6 +23,7 @@ export function SubmitButton({
   isLoading,
   disabled = false,
   onPress,
+  testID,
 }: SubmitButtonProps) {
   const isDisabled = isLoading || disabled;
   const reduceMotion = useReducedMotion();
@@ -33,13 +35,13 @@ export function SubmitButton({
 
   const handlePressIn = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
+      scale.value = withSpring(0.97, { damping: 18, stiffness: 150 });
     }
   };
 
   const handlePressOut = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(1, { damping: 18, stiffness: 240 });
+      scale.value = withSpring(1, { damping: 18, stiffness: 150 });
     }
   };
 
@@ -49,6 +51,7 @@ export function SubmitButton({
       accessibilityLabel={isLoading ? loadingLabel : label}
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
+      testID={testID}
       className={`mt-4 flex-row items-center justify-center rounded-2xl bg-stone-900 py-4 shadow-lg ${
         isDisabled ? 'opacity-40' : ''
       }`}

@@ -1,7 +1,6 @@
 /* eslint-disable max-lines */
 /**
  * StreakRemindersSection — Settings toggle for streak reminder notifications
- * with time picker for reminder time.
  */
 
 import { useState } from 'react';
@@ -22,26 +21,6 @@ interface StreakRemindersSectionProps {
   onPremiumUpsell?: () => void;
 }
 
-function timeStringToDate(time: string): Date {
-  const [hours, minutes] = time.split(':').map(Number);
-  const date = new Date();
-  date.setHours(hours || 20, minutes || 0, 0, 0);
-  return date;
-}
-
-function dateToTimeString(date: Date): string {
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  return `${hours}:${minutes}`;
-}
-
-function formatDisplayTime(time: string): string {
-  const [hours, minutes] = time.split(':').map(Number);
-  const ampm = (hours || 0) >= 12 ? 'PM' : 'AM';
-  const hour12 = (hours || 0) % 12 || 12;
-  return `${hour12}:${(minutes || 0).toString().padStart(2, '0')} ${ampm}`;
-}
-
 export function StreakRemindersSection({
   highContrastMode,
   enabled,
@@ -55,12 +34,8 @@ export function StreakRemindersSection({
   const { colors: themeColors } = useThemeColors();
 
   const handleTimeChange = (_event: unknown, selectedDate?: Date) => {
-    if (Platform.OS === 'android') {
-      setShowTimePicker(false);
-    }
-    if (selectedDate) {
-      void onChangeTime(dateToTimeString(selectedDate));
-    }
+    if (Platform.OS === 'android') setShowTimePicker(false);
+    if (selectedDate) void onChangeTime(dateToTimeString(selectedDate));
   };
 
   return (

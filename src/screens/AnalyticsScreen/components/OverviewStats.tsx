@@ -4,7 +4,6 @@
  */
 import React, { memo, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
 import { spacing } from '../../../theme/spacing';
 import { StatCard } from './StatCard';
 import type { AnalyticsOverviewStats } from '../AnalyticsScreen.types';
@@ -17,8 +16,6 @@ interface OverviewStatsProps {
 
 const formatStrengthPercentage = (strength: number) =>
   `${Math.round(strength)}%`;
-
-const anim = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
 
 export const OverviewStats = memo(function OverviewStats({
   stats,
@@ -38,7 +35,12 @@ export const OverviewStats = memo(function OverviewStats({
   }, [stats?.weakestHabit, onHabitPress]);
 
   return (
-    <Animated.View entering={anim(0)} style={styles.statsGrid}>
+    <View
+      accessible={false}
+      accessibilityLabel='Overview statistics'
+      accessibilityRole='summary'
+      style={styles.statsGrid}
+    >
       <StatCard
         loading={isLoading}
         title='Total Habits'
@@ -73,7 +75,7 @@ export const OverviewStats = memo(function OverviewStats({
         value={stats?.weakestHabit?.name ?? '-'}
         onPress={stats?.weakestHabit ? handleWeakestPress : undefined}
       />
-    </Animated.View>
+    </View>
   );
 });
 

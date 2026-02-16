@@ -22,6 +22,7 @@ export function HabitStrengthInfoModal({ visible, onClose }: Props) {
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='slide'
       presentationStyle='pageSheet'
       visible={visible}
@@ -60,7 +61,6 @@ function Header({ onClose }: { onClose: () => void }) {
 
 function Content() {
   const { colors } = useThemeColors();
-
   return (
     <ScrollView
       className='flex-1 px-4'

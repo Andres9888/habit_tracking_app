@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * UnsavedChangesAlert Component
  * Custom styled modal for confirming discard of unsaved changes
@@ -7,6 +8,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { Modal } from '../Modal';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { VARIANT_STYLES } from './constants';
 import type { UnsavedChangesAlertProps } from './types';
 
@@ -22,6 +24,7 @@ export function UnsavedChangesAlert({
   previewMaxLength = 100,
   variant = 'rose',
 }: UnsavedChangesAlertProps) {
+  const { colors } = useThemeColors();
   const styles = VARIANT_STYLES[variant];
 
   const handleDiscard = () => {
@@ -41,6 +44,7 @@ export function UnsavedChangesAlert({
 
   return (
     <Modal
+      accessibilityViewIsModal
       backdropOpacity={0.6}
       variant='centerAlert'
       visible={visible}
@@ -54,10 +58,16 @@ export function UnsavedChangesAlert({
           <AlertTriangle color={styles.iconColor} size={28} />
         </Animated.View>
 
-        <Text className='mb-2 text-center text-xl font-bold text-stone-800'>
+        <Text
+          className='mb-2 text-center text-xl font-bold'
+          style={{ color: colors.text.primary }}
+        >
           {title}
         </Text>
-        <Text className='mb-4 text-center text-base text-stone-600'>
+        <Text
+          className='mb-4 text-center text-base'
+          style={{ color: colors.text.secondary }}
+        >
           {message}
         </Text>
 
@@ -65,10 +75,14 @@ export function UnsavedChangesAlert({
           <View
             className={`mb-4 w-full rounded-lg border ${styles.previewBorder} ${styles.previewBg} p-3`}
           >
-            <Text className='mb-1 text-xs font-medium text-stone-500'>
+            <Text className='mb-1 text-xs font-medium' style={{ color: colors.text.tertiary }}>
               Your unsaved changes:
             </Text>
-            <Text className='text-sm italic text-stone-700' numberOfLines={3}>
+            <Text
+              className='text-sm italic'
+              numberOfLines={3}
+              style={{ color: colors.text.secondary }}
+            >
               "{truncatedPreview}"
             </Text>
           </View>

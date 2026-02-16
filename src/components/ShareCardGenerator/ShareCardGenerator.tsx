@@ -12,7 +12,7 @@
  */
 
 import React from 'react';
-import { View, ScrollView, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, ScrollView, Keyboard } from 'react-native';
 import type ViewShot from 'react-native-view-shot';
 import { Modal } from '../Modal';
 import { Button } from '../Button/Button';
@@ -52,6 +52,7 @@ export function ShareCardGenerator({
 
   return (
     <Modal variant='fullScreen' visible={visible} onClose={onClose}>
+      accessibilityViewIsModal
       <View style={containerStyles.container}>
         <ShareCardHeader onClose={onClose} />
 

@@ -17,6 +17,7 @@ import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
+import { AboutSection } from './sections';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 
@@ -57,8 +58,18 @@ export function SettingsContent(p: SettingsContentProps) {
       }}
     >
       <View className='gap-5 pb-8'>
+        {/* Account Section - First for easy access */}
         <Animated.View entering={anim(0)}>
-          <SettingsSection highContrastMode={hc} title='Visual Preferences'>
+          <AccountSection
+            isHighContrastActive={hc}
+            isPremium={p.isPremium}
+            onPremiumUpsell={p.onPremiumUpsell}
+          />
+        </Animated.View>
+
+        {/* Preferences Section - Visual settings */}
+        <Animated.View entering={anim(60)}>
+          <SettingsSection highContrastMode={hc} title='Preferences'>
             <View className='px-4 pb-4 pt-4'>
               <Text
                 className='mb-2 text-[13px] font-semibold'
@@ -118,7 +129,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<Check color='#0284c7' size={16} />}
               iconBackgroundColor='#bae6fd'
-              label='Use checkbox completion icon'
+              label='Checkbox style for completed habits'
               type='toggle'
               value={p.habitCompletionIcon === 'checkbox'}
               onToggle={(v) =>
@@ -129,7 +140,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<Circle color='#8b5cf6' size={16} />}
               iconBackgroundColor='#ddd6fe'
-              label='Use circles for habit days'
+              label='Circular day markers'
               type='toggle'
               value={p.dayShape === 'circle'}
               onToggle={(v) => void p.onChangeDayShape(v ? 'circle' : 'square')}
@@ -138,7 +149,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<Droplets color='#059669' size={16} />}
               iconBackgroundColor='#d1fae5'
-              label='Show strength gradient fill'
+              label='Gradient fill for habit strength'
               showBorder={false}
               type='toggle'
               value={p.showGradientFill}
@@ -146,11 +157,13 @@ export function SettingsContent(p: SettingsContentProps) {
             />
           </SettingsSection>
         </Animated.View>
-        <Animated.View entering={anim(25)}>
+
+        {/* Sounds Section - Premium feature */}
+        <Animated.View entering={anim(120)}>
           <SettingsSection
             highContrastMode={hc}
             subtitle='Premium'
-            title='Completion Sounds'
+            title='Sounds'
           >
             {showSoundUpsell ? (
               <SettingsRow
@@ -224,7 +237,9 @@ export function SettingsContent(p: SettingsContentProps) {
             )}
           </SettingsSection>
         </Animated.View>
-        <Animated.View entering={anim(50)}>
+
+        {/* Notifications Section */}
+        <Animated.View entering={anim(180)}>
           <StreakRemindersSection
             enabled={p.streakRemindersEnabled}
             highContrastMode={hc}
@@ -235,8 +250,10 @@ export function SettingsContent(p: SettingsContentProps) {
             onToggle={p.onToggleStreakReminders}
           />
         </Animated.View>
-        <Animated.View entering={anim(100)}>
-          <SettingsSection highContrastMode={hc} title='Habit Management'>
+
+        {/* Data Section - Habit management */}
+        <Animated.View entering={anim(240)}>
+          <SettingsSection highContrastMode={hc} title='Data'>
             <SettingsRow
               badge={p.archivedHabitsCount}
               highContrastMode={hc}
@@ -249,28 +266,17 @@ export function SettingsContent(p: SettingsContentProps) {
             />
           </SettingsSection>
         </Animated.View>
-        <Animated.View entering={anim(150)}>
-          <AccountSection
-            isHighContrastActive={hc}
-            isPremium={p.isPremium}
-            onPremiumUpsell={p.onPremiumUpsell}
+
+        {/* About Section - Version info */}
+        <Animated.View entering={anim(300)}>
+          <AboutSection
+            buildNumber='1'
+            highContrast={hc}
+            version='1.0.0'
           />
         </Animated.View>
       </View>
-      <View className='items-center pb-8 pt-4'>
-        <Text
-          className='text-center text-[13px] leading-[18px]'
-          style={{ color: colors.versionText }}
-        >
-          Chain Day v1.0.0 (1)
-        </Text>
-        <Text
-          className='mt-1 text-center text-[11px]'
-          style={{ color: colors.versionText, opacity: 0.6 }}
-        >
-          Made with ❤️ for better habits
-        </Text>
-      </View>
+      <View className='pb-8' />
     </ScrollView>
   );
 }

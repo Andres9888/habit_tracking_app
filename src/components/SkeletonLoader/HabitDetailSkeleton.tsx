@@ -119,7 +119,7 @@ export function HabitDetailSkeleton({
   return (
     <View
       accessible
-      accessibilityLabel='Loading habit details'
+      accessibilityLabel='Loading your habit details...'
       accessibilityRole='progressbar'
       className='flex-1 px-4 pt-6'
       style={{ backgroundColor: pageBg }}
