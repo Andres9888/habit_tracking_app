@@ -34,7 +34,7 @@ export function RecordingControls(props: RecordingControlsProps) {
   const { onPauseRecording, onResumeRecording, onCancelRecording, onOpenSettings, reduceMotion } = props;
 
   if (state === 'preparing' || state === 'stopping') {
-    return <View className='items-center py-4'><Text className='text-sm text-stone-500'>{state === 'preparing' ? 'Preparing...' : 'Saving...'}</Text></View>;
+    return <View className='items-center py-4'><Text className='text-sm text-stone-500 dark:text-stone-400'>{state === 'preparing' ? 'Preparing...' : 'Saving...'}</Text></View>;
   }
   if (state === 'permission-denied') {
     return <MicrophonePermissionDenied compact canAskAgain={canAskAgain} errorMessage={errorMessage ?? undefined} reduceMotion={reduceMotion} onOpenSettings={onOpenSettings} onTryAgain={onStartRecording} />;
@@ -47,7 +47,7 @@ export function RecordingControls(props: RecordingControlsProps) {
     <View className='items-center gap-4'>
       {(isRecording || isPaused) && <RecordingDurationDisplay formattedDuration={formattedDuration} isApproachingMaxDuration={isApproachingMaxDuration} isMaxDurationReached={isMaxDurationReached} secondsUntilMaxDuration={secondsUntilMaxDuration} />}
       <RecordingButtonGroup isPaused={isPaused} isRecording={isRecording} onCancelRecording={onCancelRecording} onPauseRecording={onPauseRecording} onResumeRecording={onResumeRecording} onStartRecording={onStartRecording} onStopRecording={onStopRecording} />
-      {!isRecording && !isPaused && <Text className='text-sm text-stone-500'>Tap to record a voice note</Text>}
+      {!isRecording && !isPaused && <Text className='text-sm text-stone-500 dark:text-stone-400'>Tap to record a voice note</Text>}
     </View>
   );
 }

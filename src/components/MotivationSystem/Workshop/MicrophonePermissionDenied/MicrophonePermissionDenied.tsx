@@ -36,22 +36,22 @@ export function MicrophonePermissionDenied({
       accessibilityLabel='Microphone permission required'
       accessibilityRole='alert'
       className={clsx(
-        'items-center rounded-2xl bg-rose-50',
+        'items-center rounded-2xl bg-rose-50 dark:bg-rose-900/30',
         compact ? 'p-4' : 'p-6'
       )}
     >
       <View
         className={clsx(
-          'items-center justify-center rounded-full bg-rose-100',
+          'items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900/50',
           compact ? 'mb-3 h-12 w-12' : 'mb-4 h-16 w-16'
         )}
       >
-        <MicOff className='text-rose-500' size={compact ? 24 : 32} />
+        <MicOff className='text-rose-500 dark:text-rose-400' size={compact ? 24 : 32} />
       </View>
 
       <Text
         className={clsx(
-          'mb-2 text-center font-semibold text-rose-700',
+          'mb-2 text-center font-semibold text-rose-700 dark:text-rose-300',
           compact ? 'text-base' : 'text-lg'
         )}
       >
@@ -60,7 +60,7 @@ export function MicrophonePermissionDenied({
 
       <Text
         className={clsx(
-          'mb-4 text-center text-rose-600',
+          'mb-4 text-center text-rose-600 dark:text-rose-400',
           compact ? 'text-sm' : 'text-base'
         )}
       >
@@ -68,9 +68,9 @@ export function MicrophonePermissionDenied({
       </Text>
 
       {!compact && (
-        <View className='mb-4 flex-row items-start gap-2 rounded-lg bg-rose-100/50 p-3'>
-          <AlertCircle className='mt-0.5 text-rose-500' size={16} />
-          <Text className='flex-1 text-sm text-rose-600'>
+        <View className='mb-4 flex-row items-start gap-2 rounded-lg bg-rose-100/50 p-3 dark:bg-rose-900/20'>
+          <AlertCircle className='mt-0.5 text-rose-500 dark:text-rose-400' size={16} />
+          <Text className='flex-1 text-sm text-rose-600 dark:text-rose-400'>
             {MESSAGES.science}
           </Text>
         </View>

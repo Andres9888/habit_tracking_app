@@ -55,7 +55,7 @@ export function FullPlayback({
   onToggleMute,
 }: FullPlaybackProps) {
   return (
-    <View className='rounded-xl bg-stone-50 p-4'>
+    <View className='rounded-xl bg-stone-50 p-4 dark:bg-stone-800/50'>
       <PlaybackHeader isDay1={isDay1} label={label} />
 
       <View className='flex-row items-center gap-3'>

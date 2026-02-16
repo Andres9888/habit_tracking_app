@@ -75,6 +75,13 @@ export function ProgressBar({
     <Pressable
       accessibilityLabel='Seek through audio'
       accessibilityRole='adjustable'
+      accessibilityValue={{
+        min: 0,
+        max: 100,
+        now: Math.round(progress * 100),
+        text: `${Math.round(progress * 100)} percent played`
+      }}
+      accessibilityHint='Tap or drag to jump to a different position in the audio'
       className='relative h-6 justify-center'
       disabled={isDisabled}
       onLayout={handleLayout}
@@ -83,7 +90,7 @@ export function ProgressBar({
       onTouchStart={handleTouchStart}
     >
       {/* Track background */}
-      <View className='h-1 w-full rounded-full bg-stone-200' />
+      <View className='h-1 w-full rounded-full bg-stone-200 dark:bg-stone-700' />
 
       {/* Progress fill */}
       <Animated.View

@@ -49,6 +49,7 @@ export function MainRecordButton({ isRecording, isPaused, onStartRecording, onPa
   }, [isRecording, isPaused, onStartRecording, onPauseRecording, onResumeRecording]);
 
   const label = isRecording ? (isPaused ? 'Resume recording' : 'Pause recording') : 'Start recording';
+  const hint = isRecording ? (isPaused ? 'Continue recording your voice note' : 'Pause the current recording') : 'Begin recording a new voice note';
 
   return (
     <View className='relative'>
@@ -57,6 +58,7 @@ export function MainRecordButton({ isRecording, isPaused, onStartRecording, onPa
         <Pressable
           accessibilityLabel={label}
           accessibilityRole='button'
+          accessibilityHint={hint}
           className={clsx('h-16 w-16 items-center justify-center rounded-full', isRecording && !isPaused ? 'bg-teal-600' : 'bg-teal-500')}
           onPress={handleRecordPress}
           onPressIn={handlePressIn}

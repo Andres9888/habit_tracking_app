@@ -23,7 +23,7 @@ export function TimeControls({
 }: TimeControlsProps) {
   return (
     <View className='mt-2 flex-row items-center justify-between'>
-      <Text className='text-xs text-stone-500'>
+      <Text className='text-xs text-stone-500 dark:text-stone-400'>
         {isReady ? formattedPosition : '0:00'}
       </Text>
 
@@ -32,13 +32,14 @@ export function TimeControls({
           <Pressable
             accessibilityLabel={isMuted ? 'Unmute' : 'Mute'}
             accessibilityRole='button'
-            className='rounded-lg bg-stone-100 p-1.5'
+            accessibilityHint={isMuted ? 'Enable audio' : 'Mute audio'}
+            className='rounded-lg bg-stone-100 p-1.5 dark:bg-stone-700'
             onPress={onToggleMute}
           >
             {isMuted ? (
-              <VolumeX className='text-stone-500' size={14} />
+              <VolumeX className='text-stone-500 dark:text-stone-400' size={14} />
             ) : (
-              <Volume2 className='text-stone-500' size={14} />
+              <Volume2 className='text-stone-500 dark:text-stone-400' size={14} />
             )}
           </Pressable>
         )}
@@ -51,7 +52,7 @@ export function TimeControls({
         )}
       </View>
 
-      <Text className='text-xs text-stone-500'>
+      <Text className='text-xs text-stone-500 dark:text-stone-400'>
         {isReady ? formattedRemaining : `-${displayDuration}`}
       </Text>
     </View>

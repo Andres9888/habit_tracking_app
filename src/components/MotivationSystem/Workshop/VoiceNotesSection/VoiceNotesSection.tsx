@@ -40,7 +40,7 @@ export function VoiceNotesSection(props: VoiceNotesSectionProps) {
       >
         <VoiceNotesSectionHeader hasVoiceNotes={hasVoiceNotes} isPremium={isPremium} isRecording={isRecording} />
         {!isRecording && !isPaused && !hasVoiceNotes && (
-          <Text className='text-sm text-stone-500'>Record your motivation for powerful recall</Text>
+          <Text className='text-sm text-stone-500 dark:text-stone-400'>Record your motivation for powerful recall</Text>
         )}
         {(isRecording || isPaused) && (
           <View className='mt-2'>
@@ -49,7 +49,7 @@ export function VoiceNotesSection(props: VoiceNotesSectionProps) {
         )}
         <CompletionCheckmark isVisible={hasVoiceNotes} reduceMotion={reduceMotion} sectionIndex={sectionIndex} shouldAnimate={shouldAnimate} />
         {showRecordingUI && (
-          <View className='mt-4 border-t border-stone-100 pt-4'>
+          <View className='mt-4 border-t border-stone-100 pt-4 dark:border-stone-700'>
             <RecordingControls
               canAskAgain={status.canAskAgain} errorMessage={status.errorMessage} formattedDuration={formattedDuration}
               isApproachingMaxDuration={isApproachingMaxDuration} isMaxDurationReached={isMaxDurationReached} isPaused={isPaused}

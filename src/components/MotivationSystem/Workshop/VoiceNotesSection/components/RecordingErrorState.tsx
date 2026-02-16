@@ -14,18 +14,19 @@ export function RecordingErrorState({ errorMessage, onTryAgain }: RecordingError
   return (
     <View className='items-center py-4'>
       <View className='flex-row items-center gap-2'>
-        <AlertCircle className='text-rose-500' size={16} />
-        <Text className='text-sm text-rose-600'>
+        <AlertCircle className='text-rose-500 dark:text-rose-400' size={16} />
+        <Text className='text-sm text-rose-600 dark:text-rose-400'>
           {errorMessage || 'Recording failed. Please try again.'}
         </Text>
       </View>
       <Pressable
         accessibilityLabel='Try recording again'
         accessibilityRole='button'
-        className='mt-2 rounded-lg bg-teal-100 px-4 py-2'
+        accessibilityHint='Attempt to start recording again after error'
+        className='mt-2 rounded-lg bg-teal-100 px-4 py-2 dark:bg-teal-900/40'
         onPress={onTryAgain}
       >
-        <Text className='text-sm font-medium text-teal-700'>Try Again</Text>
+        <Text className='text-sm font-medium text-teal-700 dark:text-teal-300'>Try Again</Text>
       </Pressable>
     </View>
   );

@@ -52,7 +52,7 @@ export function CompactPlayback({
         />
       </View>
 
-      <Text className='min-w-[48px] text-right text-xs text-stone-500'>
+      <Text className='min-w-[48px] text-right text-xs text-stone-500 dark:text-stone-400'>
         {isReady ? formattedPosition : '0:00'}/{displayDuration}
       </Text>
     </View>

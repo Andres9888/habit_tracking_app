@@ -38,16 +38,17 @@ export function SpeedControl({
       <Pressable
         accessibilityLabel={`Playback speed: ${currentSpeed}x`}
         accessibilityRole='button'
-        className='rounded-lg bg-stone-100 px-2 py-1'
+        accessibilityHint='Change playback speed'
+        className='rounded-lg bg-stone-100 px-2 py-1 dark:bg-stone-700'
         onPress={toggleOpen}
       >
-        <Text className='text-xs font-medium text-stone-600'>
+        <Text className='text-xs font-medium text-stone-600 dark:text-stone-300'>
           {currentSpeed}x
         </Text>
       </Pressable>
 
       {isOpen && (
-        <View className='absolute bottom-full right-0 mb-1 rounded-lg bg-white p-1 shadow-lg'>
+        <View className='absolute bottom-full right-0 mb-1 rounded-lg bg-white p-1 shadow-lg dark:bg-stone-800'>
           {PLAYBACK_SPEEDS.map((speed) => (
             <Pressable
               key={speed}
@@ -55,14 +56,14 @@ export function SpeedControl({
               accessibilityRole='button'
               className={clsx(
                 'rounded-md px-3 py-1.5',
-                currentSpeed === speed ? 'bg-teal-100' : ''
+                currentSpeed === speed ? 'bg-teal-100 dark:bg-teal-900/40' : ''
               )}
               onPress={() => handleSpeedPress(speed)}
             >
               <Text
                 className={clsx(
                   'text-sm font-medium',
-                  currentSpeed === speed ? 'text-teal-700' : 'text-stone-600'
+                  currentSpeed === speed ? 'text-teal-700 dark:text-teal-300' : 'text-stone-600 dark:text-stone-300'
                 )}
               >
                 {speed}x

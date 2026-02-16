@@ -47,7 +47,10 @@ export function PlayPauseButton({
 
   if (isLoading) {
     return (
-      <View className='h-10 w-10 items-center justify-center rounded-full bg-teal-100'>
+      <View 
+        accessibilityLabel='Loading audio'
+        className='h-10 w-10 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-900/40'
+      >
         <ActivityIndicator color='#14b8a6' size='small' />
       </View>
     );
@@ -60,6 +63,9 @@ export function PlayPauseButton({
           isFinished ? 'Replay' : isPlaying ? 'Pause' : 'Play'
         }
         accessibilityRole='button'
+        accessibilityHint={
+          isFinished ? 'Replay the voice note from the beginning' : isPlaying ? 'Pause audio playback' : 'Start audio playback'
+        }
         className='h-10 w-10 items-center justify-center rounded-full bg-teal-500'
         onPress={handlePress}
         onPressIn={handlePressIn}
