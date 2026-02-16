@@ -17,8 +17,8 @@ export function DismissButton({
 }: DismissButtonProps) {
   return (
     <Pressable
-      accessibilityHint='Tap to dismiss the error message'
-      accessibilityLabel='Dismiss error message'
+      accessibilityHint='Tap to close this error message'
+      accessibilityLabel='Close error'
       accessibilityRole='button'
       hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
       style={({ pressed }) => ({
