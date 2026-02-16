@@ -1,5 +1,6 @@
 import { useSignIn } from '@clerk/clerk-expo';
 import { useCallback, useState } from 'react';
+import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 
 interface UseForgotPasswordReturn {
   email: string;
@@ -34,12 +35,12 @@ export function useForgotPassword(): UseForgotPasswordReturn {
 
     // Validate email
     if (!email.trim()) {
-      setError('Please enter your email address');
+      setError(ERROR_MESSAGES.VALIDATION.REQUIRED_FIELD);
       return;
     }
 
     if (!isValidEmail(email)) {
-      setError('Please enter a valid email address');
+      setError(ERROR_MESSAGES.VALIDATION.INVALID_EMAIL);
       return;
     }
 
@@ -54,20 +55,21 @@ export function useForgotPassword(): UseForgotPasswordReturn {
 
       setSuccess(true);
       setError(null);
-    } catch (error_: any) {
+    } catch (error_: unknown) {
       if (__DEV__) console.error('Password reset error:', error_);
 
       // Handle common errors
-      if (error_.errors?.[0]?.code === 'form_identifier_not_found') {
+      const clerkError = error_ as { errors?: Array<{ code?: string; message?: string }> };
+      if (clerkError.errors?.[0]?.code === 'form_identifier_not_found') {
         setError('No account found with this email address');
-      } else if (error_.errors?.[0]?.code === 'form_password_pwned') {
+      } else if (clerkError.errors?.[0]?.code === 'form_password_pwned') {
         setError(
           'This password has been compromised. Please choose a different one.'
         );
       } else {
         setError(
-          error_.errors?.[0]?.message ||
-            'Failed to send reset email. Please try again.'
+          clerkError.errors?.[0]?.message ||
+            ERROR_MESSAGES.AUTH.PASSWORD_RESET_FAILED
         );
       }
       setSuccess(false);

@@ -4,6 +4,11 @@
 
 import { SharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import {
+  CARD_PRESS_SPRING_CONFIG,
+  CARD_PRESS_SCALE,
+  CARD_REST_SCALE,
+} from '../../utils/animations/cardPressAnimation';
 
 interface AnimationValues {
   pressScale: SharedValue<number>;
@@ -22,9 +27,15 @@ export function createPressHandlers(
 
   const handlePressIn = () => {
     if (reducedMotion) {
-      pressScale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
+      pressScale.value = withSpring(
+        CARD_PRESS_SCALE,
+        CARD_PRESS_SPRING_CONFIG
+      );
     } else {
-      pressScale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
+      pressScale.value = withSpring(
+        CARD_PRESS_SCALE,
+        CARD_PRESS_SPRING_CONFIG
+      );
       shadowElevation.value = withTiming(8, { duration: 100 });
       pressRotation.value = withSpring(-0.5, { damping: 20, stiffness: 400 });
       chevronTranslate.value = withSpring(2, { damping: 15, stiffness: 300 });
@@ -32,7 +43,7 @@ export function createPressHandlers(
   };
 
   const handlePressOut = () => {
-    pressScale.value = withSpring(1, { damping: 12, stiffness: 200 });
+    pressScale.value = withSpring(CARD_REST_SCALE, CARD_PRESS_SPRING_CONFIG);
     if (!reducedMotion) {
       shadowElevation.value = withTiming(3, { duration: 150 });
       pressRotation.value = withSpring(0, { damping: 15, stiffness: 300 });
