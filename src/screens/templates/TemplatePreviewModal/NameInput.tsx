@@ -3,8 +3,9 @@
  */
 
 import React from 'react';
-import { View, Text, TextInput, Keyboard } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from './styles';
 import type { NameInputProps } from './types';
 
@@ -14,13 +15,17 @@ export function NameInput({
   onChangeName,
 }: NameInputProps) {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
 
   return (
     <View style={styles.section}>
       <Text
         style={[
           styles.label,
-          { fontFamily: theme.custom.fontFamilies.primary.text },
+          {
+            color: colors.text.secondary,
+            fontFamily: theme.custom.fontFamilies.primary.text,
+          },
         ]}
       >
         Habit Name
@@ -29,19 +34,18 @@ export function NameInput({
         accessibilityLabel='Habit name'
         editable={!disabled}
         placeholder='Enter habit name'
-        placeholderTextColor='#a8a29e'
+        placeholderTextColor={colors.text.tertiary}
         style={[
           styles.input,
           {
-            backgroundColor: theme.custom.colors.light.background,
-            borderColor: theme.custom.colors.gray[200],
+            backgroundColor: colors.gray[50],
+            borderColor: colors.gray[200],
+            color: colors.text.primary,
             fontFamily: theme.custom.fontFamilies.primary.text,
           },
         ]}
-        returnKeyType='done'
         value={customName}
         onChangeText={onChangeName}
-        onSubmitEditing={Keyboard.dismiss}
       />
     </View>
   );

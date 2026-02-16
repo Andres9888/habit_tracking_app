@@ -107,11 +107,11 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
               backgroundColor:
                 currentStreak >= bestStreak
                   ? milestoneColors.amberLight
-                  : colors.gray[100],
+                  : themeColors.gray[100],
               borderColor:
                 currentStreak >= bestStreak
                   ? milestoneColors.amberBorder
-                  : colors.border,
+                  : themeColors.border,
             },
           ]}
         >
@@ -123,7 +123,7 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
                 color:
                   currentStreak >= bestStreak
                     ? milestoneColors.amberText
-                    : colors.gray[500],
+                    : themeColors.text.secondary,
               },
             ]}
           >
