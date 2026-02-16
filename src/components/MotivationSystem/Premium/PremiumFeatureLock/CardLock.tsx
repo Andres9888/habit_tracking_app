@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * CardLock Component
  * Standalone feature explanation card with upgrade CTA

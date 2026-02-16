@@ -20,9 +20,20 @@ export function parseAffirmationsResponse(
     jsonStr = jsonMatch[1].trim();
   }
 
-  const parsed = JSON.parse(jsonStr);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(jsonStr);
+  } catch (error) {
+    console.error('Failed to parse AI response as JSON:', error);
+    throw new Error('Invalid response format: JSON parse error');
+  }
 
-  if (!parsed.affirmations || !Array.isArray(parsed.affirmations)) {
+  if (!parsed || typeof parsed !== 'object') {
+    throw new Error('Invalid response format: response is not an object');
+  }
+
+  const parsedObj = parsed as Record<string, unknown>;
+  if (!parsedObj.affirmations || !Array.isArray(parsedObj.affirmations)) {
     throw new Error('Invalid response format: missing affirmations array');
   }
 
@@ -33,18 +44,29 @@ export function parseAffirmationsResponse(
   ]);
   const validated: GeneratedAffirmation[] = [];
 
-  for (const aff of parsed.affirmations) {
-    if (!aff.text || typeof aff.text !== 'string') {
+  const affirmations = parsedObj.affirmations || [];
+  if (!Array.isArray(affirmations)) {
+    return validated; // Return empty if affirmations is not an array
+  }
+
+  for (const aff of affirmations) {
+    if (!aff || typeof aff !== 'object') {
+      continue; // Skip non-object entries
+    }
+
+    const affObj = aff as Record<string, unknown>;
+    if (!affObj.text || typeof affObj.text !== 'string') {
       continue; // Skip invalid entries
     }
 
-    const text = aff.text.trim();
+    const text = affObj.text.trim();
     if (text.length < 3 || text.length > MAX_TEXT_LENGTH) {
       continue; // Skip entries that don't meet length requirements
     }
 
-    const type: AffirmationType = validTypes.has(aff.type)
-      ? aff.type
+    const affirmationType = affObj.type || 'motivational';
+    const type: AffirmationType = validTypes.has(affirmationType as AffirmationType)
+      ? (affirmationType as AffirmationType)
       : 'motivational';
 
     validated.push({ text, type });

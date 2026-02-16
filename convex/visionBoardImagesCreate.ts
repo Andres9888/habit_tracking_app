@@ -14,6 +14,7 @@ import {
   validateShortText,
   requireValid,
 } from './lib/inputValidation';
+import { canAddVisionBoardImage, FREE_TIER_LIMITS } from './subscriptions/premiumCheck';
 
 /**
  * Create a new vision board image from storage ID
@@ -42,6 +43,17 @@ export const create = mutation({
       throw new Error('Not authorized to add images to this habit');
     }
 
+    // SEC-005: Premium gating - check if user can add more vision board images
+    // Free tier: 4 images per habit, Premium: unlimited
+    const visionBoardAccess = await canAddVisionBoardImage(
+      ctx,
+      identity.subject,
+      args.habitId
+    );
+    if (!visionBoardAccess.allowed) {
+      throw new Error(visionBoardAccess.reason ?? 'Vision board image limit reached');
+    }
+
     const fileMetadata = await ctx.db.system.get(args.storageId);
     if (!fileMetadata) {
       throw new Error('Storage file not found');
@@ -55,12 +67,6 @@ export const create = mutation({
       .query('visionBoardImages')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
       .collect();
-
-    if (existingImages.length >= MAX_IMAGES_PER_HABIT) {
-      throw new Error(
-        `Vision board is full. Maximum ${MAX_IMAGES_PER_HABIT} images allowed.`
-      );
-    }
 
     let order = args.order;
     if (order === undefined) {
