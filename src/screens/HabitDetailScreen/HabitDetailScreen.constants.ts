@@ -4,10 +4,10 @@ import type { SemanticColors } from '../../theme/darkColors';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { Doc } from '../../../convex/_generated/dataModel';
 
-export const DETAIL_BG_GRADIENT = [
-  colors.light.background,
-  colors.light.gradientMid,
-  colors.light.background,
+export const DETAIL_BG_GRADIENT_LIGHT = [
+  lightColors.background,
+  lightColors.gray[50],
+  lightColors.background,
 ] as const;
 
 /** Theme-aware background gradient for the detail screen */

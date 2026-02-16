@@ -9,7 +9,15 @@ import { notesArrayValidator, nullableNoteValidator } from './notes/types';
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query('notes').order('desc').collect();
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const notes = await ctx.db
+      .query('notes')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+      .order('desc')
+      .collect();
+    return notes;
   },
   returns: notesArrayValidator,
 });
@@ -20,7 +28,14 @@ export const search = query({
     searchText: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    let notes = await ctx.db.query('notes').order('desc').collect();
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    let notes = await ctx.db
+      .query('notes')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+      .order('desc')
+      .collect();
 
     if (args.habitId) {
       notes = notes.filter((note) => note.habitId === args.habitId);
@@ -43,7 +58,13 @@ export const get = query({
     noteId: v.id('notes'),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.noteId);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const note = await ctx.db.get(args.noteId);
+    if (!note) return null;
+    if (note.userId && note.userId !== identity.subject) return null;
+    return note;
   },
   returns: nullableNoteValidator,
 });

@@ -7,11 +7,13 @@ import React from 'react';
 import {
   View,
   Text,
-  Pressable,
   ScrollView,
   Modal as RNModal,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import { X } from 'lucide-react-native';
+import { ModalCloseButton } from '../../../components/ui/ModalCloseButton';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import NoteEditor from '../../../components/StatsNotesModal/NoteEditor';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { NotesEditorModalProps } from '../HabitDetailScreen.types';
@@ -54,6 +56,7 @@ export function NotesEditorModal({
             padding: 20,
             paddingBottom: insets.bottom + 20,
           }}
+          keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >
           <NoteEditor
@@ -65,7 +68,7 @@ export function NotesEditorModal({
             onSave={onClose}
           />
         </ScrollView>
-      </View>
+      </KeyboardAvoidingView>
     </RNModal>
   );
 }

@@ -3,7 +3,7 @@
  * Individual habit item in the rankings list
  */
 
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
@@ -16,22 +16,23 @@ interface HabitRankingItemProps {
   item: HabitRanking;
   rank: number;
   rankBadge: RankBadge | null;
-  onPress: () => void;
+  onPress: (id: string) => void;
 }
 
-export function HabitRankingItem({
+export const HabitRankingItem = memo(function HabitRankingItem({
   item,
   rank,
   rankBadge,
   onPress,
 }: HabitRankingItemProps) {
+  const handlePress = useCallback(() => onPress(item.id), [onPress, item.id]);
   return (
     <AnimatedPressable
       accessibilityHint='Opens habit detail'
       accessibilityLabel={`${item.emoji} ${item.name}, rank ${rank}, ${Math.round(item.strength)}% strength, ${item.currentStreak} day streak${item.isAtRisk ? ', at risk' : ''}`}
       accessibilityRole='button'
       style={styles.habitItem}
-      onPress={onPress}
+      onPress={handlePress}
     >
       <View style={styles.habitItemLeft}>
         <View style={styles.rankContainer}>
@@ -81,4 +82,4 @@ export function HabitRankingItem({
       </View>
     </AnimatedPressable>
   );
-}
+});

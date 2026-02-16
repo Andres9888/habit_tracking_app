@@ -3,8 +3,7 @@ import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ErrorBoundary, ScreenErrorFallback } from '../../components/ErrorBoundary';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import {
   DetailHeader,
   DetailLoadingState,
@@ -15,6 +14,7 @@ import {
   getDetailBgGradient,
   buildModalsProps,
 } from './HabitDetailScreen.constants';
+import { useThemeColors } from '../../theme';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
 import { useNotesHandlers } from './useNotesHandlers';
@@ -96,7 +96,12 @@ function HabitDetailScreenContent({
           <HabitDetailModals
             habitId={habit._id}
             habitName={habit.name}
-            {...buildModalsProps(screenState, calendarHandlers, notesHandlers, insets)}
+            {...buildModalsProps(
+              screenState,
+              calendarHandlers,
+              notesHandlers,
+              insets
+            )}
           />
         </>
       ) : (
@@ -108,26 +113,8 @@ function HabitDetailScreenContent({
 
 export default function HabitDetailScreen(props: HabitDetailScreenProps) {
   return (
-    <ErrorBoundary
-      fallback={
-        <Modal
-          transparent
-          animationType="slide"
-          visible={props.visible}
-          onRequestClose={props.onClose}
-        >
-          <View style={{ flex: 1, backgroundColor: 'black' }}>
-            <ScreenErrorFallback
-              screenName="Habit Details"
-              error={null}
-              onRetry={() => {}}
-              onGoBack={props.onClose}
-            />
-          </View>
-        </Modal>
-      }
-    >
+    <ScreenErrorBoundary screenName="Habit Details" onGoBack={props.onClose}>
       <HabitDetailScreenContent {...props} />
-    </ErrorBoundary>
+    </ScreenErrorBoundary>
   );
 }

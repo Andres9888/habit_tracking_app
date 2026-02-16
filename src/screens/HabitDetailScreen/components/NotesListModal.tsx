@@ -1,6 +1,6 @@
 /**
  * NotesListModal Component
- * Modal for displaying habit notes
+ * Modal for displaying habit notes — dark mode aware
  */
 
 import React from 'react';
