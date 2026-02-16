@@ -78,6 +78,7 @@ function HabitCardContentComponent({
       <View style={styles.bottomRow}>
         <StrengthProgressBar
           showEmoji
+          showInfo={false}
           showNextLevel
           showPercentage
           size='compact'
