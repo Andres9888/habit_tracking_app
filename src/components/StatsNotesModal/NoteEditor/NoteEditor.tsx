@@ -7,6 +7,7 @@
 import { useRef } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { colors } from '@/theme/colors';
+import { AccessibleErrorMessage } from '@/components/ui/AccessibleErrorMessage';
 
 import { HabitSelector } from './HabitSelector';
 import { NoteEditorActions } from './NoteEditorActions';
@@ -90,12 +91,13 @@ export default function NoteEditor({
             className={`text-xs ${
               characterCount > 1000 ? 'text-red-500' : 'text-stone-500'
             }`}
+            maxFontSizeMultiplier={2.0}
           >
             {characterCount} / 1000 characters
           </Text>
         </View>
 
-        {error ? <Text className='text-sm text-red-500'>{error}</Text> : null}
+        <AccessibleErrorMessage message={error} urgency="polite" />
       </View>
 
       <NoteEditorActions

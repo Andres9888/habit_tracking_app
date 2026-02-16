@@ -60,8 +60,8 @@ export function SortOptionRow({
       style={{
         backgroundColor: selected
           ? isDark
-            ? '#1f2937'
-            : '#ecfdf5'
+            ? themeColors.gray[800]
+            : themeColors.primary[50] ?? '#ecfdf5'
           : 'transparent',
         borderColor: selected ? themeColors.primary[300] : 'transparent',
         borderWidth: selected ? 1 : 0,

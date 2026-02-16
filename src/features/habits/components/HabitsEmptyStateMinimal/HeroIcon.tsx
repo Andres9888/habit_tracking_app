@@ -22,8 +22,9 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { BREATHING_ANIMATION, HERO_GLOW } from './animations';
-import { BORDER_RADIUS, COLORS } from './constants';
+import { BORDER_RADIUS } from './constants';
 import type { HeroIconProps } from './types';
+import { useEmptyStateColors } from './useEmptyStateColors';
 
 /** Default icon container size */
 const DEFAULT_SIZE = 80;
@@ -43,6 +44,7 @@ export function HeroIcon({
   emojiSize = DEFAULT_EMOJI_SIZE,
 }: HeroIconProps) {
   const shouldReduceMotion = useReducedMotion();
+  const colors = useEmptyStateColors();
   const scale = useSharedValue<number>(BREATHING_ANIMATION.minScale);
 
   useEffect(() => {
@@ -93,18 +95,20 @@ export function HeroIcon({
 
   return (
     <Animated.View
+      accessibilityElementsHidden
+      importantForAccessibility='no-hide-descendants'
       style={[
         breathingStyle,
         {
           alignItems: 'center',
-          backgroundColor: COLORS.emerald100,
+          backgroundColor: colors.heroIconBackground,
           borderRadius: dynamicBorderRadius,
           elevation: 4,
           height: size,
           justifyContent: 'center',
 
           // Emerald tinted shadow (opacity/radius animated via breathingStyle)
-          shadowColor: COLORS.emerald500,
+          shadowColor: colors.heroIconShadow,
 
           shadowOffset: { height: 8, width: 0 },
           width: size,
@@ -114,7 +118,7 @@ export function HeroIcon({
       {/* Inner gradient effect using overlay */}
       <View
         style={{
-          backgroundColor: COLORS.green50,
+          backgroundColor: colors.heroIconOverlay,
           borderRadius: dynamicBorderRadius,
           bottom: 0,
           left: 0,
