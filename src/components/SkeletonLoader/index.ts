@@ -23,4 +23,10 @@ export type {
   ReduceMotionProps,
   SkeletonWidth,
 } from './types';
+export { useSkeletonTheme } from './useSkeletonTheme';
+export {
+  SKELETON_COLORS_LIGHT,
+  SKELETON_COLORS_DARK,
+  SHIMMER_DURATION,
+} from './SkeletonLoader';
 export { default } from './SkeletonLoader';

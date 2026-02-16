@@ -2,6 +2,7 @@
  * SkeletonLoader Component
  * Base shimmer skeleton loader with gradient sweep animation.
  * Uses LinearGradient for a polished shimmer effect across all skeleton screens.
+ * Supports dark mode via useThemeColors hook.
  */
 
 import React, { useEffect } from 'react';
@@ -15,14 +16,21 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { SkeletonLoaderProps } from './types';
 
-const SKELETON_COLORS = {
+/** Light and dark skeleton color pairs */
+export const SKELETON_COLORS_LIGHT = {
   base: '#E7E5E4',
   highlight: '#F5F5F4',
 } as const;
 
-const SHIMMER_DURATION = 1500;
+export const SKELETON_COLORS_DARK = {
+  base: '#374151',
+  highlight: '#4B5563',
+} as const;
+
+export const SHIMMER_DURATION = 1500;
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -33,6 +41,8 @@ export function SkeletonLoader({
   reduceMotion = false,
   style,
 }: SkeletonLoaderProps) {
+  const { isDark } = useThemeColors();
+  const skeletonColors = isDark ? SKELETON_COLORS_DARK : SKELETON_COLORS_LIGHT;
   const shimmerPosition = useSharedValue(0);
 
   useEffect(() => {
@@ -62,7 +72,7 @@ export function SkeletonLoader({
     <View
       style={[
         {
-          backgroundColor: SKELETON_COLORS.base,
+          backgroundColor: skeletonColors.base,
           borderRadius,
           height,
           overflow: 'hidden',
@@ -73,9 +83,9 @@ export function SkeletonLoader({
     >
       <AnimatedLinearGradient
         colors={[
-          SKELETON_COLORS.base,
-          SKELETON_COLORS.highlight,
-          SKELETON_COLORS.base,
+          skeletonColors.base,
+          skeletonColors.highlight,
+          skeletonColors.base,
         ]}
         end={{ x: 1, y: 0.5 }}
         start={{ x: 0, y: 0.5 }}

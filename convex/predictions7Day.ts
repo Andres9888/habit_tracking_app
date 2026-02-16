@@ -23,8 +23,13 @@ import {
 export const predict7Days = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
     const habit = await ctx.db.get(args.habitId);
     if (!habit) return null;
+
+    if (habit.userId !== identity.subject) return null;
 
     const strength = habit.strength ?? 0;
     const accessibility = habit.accessibility ?? 1;
