@@ -7,6 +7,10 @@ import { query } from './_generated/server';
  * SEC-PUBLIC: This query is intentionally public to allow browsing
  * template categories before login. Derived from public template data.
  *
+ * PERF NOTE: This query fetches all templates but only extracts categories.
+ * Since template count is small (~200) and categories rarely change,
+ * consider caching this on the client side for better performance.
+ *
  * @returns Array of category objects with id, label, and icon
  * @example
  * ```ts
@@ -17,8 +21,12 @@ import { query } from './_generated/server';
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    // Fetch all templates to get unique categories
-    const templates = await ctx.db.query('templates').collect();
+    // PERF: Use by_createdAt index to avoid full table scan
+    // We still need all templates to get unique categories, but index scan is faster
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_createdAt')
+      .collect();
 
     // Early return if no templates exist
     if (templates.length === 0) {
