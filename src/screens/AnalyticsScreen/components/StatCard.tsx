@@ -1,75 +1,55 @@
 /**
  * StatCard - Displays a single statistic with optional emoji and interaction
- * Theme-aware for dark mode support.
  */
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import { useThemeColors } from '../../../theme/ThemeContext';
 import type { StatCardProps } from '../AnalyticsScreen.types';
 import { styles } from './StatCard.styles';
 
-export const StatCard: React.FC<StatCardProps> = ({
+export const StatCard = memo(function StatCard({
   title,
   value,
   subtitle,
   emoji,
   onPress,
   loading = false,
-}) => {
-  const { colors, isDark } = useThemeColors();
-
+}: StatCardProps) {
   const accessibilityLabel = loading
     ? `${title}, loading`
     : `${title}: ${value}${subtitle ? `, ${subtitle}` : ''}`;
 
-  const cardStyle = [
-    styles.statCard,
-    {
-      backgroundColor: colors.surface,
-      shadowColor: isDark ? '#000000' : '#1c1917',
-      shadowOpacity: isDark ? 0.3 : 0.08,
-    },
-  ];
-
-  const skeletonColor = { backgroundColor: colors.border };
+  // When wrapped in AnimatedPressable, a11y is on the pressable — avoid double-announcing
+  const isInteractive = !!onPress && !loading;
 
   const content = (
     <View
-      accessible
+      accessible={!isInteractive}
       accessibilityHint={
-        onPress ? 'Double tap to view habit details' : undefined
+        !isInteractive && onPress ? 'Double tap to view habit details' : undefined
       }
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole={onPress ? 'button' : 'text'}
-      style={cardStyle}
+      accessibilityLabel={!isInteractive ? accessibilityLabel : undefined}
+      accessibilityRole={!isInteractive ? (onPress ? 'button' : 'text') : undefined}
+      style={styles.statCard}
     >
       {loading ? (
-        <View accessibilityLabel='Loading' style={styles.statCardLoading}>
-          <View style={[styles.skeletonTitle, skeletonColor]} />
-          <View style={[styles.skeletonValue, skeletonColor]} />
-          {subtitle && <View style={[styles.skeletonSubtitle, skeletonColor]} />}
+        <View accessibilityLabel={`Loading ${title}...`} style={styles.statCardLoading}>
+          <View style={styles.skeletonTitle} />
+          <View style={styles.skeletonValue} />
+          {subtitle && <View style={styles.skeletonSubtitle} />}
         </View>
       ) : (
         <>
-          <Text style={[styles.statCardTitle, { color: colors.text.secondary }]}>
-            {title}
-          </Text>
+          <Text style={styles.statCardTitle}>{title}</Text>
           <View style={styles.statCardValueRow}>
             {emoji && (
               <Text accessibilityElementsHidden style={styles.statCardEmoji}>
                 {emoji}
               </Text>
             )}
-            <Text style={[styles.statCardValue, { color: colors.text.primary }]}>
-              {value}
-            </Text>
+            <Text style={styles.statCardValue}>{value}</Text>
           </View>
-          {subtitle && (
-            <Text style={[styles.statCardSubtitle, { color: colors.text.tertiary }]}>
-              {subtitle}
-            </Text>
-          )}
+          {subtitle && <Text style={styles.statCardSubtitle}>{subtitle}</Text>}
         </>
       )}
     </View>
@@ -90,4 +70,4 @@ export const StatCard: React.FC<StatCardProps> = ({
   }
 
   return content;
-};
+});
