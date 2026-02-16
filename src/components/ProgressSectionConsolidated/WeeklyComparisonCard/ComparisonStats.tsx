@@ -2,6 +2,7 @@
  * ComparisonStats Component
  *
  * Displays this week vs last week comparison statistics.
+ * Uses semantic theme colors for full dark-mode support.
  */
 
 import React from 'react';
@@ -22,20 +23,36 @@ export function ComparisonStats({ trend }: ComparisonStatsProps) {
     lastWeekCompleted,
     lastWeekRate,
   } = trend;
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+
+  // Theme-aware accent colors for "This Week" highlight
+  const thisWeekBg = isDark ? 'rgba(5, 150, 105, 0.15)' : '#ECFDF5'; // emerald-50 equivalent
+  const thisWeekLabel = isDark ? '#6EE7B7' : '#047857'; // emerald-300 / emerald-700
+  const thisWeekValue = isDark ? '#A7F3D0' : '#064E3B'; // emerald-200 / emerald-900
+  const thisWeekSub = isDark ? '#6EE7B7' : '#059669'; // emerald-300 / emerald-600
 
   return (
     <View className='mb-3 flex-row items-center gap-4'>
       {/* This Week */}
-      <View className='flex-1 rounded-xl bg-lime-50 p-3'>
-        <Text className='mb-1 text-xs text-lime-700'>This Week</Text>
+      <View
+        accessibilityLabel={`This week: ${thisWeekCompleted} of ${thisWeekTotal}, ${thisWeekRate} percent`}
+        className='flex-1 rounded-xl p-3'
+        style={{ backgroundColor: thisWeekBg }}
+      >
+        <Text className='mb-1 text-xs font-medium' style={{ color: thisWeekLabel }}>
+          This Week
+        </Text>
         <View className='flex-row items-baseline gap-1'>
-          <Text className='text-xl font-bold text-lime-900'>
+          <Text className='text-xl font-bold' style={{ color: thisWeekValue }}>
             {thisWeekCompleted}
           </Text>
-          <Text className='text-xs text-lime-600'>/ {thisWeekTotal}</Text>
+          <Text className='text-xs' style={{ color: thisWeekSub }}>
+            / {thisWeekTotal}
+          </Text>
         </View>
-        <Text className='mt-0.5 text-xs text-lime-600'>{thisWeekRate}%</Text>
+        <Text className='mt-0.5 text-xs' style={{ color: thisWeekSub }}>
+          {thisWeekRate}%
+        </Text>
       </View>
 
       {/* VS Indicator */}
@@ -50,6 +67,7 @@ export function ComparisonStats({ trend }: ComparisonStatsProps) {
 
       {/* Last Week */}
       <View
+        accessibilityLabel={`Last week: ${lastWeekCompleted} of 7, ${lastWeekRate} percent`}
         className='flex-1 rounded-xl p-3'
         style={{ backgroundColor: colors.gray[50] }}
       >

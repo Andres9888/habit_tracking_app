@@ -6,29 +6,42 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
 import type { TrendStyle } from './types';
 
 /**
- * Get trend color and icon based on rate change
+ * Get trend style based on rate change.
+ * Returns both light and dark color values so the badge renders correctly in either mode.
  */
 export function getTrendStyle(rateChange: number): TrendStyle {
   if (rateChange > 0) {
     return {
-      bgColor: 'bg-emerald-50',
+      bgColorDark: 'rgba(5,150,105,0.18)',
+      bgColorLight: '#ECFDF5',
       icon: TrendingUp,
+      iconColorDark: '#6EE7B7',
+      iconColorLight: '#059669',
       label: 'improvement',
-      textColor: 'text-emerald-600',
+      textColorDark: '#6EE7B7',
+      textColorLight: '#059669',
     };
   } else if (rateChange < 0) {
     return {
-      bgColor: 'bg-red-50',
+      bgColorDark: 'rgba(239,68,68,0.18)',
+      bgColorLight: '#FEF2F2',
       icon: TrendingDown,
+      iconColorDark: '#FCA5A5',
+      iconColorLight: '#EF4444',
       label: 'decline',
-      textColor: 'text-red-500',
+      textColorDark: '#FCA5A5',
+      textColorLight: '#EF4444',
     };
   }
   return {
-    bgColor: 'bg-stone-50',
+    bgColorDark: 'rgba(120,113,108,0.18)',
+    bgColorLight: '#FAFAF9',
     icon: Minus,
+    iconColorDark: '#A8A29E',
+    iconColorLight: '#78716C',
     label: 'no change',
-    textColor: 'text-stone-500',
+    textColorDark: '#A8A29E',
+    textColorLight: '#78716C',
   };
 }
 

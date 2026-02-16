@@ -13,8 +13,12 @@ export interface WeeklyComparisonCardProps {
 }
 
 export interface TrendStyle {
-  bgColor: string;
-  textColor: string;
+  bgColorLight: string;
+  bgColorDark: string;
+  textColorLight: string;
+  textColorDark: string;
+  iconColorLight: string;
+  iconColorDark: string;
   icon: typeof TrendingUp;
   label: string;
 }

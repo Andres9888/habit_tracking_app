@@ -70,14 +70,15 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
             <Pressable
               accessibilityLabel='Learn more about weekly comparison'
               accessibilityRole='button'
-              hitSlop={8}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              style={{ minHeight: 44, minWidth: 44, justifyContent: 'center', alignItems: 'center' }}
               onPress={handleInfoPress}
             >
               <View
-                className='h-4 w-4 items-center justify-center rounded-full'
+                className='h-5 w-5 items-center justify-center rounded-full'
                 style={{ backgroundColor: colors.gray[100] }}
               >
-                <Info color={colors.text.tertiary} size={10} />
+                <Info color={colors.text.tertiary} size={12} />
               </View>
             </Pressable>
           )}

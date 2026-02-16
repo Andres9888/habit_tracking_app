@@ -3,13 +3,14 @@
  * Main orchestrator for weekly habit insights display
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { WeeklyInsightsCardProps } from './WeeklyInsightsCard.types';
-import { styles } from './WeeklyInsightsCard.styles';
+import { styles, themedStyles } from './WeeklyInsightsCard.styles';
 import { SummarySection } from './SummarySection';
 import { HabitListSection } from './HabitListSection';
 import { SuggestedActions } from './SuggestedActions';
@@ -19,14 +20,17 @@ export default function WeeklyInsightsCard({
   onHabitPress,
   onArchivePress,
 }: WeeklyInsightsCardProps) {
+  const { colors: themeColors } = useThemeColors();
+  const themed = useMemo(() => themedStyles(themeColors), [themeColors]);
+
   const [expandedSection, setExpandedSection] = useState<string | null>(
     'summary'
   );
 
   if (!insights) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Generating insights...</Text>
+      <View style={themed.loadingContainer}>
+        <Text style={themed.loadingText}>Generating insights...</Text>
       </View>
     );
   }
@@ -85,14 +89,14 @@ export default function WeeklyInsightsCard({
       <AnimatedPressable
         accessibilityLabel='View past reports'
         accessibilityRole='button'
-        style={styles.archiveButton}
+        style={themed.archiveButton}
         onPress={onArchivePress}
       >
-        <Ionicons color={colors.text.secondary} name='archive' size={20} />
-        <Text style={styles.archiveButtonText}>View Past Reports</Text>
+        <Ionicons color={themeColors.text.secondary} name='archive' size={20} />
+        <Text style={themed.archiveButtonText}>View Past Reports</Text>
       </AnimatedPressable>
 
-      <Text style={styles.generatedDate}>
+      <Text style={themed.generatedDate}>
         Generated {new Date(insights.generatedAt).toLocaleDateString()}
       </Text>
     </ScrollView>

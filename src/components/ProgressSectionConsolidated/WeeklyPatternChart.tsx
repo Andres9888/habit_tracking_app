@@ -61,6 +61,12 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
     };
   }, [dayStats]);
 
+  // Check for empty state (no data at all)
+  const hasData = useMemo(
+    () => dayStats.some((d) => d.total > 0),
+    [dayStats]
+  );
+
   // Build accessibility summary
   const accessibilitySummary = useMemo(() => {
     const bestDay = dayStats.find((d) => d.dayIndex === bestDayIndex);
@@ -103,7 +109,7 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
 
       {/* Chart container */}
       <View
-        accessibilityLabel={accessibilitySummary}
+        accessibilityLabel={hasData ? accessibilitySummary : 'No weekly pattern data yet. Complete habits to see your pattern.'}
         accessibilityRole='image'
         className='flex-row items-end justify-between rounded-xl px-2'
         style={{
@@ -113,35 +119,48 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
           paddingTop: 8,
         }}
       >
-        {dayStats.map((day, index) => (
-          <DayBar
-            key={day.dayIndex}
-            dayIndex={day.dayIndex}
-            index={index}
-            isBest={day.dayIndex === bestDayIndex}
-            isWorst={day.dayIndex === worstDayIndex}
-            maxRate={maxRate}
-            rate={day.rate}
-            reduceMotion={reduceMotion}
-          />
-        ))}
+        {hasData ? (
+          dayStats.map((day, index) => (
+            <DayBar
+              key={day.dayIndex}
+              dayIndex={day.dayIndex}
+              index={index}
+              isBest={day.dayIndex === bestDayIndex}
+              isWorst={day.dayIndex === worstDayIndex}
+              maxRate={maxRate}
+              rate={day.rate}
+              reduceMotion={reduceMotion}
+            />
+          ))
+        ) : (
+          <View className='flex-1 items-center justify-center'>
+            <Text
+              className='text-xs'
+              style={{ color: colors.text.tertiary }}
+            >
+              Complete habits to see your weekly pattern
+            </Text>
+          </View>
+        )}
       </View>
 
-      {/* Legend */}
-      <View className='mt-2 flex-row items-center justify-center gap-4'>
-        <View className='flex-row items-center gap-1'>
-          <View className='h-2 w-2 rounded-sm bg-emerald-500' />
-          <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>
-            Best
-          </Text>
+      {/* Legend — only show when there's data */}
+      {hasData && (
+        <View className='mt-2 flex-row items-center justify-center gap-4'>
+          <View className='flex-row items-center gap-1'>
+            <View className='h-2 w-2 rounded-sm bg-emerald-500' />
+            <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>
+              Best
+            </Text>
+          </View>
+          <View className='flex-row items-center gap-1'>
+            <View className='h-2 w-2 rounded-sm bg-amber-400' />
+            <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>
+              Focus
+            </Text>
+          </View>
         </View>
-        <View className='flex-row items-center gap-1'>
-          <View className='h-2 w-2 rounded-sm bg-amber-400' />
-          <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>
-            Focus
-          </Text>
-        </View>
-      </View>
+      )}
     </View>
   );
 });
