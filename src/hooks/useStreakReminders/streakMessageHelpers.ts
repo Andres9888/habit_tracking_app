@@ -1,6 +1,9 @@
 export function parseTime(time: string): { hour: number; minute: number } {
-  const [h, m] = time.split(':').map(Number);
-  return { hour: h || 20, minute: m || 0 };
+  if (!time || typeof time !== 'string') return { hour: 20, minute: 0 };
+  const parts = time.split(':').map(Number);
+  const h = Number.isFinite(parts[0]) ? parts[0] : 20;
+  const m = Number.isFinite(parts[1]) ? parts[1] : 0;
+  return { hour: h, minute: m };
 }
 
 export function getMessageForStreak(

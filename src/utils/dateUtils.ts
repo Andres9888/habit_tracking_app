@@ -68,9 +68,12 @@ export function formatDateString(date: Date | string): string {
     // Try to parse and format
     const parsed = new Date(date);
     if (Number.isNaN(parsed.getTime())) {
-      throw new TypeError(`Invalid date string: ${date}`);
+      if (__DEV__) console.warn(`Invalid date string: ${date}`);
+      // Return today's date as safe fallback instead of crashing
+      date = new Date();
+    } else {
+      date = parsed;
     }
-    date = parsed;
   }
 
   const year = date.getFullYear();
