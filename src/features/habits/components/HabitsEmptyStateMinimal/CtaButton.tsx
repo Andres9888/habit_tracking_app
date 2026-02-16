@@ -6,6 +6,7 @@ import { useCallback } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 import { CTA_SHIMMER } from './animations';
 import { COPY } from './constants';
@@ -24,6 +25,7 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
 
   const handlePress = useCallback(() => {
     if (disabled || isLoading) return;
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
   }, [disabled, isLoading, onPress]);
 

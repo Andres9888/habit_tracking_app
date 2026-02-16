@@ -4,6 +4,7 @@
 
 import { Pressable, Text } from 'react-native';
 import { Filter } from 'lucide-react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 
 interface ResearchFilterButtonProps {
@@ -17,6 +18,9 @@ export function ResearchFilterButton({
   onToggle,
   researchOnly,
 }: ResearchFilterButtonProps) {
+  const { colors } = useThemeColors();
+  const defaultColor = colors.text.primary;
+
   return (
     <Pressable
       accessibilityLabel='Toggle research-only filter'
@@ -24,11 +28,11 @@ export function ResearchFilterButton({
       style={[styles.controlButton, researchOnly && styles.controlButtonActive]}
       onPress={onToggle}
     >
-      <Filter color={researchOnly ? '#fff' : '#1c1917'} size={16} />
+      <Filter color={researchOnly ? '#fff' : defaultColor} size={16} />
       <Text
         style={[
           styles.controlButtonText,
-          { color: researchOnly ? '#fff' : '#1c1917' },
+          { color: researchOnly ? '#fff' : defaultColor },
         ]}
       >
         {label}

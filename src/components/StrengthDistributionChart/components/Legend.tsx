@@ -23,6 +23,8 @@ export function Legend({ data, onSegmentPress }: LegendProps) {
         return (
           <TouchableOpacity
             key={level}
+            accessibilityLabel={`${LEVEL_LABELS[level]}: ${levelData.percentage.toFixed(0)}%, ${levelData.count} habits`}
+            accessibilityRole='button'
             activeOpacity={0.7}
             style={styles.legendItem}
             onPress={() => onSegmentPress?.(level)}

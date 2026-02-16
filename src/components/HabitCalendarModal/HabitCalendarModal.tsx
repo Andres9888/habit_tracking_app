@@ -1,5 +1,6 @@
 import { Modal, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { StatsCard } from './StatsCard';
 import { ActivityLog } from './ActivityLog';
 import { CalendarTabs } from './CalendarTabs';
