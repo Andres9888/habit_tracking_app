@@ -22,7 +22,7 @@ import {
   borderRadius,
   shadows,
   componentSpacing,
-} from '../index';
+} from '../../../src/theme';
 
 // Test component that uses useAppTheme hook
 function TestComponent() {

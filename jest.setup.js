@@ -13,11 +13,7 @@ if (typeof global.structuredClone === 'undefined') {
 }
 
 // Mock Expo modules
-jest.mock('expo-font');
 jest.mock('expo-asset');
-jest.mock('expo-status-bar', () => ({
-  StatusBar: 'StatusBar',
-}));
 
 // Mock react-native-gesture-handler
 jest.mock('react-native-gesture-handler', () => {
@@ -131,9 +127,32 @@ jest.mock('expo-notifications', () => ({
   setNotificationHandler: jest.fn(),
 }));
 
-// Mock react-native-calendars
-jest.mock('react-native-calendars', () => ({
-  Calendar: 'Calendar',
+// Mock expo-av (used by audio recording)
+jest.mock('expo-av', () => ({
+  Audio: {
+    RecordingOptionsPresets: {
+      HIGH_QUALITY: {},
+    },
+    Recording: jest.fn(() => ({
+      prepareToRecordAsync: jest.fn(),
+      startAsync: jest.fn(),
+      stopAndUnloadAsync: jest.fn(),
+      getURI: jest.fn(() => 'mock-recording-uri'),
+      getStatusAsync: jest.fn(async () => ({
+        isRecording: false,
+        durationMillis: 0,
+      })),
+    })),
+    setAudioModeAsync: jest.fn(),
+    requestPermissionsAsync: jest.fn(async () => ({
+      granted: true,
+      status: 'granted',
+    })),
+    getPermissionsAsync: jest.fn(async () => ({
+      granted: true,
+      status: 'granted',
+    })),
+  },
 }));
 
 // Mock lucide-react-native
@@ -246,51 +265,91 @@ jest.mock('react-native-reanimated', () => {
       inOut: (easing) => easing,
     },
 
-    // Entering/Exiting animations
-    FadeIn: {
-      delay: jest.fn().mockReturnThis(),
-      duration: jest.fn().mockReturnThis(),
-      springify: jest.fn().mockReturnThis(),
-    },
-    FadeInDown: {
-      delay: jest.fn().mockReturnThis(),
-      duration: jest.fn().mockReturnThis(),
-      springify: jest.fn().mockReturnThis(),
-    },
-    FadeOut: {
-      delay: jest.fn().mockReturnThis(),
-      duration: jest.fn().mockReturnThis(),
-    },
-    SlideInRight: {
-      duration: jest.fn().mockReturnThis(),
-    },
-    SlideOutLeft: {
-      duration: jest.fn().mockReturnThis(),
-    },
-    SlideInLeft: {
-      duration: jest.fn().mockReturnThis(),
-    },
-    SlideOutRight: {
-      duration: jest.fn().mockReturnThis(),
-    },
+    // Entering/Exiting animations - Create chainable animation builder
+    FadeIn: (() => {
+      const animation = {
+        delay: jest.fn().mockReturnValue(animation),
+        duration: jest.fn().mockReturnValue(animation),
+        springify: jest.fn().mockReturnValue(animation),
+        damping: jest.fn().mockReturnValue(animation),
+        stiffness: jest.fn().mockReturnValue(animation),
+        mass: jest.fn().mockReturnValue(animation),
+      };
+      return animation;
+    })(),
+    FadeInDown: (() => {
+      const animation = {
+        delay: jest.fn().mockReturnValue(animation),
+        duration: jest.fn().mockReturnValue(animation),
+        springify: jest.fn().mockReturnValue(animation),
+        damping: jest.fn().mockReturnValue(animation),
+        stiffness: jest.fn().mockReturnValue(animation),
+        mass: jest.fn().mockReturnValue(animation),
+      };
+      return animation;
+    })(),
+    FadeOut: (() => {
+      const animation = {
+        delay: jest.fn().mockReturnValue(animation),
+        duration: jest.fn().mockReturnValue(animation),
+        damping: jest.fn().mockReturnValue(animation),
+      };
+      return animation;
+    })(),
+    SlideInRight: (() => {
+      const animation = {
+        duration: jest.fn().mockReturnValue(animation),
+        damping: jest.fn().mockReturnValue(animation),
+      };
+      return animation;
+    })(),
+    SlideOutLeft: (() => {
+      const animation = {
+        duration: jest.fn().mockReturnValue(animation),
+        damping: jest.fn().mockReturnValue(animation),
+      };
+      return animation;
+    })(),
+    SlideInLeft: (() => {
+      const animation = {
+        duration: jest.fn().mockReturnValue(animation),
+        damping: jest.fn().mockReturnValue(animation),
+      };
+      return animation;
+    })(),
+    SlideOutRight: (() => {
+      const animation = {
+        duration: jest.fn().mockReturnValue(animation),
+        damping: jest.fn().mockReturnValue(animation),
+      };
+      return animation;
+    })(),
 
-    // Layout animations
-    LinearTransition: {
-      springify: jest.fn(() => ({
-        damping: jest.fn().mockReturnThis(),
-        stiffness: jest.fn().mockReturnThis(),
-        mass: jest.fn().mockReturnThis(),
-      })),
-      duration: jest.fn().mockReturnThis(),
-      delay: jest.fn().mockReturnThis(),
-      easing: jest.fn().mockReturnThis(),
-    },
-    Layout: {
-      springify: jest.fn().mockReturnThis(),
-      duration: jest.fn().mockReturnThis(),
-      delay: jest.fn().mockReturnThis(),
-      easing: jest.fn().mockReturnThis(),
-    },
+    // Layout animations - Make fully chainable
+    LinearTransition: (() => {
+      const transition = {
+        springify: jest.fn().mockReturnValue(transition),
+        damping: jest.fn().mockReturnValue(transition),
+        stiffness: jest.fn().mockReturnValue(transition),
+        mass: jest.fn().mockReturnValue(transition),
+        duration: jest.fn().mockReturnValue(transition),
+        delay: jest.fn().mockReturnValue(transition),
+        easing: jest.fn().mockReturnValue(transition),
+      };
+      return transition;
+    })(),
+    Layout: (() => {
+      const layout = {
+        springify: jest.fn().mockReturnValue(layout),
+        damping: jest.fn().mockReturnValue(layout),
+        stiffness: jest.fn().mockReturnValue(layout),
+        mass: jest.fn().mockReturnValue(layout),
+        duration: jest.fn().mockReturnValue(layout),
+        delay: jest.fn().mockReturnValue(layout),
+        easing: jest.fn().mockReturnValue(layout),
+      };
+      return layout;
+    })(),
 
     // runOnJS - CRITICAL: Must be defined as a function that executes callbacks
     runOnJS: (fn) => fn,
