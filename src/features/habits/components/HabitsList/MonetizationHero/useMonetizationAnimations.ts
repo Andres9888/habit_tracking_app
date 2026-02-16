@@ -1,6 +1,13 @@
 /**
- * Monetization Hero Animations Hook
- * Manages progress, pulse, and shimmer animations
+ * useMonetizationAnimations — animation lifecycle for {@link MonetizationHero}.
+ *
+ * Manages three independent `Animated.Value` tracks:
+ * 1. **progress** — fills the slot-usage bar to `usageRatio × trackWidth` (420 ms ease-out).
+ * 2. **ctaPulse** — loops a gentle 1→1.04 scale on the CTA button when the limit is reached.
+ * 3. **shimmer** — loops opacity 0.4↔0.9 on the "Keep 3 habits free" label.
+ *
+ * All three tracks short-circuit to static values when `reduceMotion` is true.
+ * `trackWidth` is measured via `onLayout` so the progress bar works at any width.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
