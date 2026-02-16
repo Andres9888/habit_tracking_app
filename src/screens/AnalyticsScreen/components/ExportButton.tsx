@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
-import { spacing } from '../../../theme/spacing';
+import { spacing, borderRadius } from '../../../theme/spacing';
 
 interface ExportButtonProps {
   onPress: () => void;
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   exportButton: {
     alignItems: 'center',
     backgroundColor: colors.primary[500],
-    borderRadius: 12,
+    borderRadius: borderRadius.button,
     flexDirection: 'row',
     justifyContent: 'center',
     marginHorizontal: spacing.lg,

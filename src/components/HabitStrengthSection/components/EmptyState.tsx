@@ -4,18 +4,51 @@
  */
 import React from 'react';
 import { Text, View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
+
+const anim = (delay: number) =>
+  FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='rounded-2xl bg-white p-5 shadow-sm'>
-      <Text className='mb-2 text-lg font-bold text-stone-800'>
+    <View
+      style={{
+        backgroundColor: colors.card,
+        borderRadius: 16,
+        padding: 20,
+        shadowColor: colors.text.primary,
+        shadowOffset: { height: 4, width: 0 },
+        shadowOpacity: 0.04,
+        shadowRadius: 12,
+      }}
+    >
+      <Text
+        style={{
+          color: colors.text.primary,
+          fontSize: 17,
+          fontWeight: '700',
+          marginBottom: 8,
+        }}
+      >
         Habit Strength
       </Text>
-      <View className='items-center justify-center py-8'>
-        <Text className='mb-2 text-4xl'>🌱</Text>
-        <Text className='text-center text-stone-500'>
+      <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 32 }}>
+        <Animated.Text entering={anim(0)} style={{ fontSize: 40, marginBottom: 8 }}>
+          🌱
+        </Animated.Text>
+        <Animated.Text
+          entering={anim(60)}
+          style={{
+            color: colors.text.secondary,
+            fontSize: 15,
+            textAlign: 'center',
+          }}
+        >
           Complete your first day to start building strength!
-        </Text>
+        </Animated.Text>
       </View>
     </View>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ArrowUpDown, BookOpen, Settings } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
@@ -79,7 +80,11 @@ export function IconButtonGroup({
             onPressIn={onTemplatesPressIn}
             onPressOut={onTemplatesPressOut}
           >
-            <BookOpen color={isDark ? '#a78bfa' : '#7c3aed'} size={18} strokeWidth={2.25} />
+            <BookOpen
+              color={isDark ? '#a78bfa' : '#7c3aed'}
+              size={18}
+              strokeWidth={2.25}
+            />
           </Pressable>
           <NotificationBadge count={1} visible={showBadge} />
         </View>
@@ -93,6 +98,7 @@ export function IconButtonGroup({
           accessibilityHint='Change habit sort order'
           accessibilityLabel='Sort habits'
           accessibilityRole='button'
+          testID='home-sort-button'
           className='h-11 w-11 items-center justify-center rounded-full'
           style={({ pressed }) => ({
             backgroundColor: pressed ? pressedBg : 'transparent',
@@ -110,8 +116,10 @@ export function IconButtonGroup({
       {/* Settings Button */}
       <Animated.View style={settingsAnimatedStyle}>
         <Pressable
+          accessibilityHint='Open app settings'
           accessibilityLabel='Open settings'
           accessibilityRole='button'
+          testID='home-settings-button'
           className='h-11 w-11 items-center justify-center rounded-full'
           style={({ pressed }) => ({
             backgroundColor: pressed ? pressedBg : 'transparent',

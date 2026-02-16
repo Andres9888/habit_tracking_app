@@ -12,6 +12,7 @@ import { QuickPickChips } from './QuickPickChips';
 import { SortOptionRow } from './SortOptionRow';
 import type { SortBottomSheetProps } from './types';
 import { useSortBottomSheet } from './useSortBottomSheet';
+import { SCREEN, SHADOW_OPACITY } from '../../../../constants';
 
 /** iOS-style bottom sheet for selecting habit sort order */
 export function SortBottomSheet({
