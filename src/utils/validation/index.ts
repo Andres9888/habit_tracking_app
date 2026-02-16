@@ -9,16 +9,22 @@
 export type { ValidationResult } from './types';
 
 // Re-export validation functions
-export { validateEmail, MAX_EMAIL_LENGTH } from './emailValidation';
-export { validatePassword, MIN_PASSWORD_LENGTH } from './passwordValidation';
+export { validateEmail } from './emailValidation';
+export { validatePassword } from './passwordValidation';
 export {
   validateHabitName,
   validateLongText,
   validateShortText,
+} from './textValidation';
+
+// Re-export constants from central constants file
+export {
+  MAX_EMAIL_LENGTH,
+  MIN_PASSWORD_LENGTH,
   MAX_HABIT_NAME_LENGTH,
   MAX_LONG_TEXT_LENGTH,
   MAX_SHORT_TEXT_LENGTH,
-} from './textValidation';
+} from '@/constants';
 
 // Re-export security utilities
 export { containsDangerousPatterns } from './security';

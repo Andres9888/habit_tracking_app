@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines, max-lines-per-function */
 /**
  * HabitsListState Hook
  *
@@ -8,8 +8,8 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import { useCallback, useState } from 'react';
-import { useConvex, useMutation, useQuery } from 'convex/react';
+import { useCallback, useMemo, useState } from 'react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Habit, HabitSettings, HabitSortMode } from '../types';
 import { useHabitsWeekDates } from './useHabitsWeekDates';
@@ -21,31 +21,49 @@ import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
+import { useCompletionSound } from '../../../hooks/useCompletionSound';
+import { validateHabitsArray } from '../../../utils/validation';
 import type { HabitsListState } from './types';
 
-const FREE_HABIT_LIMIT = 3;
+import { FREE_HABIT_LIMIT } from '@/constants';
 
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
-  const [isRefreshingHabits, setIsRefreshingHabits] = useState(false);
   const isOnline = useIsOnline();
   const toggleHabitMutation = useToggleHabitWithTimezone();
   const reorderHabits = useMutation(api.habits.reorderHabits);
-  const convex = useConvex();
 
   const habitsQuery = useQuery(api.habits.list);
-  const habitsFromQuery = habitsQuery ?? [];
+  // Validate and limit habits array for performance (guards against 100+ habits edge case)
+  const habitsValidation = useMemo(
+    () => validateHabitsArray(habitsQuery ?? []),
+    [habitsQuery]
+  );
+  const habitsFromQuery = habitsValidation.limited;
   const isHabitsLoading = habitsQuery === undefined;
+
+  // Warn if habits array was limited
+  if (habitsValidation.warning && __DEV__) {
+    console.warn('[useHabitsListState]', habitsValidation.warning);
+  }
 
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
+  const completionSoundEnabled = settings?.completionSoundEnabled ?? false;
+  const completionSoundType = settings?.completionSoundType ?? 'chime';
   const dayShape = settings?.dayShape ?? 'square';
   const habitSortMode: HabitSortMode = settings?.habitSortMode ?? 'manual';
   const habitCompletionIcon = settings?.habitCompletionIcon ?? 'chain';
   const reduceMotionPreference = settings?.reduceMotion ?? false;
   const isPremiumUser = settings?.hasPremium ?? false;
   const showWeekCompletionBar = settings?.showWeekCompletionBar ?? true;
+
+  // Completion sound hook (premium feature)
+  const { playCompletionSound } = useCompletionSound({
+    soundEnabled: isPremiumUser && completionSoundEnabled,
+    soundType: completionSoundType,
+  });
 
   const weekDatesState = useHabitsWeekDates();
   const { today, extendedDateStrings } = weekDatesState;
@@ -82,28 +100,46 @@ export function useHabitsListState(): HabitsListState {
   const handleHabitPress = useCallback((_habit: Habit) => {
     // Handled by parent component
   }, []);
-  const toggleHabit = useOptimisticToggleMutation(
+
+  // Wrap toggle mutation with optimistic update for immediate feedback
+  // Pass isOnline for offline queue integration (T011)
+  const baseToggleHabit = useOptimisticToggleMutation(
     toggleHabitMutation,
     isCompleted,
     { isOnline }
   );
 
-  const refreshHabits = useCallback(async () => {
-    setIsRefreshingHabits(true);
-    try {
-      await Promise.all([
-        convex.query(api.habits.list),
-        convex.query(api.settings.get),
-      ]);
-    } finally {
-      setIsRefreshingHabits(false);
-    }
-  }, [convex]);
+  // Wrap toggleHabit to also play completion sound
+  const toggleHabit = useCallback(
+    async (args: { habitId: Habit['_id']; date: string }) => {
+      // Check if this will mark as completed (not already completed)
+      const currentlyCompleted = isCompleted(args.habitId, args.date);
+
+      // Call the original toggle function
+      const result = await baseToggleHabit(args);
+
+      // Play sound if marking as complete (not uncompleting)
+      if (!currentlyCompleted) {
+        playCompletionSound();
+      }
+
+      return result;
+    },
+    [baseToggleHabit, isCompleted, playCompletionSound]
+  );
+
+  // Stable content padding reference to avoid object re-creation every render
+  const contentPadding = useMemo(
+    () => ({ paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 }),
+    []
+  );
 
   return {
     canNavigateForward: weekDatesState.canNavigateForward,
     celebrationsEnabled,
-    contentPadding: { paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 },
+    completionSoundEnabled,
+    completionSoundType,
+    contentPadding,
     dayShape,
     freeHabitLimit: FREE_HABIT_LIMIT,
     habitCompletionIcon,
@@ -125,10 +161,8 @@ export function useHabitsListState(): HabitsListState {
     handleNextWeek: weekDatesState.handleNextWeek,
     handlePreviousWeek: weekDatesState.handlePreviousWeek,
     isPremiumUser,
-    isRefreshingHabits,
     openCreateHabitScreen,
     reduceMotionPreference,
-    refreshHabits,
     toggleHabit,
   };
 }

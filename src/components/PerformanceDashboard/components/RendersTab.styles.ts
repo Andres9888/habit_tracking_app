@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 
 export const rendersStyles = StyleSheet.create({
   compDuration: {
-    color: '#22c55e',
+    color: '#15793C',
     fontFamily: 'monospace',
     fontSize: 10,
     width: 45,

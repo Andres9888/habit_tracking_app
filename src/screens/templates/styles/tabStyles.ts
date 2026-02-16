@@ -1,5 +1,8 @@
 /**
- * Tab Styles - OPTIMIZED: Emerald active state, stronger shadows
+ * Tab Styles - Emerald active state, theme-aware via semantic tokens
+ *
+ * Note: Static styles only. Theme-dependent colors (background, text)
+ * are applied inline via useThemeColors() in the TabBar component.
  */
 import { StyleSheet } from 'react-native';
 
@@ -14,16 +17,7 @@ export const tabStyles = StyleSheet.create({
     paddingVertical: 12,
     zIndex: 1,
   },
-  tabActive: {
-    backgroundColor: '#fff',
-    elevation: 3,
-    shadowColor: '#1c1917',
-    shadowOffset: { height: 3, width: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-  },
   tabBar: {
-    backgroundColor: '#ffffff',
     borderRadius: 12,
     flexDirection: 'row',
     marginBottom: 12,
@@ -33,17 +27,14 @@ export const tabStyles = StyleSheet.create({
     position: 'relative',
   },
   tabCount: {
-    color: '#a8a29e',
     fontSize: 13,
     fontWeight: '700',
     marginLeft: 6,
   },
-  // OPTIMIZED: Emerald active count
   tabCountActive: {
     color: '#059669',
   },
   tabIndicator: {
-    backgroundColor: '#fff',
     borderRadius: 12,
     bottom: 5,
     elevation: 3,
@@ -56,11 +47,9 @@ export const tabStyles = StyleSheet.create({
     top: 5,
   },
   tabText: {
-    color: '#78716c',
     fontSize: 13,
     fontWeight: '600',
   },
-  // OPTIMIZED: Emerald active text
   tabTextActive: {
     color: '#047857',
   },

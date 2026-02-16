@@ -71,7 +71,6 @@ export default function FullsizeTemplatePreview({
     >
       <PreviewContent
         animatedStyles={animatedStyles}
-        closeButtonScale={closeButtonScale}
         confettiRef={successAnimations.confettiRef}
         createPressHandlers={createPressHandlers}
         customizeButtonScale={customizeButtonScale}
