@@ -3,9 +3,9 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import type { ActionItemProps } from './types';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
 export const ActionItem = ({
   badge,
@@ -19,9 +19,15 @@ export const ActionItem = ({
   subtitle,
 }: ActionItemProps) => {
   const { colors, isDark } = useThemeColors();
+  const { triggerWarning, triggerLightImpact } = useHapticFeedback();
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    // Use warning haptic for destructive actions, light tap for normal actions
+    if (destructive) {
+      triggerWarning();
+    } else {
+      triggerLightImpact();
+    }
     onPress();
   };
 
