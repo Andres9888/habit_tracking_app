@@ -71,14 +71,11 @@ export async function scheduleLetterUnlockNotification({
       },
     });
 
-    if (__DEV__) {
-      // eslint-disable-next-line no-console
-      console.info('scheduleLetterUnlockNotification success', {
-        letterId,
-        notificationId,
-        unlockAt: new Date(unlockAt).toISOString(),
-      });
-    }
+    if (__DEV__) console.info('scheduleLetterUnlockNotification success', {
+      letterId,
+      notificationId,
+      unlockAt: new Date(unlockAt).toISOString(),
+    });
 
     return notificationId;
   } catch (error) {

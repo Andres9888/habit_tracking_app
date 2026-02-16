@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   checkmark: {
     alignItems: 'center',
     backgroundColor: '#10b981',
-    borderRadius: 40,
+    borderRadius: 24,
     height: 80,
     justifyContent: 'center',
     width: 80,
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
   },
   ring: {
     borderColor: '#10b981',
-    borderRadius: 50,
+    borderRadius: 9999,
     borderWidth: 3,
     height: 100,
     position: 'absolute',
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
   },
   successText: {
     color: '#1c1917',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
     letterSpacing: 0.5,
     marginTop: 24,

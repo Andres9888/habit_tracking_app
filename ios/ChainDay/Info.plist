@@ -49,6 +49,12 @@
     <string>Allow $(PRODUCT_NAME) to access your microphone for voice note recordings.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your photos to create your Vision Board.</string>
+    <key>NSUserNotificationsUsageDescription</key>
+    <string>ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent.</string>
+    <key>NSFaceIDUsageDescription</key>
+    <string>ChainDay uses Face ID to securely authenticate your account.</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
     <key>RCTNewArchEnabled</key>
     <true/>
     <key>UILaunchStoryboardName</key>
@@ -74,7 +80,7 @@
       <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
     <key>UIUserInterfaceStyle</key>
-    <string>Light</string>
+    <string>Automatic</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
   </dict>

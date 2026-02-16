@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
   },
   handle: {
     backgroundColor: colors.gray[300],
-    borderRadius: 2,
+    borderRadius: 4,
     height: 4,
     width: 40,
   },

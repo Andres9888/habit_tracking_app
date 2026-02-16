@@ -77,15 +77,12 @@ export async function scheduleAffirmationDelivery({
       );
     }
 
-    if (__DEV__) {
-      // eslint-disable-next-line no-console
-      console.info('scheduleAffirmationDelivery success', {
-        affirmationId,
-        frequency,
-        notificationId,
-        scheduledTime,
-      });
-    }
+    if (__DEV__) console.info('scheduleAffirmationDelivery success', {
+      affirmationId,
+      frequency,
+      notificationId,
+      scheduledTime,
+    });
 
     return notificationId;
   } catch (error) {
