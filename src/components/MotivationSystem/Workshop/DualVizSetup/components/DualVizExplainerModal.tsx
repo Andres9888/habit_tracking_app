@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Text, Pressable, Modal } from 'react-native';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import type { DualVizExplainerModalProps } from '../DualVizSetup.types';
 import { ExplainerHeader } from './ExplainerHeader';
 import { ExplainerKeyInsight } from './ExplainerKeyInsight';
@@ -15,6 +16,8 @@ export function DualVizExplainerModal({
   visible,
   onClose,
 }: DualVizExplainerModalProps) {
+  const { colors } = useThemeColors();
+
   return (
     <Modal
       transparent
@@ -31,7 +34,8 @@ export function DualVizExplainerModal({
         <Pressable
           accessibilityLabel='Visualization protocol explanation'
           accessibilityRole='none'
-          className='w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl'
+          className='w-full max-w-sm rounded-2xl p-5 shadow-xl'
+          style={{ backgroundColor: colors.surface }}
           onPress={(e) => e.stopPropagation()}
         >
           <ExplainerHeader onClose={onClose} />
@@ -40,7 +44,10 @@ export function DualVizExplainerModal({
           <ExplainerBreakdown />
 
           {/* Source */}
-          <Text className='text-center text-xs italic text-stone-400'>
+          <Text
+            className='text-center text-xs italic'
+            style={{ color: colors.text.tertiary }}
+          >
             Source: Huberman Lab Podcast #55
           </Text>
         </Pressable>

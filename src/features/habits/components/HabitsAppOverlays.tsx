@@ -7,6 +7,7 @@ import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
 import { RevenueCatPaywall } from '../../../components/RevenueCatPaywall';
 import { HabitsModals } from './HabitsModals';
 import WebToaster from './WebToaster';
+import { TOAST_DURATION_MS } from '@/constants';
 import type { HabitsListState, HabitsModalsState } from '../hooks/types';
 
 interface HabitsAppOverlaysProps {
@@ -30,7 +31,7 @@ export function HabitsAppOverlays({
       <HabitsModals state={modals} />
 
       <ArchiveUndoToast
-        duration={5000}
+        duration={TOAST_DURATION_MS}
         habitName={list.archiveUndoHabitName}
         visible={list.archiveUndoVisible}
         onDismiss={list.dismissArchiveUndo}

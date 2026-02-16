@@ -3,6 +3,7 @@
  */
 
 import { useEffect, useRef } from 'react';
+import type ConfettiCannon from 'react-native-confetti-cannon';
 import { ANIMATION_TIMING } from './constants';
 
 interface UseConfettiProps {
@@ -11,7 +12,7 @@ interface UseConfettiProps {
 }
 
 export function useConfetti({ visible, reduceMotion }: UseConfettiProps) {
-  const confettiRef = useRef<any>(null);
+  const confettiRef = useRef<ConfettiCannon>(null);
 
   useEffect(() => {
     if (visible && confettiRef.current && !reduceMotion) {
