@@ -24,7 +24,7 @@ export function CtaButton({
   isLoading,
   onPress,
   inputValue,
-}: CtaButtonProps & { inputValue?: string }) {
+}: CtaButtonProps) {
   const isDisabled = disabled || isLoading;
   const colors = useEmptyStateColors();
   const { trigger } = useHaptics();

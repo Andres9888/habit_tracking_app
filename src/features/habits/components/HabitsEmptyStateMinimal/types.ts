@@ -92,6 +92,8 @@ export interface CtaButtonProps {
   isLoading?: boolean;
   /** Callback when button is pressed */
   onPress: () => void;
+  /** Current input value — used for dynamic CTA label */
+  inputValue?: string;
 }
 
 /**

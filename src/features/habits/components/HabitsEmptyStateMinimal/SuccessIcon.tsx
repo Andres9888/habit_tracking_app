@@ -9,7 +9,7 @@ import { Text, View, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 
 import { PROGRESS_RING, PARTICLE_BURST } from './animations';
-import { COLORS } from './constants';
+import { useEmptyStateColors } from './useEmptyStateColors';
 import { ParticleBurst } from './ParticleBurst';
 import { ProgressRing } from './ProgressRing';
 
@@ -28,6 +28,8 @@ export function SuccessIcon({
   ringStyle,
   burstStyle,
 }: SuccessIconProps) {
+  const colors = useEmptyStateColors();
+
   return (
     <Animated.View
       style={[
@@ -81,7 +83,7 @@ export function SuccessIcon({
       <View
         style={{
           alignItems: 'center',
-          backgroundColor: COLORS.successBackground,
+          backgroundColor: colors.successBackground,
           borderRadius: 48,
           height: 96,
           justifyContent: 'center',
