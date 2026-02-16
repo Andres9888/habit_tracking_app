@@ -15,36 +15,6 @@ import { render } from '@testing-library/react-native';
 import { HabitStrengthHistorySkeleton } from '../HabitStrengthHistorySkeleton';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  const React = require('react');
-  const { View } = require('react-native');
-
-  return {
-    ...Reanimated,
-    useSharedValue: jest.fn((initial) => ({ value: initial })),
-    useAnimatedStyle: jest.fn(() => ({})),
-    withRepeat: jest.fn((animation) => animation),
-    withTiming: jest.fn((toValue) => toValue),
-    interpolate: jest.fn((value, inputRange, outputRange) => {
-      const progress =
-        (value - inputRange[0]) / (inputRange[1] - inputRange[0]);
-      return outputRange[0] + progress * (outputRange[1] - outputRange[0]);
-    }),
-    Easing: {
-      inOut: jest.fn((easing) => easing),
-      ease: jest.fn(),
-    },
-    createAnimatedComponent: (Component: React.ComponentType<unknown>) => {
-      return React.forwardRef((props: Record<string, unknown>, _ref: unknown) =>
-        React.createElement(Component, {
-          ...props,
-          testID: 'animated-gradient',
-        })
-      );
-    },
-  };
-});
 
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => {

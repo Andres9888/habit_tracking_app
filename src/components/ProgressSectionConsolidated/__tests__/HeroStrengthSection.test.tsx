@@ -16,33 +16,7 @@ jest
   .mockImplementation(() => Promise.resolve(false));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const { View, Text } = require('react-native');
 
-  const Animated = {
-    View,
-    Text,
-    createAnimatedComponent: (Component: React.ComponentType) => Component,
-  };
-
-  return {
-    __esModule: true,
-    default: Animated,
-    ...Animated,
-    useSharedValue: (initialValue: number) => ({ value: initialValue }),
-    useAnimatedProps: () => ({}),
-    useAnimatedStyle: () => ({}),
-    useDerivedValue: () => ({ value: '0%' }),
-    withTiming: (value: number) => value,
-    withDelay: (_delay: number, value: number) => value,
-    withSpring: (value: number) => value,
-    Easing: {
-      out: () => () => 0,
-      cubic: () => 0,
-    },
-    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
-  };
-});
 
 // Mock react-native-svg
 jest.mock('react-native-svg', () => {

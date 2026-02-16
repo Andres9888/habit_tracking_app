@@ -23,43 +23,6 @@ jest.mock('../../../hooks/useReduceMotion', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const React = require('react');
-  const { View, Text } = require('react-native');
-
-  const Animated = {
-    View,
-    Text,
-    createAnimatedComponent: (Component: React.ComponentType) => {
-      const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) =>
-        React.createElement(Component, { ...props, ref })
-      );
-      AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
-      return AnimatedComponent;
-    },
-  };
-
-  return {
-    __esModule: true,
-    default: Animated,
-    ...Animated,
-    useSharedValue: (initialValue: number) => ({ value: initialValue }),
-    useAnimatedStyle: () => ({}),
-    withTiming: (value: number) => value,
-    withDelay: (_delay: number, value: number) => value,
-    withSpring: (value: number) => value,
-    withRepeat: (animation: unknown) => animation,
-    withSequence: (...animations: unknown[]) => animations[0],
-    interpolate: (value: number, input: number[], output: number[]) =>
-      output[0],
-    Easing: {
-      out: () => () => 0,
-      inOut: () => () => 0,
-      cubic: () => 0,
-      ease: () => 0,
-    },
-  };
-});
 
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => {

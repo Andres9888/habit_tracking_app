@@ -8,25 +8,6 @@ import { render } from '@testing-library/react-native';
 import { NextReminderBadge } from '../NextReminderBadge';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-
-  return {
-    __esModule: true,
-    default: {
-      View: View,
-    },
-    FadeIn: {
-      duration: () => ({
-        delay: () => ({}),
-      }),
-    },
-    FadeOut: {
-      duration: () => ({}),
-    },
-  };
-});
 
 // Mock lucide-react-native Clock icon
 jest.mock('lucide-react-native', () => {

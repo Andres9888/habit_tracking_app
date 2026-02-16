@@ -32,17 +32,7 @@ jest.mock('expo-haptics', () => ({
 }));
 
 // Mock reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  // Mock withTiming to immediately execute callback
-  Reanimated.withTiming = (toValue: number, _config: any, callback?: () => void) => {
-    if (callback) callback();
-    return toValue;
-  };
-  Reanimated.withSpring = (toValue: number) => toValue;
-  Reanimated.withSequence = (...values: any[]) => values[values.length - 1];
-  return Reanimated;
-});
+
 
 describe('Quick Reflection Acceptance Criteria', () => {
   // AC: "User sees Quick Reflection after completing habit"

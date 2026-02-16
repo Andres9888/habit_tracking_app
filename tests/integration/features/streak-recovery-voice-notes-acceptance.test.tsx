@@ -87,26 +87,7 @@ jest.mock('lucide-react-native', () => {
 });
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const React = require('react');
-  const { View } = require('react-native');
 
-  return {
-    default: {
-      createAnimatedComponent: (component: any) => component,
-    },
-    useAnimatedStyle: () => ({}),
-    useSharedValue: (value: any) => ({ value }),
-    withSpring: (value: any) => value,
-    withTiming: (value: any) => value,
-    withDelay: (_delay: number, value: any) => value,
-    withSequence: (...values: any[]) => values[values.length - 1],
-    withRepeat: (value: any) => value,
-    runOnJS: (fn: any) => fn,
-    Animated: { View },
-    View: View,
-  };
-});
 
 // Mock clsx
 jest.mock('clsx', () => ({

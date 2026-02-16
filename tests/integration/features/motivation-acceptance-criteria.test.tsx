@@ -86,38 +86,6 @@ jest.mock('clsx', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-  return {
-    default: {
-      View,
-      createAnimatedComponent: (Component: any) => Component,
-    },
-    useSharedValue: (initial: any) => ({ value: initial }),
-    useAnimatedStyle: () => ({}),
-    withSpring: (value: any) => value,
-    withTiming: (value: any, _config?: any, _callback?: any) => {
-      // Note: We intentionally don't call the callback to avoid infinite loops
-      // in pulsing animations. The callback triggers runOnJS which would restart
-      // the animation, causing a stack overflow in tests.
-      return value;
-    },
-    withSequence: (...values: any[]) => values[values.length - 1],
-    withRepeat: (animation: any) => animation,
-    interpolate: (value: number, input: number[], output: number[]) =>
-      output[0],
-    runOnJS: (fn: any) => fn,
-    View,
-    FadeIn: { duration: () => ({ delay: () => ({}) }) },
-    FadeOut: { duration: () => ({}) },
-    LinearTransition: {
-      springify: () => ({ damping: () => ({ stiffness: () => ({}) }) }),
-    },
-    SlideInDown: { duration: () => ({}) },
-    SlideOutDown: { duration: () => ({}) },
-  };
-});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Test Data - Re-export types from components

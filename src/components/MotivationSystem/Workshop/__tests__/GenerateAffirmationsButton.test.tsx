@@ -25,19 +25,7 @@ jest.mock('expo-haptics', () => ({
   },
 }));
 
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.default.call = () => {};
-  return {
-    ...Reanimated,
-    useAnimatedStyle: () => ({}),
-    useSharedValue: (value: number) => ({ value }),
-    withSpring: (value: number) => value,
-    withTiming: (value: number) => value,
-    withRepeat: (value: number) => value,
-    withSequence: (...args: number[]) => args[0],
-  };
-});
+
 
 jest.spyOn(Alert, 'alert');
 

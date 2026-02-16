@@ -22,12 +22,7 @@ jest.mock('../../../../contexts/SyncStatusContext/hooks', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.default.addWhitelistedNativeProps = jest.fn();
-  Reanimated.default.addWhitelistedUIProps = jest.fn();
-  return Reanimated;
-});
+
 
 describe('useSyncedToast', () => {
   beforeEach(() => {

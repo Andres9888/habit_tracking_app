@@ -40,24 +40,7 @@ jest.mock('clsx', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
-  return {
-    default: {
-      View,
-      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
-    },
-    useSharedValue: (initial: unknown) => ({ value: initial }),
-    useAnimatedStyle: () => ({}),
-    withSpring: (value: unknown) => value,
-    withTiming: (value: unknown) => value,
-    withSequence: (...values: unknown[]) => values[values.length - 1],
-    interpolate: (value: number, input: number[], output: number[]) =>
-      output[0],
-    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
-    View,
-  };
-});
+
 
 describe('IdentitySection', () => {
   const defaultProps = {

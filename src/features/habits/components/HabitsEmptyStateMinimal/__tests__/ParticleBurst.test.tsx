@@ -15,14 +15,7 @@ import { PARTICLE_BURST } from '../animations';
 import { ParticleBurst } from '../ParticleBurst';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
 
-  // Mock useReducedMotion to return false by default
-  Reanimated.useReducedMotion = jest.fn(() => false);
-
-  return Reanimated;
-});
 
 describe('ParticleBurst', () => {
   beforeEach(() => {

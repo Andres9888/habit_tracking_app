@@ -10,23 +10,7 @@ import {
 import { createPanGesture } from '@/components/HabitCard/gestures/panGesture';
 
 // Mock reanimated
-jest.mock('react-native-reanimated', () => {
-  const actual = jest.requireActual('react-native-reanimated/mock');
-  return {
-    ...actual,
-    withTiming: jest.fn((value: number, config?: { duration: number }) => ({
-      __type: 'timing',
-      duration: config?.duration,
-      value,
-    })),
-    withSpring: jest.fn((value: number, config?: object) => ({
-      __type: 'spring',
-      config,
-      value,
-    })),
-    runOnJS: jest.fn((fn: () => void) => fn),
-  };
-});
+
 
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn().mockResolvedValue(undefined),

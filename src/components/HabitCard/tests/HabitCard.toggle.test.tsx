@@ -6,7 +6,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { View } from 'react-native';
-import ReanimatedMock from 'react-native-reanimated/mock';
 import { HabitCard } from '../HabitCard';
 import { useQuery, useMutation } from 'convex/react';
 import * as Haptics from 'expo-haptics';
@@ -52,17 +51,7 @@ jest.mock('react-native-gesture-handler', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = ReanimatedMock;
-  Reanimated.default.call = () => {};
-  return {
-    ...Reanimated,
-    runOnJS: jest.fn((fn) => fn),
-    useAnimatedStyle: jest.fn(() => ({})),
-    useSharedValue: jest.fn(() => ({ value: 0 })),
-    withSpring: jest.fn((toValue) => toValue),
-  };
-});
+
 
 // Mock theme
 jest.mock('../../theme', () => ({

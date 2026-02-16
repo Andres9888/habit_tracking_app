@@ -100,32 +100,7 @@ jest.mock('clsx', () => ({
 }));
 
 // Mock react-native-reanimated for integration tests
-jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
-  return {
-    default: {
-      View,
-      createAnimatedComponent: (Component: any) => Component,
-    },
-    useSharedValue: (initial: any) => ({ value: initial }),
-    useAnimatedStyle: () => ({}),
-    withSpring: (value: any) => value,
-    withTiming: (value: any, _config?: any, _callback?: any) => value,
-    withDelay: (_delay: any, value: any) => value,
-    withSequence: (...values: any[]) => values[values.length - 1],
-    withRepeat: (animation: any) => animation,
-    interpolate: (value: number, input: number[], output: number[]) =>
-      output[0],
-    runOnJS: (_fn: any) => () => {},
-    Extrapolation: { CLAMP: 'clamp' },
-    Easing: {
-      out: (fn: any) => fn,
-      in: (fn: any) => fn,
-      cubic: (x: number) => x,
-    },
-    View,
-  };
-});
+
 
 // Mock react-native-safe-area-context
 jest.mock('react-native-safe-area-context', () => ({

@@ -17,19 +17,7 @@ import { StrengthTimelineChart } from '../StrengthTimelineChart';
 import type { StrengthSnapshot } from '../types';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
 
-  // Mock useReducedMotion to return false by default
-  Reanimated.useReducedMotion = jest.fn(() => false);
-
-  // Mock FadeIn entering animation
-  Reanimated.FadeIn = {
-    duration: jest.fn(() => ({})),
-  };
-
-  return Reanimated;
-});
 
 // Mock react-native-svg
 jest.mock('react-native-svg', () => {

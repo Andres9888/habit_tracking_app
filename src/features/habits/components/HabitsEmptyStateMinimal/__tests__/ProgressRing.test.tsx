@@ -16,14 +16,7 @@ import { COLORS } from '../constants';
 import { ProgressRing } from '../ProgressRing';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
 
-  // Mock useReducedMotion to return false by default
-  Reanimated.useReducedMotion = jest.fn(() => false);
-
-  return Reanimated;
-});
 
 // Mock react-native-svg
 jest.mock('react-native-svg', () => {
