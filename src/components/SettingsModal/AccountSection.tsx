@@ -10,6 +10,7 @@ import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { PremiumStatus } from './sections/PremiumStatus';
 import { FeedbackModal } from '../FeedbackModal';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
+import { performLogoutCleanup } from '../../lib/auth';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
 const WHATS_NEW_URL = 'https://andres9888.github.io/chainday-landing/changelog.html';
@@ -42,6 +43,7 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
             setIsDeletingAccount(true);
             void (async () => {
               try {
+                await performLogoutCleanup();
                 await user?.delete();
               } catch {
                 Alert.alert('Error', 'Failed to delete account. Please try again or contact support.');
@@ -63,7 +65,8 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
       {
         onPress: () => {
           setIsSigningOut(true);
-          void signOut()
+          void performLogoutCleanup()
+            .then(() => signOut())
             .catch(() => Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_OUT_FAILED))
             .finally(() => setIsSigningOut(false));
         },

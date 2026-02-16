@@ -53,4 +53,16 @@ export const tokenCache = {
       return;
     }
   },
+  /**
+   * Delete a token from secure storage.
+   * Used during logout to ensure no stale credentials remain.
+   * @param key - The storage key to remove
+   */
+  async deleteToken(key: string) {
+    try {
+      await SecureStore.deleteItemAsync(key);
+    } catch (error) {
+      if (__DEV__) console.warn('Failed to delete token from secure store', error);
+    }
+  },
 };

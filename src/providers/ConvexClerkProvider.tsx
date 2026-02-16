@@ -22,6 +22,7 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (!isSignedIn) {
+      convexClient.clearAuth();
       setIsConvexReady(false);
       return;
     }
