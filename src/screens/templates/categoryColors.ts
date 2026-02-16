@@ -3,6 +3,7 @@
  */
 
 import type { CategoryColorTokens } from './templates.types';
+import { colors } from '../../theme/colors';
 
 export const CATEGORY_COLORS: Record<string, CategoryColorTokens> = {
   all: {
@@ -13,9 +14,9 @@ export const CATEGORY_COLORS: Record<string, CategoryColorTokens> = {
   },
   andrew_huberman: {
     bg: '#ECFDF5',
-    bgSelected: '#059669',
+    bgSelected: colors.primary[600],
     border: '#A7F3D0',
-    text: '#047857',
+    text: colors.primary[700],
   },
   breathing: {
     bg: '#E0F2FE',
@@ -33,13 +34,13 @@ export const CATEGORY_COLORS: Record<string, CategoryColorTokens> = {
     bg: '#ECFDF5',
     bgSelected: '#10B981',
     border: '#A7F3D0',
-    text: '#059669',
+    text: colors.primary[600],
   },
   health_fitness: {
     bg: '#D1FAE5',
     bgSelected: '#10B981',
     border: '#6EE7B7',
-    text: '#047857',
+    text: colors.primary[700],
   },
   learning: {
     bg: '#F3E8FF',
@@ -69,7 +70,7 @@ export const CATEGORY_COLORS: Record<string, CategoryColorTokens> = {
     bg: '#FEF3C7',
     bgSelected: '#F59E0B',
     border: '#FDE68A',
-    text: '#D97706',
+    text: '#9A5504',
   },
   productivity: {
     bg: '#DBEAFE',

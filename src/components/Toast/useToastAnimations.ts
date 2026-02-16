@@ -33,6 +33,14 @@ export function useToastAnimations({
   // Use ref for callback to prevent it from triggering useEffect re-runs
   const onDismissRef = useRef(onDismiss);
   onDismissRef.current = onDismiss;
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup dismiss timer on unmount
+  useEffect(() => {
+    return () => {
+      if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+    };
+  }, []);
 
   const handleDismiss = useCallback(
     (fromSwipe = false) => {
@@ -45,7 +53,8 @@ export function useToastAnimations({
       opacity.value = withTiming(0, { duration: 200 });
 
       if (onDismissRef.current) {
-        setTimeout(() => {
+        if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+        dismissTimerRef.current = setTimeout(() => {
           onDismissRef.current?.();
         }, 250);
       }

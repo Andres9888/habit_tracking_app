@@ -73,9 +73,9 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.BORDER,
     borderRadius: 16,
     borderWidth: 1,
-    height: 36,
+    height: 44,
     justifyContent: 'center',
-    width: 36,
+    width: 44,
   },
   navButtons: {
     flexDirection: 'row',
@@ -93,6 +93,13 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     marginBottom: 1,
+  },
+  streakCircle: {
+    borderRadius: 6,
+    bottom: 2,
+    height: 12,
+    position: 'absolute',
+    width: 12,
   },
   todayText: {
     fontWeight: '700',

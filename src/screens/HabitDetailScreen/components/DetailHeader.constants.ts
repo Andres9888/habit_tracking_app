@@ -1,3 +1,5 @@
+import { colors } from '../../../theme/colors';
+
 export const buttonShadow = {
   elevation: 4,
   shadowColor: '#1c1917',
@@ -15,7 +17,7 @@ export const iconShadow = {
 
 export const streakShadow = {
   backgroundColor: '#ecfdf5',
-  shadowColor: '#059669',
+  shadowColor: colors.primary[600],
   shadowOffset: { height: 2, width: 0 },
   shadowOpacity: 0.1,
   shadowRadius: 8,

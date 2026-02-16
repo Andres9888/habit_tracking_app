@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 6,
+    borderRadius: 8,
   },
   container: {
     borderBottomColor: 'rgba(255,255,255,0.1)',

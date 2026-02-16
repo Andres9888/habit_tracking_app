@@ -4,10 +4,12 @@
  * Pressable container with animations for TemplateCard
  */
 import React from 'react';
-import { Pressable, View, ViewStyle } from 'react-native';
+import { Pressable, View, type ViewStyle } from 'react-native';
+import type { AnimatedStyle } from 'react-native-reanimated';
 
 import Animated from 'react-native-reanimated';
 
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { SUCCESS_COLOR } from '../TemplateCard.constants';
 import { styles } from '../TemplateCard.styles';
 
@@ -19,9 +21,9 @@ interface CardContainerProps {
   isLocked: boolean;
   isImported: boolean;
   iconColor: string;
-  containerStyle: ViewStyle;
-  shadowStyle: ViewStyle;
-  glowStyle: ViewStyle;
+  containerStyle: AnimatedStyle<ViewStyle>;
+  shadowStyle: AnimatedStyle<ViewStyle>;
+  glowStyle: AnimatedStyle<ViewStyle>;
   style?: ViewStyle;
   children: React.ReactNode;
   onPress: () => void;
@@ -44,6 +46,8 @@ export function CardContainer({
   onPressIn,
   onPressOut,
 }: CardContainerProps) {
+  const { colors } = useThemeColors();
+
   return (
     <AnimatedPressable
       accessible
@@ -52,7 +56,7 @@ export function CardContainer({
       accessibilityRole='button'
       style={[
         styles.card,
-        { backgroundColor: '#fff', opacity: isLocked ? 0.75 : 1 },
+        { backgroundColor: colors.card, opacity: isLocked ? 0.75 : 1 },
         containerStyle,
         shadowStyle,
         style,

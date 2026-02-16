@@ -6,9 +6,9 @@ import type { VariantConfig } from './PremiumPaywall.types';
 
 export const VARIANT_CONFIGS: Record<string, VariantConfig> = {
   analytics: {
-    ctaText: 'Start Free Trial',
+    ctaText: 'Try Premium Free for 7 Days',
     gradientColors: ['#047857', '#059669'] as const,
-    heroSubtitle: 'Deep insights to supercharge your habits',
+    heroSubtitle: "See exactly what's working — and what needs attention.",
     heroTitle: 'Unlock Premium Analytics',
     presentation: 'blur-overlay',
     showPricingToggle: true,
@@ -17,17 +17,16 @@ export const VARIANT_CONFIGS: Record<string, VariantConfig> = {
   benefits: {
     ctaText: 'Start 7-Day Free Trial',
     gradientColors: ['#8b5cf6', '#7c3aed'] as const,
-    heroSubtitle:
-      'Science-backed features proven to increase habit retention by 3x',
+    heroSubtitle: 'Science-backed tools proven to 3x your habit retention.',
     heroTitle: 'Unlock Your Full Motivation Toolkit',
     presentation: 'page-sheet',
     showPricingToggle: false,
     showSocialProof: true,
   },
   motivation: {
-    ctaText: 'Start Free Trial',
+    ctaText: 'Try Premium Free for 7 Days',
     gradientColors: ['#047857', '#059669'] as const,
-    heroSubtitle: 'Science-backed tools to build unbreakable habits',
+    heroSubtitle: 'Science-backed tools to make your habits unbreakable.',
     heroTitle: 'Unlock Premium Motivation',
     presentation: 'blur-overlay',
     showPricingToggle: true,
