@@ -4,7 +4,7 @@ import { typography } from '@/theme/typography';
 
 export const progressStyles = StyleSheet.create({
   badgeIcon: {
-    fontSize: 18,
+    fontSize: 17,
     marginLeft: 4,
   },
   container: {

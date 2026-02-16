@@ -1,46 +1,38 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
-
-const INITIAL_BOUNCE = 0;
-const INITIAL_SCALE = 1;
-const INITIAL_RIPPLE_OPACITY = 0;
-const INITIAL_RIPPLE_SCALE = 0.6;
-const BOUNCE_UP_DURATION_MS = 260;
-const BOUNCE_DOWN_DURATION_MS = 520;
-const BOUNCE_LOOP_DELAY_MS = 1200;
-const PEAK_BOUNCE = 1;
+import { FAB, RIPPLE_EFFECT } from '../../../../constants';
 
 export function useFABAnimations(
   celebrationsEnabled: boolean,
   reduceMotionPreference: boolean
 ) {
-  const bounce = useRef(new Animated.Value(INITIAL_BOUNCE)).current;
-  const pressScale = useRef(new Animated.Value(INITIAL_SCALE)).current;
-  const rippleOpacity = useRef(new Animated.Value(INITIAL_RIPPLE_OPACITY)).current;
-  const rippleScale = useRef(new Animated.Value(INITIAL_RIPPLE_SCALE)).current;
+  const bounce = useRef(new Animated.Value(0)).current;
+  const pressScale = useRef(new Animated.Value(1)).current;
+  const rippleOpacity = useRef(new Animated.Value(0)).current;
+  const rippleScale = useRef(new Animated.Value(RIPPLE_EFFECT.initialScale)).current;
 
   useEffect(() => {
     if (!celebrationsEnabled || reduceMotionPreference) {
       bounce.stopAnimation();
-      bounce.setValue(INITIAL_BOUNCE);
+      bounce.setValue(0);
       return;
     }
 
     const animation = Animated.loop(
       Animated.sequence([
         Animated.timing(bounce, {
-          duration: BOUNCE_UP_DURATION_MS,
+          duration: FAB.bounceInDuration,
           easing: Easing.out(Easing.cubic),
-          toValue: PEAK_BOUNCE,
+          toValue: 1,
           useNativeDriver: true,
         }),
         Animated.timing(bounce, {
-          duration: BOUNCE_DOWN_DURATION_MS,
+          duration: FAB.bounceOutDuration,
           easing: Easing.inOut(Easing.ease),
-          toValue: INITIAL_BOUNCE,
+          toValue: 0,
           useNativeDriver: true,
         }),
-        Animated.delay(BOUNCE_LOOP_DELAY_MS),
+        Animated.delay(FAB.initialBounceDelay),
       ])
     );
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * LockedHabitCard Component
  * Animated upgrade prompt card for free tier limit
@@ -6,16 +7,8 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-
-const INITIAL_CARD_SCALE = 0.94;
-const VISIBLE_OPACITY = 1;
-const HIDDEN_OPACITY = 0;
-const SPRING_DAMPING = 12;
-const SPRING_STIFFNESS = 140;
-const CARD_FADE_IN_DURATION_MS = 260;
-const BUTTON_PRESSED_SCALE = 0.97;
-const PRESS_SPRING_DAMPING = 18;
-const PRESS_SPRING_STIFFNESS = 240;
+import { useThemeColors } from '../../../../theme/ThemeContext';
+import { SCALE, ANIMATION_DURATION } from '../../../../constants';
 
 interface LockedHabitCardProps {
   onUpgradePress: () => void;
@@ -26,27 +19,28 @@ export function LockedHabitCard({
   onUpgradePress,
   reduceMotion = false,
 }: LockedHabitCardProps) {
-  const entranceScale = useRef(new Animated.Value(INITIAL_CARD_SCALE)).current;
-  const opacity = useRef(new Animated.Value(HIDDEN_OPACITY)).current;
-  const pressScale = useRef(new Animated.Value(VISIBLE_OPACITY)).current;
+  const { colors: themeColors, isDark } = useThemeColors();
+  const entranceScale = useRef(new Animated.Value(SCALE.pressSmall)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+  const pressScale = useRef(new Animated.Value(SCALE.normal)).current;
 
   useEffect(() => {
     if (reduceMotion) {
-      entranceScale.setValue(VISIBLE_OPACITY);
-      opacity.setValue(VISIBLE_OPACITY);
+      entranceScale.setValue(1);
+      opacity.setValue(1);
       return;
     }
     Animated.parallel([
       Animated.spring(entranceScale, {
-        damping: SPRING_DAMPING,
-        stiffness: SPRING_STIFFNESS,
-        toValue: VISIBLE_OPACITY,
+        damping: 18,
+        stiffness: 150,
+        toValue: 1,
         useNativeDriver: true,
       }),
       Animated.timing(opacity, {
-        duration: CARD_FADE_IN_DURATION_MS,
+        duration: ANIMATION_DURATION.extraLong,
         easing: Easing.out(Easing.cubic),
-        toValue: VISIBLE_OPACITY,
+        toValue: SCALE.normal,
         useNativeDriver: true,
       }),
     ]).start();
@@ -54,32 +48,33 @@ export function LockedHabitCard({
 
   const handlePressIn = () => {
     if (reduceMotion) {
-      pressScale.setValue(BUTTON_PRESSED_SCALE);
+      pressScale.setValue(SCALE.pressLarge);
       return;
     }
     Animated.spring(pressScale, {
-      damping: PRESS_SPRING_DAMPING,
-      stiffness: PRESS_SPRING_STIFFNESS,
-      toValue: BUTTON_PRESSED_SCALE,
+      damping: 18,
+      stiffness: 240,
+      toValue: SCALE.pressLarge,
       useNativeDriver: true,
     }).start();
   };
 
   const handlePressOut = () => {
     if (reduceMotion) {
-      pressScale.setValue(VISIBLE_OPACITY);
+      pressScale.setValue(SCALE.normal);
       return;
     }
     Animated.spring(pressScale, {
-      damping: PRESS_SPRING_DAMPING,
-      stiffness: PRESS_SPRING_STIFFNESS,
-      toValue: VISIBLE_OPACITY,
+      damping: 18,
+      stiffness: 240,
+      toValue: SCALE.normal,
       useNativeDriver: true,
     }).start();
   };
 
   return (
     <Pressable
+      accessibilityHint='Tap to start your free trial'
       accessibilityLabel='Upgrade to unlock unlimited habits'
       accessibilityRole='button'
       onPress={onUpgradePress}
@@ -87,23 +82,32 @@ export function LockedHabitCard({
       onPressOut={handlePressOut}
     >
       <Animated.View
-        className='gap-4 rounded-3xl border border-dashed border-violet-200 p-5'
+        className='gap-4 rounded-3xl border border-dashed p-5'
         style={{
+          borderColor: isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(196, 181, 253, 1)',
           opacity,
           transform: [{ scale: entranceScale }, { scale: pressScale }],
         }}
       >
         <LinearGradient
           className='absolute inset-0 rounded-3xl'
-          colors={['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
+          colors={isDark
+            ? ['rgba(88, 28, 135, 0.2)', 'rgba(120, 53, 15, 0.1)']
+            : ['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
         />
         <View className='items-center gap-2'>
           <Text className='text-[24px]'>✨</Text>
           <View className='gap-1'>
-            <Text className='text-center text-[17px] font-semibold text-stone-800'>
+            <Text
+              className='text-center text-[17px] font-semibold'
+              style={{ color: themeColors.text.primary }}
+            >
               Ready to unlock more?
             </Text>
-            <Text className='text-center text-[13px] font-normal leading-[18px] text-stone-500'>
+            <Text
+              className='text-center text-[13px] font-normal leading-[18px]'
+              style={{ color: themeColors.text.secondary }}
+            >
               Start a 7-day free trial to track unlimited habits and get
               AI-powered insights. No credit card required.
             </Text>

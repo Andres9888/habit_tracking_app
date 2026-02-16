@@ -40,7 +40,7 @@ export const dayCellStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   todayText: {
-    fontSize: 8,
+    fontSize: 10,
     fontWeight: '700',
     letterSpacing: 0.3,
     textTransform: 'uppercase',

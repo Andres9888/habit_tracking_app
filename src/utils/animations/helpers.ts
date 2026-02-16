@@ -22,28 +22,28 @@ import {
  * Common spring configurations for consistent feel
  */
 export const SPRING_CONFIGS = {
-  /** Bouncy playful animation */
+  /** Bouncy playful animation — celebrations only */
   bouncy: {
     damping: 10,
-    stiffness: 120,
+    stiffness: 180,
   } as WithSpringConfig,
 
-  /** Gentle entrance animation */
+  /** Gentle entrance animation — smooth reveals, minimal bounce */
   entrance: {
-    damping: 15,
+    damping: 18,
+    stiffness: 150,
+  } as WithSpringConfig,
+
+  /** Smooth gentle spring — subtle, no overshoot */
+  smooth: {
+    damping: 20,
     stiffness: 100,
   } as WithSpringConfig,
 
-  /** Smooth gentle spring */
-  smooth: {
-    damping: 20,
-    stiffness: 90,
-  } as WithSpringConfig,
-
-  /** Snappy interaction feedback */
+  /** Snappy interaction feedback — button presses */
   snappy: {
-    damping: 12,
-    stiffness: 150,
+    damping: 18,
+    stiffness: 240,
   } as WithSpringConfig,
 } as const;
 
@@ -75,14 +75,14 @@ export const STAGGER_DELAYS = {
   /** First element in sequence */
   first: 0,
 
-  /** Fourth element */
-  fourth: 300,
+  /** Fourth element (60ms × 3) */
+  fourth: 180,
 
-  /** Second element */
-  second: 100,
+  /** Second element (60ms × 1) */
+  second: 60,
 
-  /** Third element */
-  third: 200,
+  /** Third element (60ms × 2) */
+  third: 120,
 } as const;
 
 /**

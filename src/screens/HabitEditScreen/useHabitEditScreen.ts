@@ -83,6 +83,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     handleArchive,
     handleReminderTimeChange,
     handleReminderToggle,
+    isLoading: habitId != null && habit === undefined,
     remindersEnabled,
     handleSave,
     selectedEmoji,

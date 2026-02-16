@@ -1,5 +1,7 @@
 export interface SettingsModalProps {
   celebrationsEnabled?: boolean;
+  completionSoundEnabled?: boolean;
+  completionSoundType?: 'chime' | 'pop' | 'success';
   dayShape?: 'circle' | 'square';
   habitCompletionIcon?: 'chain' | 'checkbox';
   onChangeDayShape?: (value: 'circle' | 'square') => void | Promise<void>;
@@ -8,6 +10,10 @@ export interface SettingsModalProps {
     value: 'chain' | 'checkbox'
   ) => void | Promise<void>;
   onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;
+  onChangeCompletionSoundEnabled?: (value: boolean) => void | Promise<void>;
+  onChangeCompletionSoundType?: (
+    value: 'chime' | 'pop' | 'success'
+  ) => void | Promise<void>;
   onChangeCompact?: (value: boolean) => void | Promise<void>;
   showHabitStrengthPercentage?: boolean;
   onChangeShowHabitStrengthPercentage?: (
@@ -49,6 +55,12 @@ export interface SettingsContentProps {
   onChangeDarkModePreference: (
     value: 'system' | 'light' | 'dark'
   ) => void | Promise<void>;
+  completionSoundEnabled: boolean;
+  completionSoundType: 'chime' | 'pop' | 'success';
+  onChangeCompletionSoundEnabled: (value: boolean) => void | Promise<void>;
+  onChangeCompletionSoundType: (
+    value: 'chime' | 'pop' | 'success'
+  ) => void | Promise<void>;
   habitCompletionIcon: 'chain' | 'checkbox';
   dayShape: 'circle' | 'square';
   onChangeHabitCompletionIcon: (
@@ -56,6 +68,7 @@ export interface SettingsContentProps {
   ) => void | Promise<void>;
   onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
   onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
+  archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
   showGradientFill: boolean;
   // Streak reminders

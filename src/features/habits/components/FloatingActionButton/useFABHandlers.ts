@@ -1,16 +1,7 @@
 import { useCallback } from 'react';
 import { Animated, Easing } from 'react-native';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
-
-const INITIAL_RIPPLE_OPACITY = 0.26;
-const INITIAL_RIPPLE_SCALE = 0.6;
-const PRESS_IN_DURATION_MS = 110;
-const PRESS_OUT_DURATION_MS = 160;
-const RIPPLE_ANIMATION_DURATION_MS = 320;
-const PRESSED_SCALE = 0.94;
-const FINAL_SCALE = 1;
-const EXPANDED_RIPPLE_SCALE = 1.8;
-const HIDDEN_RIPPLE_OPACITY = 0;
+import { FAB, SCALE, RIPPLE_EFFECT } from '../../../../constants';
 
 interface UseFABHandlersProps {
   openCreateHabitScreen: () => void;
@@ -46,34 +37,34 @@ export function useFABHandlers({
       triggerSelection();
     }
 
-    rippleOpacity.setValue(INITIAL_RIPPLE_OPACITY);
-    rippleScale.setValue(INITIAL_RIPPLE_SCALE);
+    rippleOpacity.setValue(RIPPLE_EFFECT.initialOpacity);
+    rippleScale.setValue(RIPPLE_EFFECT.initialScale);
 
     Animated.parallel([
       Animated.sequence([
         Animated.timing(pressScale, {
-          duration: PRESS_IN_DURATION_MS,
+          duration: FAB.pressScaleDuration,
           easing: Easing.out(Easing.quad),
-          toValue: PRESSED_SCALE,
+          toValue: SCALE.pressSmall,
           useNativeDriver: true,
         }),
         Animated.timing(pressScale, {
-          duration: PRESS_OUT_DURATION_MS,
+          duration: FAB.pressReleaseDuration,
           easing: Easing.out(Easing.ease),
-          toValue: FINAL_SCALE,
+          toValue: SCALE.normal,
           useNativeDriver: true,
         }),
       ]),
       Animated.timing(rippleScale, {
-        duration: RIPPLE_ANIMATION_DURATION_MS,
+        duration: FAB.rippleScaleDuration,
         easing: Easing.out(Easing.cubic),
-        toValue: EXPANDED_RIPPLE_SCALE,
+        toValue: SCALE.large,
         useNativeDriver: true,
       }),
       Animated.timing(rippleOpacity, {
-        duration: RIPPLE_ANIMATION_DURATION_MS,
+        duration: FAB.rippleOpacityDuration,
         easing: Easing.out(Easing.ease),
-        toValue: HIDDEN_RIPPLE_OPACITY,
+        toValue: SCALE.transparent,
         useNativeDriver: true,
       }),
     ]).start();

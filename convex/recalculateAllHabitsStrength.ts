@@ -3,11 +3,11 @@
  * This REPLACES old strength values with new calculations
  * Run this to fix habits that were initialized with the old formula
  */
-import { mutation } from './_generated/server';
+import { internalMutation } from './_generated/server';
 import { v } from 'convex/values';
 import { calculateNewStrength, getStrengthLevel } from './habitStrength';
 
-export const recalculateAllHabitsStrength = mutation({
+export const recalculateAllHabitsStrength = internalMutation({
   args: {
     force: v.optional(v.boolean()), // Set to true to recalculate even if strength exists
   },
@@ -17,7 +17,7 @@ export const recalculateAllHabitsStrength = mutation({
       .filter((q) => q.neq(q.field('archived'), true))
       .collect();
 
-    console.log(`🔄 Recalculating strength for ${habits.length} habits...`);
+    // Recalculating strength for all habits
 
     let recalculated = 0;
     let skipped = 0;
@@ -25,12 +25,12 @@ export const recalculateAllHabitsStrength = mutation({
     for (const habit of habits) {
       // Skip if has strength and not forcing
       if (habit.strength !== undefined && !args.force) {
-        console.log(`  ⏭️  Skipping ${habit.name} - already has strength (use force:true to recalculate)`);
+        // Skip — already has strength
         skipped++;
         continue;
       }
 
-      console.log(`  🔧 Recalculating ${habit.name}...`);
+      // Recalculating habit
 
       // Get all tracking data
       const tracking = await ctx.db
@@ -44,7 +44,7 @@ export const recalculateAllHabitsStrength = mutation({
           strengthLevel: 'starting',
           strengthUpdatedAt: Date.now(),
         });
-        console.log(`    ✅ 0% (starting) - no tracking data`);
+        // Set to 0% — no tracking data
         recalculated++;
         continue;
       }
@@ -88,11 +88,11 @@ export const recalculateAllHabitsStrength = mutation({
         strengthUpdatedAt: Date.now(),
       });
 
-      console.log(`    ✅ ${currentStrength.toFixed(1)}% (${strengthLevel})`);
+      // Strength recalculated
       recalculated++;
     }
 
-    console.log(`\n✨ Complete! Recalculated: ${recalculated}, Skipped: ${skipped}`);
+    // Complete
 
     return {
       recalculated,
