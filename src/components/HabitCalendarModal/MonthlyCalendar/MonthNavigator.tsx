@@ -23,7 +23,8 @@ export function MonthNavigator({
         <Pressable
           accessibilityLabel='Previous month'
           accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full active:bg-stone-100'
+          className='h-11 w-11 items-center justify-center rounded-full active:bg-stone-100'
+          hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onPreviousMonth}
         >
           <ChevronLeft color='#1c1917' size={20} />
@@ -32,7 +33,8 @@ export function MonthNavigator({
         <Pressable
           accessibilityLabel='Next month'
           accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full active:bg-stone-100'
+          className='h-11 w-11 items-center justify-center rounded-full active:bg-stone-100'
+          hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onNextMonth}
         >
           <ChevronRight color='#1c1917' size={20} />
