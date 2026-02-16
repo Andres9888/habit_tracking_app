@@ -125,3 +125,49 @@ export async function maybeRequestReview(
     // Silent fail — never break the app for a rating prompt
   }
 }
+
+/**
+ * Attempt to show the store review prompt after viewing positive analytics.
+ *
+ * Triggers when user views analytics with strong performance metrics.
+ *
+ * Guards:
+ * - Average completion rate >= 70%
+ * - At least 3 active habits
+ * - At least 5 total completions
+ * - At least 90 days since last prompt
+ * - Store review must be available on the platform
+ *
+ * @param avgCompletionRate - Average completion rate (0-100)
+ * @param totalHabits - Total number of habits
+ */
+export async function maybeRequestReviewFromAnalytics(
+  avgCompletionRate: number,
+  totalHabits: number,
+): Promise<void> {
+  try {
+    // Only prompt on strong performance
+    if (avgCompletionRate < 70 || totalHabits < 3) {
+      return;
+    }
+
+    // Check platform support
+    if (Platform.OS === 'web') return;
+    const isAvailable = await StoreReview.isAvailableAsync();
+    if (!isAvailable) return;
+
+    // Check minimum completions
+    const completions = await getCompletionCount();
+    if (completions < MIN_COMPLETIONS) return;
+
+    // Check cooldown
+    const cooldownOk = await isCooldownExpired();
+    if (!cooldownOk) return;
+
+    // All checks passed — request review
+    await recordPromptShown();
+    await StoreReview.requestReview();
+  } catch {
+    // Silent fail — never break the app for a rating prompt
+  }
+}

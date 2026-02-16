@@ -5,11 +5,11 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { X } from 'lucide-react-native';
 
 import CustomModal from '../../../../components/Modal';
 import { VisualizationExercise } from '../../../../components/VisualizationExercise';
+import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { VisualizationModalSectionProps } from './HabitsModals.types';
 
@@ -32,13 +32,14 @@ export function VisualizationModalSection({
   const insets = useSafeAreaInsets();
   const closeScale = useSharedValue(1);
   const { colors } = useThemeColors();
+  const { trigger } = useHaptics();
 
   const closeAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: closeScale.value }],
   }));
 
   const handleClose = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    trigger('tap');
     closeVisualizationExercise();
   };
 
@@ -48,9 +49,23 @@ export function VisualizationModalSection({
       visible={showVisualizationExercise}
       onClose={handleClose}
     >
-      <View className='flex-1' style={{ backgroundColor: colors.background, paddingTop: insets.top + 16 }}>
-        <View className='flex-row items-center justify-between border-b px-5 pb-4' style={{ borderColor: colors.cardBorder }}>
-          <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>Mental Boost</Text>
+      <View
+        className='flex-1'
+        style={{
+          backgroundColor: colors.background,
+          paddingTop: insets.top + 16,
+        }}
+      >
+        <View
+          className='flex-row items-center justify-between border-b px-5 pb-4'
+          style={{ borderColor: colors.cardBorder }}
+        >
+          <Text
+            className='text-lg font-bold'
+            style={{ color: colors.text.primary }}
+          >
+            Mental Boost
+          </Text>
           <AnimatedPressable
             accessibilityHint='Close the mental boost exercise'
             accessibilityLabel='Close mental boost'
@@ -66,7 +81,7 @@ export function VisualizationModalSection({
               });
             }}
             onPressOut={() => {
-              closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
+              closeScale.value = withSpring(1, { damping: 18, stiffness: 150 });
             }}
           >
             <X color={colors.text.secondary} size={24} />
