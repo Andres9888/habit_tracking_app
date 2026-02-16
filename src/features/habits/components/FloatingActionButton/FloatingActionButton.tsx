@@ -36,6 +36,7 @@ export function FloatingActionButton({
       accessibilityHint='Open create habit modal'
       accessibilityLabel='Add habit'
       accessibilityRole='button'
+      testID='home-create-habit-fab'
       className='h-14 w-14 items-center justify-center rounded-full bg-[#059669] shadow-lg'
       {...focusHandlers}
       style={[fabAnimatedStyle, focusStyle]}

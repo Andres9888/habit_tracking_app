@@ -7,6 +7,7 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { FAB, SCALE, RIPPLE_EFFECT } from '../../../../constants';
 
 interface UseFABHandlersProps {
   openCreateHabitScreen: () => void;
