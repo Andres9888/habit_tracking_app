@@ -20,11 +20,9 @@ export const getComplianceData = query({
   handler: async (ctx) => {
     // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
-    }
+    if (!identity) return [];
 
-    // SEC-001: Filter by authenticated user to prevent data leakage
+    // SEC-001: Query only current user's habits to prevent cross-user data leakage
     const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
@@ -32,14 +30,15 @@ export const getComplianceData = query({
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
     const habitIds = activeHabits.map((h) => h._id);
 
-    // PERF: Use single query with userId filter instead of N+1 queries
-    const ninetyDaysAgo = getDaysAgo(89);
-    const trackings: Doc<'tracking'>[] = await ctx.db
-      .query('tracking')
-      .withIndex('by_user_and_date', (q) =>
-        q.eq('userId', identity.subject).gte('date', ninetyDaysAgo)
-      )
-      .collect();
+    // Get all trackings for these habits
+    const trackings: Doc<'tracking'>[] = [];
+    for (const habitId of habitIds) {
+      const habitTrackings = await ctx.db
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
+        .collect();
+      trackings.push(...habitTrackings);
+    }
 
     // Build heatmap data for last 90 days
     const heatmapData: Array<{

@@ -16,11 +16,9 @@ export const get30DayTrend = query({
   handler: async (ctx) => {
     // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
-    }
+    if (!identity) return [];
 
-    // SEC-001: Filter by authenticated user to prevent data leakage
+    // SEC-001: Query only current user's habits to prevent cross-user data leakage
     const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
@@ -28,14 +26,15 @@ export const get30DayTrend = query({
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
     const habitIds = activeHabits.map((h) => h._id);
 
-    // PERF: Use single query with userId filter instead of N+1 queries
-    const thirtyDaysAgo = getDaysAgo(29);
-    const trackings = await ctx.db
-      .query('tracking')
-      .withIndex('by_user_and_date', (q) =>
-        q.eq('userId', identity.subject).gte('date', thirtyDaysAgo)
-      )
-      .collect();
+    // Get all trackings for these habits
+    const trackings: Doc<'tracking'>[] = [];
+    for (const habitId of habitIds) {
+      const habitTrackings = await ctx.db
+        .query('tracking')
+        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
+        .collect();
+      trackings.push(...habitTrackings);
+    }
 
     // Build trend data for last 30 days
     const trendData: Array<{ date: string; averageStrength: number }> = [];

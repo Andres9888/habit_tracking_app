@@ -1,18 +1,21 @@
 import { View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useSkeletonTheme } from '../../../components/SkeletonLoader/useSkeletonTheme';
 import { ShimmerBox } from './ShimmerBox';
 
 export function SkeletonCard({ index }: { index: number }) {
+  const { cardBg, shadowColor, shadowOpacity } = useSkeletonTheme();
   const staggerDelay = index * 100;
   return (
     <Animated.View
-      className='mx-5 my-2 rounded-2xl bg-white p-5'
+      className='mx-5 my-2 rounded-2xl p-5'
       entering={FadeIn.duration(300).delay(staggerDelay)}
       style={{
+        backgroundColor: cardBg,
         elevation: 4,
-        shadowColor: '#1c1917',
+        shadowColor,
         shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
+        shadowOpacity,
         shadowRadius: 16,
       }}
     >

@@ -28,7 +28,7 @@ export const getOverviewStats = query({
       };
     }
 
-    // SEC-001: Filter by authenticated user to prevent data leakage
+    // SEC-001: Query only current user's habits to prevent cross-user data leakage
     const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))

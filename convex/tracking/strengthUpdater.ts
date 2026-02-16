@@ -54,12 +54,5 @@ export async function updateHabitStrength(
     strengthUpdatedAt: Date.now(),
   });
 
-  // Log the strength change in debug mode
-  const previousStrength100 = currentStrength * 100;
-  console.warn('🔧 Strength updated:', {
-    change: `${(snapshot.strength100 - previousStrength100).toFixed(2)}%`,
-    evaluationDateKey,
-    newStrength: `${snapshot.strength100.toFixed(1)}%`,
-    previousStrength: `${previousStrength100.toFixed(1)}%`,
-  });
+  // Strength change logged only in development via Convex dashboard
 }

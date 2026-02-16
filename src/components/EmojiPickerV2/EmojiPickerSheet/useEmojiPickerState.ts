@@ -54,7 +54,14 @@ export function useEmojiPickerState(visible: boolean, habitName: string) {
 
   // Load recent emojis on mount
   useEffect(() => {
-    if (visible) getRecentEmojis().then(setRecentEmojis);
+    if (visible) {
+      void getRecentEmojis()
+        .then(setRecentEmojis)
+        .catch((error) => {
+          if (__DEV__) console.warn('Error loading recent emojis:', error);
+          setRecentEmojis([]);
+        });
+    }
   }, [visible]);
 
   // Get current category name for header

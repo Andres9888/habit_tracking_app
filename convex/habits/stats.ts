@@ -8,19 +8,14 @@ import { query } from '../_generated/server';
 export const getStats = query({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
+    // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return { streak: 0, consistency: 0 };
-    }
+    if (!identity) return { consistency: 0, streak: 0 };
 
+    // SEC-001: Ownership verification — prevent cross-user data leakage
     const habit = await ctx.db.get(args.habitId);
-    if (!habit) {
-      return { streak: 0, consistency: 0 };
-    }
-
-    // SEC-001: Ownership verification - only allow viewing own habit stats
-    if (habit.userId !== identity.subject) {
-      return { streak: 0, consistency: 0 };
+    if (!habit || habit.userId !== identity.subject) {
+      throw new Error('Not authorized to view stats for this habit');
     }
 
     const tracking = await ctx.db
