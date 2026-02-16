@@ -22,7 +22,7 @@ export function HabitStrengthHistorySkeleton({
   return (
     <View
       accessible
-      accessibilityLabel='Loading habit strength history'
+      accessibilityLabel='Loading your habit strength history...'
       className='gap-4'
       testID='habit-strength-history-skeleton'
     >

@@ -1,7 +1,7 @@
-/** StatsNotesHeader - Header + tabs for StatsNotesModal */
-import { Pressable, Text, View } from 'react-native';
-import { X } from 'lucide-react-native';
+/** StatsNotesHeader - Header + tabs for StatsNotesModal (theme-aware) */
+import { Pressable, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 const anim = (delay: number) =>

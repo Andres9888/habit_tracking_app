@@ -1,10 +1,10 @@
-import { mutation } from './_generated/server';
+import { internalMutation } from './_generated/server';
 
 /**
  * One-time migration to add userId to existing habits
  * Run this once after adding authentication
  */
-export const migrateHabitsToCurrentUser = mutation({
+export const migrateHabitsToCurrentUser = internalMutation({
   args: {},
   handler: async (ctx) => {
     // Get authenticated user
@@ -19,7 +19,7 @@ export const migrateHabitsToCurrentUser = mutation({
       .filter((q) => q.eq(q.field('userId'), undefined))
       .collect();
 
-    console.log(`Found ${habitsWithoutUser.length} habits without userId`);
+    // Migrating habits without userId
 
     // Update each habit to belong to current user
     for (const habit of habitsWithoutUser) {

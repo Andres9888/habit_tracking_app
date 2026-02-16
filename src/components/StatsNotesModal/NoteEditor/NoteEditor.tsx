@@ -4,6 +4,7 @@
  * Form for creating and editing notes with optional habit linking.
  */
 
+import { useRef } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
@@ -70,6 +71,7 @@ export default function NoteEditor({
               style={inputStyle}
               value={date}
               onChangeText={setDate}
+              onSubmitEditing={() => bodyRef.current?.focus()}
             />
 
             <HabitSelector
@@ -81,6 +83,7 @@ export default function NoteEditor({
         )}
 
         <TextInput
+          ref={bodyRef}
           multiline
           accessibilityLabel='Note body'
           className='min-h-[120px] w-full rounded-2xl px-4 py-3 text-sm font-medium'

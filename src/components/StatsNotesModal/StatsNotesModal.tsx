@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../theme/ThemeContext';
 import StatsOverview from './StatsOverview';
 import NotesList from './NotesList';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { StatsNotesHeader } from './StatsNotesHeader';
 
 interface StatsNotesModalProps {
@@ -35,7 +36,12 @@ export default function StatsNotesModal({
       visible={visible}
       onRequestClose={onClose}
     >
-      <Pressable className='flex-1 bg-black/50' onPress={onClose}>
+      <Pressable
+        accessibilityLabel='Close stats modal'
+        accessibilityRole='button'
+        className='flex-1 bg-black/50'
+        onPress={onClose}
+      >
         <View className='flex-1 p-5' style={{ paddingTop: insets.top + 8 }}>
           <Pressable
             className='flex-1 overflow-hidden rounded-2xl'

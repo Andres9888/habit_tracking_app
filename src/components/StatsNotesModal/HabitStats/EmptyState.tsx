@@ -1,9 +1,9 @@
 /**
  * Empty state when no habits exist
- * Standardized: FadeInUp animation, icon, proper typography
+ * Standardized: FadeInUp animation, icon, proper typography, dark mode
  */
 
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { BarChart2 } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -15,7 +15,7 @@ export function EmptyState() {
   const { colors: themeColors, isDark } = useThemeColors();
 
   return (
-    <View className='items-center justify-center px-6 py-10'>
+    <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 40 }}>
       <Animated.View
         className='mb-4 h-16 w-16 items-center justify-center rounded-xl'
         entering={anim(0)}
@@ -25,9 +25,10 @@ export function EmptyState() {
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
+          width: 64,
         }}
       >
-        <BarChart2 color='#f59e0b' size={32} strokeWidth={1.5} />
+        <BarChart2 color={isDark ? '#FCD34D' : '#F59E0B'} size={32} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
         className='mb-2 text-center font-bold'

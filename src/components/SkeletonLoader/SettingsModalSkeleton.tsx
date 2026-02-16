@@ -1,11 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import { SkeletonLoader } from './SkeletonLoader';
+import { useSkeletonTheme } from './useSkeletonTheme';
 import type { ReduceMotionProps } from './types';
 
-function ToggleRowSkeleton({ reduceMotion }: ReduceMotionProps) {
+function ToggleRowSkeleton({ reduceMotion, borderColor }: ReduceMotionProps & { borderColor: string }) {
   return (
-    <View className='flex-row items-center border-b border-stone-200 px-4 py-4'>
+    <View className='flex-row items-center px-4 py-4' style={{ borderBottomWidth: 1, borderBottomColor: borderColor }}>
       <SkeletonLoader
         borderRadius={10}
         height={38}
@@ -33,7 +34,9 @@ function ToggleRowSkeleton({ reduceMotion }: ReduceMotionProps) {
 function SectionSkeleton({
   reduceMotion,
   rows = 2,
-}: ReduceMotionProps & { rows?: number }) {
+  cardBg,
+  borderColor,
+}: ReduceMotionProps & { rows?: number; cardBg: string; borderColor: string }) {
   return (
     <View className='mb-5'>
       <SkeletonLoader
@@ -42,9 +45,9 @@ function SectionSkeleton({
         reduceMotion={reduceMotion}
         width={130}
       />
-      <View className='mt-2 overflow-hidden rounded-2xl bg-white'>
+      <View className='mt-2 overflow-hidden rounded-2xl' style={{ backgroundColor: cardBg }}>
         {Array.from({ length: rows }).map((_, i) => (
-          <ToggleRowSkeleton key={i} reduceMotion={reduceMotion} />
+          <ToggleRowSkeleton key={i} borderColor={borderColor} reduceMotion={reduceMotion} />
         ))}
       </View>
     </View>
@@ -54,8 +57,9 @@ function SectionSkeleton({
 export function SettingsModalSkeleton({
   reduceMotion = false,
 }: ReduceMotionProps) {
+  const { pageBg, cardBg, borderColor } = useSkeletonTheme();
   return (
-    <View className='flex-1 bg-stone-100 px-4 pt-14'>
+    <View className='flex-1 px-4 pt-14' style={{ backgroundColor: pageBg }}>
       <View className='mb-7 items-center'>
         <SkeletonLoader
           borderRadius={8}
@@ -64,9 +68,9 @@ export function SettingsModalSkeleton({
           width={110}
         />
       </View>
-      <SectionSkeleton reduceMotion={reduceMotion} rows={2} />
-      <SectionSkeleton reduceMotion={reduceMotion} rows={2} />
-      <SectionSkeleton reduceMotion={reduceMotion} rows={1} />
+      <SectionSkeleton borderColor={borderColor} cardBg={cardBg} reduceMotion={reduceMotion} rows={2} />
+      <SectionSkeleton borderColor={borderColor} cardBg={cardBg} reduceMotion={reduceMotion} rows={2} />
+      <SectionSkeleton borderColor={borderColor} cardBg={cardBg} reduceMotion={reduceMotion} rows={1} />
     </View>
   );
 }

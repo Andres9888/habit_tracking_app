@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /** HabitsHeader - OPTIMIZED: entry animation, contrast fix, clearer UX */
 
 import { View, Text } from 'react-native';
@@ -96,12 +97,9 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
 
   return (
     // OPTIMIZED: FadeInDown entry animation
-    <Animated.View
-      className='gap-2 px-4'
-      entering={ENTERING}
-    >
+    <Animated.View className='gap-2 px-4' entering={ENTERING}>
       <View className='flex-row items-center justify-between'>
-        <View className='flex-row items-center gap-3 flex-1'>
+        <View className='flex-1 flex-row items-center gap-3'>
           <DailyProgressRing completed={completedToday} total={totalHabits} />
           <View className='flex-1 gap-1'>
             <Text
