@@ -44,6 +44,7 @@ export function SortOptionRow({
   onPress,
 }: SortOptionRowProps) {
   const { colors: themeColors, isDark } = useThemeColors();
+  const { trigger } = useHaptics();
 
   const handlePress = () => {
     triggerHaptic('tap');
@@ -61,7 +62,7 @@ export function SortOptionRow({
         backgroundColor: selected
           ? isDark
             ? themeColors.gray[800]
-            : themeColors.primary[50] ?? '#ecfdf5'
+            : (themeColors.primary[50] ?? '#ecfdf5')
           : 'transparent',
         borderColor: selected ? themeColors.primary[300] : 'transparent',
         borderWidth: selected ? 1 : 0,

@@ -29,6 +29,7 @@ export const listByHabit = query({
 
 /**
  * Get all unlocked letters for a habit that haven't been read yet
+ * PERF: Uses by_habit_and_unlock compound index for efficient range query
  */
 export const getUnreadUnlocked = query({
   args: { habitId: v.id('habits') },
@@ -40,11 +41,17 @@ export const getUnreadUnlocked = query({
     if (!habit || habit.userId !== identity.subject) return [];
 
     const now = Date.now();
+    
+    // PERF: Use compound index to filter by habitId AND unlockAt in the query
+    // Then filter for isRead in JS (small result set)
     const letters = await ctx.db
       .query('letters')
-      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
+      .withIndex('by_habit_and_unlock', (q) =>
+        q.eq('habitId', args.habitId).lte('unlockAt', now)
+      )
       .collect();
-    return letters.filter((letter) => letter.unlockAt <= now && !letter.isRead);
+    
+    return letters.filter((letter) => !letter.isRead);
   },
   returns: v.array(letterObjectValidator),
 });

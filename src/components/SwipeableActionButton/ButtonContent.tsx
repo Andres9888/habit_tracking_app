@@ -9,21 +9,8 @@ import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
 import { clsx } from 'clsx';
-
-interface ButtonContentProps {
-  Icon: React.ComponentType<{
-    className?: string;
-    size?: number;
-    strokeWidth?: number;
-  }>;
-  label: string;
-  subtitle?: string;
-  isDestructive: boolean;
-  isBoost: boolean;
-  showChevron: boolean;
-  accessibleLabel: string;
-  onPress: () => void;
-}
+import type { ButtonContentProps } from './ButtonContent.types';
+import { IconContainer } from './IconContainer';
 
 export function ButtonContent({
   Icon,
@@ -58,21 +45,7 @@ export function ButtonContent({
           start={{ x: 0, y: 0 }}
         />
       )}
-      <View
-        className={clsx(
-          'h-10 w-10 items-center justify-center rounded-xl',
-          isDestructive && 'bg-red-100',
-          !isBoost && !isDestructive && 'bg-stone-100'
-        )}
-      >
-        {isBoost && (
-          <LinearGradient
-            className='absolute inset-0 rounded-xl'
-            colors={['#7c3aed', '#4f46e5']}
-            end={{ x: 1, y: 1 }}
-            start={{ x: 0, y: 0 }}
-          />
-        )}
+      <IconContainer isBoost={isBoost} isDestructive={isDestructive}>
         <Icon
           className={clsx(
             isDestructive && 'text-red-500',
@@ -82,7 +55,7 @@ export function ButtonContent({
           size={20}
           strokeWidth={2.25}
         />
-      </View>
+      </IconContainer>
       <View className='flex-1'>
         <Text
           className={clsx(

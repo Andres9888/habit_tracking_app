@@ -4,7 +4,7 @@ import { getTodayString } from '../../utils/getLocalDateString';
  * Hook for HeaderCompleteToggle toggle logic
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import {
   useSharedValue,
   withSequence,
@@ -35,6 +35,15 @@ export function useHeaderToggle({
 
   const buttonScale = useSharedValue(1);
 
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   const toggleCompletionMutation = useToggleHabitWithTimezone();
   const today = getTodayString();
 
@@ -63,7 +72,8 @@ export function useHeaderToggle({
 
     if (!wasCompleted && !reduceMotion) {
       setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 500);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setShowConfetti(false), 500);
       onComplete?.();
     } else if (wasCompleted) {
       onUncomplete?.();

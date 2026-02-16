@@ -10,6 +10,7 @@ import { X } from 'lucide-react-native';
 
 import CustomModal from '../../../../components/Modal';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
+import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
@@ -25,6 +26,7 @@ export function TemplatesModalSection({
 }: TemplatesModalSectionProps) {
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
+  const { trigger } = useHaptics();
   const closeScale = useSharedValue(1);
 
   const closeAnimatedStyle = useAnimatedStyle(() => ({
@@ -62,7 +64,7 @@ export function TemplatesModalSection({
               });
             }}
             onPressOut={() => {
-              closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
+              closeScale.value = withSpring(1, { damping: 18, stiffness: 150 });
             }}
           >
             <X color='#57534e' size={24} />

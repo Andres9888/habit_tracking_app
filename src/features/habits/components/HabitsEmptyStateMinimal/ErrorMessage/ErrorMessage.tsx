@@ -11,9 +11,9 @@
  * - Proper accessibility attributes (role="alert", liveRegion="polite")
  */
 
-import { Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 
+import { AccessibleText } from '../../../../../components/ui/AccessibleText';
 import type { ErrorMessageProps } from '../types';
 import { useEmptyStateColors } from '../useEmptyStateColors';
 import { ErrorIcon } from './ErrorIcon';
@@ -52,7 +52,8 @@ export function ErrorMessage({
       ]}
     >
       <ErrorIcon iconColor={colors.errorIcon} />
-      <Text
+      <AccessibleText
+        scalingType='body'
         style={{
           color: colors.errorText,
           flex: 1,
@@ -62,7 +63,7 @@ export function ErrorMessage({
         }}
       >
         {message}
-      </Text>
+      </AccessibleText>
       <DismissButton dismissColor={colors.errorText} onPress={handleDismiss} />
     </Animated.View>
   );

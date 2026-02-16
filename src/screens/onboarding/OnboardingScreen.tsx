@@ -7,6 +7,7 @@
 /* eslint-disable max-lines, max-lines-per-function */
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { colors } from '../../theme/colors';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
@@ -451,7 +452,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ctaButton: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 32,
@@ -479,7 +480,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   nextButton: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 48,
@@ -517,7 +518,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   strengthBar: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 8,
     height: 32,
   },
@@ -532,7 +533,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   strengthLabelActive: {
-    color: '#047857',
+    color: colors.primary[700],
     fontWeight: '700',
   },
   strengthRow: {
@@ -571,7 +572,7 @@ const styles = StyleSheet.create({
     width: 56,
   },
   title: {
-    color: '#047857',
+    color: colors.primary[700],
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,
