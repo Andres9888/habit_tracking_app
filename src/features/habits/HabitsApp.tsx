@@ -18,6 +18,7 @@ import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { WhatsNewModal, useWhatsNew } from '../../components/WhatsNewModal';
 
 const styles = StyleSheet.create({
   fabContainer: {
@@ -43,6 +44,7 @@ function HabitsAppContent() {
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
   });
+  const { shouldShow, currentChangelog, markAsSeen } = useWhatsNew();
 
   const {
     handleCreateHabitRequest,
@@ -112,6 +114,14 @@ function HabitsAppContent() {
           onPaywallClose={handlePaywallClose}
           onPaywallSuccess={handlePaywallSuccess}
         />
+
+        {shouldShow && currentChangelog && (
+          <WhatsNewModal
+            changelog={currentChangelog}
+            visible={shouldShow}
+            onDismiss={markAsSeen}
+          />
+        )}
       </View>
     </GestureHandlerRootView>
   );
