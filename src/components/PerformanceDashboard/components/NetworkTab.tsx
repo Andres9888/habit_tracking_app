@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Network Tab Component
  * API latency and network request information.
