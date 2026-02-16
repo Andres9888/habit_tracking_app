@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { Info, Zap } from 'lucide-react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const SECTION_FADE_DURATION = 400;
 const SECTION_SLIDE_DURATION = 400;
@@ -21,6 +22,7 @@ export function EmptyStrengthState({
   reduceMotion,
   onInfoPress,
 }: EmptyStrengthStateProps) {
+  const { colors, isDark } = useThemeColors();
   const entering = reduceMotion
     ? FadeIn.duration(SECTION_FADE_DURATION)
     : FadeInUp.duration(SECTION_SLIDE_DURATION).delay(SECTION_SLIDE_DELAY);
@@ -34,12 +36,12 @@ export function EmptyStrengthState({
     <Animated.View
       accessible
       accessibilityLabel='Habit strength history - No completions yet'
-      className='gap-4'
       entering={entering}
+      style={{ gap: 16 }}
       testID='habit-strength-history-empty'
     >
-      <View className='flex-row items-center justify-between'>
-        <Text className='text-base font-semibold text-stone-700 dark:text-stone-200'>
+      <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={{ color: colors.text.primary, fontSize: 16, fontWeight: '600' }}>
           Strength History
         </Text>
         <Pressable
@@ -50,18 +52,47 @@ export function EmptyStrengthState({
           testID='strength-history-info-button'
           onPress={onInfoPress}
         >
-          <Info color='#78716c' size={18} />
+          <Info color={colors.text.tertiary} size={18} />
         </Pressable>
       </View>
 
-      <View className='items-center justify-center rounded-2xl bg-stone-50 px-6 py-8 dark:bg-stone-800'>
-        <View className='mb-3 h-12 w-12 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-900/30'>
-          <Zap color='#d97706' size={24} />
+      <View
+        style={{
+          alignItems: 'center',
+          backgroundColor: colors.gray[50],
+          borderRadius: 12,
+          justifyContent: 'center',
+          paddingHorizontal: 24,
+          paddingVertical: 32,
+        }}
+      >
+        <View
+          style={{
+            alignItems: 'center',
+            backgroundColor: isDark ? '#451A03' : '#FEF3C7',
+            borderRadius: 24,
+            height: 48,
+            justifyContent: 'center',
+            marginBottom: 12,
+            width: 48,
+          }}
+        >
+          <Zap color={isDark ? '#FCD34D' : '#D97706'} size={24} />
         </View>
-        <Text className='mb-1 text-center text-base font-semibold text-stone-700 dark:text-stone-200'>
+        <Text
+          style={{
+            color: colors.text.primary,
+            fontSize: 16,
+            fontWeight: '600',
+            marginBottom: 4,
+            textAlign: 'center',
+          }}
+        >
           Ready to Build Strength
         </Text>
-        <Text className='text-center text-sm text-stone-400 dark:text-stone-500'>{message}</Text>
+        <Text style={{ color: colors.text.secondary, fontSize: 14, textAlign: 'center' }}>
+          {message}
+        </Text>
       </View>
     </Animated.View>
   );

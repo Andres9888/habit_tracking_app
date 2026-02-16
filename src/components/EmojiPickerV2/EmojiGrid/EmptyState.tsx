@@ -1,32 +1,27 @@
-/**
- * Empty state shown when no emojis match search
- * Polished: spring entrance animation, consistent styling
- */
-
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
 import { Search } from 'lucide-react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 import { styles } from './styles';
 
-const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
-
+/**
+ * Empty state shown when no emojis match search
+ */
 export function EmptyState() {
+  const { colors } = useThemeColors();
+
   return (
-    <View style={styles.emptyState}>
-      <Animated.View
-        className='mb-3 h-14 w-14 items-center justify-center rounded-xl bg-stone-100 dark:bg-stone-700'
-        entering={anim(0)}
-      >
-        <Search color='#a8a29e' size={28} strokeWidth={1.5} />
-      </Animated.View>
-      <Animated.Text entering={anim(60)} style={styles.emptyStateTitle}>
+    <Animated.View entering={FadeIn.duration(250)} style={styles.emptyState}>
+      <Search color={colors.text.tertiary} size={48} />
+      <Text style={[styles.emptyStateTitle, { color: colors.text.primary }]}>
         No emojis found
-      </Animated.Text>
-      <Animated.Text entering={anim(120)} style={styles.emptyStateSubtitle}>
+      </Text>
+      <Text
+        style={[styles.emptyStateSubtitle, { color: colors.text.tertiary }]}
+      >
         Try a different search term
-      </Animated.Text>
-    </View>
+      </Text>
+    </Animated.View>
   );
 }

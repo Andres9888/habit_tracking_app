@@ -1,35 +1,61 @@
 /**
  * EmptyVizState Component
- * Shown when no failure visualization data is available
- * Polished: spring entrance animation, proper color props, dark mode
+ * Shown when no visualization data is available
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyVizState() {
+  const { colors, isDark } = useThemeColors();
+
   return (
-    <View className='items-center justify-center py-6'>
+    <View
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 24,
+      }}
+    >
       <Animated.View
-        className='mb-3 h-12 w-12 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-900/30'
         entering={anim(0)}
+        style={{
+          alignItems: 'center',
+          backgroundColor: isDark ? '#3B1A1A' : '#FFF1F2',
+          borderRadius: 24,
+          height: 48,
+          justifyContent: 'center',
+          marginBottom: 12,
+          width: 48,
+        }}
       >
-        <AlertTriangle color='#f43f5e' size={24} strokeWidth={1.5} />
+        <AlertTriangle color={isDark ? '#FCA5A5' : '#F43F5E'} size={24} />
       </Animated.View>
       <Animated.Text
-        className='mb-1 text-center text-[15px] font-semibold text-stone-700 dark:text-stone-200'
         entering={anim(60)}
+        style={{
+          color: colors.text.primary,
+          fontSize: 14,
+          fontWeight: '500',
+          marginBottom: 4,
+          textAlign: 'center',
+        }}
       >
         Imagine how you'll feel if you skip
       </Animated.Text>
       <Animated.Text
-        className='text-center text-[13px] text-stone-400 dark:text-stone-500'
         entering={anim(120)}
+        style={{
+          color: colors.text.tertiary,
+          fontSize: 12,
+          textAlign: 'center',
+        }}
       >
         Add failure visualization in the Motivation tab
       </Animated.Text>
