@@ -20,10 +20,10 @@ export const useButtonAnimations = () => {
   const createPressHandlers = useCallback(
     (scaleValue: SharedValue<number>, scale = 0.95): PressHandlers => ({
       onPressIn: () => {
-        scaleValue.value = withSpring(scale, { damping: 15, stiffness: 200 });
+        scaleValue.value = withSpring(scale, { damping: 18, stiffness: 150 });
       },
       onPressOut: () => {
-        scaleValue.value = withSpring(1, { damping: 15, stiffness: 200 });
+        scaleValue.value = withSpring(1, { damping: 18, stiffness: 150 });
       },
     }),
     []

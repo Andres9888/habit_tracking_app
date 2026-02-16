@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /** SettingsSection - OPTIMIZED: Deeper shadows, better card styling */
 import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
@@ -6,12 +7,14 @@ import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SettingsSectionProps {
   title: string;
+  subtitle?: string;
   children: ReactNode;
   highContrastMode?: boolean;
 }
 
 export function SettingsSection({
   title,
+  subtitle,
   children,
   highContrastMode = false,
 }: SettingsSectionProps) {
@@ -31,12 +34,19 @@ export function SettingsSection({
 
   return (
     <View className='gap-2'>
-      <Text
-        className='px-1 text-[13px] font-semibold uppercase tracking-[0.7px]'
-        style={{ color: colors.title }}
-      >
-        {title}
-      </Text>
+      <View className='flex-row items-center gap-2 px-1'>
+        <Text
+          className='text-[13px] font-semibold uppercase tracking-[0.7px]'
+          style={{ color: colors.title }}
+        >
+          {title}
+        </Text>
+        {subtitle && (
+          <Text className='rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-800 dark:bg-amber-900 dark:text-amber-200'>
+            {subtitle}
+          </Text>
+        )}
+      </View>
       <View
         className='overflow-hidden rounded-2xl'
         style={{
