@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { styles } from './styles';
+import { useSuccessOverlayStyles } from './styles';
 import type { SuccessOverlayProps } from './types';
 import { useSuccessOverlayAnimations } from './useSuccessOverlayAnimations';
 
@@ -18,6 +18,7 @@ export function SuccessOverlay({
   visible,
   onAnimationComplete,
 }: SuccessOverlayProps) {
+  const styles = useSuccessOverlayStyles();
   const { overlayStyle, checkmarkStyle, ringStyle, textStyle } =
     useSuccessOverlayAnimations(visible, onAnimationComplete);
 

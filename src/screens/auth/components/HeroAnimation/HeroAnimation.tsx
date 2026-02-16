@@ -15,7 +15,7 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { AnimatedDot } from './AnimatedDot';
-import { styles } from './HeroAnimation.styles';
+import { useHeroAnimationStyles } from './HeroAnimation.styles';
 
 const STAGES = [
   { emoji: '🌱', label: 'Start' },
@@ -24,6 +24,7 @@ const STAGES = [
 ];
 
 export function HeroAnimation() {
+  const styles = useHeroAnimationStyles();
   const progress = useSharedValue(0);
   const scale = useSharedValue(1);
 

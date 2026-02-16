@@ -4,7 +4,6 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { VerificationForm } from './VerificationForm';
-import { colors } from "../../../../theme/colors";
 
 interface VerificationViewProps {
   emailAddress: string;
@@ -74,7 +73,7 @@ export function VerificationView({
           entering={anim(180)}
           style={{ alignItems: 'center', marginTop: 24 }}
         >
-          <Text style={{ color: '#78716c', fontSize: 15 }}>
+          <Text style={{ color: colors.text.tertiary, fontSize: 15 }}>
             Didn't receive the code?
           </Text>
           <Pressable
@@ -91,7 +90,7 @@ export function VerificationView({
           >
             <Text
               style={{
-                color: cooldown > 0 ? '#a8a29e' : colors.primary[700],
+                color: cooldown > 0 ? colors.text.tertiary : colors.primary[700],
                 fontSize: 15,
                 fontWeight: '600',
               }}

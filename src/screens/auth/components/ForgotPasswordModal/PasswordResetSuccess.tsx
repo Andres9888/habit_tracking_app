@@ -1,4 +1,4 @@
-/** PasswordResetSuccess - OPTIMIZED: FadeIn animation, better styling */
+/** PasswordResetSuccess - OPTIMIZED: FadeIn animation, better styling — dark mode aware */
 import { Text, View } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
@@ -14,7 +14,7 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
         className='items-center justify-center rounded-2xl bg-emerald-50 p-6'
         entering={FadeInDown.duration(280).springify().damping(18)}
         style={{
-          shadowColor: '#1c1917',
+          shadowColor: colors.text.primary,
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
@@ -39,9 +39,9 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
           accessibilityLabel='Close modal'
           accessibilityRole='button'
           className='items-center rounded-2xl py-4'
-          style={{ backgroundColor: colors.gray[900] }}
-          style={{
-            shadowColor: '#1c1917',
+          style={{ 
+            backgroundColor: colors.gray[900],
+            shadowColor: colors.text.primary,
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,
             shadowRadius: 16,

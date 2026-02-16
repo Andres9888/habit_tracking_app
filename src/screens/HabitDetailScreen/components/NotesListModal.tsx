@@ -51,7 +51,7 @@ export function NotesListModal({
             style={{ backgroundColor: isDark ? colors.gray[200] : colors.gray[100] }}
             onPress={onClose}
           >
-            <X color={isDark ? colors.text.secondary : '#57534e'} size={24} />
+            <X color={colors.text.secondary} size={24} />
           </Pressable>
         </View>
         <ScrollView

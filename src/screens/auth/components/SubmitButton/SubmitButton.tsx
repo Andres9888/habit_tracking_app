@@ -59,7 +59,7 @@ export function SubmitButton({
       style={[
         animatedStyle,
         {
-          shadowColor: '#1c1917',
+          shadowColor: '#292524',
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,

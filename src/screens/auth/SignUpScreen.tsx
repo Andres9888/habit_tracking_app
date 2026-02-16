@@ -72,8 +72,8 @@ function SignUpScreenContent({
     <View className='flex-1'>
       <LinearGradient
         colors={[
-          colors.light.background,
-          colors.light.gradientMid ?? '#f5f5f0',
+          themeColors.background,
+          colors.light.gradientMid ?? themeColors.background,
         ]}
         style={{ flex: 1 }}
       >
@@ -105,7 +105,7 @@ function SignUpScreenContent({
                 borderRadius: 16,
                 elevation: 4,
                 padding: 24,
-                shadowColor: '#1c1917',
+                shadowColor: themeColors.text.primary,
                 shadowOffset: { height: 4, width: 0 },
                 shadowOpacity: 0.08,
                 shadowRadius: 16,

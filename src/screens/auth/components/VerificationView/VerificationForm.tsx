@@ -1,4 +1,4 @@
-/** VerificationForm - Form card with code input and submit */
+/** VerificationForm - Form card with code input and submit — dark mode aware */
 import { useCallback } from 'react';
 import { View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -24,10 +24,10 @@ export function VerificationForm({
   return (
     <View
       className='rounded-2xl p-6'
-      style={{ backgroundColor: colors.card }}
       style={{
+        backgroundColor: colors.card,
         elevation: 4,
-        shadowColor: '#1c1917',
+        shadowColor: colors.text.primary,
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 16,

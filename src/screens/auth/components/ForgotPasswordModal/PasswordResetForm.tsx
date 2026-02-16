@@ -1,4 +1,4 @@
-/** PasswordResetForm - OPTIMIZED: Better input styling, shadows */
+/** PasswordResetForm - OPTIMIZED: Better input styling, shadows — dark mode aware */
 import { Text, TextInput, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -17,14 +17,15 @@ export function PasswordResetForm({
   return (
     <View className='gap-4'>
       <View className='gap-2'>
-        <Text className='text-[13px] font-semibold text-stone-600'>
+        <Text className='text-[13px] font-semibold' style={{ color: colors.text.secondary }}>
           Email address
         </Text>
         <View
           className={`rounded-2xl border-2 ${error ? 'border-red-500' : ''}`}
-          style={{ backgroundColor: colors.card, borderColor: error ? undefined : colors.border }}
-          style={{
-            shadowColor: error ? '#ef4444' : '#1c1917',
+          style={{ 
+            backgroundColor: colors.card, 
+            borderColor: error ? '#ef4444' : colors.border,
+            shadowColor: error ? '#ef4444' : colors.text.primary,
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,
             shadowRadius: 16,
@@ -37,12 +38,13 @@ export function PasswordResetForm({
             accessibilityLabel='Email address input'
             autoCapitalize='none'
             autoComplete='email'
-            className='px-4 py-4 text-[17px] font-medium text-stone-900'
+            className='px-4 py-4 text-[17px] font-medium'
             editable={!isLoading}
             keyboardType='email-address'
             placeholder='you@example.com'
-            placeholderTextColor='#a1a1aa'
+            placeholderTextColor={colors.text.tertiary}
             returnKeyType='send'
+            style={{ color: colors.text.primary }}
             value={email}
             onChangeText={onEmailChange}
             onSubmitEditing={onSubmit}

@@ -95,7 +95,7 @@ function HabitEditScreenContent({
                   style={{
                     backgroundColor: themeColors.card,
                     elevation: 4,
-                    shadowColor: isDark ? '#000000' : '#1c1917',
+                    shadowColor: themeColors.text.primary,
                     shadowOffset: { height: 4, width: 0 },
                     shadowOpacity: isDark ? 0.3 : 0.08,
                     shadowRadius: 16,

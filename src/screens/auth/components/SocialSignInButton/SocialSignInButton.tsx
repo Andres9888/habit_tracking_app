@@ -17,14 +17,14 @@ const PROVIDER_CONFIG = {
     bgColor: 'bg-black',
     borderColor: 'border-black',
     label: 'Continue with Apple',
-    spinnerColor: '#FFFFFF',
+    spinnerColor: '#FFFFFF', // Intentional: white on black Apple button
     textColor: 'text-white',
   },
   google: {
     bgColor: 'bg-white dark:bg-gray-800',
     borderColor: 'border-stone-200',
     label: 'Continue with Google',
-    spinnerColor: '#44403c',
+    spinnerColor: '#44403c', // Intentional: dark on white Google button
     textColor: 'text-stone-800',
   },
 } as const;
