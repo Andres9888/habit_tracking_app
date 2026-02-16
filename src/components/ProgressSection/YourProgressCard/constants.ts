@@ -37,7 +37,7 @@ export const STRENGTH_LEVELS: Record<string, LevelConfig> = {
     minThreshold: 40,
   },
   starting: {
-    color: '#65a30d', // lime-600
+    color: '#4D7A0A', // lime-600
     colorLight: '#ecfccb', // lime-100
     description: 'Just getting started',
     emoji: '🌱',

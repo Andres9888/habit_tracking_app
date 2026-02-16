@@ -19,7 +19,7 @@ import Animated, {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export interface FloatingXPTextProps {
   /** XP value to display (e.g., 10, 50, 100) */
@@ -41,10 +41,21 @@ export function FloatingXPText({
   onComplete,
   showCoin = false,
 }: FloatingXPTextProps) {
+  const reduceMotion = useReduceMotion();
   const translateY = useSharedValue(0);
   const opacity = useSharedValue(1);
 
   useEffect(() => {
+    if (reduceMotion) {
+      // Skip animation, just show briefly then call complete
+      opacity.value = withTiming(0, { duration: 100 }, (finished) => {
+        if (finished && onComplete) {
+          runOnJS(onComplete)();
+        }
+      });
+      return;
+    }
+
     // Animate upward movement
     translateY.value = withTiming(-40, {
       duration: 800,

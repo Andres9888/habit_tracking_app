@@ -4,7 +4,7 @@
  */
 
 import { v } from 'convex/values';
-import { mutation, query } from './_generated/server';
+import { internalMutation, mutation, query } from './_generated/server';
 import type { Id } from './_generated/dataModel';
 
 type TemplateInsert = {
@@ -153,6 +153,10 @@ export const getById = query({
 export const seedTemplates = mutation({
   args: {},
   handler: async (ctx) => {
+    // SEC: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
     const now = Date.now();
     let _insertedCount = 0;
     let _skippedCount = 0;
@@ -1578,7 +1582,7 @@ export const seedTemplates = mutation({
 /**
  * Mutation: Import a template to create a new habit
  */
-export const importTemplate = mutation({
+export const importTemplate = internalMutation({
   args: {
     customizations: v.optional(
       v.object({
@@ -1681,7 +1685,7 @@ export const getUsageStats = query({
 /**
  * Mutation: Clear all templates (for cleanup/reset)
  */
-export const clearTemplates = mutation({
+export const clearTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const templates = await ctx.db.query('templates').collect();
@@ -1698,7 +1702,7 @@ export const clearTemplates = mutation({
  * - Re-points templateUsage.templateId to the kept template
  * - Deletes extra templates
  */
-export const dedupeTemplates = mutation({
+export const dedupeTemplates = internalMutation({
   args: { dryRun: v.optional(v.boolean()) },
   handler: async (ctx, args) => {
     const dryRun = args.dryRun ?? false;
@@ -1774,6 +1778,10 @@ export const dedupeTemplates = mutation({
 export const seedAdditionalTemplates = mutation({
   args: {},
   handler: async (ctx) => {
+    // SEC: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
     const now = Date.now();
     let _insertedCount = 0;
     let _skippedCount = 0;
@@ -2499,6 +2507,10 @@ export const seedAdditionalTemplates = mutation({
 export const seedNewScienceTemplates = mutation({
   args: {},
   handler: async (ctx) => {
+    // SEC: Authentication check
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
     const now = Date.now();
     let _insertedCount = 0;
     let _skippedCount = 0;
@@ -3117,7 +3129,7 @@ export const listTemplateNames = query({
 /**
  * Mutation: Update existing templates with YouTube links
  */
-export const updateYoutubeLinks = mutation({
+export const updateYoutubeLinks = internalMutation({
   args: {},
   handler: async (ctx) => {
     const youtubeLinks: Record<string, string> = {
@@ -3227,7 +3239,7 @@ export const updateYoutubeLinks = mutation({
  * 50+ new habits across NEW categories: Longevity, Mental Health, Recovery, Breathing
  * Plus additional habits in existing categories based on peer-reviewed research
  */
-export const seedScienceTemplates = mutation({
+export const seedScienceTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -4148,7 +4160,7 @@ export const seedScienceTemplates = mutation({
  * Mutation: Seed unique non-duplicate templates (Phase 3.3)
  * 50+ truly unique habits in underserved categories: Career, Hobbies, Environment, Somatic, Purpose, Self-Care
  */
-export const seedUniqueTemplates = mutation({
+export const seedUniqueTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();

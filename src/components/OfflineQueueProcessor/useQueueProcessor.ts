@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { useCallback, useRef, useState, useMemo } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
@@ -41,7 +42,13 @@ export function useQueueProcessor(
   const lastProcessTimeRef = useRef(0);
 
   const mutations = useMemo(
-    () => ({ createAffirmation, createLetter, updateHabit, upsertReflection } as Mutations),
+    () =>
+      ({
+        createAffirmation,
+        createLetter,
+        updateHabit,
+        upsertReflection,
+      }) as Mutations,
     [createAffirmation, createLetter, updateHabit, upsertReflection]
   );
 
