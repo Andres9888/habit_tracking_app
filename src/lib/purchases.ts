@@ -15,8 +15,8 @@ import { Platform } from 'react-native';
 import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 
 const API_KEYS = {
-  ios: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY || '',
   android: process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY || '',
+  ios: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY || '',
 };
 
 let isInitialized = false;
@@ -47,14 +47,21 @@ export async function initializePurchases(userId?: string): Promise<void> {
 
   // Skip in Expo Go - native stores unavailable
   if (isExpoGo()) {
-    if (__DEV__) console.log('[Purchases] Expo Go detected - native stores unavailable, skipping');
+    if (__DEV__)
+      console.log(
+        '[Purchases] Expo Go detected - native stores unavailable, skipping'
+      );
     return;
   }
 
   const apiKey = Platform.OS === 'ios' ? API_KEYS.ios : API_KEYS.android;
 
   if (!apiKey) {
-    if (__DEV__) console.warn('[Purchases] No API key configured for platform:', Platform.OS);
+    if (__DEV__)
+      console.warn(
+        '[Purchases] No API key configured for platform:',
+        Platform.OS
+      );
     return;
   }
 
@@ -64,7 +71,7 @@ export async function initializePurchases(userId?: string): Promise<void> {
   }
 
   try {
-    await Purchases.configure({
+    Purchases.configure({
       apiKey,
       appUserID: userId,
     });
@@ -84,7 +91,8 @@ export async function initializePurchases(userId?: string): Promise<void> {
 export async function identifyUser(userId: string): Promise<void> {
   if (Platform.OS === 'web') return;
   if (!isInitialized) {
-    if (__DEV__) console.warn('[Purchases] SDK not initialized, skipping identify');
+    if (__DEV__)
+      console.warn('[Purchases] SDK not initialized, skipping identify');
     return;
   }
 
@@ -118,4 +126,4 @@ export function isPurchasesAvailable(): boolean {
   return isInitialized && Platform.OS !== 'web';
 }
 
-export { Purchases };
+export { default as Purchases } from 'react-native-purchases';

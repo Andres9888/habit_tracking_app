@@ -80,7 +80,7 @@ jest.mock('react-native-reanimated', () => {
     },
     default: {
       View,
-      createAnimatedComponent: (Component: any) => Component,
+      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
       addWhitelistedNativeProps: jest.fn(),
     },
     addWhitelistedNativeProps: jest.fn(),
@@ -138,7 +138,7 @@ jest
   .spyOn(AccessibilityInfo, 'announceForAccessibility')
   .mockImplementation(jest.fn());
 
-import CreateHabitModal from '../CreateHabitModal';
+import CreateHabitModal from '../CreateHabitModalCentered';
 
 describe('CreateHabitModal Integration - Template → Form Flow', () => {
   const mockOnClose = jest.fn();
@@ -495,9 +495,9 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
 
     it('should not show quick picks in edit mode', () => {
       const habitToEdit = {
-        _id: 'test-id' as any,
+        _id: 'test-id' as unknown,
         _creationTime: Date.now(),
-        userId: 'user-1' as any,
+        userId: 'user-1' as unknown,
         name: 'Test Habit',
         icon: '🎯',
         iconColor: '#22C55E',

@@ -101,8 +101,8 @@ function sortByStreak(
 }
 
 function compareNames(nameA: string, nameB: string): number {
-  const a = nameA.trim().toLowerCase();
-  const b = nameB.trim().toLowerCase();
-  if (a === b) return 0;
-  return a < b ? -1 : 1;
+  const normalizedA = nameA.trim().toLowerCase();
+  const normalizedB = nameB.trim().toLowerCase();
+  if (normalizedA === normalizedB) return 0;
+  return normalizedA < normalizedB ? -1 : 1;
 }

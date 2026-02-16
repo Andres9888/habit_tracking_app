@@ -33,13 +33,13 @@ export function useNavigationHandlers(opts: UseNavigationHandlersOptions) {
   const handleToggleCategory = useCallback(
     (categoryId: string) => {
       setExpandedCategories((prev) => {
-        const n = new Set(prev);
-        if (n.has(categoryId)) {
-          n.delete(categoryId);
+        const updated = new Set(prev);
+        if (updated.has(categoryId)) {
+          updated.delete(categoryId);
         } else {
-          n.add(categoryId);
+          updated.add(categoryId);
         }
-        return n;
+        return updated;
       });
     },
     [setExpandedCategories]

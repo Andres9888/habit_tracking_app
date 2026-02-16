@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /** HabitsHeader - OPTIMIZED: entry animation, contrast fix, clearer UX */
 
 import { View, Text } from 'react-native';
@@ -10,18 +11,21 @@ import { IconButtonGroup } from './IconButtonGroup';
 import { ProBadge } from './ProBadge';
 import { useHeaderAnimations } from './useHeaderAnimations';
 import { useHeaderHandlers } from './useHeaderHandlers';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
+const ENTERING = FadeInDown.duration(280).springify().damping(18);
+
+// FIXED: #78716c has 4.5:1+ contrast (was #C4BFB7 at 2.8:1)
+const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
 const DATE_STYLE = {
-  color: '#1c1917',
   fontFamily: 'System',
   letterSpacing: -0.76,
 };
-const STREAK_STYLE = { color: '#78716c', fontFamily: 'System' };
-const ENTERING = FadeInDown.duration(280).springify().damping(18);
 
+/** Format today's date as "Today · Mon D" per spec */
 const formatTodayDate = (): string => {
-  const d = new Date();
-  return `Today · ${d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
+  const now = new Date();
+  return `Today · ${now.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
 };
 
 // eslint-disable-next-line max-lines-per-function
@@ -30,19 +34,24 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
     completedToday = 0,
     forceShow = false,
     isPremiumUser = false,
+    openCreateHabitScreen,
+    openSettings,
+    openSortSheet,
+    openTemplatesScreen,
     onUpgradePress,
     showCompletionSummary = true,
     totalHabits = 0,
   } = props;
+  const { colors: themeColors } = useThemeColors();
   const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });
   const anim = useHeaderAnimations();
-  const h = useHeaderHandlers({
+  const handlers = useHeaderHandlers({
     addButtonScale: anim.addButtonScale,
     dismissBadge,
-    openCreateHabitScreen: props.openCreateHabitScreen,
-    openSettings: props.openSettings,
-    openSortSheet: props.openSortSheet,
-    openTemplatesScreen: props.openTemplatesScreen,
+    openCreateHabitScreen,
+    openSettings,
+    openSortSheet,
+    openTemplatesScreen,
     settingsButtonScale: anim.settingsButtonScale,
     sortButtonScale: anim.sortButtonScale,
     templatesButtonScale: anim.templatesButtonScale,
@@ -54,15 +63,15 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
       showBadge={showBadge}
       sortAnimatedStyle={anim.sortButtonAnimatedStyle}
       templatesAnimatedStyle={anim.templatesButtonAnimatedStyle}
-      onSettingsPress={h.handleSettingsPress}
-      onSettingsPressIn={h.handleSettingsPressIn}
-      onSettingsPressOut={h.handleSettingsPressOut}
-      onSortPress={h.handleSortPress}
-      onSortPressIn={h.handleSortPressIn}
-      onSortPressOut={h.handleSortPressOut}
-      onTemplatesPress={h.handleTemplatesPress}
-      onTemplatesPressIn={h.handleTemplatesPressIn}
-      onTemplatesPressOut={h.handleTemplatesPressOut}
+      onSettingsPress={handlers.handleSettingsPress}
+      onSettingsPressIn={handlers.handleSettingsPressIn}
+      onSettingsPressOut={handlers.handleSettingsPressOut}
+      onSortPress={handlers.handleSortPress}
+      onSortPressIn={handlers.handleSortPressIn}
+      onSortPressOut={handlers.handleSortPressOut}
+      onTemplatesPress={handlers.handleTemplatesPress}
+      onTemplatesPressIn={handlers.handleTemplatesPressIn}
+      onTemplatesPressOut={handlers.handleTemplatesPressOut}
     />
   );
 
@@ -87,19 +96,23 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
   }
 
   return (
+    // OPTIMIZED: FadeInDown entry animation
     <Animated.View className='gap-2 px-4' entering={ENTERING}>
       <View className='flex-row items-center justify-between'>
-        <View className='flex-row items-center gap-3 flex-1'>
+        <View className='flex-1 flex-row items-center gap-3'>
           <DailyProgressRing completed={completedToday} total={totalHabits} />
           <View className='flex-1 gap-1'>
-            <Text className='text-[22px] font-bold' style={DATE_STYLE}>
+            <Text
+              className='text-[22px] font-bold'
+              style={[{ color: themeColors.text.primary }, DATE_STYLE]}
+            >
               {formatTodayDate()}
             </Text>
             {showCompletionSummary && (
               <Text
                 accessibilityLabel={`${completedToday} of ${totalHabits} completed`}
                 className='text-[13px]'
-                style={STREAK_STYLE}
+                style={[{ color: themeColors.text.secondary }, STREAK_STYLE]}
               >
                 {completedToday} of {totalHabits} done
               </Text>

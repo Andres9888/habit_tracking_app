@@ -16,111 +16,137 @@ export function buildModalsStateReturnValue(
     activationModalHabit: s.activationModalHabit,
     // State properties
     celebrationsEnabled: extra.celebrationsEnabled,
-    habitDetailInitialTab: s.habitDetailInitialTab,
-    habits: extra.habits,
-    habitToEdit: s.habitToEdit,
-    habitToPause: s.habitToPause,
-    milestone: extra.milestone,
-    quickActionsHabit: s.quickActionsHabit,
     // Handlers from extracted hook
-    closeCreateHabit: h.closeCreateHabit,
-
-    reduceMotionPreference: extra.reduceMotionPreference,
-
-    closeEditScreen: h.closeEditScreen,
-
-    selectedHabit: s.selectedHabit,
-
-    closeQuickActions: h.closeQuickActions,
-
-    settings: extra.settings,
-
-    closeShareCard: h.closeShareCard,
-
-    shareCardData: s.shareCardData,
-
-    closeActivationModal: h.closeActivationModal,
-
-    showActivationModal: v.showActivationModal,
-
+closeCreateHabit: h.closeCreateHabit,
+    
+closeEditScreen: h.closeEditScreen,
+    
+closeQuickActions: h.closeQuickActions,
+    
+closeShareCard: h.closeShareCard,
+    
+closeActivationModal: h.closeActivationModal,
+    
+habitDetailInitialTab: s.habitDetailInitialTab,
+    
     closeVisualizationExercise: h.closeVisualizationExercise,
 
-    showCreateHabit: v.isCreateHabitOpen,
+    habits: extra.habits,
 
     confirmPause: h.confirmPause,
 
-    showEditScreen: v.showEditScreen,
+    habitToEdit: s.habitToEdit,
+
+    habitToPause: s.habitToPause,
+
+    milestone: extra.milestone,
 
     onDeleteHabit: h.onDeleteHabit,
 
-    showHabitCalendar: v.isHabitCalendarOpen,
-
     onSettingsChange: h.onSettingsChange,
 
-    showHabitDetail: v.isHabitDetailOpen,
-
     // Extra handlers
-    onChangeCelebrationsEnabled: extra.onChangeCelebrationsEnabled,
+onChangeCelebrationsEnabled: extra.onChangeCelebrationsEnabled,
 
-    showHapticTest: v.showHapticTest,
+    
+quickActionsHabit: s.quickActionsHabit,
 
-    handleArchive: extra.handleArchive,
+    
+handleArchive: extra.handleArchive,
 
-    showPauseModal: v.showPauseModal,
+    
+reduceMotionPreference: extra.reduceMotionPreference,
 
-    clearMilestone: extra.clearMilestone,
+    
+clearMilestone: extra.clearMilestone,
 
-    showQuickActions: v.showQuickActions,
+    
+selectedHabit: s.selectedHabit,
 
-    getStreak: extra.getStreak,
+    
+getStreak: extra.getStreak,
 
-    showSettings: v.isSettingsOpen,
+    
+settings: extra.settings,
 
-    // Inline close handlers
-    closeSettings: () => v.setIsSettingsOpen(false),
+    
+// Inline close handlers
+closeSettings: () => v.setIsSettingsOpen(false),
 
-    closeHabitCalendar: () => v.setIsHabitCalendarOpen(false),
+    
 
-    showShareCard: v.showShareCard,
+shareCardData: s.shareCardData,
 
-    closeHabitDetail: () => v.setIsHabitDetailOpen(false),
+    
+    
+closeHabitCalendar: () => v.setIsHabitCalendarOpen(false),
 
-    showTemplatesScreen: v.showTemplatesScreen,
+    
+showActivationModal: v.showActivationModal,
 
-    closeHapticTest: () => v.setShowHapticTest(false),
+    
+closeHabitDetail: () => v.setIsHabitDetailOpen(false),
 
-    showVisualizationExercise: v.showVisualizationExercise,
+    
+showCreateHabit: v.isCreateHabitOpen,
 
-    closePauseModal: () => {
+    
+closeHapticTest: () => v.setShowHapticTest(false),
+
+    
+showEditScreen: v.showEditScreen,
+
+    
+closePauseModal: () => {
       v.setShowPauseModal(false);
       s.setHabitToPause(null);
     },
 
-    showHabitStrengthPercentage: extra.showHabitStrengthPercentage,
+    
+showHabitCalendar: v.isHabitCalendarOpen,
 
+    
     closeTemplatesScreen: () => v.setShowTemplatesScreen(false),
 
-    tracking: extra.tracking,
+    showHabitDetail: v.isHabitDetailOpen,
 
     onShareMilestone: h.onShareMilestone,
 
+    showHapticTest: v.showHapticTest,
+
     openActivationModal: h.openActivationModal,
+
+    showPauseModal: v.showPauseModal,
 
     openActivationModalById: h.openActivationModalById,
 
+    showQuickActions: v.showQuickActions,
+
     openCreateHabitScreen: h.openCreateHabitScreen,
+
+    showSettings: v.isSettingsOpen,
 
     openEditHabit: h.openEditHabit,
 
     openHabitCalendar: h.openHabitCalendar,
 
+    showShareCard: v.showShareCard,
+
     openHabitDetail: h.openHabitDetail,
+
+    showTemplatesScreen: v.showTemplatesScreen,
+
     openHapticTest: () => {
       v.setIsSettingsOpen(false);
       v.setShowHapticTest(true);
     },
+
+    showVisualizationExercise: v.showVisualizationExercise,
+
     openPauseModal: h.openPauseModal,
+    showHabitStrengthPercentage: extra.showHabitStrengthPercentage,
     openQuickActions: h.openQuickActions,
+    tracking: extra.tracking,
     // Inline open handlers
     openSettings: () => v.setIsSettingsOpen(true),
 

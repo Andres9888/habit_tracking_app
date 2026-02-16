@@ -41,24 +41,24 @@ export function ActionButtons({
     <View style={styles.actionsContainer}>
       {onShare && (
         <AnimatedPressable
-          style={[styles.primaryButton, shareButtonAnimatedStyle]}
-          onPress={handleShare}
           accessible
           accessibilityLabel="Share your achievement"
           accessibilityRole="button"
+          style={[styles.primaryButton, shareButtonAnimatedStyle]}
+          onPress={handleShare}
         >
-          <Text style={styles.primaryButtonText}>Share 🎉</Text>
+          <Text style={styles.primaryButtonText}>Share Achievement 🎉</Text>
         </AnimatedPressable>
       )}
 
       <AnimatedPressable
+        accessible
+        accessibilityLabel="Keep going"
+        accessibilityRole="button"
         style={[styles.secondaryButton, continueButtonAnimatedStyle]}
         onPress={handleContinue}
-        accessible
-        accessibilityLabel="Continue"
-        accessibilityRole="button"
       >
-        <Text style={styles.secondaryButtonText}>Continue</Text>
+        <Text style={styles.secondaryButtonText}>Keep Going</Text>
       </AnimatedPressable>
     </View>
   );

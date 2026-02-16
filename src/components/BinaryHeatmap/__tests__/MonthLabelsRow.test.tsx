@@ -88,7 +88,7 @@ describe('MonthLabelsRow', () => {
 
   describe('Label Positioning', () => {
     // Helper to extract style values from React Native style prop (can be array or object)
-    const getStyleValue = (style: any, prop: string): any => {
+    const getStyleValue = (style: unknown, prop: string): unknown => {
       if (!style) return undefined;
       if (Array.isArray(style)) {
         for (const s of style) {
@@ -110,7 +110,7 @@ describe('MonthLabelsRow', () => {
       // Find the View containing the label
       const views = UNSAFE_getAllByType(require('react-native').View);
       const labelContainer = views.find(
-        (v: any) =>
+        (v: unknown) =>
           getStyleValue(v.props.style, 'left') === 0 &&
           getStyleValue(v.props.style, 'position') === 'absolute'
       );
@@ -132,7 +132,7 @@ describe('MonthLabelsRow', () => {
 
       // Oct should be at position 0
       const octContainer = views.find(
-        (v: any) =>
+        (v: unknown) =>
           getStyleValue(v.props.style, 'left') === 0 &&
           getStyleValue(v.props.style, 'position') === 'absolute'
       );
@@ -141,7 +141,7 @@ describe('MonthLabelsRow', () => {
       // Nov should be at position 5 * cellUnit
       const expectedNovPosition = 5 * cellUnit;
       const novContainer = views.find(
-        (v: any) =>
+        (v: unknown) =>
           getStyleValue(v.props.style, 'left') === expectedNovPosition &&
           getStyleValue(v.props.style, 'position') === 'absolute'
       );
@@ -164,7 +164,7 @@ describe('MonthLabelsRow', () => {
       // Oct label width should be from week 0 to week 4 = 4 * cellUnit
       const expectedOctWidth = 4 * cellUnit;
       const octContainer = views.find(
-        (v: any) =>
+        (v: unknown) =>
           getStyleValue(v.props.style, 'left') === 0 &&
           getStyleValue(v.props.style, 'width') === expectedOctWidth
       );
@@ -188,7 +188,7 @@ describe('MonthLabelsRow', () => {
       const novPosition = 8 * cellUnit;
       const expectedNovWidth = gridWidth - novPosition;
       const novContainer = views.find(
-        (v: any) =>
+        (v: unknown) =>
           getStyleValue(v.props.style, 'left') === novPosition &&
           getStyleValue(v.props.style, 'width') === expectedNovWidth
       );
@@ -286,7 +286,7 @@ describe('MonthLabelsRow', () => {
 
     it('should apply minimum width for narrow month spans', () => {
       // Helper to extract style values from React Native style prop (can be array or object)
-      const getStyleValue = (style: any, prop: string): any => {
+      const getStyleValue = (style: unknown, prop: string): unknown => {
         if (!style) return undefined;
         if (Array.isArray(style)) {
           for (const s of style) {
@@ -312,7 +312,7 @@ describe('MonthLabelsRow', () => {
 
       // Oct container should have at least MIN_WIDTH
       const octContainer = views.find(
-        (v: any) =>
+        (v: unknown) =>
           getStyleValue(v.props.style, 'left') === 0 &&
           getStyleValue(v.props.style, 'width') >= MONTH_LABEL.MIN_WIDTH
       );
@@ -467,7 +467,7 @@ describe('MonthLabelsRow', () => {
 
       const textElements = UNSAFE_getAllByType(require('react-native').Text);
       const labelText = textElements.find(
-        (t: any) => t.props.children === 'Jan'
+        (t: unknown) => t.props.children === 'Jan'
       );
 
       expect(labelText).toBeTruthy();
@@ -482,7 +482,7 @@ describe('MonthLabelsRow', () => {
 
       const textElements = UNSAFE_getAllByType(require('react-native').Text);
       const labelText = textElements.find(
-        (t: any) => t.props.children === 'Jan'
+        (t: unknown) => t.props.children === 'Jan'
       );
 
       // Font size should come from stylesheet which uses MONTH_LABEL.FONT_SIZE

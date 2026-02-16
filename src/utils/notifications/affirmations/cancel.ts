@@ -29,8 +29,7 @@ export async function cancelAffirmationDelivery(
     );
 
     if (toCancel.length > 0) {
-      // eslint-disable-next-line no-console
-      console.info('cancelAffirmationDelivery: cancelled', {
+      if (__DEV__) console.info('cancelAffirmationDelivery: cancelled', {
         affirmationId,
         count: toCancel.length,
       });
@@ -67,8 +66,7 @@ export async function cancelAllAffirmationDeliveriesForHabit(
     );
 
     if (toCancel.length > 0) {
-      // eslint-disable-next-line no-console
-      console.info('cancelAllAffirmationDeliveriesForHabit: cancelled', {
+      if (__DEV__) console.info('cancelAllAffirmationDeliveriesForHabit: cancelled', {
         count: toCancel.length,
         habitId,
       });

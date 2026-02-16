@@ -1,3 +1,4 @@
+/* eslint-disable max-lines, max-lines-per-function */
 /**
  * AuthGate Component
  *
@@ -10,17 +11,24 @@
 
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { api } from '../../../convex/_generated/api';
 import { colors } from '../../theme/colors';
+import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
 import { OnboardingScreen } from '../../screens/onboarding';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
-import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 
 const LOADING_TIMEOUT_MS = 10_000;
 
@@ -65,8 +73,8 @@ function BrandedLoadingScreen() {
               Taking longer than expected
             </Text>
             <Text style={loadingStyles.errorDescription}>
-              We're having trouble connecting. Check your internet connection and
-              try again.
+              We're having trouble connecting. Check your internet connection
+              and try again.
             </Text>
             <Pressable
               accessibilityLabel='Try Again'
@@ -78,12 +86,16 @@ function BrandedLoadingScreen() {
             </Pressable>
           </View>
         ) : (
-          <ActivityIndicator
-            color={colors.primary[500]}
-            size='small'
-            style={loadingStyles.spinner}
-          />
+          <View style={loadingStyles.shimmerContainer}>
+            <SkeletonLoader borderRadius={4} height={4} width={120} />
+          </View>
         )}
+      </View>
+
+      {/* Ghost habit cards preview */}
+      <View style={loadingStyles.cardsPreview}>
+        <HabitCardSkeleton />
+        <HabitCardSkeleton />
       </View>
     </View>
   );
@@ -116,13 +128,13 @@ const loadingStyles = StyleSheet.create({
     marginTop: 8,
     padding: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
   errorDescription: {
     color: colors.text.secondary,
-    fontSize: 14,
+    fontSize: 13,
     lineHeight: 20,
     marginBottom: 20,
     textAlign: 'center',
@@ -137,7 +149,7 @@ const loadingStyles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     backgroundColor: colors.primary[100],
-    borderRadius: 32,
+    borderRadius: 24,
     height: 64,
     justifyContent: 'center',
     marginBottom: 16,
@@ -154,14 +166,18 @@ const loadingStyles = StyleSheet.create({
   },
   retryButtonText: {
     color: colors.text.inverse,
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
   },
-  spinner: {
-    marginTop: 8,
+  cardsPreview: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  shimmerContainer: {
+    marginTop: 12,
   },
 });
-
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();
@@ -185,25 +201,44 @@ export function AuthGate() {
     return <BrandedLoadingScreen />;
   }
 
-  if (!isSignedIn) {
-    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <WelcomeScreen />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (!onboardingComplete) {
-    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <OnboardingScreen onComplete={markComplete} />
-      </GestureHandlerRootView>
-    );
-  }
+  // Determine which screen to show
+  const screenKey = !isSignedIn
+    ? 'welcome'
+    : !onboardingComplete
+      ? 'onboarding'
+      : 'app';
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <HabitsApp />
+      {screenKey === 'welcome' && (
+        <Animated.View
+          key="welcome"
+          entering={FadeIn.duration(300)}
+          exiting={FadeOut.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <WelcomeScreen />
+        </Animated.View>
+      )}
+      {screenKey === 'onboarding' && (
+        <Animated.View
+          key="onboarding"
+          entering={FadeIn.duration(300)}
+          exiting={FadeOut.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <OnboardingScreen onComplete={markComplete} />
+        </Animated.View>
+      )}
+      {screenKey === 'app' && (
+        <Animated.View
+          key="app"
+          entering={FadeIn.duration(300)}
+          style={{ flex: 1 }}
+        >
+          <HabitsApp />
+        </Animated.View>
+      )}
     </GestureHandlerRootView>
   );
 }

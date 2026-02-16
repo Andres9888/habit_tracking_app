@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * ButtonContent - The main pressable button content
  */
@@ -51,10 +52,10 @@ export function ButtonContent({
     >
       {isBoost && (
         <LinearGradient
-          colors={['#f5f3ff', '#e0e7ff']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
           className='absolute inset-0 rounded-xl'
+          colors={['#f5f3ff', '#e0e7ff']}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
         />
       )}
       <View
@@ -66,10 +67,10 @@ export function ButtonContent({
       >
         {isBoost && (
           <LinearGradient
-            colors={['#7c3aed', '#4f46e5']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
             className='absolute inset-0 rounded-xl'
+            colors={['#7c3aed', '#4f46e5']}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0 }}
           />
         )}
         <Icon

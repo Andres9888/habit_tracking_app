@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
     borderColor: '#fecaca', // red-200
     borderRadius: borderRadius.xl,
     borderWidth: 1,
-    ...shadows.modal,
+    ...shadows.alert,
     maxWidth: 400,
     overflow: 'hidden',
     shadowColor: '#dc2626', // red-600

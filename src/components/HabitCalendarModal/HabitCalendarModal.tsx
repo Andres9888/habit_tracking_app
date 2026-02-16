@@ -1,5 +1,6 @@
 import { Modal, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { StatsCard } from './StatsCard';
 import { ActivityLog } from './ActivityLog';
 import { CalendarTabs } from './CalendarTabs';
@@ -20,19 +21,20 @@ export default function HabitCalendarModal({
   toggleHabit,
   onOpenMotivationTab,
 }: HabitCalendarModalProps) {
+  const { colors } = useThemeColors();
   const state = useHabitCalendarModal({
     habit,
-    tracking,
-    toggleHabit,
     onClose,
     onOpenMotivationTab,
+    toggleHabit,
+    tracking,
   });
 
   if (!state.isValid || !habit) return null;
 
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
-      <SafeAreaView className='flex-1 bg-[#F8F5F1]'>
+      <SafeAreaView className='flex-1' style={{ backgroundColor: colors.background }}>
         <ModalHeader name={state.name} onClose={onClose} onEdit={state.handleEditPress} />
 
         <ScrollView className='px-4' showsVerticalScrollIndicator={false}>
@@ -80,8 +82,8 @@ export default function HabitCalendarModal({
         habitId={habit._id}
         visible={state.showEditScreen}
         onClose={state.handleCloseEdit}
-        onOpenCueEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
         onOpenAffirmationsEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
+        onOpenCueEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
         onOpenVisionBoard={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
       />
     </Modal>

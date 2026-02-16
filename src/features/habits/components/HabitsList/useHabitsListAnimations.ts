@@ -5,7 +5,11 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
+import { LIST_HEADER_ANIMATION_DURATION_MS, TRANSLATE, ANIMATION_DELAY } from '@/constants';
 
+/**
+ * Animated values and state setters used by the HabitsList entrance sequence.
+ */
 interface UseHabitsListAnimationsOptions {
   headerOpacity: Animated.Value;
   headerTranslateY: Animated.Value;
@@ -17,6 +21,12 @@ interface UseHabitsListAnimationsOptions {
   setShouldTriggerHabitEntrance: (value: boolean) => void;
 }
 
+/**
+ * Encapsulates the success-to-list transition animation choreography.
+ *
+ * Resets header, calendar, and row animated values, then plays a staggered
+ * sequence and re-enables habit entrance behavior when complete.
+ */
 export function useHabitsListAnimations(
   options: UseHabitsListAnimationsOptions
 ) {
@@ -51,24 +61,24 @@ export function useHabitsListAnimations(
   const handleSuccessTransitionComplete = useCallback(() => {
     setIsInSuccessCelebration(false);
     const config = {
-      duration: 350,
+      duration: LIST_HEADER_ANIMATION_DURATION_MS,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     };
 
     headerOpacity.setValue(0);
-    headerTranslateY.setValue(20);
+    headerTranslateY.setValue(TRANSLATE.small);
     calendarOpacity.setValue(0);
-    calendarTranslateY.setValue(20);
+    calendarTranslateY.setValue(TRANSLATE.small);
     habitRowOpacity.setValue(0);
-    habitRowTranslateY.setValue(20);
+    habitRowTranslateY.setValue(TRANSLATE.small);
 
     // Clear any existing timeout
     if (animationTimeoutRef.current) {
       clearTimeout(animationTimeoutRef.current);
     }
 
-    animationRef.current = Animated.stagger(100, [
+    animationRef.current = Animated.stagger(ANIMATION_DELAY.small, [
       Animated.parallel([
         Animated.timing(headerOpacity, { ...config, toValue: 1 }),
         Animated.timing(headerTranslateY, { ...config, toValue: 0 }),
@@ -86,7 +96,7 @@ export function useHabitsListAnimations(
     animationRef.current.start(() => {
       animationTimeoutRef.current = setTimeout(
         () => setShouldTriggerHabitEntrance(true),
-        200
+        ANIMATION_DELAY.standard
       );
     });
   }, [

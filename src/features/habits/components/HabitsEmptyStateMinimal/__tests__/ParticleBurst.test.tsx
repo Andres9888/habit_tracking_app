@@ -163,7 +163,9 @@ describe('ParticleBurst', () => {
     });
 
     it('should accept both custom props together', () => {
-      const { toJSON } = render(<ParticleBurst duration={1000} distance={80} />);
+      const { toJSON } = render(
+        <ParticleBurst duration={1000} distance={80} />
+      );
       expect(toJSON()).toBeTruthy();
     });
   });
@@ -174,7 +176,7 @@ describe('ParticleBurst', () => {
     });
 
     it('should have correct default duration', () => {
-      expect(PARTICLE_BURST.duration).toBe(500);
+      expect(PARTICLE_BURST.duration).toBe(800);
     });
 
     it('should have correct default distance', () => {

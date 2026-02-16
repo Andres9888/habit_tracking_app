@@ -7,10 +7,7 @@ import { typography } from '../../theme/typography';
 
 interface StrengthProgressBarProps {
   strengthPercent: number;
-  strengthEmojiAnimatedStyle: AnimatedStyle<{
-    opacity: number;
-    transform: { scale: number; rotate: string }[];
-  }>;
+  strengthEmojiAnimatedStyle: AnimatedStyle;
   progressAnimatedStyle: AnimatedStyle;
 }
 
@@ -27,7 +24,7 @@ export function StrengthProgressBar({
           style={[
             { fontSize: typography.heading2.fontSize, textAlign: 'center' },
 
-            strengthEmojiAnimatedStyle as any,
+            strengthEmojiAnimatedStyle,
           ]}
         >
           {getStrengthEmoji(strengthPercent)}
@@ -41,7 +38,7 @@ export function StrengthProgressBar({
       <View className='flex-1 items-center'>
         <Text
           className='text-[13px] font-bold'
-          style={{ color: '#65a30d', marginLeft: 12 }}
+          style={{ color: '#4D7A0A', marginLeft: 12 }}
         >
           {Math.round(strengthPercent)}%
         </Text>
@@ -54,7 +51,7 @@ export function StrengthProgressBar({
           justifyContent: 'center',
           left: '20%',
           position: 'absolute',
-          right: '20%',
+          right: '22%',
           top: 0,
         }}
       >
@@ -73,7 +70,7 @@ export function StrengthProgressBar({
           <ReAnimated.View
             style={[
               {
-                backgroundColor: '#65a30d',
+                backgroundColor: '#4D7A0A',
                 borderRadius: borderRadius.xs,
                 height: '100%',
               },

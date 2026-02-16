@@ -53,7 +53,7 @@ export function useHabitCalendarModal({
   const handleCloseEdit = () => setShowEditScreen(false);
   const handleQuickLogPress = () => {
     if (isTodayCompleted) return;
-    toggleHabit({ habitId: habit._id, date: todayDateString });
+    toggleHabit({ date: todayDateString, habitId: habit._id });
   };
   const handleOpenAdvancedFeatures = () => {
     setShowEditScreen(false);
@@ -62,21 +62,21 @@ export function useHabitCalendarModal({
   };
 
   return {
-    isValid: true,
-    emoji,
-    name,
-    scheduleLabel,
-    habitTrackingEntries,
-    isTodayCompleted,
-    recentMissBadge,
     bestStreak,
     completionPercentage,
-    showEditScreen,
     calendarView,
-    setCalendarView,
+    emoji,
+    habitTrackingEntries,
     handleEditPress,
     handleCloseEdit,
-    handleQuickLogPress,
+    isTodayCompleted,
     handleOpenAdvancedFeatures,
+    isValid: true,
+    handleQuickLogPress,
+    name,
+    recentMissBadge,
+    scheduleLabel,
+    setCalendarView,
+    showEditScreen,
   } as const;
 }

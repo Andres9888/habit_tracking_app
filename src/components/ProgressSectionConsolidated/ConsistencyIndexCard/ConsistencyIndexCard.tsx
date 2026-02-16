@@ -10,7 +10,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Activity, Info, TrendingUp, TrendingDown } from 'lucide-react-native';
+import { Activity, Info } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
 import type { ConsistencyIndexCardProps } from './types';

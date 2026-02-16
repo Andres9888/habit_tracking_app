@@ -1,7 +1,9 @@
 import { Platform, type ViewStyle } from 'react-native';
 
-const FOCUS_RING_COLOR = '#047857';
-const FOCUS_RING_GLOW_COLOR = '#059669';
+import { colors } from '@/theme/colors';
+
+const FOCUS_RING_COLOR = colors.primary[700];
+const FOCUS_RING_GLOW_COLOR = colors.primary[600];
 
 export const focusRingStyle: ViewStyle = {
   borderColor: FOCUS_RING_COLOR,

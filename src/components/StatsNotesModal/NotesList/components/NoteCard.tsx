@@ -50,8 +50,8 @@ export const NoteCard: React.FC<NoteCardProps> = ({
           accessibilityLabel='Edit note'
           accessibilityRole='button'
           className='rounded-full bg-stone-200 p-2'
-          disabled={isDeleting}
           disableAnimation={isDeleting}
+          disabled={isDeleting}
           onPress={onEdit}
         >
           <Edit3 color='#57534e' size={14} strokeWidth={2.25} />
@@ -60,8 +60,8 @@ export const NoteCard: React.FC<NoteCardProps> = ({
           accessibilityLabel='Delete note'
           accessibilityRole='button'
           className='rounded-full bg-red-100 p-2'
-          disabled={isDeleting}
           disableAnimation={isDeleting}
+          disabled={isDeleting}
           onPress={onDelete}
         >
           {isDeleting ? (

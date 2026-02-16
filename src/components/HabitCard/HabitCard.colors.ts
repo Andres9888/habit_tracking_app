@@ -15,5 +15,5 @@ export const REDESIGN_COLORS = {
   metaText: colors.gray[500],
   neutral: colors.gray[200],
   secondaryText: colors.text.primary,
-  streakText: colors.primary[700],
+  streakText: colors.streak[700],
 } as const;
