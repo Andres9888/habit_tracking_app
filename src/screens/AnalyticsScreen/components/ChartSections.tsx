@@ -3,7 +3,7 @@
  */
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
@@ -27,6 +27,7 @@ export const ChartSections = memo(function ChartSections({
   complianceData,
   isLoading = false,
 }: ChartSectionsProps) {
+  const { colors: themeColors } = useThemeColors();
   const strengthAccessibilityLabel = strengthDistribution
     ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
     : 'Loading chart';
@@ -47,9 +48,12 @@ export const ChartSections = memo(function ChartSections({
         <Text
           accessibilityLabel='Strength Distribution Chart'
           accessibilityRole='header'
-          style={styles.sectionTitle}
+          style={[styles.sectionTitle, { color: themeColors.text.primary }]}
         >
           Strength Distribution
+        </Text>
+        <Text style={[styles.sectionDesc, { color: themeColors.text.secondary }]}>
+          How your habits break down by strength level
         </Text>
         <View accessible accessibilityLabel={strengthAccessibilityLabel}>
           <StrengthDistributionChart
@@ -63,15 +67,18 @@ export const ChartSections = memo(function ChartSections({
         <Text
           accessibilityLabel='30-Day Trend Chart'
           accessibilityRole='header'
-          style={styles.sectionTitle}
+          style={[styles.sectionTitle, { color: themeColors.text.primary }]}
         >
           30-Day Trend
+        </Text>
+        <Text style={[styles.sectionDesc, { color: themeColors.text.secondary }]}>
+          Your average habit strength over the past month
         </Text>
         <View
           accessible
           accessibilityLabel={
             trendData && trendData.length > 0
-              ? `Trend chart showing ${trendData.length} days of data. Latest average strength: ${Math.round(trendData.at(-1).averageStrength)}%`
+              ? `Trend chart showing ${trendData.length} days of data. Latest average strength: ${Math.round(trendData.at(-1)?.averageStrength ?? 0)}%`
               : 'No trend data available'
           }
         >
@@ -83,9 +90,12 @@ export const ChartSections = memo(function ChartSections({
         <Text
           accessibilityLabel='Compliance Heatmap Chart'
           accessibilityRole='header'
-          style={styles.sectionTitle}
+          style={[styles.sectionTitle, { color: themeColors.text.primary }]}
         >
-          Compliance Heatmap
+          Daily Completions
+        </Text>
+        <Text style={[styles.sectionDesc, { color: themeColors.text.secondary }]}>
+          Each square is a day — darker means more habits completed
         </Text>
         <View
           accessible
@@ -110,9 +120,14 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
     paddingHorizontal: spacing.lg,
   },
+  sectionDesc: {
+    fontSize: 14,
+    lineHeight: 18,
+    marginBottom: spacing.md,
+    marginTop: -spacing.sm + 2,
+  },
   sectionTitle: {
     ...typography.heading3,
-    color: colors.text.primary,
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
 });

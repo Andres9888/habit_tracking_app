@@ -13,12 +13,13 @@ export const StatCard = memo(function StatCard({
   value,
   subtitle,
   emoji,
+  trend,
   onPress,
   loading = false,
 }: StatCardProps) {
   const accessibilityLabel = loading
     ? `${title}, loading`
-    : `${title}: ${value}${subtitle ? `, ${subtitle}` : ''}`;
+    : `${title}: ${value}${subtitle ? `, ${subtitle}` : ''}${trend ? `, ${trend.label}` : ''}`;
 
   // When wrapped in AnimatedPressable, a11y is on the pressable — avoid double-announcing
   const isInteractive = !!onPress && !loading;
@@ -86,6 +87,26 @@ export const StatCard = memo(function StatCard({
             >
               {subtitle}
             </Text>
+          )}
+          {trend && (
+            <View style={styles.trendRow}>
+              <Text
+                style={[
+                  styles.trendText,
+                  {
+                    color:
+                      trend.direction === 'up'
+                        ? '#15793C'
+                        : trend.direction === 'down'
+                          ? '#B53030'
+                          : colors.text.tertiary,
+                  },
+                ]}
+              >
+                {trend.direction === 'up' ? '↑' : trend.direction === 'down' ? '↓' : '→'}{' '}
+                {trend.label}
+              </Text>
+            </View>
           )}
         </>
       )}

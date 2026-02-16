@@ -9,7 +9,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing } from '../../../theme/spacing';
 
-export const AnalyticsHeader: React.FC = () => {
+interface AnalyticsHeaderProps {
+  summaryLabel?: string;
+}
+
+export const AnalyticsHeader: React.FC<AnalyticsHeaderProps> = ({ summaryLabel }) => {
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
 
@@ -34,7 +38,7 @@ export const AnalyticsHeader: React.FC = () => {
         entering={FadeInDown.delay(50).springify().damping(18)}
         style={[styles.headerSubtitle, { color: colors.text.secondary }]}
       >
-        Track your habit journey
+        {summaryLabel ?? 'Track your habit journey'}
       </Animated.Text>
     </View>
   );

@@ -56,4 +56,12 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
+  trendRow: {
+    marginTop: spacing.xs,
+  },
+  trendText: {
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: -0.2,
+  },
 });

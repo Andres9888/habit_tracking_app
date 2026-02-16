@@ -18,6 +18,10 @@ export interface StatCardProps {
   value: string | number;
   subtitle?: string;
   emoji?: string;
+  trend?: {
+    direction: 'up' | 'down' | 'neutral';
+    label: string; // e.g. "+5% vs last week"
+  };
   onPress?: () => void;
   loading?: boolean;
 }
@@ -64,6 +68,7 @@ export interface UseAnalyticsScreenReturn {
   // Data
   overviewStats: AnalyticsOverviewStats | undefined;
   strengthDistribution: StrengthDistributionData | undefined;
+  strengthTrend: { direction: 'up' | 'down' | 'neutral'; label: string } | undefined;
   trendData: TrendData[] | undefined;
   complianceData: HeatmapData[] | undefined;
   weeklyInsights: WeeklyInsights | undefined;

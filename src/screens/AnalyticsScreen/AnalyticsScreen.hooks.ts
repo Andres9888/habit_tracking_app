@@ -1,7 +1,7 @@
 /**
  * Business logic hooks for AnalyticsScreen
  */
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { Alert } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
@@ -30,6 +30,25 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
 
   const isLoading = !overviewStats;
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Compute trend indicators from 30-day data
+  const strengthTrend = useMemo(() => {
+    if (!trendData || trendData.length < 14) return undefined;
+    const recent = trendData.slice(-7);
+    const previous = trendData.slice(-14, -7);
+    const recentAvg =
+      recent.reduce((s, d) => s + d.averageStrength, 0) / recent.length;
+    const previousAvg =
+      previous.reduce((s, d) => s + d.averageStrength, 0) / previous.length;
+    const diff = recentAvg - previousAvg;
+    const absDiff = Math.abs(Math.round(diff));
+    if (absDiff < 1)
+      return { direction: 'neutral' as const, label: 'Steady vs last week' };
+    return {
+      direction: diff > 0 ? ('up' as const) : ('down' as const),
+      label: `${absDiff}% vs last week`,
+    };
+  }, [trendData]);
 
   // Cleanup refresh timer on unmount
   useEffect(() => {
@@ -103,6 +122,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     showExportMenu,
     showPaywall,
     strengthDistribution,
+    strengthTrend,
     trendData,
     weeklyInsights: weeklyInsights ?? undefined,
   };

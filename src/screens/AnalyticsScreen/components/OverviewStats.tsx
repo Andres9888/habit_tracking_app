@@ -11,6 +11,7 @@ import type { AnalyticsOverviewStats } from '../AnalyticsScreen.types';
 interface OverviewStatsProps {
   stats: AnalyticsOverviewStats | undefined;
   isLoading: boolean;
+  strengthTrend?: { direction: 'up' | 'down' | 'neutral'; label: string };
   onHabitPress: (habitId: string) => void;
 }
 
@@ -20,6 +21,7 @@ const formatStrengthPercentage = (strength: number) =>
 export const OverviewStats = memo(function OverviewStats({
   stats,
   isLoading,
+  strengthTrend,
   onHabitPress,
 }: OverviewStatsProps) {
   const handleStrongestPress = useCallback(() => {
@@ -49,6 +51,7 @@ export const OverviewStats = memo(function OverviewStats({
       <StatCard
         loading={isLoading}
         title='Average Strength'
+        trend={strengthTrend}
         value={stats ? formatStrengthPercentage(stats.averageStrength) : '-'}
       />
       <StatCard

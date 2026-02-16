@@ -6,6 +6,7 @@
 import React, { useMemo } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
@@ -25,6 +26,7 @@ import {
 
 function AnalyticsScreenContent() {
   const { colors: themeColors } = useThemeColors();
+  const insets = useSafeAreaInsets();
   const {
     refreshing,
     showPaywall,
@@ -33,6 +35,7 @@ function AnalyticsScreenContent() {
     isLoading,
     overviewStats,
     strengthDistribution,
+    strengthTrend,
     trendData,
     complianceData,
     weeklyInsights,
@@ -52,17 +55,19 @@ function AnalyticsScreenContent() {
   );
   const hasNoHabits = overviewStats?.totalHabits === 0;
 
-  // Show paywall modal if not premium user
-  if (!isPremiumUser && showPaywall) {
-    return (
-      <PremiumPaywall
-        visible
-        variant='analytics'
-        onClose={() => setShowPaywall(false)}
-        onStartTrial={handleStartTrial}
-      />
-    );
-  }
+  // Dynamic header summary — answers "How am I doing?" at a glance
+  const headerSummary = useMemo(() => {
+    if (!overviewStats || hasNoHabits) return undefined;
+    const avg = Math.round(overviewStats.averageStrength);
+    if (avg >= 80) return `You're crushing it — ${avg}% average strength 💪`;
+    if (avg >= 60) return `Going strong — ${avg}% average strength`;
+    if (avg >= 40) return `Building momentum — ${avg}% average strength`;
+    if (avg >= 20) return `Getting started — ${avg}% average strength`;
+    return `Just beginning — keep going!`;
+  }, [overviewStats, hasNoHabits]);
+
+  // Premium paywall is now shown as a modal overlay (not a full screen block)
+  // so users can see a preview of their analytics behind it
 
   if (isLoading) {
     return <AnalyticsScreenSkeleton />;
@@ -70,7 +75,7 @@ function AnalyticsScreenContent() {
 
   return (
     <ScrollView
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={[styles.contentContainer, { paddingBottom: Math.max(insets.bottom + 16, 48) }]}
       refreshControl={
         <RefreshControl
           colors={[colors.primary[500]]}
@@ -82,7 +87,7 @@ function AnalyticsScreenContent() {
       style={[styles.container, { backgroundColor: themeColors.background }]}
     >
       <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
-        <AnalyticsHeader />
+        <AnalyticsHeader summaryLabel={headerSummary} />
       </Animated.View>
 
       {hasNoHabits ? (
@@ -97,6 +102,7 @@ function AnalyticsScreenContent() {
             <OverviewStats
               isLoading={isLoading}
               stats={overviewStats}
+              strengthTrend={strengthTrend}
               onHabitPress={handleHabitPress}
             />
           </Animated.View>
@@ -135,6 +141,15 @@ function AnalyticsScreenContent() {
         onClose={() => setShowExportMenu(false)}
         onExport={(format) => void handleExport(format)}
       />
+
+      {!isPremiumUser && showPaywall && (
+        <PremiumPaywall
+          visible
+          variant='analytics'
+          onClose={() => setShowPaywall(false)}
+          onStartTrial={handleStartTrial}
+        />
+      )}
     </ScrollView>
   );
 }
