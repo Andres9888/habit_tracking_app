@@ -29,7 +29,7 @@ export type HabitTrackingEntry = Doc<'tracking'>;
 // ---------------------------------------------------------------------------
 
 /** Visual status of a habit for a given day cell. */
-export type HabitStatus = 'done' | 'missed' | 'planned';
+export type HabitStatus = 'done' | 'missed' | 'planned' | 'rest';
 
 /** Available sort orders for the habit list. */
 export type HabitSortMode =

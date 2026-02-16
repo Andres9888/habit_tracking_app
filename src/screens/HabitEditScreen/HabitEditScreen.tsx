@@ -11,6 +11,7 @@ import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
 import { DangerZone } from './DangerZone';
+import { RestDaysSection } from './RestDaysSection';
 import { SectionLabel } from './SectionLabel';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
@@ -88,10 +89,29 @@ function HabitEditScreenContent({
                     onReminderToggle={state.handleReminderToggle}
                   />
                 </Animated.View>
-                <SectionLabel delay={340} text='DANGER ZONE' variant='danger' />
+                <SectionLabel delay={310} text='REST DAYS' />
                 <Animated.View
                   className='mx-4 rounded-2xl p-4'
-                  entering={FadeInUp.delay(400).springify().damping(18)}
+                  entering={FadeInUp.delay(340).springify().damping(18)}
+                  style={{
+                    backgroundColor: themeColors.card,
+                    elevation: 4,
+                    shadowColor: isDark ? '#000000' : '#1c1917',
+                    shadowOffset: { height: 4, width: 0 },
+                    shadowOpacity: isDark ? 0.3 : 0.08,
+                    shadowRadius: 16,
+                  }}
+                >
+                  <RestDaysSection
+                    isPremium={state.isPremium}
+                    restDays={state.restDays}
+                    onRestDaysChange={state.setRestDays}
+                  />
+                </Animated.View>
+                <SectionLabel delay={400} text='DANGER ZONE' variant='danger' />
+                <Animated.View
+                  className='mx-4 rounded-2xl p-4'
+                  entering={FadeInUp.delay(460).springify().damping(18)}
                   style={{
                     backgroundColor: themeColors.card,
                     elevation: 4,

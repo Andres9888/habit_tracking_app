@@ -22,6 +22,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
+  const [restDays, setRestDays] = useState<number[]>([]);
 
   useEffect(() => {
     if (habit) {
@@ -34,6 +35,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
+      setRestDays(habit.restDays ?? []);
     }
   }, [habit]);
 
@@ -46,6 +48,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     },
     remindersEnabled,
     reminderTime,
+    restDays,
     selectedColor,
     selectedEmoji,
   });
@@ -75,6 +78,10 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     setReminderTime(time);
   }, []);
 
+  // Premium status for rest day limits
+  const settingsQuery = useQuery(api.settings.get);
+  const isPremium = (settingsQuery as { hasPremium?: boolean } | undefined)?.hasPremium ?? false;
+
   return {
     habitName,
     handleColorSelect,
@@ -84,11 +91,14 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     handleReminderTimeChange,
     handleReminderToggle,
     isLoading: habitId != null && habit === undefined,
+    isPremium,
     remindersEnabled,
     handleSave,
+    restDays,
     selectedEmoji,
     isSaving,
     setHabitName,
+    setRestDays,
     reminderTime,
     selectedColor,
     triggerSelection,

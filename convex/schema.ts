@@ -236,6 +236,11 @@ const applicationTables = {
     vizSuccessMind: v.optional(v.string()),
 
     // Motivation - user-provided reason for building this habit
+    // Rest Days - days of week where not completing doesn't break streak
+    // Array of day numbers: 0=Sunday, 1=Monday, ..., 6=Saturday
+    // Free users: max 1 rest day; Premium: unlimited
+    restDays: v.optional(v.array(v.number())),
+
     why: v.optional(v.string()),
 
     woopObstacle: v.optional(v.string()),

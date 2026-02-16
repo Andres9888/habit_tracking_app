@@ -45,6 +45,7 @@ export const fullHabitValidator = v.object({
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  restDays: v.optional(v.array(v.number())),
   resumedAt: v.optional(v.number()),
   strength: v.optional(v.number()),
   strengthAtPause: v.optional(v.number()),

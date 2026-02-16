@@ -11,12 +11,14 @@ interface HabitCalendarViewProps {
   habitId: Id<'habits'>;
   tracking: Array<{ habitId: Id<'habits'>; date: string; completed: boolean }>;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
+  restDays?: number[];
 }
 
 export default function HabitCalendarView({
   habitId,
   tracking,
   toggleHabit,
+  restDays,
 }: HabitCalendarViewProps) {
   const {
     currentMonth,
@@ -26,7 +28,7 @@ export default function HabitCalendarView({
     handlePreviousMonth,
     handleNextMonth,
     handleToday,
-  } = useHabitCalendarViewLogic({ habitId, tracking });
+  } = useHabitCalendarViewLogic({ habitId, restDays, tracking });
 
   return (
     <View className='gap-4'>

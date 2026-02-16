@@ -8,7 +8,7 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 import { useHabitMutations } from './useHabitMutations';
@@ -52,9 +52,21 @@ export function useHabitsModalsState({
   } = useHabitMutations();
   const { milestone, clearMilestone } = useHabitMilestones(habits, false);
 
+  // Build restDays lookup map for streak calculation
+  const restDaysByHabit = useMemo(() => {
+    const map = new Map<string, number[]>();
+    for (const habit of habits) {
+      if (habit.restDays && habit.restDays.length > 0) {
+        map.set(habit._id, habit.restDays);
+      }
+    }
+    return map;
+  }, [habits]);
+
   const { tracking, getStreak, isCompleted } = useHabitsTracking(
     generateDateStrings(365),
-    getTodayMidnight()
+    getTodayMidnight(),
+    restDaysByHabit
   );
 
   // Wrap toggle mutation as plain async function

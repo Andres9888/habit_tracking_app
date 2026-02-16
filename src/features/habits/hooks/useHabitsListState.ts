@@ -65,11 +65,23 @@ export function useHabitsListState(): HabitsListState {
     soundType: completionSoundType,
   });
 
+  // Build restDays lookup map for streak calculation
+  const restDaysByHabit = useMemo(() => {
+    const map = new Map<string, number[]>();
+    for (const habit of habitsFromQuery) {
+      if (habit.restDays && habit.restDays.length > 0) {
+        map.set(habit._id, habit.restDays);
+      }
+    }
+    return map;
+  }, [habitsFromQuery]);
+
   const weekDatesState = useHabitsWeekDates();
   const { today, extendedDateStrings } = weekDatesState;
   const { getStreak, getHabitStatus, isCompleted } = useHabitsTracking(
     extendedDateStrings,
-    today
+    today,
+    restDaysByHabit
   );
 
   const habits = useHabitsSorting({

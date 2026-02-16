@@ -8,7 +8,11 @@ import { useOptimisticStore } from '../../../lib/optimistic';
 import { validateDateString } from '../../../utils/validation';
 import type { HabitStatus } from '../types';
 
-export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
+export function useHabitsTracking(
+  extendedDateStrings: string[],
+  today: Date,
+  restDaysByHabit?: Map<string, number[]>
+) {
   // Use startDate/endDate range instead of sending all 365 date strings
   // This reduces the Convex query argument payload from ~4KB to ~50 bytes
   // Sort to handle arrays in either chronological or reverse order
@@ -60,9 +64,10 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     (habitId: string) => {
       const completedDates = completedDatesByHabit.get(habitId);
       if (!completedDates) return 0;
-      return computeCurrentStreakFromDates(completedDates, today);
+      const restDays = restDaysByHabit?.get(habitId) ?? [];
+      return computeCurrentStreakFromDates(completedDates, today, restDays);
     },
-    [completedDatesByHabit, today]
+    [completedDatesByHabit, today, restDaysByHabit]
   );
 
   const getHabitStatus = useCallback(
@@ -97,12 +102,18 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
         return 'planned';
       }
 
+      // Check if this day is a rest day for this habit
+      const habitRestDays = restDaysByHabit?.get(habitId) ?? [];
+      if (habitRestDays.length > 0 && habitRestDays.includes(date.getDay())) {
+        return 'rest';
+      }
+
       if (date < today) {
         return 'missed';
       }
       return 'planned';
     },
-    [today, completedDatesByHabit]
+    [today, completedDatesByHabit, restDaysByHabit]
   );
 
   /**

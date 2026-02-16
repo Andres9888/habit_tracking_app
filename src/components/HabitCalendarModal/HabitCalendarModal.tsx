@@ -67,7 +67,7 @@ export default function HabitCalendarModal({
           <View className='mt-8'>
             <CalendarTabs activeView={state.calendarView} onViewChange={state.setCalendarView} />
             {state.calendarView === 'month' ? (
-              <HabitCalendarView habitId={habit._id} toggleHabit={toggleHabit} tracking={tracking} />
+              <HabitCalendarView habitId={habit._id} restDays={habit.restDays} toggleHabit={toggleHabit} tracking={tracking} />
             ) : (
               <HeatmapCalendar habitId={habit._id} monthsToShow={6} tracking={tracking} />
             )}
