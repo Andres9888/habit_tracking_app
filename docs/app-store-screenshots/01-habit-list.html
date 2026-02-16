@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Habits That Stick</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Inter', sans-serif; }
+
+  .screenshot-container {
+    width: 1290px; height: 2796px;
+    background: linear-gradient(165deg, #ecfdf5 0%, #d1fae5 30%, #a7f3d0 60%, #6ee7b7 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding-top: 140px; position: relative; overflow: hidden;
+  }
+  .screenshot-container::before {
+    content: ''; position: absolute; top: -200px; right: -200px;
+    width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(5,150,105,0.15) 0%, transparent 70%);
+  }
+  .headline {
+    font-size: 72px; font-weight: 800; color: #064e3b;
+    text-align: center; margin-bottom: 16px; letter-spacing: -1.5px;
+    line-height: 1.1;
+  }
+  .subheadline {
+    font-size: 36px; font-weight: 500; color: #047857; opacity: 0.8;
+    text-align: center; margin-bottom: 80px;
+  }
+  .device-frame {
+    width: 380px; height: 820px; background: #fff; border-radius: 52px;
+    box-shadow: 0 50px 100px rgba(0,0,0,0.15), 0 20px 40px rgba(0,0,0,0.1), inset 0 0 0 3px #e5e7eb;
+    overflow: hidden; position: relative;
+    transform: scale(2.2); transform-origin: top center;
+  }
+  .notch {
+    width: 160px; height: 34px; background: #000; border-radius: 0 0 20px 20px;
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 10;
+  }
+  .status-bar {
+    height: 54px; padding: 16px 24px 0; display: flex; justify-content: space-between;
+    align-items: center; font-size: 14px; font-weight: 600; color: #1f2937;
+  }
+  .status-icons { display: flex; gap: 6px; align-items: center; }
+  .status-icons span { font-size: 13px; }
+
+  .app-content { padding: 0 16px; }
+  .app-header {
+    padding: 8px 0 16px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .app-title { font-size: 28px; font-weight: 800; color: #111827; }
+  .date-pill {
+    background: #ecfdf5; color: #047857; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px;
+  }
+  .streak-banner {
+    background: linear-gradient(135deg, #059669, #047857);
+    border-radius: 16px; padding: 16px 18px; margin-bottom: 16px; color: #fff;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .streak-number { font-size: 36px; font-weight: 800; line-height: 1; }
+  .streak-label { font-size: 13px; font-weight: 500; opacity: 0.9; }
+  .streak-fire { font-size: 32px; }
+
+  .habit-card {
+    background: #fff; border-radius: 16px; padding: 16px;
+    margin-bottom: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #f3f4f6; display: flex; align-items: center; gap: 14px;
+  }
+  .habit-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    flex-shrink: 0;
+  }
+  .habit-info { flex: 1; }
+  .habit-name { font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 2px; }
+  .habit-streak { font-size: 12px; color: #6b7280; font-weight: 500; }
+  .habit-streak strong { color: #059669; }
+  .strength-bar {
+    height: 6px; background: #f3f4f6; border-radius: 3px; margin-top: 6px; overflow: hidden;
+  }
+  .strength-fill { height: 100%; border-radius: 3px; }
+  .check-circle {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .check-done { background: #059669; color: #fff; }
+  .check-pending { border: 2.5px solid #d1d5db; }
+
+  .chain-dots {
+    display: flex; gap: 3px; margin-top: 6px;
+  }
+  .chain-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+<div class="screenshot-container">
+  <div class="headline">Build Habits<br>That Stick</div>
+  <div class="subheadline">Your daily chain, visualized</div>
+
+  <div class="device-frame">
+    <div class="notch"></div>
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <span>📶</span><span>🔋</span>
+      </div>
+    </div>
+    <div class="app-content">
+      <div class="app-header">
+        <div class="app-title">Today</div>
+        <div class="date-pill">Mon, Feb 16</div>
+      </div>
+
+      <div class="streak-banner">
+        <span class="streak-fire">🔥</span>
+        <div>
+          <div class="streak-number">47</div>
+          <div class="streak-label">day streak — keep it going!</div>
+        </div>
+      </div>
+
+      <div class="habit-card">
+        <div class="habit-icon" style="background:#ecfdf5;">🧘</div>
+        <div class="habit-info">
+          <div class="habit-name">Morning Meditation</div>
+          <div class="habit-streak"><strong>32 days</strong> · Chain strength: Strong</div>
+          <div class="strength-bar"><div class="strength-fill" style="width:85%;background:linear-gradient(90deg,#059669,#34d399);"></div></div>
+          <div class="chain-dots">
+            <div class="chain-dot" style="background:#059669;"></div>
+            <div class="chain-dot" style="background:#059669;"></div>
+            <div class="chain-dot" style="background:#059669;"></div>
+            <div class="chain-dot" style="background:#059669;"></div>
+            <div class="chain-dot" style="background:#059669;"></div>
+            <div class="chain-dot" style="background:#059669;"></div>
+            <div class="chain-dot" style="background:#059669;"></div>
+          </div>
+        </div>
+        <div class="check-circle check-done">✓</div>
+      </div>
+
+      <div class="habit-card">
+        <div class="habit-icon" style="background:#eff6ff;">📖</div>
+        <div class="habit-info">
+          <div class="habit-name">Read 20 Pages</div>
+          <div class="habit-streak"><strong>18 days</strong> · Chain strength: Growing</div>
+          <div class="strength-bar"><div class="strength-fill" style="width:60%;background:linear-gradient(90deg,#3b82f6,#93c5fd);"></div></div>
+          <div class="chain-dots">
+            <div class="chain-dot" style="background:#3b82f6;"></div>
+            <div class="chain-dot" style="background:#3b82f6;"></div>
+            <div class="chain-dot" style="background:#3b82f6;"></div>
+            <div class="chain-dot" style="background:#3b82f6;"></div>
+            <div class="chain-dot" style="background:#3b82f6;"></div>
+            <div class="chain-dot" style="background:#d1d5db;"></div>
+            <div class="chain-dot" style="background:#3b82f6;"></div>
+          </div>
+        </div>
+        <div class="check-circle check-done">✓</div>
+      </div>
+
+      <div class="habit-card">
+        <div class="habit-icon" style="background:#fef3c7;">💪</div>
+        <div class="habit-info">
+          <div class="habit-name">Exercise 30 min</div>
+          <div class="habit-streak"><strong>47 days</strong> · Chain strength: Unbreakable</div>
+          <div class="strength-bar"><div class="strength-fill" style="width:95%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div>
+          <div class="chain-dots">
+            <div class="chain-dot" style="background:#f59e0b;"></div>
+            <div class="chain-dot" style="background:#f59e0b;"></div>
+            <div class="chain-dot" style="background:#f59e0b;"></div>
+            <div class="chain-dot" style="background:#f59e0b;"></div>
+            <div class="chain-dot" style="background:#f59e0b;"></div>
+            <div class="chain-dot" style="background:#f59e0b;"></div>
+            <div class="chain-dot" style="background:#f59e0b;"></div>
+          </div>
+        </div>
+        <div class="check-circle check-pending"></div>
+      </div>
+
+      <div class="habit-card">
+        <div class="habit-icon" style="background:#fce7f3;">💧</div>
+        <div class="habit-info">
+          <div class="habit-name">Drink 8 Glasses Water</div>
+          <div class="habit-streak"><strong>12 days</strong> · Chain strength: Building</div>
+          <div class="strength-bar"><div class="strength-fill" style="width:40%;background:linear-gradient(90deg,#ec4899,#f9a8d4);"></div></div>
+          <div class="chain-dots">
+            <div class="chain-dot" style="background:#ec4899;"></div>
+            <div class="chain-dot" style="background:#ec4899;"></div>
+            <div class="chain-dot" style="background:#ec4899;"></div>
+            <div class="chain-dot" style="background:#d1d5db;"></div>
+            <div class="chain-dot" style="background:#ec4899;"></div>
+            <div class="chain-dot" style="background:#ec4899;"></div>
+            <div class="chain-dot" style="background:#ec4899;"></div>
+          </div>
+        </div>
+        <div class="check-circle check-pending"></div>
+      </div>
+
+      <div class="habit-card">
+        <div class="habit-icon" style="background:#ede9fe;">✍️</div>
+        <div class="habit-info">
+          <div class="habit-name">Journal Entry</div>
+          <div class="habit-streak"><strong>8 days</strong> · Chain strength: New</div>
+          <div class="strength-bar"><div class="strength-fill" style="width:25%;background:linear-gradient(90deg,#8b5cf6,#c4b5fd);"></div></div>
+          <div class="chain-dots">
+            <div class="chain-dot" style="background:#8b5cf6;"></div>
+            <div class="chain-dot" style="background:#8b5cf6;"></div>
+            <div class="chain-dot" style="background:#d1d5db;"></div>
+            <div class="chain-dot" style="background:#8b5cf6;"></div>
+            <div class="chain-dot" style="background:#8b5cf6;"></div>
+            <div class="chain-dot" style="background:#8b5cf6;"></div>
+            <div class="chain-dot" style="background:#d1d5db;"></div>
+          </div>
+        </div>
+        <div class="check-circle check-pending"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

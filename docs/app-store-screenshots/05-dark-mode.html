@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Beautiful Day & Night</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Inter', sans-serif; }
+
+  .screenshot-container {
+    width: 1290px; height: 2796px;
+    background: linear-gradient(165deg, #1e293b 0%, #0f172a 40%, #020617 100%);
+    display: flex; flex-direction: column; align-items: center; padding-top: 140px;
+    position: relative; overflow: hidden;
+  }
+  .screenshot-container::before {
+    content: ''; position: absolute; top: 300px; right: -100px;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(5,150,105,0.15) 0%, transparent 70%);
+  }
+  .screenshot-container::after {
+    content: ''; position: absolute; bottom: 200px; left: -100px;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
+  }
+  .headline { font-size: 72px; font-weight: 800; color: #f1f5f9; text-align: center; margin-bottom: 16px; letter-spacing: -1.5px; line-height: 1.1; }
+  .subheadline { font-size: 36px; font-weight: 500; color: #94a3b8; text-align: center; margin-bottom: 80px; }
+  .device-frame {
+    width: 380px; height: 820px; background: #111827; border-radius: 52px;
+    box-shadow: 0 50px 100px rgba(0,0,0,0.4), 0 20px 40px rgba(0,0,0,0.3), inset 0 0 0 3px #1f2937;
+    overflow: hidden; position: relative;
+    transform: scale(2.2); transform-origin: top center;
+  }
+  .notch { width: 160px; height: 34px; background: #000; border-radius: 0 0 20px 20px; position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 10; }
+  .status-bar { height: 54px; padding: 16px 24px 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; color: #e2e8f0; }
+
+  .app-content { padding: 0 16px; }
+  .app-header { padding: 8px 0 16px; display: flex; justify-content: space-between; align-items: center; }
+  .app-title { font-size: 28px; font-weight: 800; color: #f1f5f9; }
+  .date-pill { background: #1e3a2e; color: #34d399; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; }
+
+  .streak-banner {
+    background: linear-gradient(135deg, #065f46, #047857);
+    border-radius: 16px; padding: 16px 18px; margin-bottom: 16px; color: #fff;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .streak-fire { font-size: 32px; }
+  .streak-number { font-size: 36px; font-weight: 800; line-height: 1; }
+  .streak-label { font-size: 13px; font-weight: 500; opacity: 0.9; }
+
+  .habit-card {
+    background: #1f2937; border-radius: 16px; padding: 16px;
+    margin-bottom: 12px; border: 1px solid #374151;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .habit-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    flex-shrink: 0;
+  }
+  .habit-info { flex: 1; }
+  .habit-name { font-size: 16px; font-weight: 700; color: #f1f5f9; margin-bottom: 2px; }
+  .habit-streak { font-size: 12px; color: #9ca3af; font-weight: 500; }
+  .habit-streak strong { color: #34d399; }
+  .strength-bar { height: 6px; background: #374151; border-radius: 3px; margin-top: 6px; overflow: hidden; }
+  .strength-fill { height: 100%; border-radius: 3px; }
+  .chain-dots { display: flex; gap: 3px; margin-top: 6px; }
+  .chain-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .check-circle {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .check-done { background: #059669; color: #fff; }
+  .check-pending { border: 2.5px solid #4b5563; }
+
+  .bottom-nav {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+    background: #111827; border-top: 1px solid #1f2937;
+    display: flex; justify-content: space-around; align-items: center; padding: 0 20px;
+  }
+  .nav-item { text-align: center; }
+  .nav-icon { font-size: 20px; }
+  .nav-label { font-size: 9px; color: #6b7280; font-weight: 600; margin-top: 2px; }
+  .nav-active .nav-label { color: #34d399; }
+</style>
+</head>
+<body>
+<div class="screenshot-container">
+  <div class="headline">Beautiful<br>Day & Night</div>
+  <div class="subheadline">Gorgeous dark mode included</div>
+
+  <div class="device-frame">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div>📶 🔋</div></div>
+    <div class="app-content">
+      <div class="app-header">
+        <div class="app-title">Today</div>
+        <div class="date-pill">Mon, Feb 16</div>
+      </div>
+
+      <div class="streak-banner">
+        <span class="streak-fire">🔥</span>
+        <div>
+          <div class="streak-number">47</div>
+          <div class="streak-label">day streak — keep it going!</div>
+        </div>
+      </div>
+
+      <div class="habit-card">
+        <div class="habit-icon" style="background:#1e3a2e;">🧘</div>
+        <div class="habit-info">
+          <div class="habit-name">Morning Meditation</div>
+          <div class="habit-streak"><strong>32 days</strong> · Strong</div>
+          <div class="strength-bar"><div class="strength-fill" style="width:85%;background:linear-gradient(90deg,#059669,#34d399);"></div></div>
+          <div class="chain-dots">
+            <div class="chain-dot" style="background:#059669;"></div><div class="chain-dot" style="background:#059669;"></div><div class="chain-dot" style="background:#059669;"></div><div class="chain-dot" style="background:#059669;"></div><div class="chain-dot" style="background:#059669;"></div><div class="chain-dot" style="background:#059669;"></div><div class="chain-dot" style="background:#059669;"></div>
+          </div>
+        </div>
+        <div class="check-circle check-done">✓</div>
+      </div>
+
+      <div class="habit-card">
+        <div class="habit-icon" style="background:#1e2a3f;">📖</div>
+        <div class="habit-info">
+          <div class="habit-name">Read 20 Pages</div>
+          <div class="habit-streak"><strong>18 days</strong> · Growing</div>
+          <div class="strength-bar"><div class="strength-fill" style="width:60%;background:linear-gradient(90deg,#3b82f6,#93c5fd);"></div></div>
+          <div class="chain-dots">
+            <div class="chain-dot" style="background:#3b82f6;"></div><div class="chain-dot" style="background:#3b82f6;"></div><div class="chain-dot" style="background:#3b82f6;"></div><div class="chain-dot" style="background:#3b82f6;"></div><div class="chain-dot" style="background:#3b82f6;"></div><div class="chain-dot" style="background:#374151;"></div><div class="chain-dot" style="background:#3b82f6;"></div>
+          </div>
+        </div>
+        <div class="check-circle check-done">✓</div>
+      </div>
+
+      <div class="habit-card">
+        <div class="habit-icon" style="background:#3b2f1e;">💪</div>
+        <div class="habit-info">
+          <div class="habit-name">Exercise 30 min</div>
+          <div class="habit-streak"><strong>47 days</strong> · Unbreakable</div>
+          <div class="strength-bar"><div class="strength-fill" style="width:95%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div>
+          <div class="chain-dots">
+            <div class="chain-dot" style="background:#f59e0b;"></div><div class="chain-dot" style="background:#f59e0b;"></div><div class="chain-dot" style="background:#f59e0b;"></div><div class="chain-dot" style="background:#f59e0b;"></div><div class="chain-dot" style="background:#f59e0b;"></div><div class="chain-dot" style="background:#f59e0b;"></div><div class="chain-dot" style="background:#f59e0b;"></div>
+          </div>
+        </div>
+        <div class="check-circle check-pending"></div>
+      </div>
+
+      <div class="habit-card">
+        <div class="habit-icon" style="background:#2e1e2e;">💧</div>
+        <div class="habit-info">
+          <div class="habit-name">Drink 8 Glasses Water</div>
+          <div class="habit-streak"><strong>12 days</strong> · Building</div>
+          <div class="strength-bar"><div class="strength-fill" style="width:40%;background:linear-gradient(90deg,#ec4899,#f9a8d4);"></div></div>
+          <div class="chain-dots">
+            <div class="chain-dot" style="background:#ec4899;"></div><div class="chain-dot" style="background:#ec4899;"></div><div class="chain-dot" style="background:#ec4899;"></div><div class="chain-dot" style="background:#374151;"></div><div class="chain-dot" style="background:#ec4899;"></div><div class="chain-dot" style="background:#ec4899;"></div><div class="chain-dot" style="background:#ec4899;"></div>
+          </div>
+        </div>
+        <div class="check-circle check-pending"></div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item nav-active"><div class="nav-icon">🏠</div><div class="nav-label">Today</div></div>
+      <div class="nav-item"><div class="nav-icon">📊</div><div class="nav-label">Analytics</div></div>
+      <div class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">Templates</div></div>
+      <div class="nav-item"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

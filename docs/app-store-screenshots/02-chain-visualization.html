@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Don't Break The Chain</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Inter', sans-serif; }
+
+  .screenshot-container {
+    width: 1290px; height: 2796px;
+    background: linear-gradient(165deg, #fef3c7 0%, #fde68a 30%, #fbbf24 70%, #f59e0b 100%);
+    display: flex; flex-direction: column; align-items: center; padding-top: 140px;
+    position: relative; overflow: hidden;
+  }
+  .screenshot-container::before {
+    content: ''; position: absolute; bottom: -100px; left: -100px;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,158,11,0.2) 0%, transparent 70%);
+  }
+  .headline { font-size: 72px; font-weight: 800; color: #78350f; text-align: center; margin-bottom: 16px; letter-spacing: -1.5px; line-height: 1.1; }
+  .subheadline { font-size: 36px; font-weight: 500; color: #92400e; opacity: 0.8; text-align: center; margin-bottom: 80px; }
+  .device-frame {
+    width: 380px; height: 820px; background: #fff; border-radius: 52px;
+    box-shadow: 0 50px 100px rgba(0,0,0,0.15), 0 20px 40px rgba(0,0,0,0.1), inset 0 0 0 3px #e5e7eb;
+    overflow: hidden; position: relative;
+    transform: scale(2.2); transform-origin: top center;
+  }
+  .notch { width: 160px; height: 34px; background: #000; border-radius: 0 0 20px 20px; position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 10; }
+  .status-bar { height: 54px; padding: 16px 24px 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; color: #1f2937; }
+
+  .app-content { padding: 0 16px; }
+  .nav-back { font-size: 14px; color: #059669; font-weight: 600; margin-bottom: 8px; }
+  .habit-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .habit-big-icon { font-size: 36px; }
+  .habit-big-name { font-size: 22px; font-weight: 800; color: #111827; }
+  .habit-big-streak { font-size: 13px; color: #059669; font-weight: 600; }
+
+  .chain-stats {
+    display: flex; gap: 10px; margin-bottom: 18px;
+  }
+  .stat-card {
+    flex: 1; background: #f9fafb; border-radius: 14px; padding: 12px 10px; text-align: center;
+    border: 1px solid #f3f4f6;
+  }
+  .stat-num { font-size: 24px; font-weight: 800; color: #111827; }
+  .stat-label { font-size: 11px; color: #6b7280; font-weight: 500; margin-top: 2px; }
+
+  .calendar-section { margin-bottom: 16px; }
+  .cal-month { font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 10px; }
+  .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 6px; text-align: center; font-size: 11px; color: #9ca3af; font-weight: 600; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-day {
+    aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: #374151;
+  }
+  .cal-done { background: #059669; color: #fff; }
+  .cal-today { background: #047857; color: #fff; box-shadow: 0 0 0 2px #34d399; }
+  .cal-missed { background: #fee2e2; color: #ef4444; }
+  .cal-future { background: #f9fafb; color: #d1d5db; }
+  .cal-empty { background: transparent; }
+
+  .chain-visual {
+    background: linear-gradient(135deg, #059669, #047857); border-radius: 16px;
+    padding: 14px; margin-bottom: 12px; text-align: center;
+  }
+  .chain-links { display: flex; align-items: center; justify-content: center; gap: 2px; flex-wrap: wrap; }
+  .chain-link {
+    width: 12px; height: 12px; border-radius: 3px; background: rgba(255,255,255,0.9);
+  }
+  .chain-link.missed { background: rgba(255,255,255,0.2); }
+  .chain-msg { color: #fff; font-size: 14px; font-weight: 700; margin-top: 10px; }
+  .chain-sub { color: rgba(255,255,255,0.8); font-size: 12px; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="screenshot-container">
+  <div class="headline">Don't Break<br>The Chain</div>
+  <div class="subheadline">Every link makes you stronger</div>
+
+  <div class="device-frame">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div>📶 🔋</div></div>
+    <div class="app-content">
+      <div class="nav-back">← Back</div>
+      <div class="habit-header">
+        <span class="habit-big-icon">💪</span>
+        <div>
+          <div class="habit-big-name">Exercise 30 min</div>
+          <div class="habit-big-streak">🔥 47-day streak!</div>
+        </div>
+      </div>
+
+      <div class="chain-stats">
+        <div class="stat-card">
+          <div class="stat-num" style="color:#059669;">47</div>
+          <div class="stat-label">Current Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" style="color:#f59e0b;">52</div>
+          <div class="stat-label">Best Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">89%</div>
+          <div class="stat-label">Completion</div>
+        </div>
+      </div>
+
+      <div class="chain-visual">
+        <div class="chain-links">
+          <script>
+            // Generate 47 filled links
+          </script>
+          <!-- 47 filled + a few missed for realism -->
+          <div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div>
+          <div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div>
+          <div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div>
+          <div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div>
+          <div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div>
+        </div>
+        <div class="chain-msg">🔗 47 links strong!</div>
+        <div class="chain-sub">Keep going — you're unstoppable</div>
+      </div>
+
+      <div class="calendar-section">
+        <div class="cal-month">February 2026</div>
+        <div class="cal-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+        <div class="cal-grid">
+          <div class="cal-day cal-done">1</div><div class="cal-day cal-done">2</div><div class="cal-day cal-done">3</div><div class="cal-day cal-done">4</div><div class="cal-day cal-done">5</div><div class="cal-day cal-done">6</div><div class="cal-day cal-done">7</div>
+          <div class="cal-day cal-done">8</div><div class="cal-day cal-done">9</div><div class="cal-day cal-done">10</div><div class="cal-day cal-done">11</div><div class="cal-day cal-done">12</div><div class="cal-day cal-done">13</div><div class="cal-day cal-done">14</div>
+          <div class="cal-day cal-done">15</div><div class="cal-day cal-today">16</div><div class="cal-day cal-future">17</div><div class="cal-day cal-future">18</div><div class="cal-day cal-future">19</div><div class="cal-day cal-future">20</div><div class="cal-day cal-future">21</div>
+          <div class="cal-day cal-future">22</div><div class="cal-day cal-future">23</div><div class="cal-day cal-future">24</div><div class="cal-day cal-future">25</div><div class="cal-day cal-future">26</div><div class="cal-day cal-future">27</div><div class="cal-day cal-future">28</div>
+        </div>
+      </div>
+
+      <div class="calendar-section">
+        <div class="cal-month">January 2026</div>
+        <div class="cal-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+        <div class="cal-grid">
+          <div class="cal-day cal-empty"></div><div class="cal-day cal-empty"></div><div class="cal-day cal-empty"></div><div class="cal-day cal-empty"></div><div class="cal-day cal-done">1</div><div class="cal-day cal-done">2</div><div class="cal-day cal-done">3</div>
+          <div class="cal-day cal-done">4</div><div class="cal-day cal-done">5</div><div class="cal-day cal-done">6</div><div class="cal-day cal-done">7</div><div class="cal-day cal-done">8</div><div class="cal-day cal-missed">9</div><div class="cal-day cal-done">10</div>
+          <div class="cal-day cal-done">11</div><div class="cal-day cal-done">12</div><div class="cal-day cal-done">13</div><div class="cal-day cal-done">14</div><div class="cal-day cal-done">15</div><div class="cal-day cal-done">16</div><div class="cal-day cal-done">17</div>
+          <div class="cal-day cal-done">18</div><div class="cal-day cal-done">19</div><div class="cal-day cal-done">20</div><div class="cal-day cal-done">21</div><div class="cal-day cal-done">22</div><div class="cal-day cal-done">23</div><div class="cal-day cal-done">24</div>
+          <div class="cal-day cal-done">25</div><div class="cal-day cal-done">26</div><div class="cal-day cal-done">27</div><div class="cal-day cal-done">28</div><div class="cal-day cal-done">29</div><div class="cal-day cal-done">30</div><div class="cal-day cal-done">31</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
