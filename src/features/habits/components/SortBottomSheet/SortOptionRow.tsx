@@ -1,3 +1,4 @@
+import React, { memo, useCallback, useMemo } from 'react';
 import { Check } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
@@ -43,7 +44,7 @@ interface SortOptionRowProps {
 /**
  * SortOptionRow - A single sort option in the detailed options list.
  */
-export function SortOptionRow({
+function SortOptionRowComponent({
   Icon,
   iconBgColors,
   title,
@@ -54,10 +55,20 @@ export function SortOptionRow({
   const { colors: themeColors, isDark } = useThemeColors();
   const { trigger } = useHaptics();
 
-  const handlePress = () => {
+  const handlePress = useCallback(() => {
     trigger('tap');
     onPress();
-  };
+  }, [trigger, onPress]);
+
+  const containerStyle = useMemo(() => ({
+    backgroundColor: selected
+      ? isDark
+        ? DARK_SURFACE_COLOR
+        : '#ecfdf5'
+      : 'transparent',
+    borderColor: selected ? themeColors.primary[300] : 'transparent',
+    borderWidth: selected ? 1 : 0,
+  }), [selected, isDark, themeColors.primary]);
 
   return (
     <Pressable
@@ -66,15 +77,7 @@ export function SortOptionRow({
       accessibilityRole='radio'
       accessibilityState={{ checked: selected }}
       className='mb-1 flex-row items-center gap-3 rounded-xl px-3 py-3'
-      style={{
-        backgroundColor: selected
-          ? isDark
-            ? DARK_SURFACE_COLOR
-            : '#ecfdf5'
-          : 'transparent',
-        borderColor: selected ? themeColors.primary[300] : 'transparent',
-        borderWidth: selected ? 1 : 0,
-      }}
+      style={containerStyle}
       onPress={handlePress}
     >
       <LinearGradient
@@ -121,4 +124,5 @@ export function SortOptionRow({
   );
 }
 
+export const SortOptionRow = memo(SortOptionRowComponent);
 export default SortOptionRow;

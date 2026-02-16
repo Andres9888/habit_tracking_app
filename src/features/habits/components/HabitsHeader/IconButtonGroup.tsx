@@ -1,11 +1,11 @@
 /* eslint-disable max-lines */
+import React, { memo, useMemo } from 'react';
 import { ArrowUpDown, BookOpen, Settings } from 'lucide-react-native';
 import { Pressable, View, StyleSheet } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { NotificationBadge } from '../../../../components/NotificationBadge';
 import { useIsDark } from '../../../../theme/ThemeContext';
 import type { ViewStyle } from 'react-native';
-import { useMemo } from 'react';
 
 interface IconButtonGroupProps {
   // Templates button
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 /**
  * Compact icon button group containing Templates, Sort, and Settings buttons.
  */
-export function IconButtonGroup({
+export const IconButtonGroup = memo(function IconButtonGroup({
   templatesAnimatedStyle,
   showBadge,
   onTemplatesPress,
@@ -169,4 +169,4 @@ export function IconButtonGroup({
       </Animated.View>
     </View>
   );
-}
+});

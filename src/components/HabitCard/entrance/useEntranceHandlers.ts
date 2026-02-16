@@ -3,7 +3,7 @@
  * Provides handlers for entrance animation control
  */
 
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { runFadeUp, runAccentSlideDown, runWidthExpansion } from './animations';
 import { createSetInstantVisible } from './setInstantVisible';
 import { createResetAnimation } from './resetAnimation';
@@ -22,6 +22,14 @@ export function useEntranceHandlers({
   // Use ref for callback to prevent it from triggering useCallback re-runs
   const onAnimationCompleteRef = useRef(onAnimationComplete);
   onAnimationCompleteRef.current = onAnimationComplete;
+  const delayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup delayed entrance timer on unmount
+  useEffect(() => {
+    return () => {
+      if (delayTimerRef.current) clearTimeout(delayTimerRef.current);
+    };
+  }, []);
 
   const setInstantVisible = useMemo(
     () => createSetInstantVisible(values),
@@ -57,8 +65,12 @@ export function useEntranceHandlers({
         }
       }
     };
-    if (delay > 0) setTimeout(execute, delay);
-    else execute();
+    if (delay > 0) {
+      if (delayTimerRef.current) clearTimeout(delayTimerRef.current);
+      delayTimerRef.current = setTimeout(execute, delay);
+    } else {
+      execute();
+    }
   }, [
     reduceMotion,
     variant,

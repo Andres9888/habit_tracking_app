@@ -3,7 +3,7 @@
  * Manages bottom sheet animations and gesture handling
  */
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   useSharedValue,
@@ -28,11 +28,20 @@ export function useSheetAnimations(visible: boolean, onClose: () => void) {
   const searchFocusAnim = useSharedValue(0);
   const sheetHeight = useSharedValue(SHEET_HEIGHT_COLLAPSED);
 
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const animatedStyles = useSheetStyles(
     translateY,
     backdropOpacity,
     searchFocusAnim
   );
+
+  // Cleanup close timer on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (visible) {
@@ -49,7 +58,8 @@ export function useSheetAnimations(visible: boolean, onClose: () => void) {
   const closeSheet = useCallback(() => {
     translateY.value = withSpring(SHEET_HEIGHT_EXPANDED, SPRING_CONFIG);
     backdropOpacity.value = withTiming(0, { duration: 200 });
-    setTimeout(onClose, 200);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(onClose, 200);
   }, [onClose]);
 
   const expandSheet = useCallback(() => {

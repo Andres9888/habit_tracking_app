@@ -11,15 +11,27 @@
  * Performance: Uses Reanimated for smooth UI-thread animations
  */
 
-import { Pressable, Text, View } from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
-import { SHADOW_OPACITY, OPACITY } from '../../../../../constants';
+import { OPACITY } from '../../../../../constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export function MonetizationHero({
+const heroStyles = StyleSheet.create({
+  container: {
+    backgroundColor: '#1c1917',
+    elevation: 4,
+    shadowColor: '#1c1917',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+  },
+});
+
+export const MonetizationHero = memo(function MonetizationHero({
   freeHabitLimit,
   habitSlotsUsed,
   hasReachedHabitLimit,
@@ -37,14 +49,7 @@ export function MonetizationHero({
   return (
     <View
       className='overflow-hidden rounded-3xl p-6'
-      style={{
-        backgroundColor: '#1c1917',
-        elevation: 4,
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: SHADOW_OPACITY.minimal,
-        shadowRadius: 16,
-      }}
+      style={heroStyles.container}
     >
       <View className='gap-2'>
         <Text className='text-[13px] font-medium uppercase tracking-[4px] text-[#a5b4fc]'>
@@ -116,4 +121,4 @@ export function MonetizationHero({
       </View>
     </View>
   );
-}
+});

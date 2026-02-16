@@ -51,11 +51,11 @@ export const useSettingsModalLogic = ({
     };
   }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
     if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
     closeTimerRef.current = setTimeout(() => setView('settings'), 300);
-  };
+  }, [onClose]);
 
   const update = useCallback(
     async (patch: Record<string, unknown>) => {
@@ -64,26 +64,26 @@ export const useSettingsModalLogic = ({
     [settings, updateSettings]
   );
 
-  const setDarkModePreference = async (value: DarkModePreference) => {
+  const setDarkModePreference = useCallback(async (value: DarkModePreference) => {
     setDarkModeState(value);
     await update({ darkMode: value });
-  };
-  const setReduceMotion = async (value: boolean) => {
+  }, [update]);
+  const setReduceMotion = useCallback(async (value: boolean) => {
     setReduceMotionState(value);
     await update({ reduceMotion: value });
-  };
-  const setHighContrastMode = async (value: boolean) => {
+  }, [update]);
+  const setHighContrastMode = useCallback(async (value: boolean) => {
     setHighContrastModeState(value);
     await update({ highContrastMode: value });
-  };
-  const setUseDyslexicFont = async (value: boolean) => {
+  }, [update]);
+  const setUseDyslexicFont = useCallback(async (value: boolean) => {
     setUseDyslexicFontState(value);
     await update({ useDyslexicFont: value });
-  };
-  const setShowGradientFill = async (value: boolean) => {
+  }, [update]);
+  const setShowGradientFill = useCallback(async (value: boolean) => {
     setShowGradientFillState(value);
     await update({ showGradientFill: value });
-  };
+  }, [update]);
 
   return {
     darkModePreference,

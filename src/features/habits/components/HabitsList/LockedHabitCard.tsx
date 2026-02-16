@@ -10,7 +10,7 @@
  * Both respect the `reduceMotion` preference.
  */
 
-import { useEffect, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -21,7 +21,7 @@ interface LockedHabitCardProps {
   reduceMotion?: boolean;
 }
 
-export function LockedHabitCard({
+export const LockedHabitCard = memo(function LockedHabitCard({
   onUpgradePress,
   reduceMotion = false,
 }: LockedHabitCardProps) {
@@ -53,7 +53,7 @@ export function LockedHabitCard({
     ]).start();
   }, [opacity, entranceScale, reduceMotion]);
 
-  const handlePressIn = () => {
+  const handlePressIn = useCallback(() => {
     if (reduceMotion) {
       pressScale.setValue(SCALE.pressLarge);
       return;
@@ -65,9 +65,9 @@ export function LockedHabitCard({
       toValue: SCALE.pressLarge,
       useNativeDriver: true,
     }).start();
-  };
+  }, [reduceMotion, pressScale]);
 
-  const handlePressOut = () => {
+  const handlePressOut = useCallback(() => {
     if (reduceMotion) {
       pressScale.setValue(SCALE.normal);
       return;
@@ -79,7 +79,20 @@ export function LockedHabitCard({
       toValue: SCALE.normal,
       useNativeDriver: true,
     }).start();
-  };
+  }, [reduceMotion, pressScale]);
+
+  const animatedViewStyle = useMemo(() => ({
+    borderColor: isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(196, 181, 253, 1)',
+    opacity,
+    transform: [{ scale: entranceScale }, { scale: pressScale }],
+  }), [isDark, opacity, entranceScale, pressScale]);
+
+  const gradientColors = useMemo(() =>
+    isDark
+      ? (['rgba(88, 28, 135, 0.2)', 'rgba(120, 53, 15, 0.1)'] as const)
+      : (['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)'] as const),
+    [isDark]
+  );
 
   return (
     <Pressable
@@ -92,17 +105,11 @@ export function LockedHabitCard({
     >
       <Animated.View
         className='gap-4 rounded-3xl border border-dashed p-5'
-        style={{
-          borderColor: isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(196, 181, 253, 1)',
-          opacity,
-          transform: [{ scale: entranceScale }, { scale: pressScale }],
-        }}
+        style={animatedViewStyle}
       >
         <LinearGradient
           className='absolute inset-0 rounded-3xl'
-          colors={isDark
-            ? ['rgba(88, 28, 135, 0.2)', 'rgba(120, 53, 15, 0.1)']
-            : ['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
+          colors={gradientColors}
         />
         <View className='items-center gap-2'>
           <Text className='text-[24px]'>✨</Text>
@@ -136,4 +143,4 @@ export function LockedHabitCard({
       </Animated.View>
     </Pressable>
   );
-}
+});

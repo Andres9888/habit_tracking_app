@@ -3,6 +3,7 @@
  * QW-9: Adds visual loading feedback (opacity + spinner) during import
  */
 
+import React, { memo, useCallback } from 'react';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import TemplateCard from '../../../components/TemplateCard';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
@@ -15,13 +16,16 @@ interface TemplateListCardProps {
   onPreview: (template: Doc<'templates'>) => void;
 }
 
-export function TemplateListCard({
+export const TemplateListCard = memo(function TemplateListCard({
   item,
   importingTemplateId,
   onImport,
   onPreview,
 }: TemplateListCardProps) {
   const isImporting = importingTemplateId === item._id;
+
+  const handleImport = useCallback(() => onImport(item._id), [onImport, item._id]);
+  const handlePreview = useCallback(() => onPreview(item), [onPreview, item]);
 
   return (
     <View style={isImporting ? loadingStyles.importing : undefined}>
@@ -39,8 +43,8 @@ export function TemplateListCard({
         scientificLink={item.scientificLink}
         scientificReference={item.scientificReference}
         youtubeLink={item.youtubeLink}
-        onImport={() => onImport(item._id)}
-        onPreview={() => onPreview(item)}
+        onImport={handleImport}
+        onPreview={handlePreview}
       />
       {isImporting && (
         <View style={loadingStyles.overlay}>
@@ -49,7 +53,7 @@ export function TemplateListCard({
       )}
     </View>
   );
-}
+});
 
 const loadingStyles = StyleSheet.create({
   importing: {

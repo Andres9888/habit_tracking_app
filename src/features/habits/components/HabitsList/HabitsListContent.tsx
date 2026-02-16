@@ -11,7 +11,7 @@
  * {@link HabitsListContentProps}.
  */
 
-import { useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import DraggableFlatList, {
   type RenderItemParams,
@@ -26,7 +26,7 @@ import { HabitsListModals } from './HabitsListModals';
 import type { Habit } from '../../types';
 import type { HabitsListContentProps } from './HabitsList.types';
 
-export function HabitsListContent({
+export const HabitsListContent = memo(function HabitsListContent({
   props,
   state,
   handlers,
@@ -109,6 +109,6 @@ export function HabitsListContent({
       />
     </View>
   );
-}
+});
 
 export { type HabitsListContentProps } from './HabitsList.types';

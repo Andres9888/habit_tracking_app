@@ -5,10 +5,11 @@
  * trust and encourage trial conversion.  Purely presentational; no props.
  */
 
+import React, { memo } from 'react';
 import { Text, View } from 'react-native';
 import { SOCIAL_PROOF } from './constants';
 
-export function SocialProofCard() {
+export const SocialProofCard = memo(function SocialProofCard() {
   return (
     <View className='gap-3 rounded-3xl border border-stone-200 bg-stone-50/80 p-5'>
       <Text className='text-[13px] font-medium uppercase tracking-[2px] text-stone-700'>
@@ -22,4 +23,4 @@ export function SocialProofCard() {
       </Text>
     </View>
   );
-}
+});

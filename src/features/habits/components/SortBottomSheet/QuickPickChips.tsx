@@ -1,3 +1,4 @@
+import React, { memo, useCallback } from 'react';
 import { Pressable, ScrollView, Text } from 'react-native';
 
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
@@ -17,7 +18,7 @@ interface QuickPickChipsProps {
   onSelect: (mode: HabitSortMode) => void;
 }
 
-export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
+export const QuickPickChips = memo(function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const { trigger } = useHaptics();
 
@@ -69,4 +70,4 @@ export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
       })}
     </ScrollView>
   );
-}
+});

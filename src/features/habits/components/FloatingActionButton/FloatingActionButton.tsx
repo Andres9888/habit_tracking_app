@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 import { Plus } from 'lucide-react-native';
 import { Animated, Pressable } from 'react-native';
 import { useFocusRing } from '../../../../utils/accessibility';
@@ -7,11 +8,11 @@ import type { FloatingActionButtonProps } from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export function FloatingActionButton({
+const FloatingActionButtonComponent = ({
   openCreateHabitScreen,
   celebrationsEnabled = true,
   reduceMotionPreference = false,
-}: FloatingActionButtonProps) {
+}: FloatingActionButtonProps) => {
   const { bounce, pressScale, rippleOpacity, rippleScale } = useFABAnimations(
     celebrationsEnabled,
     reduceMotionPreference
@@ -62,6 +63,7 @@ export function FloatingActionButton({
       <Plus color='#ffffff' size={24} strokeWidth={2.5} />
     </AnimatedPressable>
   );
-}
+};
 
+export const FloatingActionButton = memo(FloatingActionButtonComponent);
 export default FloatingActionButton;

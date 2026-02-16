@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useEffect, useState } from 'react';
 import { Keyboard, TextInput } from 'react-native';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useChipSelection } from './useChipSelection';
@@ -20,6 +20,14 @@ export function useHabitCreationFlow({
   const [successHabitName, setSuccessHabitName] = useState<string | null>(null);
   const [successEmoji, setSuccessEmoji] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const focusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timer on unmount to prevent memory leak
+  useEffect(() => {
+    return () => {
+      if (focusTimerRef.current) clearTimeout(focusTimerRef.current);
+    };
+  }, []);
 
   const handleCreateHabit = useCallback(async () => {
     if (!chipSelection.inputValue.trim() || isCreating) return;
@@ -63,7 +71,8 @@ export function useHabitCreationFlow({
     setSuccessEmoji(null);
     setIsCreating(false);
     chipSelection.resetSelection();
-    setTimeout(() => inputRef.current?.focus(), 100);
+    if (focusTimerRef.current) clearTimeout(focusTimerRef.current);
+    focusTimerRef.current = setTimeout(() => inputRef.current?.focus(), 100);
   }, [chipSelection, inputRef]);
 
   const handleDismissError = useCallback(() => {
