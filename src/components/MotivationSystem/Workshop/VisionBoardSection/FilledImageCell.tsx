@@ -1,6 +1,14 @@
 /**
  * FilledImageCell Component - Image cell with caption and zoom indicator
  * Uses expo-image for optimized memory management and caching (App Store compliance)
+ * 
+ * Performance optimizations:
+ * - expo-image with memory-disk caching (vs RN Image which has no built-in cache)
+ * - recyclingKey for better memory reuse in grids
+ * - priority="high" for visible images (loads before background content)
+ * - contentPosition for better centering of non-square images
+ * - Smooth 200ms cross-fade transition
+ * - Blurhash placeholder (generic neutral tone - could be generated per-image for better UX)
  */
 
 import React, { useCallback } from 'react';
@@ -53,9 +61,12 @@ export function FilledImageCell({
           <Image
             accessibilityLabel={image.caption || `Vision board image ${index + 1}`}
             contentFit="cover"
+            contentPosition="center"
             source={{ uri: image.imageUrl }}
             style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
             cachePolicy="memory-disk"
+            priority="high"
+            recyclingKey={image.id}
             transition={200}
             placeholder={{ blurhash: 'LGF5?xYk^6#M@-5c,1J5@[or[Q6.' }}
           />

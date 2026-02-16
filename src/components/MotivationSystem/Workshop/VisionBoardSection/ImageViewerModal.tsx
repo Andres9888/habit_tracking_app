@@ -1,6 +1,13 @@
 /**
  * ImageViewerModal Component - Full-size image viewer with caption editing and delete
  * Uses expo-image for optimized memory management (App Store compliance)
+ * 
+ * Performance optimizations:
+ * - expo-image with memory-disk caching
+ * - priority="high" for fast loading (user just tapped to view)
+ * - contentFit="contain" to preserve aspect ratio without cropping
+ * - Smooth 200ms cross-fade transition
+ * - Same recyclingKey for memory reuse (same image as grid thumbnail)
  */
 
 import React from 'react';
@@ -61,6 +68,8 @@ export function ImageViewerModal({
               source={{ uri: image.imageUrl }}
               style={{ height: SCREEN_WIDTH, width: SCREEN_WIDTH }}
               cachePolicy="memory-disk"
+              priority="high"
+              recyclingKey={image.id}
               transition={200}
             />
           )}
