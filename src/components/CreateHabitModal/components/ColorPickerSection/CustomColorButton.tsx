@@ -3,6 +3,7 @@ import { memo, useCallback, useRef } from 'react';
 import { Animated, Keyboard, View } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { Motion } from '../../../../constants/motion';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { CustomColorButtonProps } from './types';
 import { AnimatedPressable } from '../../../ui';
 
@@ -12,6 +13,7 @@ import { AnimatedPressable } from '../../../ui';
  * V12: Updated to 44px to match larger color swatches
  */
 const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
+  const { colors } = useThemeColors();
   const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
 
@@ -55,7 +57,7 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
           accessibilityRole='button'
           style={{
             alignItems: 'center',
-            borderColor: '#a8a29e',
+            borderColor: colors.borders.medium,
             borderRadius: 999,
             borderStyle: 'dashed',
             borderWidth: 2,
@@ -68,7 +70,7 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >
-          <Plus color='#a8a29e' size={20} />
+          <Plus color={colors.borders.medium} size={20} />
         </AnimatedPressable>
       </Animated.View>
     </View>

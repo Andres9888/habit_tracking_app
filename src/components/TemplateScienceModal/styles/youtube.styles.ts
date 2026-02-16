@@ -4,12 +4,13 @@
 
 import { StyleSheet } from 'react-native';
 import { typography } from '../../../theme/typography';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const youtubeStyles = StyleSheet.create({
   youtubeButton: {
     alignItems: 'center',
     backgroundColor: '#FEF2F2',
-    borderColor: '#FECACA',
+    // borderColor set by themedYoutubeStyles
     borderRadius: 16,
     borderWidth: 1,
     flexDirection: 'row',
@@ -38,3 +39,11 @@ export const youtubeStyles = StyleSheet.create({
     marginBottom: 2,
   },
 });
+
+export function themedYoutubeStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    youtubeButton: {
+      borderColor: colors.borders.error,
+    },
+  });
+}

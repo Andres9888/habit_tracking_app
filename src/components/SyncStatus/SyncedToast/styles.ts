@@ -9,12 +9,13 @@ import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: '#f0fdf4', // green-50 - soft success background
-    borderColor: '#86efac', // green-300 - visible border
+    // borderColor set by themedStyles
     borderRadius: borderRadius.large,
     borderWidth: 1,
     flexDirection: 'row',
@@ -48,3 +49,11 @@ export const styles = StyleSheet.create({
 
 export const ICON_SIZE = 12;
 export const ICON_COLOR = '#16a34a'; // green-600
+
+export function themedStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    container: {
+      borderColor: colors.borders.synced,
+    },
+  });
+}

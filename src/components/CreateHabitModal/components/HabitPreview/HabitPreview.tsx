@@ -7,6 +7,7 @@ import { usePreviewAnimations } from './usePreviewAnimations';
 import { getAccessibilityLabel } from './helpers';
 import { EmptyPreview } from './EmptyPreview';
 import { PreviewContent } from './PreviewContent';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { HabitPreviewProps } from './types';
 
 export const HabitPreview = ({
@@ -15,6 +16,7 @@ export const HabitPreview = ({
   selectedColor,
   timeOfDay,
 }: HabitPreviewProps) => {
+  const { colors } = useThemeColors();
   const isEmpty = !habitName && !selectedEmoji;
   const animations = usePreviewAnimations(
     isEmpty,
@@ -35,7 +37,7 @@ export const HabitPreview = ({
       accessibilityRole='summary'
       className='mb-4 mt-3 overflow-hidden rounded-2xl bg-white p-3'
       style={{
-        borderColor: isEmpty ? '#e7e5e4' : selectedColor,
+        borderColor: isEmpty ? colors.borders.subtle : selectedColor,
         borderWidth: 2,
       }}
     >

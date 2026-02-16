@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const formStyles = StyleSheet.create({
   charCount: {
@@ -18,7 +19,6 @@ export const formStyles = StyleSheet.create({
     width: 44,
   },
   colorSwatchActive: {
-    borderColor: '#111827',
     borderWidth: 3,
   },
   inputLabel: {
@@ -33,7 +33,6 @@ export const formStyles = StyleSheet.create({
   },
   nameInput: {
     backgroundColor: '#fff',
-    borderColor: '#e7e5e4',
     borderRadius: 12,
     borderWidth: 1,
     fontSize: 17,
@@ -41,7 +40,6 @@ export const formStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   reminderChip: {
-    borderColor: '#e7e5e4',
     borderRadius: 999,
     borderWidth: 1,
     paddingHorizontal: 12,
@@ -49,7 +47,6 @@ export const formStyles = StyleSheet.create({
   },
   reminderChipActive: {
     backgroundColor: '#111827',
-    borderColor: '#111827',
   },
   reminderChipText: {
     fontSize: 13,
@@ -62,3 +59,21 @@ export const formStyles = StyleSheet.create({
     marginTop: 8,
   },
 });
+
+/** Themed overrides for dark mode border colors */
+export function themedFormStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    colorSwatchActive: {
+      borderColor: colors.borders.strong,
+    },
+    nameInput: {
+      borderColor: colors.borders.subtle,
+    },
+    reminderChip: {
+      borderColor: colors.borders.subtle,
+    },
+    reminderChipActive: {
+      borderColor: colors.borders.strong,
+    },
+  });
+}

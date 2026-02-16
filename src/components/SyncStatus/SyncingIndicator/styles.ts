@@ -9,12 +9,13 @@ import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
 import { colors } from '../../../theme/colors';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: '#fffbeb', // amber-50 - warm active background
-    borderColor: '#fde68a', // amber-200 - soft border
+    // borderColor set by themedStyles
     borderRadius: borderRadius.large,
     borderWidth: 1,
     flexDirection: 'row',
@@ -55,3 +56,11 @@ export const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
 });
+
+export function themedStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    container: {
+      borderColor: colors.borders.warningSoft,
+    },
+  });
+}

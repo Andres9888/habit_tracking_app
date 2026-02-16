@@ -3,7 +3,7 @@ import { ArrowUpDown, BookOpen, Settings } from 'lucide-react-native';
 import { Pressable, View, StyleSheet } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { NotificationBadge } from '../../../../components/NotificationBadge';
-import { useIsDark } from '../../../../theme/ThemeContext';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { ViewStyle } from 'react-native';
 import { useMemo } from 'react';
 
@@ -73,9 +73,9 @@ export function IconButtonGroup({
   onSettingsPressIn,
   onSettingsPressOut,
 }: IconButtonGroupProps) {
-  const isDark = useIsDark();
+  const { colors, isDark } = useThemeColors();
   const iconColor = isDark ? '#D1D5DB' : '#44403c';
-  const dividerBg = isDark ? '#374151' : undefined;
+  const dividerBg = isDark ? colors.border : undefined;
 
   const templatesButtonStyle = useMemo(
     () => (state: { pressed: boolean }) => [
@@ -99,7 +99,7 @@ export function IconButtonGroup({
       className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'
       style={
         isDark
-          ? { borderColor: '#374151', backgroundColor: 'rgba(31,41,55,0.8)' }
+          ? { borderColor: colors.border, backgroundColor: 'rgba(31,41,55,0.8)' }
           : undefined
       }
     >

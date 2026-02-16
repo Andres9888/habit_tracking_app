@@ -3,12 +3,13 @@
  */
 
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const badgeStyles = StyleSheet.create({
   popularBadge: {
     alignItems: 'center',
     backgroundColor: '#FFF7ED',
-    borderColor: '#FFEDD5',
+    // borderColor set by themedBadgeStyles
     borderRadius: 12,
     borderWidth: 1,
     bottom: -4,
@@ -43,3 +44,11 @@ export const badgeStyles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export function themedBadgeStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    popularBadge: {
+      borderColor: colors.borders.orangeSubtle,
+    },
+  });
+}

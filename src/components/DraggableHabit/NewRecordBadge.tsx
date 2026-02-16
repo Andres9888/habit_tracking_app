@@ -13,12 +13,12 @@ export function NewRecordBadge({
   newRecordOpacity,
   newRecordScale,
 }: NewRecordBadgeProps) {
-  const { isDark } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   return (
     <Animated.View
       className='mx-3 mb-3 flex-row items-center justify-center gap-1.5 rounded-full py-2'
       style={{
-        borderColor: isDark ? '#D97706' : '#fcd34d',
+        borderColor: colors.borders.badge,
         borderWidth: 1,
         opacity: newRecordOpacity,
         transform: [{ scale: newRecordScale }],

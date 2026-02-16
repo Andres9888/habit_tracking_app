@@ -60,7 +60,7 @@ export function useToastStyles() {
     },
     toast: {
       backgroundColor: colors.card,
-      borderColor: isDark ? '#92400E' : '#f5f5f4',
+      borderColor: isDark ? colors.borders.warningSubtle : colors.borders.archive,
       borderRadius: borderRadius.xl,
       borderWidth: 1,
       ...shadows.alert,

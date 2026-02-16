@@ -34,7 +34,7 @@ export function SettingsRow({
   showBorder = true,
   highContrastMode = false,
 }: SettingsRowProps) {
-  const { isDark } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const colors = getSettingsRowColors(highContrastMode, isDark);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
@@ -60,7 +60,7 @@ export function SettingsRow({
         className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
         style={{
           backgroundColor: iconBackgroundColor,
-          borderColor: highContrastMode ? '#facc15' : 'transparent',
+          borderColor: highContrastMode ? themeColors.borders.highContrast : 'transparent',
           borderWidth: highContrastMode ? 2 : 0,
         }}
       >

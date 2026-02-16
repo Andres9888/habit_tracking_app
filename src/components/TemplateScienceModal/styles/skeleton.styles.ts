@@ -3,11 +3,12 @@
  */
 
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const skeletonStyles = StyleSheet.create({
   skeletonCard: {
     backgroundColor: '#FFFFFF',
-    borderColor: '#e7e5e4',
+    // borderColor set by themedSkeletonStyles
     borderRadius: 16,
     borderWidth: 1,
     marginBottom: 16,
@@ -22,7 +23,7 @@ export const skeletonStyles = StyleSheet.create({
   },
   skeletonFooter: {
     backgroundColor: '#FAFAF9',
-    borderTopColor: '#e7e5e4',
+    // borderTopColor set by themedSkeletonStyles
     borderTopWidth: 1,
     paddingBottom: 34,
     paddingHorizontal: 20,
@@ -40,3 +41,14 @@ export const skeletonStyles = StyleSheet.create({
     marginTop: 16,
   },
 });
+
+export function themedSkeletonStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    skeletonCard: {
+      borderColor: colors.borders.subtle,
+    },
+    skeletonFooter: {
+      borderTopColor: colors.borders.subtle,
+    },
+  });
+}

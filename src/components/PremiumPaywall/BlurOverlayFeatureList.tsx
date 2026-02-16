@@ -6,6 +6,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { MOTIVATION_FEATURES } from './motivationFeatures';
 import { ANALYTICS_FEATURES } from './analyticsFeatures';
 
@@ -48,6 +49,8 @@ export function AnalyticsFeatureList() {
 export function MotivationFeatureList({
   triggeredByFeature,
 }: MotivationFeatureListProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='mb-6'>
       {MOTIVATION_FEATURES.map((feature) => (
@@ -56,7 +59,7 @@ export function MotivationFeatureList({
           className='mb-3 flex-row items-center rounded-xl bg-white/10 p-4'
           style={
             feature.id === triggeredByFeature
-              ? { borderColor: '#10b981', borderWidth: 2 }
+              ? { borderColor: colors.borders.selected, borderWidth: 2 }
               : undefined
           }
         >

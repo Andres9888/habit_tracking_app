@@ -7,12 +7,13 @@
 
 import { StyleSheet } from 'react-native';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: '#fafaf9', // stone-50 - subtle background
-    borderColor: '#e7e5e4', // stone-200 - soft border
+    // borderColor set by themedStyles
     borderRadius: 16,
     borderWidth: 1,
     flexDirection: 'row',
@@ -37,3 +38,11 @@ export const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
 });
+
+export function themedStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    container: {
+      borderColor: colors.borders.subtle,
+    },
+  });
+}

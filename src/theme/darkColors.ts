@@ -65,6 +65,65 @@ export const darkColors = {
   /** Border color for cards and dividers (gray-700) */
   border: '#374151',
 
+  /**
+   * Semantic Border Colors
+   *
+   * Contextual border tokens for states, feedback, and accents.
+   * Dark mode uses inverted tones for contrast on dark surfaces.
+   */
+  borders: {
+    /** Default subtle border — replaces stone-200 */
+    subtle: '#4B5563',
+    /** Slightly stronger subtle — replaces stone-300 */
+    muted: '#4B5563',
+    /** Medium emphasis — replaces stone-400 */
+    medium: '#6B7280',
+    /** High emphasis — replaces gray-900 */
+    strong: '#E5E7EB',
+    /** Selected / active item (emerald) */
+    selected: '#34D399',
+    /** Error state — light */
+    error: '#991B1B',
+    /** Error state — strong */
+    errorStrong: '#F87171',
+    /** Success — light background border */
+    success: '#065F46',
+    /** Success — strong emphasis */
+    successStrong: '#34D399',
+    /** Success card border (emerald-200 equivalent) */
+    successCard: '#064E3B',
+    /** Success light border (mint) */
+    successLight: '#065F46',
+    /** Warning — primary */
+    warning: '#F59E0B',
+    /** Warning — subtle */
+    warningSubtle: '#92400E',
+    /** Warning — softest */
+    warningSoft: '#78350F',
+    /** Tip / hint (yellow) */
+    tip: '#713F12',
+    /** Info (blue) */
+    info: '#1E3A5F',
+    /** Orange accent */
+    orange: '#F97316',
+    /** Orange subtle background border */
+    orangeSubtle: '#7C2D12',
+    /** Premium border */
+    premium: '#5B21B6',
+    /** Premium strong / selected */
+    premiumStrong: '#8B5CF6',
+    /** Purple accent */
+    accent: '#A855F7',
+    /** High-contrast accessibility border */
+    highContrast: '#EAB308',
+    /** Synced / confirmed green */
+    synced: '#065F46',
+    /** New record / badge amber */
+    badge: '#FBBF24',
+    /** Archive undo border */
+    archive: '#FCD34D',
+  },
+
   /** Card surface — elevated above background (gray-800) */
   card: '#1F2937',
 
@@ -140,6 +199,35 @@ export const lightColors = {
 
   /** Border color for cards and dividers */
   border: '#DDD8D2',
+
+  /** Semantic Border Colors — light mode values */
+  borders: {
+    subtle: '#e7e5e4',
+    muted: '#d6d3d1',
+    medium: '#a8a29e',
+    strong: '#111827',
+    selected: '#10b981',
+    error: '#FECACA',
+    errorStrong: '#ef4444',
+    success: '#bbf7d0',
+    successStrong: '#10b981',
+    successCard: '#a7f3d0',
+    successLight: '#D1FAE5',
+    warning: '#fbbf24',
+    warningSubtle: '#fcd34d',
+    warningSoft: '#fde68a',
+    tip: '#fef08a',
+    info: '#BFDBFE',
+    orange: '#fb923c',
+    orangeSubtle: '#FFEDD5',
+    premium: '#c4b5fd',
+    premiumStrong: '#6d28d9',
+    accent: '#a855f7',
+    highContrast: '#facc15',
+    synced: '#86efac',
+    badge: '#D97706',
+    archive: '#f5f5f4',
+  },
 
   /** Card surface — subtle lift above background (L1) */
   card: '#EDEAE5',
@@ -239,6 +327,35 @@ export interface SemanticColors {
 
   /** Border color for dividers and separators */
   border: string;
+
+  /** Semantic border colors for states, feedback, and accents */
+  borders: {
+    subtle: string;
+    muted: string;
+    medium: string;
+    strong: string;
+    selected: string;
+    error: string;
+    errorStrong: string;
+    success: string;
+    successStrong: string;
+    successCard: string;
+    successLight: string;
+    warning: string;
+    warningSubtle: string;
+    warningSoft: string;
+    tip: string;
+    info: string;
+    orange: string;
+    orangeSubtle: string;
+    premium: string;
+    premiumStrong: string;
+    accent: string;
+    highContrast: string;
+    synced: string;
+    badge: string;
+    archive: string;
+  };
 
   /** Primary brand color scale */
   primary: {

@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SuggestionChipProps {
   emoji: string | null;
@@ -16,6 +17,7 @@ export const SuggestionChip = ({
   color,
   onPick,
 }: SuggestionChipProps) => {
+  const { colors } = useThemeColors();
   const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
 
@@ -25,7 +27,7 @@ export const SuggestionChip = ({
         accessibilityLabel={`Use template ${name}`}
         accessibilityRole='button'
         className='flex-row items-center rounded-full bg-white px-3 py-2'
-        style={{ borderColor: '#d6d3d1', borderWidth: 1 }}
+        style={{ borderColor: colors.borders.muted, borderWidth: 1 }}
         onPress={() => {
           triggerSelection();
           onPick(emoji, name, color);

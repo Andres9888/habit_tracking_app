@@ -1,6 +1,7 @@
 import { memo, useCallback, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { HUBERMAN_PHASES } from '../../../../constants/hubermanPhases';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { QuickPickCardProps } from './types';
 
 const QuickPickCardComponent = ({
@@ -8,6 +9,7 @@ const QuickPickCardComponent = ({
   isSelected,
   onPress,
 }: QuickPickCardProps) => {
+  const { colors } = useThemeColors();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const phaseInfo = HUBERMAN_PHASES[template.timeOfDay];
 
@@ -43,7 +45,7 @@ const QuickPickCardComponent = ({
         className='mr-3 overflow-hidden rounded-2xl bg-white p-3'
         style={[
           {
-            borderColor: isSelected ? '#22C55E' : '#e7e5e4', // #e7e5e4 = stone-200
+            borderColor: isSelected ? colors.borders.selected : colors.borders.subtle,
             borderWidth: 2,
             minWidth: 100,
             transform: [{ scale: scaleAnim }],

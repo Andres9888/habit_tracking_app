@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../../theme/spacing';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '../../../../theme/darkColors';
 
 export const progressStyles = StyleSheet.create({
   badgeIcon: {
@@ -9,7 +10,6 @@ export const progressStyles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#ffffff',
-    borderColor: '#e5e7eb', // gray-200
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     marginTop: 12,
@@ -43,7 +43,6 @@ export const progressStyles = StyleSheet.create({
   progressBadge: {
     alignItems: 'center',
     backgroundColor: '#fef3c7', // amber-100
-    borderColor: '#fbbf24', // amber-400
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     height: 24,
@@ -80,3 +79,14 @@ export const progressStyles = StyleSheet.create({
     fontSize: typography.tabBar.fontSize,
   },
 });
+
+export function themedProgressStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    container: {
+      borderColor: colors.borders.subtle,
+    },
+    progressBadge: {
+      borderColor: colors.borders.warning,
+    },
+  });
+}

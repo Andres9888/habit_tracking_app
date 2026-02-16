@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const searchStyles = StyleSheet.create({
   searchBar: {
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderColor: '#e7e5e4',
     borderRadius: 12,
     borderWidth: 1.5,
     flexDirection: 'row',
@@ -20,3 +20,11 @@ export const searchStyles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
+
+export function themedSearchStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    searchBar: {
+      borderColor: colors.borders.subtle,
+    },
+  });
+}

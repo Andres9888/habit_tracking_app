@@ -58,7 +58,7 @@ export function useToastStyles() {
     },
     toast: {
       backgroundColor: colors.card,
-      borderColor: isDark ? '#991B1B' : '#fecaca',
+      borderColor: colors.borders.error,
       borderRadius: borderRadius.xl,
       borderWidth: 1,
       ...shadows.alert,

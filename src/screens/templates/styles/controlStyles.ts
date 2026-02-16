@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const controlStyles = StyleSheet.create({
   controlButton: {
     alignItems: 'center',
-    borderColor: '#e7e5e4',
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -13,7 +13,6 @@ export const controlStyles = StyleSheet.create({
   },
   controlButtonActive: {
     backgroundColor: '#111827',
-    borderColor: '#111827',
   },
   controlButtonText: {
     color: '#1c1917',
@@ -32,3 +31,14 @@ export const controlStyles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
+
+export function themedControlStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    controlButton: {
+      borderColor: colors.borders.subtle,
+    },
+    controlButtonActive: {
+      borderColor: colors.borders.strong,
+    },
+  });
+}

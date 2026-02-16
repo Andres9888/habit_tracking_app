@@ -8,12 +8,13 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
     backgroundColor: '#fef3c7', // amber-100 - soft pending indicator
-    borderColor: '#fcd34d', // amber-300 - subtle border
+    // borderColor set by themedStyles
     borderRadius: borderRadius.small,
     borderWidth: 1,
     justifyContent: 'center',
@@ -44,3 +45,11 @@ export const ICON_SIZES = {
 
 // Icon color - amber-600 for visibility
 export const ICON_COLOR = '#d97706';
+
+export function themedStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    badge: {
+      borderColor: colors.borders.warningSubtle,
+    },
+  });
+}

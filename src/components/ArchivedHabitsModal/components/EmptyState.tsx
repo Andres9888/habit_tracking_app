@@ -78,7 +78,7 @@ export function EmptyState() {
         entering={anim(240)}
         style={{
           backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
-          borderColor: isDark ? '#065F46' : '#D1FAE5',
+          borderColor: colors.borders.successLight,
           borderRadius: 16,
           borderWidth: 1,
           flexDirection: 'row',

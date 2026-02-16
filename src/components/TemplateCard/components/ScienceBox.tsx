@@ -20,9 +20,9 @@ export function ScienceBox({ scientificReference }: ScienceBoxProps) {
   const { colors, isDark } = useThemeColors();
 
   return (
-    <View style={[styles.scienceBox, isDark && {
-      backgroundColor: colors.primary[100],
-      borderColor: colors.primary[300],
+    <View style={[styles.scienceBox, {
+      backgroundColor: isDark ? colors.primary[100] : '#f0fdf4',
+      borderColor: isDark ? colors.primary[300] : colors.borders.success,
     }]}>
       <View style={styles.scienceHeader}>
         <Text style={styles.scienceIcon}>🔬</Text>
@@ -40,8 +40,6 @@ export function ScienceBox({ scientificReference }: ScienceBoxProps) {
 
 export const styles = StyleSheet.create({
   scienceBox: {
-    backgroundColor: '#f0fdf4',
-    borderColor: '#bbf7d0',
     borderRadius: borderRadius.medium,
     borderWidth: 2,
     gap: spacing.sm,

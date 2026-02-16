@@ -57,7 +57,7 @@ export const ActionItem = ({
           backgroundColor: getRowBg(),
           opacity: disabled ? 0.5 : 1,
         },
-        highlighted && { borderWidth: 2, borderColor: isDark ? '#6d28d9' : '#c4b5fd' },
+        highlighted && { borderWidth: 2, borderColor: isDark ? colors.borders.premiumStrong : colors.borders.premium },
       ]}
       onPress={handlePress}
     >

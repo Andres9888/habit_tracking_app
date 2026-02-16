@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const sortStyles = StyleSheet.create({
   dropdownBackdrop: {
@@ -16,7 +17,6 @@ export const sortStyles = StyleSheet.create({
   },
   sortDropdown: {
     backgroundColor: '#ffffff',
-    borderColor: '#e7e5e4',
     borderRadius: 12,
     borderWidth: 1,
     elevation: 8,
@@ -53,3 +53,11 @@ export const sortStyles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+
+export function themedSortStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    sortDropdown: {
+      borderColor: colors.borders.subtle,
+    },
+  });
+}

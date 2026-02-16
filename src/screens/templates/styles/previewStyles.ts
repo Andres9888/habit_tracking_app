@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const previewStyles = StyleSheet.create({
   previewActions: {
@@ -25,7 +26,6 @@ export const previewStyles = StyleSheet.create({
   },
   previewScienceBox: {
     alignItems: 'flex-start',
-    borderColor: '#bbf7d0',
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: 'row',
@@ -58,7 +58,6 @@ export const previewStyles = StyleSheet.create({
   youtubeLink: {
     alignItems: 'center',
     backgroundColor: '#FEF2F2',
-    borderColor: '#FECACA',
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: 'row',
@@ -67,3 +66,14 @@ export const previewStyles = StyleSheet.create({
     padding: 14,
   },
 });
+
+export function themedPreviewStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    previewScienceBox: {
+      borderColor: colors.borders.success,
+    },
+    youtubeLink: {
+      borderColor: colors.borders.error,
+    },
+  });
+}

@@ -51,7 +51,7 @@ export function CardHeader({
         <Animated.View style={{ transform: [{ scale: iconPulse }] }}>
           <View
             className='h-9 w-9 items-center justify-center rounded-xl'
-            style={getIconContainerStyle(iconBg, accentColor, highContrastMode)}
+            style={getIconContainerStyle(iconBg, accentColor, highContrastMode, themeColors)}
           >
             <Text className='text-[22px] leading-[26px]'>{emoji}</Text>
           </View>
@@ -76,7 +76,7 @@ export function CardHeader({
           )}
           <View className='ml-auto'>
             <ChevronRight
-              color={getChevronColor(highContrastMode)}
+              color={getChevronColor(highContrastMode, themeColors)}
               size={18}
               strokeWidth={2}
             />

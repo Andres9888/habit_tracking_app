@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const tipsStyles = StyleSheet.create({
   tipIconContainer: {
@@ -27,7 +28,7 @@ export const tipsStyles = StyleSheet.create({
   },
   tipsBox: {
     backgroundColor: '#fefce8',
-    borderColor: '#fef08a',
+    // borderColor set by themedTipsStyles
     borderRadius: borderRadius.large,
     borderWidth: 2,
     marginHorizontal: 20,
@@ -59,3 +60,11 @@ export const tipsStyles = StyleSheet.create({
     lineHeight: 22,
   },
 });
+
+export function themedTipsStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    tipsBox: {
+      borderColor: colors.borders.tip,
+    },
+  });
+}

@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '../../../../theme/darkColors';
 
 export const celebrationStyles = StyleSheet.create({
   celebrationContainer: {
     alignItems: 'center',
     backgroundColor: '#fefce8', // amber-50
-    borderColor: '#fbbf24', // amber-400
     borderWidth: 1,
   },
   celebrationContent: {
@@ -33,3 +33,11 @@ export const celebrationStyles = StyleSheet.create({
     marginTop: 8,
   },
 });
+
+export function themedCelebrationStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    celebrationContainer: {
+      borderColor: colors.borders.warning,
+    },
+  });
+}

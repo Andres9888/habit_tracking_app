@@ -9,6 +9,7 @@ import {
   HUBERMAN_PHASES,
   type HubermanPhase,
 } from '../../../../constants/hubermanPhases';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface TimeOfDayButtonProps {
   phase: HubermanPhase;
@@ -21,6 +22,7 @@ export const TimeOfDayButton = ({
   isSelected,
   onPress,
 }: TimeOfDayButtonProps) => {
+  const { colors } = useThemeColors();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const phaseInfo = HUBERMAN_PHASES[phase];
 
@@ -57,7 +59,7 @@ export const TimeOfDayButton = ({
         style={[
           {
             backgroundColor: isSelected ? '#22C55E' : '#fafaf9',
-            borderColor: isSelected ? '#16A34A' : '#e7e5e4',
+            borderColor: isSelected ? colors.borders.selected : colors.borders.subtle,
             borderWidth: 1.5,
             transform: [{ scale: scaleAnim }],
           },

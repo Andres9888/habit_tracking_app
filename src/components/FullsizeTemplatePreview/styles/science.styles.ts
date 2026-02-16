@@ -6,13 +6,14 @@ import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const scienceStyles = StyleSheet.create({
   researchLinkButton: {
     alignItems: 'center',
     alignSelf: 'flex-start',
     backgroundColor: '#EFF6FF',
-    borderColor: '#BFDBFE',
+    // borderColor set by themedScienceStyles
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
@@ -28,7 +29,7 @@ export const scienceStyles = StyleSheet.create({
   },
   scienceBox: {
     backgroundColor: '#f0fdf4',
-    borderColor: '#bbf7d0',
+    // borderColor set by themedScienceStyles
     borderRadius: borderRadius.large,
     borderWidth: 2,
     marginHorizontal: 20,
@@ -63,3 +64,14 @@ export const scienceStyles = StyleSheet.create({
     lineHeight: 24,
   },
 });
+
+export function themedScienceStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    researchLinkButton: {
+      borderColor: colors.borders.info,
+    },
+    scienceBox: {
+      borderColor: colors.borders.success,
+    },
+  });
+}

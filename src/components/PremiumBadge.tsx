@@ -14,6 +14,7 @@ import { Lock, Flame, Sparkles } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { shadows, borderRadius } from '../theme/spacing';
 import { colors } from '../theme/colors';
+import { useThemeColors } from '../theme/ThemeContext';
 
 type PremiumBadgeVariant = 'pro' | 'popular' | 'new';
 
@@ -23,9 +24,11 @@ interface PremiumBadgeProps {
 }
 
 export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
+  const { colors } = useThemeColors();
+
   if (variant === 'popular') {
     return (
-      <View style={[styles.badge, styles.popularBadge, style]}>
+      <View style={[styles.badge, styles.popularBadge, style, { borderColor: colors.borders.error }]}>
         <Flame color='#ff4500' size={12} strokeWidth={2.5} />
         <Text style={[styles.badgeText, { color: '#ff4500' }]}>Popular</Text>
       </View>
@@ -34,7 +37,7 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
 
   if (variant === 'new') {
     return (
-      <View style={[styles.badge, styles.newBadge, style]}>
+      <View style={[styles.badge, styles.newBadge, style, { borderColor: colors.borders.info }]}>
         <Sparkles color='#3b82f6' size={12} strokeWidth={2.5} />
         <Text style={[styles.badgeText, { color: '#3b82f6' }]}>New</Text>
       </View>
@@ -78,12 +81,10 @@ const styles = StyleSheet.create({
   },
   newBadge: {
     backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
     borderWidth: 1,
   },
   popularBadge: {
     backgroundColor: '#fff5f5',
-    borderColor: '#fecaca',
     borderWidth: 1,
   },
   proBadge: {

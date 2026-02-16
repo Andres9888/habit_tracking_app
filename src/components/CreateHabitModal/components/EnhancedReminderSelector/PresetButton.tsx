@@ -5,6 +5,7 @@
 
 import { memo, useCallback, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { PresetButtonProps } from './types';
 
 const useButtonAnimation = (reduceMotion: boolean) => {
@@ -42,6 +43,7 @@ function PresetButtonComponent({
   onPress,
   reduceMotion,
 }: PresetButtonProps) {
+  const { colors } = useThemeColors();
   const { scaleAnim, handlePressIn, handlePressOut } =
     useButtonAnimation(reduceMotion);
 
@@ -60,7 +62,7 @@ function PresetButtonComponent({
         className='items-center justify-center rounded-xl px-3'
         style={{
           backgroundColor: isSelected ? '#ECFDF5' : '#f5f5f4',
-          borderColor: isSelected ? '#10B981' : 'transparent',
+          borderColor: isSelected ? colors.borders.selected : 'transparent',
           borderWidth: isSelected ? 2 : 1,
           height: 48,
           transform: [{ scale: scaleAnim }],

@@ -1,13 +1,16 @@
 import { ViewStyle } from 'react-native';
+import type { SemanticColors } from '../../theme/darkColors';
 
 export function getIconContainerStyle(
   iconBg: string,
   accentColor: string,
-  highContrastMode: boolean
+  highContrastMode: boolean,
+  themeColors?: SemanticColors
 ): ViewStyle {
+  const hcBorder = themeColors?.borders.highContrast ?? '#facc15';
   return {
     backgroundColor: iconBg,
-    borderColor: highContrastMode ? '#111111' : 'rgba(0,0,0,0.04)',
+    borderColor: highContrastMode ? hcBorder : 'rgba(0,0,0,0.04)',
     borderWidth: highContrastMode ? 2 : 1,
     shadowColor: accentColor,
     shadowOffset: { height: 0, width: 0 },
@@ -27,6 +30,11 @@ export const TITLE_OVERLAY_STYLE: ViewStyle = {
   top: 0,
 };
 
-export function getChevronColor(highContrastMode: boolean): string {
-  return highContrastMode ? '#facc15' : '#a8a29e';
+export function getChevronColor(
+  highContrastMode: boolean,
+  themeColors?: SemanticColors
+): string {
+  return highContrastMode
+    ? (themeColors?.borders.highContrast ?? '#facc15')
+    : (themeColors?.borders.medium ?? '#a8a29e');
 }

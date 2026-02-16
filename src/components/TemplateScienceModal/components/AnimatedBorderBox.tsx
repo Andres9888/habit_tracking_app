@@ -12,6 +12,7 @@ import Animated, {
   Easing,
   interpolate,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { hexToRgba } from '../TemplateScienceModal.utils';
 import type { AnimatedBorderBoxProps } from '../TemplateScienceModal.types';
 
@@ -20,6 +21,7 @@ export const AnimatedBorderBox = ({
   baseColor,
   style,
 }: AnimatedBorderBoxProps) => {
+  const { colors } = useThemeColors();
   const borderProgress = useSharedValue(0);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export const AnimatedBorderBox = ({
       [0, 1, 0, 1, 0]
     );
     return {
-      borderColor: borderColorValue > 0.5 ? activeColor : '#e7e5e4',
+      borderColor: borderColorValue > 0.5 ? activeColor : colors.borders.subtle,
     };
   });
 
@@ -53,7 +55,7 @@ export const AnimatedBorderBox = ({
 const styles = StyleSheet.create({
   citationBox: {
     backgroundColor: '#FAFAFA',
-    borderColor: '#e7e5e4',
+    // borderColor set dynamically via animatedBorderStyle
     borderRadius: 16,
     borderWidth: 2,
     marginBottom: 16,

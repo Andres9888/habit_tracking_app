@@ -7,6 +7,7 @@ import { memo } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
 import { REMINDER_OPTIONS } from './constants';
 import { useButtonAnimations } from './useButtonAnimations';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { ReminderOptionButtonProps } from './types';
 
 function ReminderOptionButtonComponent({
@@ -16,6 +17,7 @@ function ReminderOptionButtonComponent({
   reduceMotion,
 }: ReminderOptionButtonProps) {
   const optionInfo = REMINDER_OPTIONS[option];
+  const { colors } = useThemeColors();
   const { scaleAnim, slideAnim, handlePressIn, handlePressOut } =
     useButtonAnimations(reduceMotion);
 
@@ -39,7 +41,7 @@ function ReminderOptionButtonComponent({
         style={[
           {
             backgroundColor: isSelected ? '#ECFDF5' : '#fafaf9',
-            borderColor: isSelected ? '#10B981' : '#e7e5e4',
+            borderColor: isSelected ? colors.borders.selected : colors.borders.subtle,
             borderWidth: isSelected ? 2 : 1,
             elevation: isSelected ? 2 : 0,
             shadowColor: '#1c1917',

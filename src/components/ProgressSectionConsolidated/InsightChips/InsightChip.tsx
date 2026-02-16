@@ -34,7 +34,7 @@ export const InsightChip = React.memo(function InsightChip({
     chip.onPress?.();
   };
 
-  const borderColor = BORDER_COLOR_MAP[chip.borderColor] || '#e7e5e4';
+  const borderColor = BORDER_COLOR_MAP[chip.borderColor] || colors.borders.subtle;
   const accessibilityLabel = `${chip.label}: ${chip.value}${chip.hasPulse ? ', active streak' : ''}`;
   const accessibilityHint = chip.isInteractive
     ? 'Double tap to view details'
@@ -65,7 +65,7 @@ export const InsightChip = React.memo(function InsightChip({
           <Animated.View
             className='absolute -inset-0.5 rounded-xl'
             pointerEvents='none'
-            style={[{ borderColor: '#fb923c', borderWidth: 2 }, pulseRingStyle]}
+            style={[{ borderColor: colors.borders.orange, borderWidth: 2 }, pulseRingStyle]}
           />
         )}
 

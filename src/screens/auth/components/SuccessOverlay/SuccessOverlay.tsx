@@ -1,7 +1,8 @@
 import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { styles } from './styles';
+import { useThemeColors } from '../../../../theme/ThemeContext';
+import { styles, themedSuccessStyles } from './styles';
 import type { SuccessOverlayProps } from './types';
 import { useSuccessOverlayAnimations } from './useSuccessOverlayAnimations';
 
@@ -18,6 +19,8 @@ export function SuccessOverlay({
   visible,
   onAnimationComplete,
 }: SuccessOverlayProps) {
+  const { colors } = useThemeColors();
+  const themed = themedSuccessStyles(colors);
   const { overlayStyle, checkmarkStyle, ringStyle, textStyle } =
     useSuccessOverlayAnimations(visible, onAnimationComplete);
 
@@ -32,7 +35,7 @@ export function SuccessOverlay({
     >
       <View style={styles.content}>
         <View style={styles.iconContainer}>
-          <Animated.View style={[styles.ring, ringStyle]} />
+          <Animated.View style={[styles.ring, themed.ring, ringStyle]} />
           <Animated.View style={[styles.checkmark, checkmarkStyle]}>
             <Text style={styles.checkmarkText}>✓</Text>
           </Animated.View>

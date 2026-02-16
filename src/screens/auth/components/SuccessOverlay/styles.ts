@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../../theme/darkColors';
 
 export const styles = StyleSheet.create({
   checkmark: {
@@ -32,7 +33,6 @@ export const styles = StyleSheet.create({
     zIndex: 100,
   },
   ring: {
-    borderColor: '#10b981',
     borderRadius: 9999,
     borderWidth: 3,
     height: 100,
@@ -47,3 +47,11 @@ export const styles = StyleSheet.create({
     marginTop: 24,
   },
 });
+
+export function themedSuccessStyles(colors: SemanticColors) {
+  return StyleSheet.create({
+    ring: {
+      borderColor: colors.borders.successStrong,
+    },
+  });
+}
