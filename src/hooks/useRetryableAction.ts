@@ -36,8 +36,8 @@ export function useRetryableAction(
       setIsLoading(true);
       try {
         await action(...args);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error(String(err)));
+      } catch (error_) {
+        setError(error_ instanceof Error ? error_ : new Error(String(error_)));
       } finally {
         setIsLoading(false);
       }

@@ -1,9 +1,10 @@
 import { Plus } from 'lucide-react-native';
 import { memo, useCallback, useRef } from 'react';
-import { Animated, Keyboard, TouchableOpacity, View } from 'react-native';
+import { Animated, Keyboard, View } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { Motion } from '../../../../constants/motion';
 import type { CustomColorButtonProps } from './types';
+import { AnimatedPressable } from '../../../ui';
 
 /**
  * Custom color button with dashed border and plus icon
@@ -48,7 +49,8 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
       }}
     >
       <Animated.View style={{ transform: [{ scale }] }}>
-        <TouchableOpacity
+        <AnimatedPressable
+          disableAnimation
           accessibilityLabel='Choose custom color'
           accessibilityRole='button'
           style={{
@@ -67,7 +69,7 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
           onPressOut={handlePressOut}
         >
           <Plus color='#a8a29e' size={20} />
-        </TouchableOpacity>
+        </AnimatedPressable>
       </Animated.View>
     </View>
   );

@@ -12,6 +12,16 @@ export type {
   OfflineOperationType,
   ToggleCompletionOperation,
   ToggleCompletionPayload,
+  CreateHabitOperation,
+  CreateHabitPayload,
+  UpdateHabitOperation,
+  UpdateHabitPayload,
+  ArchiveHabitOperation,
+  ArchiveHabitPayload,
+  PauseHabitOperation,
+  PauseHabitPayload,
+  RemoveHabitOperation,
+  RemoveHabitPayload,
 } from './types';
 
 // State types
