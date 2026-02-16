@@ -56,4 +56,3 @@ export interface HabitSettings {
 }
 
 export type HabitSettingsUpdate = HabitSettings;
-export type SettingsDocument = HabitSettings;

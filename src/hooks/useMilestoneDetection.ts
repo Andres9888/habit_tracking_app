@@ -10,14 +10,8 @@
 export {
   // Types
   type MilestoneAchievement,
-  type UseMilestoneDetectionReturn,
-  type UseMultiMilestoneDetectionReturn,
-  // Utilities
-  checkMilestoneCrossed,
-  MILESTONE_THRESHOLDS,
   // Hooks
   useMilestoneDetection,
-  useMultiMilestoneDetection,
   // Default export
   useMilestoneDetection as default,
 } from './useMilestoneDetection/index';
