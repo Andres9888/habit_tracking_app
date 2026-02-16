@@ -8,6 +8,7 @@ import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
+import { computeCurrentStreakFromDates } from '../../utils/streak';
 
 interface UseHabitDetailScreenStateProps {
   habitCreatedAt: number | undefined;
@@ -66,6 +67,11 @@ export const useHabitDetailScreenState = ({
 
   const isCompletedToday = completedDates.has(today);
 
+  const currentStreak = useMemo(
+    () => computeCurrentStreakFromDates(completedDates, new Date()),
+    [completedDates]
+  );
+
   // Days tracking calculation
   const daysTracking = useMemo(() => {
     return habitCreatedAt
@@ -101,6 +107,7 @@ export const useHabitDetailScreenState = ({
 
   return {
     completedDates,
+    currentStreak,
     daysTracking,
     editingNote,
     editingNoteId,

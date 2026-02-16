@@ -5,15 +5,18 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import { InsightsCard } from '../../../components/InsightsCard';
 import { useThemeColors } from '../../../theme';
 import { colors } from '../../../theme/colors';
-import type { Habit } from '../../../features/habits/types';
+import type { Habit, HabitTrackingEntry } from '../../../features/habits/types';
 
 interface HabitDetailContentProps {
   habit: Habit;
   completedDates: Set<string>;
+  currentStreak: number;
   notesByDate?: Record<string, string>;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
+  tracking: HabitTrackingEntry[];
 }
 
 const anim = (delay: number) =>
@@ -51,8 +54,10 @@ function SectionLabel({
 export function HabitDetailContent({
   habit,
   completedDates,
+  currentStreak,
   notesByDate,
   onDayPress,
+  tracking,
 }: HabitDetailContentProps) {
   const { colors, isDark } = useThemeColors();
   const cardBg = isDark ? colors.card : '#FFFFFF';
@@ -121,6 +126,22 @@ export function HabitDetailContent({
           />
         </ErrorBoundary>
       </Animated.View>
+      {/* INSIGHTS section */}
+      {tracking.length >= 7 && (
+        <>
+          <SectionLabel borderColor={borderColor} delay={480} text='INSIGHTS' textColor={labelColor} />
+          <Animated.View entering={anim(540)}>
+            <ErrorBoundary>
+              <InsightsCard
+                currentStreak={currentStreak}
+                habitCreatedAt={habit.createdAt}
+                habitName={habit.name}
+                tracking={tracking}
+              />
+            </ErrorBoundary>
+          </Animated.View>
+        </>
+      )}
     </ScrollView>
   );
 }
