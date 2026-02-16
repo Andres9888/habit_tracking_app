@@ -26,7 +26,7 @@ export const RewardCelebrationToast = ({
 }: RewardCelebrationToastProps) => {
   const { translateY, opacity } = useRewardToastAnimation(visible);
   const { title, premiumCTA } = useRewardToastContent(streak);
-  const { triggerSelection, triggerLightImpact } = useHapticFeedback({});
+  const { triggerLightImpact } = useHapticFeedback({});
 
   return (
     <AnimatedContainer
@@ -59,7 +59,7 @@ export const RewardCelebrationToast = ({
             accessibilityLabel='Share streak'
             className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-4 py-2.5'
             onPress={() => {
-              triggerSelection();
+              triggerLightImpact();
               onSecondaryAction();
             }}
           >
@@ -73,7 +73,7 @@ export const RewardCelebrationToast = ({
             className='flex-1 items-center justify-center rounded-full px-4 py-2.5'
             style={{ backgroundColor: '#7c3aed' }}
             onPress={() => {
-              triggerSelection();
+              triggerLightImpact();
               onPrimaryAction();
             }}
           >

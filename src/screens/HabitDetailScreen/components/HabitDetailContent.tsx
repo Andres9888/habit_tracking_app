@@ -1,35 +1,47 @@
-/** HabitDetailContent - Optimized for 9+ scores: typography, layout, motion */
+/** HabitDetailContent - Dark mode + a11y optimized */
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { MonthlyCalendarGrid, StreakCalendar } from '../../../components/BinaryHeatmap';
+import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import { useThemeColors } from '../../../theme';
 import type { Habit } from '../../../features/habits/types';
-import type { Doc } from '../../../convex/_generated/dataModel';
 
 interface HabitDetailContentProps {
   habit: Habit;
   completedDates: Set<string>;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
-  notes?: Doc<'notes'>[];
 }
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 /** Section label component for consistent styling */
-function SectionLabel({ text, delay }: { text: string; delay: number }) {
+function SectionLabel({
+  text,
+  delay,
+  borderColor,
+  textColor,
+}: {
+  text: string;
+  delay: number;
+  borderColor: string;
+  textColor: string;
+}) {
   return (
     <Animated.View
       className='mb-3 mt-6 flex-row items-center justify-center gap-2'
       entering={anim(delay)}
     >
-      <View className='h-px flex-1 bg-stone-200' />
-      <Text className='text-[13px] font-semibold tracking-wider text-stone-400'>
+      <View className='h-px flex-1' style={{ backgroundColor: borderColor }} />
+      <Text
+        className='text-[13px] font-semibold tracking-wider'
+        style={{ color: textColor }}
+      >
         {text}
       </Text>
-      <View className='h-px flex-1 bg-stone-200' />
+      <View className='h-px flex-1' style={{ backgroundColor: borderColor }} />
     </Animated.View>
   );
 }
@@ -38,8 +50,13 @@ export function HabitDetailContent({
   habit,
   completedDates,
   onDayPress,
-  notes = [],
 }: HabitDetailContentProps) {
+  const { colors, isDark } = useThemeColors();
+  const cardBg = isDark ? colors.card : '#FFFFFF';
+  const shadowColor = isDark ? '#000000' : '#1c1917';
+  const borderColor = isDark ? colors.border : '#DDD8D2';
+  const labelColor = isDark ? colors.text.tertiary : '#9C958D';
+
   return (
     <ScrollView
       bounces
@@ -47,18 +64,19 @@ export function HabitDetailContent({
       contentContainerClassName='pb-8 px-4'
       showsVerticalScrollIndicator={false}
     >
-      {/* STRENGTH section - OPTIMIZED: better visual weight, deeper shadows */}
+      {/* STRENGTH section */}
       {habit.createdAt && (
         <>
-          <SectionLabel delay={240} text='STRENGTH' />
+          <SectionLabel borderColor={borderColor} delay={240} text='STRENGTH' textColor={labelColor} />
           <Animated.View
-            className='rounded-2xl bg-white'
+            className='rounded-2xl'
             entering={anim(300)}
             style={{
+              backgroundColor: cardBg,
               elevation: 4,
-              shadowColor: '#1c1917',
+              shadowColor,
               shadowOffset: { height: 4, width: 0 },
-              shadowOpacity: 0.08,
+              shadowOpacity: isDark ? 0.3 : 0.08,
               shadowRadius: 16,
             }}
           >
@@ -75,40 +93,17 @@ export function HabitDetailContent({
         </>
       )}
 
-      {/* STREAK CALENDAR section - Month-view calendar showing completions */}
-      <SectionLabel delay={360} text='STREAK CALENDAR' />
+      {/* HISTORY section */}
+      <SectionLabel borderColor={borderColor} delay={360} text='HISTORY' textColor={labelColor} />
       <Animated.View
-        className='rounded-2xl bg-white p-4'
+        className='rounded-2xl p-4'
         entering={anim(420)}
         style={{
+          backgroundColor: cardBg,
           elevation: 4,
-          shadowColor: '#1c1917',
+          shadowColor,
           shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
-        }}
-      >
-        <ErrorBoundary>
-          <StreakCalendar
-            completedDates={completedDates}
-            habitColor={habit.iconColor ?? '#047857'}
-            habitCreatedAt={habit.createdAt}
-            habitId={habit._id}
-            notes={notes}
-          />
-        </ErrorBoundary>
-      </Animated.View>
-
-      {/* HISTORY section - OPTIMIZED: consistent card styling */}
-      <SectionLabel delay={480} text='HISTORY' />
-      <Animated.View
-        className='rounded-2xl bg-white p-4'
-        entering={anim(540)}
-        style={{
-          elevation: 4,
-          shadowColor: '#1c1917',
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
+          shadowOpacity: isDark ? 0.3 : 0.08,
           shadowRadius: 16,
         }}
       >
