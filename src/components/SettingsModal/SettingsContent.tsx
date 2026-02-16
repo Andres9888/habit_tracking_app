@@ -11,6 +11,7 @@ import {
   Volume2,
   Lock,
 } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SettingsRow } from './SettingsRow';
@@ -23,28 +24,29 @@ import type { SettingsContentProps } from './types';
 
 const anim = (delay: number) => FadeInDown.delay(delay).springify().damping(18);
 
-const DARK_MODE_OPTIONS: Array<{
-  key: 'system' | 'light' | 'dark';
-  label: string;
-  Icon: typeof Monitor;
-}> = [
-  { Icon: Monitor, key: 'system', label: 'System' },
-  { Icon: Sun, key: 'light', label: 'Light' },
-  { Icon: Moon, key: 'dark', label: 'Dark' },
-];
-
-const COMPLETION_SOUND_OPTIONS: Array<{
-  key: 'chime' | 'pop' | 'success';
-  label: string;
-}> = [
-  { key: 'chime', label: 'Chime' },
-  { key: 'pop', label: 'Pop' },
-  { key: 'success', label: 'Success' },
-];
-
 export function SettingsContent(p: SettingsContentProps) {
+  const { t } = useTranslation();
   const { colors, isHighContrastActive: hc } = p;
   const { colors: themeColors, isDark } = useThemeColors();
+
+  const DARK_MODE_OPTIONS: Array<{
+    key: 'system' | 'light' | 'dark';
+    label: string;
+    Icon: typeof Monitor;
+  }> = [
+    { Icon: Monitor, key: 'system', label: t('settings.system') },
+    { Icon: Sun, key: 'light', label: t('settings.light') },
+    { Icon: Moon, key: 'dark', label: t('settings.dark') },
+  ];
+
+  const COMPLETION_SOUND_OPTIONS: Array<{
+    key: 'chime' | 'pop' | 'success';
+    label: string;
+  }> = [
+    { key: 'chime', label: t('settings.chime') },
+    { key: 'pop', label: t('settings.pop') },
+    { key: 'success', label: t('settings.successSound') },
+  ];
 
   // If not premium, show upsell for completion sounds
   const showSoundUpsell = !p.isPremium;
@@ -69,13 +71,16 @@ export function SettingsContent(p: SettingsContentProps) {
 
         {/* Preferences Section - Visual settings */}
         <Animated.View entering={anim(60)}>
-          <SettingsSection highContrastMode={hc} title='Preferences'>
+          <SettingsSection
+            highContrastMode={hc}
+            title={t('settings.preferences')}
+          >
             <View className='px-4 pb-4 pt-4'>
               <Text
                 className='mb-2 text-[13px] font-semibold'
                 style={{ color: themeColors.text.secondary }}
               >
-                Appearance
+                {t('settings.appearance')}
               </Text>
               <View
                 className='flex-row rounded-xl p-1'
@@ -271,11 +276,7 @@ export function SettingsContent(p: SettingsContentProps) {
 
         {/* About Section - Version info */}
         <Animated.View entering={anim(300)}>
-          <AboutSection
-            buildNumber='1'
-            highContrast={hc}
-            version='1.0.0'
-          />
+          <AboutSection buildNumber='1' highContrast={hc} version='1.0.0' />
         </Animated.View>
       </View>
       <View className='pb-8' />

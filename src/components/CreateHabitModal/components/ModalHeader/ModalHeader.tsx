@@ -2,9 +2,9 @@
  * Modal header with close/save actions
  */
 import { View, Pressable, Keyboard } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCallback } from 'react';
-import STRINGS from '../../../../constants/strings';
 import { X } from 'lucide-react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
@@ -22,6 +22,7 @@ export const ModalHeader = ({
   onDismissKeyboard,
   onValidationError,
 }: ModalHeaderProps) => {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { colors: themeColors } = useThemeColors();
   const canSave = habitName.trim().length > 0;
@@ -50,7 +51,7 @@ export const ModalHeader = ({
       style={{ paddingTop: headerPadding }}
     >
       <Pressable
-        accessibilityLabel={STRINGS.CREATE_HABIT.close}
+        accessibilityLabel={t('common.close')}
         accessibilityRole='button'
         className='h-11 w-11 items-center justify-center rounded-full'
         style={({ pressed }) => ({

@@ -16,6 +16,9 @@
 
 import '../global.css';
 
+// Initialize i18n before other providers
+import './i18n/i18n';
+
 import { ClerkProvider } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
 import { useState, useEffect } from 'react';
@@ -64,10 +67,19 @@ function LazyProviders({ children }: PropsWithChildren) {
   }
 
   // Dynamic imports for heavy providers
-  const { PurchasesProvider } = require('./components/providers/PurchasesProvider');
-  const { StreakMilestoneProvider } = require('./components/StreakMilestoneCelebration');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const {
+    PurchasesProvider,
+  } = require('./components/providers/PurchasesProvider');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const {
+    StreakMilestoneProvider,
+  } = require('./components/StreakMilestoneCelebration');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { NetworkStatusProvider } = require('./contexts/NetworkStatusContext');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { SyncStatusProvider } = require('./contexts/SyncStatusContext');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { OfflineProvider } = require('./providers/OfflineProvider');
 
   return (
@@ -75,9 +87,7 @@ function LazyProviders({ children }: PropsWithChildren) {
       <OfflineProvider>
         <SyncStatusProvider>
           <PurchasesProvider>
-            <StreakMilestoneProvider>
-              {children}
-            </StreakMilestoneProvider>
+            <StreakMilestoneProvider>{children}</StreakMilestoneProvider>
           </PurchasesProvider>
         </SyncStatusProvider>
       </OfflineProvider>
@@ -98,9 +108,7 @@ function CoreProviders({ children }: PropsWithChildren) {
             <SentryUserSync>
               <ConvexClerkProvider>
                 <ThemeColorProvider>
-                  <LazyProviders>
-                    {children}
-                  </LazyProviders>
+                  <LazyProviders>{children}</LazyProviders>
                 </ThemeColorProvider>
               </ConvexClerkProvider>
             </SentryUserSync>
