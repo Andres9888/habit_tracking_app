@@ -31,6 +31,8 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { safeSetBoolean } from '@/utils/storage';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SemanticColors } from '../../theme/darkColors';
@@ -54,6 +56,7 @@ function ChainLink({
   colors: SemanticColors;
 }) {
   const linkColors = [
+
     colors.primary[600],
     colors.primary[700],
     colors.primary[400],
@@ -115,6 +118,7 @@ function StrengthMeter({
   reduceMotion: boolean;
   colors: SemanticColors;
 }) {
+
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
   return (
     <View style={styles.strengthContainer}>
@@ -136,6 +140,7 @@ function StrengthMeter({
               {
                 backgroundColor: interpolateColor(i / 4, colors),
                 opacity: 0.2 + i * 0.2,
+
                 width: `${20 + i * 20}%`,
               },
             ]}
@@ -159,6 +164,7 @@ function interpolateColor(t: number, colors: SemanticColors): string {
   if (t < 0.5) return colors.primary[400];
   if (t < 0.75) return colors.primary[600];
   return colors.primary[700];
+
 }
 
 // ─── Template Grid ───────────────────────────────────────────────────
@@ -226,6 +232,7 @@ const PAGES: PageData[] = [
     id: 'chain',
     subtitle:
       'Every day you show up, your chain grows stronger. Miss a day and you start over. Simple — but powerful.',
+
     title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
@@ -234,6 +241,7 @@ const PAGES: PageData[] = [
     subtitle:
       'Habits start fragile. After 21 days they become routine. After 66 days? Automatic. We track every stage.',
     title: 'Watch Habits Get Stronger',
+
     Visual: StrengthMeter,
   },
   {
@@ -241,6 +249,7 @@ const PAGES: PageData[] = [
     subtitle:
       'Pick from 200+ science-backed templates or create your own. Most people start with just one.',
     title: 'Start Small, Win Big',
+
     Visual: TemplateGrid,
   },
 ];
@@ -307,6 +316,7 @@ interface OnboardingScreenProps {
 }
 
 export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
@@ -319,7 +329,15 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
     setIsLoading(true);
     void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
     try {
-      await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
+      // Mark onboarding as complete in AsyncStorage
+      await safeSetBoolean(ONBOARDING_KEY, true);
+      onComplete();
+    } catch (error) {
+      // If storage fails, still proceed to avoid blocking user
+      // They might see onboarding again on next launch, but that's acceptable
+      if (__DEV__) {
+        console.error('[OnboardingScreen] Failed to save completion state:', error);
+      }
       onComplete();
     } finally {
       setIsLoading(false);
@@ -661,3 +679,11 @@ const styles = StyleSheet.create({
 });
 
 export { ONBOARDING_KEY };
+
+export function OnboardingScreen(props: OnboardingScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Onboarding">
+      <OnboardingScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}

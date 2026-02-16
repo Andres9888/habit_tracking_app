@@ -37,7 +37,7 @@ export const useArchivedHabitsModalLogic = () => {
   };
 
   const handlePermanentDelete = (habitId: Id<'habits'>, habitName: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
     Alert.alert(
       `Permanently Delete "${habitName}"?`,
@@ -72,7 +72,7 @@ export const useArchivedHabitsModalLogic = () => {
   };
 
   const handleDeleteAll = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
     Alert.alert(
       'Delete All Archived Habits?',

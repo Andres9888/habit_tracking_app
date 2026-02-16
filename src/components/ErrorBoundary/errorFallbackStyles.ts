@@ -6,8 +6,8 @@ import { StyleSheet } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 
-export const getStyles = () => {
-  const colors = useThemeColors();
+export const useStyles = () => {
+  const { colors } = useThemeColors();
 
   return StyleSheet.create({
     actions: { flexDirection: 'row', gap: 16, marginTop: 16 },

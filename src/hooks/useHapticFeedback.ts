@@ -30,6 +30,22 @@ const safeCall = (fn: () => Promise<void>) => {
   });
 };
 
+/**
+ * Legacy haptic feedback hook providing various impact styles.
+ * Wraps the centralized haptics patterns library for backward compatibility.
+ * Prefer using `useHaptics` from '@/utils/haptics' for new code.
+ *
+ * @param options - Configuration options
+ * @param options.isEnabled - Whether haptics are enabled (default: true)
+ * @param options.preference - Override for reduced motion preference
+ * @returns Object containing various haptic trigger functions
+ *
+ * @example
+ * ```ts
+ * const { triggerSuccess, triggerWarning } = useHapticFeedback();
+ * await triggerSuccess();
+ * ```
+ */
 export const useHapticFeedback = ({
   isEnabled = true,
   preference,

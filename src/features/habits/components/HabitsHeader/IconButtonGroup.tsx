@@ -62,6 +62,7 @@ export function IconButtonGroup({
             accessibilityHint='Browse habit templates to add'
             accessibilityLabel='Browse habit templates'
             accessibilityRole='button'
+            testID='home-templates-button'
             className='h-11 w-11 items-center justify-center rounded-full bg-violet-50'
             style={({ pressed }) => ({
               backgroundColor: pressed
@@ -93,6 +94,7 @@ export function IconButtonGroup({
           accessibilityHint='Change habit sort order'
           accessibilityLabel='Sort habits'
           accessibilityRole='button'
+          testID='home-sort-button'
           className='h-11 w-11 items-center justify-center rounded-full'
           style={({ pressed }) => ({
             backgroundColor: pressed ? 'rgba(0, 0, 0, 0.05)' : 'transparent',
@@ -116,6 +118,7 @@ export function IconButtonGroup({
           accessibilityHint='Open app settings'
           accessibilityLabel='Open settings'
           accessibilityRole='button'
+          testID='home-settings-button'
           className='h-11 w-11 items-center justify-center rounded-full'
           style={({ pressed }) => ({
             backgroundColor: pressed ? 'rgba(0, 0, 0, 0.05)' : 'transparent',

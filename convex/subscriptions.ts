@@ -96,6 +96,12 @@ export const grantPremium = internalMutation({
 /**
  * Revoke premium access (CANCELLATION, EXPIRATION)
  *
+ * CANCELLATION: User turned off auto-renew but still has access until the
+ * period ends.  We mark the subscription as "cancelled" but do NOT revoke
+ * premium — the user already paid for the current period.
+ *
+ * EXPIRATION: The paid period has ended.  Now we actually revoke access.
+ *
  * SEC-002: Server-side premium validation
  * Updates userSettings.hasPremium which affects:
  *   - Voice notes: limited to 1 per habit
@@ -118,7 +124,12 @@ export const revokePremium = internalMutation({
         updatedAt: now,
       });
     }
-    await updateUserSettingsPremium(ctx, clerkId, false);
+    // Only revoke premium access on EXPIRATION.
+    // CANCELLATION means the user cancelled auto-renew but their current
+    // billing period is still active — they should keep premium until it expires.
+    if (eventType === 'EXPIRATION') {
+      await updateUserSettingsPremium(ctx, clerkId, false);
+    }
   },
 });
 

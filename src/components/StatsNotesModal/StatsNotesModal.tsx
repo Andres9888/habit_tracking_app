@@ -26,7 +26,7 @@ export default function StatsNotesModal({
 }: StatsNotesModalProps) {
   const [activeTab, setActiveTab] = useState<'stats' | 'notes'>('stats');
   const insets = useSafeAreaInsets();
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   return (
     <Modal
@@ -35,10 +35,17 @@ export default function StatsNotesModal({
       visible={visible}
       onRequestClose={onClose}
     >
-      <Pressable className='flex-1 bg-black/50' onPress={onClose}>
+      <Pressable
+        accessibilityLabel='Close stats modal'
+        accessibilityRole='button'
+        className='flex-1 bg-black/50'
+        onPress={onClose}
+      >
         <View className='flex-1 p-5' style={{ paddingTop: insets.top + 8 }}>
           <Pressable
+            accessible={false}
             className='flex-1 overflow-hidden rounded-2xl'
+            importantForAccessibility='no'
             style={[cardShadow, { backgroundColor: colors.surface }]}
             onPress={(e) => e.stopPropagation()}
           >
