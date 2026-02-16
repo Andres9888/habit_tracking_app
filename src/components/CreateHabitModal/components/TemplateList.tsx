@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { useCallback, useMemo } from 'react';
 import type {
   LayoutChangeEvent,

@@ -4,7 +4,7 @@
  */
 
 import { v } from 'convex/values';
-import { mutation, query } from './_generated/server';
+import { internalMutation, mutation, query } from './_generated/server';
 import type { Id } from './_generated/dataModel';
 
 type TemplateInsert = {
@@ -148,9 +148,10 @@ export const getById = query({
 });
 
 /**
- * Mutation: Seed initial templates (for setup/migration)
+ * Internal Mutation: Seed initial templates (for setup/migration)
+ * SEC: Internal only - run via Convex dashboard, not accessible to users
  */
-export const seedTemplates = mutation({
+export const seedTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -1578,7 +1579,7 @@ export const seedTemplates = mutation({
 /**
  * Mutation: Import a template to create a new habit
  */
-export const importTemplate = mutation({
+export const importTemplate = internalMutation({
   args: {
     customizations: v.optional(
       v.object({
@@ -1681,7 +1682,7 @@ export const getUsageStats = query({
 /**
  * Mutation: Clear all templates (for cleanup/reset)
  */
-export const clearTemplates = mutation({
+export const clearTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const templates = await ctx.db.query('templates').collect();
@@ -1698,7 +1699,7 @@ export const clearTemplates = mutation({
  * - Re-points templateUsage.templateId to the kept template
  * - Deletes extra templates
  */
-export const dedupeTemplates = mutation({
+export const dedupeTemplates = internalMutation({
   args: { dryRun: v.optional(v.boolean()) },
   handler: async (ctx, args) => {
     const dryRun = args.dryRun ?? false;
@@ -1771,7 +1772,11 @@ export const dedupeTemplates = mutation({
  * Mutation: Seed additional science-backed templates (Phase 3.1)
  * 45 new habits covering: Physical Resilience, Cognitive, Nutrition, Digital Wellness, Social
  */
-export const seedAdditionalTemplates = mutation({
+/**
+ * Internal Mutation: Seed additional templates
+ * SEC: Internal only - run via Convex dashboard, not accessible to users
+ */
+export const seedAdditionalTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -2496,7 +2501,11 @@ export const seedAdditionalTemplates = mutation({
  * Mutation: Seed new science-backed templates (Phase 3.2)
  * Unique habits covering: Dental Health, Bone Health, Hearing Health, Immune Support, Preventive Care, Goal Setting
  */
-export const seedNewScienceTemplates = mutation({
+/**
+ * Internal Mutation: Seed new science-backed templates
+ * SEC: Internal only - run via Convex dashboard, not accessible to users
+ */
+export const seedNewScienceTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -3117,7 +3126,7 @@ export const listTemplateNames = query({
 /**
  * Mutation: Update existing templates with YouTube links
  */
-export const updateYoutubeLinks = mutation({
+export const updateYoutubeLinks = internalMutation({
   args: {},
   handler: async (ctx) => {
     const youtubeLinks: Record<string, string> = {
@@ -3227,7 +3236,7 @@ export const updateYoutubeLinks = mutation({
  * 50+ new habits across NEW categories: Longevity, Mental Health, Recovery, Breathing
  * Plus additional habits in existing categories based on peer-reviewed research
  */
-export const seedScienceTemplates = mutation({
+export const seedScienceTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -4148,7 +4157,7 @@ export const seedScienceTemplates = mutation({
  * Mutation: Seed unique non-duplicate templates (Phase 3.3)
  * 50+ truly unique habits in underserved categories: Career, Hobbies, Environment, Somatic, Purpose, Self-Care
  */
-export const seedUniqueTemplates = mutation({
+export const seedUniqueTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();

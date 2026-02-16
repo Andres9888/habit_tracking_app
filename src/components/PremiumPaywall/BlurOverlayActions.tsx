@@ -22,6 +22,7 @@ export function BlurOverlayActions({ config, handlers, onStartTrial, onRestore }
         <Pressable
           accessibilityLabel={config.ctaText}
           accessibilityRole='button'
+          testID='paywall-start-trial-button'
           disabled={handlers.isProcessing || !handlers.priceLabel}
           onPress={onStartTrial}
         >

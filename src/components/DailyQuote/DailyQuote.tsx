@@ -27,9 +27,13 @@ function getDayOfYear(): number {
   return Math.floor(diff / oneDay);
 }
 
-export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: DailyQuoteProps) {
+export function DailyQuote({
+  quote: overrideQuote,
+  showRefresh,
+  onRefresh,
+}: DailyQuoteProps) {
   const { colors } = useThemeColors();
-  
+
   const quote = useMemo(() => {
     if (overrideQuote) return overrideQuote;
     // Use day of year to select quote (consistent per day)
@@ -37,53 +41,66 @@ export function DailyQuote({ quote: overrideQuote, showRefresh, onRefresh }: Dai
     return QUOTES[dayOfYear % QUOTES.length];
   }, [overrideQuote]);
 
-  const styles = useMemo(() => StyleSheet.create({
-    author: {
-      color: colors.gray[500],
-      fontSize: 13,
-      fontWeight: '500',
-    },
-    container: {
-      backgroundColor: colors.gray[50],
-      borderLeftColor: colors.gray[400],
-      borderLeftWidth: 3,
-      borderRadius: 16,
-      marginHorizontal: 16,
-      marginVertical: 8,
-      padding: 16,
-    },
-    footer: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 10,
-    },
-    iconContainer: {
-      marginBottom: 8,
-    },
-    quoteText: {
-      color: colors.gray[600],
-      fontSize: 15,
-      fontStyle: 'italic',
-      lineHeight: 22,
-    },
-    refreshButton: {
-      padding: 4,
-    },
-  }), [colors]);
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        author: {
+          color: colors.gray[500],
+          fontSize: 13,
+          fontWeight: '500',
+        },
+        container: {
+          backgroundColor: colors.gray[50],
+          borderLeftColor: colors.gray[400],
+          borderLeftWidth: 3,
+          borderRadius: 16,
+          marginHorizontal: 16,
+          marginVertical: 8,
+          padding: 16,
+        },
+        footer: {
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginTop: 10,
+        },
+        iconContainer: {
+          marginBottom: 8,
+        },
+        quoteText: {
+          color: colors.gray[600],
+          fontSize: 15,
+          fontStyle: 'italic',
+          lineHeight: 22,
+        },
+        refreshButton: {
+          alignItems: 'center' as const,
+          height: 44,
+          justifyContent: 'center' as const,
+          width: 44,
+        },
+      }),
+    [colors]
+  );
 
   return (
     <Animated.View entering={FadeIn.delay(100)} style={styles.container}>
       <View style={styles.iconContainer}>
         <Quote color={colors.gray[400]} size={16} />
       </View>
-      
+
       <Text style={styles.quoteText}>"{quote.text}"</Text>
-      
+
       <View style={styles.footer}>
         <Text style={styles.author}>— {quote.author}</Text>
         {showRefresh && onRefresh && (
-          <Pressable style={styles.refreshButton} onPress={onRefresh}>
+          <Pressable
+            accessibilityLabel='Refresh quote'
+            accessibilityRole='button'
+            hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
+            style={styles.refreshButton}
+            onPress={onRefresh}
+          >
             <RefreshCw color={colors.gray[400]} size={14} />
           </Pressable>
         )}

@@ -1,10 +1,20 @@
 /**
- * Highlight Animation Sequences
- * Animations for newly created habit cards
+ * @module highlightAnimations
+ *
+ * RN Animated sequences for newly-created habit cards:
+ *
+ * - {@link runHighlightAnimation} — scale bounce + pulsing glow border to
+ *   draw attention to a just-created card. Used by {@link useHighlightAnimation}.
+ * - {@link runIconPulseLoop} — infinite gentle scale loop on the icon when
+ *   the week is fully complete. Used by {@link useIconPulse}.
  */
 
 import { Animated, Easing } from 'react-native';
 
+/**
+ * Plays a one-shot attention animation on a newly-created habit card:
+ * card scales up to 1.04 then settles, while a glow border pulses twice then fades.
+ */
 export function runHighlightAnimation(
   cardScale: Animated.Value,
   highlightGlow: Animated.Value
@@ -53,6 +63,7 @@ export function runHighlightAnimation(
   ]).start();
 }
 
+/** Infinite gentle scale loop (1 ↔ 1.05) for the icon when the week is complete. */
 export function runIconPulseLoop(iconPulse: Animated.Value) {
   Animated.loop(
     Animated.sequence([

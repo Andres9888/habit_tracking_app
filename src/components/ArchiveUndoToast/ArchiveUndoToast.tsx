@@ -15,8 +15,9 @@ import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Archive, Undo2 } from 'lucide-react-native';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { ArchiveUndoToastProps, DEFAULT_DURATION } from './types';
-import { styles } from './styles';
+import { useToastStyles } from './styles';
 import { useArchiveUndoToast } from './useArchiveUndoToast';
 
 export type { ArchiveUndoToastProps } from './types';
@@ -28,9 +29,12 @@ export function ArchiveUndoToast({
   onDismiss,
   onUndo,
 }: ArchiveUndoToastProps) {
+  const { isDark } = useThemeColors();
+  const styles = useToastStyles();
   const insets = useSafeAreaInsets();
   const { panGesture, containerStyle, progressStyle, handleUndo } =
     useArchiveUndoToast({ duration, onDismiss, onUndo, visible });
+  const amberIconColor = isDark ? '#FCD34D' : '#b45309';
 
   if (!visible) return null;
 
@@ -49,7 +53,7 @@ export function ArchiveUndoToast({
         >
           <View style={styles.content}>
             <View style={styles.iconContainer}>
-              <Archive color='#b45309' size={18} strokeWidth={2} />
+              <Archive color={amberIconColor} size={18} strokeWidth={2} />
             </View>
 
             <Text numberOfLines={1} style={styles.message}>
@@ -66,7 +70,7 @@ export function ArchiveUndoToast({
               ]}
               onPress={handleUndo}
             >
-              <Undo2 color='#b45309' size={14} strokeWidth={2.5} />
+              <Undo2 color={amberIconColor} size={14} strokeWidth={2.5} />
               <Text style={styles.undoText}>UNDO</Text>
             </Pressable>
           </View>

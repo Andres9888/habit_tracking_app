@@ -16,6 +16,9 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.light.card,
     borderRadius: borderRadius.large,
     maxWidth: 340,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.lg,
     ...shadows.alert,
   },
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { View, Text } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,12 +16,15 @@ export function CharacterCard({ data, achievementCount }: CharacterCardProps) {
   const xpToNextLevel = data.xpToNextLevel || 1; // Guard against 0
   const xpProgress = (data.xp / xpToNextLevel) * 100;
   const xpRemaining = xpToNextLevel - data.xp;
+  const { colors } = useThemeColors();
 
   return (
     <Animated.View
       className='mb-6 overflow-hidden rounded-3xl border border-stone-100 bg-white'
       style={{
-        shadowColor: '#1c1917',
+        backgroundColor: colors.card,
+        borderColor: colors.cardBorder,
+        shadowColor: colors.text.primary,
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 16,
@@ -51,7 +55,7 @@ export function CharacterCard({ data, achievementCount }: CharacterCardProps) {
                 </Text>
                 <Text className='text-lg'>✨</Text>
               </View>
-              <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#6a7282]'>
+              <Text className='text-sm font-normal leading-5 tracking-[-0.15px]' style={{ color: colors.text.secondary }}>
                 {data.title}
               </Text>
             </View>
@@ -79,14 +83,14 @@ export function CharacterCard({ data, achievementCount }: CharacterCardProps) {
 
         <View className='flex-col gap-2'>
           <View className='flex-row items-center justify-between'>
-            <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#4a5565]'>
+            <Text className='text-sm font-normal leading-5 tracking-[-0.15px]' style={{ color: colors.text.secondary }}>
               Experience
             </Text>
-            <Text className='text-sm font-normal leading-5 tracking-[-0.15px] text-[#101828]'>
+            <Text className='text-sm font-normal leading-5 tracking-[-0.15px]' style={{ color: colors.text.primary }}>
               {data.xp}/{data.xpToNextLevel} XP
             </Text>
           </View>
-          <View className='h-3 w-full overflow-hidden rounded-full bg-stone-100'>
+          <View className='h-3 w-full overflow-hidden rounded-full' style={{ backgroundColor: colors.gray[200] }}>
             <View style={{ width: `${xpProgress}%` }}>
               <LinearGradient
                 colors={XP_GRADIENT}
@@ -96,7 +100,7 @@ export function CharacterCard({ data, achievementCount }: CharacterCardProps) {
               />
             </View>
           </View>
-          <Text className='text-center text-xs font-normal leading-4 text-[#99a1af]'>
+          <Text className='text-center text-xs font-normal leading-4' style={{ color: colors.text.tertiary }}>
             {xpRemaining} XP to Level {data.level + 1}
           </Text>
         </View>

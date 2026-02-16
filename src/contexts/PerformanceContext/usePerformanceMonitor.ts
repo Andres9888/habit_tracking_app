@@ -10,6 +10,16 @@ import type {
 import type { PerformanceConfig } from './types';
 import { generateSessionId, useMonitorRefs } from './useMonitorRefs';
 
+/**
+ * Core performance monitoring hook that manages frame timing, memory usage,
+ * and network latency tracking.
+ * 
+ * Provides methods to start/stop monitoring, save performance baselines,
+ * and clear collected data.
+ * 
+ * @param config - Performance monitoring configuration (frame monitoring, memory interval, etc.)
+ * @returns Performance monitoring state and control methods
+ */
 export function usePerformanceMonitor(config: PerformanceConfig) {
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [baseline, setBaseline] = useState<PerformanceBaseline | null>(null);

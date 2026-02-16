@@ -6,7 +6,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-import { styles } from './styles';
+import { useThemedStyles } from './styles';
 
 interface CountBadgeProps {
   templateCount: number;
@@ -14,6 +14,7 @@ interface CountBadgeProps {
 }
 
 export function CountBadge({ templateCount, scienceCount }: CountBadgeProps) {
+  const styles = useThemedStyles();
   const habitsText = templateCount === 1 ? 'habit' : 'habits';
 
   return (

@@ -36,6 +36,7 @@ export function RevenueCatPaywall({
 
     return (
       <Modal transparent animationType='fade' visible={visible} onRequestClose={onClose}>
+        accessibilityViewIsModal
         <View className='flex-1 items-center justify-center bg-black/50'>
           <View className='mx-6 rounded-2xl p-6' style={{ backgroundColor: colors.surface }}>
             <Text className='mb-2 text-center text-lg font-semibold' style={{ color: colors.text.primary }}>
@@ -68,6 +69,7 @@ export function RevenueCatPaywall({
   // Use RevenueCat's Paywall JSX component (more reliable with Expo)
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='slide'
       presentationStyle='fullScreen'
       visible={visible}
