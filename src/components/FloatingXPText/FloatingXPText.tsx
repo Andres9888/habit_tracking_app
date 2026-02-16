@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * FloatingXPText Component
  *
@@ -98,10 +99,24 @@ export function FloatingXPText({
     >
       {showCoin ? (
         // Coin variant (gold color)
-        <Animated.Text style={styles.coinText}>+{value} 🪙</Animated.Text>
+        <Animated.Text
+          style={[
+            styles.coinText,
+            isDark && { color: '#FBBF24', textShadowColor: '#FBBF24' },
+          ]}
+        >
+          +{value} 🪙
+        </Animated.Text>
       ) : (
         // XP variant (green gradient - simulate with shadow for now)
-        <Animated.Text style={styles.xpText}>+{value} XP</Animated.Text>
+        <Animated.Text
+          style={[
+            styles.xpText,
+            isDark && { color: '#34D399', textShadowColor: '#34D399' },
+          ]}
+        >
+          +{value} XP
+        </Animated.Text>
       )}
     </Animated.View>
   );

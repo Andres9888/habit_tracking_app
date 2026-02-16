@@ -1,8 +1,32 @@
 /**
- * Reusable Press Animation Hook - OPTIMIZED: Added haptic feedback
+ * Reusable Press Animation Hook
  *
- * Provides smooth scale animation + haptics for pressable components.
- * Respects reduced motion preferences.
+ * Provides smooth scale animation with optional haptic feedback for pressable components.
+ * Automatically respects reduced motion accessibility preferences.
+ *
+ * Features:
+ * - Smooth spring-based scale animation on press
+ * - Optional haptic feedback (iOS & Android)
+ * - Reduced motion support
+ * - Customizable press scale and spring configuration
+ *
+ * @param config - Configuration options
+ * @returns Object containing animated style and press handlers
+ *
+ * @example
+ * ```tsx
+ * const { animatedStyle, pressHandlers } = usePressAnimation({
+ *   pressScale: 0.95,
+ *   enableHaptics: true,
+ *   hapticStyle: 'light',
+ * });
+ *
+ * <Pressable {...pressHandlers}>
+ *   <Animated.View style={[styles.button, animatedStyle]}>
+ *     <Text>Press me</Text>
+ *   </Animated.View>
+ * </Pressable>
+ * ```
  */
 
 import { useCallback } from 'react';

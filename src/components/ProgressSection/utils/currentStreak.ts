@@ -34,7 +34,11 @@ export function calculateCurrentStreak(tracking: HabitTrackingEntry[]): number {
   while (streak < 400) {
     if (completedDates.has(checkDate)) {
       streak++;
-      const [year, month, day] = checkDate.split('-').map(Number);
+      const dateParts = checkDate.split('-').map(Number);
+      const year = dateParts[0] ?? 0;
+      const month = dateParts[1] ?? 1;
+      const day = dateParts[2] ?? 1;
+      if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) break;
       const prevDate = new Date(year, month - 1, day);
       prevDate.setDate(prevDate.getDate() - 1);
       checkDate = formatDateString(prevDate);

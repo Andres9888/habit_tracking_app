@@ -84,7 +84,7 @@ export function useStrengthRingAnimation({
       // Regular strength update: subtle pulse
       emojiScale.value = withSequence(
         withTiming(1.08, { duration: 100, easing: Easing.out(Easing.ease) }),
-        withSpring(1, { damping: 15, stiffness: 200 })
+        withSpring(1, { damping: 18, stiffness: 150 })
       );
     }
   }, [

@@ -103,7 +103,7 @@ export function useToastAnimations({
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
         runOnJS(handleSwipeDismiss)();
       } else {
-        translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
+        translateY.value = withSpring(0, { damping: 18, stiffness: 150 });
         opacity.value = withTiming(1, { duration: 150 });
       }
     });

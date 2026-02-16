@@ -61,6 +61,7 @@ function SettingsModalContent({
   if (view === 'archived') {
     return (
       <Modal
+        accessibilityViewIsModal
         animationType='slide'
         visible={visible}
         onRequestClose={handleClose}
@@ -75,6 +76,7 @@ function SettingsModalContent({
 
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={handleClose}>
+      accessibilityViewIsModal
       <View
         className='flex-1 bg-background'
         style={{ backgroundColor: colors.background }}
@@ -124,6 +126,7 @@ export default function SettingsModal(props: SettingsModalProps) {
     <ErrorBoundary
       fallback={
         <Modal
+          accessibilityViewIsModal
           animationType='slide'
           visible={props.visible}
           onRequestClose={props.onClose}

@@ -76,7 +76,7 @@ export async function requirePremium(
 export async function canAddVoiceNote(
   ctx: QueryCtx,
   userId: string,
-  habitId: Id<"habits">
+  habitId: Id<'habits'>
 ): Promise<{ allowed: boolean; reason?: string }> {
   const hasPremium = await hasPremiumAccess(ctx, userId);
   if (hasPremium) {
@@ -112,7 +112,7 @@ export async function canAddVoiceNote(
 export async function canAddVisionBoardImage(
   ctx: QueryCtx,
   userId: string,
-  habitId: Id<"habits">
+  habitId: Id<'habits'>
 ): Promise<{ allowed: boolean; reason?: string }> {
   const hasPremium = await hasPremiumAccess(ctx, userId);
   if (hasPremium) {

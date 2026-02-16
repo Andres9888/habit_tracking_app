@@ -24,11 +24,11 @@ export const CARD_REST_SCALE = 1;
 
 /**
  * Spring configuration for card press animations
- * Matches app design system: springify().damping(18)
+ * Matches app design system: damping 18, stiffness 150
  */
 export const CARD_PRESS_SPRING_CONFIG: WithSpringConfig = {
   damping: 18,
-  stiffness: 240,
+  stiffness: 150,
 };
 
 /**

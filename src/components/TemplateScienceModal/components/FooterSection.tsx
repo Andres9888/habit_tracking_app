@@ -7,7 +7,8 @@ import { Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
 import Button from '../../Button/Button';
-import { footerStyles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { footerStyles, themedFooterStyles } from '../styles';
 import type { FooterSectionProps } from '../TemplateScienceModal.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -21,12 +22,16 @@ export const FooterSection = ({
   pressHandlers,
   templateName,
 }: FooterSectionProps) => {
+  const { colors, isDark } = useThemeColors();
+  const themed = themedFooterStyles(colors);
+  const bgRgba = isDark ? 'rgba(17, 24, 39,' : 'rgba(250, 250, 249,';
+
   return (
     <LinearGradient
       colors={[
-        'rgba(250, 250, 249, 0)',
-        'rgba(250, 250, 249, 1)',
-        'rgba(250, 250, 249, 1)',
+        `${bgRgba} 0)`,
+        `${bgRgba} 1)`,
+        `${bgRgba} 1)`,
       ]}
       style={footerStyles.footerGradient}
     >
@@ -49,7 +54,7 @@ export const FooterSection = ({
           onPress={onBack}
           {...pressHandlers}
         >
-          <Text style={footerStyles.backButtonText}>Back to Import Habits</Text>
+          <Text style={[footerStyles.backButtonText, themed.backButtonText]}>Back to Import Habits</Text>
         </AnimatedPressable>
       </Animated.View>
     </LinearGradient>

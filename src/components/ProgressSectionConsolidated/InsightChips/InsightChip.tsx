@@ -7,6 +7,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 import { useInsightChipAnimations } from './useInsightChipAnimations';
 import { BORDER_COLOR_MAP } from './constants';
@@ -26,6 +27,7 @@ export const InsightChip = React.memo(function InsightChip({
       index,
       reduceMotion,
     });
+  const { colors } = useThemeColors();
 
   const handlePress = () => {
     onHapticFeedback();
@@ -50,8 +52,14 @@ export const InsightChip = React.memo(function InsightChip({
       onPressOut={handlePressOut}
     >
       <View
-        className='relative rounded-xl bg-white px-3 py-2.5'
-        style={{ borderColor, borderWidth: 1, minHeight: 56, minWidth: 90 }}
+        className='relative rounded-xl px-3 py-2.5'
+        style={{
+          backgroundColor: colors.card,
+          borderColor,
+          borderWidth: 1,
+          minHeight: 56,
+          minWidth: 90,
+        }}
       >
         {chip.hasPulse && (
           <Animated.View
@@ -64,10 +72,18 @@ export const InsightChip = React.memo(function InsightChip({
         <View className='flex-row items-center gap-2'>
           <Text className='text-lg'>{chip.icon}</Text>
           <View>
-            <Text className='text-base font-bold text-stone-800'>
+            <Text
+              className='text-base font-bold'
+              style={{ color: colors.text.primary }}
+            >
               {chip.value}
             </Text>
-            <Text className='text-[10px] text-stone-500'>{chip.label}</Text>
+            <Text
+              className='text-[10px]'
+              style={{ color: colors.text.tertiary }}
+            >
+              {chip.label}
+            </Text>
           </View>
         </View>
       </View>

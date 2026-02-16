@@ -64,7 +64,7 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   const deleteBg = isDark ? '#450A0A' : '#FEF2F2';
   const deleteBorder = isDark ? '#991B1B' : '#FECACA';
 
-  const springConfig = { damping: 18, stiffness: 240 };
+  const springConfig = { damping: 18, stiffness: 150 };
 
   return (
     <View className='flex-col gap-3'>

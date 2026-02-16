@@ -35,6 +35,7 @@ export function ActionSection({
         <AnimatedEntrance delay={ENTRANCE_DELAYS.cta}>
           <CtaButton
             disabled={!inputValue.trim()}
+            inputValue={inputValue}
             isLoading={isCreating}
             onPress={onCreateHabit}
           />

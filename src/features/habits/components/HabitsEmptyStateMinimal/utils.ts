@@ -12,6 +12,7 @@ import {
   NIGHT_CHIPS,
   STATIC_CHIPS,
 } from './constants';
+import { PLACEHOLDER_EXAMPLES } from './placeholderConstants';
 
 /**
  * Time windows for chip suggestions (24-hour format)
@@ -73,4 +74,30 @@ export function getTimeBasedChips(
 
   // Night: 10pm - 5am (wraps around midnight)
   return NIGHT_CHIPS;
+}
+
+/**
+ * Get placeholder examples matching the current time window
+ */
+export function getTimeBasedPlaceholders(
+  date: Date = new Date()
+): readonly string[] {
+  const hour = date.getHours();
+
+  if (hour >= TIME_WINDOWS.MORNING.start && hour < TIME_WINDOWS.MORNING.end) {
+    return PLACEHOLDER_EXAMPLES.MORNING;
+  }
+
+  if (
+    hour >= TIME_WINDOWS.AFTERNOON.start &&
+    hour < TIME_WINDOWS.AFTERNOON.end
+  ) {
+    return PLACEHOLDER_EXAMPLES.AFTERNOON;
+  }
+
+  if (hour >= TIME_WINDOWS.EVENING.start && hour < TIME_WINDOWS.EVENING.end) {
+    return PLACEHOLDER_EXAMPLES.EVENING;
+  }
+
+  return PLACEHOLDER_EXAMPLES.NIGHT;
 }
