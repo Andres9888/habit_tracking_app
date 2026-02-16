@@ -7,13 +7,14 @@
  * ACCESSIBILITY: Focus state support added per UI audit (2026-02-07)
  */
 
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import { CompletionToast } from '../CompletionToast';
 import { SuccessShimmer } from '../animations/SuccessShimmer';
+import { ConfirmActionModal } from '../ConfirmActionModal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
 import { useHabitCard } from './useHabitCard';
@@ -46,13 +47,25 @@ function HabitCardComponent(props: HabitCardProps) {
   const { colors: themeColors } = useThemeColors();
   const { focusStyle, focusHandlers } = useFocusRing({ disabled });
 
+  // Confirmation modal state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const handleDeletePress = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowDeleteConfirm(false);
+    onDelete?.();
+  };
+
   return (
     <View style={[styles.container, style]}>
       <SwipeActions
         actionsAnimatedStyle={habit.animations.actionsAnimatedStyle}
         name={name}
         translateX={habit.translateX}
-        onDelete={onDelete}
+        onDelete={onDelete ? handleDeletePress : undefined}
         onEdit={onEdit}
       />
       <GestureDetector gesture={habit.composedGesture}>
@@ -131,6 +144,15 @@ function HabitCardComponent(props: HabitCardProps) {
         visible={habit.showCompletionToast}
         onDismiss={() => habit.setShowCompletionToast(false)}
       />
+      {onDelete && (
+        <ConfirmActionModal
+          actionType="delete"
+          habitName={name}
+          visible={showDeleteConfirm}
+          onCancel={() => setShowDeleteConfirm(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </View>
   );
 }

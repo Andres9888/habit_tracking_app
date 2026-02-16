@@ -28,6 +28,7 @@ import ReAnimated from 'react-native-reanimated';
 import { ArchiveAction } from './ArchiveAction';
 import { CardContent } from './CardContent';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
+import { SwipeGripLines } from '../HabitCard/components/SwipeGripLines';
 import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
 import { buildCardStyle } from './cardStyles';
 import type { DraggableHabitCardProps } from './DraggableHabitCard.types';
@@ -120,6 +121,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
               {...props}
               effectiveAccentColor={effectiveAccentColor}
             />
+            {props.onArchive && <SwipeGripLines />}
           </ReAnimated.View>
         </Animated.View>
       </Pressable>

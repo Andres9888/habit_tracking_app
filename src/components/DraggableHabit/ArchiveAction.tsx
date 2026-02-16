@@ -2,6 +2,7 @@ import React from 'react';
 import { Animated, View, Text } from 'react-native';
 import { Archive } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { borderRadius } from '../../theme/spacing';
 import { typography } from '@/theme/typography';
 
@@ -11,23 +12,30 @@ interface ArchiveActionProps {
 
 export function ArchiveAction({ dragX }: ArchiveActionProps) {
   const { isDark } = useThemeColors();
+  const reduceMotion = useReduceMotion();
+
   const trans = dragX.interpolate({
     extrapolate: 'clamp',
     inputRange: [-100, 0],
     outputRange: [0, 100],
   });
 
-  const iconScale = dragX.interpolate({
-    extrapolate: 'clamp',
-    inputRange: [-100, -60, -30, 0],
-    outputRange: [1.1, 1, 0.85, 0.8],
-  });
+  // Disable scale/opacity animations if reduce motion is enabled
+  const iconScale = reduceMotion
+    ? 1
+    : dragX.interpolate({
+        extrapolate: 'clamp',
+        inputRange: [-100, -60, -30, 0],
+        outputRange: [1.1, 1, 0.85, 0.8],
+      });
 
-  const iconOpacity = dragX.interpolate({
-    extrapolate: 'clamp',
-    inputRange: [-100, -40, 0],
-    outputRange: [1, 0.85, 0.6],
-  });
+  const iconOpacity = reduceMotion
+    ? 1
+    : dragX.interpolate({
+        extrapolate: 'clamp',
+        inputRange: [-100, -40, 0],
+        outputRange: [1, 0.85, 0.6],
+      });
 
   return (
     <Animated.View

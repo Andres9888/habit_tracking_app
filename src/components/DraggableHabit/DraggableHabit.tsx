@@ -34,7 +34,7 @@
  * when a sibling card's props change but this card's haven't.
  */
 
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { useHabitCardEntrance } from '../HabitCard/useHabitCardEntrance';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useDraggableHabitAnimations } from './useDraggableHabitAnimations';
@@ -43,6 +43,7 @@ import { usePressHandlers } from './usePressHandlers';
 import { useDraggableHabitState } from './useDraggableHabitState';
 import { useCardStrengthFill } from './useCardStrengthFill';
 import { DraggableHabitCard } from './DraggableHabitCard';
+import { ConfirmActionModal } from '../ConfirmActionModal';
 import type { DraggableHabitProps } from './types';
 
 function DraggableHabit(props: DraggableHabitProps) {
@@ -116,19 +117,30 @@ function DraggableHabit(props: DraggableHabitProps) {
     reduceMotionPreference
   );
 
-  // 7. Press / long-press / swipe handlers
+  // 7. Confirmation modal state
+  const [showArchiveConfirm, setShowArchiveConfirm] = useState(false);
+
+  // 8. Press / long-press / swipe handlers
   const pressHandlers = usePressHandlers({
     archiveFlash: animations.archiveFlash,
     cardScale: animations.cardScale,
     habit,
-    onArchive,
+    onArchive: onArchive
+      ? () => setShowArchiveConfirm(true)
+      : undefined,
     onLongPress,
     triggerSelection,
     triggerHeavyImpact,
   });
 
+  const handleConfirmArchive = () => {
+    setShowArchiveConfirm(false);
+    onArchive?.(habit._id);
+  };
+
   return (
-    <DraggableHabitCard
+    <>
+      <DraggableHabitCard
       {...state}
       {...animations}
       {...pressHandlers}
@@ -158,6 +170,16 @@ function DraggableHabit(props: DraggableHabitProps) {
       onPress={onPress}
       onWeekComplete={onWeekComplete}
     />
+      {onArchive && (
+        <ConfirmActionModal
+          actionType="archive"
+          habitName={habit.name}
+          visible={showArchiveConfirm}
+          onCancel={() => setShowArchiveConfirm(false)}
+          onConfirm={handleConfirmArchive}
+        />
+      )}
+    </>
   );
 }
 
