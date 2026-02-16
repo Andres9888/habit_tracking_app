@@ -8,6 +8,8 @@
  * - Selected preset shows green border
  * - Custom time shows green border when set
  * - Next reminder badge updates on time change
+ * - Notification preview showing what the alert looks like
+ * - Smart suggestions based on reminder time
  * - Keyboard dismissed on any interaction
  * - All elements have accessibility labels
  * - Haptic feedback on selection
@@ -18,6 +20,9 @@ import { View } from 'react-native';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import { TimePickerModal } from '../TimePickerModal';
 import { NextReminderBadge } from '../NextReminderBadge';
+import { ReminderNotificationPreview } from '../ReminderNotificationPreview';
+import { ReminderSmartSuggestion } from '../ReminderSmartSuggestion';
+import { QuietHoursWarning } from '../QuietHoursWarning';
 import { DEFAULT_PRESETS } from './constants';
 import { useReminderSelector } from './useReminderSelector';
 import { ToggleRow } from './ToggleRow';
@@ -32,6 +37,10 @@ function EnhancedReminderSelectorComponent({
   onTimeChange,
   presets = DEFAULT_PRESETS,
   showNextReminder = true,
+  quietHoursEnabled = false,
+  quietHoursStartTime = '22:00',
+  quietHoursEndTime = '07:00',
+  habitName = 'Your habit',
 }: EnhancedReminderSelectorProps) {
   const reduceMotion = useReduceMotion();
 
@@ -69,6 +78,28 @@ function EnhancedReminderSelectorComponent({
             customTimeLabel={customTimeLabel}
             isCustomTime={isCustomTime}
             onPress={handleCustomTimePress}
+          />
+
+          {/* Notification preview */}
+          <ReminderNotificationPreview
+            reminderTime={reminderTime}
+            habitName={habitName}
+            showPreview={true}
+          />
+
+          {/* Quiet hours warning if applicable */}
+          <QuietHoursWarning
+            reminderTime={reminderTime}
+            quietHoursEnabled={quietHoursEnabled}
+            quietHoursStartTime={quietHoursStartTime}
+            quietHoursEndTime={quietHoursEndTime}
+          />
+
+          {/* Smart suggestion based on time */}
+          <ReminderSmartSuggestion
+            enabled={enabled}
+            hour={reminderTime.getHours()}
+            minute={reminderTime.getMinutes()}
           />
 
           {showNextReminder && (

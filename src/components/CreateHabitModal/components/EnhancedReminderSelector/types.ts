@@ -25,6 +25,12 @@ export interface EnhancedReminderSelectorProps {
   presets?: ReminderPreset[];
   /** Whether to show the next reminder badge (default: true) */
   showNextReminder?: boolean;
+  /** Optional quiet hours configuration for warning display */
+  quietHoursEnabled?: boolean;
+  quietHoursStartTime?: string; // "HH:MM" format
+  quietHoursEndTime?: string; // "HH:MM" format
+  /** Optional habit name for notification preview */
+  habitName?: string;
 }
 
 export interface PresetButtonProps {
