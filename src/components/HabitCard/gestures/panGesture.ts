@@ -11,7 +11,7 @@ import {
   runOnJS,
   type SharedValue,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { HapticPatterns } from '../../../utils/haptics/patterns';
 import { springs } from '../../../theme/animations';
 import { SWIPE_THRESHOLD, ACTION_WIDTH } from '../HabitCard.constants';
 

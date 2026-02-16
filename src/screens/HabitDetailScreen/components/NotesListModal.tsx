@@ -26,6 +26,7 @@ export function NotesListModal({
 
   return (
     <RNModal animationType='slide' visible={isOpen} onRequestClose={onClose}>
+      accessibilityViewIsModal
       <View
         className='flex-1'
         style={{

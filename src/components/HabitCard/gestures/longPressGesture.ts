@@ -5,7 +5,7 @@
 
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { HapticPatterns } from '../../../utils/haptics/patterns';
 
 interface LongPressGestureOptions {
   disabled: boolean;

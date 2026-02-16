@@ -6,11 +6,13 @@ import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import { useThemeColors } from '../../../theme';
+import { colors } from '../../../theme/colors';
 import type { Habit } from '../../../features/habits/types';
 
 interface HabitDetailContentProps {
   habit: Habit;
   completedDates: Set<string>;
+  notesByDate?: Record<string, string>;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
@@ -49,6 +51,7 @@ function SectionLabel({
 export function HabitDetailContent({
   habit,
   completedDates,
+  notesByDate,
   onDayPress,
 }: HabitDetailContentProps) {
   const { colors, isDark } = useThemeColors();
@@ -110,9 +113,10 @@ export function HabitDetailContent({
         <ErrorBoundary>
           <MonthlyCalendarGrid
             completedDates={completedDates}
-            habitColor={habit.color ?? habit.iconColor ?? '#047857'}
+            habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
             habitCreatedAt={habit.createdAt}
             habitId={habit._id}
+            notesByDate={notesByDate}
             onDayPress={onDayPress}
           />
         </ErrorBoundary>

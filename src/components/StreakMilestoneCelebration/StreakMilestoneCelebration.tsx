@@ -153,6 +153,7 @@ export function StreakMilestoneCelebration({
   return (
     <>
       <Modal
+        accessibilityViewIsModal
         backdropOpacity={0.7}
         style={styles.modalContent}
         variant='fullScreen'
