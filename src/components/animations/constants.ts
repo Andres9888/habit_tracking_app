@@ -52,3 +52,13 @@ export const STAGGER_DELAY = 80;
  * Allows content to settle before showing completion indicators
  */
 export const BASE_CHECKMARK_DELAY = 600;
+
+/**
+ * Design-system spring — the default "premium feel" spring.
+ * Damping 18, stiffness 150 per design system spec.
+ * Good for: micro-interactions, count-ups, progress fills.
+ */
+export const SPRING_PREMIUM: WithSpringConfig = {
+  damping: 18,
+  stiffness: 150,
+};

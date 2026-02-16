@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
+import { safeParseNumber } from '../../utils/validation';
 
 export interface HabitCardValues {
   translateX: ReturnType<typeof useSharedValue<number>>;
@@ -24,9 +25,12 @@ export interface HabitCardValues {
 }
 
 export function useHabitCardValues(strength: number): HabitCardValues {
+  // Validate and clamp strength to 0-100 range
+  const safeStrength = safeParseNumber(strength, 0, 0, 100);
+
   const translateX = useSharedValue(0);
   const cardScale = useSharedValue(1);
-  const strengthFillWidth = useSharedValue(strength);
+  const strengthFillWidth = useSharedValue(safeStrength);
   const [showFloatingXP, setShowFloatingXP] = useState(false);
   const [xpPosition, setXPPosition] = useState({ x: 0, y: 0 });
   const [isToggling, setIsToggling] = useState(false);

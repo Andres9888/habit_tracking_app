@@ -32,10 +32,15 @@ export function ContentSection({
         {milestone.title}
       </Animated.Text>
 
+      {/* Subtitle */}
+      <Animated.Text style={[styles.subtitle, contentAnimatedStyle]}>
+        You've built an incredible habit!
+      </Animated.Text>
+
       {/* Content */}
       <Animated.View style={contentAnimatedStyle}>
         {/* Streak Count */}
-        <View style={styles.streakBadge}>
+        <View style={[styles.streakBadge, { alignSelf: 'center' }]}>
           <Text style={[styles.streakCount, { color: milestone.color }]}>
             {streakDays}
           </Text>
@@ -43,7 +48,7 @@ export function ContentSection({
         </View>
 
         {/* Habit Info */}
-        <View style={styles.habitRow}>
+        <View style={[styles.habitRow, { justifyContent: 'center' }]}>
           <Text style={styles.habitEmoji}>{habitEmoji}</Text>
           <Text numberOfLines={1} style={styles.habitName}>
             {habitName}

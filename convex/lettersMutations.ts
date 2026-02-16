@@ -10,6 +10,7 @@ import {
   validateShortText,
   requireValid,
 } from './lib/inputValidation';
+import { requirePremium } from './subscriptions/premiumCheck';
 
 /**
  * Create a new letter to self
@@ -27,6 +28,9 @@ export const create = mutation({
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to create letters');
     }
+
+    // SEC-005: Premium feature — Letters to Self requires premium
+    await requirePremium(ctx, identity.subject, 'Letters to Self');
 
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');

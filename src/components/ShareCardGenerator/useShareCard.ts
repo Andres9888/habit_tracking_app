@@ -18,6 +18,7 @@ import {
   DEFAULT_PLATFORM,
   APP_STORE_LINK,
 } from './ShareCardGenerator.constants';
+import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 export function useShareCard(data: ShareCardData) {
   const viewShotRef = useRef<ViewShot>(null);
@@ -73,7 +74,7 @@ export function useShareCard(data: ShareCardData) {
       }
     } catch (error) {
       if (__DEV__) console.error('Error sharing card:', error);
-      alert('Failed to share card. Please try again.');
+      alert(ERROR_MESSAGES.DATA_OPS.SHARE_CARD_FAILED);
     } finally {
       setIsGenerating(false);
     }
