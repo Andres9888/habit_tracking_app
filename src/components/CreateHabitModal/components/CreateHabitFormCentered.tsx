@@ -33,13 +33,13 @@ const CreateHabitFormCenteredComponent = ({
       {/* Centered top section - name input */}
       <View
         className='items-center'
-        style={{ marginBottom: 48, marginTop: 32 }}
+        style={{ marginBottom: 40, marginTop: 28 }}
       >
         <Text
-          className='mb-6 text-center text-4xl font-bold leading-tight'
+          className='mb-6 text-center text-[28px] font-bold leading-tight'
           style={{ color: themeColors.text.primary }}
         >
-          What habit do you want to build?
+          Name your new habit
         </Text>
 
         <TextInput
@@ -54,28 +54,40 @@ const CreateHabitFormCenteredComponent = ({
             lineHeight: 28,
             color: themeColors.text.primary,
             backgroundColor: isDark ? themeColors.card : '#FFFFFF',
-            borderColor: showNameError ? '#f87171' : themeColors.border,
+            borderColor: showNameError
+              ? '#f87171'
+              : isDark
+                ? themeColors.border
+                : themeColors.border,
           }}
           value={habitName}
           onChangeText={onHabitNameChange}
           onSubmitEditing={Keyboard.dismiss}
         />
 
-        {/* Error message or character counter */}
+        {/* Error message or character counter (only when typing) */}
         {showNameError ? (
           <Text
             accessibilityLiveRegion='polite'
             accessibilityRole='alert'
-            className='mt-3 text-xs font-medium text-red-500'
+            className='mt-3 text-sm font-medium'
+            style={{ color: '#ef4444' }}
           >
-            Please enter a habit name (at least 2 characters)
+            Give your habit a name (at least 2 characters)
+          </Text>
+        ) : habitName.length > 0 ? (
+          <Text
+            className='mt-3 text-xs'
+            style={{ color: themeColors.text.tertiary }}
+          >
+            {habitName.length}/50 characters
           </Text>
         ) : (
           <Text
             className='mt-3 text-xs'
             style={{ color: themeColors.text.tertiary }}
           >
-            {habitName.length}/50 characters
+            Be specific — include when, how long, or where
           </Text>
         )}
       </View>
