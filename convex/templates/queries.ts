@@ -1,5 +1,9 @@
 /**
  * Template query functions
+ * 
+ * SEC-PUBLIC: All template queries are intentionally public.
+ * Templates are a browsable library meant to be accessible before login
+ * to encourage user onboarding. They contain no user data.
  */
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
@@ -7,6 +11,7 @@ import { categoryValidator } from './types';
 
 /**
  * Query: List all templates, optionally filtered by category
+ * INTENTIONALLY PUBLIC - no auth required
  */
 export const list = query({
   args: {

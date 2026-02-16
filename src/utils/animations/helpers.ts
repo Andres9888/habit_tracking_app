@@ -46,9 +46,7 @@ export const SPRING_CONFIGS = {
     stiffness: 100,
   } as WithSpringConfig,
 
-  /** Snappy interaction feedback — button presses
-   * Updated to match design system (was 240, now 150)
-   */
+  /** Snappy interaction feedback — button presses (design system standard) */
   snappy: {
     damping: 18,
     mass: 1,

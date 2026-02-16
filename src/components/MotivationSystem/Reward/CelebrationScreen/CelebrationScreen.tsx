@@ -31,6 +31,7 @@ export function CelebrationScreen(props: CelebrationScreenProps) {
 
   return (
     <Modal
+      accessibilityViewIsModal
       respectReduceMotion={!reduceMotion}
       variant='fullScreen'
       visible={visible}

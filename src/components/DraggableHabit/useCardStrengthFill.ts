@@ -1,6 +1,12 @@
 /**
- * useCardStrengthFill — animated width for watercolor fill background.
- * Reads showGradientFill setting directly from Convex to avoid prop threading.
+ * useCardStrengthFill — Reanimated width for the watercolor fill background.
+ *
+ * Animates a `width: N%` style that drives the {@link StrengthFillBackground}
+ * gradient behind the card content. First render uses a delayed ease-in;
+ * subsequent changes use a spring. Reads `showGradientFill` from Convex settings
+ * directly to avoid prop-threading through the component tree.
+ *
+ * @returns `{ isDark, showGradientFill, strengthFillStyle }`
  */
 
 import { useEffect, useRef } from 'react';

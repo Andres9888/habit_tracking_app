@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Account section for settings modal
  */
@@ -115,11 +116,6 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
 
   return (
     <>
-      <PremiumStatus
-        highContrast={isHighContrastActive}
-        isPremium={isPremium}
-        onUpgrade={onPremiumUpsell}
-      />
       <AccountInfo
         email={userEmail}
         highContrast={isHighContrastActive}
@@ -127,6 +123,11 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
         isLoading={isSigningOut}
         onDeleteAccount={handleDeleteAccount}
         onSignOut={handleSignOut}
+      />
+      <PremiumStatus
+        highContrast={isHighContrastActive}
+        isPremium={isPremium}
+        onUpgrade={onPremiumUpsell}
       />
       <AppActions
         highContrast={isHighContrastActive}

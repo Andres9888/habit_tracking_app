@@ -1,6 +1,13 @@
 /**
- * useDraggableHabitAnimations Hook
- * Main orchestrator for DraggableHabit card animations
+ * useDraggableHabitAnimations — Main orchestrator for card-level RN Animated values.
+ *
+ * Creates all `Animated.Value` refs and delegates to sub-hooks:
+ * - {@link useEntranceAnimation} — fade + slide on mount
+ * - {@link useHighlightAnimation} — glow border for just-created cards
+ * - {@link useIconPulse} — breathing icon for perfect weeks
+ * - {@link useNewRecordAnimation} — badge + haptics for new streak records
+ *
+ * Returns the animated values and `showNewRecord` state for the card renderer.
  */
 
 import { useRef, useState } from 'react';

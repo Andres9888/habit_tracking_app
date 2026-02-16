@@ -1,7 +1,13 @@
 /**
- * MonetizationHero Component
- * Premium upgrade card with animated progress and CTA
- * 
+ * MonetizationHero — dark-themed premium upgrade card with progress bar.
+ *
+ * Part of the **monetization flow**: displays the user's free-tier slot usage
+ * as an animated progress bar, a pulsing "Start Free Trial" CTA, and a
+ * shimmering "Keep 3 habits free" label.
+ *
+ * All animations are driven by {@link useMonetizationAnimations} and respect
+ * the `reduceMotion` preference.
+ *
  * Performance: Uses Reanimated for smooth UI-thread animations
  */
 

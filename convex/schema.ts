@@ -152,7 +152,10 @@ const applicationTables = {
     // Habit Edit Screen fields
     icon: v.optional(v.string()),
 
-    // Emoji icon
+    // Accent color used for habit card border/icon background
+    color: v.optional(v.string()),
+
+    // Emoji icon background color (legacy, retained for compatibility)
     iconColor: v.optional(v.string()),
 
     // Identity - who you are becoming (James Clear's identity-based habits)
@@ -419,6 +422,8 @@ const applicationTables = {
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),
   }).index('by_category', ['category']),
+  // Note: No index on popularityScore — it's optional and template count is small (~200)
+  // In-memory sorting in getPopular() is more efficient than index on optional field
 
   // Track template usage analytics
   templateUsage: defineTable({
