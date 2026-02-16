@@ -10,10 +10,10 @@ import {
   withTiming,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
 interface UseHeaderToggleProps {
   completedToday: boolean;
@@ -34,6 +34,7 @@ export function useHeaderToggle({
   const reduceMotion = useReduceMotion();
 
   const buttonScale = useSharedValue(1);
+  const { triggerSuccess, triggerLightImpact } = useHapticFeedback();
 
   const toggleCompletionMutation = useToggleHabitWithTimezone();
   const today = getTodayString();
@@ -48,12 +49,12 @@ export function useHeaderToggle({
 
     setIsToggling(true);
 
-    // Haptic feedback
-    Haptics.impactAsync(
-      localCompleted
-        ? Haptics.ImpactFeedbackStyle.Light
-        : Haptics.ImpactFeedbackStyle.Medium
-    );
+    // Haptic feedback: success pattern when completing, light tap when uncompleting
+    if (!localCompleted) {
+      triggerSuccess();
+    } else {
+      triggerLightImpact();
+    }
 
     // Button animation
     buttonScale.value = withSequence(
@@ -93,6 +94,8 @@ export function useHeaderToggle({
     buttonScale,
     onComplete,
     onUncomplete,
+    triggerSuccess,
+    triggerLightImpact,
   ]);
 
   return {

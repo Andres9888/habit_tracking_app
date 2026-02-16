@@ -4,8 +4,9 @@
  * Ultra-minimal empty state design focused on a single question flow.
  */
 
-import { useRef } from 'react';
-import { TextInput } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Platform, TextInput } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -38,6 +39,16 @@ export function HabitsEmptyStateMinimal({
 
   const flow = useHabitCreationFlow({ inputRef, onQuickCreateHabit });
 
+  // Auto-focus input after entrance animations complete (iOS only — Android keyboards can be jarring)
+  useEffect(() => {
+    if (!isLoading && Platform.OS === 'ios') {
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 800); // After entrance animations settle
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, inputRef]);
+
   if (flow.successHabitName) {
     return (
       <SuccessState
@@ -55,19 +66,24 @@ export function HabitsEmptyStateMinimal({
   }
 
   return (
-    <Animated.View
-      style={[
-        {
-          alignItems: 'center',
-          flex: 1,
-          justifyContent: 'center',
-          minHeight: '100%',
-          paddingHorizontal: 24,
-          width: '100%',
-        },
-        animations.containerAnimatedStyle,
-      ]}
+    <LinearGradient
+      colors={['#FAFAF9', '#F0FDF4', '#ECFDF5', '#F0FDF4', '#FAFAF9']}
+      locations={[0, 0.25, 0.5, 0.75, 1]}
+      style={{ flex: 1, minHeight: '100%', width: '100%' }}
     >
+      <Animated.View
+        style={[
+          {
+            alignItems: 'center',
+            flex: 1,
+            justifyContent: 'center',
+            minHeight: '100%',
+            paddingHorizontal: 24,
+            width: '100%',
+          },
+          animations.containerAnimatedStyle,
+        ]}
+      >
       <HeroSection
         headlineAnimatedStyle={animations.headlineAnimatedStyle}
         heroAnimatedStyle={animations.heroAnimatedStyle}
@@ -100,6 +116,7 @@ export function HabitsEmptyStateMinimal({
         onCreateHabit={flow.handleCreateHabit}
         onDismissError={flow.handleDismissError}
       />
-    </Animated.View>
+      </Animated.View>
+    </LinearGradient>
   );
 }

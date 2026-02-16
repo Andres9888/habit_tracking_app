@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
   container: { flex: 1 },
   flex: { flex: 1 },
   footer: { marginTop: 32, paddingHorizontal: 16 },
-  footerLink: { color: '#047857', textDecorationLine: 'underline' },
+  footerLink: { color: colors.primary[700], textDecorationLine: 'underline' },
   footerText: {
     color: '#57534e',
     fontSize: 13,
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
   gradientBg: { backgroundColor: colors.light.background, flex: 1 },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 24,
     elevation: 4,
     height: 88,
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 16,
     width: 88,
   },
-  inputFocused: { borderColor: '#047857', borderWidth: 2 },
+  inputFocused: { borderColor: colors.primary[700], borderWidth: 2 },
   scrollContent: { flexGrow: 1, paddingHorizontal: 24 },
   socialButtons: { gap: 12 },
   tagline: {

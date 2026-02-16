@@ -8,7 +8,7 @@ import Animated from 'react-native-reanimated';
 import { X, Share2 } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { headerStyles } from '../styles';
+import { headerStyles, themedHeaderStyles } from '../styles';
 import type { HeaderProps } from '../TemplateScienceModal.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -25,14 +25,15 @@ export const ModalHeader = ({
 }: HeaderProps) => {
   const theme = useAppTheme();
   const { colors } = useThemeColors();
+  const themed = themedHeaderStyles(colors);
 
   return (
-    <Animated.View style={[headerStyles.header, headerAnimatedStyle]}>
+    <Animated.View style={[themed.header, headerAnimatedStyle]}>
       <AnimatedPressable
         accessibilityHint='Share this template with others'
         accessibilityLabel='Share template'
         accessibilityRole='button'
-        style={[headerStyles.shareButton, shareButtonAnimatedStyle]}
+        style={[themed.shareButton, shareButtonAnimatedStyle]}
         hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
         onPress={onShare}
         {...pressHandlers}
@@ -44,7 +45,7 @@ export const ModalHeader = ({
         <Text
           numberOfLines={1}
           style={[
-            headerStyles.headerTitle,
+            themed.headerTitle,
             { fontFamily: theme.custom.fontFamilies.primary.text },
           ]}
         >
@@ -56,7 +57,7 @@ export const ModalHeader = ({
         accessibilityHint='Double tap to close this modal'
         accessibilityLabel='Close habit details'
         accessibilityRole='button'
-        style={[headerStyles.closeButton, closeButtonAnimatedStyle]}
+        style={[themed.closeButton, closeButtonAnimatedStyle]}
         hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
         onPress={onClose}
         {...pressHandlers}
