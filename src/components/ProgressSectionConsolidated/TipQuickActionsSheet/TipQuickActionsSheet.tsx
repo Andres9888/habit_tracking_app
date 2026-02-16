@@ -10,6 +10,7 @@ import { X } from 'lucide-react-native';
 import { Modal } from '../../Modal';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { TipQuickActionsSheetProps, QuickAction } from './types';
 import { getQuickActionsForTipType } from './getQuickActionsForTipType';
 import { QuickActionItem } from './QuickActionItem';
@@ -26,6 +27,7 @@ export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
 }: TipQuickActionsSheetProps) {
   const reduceMotion = useReduceMotion();
   const { triggerLightImpact } = useHapticFeedback();
+  const { colors } = useThemeColors();
 
   const quickActions = useMemo(
     () => getQuickActionsForTipType(tipType, focusDayName, currentStreak),
@@ -56,8 +58,8 @@ export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
       >
         <View style={styles.header}>
           <View style={styles.headerTextContainer}>
-            <Text style={styles.headerTitle}>Quick Actions</Text>
-            <Text numberOfLines={2} style={styles.headerSubtitle}>
+            <Text style={[styles.headerTitle, { color: colors.text.primary }]}>Quick Actions</Text>
+            <Text numberOfLines={2} style={[styles.headerSubtitle, { color: colors.text.secondary }]}>
               {tipText}
             </Text>
           </View>
@@ -69,11 +71,11 @@ export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
             testID='close-quick-actions'
             onPress={handleClose}
           >
-            <X color='#78716c' size={24} strokeWidth={2} />
+            <X color={colors.text.secondary} size={24} strokeWidth={2} />
           </Pressable>
         </View>
 
-        <View style={styles.divider} />
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
         <View style={styles.actionsList}>
           {quickActions.map((action, index) => (

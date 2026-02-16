@@ -10,7 +10,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Modal } from './Modal';
 import { Button } from './Button/Button';
-import { useAppTheme } from '../theme';
+import { useThemeColors } from '../theme/ThemeContext';
 import { typography } from '../theme/typography';
 
 interface PauseHabitModalProps {
@@ -26,17 +26,17 @@ export function PauseHabitModal({
   onConfirm,
   onCancel,
 }: PauseHabitModalProps) {
-  const theme = useAppTheme();
+  const { colors } = useThemeColors();
 
   return (
     <Modal variant='centerAlert' visible={visible} onClose={onCancel}>
       <View style={styles.container}>
-        <Text style={[styles.title, { color: theme.custom.colors.gray[900] }]}>
+        <Text style={[styles.title, { color: colors.text.primary }]}>
           Pause "{habitName}"?
         </Text>
 
         <Text
-          style={[styles.message, { color: theme.custom.colors.gray[600] }]}
+          style={[styles.message, { color: colors.text.secondary }]}
         >
           This habit will be hidden from your daily list, but your progress and
           strength will be preserved. You can resume it anytime from Settings.

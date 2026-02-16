@@ -1,5 +1,8 @@
 /**
  * TipQuickActionsSheet Styles
+ *
+ * Layout-only styles. Colors are applied dynamically via useThemeColors()
+ * to support dark mode.
  */
 
 import { StyleSheet } from 'react-native';
@@ -15,11 +18,7 @@ export const styles = StyleSheet.create({
     gap: 12,
     padding: 12,
   },
-  actionItemPressed: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-  },
   actionLabel: {
-    color: '#1c1917',
     fontSize: 15,
     fontWeight: '600',
   },
@@ -29,7 +28,6 @@ export const styles = StyleSheet.create({
     paddingTop: 8,
   },
   actionSubtitle: {
-    color: '#78716c',
     fontSize: 13,
     marginTop: 2,
   },
@@ -49,7 +47,6 @@ export const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   divider: {
-    backgroundColor: '#e7e5e4',
     height: 1,
     marginHorizontal: 16,
   },
@@ -62,7 +59,6 @@ export const styles = StyleSheet.create({
     paddingTop: 8,
   },
   headerSubtitle: {
-    color: '#78716c',
     fontSize: typography.bodySmall.fontSize,
     marginTop: 4,
   },
@@ -71,7 +67,6 @@ export const styles = StyleSheet.create({
     paddingRight: 8,
   },
   headerTitle: {
-    color: '#1c1917',
     fontSize: 17,
     fontWeight: '700',
   },

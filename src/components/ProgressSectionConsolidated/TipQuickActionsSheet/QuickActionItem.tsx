@@ -8,6 +8,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { QuickAction } from './types';
 import { ICON_MAP, ACTION_COLORS } from './constants';
 import { styles } from './styles';
@@ -26,8 +27,9 @@ export const QuickActionItem = React.memo(function QuickActionItem({
   reduceMotion,
 }: QuickActionItemProps) {
   const { triggerLightImpact } = useHapticFeedback();
+  const { colors: themeColors, isDark } = useThemeColors();
   const Icon = ICON_MAP[action.icon];
-  const colors = ACTION_COLORS[action.actionType];
+  const actionColors = ACTION_COLORS[action.actionType];
 
   const handlePress = () => {
     triggerLightImpact();
@@ -48,7 +50,7 @@ export const QuickActionItem = React.memo(function QuickActionItem({
         accessibilityRole='button'
         style={({ pressed }) => [
           styles.actionItem,
-          pressed && styles.actionItemPressed,
+          pressed && { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)' },
         ]}
         testID={`quick-action-${action.id}`}
         onPress={handlePress}
@@ -56,14 +58,14 @@ export const QuickActionItem = React.memo(function QuickActionItem({
         <View
           accessibilityElementsHidden
           importantForAccessibility='no-hide-descendants'
-          style={[styles.iconContainer, { backgroundColor: colors.bg }]}
+          style={[styles.iconContainer, { backgroundColor: actionColors.bg }]}
         >
-          <Icon color={colors.icon} size={20} strokeWidth={2} />
+          <Icon color={actionColors.icon} size={20} strokeWidth={2} />
         </View>
         <View style={styles.actionTextContainer}>
-          <Text style={styles.actionLabel}>{action.label}</Text>
+          <Text style={[styles.actionLabel, { color: themeColors.text.primary }]}>{action.label}</Text>
           {action.subtitle && (
-            <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
+            <Text style={[styles.actionSubtitle, { color: themeColors.text.secondary }]}>{action.subtitle}</Text>
           )}
         </View>
       </Pressable>
