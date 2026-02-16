@@ -111,7 +111,7 @@ export function useLetterNotification({
           unlockAt,
         });
 
-        if (!notificationId && __DEV__ && __DEV__) console.warn('[useLetterNotification] Notification scheduling failed:', letterId);
+        if (!notificationId && __DEV__) console.warn('[useLetterNotification] Notification scheduling failed:', letterId);
 
         onSuccess?.(letterId);
         return letterId;

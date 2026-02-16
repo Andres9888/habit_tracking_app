@@ -55,6 +55,6 @@ export function trackEvent(event: CreateHabitModalEvent): void {
     analyticsTracker.track(event);
   } catch (error) {
     // Silently fail - don't let analytics errors break the app
-    if (__DEV__ && __DEV__) console.error('[Analytics] Error tracking event:', error);
+    if (__DEV__) console.error('[Analytics] Error tracking event:', error);
   }
 }
