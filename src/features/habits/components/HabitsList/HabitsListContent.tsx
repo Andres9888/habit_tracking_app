@@ -36,6 +36,14 @@ export function HabitsListContent({
   const { list, modals, onUpgradeIntent } = props;
   const { upgradePromptVisible, onUpgradeDismiss, onUpgradeConfirm } = props;
 
+  // Filter habits by selected category
+  const filteredHabits = useMemo(() => {
+    if (!state.selectedCategoryFilter) {
+      return list.habits;
+    }
+    return list.habits.filter((habit) => habit.category === state.selectedCategoryFilter);
+  }, [list.habits, state.selectedCategoryFilter]);
+
   const contentContainerStyle = useMemo(
     () => ({
       paddingBottom: list.contentPadding.paddingBottom,
@@ -89,7 +97,7 @@ export function HabitsListContent({
       <DraggableFlatList<Habit>
         activationDistance={handlers.isReorderingEnabled ? 12 : 9999}
         contentContainerStyle={contentContainerStyle}
-        data={list.habits}
+        data={filteredHabits}
         keyExtractor={handlers.keyExtractor}
         ListEmptyComponent={listEmptyComponent}
         ListFooterComponent={listFooterComponent}

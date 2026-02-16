@@ -23,6 +23,7 @@ import {
   TrialCountdownBanner,
   useTrialCountdown,
 } from '../../../../components/TrialCountdownBanner';
+import { CategoryFilterBar } from './CategoryFilterBar';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
@@ -84,6 +85,12 @@ function HabitsListHeaderComponent(
           />
         </Animated.View>
       )}
+
+      {/* Category Filter Bar */}
+      <CategoryFilterBar
+        selectedCategory={props.selectedCategoryFilter}
+        onCategoryChange={props.onCategoryFilterChange}
+      />
 
       {/* Trial Countdown Banner */}
       {shouldShowBanner && daysRemaining !== null && (

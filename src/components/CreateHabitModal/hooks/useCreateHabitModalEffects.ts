@@ -42,6 +42,7 @@ interface HabitDataParams {
   fullHabitName: string;
   reminderSound: string | null;
   reminderTime: Date;
+  selectedCategory: string;
   selectedColor: string;
   selectedEmoji: string | null;
 }
@@ -53,6 +54,7 @@ export function useHabitData(params: HabitDataParams) {
       fullHabitName: params.fullHabitName,
       reminderSound: params.reminderSound,
       reminderTime: params.reminderTime,
+      selectedCategory: params.selectedCategory,
       selectedColor: params.selectedColor,
       selectedEmoji: params.selectedEmoji,
     }),
@@ -61,6 +63,7 @@ export function useHabitData(params: HabitDataParams) {
       params.fullHabitName,
       params.reminderSound,
       params.reminderTime,
+      params.selectedCategory,
       params.selectedColor,
       params.selectedEmoji,
     ]

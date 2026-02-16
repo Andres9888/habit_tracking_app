@@ -35,9 +35,11 @@ export function CreateHabitScrollContent({
           habitName={form.habitName}
           reminderEnabled={form.remindersEnabled}
           reminderTime={form.reminderTime}
+          selectedCategory={form.selectedCategory}
           selectedColor={form.selectedColor}
           selectedEmoji={form.selectedEmoji}
           showNameError={showNameError}
+          onCategorySelect={callbacks.handleCategorySelect}
           onColorSelect={callbacks.handleColorSelect}
           onEmojiSelect={callbacks.handleEmojiSelect}
           onHabitNameChange={callbacks.handleNameChange}

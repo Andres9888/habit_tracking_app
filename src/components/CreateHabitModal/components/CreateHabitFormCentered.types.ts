@@ -16,6 +16,8 @@ export interface CreateHabitFormCenteredProps {
   onReminderToggle: (enabled: boolean) => void;
   /** Called when reminder time changes (preset or custom selection) */
   onReminderTimeChange: (time: Date) => void;
+  selectedCategory?: string;
+  onCategorySelect?: (categoryId: string) => void;
   onSubmit: () => void;
   autoFocus?: boolean;
   /** Whether to show validation error for empty habit name */

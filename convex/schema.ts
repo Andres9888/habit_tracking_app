@@ -207,6 +207,11 @@ const applicationTables = {
     // Last time strength was calculated
     strengthUpdatedAt: v.optional(v.number()),
 
+    // Habit category for grouping and filtering
+    // Default categories: "health", "productivity", "mindfulness", "fitness", "learning", "social"
+    // Custom categories available for premium users
+    category: v.optional(v.string()),
+
     tags: v.optional(v.array(v.string())),
 
     totalCompletions: v.optional(v.number()),

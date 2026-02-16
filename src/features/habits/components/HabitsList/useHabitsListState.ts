@@ -22,6 +22,9 @@ export function useHabitsListState() {
   const [isSortSheetOpen, setIsSortSheetOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [isDaySheetOpen, setIsDaySheetOpen] = useState(false);
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<
+    string | null
+  >(null);
   const [justCreatedHabitId, setJustCreatedHabitId] =
     useState<Id<'habits'> | null>(null);
   const [isInSuccessCelebration, setIsInSuccessCelebration] = useState(false);
@@ -52,11 +55,16 @@ export function useHabitsListState() {
     seenHabitIdsRef.current.add(habitId);
   }, []);
 
+  const handleCategoryFilterChange = useCallback((categoryId: string | null) => {
+    setSelectedCategoryFilter(categoryId);
+  }, []);
+
   return {
     calendarOpacity,
     calendarTranslateY,
     habitRowOpacity,
     habitRowTranslateY,
+    handleCategoryFilterChange,
     handleCloseDaySheet,
     handleCloseSortSheet,
     handleDayPress,
@@ -69,6 +77,7 @@ export function useHabitsListState() {
     isSortSheetOpen,
     justCreatedHabitId,
     seenHabitIdsRef,
+    selectedCategoryFilter,
     selectedDay,
     setIsInSuccessCelebration,
     setJustCreatedHabitId,

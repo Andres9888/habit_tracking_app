@@ -55,6 +55,9 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
       habitToEdit?.reminderTime
     )
   );
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    habitToEdit?.category ?? ''
+  );
 
   return {
     dayPhase,
@@ -66,6 +69,7 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     remindersEnabled,
     reminderSound,
     reminderTime,
+    selectedCategory,
     selectedColor,
     selectedEmoji,
     setColorPickerVisible,
@@ -76,6 +80,7 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     setRemindersEnabled,
     setReminderSound,
     setReminderTime,
+    setSelectedCategory,
     setSelectedColor,
     setSelectedEmoji,
     setShowTimePicker,

@@ -17,12 +17,14 @@ export interface HabitsListHeaderProps {
   justCreatedHabitId: string | null;
   reduceMotionPreference: boolean;
   showWeekCompletionBar: boolean;
+  selectedCategoryFilter: string | null;
   headerOpacity: Animated.Value;
   headerTranslateY: Animated.Value;
   calendarOpacity: Animated.Value;
   calendarTranslateY: Animated.Value;
   getHabitStatus: (habitId: string, dateString: string) => string;
   onAddHabitPress: () => void;
+  onCategoryFilterChange: (categoryId: string | null) => void;
   onDayPress: (date: Date) => void;
   onNextWeek: () => void;
   onPreviousWeek: () => void;

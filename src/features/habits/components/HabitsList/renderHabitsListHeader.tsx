@@ -45,10 +45,12 @@ export function renderHabitsListHeader({
       openSettings={modals.openSettings}
       openTemplatesScreen={modals.openTemplatesScreen}
       reduceMotionPreference={list.reduceMotionPreference}
+      selectedCategoryFilter={state.selectedCategoryFilter}
       showWeekCompletionBar={list.showWeekCompletionBar}
       weekDates={weekDates}
       weekDateStrings={list.weekDateStrings}
       onAddHabitPress={handlers.handleAddHabitPress}
+      onCategoryFilterChange={state.handleCategoryFilterChange}
       onDayPress={state.handleDayPress}
       onNextWeek={onNextWeek}
       onOpenSortSheet={state.handleOpenSortSheet}
