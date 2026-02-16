@@ -10,6 +10,7 @@ export interface Habit {
   createdAt: number;
   _creationTime: number;
   icon?: string;
+  color?: string;
   iconColor?: string;
   order?: number;
   preferredTime?: string;
