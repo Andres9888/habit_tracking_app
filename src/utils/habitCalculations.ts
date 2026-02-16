@@ -1,10 +1,13 @@
 /**
- * Habit Calculations Utility
+ * Habit Statistics Calculations
  *
  * Pure functions for calculating habit statistics:
  * - Best streak (longest consecutive completion sequence)
  * - Completion percentage (days completed / total days)
  * - Activity date/time formatting
+ *
+ * @module habitCalculations
+ * @category Statistics
  */
 
 import { format, parseISO, differenceInDays } from 'date-fns';
@@ -15,8 +18,21 @@ interface TrackingEntry {
 }
 
 /**
- * Calculate the all-time best streak for a habit
- * Returns the longest consecutive sequence of completed days in the entire history
+ * Calculate the all-time best streak for a habit.
+ * Returns the longest consecutive sequence of completed days in the entire history.
+ *
+ * @param tracking - Array of tracking entries with date and completed status
+ * @returns Maximum consecutive days completed (0 if none)
+ *
+ * @example
+ * const tracking = [
+ *   { date: '2024-01-01', completed: true },
+ *   { date: '2024-01-02', completed: true },
+ *   { date: '2024-01-03', completed: true },
+ *   { date: '2024-01-05', completed: true }, // gap
+ *   { date: '2024-01-06', completed: true },
+ * ];
+ * calculateBestStreak(tracking); // returns 3
  */
 export function calculateBestStreak(tracking: TrackingEntry[]): number {
   if (tracking.length === 0) return 0;
@@ -55,8 +71,20 @@ export function calculateBestStreak(tracking: TrackingEntry[]): number {
 }
 
 /**
- * Calculate completion percentage for a habit
- * Percentage of days completed since habit creation until today
+ * Calculate completion percentage for a habit.
+ * Percentage of days completed since habit creation until today.
+ *
+ * @param habitCreatedAt - Unix timestamp (ms) when habit was created
+ * @param tracking - Array of tracking entries
+ * @returns Completion percentage (0-100), rounded to nearest integer
+ *
+ * @example
+ * const tracking = [
+ *   { date: '2024-01-01', completed: true },
+ *   { date: '2024-01-02', completed: true },
+ *   { date: '2024-01-03', completed: false },
+ * ];
+ * calculateCompletionPercentage(1704067200000, tracking); // ~67 (2/3 days)
  */
 export function calculateCompletionPercentage(
   habitCreatedAt: number,
@@ -83,14 +111,26 @@ export function calculateCompletionPercentage(
 }
 
 /**
- * Format activity log date in "Sunday, October 19" format
+ * Format activity log date in "Sunday, October 19" format.
+ *
+ * @param date - Date string in YYYY-MM-DD format
+ * @returns Formatted date string (e.g., "Sunday, January 15")
+ *
+ * @example
+ * formatActivityDate('2024-01-15') // "Sunday, January 15"
  */
 export function formatActivityDate(date: string): string {
   return format(parseISO(date), 'EEEE, MMMM d');
 }
 
 /**
- * Format activity log time in "7:03 AM" format
+ * Format activity log time in "7:03 AM" format.
+ *
+ * @param timestamp - Unix timestamp in milliseconds
+ * @returns Formatted time string (e.g., "7:03 AM")
+ *
+ * @example
+ * formatActivityTime(1705333380000) // "7:03 AM" (depends on local timezone)
  */
 export function formatActivityTime(timestamp: number): string {
   return format(new Date(timestamp), 'h:mm a');

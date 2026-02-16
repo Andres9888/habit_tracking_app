@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const layoutStyles = StyleSheet.create({
   bottomSpacer: {
@@ -15,7 +16,6 @@ export const layoutStyles = StyleSheet.create({
     paddingTop: 100,
   },
   container: {
-    backgroundColor: '#FAFAF9',
     flex: 1,
   },
   content: {
@@ -34,10 +34,16 @@ export const layoutStyles = StyleSheet.create({
     zIndex: 100,
   },
   dismissPill: {
-    backgroundColor: '#6B7280',
-    borderRadius: 3,
+    borderRadius: 4,
     height: 5,
     marginBottom: 8,
     width: 40,
   },
 });
+
+export function themedLayoutStyles(colors: SemanticColors) {
+  return {
+    container: { backgroundColor: colors.background },
+    dismissPill: { backgroundColor: colors.gray[400] },
+  } as const;
+}

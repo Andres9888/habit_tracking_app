@@ -6,3 +6,4 @@ export {
   AnimatedPressable,
   type AnimatedPressableProps,
 } from './AnimatedPressable';
+export { ModalCloseButton } from './ModalCloseButton';

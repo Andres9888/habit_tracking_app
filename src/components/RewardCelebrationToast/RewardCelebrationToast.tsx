@@ -1,4 +1,5 @@
 import { Animated, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useRewardToastAnimation } from './useRewardToastAnimation';
@@ -25,7 +26,7 @@ export const RewardCelebrationToast = ({
 }: RewardCelebrationToastProps) => {
   const { translateY, opacity } = useRewardToastAnimation(visible);
   const { title, premiumCTA } = useRewardToastContent(streak);
-  const { triggerSelection, triggerLightImpact } = useHapticFeedback({});
+  const { triggerLightImpact } = useHapticFeedback({});
 
   return (
     <AnimatedContainer
@@ -41,10 +42,13 @@ export const RewardCelebrationToast = ({
         <Text className='mt-2 text-[17px] leading-[22px] text-stone-700'>
           {message}
         </Text>
-        <View
-          className='mt-3 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 p-3'
-          style={{ backgroundColor: '#faf5ff' }}
-        >
+        <View className='mt-3 rounded-2xl p-3'>
+          <LinearGradient
+            className='absolute inset-0 rounded-2xl'
+            colors={['#faf5ff', '#eff6ff']}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0 }}
+          />
           <Text className='text-[13px] font-semibold text-[#7c3aed]'>
             ✨ {premiumCTA.benefit}
           </Text>
@@ -55,7 +59,7 @@ export const RewardCelebrationToast = ({
             accessibilityLabel='Share streak'
             className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-4 py-2.5'
             onPress={() => {
-              triggerSelection();
+              triggerLightImpact();
               onSecondaryAction();
             }}
           >
@@ -69,7 +73,7 @@ export const RewardCelebrationToast = ({
             className='flex-1 items-center justify-center rounded-full px-4 py-2.5'
             style={{ backgroundColor: '#7c3aed' }}
             onPress={() => {
-              triggerSelection();
+              triggerLightImpact();
               onPrimaryAction();
             }}
           >

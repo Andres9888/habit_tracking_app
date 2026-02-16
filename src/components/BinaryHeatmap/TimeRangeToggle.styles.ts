@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { shadows, borderRadius } from '../../theme/spacing';
 import { typography } from '@/theme/typography';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { COLORS, FOCUS } from './constants';
 
 export const styles = StyleSheet.create({
@@ -19,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   buttonActive: {
     ...shadows.subtle,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff', // overridden by useThemedToggleStyles
     shadowOpacity: 0.1,
   },
   buttonText: {
@@ -33,7 +34,7 @@ export const styles = StyleSheet.create({
     color: COLORS.TEXT_SECONDARY,
   },
   container: {
-    backgroundColor: '#f5f5f4',
+    backgroundColor: '#f5f5f4', // overridden by useThemedToggleStyles
     borderRadius: borderRadius.small,
     flexDirection: 'row',
     padding: 2,
@@ -45,3 +46,18 @@ export const styles = StyleSheet.create({
     outlineWidth: FOCUS.RING_WIDTH,
   },
 });
+
+export function useThemedToggleStyles() {
+  const { colors } = useThemeColors();
+  return {
+    ...styles,
+    buttonActive: {
+      ...styles.buttonActive,
+      backgroundColor: colors.card,
+    },
+    container: {
+      ...styles.container,
+      backgroundColor: colors.gray[100],
+    },
+  };
+}

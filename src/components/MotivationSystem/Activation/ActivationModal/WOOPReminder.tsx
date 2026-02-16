@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Target } from 'lucide-react-native';
 
 interface WOOPReminderProps {
@@ -12,7 +13,13 @@ interface WOOPReminderProps {
  */
 export function WOOPReminder({ obstacle, plan }: WOOPReminderProps) {
   return (
-    <View className='rounded-2xl bg-gradient-to-r from-amber-50 to-emerald-50 p-4'>
+    <View className='rounded-2xl p-4'>
+      <LinearGradient
+        className='absolute inset-0 rounded-2xl'
+        colors={['#fffbeb', '#ecfdf5']}
+        end={{ x: 1, y: 0 }}
+        start={{ x: 0, y: 0 }}
+      />
       <View className='mb-2 flex-row items-center gap-2'>
         <View className='h-8 w-8 items-center justify-center rounded-lg bg-amber-100'>
           <Target className='text-amber-600' size={16} />

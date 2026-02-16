@@ -1,6 +1,6 @@
+/* eslint-disable max-lines */
 /**
  * StreakRemindersSection — Settings toggle for streak reminder notifications
- * with time picker for reminder time.
  */
 
 import { useState } from 'react';
@@ -9,6 +9,11 @@ import { Platform, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
+import {
+  timeStringToDate,
+  dateToTimeString,
+  formatDisplayTime,
+} from './timeHelpers';
 
 interface StreakRemindersSectionProps {
   highContrastMode: boolean;
@@ -18,26 +23,6 @@ interface StreakRemindersSectionProps {
   onToggle: (value: boolean) => void | Promise<void>;
   onChangeTime: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
-}
-
-function timeStringToDate(time: string): Date {
-  const [h, m] = time.split(':').map(Number);
-  const d = new Date();
-  d.setHours(h || 20, m || 0, 0, 0);
-  return d;
-}
-
-function dateToTimeString(date: Date): string {
-  const h = date.getHours().toString().padStart(2, '0');
-  const m = date.getMinutes().toString().padStart(2, '0');
-  return `${h}:${m}`;
-}
-
-function formatDisplayTime(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const ampm = (h || 0) >= 12 ? 'PM' : 'AM';
-  const hour12 = (h || 0) % 12 || 12;
-  return `${hour12}:${(m || 0).toString().padStart(2, '0')} ${ampm}`;
 }
 
 export function StreakRemindersSection({
@@ -52,12 +37,8 @@ export function StreakRemindersSection({
   const [showTimePicker, setShowTimePicker] = useState(false);
 
   const handleTimeChange = (_event: unknown, selectedDate?: Date) => {
-    if (Platform.OS === 'android') {
-      setShowTimePicker(false);
-    }
-    if (selectedDate) {
-      void onChangeTime(dateToTimeString(selectedDate));
-    }
+    if (Platform.OS === 'android') setShowTimePicker(false);
+    if (selectedDate) void onChangeTime(dateToTimeString(selectedDate));
   };
 
   return (
@@ -83,7 +64,7 @@ export function StreakRemindersSection({
             onPress={() => setShowTimePicker(!showTimePicker)}
           />
           {showTimePicker && (
-            <View style={{ paddingHorizontal: 16, paddingBottom: 8 }}>
+            <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
               <DateTimePicker
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 mode='time'
@@ -106,14 +87,8 @@ export function StreakRemindersSection({
         </>
       )}
       {!enabled && (
-        <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
-          <Text
-            style={{
-              color: '#78716c',
-              fontSize: 13,
-              lineHeight: 18,
-            }}
-          >
+        <View style={{ paddingBottom: 12, paddingHorizontal: 16 }}>
+          <Text style={{ color: '#78716c', fontSize: 13, lineHeight: 18 }}>
             Get a reminder if you haven't completed a habit with an active
             streak by your chosen time.
           </Text>

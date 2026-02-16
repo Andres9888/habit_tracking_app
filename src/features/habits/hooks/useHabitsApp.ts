@@ -1,10 +1,19 @@
+/**
+ * useHabitsApp — top-level composition hook for the habits screen.
+ *
+ * Combines list state (`useHabitsListState`), modal state
+ * (`useHabitsModalsState`), and notification routing into a single
+ * `UseHabitsAppResult` consumed by `HabitsAppContent`.
+ *
+ * This hook owns no UI state itself; it wires sub-hooks together and
+ * patches `list.handleHabitPress` to open the habit-detail screen.
+ */
+
 import { useMemo } from 'react';
 import { useHabitsListState } from './useHabitsListState';
 import { useHabitsModalsState } from './useHabitsModalsState';
 import { useNotificationResponse } from '../../../hooks/useNotificationResponse';
 import type { UseHabitsAppResult } from './types';
-
-// Re-export types for component imports
 
 export function useHabitsApp(): UseHabitsAppResult {
   const list = useHabitsListState();
@@ -13,7 +22,7 @@ export function useHabitsApp(): UseHabitsAppResult {
     showHabitStrengthPercentage: list.showHabitStrengthPercentage,
   });
 
-  // Route notification taps to the activation modal
+  // Route push-notification taps to the activation modal for the tapped habit.
   const { openActivationModalById } = modals;
   const notificationHandlers = useMemo(
     () => ({
@@ -25,7 +34,7 @@ export function useHabitsApp(): UseHabitsAppResult {
   );
   useNotificationResponse(notificationHandlers);
 
-  // Tapping a habit opens the redesigned Habit Detail Screen
+  // Tapping a habit row opens the redesigned Habit Detail Screen.
   return {
     list: { ...list, handleHabitPress: modals.openHabitDetail },
     modals,

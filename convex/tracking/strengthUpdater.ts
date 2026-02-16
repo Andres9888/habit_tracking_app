@@ -1,7 +1,7 @@
 import type { GenericMutationCtx } from 'convex/server';
 import type { DataModel, Id } from '../_generated/dataModel';
 import { calculateMomentumStrengthSnapshot } from '../habitStrength';
-import { findMaxTrackingDate, getTodayDateKey, maxDateKey } from './helpers';
+import { findMaxTrackingDate, getTodayForTimezone, maxDateKey } from './helpers';
 
 interface TrackingRecord {
   completed: boolean;
@@ -14,6 +14,7 @@ interface StrengthUpdateParams {
   habitCreatedAt: number;
   currentStrength: number;
   toggleDate: string;
+  timezone?: string;
 }
 
 /**
@@ -22,7 +23,8 @@ interface StrengthUpdateParams {
 export async function updateHabitStrength(
   params: StrengthUpdateParams
 ): Promise<void> {
-  const { ctx, habitCreatedAt, habitId, currentStrength, toggleDate } = params;
+  const { ctx, habitCreatedAt, habitId, currentStrength, toggleDate, timezone } =
+    params;
 
   const allTracking = await ctx.db
     .query('tracking')
@@ -31,7 +33,7 @@ export async function updateHabitStrength(
 
   const maxTrackingDateKey = findMaxTrackingDate(allTracking, toggleDate);
   const evaluationDateKey = maxDateKey(
-    getTodayDateKey(),
+    getTodayForTimezone(timezone),
     maxDateKey(toggleDate, maxTrackingDateKey)
   );
 
@@ -52,12 +54,5 @@ export async function updateHabitStrength(
     strengthUpdatedAt: Date.now(),
   });
 
-  // Log the strength change in debug mode
-  const previousStrength100 = currentStrength * 100;
-  console.warn('🔧 Strength updated:', {
-    change: `${(snapshot.strength100 - previousStrength100).toFixed(2)}%`,
-    evaluationDateKey,
-    newStrength: `${snapshot.strength100.toFixed(1)}%`,
-    previousStrength: `${previousStrength100.toFixed(1)}%`,
-  });
+  // Strength change logged only in development via Convex dashboard
 }

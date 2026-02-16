@@ -41,7 +41,7 @@ export function useTemplateBadge({ totalHabits, hasViewedTemplates }: UseTemplat
       if (totalHabits >= 2) {
         // Track how many times shown
         const shownCount = await SecureStore.getItemAsync(BADGE_SHOWN_COUNT_KEY);
-        const count = parseInt(shownCount || '0', 10);
+        const count = Number.parseInt(shownCount || '0', 10);
 
         if (count < 3) {
           // Auto-dismiss after 3 sessions
@@ -69,7 +69,7 @@ export function useTemplateBadge({ totalHabits, hasViewedTemplates }: UseTemplat
   };
 
   return {
-    showBadge,
     dismissBadge,
+    showBadge,
   };
 }

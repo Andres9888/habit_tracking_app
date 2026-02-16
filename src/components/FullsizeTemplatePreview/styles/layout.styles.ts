@@ -10,8 +10,7 @@ export const layoutStyles = StyleSheet.create({
   },
   closeButton: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-    borderRadius: 16,
+    borderRadius: 20,
     height: 40,
     justifyContent: 'center',
     width: 40,
@@ -38,8 +37,8 @@ export const layoutStyles = StyleSheet.create({
     zIndex: 10,
   },
   successGlowOverlay: {
-    bottom: 0,
     borderRadius: 12,
+    bottom: 0,
     left: 0,
     position: 'absolute',
     right: 0,

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * WelcomeScreen - Auth landing page
  * Clean design consistent with app style
@@ -20,10 +21,11 @@ import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
 import { styles } from './WelcomeScreen.styles';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 type AuthMode = 'welcome' | 'signin' | 'signup';
 
-export default function WelcomeScreen() {
+function WelcomeScreenContent() {
   const [mode, setMode] = useState<AuthMode>('welcome');
   const insets = useSafeAreaInsets();
   const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =
@@ -84,22 +86,24 @@ export default function WelcomeScreen() {
           />
           <AuthDivider />
           <AnimatedPressable
+            accessibilityHint='Create a new Chain Day account'
             accessibilityLabel='Create free account with Chain Day'
             accessibilityRole='button'
             accessibilityState={{ disabled: !!isLoading }}
-            disabled={!!isLoading}
             disableAnimation={!!isLoading}
+            disabled={!!isLoading}
             style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
             onPress={() => setMode('signup')}
           >
             <Text style={styles.primaryButtonText}>Create Free Account</Text>
           </AnimatedPressable>
           <AnimatedPressable
+            accessibilityHint='Navigate to sign in screen'
             accessibilityLabel='Sign in to existing account'
             accessibilityRole='link'
             accessibilityState={{ disabled: !!isLoading }}
-            disabled={!!isLoading}
             disableAnimation={!!isLoading}
+            disabled={!!isLoading}
             style={styles.textLink}
             onPress={() => setMode('signin')}
           >
@@ -109,5 +113,13 @@ export default function WelcomeScreen() {
         </Animated.View>
       </View>
     </View>
+  );
+}
+
+export default function WelcomeScreen() {
+  return (
+    <ScreenErrorBoundary screenName="Welcome">
+      <WelcomeScreenContent />
+    </ScreenErrorBoundary>
   );
 }

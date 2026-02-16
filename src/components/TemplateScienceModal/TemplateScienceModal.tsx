@@ -21,7 +21,8 @@ import {
   useAnimatedStyles,
   useModalHandlers,
 } from './hooks';
-import { layoutStyles } from './styles';
+import { useThemeColors } from '../../theme/ThemeContext';
+import { layoutStyles, themedLayoutStyles } from './styles';
 import { calculateReadingTime } from './TemplateScienceModal.utils';
 import type { TemplateScienceModalProps } from './TemplateScienceModal.types';
 
@@ -39,6 +40,8 @@ export default function TemplateScienceModal({
   const modalAnimations = useModalAnimations({ template, visible });
   const scrollAnimations = useScrollAnimations({ template, visible });
   const { scaleValues, createPressHandlers } = useButtonAnimations();
+  const { colors } = useThemeColors();
+  const themedLayout = themedLayoutStyles(colors);
   const handlers = useModalHandlers({ onClose, onUseTemplate, template });
 
   const animatedStyles = useAnimatedStyles({
@@ -60,12 +63,13 @@ export default function TemplateScienceModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableBackdropClose={false}
       variant='fullScreen'
       visible={visible}
       onClose={onClose}
     >
-      <Animated.View style={[layoutStyles.container, animatedStyles.container]}>
+      <Animated.View style={[layoutStyles.container, themedLayout.container, animatedStyles.container]}>
         <DismissIndicator animatedStyle={animatedStyles.dismissIndicator} />
         <ModalHeader
           closeButtonAnimatedStyle={animatedStyles.closeButton}

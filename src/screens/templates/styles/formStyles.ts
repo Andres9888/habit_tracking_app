@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export const formStyles = StyleSheet.create({
   charCount: {
     color: '#a8a29e',
-    fontSize: 12,
+    fontSize: 13,
     marginTop: 4,
     textAlign: 'right',
   },
@@ -14,8 +14,8 @@ export const formStyles = StyleSheet.create({
   },
   colorSwatch: {
     borderRadius: 999,
-    height: 36,
-    width: 36,
+    height: 44,
+    width: 44,
   },
   colorSwatchActive: {
     borderColor: '#111827',

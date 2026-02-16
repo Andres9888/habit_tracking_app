@@ -63,8 +63,8 @@ export function useOAuthSignIn() {
         }
 
         return { success: true };
-      } catch (err: unknown) {
-        const mappedError = mapOAuthError(err);
+      } catch (error_: unknown) {
+        const mappedError = mapOAuthError(error_);
 
         // User cancelled - don't show error
         if (mappedError.isCancellation) {

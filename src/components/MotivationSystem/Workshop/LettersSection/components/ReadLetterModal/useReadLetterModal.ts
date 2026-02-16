@@ -3,7 +3,7 @@
  * Animation and state management for ReadLetterModal
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { withSpring, withTiming, withSequence } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { SPRING_BOUNCY, SPRING_GENTLE } from '../../../../../animations';
@@ -43,7 +43,13 @@ export function useReadLetterModal({
     : '';
   const isLocked = letter ? letter.unlockAt > Date.now() : false;
 
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
   useEffect(() => {
+    // Clear any pending timers from previous render
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+
     if (!visible || !letter) return;
     setShowContent(false);
     setAnimationComplete(false);
@@ -64,25 +70,30 @@ export function useReadLetterModal({
     anim.envelopeOpacity.value = withTiming(1, { duration: 400 });
 
     if (wasJustUnlocked) {
-      setTimeout(() => {
+      timersRef.current.push(setTimeout(() => {
         anim.sparkleScale.value = withSequence(
           withSpring(1.2, SPRING_BOUNCY),
-          withSpring(1, { damping: 15, stiffness: 200 })
+          withSpring(1, { damping: 18, stiffness: 150 })
         );
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      }, 300);
+      }, 300));
     }
 
-    setTimeout(
+    timersRef.current.push(setTimeout(
       () => {
         setShowContent(true);
         anim.contentOpacity.value = withTiming(1, { duration: 500 });
         anim.contentTranslateY.value = withSpring(0, SPRING_GENTLE);
         if (!letter.isRead) onMarkAsRead(letter.id);
-        setTimeout(() => setAnimationComplete(true), 500);
+        timersRef.current.push(setTimeout(() => setAnimationComplete(true), 500));
       },
       wasJustUnlocked ? 800 : 400
-    );
+    ));
+
+    return () => {
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
+    };
   }, [visible, letter?.id]);
 
   return {

@@ -1,5 +1,9 @@
 /**
- * useDraggableHabitState - Derived state for DraggableHabit
+ * useDraggableHabitState — Derives all non-animated visual state for DraggableHabit.
+ *
+ * Combines {@link useDraggableHabitLogic} (emoji, name, accentColor) with
+ * memoised computed values: card colors, week-complete flag, strength percentage,
+ * and whether the current streak is a new personal record.
  */
 
 import { useMemo } from 'react';

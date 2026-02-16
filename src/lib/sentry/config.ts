@@ -1,25 +1,32 @@
 /**
- * Sentry Configuration
- * Builds Sentry config from environment variables.
+ * Sentry Configuration Module
+ *
+ * Builds Sentry configuration from environment variables.
+ * Handles DSN retrieval, environment detection, and release versioning.
+ *
+ * @module sentry/config
+ * @category Error Tracking / Monitoring
  */
 
 import Constants from 'expo-constants';
 import type { SentryConfig } from './types';
 import { DEFAULT_SENTRY_CONFIG } from './types';
 
-/** Get the Sentry DSN from environment */
+/** Get the Sentry DSN from environment variables.
+ * @returns The DSN string, or null if not configured
+ */
 function getDsn(): string | null {
   const dsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
   if (!dsn || dsn === '') {
-    if (__DEV__) {
-      if (__DEV__) console.log('[Sentry] No DSN configured - monitoring disabled');
-    }
+    if (__DEV__ && __DEV__) console.log('[Sentry] No DSN configured - monitoring disabled');
     return null;
   }
   return dsn;
 }
 
-/** Determine the current environment */
+/** Determine the current environment based on build configuration.
+ * @returns Environment string: 'development', 'preview', or 'production'
+ */
 function getEnvironment(): SentryConfig['environment'] {
   if (__DEV__) return 'development';
 
@@ -30,7 +37,10 @@ function getEnvironment(): SentryConfig['environment'] {
   return 'production';
 }
 
-/** Get the release version string */
+/** Get the release version string for Sentry.
+ * Combines app version with build number.
+ * @returns Release string (e.g., "daily-habits@1.2.3+100")
+ */
 function getRelease(): string {
   const version = Constants.expoConfig?.version ?? '1.0.0';
   const buildNumber =
@@ -40,7 +50,15 @@ function getRelease(): string {
   return `daily-habits@${version}+${buildNumber}`;
 }
 
-/** Build complete Sentry configuration */
+/** Build complete Sentry configuration by combining all settings.
+ * @returns Complete SentryConfig object, or null if DSN is not configured
+ *
+ * @example
+ * const config = buildSentryConfig();
+ * if (config) {
+ *   initSentry(config);
+ * }
+ */
 export function buildSentryConfig(): SentryConfig | null {
   const dsn = getDsn();
   if (!dsn) return null;
@@ -58,7 +76,9 @@ export function buildSentryConfig(): SentryConfig | null {
   };
 }
 
-/** Check if Sentry should be enabled */
+/** Check if Sentry should be enabled based on DSN configuration.
+ * @returns True if DSN is configured, false otherwise
+ */
 export function isSentryEnabled(): boolean {
   return getDsn() !== null;
 }

@@ -45,14 +45,10 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
   // Update indicator position when value changes
   useEffect(() => {
     const newIndex = Math.max(0, TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value));
-    if (reduceMotion) {
-      indicatorPosition.value = newIndex;
-    } else {
-      indicatorPosition.value = withSpring(newIndex, {
+    indicatorPosition.value = reduceMotion ? newIndex : withSpring(newIndex, {
         damping: 15,
         stiffness: 200,
       });
-    }
   }, [value, reduceMotion, indicatorPosition]);
 
   const handlePress = useCallback(
@@ -78,19 +74,19 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
 
   return (
     <View
-      className="flex-row rounded-full bg-stone-100 p-0.5"
-      accessibilityRole="tablist"
       accessibilityLabel="Time range selection"
+      accessibilityRole="tablist"
+      className="flex-row rounded-full bg-stone-100 p-0.5"
     >
       {/* Animated indicator background */}
       <AnimatedView
         className="absolute rounded-full bg-white shadow-sm"
         style={[
           {
-            width: segmentWidth,
             height: 28,
-            top: 2,
             left: 2,
+            top: 2,
+            width: segmentWidth,
           },
           indicatorStyle,
         ]}
@@ -103,11 +99,11 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
         return (
           <Pressable
             key={option.value}
+            accessibilityLabel={`${option.label} time range`}
             accessibilityRole="tab"
             accessibilityState={{ selected: isSelected }}
-            accessibilityLabel={`${option.label} time range`}
             className="items-center justify-center"
-            style={{ width: segmentWidth, height: 28 }}
+            style={{ height: 28, width: segmentWidth }}
             onPress={() => handlePress(option.value)}
           >
             <Text

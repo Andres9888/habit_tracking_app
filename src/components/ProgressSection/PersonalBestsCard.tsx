@@ -15,6 +15,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Trophy } from 'lucide-react-native';
 
 import type { PersonalBestsCardProps } from './types';
@@ -41,7 +42,12 @@ export function PersonalBestsCard({
       accessibilityLabel={`Personal bests${currentStreak > 0 ? `, current streak ${currentStreak} days` : ''}`}
       className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'
     >
-      <View className='absolute inset-0 bg-gradient-to-br from-amber-50/30 via-white to-orange-50/30' />
+      <LinearGradient
+        className='absolute inset-0'
+        colors={['rgba(255, 251, 235, 0.3)', '#ffffff', 'rgba(255, 237, 213, 0.3)']}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
+      />
       <View className='absolute inset-0 rounded-2xl border border-amber-500/20' />
 
       <View className='p-4'>

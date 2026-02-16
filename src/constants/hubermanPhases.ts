@@ -25,15 +25,9 @@ export interface PhaseInfo {
 
 export const HUBERMAN_PHASES: Record<HubermanPhase, PhaseInfo> = {
   phase1_push: {
-    id: 'phase1_push',
-    label: 'Phase 1: Push',
-    shortLabel: 'Push',
-    icon: '🌅',
-    timeRange: '0-8h after waking',
-    description: 'Peak focus & demanding work',
-    color: '#F97316', // Orange-500
-    bgColor: '#FFEDD5', // Orange-100
-    activities: [
+    
+// Orange-100
+activities: [
       'Deep work',
       'Learning new skills',
       'Exercise',
@@ -41,17 +35,33 @@ export const HUBERMAN_PHASES: Record<HubermanPhase, PhaseInfo> = {
       'Writing',
       'Important decisions',
     ],
+    
+
+// Orange-500
+bgColor: '#FFEDD5',
+    
+
+color: '#F97316',
+    
+
+description: 'Peak focus & demanding work',
+    
+
+icon: '🌅',
+    
+
+id: 'phase1_push',
+    
+
+label: 'Phase 1: Push', 
+    
+shortLabel: 'Push', 
+    timeRange: '0-8h after waking',
   },
   phase2_pivot: {
-    id: 'phase2_pivot',
-    label: 'Phase 2: Pivot',
-    shortLabel: 'Pivot',
-    icon: '☀️',
-    timeRange: '9-15h after waking',
-    description: 'Creative & collaborative work',
-    color: '#EAB308', // Yellow-500
-    bgColor: '#FEF9C3', // Yellow-100
-    activities: [
+    
+// Yellow-100
+activities: [
       'Creative tasks',
       'Brainstorming',
       'Meetings',
@@ -59,17 +69,33 @@ export const HUBERMAN_PHASES: Record<HubermanPhase, PhaseInfo> = {
       'Light exercise',
       'Skill practice',
     ],
+    
+
+// Yellow-500
+bgColor: '#FEF9C3',
+    
+
+color: '#EAB308',
+    
+
+description: 'Creative & collaborative work',
+    
+
+icon: '☀️',
+    
+
+id: 'phase2_pivot',
+    
+
+label: 'Phase 2: Pivot', 
+    
+shortLabel: 'Pivot', 
+    timeRange: '9-15h after waking',
   },
   phase3_pull: {
-    id: 'phase3_pull',
-    label: 'Phase 3: Pull',
-    shortLabel: 'Pull',
-    icon: '🌙',
-    timeRange: '16+h after waking',
-    description: 'Wind-down & reflection',
-    color: '#8B5CF6', // Violet-500
-    bgColor: '#EDE9FE', // Violet-100
-    activities: [
+    
+// Violet-100
+activities: [
       'Journaling',
       'Reading',
       'Meditation',
@@ -77,6 +103,28 @@ export const HUBERMAN_PHASES: Record<HubermanPhase, PhaseInfo> = {
       'Planning tomorrow',
       'Relaxation',
     ],
+    
+
+// Violet-500
+bgColor: '#EDE9FE',
+    
+
+color: '#8B5CF6',
+    
+
+description: 'Wind-down & reflection',
+    
+
+icon: '🌙',
+    
+
+id: 'phase3_pull',
+    
+
+label: 'Phase 3: Pull', 
+    
+shortLabel: 'Pull', 
+    timeRange: '16+h after waking',
   },
 } as const;
 
@@ -98,9 +146,9 @@ export const getPhaseFromPreferredTime = (
 
   // Map legacy preferredTime values to phases
   const timeToPhase: Record<string, HubermanPhase> = {
-    morning: 'phase1_push',
     afternoon: 'phase2_pivot',
     evening: 'phase3_pull',
+    morning: 'phase1_push',
     // Direct phase values
     phase1_push: 'phase1_push',
     phase2_pivot: 'phase2_pivot',

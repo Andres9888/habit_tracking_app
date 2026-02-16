@@ -4,15 +4,17 @@
 import React from 'react';
 import { View } from 'react-native';
 import { SkeletonLoader } from './SkeletonLoader';
+import { useSkeletonTheme } from './useSkeletonTheme';
 import type { ReduceMotionProps } from './types';
 
 export function MomentumMeterSkeleton({
   reduceMotion = false,
 }: ReduceMotionProps) {
+  const { surfaceBg } = useSkeletonTheme();
   return (
     <View
       className='flex-row items-center gap-4 rounded-2xl px-4 py-3'
-      style={{ backgroundColor: '#f5f5f4' }}
+      style={{ backgroundColor: surfaceBg }}
     >
       <SkeletonLoader
         borderRadius={28}

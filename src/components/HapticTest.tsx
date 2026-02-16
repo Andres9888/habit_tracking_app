@@ -241,13 +241,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 4,
   },
+  statusText: {
+    marginBottom: 8,
+  },
   subtitle: {
     marginBottom: 20,
     opacity: 0.7,
     textAlign: 'center',
-  },
-  statusText: {
-    marginBottom: 8,
   },
   surface: {
     borderRadius: 12,

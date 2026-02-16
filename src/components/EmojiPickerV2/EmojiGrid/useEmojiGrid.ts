@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
-import type { FlatList, ListRenderItemInfo } from 'react-native';
+import type { FlatList } from 'react-native';
 
 import { EMOJIS_PER_ROW } from './types';
 

@@ -22,62 +22,70 @@ import { CONTAINER_SHADOW } from '@/components/CalendarTimeline/CalendarTimeline
 
 describe('Shadow Token Migration - Phase 3 Task 2', () => {
   describe('shadows token definitions', () => {
-    it('shadows.card should have correct values', () => {
-      expect(shadows.card.elevation).toBe(2);
-      expect(shadows.card.shadowColor).toBe('#000000');
-      expect(shadows.card.shadowOffset).toEqual({ height: 2, width: 0 });
-      expect(shadows.card.shadowOpacity).toBe(0.1);
-      expect(shadows.card.shadowRadius).toBe(8);
+    it('shadows.subtle (Level 0) should have correct values', () => {
+      expect(shadows.subtle.elevation).toBe(1);
+      expect(shadows.subtle.shadowColor).toBe('#1c1917');
+      expect(shadows.subtle.shadowOffset).toEqual({ height: 1, width: 0 });
+      expect(shadows.subtle.shadowOpacity).toBe(0.05);
+      expect(shadows.subtle.shadowRadius).toBe(4);
     });
 
-    it('shadows.modal should have correct values', () => {
-      expect(shadows.modal.elevation).toBe(4);
-      expect(shadows.modal.shadowColor).toBe('#000000');
-      expect(shadows.modal.shadowOffset).toEqual({ height: 4, width: 0 });
-      expect(shadows.modal.shadowOpacity).toBe(0.12);
-      expect(shadows.modal.shadowRadius).toBe(16);
+    it('shadows.card (Level 1) should have correct values', () => {
+      expect(shadows.card.elevation).toBe(3);
+      expect(shadows.card.shadowColor).toBe('#1c1917');
+      expect(shadows.card.shadowOffset).toEqual({ height: 4, width: 0 });
+      expect(shadows.card.shadowOpacity).toBe(0.08);
+      expect(shadows.card.shadowRadius).toBe(16);
     });
 
-    it('shadows.floatingActionButton should have correct values', () => {
+    it('shadows.floatingActionButton (Level 2) should have correct values', () => {
       expect(shadows.floatingActionButton.elevation).toBe(6);
-      expect(shadows.floatingActionButton.shadowColor).toBe('#000000');
+      expect(shadows.floatingActionButton.shadowColor).toBe('#1c1917');
       expect(shadows.floatingActionButton.shadowOffset).toEqual({
         height: 6,
         width: 0,
       });
-      expect(shadows.floatingActionButton.shadowOpacity).toBe(0.15);
-      expect(shadows.floatingActionButton.shadowRadius).toBe(12);
+      expect(shadows.floatingActionButton.shadowOpacity).toBe(0.10);
+      expect(shadows.floatingActionButton.shadowRadius).toBe(20);
     });
 
-    it('shadows.subtle should have correct values', () => {
-      expect(shadows.subtle.elevation).toBe(1);
-      expect(shadows.subtle.shadowColor).toBe('#000000');
-      expect(shadows.subtle.shadowOffset).toEqual({ height: 1, width: 0 });
-      expect(shadows.subtle.shadowOpacity).toBe(0.05);
-      expect(shadows.subtle.shadowRadius).toBe(3);
+    it('shadows.modal (Level 3) should have correct values', () => {
+      expect(shadows.modal.elevation).toBe(8);
+      expect(shadows.modal.shadowColor).toBe('#1c1917');
+      expect(shadows.modal.shadowOffset).toEqual({ height: 8, width: 0 });
+      expect(shadows.modal.shadowOpacity).toBe(0.12);
+      expect(shadows.modal.shadowRadius).toBe(24);
+    });
+
+    it('shadows.alert (Level 4) should have correct values', () => {
+      expect(shadows.alert.elevation).toBe(12);
+      expect(shadows.alert.shadowColor).toBe('#1c1917');
+      expect(shadows.alert.shadowOffset).toEqual({ height: 12, width: 0 });
+      expect(shadows.alert.shadowOpacity).toBe(0.16);
+      expect(shadows.alert.shadowRadius).toBe(32);
     });
   });
 
-  describe('ArchiveUndoToast uses shadows.modal', () => {
-    it('toast elevation should match shadows.modal', () => {
-      expect(archiveToastStyles.toast.elevation).toBe(shadows.modal.elevation);
+  describe('ArchiveUndoToast uses shadows.alert', () => {
+    it('toast elevation should match shadows.alert', () => {
+      expect(archiveToastStyles.toast.elevation).toBe(shadows.alert.elevation);
     });
 
-    it('toast shadowRadius should match shadows.modal', () => {
+    it('toast shadowRadius should match shadows.alert', () => {
       expect(archiveToastStyles.toast.shadowRadius).toBe(
-        shadows.modal.shadowRadius
+        shadows.alert.shadowRadius
       );
     });
   });
 
-  describe('DeleteUndoToast uses shadows.modal', () => {
-    it('toast elevation should match shadows.modal', () => {
-      expect(deleteToastStyles.toast.elevation).toBe(shadows.modal.elevation);
+  describe('DeleteUndoToast uses shadows.alert', () => {
+    it('toast elevation should match shadows.alert', () => {
+      expect(deleteToastStyles.toast.elevation).toBe(shadows.alert.elevation);
     });
 
-    it('toast shadowRadius should match shadows.modal', () => {
+    it('toast shadowRadius should match shadows.alert', () => {
       expect(deleteToastStyles.toast.shadowRadius).toBe(
-        shadows.modal.shadowRadius
+        shadows.alert.shadowRadius
       );
     });
   });

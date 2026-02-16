@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 interface UseHabitActionsProps {
   habitId: Id<'habits'> | null;
@@ -23,7 +24,16 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
         { style: 'cancel', text: 'Cancel' },
         {
           onPress: () => {
-            void removeHabit({ habitId }).then(onSuccess);
+            void removeHabit({ habitId })
+              .then(onSuccess)
+              .catch((error) => {
+                if (__DEV__) console.warn('Error deleting habit:', error);
+                Alert.alert(
+                  'Error',
+                  ERROR_MESSAGES.DATA_OPS.DELETE_HABIT_FAILED,
+                  [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: () => void removeHabit({ habitId }).then(onSuccess) }]
+                );
+              });
           },
           style: 'destructive',
           text: 'Delete',
@@ -42,7 +52,16 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
         { style: 'cancel', text: 'Cancel' },
         {
           onPress: () => {
-            void archiveHabit({ habitId }).then(onSuccess);
+            void archiveHabit({ habitId })
+              .then(onSuccess)
+              .catch((error) => {
+                if (__DEV__) console.warn('Error archiving habit:', error);
+                Alert.alert(
+                  'Error',
+                  ERROR_MESSAGES.DATA_OPS.ARCHIVE_HABIT_FAILED,
+                  [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: () => void archiveHabit({ habitId }).then(onSuccess) }]
+                );
+              });
           },
           text: 'Archive',
         },
@@ -50,5 +69,5 @@ export function useHabitActions({ habitId, onSuccess }: UseHabitActionsProps) {
     );
   }, [habitId, archiveHabit, onSuccess]);
 
-  return { handleDelete, handleArchive };
+  return { handleArchive, handleDelete };
 }
