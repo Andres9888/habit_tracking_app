@@ -6,6 +6,7 @@
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
+import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
 
 interface UpgradePromptProps {
   onClose: () => void;
@@ -23,9 +24,10 @@ export function UpgradePrompt({
   return (
     <Animated.View
       className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
-      entering={FadeIn.duration(280)}
+      entering={FadeIn.duration(ANIMATION_DURATION.medium)}
     >
       <Pressable
+        accessibilityHint='Tap outside to dismiss'
         accessibilityLabel='Close upgrade prompt'
         accessibilityRole='button'
         className='absolute inset-0'
@@ -33,7 +35,7 @@ export function UpgradePrompt({
       />
       <Animated.View
         className='w-full rounded-t-3xl px-6 py-8'
-        entering={SlideInDown.duration(280).damping(18)}
+        entering={SlideInDown.duration(ANIMATION_DURATION.medium).damping(ANIMATION_VALUES.springDamping)}
       >
         <LinearGradient
           className='absolute inset-0 rounded-t-3xl'
@@ -50,16 +52,17 @@ export function UpgradePrompt({
             Track unlimited habits across all areas of your life. Premium
             members build stronger routines and stay consistent 2× longer.
           </Text>
-          <View className='items-center rounded-2xl bg-emerald-50 px-4 py-3'>
-            <Text className='text-center text-[13px] font-semibold text-emerald-700'>
+          <View className='items-center rounded-2xl bg-violet-50 px-4 py-3'>
+            <Text className='text-center text-[13px] font-semibold text-violet-700'>
               $0 for 7 days · Cancel anytime
             </Text>
           </View>
           <Pressable
+            accessibilityHint='Start your 7-day free trial'
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
-            className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(5,150,105,0.25)]'
-            style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
+            className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
+            style={({ pressed }) => ({ opacity: pressed ? OPACITY.strong : OPACITY.full })}
             onPress={onUpgradePress}
           >
             <LinearGradient
@@ -73,10 +76,11 @@ export function UpgradePrompt({
             </Text>
           </Pressable>
           <Pressable
+            accessibilityHint='Dismiss this upgrade prompt'
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
             className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+            style={({ pressed }) => ({ opacity: pressed ? OPACITY.high : OPACITY.full })}
             onPress={onClose}
           >
             <Text className='text-[15px] font-normal text-stone-600'>

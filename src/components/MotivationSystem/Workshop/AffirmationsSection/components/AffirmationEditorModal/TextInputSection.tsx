@@ -23,6 +23,7 @@ export function TextInputSection({
         Your Affirmation
       </Text>
       <TextInput
+        autoFocus
         multiline
         accessibilityLabel='Affirmation text'
         className='min-h-[100px] rounded-xl border-2 border-amber-200 bg-white px-4 py-3 text-base text-stone-800'

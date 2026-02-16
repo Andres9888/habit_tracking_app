@@ -7,11 +7,13 @@ import { View, Text, Pressable } from 'react-native';
 import { X } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from './styles';
 import type { ModalHeaderProps } from './types';
 
 export function ModalHeader({ disabled, onClose }: ModalHeaderProps) {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
 
   return (
@@ -21,7 +23,10 @@ export function ModalHeader({ disabled, onClose }: ModalHeaderProps) {
       <Text
         style={[
           styles.headerTitle,
-          { fontFamily: theme.custom.fontFamilies.primary.text },
+          {
+            color: colors.text.primary,
+            fontFamily: theme.custom.fontFamilies.primary.text,
+          },
         ]}
       >
         Customize Habit
@@ -31,10 +36,10 @@ export function ModalHeader({ disabled, onClose }: ModalHeaderProps) {
         accessibilityLabel='Close customize modal'
         accessibilityRole='button'
         disabled={disabled}
-        style={styles.closeButton}
+        style={[styles.closeButton, { backgroundColor: colors.gray[200] }]}
         onPress={onClose}
       >
-        <X color='#374151' size={24} strokeWidth={2.5} />
+        <X color={colors.text.secondary} size={24} strokeWidth={2.5} />
       </Pressable>
     </View>
   );

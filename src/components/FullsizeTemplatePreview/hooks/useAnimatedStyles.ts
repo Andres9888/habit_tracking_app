@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Animated styles for FullsizeTemplatePreview
  */
@@ -119,7 +120,6 @@ export const useAnimatedStyles = (props: UseAnimatedStylesProps) => {
     backdropStyle,
     checkmarkAnimatedStyle,
     closeButtonAnimatedOpacityStyle,
-    closeButtonStyle,
     contentStyle,
     customizeButtonStyle,
     iconAnimatedStyle,

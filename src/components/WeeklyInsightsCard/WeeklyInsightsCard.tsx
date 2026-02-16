@@ -55,7 +55,7 @@ export default function WeeklyInsightsCard({
       />
 
       <HabitListSection
-        badgeBgColor='#FEE2E2'
+        badgeBgColor={colors.errorLight}
         badgeTextColor={colors.error}
         habits={insights.lostStrength}
         iconColor={colors.error}
@@ -68,10 +68,10 @@ export default function WeeklyInsightsCard({
       />
 
       <HabitListSection
-        badgeBgColor='#FEF3C7'
-        badgeTextColor={colors.warning[700]}
+        badgeBgColor={colors.warningLight}
+        badgeTextColor={colors.warning}
         habits={insights.atRisk}
-        iconColor={colors.warning[500]}
+        iconColor={colors.warning}
         iconName='warning'
         isExpanded={expandedSection === 'risk'}
         title='Habits at Risk'
@@ -82,7 +82,12 @@ export default function WeeklyInsightsCard({
         <SuggestedActions />
       </HabitListSection>
 
-      <AnimatedPressable style={styles.archiveButton} onPress={onArchivePress}>
+      <AnimatedPressable
+        accessibilityLabel='View past reports'
+        accessibilityRole='button'
+        style={styles.archiveButton}
+        onPress={onArchivePress}
+      >
         <Ionicons color={colors.text.secondary} name='archive' size={20} />
         <Text style={styles.archiveButtonText}>View Past Reports</Text>
       </AnimatedPressable>

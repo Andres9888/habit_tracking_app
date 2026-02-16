@@ -2,10 +2,11 @@ import React from 'react';
 import { View, Text } from 'react-native';
 
 import { styles } from '../PredictionInsights.styles';
+import type { AppTheme } from '../../../theme';
 
 interface ConfidenceLevelProps {
   confidence: number;
-  theme: any;
+  theme: AppTheme;
 }
 
 export function ConfidenceLevel({ confidence, theme }: ConfidenceLevelProps) {
