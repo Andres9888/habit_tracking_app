@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * useLettersSection Hook
  * State management for the LettersSection component

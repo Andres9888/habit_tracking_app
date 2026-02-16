@@ -56,8 +56,8 @@ export function DetailHeader({
             className='mb-4 h-20 w-20 items-center justify-center rounded-2xl'
             style={{
               ...iconShadow,
-              backgroundColor: habit.color ?? habit.iconColor || '#fef3c7',
-              shadowColor: habit.color ?? habit.iconColor || '#f59e0b',
+              backgroundColor: (habit.color ?? habit.iconColor) || '#fef3c7',
+              shadowColor: (habit.color ?? habit.iconColor) || '#f59e0b',
             }}
           >
             <Text style={{ fontSize: 40 }}>{habit.icon}</Text>
@@ -65,7 +65,12 @@ export function DetailHeader({
         )}
         <Text
           className='text-center font-bold'
-          style={{ fontSize: 34, letterSpacing: -0.5, lineHeight: 41, color: textPrimary }}
+          style={{
+            fontSize: 34,
+            letterSpacing: -0.5,
+            lineHeight: 41,
+            color: textPrimary,
+          }}
         >
           {habitName}
         </Text>

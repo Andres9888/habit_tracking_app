@@ -7,7 +7,8 @@ import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Modal from '../../Modal';
 import { SkeletonBox } from './SkeletonBox';
-import { layoutStyles, headerStyles, skeletonStyles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { layoutStyles, themedLayoutStyles, headerStyles, themedHeaderStyles, skeletonStyles } from '../styles';
 
 interface SkeletonLoadingProps {
   visible: boolean;
@@ -15,6 +16,10 @@ interface SkeletonLoadingProps {
 }
 
 export const SkeletonLoading = ({ visible, onClose }: SkeletonLoadingProps) => {
+  const { colors } = useThemeColors();
+  const themedLayout = themedLayoutStyles(colors);
+  const themedHeader = themedHeaderStyles(colors);
+
   return (
     <Modal
       disableBackdropClose={false}
@@ -22,8 +27,8 @@ export const SkeletonLoading = ({ visible, onClose }: SkeletonLoadingProps) => {
       visible={visible}
       onClose={onClose}
     >
-      <View style={layoutStyles.container}>
-        <View style={headerStyles.header}>
+      <View style={[layoutStyles.container, themedLayout.container]}>
+        <View style={themedHeader.header}>
           <SkeletonBox borderRadius={20} height={40} width={40} />
           <SkeletonBox borderRadius={8} height={20} width={120} />
           <View style={headerStyles.headerSpacer} />

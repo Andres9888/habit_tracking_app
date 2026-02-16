@@ -6,6 +6,7 @@
 import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { colors } from '../../../theme/colors';
 
 interface PasswordStrengthBarProps {
   password: string;
@@ -20,7 +21,7 @@ const STRENGTH_CONFIG: Record<
   weak: { color: '#ef4444', label: 'Weak', width: '25%' },
   fair: { color: '#f59e0b', label: 'Fair', width: '50%' },
   good: { color: '#22c55e', label: 'Good', width: '75%' },
-  strong: { color: '#047857', label: 'Strong', width: '100%' },
+  strong: { color: colors.primary[700], label: 'Strong', width: '100%' },
 };
 
 function getStrength(password: string): Strength {

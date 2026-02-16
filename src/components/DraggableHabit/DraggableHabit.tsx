@@ -53,7 +53,7 @@ function DraggableHabit(props: DraggableHabitProps) {
     variant: entranceVariant,
   });
 
-  const { triggerSelection, triggerSuccess } = useHapticFeedback({
+  const { triggerSelection, triggerSuccess, triggerHeavyImpact } = useHapticFeedback({
     isEnabled: celebrationsEnabled,
     preference: reduceMotionPreference,
   });
@@ -81,6 +81,7 @@ function DraggableHabit(props: DraggableHabitProps) {
     onArchive,
     onLongPress,
     triggerSelection,
+    triggerHeavyImpact,
   });
 
   return (

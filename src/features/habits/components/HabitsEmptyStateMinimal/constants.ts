@@ -5,6 +5,7 @@
  * Reference: docs/specs/empty-habit-screen/minimal-redesign.md
  */
 
+import { colors } from '../../../../theme/colors';
 import type { SuggestionChip } from './types';
 
 /**
@@ -87,26 +88,38 @@ export const COPY = {
   // Secondary links
   browseTemplates: 'Browse templates',
 
+  // Templates bridge CTA
+  browseTemplatesCard: 'Not sure where to start? Browse 50+ habit templates →',
+
   createCustom: 'Create custom habit',
 
   // Primary CTA — action-oriented, reduces friction
   ctaButton: "Let's go! →",
 
-  // Question headline — warm, low-pressure framing
-  headline: 'Start with just one habit',
+  // Dynamic CTA when chip/input is filled
+  ctaButtonDynamic: (habitName: string) => `Add "${habitName}" →`,
+
+  // Question headline - line break after "thing" for rhythm
+  headline: "What's one small thing\nyou want to do daily?",
 
   // Input placeholder - motivating and descriptive
-  inputPlaceholder: 'e.g. Drink water, Read 5 pages…',
+  inputPlaceholder: 'What habit do you want to build?',
 
+  // Motivational stat
+  motivationalStat:
+    'People who start with one small habit are 3× more likely to build lasting routines.',
+  // Question headline — warm, low-pressure framing
+  headline: 'Start with just one habit',
+  inputPlaceholder: 'e.g. Drink water, Read 5 pages…',
   // Progress hint shown when user types a habit name
   progressHint: 'Step 1 of 1 — that\'s it!',
-
   // Social proof line
   socialProof: 'Most popular: 💧 Water · chosen by 68% of new users',
 
   // Success state
   successHeadline: "You're growing!",
-  successSubtext: (habitName: string) => `"${habitName}" added — your chain starts now!`,
+  successSubtext: (habitName: string) =>
+    `"${habitName}" added — your chain starts now!`,
 } as const;
 
 /**
@@ -125,7 +138,7 @@ export const COLORS = {
   emerald500: '#10B981',
 
   // WCAG AA compliant primary action (5.21:1 contrast with white)
-  emerald700: '#047857',
+  emerald700: colors.primary[700],
 
   // Caret color
   emeraldCaret: '#10B981',

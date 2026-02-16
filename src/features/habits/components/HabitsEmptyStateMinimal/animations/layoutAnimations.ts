@@ -6,14 +6,17 @@
 
 /**
  * Entrance animation delays (staggered fade-in-up)
- * Each element delayed by 100ms
+ * Each element delayed by 60ms per design system
  */
 export const ENTRANCE_DELAYS = {
-  chips: 200,
-  cta: 280,
+  chips: 180,
+  cta: 240,
   headline: 60,
   heroIcon: 0,
   input: 120,
+  secondaryLinks: 300,
+  chips: 200,
+  cta: 280,
   secondaryLinks: 350,
 } as const;
 
@@ -26,7 +29,7 @@ export const KEYBOARD_LAYOUT = {
   compactHeroFontSize: 28,
   compactHeroSize: 60,
   topPadding: 100,
-  transitionDuration: 300,
+  transitionDuration: 280,
 } as const;
 
 /**
@@ -35,7 +38,7 @@ export const KEYBOARD_LAYOUT = {
  */
 export const ERROR_ANIMATION = {
   autoDismissDelay: 5000,
-  entranceDuration: 300,
+  entranceDuration: 280,
   shakeDistance: 8,
   shakeDuration: 500,
   shakeOscillations: 3,
