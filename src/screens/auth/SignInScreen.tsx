@@ -38,6 +38,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -46,7 +47,7 @@ interface SignInScreenProps {
   onNavigateToSignUp?: () => void;
 }
 
-export default function SignInScreen(_props: SignInScreenProps = {}) {
+function SignInScreenContent(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const passwordRef = useRef<TextInput>(null);
@@ -346,3 +347,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default function SignInScreen(props: SignInScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Sign In">
+      <SignInScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}

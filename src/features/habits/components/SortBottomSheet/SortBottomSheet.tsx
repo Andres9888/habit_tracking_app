@@ -11,6 +11,7 @@ import { QuickPickChips } from './QuickPickChips';
 import { SortOptionRow } from './SortOptionRow';
 import type { SortBottomSheetProps } from './types';
 import { useSortBottomSheet } from './useSortBottomSheet';
+import { SCREEN, SHADOW_OPACITY } from '../../../../constants';
 
 /** iOS-style bottom sheet for selecting habit sort order */
 export function SortBottomSheet({
@@ -55,11 +56,11 @@ export function SortBottomSheet({
               {
                 backgroundColor: themeColors.card,
                 elevation: 20,
-                maxHeight: SCREEN_HEIGHT * 0.85,
+                maxHeight: SCREEN_HEIGHT * SCREEN.maxHeightPercent,
                 paddingBottom: insets.bottom + 16,
                 shadowColor: isDark ? '#000000' : '#1c1917',
                 shadowOffset: { height: 4, width: 0 },
-                shadowOpacity: 0.08,
+                shadowOpacity: SHADOW_OPACITY.minimal,
                 shadowRadius: 16,
               },
               sheetStyle,
@@ -83,7 +84,7 @@ export function SortBottomSheet({
                 accessibilityHint='Close sort options'
                 accessibilityLabel='Close'
                 accessibilityRole='button'
-                className='h-10 w-10 items-center justify-center rounded-full'
+                className='h-11 w-11 items-center justify-center rounded-full'
                 style={{ backgroundColor: isDark ? themeColors.gray[800] : themeColors.gray[100] }}
                 onPress={handleDismiss}
               >

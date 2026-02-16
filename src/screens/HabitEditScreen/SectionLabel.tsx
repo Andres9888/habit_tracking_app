@@ -1,6 +1,7 @@
-/** Section label with animation — divider lines match HabitDetailContent style */
-import { View, Text } from 'react-native';
+/** Section label with animation — dark mode aware */
+import { Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme';
 
 interface SectionLabelProps {
   text: string;
@@ -13,21 +14,20 @@ export function SectionLabel({
   delay,
   variant = 'default',
 }: SectionLabelProps) {
-  const textColor = variant === 'danger' ? 'text-red-400' : 'text-stone-400';
-  const lineColor = variant === 'danger' ? 'bg-red-200' : 'bg-stone-200';
+  const { colors } = useThemeColors();
+  const color = variant === 'danger' ? '#F87171' : colors.text.tertiary;
+
   return (
     <Animated.View
-      className='mb-3 mt-6 flex-row items-center justify-center gap-2 px-4'
+      className='mb-4 mt-8'
       entering={FadeInUp.delay(delay).springify().damping(18)}
     >
-      <View className={`h-px flex-1 ${lineColor}`} />
       <Text
-        className={`font-semibold tracking-wider ${textColor}`}
-        style={{ fontSize: 13, letterSpacing: 0.5, lineHeight: 18 }}
+        className='text-center font-semibold'
+        style={{ fontSize: 13, letterSpacing: 0.5, lineHeight: 18, color }}
       >
         {text}
       </Text>
-      <View className={`h-px flex-1 ${lineColor}`} />
     </Animated.View>
   );
 }
