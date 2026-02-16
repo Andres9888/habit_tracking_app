@@ -1,7 +1,8 @@
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
 import { Search } from 'lucide-react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
-import { colors } from '../../../theme/colors';
 import { styles } from './styles';
 import type { SemanticColors } from '../../../theme/darkColors';
 

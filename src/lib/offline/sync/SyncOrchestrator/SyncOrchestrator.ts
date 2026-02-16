@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Sync Orchestrator - Coordinates offline queue sync with network detection.
  * Implements FR-004, FR-005, NFR-002.

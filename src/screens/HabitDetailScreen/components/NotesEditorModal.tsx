@@ -7,11 +7,13 @@ import React from 'react';
 import {
   View,
   Text,
-  Pressable,
   ScrollView,
   Modal as RNModal,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import { X } from 'lucide-react-native';
+import { ModalCloseButton } from '../../../components/ui/ModalCloseButton';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import NoteEditor from '../../../components/StatsNotesModal/NoteEditor';
 import type { NotesEditorModalProps } from '../HabitDetailScreen.types';
 
@@ -22,24 +24,26 @@ export function NotesEditorModal({
   isOpen,
   onClose,
 }: NotesEditorModalProps) {
+  const { colors } = useThemeColors();
+
   return (
     <RNModal animationType='slide' visible={isOpen} onRequestClose={onClose}>
-      <View className='flex-1' style={{ backgroundColor: '#FAF8F5', paddingTop: insets.top + 16 }}>
-        <View className='flex-row items-center justify-between border-b border-stone-100 px-5 pb-4'>
+      <KeyboardAvoidingView
+        accessibilityViewIsModal
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1, backgroundColor: colors.background, paddingTop: insets.top + 16 }}
+      >
+        <View
+          className='flex-row items-center justify-between px-5 pb-4'
+          style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
+        >
           <Text
-            className='font-bold text-stone-900'
-            style={{ fontSize: 22, letterSpacing: -0.35 }}
+            className='font-bold'
+            style={{ fontSize: 22, letterSpacing: -0.35, color: colors.text.primary }}
           >
             {editingNote ? 'Edit Note' : 'New Note'}
           </Text>
-          <Pressable
-            accessibilityLabel='Close note editor'
-            accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
-            onPress={onClose}
-          >
-            <X color='#57534e' size={24} />
-          </Pressable>
+          <ModalCloseButton label='Close note editor' onClose={onClose} />
         </View>
         <ScrollView
           className='flex-1'
@@ -47,6 +51,7 @@ export function NotesEditorModal({
             padding: 20,
             paddingBottom: insets.bottom + 20,
           }}
+          keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >
           <NoteEditor
@@ -58,7 +63,7 @@ export function NotesEditorModal({
             onSave={onClose}
           />
         </ScrollView>
-      </View>
+      </KeyboardAvoidingView>
     </RNModal>
   );
 }

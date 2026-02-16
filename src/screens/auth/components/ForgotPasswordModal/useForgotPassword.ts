@@ -1,5 +1,6 @@
 import { useSignIn } from '@clerk/clerk-expo';
 import { useCallback, useState } from 'react';
+import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 
 interface UseForgotPasswordReturn {
   email: string;
@@ -34,12 +35,12 @@ export function useForgotPassword(): UseForgotPasswordReturn {
 
     // Validate email
     if (!email.trim()) {
-      setError('Please enter your email address');
+      setError(ERROR_MESSAGES.VALIDATION.REQUIRED_FIELD);
       return;
     }
 
     if (!isValidEmail(email)) {
-      setError('Please enter a valid email address');
+      setError(ERROR_MESSAGES.VALIDATION.INVALID_EMAIL);
       return;
     }
 
@@ -68,7 +69,7 @@ export function useForgotPassword(): UseForgotPasswordReturn {
       } else {
         setError(
           clerkError.errors?.[0]?.message ||
-            'Failed to send reset email. Please try again.'
+            ERROR_MESSAGES.AUTH.PASSWORD_RESET_FAILED
         );
       }
       setSuccess(false);

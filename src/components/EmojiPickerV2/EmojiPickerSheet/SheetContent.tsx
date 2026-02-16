@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CategoryPills } from '../CategoryPills';
 import { EmojiGrid } from '../EmojiGrid';
 import { styles, themedStyles } from './EmojiPickerSheet.styles';
