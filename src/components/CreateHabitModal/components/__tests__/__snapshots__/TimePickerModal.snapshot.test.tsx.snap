@@ -25,6 +25,7 @@ exports[`TimePickerModal Snapshots Hidden State iOS modal hidden when visible=fa
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening time (8:00 PM) 1`] = `
 <Modal
+  accessibilityViewIsModal={true}
   animationType="fade"
   onRequestClose={[Function]}
   testID="time-picker-modal"
@@ -235,6 +236,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening tim
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning time (7:00 AM) 1`] = `
 <Modal
+  accessibilityViewIsModal={true}
   animationType="fade"
   onRequestClose={[Function]}
   testID="time-picker-modal"
@@ -445,6 +447,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning tim
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom title 1`] = `
 <Modal
+  accessibilityViewIsModal={true}
   animationType="fade"
   onRequestClose={[Function]}
   testID="time-picker-modal"
@@ -655,6 +658,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom ti
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default title 1`] = `
 <Modal
+  accessibilityViewIsModal={true}
   animationType="fade"
   onRequestClose={[Function]}
   testID="time-picker-modal"
@@ -865,6 +869,7 @@ exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default t
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (6:30 AM) 1`] = `
 <Modal
+  accessibilityViewIsModal={true}
   animationType="fade"
   onRequestClose={[Function]}
   testID="time-picker-modal"

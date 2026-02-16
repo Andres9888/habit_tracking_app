@@ -22,7 +22,7 @@ import {
   borderRadius,
   shadows,
   componentSpacing,
-} from '../index';
+} from '../../../src/theme';
 
 // Test component that uses useAppTheme hook
 function TestComponent() {
@@ -198,9 +198,9 @@ describe('Theme Integration - Phase 1', () => {
       expect(theme.fonts.labelSmall.fontSize).toBe(10);
     });
 
-    it('should use SF Pro font family', () => {
-      expect(theme.fonts.displayLarge.fontFamily).toBe('SF Pro Display');
-      expect(theme.fonts.bodyLarge.fontFamily).toBe('SF Pro Text');
+    it('should use custom font family (Literata/DMSans)', () => {
+      expect(theme.fonts.displayLarge.fontFamily).toBe('Literata');
+      expect(theme.fonts.bodyLarge.fontFamily).toBe('DMSans');
     });
   });
 
@@ -222,7 +222,7 @@ describe('Theme Integration - Phase 1', () => {
     it('✅ All hex values match UX spec', () => {
       expect(colors.primary[500]).toBe('#10B981');
       expect(colors.secondary[500]).toBe('#3B82F6');
-      expect(colors.error).toBe('#EF4444');
+      expect(colors.error).toBe('#B53030'); // WCAG AA compliant error color
     });
 
     it('✅ Typography scales with iOS Dynamic Type (Paper integration)', () => {

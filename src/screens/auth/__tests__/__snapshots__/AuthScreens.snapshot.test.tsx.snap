@@ -1828,1474 +1828,304 @@ exports[`SignInScreen Snapshots should match snapshot with navigation callback 1
 
 exports[`SignUpScreen Snapshots should match snapshot with empty form 1`] = `
 <View
-  className="flex-1"
->
-  <View
-    colors={
-      [
-        "#F5F1ED",
-        "#F0EDE8",
-      ]
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#F5F1ED",
+      "flex": 1,
+      "justifyContent": "center",
+      "paddingBottom": 34,
+      "paddingHorizontal": 24,
+      "paddingTop": 44,
     }
+  }
+>
+  <Text
     style={
       {
-        "flex": 1,
+        "fontSize": 64,
+        "marginBottom": 16,
       }
     }
-    testID="linear-gradient"
   >
-    <View
-      onLayout={[Function]}
+    😕
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#2D2A26",
+        "fontSize": 22,
+        "fontWeight": "600",
+        "textAlign": "center",
+      }
+    }
+  >
+    Something went wrong
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#6B6560",
+        "fontSize": 15,
+        "lineHeight": 22,
+        "marginTop": 8,
+        "textAlign": "center",
+      }
+    }
+  >
+    Sign Up
+     encountered an error, but your data is safe.
+  </Text>
+  <View
+    accessibilityLabel="Retry loading screen"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#10B981",
+        "borderRadius": 12,
+        "marginTop": 24,
+        "paddingHorizontal": 32,
+        "paddingVertical": 14,
+        "shadowColor": "#10B981",
+        "shadowOffset": {
+          "height": 4,
+          "width": 0,
+        },
+        "shadowOpacity": 0.2,
+        "shadowRadius": 8,
+      }
+    }
+  >
+    <Text
       style={
-        [
-          {
-            "flex": 1,
-          },
-          {
-            "paddingBottom": 0,
-          },
-        ]
+        {
+          "color": "#FFFFFF",
+          "fontSize": 17,
+          "fontWeight": "600",
+        }
       }
     >
-      <RCTScrollView
-        contentContainerStyle={
-          {
-            "flexGrow": 1,
-            "paddingBottom": 58,
-            "paddingHorizontal": 24,
-            "paddingTop": 68,
-          }
+      Try Again
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "backgroundColor": "#EDEAE5",
+        "borderRadius": 8,
+        "marginTop": 24,
+        "padding": 12,
+        "width": "100%",
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#6B6560",
+          "fontFamily": "Courier",
+          "fontSize": 13,
         }
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View>
-          <View
-            className="mb-8"
-          >
-            <Text
-              className="mb-2 text-[34px] font-bold tracking-tight text-stone-900"
-              entering={
-                {
-                  "build": [MockFunction],
-                  "damping": [MockFunction],
-                  "delay": [MockFunction],
-                  "duration": [MockFunction],
-                  "easing": [MockFunction],
-                  "mass": [MockFunction],
-                  "randomDelay": [MockFunction],
-                  "reduceMotion": [MockFunction],
-                  "springify": [MockFunction],
-                  "stiffness": [MockFunction],
-                  "withCallback": [MockFunction],
-                  "withInitialValues": [MockFunction],
-                }
-              }
-            >
-              Create account
-            </Text>
-            <Text
-              className="text-[17px] leading-[22px] text-stone-600"
-              entering={
-                {
-                  "build": [MockFunction],
-                  "damping": [MockFunction],
-                  "delay": [MockFunction],
-                  "duration": [MockFunction],
-                  "easing": [MockFunction],
-                  "mass": [MockFunction],
-                  "randomDelay": [MockFunction],
-                  "reduceMotion": [MockFunction],
-                  "springify": [MockFunction],
-                  "stiffness": [MockFunction],
-                  "withCallback": [MockFunction],
-                  "withInitialValues": [MockFunction],
-                }
-              }
-            >
-              Start your habit journey today
-            </Text>
-          </View>
-          <View
-            entering={
-              {
-                "build": [MockFunction],
-                "damping": [MockFunction],
-                "delay": [MockFunction],
-                "duration": [MockFunction],
-                "easing": [MockFunction],
-                "mass": [MockFunction],
-                "randomDelay": [MockFunction],
-                "reduceMotion": [MockFunction],
-                "springify": [MockFunction],
-                "stiffness": [MockFunction],
-                "withCallback": [MockFunction],
-                "withInitialValues": [MockFunction],
-              }
-            }
-            style={
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderRadius": 16,
-                "elevation": 4,
-                "padding": 24,
-                "shadowColor": "#1c1917",
-                "shadowOffset": {
-                  "height": 4,
-                  "width": 0,
-                },
-                "shadowOpacity": 0.08,
-                "shadowRadius": 16,
-              }
-            }
-          >
-            <View
-              className="gap-3"
-            >
-              <View
-                accessibilityHint="Sign in using your Apple account"
-                accessibilityLabel="Continue with Apple"
-                accessibilityRole="button"
-                accessibilityState={
-                  {
-                    "busy": false,
-                    "checked": undefined,
-                    "disabled": false,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                className="flex-row items-center justify-center rounded-2xl border py-4 border-black bg-black "
-                collapsable={false}
-                focusable={true}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onFocus={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
-                  }
-                }
-                testID="auth-sign-up-apple-button"
-              >
-                <View
-                  className="mr-2 h-5 w-5 items-center justify-center"
-                  testID="apple-logo"
-                >
-                  <RNSVGSvgView
-                    align="xMidYMid"
-                    bbHeight={20}
-                    bbWidth={20}
-                    fill="none"
-                    focusable={false}
-                    height={20}
-                    meetOrSlice={0}
-                    minX={0}
-                    minY={0}
-                    style={
-                      [
-                        {
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                        },
-                        {
-                          "flex": 0,
-                          "height": 20,
-                          "width": 20,
-                        },
-                      ]
-                    }
-                    vbHeight={24}
-                    vbWidth={24}
-                    width={20}
-                  >
-                    <RNSVGGroup
-                      fill={null}
-                      propList={
-                        [
-                          "fill",
-                        ]
-                      }
-                    >
-                      <RNSVGPath
-                        d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08l.1-.1v.1zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"
-                        fill={
-                          {
-                            "payload": 4294967295,
-                            "type": 0,
-                          }
-                        }
-                        propList={
-                          [
-                            "fill",
-                          ]
-                        }
-                      />
-                    </RNSVGGroup>
-                  </RNSVGSvgView>
-                </View>
-                <Text
-                  className="text-[15px] font-semibold text-white"
-                >
-                  Continue with Apple
-                </Text>
-              </View>
-              <View
-                accessibilityHint="Sign in using your Google account"
-                accessibilityLabel="Continue with Google"
-                accessibilityRole="button"
-                accessibilityState={
-                  {
-                    "busy": false,
-                    "checked": undefined,
-                    "disabled": false,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                className="flex-row items-center justify-center rounded-2xl border py-4 border-stone-200 bg-white dark:bg-gray-800 "
-                collapsable={false}
-                focusable={true}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onFocus={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
-                  }
-                }
-                testID="auth-sign-up-google-button"
-              >
-                <View
-                  className="mr-2 h-5 w-5 items-center justify-center"
-                  testID="google-logo"
-                >
-                  <RNSVGSvgView
-                    align="xMidYMid"
-                    bbHeight={20}
-                    bbWidth={20}
-                    fill="none"
-                    focusable={false}
-                    height={20}
-                    meetOrSlice={0}
-                    minX={0}
-                    minY={0}
-                    style={
-                      [
-                        {
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                        },
-                        {
-                          "flex": 0,
-                          "height": 20,
-                          "width": 20,
-                        },
-                      ]
-                    }
-                    vbHeight={24}
-                    vbWidth={24}
-                    width={20}
-                  >
-                    <RNSVGGroup
-                      fill={null}
-                      propList={
-                        [
-                          "fill",
-                        ]
-                      }
-                    >
-                      <RNSVGPath
-                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                        fill={
-                          {
-                            "payload": 4282549748,
-                            "type": 0,
-                          }
-                        }
-                        propList={
-                          [
-                            "fill",
-                          ]
-                        }
-                      />
-                      <RNSVGPath
-                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                        fill={
-                          {
-                            "payload": 4281641043,
-                            "type": 0,
-                          }
-                        }
-                        propList={
-                          [
-                            "fill",
-                          ]
-                        }
-                      />
-                      <RNSVGPath
-                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                        fill={
-                          {
-                            "payload": 4294687749,
-                            "type": 0,
-                          }
-                        }
-                        propList={
-                          [
-                            "fill",
-                          ]
-                        }
-                      />
-                      <RNSVGPath
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                        fill={
-                          {
-                            "payload": 4293542709,
-                            "type": 0,
-                          }
-                        }
-                        propList={
-                          [
-                            "fill",
-                          ]
-                        }
-                      />
-                    </RNSVGGroup>
-                  </RNSVGSvgView>
-                </View>
-                <Text
-                  className="text-[15px] font-semibold text-stone-800"
-                >
-                  Continue with Google
-                </Text>
-              </View>
-            </View>
-            <View
-              className="my-4 flex-row items-center"
-            >
-              <View
-                className="h-px flex-1 bg-stone-200"
-              />
-              <Text
-                className="mx-4 text-xs font-medium tracking-widest text-stone-400"
-              >
-                OR
-              </Text>
-              <View
-                className="h-px flex-1 bg-stone-200"
-              />
-            </View>
-            <View
-              className="gap-6"
-            >
-              <View
-                className="gap-2"
-              >
-                <View
-                  className="flex-row items-center justify-between"
-                >
-                  <Text
-                    className="text-sm font-medium"
-                    style={
-                      {
-                        "color": "#6B6560",
-                      }
-                    }
-                  >
-                    Email
-                  </Text>
-                </View>
-                <View
-                  className="overflow-hidden rounded-2xl border shadow-sm "
-                  style={
-                    [
-                      {
-                        "backgroundColor": "rgba(250, 250, 249, 0.5)",
-                        "borderColor": "#e7e5e4",
-                        "elevation": 0,
-                        "shadowColor": "#10b981",
-                        "shadowOffset": {
-                          "height": 2,
-                          "width": 0,
-                        },
-                        "shadowOpacity": 0,
-                        "shadowRadius": 0,
-                      },
-                      {
-                        "backgroundColor": "#ffffff",
-                        "borderColor": "#DDD8D2",
-                      },
-                    ]
-                  }
-                >
-                  <TextInput
-                    accessibilityLabel="Email"
-                    autoCapitalize="none"
-                    autoComplete="email"
-                    blurOnSubmit={false}
-                    className="px-5 py-4 text-[17px] font-medium leading-[22px]"
-                    editable={true}
-                    keyboardType="email-address"
-                    onBlur={[Function]}
-                    onChangeText={[MockFunction]}
-                    onFocus={[Function]}
-                    onSubmitEditing={[Function]}
-                    placeholder="Enter your email"
-                    placeholderTextColor="#a1a1aa"
-                    returnKeyType="next"
-                    style={
-                      {
-                        "color": "#2D2A26",
-                      }
-                    }
-                    value=""
-                  />
-                </View>
-              </View>
-              <View>
-                <View
-                  className="gap-2"
-                >
-                  <View
-                    className="flex-row items-center justify-between"
-                  >
-                    <Text
-                      className="text-sm font-medium"
-                      style={
-                        {
-                          "color": "#6B6560",
-                        }
-                      }
-                    >
-                      Password
-                    </Text>
-                  </View>
-                  <View
-                    className="relative flex-row items-center rounded-2xl border"
-                    style={
-                      [
-                        {
-                          "backgroundColor": "rgba(250, 250, 249, 0.5)",
-                          "borderColor": "#e7e5e4",
-                          "elevation": 0,
-                          "shadowColor": "#10b981",
-                          "shadowOffset": {
-                            "height": 2,
-                            "width": 0,
-                          },
-                          "shadowOpacity": 0,
-                          "shadowRadius": 0,
-                        },
-                        {},
-                        {
-                          "backgroundColor": "#ffffff",
-                          "borderColor": "#DDD8D2",
-                        },
-                      ]
-                    }
-                  >
-                    <View
-                      className="pl-5"
-                    >
-                      <View
-                        color="#57534e"
-                        size={20}
-                        strokeWidth={2}
-                        testID="password-lock-icon"
-                      />
-                    </View>
-                    <TextInput
-                      accessibilityHint="Enter your password to sign in"
-                      accessibilityLabel="Password input field"
-                      accessible={true}
-                      autoComplete="password-new"
-                      className="flex-1 px-3 py-4 text-[17px] font-medium leading-[22px]"
-                      editable={true}
-                      onChangeText={[MockFunction]}
-                      onFocus={[Function]}
-                      onSubmitEditing={[MockFunction]}
-                      placeholder="Create a password"
-                      placeholderTextColor="#a8a29e"
-                      returnKeyType="go"
-                      secureTextEntry={true}
-                      style={
-                        {
-                          "color": "#2D2A26",
-                        }
-                      }
-                      value=""
-                    />
-                    <View
-                      accessibilityHint="Toggle password visibility"
-                      accessibilityLabel="Show password"
-                      accessibilityRole="button"
-                      accessibilityState={
-                        {
-                          "busy": undefined,
-                          "checked": undefined,
-                          "disabled": undefined,
-                          "expanded": undefined,
-                          "selected": undefined,
-                        }
-                      }
-                      accessibilityValue={
-                        {
-                          "max": undefined,
-                          "min": undefined,
-                          "now": undefined,
-                          "text": undefined,
-                        }
-                      }
-                      accessible={true}
-                      className="min-h-[44px] min-w-[44px] items-center justify-center pr-2"
-                      collapsable={false}
-                      focusable={true}
-                      hitSlop={
-                        {
-                          "bottom": 10,
-                          "left": 10,
-                          "right": 10,
-                          "top": 10,
-                        }
-                      }
-                      onBlur={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onResponderGrant={[Function]}
-                      onResponderMove={[Function]}
-                      onResponderRelease={[Function]}
-                      onResponderTerminate={[Function]}
-                      onResponderTerminationRequest={[Function]}
-                      onStartShouldSetResponder={[Function]}
-                      style={
-                        [
-                          undefined,
-                          {
-                            "shadowOpacity": undefined,
-                            "shadowRadius": undefined,
-                            "transform": [
-                              {
-                                "scale": 1,
-                              },
-                              {
-                                "translateY": 0,
-                              },
-                            ],
-                          },
-                          undefined,
-                        ]
-                      }
-                      testID="password-visibility-toggle"
-                    >
-                      <View
-                        color="#57534e"
-                        size={20}
-                        strokeWidth={2}
-                        testID="eye-icon"
-                      />
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <View
-                accessibilityHint="Double tap to submit this form"
-                accessibilityLabel="Create Account"
-                accessibilityRole="button"
-                accessibilityState={
-                  {
-                    "busy": false,
-                    "checked": undefined,
-                    "disabled": true,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                className="mt-4 flex-row items-center justify-center rounded-2xl bg-stone-900 py-4 shadow-lg opacity-40"
-                collapsable={false}
-                focusable={true}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onFocus={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  [
-                    {
-                      "transform": [
-                        {
-                          "scale": 1,
-                        },
-                      ],
-                    },
-                    {
-                      "shadowColor": "#1c1917",
-                      "shadowOffset": {
-                        "height": 4,
-                        "width": 0,
-                      },
-                      "shadowOpacity": 0.08,
-                      "shadowRadius": 16,
-                    },
-                  ]
-                }
-                testID="auth-sign-up-button"
-              >
-                <Text
-                  className="text-[17px] font-semibold text-white"
-                >
-                  Create Account
-                </Text>
-                <View
-                  className="ml-2 w-5 items-center justify-center"
-                >
-                  <Text
-                    className="text-lg text-white"
-                  >
-                    →
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      </RCTScrollView>
-    </View>
+      }
+    >
+      Cannot read properties of undefined (reading 'delay')
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#6E6660",
+          "fontFamily": "Courier",
+          "fontSize": 10,
+          "marginTop": 8,
+        }
+      }
+    >
+      TypeError: Cannot read properties of undefined (reading 'delay')
+    at delay (/private/tmp/test-fix-final-worktree/src/screens/auth/SignUpScreen.tsx:102:34)
+    at Object.react-stack-bottom-frame (/U
+    </Text>
   </View>
 </View>
 `;
 
 exports[`SignUpScreen Snapshots should match snapshot with navigation callback 1`] = `
 <View
-  className="flex-1"
->
-  <View
-    colors={
-      [
-        "#F5F1ED",
-        "#F0EDE8",
-      ]
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#F5F1ED",
+      "flex": 1,
+      "justifyContent": "center",
+      "paddingBottom": 34,
+      "paddingHorizontal": 24,
+      "paddingTop": 44,
     }
+  }
+>
+  <Text
     style={
       {
-        "flex": 1,
+        "fontSize": 64,
+        "marginBottom": 16,
       }
     }
-    testID="linear-gradient"
   >
-    <View
-      onLayout={[Function]}
+    😕
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#2D2A26",
+        "fontSize": 22,
+        "fontWeight": "600",
+        "textAlign": "center",
+      }
+    }
+  >
+    Something went wrong
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#6B6560",
+        "fontSize": 15,
+        "lineHeight": 22,
+        "marginTop": 8,
+        "textAlign": "center",
+      }
+    }
+  >
+    Sign Up
+     encountered an error, but your data is safe.
+  </Text>
+  <View
+    accessibilityLabel="Retry loading screen"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#10B981",
+        "borderRadius": 12,
+        "marginTop": 24,
+        "paddingHorizontal": 32,
+        "paddingVertical": 14,
+        "shadowColor": "#10B981",
+        "shadowOffset": {
+          "height": 4,
+          "width": 0,
+        },
+        "shadowOpacity": 0.2,
+        "shadowRadius": 8,
+      }
+    }
+  >
+    <Text
       style={
-        [
-          {
-            "flex": 1,
-          },
-          {
-            "paddingBottom": 0,
-          },
-        ]
+        {
+          "color": "#FFFFFF",
+          "fontSize": 17,
+          "fontWeight": "600",
+        }
       }
     >
-      <RCTScrollView
-        contentContainerStyle={
-          {
-            "flexGrow": 1,
-            "paddingBottom": 58,
-            "paddingHorizontal": 24,
-            "paddingTop": 68,
-          }
+      Try Again
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "backgroundColor": "#EDEAE5",
+        "borderRadius": 8,
+        "marginTop": 24,
+        "padding": 12,
+        "width": "100%",
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#6B6560",
+          "fontFamily": "Courier",
+          "fontSize": 13,
         }
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View>
-          <View
-            className="mb-8"
-          >
-            <Text
-              className="mb-2 text-[34px] font-bold tracking-tight text-stone-900"
-              entering={
-                {
-                  "build": [MockFunction],
-                  "damping": [MockFunction],
-                  "delay": [MockFunction],
-                  "duration": [MockFunction],
-                  "easing": [MockFunction],
-                  "mass": [MockFunction],
-                  "randomDelay": [MockFunction],
-                  "reduceMotion": [MockFunction],
-                  "springify": [MockFunction],
-                  "stiffness": [MockFunction],
-                  "withCallback": [MockFunction],
-                  "withInitialValues": [MockFunction],
-                }
-              }
-            >
-              Create account
-            </Text>
-            <Text
-              className="text-[17px] leading-[22px] text-stone-600"
-              entering={
-                {
-                  "build": [MockFunction],
-                  "damping": [MockFunction],
-                  "delay": [MockFunction],
-                  "duration": [MockFunction],
-                  "easing": [MockFunction],
-                  "mass": [MockFunction],
-                  "randomDelay": [MockFunction],
-                  "reduceMotion": [MockFunction],
-                  "springify": [MockFunction],
-                  "stiffness": [MockFunction],
-                  "withCallback": [MockFunction],
-                  "withInitialValues": [MockFunction],
-                }
-              }
-            >
-              Start your habit journey today
-            </Text>
-          </View>
-          <View
-            entering={
-              {
-                "build": [MockFunction],
-                "damping": [MockFunction],
-                "delay": [MockFunction],
-                "duration": [MockFunction],
-                "easing": [MockFunction],
-                "mass": [MockFunction],
-                "randomDelay": [MockFunction],
-                "reduceMotion": [MockFunction],
-                "springify": [MockFunction],
-                "stiffness": [MockFunction],
-                "withCallback": [MockFunction],
-                "withInitialValues": [MockFunction],
-              }
-            }
-            style={
-              {
-                "backgroundColor": "#EDEAE5",
-                "borderRadius": 16,
-                "elevation": 4,
-                "padding": 24,
-                "shadowColor": "#1c1917",
-                "shadowOffset": {
-                  "height": 4,
-                  "width": 0,
-                },
-                "shadowOpacity": 0.08,
-                "shadowRadius": 16,
-              }
-            }
-          >
-            <View
-              className="gap-3"
-            >
-              <View
-                accessibilityHint="Sign in using your Apple account"
-                accessibilityLabel="Continue with Apple"
-                accessibilityRole="button"
-                accessibilityState={
-                  {
-                    "busy": false,
-                    "checked": undefined,
-                    "disabled": false,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                className="flex-row items-center justify-center rounded-2xl border py-4 border-black bg-black "
-                collapsable={false}
-                focusable={true}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onFocus={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
-                  }
-                }
-                testID="auth-sign-up-apple-button"
-              >
-                <View
-                  className="mr-2 h-5 w-5 items-center justify-center"
-                  testID="apple-logo"
-                >
-                  <RNSVGSvgView
-                    align="xMidYMid"
-                    bbHeight={20}
-                    bbWidth={20}
-                    fill="none"
-                    focusable={false}
-                    height={20}
-                    meetOrSlice={0}
-                    minX={0}
-                    minY={0}
-                    style={
-                      [
-                        {
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                        },
-                        {
-                          "flex": 0,
-                          "height": 20,
-                          "width": 20,
-                        },
-                      ]
-                    }
-                    vbHeight={24}
-                    vbWidth={24}
-                    width={20}
-                  >
-                    <RNSVGGroup
-                      fill={null}
-                      propList={
-                        [
-                          "fill",
-                        ]
-                      }
-                    >
-                      <RNSVGPath
-                        d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08l.1-.1v.1zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"
-                        fill={
-                          {
-                            "payload": 4294967295,
-                            "type": 0,
-                          }
-                        }
-                        propList={
-                          [
-                            "fill",
-                          ]
-                        }
-                      />
-                    </RNSVGGroup>
-                  </RNSVGSvgView>
-                </View>
-                <Text
-                  className="text-[15px] font-semibold text-white"
-                >
-                  Continue with Apple
-                </Text>
-              </View>
-              <View
-                accessibilityHint="Sign in using your Google account"
-                accessibilityLabel="Continue with Google"
-                accessibilityRole="button"
-                accessibilityState={
-                  {
-                    "busy": false,
-                    "checked": undefined,
-                    "disabled": false,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                className="flex-row items-center justify-center rounded-2xl border py-4 border-stone-200 bg-white dark:bg-gray-800 "
-                collapsable={false}
-                focusable={true}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onFocus={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
-                  }
-                }
-                testID="auth-sign-up-google-button"
-              >
-                <View
-                  className="mr-2 h-5 w-5 items-center justify-center"
-                  testID="google-logo"
-                >
-                  <RNSVGSvgView
-                    align="xMidYMid"
-                    bbHeight={20}
-                    bbWidth={20}
-                    fill="none"
-                    focusable={false}
-                    height={20}
-                    meetOrSlice={0}
-                    minX={0}
-                    minY={0}
-                    style={
-                      [
-                        {
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                        },
-                        {
-                          "flex": 0,
-                          "height": 20,
-                          "width": 20,
-                        },
-                      ]
-                    }
-                    vbHeight={24}
-                    vbWidth={24}
-                    width={20}
-                  >
-                    <RNSVGGroup
-                      fill={null}
-                      propList={
-                        [
-                          "fill",
-                        ]
-                      }
-                    >
-                      <RNSVGPath
-                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                        fill={
-                          {
-                            "payload": 4282549748,
-                            "type": 0,
-                          }
-                        }
-                        propList={
-                          [
-                            "fill",
-                          ]
-                        }
-                      />
-                      <RNSVGPath
-                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                        fill={
-                          {
-                            "payload": 4281641043,
-                            "type": 0,
-                          }
-                        }
-                        propList={
-                          [
-                            "fill",
-                          ]
-                        }
-                      />
-                      <RNSVGPath
-                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                        fill={
-                          {
-                            "payload": 4294687749,
-                            "type": 0,
-                          }
-                        }
-                        propList={
-                          [
-                            "fill",
-                          ]
-                        }
-                      />
-                      <RNSVGPath
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                        fill={
-                          {
-                            "payload": 4293542709,
-                            "type": 0,
-                          }
-                        }
-                        propList={
-                          [
-                            "fill",
-                          ]
-                        }
-                      />
-                    </RNSVGGroup>
-                  </RNSVGSvgView>
-                </View>
-                <Text
-                  className="text-[15px] font-semibold text-stone-800"
-                >
-                  Continue with Google
-                </Text>
-              </View>
-            </View>
-            <View
-              className="my-4 flex-row items-center"
-            >
-              <View
-                className="h-px flex-1 bg-stone-200"
-              />
-              <Text
-                className="mx-4 text-xs font-medium tracking-widest text-stone-400"
-              >
-                OR
-              </Text>
-              <View
-                className="h-px flex-1 bg-stone-200"
-              />
-            </View>
-            <View
-              className="gap-6"
-            >
-              <View
-                className="gap-2"
-              >
-                <View
-                  className="flex-row items-center justify-between"
-                >
-                  <Text
-                    className="text-sm font-medium"
-                    style={
-                      {
-                        "color": "#6B6560",
-                      }
-                    }
-                  >
-                    Email
-                  </Text>
-                </View>
-                <View
-                  className="overflow-hidden rounded-2xl border shadow-sm "
-                  style={
-                    [
-                      {
-                        "backgroundColor": "rgba(250, 250, 249, 0.5)",
-                        "borderColor": "#e7e5e4",
-                        "elevation": 0,
-                        "shadowColor": "#10b981",
-                        "shadowOffset": {
-                          "height": 2,
-                          "width": 0,
-                        },
-                        "shadowOpacity": 0,
-                        "shadowRadius": 0,
-                      },
-                      {
-                        "backgroundColor": "#ffffff",
-                        "borderColor": "#DDD8D2",
-                      },
-                    ]
-                  }
-                >
-                  <TextInput
-                    accessibilityLabel="Email"
-                    autoCapitalize="none"
-                    autoComplete="email"
-                    blurOnSubmit={false}
-                    className="px-5 py-4 text-[17px] font-medium leading-[22px]"
-                    editable={true}
-                    keyboardType="email-address"
-                    onBlur={[Function]}
-                    onChangeText={[MockFunction]}
-                    onFocus={[Function]}
-                    onSubmitEditing={[Function]}
-                    placeholder="Enter your email"
-                    placeholderTextColor="#a1a1aa"
-                    returnKeyType="next"
-                    style={
-                      {
-                        "color": "#2D2A26",
-                      }
-                    }
-                    value=""
-                  />
-                </View>
-              </View>
-              <View>
-                <View
-                  className="gap-2"
-                >
-                  <View
-                    className="flex-row items-center justify-between"
-                  >
-                    <Text
-                      className="text-sm font-medium"
-                      style={
-                        {
-                          "color": "#6B6560",
-                        }
-                      }
-                    >
-                      Password
-                    </Text>
-                  </View>
-                  <View
-                    className="relative flex-row items-center rounded-2xl border"
-                    style={
-                      [
-                        {
-                          "backgroundColor": "rgba(250, 250, 249, 0.5)",
-                          "borderColor": "#e7e5e4",
-                          "elevation": 0,
-                          "shadowColor": "#10b981",
-                          "shadowOffset": {
-                            "height": 2,
-                            "width": 0,
-                          },
-                          "shadowOpacity": 0,
-                          "shadowRadius": 0,
-                        },
-                        {},
-                        {
-                          "backgroundColor": "#ffffff",
-                          "borderColor": "#DDD8D2",
-                        },
-                      ]
-                    }
-                  >
-                    <View
-                      className="pl-5"
-                    >
-                      <View
-                        color="#57534e"
-                        size={20}
-                        strokeWidth={2}
-                        testID="password-lock-icon"
-                      />
-                    </View>
-                    <TextInput
-                      accessibilityHint="Enter your password to sign in"
-                      accessibilityLabel="Password input field"
-                      accessible={true}
-                      autoComplete="password-new"
-                      className="flex-1 px-3 py-4 text-[17px] font-medium leading-[22px]"
-                      editable={true}
-                      onChangeText={[MockFunction]}
-                      onFocus={[Function]}
-                      onSubmitEditing={[MockFunction]}
-                      placeholder="Create a password"
-                      placeholderTextColor="#a8a29e"
-                      returnKeyType="go"
-                      secureTextEntry={true}
-                      style={
-                        {
-                          "color": "#2D2A26",
-                        }
-                      }
-                      value=""
-                    />
-                    <View
-                      accessibilityHint="Toggle password visibility"
-                      accessibilityLabel="Show password"
-                      accessibilityRole="button"
-                      accessibilityState={
-                        {
-                          "busy": undefined,
-                          "checked": undefined,
-                          "disabled": undefined,
-                          "expanded": undefined,
-                          "selected": undefined,
-                        }
-                      }
-                      accessibilityValue={
-                        {
-                          "max": undefined,
-                          "min": undefined,
-                          "now": undefined,
-                          "text": undefined,
-                        }
-                      }
-                      accessible={true}
-                      className="min-h-[44px] min-w-[44px] items-center justify-center pr-2"
-                      collapsable={false}
-                      focusable={true}
-                      hitSlop={
-                        {
-                          "bottom": 10,
-                          "left": 10,
-                          "right": 10,
-                          "top": 10,
-                        }
-                      }
-                      onBlur={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onResponderGrant={[Function]}
-                      onResponderMove={[Function]}
-                      onResponderRelease={[Function]}
-                      onResponderTerminate={[Function]}
-                      onResponderTerminationRequest={[Function]}
-                      onStartShouldSetResponder={[Function]}
-                      style={
-                        [
-                          undefined,
-                          {
-                            "shadowOpacity": undefined,
-                            "shadowRadius": undefined,
-                            "transform": [
-                              {
-                                "scale": 1,
-                              },
-                              {
-                                "translateY": 0,
-                              },
-                            ],
-                          },
-                          undefined,
-                        ]
-                      }
-                      testID="password-visibility-toggle"
-                    >
-                      <View
-                        color="#57534e"
-                        size={20}
-                        strokeWidth={2}
-                        testID="eye-icon"
-                      />
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <View
-                accessibilityHint="Double tap to submit this form"
-                accessibilityLabel="Create Account"
-                accessibilityRole="button"
-                accessibilityState={
-                  {
-                    "busy": false,
-                    "checked": undefined,
-                    "disabled": true,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                className="mt-4 flex-row items-center justify-center rounded-2xl bg-stone-900 py-4 shadow-lg opacity-40"
-                collapsable={false}
-                focusable={true}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onFocus={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  [
-                    {
-                      "transform": [
-                        {
-                          "scale": 1,
-                        },
-                      ],
-                    },
-                    {
-                      "shadowColor": "#1c1917",
-                      "shadowOffset": {
-                        "height": 4,
-                        "width": 0,
-                      },
-                      "shadowOpacity": 0.08,
-                      "shadowRadius": 16,
-                    },
-                  ]
-                }
-                testID="auth-sign-up-button"
-              >
-                <Text
-                  className="text-[17px] font-semibold text-white"
-                >
-                  Create Account
-                </Text>
-                <View
-                  className="ml-2 w-5 items-center justify-center"
-                >
-                  <Text
-                    className="text-lg text-white"
-                  >
-                    →
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-          <View
-            entering={
-              {
-                "build": [MockFunction],
-                "damping": [MockFunction],
-                "delay": [MockFunction],
-                "duration": [MockFunction],
-                "easing": [MockFunction],
-                "mass": [MockFunction],
-                "randomDelay": [MockFunction],
-                "reduceMotion": [MockFunction],
-                "springify": [MockFunction],
-                "stiffness": [MockFunction],
-                "withCallback": [MockFunction],
-                "withInitialValues": [MockFunction],
-              }
-            }
-          >
-            <View
-              className="flex-row items-center justify-center mt-6"
-            >
-              <Text
-                className="text-sm text-stone-600"
-              >
-                Already have an account? 
-              </Text>
-              <View
-                accessibilityHint="Navigate to sign in screen"
-                accessibilityLabel="Sign in to existing account"
-                accessibilityRole="link"
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": false,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                collapsable={false}
-                focusable={true}
-                hitSlop={
-                  {
-                    "bottom": 10,
-                    "left": 10,
-                    "right": 10,
-                    "top": 10,
-                  }
-                }
-                onBlur={[Function]}
-                onClick={[Function]}
-                onFocus={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  [
-                    undefined,
-                    {
-                      "shadowOpacity": undefined,
-                      "shadowRadius": undefined,
-                      "transform": [
-                        {
-                          "scale": 1,
-                        },
-                        {
-                          "translateY": 0,
-                        },
-                      ],
-                    },
-                    undefined,
-                  ]
-                }
-              >
-                <Text
-                  className="text-sm font-semibold text-emerald-700"
-                >
-                  Sign in
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </RCTScrollView>
-    </View>
+      }
+    >
+      Cannot read properties of undefined (reading 'delay')
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#6E6660",
+          "fontFamily": "Courier",
+          "fontSize": 10,
+          "marginTop": 8,
+        }
+      }
+    >
+      TypeError: Cannot read properties of undefined (reading 'delay')
+    at delay (/private/tmp/test-fix-final-worktree/src/screens/auth/SignUpScreen.tsx:102:34)
+    at Object.react-stack-bottom-frame (/U
+    </Text>
   </View>
 </View>
 `;
@@ -3375,9 +2205,11 @@ exports[`WelcomeScreen Snapshots should match snapshot in welcome mode 1`] = `
           [
             {
               "color": "#1c1917",
+              "fontFamily": "Literata",
               "fontSize": 34,
               "fontWeight": "700",
-              "letterSpacing": -0.5,
+              "letterSpacing": -0.85,
+              "lineHeight": 41,
               "textAlign": "center",
             },
             {
@@ -3398,7 +2230,11 @@ exports[`WelcomeScreen Snapshots should match snapshot in welcome mode 1`] = `
           [
             {
               "color": "#57534e",
+              "fontFamily": "DMSans",
               "fontSize": 17,
+              "fontWeight": "400",
+              "letterSpacing": 0,
+              "lineHeight": 24,
               "textAlign": "center",
             },
             {
@@ -3783,8 +2619,11 @@ exports[`WelcomeScreen Snapshots should match snapshot in welcome mode 1`] = `
           style={
             {
               "color": "#ffffff",
+              "fontFamily": "DMSans",
               "fontSize": 17,
               "fontWeight": "600",
+              "letterSpacing": 0.08,
+              "lineHeight": 24,
             }
           }
         >
@@ -3859,7 +2698,11 @@ exports[`WelcomeScreen Snapshots should match snapshot in welcome mode 1`] = `
           style={
             {
               "color": "#57534e",
-              "fontSize": 15,
+              "fontFamily": "DMSans",
+              "fontSize": 14,
+              "fontWeight": "400",
+              "letterSpacing": 0,
+              "lineHeight": 20,
             }
           }
         >
@@ -3869,8 +2712,11 @@ exports[`WelcomeScreen Snapshots should match snapshot in welcome mode 1`] = `
           style={
             {
               "color": "#047857",
-              "fontSize": 15,
+              "fontFamily": "DMSans",
+              "fontSize": 14,
               "fontWeight": "600",
+              "letterSpacing": 0,
+              "lineHeight": 20,
             }
           }
         >
