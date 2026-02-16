@@ -45,8 +45,8 @@ export const useDraggableHabitLogic = (habit: Habit) => {
   const { emoji: extractedEmoji, name } = getEmojiAndName(habit.name);
   const emoji = habit.icon || extractedEmoji;
 
-  // Use iconColor if available, otherwise pick based on name
-  const accentColor = habit.iconColor || pickAccentColor(name || habit.name);
+  // Use explicit habit color when available, then legacy iconColor, then deterministic fallback
+  const accentColor = habit.color || habit.iconColor || pickAccentColor(name || habit.name);
 
   return {
     accentColor,
