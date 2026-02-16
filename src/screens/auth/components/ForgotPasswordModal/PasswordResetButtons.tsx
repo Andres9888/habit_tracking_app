@@ -50,10 +50,10 @@ export function PasswordResetButtons({
         ]}
         onPress={onSubmit}
         onPressIn={() => {
-          scale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
+          scale.value = withSpring(0.97, { damping: 18, stiffness: 150 });
         }}
         onPressOut={() => {
-          scale.value = withSpring(1, { damping: 18, stiffness: 240 });
+          scale.value = withSpring(1, { damping: 18, stiffness: 150 });
         }}
       >
         {isLoading ? (

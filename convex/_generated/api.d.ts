@@ -124,6 +124,7 @@ import type * as streakUtils_types from "../streakUtils/types.js";
 import type * as streakUtils_updateStreak from "../streakUtils/updateStreak.js";
 import type * as streakUtils from "../streakUtils.js";
 import type * as subscriptions_helpers from "../subscriptions/helpers.js";
+import type * as subscriptions_premiumCheck from "../subscriptions/premiumCheck.js";
 import type * as subscriptions from "../subscriptions.js";
 import type * as templates_clearAndDedupe from "../templates/clearAndDedupe.js";
 import type * as templates_helpers from "../templates/helpers.js";
@@ -280,6 +281,7 @@ declare const fullApi: ApiFromModules<{
   "streakUtils/updateStreak": typeof streakUtils_updateStreak;
   streakUtils: typeof streakUtils;
   "subscriptions/helpers": typeof subscriptions_helpers;
+  "subscriptions/premiumCheck": typeof subscriptions_premiumCheck;
   subscriptions: typeof subscriptions;
   "templates/clearAndDedupe": typeof templates_clearAndDedupe;
   "templates/helpers": typeof templates_helpers;

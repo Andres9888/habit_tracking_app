@@ -1,6 +1,26 @@
 /**
- * HabitsList Component - Main orchestration
- * Displays the draggable list of habits with header, footer, and modals
+ * HabitsList — top-level orchestrator for the habits screen.
+ *
+ * This component does **no rendering itself**; it wires together local UI state
+ * (`useHabitsListState`), animation logic (`useHabitsListAnimations`), event
+ * handlers (`useHabitsListHandlers`), and a per-row render function
+ * (`useHabitRenderItem`) then delegates all visual output to
+ * {@link HabitsListContent}, which wraps a `DraggableFlatList`.
+ *
+ * ### Render-prop pattern
+ * `useHabitRenderItem` returns a **render function** that is passed into the
+ * FlatList via `HabitsListContent`.  Each row is further wrapped by
+ * `renderHabitRow` to apply entrance animations on newly-created habits.
+ *
+ * ### Data flow
+ * ```
+ * HabitsList (props)
+ *   ├─ useHabitsListState        → local UI state (sheets, animations, highlights)
+ *   ├─ useHabitsListAnimations   → success-transition choreography
+ *   ├─ useHabitsListHandlers     → quick-create, sort, drag callbacks
+ *   ├─ useHabitRenderItem        → per-row render function
+ *   └─ HabitsListContent         → DraggableFlatList + modals
+ * ```
  */
 
 import { useHabitRenderItem } from '../../hooks/useHabitRenderItem';
