@@ -23,7 +23,7 @@ export function getHabitRenderData(
   const weekStatus = weekDateStrings.map((dateString) =>
     getHabitStatus(item._id, dateString)
   );
-  const streak = getStreak(item._id);
+  const streak = getStreak(item._id, item.restDays);
   const isConnectedToPreviousWeek = getPreviousWeekConnection(
     weekDateStrings?.[0],
     item._id,

@@ -28,6 +28,11 @@ const STATUS_STYLES: Record<
     indicator: 'bg-emerald-500',
     text: 'text-emerald-600',
   },
+  rest: {
+    container: 'border-transparent bg-blue-50',
+    indicator: 'bg-blue-400',
+    text: 'text-blue-600',
+  },
   upcoming: {
     container: 'border-stone-200 bg-white',
     indicator: 'bg-stone-300 opacity-60',
@@ -39,6 +44,7 @@ const STATUS_LABELS: Record<HabitStatus, string> = {
   done: 'Completed day',
   missed: 'Missed day',
   planned: 'Today',
+  rest: 'Rest day (streak freeze)',
   upcoming: 'Upcoming day',
 };
 

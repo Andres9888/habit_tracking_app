@@ -57,10 +57,10 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   }, [tracking, optimisticStore.pendingToggles]);
 
   const getStreak = useCallback(
-    (habitId: string) => {
+    (habitId: string, restDays?: number[]) => {
       const completedDates = completedDatesByHabit.get(habitId);
       if (!completedDates) return 0;
-      return computeCurrentStreakFromDates(completedDates, today);
+      return computeCurrentStreakFromDates(completedDates, today, restDays);
     },
     [completedDatesByHabit, today]
   );

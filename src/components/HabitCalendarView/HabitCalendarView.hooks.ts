@@ -13,16 +13,18 @@ import {
 import { useCallback, useMemo, useState } from 'react';
 import type { Id } from '../../../convex/_generated/dataModel';
 
-export type HabitStatus = 'done' | 'missed' | 'planned' | 'upcoming';
+export type HabitStatus = 'done' | 'missed' | 'planned' | 'upcoming' | 'rest';
 
 interface UseHabitCalendarViewLogicProps {
   habitId: Id<'habits'>;
   tracking: Array<{ habitId: Id<'habits'>; date: string; completed: boolean }>;
+  restDays?: number[];
 }
 
 export const useHabitCalendarViewLogic = ({
   habitId,
   tracking,
+  restDays,
 }: UseHabitCalendarViewLogicProps) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -43,9 +45,16 @@ export const useHabitCalendarViewLogic = ({
       );
       const today = startOfToday();
       const completion = trackingMap.get(dateString);
+      const dayOfWeek = parsedDate.getDay();
+      const isRestDay = restDays && restDays.includes(dayOfWeek);
 
       if (completion) {
         return 'done';
+      }
+
+      // Show rest days as 'rest' status (show differently on calendar)
+      if (isRestDay && isBefore(parsedDate, today)) {
+        return 'rest';
       }
 
       if (isSameDay(parsedDate, today)) {
@@ -58,7 +67,7 @@ export const useHabitCalendarViewLogic = ({
 
       return 'upcoming';
     },
-    [trackingMap]
+    [trackingMap, restDays]
   );
 
   const handlePreviousMonth = () => {

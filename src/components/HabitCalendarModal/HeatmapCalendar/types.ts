@@ -4,4 +4,5 @@ export interface HeatmapCalendarProps {
   habitId: Id<'habits'>;
   tracking: Array<{ habitId: Id<'habits'>; date: string; completed: boolean }>;
   monthsToShow?: number;
+  restDays?: number[];
 }

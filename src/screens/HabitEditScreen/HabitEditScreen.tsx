@@ -80,12 +80,15 @@ function HabitEditScreenContent({
                     habitName={state.habitName}
                     remindersEnabled={state.remindersEnabled}
                     reminderTime={state.reminderTime}
+                    restDays={state.restDays}
+                    hasPremium={state.hasPremium}
                     selectedColor={state.selectedColor}
                     selectedEmoji={state.selectedEmoji}
                     onColorSelect={state.handleColorSelect}
                     onEmojiSelect={state.handleEmojiSelect}
                     onReminderTimeChange={state.handleReminderTimeChange}
                     onReminderToggle={state.handleReminderToggle}
+                    onRestDaysChange={state.handleRestDaysChange}
                   />
                 </Animated.View>
                 <SectionLabel delay={340} text='DANGER ZONE' variant='danger' />

@@ -8,6 +8,7 @@ interface DayRowProps {
   label: string;
   months: Date[];
   completedDates: Set<string>;
+  restDays?: number[];
   today: Date;
 }
 
@@ -16,6 +17,7 @@ export function DayRow({
   label,
   months,
   completedDates,
+  restDays,
   today,
 }: DayRowProps) {
   return (
@@ -41,11 +43,13 @@ export function DayRow({
               }
 
               const dateString = format(day, 'yyyy-MM-dd');
+              const isRestDay = restDays && restDays.includes(day.getDay());
               return (
                 <HeatmapDot
                   key={dateString}
                   isCompleted={completedDates.has(dateString)}
                   isFuture={day > today}
+                  isRestDay={isRestDay && day < today}
                 />
               );
             })}

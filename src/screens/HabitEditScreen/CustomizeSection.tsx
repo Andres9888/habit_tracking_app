@@ -12,6 +12,7 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
+import { RestDaysSelector } from './RestDaysSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 
 const entrance = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
@@ -22,10 +23,13 @@ interface CustomizeSectionProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
+  restDays?: number[];
+  hasPremium?: boolean;
   onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
+  onRestDaysChange?: (days: number[]) => void;
 }
 
 export function CustomizeSection({
@@ -34,10 +38,13 @@ export function CustomizeSection({
   selectedColor,
   remindersEnabled,
   reminderTime,
+  restDays = [],
+  hasPremium = false,
   onEmojiSelect,
   onColorSelect,
   onReminderToggle,
   onReminderTimeChange,
+  onRestDaysChange,
 }: CustomizeSectionProps) {
   return (
     <View className='flex-1'>
@@ -65,6 +72,14 @@ export function CustomizeSection({
           reminderTime={reminderTime}
           onTimeChange={onReminderTimeChange}
           onToggle={onReminderToggle}
+        />
+      </Animated.View>
+
+      <Animated.View entering={entrance(180)}>
+        <RestDaysSelector
+          restDays={restDays}
+          hasPremium={hasPremium}
+          onRestDaysChange={onRestDaysChange ?? (() => {})}
         />
       </Animated.View>
     </View>

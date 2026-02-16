@@ -16,12 +16,14 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
   const { triggerSelection, triggerSuccess } = useHapticFeedback();
 
   const habit = useQuery(api.habits.get, habitId ? { habitId } : 'skip');
+  const settings = useQuery(api.settings.get);
 
   const [habitName, setHabitName] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>('💪');
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
+  const [restDays, setRestDays] = useState<number[]>([]);
 
   useEffect(() => {
     if (habit) {
@@ -34,6 +36,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
+      setRestDays(habit.restDays ?? []);
     }
   }, [habit]);
 
@@ -46,6 +49,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     },
     remindersEnabled,
     reminderTime,
+    restDays,
     selectedColor,
     selectedEmoji,
   });
@@ -75,6 +79,10 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     setReminderTime(time);
   }, []);
 
+  const handleRestDaysChange = useCallback((days: number[]) => {
+    setRestDays(days);
+  }, []);
+
   return {
     habitName,
     handleColorSelect,
@@ -83,9 +91,12 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     handleArchive,
     handleReminderTimeChange,
     handleReminderToggle,
+    handleRestDaysChange,
+    hasPremium: settings?.hasPremium ?? false,
     isLoading: habitId != null && habit === undefined,
     remindersEnabled,
     handleSave,
+    restDays,
     selectedEmoji,
     isSaving,
     setHabitName,

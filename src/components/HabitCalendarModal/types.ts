@@ -10,6 +10,7 @@ export interface Habit {
   frequency?: string;
   reminderTime?: string;
   preferredTime?: string;
+  restDays?: number[];
   createdAt?: number;
   [key: string]: unknown;
 }

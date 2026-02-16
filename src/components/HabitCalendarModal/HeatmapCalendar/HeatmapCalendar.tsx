@@ -9,6 +9,7 @@ export default function HeatmapCalendar({
   habitId,
   tracking,
   monthsToShow = 6,
+  restDays,
 }: HeatmapCalendarProps) {
   const today = new Date();
 
@@ -32,6 +33,7 @@ export default function HeatmapCalendar({
           dayOfWeek={dayOfWeek}
           label={label}
           months={months}
+          restDays={restDays}
           today={today}
         />
       ))}

@@ -43,7 +43,7 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
       <ErrorBoundary>
         <HabitCalendarModal
           habit={selectedHabit}
-          streak={selectedHabit ? getStreak(selectedHabit._id) : 0}
+          streak={selectedHabit ? getStreak(selectedHabit._id, selectedHabit.restDays) : 0}
           toggleHabit={toggleHabit}
           tracking={tracking}
           visible={showHabitCalendar}

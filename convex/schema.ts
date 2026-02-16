@@ -195,6 +195,11 @@ const applicationTables = {
 
     resumedAt: v.optional(v.number()),
 
+    // Streak Freeze / Rest Days
+    // Days of week where missing a habit doesn't break the streak (0=Sunday, 6=Saturday)
+    // Premium feature: free users get 1 rest day, premium users get unlimited
+    restDays: v.optional(v.array(v.number())),
+
     // Habit Strength System (Klein et al., 2011; Zhang et al., 2021)
     // Computed habit strength (0-1)
     strength: v.optional(v.number()),

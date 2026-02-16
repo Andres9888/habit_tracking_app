@@ -18,6 +18,7 @@ interface UseSaveHandlerProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
+  restDays?: number[];
   onSuccess: () => void;
 }
 
@@ -28,6 +29,7 @@ export function useHabitSaveHandler({
   selectedColor,
   remindersEnabled,
   reminderTime,
+  restDays,
   onSuccess,
 }: UseSaveHandlerProps) {
   const updateHabit = useMutation(api.habits.update);
@@ -82,6 +84,7 @@ export function useHabitSaveHandler({
         remindersEnabled: enableReminders,
         reminderSound: enableReminders ? 'default' : undefined,
         reminderTime: enableReminders ? reminderTimeString : undefined,
+        restDays: restDays && restDays.length > 0 ? restDays : undefined,
       });
 
       onSuccess();
@@ -99,6 +102,7 @@ export function useHabitSaveHandler({
     selectedColor,
     remindersEnabled,
     reminderTime,
+    restDays,
     updateHabit,
     onSuccess,
   ]);
