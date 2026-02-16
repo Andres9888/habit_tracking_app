@@ -2,9 +2,8 @@
  * OverviewStats - Grid of stat cards showing key metrics
  * OPTIMIZED: FadeInUp stagger animations
  */
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
 import { spacing } from '../../../theme/spacing';
 import { StatCard } from './StatCard';
 import type { AnalyticsOverviewStats } from '../AnalyticsScreen.types';
@@ -18,15 +17,30 @@ interface OverviewStatsProps {
 const formatStrengthPercentage = (strength: number) =>
   `${Math.round(strength)}%`;
 
-const anim = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
-
-export const OverviewStats: React.FC<OverviewStatsProps> = ({
+export const OverviewStats = memo(function OverviewStats({
   stats,
   isLoading,
   onHabitPress,
-}) => {
+}: OverviewStatsProps) {
+  const handleStrongestPress = useCallback(() => {
+    if (stats?.strongestHabit) {
+      onHabitPress(stats.strongestHabit.id);
+    }
+  }, [stats?.strongestHabit, onHabitPress]);
+
+  const handleWeakestPress = useCallback(() => {
+    if (stats?.weakestHabit) {
+      onHabitPress(stats.weakestHabit.id);
+    }
+  }, [stats?.weakestHabit, onHabitPress]);
+
   return (
-    <Animated.View entering={anim(0)} style={styles.statsGrid}>
+    <View
+      accessible={false}
+      accessibilityLabel='Overview statistics'
+      accessibilityRole='summary'
+      style={styles.statsGrid}
+    >
       <StatCard
         loading={isLoading}
         title='Total Habits'
@@ -47,11 +61,7 @@ export const OverviewStats: React.FC<OverviewStatsProps> = ({
         }
         title='Strongest Habit'
         value={stats?.strongestHabit?.name ?? '-'}
-        onPress={
-          stats?.strongestHabit
-            ? () => onHabitPress(stats.strongestHabit!.id)
-            : undefined
-        }
+        onPress={stats?.strongestHabit ? handleStrongestPress : undefined}
       />
       <StatCard
         emoji={stats?.weakestHabit?.emoji}
@@ -63,15 +73,11 @@ export const OverviewStats: React.FC<OverviewStatsProps> = ({
         }
         title='Weakest Habit'
         value={stats?.weakestHabit?.name ?? '-'}
-        onPress={
-          stats?.weakestHabit
-            ? () => onHabitPress(stats.weakestHabit!.id)
-            : undefined
-        }
+        onPress={stats?.weakestHabit ? handleWeakestPress : undefined}
       />
-    </Animated.View>
+    </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   statsGrid: {

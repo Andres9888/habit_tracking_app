@@ -1,36 +1,39 @@
 /**
  * StatCard - Displays a single statistic with optional emoji and interaction
  */
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import type { StatCardProps } from '../AnalyticsScreen.types';
 import { styles } from './StatCard.styles';
 
-export const StatCard: React.FC<StatCardProps> = ({
+export const StatCard = memo(function StatCard({
   title,
   value,
   subtitle,
   emoji,
   onPress,
   loading = false,
-}) => {
+}: StatCardProps) {
   const accessibilityLabel = loading
     ? `${title}, loading`
     : `${title}: ${value}${subtitle ? `, ${subtitle}` : ''}`;
 
+  // When wrapped in AnimatedPressable, a11y is on the pressable — avoid double-announcing
+  const isInteractive = !!onPress && !loading;
+
   const content = (
     <View
-      accessible
+      accessible={!isInteractive}
       accessibilityHint={
-        onPress ? 'Double tap to view habit details' : undefined
+        !isInteractive && onPress ? 'Double tap to view habit details' : undefined
       }
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole={onPress ? 'button' : 'text'}
+      accessibilityLabel={!isInteractive ? accessibilityLabel : undefined}
+      accessibilityRole={!isInteractive ? (onPress ? 'button' : 'text') : undefined}
       style={styles.statCard}
     >
       {loading ? (
-        <View accessibilityLabel='Loading' style={styles.statCardLoading}>
+        <View accessibilityLabel={`Loading ${title}...`} style={styles.statCardLoading}>
           <View style={styles.skeletonTitle} />
           <View style={styles.skeletonValue} />
           {subtitle && <View style={styles.skeletonSubtitle} />}
@@ -67,4 +70,4 @@ export const StatCard: React.FC<StatCardProps> = ({
   }
 
   return content;
-};
+});

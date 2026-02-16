@@ -14,8 +14,7 @@
 import '../global.css';
 
 import { ClerkProvider } from '@clerk/clerk-expo';
-import { useEffect, type PropsWithChildren } from 'react';
-import { AppState } from 'react-native';
+import type { PropsWithChildren } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -31,11 +30,14 @@ import { OfflineProvider } from './providers/OfflineProvider';
 import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
 
-import { startNewSession } from './lib/analytics/conversionTracker';
-import { loadABAssignments } from './lib/analytics/abTestFlags';
-
-// Initialize Sentry as early as possible
-initSentry();
+// Initialize Sentry after first frame to avoid blocking app launch.
+// requestIdleCallback (or setTimeout fallback) defers this work until
+// the main thread is idle, keeping the first paint fast.
+if (typeof requestIdleCallback === 'function') {
+  requestIdleCallback(() => initSentry());
+} else {
+  setTimeout(() => initSentry(), 0);
+}
 
 const clerkKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 if (!clerkKey) {
@@ -43,10 +45,6 @@ if (!clerkKey) {
     'EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is required. Add it to .env.local'
   );
 }
-
-// Initialize conversion tracking and A/B test assignments
-startNewSession();
-void loadABAssignments();
 
 function Providers({ children }: PropsWithChildren) {
   return (
@@ -79,16 +77,6 @@ function Providers({ children }: PropsWithChildren) {
 }
 
 export default function App() {
-  // Track new sessions when app comes to foreground
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (state) => {
-      if (state === 'active') {
-        startNewSession();
-      }
-    });
-    return () => subscription.remove();
-  }, []);
-
   return (
     <Providers>
       <AuthGate />

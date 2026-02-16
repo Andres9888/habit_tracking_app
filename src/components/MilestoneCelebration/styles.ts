@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   glow: {
-    borderRadius: 80,
+    borderRadius: 9999,
     elevation: 20,
     height: 160,
     position: 'absolute',

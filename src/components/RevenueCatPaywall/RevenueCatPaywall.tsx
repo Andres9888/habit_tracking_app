@@ -13,11 +13,7 @@
 
 import { Platform, Modal, View, Text, Pressable, Alert } from 'react-native';
 import RevenueCatUI from 'react-native-purchases-ui';
-import {
-  trackPurchaseStarted,
-  trackPurchaseCancelled,
-  trackPurchaseFailed,
-} from '../../lib/analytics/conversionTracker';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { RevenueCatPaywallProps } from './types';
 
 /**
@@ -32,18 +28,20 @@ export function RevenueCatPaywall({
   onPurchaseSuccess,
   onRestoreSuccess,
 }: RevenueCatPaywallProps) {
+  const { colors } = useThemeColors();
+
   // Web fallback - RevenueCat UI doesn't work on web
   if (Platform.OS === 'web') {
     if (!visible) return null;
 
     return (
-      <Modal transparent animationType='fade' visible={visible}>
+      <Modal transparent animationType='fade' visible={visible} onRequestClose={onClose}>
         <View className='flex-1 items-center justify-center bg-black/50'>
-          <View className='mx-6 rounded-2xl bg-white p-6'>
-            <Text className='mb-2 text-center text-lg font-semibold text-stone-900'>
+          <View className='mx-6 rounded-2xl p-6' style={{ backgroundColor: colors.surface }}>
+            <Text className='mb-2 text-center text-lg font-semibold' style={{ color: colors.text.primary }}>
               Premium Subscription
             </Text>
-            <Text className='mb-4 text-center text-stone-600'>
+            <Text className='mb-4 text-center' style={{ color: colors.text.secondary }}>
               In-app purchases are not available on web. Please use the mobile
               app to subscribe.
             </Text>
@@ -86,7 +84,6 @@ export function RevenueCatPaywall({
         }}
         onPurchaseCancelled={() => {
           if (__DEV__) console.log('[RevenueCatPaywall] Purchase cancelled');
-          trackPurchaseCancelled('home_hero');
         }}
         onPurchaseCompleted={({ customerInfo }) => {
           if (__DEV__)
@@ -100,16 +97,7 @@ export function RevenueCatPaywall({
         onPurchaseError={({ error }) => {
           if (__DEV__)
             console.error('[RevenueCatPaywall] Purchase error:', error);
-          trackPurchaseFailed('home_hero', error?.message);
-          Alert.alert('Purchase failed', 'Please try again.');
-        }}
-        onPurchaseStarted={({ packageBeingPurchased }) => {
-          if (__DEV__)
-            console.log(
-              '[RevenueCatPaywall] Purchase started:',
-              packageBeingPurchased
-            );
-          trackPurchaseStarted('home_hero', packageBeingPurchased?.packageType);
+          Alert.alert('Purchase Failed', 'Your payment couldn\u2019t be processed. Please check your payment method and try again.');
         }}
         onRestoreCompleted={({ customerInfo }) => {
           if (__DEV__)
@@ -120,7 +108,7 @@ export function RevenueCatPaywall({
         onRestoreError={({ error }) => {
           if (__DEV__)
             console.error('[RevenueCatPaywall] Restore error:', error);
-          Alert.alert('Restore failed', 'Please try again.');
+          Alert.alert('Restore Failed', 'We couldn\u2019t find your previous purchases. Please try again or contact support.');
         }}
       />
     </Modal>

@@ -8,6 +8,7 @@ import { RevenueCatPaywall } from '../../../components/RevenueCatPaywall';
 import { usePaywallTracking } from '../../../hooks/usePaywallTracking';
 import { HabitsModals } from './HabitsModals';
 import WebToaster from './WebToaster';
+import { TOAST_DURATION_MS } from '@/constants';
 import type { HabitsListState, HabitsModalsState } from '../hooks/types';
 import type { PaywallTriggerSource } from '../../../lib/analytics/conversionTracker';
 
@@ -42,7 +43,7 @@ export function HabitsAppOverlays({
       <HabitsModals state={modals} />
 
       <ArchiveUndoToast
-        duration={5000}
+        duration={TOAST_DURATION_MS}
         habitName={list.archiveUndoHabitName}
         visible={list.archiveUndoVisible}
         onDismiss={list.dismissArchiveUndo}

@@ -8,10 +8,12 @@ import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
 import HabitRankingsList from '../../../components/HabitRankingsList';
+import type { WeeklyInsights } from '../AnalyticsScreen.types';
+import type { RankedHabit } from '../AnalyticsScreen.types';
 
 interface InsightsSectionsProps {
-  weeklyInsights: any;
-  rankedHabits: any[];
+  weeklyInsights: WeeklyInsights | undefined;
+  rankedHabits: RankedHabit[];
   onHabitPress: (habitId: string) => void;
 }
 
@@ -35,7 +37,18 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Habit Rankings</Text>
-        <HabitRankingsList habits={rankedHabits} onHabitPress={onHabitPress} />
+        <HabitRankingsList
+          habits={rankedHabits.map((h) => ({
+            id: h.id,
+            name: h.name,
+            emoji: h.emoji ?? '',
+            strength: h.strength,
+            currentStreak: h.currentStreak ?? 0,
+            longestStreak: h.longestStreak ?? 0,
+            isAtRisk: h.isAtRisk ?? false,
+          }))}
+          onHabitPress={onHabitPress}
+        />
       </View>
     </>
   );
