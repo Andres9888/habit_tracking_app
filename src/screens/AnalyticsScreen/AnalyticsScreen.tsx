@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
@@ -23,6 +24,7 @@ import {
 } from './components';
 
 function AnalyticsScreenContent() {
+  const { colors: themeColors } = useThemeColors();
   const {
     refreshing,
     showPaywall,
@@ -44,7 +46,10 @@ function AnalyticsScreenContent() {
   } = useAnalyticsScreen();
 
   // All React hooks must be called before any early returns
-  const rankedHabits = useMemo(() => overviewStats?.rankedHabits || [], [overviewStats?.rankedHabits]);
+  const rankedHabits = useMemo(
+    () => overviewStats?.rankedHabits || [],
+    [overviewStats?.rankedHabits]
+  );
   const hasNoHabits = overviewStats?.totalHabits === 0;
 
   // Show paywall modal if not premium user
@@ -74,7 +79,7 @@ function AnalyticsScreenContent() {
           onRefresh={() => void onRefresh()}
         />
       }
-      style={styles.container}
+      style={[styles.container, { backgroundColor: themeColors.background }]}
     >
       <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
         <AnalyticsHeader />
@@ -86,7 +91,9 @@ function AnalyticsScreenContent() {
         </Animated.View>
       ) : (
         <>
-          <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
+          <Animated.View
+            entering={FadeInDown.delay(340).springify().damping(18)}
+          >
             <OverviewStats
               isLoading={isLoading}
               stats={overviewStats}
@@ -94,7 +101,9 @@ function AnalyticsScreenContent() {
             />
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(400).springify().damping(18)}>
+          <Animated.View
+            entering={FadeInDown.delay(400).springify().damping(18)}
+          >
             <ChartSections
               complianceData={complianceData}
               isLoading={isLoading}
@@ -103,7 +112,9 @@ function AnalyticsScreenContent() {
             />
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(460).springify().damping(18)}>
+          <Animated.View
+            entering={FadeInDown.delay(460).springify().damping(18)}
+          >
             <InsightsSections
               rankedHabits={rankedHabits}
               weeklyInsights={weeklyInsights}
@@ -111,7 +122,9 @@ function AnalyticsScreenContent() {
             />
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(520).springify().damping(18)}>
+          <Animated.View
+            entering={FadeInDown.delay(520).springify().damping(18)}
+          >
             <ExportButton onPress={() => void handleExportPress()} />
           </Animated.View>
         </>
@@ -128,7 +141,7 @@ function AnalyticsScreenContent() {
 
 export default function AnalyticsScreen() {
   return (
-    <ScreenErrorBoundary screenName="Analytics">
+    <ScreenErrorBoundary screenName='Analytics'>
       <AnalyticsScreenContent />
     </ScreenErrorBoundary>
   );

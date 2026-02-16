@@ -11,6 +11,7 @@ import {
 
 import { COLORS, FOCUS } from './constants';
 import { typography } from '@/theme/typography';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 const STATS_CONFIG = {
   BADGE_BORDER_RADIUS: 8,
@@ -33,7 +34,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
   } as ViewStyle,
   frequencyBadge: {
-    backgroundColor: '#f5f5f4',
+    backgroundColor: '#f5f5f4', // overridden by useThemedStatsStyles
     borderRadius: STATS_CONFIG.BADGE_BORDER_RADIUS,
     paddingHorizontal: STATS_CONFIG.BADGE_PADDING_X,
     paddingVertical: STATS_CONFIG.BADGE_PADDING_Y,
@@ -45,7 +46,7 @@ export const styles = StyleSheet.create({
   } as TextStyle,
   settingsButton: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4',
+    backgroundColor: '#f5f5f4', // overridden by useThemedStatsStyles
     borderRadius: STATS_CONFIG.SETTINGS_BUTTON_SIZE / 2,
     height: STATS_CONFIG.SETTINGS_BUTTON_SIZE,
     justifyContent: 'center',
@@ -71,3 +72,18 @@ export const styles = StyleSheet.create({
     outlineWidth: FOCUS.RING_WIDTH,
   } as ViewStyle,
 });
+
+export function useThemedStatsStyles() {
+  const { colors } = useThemeColors();
+  return {
+    ...styles,
+    frequencyBadge: {
+      ...styles.frequencyBadge,
+      backgroundColor: colors.gray[100],
+    },
+    settingsButton: {
+      ...styles.settingsButton,
+      backgroundColor: colors.gray[100],
+    },
+  };
+}
