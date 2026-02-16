@@ -52,3 +52,11 @@ export const characterCounterStyle = (color: string): TextStyle => ({
   fontWeight: '500',
   marginLeft: 8,
 });
+
+export const placeholderOverlayStyle: TextStyle = {
+  color: COLORS.stone400,
+  fontSize: 17,
+  fontWeight: '500',
+  left: 20,
+  position: 'absolute',
+};

@@ -111,7 +111,8 @@ export const COPY = {
 
   // Success state
   successHeadline: "You're growing!",
-  successSubtext: (habitName: string) => `"${habitName}" added — your chain starts now!`,
+  successSubtext: (habitName: string) =>
+    `"${habitName}" added — your chain starts now!`,
 } as const;
 
 /**
