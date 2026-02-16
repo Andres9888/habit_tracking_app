@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * StreakRemindersSection — Settings toggle for streak reminder notifications
  * with time picker for reminder time.

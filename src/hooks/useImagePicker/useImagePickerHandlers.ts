@@ -51,13 +51,23 @@ export function useImagePickerHandlers({
           [
             {
               onPress: () => {
-                void pickFromCamera(options).then(resolve);
+                void pickFromCamera(options)
+                  .then(resolve)
+                  .catch((error) => {
+                    if (__DEV__) console.warn('Error picking from camera:', error);
+                    resolve(null);
+                  });
               },
               text: 'Take Photo',
             },
             {
               onPress: () => {
-                void pickFromLibrary(options).then(resolve);
+                void pickFromLibrary(options)
+                  .then(resolve)
+                  .catch((error) => {
+                    if (__DEV__) console.warn('Error picking from library:', error);
+                    resolve(null);
+                  });
               },
               text: 'Choose from Library',
             },
