@@ -1,3 +1,12 @@
+/**
+ * usePressHandlers — Touch interaction handlers for a habit card.
+ *
+ * Returns four callbacks:
+ * - `handlePressIn` / `handlePressOut` — spring scale to 0.97/1.0 for press feedback
+ * - `handleLongPress` — heavy haptic + forwards to parent drag handler
+ * - `handleSwipeableOpen` — success haptic + archive flash + calls onArchive
+ */
+
 import { Animated, Easing } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';

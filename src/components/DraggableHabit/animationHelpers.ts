@@ -1,3 +1,13 @@
+/**
+ * @module animationHelpers
+ *
+ * Reanimated-based micro-animations for the strength emoji.
+ * These are triggered by {@link useStrengthAnimation} when strength changes.
+ *
+ * - {@link runLevelUpAnimation} — dramatic shake + scale burst on level threshold crossing
+ * - {@link runSubtlePulse} — gentle scale bump on any strength increase within same level
+ */
+
 import {
   withSpring,
   withSequence,
@@ -6,6 +16,10 @@ import {
   Easing as ReanimatedEasing,
 } from 'react-native-reanimated';
 
+/**
+ * Dramatic level-up celebration: fade+shrink → shake left/right → spring back enlarged.
+ * Triggered when the strength emoji changes tier (e.g. 🌿→🌳).
+ */
 export function runLevelUpAnimation(
   opacity: { value: number },
   scale: { value: number },
@@ -49,6 +63,7 @@ export function runLevelUpAnimation(
   );
 }
 
+/** Gentle scale bump (1 → 1.08 → 1) for strength increases within the same level. */
 export function runSubtlePulse(scale: { value: number }) {
   scale.value = withSequence(
     withTiming(1.08, {
