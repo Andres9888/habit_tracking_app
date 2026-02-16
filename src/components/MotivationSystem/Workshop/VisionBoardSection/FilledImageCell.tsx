@@ -66,7 +66,7 @@ export function FilledImageCell({
         )}
         {image.caption && (
           <View className='absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1'>
-            <Text className='text-xs text-white' numberOfLines={2}>
+            <Text className='text-xs text-white' numberOfLines={2} maxFontSizeMultiplier={2.0}>
               {image.caption}
             </Text>
           </View>

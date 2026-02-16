@@ -1,13 +1,21 @@
 /**
  * ErrorMessage - Animated error card with shake effect
+ *
+ * Features:
+ * - Styled container (red-50 bg, red-200 border, 12px radius)
+ * - Error icon (red circle with "!")
+ * - Error text display
+ * - Dismiss button ("✕")
+ * - Entrance animation: fade + slide down + shake
+ * - Respects reduced motion preferences
+ * - Proper accessibility attributes (role="alert", liveRegion="polite")
  */
 
 import { Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { useThemeColors } from '@/theme/ThemeContext';
 import type { ErrorMessageProps } from '../types';
-import { ERROR_COLORS_LIGHT, ERROR_COLORS_DARK } from './constants';
+import { useEmptyStateColors } from '../useEmptyStateColors';
 import { ErrorIcon } from './ErrorIcon';
 import { DismissButton } from './DismissButton';
 import { useErrorAnimations } from './useErrorAnimations';
@@ -17,9 +25,7 @@ export function ErrorMessage({
   onDismiss,
   autoDismiss = false,
 }: ErrorMessageProps) {
-  const { isDark } = useThemeColors();
-  const errorColors = isDark ? ERROR_COLORS_DARK : ERROR_COLORS_LIGHT;
-
+  const colors = useEmptyStateColors();
   const { animatedStyle, handleDismiss } = useErrorAnimations({
     autoDismiss,
     onDismiss,
@@ -33,8 +39,8 @@ export function ErrorMessage({
         animatedStyle,
         {
           alignItems: 'center',
-          backgroundColor: errorColors.background,
-          borderColor: errorColors.border,
+          backgroundColor: colors.errorBackground,
+          borderColor: colors.errorBorder,
           borderRadius: 12,
           borderWidth: 1,
           flexDirection: 'row',
@@ -45,10 +51,10 @@ export function ErrorMessage({
         },
       ]}
     >
-      <ErrorIcon isDark={isDark} />
+      <ErrorIcon iconColor={colors.errorIcon} />
       <Text
         style={{
-          color: errorColors.text,
+          color: colors.errorText,
           flex: 1,
           fontSize: 13,
           fontWeight: '500',
@@ -57,7 +63,7 @@ export function ErrorMessage({
       >
         {message}
       </Text>
-      <DismissButton isDark={isDark} onPress={handleDismiss} />
+      <DismissButton dismissColor={colors.errorText} onPress={handleDismiss} />
     </Animated.View>
   );
 }

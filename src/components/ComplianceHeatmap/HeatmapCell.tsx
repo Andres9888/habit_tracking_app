@@ -22,7 +22,11 @@ export function HeatmapCell({ day, onPress }: HeatmapCellProps) {
 
   return (
     <TouchableOpacity
-      accessibilityLabel={day.date ? `${day.date}, ${Math.round(day.completionRate)}% completion` : undefined}
+      accessibilityLabel={
+        day.date
+          ? `${day.date}, ${Math.round(day.completionRate)}% completion`
+          : undefined
+      }
       accessibilityRole={day.date ? 'button' : 'none'}
       activeOpacity={0.7}
       disabled={!day.date}

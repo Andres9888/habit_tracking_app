@@ -8,10 +8,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 
-import { useThemeColors } from '@/theme/ThemeContext';
 import { CTA_SHIMMER } from './animations';
 import { COPY } from './constants';
 import type { CtaButtonProps } from './types';
+import { useEmptyStateColors } from './useEmptyStateColors';
 import { useCtaButtonAnimations } from './useCtaButtonAnimations';
 import { getCtaButtonStyle, getCtaTextStyle } from './CtaButton.styles';
 
@@ -20,7 +20,7 @@ const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
   const isDisabled = disabled || isLoading;
-  const { colors } = useThemeColors();
+  const colors = useEmptyStateColors();
 
   const { animatedStyle, handlePressIn, handlePressOut, shimmerAnimatedStyle } =
     useCtaButtonAnimations({ disabled: !!disabled, isLoading: !!isLoading });
@@ -40,7 +40,14 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
       accessibilityRole='button'
       accessibilityState={{ disabled: isDisabled }}
       disabled={isDisabled}
-      style={[animatedStyle, getCtaButtonStyle(!!isDisabled, colors)]}
+      style={[
+        animatedStyle,
+        getCtaButtonStyle(
+          !!isDisabled,
+          colors.ctaBackground,
+          colors.ctaBackground
+        ),
+      ]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -61,9 +68,9 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
         testID='cta-shimmer-overlay'
       />
       {isLoading ? (
-        <ActivityIndicator color={colors.text.inverse} size='small' />
+        <ActivityIndicator color={colors.ctaText} size='small' />
       ) : (
-        <Text style={getCtaTextStyle(colors)}>{COPY.ctaButton}</Text>
+        <Text style={getCtaTextStyle(colors.ctaText)}>{COPY.ctaButton}</Text>
       )}
     </AnimatedPressable>
   );

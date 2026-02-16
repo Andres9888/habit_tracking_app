@@ -6,20 +6,16 @@
 
 import { View, Text } from 'react-native';
 
-import { ERROR_COLORS_LIGHT, ERROR_COLORS_DARK } from './constants';
-
 interface ErrorIconProps {
-  isDark?: boolean;
+  iconColor?: string;
 }
 
-export function ErrorIcon({ isDark = false }: ErrorIconProps) {
-  const errorColors = isDark ? ERROR_COLORS_DARK : ERROR_COLORS_LIGHT;
-
+export function ErrorIcon({ iconColor = '#EF4444' }: ErrorIconProps) {
   return (
     <View
       style={{
         alignItems: 'center',
-        backgroundColor: errorColors.iconBackground,
+        backgroundColor: iconColor,
         borderRadius: 12,
         height: 20,
         justifyContent: 'center',
@@ -28,7 +24,7 @@ export function ErrorIcon({ isDark = false }: ErrorIconProps) {
     >
       <Text
         style={{
-          color: errorColors.iconText,
+          color: '#FFFFFF',
           fontSize: 13,
           fontWeight: '700',
           lineHeight: 18,

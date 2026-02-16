@@ -2,15 +2,17 @@
  * CtaButton styles
  */
 
-import type { TextStyle, ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import { BORDER_RADIUS, TOUCH_TARGETS } from './constants';
-import type { SemanticColors } from '@/theme/darkColors';
 
-export function getCtaButtonStyle(isDisabled: boolean, colors?: SemanticColors): ViewStyle {
-  const bgColor = colors?.primary[700] ?? '#047857';
+export function getCtaButtonStyle(
+  isDisabled: boolean,
+  backgroundColor: string,
+  shadowColor: string
+): ViewStyle {
   return {
     alignItems: 'center',
-    backgroundColor: bgColor,
+    backgroundColor,
     borderRadius: BORDER_RADIUS.cta,
     elevation: isDisabled ? 0 : 4,
     height: TOUCH_TARGETS.ctaHeight,
@@ -18,7 +20,8 @@ export function getCtaButtonStyle(isDisabled: boolean, colors?: SemanticColors):
     opacity: isDisabled ? 0.4 : 1,
     overflow: 'hidden',
     paddingVertical: 16,
-    shadowColor: bgColor,
+    // Shadow for depth
+    shadowColor,
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -26,17 +29,10 @@ export function getCtaButtonStyle(isDisabled: boolean, colors?: SemanticColors):
   };
 }
 
-export function getCtaTextStyle(colors?: SemanticColors): TextStyle {
+export function getCtaTextStyle(color: string) {
   return {
-    color: colors?.text.inverse ?? '#ffffff',
+    color,
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '600' as const,
   };
 }
-
-/** @deprecated Use getCtaTextStyle(colors) instead */
-export const ctaTextStyle: TextStyle = {
-  color: '#ffffff',
-  fontSize: 15,
-  fontWeight: '600',
-};

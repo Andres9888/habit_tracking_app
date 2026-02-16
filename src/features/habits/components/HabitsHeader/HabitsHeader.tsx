@@ -84,15 +84,9 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
     </View>
   );
 
-  // Empty state: show minimal header with icon group (templates accessible)
+  // Empty state: hide header entirely (templates accessible from empty state)
   if (totalHabits === 0 && !forceShow) {
-    return (
-      <Animated.View className='gap-2 px-4' entering={ENTERING}>
-        <View className='flex-row items-center justify-end'>
-          {rightSection}
-        </View>
-      </Animated.View>
-    );
+    return null;
   }
 
   return (
