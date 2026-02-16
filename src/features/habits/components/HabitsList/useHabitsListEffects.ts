@@ -3,6 +3,7 @@
  */
 
 import { useEffect } from 'react';
+import { InteractionManager } from 'react-native';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import {
   ENTRANCE_ANIMATION_DELAY_MS,
@@ -37,13 +38,21 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
   } = options;
 
   // Clear "just created" highlight after a delay
+  // Uses InteractionManager to ensure smooth animations
   useEffect(() => {
     if (!justCreatedHabitId) return;
-    const timer = setTimeout(() => setJustCreatedHabitId(null), NEW_HABIT_HIGHLIGHT_MS);
-    return () => clearTimeout(timer);
+    let timer: NodeJS.Timeout;
+    const task = InteractionManager.runAfterInteractions(() => {
+      timer = setTimeout(() => setJustCreatedHabitId(null), NEW_HABIT_HIGHLIGHT_MS);
+    });
+    return () => {
+      task.cancel();
+      if (timer) clearTimeout(timer);
+    };
   }, [justCreatedHabitId, setJustCreatedHabitId]);
 
   // Trigger entrance animation after layout settles
+  // Defers heavy animation setup until interaction is complete
   useEffect(() => {
     if (
       shouldTriggerHabitEntrance ||
@@ -51,8 +60,14 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
       habitsLength === 0
     )
       return;
-    const timer = setTimeout(() => setShouldTriggerHabitEntrance(true), ENTRANCE_ANIMATION_DELAY_MS);
-    return () => clearTimeout(timer);
+    let timer: NodeJS.Timeout;
+    const task = InteractionManager.runAfterInteractions(() => {
+      timer = setTimeout(() => setShouldTriggerHabitEntrance(true), ENTRANCE_ANIMATION_DELAY_MS);
+    });
+    return () => {
+      task.cancel();
+      if (timer) clearTimeout(timer);
+    };
   }, [
     habitsLength,
     isInSuccessCelebration,

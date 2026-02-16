@@ -5,6 +5,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { InteractionManager } from 'react-native';
 import { useNetworkStatus } from '../../../contexts/NetworkStatusContext/hooks';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { getOfflineQueueManager } from '../queueManager';
@@ -50,8 +51,18 @@ export function useSyncOrchestrator(
   }, [orchestrator, onSyncComplete, onSyncError]);
 
   useEffect(() => {
-    if (autoStart) orchestrator.start(onOnline);
-    return () => orchestrator.stop();
+    if (!autoStart) return;
+
+    // Defer sync orchestrator start to avoid JS thread blocking
+    // This ensures screen renders first, then sync operations begin
+    const task = InteractionManager.runAfterInteractions(() => {
+      orchestrator.start(onOnline);
+    });
+
+    return () => {
+      task.cancel();
+      orchestrator.stop();
+    };
   }, [orchestrator, autoStart, onOnline]);
 
   useEffect(() => {

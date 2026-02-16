@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { InteractionManager } from 'react-native';
 import * as Network from 'expo-network';
 import type {
   NetworkStatus,
@@ -76,14 +77,24 @@ export function NetworkStatusProvider({
   );
 
   useEffect(() => {
-    void Network.getNetworkStateAsync()
-      .then(handleStatusUpdate)
-      .catch((error) => {
-        if (__DEV__) console.warn('Error getting initial network state:', error);
-        setIsChecking(false);
-      });
+    // Add listener immediately (non-blocking)
     const subscription = Network.addNetworkStateListener(handleStatusUpdate);
-    return () => subscription.remove();
+
+    // Defer initial network check to avoid JS thread blocking
+    // This allows the UI to render first, then check network status
+    const task = InteractionManager.runAfterInteractions(() => {
+      void Network.getNetworkStateAsync()
+        .then(handleStatusUpdate)
+        .catch((error) => {
+          if (__DEV__) console.warn('Error getting initial network state:', error);
+          setIsChecking(false);
+        });
+    });
+
+    return () => {
+      subscription.remove();
+      task.cancel();
+    };
   }, [handleStatusUpdate]);
 
   const refresh = useCallback(async () => {

@@ -15,6 +15,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { InteractionManager } from 'react-native';
 import { getOfflineQueueManager } from '../../lib/offline';
 import type { OfflineContextValue, OfflineProviderProps } from './types';
 
@@ -60,13 +61,21 @@ export function OfflineProvider({
     }
   }, []);
 
-  // Auto-restore on mount
+  // Auto-restore on mount (deferred to avoid JS thread blocking)
+  // Wrapped with InteractionManager to let the UI render first,
+  // then restore the queue after interaction is complete
   useEffect(() => {
     if (skipAutoRestore) {
       setIsRestored(true);
       return;
     }
-    restoreQueue();
+
+    // Defer queue restoration until the UI is idle
+    const task = InteractionManager.runAfterInteractions(() => {
+      restoreQueue();
+    });
+
+    return () => task.cancel();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skipAutoRestore]);
 
