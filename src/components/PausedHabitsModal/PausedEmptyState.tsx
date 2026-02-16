@@ -1,64 +1,41 @@
-/** PausedEmptyState - Empty state for paused habits */
-import { View } from 'react-native';
-import { Pause } from 'lucide-react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+/** PausedEmptyState - Empty state for paused habits, respects reduce-motion */
+import { Text } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
-
-const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+import { useReducedMotionEntry } from '../EmptyState/useReducedMotionEntry';
 
 export function PausedEmptyState() {
   const { colors } = useThemeColors();
+  const { entry } = useReducedMotionEntry();
 
   return (
     <Animated.View
-      className='items-center py-12'
-      entering={anim(0)}
+      accessible
+      accessibilityLabel='No paused habits. Paused habits will appear here.'
+      accessibilityRole='text'
+      entering={entry(60)}
+      style={{ alignItems: 'center', gap: 12, paddingVertical: 48 }}
     >
-      <Animated.View
-        entering={anim(0)}
+      <Text style={{ fontSize: 48 }}>⏸️</Text>
+      <Text
         style={{
-          width: 64,
-          height: 64,
-          borderRadius: 20,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: colors.primary[100],
-          marginBottom: 16,
-          shadowColor: colors.text.primary,
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.06,
-          shadowRadius: 12,
-        }}
-      >
-        <Pause color={colors.primary[500]} size={32} strokeWidth={1.5} />
-      </Animated.View>
-      <Animated.Text
-        entering={anim(60)}
-        style={{
-          fontSize: 22,
-          fontWeight: '700',
-          letterSpacing: -0.35,
           color: colors.text.primary,
-          textAlign: 'center',
-          marginBottom: 6,
+          fontSize: 22,
+          fontWeight: '600',
+          letterSpacing: -0.35,
         }}
       >
-        All Systems Go
-      </Animated.Text>
-      <Animated.Text
-        entering={anim(120)}
+        No paused habits
+      </Text>
+      <Text
         style={{
-          fontSize: 15,
-          lineHeight: 21,
           color: colors.text.secondary,
-          textAlign: 'center',
-          maxWidth: 260,
+          fontSize: 17,
+          lineHeight: 22,
         }}
       >
-        No habits on pause right now. Swipe left on any habit to take a breather
-        without losing your data.
-      </Animated.Text>
+        Paused habits will appear here
+      </Text>
     </Animated.View>
   );
 }

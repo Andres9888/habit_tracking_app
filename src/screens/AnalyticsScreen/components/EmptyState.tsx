@@ -1,134 +1,124 @@
 /**
- * AnalyticsScreen EmptyState
- * Theme-aware, on-brand emerald palette, engaging onboarding steps
+ * EmptyState - OPTIMIZED: animation (respects reduce-motion), dark mode, accessible
  */
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { BarChart3, Sparkles } from 'lucide-react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-
-const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+import { useReducedMotionEntry } from '../../../components/EmptyState/useReducedMotionEntry';
 
 export const EmptyState: React.FC = () => {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  const { entry } = useReducedMotionEntry();
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}>
+    <View
+      accessible
+      accessibilityLabel='No analytics yet. Create habits and track them for a few days to unlock your insights dashboard.'
+      accessibilityRole='text'
+      style={{ alignItems: 'center', flex: 1, justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}
+    >
       {/* Illustration */}
       <Animated.View
-        entering={anim(0)}
+        entering={entry(0)}
         style={{
-          width: 96,
-          height: 96,
-          borderRadius: 28,
           alignItems: 'center',
+          backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
+          borderRadius: 24,
+          height: 96,
           justifyContent: 'center',
-          backgroundColor: colors.primary[100],
           marginBottom: 24,
-          shadowColor: colors.primary[500],
+          shadowColor: '#8b5cf6',
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
+          width: 96,
         }}
       >
-        <BarChart3 color={colors.primary[500]} size={48} strokeWidth={1.5} />
+        <BarChart3 color={isDark ? '#C4B5FD' : '#8b5cf6'} size={48} strokeWidth={1.5} />
       </Animated.View>
 
       {/* Title */}
       <Animated.Text
-        entering={anim(50)}
+        entering={entry(50)}
         style={{
+          color: colors.text.primary,
           fontSize: 22,
           fontWeight: '700',
           letterSpacing: -0.5,
-          color: colors.text.primary,
-          textAlign: 'center',
           marginBottom: 8,
+          textAlign: 'center',
         }}
       >
-        Your Insights Are Brewing
+        No Analytics Yet
       </Animated.Text>
 
       {/* Description */}
       <Animated.Text
-        entering={anim(100)}
+        entering={entry(100)}
         style={{
+          color: colors.text.secondary,
           fontSize: 17,
           lineHeight: 22,
-          color: colors.text.secondary,
-          textAlign: 'center',
-          maxWidth: 280,
           marginBottom: 32,
+          maxWidth: 280,
+          textAlign: 'center',
         }}
       >
-        Track habits for a few days and we'll paint a picture of your progress.
+        Create habits and track them for a few days to unlock your insights
+        dashboard.
       </Animated.Text>
 
       {/* Steps Card */}
       <Animated.View
-        entering={anim(150)}
+        entering={entry(150)}
         style={{
-          width: '100%',
-          borderRadius: 16,
           backgroundColor: colors.card,
+          borderRadius: 16,
           padding: 20,
           shadowColor: colors.text.primary,
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
+          width: '100%',
         }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-          <Sparkles color='#f59e0b' size={16} />
-          <Animated.Text
-            style={{
-              fontSize: 13,
-              fontWeight: '600',
-              color: '#d97706',
-              letterSpacing: 0.5,
-            }}
-          >
+        <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8, marginBottom: 12 }}>
+          <Sparkles color={isDark ? '#FCD34D' : '#F59E0B'} size={16} />
+          <Text style={{ color: isDark ? '#FCD34D' : '#D97706', fontSize: 13, fontWeight: '600' }}>
             GET STARTED
-          </Animated.Text>
+          </Text>
         </View>
         <View style={{ gap: 12 }}>
-          <StepItem colors={colors} number='1' text='Create a habit on the Home tab' />
-          <StepItem colors={colors} number='2' text='Check it off each day' />
-          <StepItem colors={colors} number='3' text='Come back here for insights' />
+          <StepItem colors={colors} number='1' text='Go to Home tab' />
+          <StepItem colors={colors} number='2' text='Create your first habit' />
+          <StepItem colors={colors} number='3' text='Track it daily' />
+          <StepItem colors={colors} number='4' text='Come back to see insights!' />
         </View>
       </Animated.View>
     </View>
   );
 };
 
-function StepItem({ number, text, colors }: { number: string; text: string; colors: any }) {
+function StepItem({ number, text, colors }: { number: string; text: string; colors: { gray: Record<string, string>; text: { primary: string; secondary: string } } }) {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+    <View style={{ alignItems: 'center', flexDirection: 'row', gap: 12 }}>
       <View
         style={{
-          width: 28,
-          height: 28,
-          borderRadius: 14,
           alignItems: 'center',
+          backgroundColor: colors.gray[100],
+          borderRadius: 14,
+          height: 28,
           justifyContent: 'center',
-          backgroundColor: colors.primary[100],
+          width: 28,
         }}
       >
-        <Animated.Text
-          style={{
-            fontSize: 13,
-            fontWeight: '600',
-            color: colors.primary[500],
-          }}
-        >
+        <Text style={{ color: colors.text.secondary, fontSize: 13, fontWeight: '600' }}>
           {number}
-        </Animated.Text>
+        </Text>
       </View>
-      <Animated.Text style={{ fontSize: 17, color: colors.text.primary }}>
-        {text}
-      </Animated.Text>
+      <Text style={{ color: colors.text.primary, fontSize: 17 }}>{text}</Text>
     </View>
   );
 }

@@ -35,7 +35,7 @@ export function initSentryWithConfig(config: SentryConfig): boolean {
       attachStacktrace: true,
       beforeBreadcrumb,
        
-      beforeSend: createBeforeSend(config) as any,
+      beforeSend: createBeforeSend(config),
       debug: config.debug,
       dsn: config.dsn,
       enableAutoSessionTracking: true,

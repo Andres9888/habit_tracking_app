@@ -6,7 +6,6 @@
 import React from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { Mail, Calendar, Lock, ChevronRight } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { UnlockDurationPicker } from '../UnlockDurationPicker';
 
 interface ScheduleStepProps {

@@ -1,10 +1,10 @@
 /**
  * StreakEmptyState - Shown when no streak records exist
- * Theme-aware with engaging copy
+ * Standardized: FadeInUp animation, proper typography, dark mode
  */
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { Flame } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -13,19 +13,19 @@ const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function StreakEmptyState() {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   return (
     <Animated.View
-      accessibilityLabel='No streak records yet. Complete two or more consecutive days to start tracking streaks.'
+      accessibilityLabel='No streak records yet.'
       entering={anim(0)}
       style={{
-        marginTop: 12,
         alignItems: 'center',
+        backgroundColor: colors.card,
+        borderColor: colors.border,
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: colors.cardBorder,
-        backgroundColor: colors.card,
+        marginTop: 12,
         padding: 20,
         shadowColor: colors.text.primary,
         shadowOffset: { height: 4, width: 0 },
@@ -35,40 +35,37 @@ export function StreakEmptyState() {
     >
       <View
         style={{
-          width: 40,
-          height: 40,
-          borderRadius: 20,
           alignItems: 'center',
+          backgroundColor: isDark ? '#431407' : '#FFF7ED',
+          borderRadius: 20,
+          height: 40,
           justifyContent: 'center',
-          backgroundColor: '#FFF7ED',
           marginBottom: 12,
+          width: 40,
         }}
       >
-        <Flame color='#f97316' size={20} strokeWidth={1.5} />
+        <Flame color={isDark ? '#FDBA74' : '#F97316'} size={20} strokeWidth={1.5} />
       </View>
-      <Animated.Text
-        entering={anim(60)}
+      <Text
         style={{
+          color: colors.text.primary,
           fontSize: 17,
           fontWeight: '600',
-          color: colors.text.primary,
-          textAlign: 'center',
           marginBottom: 4,
-        }}
-      >
-        Your First Streak Awaits
-      </Animated.Text>
-      <Animated.Text
-        entering={anim(120)}
-        style={{
-          fontSize: 13,
-          color: colors.text.secondary,
           textAlign: 'center',
-          lineHeight: 18,
         }}
       >
-        Show up two days in a row and watch the fire grow 🔥
-      </Animated.Text>
+        No Streaks Yet
+      </Text>
+      <Text
+        style={{
+          color: colors.text.secondary,
+          fontSize: 13,
+          textAlign: 'center',
+        }}
+      >
+        Complete 2+ consecutive days to start tracking streaks
+      </Text>
     </Animated.View>
   );
 }

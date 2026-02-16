@@ -1,5 +1,4 @@
-import { View } from 'react-native';
-import { Archive } from 'lucide-react-native';
+import { Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
@@ -7,95 +6,109 @@ const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   return (
-    <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 64 }}>
-      {/* Icon */}
+    <View
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+        paddingVertical: 64,
+      }}
+    >
+      {/* Illustration */}
       <Animated.View
         entering={anim(0)}
         style={{
-          width: 80,
-          height: 80,
-          borderRadius: 24,
           alignItems: 'center',
+          backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
+          borderRadius: 16,
+          height: 112,
           justifyContent: 'center',
-          backgroundColor: colors.primary[100],
-          marginBottom: 20,
-          shadowColor: colors.primary[500],
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.06,
-          shadowRadius: 16,
+          marginBottom: 24,
+          width: 128,
         }}
       >
-        <Archive color={colors.primary[500]} size={36} strokeWidth={1.5} />
+        <Text style={{ fontSize: 48 }}>🌱</Text>
       </Animated.View>
 
-      {/* Copy */}
+      {/* Text Content */}
       <Animated.Text
         entering={anim(60)}
         style={{
+          color: colors.text.primary,
           fontSize: 22,
           fontWeight: '700',
-          letterSpacing: -0.35,
-          color: colors.text.primary,
-          textAlign: 'center',
+          letterSpacing: -0.5,
           marginBottom: 8,
+          textAlign: 'center',
         }}
       >
-        All Habits Active
+        Your Habits Are Thriving!
       </Animated.Text>
       <Animated.Text
         entering={anim(120)}
         style={{
-          fontSize: 15,
-          lineHeight: 21,
           color: colors.text.secondary,
+          fontSize: 15,
+          marginBottom: 4,
           textAlign: 'center',
-          maxWidth: 280,
-          marginBottom: 24,
         }}
       >
-        Nothing archived yet. Swipe left on any habit to tuck it away without losing your progress.
+        All your habits are active and growing.
       </Animated.Text>
-
-      {/* Tip Card */}
-      <Animated.View
+      <Animated.Text
         entering={anim(180)}
         style={{
-          width: '100%',
-          maxWidth: 320,
-          borderRadius: 16,
-          backgroundColor: colors.primary[100],
-          borderWidth: 1,
-          borderColor: colors.primary[300],
-          padding: 16,
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          gap: 12,
+          color: colors.text.secondary,
+          fontSize: 14,
+          marginBottom: 24,
+          maxWidth: 280,
+          textAlign: 'center',
         }}
       >
-        <Animated.Text style={{ fontSize: 20 }}>💡</Animated.Text>
+        When you need a break, swipe left on any habit to archive it here for
+        safekeeping.
+      </Animated.Text>
+
+      {/* Pro Tip Card */}
+      <Animated.View
+        entering={anim(240)}
+        style={{
+          backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
+          borderColor: isDark ? '#065F46' : '#D1FAE5',
+          borderRadius: 16,
+          borderWidth: 1,
+          flexDirection: 'row',
+          gap: 12,
+          maxWidth: 320,
+          padding: 16,
+          width: '100%',
+        }}
+      >
+        <Text style={{ fontSize: 24 }}>💚</Text>
         <View style={{ flex: 1 }}>
-          <Animated.Text
+          <Text
             style={{
+              color: isDark ? '#6EE7B7' : '#065F46',
               fontSize: 14,
-              fontWeight: '600',
-              color: colors.primary[500],
+              fontWeight: '500',
               marginBottom: 4,
             }}
           >
             Good to Know
-          </Animated.Text>
-          <Animated.Text
+          </Text>
+          <Text
             style={{
-              fontSize: 13,
+              color: isDark ? '#A7F3D0' : '#047857',
+              fontSize: 12,
               lineHeight: 18,
-              color: colors.text.secondary,
             }}
           >
-            Archiving keeps all your streaks and data safe. Restore anytime and pick up right where you left off.
-          </Animated.Text>
+            Archiving preserves all your progress and streaks. Restore habits
+            anytime and pick up right where you left off!
+          </Text>
         </View>
       </Animated.View>
     </View>

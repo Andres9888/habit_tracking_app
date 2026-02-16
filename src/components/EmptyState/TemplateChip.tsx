@@ -26,8 +26,8 @@ interface TemplateChipProps {
 }
 
 export function TemplateChip({ template, onPress }: TemplateChipProps) {
-  const { triggerLightImpact } = useHapticFeedback();
   const { colors } = useThemeColors();
+  const { triggerLightImpact } = useHapticFeedback();
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -51,7 +51,7 @@ export function TemplateChip({ template, onPress }: TemplateChipProps) {
     <AnimatedPressable
       accessibilityLabel={`Create ${template.name} habit`}
       accessibilityRole='button'
-      style={[styles.templateChip, { backgroundColor: colors.card, borderColor: colors.cardBorder, borderWidth: 1 }, animatedStyle]}
+      style={[styles.templateChip, { backgroundColor: colors.gray[100] }, animatedStyle]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

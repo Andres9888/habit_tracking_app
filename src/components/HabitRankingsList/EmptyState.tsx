@@ -1,65 +1,67 @@
 /**
  * HabitRankingsList EmptyState
- * Theme-aware, on-brand emerald palette, engaging copy
+ * Design-system compliant: StyleSheet, themed colors, FadeInUp animation
  */
 
 import React from 'react';
-import { View } from 'react-native';
-import { Trophy } from 'lucide-react-native';
+import { View, StyleSheet } from 'react-native';
+import { ListOrdered } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { colors } from '../../theme/colors';
+import { typography } from '../../theme/typography';
+import { spacing, borderRadius, shadows } from '../../theme/spacing';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
 export function EmptyState() {
-  const { colors } = useThemeColors();
-
   return (
-    <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 48 }}>
-      <Animated.View
-        entering={anim(0)}
-        style={{
-          width: 80,
-          height: 80,
-          borderRadius: 24,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: colors.primary[100],
-          marginBottom: 16,
-          shadowColor: colors.primary[500],
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
-        }}
-      >
-        <Trophy color={colors.primary[500]} size={40} strokeWidth={1.5} />
+    <View
+      accessible
+      accessibilityLabel='No habits to rank yet'
+      accessibilityRole='text'
+      style={styles.container}
+    >
+      <Animated.View entering={anim(0)} style={styles.iconContainer}>
+        <ListOrdered color={colors.primary[600]} size={40} strokeWidth={1.5} />
       </Animated.View>
-      <Animated.Text
-        entering={anim(60)}
-        style={{
-          fontSize: 22,
-          fontWeight: '700',
-          letterSpacing: -0.5,
-          color: colors.text.primary,
-          textAlign: 'center',
-          marginBottom: 8,
-        }}
-      >
-        Leaderboard Unlocks Soon
+      <Animated.Text entering={anim(60)} style={styles.title}>
+        No Habits to Rank Yet
       </Animated.Text>
-      <Animated.Text
-        entering={anim(120)}
-        style={{
-          fontSize: 17,
-          lineHeight: 22,
-          color: colors.text.secondary,
-          textAlign: 'center',
-          maxWidth: 280,
-        }}
-      >
-        Complete a few habits and your top performers will show up here.
+      <Animated.Text entering={anim(120)} style={styles.description}>
+        Complete some habits to see your rankings here
       </Animated.Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing['2xl'],
+  },
+  description: {
+    ...typography.body,
+    color: colors.text.secondary,
+    maxWidth: 280,
+    textAlign: 'center',
+  },
+  iconContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.primary[100],
+    borderRadius: borderRadius.large,
+    height: 80,
+    justifyContent: 'center',
+    marginBottom: spacing.base,
+    width: 80,
+    ...shadows.card,
+  },
+  title: {
+    ...typography.heading2,
+    color: colors.text.primary,
+    marginBottom: spacing.sm,
+    textAlign: 'center',
+  },
+});
