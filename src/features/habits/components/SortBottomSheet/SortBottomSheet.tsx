@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { useCallback } from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { X } from 'lucide-react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
@@ -12,8 +13,12 @@ import { SortOptionRow } from './SortOptionRow';
 import type { SortBottomSheetProps } from './types';
 import { useSortBottomSheet } from './useSortBottomSheet';
 import { SCREEN, SHADOW_OPACITY } from '../../../../constants';
+import type { HabitSortMode } from '../../types';
 
-/** iOS-style bottom sheet for selecting habit sort order */
+/**
+ * iOS-style bottom sheet for selecting habit sort order
+ * PERF: Optimized to prevent inline function creation in render
+ */
 export function SortBottomSheet({
   visible,
   onClose,
@@ -30,6 +35,12 @@ export function SortBottomSheet({
     handleSelectSort,
     handleDismiss,
   } = useSortBottomSheet({ onClose, onSelectSortMode, reduceMotion, visible });
+
+  // PERF: Create stable handler factory for option rows
+  const createOptionPressHandler = useCallback(
+    (value: HabitSortMode) => () => handleSelectSort(value),
+    [handleSelectSort]
+  );
 
   return (
     <Modal
@@ -103,7 +114,7 @@ export function SortBottomSheet({
                   iconBgColors={option.iconBgColors}
                   selected={sortMode === option.value}
                   title={option.label}
-                  onPress={() => handleSelectSort(option.value)}
+                  onPress={createOptionPressHandler(option.value)}
                 />
               ))}
             </ScrollView>

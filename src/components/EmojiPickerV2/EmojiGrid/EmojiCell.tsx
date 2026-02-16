@@ -14,6 +14,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
  * Memoized emoji cell component with press animation
+ * PERF: Accept emoji in onPress to avoid parent creating new handlers per cell
  */
 export const EmojiCell = memo(({ emoji, isSelected, onPress }: EmojiCellProps) => {
   const scale = useSharedValue(1);
@@ -29,6 +30,10 @@ export const EmojiCell = memo(({ emoji, isSelected, onPress }: EmojiCellProps) =
     );
   }, [scale]);
 
+  const handlePress = useCallback(() => {
+    onPress(emoji);
+  }, [emoji, onPress]);
+
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
@@ -39,7 +44,7 @@ export const EmojiCell = memo(({ emoji, isSelected, onPress }: EmojiCellProps) =
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
       style={[styles.emojiCell, isSelected && styles.emojiCellSelected, animatedStyle]}
-      onPress={onPress}
+      onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >

@@ -1,5 +1,6 @@
 import { format, isToday } from 'date-fns';
 import clsx from 'clsx';
+import { memo, useCallback } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import type { HabitStatus } from '../HabitCalendarView.hooks';
 
@@ -42,10 +43,20 @@ const STATUS_LABELS: Record<HabitStatus, string> = {
   upcoming: 'Upcoming day',
 };
 
-export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
+/**
+ * PERF: Memoized calendar day component to prevent unnecessary re-renders
+ */
+function CalendarDayComponent({ date, status, onPress }: CalendarDayProps) {
   const isCurrentDay = isToday(date);
   const { container, indicator, text } = STATUS_STYLES[status];
   const isDisabled = status === 'upcoming';
+
+  // PERF: Memoize press handler
+  const handlePress = useCallback(() => {
+    if (!isDisabled) {
+      onPress();
+    }
+  }, [isDisabled, onPress]);
 
   return (
     <Pressable
@@ -59,11 +70,7 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
       accessibilityState={{ disabled: isDisabled, selected: status === 'done' }}
       className='aspect-square w-[14.28%] p-1'
       disabled={isDisabled}
-      onPress={() => {
-        if (!isDisabled) {
-          onPress();
-        }
-      }}
+      onPress={handlePress}
     >
       <View
         className={clsx(
@@ -80,3 +87,5 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
     </Pressable>
   );
 }
+
+export const CalendarDay = memo(CalendarDayComponent);

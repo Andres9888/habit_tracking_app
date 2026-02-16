@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Pressable } from 'react-native';
 import { format } from 'date-fns';
 
@@ -11,7 +11,10 @@ import {
 } from './DayCell.helpers';
 import { DayCellContent } from './DayCellContent';
 
-/** Renders a single day cell in the timeline */
+/**
+ * Renders a single day cell in the timeline
+ * PERF: Optimized with useCallback to prevent re-creating press handlers
+ */
 export const DayCell: React.FC<DayCellProps> = ({
   date,
   index,
@@ -40,6 +43,11 @@ export const DayCell: React.FC<DayCellProps> = ({
   );
   const accessibilityHint = getAccessibilityHint(canPressDay, isDayDisabled);
 
+  // PERF: Memoize press handler
+  const handlePress = useCallback(() => {
+    onDayPress?.(date);
+  }, [onDayPress, date]);
+
   const contentProps = {
     colors,
     completionStatus,
@@ -62,7 +70,7 @@ export const DayCell: React.FC<DayCellProps> = ({
         className='flex-1 items-center gap-0.5'
         disabled={isDayDisabled}
         style={{ opacity: isDayDisabled ? 0.5 : 1 }}
-        onPress={() => onDayPress(date)}
+        onPress={handlePress}
       >
         {({ pressed }) => (
           <DayCellContent {...contentProps} pressed={pressed} />

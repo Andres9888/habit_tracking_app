@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Microscope } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
@@ -47,6 +47,17 @@ const TemplateListItemComponent = ({
     triggerLightImpact,
   });
 
+  // PERF: Memoize press handlers to avoid breaking memo optimization
+  const handleSelectPress = useCallback(() => {
+    triggerSelection();
+    onSelect(template);
+  }, [triggerSelection, onSelect, template]);
+
+  const handleSciencePress = useCallback(() => {
+    triggerSelection();
+    onViewScience(template);
+  }, [triggerSelection, onViewScience, template]);
+
   return (
     <Animated.View style={entranceAnimatedStyle}>
       <View className='flex-row items-center gap-3 border-b border-stone-100 p-4'>
@@ -55,10 +66,7 @@ const TemplateListItemComponent = ({
           accessibilityRole='button'
           className='flex-1 flex-row items-center gap-3'
           style={templateAnimatedStyle}
-          onPress={() => {
-            triggerSelection();
-            onSelect(template);
-          }}
+          onPress={handleSelectPress}
           onPressIn={handleTemplatePressIn}
           onPressOut={handleTemplatePressOut}
         >
@@ -88,10 +96,7 @@ const TemplateListItemComponent = ({
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-full bg-blue-50'
           style={scienceAnimatedStyle}
-          onPress={() => {
-            triggerSelection();
-            onViewScience(template);
-          }}
+          onPress={handleSciencePress}
           onPressIn={handleSciencePressIn}
           onPressOut={handleSciencePressOut}
         >

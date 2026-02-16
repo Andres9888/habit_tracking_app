@@ -1,5 +1,6 @@
 /* eslint-disable max-lines, max-lines-per-function */
 /** SettingsContent - Stagger animations, stone-100 bg, 12px version */
+import { useCallback } from 'react';
 import {
   Moon,
   BookOpen,
@@ -42,12 +43,31 @@ const COMPLETION_SOUND_OPTIONS: Array<{
   { key: 'success', label: 'Success' },
 ];
 
+/**
+ * PERF: Optimized settings content with memoized handlers
+ */
 export function SettingsContent(p: SettingsContentProps) {
   const { colors, isHighContrastActive: hc } = p;
   const { colors: themeColors, isDark } = useThemeColors();
 
   // If not premium, show upsell for completion sounds
   const showSoundUpsell = !p.isPremium;
+
+  // PERF: Memoize handler factories for dark mode options
+  const createDarkModeHandler = useCallback(
+    (key: 'system' | 'light' | 'dark') => () => {
+      void p.onChangeDarkModePreference(key);
+    },
+    [p]
+  );
+
+  // PERF: Memoize handler factory for completion sound options
+  const createSoundTypeHandler = useCallback(
+    (key: 'chime' | 'pop' | 'success') => () => {
+      void p.onChangeCompletionSoundType(key);
+    },
+    [p]
+  );
 
   return (
     <ScrollView
@@ -100,7 +120,7 @@ export function SettingsContent(p: SettingsContentProps) {
                           ? themeColors.card
                           : 'transparent',
                       }}
-                      onPress={() => void p.onChangeDarkModePreference(key)}
+                      onPress={createDarkModeHandler(key)}
                     >
                       <Icon
                         color={
@@ -215,9 +235,7 @@ export function SettingsContent(p: SettingsContentProps) {
                                   : '#e5e7eb'
                                 : 'transparent',
                             }}
-                            onPress={() =>
-                              void p.onChangeCompletionSoundType(key)
-                            }
+                            onPress={createSoundTypeHandler(key)}
                           >
                             <Text
                               className='text-[13px] font-semibold'

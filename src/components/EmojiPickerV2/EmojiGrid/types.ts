@@ -9,7 +9,7 @@ export interface EmojiGridProps {
 export interface EmojiCellProps {
   emoji: string;
   isSelected: boolean;
-  onPress: () => void;
+  onPress: (emoji: string) => void;
 }
 
 export interface EmojiRowProps {

@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { Pressable, ScrollView, Text } from 'react-native';
 
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
@@ -10,9 +11,22 @@ interface QuickPickChipsProps {
   onSelect: (mode: HabitSortMode) => void;
 }
 
-export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
+/**
+ * PERF: Memoized to prevent re-renders when parent updates
+ * Moved press handler creation outside of map
+ */
+function QuickPickChipsComponent({ sortMode, onSelect }: QuickPickChipsProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const { trigger } = useHaptics();
+
+  // PERF: Create stable handler for each option
+  const createPressHandler = useCallback(
+    (value: HabitSortMode) => () => {
+      trigger('tap');
+      onSelect(value);
+    },
+    [trigger, onSelect]
+  );
 
   return (
     <ScrollView
@@ -39,10 +53,7 @@ export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
                   : themeColors.gray[100],
               minHeight: 44,
             }}
-            onPress={() => {
-              trigger('tap');
-              onSelect(option.value);
-            }}
+            onPress={createPressHandler(option.value)}
           >
             <option.Icon
               color={isSelected ? '#ffffff' : themeColors.text.secondary}
@@ -63,3 +74,5 @@ export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
     </ScrollView>
   );
 }
+
+export const QuickPickChips = memo(QuickPickChipsComponent);

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Check } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
@@ -34,8 +35,9 @@ interface SortOptionRowProps {
 
 /**
  * SortOptionRow - A single sort option in the detailed options list.
+ * PERF: Memoized to prevent re-renders when other options change
  */
-export function SortOptionRow({
+function SortOptionRowComponent({
   Icon,
   iconBgColors,
   title,
@@ -104,5 +106,7 @@ export function SortOptionRow({
     </Pressable>
   );
 }
+
+export const SortOptionRow = memo(SortOptionRowComponent);
 
 export default SortOptionRow;

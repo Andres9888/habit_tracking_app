@@ -4,7 +4,7 @@
  */
 
 import type { ComponentProps } from 'react';
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
@@ -42,8 +42,17 @@ function getAccessibilityLabel(
   return `${base}, ${sign}${Math.round(habit.percentageChange)}% change`;
 }
 
-export function HabitItem({ habit, type, onPress }: HabitItemProps) {
+/**
+ * PERF: Memoized to prevent re-renders when parent list updates
+ * but this item's props haven't changed
+ */
+function HabitItemComponent({ habit, type, onPress }: HabitItemProps) {
   const icon = getChangeIcon(type);
+
+  // PERF: Memoize handler to prevent creating new function on every render
+  const handlePress = useCallback(() => {
+    onPress?.(habit.habitId);
+  }, [habit.habitId, onPress]);
 
   return (
     <AnimatedPressable
@@ -51,7 +60,7 @@ export function HabitItem({ habit, type, onPress }: HabitItemProps) {
       accessibilityLabel={getAccessibilityLabel(habit, type)}
       accessibilityRole='button'
       style={styles.habitItem}
-      onPress={() => onPress?.(habit.habitId)}
+      onPress={handlePress}
     >
       <View style={styles.habitItemLeft}>
         <Text style={styles.habitEmoji}>{habit.emoji}</Text>
@@ -84,3 +93,5 @@ export function HabitItem({ habit, type, onPress }: HabitItemProps) {
     </AnimatedPressable>
   );
 }
+
+export const HabitItem = memo(HabitItemComponent);

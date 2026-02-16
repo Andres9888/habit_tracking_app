@@ -7,8 +7,9 @@ import { EMOJIS_PER_ROW, type EmojiRowProps } from './types';
 
 /**
  * Memoized emoji row component
+ * PERF: Pass onEmojiSelect directly to cells to avoid creating inline handlers
  */
-export const EmojiRow = memo(({ emojis, selectedEmoji, onEmojiSelect }: EmojiRowProps) => {
+function EmojiRowComponent({ emojis, selectedEmoji, onEmojiSelect }: EmojiRowProps) {
   return (
     <View style={styles.emojiRow}>
       {emojis.map((emoji, index) => (
@@ -16,7 +17,7 @@ export const EmojiRow = memo(({ emojis, selectedEmoji, onEmojiSelect }: EmojiRow
           <EmojiCell
             emoji={emoji}
             isSelected={selectedEmoji === emoji}
-            onPress={() => onEmojiSelect(emoji)}
+            onPress={onEmojiSelect}
           />
         </View>
       ))}
@@ -29,6 +30,8 @@ export const EmojiRow = memo(({ emojis, selectedEmoji, onEmojiSelect }: EmojiRow
         ))}
     </View>
   );
-});
+}
+
+export const EmojiRow = memo(EmojiRowComponent);
 
 EmojiRow.displayName = 'EmojiRow';

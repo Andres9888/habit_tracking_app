@@ -77,12 +77,21 @@ interface CategoryPillsProps {
   categories?: Category[];
 }
 
-export const CategoryPills = memo(
-  ({
-    selectedCategory,
-    onCategorySelect,
-    categories = HABIT_CATEGORIES,
-  }: CategoryPillsProps) => (
+/**
+ * PERF: Memoized category pills with optimized press handlers
+ */
+function CategoryPillsComponent({
+  selectedCategory,
+  onCategorySelect,
+  categories = HABIT_CATEGORIES,
+}: CategoryPillsProps) {
+  // PERF: Create stable handler factory
+  const createPressHandler = useCallback(
+    (categoryId: string) => () => onCategorySelect(categoryId),
+    [onCategorySelect]
+  );
+
+  return (
     <ScrollView
       horizontal
       contentContainerStyle={styles.categoriesContent}
@@ -95,12 +104,14 @@ export const CategoryPills = memo(
           icon={category.icon}
           isSelected={selectedCategory === category.id}
           name={category.name}
-          onPress={() => onCategorySelect(category.id)}
+          onPress={createPressHandler(category.id)}
         />
       ))}
     </ScrollView>
-  )
-);
+  );
+}
+
+export const CategoryPills = memo(CategoryPillsComponent);
 
 CategoryPills.displayName = 'CategoryPills';
 export default CategoryPills;
