@@ -18,11 +18,12 @@ import '../global.css';
 
 import { ClerkProvider } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
+import { SplashTransition } from './components/SplashTransition';
 import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
@@ -112,9 +113,23 @@ function CoreProviders({ children }: PropsWithChildren) {
 }
 
 export default function App() {
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  useEffect(() => {
+    // Mark app as ready after critical resources are loaded
+    // This gives time for fonts, theme, and initial auth check
+    const timer = setTimeout(() => {
+      setIsAppReady(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <CoreProviders>
-      <AuthGate />
+      <SplashTransition isReady={isAppReady}>
+        <AuthGate />
+      </SplashTransition>
     </CoreProviders>
   );
 }

@@ -63,6 +63,7 @@
     "expo-notifications": "~0.32.16",
     "expo-secure-store": "^15.0.7",
     "expo-sharing": "^14.0.7",
+    "expo-splash-screen": "^31.0.13",
     "expo-store-review": "^9.0.9",
     "expo-web-browser": "~15.0.9",
     "lucide-react-native": "^0.564.0",

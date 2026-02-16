@@ -10,7 +10,12 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#059669"
+      "backgroundColor": "#059669",
+      "dark": {
+        "image": "./assets/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#047857"
+      }
     },
     "assetBundlePatterns": [
       "assets/*",
@@ -52,6 +57,7 @@
       }
     },
     "plugins": [
+      "expo-splash-screen",
       "expo-font",
       "expo-notifications",
       "expo-web-browser",
