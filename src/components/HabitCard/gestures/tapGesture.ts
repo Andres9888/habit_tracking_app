@@ -8,7 +8,10 @@ import { runOnJS, type SharedValue } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { showSyncError } from '../../../utils/errorAlerts';
-import { pressCard, releaseCard } from '../../../utils/animations/cardPressAnimation';
+import {
+  pressCard,
+  releaseCard,
+} from '../../../utils/animations/cardPressAnimation';
 
 interface TapGestureOptions {
   id: Id<'habits'>;
@@ -62,17 +65,17 @@ export function createTapGesture(options: TapGestureOptions) {
       }
 
       // Standard card press animation with spring physics
-      if (!reduceMotion) {
-        pressCard(cardScale);
-      } else {
+      if (reduceMotion) {
         cardScale.value = 0.97;
+      } else {
+        pressCard(cardScale);
       }
     })
     .onFinalize(() => {
-      if (!reduceMotion) {
-        releaseCard(cardScale);
-      } else {
+      if (reduceMotion) {
         cardScale.value = 1;
+      } else {
+        releaseCard(cardScale);
       }
     })
     .onEnd(() => {

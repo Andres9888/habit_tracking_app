@@ -21,7 +21,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 const STORAGE_KEY = '@habit_app:calendar_collapse_preferences';
 
 describe('calendarCollapsePreferences', () => {
-  const mockHabitId = 'test-habit-id' as any;
+  const mockHabitId = 'test-habit-id' as unknown;
 
   beforeEach(() => {
     jest.clearAllMocks();
