@@ -30,6 +30,7 @@ jest.mock('../../hooks/useHapticFeedback', () => ({
     triggerSuccess: jest.fn(),
     triggerWarning: jest.fn(),
     triggerError: jest.fn(),
+    triggerMediumImpact: jest.fn(),
   }),
 }));
 
