@@ -42,12 +42,15 @@ export function HabitsEmptyStateMinimal({
 
   const flow = useHabitCreationFlow({ inputRef, onQuickCreateHabit });
 
-  // Auto-focus input after entrance animations complete (iOS only — Android keyboards can be jarring)
+  // Auto-focus input after entrance animations complete
+  // iOS: focus immediately (keyboard slides up smoothly)
+  // Android: delay slightly longer to avoid jarring keyboard pop
   useEffect(() => {
-    if (!isLoading && Platform.OS === 'ios') {
+    if (!isLoading) {
+      const delay = Platform.OS === 'ios' ? 800 : 1200;
       const timer = setTimeout(() => {
         inputRef.current?.focus();
-      }, 800); // After entrance animations settle
+      }, delay);
       return () => clearTimeout(timer);
     }
   }, [isLoading, inputRef]);

@@ -110,9 +110,9 @@ export const COPY = {
     'People who start with one small habit are 3× more likely to build lasting routines.',
 
   // Success state
-  successHeadline: "You're growing!",
+  successHeadline: 'Your first link! 🔗',
   successSubtext: (habitName: string) =>
-    `"${habitName}" added — your chain starts now!`,
+    `"${habitName}" added — complete it today to start your chain!`,
 } as const;
 
 /**

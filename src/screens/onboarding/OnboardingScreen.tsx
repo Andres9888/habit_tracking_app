@@ -45,7 +45,7 @@ function ChainLink({
   index: number;
   reduceMotion: boolean;
 }) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const chainColors = [
     colors.primary[600],
     colors.primary[700],
@@ -70,7 +70,7 @@ function ChainLink({
         },
       ]}
     >
-      <View style={styles.chainLinkInner} />
+      <View style={[styles.chainLinkInner, isDark && { backgroundColor: colors.background }]} />
     </Animated.View>
   );
 }
@@ -122,7 +122,8 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
           <Text
             style={[
               styles.strengthLabel,
-              i === 4 && styles.strengthLabelActive,
+              { color: colors.text.secondary },
+              i === 4 && [styles.strengthLabelActive, { color: colors.primary[700] }],
             ]}
           >
             {stage}
@@ -157,6 +158,7 @@ const TEMPLATE_ICONS = [
 ];
 
 function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
+  const { colors, isDark } = useThemeColors();
   return (
     <View style={styles.templateGrid}>
       {TEMPLATE_ICONS.map((emoji, i) => (
@@ -169,7 +171,13 @@ function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
                   .springify()
                   .damping(18)
           }
-          style={styles.templateItem}
+          style={[
+            styles.templateItem,
+            {
+              backgroundColor: isDark ? colors.card : '#F0FDF4',
+              shadowOpacity: isDark ? 0.2 : 0.08,
+            },
+          ]}
         >
           <Text style={styles.templateEmoji}>{emoji}</Text>
         </Animated.View>
@@ -249,7 +257,7 @@ interface OnboardingScreenProps {
 }
 
 function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
@@ -320,7 +328,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
               ? undefined
               : FadeInUp.delay(200).springify().damping(18)
           }
-          style={styles.title}
+          style={[styles.title, { color: colors.text.primary }]}
         >
           {item.title}
         </Animated.Text>
@@ -330,7 +338,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
               ? undefined
               : FadeInUp.delay(350).springify().damping(18)
           }
-          style={styles.subtitle}
+          style={[styles.subtitle, { color: colors.text.secondary }]}
         >
           {item.subtitle}
         </Animated.Text>
@@ -353,7 +361,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
           style={styles.skipButton}
           onPress={handleSkip}
         >
-          <Text style={styles.skipText}>Skip</Text>
+          <Text style={[styles.skipText, { color: colors.text.secondary }]}>Skip</Text>
         </Pressable>
       </Animated.View>
 

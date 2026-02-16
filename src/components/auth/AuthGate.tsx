@@ -27,6 +27,7 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import { api } from '../../../convex/_generated/api';
 import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import { useConvexAuthReady } from '../../providers';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
@@ -38,15 +39,8 @@ const OnboardingScreen = lazy(() => import('../../screens/onboarding/OnboardingS
 
 const LOADING_TIMEOUT_MS = 10_000;
 
-function ChainIcon() {
-  return (
-    <View style={loadingStyles.iconContainer}>
-      <Text style={loadingStyles.iconText}>🔗</Text>
-    </View>
-  );
-}
-
 function BrandedLoadingScreen() {
+  const { colors: themeColors, isDark } = useThemeColors();
   const [timedOut, setTimedOut] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -68,17 +62,19 @@ function BrandedLoadingScreen() {
   }, []);
 
   return (
-    <View style={loadingStyles.container}>
+    <View style={[loadingStyles.container, { backgroundColor: themeColors.background }]}>
       <View style={loadingStyles.content}>
-        <ChainIcon />
-        <Text style={loadingStyles.appName}>Chain Day</Text>
+        <View style={[loadingStyles.iconContainer, { backgroundColor: isDark ? themeColors.primary[100] : colors.primary[100] }]}>
+          <Text style={loadingStyles.iconText}>🔗</Text>
+        </View>
+        <Text style={[loadingStyles.appName, { color: isDark ? themeColors.text.primary : colors.primary[700] }]}>Chain Day</Text>
 
         {timedOut ? (
-          <View style={loadingStyles.errorCard}>
-            <Text style={loadingStyles.errorTitle}>
+          <View style={[loadingStyles.errorCard, { backgroundColor: themeColors.card, borderColor: themeColors.border }]}>
+            <Text style={[loadingStyles.errorTitle, { color: themeColors.text.primary }]}>
               Taking longer than expected
             </Text>
-            <Text style={loadingStyles.errorDescription}>
+            <Text style={[loadingStyles.errorDescription, { color: themeColors.text.secondary }]}>
               We're having trouble connecting. Check your internet connection
               and try again.
             </Text>

@@ -25,6 +25,7 @@ import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
 import { styles } from './WelcomeScreen.styles';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 // Lazy load auth screens - only bundle when user wants to sign in/up
 const SignInScreen = lazy(() => import('./SignInScreen'));
@@ -35,14 +36,17 @@ type AuthMode = 'welcome' | 'signin' | 'signup';
 function WelcomeScreenContent() {
   const [mode, setMode] = useState<AuthMode>('welcome');
   const insets = useSafeAreaInsets();
+  const { colors: themeColors, isDark } = useThemeColors();
   const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =
     useOAuthSignIn();
   const { iconStyle, titleStyle, subtitleStyle, buttonsStyle } =
     useWelcomeAnimations();
 
+  const containerDarkStyle = { backgroundColor: themeColors.background };
+
   if (mode === 'signin') {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, isDark && containerDarkStyle]}>
         <Suspense fallback={<View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary[600]} /></View>}>
           <SignInScreen />
         </Suspense>
@@ -55,7 +59,7 @@ function WelcomeScreenContent() {
 
   if (mode === 'signup') {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, isDark && containerDarkStyle]}>
         <Suspense fallback={<View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary[600]} /></View>}>
           <SignUpScreen />
         </Suspense>
@@ -67,16 +71,16 @@ function WelcomeScreenContent() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isDark && containerDarkStyle]}>
       <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
         <View style={styles.heroSection}>
-          <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <Link color='#1c1917' size={40} strokeWidth={2} />
+          <Animated.View style={[styles.iconContainer, iconStyle, isDark && { backgroundColor: themeColors.card }]}>
+            <Link color={themeColors.text.primary} size={40} strokeWidth={2} />
           </Animated.View>
-          <Animated.Text style={[styles.title, titleStyle]}>
+          <Animated.Text style={[styles.title, { color: themeColors.text.primary }, titleStyle]}>
             Chain Day
           </Animated.Text>
-          <Animated.Text style={[styles.subtitle, subtitleStyle]}>
+          <Animated.Text style={[styles.subtitle, { color: themeColors.text.secondary }, subtitleStyle]}>
             Build habits that stick
           </Animated.Text>
         </View>
@@ -118,8 +122,8 @@ function WelcomeScreenContent() {
             style={styles.textLink}
             onPress={() => setMode('signin')}
           >
-            <Text style={styles.textLinkLabel}>Already have an account?</Text>
-            <Text style={styles.textLinkAction}> Sign in</Text>
+            <Text style={[styles.textLinkLabel, { color: themeColors.text.secondary }]}>Already have an account?</Text>
+            <Text style={[styles.textLinkAction, { color: themeColors.primary[700] }]}> Sign in</Text>
           </AnimatedPressable>
         </Animated.View>
       </View>

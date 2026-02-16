@@ -8,6 +8,7 @@ import { Pressable, Text, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
+import { useEmptyStateColors } from './useEmptyStateColors';
 
 interface SuccessContentProps {
   habitName: string;
@@ -24,6 +25,7 @@ export function SuccessContent({
   tapHintStyle,
   onAddAnother,
 }: SuccessContentProps) {
+  const esColors = useEmptyStateColors();
   return (
     <Animated.View
       style={[contentStyle, { alignItems: 'center', width: '100%' }]}
@@ -31,7 +33,7 @@ export function SuccessContent({
       {/* Headline */}
       <Text
         style={{
-          color: COLORS.stone800,
+          color: esColors.textPrimary,
           fontSize: 22,
           fontWeight: '600',
           marginBottom: 8,
@@ -44,7 +46,7 @@ export function SuccessContent({
       {/* Subtext */}
       <Text
         style={{
-          color: COLORS.stone500,
+          color: esColors.textSecondary,
           fontSize: 13,
           marginBottom: 24,
           textAlign: 'center',
@@ -59,7 +61,7 @@ export function SuccessContent({
           style={[
             tapHintStyle,
             {
-              color: COLORS.stone500,
+              color: esColors.textSecondary,
               fontSize: 13,
               textAlign: 'center',
             },
@@ -77,7 +79,7 @@ export function SuccessContent({
           accessibilityRole='button'
           style={({ pressed }) => ({
             alignItems: 'center',
-            backgroundColor: COLORS.stone800,
+            backgroundColor: esColors.ctaBackground,
             borderRadius: BORDER_RADIUS.cta,
             height: TOUCH_TARGETS.ctaHeight,
             justifyContent: 'center',
