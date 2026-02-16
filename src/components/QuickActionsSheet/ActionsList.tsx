@@ -10,6 +10,7 @@ import {
   Trash2,
 } from 'lucide-react-native';
 import { ActionItem } from './ActionItem';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { ActionsListProps } from './types';
 
 export const ActionsList = ({
@@ -22,6 +23,9 @@ export const ActionsList = ({
   onPause,
   onDelete,
 }: ActionsListProps) => {
+  const { colors, isDark } = useThemeColors();
+  const iconColor = colors.text.secondary;
+
   return (
     <ScrollView
       bounces={false}
@@ -32,7 +36,7 @@ export const ActionsList = ({
         <ActionItem
           icon={
             <Check
-              className={completed ? 'text-emerald-600' : 'text-stone-600'}
+              color={completed ? (isDark ? '#34d399' : '#059669') : iconColor}
               size={20}
               strokeWidth={2.5}
             />
@@ -44,16 +48,14 @@ export const ActionsList = ({
           highlighted
           showChevron
           badge='NEW!'
-          icon={<Brain className='text-white' size={20} strokeWidth={2} />}
+          icon={<Brain color='#ffffff' size={20} strokeWidth={2} />}
           label='Mental Boost'
           subtitle='Visualize success & strengthen motivation'
           onPress={onMentalBoost}
         />
         <ActionItem
           showChevron
-          icon={
-            <Calendar className='text-stone-600' size={20} strokeWidth={2} />
-          }
+          icon={<Calendar color={iconColor} size={20} strokeWidth={2} />}
           label='View Calendar'
           onPress={onViewCalendar}
         />
@@ -61,23 +63,24 @@ export const ActionsList = ({
         {onViewDetails && (
           <ActionItem
             showChevron
-            icon={
-              <FileText className='text-stone-600' size={20} strokeWidth={2} />
-            }
+            icon={<FileText color={iconColor} size={20} strokeWidth={2} />}
             label='View Details'
             subtitle='Stats, why, vision board'
             onPress={onViewDetails}
           />
         )}
-        <View className='my-2 h-px bg-stone-100' />
+        <View
+          className='my-2 h-px'
+          style={{ backgroundColor: colors.border }}
+        />
         <ActionItem
-          icon={<Edit3 className='text-stone-600' size={20} strokeWidth={2} />}
+          icon={<Edit3 color={iconColor} size={20} strokeWidth={2} />}
           label='Edit Habit'
           onPress={onEdit}
         />
 
         <ActionItem
-          icon={<Pause className='text-stone-600' size={20} strokeWidth={2} />}
+          icon={<Pause color={iconColor} size={20} strokeWidth={2} />}
           label='Pause Habit'
           subtitle='Hide from daily list'
           onPress={onPause}
@@ -85,7 +88,7 @@ export const ActionsList = ({
 
         <ActionItem
           destructive
-          icon={<Trash2 className='text-red-500' size={20} strokeWidth={2} />}
+          icon={<Trash2 color={isDark ? '#fca5a5' : '#ef4444'} size={20} strokeWidth={2} />}
           label='Delete Habit'
           subtitle='This cannot be undone'
           onPress={onDelete}

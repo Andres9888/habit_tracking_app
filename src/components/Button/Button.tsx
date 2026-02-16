@@ -31,6 +31,8 @@ export function Button({
   style,
   textStyle,
   onPress,
+  accessibilityLabel,
+  accessibilityHint,
   ...pressableProps
 }: ButtonProps) {
   const theme = useAppTheme();
@@ -47,6 +49,8 @@ export function Button({
     <AnimatedPressable
       accessible
       accessibilityRole='button'
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: disabled || loading }}
       disabled={disabled || loading}
       {...focusHandlers}

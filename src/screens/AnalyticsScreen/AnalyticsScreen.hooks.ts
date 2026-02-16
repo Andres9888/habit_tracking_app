@@ -7,6 +7,8 @@ import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { exportData, prepareExportData } from '../../utils/exportData';
 import { usePremium } from '../../hooks/usePremium/usePremium';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { maybeRequestReviewFromAnalytics } from '@/utils/storeReview';
 import type {
   ExportFormat,
   UseAnalyticsScreenReturn,
@@ -17,16 +19,38 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const { isPremium: isPremiumUser } = usePremium();
   const [showPaywall, setShowPaywall] = useState(!isPremiumUser);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const { triggerLightImpact } = useHapticFeedback();
+  const hasCheckedReview = useRef(false);
 
   // Fetch analytics data from Convex
   const overviewStats = useQuery(api.analytics.getOverviewStats);
   const strengthDistribution = useQuery(api.analytics.getStrengthDistribution);
   const trendData = useQuery(api.analytics.get30DayTrend);
   const complianceData = useQuery(api.analytics.getComplianceData);
-  const weeklyInsights = useQuery(api.analytics.getWeeklyInsights);
+  const weeklyInsightsRaw = useQuery(api.analytics.getWeeklyInsights);
+  const weeklyInsights = (weeklyInsightsRaw && 'weekOverWeekChange' in weeklyInsightsRaw ? weeklyInsightsRaw : undefined) as import('../../components/WeeklyInsightsCard').WeeklyInsights | undefined;
 
   const isLoading = !overviewStats;
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Maybe request review after viewing positive stats (once per session)
+  useEffect(() => {
+    if (
+      !hasCheckedReview.current &&
+      !isLoading &&
+      overviewStats &&
+      complianceData &&
+      complianceData.length > 0
+    ) {
+      hasCheckedReview.current = true;
+      // Calculate average completion rate from heatmap data
+      const avgCompletionRate =
+        complianceData.reduce((sum, day) => sum + day.completionRate, 0) /
+        complianceData.length;
+      const totalHabits = overviewStats.totalHabits || 0;
+      void maybeRequestReviewFromAnalytics(avgCompletionRate, totalHabits);
+    }
+  }, [isLoading, overviewStats, complianceData]);
 
   // Cleanup refresh timer on unmount
   useEffect(() => {
@@ -36,11 +60,12 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   }, []);
 
   const onRefresh = useCallback(async () => {
+    triggerLightImpact(); // Haptic feedback when pull-to-refresh activates
     setRefreshing(true);
     // Convex queries automatically refresh
     if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
     refreshTimerRef.current = setTimeout(() => setRefreshing(false), 1000);
-  }, []);
+  }, [triggerLightImpact]);
 
   const handleHabitPress = useCallback((_habitId: string) => {
     // TODO: navigate to habit detail

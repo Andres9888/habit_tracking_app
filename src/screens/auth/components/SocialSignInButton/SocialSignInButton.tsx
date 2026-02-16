@@ -21,7 +21,7 @@ const PROVIDER_CONFIG = {
     textColor: 'text-white',
   },
   google: {
-    bgColor: 'bg-white',
+    bgColor: 'bg-white dark:bg-gray-800',
     borderColor: 'border-stone-200',
     label: 'Continue with Google',
     spinnerColor: '#44403c',
@@ -46,13 +46,13 @@ export function SocialSignInButton({
 
   const handlePressIn = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
+      scale.value = withSpring(0.97, { damping: 18, stiffness: 150 });
     }
   };
 
   const handlePressOut = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(1, { damping: 18, stiffness: 240 });
+      scale.value = withSpring(1, { damping: 18, stiffness: 150 });
     }
   };
 

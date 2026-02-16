@@ -23,6 +23,7 @@ export function WOOPExplainerModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='fade'
       visible={visible}

@@ -2,7 +2,9 @@
  * WelcomeScreen styles
  */
 
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle } from 'react-native';
+import { colors } from '../../theme/colors';
+import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   actionSection: {
@@ -46,44 +48,41 @@ export const styles = StyleSheet.create({
   },
   primaryButton: {
     alignItems: 'center',
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 12,
     elevation: 4,
     paddingVertical: 16,
-    shadowColor: '#059669',
+    shadowColor: colors.primary[600],
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 16,
   },
   primaryButtonText: {
+    ...typography.button,
     color: '#ffffff',
-    fontSize: 17,
-    fontWeight: '600',
-  },
+  } as TextStyle,
   subtitle: {
+    ...typography.body,
     color: '#57534e',
-    fontSize: 17,
     textAlign: 'center',
-  },
+  } as TextStyle,
   textLink: {
     flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: 12,
   },
   textLinkAction: {
-    color: '#047857',
-    fontSize: 15,
+    ...typography.bodySmall,
+    color: colors.primary[700],
     fontWeight: '600',
-  },
+  } as TextStyle,
   textLinkLabel: {
+    ...typography.bodySmall,
     color: '#57534e',
-    fontSize: 15,
-  },
+  } as TextStyle,
   title: {
+    ...typography.displayLarge,
     color: '#1c1917',
-    fontSize: 34,
-    fontWeight: '700',
-    letterSpacing: -0.5,
     textAlign: 'center',
-  },
+  } as TextStyle,
 });

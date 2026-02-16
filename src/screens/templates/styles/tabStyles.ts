@@ -1,5 +1,5 @@
 /**
- * Tab Styles - Emerald active state, theme-aware via semantic tokens
+ * Tab Styles - Theme-aware via semantic tokens
  *
  * Note: Static styles only. Theme-dependent colors (background, text)
  * are applied inline via useThemeColors() in the TabBar component.
@@ -32,7 +32,7 @@ export const tabStyles = StyleSheet.create({
     marginLeft: 6,
   },
   tabCountActive: {
-    color: '#059669',
+    // Applied dynamically via theme colors in TabBar
   },
   tabIndicator: {
     borderRadius: 12,
@@ -40,7 +40,6 @@ export const tabStyles = StyleSheet.create({
     elevation: 3,
     left: 5,
     position: 'absolute',
-    shadowColor: '#059669',
     shadowOffset: { height: 3, width: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 8,
@@ -51,6 +50,6 @@ export const tabStyles = StyleSheet.create({
     fontWeight: '600',
   },
   tabTextActive: {
-    color: '#047857',
+    // Applied dynamically via theme colors in TabBar
   },
 });

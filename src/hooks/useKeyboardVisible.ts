@@ -3,13 +3,25 @@ import { Keyboard, Platform } from 'react-native';
 import type { KeyboardEvent } from 'react-native';
 
 /**
- * Hook that tracks keyboard visibility and height
+ * Hook that tracks keyboard visibility and height for responsive UI adjustments.
  *
- * Works on both iOS and Android:
+ * Automatically listens to platform-appropriate keyboard events:
  * - iOS: Uses keyboardWillShow/Hide for smoother animations
  * - Android: Uses keyboardDidShow/Hide (will* events not supported)
  *
- * @returns Object with isKeyboardVisible boolean and keyboardHeight number
+ * @returns Object containing keyboard state
+ * @returns returns.isKeyboardVisible - Whether the keyboard is currently visible
+ * @returns returns.keyboardHeight - Current keyboard height in pixels (0 when hidden)
+ *
+ * @example
+ * ```tsx
+ * const { isKeyboardVisible, keyboardHeight } = useKeyboardVisible();
+ *
+ * // Adjust view padding when keyboard appears
+ * <View style={{ paddingBottom: isKeyboardVisible ? keyboardHeight : 0 }}>
+ *   <TextInput placeholder="Type here..." />
+ * </View>
+ * ```
  */
 export const useKeyboardVisible = () => {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);

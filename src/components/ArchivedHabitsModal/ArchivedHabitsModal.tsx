@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
@@ -18,8 +18,13 @@ export default function ArchivedHabitsModal({
 }: ArchivedHabitsModalProps) {
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
-  const { archivedHabits, handleRestore, handlePermanentDelete, handleDeleteAll, isLoading } =
-    useArchivedHabitsModalLogic();
+  const {
+    archivedHabits,
+    handleRestore,
+    handlePermanentDelete,
+    handleDeleteAll,
+    isLoading,
+  } = useArchivedHabitsModalLogic();
 
   const renderItem = useCallback(
     ({ item, index }: { item: (typeof archivedHabits)[0]; index: number }) => (

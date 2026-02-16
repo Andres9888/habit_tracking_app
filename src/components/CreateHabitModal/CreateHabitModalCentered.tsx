@@ -17,6 +17,7 @@ import { CreateHabitScrollContent } from './components/CreateHabitScrollContent'
 import { ModalHeader } from './components/ModalHeader';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
+import { useKeyboardState } from './hooks/useKeyboardState';
 import { useSwipeDismiss } from './hooks/useSwipeDismiss';
 import type { CreateHabitModalProps } from './types';
 
@@ -26,6 +27,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const scrollViewRef = useRef<ScrollViewType>(null);
   const [showNameError, setShowNameError] = useState(false);
   const { colors } = useThemeColors();
+  const { isKeyboardVisible } = useKeyboardState();
   const { animatedStyle, panGesture } = useSwipeDismiss({ onClose });
 
   const callbacks = useCenteredFormCallbacks({
@@ -46,6 +48,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}
@@ -64,6 +67,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
               <ModalHeader
                 habitName={form.habitName}
                 isEditMode={isEditMode}
+                isKeyboardVisible={isKeyboardVisible}
                 onClose={onClose}
                 onSave={callbacks.handleSave}
                 onValidationError={callbacks.handleValidationError}
