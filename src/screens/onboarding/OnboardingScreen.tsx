@@ -103,9 +103,10 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
           entering={
             reduceMotion
               ? undefined
-              : FadeInDown.delay(400 + i * 200)
+              : FadeInUp.delay(400 + i * 150)
                   .springify()
-                  .damping(18)
+                  .damping(16)
+                  .stiffness(180)
           }
           style={styles.strengthRow}
         >
@@ -114,7 +115,7 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
               styles.strengthBar,
               {
                 backgroundColor: interpolateColor(i / 4, colors.primary),
-                opacity: 0.15 + i * 0.2125,
+                opacity: 0.2 + i * 0.2,
                 width: `${20 + i * 20}%`,
               },
             ]}
@@ -165,9 +166,10 @@ function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
           entering={
             reduceMotion
               ? undefined
-              : FadeIn.delay(300 + i * 60)
+              : FadeInDown.delay(300 + i * 60)
                   .springify()
-                  .damping(18)
+                  .damping(15)
+                  .stiffness(200)
           }
           style={styles.templateItem}
         >
@@ -191,22 +193,22 @@ const PAGES: PageData[] = [
   {
     id: 'chain',
     subtitle:
-      'Complete your habits daily and watch your chain grow — every link counts.',
-    title: "Don't Break the Chain",
+      'Every day you show up, your chain grows stronger. Miss a day? Start over. Simple motivation that actually works.',
+    title: 'Never Miss a Day Again',
     Visual: ChainVisualization,
   },
   {
     id: 'strength',
     subtitle:
-      'Your habits get stronger over time — backed by behavioral science.',
-    title: 'Science-Backed Strength',
+      'Watch your habits transform from effort to effortless. Track your progress from "starting" to "automatic" - the science is built in.',
+    title: 'From Hard to Habit in 66 Days',
     Visual: StrengthMeter,
   },
   {
     id: 'templates',
     subtitle:
-      'Pick from science-backed templates or create your own in seconds.',
-    title: '200+ Ready-Made Templates',
+      "Don't start from scratch. Choose from proven habits for fitness, mindfulness, productivity, and more. Your first habit starts in 10 seconds.",
+    title: 'Start With What Works',
     Visual: TemplateGrid,
   },
 ];
@@ -399,7 +401,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
                 <ActivityIndicator color='#FFFFFF' />
               ) : (
                 <Text style={styles.ctaText}>
-                  Let's Build Your First Habit →
+                  Start Your First Chain Now →
                 </Text>
               )}
             </Pressable>

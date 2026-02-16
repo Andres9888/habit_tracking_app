@@ -45,7 +45,10 @@ export function WelcomeContent({
           Chain Day
         </Animated.Text>
         <Animated.Text style={[styles.subtitle, subtitleStyle]}>
-          Build habits that stick
+          Build life-changing habits in just 2 minutes a day
+        </Animated.Text>
+        <Animated.Text style={[styles.tagline, subtitleStyle]}>
+          Join 100,000+ people transforming their lives, one day at a time
         </Animated.Text>
       </View>
       <Animated.View style={[styles.actionSection, buttonsStyle]}>

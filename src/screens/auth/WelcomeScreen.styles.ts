@@ -62,8 +62,16 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   subtitle: {
-    color: '#57534e',
+    color: '#1c1917',
     fontSize: 17,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  tagline: {
+    color: '#78716c',
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: 8,
     textAlign: 'center',
   },
   textLink: {
