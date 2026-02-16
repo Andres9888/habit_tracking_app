@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { buttonShadow } from './DetailHeader.constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -18,7 +19,7 @@ interface HeaderButtonProps {
 }
 
 export function HeaderButton({ onPress, icon, label }: HeaderButtonProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
   const animStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -34,17 +35,7 @@ export function HeaderButton({ onPress, icon, label }: HeaderButtonProps) {
       accessibilityLabel={label}
       accessibilityRole='button'
       className='h-11 w-11 items-center justify-center rounded-full'
-      style={[
-        {
-          backgroundColor: isDark ? 'rgba(31,41,55,0.9)' : 'rgba(255,255,255,0.9)',
-          elevation: 4,
-          shadowColor: isDark ? '#000' : '#1c1917',
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: isDark ? 0.3 : 0.08,
-          shadowRadius: 16,
-        },
-        animStyle,
-      ]}
+      style={[buttonShadow, animStyle, { backgroundColor: colors.card }]}
       onPress={handlePress}
       onPressIn={() => {
         scale.value = withSpring(0.92, { damping: 18, stiffness: 240 });
