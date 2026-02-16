@@ -22,6 +22,7 @@ export function HabitStrengthInfoModal({ visible, onClose }: Props) {
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='slide'
       presentationStyle='pageSheet'
       visible={visible}

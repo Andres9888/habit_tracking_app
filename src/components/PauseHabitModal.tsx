@@ -30,6 +30,7 @@ export function PauseHabitModal({
 
   return (
     <Modal variant='centerAlert' visible={visible} onClose={onCancel}>
+      accessibilityViewIsModal
       <View style={styles.container}>
         <Text style={[styles.title, { color: theme.custom.colors.gray[900] }]}>
           Pause "{habitName}"?

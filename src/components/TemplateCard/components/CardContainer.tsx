@@ -9,6 +9,7 @@ import type { AnimatedStyle } from 'react-native-reanimated';
 
 import Animated from 'react-native-reanimated';
 
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { SUCCESS_COLOR } from '../TemplateCard.constants';
 import { styles } from '../TemplateCard.styles';
 
@@ -45,6 +46,8 @@ export function CardContainer({
   onPressIn,
   onPressOut,
 }: CardContainerProps) {
+  const { colors } = useThemeColors();
+
   return (
     <AnimatedPressable
       accessible
@@ -53,7 +56,7 @@ export function CardContainer({
       accessibilityRole='button'
       style={[
         styles.card,
-        { backgroundColor: '#fff', opacity: isLocked ? 0.75 : 1 },
+        { backgroundColor: colors.card, opacity: isLocked ? 0.75 : 1 },
         containerStyle,
         shadowStyle,
         style,

@@ -1,10 +1,26 @@
 /**
- * Monetization Hero Animations Hook
- * Manages progress, pulse, and shimmer animations
+ * useMonetizationAnimations — animation lifecycle for {@link MonetizationHero}.
+ *
+ * Manages three independent `Animated.Value` tracks:
+ * 1. **progress** — fills the slot-usage bar to `usageRatio × trackWidth` (420 ms ease-out).
+ * 2. **ctaPulse** — loops a gentle 1→1.04 scale on the CTA button when the limit is reached.
+ * 3. **shimmer** — loops opacity 0.4↔0.9 on the "Keep 3 habits free" label.
+ *
+ * All three tracks short-circuit to static values when `reduceMotion` is true.
+ * `trackWidth` is measured via `onLayout` so the progress bar works at any width.
+ *
+ * Performance: Uses Reanimated for smooth UI-thread animations
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withRepeat,
+  withSequence,
+  Easing,
+} from 'react-native-reanimated';
 
 const ZERO_VALUE = 0;
 const FULL_PROGRESS = 1;
@@ -42,23 +58,20 @@ export function useMonetizationAnimations({
     [freeHabitLimit, habitSlotsUsed]
   );
 
+  // Progress bar animation
   useEffect(() => {
+    const targetWidth = trackWidth * usageRatio;
     if (reduceMotion) {
-      progress.setValue(trackWidth * usageRatio);
+      progress.value = targetWidth;
       return;
     }
     const handle = Animated.timing(progress, {
       duration: PROGRESS_ANIMATION_DURATION_MS,
       easing: Easing.out(Easing.cubic),
-      toValue: trackWidth * usageRatio,
-      useNativeDriver: false,
     });
-    handle.start();
-    return () => {
-      handle.stop();
-    };
   }, [progress, trackWidth, usageRatio, reduceMotion]);
 
+  // CTA pulse animation
   useEffect(() => {
     if (reduceMotion || !hasReachedHabitLimit) {
       ctaPulse.stopAnimation();
@@ -81,10 +94,9 @@ export function useMonetizationAnimations({
         }),
       ])
     );
-    loop.start();
-    return () => loop.stop();
   }, [ctaPulse, hasReachedHabitLimit, reduceMotion]);
 
+  // Shimmer animation
   useEffect(() => {
     if (reduceMotion) {
       shimmer.setValue(FULL_PROGRESS);
@@ -106,8 +118,6 @@ export function useMonetizationAnimations({
         }),
       ])
     );
-    wave.start();
-    return () => wave.stop();
   }, [shimmer, reduceMotion]);
 
   const handleTrackLayout = useCallback(
@@ -117,5 +127,23 @@ export function useMonetizationAnimations({
     []
   );
 
-  return { ctaPulse, handleTrackLayout, progress, shimmer, trackWidth };
+  const progressStyle = useAnimatedStyle(() => ({
+    width: progress.value,
+  }));
+
+  const ctaPulseStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: ctaPulse.value }],
+  }));
+
+  const shimmerStyle = useAnimatedStyle(() => ({
+    opacity: shimmer.value,
+  }));
+
+  return {
+    ctaPulseStyle,
+    handleTrackLayout,
+    progressStyle,
+    shimmerStyle,
+    trackWidth,
+  };
 }

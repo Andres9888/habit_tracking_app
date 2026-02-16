@@ -96,6 +96,7 @@ export const QuickActionsSheet = ({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='none'
       visible={visible}

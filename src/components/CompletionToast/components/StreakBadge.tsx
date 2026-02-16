@@ -21,6 +21,7 @@ export function StreakBadge({ streak, onPress }: StreakBadgeProps) {
     <Pressable
       accessibilityHint='Tap to dismiss'
       accessibilityLabel={`${streakEmoji} ${streak} day streak`}
+      accessibilityRole='button'
       style={[styles.streakBadge, { backgroundColor: COLORS.streakBadgeBg }]}
       onPress={onPress}
     >

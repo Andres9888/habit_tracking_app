@@ -34,7 +34,7 @@ export function DayCircle({
     const delay = index * 35;
     scale.value = withDelay(
       delay,
-      withSpring(1, { damping: 12, stiffness: 200 })
+      withSpring(1, { damping: 18, stiffness: 150 })
     );
     opacity.value = withDelay(delay, withTiming(1, { duration: 120 }));
 

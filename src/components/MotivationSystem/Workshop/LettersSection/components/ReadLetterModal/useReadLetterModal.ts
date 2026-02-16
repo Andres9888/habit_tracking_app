@@ -73,7 +73,7 @@ export function useReadLetterModal({
       timersRef.current.push(setTimeout(() => {
         anim.sparkleScale.value = withSequence(
           withSpring(1.2, SPRING_BOUNCY),
-          withSpring(1, { damping: 15, stiffness: 200 })
+          withSpring(1, { damping: 18, stiffness: 150 })
         );
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }, 300));

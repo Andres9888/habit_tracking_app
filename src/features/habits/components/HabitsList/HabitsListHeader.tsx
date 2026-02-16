@@ -1,5 +1,15 @@
 /**
- * HabitsListHeader - Redesigned per home-screen-redesign-spec.md
+ * HabitsListHeader — animated header rendered above the habit rows.
+ *
+ * Contains (top-to-bottom):
+ * 1. **OfflineIndicator** (US3) — shown when the device loses connectivity.
+ * 2. **HabitsHeader** — title, completion summary, action buttons (add, sort, settings, templates).
+ * 3. **CalendarTimeline** — week-view dots with day completion heat and navigation arrows.
+ * 4. **TrialCountdownBanner** — shown during an active free-trial period.
+ *
+ * Animated values (`headerOpacity/TranslateY`, `calendarOpacity/TranslateY`) drive
+ * the staggered entrance choreography orchestrated by `useHabitsListAnimations`.
+ * Memoised via `React.memo` to skip re-renders when props are reference-equal.
  */
 
 /* eslint-disable max-lines-per-function */
