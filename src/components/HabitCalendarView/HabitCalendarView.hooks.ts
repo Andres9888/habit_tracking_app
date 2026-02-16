@@ -9,11 +9,18 @@ import {
   startOfToday,
   isBefore,
   isSameDay,
+  addDays,
+  format,
 } from 'date-fns';
 import { useCallback, useMemo, useState } from 'react';
 import type { Id } from '../../../convex/_generated/dataModel';
 
 export type HabitStatus = 'done' | 'missed' | 'planned' | 'upcoming';
+
+export interface StreakConnection {
+  connectLeft: boolean;
+  connectRight: boolean;
+}
 
 interface UseHabitCalendarViewLogicProps {
   habitId: Id<'habits'>;
@@ -61,6 +68,29 @@ export const useHabitCalendarViewLogic = ({
     [trackingMap]
   );
 
+  // Calculate streak connections for visual chain effect
+  const getStreakConnection = useCallback(
+    (dateString: string): StreakConnection => {
+      const completion = trackingMap.get(dateString);
+      if (!completion) {
+        return { connectLeft: false, connectRight: false };
+      }
+
+      const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
+      const previousDateString = format(addDays(parsedDate, -1), 'yyyy-MM-dd');
+      const nextDateString = format(addDays(parsedDate, 1), 'yyyy-MM-dd');
+
+      const previousCompleted = trackingMap.get(previousDateString) === true;
+      const nextCompleted = trackingMap.get(nextDateString) === true;
+
+      return {
+        connectLeft: previousCompleted,
+        connectRight: nextCompleted,
+      };
+    },
+    [trackingMap]
+  );
+
   const handlePreviousMonth = () => {
     setCurrentMonth((prev) => subMonths(prev, 1));
   };
@@ -90,8 +120,9 @@ export const useHabitCalendarViewLogic = ({
     daysInMonth,
     emptyDays,
     getHabitStatus,
+    getStreakConnection,
     handleNextMonth,
     handlePreviousMonth,
     handleToday,
   };
-};
+}

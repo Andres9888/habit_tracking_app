@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useHabitCalendarViewLogic } from './HabitCalendarView.hooks';
 import { CalendarHeader } from './CalendarHeader';
@@ -23,13 +24,27 @@ export default function HabitCalendarView({
     daysInMonth,
     emptyDays,
     getHabitStatus,
+    getStreakConnection,
     handlePreviousMonth,
     handleNextMonth,
     handleToday,
   } = useHabitCalendarViewLogic({ habitId, tracking });
 
+  // Swipe gesture for month navigation
+  const swipeGesture = Gesture.Pan()
+    .activeOffsetX([-20, 20])
+    .onEnd((event) => {
+      if (event.translationX > 50) {
+        // Swipe right - previous month
+        handlePreviousMonth();
+      } else if (event.translationX < -50) {
+        // Swipe left - next month
+        handleNextMonth();
+      }
+    });
+
   return (
-    <View className='gap-4'>
+    <View style={styles.container}>
       <CalendarHeader
         currentMonth={currentMonth}
         onNext={handleNextMonth}
@@ -37,32 +52,59 @@ export default function HabitCalendarView({
         onToday={handleToday}
       />
 
-      <DayNamesRow />
+      <GestureDetector gesture={swipeGesture}>
+        <View style={styles.calendarGrid}>
+          <DayNamesRow />
 
-      <View className='flex-row flex-wrap px-1'>
-        {emptyDays.map((i) => (
-          <View
-            key={`empty-${i}`}
-            className='aspect-square w-[14.28%] items-center justify-center p-0.5'
-          />
-        ))}
+          <View style={styles.weekRow}>
+            {emptyDays.map((i) => (
+              <View
+                key={`empty-${i}`}
+                style={styles.emptyDay}
+              />
+            ))}
 
-        {daysInMonth.map((date) => {
-          const dateString = format(date, 'yyyy-MM-dd');
-          const status = getHabitStatus(dateString);
+            {daysInMonth.map((date) => {
+              const dateString = format(date, 'yyyy-MM-dd');
+              const status = getHabitStatus(dateString);
+              const streakConnection = getStreakConnection(dateString);
 
-          return (
-            <CalendarDay
-              key={dateString}
-              date={date}
-              status={status}
-              onPress={() => toggleHabit({ date: dateString, habitId })}
-            />
-          );
-        })}
-      </View>
+              return (
+                <CalendarDay
+                  key={dateString}
+                  date={date}
+                  status={status}
+                  streakConnection={streakConnection}
+                  onPress={() => toggleHabit({ date: dateString, habitId })}
+                />
+              );
+            })}
+          </View>
 
-      <CalendarLegend />
+          <CalendarLegend />
+        </View>
+      </GestureDetector>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 16,
+  },
+  calendarGrid: {
+    // Container for swipable calendar content
+  },
+  weekRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 4,
+  },
+  emptyDay: {
+    aspectRatio: 1,
+    width: '14.28%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 2,
+  },
+});

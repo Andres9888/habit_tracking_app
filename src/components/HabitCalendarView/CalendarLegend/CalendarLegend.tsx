@@ -1,35 +1,52 @@
-import { Text, View } from 'react-native';
-
-const LEGEND_ITEMS = [
-  {
-    indicatorClassName: 'bg-emerald-500',
-    label: 'Completed',
-    textClassName: 'text-emerald-700',
-  },
-  {
-    indicatorClassName: 'bg-rose-400',
-    label: 'Missed',
-    textClassName: 'text-rose-500',
-  },
-  {
-    indicatorClassName: 'bg-emerald-500',
-    label: 'Today',
-    textClassName: 'text-emerald-600',
-  },
-  {
-    indicatorClassName: 'bg-stone-300',
-    label: 'Upcoming',
-    textClassName: 'text-stone-400',
-  },
-];
+import { Text, View, StyleSheet } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 export function CalendarLegend() {
+  const { colors } = useThemeColors();
+
+  const LEGEND_ITEMS = [
+    {
+      indicatorColor: colors.primary[500],
+      label: 'Completed',
+      textColor: colors.primary[700],
+    },
+    {
+      indicatorColor: '#F87171', // rose-400 equivalent
+      label: 'Missed',
+      textColor: '#F43F5E', // rose-500 equivalent
+    },
+    {
+      indicatorColor: colors.primary[500],
+      label: 'Today',
+      textColor: colors.primary[600],
+    },
+    {
+      indicatorColor: colors.gray[400],
+      label: 'Upcoming',
+      textColor: colors.gray[400],
+    },
+  ];
+
   return (
-    <View className='flex-row flex-wrap items-center justify-center gap-4 pb-1 pt-2'>
-      {LEGEND_ITEMS.map(({ indicatorClassName, label, textClassName }) => (
-        <View key={label} className='flex-row items-center gap-1.5'>
-          <View className={`h-2.5 w-2.5 rounded-full ${indicatorClassName}`} />
-          <Text className={`text-[10px] font-medium ${textClassName}`}>
+    <View style={sheet.container}>
+      {LEGEND_ITEMS.map(({ indicatorColor, label, textColor }) => (
+        <View key={label} style={sheet.legendItem}>
+          <View
+            style={[
+              sheet.indicator,
+              {
+                backgroundColor: indicatorColor,
+              },
+            ]}
+          />
+          <Text
+            style={[
+              sheet.label,
+              {
+                color: textColor,
+              },
+            ]}
+          >
             {label}
           </Text>
         </View>
@@ -37,3 +54,29 @@ export function CalendarLegend() {
     </View>
   );
 }
+
+const sheet = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    paddingBottom: 4,
+    paddingTop: 8,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  indicator: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  label: {
+    fontSize: 10,
+    fontWeight: '500',
+  },
+});
