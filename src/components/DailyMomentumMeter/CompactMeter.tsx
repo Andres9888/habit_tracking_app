@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Animated } from 'react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { ProgressColors } from './types';
 
 interface CompactMeterProps {
@@ -13,11 +14,12 @@ export function CompactMeter({
   colors,
   progressWidth,
 }: CompactMeterProps) {
+  const { colors: themeColors } = useThemeColors();
   return (
     <View className='flex-row items-center gap-2'>
       <View
         className='h-2 flex-1 overflow-hidden rounded-full'
-        style={{ backgroundColor: '#e7e5e4' }}
+        style={{ backgroundColor: themeColors.gray[200] }}
       >
         <Animated.View
           className='h-full rounded-full'

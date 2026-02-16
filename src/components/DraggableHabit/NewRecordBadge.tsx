@@ -2,6 +2,7 @@ import React from 'react';
 import { Animated, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TrendingUp } from 'lucide-react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface NewRecordBadgeProps {
   newRecordOpacity: Animated.Value;
@@ -12,11 +13,12 @@ export function NewRecordBadge({
   newRecordOpacity,
   newRecordScale,
 }: NewRecordBadgeProps) {
+  const { isDark } = useThemeColors();
   return (
     <Animated.View
       className='mx-3 mb-3 flex-row items-center justify-center gap-1.5 rounded-full py-2'
       style={{
-        borderColor: '#fcd34d', // amber-300
+        borderColor: isDark ? '#D97706' : '#fcd34d',
         borderWidth: 1,
         opacity: newRecordOpacity,
         transform: [{ scale: newRecordScale }],
@@ -24,14 +26,14 @@ export function NewRecordBadge({
     >
       <LinearGradient
         className='absolute inset-0 rounded-full'
-        colors={['#fef3c7', '#fffbeb']}
+        colors={isDark ? ['#451A03', '#78350F'] : ['#fef3c7', '#fffbeb']}
         end={{ x: 1, y: 0 }}
         start={{ x: 0, y: 0 }}
       />
-      <TrendingUp color='#d97706' size={16} strokeWidth={2.5} />
+      <TrendingUp color={isDark ? '#FBBF24' : '#d97706'} size={16} strokeWidth={2.5} />
       <Text
         className='text-[13px] font-bold uppercase tracking-wide'
-        style={{ color: '#b45309' }}
+        style={{ color: isDark ? '#FCD34D' : '#b45309' }}
       >
         New Personal Record! 🎉
       </Text>
