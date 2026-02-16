@@ -40,7 +40,7 @@ export function TemplateListSkeleton({
   return (
     <View
       accessible
-      accessibilityLabel='Loading templates'
+      accessibilityLabel='Loading habit templates...'
       accessibilityRole='progressbar'
       className='py-2'
     >

@@ -75,15 +75,19 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
 
   const handleCreate = useCallback(async () => {
     if (!form.habitName.trim() || !form.fullHabitName) return;
-    const { hasReminders } = await checkReminderPermissions(
-      form.remindersEnabled
-    );
-    const data = { ...habitData, hasReminders };
+    try {
+      const { hasReminders } = await checkReminderPermissions(
+        form.remindersEnabled
+      );
+      const data = { ...habitData, hasReminders };
 
-    await (isEditMode && habitToEdit
-      ? handleEdit({ ...data, habitToEdit })
-      : createNewHabit(data));
-    cleanup();
+      await (isEditMode && habitToEdit
+        ? handleEdit({ ...data, habitToEdit })
+        : createNewHabit(data));
+      cleanup();
+    } catch (error) {
+      if (__DEV__) console.error('Failed to save habit:', error);
+    }
   }, [
     form.habitName,
     form.fullHabitName,

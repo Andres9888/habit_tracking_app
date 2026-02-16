@@ -49,7 +49,7 @@ const CreateHabitFormCenteredComponent = ({
             showNameError ? 'border-red-400' : 'border-stone-200'
           }`}
           maxLength={50}
-          placeholder='e.g., Read for 20 minutes'
+          placeholder='e.g., Read 20 minutes daily'
           placeholderTextColor='#A8A29E'
           returnKeyType='done'
           value={habitName}

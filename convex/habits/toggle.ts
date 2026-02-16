@@ -37,9 +37,14 @@ export const toggleHabit = mutation({
           completed: true, date: args.date, habitId: args.habitId, userId: identity.subject,
         }));
 
-    await ctx.scheduler.runAfter(0, internal.habits.toggle.recalculateStreakAndStrength, {
-      date: args.date, habitId: args.habitId, timezone: args.timezone,
-    });
+    // Schedule streak/strength recalculation with small delay to batch multiple toggles
+    // This prevents race conditions if user rapidly toggles the same habit
+    // The delay (500ms) allows multiple quick toggles to be batched into one recalculation
+    await ctx.scheduler.runAfter(
+      500,
+      internal.habits.toggle.recalculateStreakAndStrength,
+      { date: args.date, habitId: args.habitId, timezone: args.timezone }
+    );
     return null;
   },
   returns: v.null(),

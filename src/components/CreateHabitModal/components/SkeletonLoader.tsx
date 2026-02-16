@@ -38,7 +38,7 @@ export const SkeletonButton = ({ className: _className = '' }: { className?: str
 );
 
 export const SkeletonCard = ({ className: _className = '' }: { className?: string }) => (
-  <View className='rounded-2xl bg-white p-4'>
+  <View className='rounded-2xl p-4'>
     <View className='flex-row items-center gap-4'>
       <SkeletonLoader borderRadius={16} height={64} width={64} />
       <View className='flex-1'>

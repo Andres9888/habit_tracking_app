@@ -3,7 +3,7 @@
  * Handles emoji selection, search focus, and dismiss actions
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { addRecentEmoji } from '../../../utils/recentEmojis';
 
 const SELECTION_FEEDBACK_DELAY = 300;
@@ -20,6 +20,16 @@ export function useSheetHandlers(
   actions: SheetActions
 ) {
   const [pendingEmoji, setPendingEmoji] = useState<string | null>(null);
+  const selectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clearTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (selectTimerRef.current) clearTimeout(selectTimerRef.current);
+      if (clearTimerRef.current) clearTimeout(clearTimerRef.current);
+    };
+  }, []);
 
   const handleSearchFocus = useCallback(
     (focused: boolean) => {
@@ -37,10 +47,12 @@ export function useSheetHandlers(
     (emoji: string) => {
       setPendingEmoji(emoji);
       void addRecentEmoji(emoji);
-      setTimeout(() => {
+      if (selectTimerRef.current) clearTimeout(selectTimerRef.current);
+      if (clearTimerRef.current) clearTimeout(clearTimerRef.current);
+      selectTimerRef.current = setTimeout(() => {
         onSelect(emoji);
         actions.closeSheet();
-        setTimeout(() => setPendingEmoji(null), SELECTION_FEEDBACK_DELAY);
+        clearTimerRef.current = setTimeout(() => setPendingEmoji(null), SELECTION_FEEDBACK_DELAY);
       }, SELECTION_FEEDBACK_DELAY);
     },
     [onSelect, actions.closeSheet]

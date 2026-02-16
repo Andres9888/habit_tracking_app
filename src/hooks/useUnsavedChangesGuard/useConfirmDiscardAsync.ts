@@ -39,7 +39,7 @@ export function useConfirmDiscardAsync({
         return;
       }
 
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
       setIsConfirmationVisible(true);
       resolveRef.current = resolve;
 
