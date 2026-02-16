@@ -5,14 +5,15 @@
 import { forwardRef, useMemo } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { CHARACTER_LIMIT, COLORS, COPY } from '../constants';
+import { CHARACTER_LIMIT, COPY } from '../constants';
 import type { HabitInputProps } from '../types';
+import { useEmptyStateColors } from '../useEmptyStateColors';
 import { ClearIcon } from './ClearIcon';
 import { getCharacterCounterColor } from './helpers';
 import { useInputAnimations } from './useInputAnimations';
 import {
   getContainerStyle,
-  inputTextStyle,
+  getInputTextStyle,
   clearButtonPressedStyle,
   characterCounterStyle,
 } from './inputStyles';
@@ -24,30 +25,46 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     { value, onChangeText, onFocus, onBlur, onSubmitEditing, onClear },
     ref
   ) {
+    const colors = useEmptyStateColors();
     const { isFocused, containerStyle, handleFocus, handleBlur } =
       useInputAnimations({ onBlur, onFocus });
 
     const showClearButton = value.length > 0;
     const showCharacterCounter = isFocused || value.length > 0;
     const characterCounterColor = useMemo(
-      () => getCharacterCounterColor(value.length),
-      [value.length]
+      () =>
+        getCharacterCounterColor(
+          value.length,
+          colors.counterNormal,
+          colors.counterWarning,
+          colors.counterError
+        ),
+      [value.length, colors]
     );
 
     return (
-      <AnimatedView style={[containerStyle, getContainerStyle({ isFocused })]}>
+      <AnimatedView
+        style={[
+          containerStyle,
+          getContainerStyle({
+            isFocused,
+            backgroundColor: colors.inputBackground,
+            shadowColor: colors.inputBorderFocused,
+          }),
+        ]}
+      >
         <TextInput
           ref={ref}
-          accessibilityHint={`Type a habit you want to track daily, maximum ${CHARACTER_LIMIT.max} characters`}
-          accessibilityLabel='Enter your habit name'
+          accessibilityHint='Type a habit name and press return to create it'
+          accessibilityLabel='Habit name input'
           autoCapitalize='sentences'
           autoCorrect={false}
           maxLength={CHARACTER_LIMIT.max}
           placeholder={COPY.inputPlaceholder}
-          placeholderTextColor={COLORS.stone400}
+          placeholderTextColor={colors.inputPlaceholder}
           returnKeyType='done'
-          selectionColor={COLORS.emeraldCaret}
-          style={inputTextStyle}
+          selectionColor={colors.inputCaret}
+          style={getInputTextStyle(colors.inputText)}
           value={value}
           onBlur={handleBlur}
           onChangeText={onChangeText}

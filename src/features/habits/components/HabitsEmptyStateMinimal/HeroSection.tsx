@@ -2,8 +2,9 @@ import { Text } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
-import { COLORS, COPY } from './constants';
+import { COPY } from './constants';
 import { HeroIcon } from './HeroIcon';
+import { useEmptyStateColors } from './useEmptyStateColors';
 
 interface HeroSectionProps {
   isLoading: boolean;
@@ -16,6 +17,7 @@ export function HeroSection({
   heroAnimatedStyle,
   headlineAnimatedStyle,
 }: HeroSectionProps) {
+  const colors = useEmptyStateColors();
   return (
     <Animated.View
       style={{
@@ -32,9 +34,10 @@ export function HeroSection({
 
       <AnimatedEntrance delay={ENTRANCE_DELAYS.headline}>
         <Animated.Text
+          accessibilityRole='header'
           style={[
             {
-              color: COLORS.stone800,
+              color: colors.textPrimary,
               fontSize: 28,
               fontWeight: '800',
               letterSpacing: -0.5,
@@ -53,7 +56,7 @@ export function HeroSection({
       <AnimatedEntrance delay={ENTRANCE_DELAYS.headline + 50}>
         <Text
           style={{
-            color: COLORS.stone500,
+            color: colors.textSecondary,
             fontSize: 13,
             fontStyle: 'italic',
             lineHeight: 18,

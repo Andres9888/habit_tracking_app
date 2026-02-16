@@ -11,14 +11,16 @@ import * as Haptics from 'expo-haptics';
 import { CTA_SHIMMER } from './animations';
 import { COPY } from './constants';
 import type { CtaButtonProps } from './types';
+import { useEmptyStateColors } from './useEmptyStateColors';
 import { useCtaButtonAnimations } from './useCtaButtonAnimations';
-import { getCtaButtonStyle, ctaTextStyle } from './CtaButton.styles';
+import { getCtaButtonStyle, getCtaTextStyle } from './CtaButton.styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 export function CtaButton({ disabled, isLoading, onPress, inputValue }: CtaButtonProps & { inputValue?: string }) {
   const isDisabled = disabled || isLoading;
+  const colors = useEmptyStateColors();
 
   const { animatedStyle, handlePressIn, handlePressOut, shimmerAnimatedStyle } =
     useCtaButtonAnimations({ disabled: !!disabled, isLoading: !!isLoading });
@@ -38,7 +40,14 @@ export function CtaButton({ disabled, isLoading, onPress, inputValue }: CtaButto
       accessibilityRole='button'
       accessibilityState={{ disabled: isDisabled }}
       disabled={isDisabled}
-      style={[animatedStyle, getCtaButtonStyle(!!isDisabled)]}
+      style={[
+        animatedStyle,
+        getCtaButtonStyle(
+          !!isDisabled,
+          colors.ctaBackground,
+          colors.ctaBackground
+        ),
+      ]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -59,9 +68,9 @@ export function CtaButton({ disabled, isLoading, onPress, inputValue }: CtaButto
         testID='cta-shimmer-overlay'
       />
       {isLoading ? (
-        <ActivityIndicator color='#ffffff' size='small' />
+        <ActivityIndicator color={colors.ctaText} size='small' />
       ) : (
-        <Text style={ctaTextStyle}>
+        <Text style={getCtaTextStyle(colors.ctaText)}>
           {inputValue?.trim()
             ? COPY.ctaButtonDynamic(inputValue.trim())
             : COPY.ctaButton}
