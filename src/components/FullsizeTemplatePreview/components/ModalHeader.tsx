@@ -1,30 +1,22 @@
 /**
  * Modal header for FullsizeTemplatePreview
- * Contains close button with animation
+ * Uses shared ModalCloseButton for consistent close button styling
  */
 
 import React from 'react';
-import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { X } from 'lucide-react-native';
 import { layoutStyles } from '../styles';
-import type { PressHandlers } from '../FullsizeTemplatePreview.types';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+import { ModalCloseButton } from '../../ui/ModalCloseButton';
 
 interface ModalHeaderProps {
   topInset: number;
-  closeButtonStyle: object;
   closeButtonAnimatedOpacityStyle: object;
-  closeButtonPressHandlers: PressHandlers;
   onClose: () => void;
 }
 
 export function ModalHeader({
   topInset,
-  closeButtonStyle,
   closeButtonAnimatedOpacityStyle,
-  closeButtonPressHandlers,
   onClose,
 }: ModalHeaderProps) {
   return (
@@ -35,18 +27,7 @@ export function ModalHeader({
         closeButtonAnimatedOpacityStyle,
       ]}
     >
-      <AnimatedPressable
-        accessible
-        accessibilityHint='Double tap to close this preview'
-        accessibilityLabel='Close preview'
-        accessibilityRole='button'
-        hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
-        style={[layoutStyles.closeButton, closeButtonStyle]}
-        onPress={onClose}
-        {...closeButtonPressHandlers}
-      >
-        <X color='#3D3833' size={24} strokeWidth={2.5} />
-      </AnimatedPressable>
+      <ModalCloseButton label='Close preview' onClose={onClose} />
     </Animated.View>
   );
 }

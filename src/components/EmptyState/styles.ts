@@ -36,7 +36,6 @@ export const styles = StyleSheet.create({
   },
   templateChip: {
     alignItems: 'center',
-    backgroundColor: '#f3f4f6',
     borderRadius: 16,
     flexDirection: 'row',
     gap: 6,
@@ -44,14 +43,12 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   templateChipPressed: {
-    backgroundColor: '#e5e7eb',
     transform: [{ scale: 0.98 }],
   },
   templateEmoji: {
     fontSize: typography.body.fontSize,
   },
   templateName: {
-    color: '#3D3833',
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },

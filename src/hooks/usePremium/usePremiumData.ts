@@ -96,9 +96,13 @@ export function usePremiumData(): PremiumData {
       }
     }
 
-    void fetchData().then(() => {
-      if (isMounted) setupListener();
-    });
+    void fetchData()
+      .then(() => {
+        if (isMounted) setupListener();
+      })
+      .catch((error) => {
+        if (__DEV__) console.warn('[usePremium] Unexpected error during setup:', error);
+      });
 
     return () => {
       isMounted = false;

@@ -94,11 +94,15 @@ export function useNotificationResponse(handlers: NotificationResponseHandler) {
     );
 
     // Check for any notification that launched the app
-    Notifications.getLastNotificationResponseAsync().then((response) => {
-      if (response) {
-        handleNotificationResponse(response);
-      }
-    });
+    void Notifications.getLastNotificationResponseAsync()
+      .then((response) => {
+        if (response) {
+          handleNotificationResponse(response);
+        }
+      })
+      .catch((error) => {
+        if (__DEV__) console.warn('Error getting last notification response:', error);
+      });
 
     return () => {
       subscription.remove();

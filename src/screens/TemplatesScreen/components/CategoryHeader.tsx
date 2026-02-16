@@ -5,6 +5,7 @@
 import { Pressable, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import {
   CATEGORY_COLORS,
   DEFAULT_CATEGORY_COLORS,
@@ -31,7 +32,9 @@ export function CategoryHeader({
   viewMode,
 }: CategoryHeaderProps) {
   const theme = useAppTheme();
-  const colors = CATEGORY_COLORS[selectedCategory] || DEFAULT_CATEGORY_COLORS;
+  const { colors: themeColors } = useThemeColors();
+  const catColors =
+    CATEGORY_COLORS[selectedCategory] || DEFAULT_CATEGORY_COLORS;
   const categoryIcon =
     categories?.find((c) => c.id === selectedCategory)?.icon || '📌';
 
@@ -45,14 +48,23 @@ export function CategoryHeader({
           style={styles.backButton}
           onPress={onBackPress}
         >
-          <ArrowLeft color='#3D3833' size={20} strokeWidth={2.5} />
-          <Text style={styles.backButtonText}>Back</Text>
+          <ArrowLeft
+            color={themeColors.text.secondary}
+            size={20}
+            strokeWidth={2.5}
+          />
+          <Text style={[styles.backButtonText, { color: themeColors.text.secondary }]}>
+            Back
+          </Text>
         </Pressable>
       )}
       <View style={styles.categoryHeaderRow}>
         {viewMode === 'category' && (
           <View
-            style={[styles.categoryHeaderIcon, { backgroundColor: colors.bg }]}
+            style={[
+              styles.categoryHeaderIcon,
+              { backgroundColor: catColors.bg },
+            ]}
           >
             <Text style={{ fontSize: 24 }}>{categoryIcon}</Text>
           </View>
@@ -61,7 +73,7 @@ export function CategoryHeader({
           <Text
             style={[
               theme.custom.typography.heading1,
-              { color: '#1c1917', fontWeight: '700' },
+              { color: themeColors.text.primary, fontWeight: '700' },
             ]}
           >
             {viewMode === 'search'
@@ -71,7 +83,7 @@ export function CategoryHeader({
           <Text
             style={[
               theme.custom.typography.bodySmall,
-              { color: '#78716c', marginTop: 2 },
+              { color: themeColors.text.secondary, marginTop: 2 },
             ]}
           >
             {filteredCount} template{filteredCount === 1 ? '' : 's'}

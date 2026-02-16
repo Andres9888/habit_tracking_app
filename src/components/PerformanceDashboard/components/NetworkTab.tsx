@@ -3,8 +3,8 @@
  * API latency and network request information.
  */
 
-import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { FlatList, Text, View } from 'react-native';
 import { StatusIndicator } from './StatusIndicator';
 import { StatRow } from './StatRow';
 import { tabStyles, valueStyles } from './tabStyles';
@@ -49,19 +49,35 @@ function RequestsList({
 }: {
   requests: NetworkData['recentRequests'];
 }) {
+  const recentRequests = requests.slice(-5).reverse();
+
+  const renderItem = useCallback(
+    ({ item }: { item: NetworkData['recentRequests'][0] }) => (
+      <RequestRow request={item} />
+    ),
+    []
+  );
+
+  const keyExtractor = useCallback(
+    (_: NetworkData['recentRequests'][0], index: number) => `${index}`,
+    []
+  );
+
   return (
     <View style={networkStyles.requests}>
       <Text style={tabStyles.historyLabel}>Recent Requests</Text>
-      <ScrollView nestedScrollEnabled style={tabStyles.scrollView}>
-        {requests.length === 0 ? (
-          <Text style={tabStyles.emptyText}>No requests yet</Text>
-        ) : (
-          requests
-            .slice(-5)
-            .reverse()
-            .map((req, i) => <RequestRow key={i} request={req} />)
-        )}
-      </ScrollView>
+      {recentRequests.length === 0 ? (
+        <Text style={tabStyles.emptyText}>No requests yet</Text>
+      ) : (
+        <FlatList
+          nestedScrollEnabled
+          data={recentRequests}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          style={tabStyles.scrollView}
+          windowSize={3}
+        />
+      )}
     </View>
   );
 }

@@ -16,8 +16,13 @@ export function HapticTestModalSection({
       onRequestClose={closeHapticTest}
     >
       <View className='flex-1'>
-        <View className='px-4 py-4' style={{ backgroundColor: '#1A1816' }}>
-          <Pressable onPress={closeHapticTest}>
+        <View className='px-4 py-4' style={{ backgroundColor: '#111827' }}>
+          <Pressable
+            accessibilityHint='Go back to the habits app'
+            accessibilityLabel='Go back'
+            accessibilityRole='button'
+            onPress={closeHapticTest}
+          >
             <Text style={{ color: '#ffffff', fontSize: 17, fontWeight: '600' }}>
               ← Back to App
             </Text>
