@@ -37,7 +37,7 @@ export function useConfirmDiscard({
         return;
       }
 
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
       setIsConfirmationVisible(true);
 
       const buttons: AlertButton[] = [

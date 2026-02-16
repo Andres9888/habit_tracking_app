@@ -4,7 +4,9 @@
  */
 
 import { View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 
@@ -16,7 +18,7 @@ import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 
-export function HabitsApp() {
+function HabitsAppContent() {
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
   const { triggerSelection, triggerWarning } = useHapticFeedback({
@@ -51,6 +53,7 @@ export function HabitsApp() {
         {showHabitsSkeleton ? (
           <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
         ) : (
+          <Animated.View entering={FadeIn.duration(300)} style={{ flex: 1 }}>
           <HabitsList
             canNavigateForward={list.canNavigateForward}
             list={list}
@@ -64,6 +67,7 @@ export function HabitsApp() {
             onUpgradeDismiss={handleUpgradeDismiss}
             onUpgradeIntent={handleUpgradeIntent}
           />
+          </Animated.View>
         )}
 
         {list.habits.length > 0 && (
@@ -87,6 +91,14 @@ export function HabitsApp() {
         />
       </View>
     </GestureHandlerRootView>
+  );
+}
+
+export function HabitsApp() {
+  return (
+    <ScreenErrorBoundary screenName="Habits">
+      <HabitsAppContent />
+    </ScreenErrorBoundary>
   );
 }
 

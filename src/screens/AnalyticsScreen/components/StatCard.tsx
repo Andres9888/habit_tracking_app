@@ -2,7 +2,7 @@
  * StatCard - Displays a single statistic with optional emoji, accent color, and interaction.
  * Supports animated value countup for numeric stats.
  */
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { AnimatedStatValue } from './AnimatedStatValue';
@@ -30,14 +30,17 @@ export const StatCard: React.FC<ExtendedStatCardProps> = ({
     ? `${title}, loading`
     : `${title}: ${value}${subtitle ? `, ${subtitle}` : ''}`;
 
+  // When wrapped in AnimatedPressable, a11y is on the pressable — avoid double-announcing
+  const isInteractive = !!onPress && !loading;
+
   const content = (
     <View
-      accessible
+      accessible={!isInteractive}
       accessibilityHint={
-        onPress ? 'Double tap to view habit details' : undefined
+        !isInteractive && onPress ? 'Double tap to view habit details' : undefined
       }
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole={onPress ? 'button' : 'text'}
+      accessibilityLabel={!isInteractive ? accessibilityLabel : undefined}
+      accessibilityRole={!isInteractive ? (onPress ? 'button' : 'text') : undefined}
       style={styles.statCard}
     >
       {/* Accent top bar */}
@@ -95,4 +98,4 @@ export const StatCard: React.FC<ExtendedStatCardProps> = ({
   }
 
   return content;
-};
+});

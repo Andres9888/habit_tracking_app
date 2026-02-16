@@ -2,9 +2,8 @@
  * OverviewStats - Grid of stat cards showing key metrics
  * Each card enters with individual staggered spring animations for premium feel.
  */
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
 import { spacing } from '../../../theme/spacing';
 import { durations, springs } from '../../../theme/animations';
 import { StatCard } from './StatCard';
@@ -29,7 +28,19 @@ export const OverviewStats: React.FC<OverviewStatsProps> = ({
   stats,
   isLoading,
   onHabitPress,
-}) => {
+}: OverviewStatsProps) {
+  const handleStrongestPress = useCallback(() => {
+    if (stats?.strongestHabit) {
+      onHabitPress(stats.strongestHabit.id);
+    }
+  }, [stats?.strongestHabit, onHabitPress]);
+
+  const handleWeakestPress = useCallback(() => {
+    if (stats?.weakestHabit) {
+      onHabitPress(stats.weakestHabit.id);
+    }
+  }, [stats?.weakestHabit, onHabitPress]);
+
   return (
     <View style={styles.statsGrid}>
       <Animated.View entering={cardAnim(0)} style={styles.cardWrapper}>
@@ -90,7 +101,7 @@ export const OverviewStats: React.FC<OverviewStatsProps> = ({
       </Animated.View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   cardWrapper: {

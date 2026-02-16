@@ -6,6 +6,7 @@
  */
 
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { CompletionSoundType } from '../../../../convex/settings/types';
 import type { ToggleMutationResult } from '../../../lib/optimistic';
 import type {
   Habit,
@@ -15,8 +16,13 @@ import type {
   RewardToastData,
 } from '../types';
 
+/** Result of toggling a habit completion */
+export type ToggleMutationResult = { success: boolean; error?: string };
+
 export interface HabitsListState {
   celebrationsEnabled: boolean;
+  completionSoundEnabled: boolean;
+  completionSoundType: CompletionSoundType;
   dayShape: HabitSettings['dayShape'];
   freeHabitLimit: number;
   habits: Habit[];

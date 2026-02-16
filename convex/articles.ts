@@ -6,7 +6,7 @@
  */
 
 import { v } from 'convex/values';
-import { mutation, query } from './_generated/server';
+import { internalMutation, query } from './_generated/server';
 
 export const list = query({
   args: { category: v.optional(v.string()) },
@@ -34,8 +34,8 @@ export const list = query({
   ),
 });
 
-// Add some initial articles
-export const seed = mutation({
+// Add some initial articles (internal only — run via dashboard)
+export const seed = internalMutation({
   args: {},
   handler: async (ctx) => {
     const articles = await ctx.db.query('articles').collect();
