@@ -1,11 +1,10 @@
 /**
  * ChartSections - Analytics chart components (Strength, Trend, Heatmap)
- * Theme-aware with dark mode support
  */
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme';
+import { colors } from '../../../theme/colors';
+import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
 import type { StrengthDistributionData } from '../../../components/StrengthDistributionChart/StrengthDistributionChart.types';
@@ -22,16 +21,12 @@ interface ChartSectionsProps {
   isLoading?: boolean;
 }
 
-const anim = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
-
-export const ChartSections: React.FC<ChartSectionsProps> = ({
+export const ChartSections = memo(function ChartSections({
   strengthDistribution,
   trendData,
   complianceData,
   isLoading = false,
-}) => {
-  const { colors: tc, isDark } = useThemeColors();
-
+}: ChartSectionsProps) {
   const strengthAccessibilityLabel = strengthDistribution
     ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
     : 'Loading chart';
@@ -46,73 +41,78 @@ export const ChartSections: React.FC<ChartSectionsProps> = ({
     );
   }
 
-  const sectionTitleStyle = {
-    color: tc.text.primary,
-    fontSize: 20,
-    fontWeight: '700' as const,
-    letterSpacing: -0.5,
-    marginBottom: spacing.md,
-  };
-
-  const chartCardStyle = {
-    backgroundColor: tc.card,
-    borderColor: tc.cardBorder,
-    borderRadius: 16,
-    borderWidth: 1,
-    padding: spacing.md,
-    shadowColor: isDark ? '#000000' : '#1c1917',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: isDark ? 0.3 : 0.08,
-    shadowRadius: 16,
-    elevation: 3,
-  };
-
   return (
     <>
-      <Animated.View
-        accessible
-        accessibilityRole='none'
-        entering={anim(0)}
-        style={styles.section}
-      >
+      <View accessible accessibilityRole='none' style={styles.section}>
         <Text
           accessibilityLabel='Strength Distribution Chart'
           accessibilityRole='header'
-          style={sectionTitleStyle}
+          style={styles.sectionTitle}
         >
           Strength Distribution
         </Text>
-        <View accessible accessibilityLabel={strengthAccessibilityLabel} style={chartCardStyle}>
+        <View accessible accessibilityLabel={strengthAccessibilityLabel}>
           <StrengthDistributionChart
             data={strengthDistribution ?? null}
             onSegmentPress={undefined}
           />
         </View>
-      </Animated.View>
+      </View>
 
-      <Animated.View entering={anim(60)} style={styles.section}>
-        <Text style={sectionTitleStyle}>30-Day Trend</Text>
-        <View style={chartCardStyle}>
+      <View accessible accessibilityRole='none' style={styles.section}>
+        <Text
+          accessibilityLabel='30-Day Trend Chart'
+          accessibilityRole='header'
+          style={styles.sectionTitle}
+        >
+          30-Day Trend
+        </Text>
+        <View
+          accessible
+          accessibilityLabel={
+            trendData && trendData.length > 0
+              ? `Trend chart showing ${trendData.length} days of data. Latest average strength: ${Math.round(trendData[trendData.length - 1].averageStrength)}%`
+              : 'No trend data available'
+          }
+        >
           <TrendLineChart data={trendData ?? null} onDataPointPress={undefined} />
         </View>
-      </Animated.View>
+      </View>
 
-      <Animated.View entering={anim(120)} style={styles.section}>
-        <Text style={sectionTitleStyle}>Compliance Heatmap</Text>
-        <View style={chartCardStyle}>
+      <View accessible accessibilityRole='none' style={styles.section}>
+        <Text
+          accessibilityLabel='Compliance Heatmap Chart'
+          accessibilityRole='header'
+          style={styles.sectionTitle}
+        >
+          Compliance Heatmap
+        </Text>
+        <View
+          accessible
+          accessibilityLabel={
+            complianceData && complianceData.length > 0
+              ? `Heatmap showing habit completion over ${complianceData.length} days`
+              : 'No compliance data available'
+          }
+        >
           <ComplianceHeatmap
             data={complianceData ?? null}
             onDayPress={undefined}
           />
         </View>
-      </Animated.View>
+      </View>
     </>
   );
-};
+});
 
 const styles = StyleSheet.create({
   section: {
     marginBottom: spacing.xl,
     paddingHorizontal: spacing.lg,
+  },
+  sectionTitle: {
+    ...typography.heading3,
+    color: colors.text.primary,
+    marginBottom: spacing.md,
   },
 });

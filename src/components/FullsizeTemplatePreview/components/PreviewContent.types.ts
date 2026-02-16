@@ -3,6 +3,7 @@
  */
 
 import type { ViewStyle } from 'react-native';
+import type ConfettiCannon from 'react-native-confetti-cannon';
 import type { SharedValue } from 'react-native-reanimated';
 import type { Template } from '../../../types/template';
 import type { PressHandlers } from '../FullsizeTemplatePreview.types';
@@ -29,7 +30,7 @@ export interface PreviewContentHandlers {
 
 export interface PreviewContentProps {
   animatedStyles: PreviewContentAnimatedStyles;
-  confettiRef: React.RefObject<any>;
+  confettiRef: React.RefObject<ConfettiCannon | null>;
   createPressHandlers: (
     scale: SharedValue<number>,
     scaleValue?: number

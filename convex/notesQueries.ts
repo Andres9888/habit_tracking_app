@@ -12,8 +12,12 @@ export const list = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
 
-    const notes = await ctx.db.query('notes').order('desc').collect();
-    return notes.filter((n) => n.userId === identity.subject);
+    const notes = await ctx.db
+      .query('notes')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+      .order('desc')
+      .collect();
+    return notes;
   },
   returns: notesArrayValidator,
 });
@@ -27,8 +31,11 @@ export const search = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
 
-    let notes = await ctx.db.query('notes').order('desc').collect();
-    notes = notes.filter((n) => n.userId === identity.subject);
+    let notes = await ctx.db
+      .query('notes')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+      .order('desc')
+      .collect();
 
     if (args.habitId) {
       notes = notes.filter((note) => note.habitId === args.habitId);
