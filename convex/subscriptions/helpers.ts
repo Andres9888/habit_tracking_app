@@ -11,18 +11,13 @@ export async function updateUserSettingsPremium(
 ) {
   const settings = await ctx.db
     .query('userSettings')
-    .filter((q) => q.eq(q.field('userId'), clerkId))
+    .withIndex('by_userId', (q) => q.eq('userId', clerkId))
     .first();
 
   if (settings) {
     await ctx.db.patch(settings._id, { hasPremium });
-    console.warn(
-      '[subscriptions] Updated hasPremium:',
-      hasPremium,
-      'for clerkId:',
-      clerkId
-    );
+    // Premium status updated successfully
   } else {
-    console.warn('[subscriptions] No settings found for clerkId:', clerkId);
+    console.error('[subscriptions] No settings found for clerkId:', clerkId);
   }
 }

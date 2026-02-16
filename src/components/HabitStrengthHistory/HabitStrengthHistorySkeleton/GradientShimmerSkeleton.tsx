@@ -17,7 +17,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { SKELETON_COLORS, SHIMMER_DURATION } from './constants';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import {
+  SKELETON_COLORS_LIGHT,
+  SKELETON_COLORS_DARK,
+  SHIMMER_DURATION,
+} from '../../SkeletonLoader/SkeletonLoader';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -32,6 +37,8 @@ export function GradientShimmerSkeleton({
   borderRadius = 12,
   reduceMotion = false,
 }: GradientShimmerSkeletonProps) {
+  const { isDark } = useThemeColors();
+  const SKELETON_COLORS = isDark ? SKELETON_COLORS_DARK : SKELETON_COLORS_LIGHT;
   const shimmerPosition = useSharedValue(0);
 
   useEffect(() => {
@@ -64,6 +71,7 @@ export function GradientShimmerSkeleton({
       style={[
         styles.gradientContainer,
         {
+          backgroundColor: SKELETON_COLORS.base,
           borderRadius,
           height,
         },
@@ -89,7 +97,6 @@ const styles = StyleSheet.create({
     width: '200%',
   },
   gradientContainer: {
-    backgroundColor: SKELETON_COLORS.base,
     overflow: 'hidden',
     width: '100%',
   },

@@ -9,6 +9,6 @@ export type {
   StrengthDistributionData,
   TrendDataPoint,
   ComplianceDay,
-  WeeklyInsight,
+  WeeklyInsights,
   ExportFormat,
 } from './AnalyticsScreen.types';

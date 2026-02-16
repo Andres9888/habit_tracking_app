@@ -2,7 +2,7 @@
  * HabitInput Styles - Extracted style definitions
  */
 
-import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { ViewStyle, TextStyle } from 'react-native';
 import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from '../constants';
 
 interface ContainerStyleParams {
@@ -31,7 +31,7 @@ export function getContainerStyle({
 export const inputTextStyle: TextStyle = {
   color: COLORS.stone800,
   flex: 1,
-  fontSize: 16,
+  fontSize: 17,
   fontWeight: '500',
 };
 
@@ -42,7 +42,7 @@ export const clearButtonPressedStyle = (pressed: boolean): ViewStyle => ({
 
 export const characterCounterStyle = (color: string): TextStyle => ({
   color,
-  fontSize: 12,
+  fontSize: 13,
   fontWeight: '500',
   marginLeft: 8,
 });

@@ -51,7 +51,7 @@ export const darkColors = {
     // gray-50
     secondary: '#9CA3AF',
     // gray-400
-    tertiary: '#6B7280', // gray-900
+    tertiary: '#8E95A2', // WCAG AA 4.87:1 on dark card
   },
 } as const;
 
@@ -59,36 +59,36 @@ export const darkColors = {
  * Light mode semantic colors (matching existing defaults)
  */
 export const lightColors = {
-  background: '#faf9f7',
-  border: '#e7e5e4',
-  card: '#ffffff',
-  cardBorder: '#E5E7EB',
+  background: '#F5F1ED',
+  border: '#DDD8D2',
+  card: '#EDEAE5',
+  cardBorder: '#DDD8D2',
   gray: {
-    50: '#faf9f7',
-    100: '#f5f5f4',
-    200: '#E5E7EB',
-    300: '#D1D5DB',
-    400: '#6B7280',
-    500: '#78716c',
-    600: '#4B5563',
-    700: '#374151',
-    800: '#1F2937',
-    900: '#111827',
+    50: '#FAF8F5',
+    100: '#F5F1ED',
+    200: '#DDD8D2',
+    300: '#C4BFB7',
+    400: '#6E6660',
+    500: '#6B6560',
+    600: '#524D47',
+    700: '#3D3833',
+    800: '#2D2A26',
+    900: '#1A1816',
   },
   primary: {
-    100: '#D1FAE5',
-    300: '#86EFAC',
-    400: '#34D399',
-    500: '#10B981',
-    600: '#059669',
-    700: '#047857',
+    100: '#D4F0E2',
+    300: '#6FCF9A',
+    400: '#3FBD7E',
+    500: '#2A9D6E',
+    600: '#22805A',
+    700: '#1B6B4A',
   },
-  surface: '#ffffff',
+  surface: '#EDEAE5',
   text: {
     inverse: '#FFFFFF',
-    primary: '#1F2937',
-    secondary: '#78716c',
-    tertiary: '#6B7280',
+    primary: '#2D2A26',
+    secondary: '#6B6560',
+    tertiary: '#6E6660',
   },
 } as const;
 
