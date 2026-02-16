@@ -64,6 +64,7 @@ export default function FullsizeTemplatePreview({
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableBackdropClose={isImporting}
       variant='fullScreen'
       visible={visible}

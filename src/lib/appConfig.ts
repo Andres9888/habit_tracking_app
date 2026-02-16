@@ -1,10 +1,16 @@
 /**
- * App Configuration
+ * App Configuration Module
  *
  * Core application configuration including:
  * - Convex client for real-time database
  * - Clerk authentication keys
  * - Secure token storage for auth persistence
+ *
+ * This module initializes critical infrastructure components that
+ * must be configured before the app can function properly.
+ *
+ * @module appConfig
+ * @category Infrastructure
  */
 
 import { ConvexReactClient } from 'convex/react';
@@ -21,6 +27,11 @@ export const clerkPublishableKey =
   process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 export const tokenCache = {
+  /**
+   * Retrieve a token from secure storage.
+   * @param key - The storage key to retrieve
+   * @returns The stored token string, or null if not found/error
+   */
   async getToken(key: string) {
     try {
       return SecureStore.getItemAsync(key);
@@ -29,6 +40,11 @@ export const tokenCache = {
       return null;
     }
   },
+  /**
+   * Save a token to secure storage.
+   * @param key - The storage key to save under
+   * @param value - The token value to store
+   */
   async saveToken(key: string, value: string) {
     try {
       return SecureStore.setItemAsync(key, value);

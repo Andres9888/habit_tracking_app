@@ -11,12 +11,11 @@ export function SentryUserSync({ children }: PropsWithChildren) {
   const { user, isSignedIn } = useUser();
 
   // Sync user to Sentry when auth changes
+  // Only send anonymous user ID - do NOT send email or username to protect privacy
   useSentryUser(
     isSignedIn && user
       ? {
-          email: user.primaryEmailAddress?.emailAddress,
           id: user.id,
-          username: user.username ?? undefined,
         }
       : null
   );
