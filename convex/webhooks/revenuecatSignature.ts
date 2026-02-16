@@ -13,6 +13,10 @@
 // Note: Environment variables are accessed differently in Convex HTTP actions
 const REVENUECAT_WEBHOOK_SECRET = process.env.REVENUECAT_WEBHOOK_SECRET ?? '';
 
+// Allow bypassing signature verification in development
+// This should NEVER be true in production
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 /**
  * Verifies that a webhook request came from RevenueCat
  *
@@ -24,15 +28,19 @@ export async function verifyRevenueCatSignature(
   body: string,
   signature: string
 ): Promise<boolean> {
-  // If no secret is configured, skip verification (development mode)
-  // IMPORTANT: Always configure the secret in production!
+  // If no secret is configured, we must reject in production
+  // SECURITY: Only allow bypass in explicit development mode
   if (!REVENUECAT_WEBHOOK_SECRET) {
-    console.warn(
-      '[RevenueCat] WARNING: No webhook secret configured, skipping verification'
+    if (isDevelopment) {
+      console.warn(
+        '[RevenueCat] DEV MODE: No webhook secret configured, skipping verification'
+      );
+      return true;
+    }
+    console.error(
+      '[RevenueCat] CRITICAL: No webhook secret configured in production - rejecting webhook'
     );
-    // In production, you should return false here
-    // For now, we allow it to support local development
-    return true;
+    return false;
   }
 
   if (!signature) {

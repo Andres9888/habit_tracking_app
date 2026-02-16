@@ -175,7 +175,7 @@ describe('BinaryHeatmapGrid', () => {
       // Count View elements with accessibilityRole="row"
       const allViews = UNSAFE_getAllByType(require('react-native').View);
       const rows = allViews.filter(
-        (v: any) => v.props.accessibilityRole === 'row'
+        (v: unknown) => v.props.accessibilityRole === 'row'
       );
       expect(rows).toHaveLength(7);
     });
@@ -513,7 +513,7 @@ describe('BinaryHeatmapGrid', () => {
       // 7 rows (one for each day of week)
       const allViews = UNSAFE_getAllByType(require('react-native').View);
       const rows = allViews.filter(
-        (v: any) => v.props.accessibilityRole === 'row'
+        (v: unknown) => v.props.accessibilityRole === 'row'
       );
       expect(rows).toHaveLength(7);
     });

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { KeyboardEvent } from 'react-native';
-import { Keyboard } from 'react-native';
+import { Keyboard, Platform } from 'react-native';
 
 export const useKeyboardState = (): {
   isKeyboardVisible: boolean;
@@ -20,8 +20,14 @@ export const useKeyboardState = (): {
       setKeyboardHeight(0);
     };
 
-    const showSub = Keyboard.addListener('keyboardDidShow', handleShow);
-    const hideSub = Keyboard.addListener('keyboardDidHide', handleHide);
+    // Use 'will' events on iOS for smoother animations, 'did' on Android
+    const showEvent =
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent =
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const showSub = Keyboard.addListener(showEvent, handleShow);
+    const hideSub = Keyboard.addListener(hideEvent, handleHide);
 
     return () => {
       showSub.remove();
