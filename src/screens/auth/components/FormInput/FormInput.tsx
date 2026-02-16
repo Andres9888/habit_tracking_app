@@ -3,6 +3,7 @@ import { forwardRef } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useFormInputAnimations } from './useFormInputAnimations';
 
 interface FormInputProps extends TextInputProps {
@@ -19,6 +20,7 @@ export const FormInput = forwardRef(function FormInput(
   { label, labelRight, error, required, onBlur, ...props }: FormInputProps,
   ref: Ref<TextInput>
 ) {
+  const { colors: themeColors, isDark } = useThemeColors();
   const {
     animatedStyle,
     handleFocus,
@@ -39,27 +41,45 @@ export const FormInput = forwardRef(function FormInput(
   return (
     <View className='gap-2'>
       <View className='flex-row items-center justify-between'>
-        <Text className='text-sm font-medium text-stone-600'>
+        <Text
+          className='text-sm font-medium'
+          style={{ color: themeColors.text.secondary }}
+        >
           {label}
           {required && <Text className='text-red-500'> *</Text>}
         </Text>
         {labelRight}
       </View>
       <Animated.View
-        className={`overflow-hidden rounded-2xl border bg-white shadow-sm ${error ? 'border-red-500' : 'border-stone-200'}`}
-        style={animatedStyle}
+        className={`overflow-hidden rounded-2xl border shadow-sm ${error ? 'border-red-500' : ''}`}
+        style={[
+          animatedStyle,
+          {
+            backgroundColor: isDark ? themeColors.card : '#ffffff',
+            borderColor: error ? '#ef4444' : themeColors.border,
+          },
+        ]}
       >
         <TextInput
           ref={ref}
           accessibilityLabel={label}
-          className='px-5 py-4 text-[17px] font-medium leading-[22px] text-stone-900'
-          placeholderTextColor='#a1a1aa'
+          className='px-5 py-4 text-[17px] font-medium leading-[22px]'
+          placeholderTextColor={isDark ? themeColors.text.tertiary : '#a1a1aa'}
+          style={{ color: themeColors.text.primary }}
           onBlur={handleBlurWrapper}
           onFocus={handleFocus}
           {...props}
         />
       </Animated.View>
-      {error && <Text className='px-1 text-sm text-red-500'>{error}</Text>}
+      {error && (
+        <Text
+          accessibilityLiveRegion='polite'
+          accessibilityRole='alert'
+          className='px-1 text-sm text-red-500'
+        >
+          {error}
+        </Text>
+      )}
     </View>
   );
 });

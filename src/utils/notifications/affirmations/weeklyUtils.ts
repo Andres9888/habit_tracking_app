@@ -8,6 +8,13 @@ export function getNextWeeklyOccurrence(
   daysOfWeek: number[]
 ): Date {
   const now = new Date();
+  if (!Array.isArray(daysOfWeek) || daysOfWeek.length === 0) {
+    // Fallback: schedule for tomorrow at the given time
+    const fallback = new Date(now);
+    fallback.setDate(now.getDate() + 1);
+    fallback.setHours(hours || 8, minutes || 0, 0, 0);
+    return fallback;
+  }
   const currentDay = now.getDay();
   const currentTime = now.getHours() * 60 + now.getMinutes();
   const targetTime = hours * 60 + minutes;
@@ -28,7 +35,7 @@ export function getNextWeeklyOccurrence(
   }
 
   // All scheduled days have passed this week; schedule for next week
-  const nextDay = sortedDays[0];
+  const nextDay = sortedDays[0] ?? 0;
   const daysUntil = 7 - currentDay + nextDay;
   const nextDate = new Date(now);
   nextDate.setDate(now.getDate() + daysUntil);

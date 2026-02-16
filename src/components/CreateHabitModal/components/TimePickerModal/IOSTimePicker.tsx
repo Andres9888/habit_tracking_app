@@ -30,6 +30,7 @@ export function IOSTimePicker({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='fade'
       testID='time-picker-modal'

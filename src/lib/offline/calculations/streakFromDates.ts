@@ -65,6 +65,16 @@ export function computeCurrentStreakFromDates(
     return 0;
   }
 
+  // Check that the streak is still active: last completion must be today or
+  // yesterday (1-day grace period). Matches server-side calculateStreakFromHistory.
+  const latestDate = parseDate(latestCompleted);
+  const todayDateObj = parseDate(todayDate);
+  const daysSinceLastCompletion = differenceInDays(todayDateObj, latestDate);
+
+  if (daysSinceLastCompletion > 1) {
+    return 0;
+  }
+
   let streak = 0;
   const currentDate = parseDate(latestCompleted);
 

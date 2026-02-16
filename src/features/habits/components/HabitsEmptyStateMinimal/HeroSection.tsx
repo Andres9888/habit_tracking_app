@@ -4,6 +4,7 @@ import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
 import { COPY } from './constants';
 import { HeroIcon } from './HeroIcon';
+import { useEmptyStateColors } from './useEmptyStateColors';
 
 interface HeroSectionProps {
   isLoading: boolean;
@@ -34,6 +35,7 @@ export function HeroSection({
 
       <AnimatedEntrance delay={ENTRANCE_DELAYS.headline}>
         <Animated.Text
+          accessibilityRole='header'
           style={[
             {
               color: colors.text.primary,
@@ -48,6 +50,23 @@ export function HeroSection({
         >
           {COPY.headline}
         </Animated.Text>
+      </AnimatedEntrance>
+
+      <AnimatedEntrance delay={ENTRANCE_DELAYS.headline + 50}>
+        <AccessibleText
+          scalingType='body'
+          style={{
+            color: colors.textSecondary,
+            fontSize: 13,
+            fontStyle: 'italic',
+            lineHeight: 18,
+            marginTop: 8,
+            paddingHorizontal: 16,
+            textAlign: 'center',
+          }}
+        >
+          {COPY.motivationalStat}
+        </AccessibleText>
       </AnimatedEntrance>
     </Animated.View>
   );
