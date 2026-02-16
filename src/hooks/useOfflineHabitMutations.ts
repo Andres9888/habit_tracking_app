@@ -4,6 +4,30 @@
  * Wraps Convex habit mutations with offline queue support.
  * When offline, operations are queued for later sync.
  * When online, operations execute immediately with fallback to queue on error.
+ *
+ * @returns Object containing mutation methods and online status
+ *
+ * @example
+ * ```tsx
+ * const { createHabit, updateHabit, isOnline } = useOfflineHabitMutations();
+ *
+ * // Create a habit (works offline)
+ * const result = await createHabit({
+ *   name: 'Morning meditation',
+ *   icon: '🧘',
+ *   remindersEnabled: true,
+ * });
+ *
+ * if (result.queued) {
+ *   toast.info('Will sync when back online');
+ * }
+ *
+ * // Update a habit
+ * await updateHabit({
+ *   habitId: habit._id,
+ *   name: 'Evening meditation',
+ * });
+ * ```
  */
 
 import { useCallback } from 'react';

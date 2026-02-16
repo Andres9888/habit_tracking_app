@@ -26,6 +26,7 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}

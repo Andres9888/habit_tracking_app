@@ -1,11 +1,12 @@
 /**
  * HabitsList Constants
+ *
+ * Static data used by the monetization / upgrade UI within the HabitsList folder.
+ * Animation and timing constants live in the global `@/constants` module and are
+ * re-exported here for convenience (`ENTRANCE_STAGGER_DELAY`).
  */
 
-
-
-
-
+/** Benefit items displayed in {@link PremiumBenefitsRow}. */
 export const PREMIUM_BENEFITS = [
   {
     description:
@@ -24,6 +25,7 @@ export const PREMIUM_BENEFITS = [
   },
 ];
 
+/** Testimonial content displayed in {@link SocialProofCard}. */
 export const SOCIAL_PROOF = {
   attribution: 'Maya - 42-day streak',
   quote:

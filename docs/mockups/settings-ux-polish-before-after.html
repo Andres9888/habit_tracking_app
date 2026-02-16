@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings UX Polish - Before/After Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 42px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        @media (max-width: 1024px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        .panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .panel h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+        .panel .label {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .before-label {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .after-label {
+            background: #d1fae5;
+            color: #059669;
+        }
+        .phone {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+        }
+        .section {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+        .section-title {
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b7280;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .section-subtitle {
+            font-size: 11px;
+            color: #8b5cf6;
+            margin-left: 8px;
+        }
+        .row {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .row:last-child {
+            border-bottom: none;
+        }
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .row-label {
+            flex: 1;
+            font-size: 17px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .chevron {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        .badge {
+            background: #e7e5e4;
+            color: #57534e;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .premium-badge {
+            background: #fef3c7;
+            color: #f59e0b;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .notes {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            grid-column: 1 / -1;
+        }
+        .notes h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+        .changes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .change-item {
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border-left: 4px solid #059669;
+        }
+        .change-item h3 {
+            color: #059669;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .change-item p {
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .issue {
+            border-left-color: #dc2626;
+        }
+        .issue h3 {
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚙️ Settings Screen UX Polish</h1>
+        
+        <div class="comparison">
+            <!-- BEFORE -->
+            <div class="panel">
+                <h2>Before</h2>
+                <span class="label before-label">Current Version</span>
+                
+                <div class="phone">
+                    <div class="section">
+                        <div class="section-title">Visual Preferences</div>
+                        <div class="row">
+                            <div class="icon" style="background: #bae6fd;">✓</div>
+                            <div class="row-label">Use checkbox completion icon</div>
+                            <div class="chevron">⚪</div>
+                        </div>
+                        <div class="row">
+                            <div class="icon" style="background: #ddd6fe;">◯</div>
+                            <div class="row-label">Use circles for habit days</div>
+                            <div class="chevron">⚪</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Completion Sounds <span class="section-subtitle">Premium</span></div>
+                        <div class="row">
+                            <div class="icon" style="background: #fef3c7;">🔒</div>
+                            <div class="row-label">Unlock sounds...</div>
+                            <div class="chevron">›</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Notifications</div>
+                        <div class="row">
+                            <div class="icon" style="background: #fed7aa;">🔔</div>
+                            <div class="row-label">Streak Reminders</div>
+                            <div class="chevron">⚪</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Habit Management</div>
+                        <div class="row">
+                            <div class="icon" style="background: #e7e5e4;">📖</div>
+                            <div class="row-label">Archived Habits</div>
+                            <div class="badge">3</div>
+                            <div class="chevron">›</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Subscription</div>
+                        <div class="row">
+                            <div class="icon" style="background: #ede9fe;">⚡</div>
+                            <div class="row-label">Upgrade to Premium</div>
+                            <span class="premium-badge">PRO</span>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Account</div>
+                        <div class="row">
+                            <div class="icon" style="background: #e0e7ff;">👤</div>
+                            <div class="row-label" style="font-size: 15px;">user@example.com</div>
+                        </div>
+                        <div class="row">
+                            <div class="icon" style="background: #fecaca;">🚪</div>
+                            <div class="row-label">Sign Out</div>
+                            <div class="chevron">›</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AFTER -->
+            <div class="panel">
+                <h2>After</h2>
+                <span class="label after-label">Improved Version</span>
+                
+                <div class="phone">
+                    <div class="section">
+                        <div class="section-title">Account</div>
+                        <div class="row">
+                            <div class="icon" style="background: #e0e7ff;">👤</div>
+                            <div class="row-label" style="font-size: 15px;">user@example.com</div>
+                        </div>
+                        <div class="row">
+                            <div class="icon" style="background: #fecaca;">🚪</div>
+                            <div class="row-label">Sign Out</div>
+                            <div class="chevron">›</div>
+                        </div>
+                        <div class="row">
+                            <div class="icon" style="background: #fecaca;">🗑️</div>
+                            <div class="row-label">Delete Account</div>
+                            <div class="chevron">›</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Premium</div>
+                        <div class="row">
+                            <div class="icon" style="background: #fef3c7;">👑</div>
+                            <div class="row-label">Premium</div>
+                            <span class="premium-badge">Active</span>
+                        </div>
+                        <div class="row">
+                            <div class="icon" style="background: #e0e7ff;">⚙️</div>
+                            <div class="row-label">Manage Subscription</div>
+                            <div class="chevron">›</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Preferences</div>
+                        <div class="row">
+                            <div class="icon" style="background: #bae6fd;">✓</div>
+                            <div class="row-label">Checkbox style for completed habits</div>
+                            <div class="chevron">⚪</div>
+                        </div>
+                        <div class="row">
+                            <div class="icon" style="background: #ddd6fe;">◯</div>
+                            <div class="row-label">Circular day markers</div>
+                            <div class="chevron">⚪</div>
+                        </div>
+                        <div class="row">
+                            <div class="icon" style="background: #d1fae5;">💧</div>
+                            <div class="row-label">Gradient fill for habit strength</div>
+                            <div class="chevron">⚪</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Sounds <span class="section-subtitle">Premium</span></div>
+                        <div class="row">
+                            <div class="icon" style="background: #fef3c7;">🔊</div>
+                            <div class="row-label">Play sound on habit completion</div>
+                            <div class="chevron">⚪</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Notifications</div>
+                        <div class="row">
+                            <div class="icon" style="background: #fed7aa;">🔔</div>
+                            <div class="row-label">Streak Reminders</div>
+                            <div class="chevron">⚪</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Data</div>
+                        <div class="row">
+                            <div class="icon" style="background: #e7e5e4;">📖</div>
+                            <div class="row-label">Archived Habits</div>
+                            <div class="badge">3</div>
+                            <div class="chevron">›</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">App</div>
+                        <div class="row">
+                            <div class="icon" style="background: #fef3c7;">⭐</div>
+                            <div class="row-label">Rate Chain Day</div>
+                            <div class="chevron">›</div>
+                        </div>
+                        <div class="row">
+                            <div class="icon" style="background: #d1fae5;">📤</div>
+                            <div class="row-label">Share with Friends</div>
+                            <div class="chevron">›</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">About</div>
+                        <div class="row">
+                            <div class="icon" style="background: #e0e7ff;">ℹ️</div>
+                            <div class="row-label">Version</div>
+                            <div style="color: #6b7280; font-size: 15px;">1.0.0 (1)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CHANGES SUMMARY -->
+        <div class="notes">
+            <h2>✨ Key Improvements</h2>
+            <div class="changes">
+                <div class="change-item">
+                    <h3>✅ Better Organization</h3>
+                    <p>Reordered sections to follow a logical flow: Account → Preferences → Premium → Data → App → About. Account info is now at the top for easy access.</p>
+                </div>
+                
+                <div class="change-item">
+                    <h3>✅ Clearer Labels</h3>
+                    <p>Improved toggle descriptions: "Checkbox style for completed habits" instead of "Use checkbox completion icon" for better clarity.</p>
+                </div>
+                
+                <div class="change-item">
+                    <h3>✅ Subscription Management</h3>
+                    <p>Added "Manage Subscription" link for premium users to access App Store subscription settings directly.</p>
+                </div>
+                
+                <div class="change-item">
+                    <h3>✅ Section Naming</h3>
+                    <p>Renamed "Habit Management" to "Data" and "Completion Sounds" to "Sounds" for consistency and brevity.</p>
+                </div>
+                
+                <div class="change-item">
+                    <h3>✅ About Section</h3>
+                    <p>Created dedicated "About" section for version info instead of floating text at the bottom.</p>
+                </div>
+                
+                <div class="change-item">
+                    <h3>✅ Premium Clarity</h3>
+                    <p>Premium status and subscription management are now grouped together in a dedicated "Premium" section for better discoverability.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
