@@ -1,0 +1,71 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "done": "Done",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "close": "Close",
+    "ok": "OK"
+  },
+  "settings": {
+    "title": "Settings",
+    "preferences": "Preferences",
+    "appearance": "Appearance",
+    "language": "Language",
+    "account": "Account",
+    "about": "About",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark",
+    "completionSound": "Completion Sound",
+    "chime": "Chime",
+    "pop": "Pop",
+    "success": "Success",
+    "streakReminders": "Streak Reminders",
+    "notifications": "Notifications"
+  },
+  "languages": {
+    "en": "English",
+    "ja": "日本語",
+    "es": "Español"
+  },
+  "habits": {
+    "yourHabits": "Your habits",
+    "createHabit": "Create habit",
+    "editHabit": "Edit habit",
+    "deleteHabit": "Delete habit",
+    "habitName": "Habit name",
+    "category": "Category"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "signUp": "Sign up",
+    "welcome": "Welcome back",
+    "yourStreakIsWaiting": "Your streak is waiting — let's keep the momentum going."
+  },
+  "errors": {
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "saveError": "Your changes couldn't be saved. Please check your connection and try again.",
+    "syncFailed": "Sync failed. Your data will retry when you're back online.",
+    "offlineSave": "Your habit will be saved when you're back online."
+  },
+  "progress": {
+    "youreGrowing": "You're growing!",
+    "youreOnARoll": "You're on a roll! Ready for more?",
+    "greatProgress": "You're making great progress! Go unlimited to track every area of your life."
+  },
+  "notifications": {
+    "letterReady": "Your letter to yourself is ready to read!",
+    "streakFreeze": "Your {{streak}}-day streak on {{emoji}} {{name}} is about to break — use a streak freeze?"
+  },
+  "dates": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "thisWeek": "This week"
+  }
+}

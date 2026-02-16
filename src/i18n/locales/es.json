@@ -1,0 +1,71 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "done": "Listo",
+    "loading": "Cargando...",
+    "error": "Error",
+    "retry": "Reintentar",
+    "close": "Cerrar",
+    "ok": "OK"
+  },
+  "settings": {
+    "title": "Configuración",
+    "preferences": "Preferencias",
+    "appearance": "Apariencia",
+    "language": "Idioma",
+    "account": "Cuenta",
+    "about": "Acerca de",
+    "system": "Sistema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "completionSound": "Sonido de completado",
+    "chime": "Campanada",
+    "pop": "Pop",
+    "success": "Éxito",
+    "streakReminders": "Recordatorios de racha",
+    "notifications": "Notificaciones"
+  },
+  "languages": {
+    "en": "English",
+    "ja": "日本語",
+    "es": "Español"
+  },
+  "habits": {
+    "yourHabits": "Tus hábitos",
+    "createHabit": "Crear hábito",
+    "editHabit": "Editar hábito",
+    "deleteHabit": "Eliminar hábito",
+    "habitName": "Nombre del hábito",
+    "category": "Categoría"
+  },
+  "auth": {
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "signUp": "Registrarse",
+    "welcome": "Bienvenido de nuevo",
+    "yourStreakIsWaiting": "Tu racha te espera — mantengamos el impulso."
+  },
+  "errors": {
+    "sessionExpired": "Tu sesión ha expirado. Por favor, inicia sesión nuevamente.",
+    "saveError": "No se pudieron guardar tus cambios. Verifica tu conexión e intenta nuevamente.",
+    "syncFailed": "La sincronización falló. Tus datos se reintentarán cuando vuelvas a estar en línea.",
+    "offlineSave": "Tu hábito se guardará cuando vuelvas a estar en línea."
+  },
+  "progress": {
+    "youreGrowing": "¡Estás creciendo!",
+    "youreOnARoll": "¡Vas muy bien! ¿Listo para más?",
+    "greatProgress": "¡Estás haciendo un gran progreso! Ve ilimitado para rastrear cada área de tu vida."
+  },
+  "notifications": {
+    "letterReady": "¡Tu carta para ti mismo está lista para leer!",
+    "streakFreeze": "Tu racha de {{streak}} días en {{emoji}} {{name}} está a punto de romperse — ¿usar congelación de racha?"
+  },
+  "dates": {
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "thisWeek": "Esta semana"
+  }
+}

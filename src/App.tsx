@@ -29,6 +29,7 @@ import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { OfflineProvider } from './providers/OfflineProvider';
 import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
+import './i18n'; // Initialize i18n
 
 // Initialize Sentry after first frame to avoid blocking app launch.
 // requestIdleCallback (or setTimeout fallback) defers this work until

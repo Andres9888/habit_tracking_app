@@ -10,6 +10,7 @@ import {
   Sun,
   Volume2,
   Lock,
+  Globe,
 } from 'lucide-react-native';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -19,7 +20,9 @@ import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
 import { AboutSection } from './sections';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { useI18n, SUPPORTED_LANGUAGES } from '../../i18n';
 import type { SettingsContentProps } from './types';
+import type { SupportedLanguage } from '../../i18n';
 
 const anim = (delay: number) => FadeInDown.delay(delay).springify().damping(18);
 
@@ -45,6 +48,7 @@ const COMPLETION_SOUND_OPTIONS: Array<{
 export function SettingsContent(p: SettingsContentProps) {
   const { colors, isHighContrastActive: hc } = p;
   const { colors: themeColors, isDark } = useThemeColors();
+  const { currentLanguage, changeLanguage } = useI18n();
 
   // If not premium, show upsell for completion sounds
   const showSoundUpsell = !p.isPremium;
@@ -125,6 +129,56 @@ export function SettingsContent(p: SettingsContentProps) {
                 })}
               </View>
             </View>
+
+            {/* Language Selector */}
+            <View className='px-4 pb-4 pt-4'>
+              <Text
+                className='mb-2 text-[13px] font-semibold'
+                style={{ color: themeColors.text.secondary }}
+              >
+                Language
+              </Text>
+              <View
+                className='flex-row rounded-xl p-1'
+                style={{
+                  backgroundColor: themeColors.surface,
+                  borderColor: themeColors.border,
+                  borderWidth: 1,
+                }}
+              >
+                {SUPPORTED_LANGUAGES.map(({ code, nativeLabel }) => {
+                  const selected = currentLanguage === code;
+                  return (
+                    <Pressable
+                      key={code}
+                      accessibilityHint={`Set language to ${nativeLabel}`}
+                      accessibilityLabel={`${nativeLabel} language`}
+                      accessibilityRole='radio'
+                      accessibilityState={{ selected }}
+                      className='flex-1 flex-row items-center justify-center gap-1.5 rounded-lg px-2 py-2'
+                      style={{
+                        backgroundColor: selected
+                          ? themeColors.card
+                          : 'transparent',
+                      }}
+                      onPress={() => void changeLanguage(code as SupportedLanguage)}
+                    >
+                      <Text
+                        className='text-[13px] font-semibold'
+                        style={{
+                          color: selected
+                            ? themeColors.text.primary
+                            : themeColors.text.secondary,
+                        }}
+                      >
+                        {nativeLabel}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
+
             <SettingsRow
               highContrastMode={hc}
               icon={<Check color='#0284c7' size={16} />}
