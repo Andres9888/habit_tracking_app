@@ -69,7 +69,7 @@ export const CATEGORY_COLORS: Record<string, CategoryColorTokens> = {
     bg: '#FEF3C7',
     bgSelected: '#F59E0B',
     border: '#FDE68A',
-    text: '#D97706',
+    text: '#9A5504',
   },
   productivity: {
     bg: '#DBEAFE',

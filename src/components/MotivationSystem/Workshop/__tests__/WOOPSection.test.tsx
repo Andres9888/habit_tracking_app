@@ -39,7 +39,7 @@ jest.mock('lucide-react-native', () => ({
 
 // Mock clsx
 jest.mock('clsx', () => ({
-  clsx: (...args: any[]) => args.filter(Boolean).join(' '),
+  clsx: (...args: unknown[]) => args.filter(Boolean).join(' '),
 }));
 
 // Mock react-native-reanimated
@@ -48,16 +48,16 @@ jest.mock('react-native-reanimated', () => {
   return {
     default: {
       View,
-      createAnimatedComponent: (Component: any) => Component,
+      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
     },
-    useSharedValue: (initial: any) => ({ value: initial }),
+    useSharedValue: (initial: unknown) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
-    withSpring: (value: any) => value,
-    withTiming: (value: any) => value,
-    withSequence: (...values: any[]) => values[values.length - 1],
+    withSpring: (value: unknown) => value,
+    withTiming: (value: unknown) => value,
+    withSequence: (...values: unknown[]) => values[values.length - 1],
     interpolate: (value: number, input: number[], output: number[]) =>
       output[0],
-    runOnJS: (fn: any) => fn,
+    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
     View,
   };
 });
