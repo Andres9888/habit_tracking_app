@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { useSignIn } from '@clerk/clerk-expo';
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail } from '../../../utils/validation';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';
@@ -10,6 +9,7 @@ export function useSignInFlow() {
   const { signIn, setActive, isLoaded } = useSignIn();
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [signInError, setSignInError] = useState<string | null>(null);
 
   // Email validation
   const emailField = useFieldValidation({
@@ -18,17 +18,22 @@ export function useSignInFlow() {
     validate: validateEmail,
   });
 
+  const clearSignInError = useCallback(() => {
+    setSignInError(null);
+  }, []);
+
   const handleSignIn = useCallback(async () => {
     if (!isLoaded) return;
 
     // Validate email before submitting
     const emailResult = emailField.validateNow();
     if (!emailResult.isValid) {
-      Alert.alert('Validation Error', ERROR_MESSAGES.AUTH.SIGN_IN_INVALID_EMAIL);
+      setSignInError(ERROR_MESSAGES.AUTH.SIGN_IN_INVALID_EMAIL);
       return;
     }
 
     setIsLoading(true);
+    setSignInError(null);
     try {
       const signInAttempt = await signIn.create({
         identifier: emailField.value,
@@ -38,16 +43,12 @@ export function useSignInFlow() {
       if (signInAttempt.status === 'complete') {
         await setActive({ session: signInAttempt.createdSessionId });
       } else {
-        Alert.alert(
-          'Error',
-          'Sign in incomplete. Please check your credentials.'
-        );
+        setSignInError('Sign in incomplete. Please check your credentials.');
       }
     } catch (error: unknown) {
       const clerkError = error as { errors?: Array<{ message?: string }> };
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert(
-        'Error',
+      setSignInError(
         clerkError.errors?.[0]?.message || ERROR_MESSAGES.AUTH.SIGN_IN_FAILED
       );
     } finally {
@@ -59,6 +60,7 @@ export function useSignInFlow() {
 
   return {
     canSubmit,
+    clearSignInError,
     emailAddress: emailField.value,
     emailError: emailField.error,
     handleSignIn,
@@ -67,5 +69,6 @@ export function useSignInFlow() {
     password,
     setEmailAddress: emailField.setValue,
     setPassword,
+    signInError,
   };
 }

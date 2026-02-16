@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { useSignUp } from '@clerk/clerk-expo';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail, validatePassword } from '../../../utils/validation';
@@ -11,6 +11,7 @@ export function useSignUpFlow() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [pendingVerification, setPendingVerification] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [signUpError, setSignUpError] = useState<string | null>(null);
 
   // Email validation
   const emailField = useFieldValidation({
@@ -42,6 +43,7 @@ export function useSignUpFlow() {
     }
 
     setIsLoading(true);
+    setSignUpError(null);
     try {
       await signUp.create({
         emailAddress: emailField.value,
@@ -51,11 +53,29 @@ export function useSignUpFlow() {
       setPendingVerification(true);
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', getClerkErrorMessage(error, ERROR_MESSAGES.AUTH.SIGN_UP_FAILED));
+      setSignUpError(getClerkErrorMessage(error, ERROR_MESSAGES.AUTH.SIGN_UP_FAILED));
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handleBackToSignUp = useCallback(() => {
+    setPendingVerification(false);
+  }, []);
+
+  const clearSignUpError = useCallback(() => {
+    setSignUpError(null);
+  }, []);
+
+  const handleResendCode = useCallback(async () => {
+    if (!isLoaded) return;
+    try {
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+    } catch (error: unknown) {
+      if (__DEV__) console.error(JSON.stringify(error, null, 2));
+      Alert.alert('Error', getClerkErrorMessage(error, 'Failed to resend code'));
+    }
+  }, [isLoaded, signUp]);
 
   const handleVerification = async (code: string) => {
     if (!isLoaded) return;
@@ -94,8 +114,11 @@ export function useSignUpFlow() {
   };
 
   return {
+    clearSignUpError,
     emailAddress: emailField.value,
     emailError: emailField.error,
+    handleBackToSignUp,
+    handleResendCode,
     handleSignUp,
     handleVerification,
     isFormValid: emailField.isValid && passwordField.isValid,
@@ -107,5 +130,6 @@ export function useSignUpFlow() {
     pendingVerification,
     setEmailAddress: emailField.setValue,
     setPassword: passwordField.setValue,
+    signUpError,
   };
 }

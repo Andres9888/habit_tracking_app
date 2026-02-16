@@ -7,6 +7,7 @@ import { VerificationForm } from './VerificationForm';
 interface VerificationViewProps {
   emailAddress: string;
   isLoading: boolean;
+  onBack?: () => void;
   onResend?: () => Promise<void>;
   onVerify: (code: string) => Promise<void>;
 }
@@ -19,6 +20,7 @@ const anim = (d: number) =>
 export function VerificationView({
   emailAddress,
   isLoading,
+  onBack,
   onResend,
   onVerify,
 }: VerificationViewProps) {
@@ -97,6 +99,32 @@ export function VerificationView({
             </Text>
           </Pressable>
         </Animated.View>
+
+        {/* Back to sign-up — escape hatch if wrong email was entered */}
+        {onBack && (
+          <Animated.View
+            entering={anim(240)}
+            style={{ alignItems: 'center', marginTop: 16 }}
+          >
+            <Pressable
+              accessibilityLabel='Go back and change email'
+              accessibilityRole='button'
+              hitSlop={12}
+              style={{ minHeight: 44, justifyContent: 'center' }}
+              onPress={onBack}
+            >
+              <Text
+                style={{
+                  color: '#78716c',
+                  fontSize: 15,
+                  fontWeight: '500',
+                }}
+              >
+                ← Wrong email? Go back
+              </Text>
+            </Pressable>
+          </Animated.View>
+        )}
       </View>
     </View>
   );

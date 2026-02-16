@@ -32,10 +32,13 @@ function SignUpScreenContent({
   const insets = useSafeAreaInsets();
   const passwordRef = useRef<TextInput>(null);
   const {
+    clearSignUpError,
     emailAddress,
     setEmailAddress,
     emailError,
     onEmailBlur,
+    handleBackToSignUp,
+    handleResendCode,
     password,
     setPassword,
     passwordError,
@@ -45,6 +48,7 @@ function SignUpScreenContent({
     handleSignUp,
     handleVerification,
     isFormValid,
+    signUpError,
   } = useSignUpFlow();
   const {
     signInWithGoogle,
@@ -61,6 +65,8 @@ function SignUpScreenContent({
       <VerificationView
         emailAddress={emailAddress}
         isLoading={isLoading}
+        onBack={handleBackToSignUp}
+        onResend={handleResendCode}
         onVerify={handleVerification}
       />
     );
@@ -86,6 +92,7 @@ function SignUpScreenContent({
               paddingHorizontal: 24,
               paddingTop: insets.top + 24,
             }}
+            keyboardDismissMode='interactive'
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
           >
@@ -93,6 +100,9 @@ function SignUpScreenContent({
 
             {oauthError && (
               <AuthError message={oauthError} onDismiss={clearError} />
+            )}
+            {signUpError && (
+              <AuthError message={signUpError} onDismiss={clearSignUpError} />
             )}
 
             {/* OPTIMIZED: Form card with depth matching SignIn */}

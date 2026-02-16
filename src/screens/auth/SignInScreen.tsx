@@ -52,6 +52,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const passwordRef = useRef<TextInput>(null);
   const {
+    clearSignInError,
     emailAddress,
     setEmailAddress,
     emailError,
@@ -61,6 +62,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
     isLoading,
     handleSignIn,
     canSubmit,
+    signInError,
   } = useSignInFlow();
   const {
     signInWithGoogle,
@@ -130,6 +132,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
             styles.scrollContent,
             { paddingBottom: insets.bottom + 24, paddingTop: insets.top + 40 },
           ]}
+          keyboardDismissMode='interactive'
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
         >
@@ -162,6 +165,9 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
           <Animated.View style={[styles.authContent, contentStyle]}>
             {oauthError && (
               <AuthError message={oauthError} onDismiss={clearError} />
+            )}
+            {signInError && (
+              <AuthError message={signInError} onDismiss={clearSignInError} />
             )}
 
             <View style={styles.socialButtons}>
