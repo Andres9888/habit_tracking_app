@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Account section for settings modal
  */

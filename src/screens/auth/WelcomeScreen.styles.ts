@@ -4,6 +4,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
 
 export const styles = StyleSheet.create({
   actionSection: {
@@ -44,9 +45,11 @@ export const styles = StyleSheet.create({
   },
   primaryButton: {
     alignItems: 'center',
+    backgroundColor: colors.primary[600],
     borderRadius: 12,
     elevation: 4,
     paddingVertical: 16,
+    shadowColor: colors.primary[600],
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 16,
@@ -65,7 +68,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   textLinkAction: {
-    fontSize: 15,
+    color: colors.primary[700],    fontSize: 15,
     fontWeight: '600',
   },
   textLinkLabel: {

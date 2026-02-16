@@ -8,7 +8,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
 import { Play, ExternalLink } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
-import { sectionStyles, youtubeStyles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { sectionStyles, themedSectionStyles, youtubeStyles } from '../styles';
 import type { YouTubeSectionProps } from '../TemplateScienceModal.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -21,21 +22,23 @@ export const YouTubeSection = ({
   templateName,
 }: YouTubeSectionProps) => {
   const theme = useAppTheme();
+  const { colors, isDark } = useThemeColors();
+  const themed = themedSectionStyles(colors);
 
   return (
-    <Animated.View style={[sectionStyles.sectionCard, animatedStyle]}>
+    <Animated.View style={[themed.sectionCard, animatedStyle]}>
       <View style={sectionStyles.sectionHeader}>
         <View
           style={[
             sectionStyles.sectionIconBadge,
-            { backgroundColor: '#FEE2E2' },
+            { backgroundColor: isDark ? colors.gray[100] : '#FEE2E2' },
           ]}
         >
           <Play color='#DC2626' fill='#DC2626' size={16} />
         </View>
         <Text
           style={[
-            sectionStyles.sectionTitle,
+            themed.sectionTitle,
             { fontFamily: theme.custom.fontFamilies.primary.text },
           ]}
         >

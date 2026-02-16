@@ -7,6 +7,7 @@
 /* eslint-disable max-lines, max-lines-per-function */
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { colors } from '../../theme/colors';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -190,7 +191,8 @@ interface PageData {
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    subtitle: 'Complete your habits daily and watch your chain grow — every link counts.',
+    subtitle:
+      'Complete your habits daily and watch your chain grow — every link counts.',
     title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
@@ -203,7 +205,8 @@ const PAGES: PageData[] = [
   },
   {
     id: 'templates',
-    subtitle: 'Pick from science-backed templates or create your own in seconds.',
+    subtitle:
+      'Pick from science-backed templates or create your own in seconds.',
     title: '200+ Ready-Made Templates',
     Visual: TemplateGrid,
   },
@@ -229,7 +232,8 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
           style={[
             styles.dot,
             {
-              backgroundColor: i === currentIndex ? colors.primary[600] : colors.gray[300],
+              backgroundColor:
+                i === currentIndex ? colors.primary[600] : colors.gray[300],
               width: i === currentIndex ? 24 : 8,
             },
           ]}
@@ -275,7 +279,10 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
       onComplete();
     } catch (error) {
       if (__DEV__) {
-        console.error('[OnboardingScreen] Failed to save completion state:', error);
+        console.error(
+          '[OnboardingScreen] Failed to save completion state:',
+          error
+        );
       }
       onComplete();
     } finally {
@@ -344,7 +351,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   );
 
   return (
-    <View style={[styles.container, themedStyles.container]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Skip button */}
       <Animated.View
         entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
@@ -463,6 +470,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ctaButton: {
+    backgroundColor: colors.primary[600],
+=======
+>>>>>>> origin/main
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 32,
@@ -488,87 +498,16 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   nextButton: {
-    borderRadius: 12,
-    elevation: 4,
-    paddingHorizontal: 48,
-    paddingVertical: 16,
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-  },
-  nextText: {
-    fontSize: 17,
-    fontWeight: '600',
-  },
-  page: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 32,
-  },
-  skipButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 44,
-    minWidth: 44,
-  },
-  skipContainer: {
-    position: 'absolute',
-    right: 24,
-    zIndex: 10,
-  },
-  skipText: {
-    fontSize: 17,
-    fontWeight: '500',
-  },
-  strengthBar: {
-    borderRadius: 8,
+    backgroundColor: colors.primary[600],    borderRadius: 8,
     height: 32,
-  },
   strengthContainer: {
     gap: 12,
     paddingHorizontal: 16,
     width: '100%',
-  },
   strengthLabel: {
     fontSize: 13,
     fontWeight: '500',
-  },
-  strengthRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 12,
-  },
-  subtitle: {
-    fontSize: 17,
-    lineHeight: 24,
-    paddingHorizontal: 16,
-    textAlign: 'center',
-  },
-  templateEmoji: {
-    fontSize: 28,
-  },
-  templateGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-    justifyContent: 'center',
-    width: 280,
-  },
-  templateItem: {
-    alignItems: 'center',
-    borderRadius: 16,
-    elevation: 2,
-    height: 56,
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    width: 56,
-  },
-  title: {
-    fontSize: 34,
+    color: colors.primary[700],    fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,
     marginBottom: 12,

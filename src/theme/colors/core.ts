@@ -2,9 +2,53 @@
  * Core Color Palette - Habit Tracking App
  * Frontend Redesign Spec 2026-02-14
  *
- * Warm Minimal direction — earth-toned, restrained, organic
- * Single saturated color: forest green (primary.600)
- * WCAG 2.1 Level AA compliant
+ * ## Design Philosophy
+ *
+ * **Warm Minimal** — earth-toned, restrained, organic aesthetic
+ * - **Single saturated color**: Forest green (primary.600 #059669)
+ * - **Neutral foundation**: Warm stone grays (#F5F1ED → #1A1816)
+ * - **Accent sparingly**: Burnished gold streak color (≤10% visible area)
+ * - **WCAG 2.1 Level AA compliant** for all text/background combinations
+ *
+ * ## Color Naming Convention
+ *
+ * ### Scale Numbers (50-900)
+ * - **50**: Lightest shade — muted surfaces, subtle backgrounds
+ * - **100-200**: Light shades — backgrounds, cards, borders
+ * - **300-400**: Medium shades — disabled states, placeholders
+ * - **500-600**: Base shades — primary usage, buttons, CTAs
+ * - **700-900**: Dark shades — text, headings, high contrast
+ *
+ * ### Semantic Prefixes
+ * - `primary.*`: Forest green brand color
+ * - `gray.*`: Warm stone neutrals
+ * - `streak.*`: Burnished gold for momentum
+ * - `strength.*`: Habit progress levels
+ * - `premium.*`: Subscription tier purple
+ *
+ * ### Suffixes
+ * - `Light`: Tinted background (e.g., `errorLight`, `warningLight`)
+ * - No suffix: Primary usage
+ *
+ * @example
+ * ```tsx
+ * import { colors } from '@/theme/colors';
+ *
+ * // Buttons use primary.600
+ * <Button backgroundColor={colors.primary[600]} />
+ *
+ * // Text on colored surfaces uses primary.700 (higher contrast)
+ * <Text color={colors.primary[700]}>Forest Green Text</Text>
+ *
+ * // Backgrounds use light.background
+ * <View style={{ backgroundColor: colors.light.background }} />
+ *
+ * // Cards use light.card with borders
+ * <View style={{
+ *   backgroundColor: colors.light.card,
+ *   borderColor: colors.border
+ * }} />
+ * ```
  */
 
 export const colors = {
@@ -57,13 +101,14 @@ export const colors = {
   },
 
   // Primary Colors (Forest Green — single saturated color)
+  // Design system: #047857 (text), #059669 (buttons)
   primary: {
-    100: '#D4F0E2', // Light tinted backgrounds
-    300: '#6FCF9A', // Decorative, confetti
-    400: '#3FBD7E', // Lighter, hover states
-    500: '#2A9D6E', // Success indicators, focus rings
-    600: '#22805A', // Buttons, CTA fills
-    700: '#1B6B4A', // High-contrast text on colored surfaces
+    100: '#D1FAE5', // Light tinted backgrounds
+    300: '#6EE7B7', // Decorative, confetti
+    400: '#34D399', // Lighter, hover states
+    500: '#10B981', // Success indicators, focus rings
+    600: '#059669', // Buttons, CTA fills
+    700: '#047857', // High-contrast text on colored surfaces
   },
 
   // Secondary Colors (Trust & Calm)
@@ -83,9 +128,41 @@ export const colors = {
     700: '#7D5907', // Dark gold, high-contrast text — WCAG AA 6.36:1 with white
   },
 
-  // Habit Strength Level Colors
+  /**
+   * Habit Strength Level Colors
+   *
+   * Maps to habit formation stages based on completion percentage.
+   * Each level has a base color + light tinted background variant.
+   *
+   * Progression stages:
+   * - **Starting** (0-20%): Lime green — early momentum
+   * - **Developing** (20-40%): Teal — gaining traction
+   * - **Building** (40-60%): Green — steady progress
+   * - **Strong** (60-80%): Cyan — well-established
+   * - **Automatic** (80-100%): Forest green — ingrained habit (matches primary.600)
+   *
+   * All color/background pairs meet WCAG AA contrast requirements.
+   *
+   * @example
+   * ```tsx
+   * import { colors } from '@/theme/colors';
+   *
+   * const getStrengthColor = (percentage: number) => {
+   *   if (percentage >= 80) return colors.strength.automatic;
+   *   if (percentage >= 60) return colors.strength.strong;
+   *   if (percentage >= 40) return colors.strength.building;
+   *   if (percentage >= 20) return colors.strength.developing;
+   *   return colors.strength.starting;
+   * };
+   *
+   * <ProgressRing
+   *   color={colors.strength.building}
+   *   backgroundColor={colors.strength.buildingLight}
+   * />
+   * ```
+   */
   strength: {
-    automatic: '#22805A', // 80-100% — matches primary.600
+    automatic: '#059669', // 80-100% — matches primary.600
     automaticLight: '#D4F0E2',
     building: '#16a34a',
     buildingLight: '#dcfce7',

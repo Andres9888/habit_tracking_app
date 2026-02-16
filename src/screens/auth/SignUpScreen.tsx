@@ -5,6 +5,11 @@ import { ScrollView, View, KeyboardAvoidingView, Platform, StyleSheet, TextInput
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+  const { colors: themeColors } = useThemeColors();
+=======
+import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
+>>>>>>> origin/main
 import {
   AuthDivider,
   AuthError,
@@ -21,15 +26,14 @@ import { PasswordStrengthBar } from './components/PasswordStrengthBar';
 import { SignUpHeader } from './components/SignUpHeader';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-
 interface SignUpScreenProps {
   onNavigateToSignIn?: () => void;
 }
-
 function SignUpScreenContent({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
+<<<<<<< HEAD
   const { colors, isDark } = useThemeColors();
   const passwordRef = useRef<TextInput>(null);
   const {
@@ -109,7 +113,16 @@ function SignUpScreenContent({
 
             <Animated.View
               entering={FadeInUp.delay(100).springify().damping(18)}
-              style={[styles.formCard, themed.formCard]}
+              style={{
+                backgroundColor: themeColors.card,
+                borderRadius: 16,
+                elevation: 4,
+                padding: 24,
+                shadowColor: '#1c1917',
+                shadowOffset: { height: 4, width: 0 },
+                shadowOpacity: 0.08,
+                shadowRadius: 16,
+              }}
             >
               <View style={styles.socialGap}>
                 <SocialSignInButton
