@@ -1,6 +1,13 @@
 /**
- * UpgradePrompt Component
- * Modal overlay for upgrade CTA — optimized for trial conversion
+ * UpgradePrompt — full-screen modal overlay for trial conversion.
+ *
+ * Part of the **monetization flow**: shown by {@link HabitsListModals} when
+ * `upgradePromptVisible` is true (typically after the user tries to exceed
+ * the free-tier habit limit).
+ *
+ * Features a slide-in card with headline, value prop, pricing pill, primary
+ * CTA ("Start Free Trial"), and a dismissive secondary button ("Maybe later").
+ * The backdrop is tappable to dismiss.
  */
 
 import { Pressable, Text, View } from 'react-native';
