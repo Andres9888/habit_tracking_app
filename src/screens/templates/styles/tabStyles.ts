@@ -32,6 +32,9 @@ export const tabStyles = StyleSheet.create({
     fontWeight: '700',
     marginLeft: 6,
   },
+  tabCountActive: {
+    color: '#059669',
+  },
   tabIndicator: {
     borderRadius: 12,
     bottom: 5,
@@ -46,6 +49,9 @@ export const tabStyles = StyleSheet.create({
   tabText: {
     fontSize: 13,
     fontWeight: '600',
+  },
+  tabTextActive: {
+    color: '#047857',
   },
 });
 

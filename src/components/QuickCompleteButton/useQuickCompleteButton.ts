@@ -61,7 +61,7 @@ export function useQuickCompleteButton({
     Haptics.impactAsync(
       localCompleted
         ? Haptics.ImpactFeedbackStyle.Light
-        : Haptics.ImpactFeedbackStyle.Heavy
+        : Haptics.ImpactFeedbackStyle.Medium
     );
     buttonScale.value = withSequence(
       withTiming(0.96, { duration: 80 }),

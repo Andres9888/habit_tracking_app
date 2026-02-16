@@ -6,7 +6,7 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
 import { useMemo, useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
-import type { Id, Doc } from '../../../convex/_generated/dataModel';
+import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
 
 interface UseHabitDetailScreenStateProps {

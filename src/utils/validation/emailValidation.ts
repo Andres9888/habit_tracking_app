@@ -4,8 +4,7 @@
 
 import type { ValidationResult } from './types';
 import { containsDangerousPatterns } from './security';
-
-export const MAX_EMAIL_LENGTH = 254; // RFC 5321
+import { MAX_EMAIL_LENGTH } from '@/constants';
 
 /**
  * Validate email address format
