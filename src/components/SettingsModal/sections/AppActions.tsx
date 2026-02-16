@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Share2, Mail, Sparkles } from 'lucide-react-native';
+import { Star, Share2, MessageSquare, Sparkles } from 'lucide-react-native';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 
@@ -7,7 +7,7 @@ interface Props {
   highContrast: boolean;
   onRate: () => void;
   onShare: () => void;
-  onSupport: () => void;
+  onFeedback: () => void;
   onWhatsNew: () => void;
 }
 
@@ -15,7 +15,7 @@ export function AppActions({
   highContrast,
   onRate,
   onShare,
-  onSupport,
+  onFeedback,
   onWhatsNew,
 }: Props) {
   return (
@@ -38,20 +38,20 @@ export function AppActions({
       />
       <SettingsRow
         highContrastMode={highContrast}
-        icon={<Sparkles color='#8b5cf6' size={16} />}
+        icon={<MessageSquare color='#8b5cf6' size={16} />}
         iconBackgroundColor='#ede9fe'
-        label="What's New"
+        label='Send Feedback'
         type='navigation'
-        onPress={onWhatsNew}
+        onPress={onFeedback}
       />
       <SettingsRow
         highContrastMode={highContrast}
-        icon={<Mail color='#6366f1' size={16} />}
-        iconBackgroundColor='#e0e7ff'
-        label='Contact Support'
+        icon={<Sparkles color='#a855f7' size={16} />}
+        iconBackgroundColor='#f3e8ff'
+        label="What's New"
         showBorder={false}
         type='navigation'
-        onPress={onSupport}
+        onPress={onWhatsNew}
       />
     </SettingsSection>
   );
