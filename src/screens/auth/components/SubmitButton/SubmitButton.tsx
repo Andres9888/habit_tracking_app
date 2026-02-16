@@ -5,6 +5,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SubmitButtonProps {
   label: string;
@@ -25,6 +26,7 @@ export function SubmitButton({
   onPress,
   testID,
 }: SubmitButtonProps) {
+  const { colors: themeColors } = useThemeColors();
   const isDisabled = isLoading || disabled;
   const reduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
@@ -59,7 +61,7 @@ export function SubmitButton({
       style={[
         animatedStyle,
         {
-          shadowColor: '#1c1917',
+          shadowColor: themeColors.text.primary,
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
@@ -74,7 +76,7 @@ export function SubmitButton({
       </Text>
       <View className='ml-2 w-5 items-center justify-center'>
         {isLoading ? (
-          <ActivityIndicator color='#FFFFFF' size='small' />
+          <ActivityIndicator color={themeColors.text.inverse} size='small' />
         ) : (
           <Text className='text-lg text-white'>→</Text>
         )}

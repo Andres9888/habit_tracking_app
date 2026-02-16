@@ -6,6 +6,7 @@
 import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { colors } from '../../../theme/colors';
 
 interface PasswordStrengthBarProps {
@@ -14,15 +15,16 @@ interface PasswordStrengthBarProps {
 
 type Strength = 'weak' | 'fair' | 'good' | 'strong';
 
-const STRENGTH_CONFIG: Record<
-  Strength,
-  { color: string; label: string; width: `${number}%` }
-> = {
-  weak: { color: '#ef4444', label: 'Weak', width: '25%' },
-  fair: { color: '#f59e0b', label: 'Fair', width: '50%' },
-  good: { color: '#22c55e', label: 'Good', width: '75%' },
-  strong: { color: colors.primary[700], label: 'Strong', width: '100%' },
-};
+function useStrengthConfig() {
+  const { colors: themeColors } = useThemeColors();
+  
+  return {
+    weak: { color: '#ef4444', label: 'Weak', width: '25%' as const },
+    fair: { color: '#f59e0b', label: 'Fair', width: '50%' as const },
+    good: { color: themeColors.primary[500], label: 'Good', width: '75%' as const },
+    strong: { color: themeColors.primary[700], label: 'Strong', width: '100%' as const },
+  };
+}
 
 function getStrength(password: string): Strength {
   let score = 0;
@@ -39,24 +41,50 @@ function getStrength(password: string): Strength {
 }
 
 export function PasswordStrengthBar({ password }: PasswordStrengthBarProps) {
+  const { colors: themeColors } = useThemeColors();
+  const strengthConfig = useStrengthConfig();
   const strength = useMemo(() => getStrength(password), [password]);
-  const config = STRENGTH_CONFIG[strength];
+  const config = strengthConfig[strength];
+
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: 8,
+      marginTop: 6,
+    },
+    fill: {
+      borderRadius: 2,
+      height: '100%',
+    },
+    label: {
+      fontSize: 13,
+      fontWeight: '600',
+    },
+    track: {
+      backgroundColor: themeColors.gray[200],
+      borderRadius: 2,
+      flex: 1,
+      height: 4,
+      overflow: 'hidden',
+    },
+  });
 
   if (!password) return null;
 
   return (
-    <Animated.View entering={FadeInDown.duration(280).springify().damping(18)} style={styles.container}>
-      <View style={styles.track}>
+    <Animated.View entering={FadeInDown.duration(280).springify().damping(18)} style={dynamicStyles.container}>
+      <View style={dynamicStyles.track}>
         <View
           style={[
-            styles.fill,
+            dynamicStyles.fill,
             { backgroundColor: config.color, width: config.width },
           ]}
         />
       </View>
       <Text
         accessibilityLabel={`Password strength: ${config.label}`}
-        style={[styles.label, { color: config.color }]}
+        style={[dynamicStyles.label, { color: config.color }]}
       >
         {config.label}
       </Text>

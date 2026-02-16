@@ -12,10 +12,11 @@ import { FormInput } from './FormInput';
 import { PasswordInput } from './PasswordInput';
 import { SocialSignInButton } from './SocialSignInButton';
 import { SubmitButton } from './SubmitButton';
-import { styles } from '../SignInScreen.styles';
+import { useSignInStyles } from '../SignInScreen.styles';
 import type { SignInFormSectionProps } from './SignInFormSection.types';
 
 export function SignInFormSection(props: SignInFormSectionProps) {
+  const styles = useSignInStyles();
   const {
     contentStyle,
     emailAddress,

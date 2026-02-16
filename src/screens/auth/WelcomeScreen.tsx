@@ -22,9 +22,10 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
-import { styles } from './WelcomeScreen.styles';
+import { styles, useWelcomeStyles } from './WelcomeScreen.styles';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { colors } from '../../theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 // Lazy load auth screens - only bundle when user wants to sign in/up
 const SignInScreen = lazy(() => import('./SignInScreen'));
@@ -39,14 +40,16 @@ function WelcomeScreenContent() {
     useOAuthSignIn();
   const { iconStyle, titleStyle, subtitleStyle, buttonsStyle } =
     useWelcomeAnimations();
+  const { colors: themeColors } = useThemeColors();
+  const dynamicStyles = useWelcomeStyles();
 
   if (mode === 'signin') {
     return (
-      <View style={styles.container}>
-        <Suspense fallback={<View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary[600]} /></View>}>
+      <View style={dynamicStyles.container}>
+        <Suspense fallback={<View style={dynamicStyles.loadingContainer}><ActivityIndicator size="large" color={colors.primary[600]} /></View>}>
           <SignInScreen />
         </Suspense>
-        <View style={[styles.backButton, { top: insets.top + 8 }]}>
+        <View style={[dynamicStyles.backButton, { top: insets.top + 8 }]}>
           <BackButton onPress={() => setMode('welcome')} />
         </View>
       </View>
@@ -55,11 +58,11 @@ function WelcomeScreenContent() {
 
   if (mode === 'signup') {
     return (
-      <View style={styles.container}>
-        <Suspense fallback={<View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary[600]} /></View>}>
+      <View style={dynamicStyles.container}>
+        <Suspense fallback={<View style={dynamicStyles.loadingContainer}><ActivityIndicator size="large" color={colors.primary[600]} /></View>}>
           <SignUpScreen />
         </Suspense>
-        <View style={[styles.backButton, { top: insets.top + 8 }]}>
+        <View style={[dynamicStyles.backButton, { top: insets.top + 8 }]}>
           <BackButton onPress={() => setMode('welcome')} />
         </View>
       </View>
@@ -67,21 +70,21 @@ function WelcomeScreenContent() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
-        <View style={styles.heroSection}>
-          <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <Link color='#1c1917' size={40} strokeWidth={2} />
+    <View style={dynamicStyles.container}>
+      <View style={[dynamicStyles.content, { paddingTop: insets.top + 24 }]}>
+        <View style={dynamicStyles.heroSection}>
+          <Animated.View style={[dynamicStyles.iconContainer, iconStyle]}>
+            <Link color={themeColors.text.primary} size={40} strokeWidth={2} />
           </Animated.View>
-          <Animated.Text style={[styles.title, titleStyle]}>
+          <Animated.Text style={[dynamicStyles.title, titleStyle]}>
             Chain Day
           </Animated.Text>
-          <Animated.Text style={[styles.subtitle, subtitleStyle]}>
+          <Animated.Text style={[dynamicStyles.subtitle, subtitleStyle]}>
             Build habits that stick
           </Animated.Text>
         </View>
 
-        <Animated.View style={[styles.actionSection, buttonsStyle]}>
+        <Animated.View style={[dynamicStyles.actionSection, buttonsStyle]}>
           {error && <AuthError message={error} onDismiss={clearError} />}
           <SocialSignInButton
             disabled={!!isLoading}
@@ -103,10 +106,10 @@ function WelcomeScreenContent() {
             accessibilityState={{ disabled: !!isLoading }}
             disableAnimation={!!isLoading}
             disabled={!!isLoading}
-            style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
+            style={[dynamicStyles.primaryButton, isLoading && dynamicStyles.buttonDisabled]}
             onPress={() => setMode('signup')}
           >
-            <Text style={styles.primaryButtonText}>Create Free Account</Text>
+            <Text style={dynamicStyles.primaryButtonText}>Create Free Account</Text>
           </AnimatedPressable>
           <AnimatedPressable
             accessibilityHint='Navigate to sign in screen'
@@ -115,11 +118,11 @@ function WelcomeScreenContent() {
             accessibilityState={{ disabled: !!isLoading }}
             disableAnimation={!!isLoading}
             disabled={!!isLoading}
-            style={styles.textLink}
+            style={dynamicStyles.textLink}
             onPress={() => setMode('signin')}
           >
-            <Text style={styles.textLinkLabel}>Already have an account?</Text>
-            <Text style={styles.textLinkAction}> Sign in</Text>
+            <Text style={dynamicStyles.textLinkLabel}>Already have an account?</Text>
+            <Text style={dynamicStyles.textLinkAction}> Sign in</Text>
           </AnimatedPressable>
         </Animated.View>
       </View>

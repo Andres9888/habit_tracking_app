@@ -8,7 +8,8 @@ import { Link } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
-import { styles } from '../SignInScreen.styles';
+import { useSignInStyles } from '../SignInScreen.styles';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SignInBrandSectionProps {
   logoStyle: AnimatedStyle<ViewStyle>;
@@ -19,11 +20,14 @@ export function SignInBrandSection({
   logoStyle,
   headerStyle,
 }: SignInBrandSectionProps) {
+  const styles = useSignInStyles();
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <>
       <View style={styles.brandSection}>
         <Animated.View style={[styles.iconContainer, logoStyle]}>
-          <Link color='#ffffff' size={40} strokeWidth={2} />
+          <Link color={themeColors.text.inverse} size={40} strokeWidth={2} />
         </Animated.View>
         <Animated.View style={headerStyle}>
           <Text style={styles.appName}>Chain Day</Text>
