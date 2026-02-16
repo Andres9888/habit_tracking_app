@@ -9,6 +9,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { OfflinePendingBanner } from '../../components/OfflinePendingBanner';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 import { HabitsList } from './components/HabitsList';
@@ -73,6 +74,7 @@ function HabitsAppContent() {
     // AuthGate also wraps one; react-native-gesture-handler supports nesting safely.
     <GestureHandlerRootView style={styles.flex1}>
       <View style={[styles.flex1, { backgroundColor: colors.background }]}>
+        <OfflinePendingBanner reduceMotion={list.reduceMotionPreference} />
         <SyncStatusOverlays />
 
         {showHabitsSkeleton ? (
