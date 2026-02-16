@@ -1,11 +1,11 @@
 /**
  * SignInScreen - Premium sign in experience
- * Clean design with chain branding and smooth animations
+ * Clean design with chain branding, smooth animations, and full dark mode support.
  */
 
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Linking,
   Text,
@@ -14,7 +14,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   TextInput,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -38,6 +37,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignInScreenProps {
@@ -49,6 +49,7 @@ interface SignInScreenProps {
 
 function SignInScreenContent(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useThemeColors();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const passwordRef = useRef<TextInput>(null);
   const {
@@ -72,6 +73,25 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
 
   const isAnyLoading = isLoading || !!oauthLoading;
 
+  const themed = useMemo(
+    () => ({
+      container: { backgroundColor: colors.background },
+      gradientColors: isDark
+        ? [colors.background, colors.surface, colors.background] as [string, string, string]
+        : [colors.gray[50], colors.gray[100], colors.gray[50]] as [string, string, string],
+      logoGradientColors: isDark
+        ? [colors.primary[500], colors.primary[600]] as [string, string]
+        : ['#22c55e', '#16a34a'] as [string, string],
+      appName: { color: colors.text.primary },
+      tagline: { color: colors.text.secondary },
+      welcomeTitle: { color: colors.text.primary },
+      welcomeSubtitle: { color: colors.text.secondary },
+      footerText: { color: colors.text.tertiary },
+      footerLink: { color: colors.primary[isDark ? 500 : 700] },
+    }),
+    [colors, isDark]
+  );
+
   // Entrance animations
   const logoScale = useSharedValue(0.5);
   const logoOpacity = useSharedValue(0);
@@ -81,18 +101,10 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
   const contentTranslateY = useSharedValue(30);
 
   useEffect(() => {
-    // Logo entrance
-    logoScale.value = withDelay(
-      50,
-      withSpring(1, { damping: 18, stiffness: 150 })
-    );
+    logoScale.value = withDelay(50, withSpring(1, { damping: 18, stiffness: 150 }));
     logoOpacity.value = withDelay(50, withTiming(1, { duration: 280 }));
-
-    // Header entrance (60ms stagger)
     headerOpacity.value = withDelay(110, withTiming(1, { duration: 280 }));
     headerTranslateY.value = withDelay(110, withSpring(0, { damping: 18, stiffness: 150 }));
-
-    // Content entrance (60ms stagger)
     contentOpacity.value = withDelay(170, withTiming(1, { duration: 280 }));
     contentTranslateY.value = withDelay(170, withSpring(0, { damping: 18, stiffness: 150 }));
   }, []);
@@ -113,10 +125,9 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
   }));
 
   return (
-    <View style={styles.container}>
-      {/* Subtle gradient background */}
+    <View style={[styles.container, themed.container]}>
       <LinearGradient
-        colors={['#fafaf9', '#f5f5f4', '#fafaf9']}
+        colors={themed.gradientColors}
         locations={[0, 0.5, 1]}
         style={StyleSheet.absoluteFill}
       />
@@ -137,7 +148,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
           <View style={styles.brandSection}>
             <Animated.View style={[styles.logoContainer, logoStyle]}>
               <LinearGradient
-                colors={['#22c55e', '#16a34a']}
+                colors={themed.logoGradientColors}
                 style={styles.logoGradient}
               >
                 <Text style={styles.logoEmoji}>🔗</Text>
@@ -145,15 +156,15 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
             </Animated.View>
 
             <Animated.View style={headerStyle}>
-              <Text style={styles.appName}>Chain Day</Text>
-              <Text style={styles.tagline}>Don't break the chain</Text>
+              <Text style={[styles.appName, themed.appName]}>Chain Day</Text>
+              <Text style={[styles.tagline, themed.tagline]}>Don't break the chain</Text>
             </Animated.View>
           </View>
 
           {/* Welcome Message */}
           <Animated.View style={[styles.welcomeSection, headerStyle]}>
-            <Text style={styles.welcomeTitle}>Welcome back! 👋</Text>
-            <Text style={styles.welcomeSubtitle}>
+            <Text style={[styles.welcomeTitle, themed.welcomeTitle]}>Welcome back! 👋</Text>
+            <Text style={[styles.welcomeSubtitle, themed.welcomeSubtitle]}>
               Your streak is waiting — let's keep the momentum going.
             </Text>
           </Animated.View>
@@ -229,11 +240,11 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
 
           {/* Footer */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>
+            <Text style={[styles.footerText, themed.footerText]}>
               By continuing, you agree to our{' '}
               <Text
                 accessibilityRole='link'
-                style={styles.footerLink}
+                style={[styles.footerLink, themed.footerLink]}
                 onPress={() => void Linking.openURL('https://chainday.app/terms')}
               >
                 Terms
@@ -241,7 +252,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
               {' & '}
               <Text
                 accessibilityRole='link'
-                style={styles.footerLink}
+                style={[styles.footerLink, themed.footerLink]}
                 onPress={() => void Linking.openURL('https://chainday.app/privacy')}
               >
                 Privacy Policy
@@ -261,7 +272,6 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
 
 const styles = StyleSheet.create({
   appName: {
-    color: '#1c1917',
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.5,
@@ -275,7 +285,6 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   container: {
-    backgroundColor: '#fafaf9',
     flex: 1,
   },
   flex: {
@@ -286,11 +295,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   footerLink: {
-    color: '#047857',
     textDecorationLine: 'underline',
   },
   footerText: {
-    color: '#a8a29e',
     fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',
@@ -324,7 +331,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   tagline: {
-    color: '#57534e',
     fontSize: 13,
     marginTop: 4,
     textAlign: 'center',
@@ -333,14 +339,12 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   welcomeSubtitle: {
-    color: '#57534e',
     fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
     textAlign: 'center',
   },
   welcomeTitle: {
-    color: '#1c1917',
     fontSize: 28,
     fontWeight: '700',
     marginBottom: 8,

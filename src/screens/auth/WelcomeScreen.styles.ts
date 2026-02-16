@@ -1,5 +1,6 @@
 /**
- * WelcomeScreen styles
+ * WelcomeScreen styles — layout-only constants.
+ * Colors are applied at runtime via useThemeColors().
  */
 
 import { StyleSheet } from 'react-native';
@@ -17,7 +18,6 @@ export const styles = StyleSheet.create({
     opacity: 0.5,
   },
   container: {
-    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   content: {
@@ -32,13 +32,11 @@ export const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4',
     borderRadius: 16,
     elevation: 4,
     height: 80,
     justifyContent: 'center',
     marginBottom: 8,
-    shadowColor: '#1c1917',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
@@ -46,22 +44,18 @@ export const styles = StyleSheet.create({
   },
   primaryButton: {
     alignItems: 'center',
-    backgroundColor: '#059669',
     borderRadius: 12,
     elevation: 4,
     paddingVertical: 16,
-    shadowColor: '#059669',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 16,
   },
   primaryButtonText: {
-    color: '#ffffff',
     fontSize: 17,
     fontWeight: '600',
   },
   subtitle: {
-    color: '#57534e',
     fontSize: 17,
     textAlign: 'center',
   },
@@ -71,16 +65,13 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   textLinkAction: {
-    color: '#047857',
     fontSize: 15,
     fontWeight: '600',
   },
   textLinkLabel: {
-    color: '#57534e',
     fontSize: 15,
   },
   title: {
-    color: '#1c1917',
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,

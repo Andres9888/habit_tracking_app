@@ -9,7 +9,7 @@
 import { useThemeColors } from '../../theme/ThemeContext';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -65,11 +65,10 @@ function ChainLink({
         styles.chainLink,
         {
           backgroundColor: chainColors[index % chainColors.length],
-          transform: [{ rotate: '0deg' }], // Uniform rotation (placeholder for future alternating style)
         },
       ]}
     >
-      <View style={styles.chainLinkInner} />
+      <View style={[styles.chainLinkInner, { backgroundColor: colors.text.inverse }]} />
     </Animated.View>
   );
 }
@@ -121,7 +120,8 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
           <Text
             style={[
               styles.strengthLabel,
-              i === 4 && styles.strengthLabelActive,
+              { color: colors.text.secondary },
+              i === 4 && { color: colors.primary[700], fontWeight: '700' },
             ]}
           >
             {stage}
@@ -156,6 +156,7 @@ const TEMPLATE_ICONS = [
 ];
 
 function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
+  const { colors } = useThemeColors();
   return (
     <View style={styles.templateGrid}>
       {TEMPLATE_ICONS.map((emoji, i) => (
@@ -168,7 +169,7 @@ function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
                   .springify()
                   .damping(18)
           }
-          style={styles.templateItem}
+          style={[styles.templateItem, { backgroundColor: colors.primary[100] }]}
         >
           <Text style={styles.templateEmoji}>{emoji}</Text>
         </Animated.View>
@@ -245,24 +246,34 @@ interface OnboardingScreenProps {
 }
 
 function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
   const shouldReduceMotion = useReducedMotion();
 
+  const themedStyles = useMemo(
+    () => ({
+      container: { backgroundColor: colors.background },
+      title: { color: colors.primary[700] },
+      subtitle: { color: colors.text.secondary },
+      skipText: { color: colors.text.tertiary },
+      ctaButton: { backgroundColor: colors.primary[600] },
+      nextButton: { backgroundColor: colors.primary[600] },
+      shadowColor: isDark ? '#000' : colors.primary[700],
+    }),
+    [colors, isDark]
+  );
+
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
     setIsLoading(true);
     void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
     try {
-      // Mark onboarding as complete in AsyncStorage
       await safeSetBoolean(ONBOARDING_KEY, true);
       onComplete();
     } catch (error) {
-      // If storage fails, still proceed to avoid blocking user
-      // They might see onboarding again on next launch, but that's acceptable
       if (__DEV__) {
         console.error('[OnboardingScreen] Failed to save completion state:', error);
       }
@@ -313,7 +324,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
               ? undefined
               : FadeInUp.delay(200).springify().damping(18)
           }
-          style={styles.title}
+          style={[styles.title, themedStyles.title]}
         >
           {item.title}
         </Animated.Text>
@@ -323,17 +334,17 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
               ? undefined
               : FadeInUp.delay(350).springify().damping(18)
           }
-          style={styles.subtitle}
+          style={[styles.subtitle, themedStyles.subtitle]}
         >
           {item.subtitle}
         </Animated.Text>
       </View>
     ),
-    [shouldReduceMotion]
+    [shouldReduceMotion, themedStyles]
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, themedStyles.container]}>
       {/* Skip button */}
       <Animated.View
         entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
@@ -346,7 +357,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
           style={styles.skipButton}
           onPress={handleSkip}
         >
-          <Text style={styles.skipText}>Skip</Text>
+          <Text style={[styles.skipText, themedStyles.skipText]}>Skip</Text>
         </Pressable>
       </Animated.View>
 
@@ -385,13 +396,18 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
               accessibilityLabel='Get started building your first habit'
               accessibilityRole='button'
               disabled={isLoading}
-              style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
+              style={[
+                styles.ctaButton,
+                themedStyles.ctaButton,
+                { shadowColor: themedStyles.shadowColor },
+                isLoading && styles.ctaButtonDisabled,
+              ]}
               onPress={() => void handleComplete()}
             >
               {isLoading ? (
-                <ActivityIndicator color='#FFFFFF' />
+                <ActivityIndicator color={colors.text.inverse} />
               ) : (
-                <Text style={styles.ctaText}>
+                <Text style={[styles.ctaText, { color: colors.text.inverse }]}>
                   Let's Build Your First Habit →
                 </Text>
               )}
@@ -401,10 +417,14 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
           <Pressable
             accessibilityLabel='Next onboarding page'
             accessibilityRole='button'
-            style={styles.nextButton}
+            style={[
+              styles.nextButton,
+              themedStyles.nextButton,
+              { shadowColor: themedStyles.shadowColor },
+            ]}
             onPress={handleNext}
           >
-            <Text style={styles.nextText}>Next</Text>
+            <Text style={[styles.nextText, { color: colors.text.inverse }]}>Next</Text>
           </Pressable>
         )}
       </View>
@@ -435,22 +455,18 @@ const styles = StyleSheet.create({
     width: 36,
   },
   chainLinkInner: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     height: 36,
     width: 20,
   },
   container: {
-    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   ctaButton: {
-    backgroundColor: '#059669',
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 32,
     paddingVertical: 16,
-    shadowColor: '#000',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
@@ -459,7 +475,6 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   ctaText: {
-    color: '#FFFFFF',
     fontSize: 17,
     fontWeight: '600',
   },
@@ -473,18 +488,15 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   nextButton: {
-    backgroundColor: '#059669',
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 48,
     paddingVertical: 16,
-    shadowColor: '#000',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
   nextText: {
-    color: '#FFFFFF',
     fontSize: 17,
     fontWeight: '600',
   },
@@ -506,12 +518,10 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   skipText: {
-    color: '#6B7280',
     fontSize: 17,
     fontWeight: '500',
   },
   strengthBar: {
-    backgroundColor: '#059669',
     borderRadius: 8,
     height: 32,
   },
@@ -521,13 +531,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   strengthLabel: {
-    color: '#57534e',
     fontSize: 13,
     fontWeight: '500',
-  },
-  strengthLabelActive: {
-    color: '#047857',
-    fontWeight: '700',
   },
   strengthRow: {
     alignItems: 'center',
@@ -535,7 +540,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   subtitle: {
-    color: '#6B7280',
     fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
@@ -553,7 +557,6 @@ const styles = StyleSheet.create({
   },
   templateItem: {
     alignItems: 'center',
-    backgroundColor: '#F0FDF4',
     borderRadius: 16,
     elevation: 2,
     height: 56,
@@ -565,7 +568,6 @@ const styles = StyleSheet.create({
     width: 56,
   },
   title: {
-    color: '#047857',
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,
