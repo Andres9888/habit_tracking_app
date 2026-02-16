@@ -8,6 +8,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
     className="mb-3 flex-row items-center justify-between px-1"
   >
     <Text
+      accessibilityRole="header"
       className="text-base font-semibold text-stone-800"
     >
       Quick picks
@@ -53,6 +54,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
     </View>
   </View>
   <RCTScrollView
+    accessibilityLabel="Quick pick templates"
+    accessibilityRole="list"
     contentContainerStyle={
       {
         "paddingHorizontal": 1,
@@ -100,6 +103,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
     getItem={[Function]}
     getItemCount={[Function]}
     horizontal={true}
+    initialNumToRender={5}
     keyExtractor={[Function]}
     onContentSizeChange={[Function]}
     onLayout={[Function]}
@@ -114,6 +118,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
     showsHorizontalScrollIndicator={false}
     stickyHeaderIndices={[]}
     viewabilityConfigCallbackPairs={[]}
+    windowSize={3}
   >
     <View>
       <View
@@ -129,7 +134,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
         }
       >
         <View
-          accessibilityLabel="Quick pick: Meditate"
+          accessibilityHint="Tap to use the Meditate template"
+          accessibilityLabel="Quick pick: Meditate, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -219,7 +225,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
         }
       >
         <View
-          accessibilityLabel="Quick pick: Read"
+          accessibilityHint="Tap to use the Read template"
+          accessibilityLabel="Quick pick: Read, Pull"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -309,7 +316,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
         }
       >
         <View
-          accessibilityLabel="Quick pick: Exercise"
+          accessibilityHint="Tap to use the Exercise template"
+          accessibilityLabel="Quick pick: Exercise, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -399,7 +407,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
         }
       >
         <View
-          accessibilityLabel="Quick pick: Hydrate"
+          accessibilityHint="Tap to use the Hydrate template"
+          accessibilityLabel="Quick pick: Hydrate, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -489,7 +498,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with default unselected s
         }
       >
         <View
-          accessibilityLabel="Quick pick: Journal"
+          accessibilityHint="Tap to use the Journal template"
+          accessibilityLabel="Quick pick: Journal, Pull"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -579,6 +589,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
     className="mb-3 flex-row items-center justify-between px-1"
   >
     <Text
+      accessibilityRole="header"
       className="text-base font-semibold text-stone-800"
     >
       Quick picks
@@ -624,6 +635,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
     </View>
   </View>
   <RCTScrollView
+    accessibilityLabel="Quick pick templates"
+    accessibilityRole="list"
     contentContainerStyle={
       {
         "paddingHorizontal": 1,
@@ -671,6 +684,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
     getItem={[Function]}
     getItemCount={[Function]}
     horizontal={true}
+    initialNumToRender={5}
     keyExtractor={[Function]}
     onContentSizeChange={[Function]}
     onLayout={[Function]}
@@ -685,6 +699,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
     showsHorizontalScrollIndicator={false}
     stickyHeaderIndices={[]}
     viewabilityConfigCallbackPairs={[]}
+    windowSize={3}
   >
     <View>
       <View
@@ -700,7 +715,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
         }
       >
         <View
-          accessibilityLabel="Quick pick: Meditate"
+          accessibilityHint="Tap to use the Meditate template"
+          accessibilityLabel="Quick pick: Meditate, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -790,7 +806,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
         }
       >
         <View
-          accessibilityLabel="Quick pick: Read"
+          accessibilityHint="Tap to use the Read template"
+          accessibilityLabel="Quick pick: Read, Pull"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -880,7 +897,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
         }
       >
         <View
-          accessibilityLabel="Quick pick: Exercise"
+          accessibilityHint="Tap to use the Exercise template"
+          accessibilityLabel="Quick pick: Exercise, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -970,7 +988,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
         }
       >
         <View
-          accessibilityLabel="Quick pick: Hydrate"
+          accessibilityHint="Tap to use the Hydrate template"
+          accessibilityLabel="Quick pick: Hydrate, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -1060,7 +1079,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (E
         }
       >
         <View
-          accessibilityLabel="Quick pick: Journal"
+          accessibilityHint="Tap to use the Journal template"
+          accessibilityLabel="Quick pick: Journal, Pull"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -1150,6 +1170,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
     className="mb-3 flex-row items-center justify-between px-1"
   >
     <Text
+      accessibilityRole="header"
       className="text-base font-semibold text-stone-800"
     >
       Quick picks
@@ -1195,6 +1216,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
     </View>
   </View>
   <RCTScrollView
+    accessibilityLabel="Quick pick templates"
+    accessibilityRole="list"
     contentContainerStyle={
       {
         "paddingHorizontal": 1,
@@ -1242,6 +1265,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
     getItem={[Function]}
     getItemCount={[Function]}
     horizontal={true}
+    initialNumToRender={5}
     keyExtractor={[Function]}
     onContentSizeChange={[Function]}
     onLayout={[Function]}
@@ -1256,6 +1280,7 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
     showsHorizontalScrollIndicator={false}
     stickyHeaderIndices={[]}
     viewabilityConfigCallbackPairs={[]}
+    windowSize={3}
   >
     <View>
       <View
@@ -1271,7 +1296,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
         }
       >
         <View
-          accessibilityLabel="Quick pick: Meditate"
+          accessibilityHint="Tap to use the Meditate template"
+          accessibilityLabel="Quick pick: Meditate, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -1361,7 +1387,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
         }
       >
         <View
-          accessibilityLabel="Quick pick: Read"
+          accessibilityHint="Tap to use the Read template"
+          accessibilityLabel="Quick pick: Read, Pull"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -1451,7 +1478,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
         }
       >
         <View
-          accessibilityLabel="Quick pick: Exercise"
+          accessibilityHint="Tap to use the Exercise template"
+          accessibilityLabel="Quick pick: Exercise, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -1541,7 +1569,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
         }
       >
         <View
-          accessibilityLabel="Quick pick: Hydrate"
+          accessibilityHint="Tap to use the Hydrate template"
+          accessibilityLabel="Quick pick: Hydrate, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -1631,7 +1660,8 @@ exports[`QuickPicksRow Snapshots should match snapshot with selected template (M
         }
       >
         <View
-          accessibilityLabel="Quick pick: Journal"
+          accessibilityHint="Tap to use the Journal template"
+          accessibilityLabel="Quick pick: Journal, Pull"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -1721,12 +1751,15 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
     className="mb-3 flex-row items-center justify-between px-1"
   >
     <Text
+      accessibilityRole="header"
       className="text-base font-semibold text-stone-800"
     >
       Quick picks
     </Text>
   </View>
   <RCTScrollView
+    accessibilityLabel="Quick pick templates"
+    accessibilityRole="list"
     contentContainerStyle={
       {
         "paddingHorizontal": 1,
@@ -1774,6 +1807,7 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
     getItem={[Function]}
     getItemCount={[Function]}
     horizontal={true}
+    initialNumToRender={5}
     keyExtractor={[Function]}
     onContentSizeChange={[Function]}
     onLayout={[Function]}
@@ -1788,6 +1822,7 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
     showsHorizontalScrollIndicator={false}
     stickyHeaderIndices={[]}
     viewabilityConfigCallbackPairs={[]}
+    windowSize={3}
   >
     <View>
       <View
@@ -1803,7 +1838,8 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
         }
       >
         <View
-          accessibilityLabel="Quick pick: Meditate"
+          accessibilityHint="Tap to use the Meditate template"
+          accessibilityLabel="Quick pick: Meditate, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -1893,7 +1929,8 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
         }
       >
         <View
-          accessibilityLabel="Quick pick: Read"
+          accessibilityHint="Tap to use the Read template"
+          accessibilityLabel="Quick pick: Read, Pull"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -1983,7 +2020,8 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
         }
       >
         <View
-          accessibilityLabel="Quick pick: Exercise"
+          accessibilityHint="Tap to use the Exercise template"
+          accessibilityLabel="Quick pick: Exercise, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -2073,7 +2111,8 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
         }
       >
         <View
-          accessibilityLabel="Quick pick: Hydrate"
+          accessibilityHint="Tap to use the Hydrate template"
+          accessibilityLabel="Quick pick: Hydrate, Push"
           accessibilityRole="button"
           accessibilityState={
             {
@@ -2163,7 +2202,8 @@ exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`]
         }
       >
         <View
-          accessibilityLabel="Quick pick: Journal"
+          accessibilityHint="Tap to use the Journal template"
+          accessibilityLabel="Quick pick: Journal, Pull"
           accessibilityRole="button"
           accessibilityState={
             {

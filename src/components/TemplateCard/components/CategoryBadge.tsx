@@ -8,6 +8,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Lock } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
 import { CATEGORY_LABELS } from '../TemplateCard.constants';
@@ -24,6 +25,7 @@ export function CategoryBadge({
   isPremium,
 }: CategoryBadgeProps) {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
 
   return (
     <View style={styles.badgeRow}>
@@ -34,7 +36,7 @@ export function CategoryBadge({
           <Text
             style={[
               theme.custom.typography.caption,
-              { color: '#4b5563', fontWeight: '600' },
+              { color: colors.text.secondary, fontWeight: '600' },
             ]}
           >
             {CATEGORY_LABELS[category] || category}

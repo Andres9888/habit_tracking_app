@@ -53,6 +53,7 @@ export function ButtonContent({
 
       {typeof children === 'string' ? (
         <Text
+          maxFontSizeMultiplier={2}
           style={[
             theme.custom.typography.button,
             variantStyles.text,

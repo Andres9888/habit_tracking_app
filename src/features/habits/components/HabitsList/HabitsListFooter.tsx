@@ -1,6 +1,8 @@
 /**
- * HabitsListFooter Component
- * Renders the footer with locked habit card for free tier limit
+ * HabitsListFooter — conditional footer for the habits FlatList.
+ *
+ * Renders a {@link LockedHabitCard} when `!isPremiumUser && hasReachedHabitLimit`.
+ * Returns `null` otherwise, keeping the list clean for premium or under-limit users.
  */
 
 import { View } from 'react-native';
