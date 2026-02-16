@@ -1,6 +1,6 @@
 import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import type {} from '../types';
+
 
 export function useHabitData(extendedDateStrings: string[]) {
   // Guard against empty or invalid date strings array

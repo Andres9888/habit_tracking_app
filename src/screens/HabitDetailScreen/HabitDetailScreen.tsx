@@ -62,6 +62,7 @@ function HabitDetailScreenContent({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}

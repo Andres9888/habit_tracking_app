@@ -63,7 +63,7 @@ export const itemStyles = StyleSheet.create({
   },
   riskBadge: {
     alignItems: 'center',
-    backgroundColor: '#FEE2E2',
+    backgroundColor: colors.errorLight,
     borderRadius: borderRadius.xs,
     flexDirection: 'row',
     marginLeft: spacing.xs,

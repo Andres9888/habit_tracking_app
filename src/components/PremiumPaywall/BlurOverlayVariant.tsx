@@ -47,6 +47,7 @@ export function BlurOverlayVariant({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType={reduceMotion ? 'fade' : 'slide'}
       testID={testID}

@@ -28,7 +28,7 @@ export interface CalendarTimelineColors {
 }
 
 /**
- * Standard color scheme (default)
+ * Standard color scheme (default light)
  */
 const STANDARD_COLORS: CalendarTimelineColors = {
   currentDayBackground: '#1a1a1a',
@@ -39,6 +39,20 @@ const STANDARD_COLORS: CalendarTimelineColors = {
   icon: '#1a1a1a',
   primaryText: '#1a1a1a',
   secondaryText: '#6B7280',
+};
+
+/**
+ * Dark mode color scheme
+ */
+const DARK_COLORS: CalendarTimelineColors = {
+  currentDayBackground: '#F9FAFB',
+  currentDayText: '#111827',
+  dayBackground: '#1F2937',
+  dayBorder: '#374151',
+  dayText: '#E5E7EB',
+  icon: '#D1D5DB',
+  primaryText: '#F9FAFB',
+  secondaryText: '#9CA3AF',
 };
 
 /**
@@ -56,25 +70,25 @@ const HIGH_CONTRAST_COLORS: CalendarTimelineColors = {
 };
 
 /**
- * Get color theme based on high contrast mode setting
+ * Get color theme based on mode settings
  *
  * @param highContrastMode - Whether high contrast mode is enabled
+ * @param isDark - Whether dark mode is active
  * @returns Color theme object
- *
- * @example
- * const colors = getCalendarTimelineColors(settings.highContrastMode);
- * <Text style={{ color: colors.primaryText }}>Date Range</Text>
  */
 export function getCalendarTimelineColors(
-  highContrastMode: boolean
+  highContrastMode: boolean,
+  isDark = false
 ): CalendarTimelineColors {
-  return highContrastMode ? HIGH_CONTRAST_COLORS : STANDARD_COLORS;
+  if (highContrastMode) return HIGH_CONTRAST_COLORS;
+  return isDark ? DARK_COLORS : STANDARD_COLORS;
 }
 
 /**
  * Export individual themes for direct access if needed
  */
 export const CALENDAR_THEMES = {
+  dark: DARK_COLORS,
   highContrast: HIGH_CONTRAST_COLORS,
   standard: STANDARD_COLORS,
 } as const;

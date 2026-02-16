@@ -34,6 +34,7 @@ export default function HabitCalendarModal({
 
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
+      accessibilityViewIsModal
       <SafeAreaView className='flex-1' style={{ backgroundColor: colors.background }}>
         <ModalHeader name={state.name} onClose={onClose} onEdit={state.handleEditPress} />
 
