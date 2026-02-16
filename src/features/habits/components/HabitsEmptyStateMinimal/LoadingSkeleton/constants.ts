@@ -1,19 +1,12 @@
 /**
  * Constants for LoadingSkeleton component
+ * Re-exports core skeleton colors for consistency.
  */
 
-/**
- * Skeleton colors per spec
- */
-export const SKELETON_COLORS = {
-  base: '#E7E5E4',
-  highlight: '#F5F5F4',
-} as const;
-
-/**
- * Shimmer animation duration per spec
- */
-export const SHIMMER_DURATION = 1500;
+export {
+  SKELETON_COLORS_LIGHT as SKELETON_COLORS,
+  SHIMMER_DURATION,
+} from '../../../../../components/SkeletonLoader/SkeletonLoader';
 
 /**
  * Skeleton element dimensions matching the empty state layout

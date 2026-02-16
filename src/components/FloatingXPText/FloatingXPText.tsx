@@ -19,6 +19,7 @@ import Animated, {
   withDelay,
   runOnJS,
 } from 'react-native-reanimated';
+import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 export interface FloatingXPTextProps {
   /** XP value to display (e.g., 10, 50, 100) */
@@ -40,6 +41,7 @@ export function FloatingXPText({
   onComplete,
   showCoin = false,
 }: FloatingXPTextProps) {
+  const reduceMotion = useReduceMotion();
   const translateY = useSharedValue(0);
   const opacity = useSharedValue(0);
   const scale = useSharedValue(0.5);

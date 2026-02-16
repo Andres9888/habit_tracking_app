@@ -89,10 +89,17 @@ export function AnimatedPressable({
     [disableAnimation, pressHandlers, onPressOut]
   );
 
+  // Default hitSlop for Apple HIG 44pt minimum touch target
+  // Only apply if not already specified by the consumer
+  const defaultHitSlop = pressableProps.hitSlop
+    ? undefined
+    : { top: 10, bottom: 10, left: 10, right: 10 };
+
   return (
     <AnimatedPressableBase
       {...pressableProps}
       {...(disableFocusRing ? {} : focusHandlers)}
+      hitSlop={pressableProps.hitSlop ?? defaultHitSlop}
       style={[style, !disableAnimation && animatedStyle, focusStyle]}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

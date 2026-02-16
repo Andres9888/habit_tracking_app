@@ -2,7 +2,7 @@
  * Event handlers hook for TemplateScienceModal
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { Linking, Share } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import type { Doc } from '../../../../convex/_generated/dataModel';
@@ -19,6 +19,14 @@ export const useModalHandlers = ({
   template,
 }: UseModalHandlersProps) => {
   const [showConfetti, setShowConfetti] = useState(false);
+  const useTemplateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (useTemplateTimerRef.current) clearTimeout(useTemplateTimerRef.current);
+    };
+  }, []);
 
   const handleClose = useCallback(() => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -61,7 +69,8 @@ export const useModalHandlers = ({
   const handleUseTemplate = useCallback(() => {
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setShowConfetti(true);
-    setTimeout(() => {
+    if (useTemplateTimerRef.current) clearTimeout(useTemplateTimerRef.current);
+    useTemplateTimerRef.current = setTimeout(() => {
       onUseTemplate();
     }, 800);
   }, [onUseTemplate]);
