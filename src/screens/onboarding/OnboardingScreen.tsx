@@ -1,8 +1,27 @@
 /**
- * Onboarding Screen Component
- * 3-screen carousel shown once after first sign-up.
- * Screens: Chain visualization, Strength meter, Templates grid.
- * Sets AsyncStorage flag to prevent re-showing.
+ * @file OnboardingScreen.tsx
+ * @description 3-screen onboarding carousel shown once after first sign-up.
+ *
+ * ## Architecture
+ * - **Carousel**: Horizontal `FlatList` with paging, 3 pages (Chain, Strength, Templates).
+ * - **Persistence**: Sets `@chainday_onboarding_complete` in AsyncStorage to prevent re-showing.
+ * - **Animations**: All entrance animations use Reanimated's `springify().damping(18)` with
+ *   staggered delays. Respects `useReducedMotion` for accessibility.
+ * - **Error boundary**: Wrapped in `ScreenErrorBoundary` so a crash here never blocks the app.
+ *
+ * ## State Flow
+ * ```
+ * [Page 0: Chain] → Next → [Page 1: Strength] → Next → [Page 2: Templates] → "Get Started" → onComplete()
+ *                                                                                ↑
+ *                                                 Skip button (any page) ────────┘
+ * ```
+ *
+ * ## Refactoring Opportunities
+ * - **REFACTOR**: Extract `ChainVisualization`, `StrengthMeter`, `TemplateGrid` into separate
+ *   files under `./components/` to shrink this file below 300 lines.
+ * - **REFACTOR**: `interpolateColor` could move to a shared theme utility.
+ * - **REFACTOR**: `SCREEN_WIDTH` from `Dimensions.get('window')` doesn't respond to rotation;
+ *   consider `useWindowDimensions()` for tablet/rotation support.
  */
 /* eslint-disable max-lines, max-lines-per-function */
 
@@ -31,11 +50,21 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { safeSetBoolean } from '@/utils/storage';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
+/** Static screen width — used for FlatList page sizing and `getItemLayout`. */
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
+/** AsyncStorage key that gates whether onboarding has been completed. */
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
 
-// ─── Chain Visualization ─────────────────────────────────────────────
+// ── Chain Visualization ──────────────────────────────────────────────
 
+/**
+ * Renders a single animated chain link in the onboarding chain graphic.
+ *
+ * @param delay  - Entrance animation delay in ms (staggered per link).
+ * @param index  - Position in the chain; determines color via modulo cycling.
+ * @param reduceMotion - When true, skips entrance animation entirely.
+ */
 function ChainLink({
   delay,
   index,
@@ -75,6 +104,12 @@ function ChainLink({
   );
 }
 
+/**
+ * Renders the full 7-link chain graphic for onboarding page 1.
+ * Links cascade in with a 120ms stagger starting at 400ms.
+ *
+ * @param reduceMotion - Forwarded to each `ChainLink` for a11y.
+ */
 function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
   return (
     <View style={styles.chainContainer}>
@@ -90,8 +125,14 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-// ─── Strength Meter ──────────────────────────────────────────────────
+// ── Strength Meter ───────────────────────────────────────────────────
 
+/**
+ * Animated bar chart showing 5 habit-strength stages (Starting → Automatic).
+ * Each bar grows wider and more opaque to convey progression.
+ *
+ * @param reduceMotion - When true, bars appear instantly (no spring animation).
+ */
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   const { colors } = useThemeColors();
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
@@ -133,14 +174,23 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
+/**
+ * Maps a normalized progress value `t` (0–1) to a primary color shade.
+ * Used by the strength meter to tint bars from light (400) to dark (700).
+ *
+ * @param t       - Normalized position (0 = weakest, 1 = strongest).
+ * @param primary - Theme primary color palette (keyed by shade number).
+ * @returns The hex color string for the given progress level.
+ */
 function interpolateColor(t: number, primary: Record<number, string>): string {
   if (t < 0.5) return primary[400];
   if (t < 0.75) return primary[600];
   return primary[700];
 }
 
-// ─── Template Grid ───────────────────────────────────────────────────
+// ── Template Grid ────────────────────────────────────────────────────
 
+/** Emoji icons displayed in the template grid (onboarding page 3). */
 const TEMPLATE_ICONS = [
   '🧘',
   '💧',
@@ -156,6 +206,12 @@ const TEMPLATE_ICONS = [
   '🏋️',
 ];
 
+/**
+ * 4×3 grid of emoji "template" tiles showing the breadth of available habits.
+ * Each tile fades in with a 60ms stagger for a ripple effect.
+ *
+ * @param reduceMotion - When true, all tiles appear instantly.
+ */
 function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
   return (
     <View style={styles.templateGrid}>
@@ -178,15 +234,22 @@ function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-// ─── Page Data ───────────────────────────────────────────────────────
+// ── Page Data ────────────────────────────────────────────────────────
 
+/** Shape of a single onboarding page configuration. */
 interface PageData {
   id: string;
   title: string;
   subtitle: string;
+  /** React component rendered in the visual area above the title. */
   Visual: (props: { reduceMotion: boolean }) => React.JSX.Element;
 }
 
+/**
+ * Static page definitions for the onboarding carousel.
+ * Order here determines swipe order. Adding a page is as simple as
+ * appending an entry (dot indicators and navigation adapt automatically).
+ */
 const PAGES: PageData[] = [
   {
     id: 'chain',
@@ -211,8 +274,15 @@ const PAGES: PageData[] = [
   },
 ];
 
-// ─── Dot Indicators ──────────────────────────────────────────────────
+// ── Dot Indicators ───────────────────────────────────────────────────
 
+/**
+ * Horizontal dot indicators showing the current page position.
+ * The active dot stretches to 24px width; inactive dots are 8px circles.
+ * Fully accessible with `tablist` / `tab` roles.
+ *
+ * @param currentIndex - Zero-based index of the currently visible page.
+ */
 function DotIndicators({ currentIndex }: { currentIndex: number }) {
   const { colors } = useThemeColors();
   return (
@@ -242,20 +312,45 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
   );
 }
 
-// ─── Main Component ──────────────────────────────────────────────────
+// ── Main Component ───────────────────────────────────────────────────
 
+/** Props for the onboarding screen. */
 interface OnboardingScreenProps {
+  /** Called when the user completes or skips onboarding. */
   onComplete: () => void;
 }
 
+/**
+ * Core onboarding screen content (unwrapped from error boundary).
+ *
+ * ## State
+ * - `currentIndex` — Tracks which page is visible (driven by `onViewableItemsChanged`).
+ * - `isLoading`    — Guards the "Get Started" button to prevent double-taps.
+ *
+ * ## Key Behaviors
+ * - **Skip** fires `handleComplete` from any page.
+ * - **Next** programmatically scrolls the FlatList to the next page.
+ * - **Get Started** (last page only) persists the completion flag, then calls `onComplete`.
+ * - If AsyncStorage write fails, we still call `onComplete` (user is not blocked).
+ */
 function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   const { colors } = useThemeColors();
+
+  // ── State ────────────────────────────────────────────────────────
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
   const shouldReduceMotion = useReducedMotion();
 
+  // ── Handlers ─────────────────────────────────────────────────────
+
+  /**
+   * Marks onboarding as complete in AsyncStorage, then navigates away.
+   * Guarded by `isLoading` to prevent duplicate invocations.
+   * On storage failure, still proceeds — the user may see onboarding
+   * again on next launch, but that's an acceptable degradation.
+   */
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
     setIsLoading(true);
@@ -279,11 +374,17 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
     }
   }, [onComplete, isLoading]);
 
+  /**
+   * Skip button handler — triggers light haptic and completes onboarding immediately.
+   */
   const handleSkip = useCallback(() => {
     void Haptics.impactAsync(ImpactFeedbackStyle.Light);
     void handleComplete();
   }, [handleComplete]);
 
+  /**
+   * Advances the FlatList to the next page (no-op on the last page).
+   */
   const handleNext = useCallback(() => {
     void Haptics.impactAsync(ImpactFeedbackStyle.Light);
     if (currentIndex < PAGES.length - 1) {
@@ -294,6 +395,10 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
     }
   }, [currentIndex]);
 
+  /**
+   * FlatList viewability callback — updates `currentIndex` when
+   * a new page becomes ≥50% visible (see `viewabilityConfig`).
+   */
   const onViewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
       if (viewableItems.length > 0 && viewableItems[0].index != null) {
@@ -302,12 +407,19 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
     }
   ).current;
 
+  /** 50% coverage threshold triggers a page change. */
   const viewabilityConfig = useRef({
     viewAreaCoveragePercentThreshold: 50,
   }).current;
 
   const isLastPage = currentIndex === PAGES.length - 1;
 
+  // ── Render Helpers ───────────────────────────────────────────────
+
+  /**
+   * Renders a single onboarding page: visual component + title + subtitle.
+   * Memoized with `useCallback` since `shouldReduceMotion` is the only dep.
+   */
   const renderPage = useCallback(
     ({ item }: { item: PageData }) => (
       <View style={[styles.page, { width: SCREEN_WIDTH }]}>
@@ -339,9 +451,11 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
     [shouldReduceMotion]
   );
 
+  // ── Render ───────────────────────────────────────────────────────
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Skip button */}
+      {/* Skip button — positioned absolutely in the top-right, always visible */}
       <Animated.View
         entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
         style={[styles.skipContainer, { top: insets.top + 12 }]}
@@ -357,7 +471,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
         </Pressable>
       </Animated.View>
 
-      {/* Pages */}
+      {/* Horizontal paging carousel */}
       <FlatList
         ref={flatListRef}
         horizontal
@@ -376,7 +490,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
         onViewableItemsChanged={onViewableItemsChanged}
       />
 
-      {/* Bottom section */}
+      {/* Bottom section: dot indicators + action button */}
       <View style={styles.bottomContainer}>
         <DotIndicators currentIndex={currentIndex} />
 
@@ -419,7 +533,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   );
 }
 
-// ─── Styles ──────────────────────────────────────────────────────────
+// ── Styles ───────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   bottomContainer: {
@@ -589,6 +703,11 @@ const styles = StyleSheet.create({
 
 export { ONBOARDING_KEY };
 
+/**
+ * Public export — wraps {@link OnboardingScreenContent} in an error boundary.
+ * If the onboarding screen crashes, the boundary catches it and the user
+ * can still proceed (the app won't be stuck on a white screen).
+ */
 export function OnboardingScreen(props: OnboardingScreenProps) {
   return (
     <ScreenErrorBoundary screenName="Onboarding">
