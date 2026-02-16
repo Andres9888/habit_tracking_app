@@ -214,7 +214,7 @@ describe('OfflineProvider', () => {
                 operations: [],
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
-              } as any);
+              } as unknown);
           })
       );
 
