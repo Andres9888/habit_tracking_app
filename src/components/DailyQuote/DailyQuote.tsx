@@ -69,7 +69,7 @@ export function DailyQuote({
         },
         quoteText: {
           color: colors.gray[600],
-          fontSize: 15,
+          fontSize: 13,
           fontStyle: 'italic',
           lineHeight: 22,
         },
