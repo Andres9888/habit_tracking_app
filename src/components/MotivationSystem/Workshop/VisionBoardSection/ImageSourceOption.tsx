@@ -8,6 +8,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import type { LucideIcon } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -28,6 +29,7 @@ export function ImageSourceOption({
   onPress,
   onClose,
 }: ImageSourceOptionProps) {
+  const { colors, isDark } = useThemeColors();
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -41,13 +43,23 @@ export function ImageSourceOption({
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
+  
+  // Theme-aware fuchsia accent
+  const fuchsiaBg = isDark ? '#701a75' : '#f5d0fe';
+  const fuchsiaIcon = isDark ? '#f0abfc' : '#c026d3';
 
   return (
     <AnimatedPressable
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='button'
-      className='flex-row items-center gap-3 rounded-xl border border-stone-200 p-4'
-      style={animatedStyle}
+      className='flex-row items-center gap-3 rounded-xl p-4'
+      style={[
+        animatedStyle,
+        { 
+          borderWidth: 1, 
+          borderColor: isDark ? colors.gray[700] : colors.border 
+        }
+      ]}
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         onPress();
@@ -56,12 +68,19 @@ export function ImageSourceOption({
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <View className='h-10 w-10 items-center justify-center rounded-full bg-fuchsia-100'>
-        <Icon className='text-fuchsia-500' size={20} />
+      <View 
+        className='h-10 w-10 items-center justify-center rounded-full' 
+        style={{ backgroundColor: fuchsiaBg }}
+      >
+        <Icon color={fuchsiaIcon} size={20} />
       </View>
       <View className='flex-1'>
-        <Text className='font-medium text-stone-800'>{title}</Text>
-        <Text className='text-xs text-stone-500'>{description}</Text>
+        <Text className='font-medium' style={{ color: colors.text.primary }}>
+          {title}
+        </Text>
+        <Text className='text-xs' style={{ color: colors.text.secondary }}>
+          {description}
+        </Text>
       </View>
     </AnimatedPressable>
   );

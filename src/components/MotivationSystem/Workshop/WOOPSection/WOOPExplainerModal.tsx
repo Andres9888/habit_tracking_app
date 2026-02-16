@@ -21,6 +21,29 @@ export function WOOPExplainerModal({
 }: WOOPExplainerModalProps) {
   const { colors, isDark } = useThemeColors();
 
+  // Theme-aware step colors
+  const getStepColors = (stepIndex: number) => {
+    if (stepIndex === 0 || stepIndex === 1) {
+      // Wish & Outcome (amber/yellow)
+      return {
+        bg: isDark ? '#78350f' : '#fef3c7',
+        text: isDark ? '#fcd34d' : '#d97706',
+      };
+    } else if (stepIndex === 2) {
+      // Obstacle (rose/red)
+      return {
+        bg: isDark ? '#881337' : '#ffe4e6',
+        text: isDark ? '#fb7185' : '#e11d48',
+      };
+    } else {
+      // Plan (emerald/green)
+      return {
+        bg: isDark ? '#064e3b' : '#d1fae5',
+        text: isDark ? '#6ee7b7' : '#059669',
+      };
+    }
+  };
+
   return (
     <Modal
       accessibilityViewIsModal
@@ -40,8 +63,11 @@ export function WOOPExplainerModal({
         >
           <View className='mb-4 flex-row items-start justify-between'>
             <View className='flex-row items-center gap-2'>
-              <View className='h-10 w-10 items-center justify-center rounded-xl bg-amber-100'>
-                <Target className='text-amber-600' size={20} />
+              <View 
+                className='h-10 w-10 items-center justify-center rounded-xl' 
+                style={{ backgroundColor: isDark ? '#78350f' : '#fef3c7' }}
+              >
+                <Target color={isDark ? '#fcd34d' : '#d97706'} size={20} />
               </View>
               <View>
                 <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
@@ -55,7 +81,7 @@ export function WOOPExplainerModal({
             <Pressable
               accessibilityLabel='Close'
               className='h-10 w-10 items-center justify-center rounded-full'
-              style={{ backgroundColor: colors.gray[200] }}
+              style={{ backgroundColor: isDark ? colors.gray[800] : colors.gray[200] }}
               onPress={onClose}
             >
               <X color={colors.text.secondary} size={20} />
@@ -71,27 +97,42 @@ export function WOOPExplainerModal({
           </Text>
 
           <View className='mb-4 gap-3'>
-            {WOOP_STEPS.map((step, i) => (
-              <View key={i} className='flex-row gap-3'>
-                <View
-                  className={`h-8 w-8 items-center justify-center rounded-lg ${step.bg}`}
-                >
-                  <Text className={`font-bold ${step.color}`}>
-                    {step.letter}
-                  </Text>
+            {WOOP_STEPS.map((step, i) => {
+              const stepColors = getStepColors(i);
+              return (
+                <View key={i} className='flex-row gap-3'>
+                  <View
+                    className='h-9 w-9 items-center justify-center rounded-lg'
+                    style={{ backgroundColor: stepColors.bg }}
+                  >
+                    <Text 
+                      className='text-base font-bold' 
+                      style={{ color: stepColors.text }}
+                    >
+                      {step.letter}
+                    </Text>
+                  </View>
+                  <View className='flex-1'>
+                    <Text className='mb-0.5 font-semibold' style={{ color: colors.text.primary }}>
+                      {step.title}
+                    </Text>
+                    <Text className='text-xs' style={{ color: colors.text.tertiary }}>
+                      {step.desc}
+                    </Text>
+                  </View>
                 </View>
-                <View className='flex-1'>
-                  <Text className='font-semibold' style={{ color: colors.text.primary }}>
-                    {step.title}
-                  </Text>
-                  <Text className='text-xs' style={{ color: colors.text.tertiary }}>{step.desc}</Text>
-                </View>
-              </View>
-            ))}
+              );
+            })}
           </View>
 
-          <View className='rounded-xl p-3' style={{ backgroundColor: isDark ? colors.gray[100] : '#fffbeb' }}>
-            <Text className='text-xs leading-relaxed' style={{ color: isDark ? colors.text.secondary : '#92400e' }}>
+          <View 
+            className='rounded-xl p-3' 
+            style={{ backgroundColor: isDark ? colors.gray[800] : '#fffbeb' }}
+          >
+            <Text 
+              className='text-xs leading-relaxed' 
+              style={{ color: isDark ? colors.text.secondary : '#92400e' }}
+            >
               💡 The IF-THEN plan creates an{' '}
               <Text className='font-semibold'>implementation intention</Text> —
               a mental link that triggers automatic action when you face your

@@ -21,7 +21,11 @@ export function AddImageModal({
   onPickFromCamera,
   onPickFromLibrary,
 }: AddImageModalProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  
+  // Theme-aware fuchsia accent
+  const fuchsiaBg = isDark ? '#701a75' : '#f5d0fe';
+  const fuchsiaIcon = isDark ? '#f0abfc' : '#c026d3';
 
   return (
     <Modal
@@ -42,8 +46,11 @@ export function AddImageModal({
         >
           <View className='mb-4 flex-row items-center justify-between'>
             <View className='flex-row items-center gap-3'>
-              <View className='h-10 w-10 items-center justify-center rounded-xl bg-fuchsia-100'>
-                <ImagePlus className='text-fuchsia-600' size={20} />
+              <View 
+                className='h-10 w-10 items-center justify-center rounded-xl' 
+                style={{ backgroundColor: fuchsiaBg }}
+              >
+                <ImagePlus color={fuchsiaIcon} size={20} />
               </View>
               <View>
                 <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
@@ -58,7 +65,7 @@ export function AddImageModal({
               accessibilityLabel='Close'
               accessibilityRole='button'
               className='h-10 w-10 items-center justify-center rounded-full'
-              style={{ backgroundColor: colors.gray[200] }}
+              style={{ backgroundColor: isDark ? colors.gray[800] : colors.gray[200] }}
               onPress={onClose}
             >
               <X color={colors.text.secondary} size={20} />
