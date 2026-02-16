@@ -1,5 +1,5 @@
 /**
- * HabitInput - Text input with animated focus states
+ * HabitInput - Text input with animated focus states and cycling placeholder
  */
 
 import { forwardRef, useMemo } from 'react';
@@ -10,12 +10,14 @@ import type { HabitInputProps } from '../types';
 import { useEmptyStateColors } from '../useEmptyStateColors';
 import { ClearIcon } from './ClearIcon';
 import { getCharacterCounterColor } from './helpers';
+import { useAnimatedPlaceholder } from './useAnimatedPlaceholder';
 import { useInputAnimations } from './useInputAnimations';
 import {
   getContainerStyle,
   getInputTextStyle,
   clearButtonPressedStyle,
   characterCounterStyle,
+  placeholderOverlayStyle,
 } from './inputStyles';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -28,6 +30,8 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     const colors = useEmptyStateColors();
     const { isFocused, containerStyle, handleFocus, handleBlur } =
       useInputAnimations({ onBlur, onFocus });
+
+    const placeholder = useAnimatedPlaceholder({ inputValue: value });
 
     const showClearButton = value.length > 0;
     const showCharacterCounter = isFocused || value.length > 0;
@@ -53,6 +57,15 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           }),
         ]}
       >
+        {placeholder.isActive && (
+          <Animated.Text
+            accessibilityElementsHidden
+            importantForAccessibility='no'
+            style={[placeholderOverlayStyle, placeholder.animatedStyle]}
+          >
+            {placeholder.displayText}
+          </Animated.Text>
+        )}
         <TextInput
           ref={ref}
           accessibilityHint='Type a habit name and press return to create it'

@@ -23,6 +23,7 @@ interface CelebrationOptions {
   setShowFloatingXP: (show: boolean) => void;
   setXPPosition: (position: { x: number; y: number }) => void;
   setShowConfetti: (show: boolean) => void;
+  timeoutRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
 }
 
 export function createCelebrationTrigger(options: CelebrationOptions) {
@@ -35,6 +36,7 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
     setShowFloatingXP,
     setXPPosition,
     setShowConfetti,
+    timeoutRef,
   } = options;
 
   return () => {
@@ -71,7 +73,8 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
     runOnJS(setShowFloatingXP)(true);
     runOnJS(() => {
       setXPPosition({ x: 150, y: 20 });
-      setTimeout(() => setShowFloatingXP(false), 1000);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setShowFloatingXP(false), 1000);
     })();
   };
 }
