@@ -4,8 +4,7 @@
 
 import type { ValidationResult } from './types';
 import { containsDangerousPatterns } from './security';
-
-export const MIN_PASSWORD_LENGTH = 8;
+import { MIN_PASSWORD_LENGTH } from '@/constants';
 
 /**
  * Validate password strength
