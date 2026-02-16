@@ -6,14 +6,16 @@
 
 import { View, Text } from 'react-native';
 
-import { ERROR_COLORS } from './constants';
+interface ErrorIconProps {
+  iconColor?: string;
+}
 
-export function ErrorIcon() {
+export function ErrorIcon({ iconColor = '#EF4444' }: ErrorIconProps) {
   return (
     <View
       style={{
         alignItems: 'center',
-        backgroundColor: ERROR_COLORS.iconBackground,
+        backgroundColor: iconColor,
         borderRadius: 12,
         height: 20,
         justifyContent: 'center',
@@ -22,7 +24,7 @@ export function ErrorIcon() {
     >
       <Text
         style={{
-          color: ERROR_COLORS.iconText,
+          color: '#FFFFFF',
           fontSize: 13,
           fontWeight: '700',
           lineHeight: 18,

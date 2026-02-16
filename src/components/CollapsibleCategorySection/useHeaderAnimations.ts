@@ -50,11 +50,11 @@ export function useHeaderAnimations({
   });
 
   const handleHeaderPressIn = () => {
-    headerScale.value = withSpring(0.98, { damping: 15, stiffness: 200 });
+    headerScale.value = withSpring(0.98, { damping: 18, stiffness: 150 });
   };
 
   const handleHeaderPressOut = () => {
-    headerScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+    headerScale.value = withSpring(1, { damping: 18, stiffness: 150 });
   };
 
   const handleHeaderPress = () => {

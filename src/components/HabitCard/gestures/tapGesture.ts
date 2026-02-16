@@ -5,10 +5,13 @@
 
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, type SharedValue } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { HapticPatterns } from '../../../utils/haptics/patterns';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { showSyncError } from '../../../utils/errorAlerts';
-import { pressCard, releaseCard } from '../../../utils/animations/cardPressAnimation';
+import {
+  pressCard,
+  releaseCard,
+} from '../../../utils/animations/cardPressAnimation';
 
 interface TapGestureOptions {
   id: Id<'habits'>;
@@ -48,31 +51,23 @@ export function createTapGesture(options: TapGestureOptions) {
 
       // Instant haptic feedback on touch
       if (completed) {
-        runOnJS(() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
-            () => {}
-          );
-        })();
+        runOnJS(HapticPatterns.tap)();
       } else {
-        runOnJS(() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
-            () => {}
-          );
-        })();
+        runOnJS(HapticPatterns.toggle)();
       }
 
       // Standard card press animation with spring physics
-      if (!reduceMotion) {
-        pressCard(cardScale);
-      } else {
+      if (reduceMotion) {
         cardScale.value = 0.97;
+      } else {
+        pressCard(cardScale);
       }
     })
     .onFinalize(() => {
-      if (!reduceMotion) {
-        releaseCard(cardScale);
-      } else {
+      if (reduceMotion) {
         cardScale.value = 1;
+      } else {
+        releaseCard(cardScale);
       }
     })
     .onEnd(() => {

@@ -12,10 +12,12 @@ import type { ScrollView as ScrollViewType } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { CreateHabitScrollContent } from './components/CreateHabitScrollContent';
 import { ModalHeader } from './components/ModalHeader';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
+import { useKeyboardState } from './hooks/useKeyboardState';
 import { useSwipeDismiss } from './hooks/useSwipeDismiss';
 import type { CreateHabitModalProps } from './types';
 
@@ -24,6 +26,8 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const { isEditMode, form, handleCreate } = useCreateHabitModal(props);
   const scrollViewRef = useRef<ScrollViewType>(null);
   const [showNameError, setShowNameError] = useState(false);
+  const { colors } = useThemeColors();
+  const { isKeyboardVisible } = useKeyboardState();
   const { animatedStyle, panGesture } = useSwipeDismiss({ onClose });
 
   const callbacks = useCenteredFormCallbacks({
@@ -44,6 +48,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='slide'
       visible={visible}
@@ -56,12 +61,13 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
         <View className='flex-1 bg-black/50'>
           <GestureDetector gesture={panGesture}>
             <Animated.View
-              className='flex-1 overflow-hidden rounded-t-3xl bg-stone-50 shadow-2xl'
-              style={animatedStyle}
+              className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
+              style={[animatedStyle, { backgroundColor: colors.surface }]}
             >
               <ModalHeader
                 habitName={form.habitName}
                 isEditMode={isEditMode}
+                isKeyboardVisible={isKeyboardVisible}
                 onClose={onClose}
                 onSave={callbacks.handleSave}
                 onValidationError={callbacks.handleValidationError}

@@ -5,10 +5,10 @@
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const scienceStyles = StyleSheet.create({
   citationDot: {
-    backgroundColor: '#10B981',
     borderRadius: borderRadius.xs,
     height: 8,
     width: 8,
@@ -20,22 +20,18 @@ export const scienceStyles = StyleSheet.create({
     marginBottom: 10,
   },
   citationLabel: {
-    color: '#6B7280',
     fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
   },
   citationText: {
-    color: '#374151',
     fontSize: 15,
     fontStyle: 'italic',
     lineHeight: 24,
   },
   linkButton: {
     alignItems: 'center',
-    backgroundColor: '#EFF6FF',
-    borderColor: '#BFDBFE',
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
@@ -45,13 +41,10 @@ export const scienceStyles = StyleSheet.create({
     paddingVertical: 14,
   },
   linkText: {
-    color: '#2563EB',
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '700',
   },
   whyItWorksContainer: {
-    backgroundColor: '#F0FDF4',
-    borderColor: '#BBF7D0',
     borderRadius: borderRadius.large,
     borderWidth: 1,
     padding: 18,
@@ -66,13 +59,30 @@ export const scienceStyles = StyleSheet.create({
     marginBottom: 12,
   },
   whyItWorksText: {
-    color: '#166534',
     fontSize: 15,
     lineHeight: 24,
   },
   whyItWorksTitle: {
-    color: '#15803D',
     fontSize: 15,
     fontWeight: '700',
   },
 });
+
+export function themedScienceStyles(colors: SemanticColors, isDark: boolean) {
+  return {
+    citationDot: { backgroundColor: isDark ? colors.primary[400] : '#10B981' },
+    citationLabel: { color: colors.text.tertiary },
+    citationText: { color: colors.text.secondary },
+    linkButton: {
+      backgroundColor: isDark ? colors.gray[100] : '#EFF6FF',
+      borderColor: isDark ? colors.gray[200] : '#BFDBFE',
+    },
+    linkText: { color: isDark ? colors.primary[400] : '#2563EB' },
+    whyItWorksContainer: {
+      backgroundColor: isDark ? colors.primary[100] : '#F0FDF4',
+      borderColor: isDark ? colors.primary[300] : '#BBF7D0',
+    },
+    whyItWorksText: { color: isDark ? colors.primary[500] : '#166534' },
+    whyItWorksTitle: { color: isDark ? colors.primary[400] : '#15803D' },
+  } as const;
+}

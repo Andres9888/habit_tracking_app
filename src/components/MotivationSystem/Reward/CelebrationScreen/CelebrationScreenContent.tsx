@@ -24,7 +24,8 @@ export function CelebrationScreenContent({
   handleWriteLetter,
   onReflectionSubmit,
 }: CelebrationScreenContentPropsExtended) {
-  let idx = 0;
+  // Track current section index for staggered animations
+  let sectionIndex = 0;
 
   return (
     <ScrollView
@@ -34,7 +35,7 @@ export function CelebrationScreenContent({
     >
       <HeaderSection
         habitName={habit.name}
-        index={idx++}
+        index={sectionIndex++}
         isStreakMilestone={habit.isStreakMilestone}
         milestoneNumber={habit.milestoneNumber}
         reduceMotion={reduceMotion}
@@ -42,7 +43,7 @@ export function CelebrationScreenContent({
       />
       {hasStreak && (
         <AnimatedSection
-          index={idx++}
+          index={sectionIndex++}
           reduceMotion={reduceMotion}
           visible={visible}
         >
@@ -54,7 +55,7 @@ export function CelebrationScreenContent({
       )}
       {hasStats && (
         <AnimatedSection
-          index={idx++}
+          index={sectionIndex++}
           reduceMotion={reduceMotion}
           visible={visible}
         >
@@ -68,7 +69,7 @@ export function CelebrationScreenContent({
       <ReflectionSection
         handleEmojiSelect={handleEmojiSelect}
         handleNoteChange={handleNoteChange}
-        index={idx++}
+        index={sectionIndex++}
         localEmoji={localEmoji}
         localNote={localNote}
         reduceMotion={reduceMotion}
@@ -76,7 +77,7 @@ export function CelebrationScreenContent({
         onReflectionSubmit={onReflectionSubmit ?? (() => {})}
       />
       <AnimatedSection
-        index={idx++}
+        index={sectionIndex++}
         reduceMotion={reduceMotion}
         visible={visible}
       >
@@ -86,7 +87,7 @@ export function CelebrationScreenContent({
         />
       </AnimatedSection>
       <AnimatedSection
-        index={idx++}
+        index={sectionIndex++}
         reduceMotion={reduceMotion}
         visible={visible}
       >

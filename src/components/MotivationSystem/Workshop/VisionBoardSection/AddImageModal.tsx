@@ -4,7 +4,8 @@
 
 import React from 'react';
 import { View, Text, Pressable, Modal } from 'react-native';
-import { Image as ImageIcon, ImagePlus, Camera } from 'lucide-react-native';
+import { Image as ImageIcon, ImagePlus, Camera, X } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { ImageSourceOption } from './ImageSourceOption';
 
 interface AddImageModalProps {
@@ -20,8 +21,11 @@ export function AddImageModal({
   onPickFromCamera,
   onPickFromLibrary,
 }: AddImageModalProps) {
+  const { colors } = useThemeColors();
+
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='fade'
       visible={visible}
@@ -32,21 +36,33 @@ export function AddImageModal({
         onPress={onClose}
       >
         <Pressable
-          className='mx-6 w-full max-w-sm rounded-2xl bg-white p-6'
+          className='mx-6 w-full max-w-sm rounded-2xl p-6'
+          style={{ backgroundColor: colors.surface }}
           onPress={(e) => e.stopPropagation()}
         >
-          <View className='mb-4 flex-row items-center gap-3'>
-            <View className='h-10 w-10 items-center justify-center rounded-xl bg-fuchsia-100'>
-              <ImagePlus className='text-fuchsia-600' size={20} />
+          <View className='mb-4 flex-row items-center justify-between'>
+            <View className='flex-row items-center gap-3'>
+              <View className='h-10 w-10 items-center justify-center rounded-xl bg-fuchsia-100'>
+                <ImagePlus className='text-fuchsia-600' size={20} />
+              </View>
+              <View>
+                <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
+                  Add to Vision Board
+                </Text>
+                <Text className='text-xs' style={{ color: colors.text.tertiary }}>
+                  Choose how to add your image
+                </Text>
+              </View>
             </View>
-            <View>
-              <Text className='text-lg font-bold text-stone-800'>
-                Add to Vision Board
-              </Text>
-              <Text className='text-xs text-stone-500'>
-                Choose how to add your image
-              </Text>
-            </View>
+            <Pressable
+              accessibilityLabel='Close'
+              accessibilityRole='button'
+              className='h-10 w-10 items-center justify-center rounded-full'
+              style={{ backgroundColor: colors.gray[200] }}
+              onPress={onClose}
+            >
+              <X color={colors.text.secondary} size={20} />
+            </Pressable>
           </View>
 
           <View className='gap-2'>
@@ -74,7 +90,7 @@ export function AddImageModal({
             className='mt-4 items-center py-2'
             onPress={onClose}
           >
-            <Text className='font-medium text-stone-500'>Cancel</Text>
+            <Text className='font-medium' style={{ color: colors.text.tertiary }}>Cancel</Text>
           </Pressable>
         </Pressable>
       </Pressable>
