@@ -21,7 +21,12 @@ export function QuickStatsStrip({
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
-    void AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
+    void AccessibilityInfo.isReduceMotionEnabled()
+      .then(setReduceMotion)
+      .catch((error) => {
+        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
+        setReduceMotion(false);
+      });
     const subscription = AccessibilityInfo.addEventListener(
       'reduceMotionChanged',
       setReduceMotion

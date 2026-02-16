@@ -4,10 +4,16 @@
  */
 
 import { useCallback, useState } from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
+
+const styles = StyleSheet.create({
+  flex1: { flex: 1 },
+});
 
 import { HabitsList } from './components/HabitsList';
 import FloatingActionButton from './components/FloatingActionButton';
@@ -18,7 +24,7 @@ import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 
-export function HabitsApp() {
+function HabitsAppContent() {
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
   const { triggerSelection, triggerWarning } = useHapticFeedback({
@@ -57,13 +63,14 @@ export function HabitsApp() {
   const showHabitsSkeleton = list.isHabitsLoading && list.habits.length === 0;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={{ backgroundColor: colors.background, flex: 1 }}>
+    <GestureHandlerRootView style={styles.flex1}>
+      <View style={[styles.flex1, { backgroundColor: colors.background }]}>
         <SyncStatusOverlays />
 
         {showHabitsSkeleton ? (
           <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
         ) : (
+          <Animated.View entering={FadeIn.duration(300)} style={styles.flex1}>
           <HabitsList
             canNavigateForward={list.canNavigateForward}
             list={list}
@@ -77,6 +84,7 @@ export function HabitsApp() {
             onUpgradeDismiss={handleUpgradeDismiss}
             onUpgradeIntent={handleUpgradeIntent}
           />
+          </Animated.View>
         )}
 
         {list.habits.length > 0 && (
@@ -104,6 +112,14 @@ export function HabitsApp() {
         />
       </View>
     </GestureHandlerRootView>
+  );
+}
+
+export function HabitsApp() {
+  return (
+    <ScreenErrorBoundary screenName="Habits">
+      <HabitsAppContent />
+    </ScreenErrorBoundary>
   );
 }
 

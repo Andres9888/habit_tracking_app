@@ -25,7 +25,8 @@ export function CalendarHeader({
         <Pressable
           accessibilityLabel='Jump to the current month'
           accessibilityRole='button'
-          className='rounded-full border border-stone-200 px-3 py-1'
+          className='rounded-full border border-stone-200 px-3 py-2'
+          hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onToday}
         >
           <Text className='text-xs font-semibold uppercase tracking-wide text-stone-600'>
@@ -36,7 +37,8 @@ export function CalendarHeader({
         <Pressable
           accessibilityLabel='View previous month'
           accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full'
+          className='h-11 w-11 items-center justify-center rounded-full'
+          hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onPrevious}
         >
           <ChevronLeft color='#78716c' size={20} />
@@ -45,7 +47,8 @@ export function CalendarHeader({
         <Pressable
           accessibilityLabel='View next month'
           accessibilityRole='button'
-          className='h-8 w-8 items-center justify-center rounded-full'
+          className='h-11 w-11 items-center justify-center rounded-full'
+          hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onNext}
         >
           <ChevronRight color='#78716c' size={20} />

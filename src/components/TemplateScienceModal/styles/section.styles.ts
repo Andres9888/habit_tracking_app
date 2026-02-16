@@ -38,11 +38,11 @@ export const sectionStyles = StyleSheet.create({
     width: 36,
   },
   sectionIconEmoji: {
-    fontSize: 18,
+    fontSize: 17,
   },
   sectionTitle: {
     color: '#111827',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
     letterSpacing: -0.3,
   },

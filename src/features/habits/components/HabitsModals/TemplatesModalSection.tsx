@@ -10,6 +10,7 @@ import { X } from 'lucide-react-native';
 
 import CustomModal from '../../../../components/Modal';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
 
@@ -23,6 +24,7 @@ export function TemplatesModalSection({
   closeTemplatesScreen,
 }: TemplatesModalSectionProps) {
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
   const closeScale = useSharedValue(1);
 
   const closeAnimatedStyle = useAnimatedStyle(() => ({
@@ -46,9 +48,11 @@ export function TemplatesModalSection({
         </ErrorBoundary>
         <View className='absolute right-4' style={{ top: insets.top + 8 }}>
           <AnimatedPressable
+            accessibilityHint='Close the templates screen'
             accessibilityLabel='Close templates'
             accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md'
+            className='h-10 w-10 items-center justify-center rounded-full shadow-md'
+            style={{ backgroundColor: colors.card }}
             style={closeAnimatedStyle}
             onPress={handleClose}
             onPressIn={() => {
@@ -58,7 +62,7 @@ export function TemplatesModalSection({
               });
             }}
             onPressOut={() => {
-              closeScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+              closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
             }}
           >
             <X color='#57534e' size={24} />
