@@ -209,7 +209,7 @@ jobs:
           echo "**Issues Found: ${ISSUES}**" >> auth-audit-report.md
 
       - name: Upload auth audit report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: auth-audit-report-${{ needs.init-audit.outputs.audit_id }}
           path: auth-audit-report.md
@@ -306,7 +306,7 @@ jobs:
           echo "**Issues Found: ${ISSUES}**" >> data-audit-report.md
 
       - name: Upload data audit report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: data-audit-report-${{ needs.init-audit.outputs.audit_id }}
           path: data-audit-report.md
@@ -405,7 +405,7 @@ jobs:
           echo "**Issues Found: ${ISSUES}**" >> api-audit-report.md
 
       - name: Upload API audit report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: api-audit-report-${{ needs.init-audit.outputs.audit_id }}
           path: api-audit-report.md
@@ -492,7 +492,7 @@ jobs:
           echo "\`\`\`" >> dependency-audit-report.md
 
       - name: Upload dependency audit report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: dependency-audit-report-${{ needs.init-audit.outputs.audit_id }}
           path: |
@@ -549,7 +549,7 @@ jobs:
           echo "| Failed | ${FAILED} |" >> security-test-report.md
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: security-test-results-${{ needs.init-audit.outputs.audit_id }}
           path: |
@@ -748,7 +748,7 @@ jobs:
           cat quarterly-audit-report.md >> $GITHUB_STEP_SUMMARY
 
       - name: Upload consolidated report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: quarterly-audit-report-${{ needs.init-audit.outputs.audit_id }}
           path: quarterly-audit-report.md
