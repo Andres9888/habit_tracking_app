@@ -18,7 +18,7 @@ import { getCtaButtonStyle, getCtaTextStyle } from './CtaButton.styles';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
-export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
+export function CtaButton({ disabled, isLoading, onPress, inputValue }: CtaButtonProps & { inputValue?: string }) {
   const isDisabled = disabled || isLoading;
   const colors = useEmptyStateColors();
 
@@ -70,7 +70,11 @@ export function CtaButton({ disabled, isLoading, onPress }: CtaButtonProps) {
       {isLoading ? (
         <ActivityIndicator color={colors.ctaText} size='small' />
       ) : (
-        <Text style={getCtaTextStyle(colors.ctaText)}>{COPY.ctaButton}</Text>
+        <Text style={getCtaTextStyle(colors.ctaText)}>
+          {inputValue?.trim()
+            ? COPY.ctaButtonDynamic(inputValue.trim())
+            : COPY.ctaButton}
+        </Text>
       )}
     </AnimatedPressable>
   );
