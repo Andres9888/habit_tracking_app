@@ -202,11 +202,11 @@ export function AuthGate() {
   }
 
   // Determine which screen to show
-  const screenKey = !isSignedIn
-    ? 'welcome'
-    : !onboardingComplete
-      ? 'onboarding'
-      : 'app';
+  const screenKey = isSignedIn
+    ? onboardingComplete
+      ? 'app'
+      : 'onboarding'
+    : 'welcome';
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
