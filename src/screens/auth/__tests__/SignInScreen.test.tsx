@@ -31,6 +31,32 @@ jest.mock('react-native-reanimated', () => {
 });
 
 // Mock dependencies
+// Mock useFieldValidation to avoid validate-function issues with fake timers
+jest.mock('../../../utils/validation/useFieldValidation', () => ({
+  useFieldValidation: ({ validate, initialValue = '' }: { validate?: (v: string) => { isValid: boolean; error?: string }; initialValue?: string }) => {
+    const React = require('react');
+    const [value, setValue] = React.useState(initialValue);
+    const [error, setError] = React.useState<string | undefined>();
+    return {
+      value,
+      setValue,
+      error,
+      isValid: true,
+      hasBeenValidated: false,
+      onBlur: () => {},
+      validateNow: () => {
+        if (validate) {
+          const result = validate(value);
+          setError(result.error);
+          return result;
+        }
+        return { isValid: true };
+      },
+      reset: () => { setValue(initialValue); setError(undefined); },
+    };
+  },
+}));
+
 jest.mock('@clerk/clerk-expo', () => ({
   useSignIn: () => ({
     signIn: {
@@ -38,6 +64,9 @@ jest.mock('@clerk/clerk-expo', () => ({
     },
     setActive: jest.fn(),
     isLoaded: true,
+  }),
+  useSSO: () => ({
+    startSSOFlow: jest.fn(),
   }),
 }));
 
@@ -56,7 +85,15 @@ jest.mock('../components', () => {
 
   return {
     AnimatedLogo: () => null,
+    AuthDivider: () => null,
+    AuthError: ({ message }: { message?: string }) => message ? <Text>{message}</Text> : null,
+    ForgotPasswordLink: (props: Record<string, unknown>) => (
+      <TouchableOpacity onPress={props.onPress} accessibilityLabel="Forgot password?">
+        <Text>Forgot password?</Text>
+      </TouchableOpacity>
+    ),
     ForgotPasswordModal: () => null,
+    SocialSignInButton: () => null,
     SuccessOverlay: ({ visible }: { visible: boolean }) =>
       visible ? <View testID='success-overlay' /> : null,
     FormInput: React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => (
@@ -150,7 +187,7 @@ describe('SignInScreen', () => {
     it('email input has returnKeyType next', () => {
       const { getByPlaceholderText } = render(<SignInScreen />);
 
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       expect(emailInput.props.returnKeyType).toBe('next');
     });
 
@@ -164,14 +201,14 @@ describe('SignInScreen', () => {
     it('email input has blurOnSubmit set to false for proper navigation', () => {
       const { getByPlaceholderText } = render(<SignInScreen />);
 
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       expect(emailInput.props.blurOnSubmit).toBe(false);
     });
 
     it('pressing submit on email input calls onSubmitEditing', () => {
       const { getByPlaceholderText } = render(<SignInScreen />);
 
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       expect(emailInput.props.onSubmitEditing).toBeDefined();
     });
 
@@ -185,7 +222,7 @@ describe('SignInScreen', () => {
     it('dismisses keyboard when submitting form', async () => {
       const { getByTestId, getByPlaceholderText } = render(<SignInScreen />);
 
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       const passwordInput = getByTestId('password-input');
       const submitButton = getByTestId('submit-button');
 
@@ -210,7 +247,7 @@ describe('SignInScreen', () => {
 
       // By default, autoFocusEmail is false, so no auto-focus should occur
       // We just verify the component renders without auto-focus (no immediate focus call)
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       expect(emailInput).toBeTruthy();
 
       jest.useRealTimers();
@@ -334,7 +371,7 @@ describe('SignInScreen', () => {
     it('submit button is disabled when only email is filled', () => {
       const { getByTestId, getByPlaceholderText } = render(<SignInScreen />);
 
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       fireEvent.changeText(emailInput, 'test@example.com');
 
       const submitButton = getByTestId('submit-button');
@@ -344,7 +381,7 @@ describe('SignInScreen', () => {
     it('submit button is enabled when both email and password are filled', () => {
       const { getByTestId, getByPlaceholderText } = render(<SignInScreen />);
 
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       const passwordInput = getByTestId('password-input');
 
       fireEvent.changeText(emailInput, 'test@example.com');

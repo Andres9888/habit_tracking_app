@@ -49,6 +49,32 @@ jest.mock('react-native-reanimated', () => {
 const mockSignInCreate = jest.fn();
 const mockSetActive = jest.fn();
 
+// Mock useFieldValidation
+jest.mock('../../../utils/validation/useFieldValidation', () => ({
+  useFieldValidation: ({ validate, initialValue = '' }: { validate?: (v: string) => { isValid: boolean; error?: string }; initialValue?: string }) => {
+    const React = require('react');
+    const [value, setValue] = React.useState(initialValue);
+    const [error, setError] = React.useState<string | undefined>();
+    return {
+      value,
+      setValue,
+      error,
+      isValid: true,
+      hasBeenValidated: false,
+      onBlur: () => {},
+      validateNow: () => {
+        if (validate) {
+          const result = validate(value);
+          setError(result.error);
+          return result;
+        }
+        return { isValid: true };
+      },
+      reset: () => { setValue(initialValue); setError(undefined); },
+    };
+  },
+}));
+
 jest.mock('@clerk/clerk-expo', () => ({
   useSignIn: () => ({
     signIn: {
@@ -58,6 +84,9 @@ jest.mock('@clerk/clerk-expo', () => ({
     isLoaded: true,
   }),
   useOAuth: jest.fn(),
+  useSSO: () => ({
+    startSSOFlow: jest.fn(),
+  }),
 }));
 
 // Mock safe area context
@@ -87,6 +116,14 @@ jest.mock('../components', () => {
 
   return {
     AnimatedLogo: () => <View testID="animated-logo" />,
+    AuthDivider: () => null,
+    AuthError: ({ message }: { message?: string }) => message ? <Text>{message}</Text> : null,
+    ForgotPasswordLink: (props: Record<string, unknown>) => (
+      <TouchableOpacity onPress={props.onPress} accessibilityLabel="Forgot password?">
+        <Text>Forgot password?</Text>
+      </TouchableOpacity>
+    ),
+    SocialSignInButton: () => null,
     ForgotPasswordModal: ({ visible, onClose }: { visible: boolean; onClose: () => void }) =>
       visible ? (
         <View testID="forgot-password-modal">
@@ -203,7 +240,7 @@ describe('SignInScreen Integration Tests', () => {
       );
 
       // Step 1: Find and fill email field
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       fireEvent.changeText(emailInput, 'user@example.com');
       expect(emailInput.props.value).toBe('user@example.com');
 
@@ -255,7 +292,7 @@ describe('SignInScreen Integration Tests', () => {
       const { getByPlaceholderText, getByTestId } = render(<SignInScreen />);
 
       // Step 1: Fill email and press next (via keyboard)
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       fireEvent.changeText(emailInput, 'user@example.com');
 
       // Verify returnKeyType is 'next'
@@ -295,7 +332,7 @@ describe('SignInScreen Integration Tests', () => {
 
       // Fill form
       fireEvent.changeText(
-        getByPlaceholderText('Enter your email address'),
+        getByPlaceholderText('your@email.com'),
         'user@example.com'
       );
       fireEvent.changeText(getByTestId('password-input'), 'password123');
@@ -332,7 +369,7 @@ describe('SignInScreen Integration Tests', () => {
 
       // Only fill email
       fireEvent.changeText(
-        getByPlaceholderText('Enter your email address'),
+        getByPlaceholderText('your@email.com'),
         'user@example.com'
       );
 
@@ -352,7 +389,7 @@ describe('SignInScreen Integration Tests', () => {
         <SignInScreen />
       );
 
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       const passwordInput = getByTestId('password-input');
       const submitButton = getByTestId('submit-button');
 
@@ -400,7 +437,7 @@ describe('SignInScreen Integration Tests', () => {
       );
 
       fireEvent.changeText(
-        getByPlaceholderText('Enter your email address'),
+        getByPlaceholderText('your@email.com'),
         'nonexistent@example.com'
       );
       fireEvent.changeText(getByTestId('password-input'), 'password123');
@@ -423,7 +460,7 @@ describe('SignInScreen Integration Tests', () => {
       const { getByPlaceholderText, getByTestId } = render(<SignInScreen />);
 
       fireEvent.changeText(
-        getByPlaceholderText('Enter your email address'),
+        getByPlaceholderText('your@email.com'),
         'user@example.com'
       );
       fireEvent.changeText(getByTestId('password-input'), 'password123');
@@ -447,7 +484,7 @@ describe('SignInScreen Integration Tests', () => {
       const { getByPlaceholderText, getByTestId } = render(<SignInScreen />);
 
       fireEvent.changeText(
-        getByPlaceholderText('Enter your email address'),
+        getByPlaceholderText('your@email.com'),
         'user@example.com'
       );
       fireEvent.changeText(getByTestId('password-input'), 'password123');
@@ -472,7 +509,7 @@ describe('SignInScreen Integration Tests', () => {
         <SignInScreen />
       );
 
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       fireEvent.changeText(emailInput, 'nonexistent@example.com');
       fireEvent.changeText(getByTestId('password-input'), 'password123');
       await act(async () => {
@@ -571,7 +608,7 @@ describe('SignInScreen Integration Tests', () => {
       expect(getByText('Sign in to continue your journey')).toBeTruthy();
 
       // Journey Step 2: User enters email
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       fireEvent.changeText(emailInput, 'user@example.com');
 
       // Journey Step 3: User enters password (wrong)
@@ -633,7 +670,7 @@ describe('SignInScreen Integration Tests', () => {
 
       // Step 1: User enters email that doesn't exist
       fireEvent.changeText(
-        getByPlaceholderText('Enter your email address'),
+        getByPlaceholderText('your@email.com'),
         'newuser@example.com'
       );
       fireEvent.changeText(getByTestId('password-input'), 'password123');
@@ -686,7 +723,7 @@ describe('SignInScreen Integration Tests', () => {
     it('maintains email value through form interactions', () => {
       const { getByPlaceholderText, getByTestId } = render(<SignInScreen />);
 
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       const passwordInput = getByTestId('password-input');
 
       // Fill both fields
@@ -704,7 +741,7 @@ describe('SignInScreen Integration Tests', () => {
       );
 
       // Fill form
-      const emailInput = getByPlaceholderText('Enter your email address');
+      const emailInput = getByPlaceholderText('your@email.com');
       const passwordInput = getByTestId('password-input');
       fireEvent.changeText(emailInput, 'user@example.com');
       fireEvent.changeText(passwordInput, 'password123');

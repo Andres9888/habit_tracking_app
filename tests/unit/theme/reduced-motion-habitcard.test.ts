@@ -45,6 +45,7 @@ describe('HabitCard reduced motion — celebration', () => {
     const setShowConfetti = jest.fn();
     const setShowFloatingXP = jest.fn();
     const setXPPosition = jest.fn();
+    const timeoutRef = { current: null } as React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
 
     const trigger = createCelebrationTrigger({
       cardScale: cardScale as any,
@@ -56,6 +57,7 @@ describe('HabitCard reduced motion — celebration', () => {
       setShowConfetti,
       setShowFloatingXP,
       setXPPosition,
+      timeoutRef,
     });
 
     trigger();
@@ -79,6 +81,7 @@ describe('HabitCard reduced motion — celebration', () => {
     const setShowConfetti = jest.fn();
     const setShowFloatingXP = jest.fn();
     const setXPPosition = jest.fn();
+    const timeoutRef = { current: null } as React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
 
     const { withTiming } = require('react-native-reanimated');
 
@@ -92,6 +95,7 @@ describe('HabitCard reduced motion — celebration', () => {
       setShowConfetti,
       setShowFloatingXP,
       setXPPosition,
+      timeoutRef,
     });
 
     trigger();

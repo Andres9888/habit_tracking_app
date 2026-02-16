@@ -11,14 +11,14 @@ import { styles } from '@/components/HabitCard/HabitCard.styles';
 
 describe('HabitCard Spacing Token Migration - Phase 3', () => {
   describe('core styles use spacing tokens', () => {
-    it('card borderRadius should use borderRadius.medium (12)', () => {
-      expect(styles.card.borderRadius).toBe(borderRadius.medium);
-      expect(styles.card.borderRadius).toBe(12);
+    it('card borderRadius should use borderRadius.large (16)', () => {
+      expect(styles.card.borderRadius).toBe(borderRadius.large);
+      expect(styles.card.borderRadius).toBe(16);
     });
 
-    it('cardsContainer borderRadius should use borderRadius.xl (20)', () => {
+    it('cardsContainer borderRadius should use borderRadius.xl (24)', () => {
       expect(styles.cardsContainer.borderRadius).toBe(borderRadius.xl);
-      expect(styles.cardsContainer.borderRadius).toBe(20);
+      expect(styles.cardsContainer.borderRadius).toBe(24);
     });
 
     it('cardsContainer marginHorizontal should use spacing.md (12)', () => {
@@ -112,9 +112,9 @@ describe('HabitCard Spacing Token Migration - Phase 3', () => {
       expect(streakStyles.bestStreakBadge.paddingVertical).toBe(4);
     });
 
-    it('rippleOverlay borderRadius should use borderRadius.xl (20)', () => {
+    it('rippleOverlay borderRadius should use borderRadius.xl (24)', () => {
       expect(streakStyles.rippleOverlay.borderRadius).toBe(borderRadius.xl);
-      expect(streakStyles.rippleOverlay.borderRadius).toBe(20);
+      expect(streakStyles.rippleOverlay.borderRadius).toBe(24);
     });
 
     it('streakBadge borderRadius should use borderRadius.medium (12)', () => {

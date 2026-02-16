@@ -9,15 +9,52 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { PaperProvider } from 'react-native-paper';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { View } from 'react-native';
+import { StreakMilestoneProvider } from '../../StreakMilestoneCelebration/StreakMilestoneProvider';
 import { extendedTheme } from '../../../theme';
 import { HabitCard } from '../HabitCard';
 
+// Mock react-native-gesture-handler
+jest.mock('react-native-gesture-handler', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+
+  const createMockGesture = () => ({
+    minDuration: () => createMockGesture(),
+    activeOffsetX: () => createMockGesture(),
+    activeOffsetY: () => createMockGesture(),
+    onBegin: () => createMockGesture(),
+    onEnd: () => createMockGesture(),
+    onStart: () => createMockGesture(),
+    onUpdate: () => createMockGesture(),
+    onFinalize: () => createMockGesture(),
+    simultaneousWithExternalGesture: () => createMockGesture(),
+    requirePointToBeInside: () => createMockGesture(),
+  });
+
+  return {
+    GestureHandlerRootView: ({ children }: { children: React.ReactNode }) => <View>{children}</View>,
+    Gesture: {
+      Tap: createMockGesture,
+      LongPress: createMockGesture,
+      Pan: createMockGesture,
+      Race: (...args: any[]) => args[0],
+      Simultaneous: (...args: any[]) => args[0],
+      NativeViewGesture: createMockGesture,
+    },
+  };
+});
+
 // Wrapper with theme and gesture handler
 const renderWithProviders = (component: React.ReactElement) => {
+  const GestureHandlerRootView = require('react-native-gesture-handler').GestureHandlerRootView;
   return render(
     <GestureHandlerRootView>
-      <PaperProvider theme={extendedTheme}>{component}</PaperProvider>
+      <PaperProvider theme={extendedTheme}>
+        <StreakMilestoneProvider>
+          {component}
+        </StreakMilestoneProvider>
+      </PaperProvider>
     </GestureHandlerRootView>
   );
 };
