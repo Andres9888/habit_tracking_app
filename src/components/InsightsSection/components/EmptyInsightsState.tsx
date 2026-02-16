@@ -1,12 +1,12 @@
 /**
  * EmptyInsightsState Component
- * Shown when not enough tracking data exists for insights
+ * ENHANCED: More encouraging, progress-focused messaging
  */
 
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { BarChart3, Calendar } from 'lucide-react-native';
+import { Lightbulb } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { EmptyInsightsStateProps } from '../InsightsSection.types';
 
@@ -27,53 +27,86 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
       }}
     >
       <View style={{ padding: 20 }}>
+        {/* Header */}
         <View
           style={{
             alignItems: 'center',
             flexDirection: 'row',
             gap: 8,
             justifyContent: 'center',
-            marginBottom: 12,
+            marginBottom: 16,
           }}
         >
           <View
             style={{
               alignItems: 'center',
-              backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
+              backgroundColor: isDark ? '#451A03' : '#FFFBEB',
               borderRadius: 8,
               height: 32,
               justifyContent: 'center',
               width: 32,
             }}
           >
-            <BarChart3 color={isDark ? '#C4B5FD' : '#A78BFA'} size={16} />
+            <Lightbulb color={isDark ? '#FCD34D' : '#F59E0B'} size={16} />
           </View>
           <Text style={{ color: colors.text.secondary, fontSize: 17, fontWeight: '700' }}>
             Insights
           </Text>
         </View>
+
+        {/* Content */}
         <View
           style={{
             alignItems: 'center',
-            backgroundColor: colors.gray[50],
+            backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
             borderRadius: 12,
             paddingVertical: 24,
           }}
         >
-          <Calendar color={colors.text.tertiary} size={28} style={{ marginBottom: 8 }} />
-          <Text style={{ color: colors.text.secondary, fontSize: 14, textAlign: 'center' }}>
-            Keep tracking for insights
-          </Text>
+          <Text style={{ fontSize: 32, marginBottom: 8 }}>📊</Text>
           <Text
             style={{
-              color: colors.text.tertiary,
-              fontSize: 12,
-              marginTop: 4,
+              color: colors.text.primary,
+              fontSize: 15,
+              fontWeight: '600',
+              marginBottom: 4,
               textAlign: 'center',
             }}
           >
-            {daysRemaining} more days needed
+            Insights Coming Soon!
           </Text>
+          <Text
+            style={{
+              color: colors.text.secondary,
+              fontSize: 13,
+              marginBottom: 12,
+              textAlign: 'center',
+            }}
+          >
+            Keep up the great work
+          </Text>
+
+          {/* Progress indicator */}
+          <View
+            style={{
+              backgroundColor: isDark ? '#047857' : '#D1FAE5',
+              borderRadius: 8,
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+            }}
+          >
+            <Text
+              style={{
+                color: isDark ? '#D1FAE5' : '#047857',
+                fontSize: 12,
+                fontWeight: '500',
+              }}
+            >
+              {daysRemaining === 1
+                ? '🎯 Just 1 more day!'
+                : `🎯 ${daysRemaining} more days to unlock`}
+            </Text>
+          </View>
         </View>
       </View>
     </Animated.View>

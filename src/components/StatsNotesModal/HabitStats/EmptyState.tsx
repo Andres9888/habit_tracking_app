@@ -1,10 +1,10 @@
 /**
  * Empty state when no habits exist
- * Standardized: FadeInUp animation, icon, proper typography, dark mode
+ * ENHANCED: More motivational messaging, growth-focused
  */
 
-import { View } from 'react-native';
-import { BarChart2 } from 'lucide-react-native';
+import { View, Text } from 'react-native';
+import { TrendingUp } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
@@ -16,24 +16,27 @@ export function EmptyState() {
 
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 40 }}>
+      {/* Icon */}
       <Animated.View
         entering={anim(0)}
         style={{
           alignItems: 'center',
-          backgroundColor: isDark ? '#451A03' : '#FFFBEB',
-          borderRadius: 12,
-          height: 64,
+          backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
+          borderRadius: 16,
+          height: 80,
           justifyContent: 'center',
-          marginBottom: 16,
-          shadowColor: '#f59e0b',
+          marginBottom: 20,
+          shadowColor: '#8b5cf6',
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
-          width: 64,
+          width: 80,
         }}
       >
-        <BarChart2 color={isDark ? '#FCD34D' : '#F59E0B'} size={32} strokeWidth={1.5} />
+        <TrendingUp color={isDark ? '#C4B5FD' : '#8B5CF6'} size={40} strokeWidth={1.5} />
       </Animated.View>
+
+      {/* Headline */}
       <Animated.Text
         entering={anim(60)}
         style={{
@@ -45,20 +48,39 @@ export function EmptyState() {
           textAlign: 'center',
         }}
       >
-        No Stats Yet
+        Your Stats Journey Starts Now!
       </Animated.Text>
+
+      {/* Description */}
       <Animated.Text
         entering={anim(120)}
         style={{
           color: colors.text.secondary,
           fontSize: 17,
           lineHeight: 22,
+          marginBottom: 24,
           maxWidth: 280,
           textAlign: 'center',
         }}
       >
-        Create your first habit to see stats here
+        Complete your first habit to start tracking your progress and growth
       </Animated.Text>
+
+      {/* Motivation Card */}
+      <Animated.View
+        entering={anim(180)}
+        style={{
+          backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
+          borderRadius: 12,
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+          width: '100%',
+        }}
+      >
+        <Text style={{ color: isDark ? '#6EE7B7' : '#047857', fontSize: 13, lineHeight: 18, textAlign: 'center' }}>
+          🎯 Every expert was once a beginner. Your first completion is the start of something great!
+        </Text>
+      </Animated.View>
     </View>
   );
 }

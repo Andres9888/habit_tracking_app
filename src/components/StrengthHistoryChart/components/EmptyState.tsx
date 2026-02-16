@@ -1,11 +1,11 @@
 /**
  * EmptyState - Displayed when not enough data is available
- * Standardized: FadeInUp animation, icon, proper typography, dark mode
+ * ENHANCED: More encouraging, growth-focused messaging
  */
 
 import React from 'react';
-import { View } from 'react-native';
-import { Activity } from 'lucide-react-native';
+import { View, Text } from 'react-native';
+import { TrendingUp } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
@@ -30,11 +30,12 @@ export function EmptyState({ height }: EmptyStateProps) {
         paddingHorizontal: 24,
       }}
     >
+      {/* Icon */}
       <Animated.View
         entering={anim(0)}
         style={{
           alignItems: 'center',
-          backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
+          backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
           borderRadius: 12,
           height: 48,
           justifyContent: 'center',
@@ -42,8 +43,10 @@ export function EmptyState({ height }: EmptyStateProps) {
           width: 48,
         }}
       >
-        <Activity color={isDark ? '#C4B5FD' : '#8b5cf6'} size={24} strokeWidth={1.5} />
+        <TrendingUp color={isDark ? '#6EE7B7' : '#059669'} size={24} strokeWidth={1.5} />
       </Animated.View>
+
+      {/* Title */}
       <Animated.Text
         entering={anim(60)}
         style={{
@@ -54,18 +57,37 @@ export function EmptyState({ height }: EmptyStateProps) {
           textAlign: 'center',
         }}
       >
-        Not Enough Data Yet
+        Building Your History
       </Animated.Text>
+
+      {/* Description */}
       <Animated.Text
         entering={anim(120)}
         style={{
           color: colors.text.secondary,
           fontSize: 13,
+          lineHeight: 18,
+          marginBottom: 10,
           textAlign: 'center',
         }}
       >
-        Keep tracking to see your progress
+        Keep going to unlock your chart!
       </Animated.Text>
+
+      {/* Badge */}
+      <Animated.View
+        entering={anim(180)}
+        style={{
+          backgroundColor: isDark ? '#047857' : '#D1FAE5',
+          borderRadius: 6,
+          paddingHorizontal: 10,
+          paddingVertical: 4,
+        }}
+      >
+        <Text style={{ color: isDark ? '#D1FAE5' : '#047857', fontSize: 11, fontWeight: '500' }}>
+          📈 Progress in the making
+        </Text>
+      </Animated.View>
     </View>
   );
 }
