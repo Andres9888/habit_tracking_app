@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Reminder time picker section
  */

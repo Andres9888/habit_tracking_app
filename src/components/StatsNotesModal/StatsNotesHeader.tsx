@@ -16,6 +16,10 @@ interface Props {
 export function StatsNotesHeader({ activeTab, onClose, onTabChange }: Props) {
   const { colors } = useThemeColors();
 
+  // Theme-aware active tab color
+  const activeColor = colors.primary[700];
+  const activeBorderColor = colors.primary[500];
+
   return (
     <>
       <Animated.View
@@ -47,17 +51,13 @@ export function StatsNotesHeader({ activeTab, onClose, onTabChange }: Props) {
             accessibilityRole='tab'
             accessibilityState={{ selected: activeTab === tab }}
             className='flex-1 items-center py-3'
-            style={
-              activeTab === tab
-                ? { borderBottomWidth: 2, borderBottomColor: '#047857' }
-                : undefined
-            }
+            style={activeTab === tab ? { borderBottomWidth: 2, borderBottomColor: activeBorderColor } : undefined}
             onPress={() => onTabChange(tab)}
           >
             <Text
               className='font-semibold'
               style={{
-                color: activeTab === tab ? '#047857' : colors.text.secondary,
+                color: activeTab === tab ? activeColor : colors.text.secondary,
                 fontSize: 17,
               }}
             >
