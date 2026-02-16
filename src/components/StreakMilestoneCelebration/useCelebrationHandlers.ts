@@ -5,8 +5,8 @@ import {
 } from './constants';
 import { persistMilestoneShown } from './useMilestoneCheck';
 import {
-  maybeRequestReview,
   incrementCompletionCount,
+  isMilestoneReviewEligible,
 } from '../../utils/storeReview';
 import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
 
@@ -25,7 +25,10 @@ interface ShareCardData {
   userName: string;
 }
 
-export function useCelebrationHandlers(userName: string) {
+export function useCelebrationHandlers(
+  userName: string,
+  onReviewEligible?: () => void,
+) {
   const [celebrationData, setCelebrationData] = useState<CelebrationData | null>(null);
   const [showShareCard, setShowShareCard] = useState(false);
   const [shareData, setShareData] = useState<ShareCardData | null>(null);
@@ -60,9 +63,15 @@ export function useCelebrationHandlers(userName: string) {
         celebrationData.habitId,
         celebrationData.milestone.days,
       );
-      setTimeout(() => {
-        void maybeRequestReview(celebrationData.milestone.days);
-      }, 500);
+      // Trigger sentiment-gated review if this milestone is eligible
+      if (
+        onReviewEligible &&
+        isMilestoneReviewEligible(celebrationData.milestone.days)
+      ) {
+        setTimeout(() => {
+          onReviewEligible();
+        }, 500);
+      }
     }
     setCelebrationData(null);
   }, [celebrationData]);

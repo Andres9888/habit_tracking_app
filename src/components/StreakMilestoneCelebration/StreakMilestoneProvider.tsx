@@ -4,13 +4,21 @@
  * Global provider for managing streak milestone celebrations
  *
  * Exposes a trigger function that can be called from anywhere
- * when a habit completion might cross a milestone threshold
+ * when a habit completion might cross a milestone threshold.
+ *
+ * Includes sentiment-gated App Store review prompting:
+ * After eligible milestones, shows "Enjoying Chain Day?" →
+ *   Yes → native review dialog
+ *   No → feedback form
  */
 
 import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { StreakMilestoneCelebration } from './StreakMilestoneCelebration';
 import { ShareCardGenerator } from '../ShareCardGenerator';
+import { ReviewSentimentPrompt } from '../ReviewSentimentPrompt';
+import { FeedbackModal } from '../FeedbackModal';
 import { useCelebrationHandlers } from './useCelebrationHandlers';
+import { useReviewPrompt } from '../../hooks/useReviewPrompt';
 
 interface StreakMilestoneContextValue {
   checkAndCelebrate: (
@@ -36,6 +44,16 @@ export function StreakMilestoneProvider({
   userName = '',
 }: StreakMilestoneProviderProps) {
   const {
+    sentimentVisible,
+    showFeedback,
+    requestReview,
+    handlePositive,
+    handleNegative,
+    handleSentimentClose,
+    handleFeedbackClose,
+  } = useReviewPrompt();
+
+  const {
     celebrationData,
     shareData,
     showShareCard,
@@ -43,7 +61,7 @@ export function StreakMilestoneProvider({
     handleClose,
     handleShare,
     handleShareClose,
-  } = useCelebrationHandlers(userName);
+  } = useCelebrationHandlers(userName, requestReview);
 
   const contextValue = useMemo<StreakMilestoneContextValue>(
     () => ({
@@ -77,6 +95,20 @@ export function StreakMilestoneProvider({
           onClose={handleShareClose}
         />
       )}
+
+      {/* Sentiment Pre-filter for App Store Review */}
+      <ReviewSentimentPrompt
+        visible={sentimentVisible}
+        onClose={handleSentimentClose}
+        onPositive={handlePositive}
+        onNegative={handleNegative}
+      />
+
+      {/* Feedback Form (shown when user taps "Not really") */}
+      <FeedbackModal
+        visible={showFeedback}
+        onClose={handleFeedbackClose}
+      />
     </StreakMilestoneContext.Provider>
   );
 }

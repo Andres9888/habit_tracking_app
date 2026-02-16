@@ -11,6 +11,8 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { ReviewSentimentPrompt } from '../../components/ReviewSentimentPrompt';
+import { FeedbackModal } from '../../components/FeedbackModal';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 import { styles } from './AnalyticsScreen.styles';
 import {
@@ -43,6 +45,12 @@ function AnalyticsScreenContent() {
     handleStartTrial,
     setShowPaywall,
     setShowExportMenu,
+    reviewSentimentVisible,
+    reviewShowFeedback,
+    reviewHandlePositive,
+    reviewHandleNegative,
+    reviewHandleSentimentClose,
+    reviewHandleFeedbackClose,
   } = useAnalyticsScreen();
 
   // All React hooks must be called before any early returns
@@ -134,6 +142,18 @@ function AnalyticsScreenContent() {
         visible={showExportMenu}
         onClose={() => setShowExportMenu(false)}
         onExport={(format) => void handleExport(format)}
+      />
+
+      {/* Sentiment-gated App Store Review Prompt */}
+      <ReviewSentimentPrompt
+        visible={reviewSentimentVisible}
+        onClose={reviewHandleSentimentClose}
+        onPositive={reviewHandlePositive}
+        onNegative={reviewHandleNegative}
+      />
+      <FeedbackModal
+        visible={reviewShowFeedback}
+        onClose={reviewHandleFeedbackClose}
       />
     </ScrollView>
   );

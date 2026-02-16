@@ -8,7 +8,8 @@ import { api } from '../../../convex/_generated/api';
 import { exportData, prepareExportData } from '../../utils/exportData';
 import { usePremium } from '../../hooks/usePremium/usePremium';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { maybeRequestReviewFromAnalytics } from '@/utils/storeReview';
+import { isAnalyticsReviewEligible } from '@/utils/storeReview';
+import { useReviewPrompt } from '@/hooks/useReviewPrompt';
 import type {
   ExportFormat,
   UseAnalyticsScreenReturn,
@@ -21,6 +22,15 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const { triggerLightImpact } = useHapticFeedback();
   const hasCheckedReview = useRef(false);
+  const {
+    sentimentVisible: reviewSentimentVisible,
+    showFeedback: reviewShowFeedback,
+    requestReview,
+    handlePositive: reviewHandlePositive,
+    handleNegative: reviewHandleNegative,
+    handleSentimentClose: reviewHandleSentimentClose,
+    handleFeedbackClose: reviewHandleFeedbackClose,
+  } = useReviewPrompt();
 
   // Fetch analytics data from Convex
   const overviewStats = useQuery(api.analytics.getOverviewStats);
@@ -48,7 +58,9 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
         complianceData.reduce((sum, day) => sum + day.completionRate, 0) /
         complianceData.length;
       const totalHabits = overviewStats.totalHabits || 0;
-      void maybeRequestReviewFromAnalytics(avgCompletionRate, totalHabits);
+      if (isAnalyticsReviewEligible(avgCompletionRate, totalHabits)) {
+        void requestReview();
+      }
     }
   }, [isLoading, overviewStats, complianceData]);
 
@@ -119,6 +131,12 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     onRefresh,
     overviewStats,
     refreshing,
+    reviewHandleFeedbackClose,
+    reviewHandleNegative,
+    reviewHandlePositive,
+    reviewHandleSentimentClose,
+    reviewSentimentVisible,
+    reviewShowFeedback,
     setShowExportMenu,
     setShowPaywall,
     showExportMenu,

@@ -1,9 +1,17 @@
 /**
  * Store Review Utility
  *
- * Manages App Store rating prompt timing.
- * Triggers the native rating dialog after milestone celebrations,
- * with guards for cooldown (90 days) and minimum usage (5 completions).
+ * Manages App Store rating prompt timing with a sentiment pre-filter.
+ * Instead of triggering the native dialog directly, eligible moments
+ * surface a "Enjoying Chain Day?" prompt. Happy users get the native
+ * review dialog; unhappy users get the feedback form.
+ *
+ * Guards:
+ * - At least 5 total completions (never on first session)
+ * - At least 90 days since last prompt
+ * - Platform must support StoreReview
+ * - Only at positive moments (milestones, strong analytics)
+ * - Never after a broken streak
  */
 
 import * as StoreReview from 'expo-store-review';
@@ -72,9 +80,10 @@ async function isCooldownExpired(): Promise<boolean> {
 }
 
 /**
- * Record that a prompt was shown.
+ * Record that a prompt was shown. Exported for use by the
+ * sentiment pre-filter hook (useReviewPrompt).
  */
-async function recordPromptShown(): Promise<void> {
+export async function recordPromptShown(): Promise<void> {
   try {
     await AsyncStorage.setItem(
       STORE_REVIEW_LAST_PROMPT_KEY,
@@ -86,88 +95,92 @@ async function recordPromptShown(): Promise<void> {
 }
 
 /**
+ * Check all platform and usage guards for review eligibility.
+ * Does NOT show anything — just returns whether a prompt is appropriate.
+ * Used by useReviewPrompt to gate the sentiment pre-filter.
+ */
+export async function canRequestReview(): Promise<boolean> {
+  try {
+    if (Platform.OS === 'web') return false;
+
+    const isAvailable = await StoreReview.isAvailableAsync();
+    if (!isAvailable) return false;
+
+    const completions = await getCompletionCount();
+    if (completions < MIN_COMPLETIONS) return false;
+
+    const cooldownOk = await isCooldownExpired();
+    if (!cooldownOk) return false;
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Check if a streak milestone is eligible for a review prompt.
+ * Returns true only for specific positive milestones (7, 14, 30 days).
+ */
+export function isMilestoneReviewEligible(milestoneDays: number): boolean {
+  return REVIEW_ELIGIBLE_MILESTONES.has(milestoneDays);
+}
+
+/**
+ * Check if analytics metrics qualify for a review prompt.
+ * Requires 70%+ completion rate and at least 3 active habits.
+ */
+export function isAnalyticsReviewEligible(
+  avgCompletionRate: number,
+  totalHabits: number,
+): boolean {
+  return avgCompletionRate >= 70 && totalHabits >= 3;
+}
+
+// ---------------------------------------------------------------------------
+// Legacy direct-call functions (kept for backward compatibility but now
+// gated through the sentiment pre-filter in most code paths)
+// ---------------------------------------------------------------------------
+
+/**
  * Attempt to show the store review prompt after a milestone celebration.
  *
- * Guards:
- * - Only on eligible milestones (7, 14, 30 days)
- * - At least 5 total completions
- * - At least 90 days since last prompt
- * - Store review must be available on the platform
- *
- * @param milestoneDays - The streak milestone that was just celebrated
+ * @deprecated Prefer useReviewPrompt hook with sentiment pre-filter.
  */
 export async function maybeRequestReview(
   milestoneDays: number,
 ): Promise<void> {
   try {
-    // Only prompt on specific milestones
-    if (!REVIEW_ELIGIBLE_MILESTONES.has(milestoneDays)) {
-      return;
-    }
+    if (!REVIEW_ELIGIBLE_MILESTONES.has(milestoneDays)) return;
 
-    // Check platform support
-    if (Platform.OS === 'web') return;
-    const isAvailable = await StoreReview.isAvailableAsync();
-    if (!isAvailable) return;
+    const eligible = await canRequestReview();
+    if (!eligible) return;
 
-    // Check minimum completions
-    const completions = await getCompletionCount();
-    if (completions < MIN_COMPLETIONS) return;
-
-    // Check cooldown
-    const cooldownOk = await isCooldownExpired();
-    if (!cooldownOk) return;
-
-    // All checks passed — request review
     await recordPromptShown();
     await StoreReview.requestReview();
   } catch {
-    // Silent fail — never break the app for a rating prompt
+    // Silent fail
   }
 }
 
 /**
  * Attempt to show the store review prompt after viewing positive analytics.
  *
- * Triggers when user views analytics with strong performance metrics.
- *
- * Guards:
- * - Average completion rate >= 70%
- * - At least 3 active habits
- * - At least 5 total completions
- * - At least 90 days since last prompt
- * - Store review must be available on the platform
- *
- * @param avgCompletionRate - Average completion rate (0-100)
- * @param totalHabits - Total number of habits
+ * @deprecated Prefer useReviewPrompt hook with sentiment pre-filter.
  */
 export async function maybeRequestReviewFromAnalytics(
   avgCompletionRate: number,
   totalHabits: number,
 ): Promise<void> {
   try {
-    // Only prompt on strong performance
-    if (avgCompletionRate < 70 || totalHabits < 3) {
-      return;
-    }
+    if (avgCompletionRate < 70 || totalHabits < 3) return;
 
-    // Check platform support
-    if (Platform.OS === 'web') return;
-    const isAvailable = await StoreReview.isAvailableAsync();
-    if (!isAvailable) return;
+    const eligible = await canRequestReview();
+    if (!eligible) return;
 
-    // Check minimum completions
-    const completions = await getCompletionCount();
-    if (completions < MIN_COMPLETIONS) return;
-
-    // Check cooldown
-    const cooldownOk = await isCooldownExpired();
-    if (!cooldownOk) return;
-
-    // All checks passed — request review
     await recordPromptShown();
     await StoreReview.requestReview();
   } catch {
-    // Silent fail — never break the app for a rating prompt
+    // Silent fail
   }
 }

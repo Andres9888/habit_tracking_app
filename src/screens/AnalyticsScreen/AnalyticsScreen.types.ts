@@ -68,6 +68,14 @@ export interface UseAnalyticsScreenReturn {
   complianceData: HeatmapData[] | undefined;
   weeklyInsights: WeeklyInsights | undefined;
 
+  // Review prompt (sentiment-gated)
+  reviewSentimentVisible: boolean;
+  reviewShowFeedback: boolean;
+  reviewHandlePositive: () => void;
+  reviewHandleNegative: () => void;
+  reviewHandleSentimentClose: () => void;
+  reviewHandleFeedbackClose: () => void;
+
   // Handlers
   onRefresh: () => Promise<void>;
   handleHabitPress: (habitId: string) => void;
