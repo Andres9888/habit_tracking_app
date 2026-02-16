@@ -34,6 +34,18 @@ interface HabitArgs {
   why?: string;
   frequency?: string;
   goalUnit?: string;
+  // WOOP fields
+  woopWish?: string;
+  woopOutcome?: string;
+  woopObstacle?: string;
+  woopPlan?: string;
+  // Visualization fields
+  vizSuccessBody?: string;
+  vizSuccessMind?: string;
+  vizSuccessEmotion?: string;
+  vizFailureBody?: string;
+  vizFailureMind?: string;
+  vizFailureEmotion?: string;
 }
 
 /** Validated habit fields */
@@ -53,6 +65,18 @@ interface ValidatedHabitFields {
   why?: string;
   frequency?: string;
   goalUnit?: string;
+  // WOOP fields
+  woopWish?: string;
+  woopOutcome?: string;
+  woopObstacle?: string;
+  woopPlan?: string;
+  // Visualization fields
+  vizSuccessBody?: string;
+  vizSuccessMind?: string;
+  vizSuccessEmotion?: string;
+  vizFailureBody?: string;
+  vizFailureMind?: string;
+  vizFailureEmotion?: string;
 }
 
 /**
@@ -126,6 +150,38 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   const goalUnitResult = validateShortText(args.goalUnit, 50, 'Goal unit');
   const goalUnit = requireValid(goalUnitResult, args.goalUnit);
 
+  // Optional: WOOP fields (short text)
+  const woopWishResult = validateShortText(args.woopWish, MAX_SHORT_TEXT_LENGTH, 'WOOP wish');
+  const woopWish = requireValid(woopWishResult, args.woopWish);
+
+  const woopOutcomeResult = validateLongText(args.woopOutcome, MAX_LONG_TEXT_LENGTH, 'WOOP outcome');
+  const woopOutcome = requireValid(woopOutcomeResult, args.woopOutcome);
+
+  const woopObstacleResult = validateLongText(args.woopObstacle, MAX_LONG_TEXT_LENGTH, 'WOOP obstacle');
+  const woopObstacle = requireValid(woopObstacleResult, args.woopObstacle);
+
+  const woopPlanResult = validateLongText(args.woopPlan, MAX_LONG_TEXT_LENGTH, 'WOOP plan');
+  const woopPlan = requireValid(woopPlanResult, args.woopPlan);
+
+  // Optional: Visualization fields (long text)
+  const vizSuccessBodyResult = validateLongText(args.vizSuccessBody, MAX_LONG_TEXT_LENGTH, 'Success visualization (body)');
+  const vizSuccessBody = requireValid(vizSuccessBodyResult, args.vizSuccessBody);
+
+  const vizSuccessMindResult = validateLongText(args.vizSuccessMind, MAX_LONG_TEXT_LENGTH, 'Success visualization (mind)');
+  const vizSuccessMind = requireValid(vizSuccessMindResult, args.vizSuccessMind);
+
+  const vizSuccessEmotionResult = validateLongText(args.vizSuccessEmotion, MAX_LONG_TEXT_LENGTH, 'Success visualization (emotion)');
+  const vizSuccessEmotion = requireValid(vizSuccessEmotionResult, args.vizSuccessEmotion);
+
+  const vizFailureBodyResult = validateLongText(args.vizFailureBody, MAX_LONG_TEXT_LENGTH, 'Failure visualization (body)');
+  const vizFailureBody = requireValid(vizFailureBodyResult, args.vizFailureBody);
+
+  const vizFailureMindResult = validateLongText(args.vizFailureMind, MAX_LONG_TEXT_LENGTH, 'Failure visualization (mind)');
+  const vizFailureMind = requireValid(vizFailureMindResult, args.vizFailureMind);
+
+  const vizFailureEmotionResult = validateLongText(args.vizFailureEmotion, MAX_LONG_TEXT_LENGTH, 'Failure visualization (emotion)');
+  const vizFailureEmotion = requireValid(vizFailureEmotionResult, args.vizFailureEmotion);
+
   return {
     name,
     notes,
@@ -142,6 +198,16 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
     why,
     frequency,
     goalUnit,
+    woopWish,
+    woopOutcome,
+    woopObstacle,
+    woopPlan,
+    vizSuccessBody,
+    vizSuccessMind,
+    vizSuccessEmotion,
+    vizFailureBody,
+    vizFailureMind,
+    vizFailureEmotion,
   };
 }
 
@@ -234,6 +300,50 @@ export function validateHabitUpdateFields(
   if (args.goalUnit !== undefined) {
     const goalUnitResult = validateShortText(args.goalUnit, 50, 'Goal unit');
     result.goalUnit = requireValid(goalUnitResult, args.goalUnit);
+  }
+
+  // WOOP fields
+  if (args.woopWish !== undefined) {
+    const r = validateShortText(args.woopWish, MAX_SHORT_TEXT_LENGTH, 'WOOP wish');
+    result.woopWish = requireValid(r, args.woopWish);
+  }
+  if (args.woopOutcome !== undefined) {
+    const r = validateLongText(args.woopOutcome, MAX_LONG_TEXT_LENGTH, 'WOOP outcome');
+    result.woopOutcome = requireValid(r, args.woopOutcome);
+  }
+  if (args.woopObstacle !== undefined) {
+    const r = validateLongText(args.woopObstacle, MAX_LONG_TEXT_LENGTH, 'WOOP obstacle');
+    result.woopObstacle = requireValid(r, args.woopObstacle);
+  }
+  if (args.woopPlan !== undefined) {
+    const r = validateLongText(args.woopPlan, MAX_LONG_TEXT_LENGTH, 'WOOP plan');
+    result.woopPlan = requireValid(r, args.woopPlan);
+  }
+
+  // Visualization fields
+  if (args.vizSuccessBody !== undefined) {
+    const r = validateLongText(args.vizSuccessBody, MAX_LONG_TEXT_LENGTH, 'Success visualization (body)');
+    result.vizSuccessBody = requireValid(r, args.vizSuccessBody);
+  }
+  if (args.vizSuccessMind !== undefined) {
+    const r = validateLongText(args.vizSuccessMind, MAX_LONG_TEXT_LENGTH, 'Success visualization (mind)');
+    result.vizSuccessMind = requireValid(r, args.vizSuccessMind);
+  }
+  if (args.vizSuccessEmotion !== undefined) {
+    const r = validateLongText(args.vizSuccessEmotion, MAX_LONG_TEXT_LENGTH, 'Success visualization (emotion)');
+    result.vizSuccessEmotion = requireValid(r, args.vizSuccessEmotion);
+  }
+  if (args.vizFailureBody !== undefined) {
+    const r = validateLongText(args.vizFailureBody, MAX_LONG_TEXT_LENGTH, 'Failure visualization (body)');
+    result.vizFailureBody = requireValid(r, args.vizFailureBody);
+  }
+  if (args.vizFailureMind !== undefined) {
+    const r = validateLongText(args.vizFailureMind, MAX_LONG_TEXT_LENGTH, 'Failure visualization (mind)');
+    result.vizFailureMind = requireValid(r, args.vizFailureMind);
+  }
+  if (args.vizFailureEmotion !== undefined) {
+    const r = validateLongText(args.vizFailureEmotion, MAX_LONG_TEXT_LENGTH, 'Failure visualization (emotion)');
+    result.vizFailureEmotion = requireValid(r, args.vizFailureEmotion);
   }
 
   return result;
