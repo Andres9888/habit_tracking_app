@@ -29,9 +29,9 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-            style={{ backgroundColor: '#fef3c7' }}
+            style={{ backgroundColor: themeColors.warning.background }}
           >
-            <Crown color='#f59e0b' size={16} />
+            <Crown color={themeColors.warning.primary} size={16} />
           </View>
           <View className='flex-1'>
             <View className='flex-row items-center gap-2'>
@@ -44,12 +44,12 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               <View
                 className='rounded-full px-2 py-0.5'
                 style={{
-                  backgroundColor: isDark ? '#422006' : '#fef3c7',
+                  backgroundColor: themeColors.warning.background,
                 }}
               >
                 <Text
                   className='text-[10px] font-bold uppercase'
-                  style={{ color: '#f59e0b' }}
+                  style={{ color: themeColors.warning.primary }}
                 >
                   Active
                 </Text>
@@ -65,8 +65,8 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
         </View>
         <SettingsRow
           highContrastMode={highContrast}
-          icon={<Settings color='#6366f1' size={16} />}
-          iconBackgroundColor='#e0e7ff'
+          icon={<Settings color={themeColors.category.indigo.primary} size={16} />}
+          iconBackgroundColor={themeColors.info.background}
           label='Manage Subscription'
           showBorder={false}
           type='navigation'

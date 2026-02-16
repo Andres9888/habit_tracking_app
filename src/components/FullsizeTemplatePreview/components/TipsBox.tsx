@@ -7,7 +7,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Lightbulb } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
-import { tipsStyles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { createTipsStyles } from '../styles';
 
 interface TipsBoxProps {
   tips: string[];
@@ -16,6 +17,8 @@ interface TipsBoxProps {
 
 export function TipsBox({ tips, iconColor }: TipsBoxProps) {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
+  const tipsStyles = React.useMemo(() => createTipsStyles(colors), [colors]);
 
   if (!tips || tips.length === 0) {
     return null;

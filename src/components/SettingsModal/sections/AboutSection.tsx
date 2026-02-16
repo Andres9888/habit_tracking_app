@@ -18,8 +18,8 @@ export function AboutSection({ highContrast, version, buildNumber }: Props) {
     <SettingsSection highContrastMode={highContrast} title='About'>
       <SettingsRow
         highContrastMode={highContrast}
-        icon={<Info color='#6366f1' size={16} />}
-        iconBackgroundColor='#e0e7ff'
+        icon={<Info color={themeColors.category.indigo.primary} size={16} />}
+        iconBackgroundColor={themeColors.info.background}
         label='Version'
         showBorder={false}
         type='info'

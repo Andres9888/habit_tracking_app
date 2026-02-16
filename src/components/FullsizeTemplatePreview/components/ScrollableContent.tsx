@@ -4,11 +4,12 @@
 
 import React from 'react';
 import { View, ScrollView } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { HeroSection } from './HeroSection';
 import { DescriptionSection } from './DescriptionSection';
 import { ScienceBox } from './ScienceBox';
 import { TipsBox } from './TipsBox';
-import { layoutStyles } from '../styles';
+import { createLayoutStyles } from '../styles';
 import type { Template } from '../../../types/template';
 import type { ViewStyle } from 'react-native';
 
@@ -27,6 +28,11 @@ export function ScrollableContent({
   iconGlowStyle,
   onResearchPress,
 }: ScrollableContentProps) {
+  const { colors } = useThemeColors();
+  const layoutStyles = React.useMemo(
+    () => createLayoutStyles(colors),
+    [colors],
+  );
   const tips = template?.tips;
 
   return (

@@ -5,7 +5,8 @@
 
 import React from 'react';
 import Animated from 'react-native-reanimated';
-import { layoutStyles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { createLayoutStyles } from '../styles';
 import { ModalCloseButton } from '../../ui/ModalCloseButton';
 
 interface ModalHeaderProps {
@@ -19,6 +20,12 @@ export function ModalHeader({
   closeButtonAnimatedOpacityStyle,
   onClose,
 }: ModalHeaderProps) {
+  const { colors } = useThemeColors();
+  const layoutStyles = React.useMemo(
+    () => createLayoutStyles(colors),
+    [colors],
+  );
+
   return (
     <Animated.View
       style={[

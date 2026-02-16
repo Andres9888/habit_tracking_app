@@ -12,8 +12,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ExternalLink } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { springs } from '@/theme/animations';
-import { scienceStyles } from '../styles';
+import { createScienceStyles } from '../styles';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -25,6 +26,11 @@ interface ScienceBoxProps {
 
 export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
+  const scienceStyles = React.useMemo(
+    () => createScienceStyles(colors),
+    [colors],
+  );
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -73,7 +79,7 @@ export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >
-          <ExternalLink color='#3B82F6' size={16} strokeWidth={2} />
+          <ExternalLink color={colors.info.primary} size={16} strokeWidth={2} />
           <Text style={scienceStyles.researchLinkText}>Read Research</Text>
         </AnimatedPressable>
       )}

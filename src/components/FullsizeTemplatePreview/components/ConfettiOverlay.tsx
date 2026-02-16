@@ -6,9 +6,10 @@
 import React, { forwardRef } from 'react';
 import { View } from 'react-native';
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { layoutStyles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { createLayoutStyles } from '../styles';
 import {
-  CONFETTI_COLORS,
+  getConfettiColors,
   SCREEN_WIDTH,
   SCREEN_HEIGHT,
 } from '../FullsizeTemplatePreview.constants';
@@ -19,6 +20,16 @@ interface ConfettiOverlayProps {
 
 export const ConfettiOverlay = forwardRef<ConfettiCannon, ConfettiOverlayProps>(
   function ConfettiOverlay({ visible }, ref) {
+    const { colors } = useThemeColors();
+    const layoutStyles = React.useMemo(
+      () => createLayoutStyles(colors),
+      [colors],
+    );
+    const confettiColors = React.useMemo(
+      () => getConfettiColors(colors),
+      [colors],
+    );
+
     if (!visible) {
       return null;
     }
@@ -29,7 +40,7 @@ export const ConfettiOverlay = forwardRef<ConfettiCannon, ConfettiOverlayProps>(
           ref={ref}
           fadeOut
           autoStart={false}
-          colors={CONFETTI_COLORS as unknown as string[]}
+          colors={confettiColors as unknown as string[]}
           count={60}
           explosionSpeed={250}
           fallSpeed={2500}
@@ -37,5 +48,5 @@ export const ConfettiOverlay = forwardRef<ConfettiCannon, ConfettiOverlayProps>(
         />
       </View>
     );
-  }
+  },
 );

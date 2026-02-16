@@ -9,6 +9,7 @@ import {
 } from 'react-native-reanimated';
 
 import { hexToRgba } from './CategoryChip.constants';
+import type { SemanticColors } from '../../theme/darkColors';
 
 interface UseAnimatedStylesParams {
   chipOpacity: SharedValue<number>;
@@ -16,6 +17,7 @@ interface UseAnimatedStylesParams {
   pressScale: SharedValue<number>;
   selectionProgress: SharedValue<number>;
   primaryColor: string;
+  colors: SemanticColors;
 }
 
 export function useAnimatedStyles({
@@ -24,6 +26,7 @@ export function useAnimatedStyles({
   pressScale,
   selectionProgress,
   primaryColor,
+  colors,
 }: UseAnimatedStylesParams) {
   const containerStyle = useAnimatedStyle(() => ({
     opacity: chipOpacity.value,
@@ -37,12 +40,12 @@ export function useAnimatedStyles({
     backgroundColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      ['#ffffff', 'rgba(255,255,255,0)']
+      [colors.card, 'rgba(255,255,255,0)'],
     ),
     borderColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      ['#e5e7eb', 'rgba(229,231,235,0)']
+      [colors.border, 'rgba(229,231,235,0)'],
     ),
     borderWidth: 1.5 * (1 - selectionProgress.value),
   }));
@@ -55,7 +58,7 @@ export function useAnimatedStyles({
     color: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      ['#374151', '#ffffff']
+      [colors.text.primary, colors.text.inverse],
     ),
   }));
 
@@ -65,7 +68,7 @@ export function useAnimatedStyles({
     backgroundColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [primaryRgba, 'rgba(255,255,255,0.25)']
+      [primaryRgba, 'rgba(255,255,255,0.25)'],
     ),
   }));
 
@@ -73,7 +76,7 @@ export function useAnimatedStyles({
     color: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [primaryColor, '#ffffff']
+      [primaryColor, colors.text.inverse],
     ),
   }));
 

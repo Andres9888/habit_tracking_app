@@ -2,7 +2,7 @@
  * CategoryChip Animation Hook
  */
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   useSharedValue,
   withSpring,
@@ -11,7 +11,8 @@ import {
   Easing,
 } from 'react-native-reanimated';
 
-import { CATEGORY_COLORS } from './CategoryChip.constants';
+import { useThemeColors } from '../../theme/ThemeContext';
+import { getCategoryColors } from './CategoryChip.constants';
 import { useAnimatedStyles } from './useAnimatedStyles';
 
 interface UseCategoryChipAnimationsParams {
@@ -25,7 +26,12 @@ export function useCategoryChipAnimations({
   isSelected,
   animationIndex,
 }: UseCategoryChipAnimationsParams) {
-  const colors = CATEGORY_COLORS[id] || CATEGORY_COLORS.all;
+  const { colors: themeColors } = useThemeColors();
+  const categoryColors = useMemo(
+    () => getCategoryColors(themeColors),
+    [themeColors],
+  );
+  const colors = categoryColors[id] || categoryColors.all;
 
   const chipOpacity = useSharedValue(0);
   const chipTranslateX = useSharedValue(-20);
@@ -56,6 +62,7 @@ export function useCategoryChipAnimations({
   const animatedStyles = useAnimatedStyles({
     chipOpacity,
     chipTranslateX,
+    colors: themeColors,
     pressScale,
     primaryColor: colors.primary,
     selectionProgress,

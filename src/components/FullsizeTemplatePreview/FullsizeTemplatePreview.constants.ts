@@ -3,22 +3,33 @@
  */
 
 import { Dimensions } from 'react-native';
+import { SemanticColors } from '../../theme/darkColors';
 
 export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
   Dimensions.get('window');
 
-/** Confetti colors - celebratory green variants matching success theme */
-export const CONFETTI_COLORS = [
-  '#86EFAC', // Light green
-  '#34D399', // Primary 400
-  '#22c55e', // Success green (matching button)
-  '#10B981', // Primary 500
-  '#059669', // Primary 600
-  '#F59E0B', // Gold accent
-] as const;
+/**
+ * Confetti colors - celebratory green variants matching success theme
+ *
+ * Returns theme-aware confetti colors for celebration animations.
+ */
+export const getConfettiColors = (colors: SemanticColors) =>
+  [
+    colors.success.light, // Light green
+    colors.primary[400], // Primary 400
+    colors.success.primary, // Success green (matching button)
+    colors.primary[500], // Primary 500
+    colors.primary[600], // Primary 600
+    colors.warning.primary, // Gold accent
+  ] as const;
 
-/** Default fallback color when iconColor is missing or invalid */
-export const DEFAULT_ICON_COLOR = '#78716c';
+/**
+ * Default fallback color when iconColor is missing or invalid
+ *
+ * Uses gray-500 from theme for proper dark mode support.
+ */
+export const getDefaultIconColor = (colors: SemanticColors) =>
+  colors.gray[500];
 
 /** Mapping of frequency values to display labels */
 export const FREQUENCY_LABELS: Record<string, string> = {

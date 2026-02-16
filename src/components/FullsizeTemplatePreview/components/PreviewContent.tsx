@@ -4,7 +4,8 @@
 
 import React from 'react';
 import Animated from 'react-native-reanimated';
-import { layoutStyles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { createLayoutStyles } from '../styles';
 import { SuccessGlowOverlay } from './SuccessGlowOverlay';
 import { ModalHeader } from './ModalHeader';
 import { ScrollableContent } from './ScrollableContent';
@@ -26,6 +27,12 @@ export function PreviewContent({
   reducedMotion,
   template,
 }: PreviewContentProps) {
+  const { colors } = useThemeColors();
+  const layoutStyles = React.useMemo(
+    () => createLayoutStyles(colors),
+    [colors],
+  );
+
   return (
     <Animated.View
       style={[layoutStyles.container, animatedStyles.contentStyle]}

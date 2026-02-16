@@ -126,6 +126,120 @@ export const darkColors = {
     /** Tertiary text — low emphasis, WCAG AA 4.87:1 on dark card */
     tertiary: '#8E95A2',
   },
+
+  /**
+   * Success Colors (Green)
+   *
+   * Used for positive actions, confirmations, and success states.
+   * Brighter in dark mode for visibility.
+   */
+  success: {
+    /** Background tint for success containers */
+    background: '#064E3B',
+    /** Border for success containers */
+    border: '#059669',
+    /** Primary success color — buttons, icons */
+    primary: '#22c55e',
+    /** Lighter success accent */
+    light: '#86EFAC',
+    /** Text on success backgrounds */
+    text: '#D1FAE5',
+  },
+
+  /**
+   * Info Colors (Blue)
+   *
+   * Used for informational content, links, and neutral highlights.
+   */
+  info: {
+    /** Background tint for info containers */
+    background: '#1E3A8A',
+    /** Border for info containers */
+    border: '#3B82F6',
+    /** Primary info color */
+    primary: '#3B82F6',
+    /** Lighter info accent */
+    light: '#93C5FD',
+    /** Text on info backgrounds */
+    text: '#DBEAFE',
+  },
+
+  /**
+   * Warning Colors (Amber/Gold)
+   *
+   * Used for warnings, tips, and attention-grabbing elements.
+   */
+  warning: {
+    /** Background tint for warning containers */
+    background: '#451A03',
+    /** Border for warning containers */
+    border: '#F59E0B',
+    /** Primary warning color */
+    primary: '#F59E0B',
+    /** Lighter warning accent */
+    light: '#FCD34D',
+    /** Text on warning backgrounds */
+    text: '#FEF3C7',
+  },
+
+  /**
+   * Error Colors (Rose/Red)
+   *
+   * Used for errors, destructive actions, and critical alerts.
+   */
+  error: {
+    /** Background tint for error containers */
+    background: '#7F1D1D',
+    /** Border for error containers */
+    border: '#DC2626',
+    /** Primary error color */
+    primary: '#F43F5E',
+    /** Lighter error accent */
+    light: '#FCA5A5',
+    /** Text on error backgrounds */
+    text: '#FEE2E2',
+  },
+
+  /**
+   * Category Colors
+   *
+   * Vibrant colors for category tags, chips, and classification.
+   * Used in CategoryChip and template previews.
+   */
+  category: {
+    purple: {
+      gradient: ['#8B5CF6', '#A78BFA'],
+      primary: '#8B5CF6',
+    },
+    green: {
+      gradient: ['#10B981', '#34D399'],
+      primary: '#10B981',
+    },
+    pink: {
+      gradient: ['#EC4899', '#F472B6'],
+      primary: '#EC4899',
+    },
+    teal: {
+      gradient: ['#14B8A6', '#2DD4BF'],
+      primary: '#14B8A6',
+    },
+    indigo: {
+      gradient: ['#6366F1', '#818CF8'],
+      primary: '#6366F1',
+    },
+    amber: {
+      gradient: ['#F59E0B', '#FBB03B'],
+      primary: '#F59E0B',
+    },
+    cyan: {
+      gradient: ['#06B6D4', '#22D3EE'],
+      primary: '#06B6D4',
+    },
+    rose: {
+      gradient: ['#F43F5E', '#FB7185'],
+      primary: '#F43F5E',
+    },
+  },
 } as const;
 
 /**
@@ -202,6 +316,119 @@ export const lightColors = {
     /** Tertiary text — low emphasis (gray-400), WCAG AA compliant */
     tertiary: '#6E6660',
   },
+
+  /**
+   * Success Colors (Green)
+   *
+   * Used for positive actions, confirmations, and success states.
+   */
+  success: {
+    /** Background tint for success containers */
+    background: '#f0fdf4',
+    /** Border for success containers */
+    border: '#bbf7d0',
+    /** Primary success color — buttons, icons */
+    primary: '#22c55e',
+    /** Lighter success accent */
+    light: '#86EFAC',
+    /** Text on success backgrounds */
+    text: '#166534',
+  },
+
+  /**
+   * Info Colors (Blue)
+   *
+   * Used for informational content, links, and neutral highlights.
+   */
+  info: {
+    /** Background tint for info containers */
+    background: '#EFF6FF',
+    /** Border for info containers */
+    border: '#BFDBFE',
+    /** Primary info color */
+    primary: '#3B82F6',
+    /** Lighter info accent */
+    light: '#93C5FD',
+    /** Text on info backgrounds */
+    text: '#2563EB',
+  },
+
+  /**
+   * Warning Colors (Amber/Gold)
+   *
+   * Used for warnings, tips, and attention-grabbing elements.
+   */
+  warning: {
+    /** Background tint for warning containers */
+    background: '#fefce8',
+    /** Border for warning containers */
+    border: '#fef08a',
+    /** Primary warning color */
+    primary: '#F59E0B',
+    /** Lighter warning accent */
+    light: '#FCD34D',
+    /** Text on warning backgrounds */
+    text: '#854d0e',
+  },
+
+  /**
+   * Error Colors (Rose/Red)
+   *
+   * Used for errors, destructive actions, and critical alerts.
+   */
+  error: {
+    /** Background tint for error containers */
+    background: '#FEF2F2',
+    /** Border for error containers */
+    border: '#FECACA',
+    /** Primary error color */
+    primary: '#F43F5E',
+    /** Lighter error accent */
+    light: '#FCA5A5',
+    /** Text on error backgrounds */
+    text: '#991B1B',
+  },
+
+  /**
+   * Category Colors
+   *
+   * Vibrant colors for category tags, chips, and classification.
+   * Used in CategoryChip and template previews.
+   */
+  category: {
+    purple: {
+      gradient: ['#6366F1', '#8B5CF6'],
+      primary: '#6366F1',
+    },
+    green: {
+      gradient: ['#059669', '#10B981'],
+      primary: '#059669',
+    },
+    pink: {
+      gradient: ['#EC4899', '#F472B6'],
+      primary: '#EC4899',
+    },
+    teal: {
+      gradient: ['#10B981', '#14B8A6'],
+      primary: '#10B981',
+    },
+    indigo: {
+      gradient: ['#6366F1', '#818CF8'],
+      primary: '#6366F1',
+    },
+    amber: {
+      gradient: ['#F59E0B', '#FB923C'],
+      primary: '#F59E0B',
+    },
+    cyan: {
+      gradient: ['#3B82F6', '#06B6D4'],
+      primary: '#3B82F6',
+    },
+    rose: {
+      gradient: ['#F43F5E', '#FB7185'],
+      primary: '#F43F5E',
+    },
+  },
 } as const;
 
 /**
@@ -262,5 +489,77 @@ export interface SemanticColors {
     700: string;
     800: string;
     900: string;
+  };
+
+  /** Success state colors */
+  success: {
+    background: string;
+    border: string;
+    primary: string;
+    light: string;
+    text: string;
+  };
+
+  /** Info state colors */
+  info: {
+    background: string;
+    border: string;
+    primary: string;
+    light: string;
+    text: string;
+  };
+
+  /** Warning state colors */
+  warning: {
+    background: string;
+    border: string;
+    primary: string;
+    light: string;
+    text: string;
+  };
+
+  /** Error state colors */
+  error: {
+    background: string;
+    border: string;
+    primary: string;
+    light: string;
+    text: string;
+  };
+
+  /** Category colors for chips and tags */
+  category: {
+    purple: {
+      gradient: [string, string];
+      primary: string;
+    };
+    green: {
+      gradient: [string, string];
+      primary: string;
+    };
+    pink: {
+      gradient: [string, string];
+      primary: string;
+    };
+    teal: {
+      gradient: [string, string];
+      primary: string;
+    };
+    indigo: {
+      gradient: [string, string];
+      primary: string;
+    };
+    amber: {
+      gradient: [string, string];
+      primary: string;
+    };
+    cyan: {
+      gradient: [string, string];
+      primary: string;
+    };
+    rose: {
+      gradient: [string, string];
+      primary: string;
+    };
   };
 }

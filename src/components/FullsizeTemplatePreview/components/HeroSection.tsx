@@ -9,7 +9,8 @@ import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Clock, Sparkles } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
-import { heroStyles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { createHeroStyles } from '../styles';
 import {
   FREQUENCY_LABELS,
   CATEGORY_LABELS,
@@ -24,10 +25,15 @@ export function HeroSection({
   iconGlowStyle,
 }: HeroSectionProps) {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
+  const heroStyles = React.useMemo(
+    () => createHeroStyles(colors),
+    [colors],
+  );
   const gradientColors = [
     `${iconColor}15`,
     `${iconColor}08`,
-    '#FAFAF9',
+    colors.background,
   ] as const;
   const formattedFrequency =
     FREQUENCY_LABELS[template?.frequency] || template?.frequency || 'Daily';

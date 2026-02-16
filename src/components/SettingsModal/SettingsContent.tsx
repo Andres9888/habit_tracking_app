@@ -127,8 +127,8 @@ export function SettingsContent(p: SettingsContentProps) {
             </View>
             <SettingsRow
               highContrastMode={hc}
-              icon={<Check color='#0284c7' size={16} />}
-              iconBackgroundColor='#bae6fd'
+              icon={<Check color={themeColors.info.primary} size={16} />}
+              iconBackgroundColor={themeColors.info.light}
               label='Checkbox style for completed habits'
               type='toggle'
               value={p.habitCompletionIcon === 'checkbox'}
@@ -138,8 +138,8 @@ export function SettingsContent(p: SettingsContentProps) {
             />
             <SettingsRow
               highContrastMode={hc}
-              icon={<Circle color='#8b5cf6' size={16} />}
-              iconBackgroundColor='#ddd6fe'
+              icon={<Circle color={themeColors.category.purple.primary} size={16} />}
+              iconBackgroundColor={themeColors.category.purple.gradient[1]}
               label='Circular day markers'
               type='toggle'
               value={p.dayShape === 'circle'}
@@ -147,8 +147,8 @@ export function SettingsContent(p: SettingsContentProps) {
             />
             <SettingsRow
               highContrastMode={hc}
-              icon={<Droplets color='#059669' size={16} />}
-              iconBackgroundColor='#d1fae5'
+              icon={<Droplets color={themeColors.primary[600]} size={16} />}
+              iconBackgroundColor={themeColors.primary[100]}
               label='Gradient fill for habit strength'
               showBorder={false}
               type='toggle'
@@ -168,8 +168,8 @@ export function SettingsContent(p: SettingsContentProps) {
             {showSoundUpsell ? (
               <SettingsRow
                 highContrastMode={hc}
-                icon={<Lock color='#f59e0b' size={16} />}
-                iconBackgroundColor='#fef3c7'
+                icon={<Lock color={themeColors.warning.primary} size={16} />}
+                iconBackgroundColor={themeColors.warning.background}
                 label='Unlock satisfying sounds when completing habits'
                 showBorder={false}
                 type='navigation'
@@ -179,8 +179,8 @@ export function SettingsContent(p: SettingsContentProps) {
               <>
                 <SettingsRow
                   highContrastMode={hc}
-                  icon={<Volume2 color='#f59e0b' size={16} />}
-                  iconBackgroundColor='#fef3c7'
+                  icon={<Volume2 color={themeColors.warning.primary} size={16} />}
+                  iconBackgroundColor={themeColors.warning.background}
                   label='Play sound on habit completion'
                   type='toggle'
                   value={p.completionSoundEnabled}
@@ -210,9 +210,7 @@ export function SettingsContent(p: SettingsContentProps) {
                             className='flex-1 flex-row items-center justify-center gap-1.5 rounded-lg px-2 py-2'
                             style={{
                               backgroundColor: selected
-                                ? isDark
-                                  ? '#374151'
-                                  : '#e5e7eb'
+                                ? themeColors.card
                                 : 'transparent',
                             }}
                             onPress={() =>
@@ -259,8 +257,8 @@ export function SettingsContent(p: SettingsContentProps) {
             <SettingsRow
               badge={p.archivedHabitsCount}
               highContrastMode={hc}
-              icon={<BookOpen color='#78716c' size={16} />}
-              iconBackgroundColor='#e7e5e4'
+              icon={<BookOpen color={themeColors.gray[500]} size={16} />}
+              iconBackgroundColor={themeColors.gray[200]}
               label='Archived Habits'
               showBorder={false}
               type='navigation'
