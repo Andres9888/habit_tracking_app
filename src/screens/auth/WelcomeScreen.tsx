@@ -13,6 +13,7 @@ import { Text, View, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import { Link } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import {
   AuthDivider,
@@ -33,6 +34,7 @@ const SignUpScreen = lazy(() => import('./SignUpScreen'));
 type AuthMode = 'welcome' | 'signin' | 'signup';
 
 function WelcomeScreenContent() {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<AuthMode>('welcome');
   const insets = useSafeAreaInsets();
   const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =
@@ -97,8 +99,8 @@ function WelcomeScreenContent() {
           />
           <AuthDivider />
           <AnimatedPressable
-            accessibilityHint='Create a new Chain Day account'
-            accessibilityLabel='Create free account with Chain Day'
+            accessibilityHint={t('auth.createAccount')}
+            accessibilityLabel={t('auth.createAccount')}
             accessibilityRole='button'
             accessibilityState={{ disabled: !!isLoading }}
             disableAnimation={!!isLoading}
@@ -106,11 +108,11 @@ function WelcomeScreenContent() {
             style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
             onPress={() => setMode('signup')}
           >
-            <Text style={styles.primaryButtonText}>Create Free Account</Text>
+            <Text style={styles.primaryButtonText}>{t('auth.createAccount')}</Text>
           </AnimatedPressable>
           <AnimatedPressable
-            accessibilityHint='Navigate to sign in screen'
-            accessibilityLabel='Sign in to existing account'
+            accessibilityHint={t('auth.alreadyHaveAccount')}
+            accessibilityLabel={t('auth.signIn')}
             accessibilityRole='link'
             accessibilityState={{ disabled: !!isLoading }}
             disableAnimation={!!isLoading}
@@ -118,8 +120,8 @@ function WelcomeScreenContent() {
             style={styles.textLink}
             onPress={() => setMode('signin')}
           >
-            <Text style={styles.textLinkLabel}>Already have an account?</Text>
-            <Text style={styles.textLinkAction}> Sign in</Text>
+            <Text style={styles.textLinkLabel}>{t('auth.alreadyHaveAccount')}</Text>
+            <Text style={styles.textLinkAction}> {t('auth.signIn')}</Text>
           </AnimatedPressable>
         </Animated.View>
       </View>

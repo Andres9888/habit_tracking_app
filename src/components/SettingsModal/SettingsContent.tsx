@@ -13,6 +13,7 @@ import {
 } from 'lucide-react-native';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { StreakRemindersSection } from './StreakRemindersSection';
@@ -24,28 +25,29 @@ import type { SettingsContentProps } from './types';
 
 const anim = (delay: number) => FadeInDown.delay(delay).springify().damping(18);
 
-const DARK_MODE_OPTIONS: Array<{
-  key: 'system' | 'light' | 'dark';
-  label: string;
-  Icon: typeof Monitor;
-}> = [
-  { Icon: Monitor, key: 'system', label: 'System' },
-  { Icon: Sun, key: 'light', label: 'Light' },
-  { Icon: Moon, key: 'dark', label: 'Dark' },
-];
-
-const COMPLETION_SOUND_OPTIONS: Array<{
-  key: 'chime' | 'pop' | 'success';
-  label: string;
-}> = [
-  { key: 'chime', label: 'Chime' },
-  { key: 'pop', label: 'Pop' },
-  { key: 'success', label: 'Success' },
-];
-
 export function SettingsContent(p: SettingsContentProps) {
+  const { t } = useTranslation();
   const { colors, isHighContrastActive: hc } = p;
   const { colors: themeColors, isDark } = useThemeColors();
+
+  const DARK_MODE_OPTIONS: Array<{
+    key: 'system' | 'light' | 'dark';
+    label: string;
+    Icon: typeof Monitor;
+  }> = [
+    { Icon: Monitor, key: 'system', label: t('settings.system') },
+    { Icon: Sun, key: 'light', label: t('settings.light') },
+    { Icon: Moon, key: 'dark', label: t('settings.dark') },
+  ];
+
+  const COMPLETION_SOUND_OPTIONS: Array<{
+    key: 'chime' | 'pop' | 'success';
+    label: string;
+  }> = [
+    { key: 'chime', label: t('settings.chime') },
+    { key: 'pop', label: t('settings.pop') },
+    { key: 'success', label: t('settings.successSound') },
+  ];
 
   // If not premium, show upsell for completion sounds
   const showSoundUpsell = !p.isPremium;
@@ -70,13 +72,13 @@ export function SettingsContent(p: SettingsContentProps) {
 
         {/* Preferences Section - Visual settings */}
         <Animated.View entering={anim(60)}>
-          <SettingsSection highContrastMode={hc} title='Preferences'>
+          <SettingsSection highContrastMode={hc} title={t('settings.preferences')}>
             <View className='px-4 pb-4 pt-4'>
               <Text
                 className='mb-2 text-[13px] font-semibold'
                 style={{ color: themeColors.text.secondary }}
               >
-                Appearance
+                {t('settings.appearance')}
               </Text>
               <View
                 className='flex-row rounded-xl p-1'
@@ -130,7 +132,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<Check color='#0284c7' size={16} />}
               iconBackgroundColor='#bae6fd'
-              label='Checkbox style for completed habits'
+              label={t('settings.checkboxStyle')}
               type='toggle'
               value={p.habitCompletionIcon === 'checkbox'}
               onToggle={(v) =>
@@ -141,7 +143,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<Circle color='#8b5cf6' size={16} />}
               iconBackgroundColor='#ddd6fe'
-              label='Circular day markers'
+              label={t('settings.circularDayMarkers')}
               type='toggle'
               value={p.dayShape === 'circle'}
               onToggle={(v) => void p.onChangeDayShape(v ? 'circle' : 'square')}
@@ -150,7 +152,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<Droplets color='#059669' size={16} />}
               iconBackgroundColor='#d1fae5'
-              label='Gradient fill for habit strength'
+              label={t('settings.gradientFill')}
               showBorder={false}
               type='toggle'
               value={p.showGradientFill}
@@ -164,15 +166,15 @@ export function SettingsContent(p: SettingsContentProps) {
         <Animated.View entering={anim(120)}>
           <SettingsSection
             highContrastMode={hc}
-            subtitle='Premium'
-            title='Sounds'
+            subtitle={t('settings.premium')}
+            title={t('settings.sounds')}
           >
             {showSoundUpsell ? (
               <SettingsRow
                 highContrastMode={hc}
                 icon={<Lock color='#f59e0b' size={16} />}
                 iconBackgroundColor='#fef3c7'
-                label='Unlock satisfying sounds when completing habits'
+                label={t('settings.unlockSounds')}
                 showBorder={false}
                 type='navigation'
                 onPress={p.onPremiumUpsell}
@@ -183,7 +185,7 @@ export function SettingsContent(p: SettingsContentProps) {
                   highContrastMode={hc}
                   icon={<Volume2 color='#f59e0b' size={16} />}
                   iconBackgroundColor='#fef3c7'
-                  label='Play sound on habit completion'
+                  label={t('settings.playSoundOnCompletion')}
                   type='toggle'
                   value={p.completionSoundEnabled}
                   onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
@@ -194,7 +196,7 @@ export function SettingsContent(p: SettingsContentProps) {
                       className='mb-2 text-[13px] font-semibold'
                       style={{ color: themeColors.text.secondary }}
                     >
-                      Sound
+                      {t('habits.sound')}
                     </Text>
                     <View
                       className='flex-row rounded-xl p-1'
@@ -257,13 +259,13 @@ export function SettingsContent(p: SettingsContentProps) {
 
         {/* Data Section - Habit management */}
         <Animated.View entering={anim(240)}>
-          <SettingsSection highContrastMode={hc} title='Data'>
+          <SettingsSection highContrastMode={hc} title={t('settings.data')}>
             <SettingsRow
               badge={p.archivedHabitsCount}
               highContrastMode={hc}
               icon={<BookOpen color='#78716c' size={16} />}
               iconBackgroundColor='#e7e5e4'
-              label='Archived Habits'
+              label={t('settings.archivedHabits')}
               showBorder={false}
               type='navigation'
               onPress={p.onOpenArchivedHabits}

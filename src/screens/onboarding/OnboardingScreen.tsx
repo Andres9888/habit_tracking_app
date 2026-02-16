@@ -11,6 +11,7 @@ import { colors } from '../../theme/colors';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Dimensions,
@@ -94,7 +95,14 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
 
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   const { colors } = useThemeColors();
-  const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
+  const { t } = useTranslation();
+  const stages = [
+    t('onboarding.strengthStages.starting'),
+    t('onboarding.strengthStages.building'),
+    t('onboarding.strengthStages.growing'),
+    t('onboarding.strengthStages.strong'),
+    t('onboarding.strengthStages.automatic'),
+  ];
   return (
     <View style={styles.strengthContainer}>
       {stages.map((stage, i) => (
@@ -187,29 +195,29 @@ interface PageData {
   Visual: (props: { reduceMotion: boolean }) => React.JSX.Element;
 }
 
-const PAGES: PageData[] = [
-  {
-    id: 'chain',
-    subtitle:
-      'Complete your habits daily and watch your chain grow — every link counts.',
-    title: "Don't Break the Chain",
-    Visual: ChainVisualization,
-  },
-  {
-    id: 'strength',
-    subtitle:
-      'Your habits get stronger over time — backed by behavioral science.',
-    title: 'Science-Backed Strength',
-    Visual: StrengthMeter,
-  },
-  {
-    id: 'templates',
-    subtitle:
-      'Pick from science-backed templates or create your own in seconds.',
-    title: '200+ Ready-Made Templates',
-    Visual: TemplateGrid,
-  },
-];
+function useOnboardingPages(): PageData[] {
+  const { t } = useTranslation();
+  return [
+    {
+      id: 'chain',
+      subtitle: t('onboarding.chainSubtitle'),
+      title: t('onboarding.dontBreakTheChain'),
+      Visual: ChainVisualization,
+    },
+    {
+      id: 'strength',
+      subtitle: t('onboarding.scienceSubtitle'),
+      title: t('onboarding.scienceBacked'),
+      Visual: StrengthMeter,
+    },
+    {
+      id: 'templates',
+      subtitle: t('onboarding.templatesSubtitle'),
+      title: t('onboarding.readyMadeTemplates'),
+      Visual: TemplateGrid,
+    },
+  ];
+}
 
 // ─── Dot Indicators ──────────────────────────────────────────────────
 
@@ -250,6 +258,8 @@ interface OnboardingScreenProps {
 
 function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   const { colors } = useThemeColors();
+  const { t } = useTranslation();
+  const PAGES = useOnboardingPages();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
@@ -347,13 +357,13 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
         style={[styles.skipContainer, { top: insets.top + 12 }]}
       >
         <Pressable
-          accessibilityLabel='Skip onboarding'
+          accessibilityLabel={t('onboarding.skipOnboarding')}
           accessibilityRole='button'
           hitSlop={24}
           style={styles.skipButton}
           onPress={handleSkip}
         >
-          <Text style={styles.skipText}>Skip</Text>
+          <Text style={styles.skipText}>{t('common.skip')}</Text>
         </Pressable>
       </Animated.View>
 
@@ -389,7 +399,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
             }
           >
             <Pressable
-              accessibilityLabel='Get started building your first habit'
+              accessibilityLabel={t('onboarding.letsStart')}
               accessibilityRole='button'
               disabled={isLoading}
               style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
@@ -399,19 +409,19 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
                 <ActivityIndicator color='#FFFFFF' />
               ) : (
                 <Text style={styles.ctaText}>
-                  Let's Build Your First Habit →
+                  {t('onboarding.letsStart')}
                 </Text>
               )}
             </Pressable>
           </Animated.View>
         ) : (
           <Pressable
-            accessibilityLabel='Next onboarding page'
+            accessibilityLabel={t('common.next')}
             accessibilityRole='button'
             style={styles.nextButton}
             onPress={handleNext}
           >
-            <Text style={styles.nextText}>Next</Text>
+            <Text style={styles.nextText}>{t('common.next')}</Text>
           </Pressable>
         )}
       </View>

@@ -1,8 +1,8 @@
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 import { AccessibleText } from '../../../../components/ui/AccessibleText';
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
-import { COPY } from './constants';
 import { HeroIcon } from './HeroIcon';
 import { useEmptyStateColors } from './useEmptyStateColors';
 
@@ -17,6 +17,7 @@ export function HeroSection({
   heroAnimatedStyle,
   headlineAnimatedStyle,
 }: HeroSectionProps) {
+  const { t } = useTranslation();
   const colors = useEmptyStateColors();
   return (
     <Animated.View
@@ -49,7 +50,7 @@ export function HeroSection({
             headlineAnimatedStyle,
           ]}
         >
-          {COPY.headline}
+          {t('habits.emptyStateHeadline')}
         </Animated.Text>
       </AnimatedEntrance>
 
@@ -66,7 +67,7 @@ export function HeroSection({
             textAlign: 'center',
           }}
         >
-          {COPY.motivationalStat}
+          {t('habits.emptyStateMotivation')}
         </AccessibleText>
       </AnimatedEntrance>
     </Animated.View>
