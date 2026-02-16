@@ -2,14 +2,14 @@
  * Hook for GenerateAffirmationsButton logic
  */
 
-import { triggerHaptic } from '@/utils/haptics';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { Alert } from 'react-native';
 import {
   useSharedValue,
   withSpring,
   useAnimatedStyle,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../animations';
 import { SUCCESS_FEEDBACK_DURATION } from './constants';
 
@@ -34,10 +34,18 @@ export function useGenerateButton({
 }: UseGenerateButtonParams) {
   const [showSuccess, setShowSuccess] = useState(false);
   const scale = useSharedValue(1);
+  const successTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (successTimerRef.current) clearTimeout(successTimerRef.current);
+    };
+  }, []);
 
   const handlePress = useCallback(async () => {
     if (!isPremium) {
-      triggerHaptic('warning');
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
       onPremiumRequired();
       return;
     }
@@ -52,18 +60,19 @@ export function useGenerateButton({
       return;
     }
 
-    triggerHaptic('toggle');
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
     try {
       await onGenerate();
 
       setShowSuccess(true);
-      triggerHaptic('success');
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
-      setTimeout(() => setShowSuccess(false), SUCCESS_FEEDBACK_DURATION);
+      if (successTimerRef.current) clearTimeout(successTimerRef.current);
+      successTimerRef.current = setTimeout(() => setShowSuccess(false), SUCCESS_FEEDBACK_DURATION);
     } catch (error) {
       if (__DEV__) console.error('Failed to generate affirmations:', error);
-      triggerHaptic('error');
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
 
       Alert.alert(
         'Generation Failed',

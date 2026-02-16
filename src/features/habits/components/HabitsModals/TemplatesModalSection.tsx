@@ -46,6 +46,7 @@ export function TemplatesModalSection({
         </ErrorBoundary>
         <View className='absolute right-4' style={{ top: insets.top + 8 }}>
           <AnimatedPressable
+            accessibilityHint='Close the templates screen'
             accessibilityLabel='Close templates'
             accessibilityRole='button'
             className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md'
@@ -58,7 +59,7 @@ export function TemplatesModalSection({
               });
             }}
             onPressOut={() => {
-              closeScale.value = withSpring(1, { damping: 15, stiffness: 200 });
+              closeScale.value = withSpring(1, { damping: 18, stiffness: 200 });
             }}
           >
             <X color='#57534e' size={24} />

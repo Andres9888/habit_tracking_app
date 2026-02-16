@@ -104,9 +104,19 @@ export function usePressAnimation(
     [pressScale, springConfig, scale, fireHaptic]
   )();
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    const isPressed = scale.value < 1;
+    return {
+      transform: [
+        { scale: scale.value },
+        // Gentle lift on press — premium depth feedback
+        { translateY: isPressed ? -1 : 0 },
+      ],
+      // Elevate shadow on press for card-lift micro-interaction
+      shadowOpacity: isPressed ? 0.12 : undefined,
+      shadowRadius: isPressed ? 20 : undefined,
+    };
+  });
 
   return {
     animatedStyle,

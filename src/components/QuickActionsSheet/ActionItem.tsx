@@ -1,8 +1,9 @@
-import { triggerHaptic } from '@/utils/haptics';
+/* eslint-disable max-lines */
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
 import { clsx } from 'clsx';
 import type { ActionItemProps } from './types';
 
@@ -18,7 +19,7 @@ export const ActionItem = ({
   subtitle,
 }: ActionItemProps) => {
   const handlePress = () => {
-    triggerHaptic('tap');
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
   };
 

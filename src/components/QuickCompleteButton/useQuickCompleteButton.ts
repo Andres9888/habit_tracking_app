@@ -1,4 +1,3 @@
-import { triggerHaptic } from '@/utils/haptics';
 import { getTodayString } from '../../utils/getLocalDateString';
 /**
  * useQuickCompleteButton Hook
@@ -13,6 +12,7 @@ import {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import { useQuickCompleteAnimations } from './useQuickCompleteAnimations';
@@ -58,7 +58,11 @@ export function useQuickCompleteButton({
     if (isToggling) return;
     setIsToggling(true);
 
-    triggerHaptic(localCompleted ? 'tap' : 'heavy');
+    Haptics.impactAsync(
+      localCompleted
+        ? Haptics.ImpactFeedbackStyle.Light
+        : Haptics.ImpactFeedbackStyle.Medium
+    );
     buttonScale.value = withSequence(
       withTiming(0.96, { duration: 80 }),
       withSpring(1, { damping: 12, stiffness: 200 })

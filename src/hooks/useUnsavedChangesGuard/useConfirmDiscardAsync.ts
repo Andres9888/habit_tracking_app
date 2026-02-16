@@ -4,9 +4,9 @@
  * Promise-based confirmation dialog for more flexible control flow.
  */
 
-import { triggerHaptic } from '@/utils/haptics';
 import { useCallback, type MutableRefObject } from 'react';
 import { Alert, type AlertButton } from 'react-native';
+import * as Haptics from 'expo-haptics';
 
 interface UseConfirmDiscardAsyncOptions {
   hasUnsavedChanges: boolean;
@@ -39,7 +39,7 @@ export function useConfirmDiscardAsync({
         return;
       }
 
-      triggerHaptic('toggle');
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
       setIsConfirmationVisible(true);
       resolveRef.current = resolve;
 
@@ -56,7 +56,7 @@ export function useConfirmDiscardAsync({
         {
           onPress: () => {
             setIsConfirmationVisible(false);
-            triggerHaptic('tap');
+            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             onDiscard?.();
             resolveRef.current?.(true);
             resolveRef.current = null;

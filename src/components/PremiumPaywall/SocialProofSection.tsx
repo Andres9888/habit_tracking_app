@@ -17,7 +17,7 @@ export function SocialProofSection({ dark = false }: { dark?: boolean }) {
       <Text
         className={`mt-1 text-center text-xs ${dark ? 'text-white/50' : 'text-stone-500'}`}
       >
-        Trusted by 10,000+ users building lasting habits
+        Loved by 10,000+ people building lasting habits
       </Text>
     </View>
   );

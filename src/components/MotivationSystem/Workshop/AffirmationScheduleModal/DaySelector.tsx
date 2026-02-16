@@ -18,6 +18,7 @@ export function DaySelector({ selectedDays, onToggleDay }: DaySelectorProps) {
         return (
           <Pressable
             key={index}
+            accessibilityHint={`Toggle ${name.toLowerCase()} in your weekly schedule`}
             accessibilityLabel={`${name}${isSelected ? ' selected' : ''}`}
             accessibilityRole='checkbox'
             accessibilityState={{ checked: isSelected }}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { X } from 'lucide-react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface SheetHeaderProps {
   habitName: string;
@@ -13,24 +14,27 @@ export const SheetHeader = ({
   habitIcon,
   onClose,
 }: SheetHeaderProps) => {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='flex-row items-center justify-between border-b border-stone-100 px-5 py-4'>
+    <View className='flex-row items-center justify-between border-b px-5 py-4' style={{ borderColor: colors.border }}>
       <View className='flex-row items-center gap-3'>
         {habitIcon && <Text className='text-2xl'>{habitIcon}</Text>}
         <View>
-          <Text className='text-lg font-bold text-stone-900'>
+          <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
             Quick Actions
           </Text>
-          <Text className='text-xs text-stone-500'>{habitName}</Text>
+          <Text className='text-xs' style={{ color: colors.text.tertiary }}>{habitName}</Text>
         </View>
       </View>
       <Pressable
         accessibilityLabel='Close'
         accessibilityRole='button'
-        className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+        className='h-10 w-10 items-center justify-center rounded-full'
+        style={{ backgroundColor: colors.gray[200] }}
         onPress={onClose}
       >
-        <X className='text-stone-600' size={24} />
+        <X color={colors.text.secondary} size={20} />
       </Pressable>
     </View>
   );

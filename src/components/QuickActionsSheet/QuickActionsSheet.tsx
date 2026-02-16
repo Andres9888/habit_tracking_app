@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * QuickActionsSheet Component
  * Bottom sheet with quick actions for habit management
@@ -19,6 +20,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { QuickActionsSheetProps } from './types';
 import { SheetHeader } from './SheetHeader';
 import { ActionsList } from './ActionsList';
@@ -40,6 +42,7 @@ export const QuickActionsSheet = ({
   visible,
 }: QuickActionsSheetProps) => {
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
   const translateY = useSharedValue(0);
 
   React.useEffect(() => {
@@ -66,7 +69,10 @@ export const QuickActionsSheet = ({
         event.translationY > DISMISS_THRESHOLD ||
         velocityY > VELOCITY_THRESHOLD
       ) {
-        translateY.value = withSpring(SCREEN_HEIGHT, { damping: 20, stiffness: 150 });
+        translateY.value = withSpring(SCREEN_HEIGHT, {
+          damping: 20,
+          stiffness: 150,
+        });
         runOnJS(handleDismiss)();
       } else {
         translateY.value = withSpring(0, { damping: 20, stiffness: 150 });
@@ -110,10 +116,10 @@ export const QuickActionsSheet = ({
 
       <GestureDetector gesture={panGesture}>
         <Animated.View
-          className='absolute bottom-0 left-0 right-0 rounded-t-3xl bg-white shadow-xl'
+          className='absolute bottom-0 left-0 right-0 rounded-t-3xl shadow-xl'
           entering={SlideInDown.springify().damping(18).stiffness(150)}
           exiting={SlideOutDown.springify().damping(20).stiffness(200)}
-          style={[{ paddingBottom: insets.bottom + 16 }, sheetAnimatedStyle]}
+          style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle]}
         >
           <SheetHeader
             habitIcon={habit.icon}

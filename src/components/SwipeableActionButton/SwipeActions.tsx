@@ -2,9 +2,9 @@
  * SwipeActions - Right swipe action panel
  */
 
-import { triggerHaptic } from '@/utils/haptics';
 import React from 'react';
 import { Text, Pressable, Animated } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import type { Swipeable } from 'react-native-gesture-handler';
 import { styles } from './styles';
 import type { SwipeColors } from './types';
@@ -61,7 +61,7 @@ export function SwipeActions({
         accessibilityRole='button'
         style={[styles.swipeActionInner, { backgroundColor: swipeColors.bg }]}
         onPress={() => {
-          triggerHaptic('warning');
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
           swipeableRef.current?.close();
           onSwipeAction?.();
         }}
