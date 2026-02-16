@@ -3,7 +3,7 @@
  * Individual note item with edit and delete actions
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { format } from 'date-fns';
 import { Trash2, Edit3 } from 'lucide-react-native';
@@ -24,7 +24,7 @@ interface NoteCardProps {
   onDelete: () => void;
 }
 
-export const NoteCard: React.FC<NoteCardProps> = ({
+export const NoteCard: React.FC<NoteCardProps> = React.memo(({
   note,
   habitName,
   isDeleting,
@@ -32,6 +32,12 @@ export const NoteCard: React.FC<NoteCardProps> = ({
   onDelete,
 }) => {
   const { colors } = useThemeColors();
+  const dateLabel = useMemo(() => {
+    if (note.updatedAt === note.createdAt) {
+      return `Created ${format(note.createdAt, 'MMM d, h:mm a')}`;
+    }
+    return `Updated ${format(note.updatedAt, 'MMM d, h:mm a')}`;
+  }, [note.createdAt, note.updatedAt]);
   return (
     <View className='gap-2 rounded-2xl p-4' style={{ backgroundColor: colors.gray[50] }}>
       {habitName && (
@@ -44,9 +50,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
       <Text className='text-sm leading-5' style={{ color: colors.text.primary }}>{note.body}</Text>
       <View className='flex-row items-center justify-between'>
         <Text className='text-xs' style={{ color: colors.text.tertiary }}>
-          {note.updatedAt === note.createdAt
-            ? `Created ${format(note.createdAt, 'MMM d, h:mm a')}`
-            : `Updated ${format(note.updatedAt, 'MMM d, h:mm a')}`}
+          {dateLabel}
         </Text>
         <View className='flex-row gap-2'>
           <AnimatedPressable
@@ -78,4 +82,4 @@ export const NoteCard: React.FC<NoteCardProps> = ({
       </View>
     </View>
   );
-};
+});

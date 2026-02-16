@@ -19,7 +19,7 @@ import Animated, {
 import { Check, Zap } from 'lucide-react-native';
 import type { DayCircleProps } from './types';
 
-export function DayCircle({
+export const DayCircle = React.memo(function DayCircle({
   completed,
   index,
   isToday,
@@ -102,4 +102,4 @@ export function DayCircle({
       <Text className={`text-[10px] font-medium ${labelColor}`}>{label}</Text>
     </Animated.View>
   );
-}
+});

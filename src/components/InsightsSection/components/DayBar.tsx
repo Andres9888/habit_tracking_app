@@ -31,7 +31,7 @@ function getBarColorClass(
   return 'bg-stone-200';
 }
 
-export function DayBar({
+export const DayBar = React.memo(function DayBar({
   dayStats,
   isBest,
   isWorst,
@@ -93,4 +93,4 @@ export function DayBar({
       </Text>
     </View>
   );
-}
+});

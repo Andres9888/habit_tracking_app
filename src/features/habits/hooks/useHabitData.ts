@@ -21,11 +21,12 @@ export function useHabitData(extendedDateStrings: string[]) {
   const startDate = safeDateStrings[0];
   const endDate = safeDateStrings.at(-1);
 
-  // Guard: Skip tracking query if no valid date range
-  const trackingQuery =
-    startDate && endDate
-      ? useQuery(api.habits.getTracking, { endDate, startDate })
-      : useQuery(api.habits.getTracking, { dates: safeDateStrings });
+  // Build query args unconditionally to avoid conditional hook calls (React rules)
+  const trackingArgs = startDate && endDate
+    ? { endDate, startDate }
+    : { dates: safeDateStrings };
+
+  const trackingQuery = useQuery(api.habits.getTracking, trackingArgs);
 
   // Guard: When Convex is unreachable, trackingQuery will be undefined
   const tracking = Array.isArray(trackingQuery) ? trackingQuery : [];

@@ -12,7 +12,7 @@ import { useAnimations } from './useAnimations';
 import { CompactMeter } from './CompactMeter';
 import { StandardMeter } from './StandardMeter';
 
-export function DailyMomentumMeter({
+export const DailyMomentumMeter = React.memo(function DailyMomentumMeter({
   completedToday,
   totalHabits,
   reduceMotion = false,
@@ -54,6 +54,6 @@ export function DailyMomentumMeter({
       totalHabits={totalHabits}
     />
   );
-}
+});
 
 export default DailyMomentumMeter;

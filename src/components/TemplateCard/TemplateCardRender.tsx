@@ -6,7 +6,7 @@ import {
 } from './components';
 import type { TemplateCardRenderProps } from './TemplateCard.types';
 
-export function TemplateCardRender({
+export const TemplateCardRender = React.memo(function TemplateCardRender({
   category,
   checkmarkStyle,
   containerStyle,
@@ -77,4 +77,4 @@ export function TemplateCardRender({
       </CardContainer>
     </ScrollRevealWrapper>
   );
-}
+});

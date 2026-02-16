@@ -15,7 +15,7 @@ import type { StatCardProps } from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export function StatCard({
+export const StatCard = React.memo(function StatCard({
   accessibilityHint,
   animationKey,
   color,
@@ -76,4 +76,4 @@ export function StatCard({
       </View>
     </AnimatedPressable>
   );
-}
+});

@@ -21,7 +21,7 @@ import {
 } from './useMiniTemplateCardAnimations';
 import { createImportHandler, createPressHandlers } from './usePressHandlers';
 
-export function MiniTemplateCard(props: MiniTemplateCardProps) {
+export const MiniTemplateCard = React.memo(function MiniTemplateCard(props: MiniTemplateCardProps) {
   const {
     description = '',
     hasResearch,
@@ -87,6 +87,6 @@ export function MiniTemplateCard(props: MiniTemplateCardProps) {
       onPressOut={handlePressOut}
     />
   );
-}
+});
 
 export default MiniTemplateCard;

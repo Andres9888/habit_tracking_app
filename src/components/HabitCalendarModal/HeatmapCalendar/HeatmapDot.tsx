@@ -1,3 +1,4 @@
+import React from 'react';
 import { View } from 'react-native';
 
 interface HeatmapDotProps {
@@ -5,7 +6,7 @@ interface HeatmapDotProps {
   isFuture: boolean;
 }
 
-export function HeatmapDot({ isCompleted, isFuture }: HeatmapDotProps) {
+export const HeatmapDot = React.memo(function HeatmapDot({ isCompleted, isFuture }: HeatmapDotProps) {
   const backgroundColor = isFuture
     ? '#e7e5e4'
     : isCompleted
@@ -18,4 +19,4 @@ export function HeatmapDot({ isCompleted, isFuture }: HeatmapDotProps) {
       style={{ backgroundColor }}
     />
   );
-}
+});

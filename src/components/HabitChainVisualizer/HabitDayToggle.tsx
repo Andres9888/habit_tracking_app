@@ -14,7 +14,7 @@ import { AnimatedCompletionIcon } from './AnimatedCompletionIcon';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
+export const HabitDayToggle: React.FC<HabitDayToggleProps> = React.memo(({
   accentColor,
   accessibilityHint,
   accessibilityLabel,
@@ -81,4 +81,4 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
       </AnimatedPressable>
     </Animated.View>
   );
-};
+});

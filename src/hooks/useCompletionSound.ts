@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Audio } from 'expo-av';
 import type { CompletionSoundType } from '../../convex/settings/types';
 
@@ -82,6 +82,16 @@ export function useCompletionSound({
       if (__DEV__) console.warn('Failed to play completion sound:', error);
     }
   }, [soundEnabled, soundType]);
+
+  // Cleanup sound on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (soundRef.current) {
+        soundRef.current.unloadAsync();
+        soundRef.current = undefined;
+      }
+    };
+  }, []);
 
   // Return noop if not enabled
   if (!soundEnabled) {

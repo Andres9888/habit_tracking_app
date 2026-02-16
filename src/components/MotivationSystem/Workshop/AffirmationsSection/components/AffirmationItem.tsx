@@ -21,7 +21,7 @@ interface AffirmationItemProps {
   isPremium: boolean;
 }
 
-export function AffirmationItem({
+export const AffirmationItem = React.memo(function AffirmationItem({
   affirmation,
   onEdit,
   onDelete,
@@ -91,4 +91,4 @@ export function AffirmationItem({
       )}
     </View>
   );
-}
+});

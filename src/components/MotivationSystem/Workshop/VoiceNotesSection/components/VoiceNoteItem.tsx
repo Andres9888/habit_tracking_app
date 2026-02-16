@@ -21,7 +21,7 @@ interface VoiceNoteItemProps {
   onPlayFinish?: () => void;
 }
 
-export function VoiceNoteItem({
+export const VoiceNoteItem = React.memo(function VoiceNoteItem({
   note,
   reduceMotion = false,
   onPlayStart,
@@ -83,4 +83,4 @@ export function VoiceNoteItem({
       )}
     </View>
   );
-}
+});
