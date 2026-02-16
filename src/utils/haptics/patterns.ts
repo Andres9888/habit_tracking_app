@@ -90,6 +90,52 @@ export const HapticPatterns = {
   },
 
   /**
+   * Milestone 7 days — light celebratory pulse for first week.
+   */
+  streakMilestone7: async (): Promise<void> => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    await wait(80);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    await wait(100);
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  },
+
+  /**
+   * Milestone 30 days — medium celebratory sequence for one month.
+   */
+  streakMilestone30: async (): Promise<void> => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    await wait(70);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    await wait(70);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await wait(100);
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  },
+
+  /**
+   * Milestone 100 days — powerful celebratory sequence for century club.
+   */
+  streakMilestone100: async (): Promise<void> => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await wait(60);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await wait(60);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await wait(100);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await wait(80);
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  },
+
+  /**
+   * Swipe progress — subtle feedback as swipe distance increases.
+   */
+  swipeProgress: async (): Promise<void> => {
+    await Haptics.selectionAsync();
+  },
+
+  /**
    * Success notification — for completed actions, saves, confirmations.
    */
   success: async (): Promise<void> => {

@@ -9,6 +9,7 @@ import {
   incrementCompletionCount,
 } from '../../utils/storeReview';
 import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
+import { triggerHaptic } from '../../utils/haptics';
 
 interface CelebrationData {
   milestone: StreakMilestone;
@@ -42,6 +43,15 @@ export function useCelebrationHandlers(userName: string) {
       const milestone = checkStreakMilestoneCrossed(previousStreak, currentStreak);
 
       if (milestone) {
+        // Trigger milestone-specific haptic feedback
+        if (milestone.days === 7) {
+          triggerHaptic('streakMilestone7');
+        } else if (milestone.days === 30) {
+          triggerHaptic('streakMilestone30');
+        } else if (milestone.days === 100) {
+          triggerHaptic('streakMilestone100');
+        }
+
         setCelebrationData({
           habitEmoji,
           habitId,

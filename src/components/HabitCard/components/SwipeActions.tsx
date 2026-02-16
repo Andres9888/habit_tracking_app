@@ -7,6 +7,7 @@ import React, { memo } from 'react';
 import { Pressable, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { withSpring, type SharedValue } from 'react-native-reanimated';
+import { triggerHaptic } from '../../../utils/haptics';
 import { useAppTheme } from '../../../theme';
 import { actionStyles } from '../HabitCard.actionStyles';
 
@@ -40,6 +41,7 @@ export const SwipeActions = memo(function SwipeActions({
           { backgroundColor: theme.custom.colors.secondary[500] },
         ]}
         onPress={() => {
+          triggerHaptic('tap');
           translateX.value = withSpring(0);
           onEdit?.();
         }}
@@ -56,6 +58,7 @@ export const SwipeActions = memo(function SwipeActions({
           { backgroundColor: theme.custom.colors.error },
         ]}
         onPress={() => {
+          triggerHaptic('warning');
           translateX.value = withSpring(0);
           onDelete?.();
         }}
