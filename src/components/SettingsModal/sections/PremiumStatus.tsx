@@ -134,9 +134,7 @@ export function PremiumStatus({ highContrast, isPremium, isTrialActive, expirati
               backgroundColor: '#8b5cf6',
             }}
           >
-            <Text className='text-[13px] font-bold text-white'>
-              PRO
-            </Text>
+            <Text className='text-[13px] font-bold text-white'>PRO</Text>
           </View>
         </View>
       </AnimatedPressable>
