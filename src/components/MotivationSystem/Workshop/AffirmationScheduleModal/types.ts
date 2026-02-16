@@ -7,9 +7,9 @@ import type { AffirmationFrequency } from '../../../../utils/notifications';
 
 export interface AffirmationScheduleData {
   scheduledTime?: string; // "HH:MM" 24-hour format
-  frequency?: AffirmationFrequency;
+  frequency: AffirmationFrequency;
   daysOfWeek?: number[];
-  isScheduleEnabled?: boolean;
+  isScheduleEnabled: boolean;
 }
 
 export interface AffirmationScheduleModalProps {

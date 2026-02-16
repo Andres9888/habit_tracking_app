@@ -8,10 +8,13 @@
  */
 
 import { View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
+
+const entrance = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
 
 interface CustomizeSectionProps {
   habitName: string;
@@ -23,10 +26,6 @@ interface CustomizeSectionProps {
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
-  /** Whether user has premium access */
-  isPremium?: boolean;
-  /** Called when non-premium user taps the locked reminder toggle */
-  onPremiumUpsell?: () => void;
 }
 
 export function CustomizeSection({
@@ -39,33 +38,35 @@ export function CustomizeSection({
   onColorSelect,
   onReminderToggle,
   onReminderTimeChange,
-  isPremium,
-  onPremiumUpsell,
 }: CustomizeSectionProps) {
   return (
     <View className='flex-1'>
-      <EmojiPicker
-        hideLabel
-        habitName={habitName}
-        selectedEmoji={selectedEmoji}
-        onSelect={onEmojiSelect}
-      />
+      <Animated.View entering={entrance(0)}>
+        <EmojiPicker
+          hideLabel
+          habitName={habitName}
+          selectedEmoji={selectedEmoji}
+          onSelect={onEmojiSelect}
+        />
+      </Animated.View>
 
-      <ColorPickerSection
-        hideLabel
-        colors={HABIT_COLORS}
-        selectedColor={selectedColor}
-        onSelectColor={onColorSelect}
-      />
+      <Animated.View entering={entrance(60)}>
+        <ColorPickerSection
+          hideLabel
+          colors={HABIT_COLORS}
+          selectedColor={selectedColor}
+          onSelectColor={onColorSelect}
+        />
+      </Animated.View>
 
-      <EnhancedReminderSelector
-        enabled={remindersEnabled}
-        isPremium={isPremium}
-        reminderTime={reminderTime}
-        onPremiumUpsell={onPremiumUpsell}
-        onTimeChange={onReminderTimeChange}
-        onToggle={onReminderToggle}
-      />
+      <Animated.View entering={entrance(120)}>
+        <EnhancedReminderSelector
+          enabled={remindersEnabled}
+          reminderTime={reminderTime}
+          onTimeChange={onReminderTimeChange}
+          onToggle={onReminderToggle}
+        />
+      </Animated.View>
     </View>
   );
 }
