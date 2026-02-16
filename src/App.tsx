@@ -1,42 +1,52 @@
 /**
  * App Root Component
  *
- * Main application entry point that sets up the provider hierarchy:
- * - Sentry: Error tracking and monitoring
- * - Clerk: Authentication
- * - Convex: Real-time database
- * - RevenueCat: Subscription management
- * - React Native Paper: UI theming
- *
- * Performance optimizations:
- * - Sentry init deferred with requestIdleCallback
- * - Non-critical providers lazy loaded after first paint
- * - Provider chain optimized to minimize blocking
+ * Main application entry point that sets up the provider hierarchy.
+ * Provider order is critical — each layer depends on the ones above it.
+ * See {@link buildProviderTree} for the grouped dependency chain.
  */
 
 import '../global.css';
 
 import { ClerkProvider } from '@clerk/clerk-expo';
-import type { PropsWithChildren } from 'react';
-import { useState, useEffect } from 'react';
+import type { ComponentType, PropsWithChildren } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
+import { PurchasesProvider } from './components/providers/PurchasesProvider';
+import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration';
+import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
+import { SyncStatusProvider } from './contexts/SyncStatusContext';
 import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
+import { OfflineProvider } from './providers/OfflineProvider';
 import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
 
-// Initialize Sentry after first frame to avoid blocking app launch.
-// requestIdleCallback (or setTimeout fallback) defers this work until
-// the main thread is idle, keeping the first paint fast.
-if (typeof requestIdleCallback === 'function') {
-  requestIdleCallback(() => initSentry());
-} else {
-  setTimeout(() => initSentry(), 0);
+// ---------------------------------------------------------------------------
+// Sentry Initialization
+// ---------------------------------------------------------------------------
+
+/**
+ * Defers Sentry init until the main thread is idle so it doesn't block
+ * the first paint. Falls back to setTimeout(0) on platforms without
+ * requestIdleCallback.
+ */
+function scheduleSentryInit(): void {
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(() => initSentry());
+  } else {
+    setTimeout(() => initSentry(), 0);
+  }
 }
+
+scheduleSentryInit();
+
+// ---------------------------------------------------------------------------
+// Clerk key validation
+// ---------------------------------------------------------------------------
 
 const clerkKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 if (!clerkKey) {
@@ -45,76 +55,110 @@ if (!clerkKey) {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Provider composition utility
+// ---------------------------------------------------------------------------
+
 /**
- * Lazy-loaded providers that don't block critical rendering path.
- * These are loaded after the initial paint to improve startup time.
+ * Composes an array of providers (with optional props) into a single
+ * wrapper component, eliminating deeply-nested JSX pyramids.
+ *
+ * Providers render in array order — the first entry is the outermost wrapper.
+ *
+ * @example
+ * ```tsx
+ * const Tree = composeProviders([
+ *   [ThemeProvider, { theme: dark }],
+ *   AuthProvider,
+ * ]);
+ * <Tree><App /></Tree>
+ * ```
  */
-function LazyProviders({ children }: PropsWithChildren) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // Load non-critical providers after a short delay
-    // This ensures the critical path renders first
-    const timer = setTimeout(() => setMounted(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
-  // Dynamic imports for heavy providers
-  const { PurchasesProvider } = require('./components/providers/PurchasesProvider');
-  const { StreakMilestoneProvider } = require('./components/StreakMilestoneCelebration');
-  const { NetworkStatusProvider } = require('./contexts/NetworkStatusContext');
-  const { SyncStatusProvider } = require('./contexts/SyncStatusContext');
-  const { OfflineProvider } = require('./providers/OfflineProvider');
-
-  return (
-    <NetworkStatusProvider>
-      <OfflineProvider>
-        <SyncStatusProvider>
-          <PurchasesProvider>
-            <StreakMilestoneProvider>
-              {children}
-            </StreakMilestoneProvider>
-          </PurchasesProvider>
-        </SyncStatusProvider>
-      </OfflineProvider>
-    </NetworkStatusProvider>
+function composeProviders(
+  providers: Array<ComponentType<any> | [ComponentType<any>, Record<string, unknown>]>
+): ComponentType<PropsWithChildren> {
+  return providers.reduceRight<ComponentType<PropsWithChildren>>(
+    (Accumulated, entry) => {
+      const [Provider, props] = Array.isArray(entry) ? entry : [entry, {}];
+      return function Composed({ children }: PropsWithChildren) {
+        return (
+          <Provider {...props}>
+            <Accumulated>{children}</Accumulated>
+          </Provider>
+        );
+      };
+    },
+    ({ children }: PropsWithChildren) => <>{children}</>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Provider tree
+// ---------------------------------------------------------------------------
+
 /**
- * Core providers needed for authentication and data access.
- * These are loaded immediately as they're required for the app to function.
+ * Builds the full provider tree, grouped by concern.
+ *
+ * ### Dependency chain (outermost → innermost):
+ *
+ * **Error Boundary** — catches everything below
+ * 1. SentryErrorBoundary
+ *
+ * **Platform / UI chrome** — no dependencies, needed by all UI
+ * 2. SafeAreaProvider    — insets for notches/status bars
+ * 3. PaperProvider       — Material Design theme & components
+ *
+ * **Authentication** — must wrap anything that calls useAuth / useUser
+ * 4. ClerkProvider       — auth session, token cache
+ * 5. SentryUserSync      — tags Sentry events with current user (needs Clerk)
+ *
+ * **Data layer** — needs auth tokens from Clerk
+ * 6. ConvexClerkProvider — syncs Clerk JWT → Convex client
+ *
+ * **Theming** — reads user prefs from Convex
+ * 7. ThemeColorProvider
+ *
+ * **Connectivity & sync** — depend on Convex + theme context
+ * 8. NetworkStatusProvider
+ * 9. OfflineProvider
+ * 10. SyncStatusProvider
+ *
+ * **Feature providers** — depend on auth, data, and connectivity
+ * 11. PurchasesProvider        — RevenueCat subscriptions (needs auth)
+ * 12. StreakMilestoneProvider   — celebration overlays (needs data)
  */
-function CoreProviders({ children }: PropsWithChildren) {
-  return (
-    <SentryErrorBoundary>
-      <SafeAreaProvider>
-        <PaperProvider theme={theme}>
-          <ClerkProvider publishableKey={clerkKey} tokenCache={tokenCache}>
-            <SentryUserSync>
-              <ConvexClerkProvider>
-                <ThemeColorProvider>
-                  <LazyProviders>
-                    {children}
-                  </LazyProviders>
-                </ThemeColorProvider>
-              </ConvexClerkProvider>
-            </SentryUserSync>
-          </ClerkProvider>
-        </PaperProvider>
-      </SafeAreaProvider>
-    </SentryErrorBoundary>
-  );
-}
+const Providers = composeProviders([
+  // ── Error boundary ───────────────────────────────────────────────
+  SentryErrorBoundary,
+
+  // ── Platform / UI chrome ─────────────────────────────────────────
+  SafeAreaProvider,
+  [PaperProvider, { theme }],
+
+  // ── Authentication ───────────────────────────────────────────────
+  [ClerkProvider, { publishableKey: clerkKey, tokenCache }],
+  SentryUserSync,
+
+  // ── Data layer (needs Clerk auth) ────────────────────────────────
+  ConvexClerkProvider,
+
+  // ── Theming (reads user prefs from Convex) ───────────────────────
+  ThemeColorProvider,
+
+  // ── Connectivity & sync ──────────────────────────────────────────
+  NetworkStatusProvider,
+  OfflineProvider,
+  SyncStatusProvider,
+
+  // ── Feature providers ────────────────────────────────────────────
+  PurchasesProvider,
+  StreakMilestoneProvider,
+]);
 
 export default function App() {
   return (
-    <CoreProviders>
+    <Providers>
       <AuthGate />
-    </CoreProviders>
+    </Providers>
   );
 }

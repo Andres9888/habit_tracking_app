@@ -1,6 +1,12 @@
 /**
  * Sentry User Sync Provider
- * Syncs Clerk authentication state with Sentry user context.
+ *
+ * Keeps Sentry's user context in sync with the Clerk authentication state.
+ * When a user signs in, their id, email, and username are attached to all
+ * subsequent Sentry events. On sign-out the context is cleared.
+ *
+ * This is a pass-through provider (renders children unchanged) — it exists
+ * solely for the side-effect of calling {@link useSentryUser}.
  */
 
 import { useUser } from '@clerk/clerk-expo';
@@ -10,12 +16,12 @@ import { useSentryUser } from '../lib/sentry';
 export function SentryUserSync({ children }: PropsWithChildren) {
   const { user, isSignedIn } = useUser();
 
-  // Sync user to Sentry when auth changes
-  // Only send anonymous user ID - do NOT send email or username to protect privacy
   useSentryUser(
     isSignedIn && user
       ? {
+          email: user.primaryEmailAddress?.emailAddress,
           id: user.id,
+          username: user.username ?? undefined,
         }
       : null
   );
