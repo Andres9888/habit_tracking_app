@@ -23,7 +23,7 @@ export function CharacterScreenSkeleton({
   return (
     <View
       accessible
-      accessibilityLabel='Loading character screen'
+      accessibilityLabel='Loading your character and achievements...'
       accessibilityRole='progressbar'
       className='flex-1 px-6 pt-16'
       style={{ backgroundColor: pageBg }}

@@ -27,6 +27,8 @@ import Animated, {
   useReducedMotion,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { safeSetBoolean } from '@/utils/storage';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
@@ -42,6 +44,7 @@ function ChainLink({
   index: number;
   reduceMotion: boolean;
 }) {
+  const { colors } = useThemeColors();
   const chainColors = [
     colors.primary[600],
     colors.primary[700],
@@ -89,6 +92,7 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
 // ─── Strength Meter ──────────────────────────────────────────────────
 
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
+  const { colors } = useThemeColors();
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
   return (
     <View style={styles.strengthContainer}>
@@ -108,7 +112,7 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
             style={[
               styles.strengthBar,
               {
-                backgroundColor: interpolateColor(i / 4),
+                backgroundColor: interpolateColor(i / 4, colors.primary),
                 opacity: 0.15 + i * 0.2125,
                 width: `${20 + i * 20}%`,
               },
@@ -128,10 +132,10 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-function interpolateColor(t: number): string {
-  if (t < 0.5) return colors.primary[400];
-  if (t < 0.75) return colors.primary[600];
-  return colors.primary[700];
+function interpolateColor(t: number, primary: Record<number, string>): string {
+  if (t < 0.5) return primary[400];
+  if (t < 0.75) return primary[600];
+  return primary[700];
 }
 
 // ─── Template Grid ───────────────────────────────────────────────────
@@ -240,7 +244,7 @@ interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
-export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
+function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   const { colors } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -253,7 +257,15 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
     setIsLoading(true);
     void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
     try {
-      await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
+      // Mark onboarding as complete in AsyncStorage
+      await safeSetBoolean(ONBOARDING_KEY, true);
+      onComplete();
+    } catch (error) {
+      // If storage fails, still proceed to avoid blocking user
+      // They might see onboarding again on next launch, but that's acceptable
+      if (__DEV__) {
+        console.error('[OnboardingScreen] Failed to save completion state:', error);
+      }
       onComplete();
     } finally {
       setIsLoading(false);
@@ -569,3 +581,11 @@ const styles = StyleSheet.create({
 });
 
 export { ONBOARDING_KEY };
+
+export function OnboardingScreen(props: OnboardingScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Onboarding">
+      <OnboardingScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}

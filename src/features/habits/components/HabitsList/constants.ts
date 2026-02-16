@@ -2,6 +2,10 @@
  * HabitsList Constants
  */
 
+import { ENTRANCE_STAGGER_DELAY } from '@/constants';
+
+export { ENTRANCE_STAGGER_DELAY };
+
 export const PREMIUM_BENEFITS = [
   {
     description:
@@ -25,6 +29,3 @@ export const SOCIAL_PROOF = {
   quote:
     '"Upgrading gave me the structure I needed. I finally track every routine and stay consistent."',
 };
-
-// OPTIMIZED: Faster stagger for snappier feel (was 100ms)
-export const ENTRANCE_STAGGER_DELAY = 50;

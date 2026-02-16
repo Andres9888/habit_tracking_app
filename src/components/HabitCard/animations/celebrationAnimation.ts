@@ -6,8 +6,12 @@
  * - Uncheck: 200ms scale 1→0.92→1 with soft tap
  */
 
-import { withSpring, withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
-import { springs } from '../../../theme/animations';
+import { withSpring, withSequence, withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
+
+/** Design-system spring: damping 18, stiffness 150 */
+const COMPLETION_SPRING = { damping: 18, stiffness: 150 };
+/** Slightly bouncier for the overshoot pop */
+const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
 
 interface CelebrationOptions {
   cardScale: SharedValue<number>;
@@ -44,26 +48,23 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
       rippleScale.value = 0;
       rippleOpacity.value = 0;
     } else {
-      // Satisfying spring completion — overshoot then settle
-      checkmarkScale.value = 0;
-      checkmarkScale.value = withSpring(1, {
-        ...springs.bouncy,
-        stiffness: 260,
-        damping: 12,
-      });
-      // Subtle celebratory rotation wiggle
-      checkmarkRotate.value = -8;
-      checkmarkRotate.value = withSpring(0, springs.button);
+      // Spring-based check animation: 0→1.2 (bounce) → 1 (settle)
+      // Uses spring physics for a premium, organic feel
+      checkmarkScale.value = withSequence(
+        withSpring(1.2, BOUNCE_SPRING),
+        withSpring(1, COMPLETION_SPRING)
+      );
+      // Subtle rotation morph during pop-in
+      checkmarkRotate.value = withSequence(
+        withSpring(-8, BOUNCE_SPRING),
+        withSpring(0, COMPLETION_SPRING)
+      );
 
-      // Expanding ripple with spring feel
+      // Ripple with spring for softer falloff
       rippleScale.value = 0;
-      rippleOpacity.value = 0.3;
-      rippleScale.value = withSpring(2, {
-        ...springs.gentle,
-        stiffness: 120,
-        damping: 18,
-      });
-      rippleOpacity.value = withTiming(0, { duration: 350 });
+      rippleOpacity.value = 0.25;
+      rippleScale.value = withSpring(1.8, COMPLETION_SPRING);
+      rippleOpacity.value = withTiming(0, { duration: 300 });
     }
 
     runOnJS(setShowConfetti)(!reduceMotion);
@@ -84,17 +85,13 @@ export function createUncheckTrigger(
     'worklet';
     // Haptic feedback is handled by tapGesture onBegin
 
-    if (reduceMotion) {
-      checkmarkScale.value = 1;
-      checkmarkRotate.value = 0;
-    } else {
-      // Spring shrink-and-pop for uncheck
-      checkmarkScale.value = withSpring(0, {
-        ...springs.button,
-        stiffness: 300,
-        damping: 16,
-      });
-      checkmarkRotate.value = withSpring(8, springs.micro);
-    }
+    checkmarkScale.value = reduceMotion
+      ? 1
+      : withTiming(0.92, { duration: 100 }, () => {
+          'worklet';
+          checkmarkScale.value = withTiming(1, { duration: 100 });
+        });
+
+    checkmarkRotate.value = 0;
   };
 }

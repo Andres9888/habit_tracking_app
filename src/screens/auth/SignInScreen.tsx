@@ -7,12 +7,14 @@
 /* eslint-disable max-lines-per-function */
 import React, { useState, useEffect, useRef } from 'react';
 import {
+  Linking,
   Text,
   View,
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   TextInput,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,9 +25,6 @@ import Animated, {
   withDelay,
   withSpring,
   withTiming,
-  withRepeat,
-  Easing,
-  interpolate,
 } from 'react-native-reanimated';
 import {
   AuthDivider,
@@ -39,6 +38,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -47,7 +47,7 @@ interface SignInScreenProps {
   onNavigateToSignUp?: () => void;
 }
 
-export default function SignInScreen(_props: SignInScreenProps = {}) {
+function SignInScreenContent(_props: SignInScreenProps = {}) {
   const insets = useSafeAreaInsets();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const passwordRef = useRef<TextInput>(null);
@@ -80,9 +80,6 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
   const contentOpacity = useSharedValue(0);
   const contentTranslateY = useSharedValue(30);
 
-  // Breathing animation for logo
-  const breathe = useSharedValue(0);
-
   useEffect(() => {
     // Logo entrance
     logoScale.value = withDelay(
@@ -98,21 +95,11 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
     // Content entrance (60ms stagger)
     contentOpacity.value = withDelay(170, withTiming(1, { duration: 280 }));
     contentTranslateY.value = withDelay(170, withSpring(0, { damping: 18, stiffness: 150 }));
-
-    // Breathing animation
-    breathe.value = withRepeat(
-      withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true
-    );
   }, []);
 
   const logoStyle = useAnimatedStyle(() => ({
     opacity: logoOpacity.value,
-    transform: [
-      { scale: logoScale.value },
-      { scale: interpolate(breathe.value, [0, 1], [1, 1.05]) },
-    ],
+    transform: [{ scale: logoScale.value }],
   }));
 
   const headerStyle = useAnimatedStyle(() => ({
@@ -182,12 +169,14 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_apple'}
                 provider='apple'
+                testID='auth-sign-in-apple-button'
                 onPress={signInWithApple}
               />
               <SocialSignInButton
                 disabled={isAnyLoading}
                 isLoading={oauthLoading === 'oauth_google'}
                 provider='google'
+                testID='auth-sign-in-google-button'
                 onPress={signInWithGoogle}
               />
             </View>
@@ -232,6 +221,7 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
                 isLoading={isLoading}
                 label='Sign In'
                 loadingLabel='Signing in…'
+                testID='auth-sign-in-button'
                 onPress={handleSignIn}
               />
             </View>
@@ -240,7 +230,22 @@ export default function SignInScreen(_props: SignInScreenProps = {}) {
           {/* Footer */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>
-              By continuing, you agree to our Terms & Privacy Policy
+              By continuing, you agree to our{' '}
+              <Text
+                accessibilityRole='link'
+                style={styles.footerLink}
+                onPress={() => void Linking.openURL('https://chainday.app/terms')}
+              >
+                Terms
+              </Text>
+              {' & '}
+              <Text
+                accessibilityRole='link'
+                style={styles.footerLink}
+                onPress={() => void Linking.openURL('https://chainday.app/privacy')}
+              >
+                Privacy Policy
+              </Text>
             </Text>
           </View>
         </ScrollView>
@@ -279,6 +284,10 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: 32,
     paddingHorizontal: 16,
+  },
+  footerLink: {
+    color: '#047857',
+    textDecorationLine: 'underline',
   },
   footerText: {
     color: '#a8a29e',
@@ -338,3 +347,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default function SignInScreen(props: SignInScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Sign In">
+      <SignInScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}

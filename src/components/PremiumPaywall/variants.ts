@@ -8,7 +8,7 @@ export const VARIANT_CONFIGS: Record<string, VariantConfig> = {
   analytics: {
     ctaText: 'Try Premium Free for 7 Days',
     gradientColors: ['#047857', '#059669'] as const,
-    heroSubtitle: 'See exactly what's working — and what needs attention.',
+    heroSubtitle: "See exactly what's working — and what needs attention.",
     heroTitle: 'Unlock Premium Analytics',
     presentation: 'blur-overlay',
     showPricingToggle: true,

@@ -34,7 +34,7 @@ export default function HabitRankingsList({
           item={item}
           rank={rank}
           rankBadge={getRankBadge(rank)}
-          onPress={() => handleHabitPress(item.id)}
+          onPress={handleHabitPress}
         />
       );
     },
@@ -47,7 +47,7 @@ export default function HabitRankingsList({
   const ITEM_HEIGHT = 72;
 
   const getItemLayout = useCallback(
-    (_: any, index: number) => ({
+    (_: unknown, index: number) => ({
       length: ITEM_HEIGHT,
       offset: ITEM_HEIGHT * index,
       index,

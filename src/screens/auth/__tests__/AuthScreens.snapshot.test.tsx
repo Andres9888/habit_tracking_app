@@ -17,7 +17,7 @@ import SignUpScreen from '../SignUpScreen';
 jest.mock('expo-linear-gradient', () => {
   const { View } = require('react-native');
   return {
-    LinearGradient: ({ children, ...props }: any) => (
+    LinearGradient: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
       <View testID='linear-gradient' {...props}>
         {children}
       </View>

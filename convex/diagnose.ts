@@ -3,10 +3,10 @@
  * Run: npx convex run diagnose:show
  */
 
-import { query, mutation } from './_generated/server';
+import { internalQuery, internalMutation } from './_generated/server';
 import { calculateHabitStrength } from './habitStrength';
 
-export const show = query({
+export const show = internalQuery({
   handler: async (ctx) => {
     const habits = await ctx.db.query('habits').collect();
 
@@ -51,7 +51,7 @@ export const show = query({
   },
 });
 
-export const fix = mutation({
+export const fix = internalMutation({
   handler: async (ctx) => {
     // Forcing habit strength calculation
 

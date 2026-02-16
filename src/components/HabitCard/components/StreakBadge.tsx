@@ -1,97 +1,102 @@
 /**
  * StreakBadge Component
- * Displays the current streak with tiered celebration styling.
- * Tiers: standard (1-6), silver (7-29), gold (30-99), platinum (100+)
- * Theme-aware for perfect dark mode support.
+ * Displays the current streak with fire emoji
  */
 
-import React from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { View, Text } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSequence,
+  withSpring,
+} from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
+import { milestoneColors } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { streakStyles } from '../HabitCard.streakStyles';
+
+/** Design-system spring: damping 18, stiffness 150 */
+const STREAK_SPRING = { damping: 18, stiffness: 150 };
+const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
 
 interface StreakBadgeProps {
   currentStreak: number;
   bestStreak: number;
 }
 
-/** Streak tier configuration for celebration intensity */
-function getStreakTier(streak: number) {
-  if (streak >= 100) {
-    return {
-      emoji: '💎',
-      label: 'Unstoppable',
-      bg: { light: '#EDE9FE', dark: '#4C1D9533' }, // violet tint
-      text: { light: '#6D28D9', dark: '#C4B5FD' },
-      border: { light: '#C4B5FD', dark: '#7C3AED55' },
-      glow: true,
-    };
-  }
-  if (streak >= 30) {
-    return {
-      emoji: '🏆',
-      label: 'On Fire',
-      bg: { light: '#FEF3C7', dark: '#92400E33' }, // golden
-      text: { light: '#B45309', dark: '#FCD34D' },
-      border: { light: '#FCD34D', dark: '#F59E0B55' },
-      glow: true,
-    };
-  }
-  if (streak >= 7) {
-    return {
-      emoji: '🔥',
-      label: null,
-      bg: { light: '#FEF9C3', dark: '#78350F33' }, // warm amber
-      text: { light: '#A16207', dark: '#FDE68A' },
-      border: { light: '#FDE68A', dark: '#F59E0B44' },
-      glow: false,
-    };
-  }
-  return {
-    emoji: '🔥',
-    label: null,
-    bg: { light: '#FEF9C3', dark: '#78350F22' }, // subtle amber
-    text: { light: '#A16207', dark: '#FDE68A' },
-    border: { light: 'transparent', dark: 'transparent' },
-    glow: false,
-  };
+/**
+ * AnimatedStreakText — pops with a satisfying spring bounce when streak changes.
+ */
+function AnimatedStreakText({ children, streak }: { children: React.ReactNode; streak: number }) {
+  const scale = useSharedValue(1);
+  const prevStreak = useRef(streak);
+
+  useEffect(() => {
+    if (prevStreak.current !== streak && streak > 0) {
+      // Bounce: overshoot then settle
+      scale.value = withSequence(
+        withSpring(1.15, BOUNCE_SPRING),
+        withSpring(1, STREAK_SPRING)
+      );
+    }
+    prevStreak.current = streak;
+  }, [streak, scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return <Animated.View style={animatedStyle}>{children}</Animated.View>;
 }
 
-export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
+export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
   const theme = useAppTheme();
-  const { isDark } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
 
   if (currentStreak <= 0) {
-    return null;
+    return (
+      <View style={streakStyles.streakRow}>
+        <View
+          style={[
+            streakStyles.streakBadge,
+            { backgroundColor: themeColors.gray[100] },
+          ]}
+        >
+          <Text style={streakStyles.streakFireIcon}>💪</Text>
+          <Text
+            style={[
+              streakStyles.streakText,
+              { color: themeColors.text.secondary },
+            ]}
+          >
+            Start a Streak!
+          </Text>
+        </View>
+      </View>
+    );
   }
-
-  const tier = getStreakTier(currentStreak);
-  const mode = isDark ? 'dark' : 'light';
 
   return (
     <View style={streakStyles.streakRow}>
-      <View
-        style={[
-          streakStyles.streakBadge,
-          {
-            backgroundColor: tier.bg[mode],
-            borderWidth: tier.glow ? 1 : 0,
-            borderColor: tier.border[mode],
-          },
-        ]}
-      >
-        <Text style={streakStyles.streakFireIcon}>{tier.emoji}</Text>
-        <Text
+      <AnimatedStreakText streak={currentStreak}>
+        <View
           style={[
-            streakStyles.streakText,
-            { color: tier.text[mode] },
+            streakStyles.streakBadge,
+            { backgroundColor: milestoneColors.amberLight },
           ]}
         >
-          {currentStreak} Day{currentStreak === 1 ? '' : 's'}
-          {tier.label ? ` · ${tier.label}` : ' Streak'}
-        </Text>
-      </View>
+          <Text style={streakStyles.streakFireIcon}>🔥</Text>
+          <Text
+            style={[
+              streakStyles.streakText,
+              { color: theme.custom.colors.warning[700] },
+            ]}
+          >
+            {currentStreak} Day{currentStreak === 1 ? '' : 's'} Streak
+          </Text>
+        </View>
+      </AnimatedStreakText>
 
       {/* Best Streak Badge - Shows when approaching or at personal record */}
       {bestStreak > 0 && currentStreak >= bestStreak - 2 && (
@@ -101,26 +106,24 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
             {
               backgroundColor:
                 currentStreak >= bestStreak
-                  ? tier.bg[mode]
-                  : isDark ? '#37415133' : '#F5F5F4',
+                  ? milestoneColors.amberLight
+                  : themeColors.gray[100],
               borderColor:
                 currentStreak >= bestStreak
-                  ? tier.border[mode]
-                  : isDark ? '#4B556344' : '#E5E7EB',
+                  ? milestoneColors.amberBorder
+                  : themeColors.border,
             },
           ]}
         >
-          <Text style={streakStyles.bestStreakIcon}>
-            {currentStreak >= bestStreak ? '👑' : '🏅'}
-          </Text>
+          <Text style={streakStyles.bestStreakIcon}>🏅</Text>
           <Text
             style={[
               streakStyles.bestStreakText,
               {
                 color:
                   currentStreak >= bestStreak
-                    ? tier.text[mode]
-                    : isDark ? '#9CA3AF' : '#6B7280',
+                    ? milestoneColors.amberText
+                    : themeColors.text.secondary,
               },
             ]}
           >
@@ -132,4 +135,4 @@ export function StreakBadge({ currentStreak, bestStreak }: StreakBadgeProps) {
       )}
     </View>
   );
-}
+});
