@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Share2, Mail } from 'lucide-react-native';
+import { Star, Share2, Mail, Sparkles } from 'lucide-react-native';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 
@@ -8,6 +8,7 @@ interface Props {
   onRate: () => void;
   onShare: () => void;
   onSupport: () => void;
+  onWhatsNew: () => void;
 }
 
 export function AppActions({
@@ -15,6 +16,7 @@ export function AppActions({
   onRate,
   onShare,
   onSupport,
+  onWhatsNew,
 }: Props) {
   return (
     <SettingsSection highContrastMode={highContrast} title='App'>
@@ -33,6 +35,14 @@ export function AppActions({
         label='Share with Friends'
         type='navigation'
         onPress={onShare}
+      />
+      <SettingsRow
+        highContrastMode={highContrast}
+        icon={<Sparkles color='#8b5cf6' size={16} />}
+        iconBackgroundColor='#ede9fe'
+        label="What's New"
+        type='navigation'
+        onPress={onWhatsNew}
       />
       <SettingsRow
         highContrastMode={highContrast}

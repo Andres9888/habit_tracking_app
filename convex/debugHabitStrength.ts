@@ -3,9 +3,9 @@
  * Temporary file for troubleshooting - can be deleted later
  */
 
-import { query } from './_generated/server';
+import { internalQuery } from './_generated/server';
 
-export const inspectHabits = query({
+export const inspectHabits = internalQuery({
   handler: async (ctx) => {
     const habits = await ctx.db
       .query('habits')
@@ -26,7 +26,7 @@ export const inspectHabits = query({
   },
 });
 
-export const inspectOneHabit = query({
+export const inspectOneHabit = internalQuery({
   handler: async (ctx) => {
     const habits = await ctx.db
       .query('habits')
