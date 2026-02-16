@@ -20,6 +20,24 @@ import {
   type SyncErrorCallback,
 } from './helpers';
 
+/**
+ * Provider component that manages sync orchestration state and provides
+ * sync status, callbacks, and manual trigger capabilities to the app.
+ * 
+ * Integrates with the sync orchestrator to monitor pending operations,
+ * track sync progress, and notify subscribers of sync events.
+ * 
+ * @param children - React children to render
+ * @param autoStart - Whether to automatically start syncing on mount (default: true)
+ * @param onStatusChange - Optional callback invoked when sync status changes
+ * 
+ * @example
+ * ```tsx
+ * <SyncStatusProvider autoStart={true} onStatusChange={handleSyncChange}>
+ *   <App />
+ * </SyncStatusProvider>
+ * ```
+ */
 export function SyncStatusProvider({
   children,
   autoStart = true,

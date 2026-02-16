@@ -12,6 +12,7 @@ import { spacing } from '../../../theme/spacing';
 
 export const AnalyticsHeader: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const { colors } = useThemeColors();
 
   return (
     <View
@@ -24,7 +25,7 @@ export const AnalyticsHeader: React.FC = () => {
         accessibilityLabel='Analytics'
         accessibilityRole='text'
         entering={FadeInDown.delay(0).springify().damping(18)}
-        style={styles.headerTitle}
+        style={[styles.headerTitle, { color: colors.text.primary }]}
       >
         Analytics
       </Animated.Text>
@@ -32,7 +33,7 @@ export const AnalyticsHeader: React.FC = () => {
         accessibilityLabel='Track your habit journey'
         accessibilityRole='text'
         entering={FadeInDown.delay(50).springify().damping(18)}
-        style={styles.headerSubtitle}
+        style={[styles.headerSubtitle, { color: colors.text.secondary }]}
       >
         Track your habit journey
       </Animated.Text>

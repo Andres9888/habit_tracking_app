@@ -11,7 +11,7 @@ export async function updateUserSettingsPremium(
 ) {
   const settings = await ctx.db
     .query('userSettings')
-    .filter((q) => q.eq(q.field('userId'), clerkId))
+    .withIndex('by_userId', (q) => q.eq('userId', clerkId))
     .first();
 
   if (settings) {

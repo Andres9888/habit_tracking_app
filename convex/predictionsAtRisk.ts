@@ -23,7 +23,8 @@ export const getHabitsAtRisk = query({
 
     const habits = await ctx.db
       .query('habits')
-      .filter((q) => q.and(q.eq(q.field('userId'), identity.subject), q.eq(q.field('archived'), false)))
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
+      .filter((q) => q.neq(q.field('archived'), true))
       .collect();
 
     const atRiskHabits = [];

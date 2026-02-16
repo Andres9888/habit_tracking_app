@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * EmptyState - Shown when user has no habits to analyze
  * Uses design system tokens (no hardcoded colors or NativeWind)

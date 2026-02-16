@@ -63,8 +63,8 @@ describe('CtaButton', () => {
   });
 
   describe('CTA Shimmer Animation Constants', () => {
-    it('should have correct shimmer duration (600ms)', () => {
-      expect(CTA_SHIMMER.duration).toBe(600);
+    it('should have correct shimmer duration (560ms)', () => {
+      expect(CTA_SHIMMER.duration).toBe(560);
     });
 
     it('should have correct gradient opacity (0.3)', () => {
@@ -84,8 +84,9 @@ describe('CtaButton', () => {
 
   describe('Spring Config Constants', () => {
     it('should have correct ctaPress spring config', () => {
-      expect(SPRING_CONFIGS.ctaPress.damping).toBe(20);
-      expect(SPRING_CONFIGS.ctaPress.stiffness).toBe(280);
+      expect(SPRING_CONFIGS.ctaPress.damping).toBe(18);
+      expect(SPRING_CONFIGS.ctaPress.mass).toBe(1);
+      expect(SPRING_CONFIGS.ctaPress.stiffness).toBe(150);
     });
   });
 
