@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chain Day iOS Widgets - Foundation Mockup</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 48px 24px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+      margin-bottom: 48px;
+      font-weight: 400;
+    }
+
+    .section {
+      margin-bottom: 64px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 24px;
+      letter-spacing: -0.3px;
+    }
+
+    .widget-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .widget-container {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .widget-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    /* Small Widget (2x2) */
+    .widget-small {
+      width: 169px;
+      height: 169px;
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .widget-small .logo {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 16px;
+    }
+
+    .widget-small .progress-ring {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .widget-small .progress-ring svg {
+      transform: rotate(-90deg);
+    }
+
+    .widget-small .progress-ring circle {
+      fill: none;
+      stroke-width: 8;
+    }
+
+    .widget-small .progress-ring .bg {
+      stroke: #e5e7eb;
+    }
+
+    .widget-small .progress-ring .fg {
+      stroke: #047857;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.3s ease;
+    }
+
+    .widget-small .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .widget-small .count {
+      font-size: 34px;
+      font-weight: 700;
+      color: #047857;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .widget-small .total {
+      font-size: 17px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .widget-small .streak {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Medium Widget (4x2) */
+    .widget-medium {
+      width: 360px;
+      height: 169px;
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+    }
+
+    .widget-medium .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .widget-medium .app-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #6b7280;
+    }
+
+    .widget-medium .streak-display {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #047857;
+    }
+
+    .widget-medium .habits-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .widget-medium .habit-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 17px;
+      color: #1f2937;
+    }
+
+    .widget-medium .habit-item .checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .widget-medium .habit-item.completed .checkbox {
+      background: #047857;
+      color: white;
+    }
+
+    .widget-medium .habit-item.incomplete .checkbox {
+      border: 2px solid #d1d5db;
+      color: transparent;
+    }
+
+    .widget-medium .habit-item.completed .habit-name {
+      opacity: 0.5;
+    }
+
+    /* Lock Screen Widget */
+    .widget-lockscreen {
+      width: 160px;
+      height: 160px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(20px);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 0 auto;
+    }
+
+    .widget-lockscreen .emoji {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+
+    .widget-lockscreen .number {
+      font-size: 34px;
+      font-weight: 700;
+      color: white;
+      line-height: 1;
+    }
+
+    .widget-lockscreen .label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    /* Rectangular Lock Screen Variant */
+    .widget-lockscreen-rect {
+      width: 280px;
+      height: 100px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 0 auto;
+    }
+
+    .widget-lockscreen-rect .emoji {
+      font-size: 56px;
+    }
+
+    .widget-lockscreen-rect .info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .widget-lockscreen-rect .number {
+      font-size: 34px;
+      font-weight: 700;
+      color: white;
+      line-height: 1;
+    }
+
+    .widget-lockscreen-rect .label {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .specs {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 24px;
+      color: white;
+      margin-top: 48px;
+    }
+
+    .specs h3 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .specs ul {
+      list-style: none;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .specs ul li::before {
+      content: "✓ ";
+      color: #10b981;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .dark-mode {
+      margin-top: 32px;
+    }
+
+    .dark-mode .widget-small,
+    .dark-mode .widget-medium {
+      background: #1f2937;
+    }
+
+    .dark-mode .widget-small .count {
+      color: #10b981;
+    }
+
+    .dark-mode .widget-small .total,
+    .dark-mode .widget-small .streak {
+      color: #9ca3af;
+    }
+
+    .dark-mode .widget-small .progress-ring .bg {
+      stroke: #374151;
+    }
+
+    .dark-mode .widget-small .progress-ring .fg {
+      stroke: #10b981;
+    }
+
+    .dark-mode .widget-medium .app-name {
+      color: #9ca3af;
+    }
+
+    .dark-mode .widget-medium .streak-display {
+      color: #10b981;
+    }
+
+    .dark-mode .widget-medium .habit-item {
+      color: #e5e7eb;
+    }
+
+    .dark-mode .widget-medium .habit-item .checkbox {
+      border-color: #4b5563;
+    }
+
+    .dark-mode .widget-medium .habit-item.completed .checkbox {
+      background: #10b981;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔗 Chain Day iOS Widgets</h1>
+    <p class="subtitle">Foundation Design Mockup — Light & Dark Mode</p>
+
+    <!-- Light Mode -->
+    <div class="section">
+      <h2 class="section-title">☀️ Light Mode Widgets</h2>
+      
+      <div class="widget-grid">
+        <!-- Small Widget -->
+        <div class="widget-container">
+          <div class="widget-label">Small Widget (2×2)</div>
+          <div class="widget-small">
+            <div class="logo">⛓️</div>
+            <div class="progress-ring">
+              <svg width="100" height="100">
+                <circle class="bg" cx="50" cy="50" r="42" />
+                <circle class="fg" cx="50" cy="50" r="42" 
+                  stroke-dasharray="264" 
+                  stroke-dashoffset="88" />
+              </svg>
+              <div class="progress-text">
+                <div class="count">3</div>
+                <div class="total">/5</div>
+              </div>
+            </div>
+            <div class="streak">🔥 12 days</div>
+          </div>
+        </div>
+
+        <!-- Medium Widget -->
+        <div class="widget-container">
+          <div class="widget-label">Medium Widget (4×2)</div>
+          <div class="widget-medium">
+            <div class="header">
+              <div class="app-name">CHAIN DAY</div>
+              <div class="streak-display">
+                <span>🔥</span>
+                <span>12</span>
+              </div>
+            </div>
+            <div class="habits-list">
+              <div class="habit-item completed">
+                <div class="checkbox">✓</div>
+                <div class="habit-name">Morning Meditation</div>
+              </div>
+              <div class="habit-item completed">
+                <div class="checkbox">✓</div>
+                <div class="habit-name">Read 20 pages</div>
+              </div>
+              <div class="habit-item incomplete">
+                <div class="checkbox"></div>
+                <div class="habit-name">Evening Workout</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lock Screen Circular -->
+        <div class="widget-container" style="background: #1a1a2e;">
+          <div class="widget-label" style="color: white;">Lock Screen (Circular)</div>
+          <div class="widget-lockscreen">
+            <div class="emoji">🔥</div>
+            <div class="number">12</div>
+            <div class="label">day streak</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lock Screen Rectangular -->
+      <div class="widget-container" style="background: #1a1a2e; margin-top: 32px;">
+        <div class="widget-label" style="color: white;">Lock Screen (Rectangular)</div>
+        <div class="widget-lockscreen-rect">
+          <div class="emoji">🔥</div>
+          <div class="info">
+            <div class="number">12</div>
+            <div class="label">day streak</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark Mode -->
+    <div class="section dark-mode">
+      <h2 class="section-title">🌙 Dark Mode Widgets</h2>
+      
+      <div class="widget-grid">
+        <!-- Small Widget Dark -->
+        <div class="widget-container">
+          <div class="widget-label">Small Widget (2×2) — Dark</div>
+          <div class="widget-small">
+            <div class="logo">⛓️</div>
+            <div class="progress-ring">
+              <svg width="100" height="100">
+                <circle class="bg" cx="50" cy="50" r="42" />
+                <circle class="fg" cx="50" cy="50" r="42" 
+                  stroke-dasharray="264" 
+                  stroke-dashoffset="88" />
+              </svg>
+              <div class="progress-text">
+                <div class="count">3</div>
+                <div class="total">/5</div>
+              </div>
+            </div>
+            <div class="streak">🔥 12 days</div>
+          </div>
+        </div>
+
+        <!-- Medium Widget Dark -->
+        <div class="widget-container">
+          <div class="widget-label">Medium Widget (4×2) — Dark</div>
+          <div class="widget-medium">
+            <div class="header">
+              <div class="app-name">CHAIN DAY</div>
+              <div class="streak-display">
+                <span>🔥</span>
+                <span>12</span>
+              </div>
+            </div>
+            <div class="habits-list">
+              <div class="habit-item completed">
+                <div class="checkbox">✓</div>
+                <div class="habit-name">Morning Meditation</div>
+              </div>
+              <div class="habit-item completed">
+                <div class="checkbox">✓</div>
+                <div class="habit-name">Read 20 pages</div>
+              </div>
+              <div class="habit-item incomplete">
+                <div class="checkbox"></div>
+                <div class="habit-name">Evening Workout</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design Specs -->
+    <div class="specs">
+      <h3>Design System Specifications</h3>
+      <ul>
+        <li><strong>Typography:</strong> 34pt (counts), 22pt (titles), 17pt (body), 13pt (captions)</li>
+        <li><strong>Font Family:</strong> SF Pro Display / SF Pro Text (system default)</li>
+        <li><strong>Primary Green:</strong> #047857 (light mode) / #10b981 (dark mode)</li>
+        <li><strong>Border Radius:</strong> 16px (widgets), 12px (buttons), 6px (checkboxes)</li>
+        <li><strong>Shadows:</strong> 4px offset, 16px blur, 0.08 opacity</li>
+        <li><strong>Widget Sizes:</strong> Small 169×169px, Medium 360×169px, Lock Screen 160×160px (circular)</li>
+        <li><strong>Update Frequency:</strong> Every 15 minutes or on app background</li>
+        <li><strong>Data Source:</strong> Shared App Group (UserDefaults)</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Animate progress ring on load
+    window.addEventListener('load', () => {
+      const circles = document.querySelectorAll('.progress-ring .fg');
+      circles.forEach(circle => {
+        const offset = circle.getAttribute('stroke-dashoffset');
+        circle.style.strokeDashoffset = '264';
+        setTimeout(() => {
+          circle.style.strokeDashoffset = offset;
+        }, 100);
+      });
+    });
+  </script>
+</body>
+</html>
