@@ -9,18 +9,22 @@
 import * as StoreReview from 'expo-store-review';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import {
+  MIN_COMPLETIONS_FOR_RATING,
+  RATING_COOLDOWN_DAYS,
+} from '@/constants';
 
 const STORE_REVIEW_LAST_PROMPT_KEY = '@store_review_last_prompt';
 const STORE_REVIEW_COMPLETION_COUNT_KEY = '@store_review_completion_count';
 
 /** Minimum days between rating prompts */
-const COOLDOWN_DAYS = 90;
+const COOLDOWN_DAYS = RATING_COOLDOWN_DAYS;
 
 /** Minimum total completions before prompting */
-const MIN_COMPLETIONS = 5;
+const MIN_COMPLETIONS = MIN_COMPLETIONS_FOR_RATING;
 
 /** Streak milestones that should trigger a review prompt */
-const REVIEW_ELIGIBLE_MILESTONES = [7, 14, 30];
+const REVIEW_ELIGIBLE_MILESTONES = new Set([7, 14, 30]);
 
 /**
  * Increment the completion counter. Call on every habit completion.
@@ -28,7 +32,7 @@ const REVIEW_ELIGIBLE_MILESTONES = [7, 14, 30];
 export async function incrementCompletionCount(): Promise<number> {
   try {
     const raw = await AsyncStorage.getItem(STORE_REVIEW_COMPLETION_COUNT_KEY);
-    const count = (raw ? parseInt(raw, 10) : 0) + 1;
+    const count = (raw ? Number.parseInt(raw, 10) : 0) + 1;
     await AsyncStorage.setItem(
       STORE_REVIEW_COMPLETION_COUNT_KEY,
       String(count),
@@ -45,7 +49,7 @@ export async function incrementCompletionCount(): Promise<number> {
 async function getCompletionCount(): Promise<number> {
   try {
     const raw = await AsyncStorage.getItem(STORE_REVIEW_COMPLETION_COUNT_KEY);
-    return raw ? parseInt(raw, 10) : 0;
+    return raw ? Number.parseInt(raw, 10) : 0;
   } catch {
     return 0;
   }
@@ -59,7 +63,7 @@ async function isCooldownExpired(): Promise<boolean> {
     const raw = await AsyncStorage.getItem(STORE_REVIEW_LAST_PROMPT_KEY);
     if (!raw) return true;
 
-    const lastPrompt = parseInt(raw, 10);
+    const lastPrompt = Number.parseInt(raw, 10);
     const daysSince = (Date.now() - lastPrompt) / (1000 * 60 * 60 * 24);
     return daysSince >= COOLDOWN_DAYS;
   } catch {
@@ -97,7 +101,53 @@ export async function maybeRequestReview(
 ): Promise<void> {
   try {
     // Only prompt on specific milestones
-    if (!REVIEW_ELIGIBLE_MILESTONES.includes(milestoneDays)) {
+    if (!REVIEW_ELIGIBLE_MILESTONES.has(milestoneDays)) {
+      return;
+    }
+
+    // Check platform support
+    if (Platform.OS === 'web') return;
+    const isAvailable = await StoreReview.isAvailableAsync();
+    if (!isAvailable) return;
+
+    // Check minimum completions
+    const completions = await getCompletionCount();
+    if (completions < MIN_COMPLETIONS) return;
+
+    // Check cooldown
+    const cooldownOk = await isCooldownExpired();
+    if (!cooldownOk) return;
+
+    // All checks passed — request review
+    await recordPromptShown();
+    await StoreReview.requestReview();
+  } catch {
+    // Silent fail — never break the app for a rating prompt
+  }
+}
+
+/**
+ * Attempt to show the store review prompt after viewing positive analytics.
+ *
+ * Triggers when user views analytics with strong performance metrics.
+ *
+ * Guards:
+ * - Average completion rate >= 70%
+ * - At least 3 active habits
+ * - At least 5 total completions
+ * - At least 90 days since last prompt
+ * - Store review must be available on the platform
+ *
+ * @param avgCompletionRate - Average completion rate (0-100)
+ * @param totalHabits - Total number of habits
+ */
+export async function maybeRequestReviewFromAnalytics(
+  avgCompletionRate: number,
+  totalHabits: number,
+): Promise<void> {
+  try {
+    // Only prompt on strong performance
+    if (avgCompletionRate < 70 || totalHabits < 3) {
       return;
     }
 

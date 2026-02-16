@@ -6,10 +6,16 @@ import type { CategoryColorConfig } from './CategoryChip.types';
 
 /** Convert hex color to rgba for valid color interpolation */
 export const hexToRgba = (hex: string, alpha: number): string => {
-  const r = Number.parseInt(hex.slice(1, 3), 16);
-  const g = Number.parseInt(hex.slice(3, 5), 16);
-  const b = Number.parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
+  if (!hex || typeof hex !== 'string' || hex.length < 7) {
+    return `rgba(0,0,0,${alpha})`;
+  }
+  const red = Number.parseInt(hex.slice(1, 3), 16);
+  const green = Number.parseInt(hex.slice(3, 5), 16);
+  const blue = Number.parseInt(hex.slice(5, 7), 16);
+  if (Number.isNaN(red) || Number.isNaN(green) || Number.isNaN(blue)) {
+    return `rgba(0,0,0,${alpha})`;
+  }
+  return `rgba(${red},${green},${blue},${alpha})`;
 };
 
 /** Category-specific color configurations */

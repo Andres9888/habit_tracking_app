@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colors.text.inverse,
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
   },
   card: {
@@ -53,13 +53,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
     padding: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
   description: {
     color: colors.text.secondary,
-    fontSize: 14,
+    fontSize: 13,
     lineHeight: 20,
     marginBottom: 20,
     textAlign: 'center',

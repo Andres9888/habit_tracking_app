@@ -28,10 +28,10 @@ export function PremiumPaywall({
 }: PremiumPaywallProps) {
   const config = VARIANT_CONFIGS[variant];
   const handlers = usePremiumPaywall({
-    variant,
     onClose,
-    onStartTrial,
     onRestorePurchases,
+    onStartTrial,
+    variant,
   });
 
   if (variant === 'benefits') {

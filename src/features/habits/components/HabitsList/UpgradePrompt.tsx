@@ -1,11 +1,19 @@
 /**
- * UpgradePrompt Component
- * Modal overlay for upgrade CTA — optimized for trial conversion
+ * UpgradePrompt — full-screen modal overlay for trial conversion.
+ *
+ * Part of the **monetization flow**: shown by {@link HabitsListModals} when
+ * `upgradePromptVisible` is true (typically after the user tries to exceed
+ * the free-tier habit limit).
+ *
+ * Features a slide-in card with headline, value prop, pricing pill, primary
+ * CTA ("Start Free Trial"), and a dismissive secondary button ("Maybe later").
+ * The backdrop is tappable to dismiss.
  */
 
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
+import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
 
 interface UpgradePromptProps {
   onClose: () => void;
@@ -22,22 +30,23 @@ export function UpgradePrompt({
 
   return (
     <Animated.View
-      entering={FadeIn.duration(280)}
       className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
+      entering={FadeInDown.duration(280).springify().damping(18)}
     >
       <Pressable
+        accessibilityHint='Tap outside to dismiss'
         accessibilityLabel='Close upgrade prompt'
         accessibilityRole='button'
         className='absolute inset-0'
         onPress={onClose}
       />
       <Animated.View
-        entering={SlideInDown.duration(280).damping(18)}
         className='w-full rounded-t-3xl px-6 py-8'
+        entering={SlideInDown.duration(ANIMATION_DURATION.medium).damping(ANIMATION_VALUES.springDamping)}
       >
         <LinearGradient
-          colors={['#ffffff', 'rgba(255, 251, 235, 0.3)']}
           className='absolute inset-0 rounded-t-3xl'
+          colors={['#ffffff', 'rgba(255, 251, 235, 0.3)']}
         />
         <View className='gap-4'>
           <View className='items-center pb-2'>
@@ -56,27 +65,29 @@ export function UpgradePrompt({
             </Text>
           </View>
           <Pressable
+            accessibilityHint='Start your 7-day free trial'
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
             className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
-            style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
+            style={({ pressed }) => ({ opacity: pressed ? OPACITY.strong : OPACITY.full })}
             onPress={onUpgradePress}
           >
             <LinearGradient
-              colors={['#7c3aed', '#4f46e5']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
               className='absolute inset-0 rounded-full'
+              colors={['#7c3aed', '#4f46e5']}
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
             />
             <Text className='text-[17px] font-semibold text-white'>
               Start Free Trial →
             </Text>
           </Pressable>
           <Pressable
+            accessibilityHint='Dismiss this upgrade prompt'
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
             className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+            style={({ pressed }) => ({ opacity: pressed ? OPACITY.high : OPACITY.full })}
             onPress={onClose}
           >
             <Text className='text-[15px] font-normal text-stone-600'>

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Alert } from 'react-native';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail, validatePassword } from '../../../utils/validation';
+import { getClerkErrorMessage } from '../utils/getClerkErrorMessage';
+import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 
 export function useSignUpFlow() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -47,9 +49,9 @@ export function useSignUpFlow() {
       });
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
       setPendingVerification(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', error.errors?.[0]?.message || 'Failed to sign up');
+      Alert.alert('Error', getClerkErrorMessage(error, ERROR_MESSAGES.AUTH.SIGN_UP_FAILED));
     } finally {
       setIsLoading(false);
     }
@@ -58,21 +60,33 @@ export function useSignUpFlow() {
   const handleVerification = async (code: string) => {
     if (!isLoaded) return;
 
+    const normalizedCode = code.trim();
+
+    if (normalizedCode.length !== 6) {
+      Alert.alert(
+        'Invalid code',
+        'Please enter a valid 6-digit verification code.'
+      );
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const attempt = await signUp.attemptEmailAddressVerification({ code });
+      const attempt = await signUp.attemptEmailAddressVerification({
+        code: normalizedCode,
+      });
 
       if (attempt.status === 'complete') {
         await setActive({ session: attempt.createdSessionId });
       } else {
         if (__DEV__) console.error(JSON.stringify(attempt, null, 2));
-        Alert.alert('Error', 'Verification incomplete. Please try again.');
+        Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_UP_VERIFICATION_INCOMPLETE);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert(
         'Error',
-        error.errors?.[0]?.message || 'Failed to verify email'
+        getClerkErrorMessage(error, ERROR_MESSAGES.AUTH.SIGN_UP_VERIFICATION_INCOMPLETE)
       );
     } finally {
       setIsLoading(false);

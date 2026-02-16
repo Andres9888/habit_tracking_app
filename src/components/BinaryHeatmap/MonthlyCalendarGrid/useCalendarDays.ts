@@ -49,7 +49,7 @@ export function useCalendarDays({
 
   const days = useMemo(() => {
     // Guard against invalid currentMonth
-    if (!currentMonth || isNaN(currentMonth.getTime())) {
+    if (!currentMonth || Number.isNaN(currentMonth.getTime())) {
       return [];
     }
     const monthStart = startOfMonth(currentMonth);
@@ -68,6 +68,8 @@ export function useCalendarDays({
         const isBeforeCreation = habitCreatedAt
           ? isBefore(date, new Date(habitCreatedAt)) && !isCompleted
           : false;
+        // A day is "missed" if it's in the past, not before creation, not completed, and not in the future
+        const isMissed = !isFuture && !isBeforeCreation && !isCompleted && isCurrentMonth;
 
         return {
           date,
@@ -78,6 +80,7 @@ export function useCalendarDays({
           isCurrentMonth,
           isFuture,
           isToday,
+          isMissed,
         };
       });
   }, [currentMonth, todayString, completedDates, habitCreatedAt]);

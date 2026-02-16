@@ -6,6 +6,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DEFAULT_MAX_AGE_MS, DRAFT_KEY_PREFIX } from './constants';
 import type { DraftContentType, StoredDraft } from './types';
 
+function isStoredDraft(value: unknown): value is StoredDraft {
+  if (!value || typeof value !== 'object') return false;
+
+  const maybeDraft = value as Partial<StoredDraft>;
+  return (
+    typeof maybeDraft.content === 'string' &&
+    typeof maybeDraft.timestamp === 'number' &&
+    Number.isFinite(maybeDraft.timestamp) &&
+    maybeDraft.version === 1
+  );
+}
+
 /** Generate storage key for a draft */
 export function getDraftKey(
   habitId: string,
@@ -25,12 +37,17 @@ export async function getDraft(
     const raw = await AsyncStorage.getItem(key);
     if (!raw) return null;
 
-    const stored: StoredDraft = JSON.parse(raw);
-    if (Date.now() - stored.timestamp > maxAgeMs) {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!isStoredDraft(parsed)) {
       await AsyncStorage.removeItem(key);
       return null;
     }
-    return stored.content;
+
+    if (Date.now() - parsed.timestamp > maxAgeMs) {
+      await AsyncStorage.removeItem(key);
+      return null;
+    }
+    return parsed.content;
   } catch (error) {
     if (__DEV__) console.warn('Failed to read draft:', error);
     return null;

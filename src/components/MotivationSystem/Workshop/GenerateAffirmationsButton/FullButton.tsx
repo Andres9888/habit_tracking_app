@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * FullButton - Full variant of GenerateAffirmationsButton
  * Standalone use with context hints and slot indicators
@@ -73,7 +74,12 @@ export function FullButton({
     ? 'Generate personalized affirmations with AI'
     : 'Upgrade to premium for AI-generated affirmations';
 
-  const showGradient = shouldShowGradient(isPremium, isGenerating, canGenerate, showSuccess);
+  const showGradient = shouldShowGradient(
+    isPremium,
+    isGenerating,
+    canGenerate,
+    showSuccess
+  );
 
   return (
     <View className='gap-2'>
@@ -96,10 +102,10 @@ export function FullButton({
         >
           {showGradient && (
             <LinearGradient
-              colors={getGradientColors(isGenerating)}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
               className='absolute inset-0 rounded-xl'
+              colors={getGradientColors(isGenerating)}
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
             />
           )}
           <ButtonContent

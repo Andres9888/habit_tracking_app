@@ -23,7 +23,8 @@ export function ScienceTipSection({
   reduceMotion,
   visible,
 }: ScienceTipSectionProps) {
-  const idx =
+  // Calculate stagger delay index based on how many sections appear before this one
+  const animationIndex =
     (hasStreak ? 1 : 0) +
     (hasWhy ? 1 : 0) +
     (hasVoiceNote ? 1 : 0) +
@@ -31,7 +32,7 @@ export function ScienceTipSection({
     1;
 
   return (
-    <AnimatedContent index={idx} reduceMotion={reduceMotion} visible={visible}>
+    <AnimatedContent index={animationIndex} reduceMotion={reduceMotion} visible={visible}>
       <View className='mt-4 rounded-xl bg-stone-100 p-3'>
         <Text className='text-center text-xs italic text-stone-600'>
           💡 Research shows: Just 2 minutes is enough to maintain your habit.

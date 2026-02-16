@@ -33,6 +33,14 @@ export function useToastAnimations({
   // Use ref for callback to prevent it from triggering useEffect re-runs
   const onDismissRef = useRef(onDismiss);
   onDismissRef.current = onDismiss;
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup dismiss timer on unmount
+  useEffect(() => {
+    return () => {
+      if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+    };
+  }, []);
 
   const handleDismiss = useCallback(
     (fromSwipe = false) => {
@@ -41,11 +49,12 @@ export function useToastAnimations({
         haptic.triggerLightImpact();
       }
 
-      translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
+      translateY.value = withSpring(100, { damping: 18, stiffness: 150 });
       opacity.value = withTiming(0, { duration: 200 });
 
       if (onDismissRef.current) {
-        setTimeout(() => {
+        if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+        dismissTimerRef.current = setTimeout(() => {
           onDismissRef.current?.();
         }, 250);
       }
@@ -55,7 +64,7 @@ export function useToastAnimations({
 
   useEffect(() => {
     if (visible) {
-      translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
+      translateY.value = withSpring(0, { damping: 18, stiffness: 150 });
       opacity.value = withTiming(1, { duration: 200 });
 
       if (duration > 0 && onDismissRef.current) {
@@ -65,7 +74,7 @@ export function useToastAnimations({
         return () => clearTimeout(timer);
       }
     } else {
-      translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
+      translateY.value = withSpring(100, { damping: 18, stiffness: 150 });
       opacity.value = withTiming(0, { duration: 200 });
     }
   }, [visible, duration, translateY, opacity, handleDismiss]);
@@ -86,7 +95,7 @@ export function useToastAnimations({
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
         runOnJS(handleSwipeDismiss)();
       } else {
-        translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
+        translateY.value = withSpring(0, { damping: 18, stiffness: 150 });
         opacity.value = withTiming(1, { duration: 150 });
       }
     });

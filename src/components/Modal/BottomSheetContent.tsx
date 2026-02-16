@@ -12,6 +12,7 @@ import {
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme } from '../../theme';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { styles } from './Modal.styles';
 
 interface BottomSheetContentProps {
@@ -28,6 +29,7 @@ export function BottomSheetContent({
   customStyle,
 }: BottomSheetContentProps) {
   const theme = useAppTheme();
+  const { colors: themeColors } = useThemeColors();
   const insets = useSafeAreaInsets();
 
   return (
@@ -36,7 +38,7 @@ export function BottomSheetContent({
         style={[
           styles.bottomSheet,
           {
-            backgroundColor: theme.custom.colors.light.background,
+            backgroundColor: themeColors.surface,
             borderTopLeftRadius: theme.custom.borderRadius.large,
             borderTopRightRadius: theme.custom.borderRadius.large,
             paddingBottom: insets.bottom,

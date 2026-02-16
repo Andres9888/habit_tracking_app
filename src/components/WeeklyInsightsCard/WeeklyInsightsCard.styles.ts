@@ -5,29 +5,29 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
-import { spacing } from '../../theme/spacing';
+import { spacing, borderRadius } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   archiveButton: {
     alignItems: 'center',
     backgroundColor: colors.surface,
+    borderRadius: borderRadius.button,
     flexDirection: 'row',
-    borderRadius: 12,
     justifyContent: 'center',
     marginBottom: spacing.md,
     padding: spacing.md,
-  },
-  badge: {
-    backgroundColor: '#D1FAE5',
-    borderRadius: 8,
-    marginLeft: spacing.xs,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: 2,
   },
   archiveButtonText: {
     ...typography.body,
     color: colors.text.secondary,
     marginLeft: spacing.sm,
+  },
+  badge: {
+    backgroundColor: colors.strength.buildingLight,
+    borderRadius: borderRadius.chip,
+    marginLeft: spacing.xs,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 2,
   },
   badgeText: {
     ...typography.caption,
@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
   loadingContainer: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: borderRadius.button,
     justifyContent: 'center',
     padding: spacing.xl,
   },
@@ -57,7 +57,7 @@ export const styles = StyleSheet.create({
   },
   section: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: borderRadius.button,
     marginBottom: spacing.md,
     overflow: 'hidden',
   },

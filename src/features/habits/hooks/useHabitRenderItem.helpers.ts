@@ -19,13 +19,13 @@ export function getHabitRenderData(
 
   const entranceDelay = index * (entranceStaggerDelay ?? 0);
   const hasBeenSeen = seenHabitIds?.has(item._id) ?? false;
-  const triggerEntrance = shouldTriggerEntrance && !hasBeenSeen;
+  const triggerEntrance = Boolean(shouldTriggerEntrance) && !hasBeenSeen;
   const weekStatus = weekDateStrings.map((dateString) =>
     getHabitStatus(item._id, dateString)
   );
   const streak = getStreak(item._id);
   const isConnectedToPreviousWeek = getPreviousWeekConnection(
-    weekDateStrings[0],
+    weekDateStrings?.[0],
     item._id,
     getHabitStatus
   );

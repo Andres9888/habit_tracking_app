@@ -16,7 +16,7 @@ export interface SkeletonBoxProps {
   borderRadius?: number;
   height: number;
   style?: object;
-  width: number | string;
+  width: number | 'auto' | `${number}%`;
 }
 
 export interface ConfettiParticleProps {

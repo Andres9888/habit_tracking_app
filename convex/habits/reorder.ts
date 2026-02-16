@@ -23,8 +23,7 @@ export const reorderHabits = mutation({
 
     // SEC-001: Verify ownership of ALL habits before making any changes
     const habits = await Promise.all(args.habitIds.map((id) => ctx.db.get(id)));
-    for (let i = 0; i < habits.length; i++) {
-      const habit = habits[i];
+    for (const [i, habit] of habits.entries()) {
       if (!habit) {
         throw new Error(`Habit ${args.habitIds[i]} not found`);
       }

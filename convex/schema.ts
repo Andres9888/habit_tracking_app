@@ -156,7 +156,10 @@ const applicationTables = {
     // Habit Edit Screen fields
     icon: v.optional(v.string()),
 
-    // Emoji icon
+    // Accent color used for habit card border/icon background
+    color: v.optional(v.string()),
+
+    // Emoji icon background color (legacy, retained for compatibility)
     iconColor: v.optional(v.string()),
 
     // Identity - who you are becoming (James Clear's identity-based habits)
@@ -299,6 +302,7 @@ const applicationTables = {
   })
     .index('by_date', ['date'])
     .index('by_habit', ['habitId'])
+    .index('by_user', ['userId'])
     .index('by_user_and_date', ['userId', 'date']),
 
   // Quick Reflection - Post-habit completion feedback (BJ Fogg's Tiny Habits)
@@ -327,6 +331,7 @@ const applicationTables = {
   })
     .index('by_habit', ['habitId'])
     .index('by_habit_and_date', ['habitId', 'date'])
+    .index('by_user', ['userId'])
     .index('by_user_and_date', ['userId', 'date']),
 
   // Subscriptions - RevenueCat webhook-driven subscription state
@@ -420,7 +425,10 @@ const applicationTables = {
 
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),
-  }).index('by_category', ['category']),
+  })
+    .index('by_category', ['category'])
+    .index('by_createdAt', ['createdAt']),
+  // PERF: Added by_createdAt index to avoid full table scans when listing all templates
 
   // Track template usage analytics
   templateUsage: defineTable({
@@ -462,6 +470,12 @@ const applicationTables = {
 
     celebrationsEnabled: v.optional(v.boolean()),
 
+    // Completion sound settings (Premium feature)
+    completionSoundEnabled: v.optional(v.boolean()),
+    completionSoundType: v.optional(
+      v.union(v.literal('chime'), v.literal('pop'), v.literal('success'))
+    ),
+
     darkMode: v.optional(
       v.union(
         v.boolean(), // Backwards compatibility
@@ -499,6 +513,8 @@ const applicationTables = {
 
     showEmojis: v.boolean(),
 
+    showGradientFill: v.optional(v.boolean()),
+
     showMotivationalMessages: v.boolean(),
 
     showNotesStats: v.optional(v.boolean()),
@@ -515,7 +531,7 @@ const applicationTables = {
     // Backwards compatibility
     useDyslexicFont: v.optional(v.boolean()),
     userId: v.optional(v.string()),
-  }),
+  }).index('by_userId', ['userId']),
 
   // Vision Board Images - Photo grid of motivational images (Story T12)
   // Scientific Basis:

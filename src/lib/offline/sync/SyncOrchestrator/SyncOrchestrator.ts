@@ -1,6 +1,6 @@
+/* eslint-disable max-lines */
 /**
  * Sync Orchestrator - Coordinates offline queue sync with network detection.
- * Implements FR-004, FR-005, NFR-002.
  */
 
 import type { OfflineQueueManagerAPI } from '../../queueManager';
@@ -9,7 +9,6 @@ import type {
   SyncOrchestratorConfig,
   SyncOrchestratorState,
   SyncOrchestratorResult,
-  SyncOrchestratorEvent,
   SyncOrchestratorEventListener,
   SyncProgressCallback,
   ToggleSyncExecutor,
@@ -18,6 +17,7 @@ import { DEFAULT_ORCHESTRATOR_CONFIG, getOperationsForSync } from '../helpers';
 import { createSyncResult, createErrorResult } from '../resultHelpers';
 import { executeSyncCycle } from './syncExecution';
 import { checkPreconditions } from './checkPreconditions';
+import { createEmitter } from './lifecycle';
 
 export class SyncOrchestrator {
   private queueManager: OfflineQueueManagerAPI;
@@ -28,6 +28,7 @@ export class SyncOrchestrator {
   private listeners = new Set<SyncOrchestratorEventListener>();
   private syncTimeoutId: ReturnType<typeof setTimeout> | null = null;
   private onlineUnsubscribe: (() => void) | null = null;
+  private emit: ReturnType<typeof createEmitter>;
 
   constructor(
     qM: OfflineQueueManagerAPI,
@@ -38,6 +39,7 @@ export class SyncOrchestrator {
     this.syncManager = sM;
     this.config = { ...DEFAULT_ORCHESTRATOR_CONFIG, ...cfg };
     this.state = { isActive: false, isSyncing: false };
+    this.emit = createEmitter(this.listeners);
   }
 
   setExecutor(executor: ToggleSyncExecutor): void {
@@ -93,13 +95,11 @@ export class SyncOrchestrator {
       syncManager: this.syncManager,
     });
     if (earlyResult) return earlyResult;
-
     const ops = getOperationsForSync(
       this.queueManager.getState().operations,
       this.config.batchSize
     );
     if (ops.length === 0) return createSyncResult(true, 0, 0, 0, 0);
-
     this.emit('sync:started');
     try {
       const result = await executeSyncCycle({
@@ -126,19 +126,5 @@ export class SyncOrchestrator {
   subscribe(listener: SyncOrchestratorEventListener): () => void {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
-  }
-
-  private emit(
-    type: SyncOrchestratorEvent['type'],
-    data?: SyncOrchestratorEvent['data']
-  ): void {
-    const event: SyncOrchestratorEvent = { data, timestamp: Date.now(), type };
-    for (const l of this.listeners) {
-      try {
-        l(event);
-      } catch {
-        /* */
-      }
-    }
   }
 }

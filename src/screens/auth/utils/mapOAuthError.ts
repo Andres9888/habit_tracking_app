@@ -5,6 +5,8 @@
  * https://clerk.com/docs/custom-flows/error-handling
  */
 
+import { ERROR_MESSAGES } from '../../../constants/errorMessages';
+
 /** Clerk error structure from SDK */
 export interface ClerkError {
   code?: string;
@@ -37,33 +39,30 @@ export interface MappedError {
   code: OAuthErrorCode;
 }
 
-/** Error message map - keys are Clerk error codes */
-const ERROR_MESSAGES: Record<OAuthErrorCode, string> = {
-  oauth_access_denied: 'Sign in was cancelled.',
-  user_cancelled: 'Sign in was cancelled.',
-  external_account_not_found:
-    'Unable to verify your account. Please try again.',
-  external_account_exists:
-    'This account is already linked to another user. Please sign in with your original account.',
-  email_address_not_found:
-    "We couldn't retrieve your email. Please try a different sign-in method.",
-  identifier_already_signed_in: 'You are already signed in.',
-  session_exists: 'You already have an active session.',
-  network_error: 'Please check your internet connection and try again.',
-  unknown: 'Failed to sign in. Please try again.',
+/** OAuth-specific error message map - keys are Clerk error codes */
+const OAUTH_ERROR_MESSAGES: Record<OAuthErrorCode, string> = {
+  email_address_not_found: ERROR_MESSAGES.AUTH.SIGN_IN_EMAIL_NOT_FOUND,
+  external_account_exists: ERROR_MESSAGES.AUTH.SIGN_IN_EXTERNAL_ACCOUNT_EXISTS,
+  external_account_not_found: ERROR_MESSAGES.AUTH.SIGN_IN_EXTERNAL_ACCOUNT_NOT_FOUND,
+  identifier_already_signed_in: ERROR_MESSAGES.AUTH.SIGN_IN_ALREADY_SIGNED_IN,
+  network_error: ERROR_MESSAGES.NETWORK.CONNECTION_ISSUE,
+  oauth_access_denied: ERROR_MESSAGES.AUTH.SIGN_IN_CANCELLED,
+  session_exists: ERROR_MESSAGES.AUTH.SIGN_IN_ALREADY_SIGNED_IN,
+  unknown: ERROR_MESSAGES.AUTH.SIGN_IN_FAILED,
+  user_cancelled: ERROR_MESSAGES.AUTH.SIGN_IN_CANCELLED,
 };
 
 /** Codes that indicate user cancellation (don't show error) */
-const CANCELLATION_CODES: OAuthErrorCode[] = [
+const CANCELLATION_CODES = new Set<OAuthErrorCode>([
   'oauth_access_denied',
   'user_cancelled',
-];
+]);
 
 /** Codes that indicate user should be redirected */
-const REDIRECT_CODES: OAuthErrorCode[] = [
+const REDIRECT_CODES = new Set<OAuthErrorCode>([
   'identifier_already_signed_in',
   'session_exists',
-];
+]);
 
 /**
  * Determines if an error is a network-related error.
@@ -129,7 +128,7 @@ export function mapOAuthError(error: unknown): MappedError {
     return {
       code: 'network_error',
       isCancellation: false,
-      message: ERROR_MESSAGES.network_error,
+      message: OAUTH_ERROR_MESSAGES.network_error,
       shouldRedirect: false,
     };
   }
@@ -140,14 +139,14 @@ export function mapOAuthError(error: unknown): MappedError {
 
   // Get message from map, or use Clerk's message, or fallback
   const message =
-    ERROR_MESSAGES[errorCode] ??
+    OAUTH_ERROR_MESSAGES[errorCode] ??
     clerkError?.message ??
-    ERROR_MESSAGES.unknown;
+    OAUTH_ERROR_MESSAGES.unknown;
 
   return {
     code: errorCode,
-    isCancellation: CANCELLATION_CODES.includes(errorCode),
+    isCancellation: CANCELLATION_CODES.has(errorCode),
     message,
-    shouldRedirect: REDIRECT_CODES.includes(errorCode),
+    shouldRedirect: REDIRECT_CODES.has(errorCode),
   };
 }

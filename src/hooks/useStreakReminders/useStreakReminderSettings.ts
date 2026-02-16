@@ -26,7 +26,7 @@ async function shouldRequestPermission(): Promise<boolean> {
   if (!firstHabitDate) return false;
 
   const daysSinceFirstHabit = Math.floor(
-    (Date.now() - parseInt(firstHabitDate, 10)) / (1000 * 60 * 60 * 24)
+    (Date.now() - Number.parseInt(firstHabitDate, 10)) / (1000 * 60 * 60 * 24)
   );
 
   return daysSinceFirstHabit >= 3;
@@ -36,9 +36,13 @@ async function shouldRequestPermission(): Promise<boolean> {
  * Mark that the first habit was created (for deferred permission request)
  */
 export async function markFirstHabitCreated(): Promise<void> {
-  const existing = await AsyncStorage.getItem(FIRST_HABIT_CREATED_KEY);
-  if (!existing) {
-    await AsyncStorage.setItem(FIRST_HABIT_CREATED_KEY, String(Date.now()));
+  try {
+    const existing = await AsyncStorage.getItem(FIRST_HABIT_CREATED_KEY);
+    if (!existing) {
+      await AsyncStorage.setItem(FIRST_HABIT_CREATED_KEY, String(Date.now()));
+    }
+  } catch (error) {
+    if (__DEV__) console.error('Failed to mark first habit created:', error);
   }
 }
 
@@ -63,25 +67,30 @@ export function useStreakReminderSettings() {
     async (value: boolean) => {
       setEnabledLocal(value);
 
-      if (value) {
-        // Request permission if needed
-        const canRequest = await shouldRequestPermission();
-        if (canRequest) {
-          const granted = await ensureNotificationPermissions();
-          setPermissionGranted(granted);
-          await AsyncStorage.setItem(PERMISSION_REQUESTED_KEY, 'true');
-          if (!granted) {
-            setEnabledLocal(false);
-            return;
+      try {
+        if (value) {
+          // Request permission if needed
+          const canRequest = await shouldRequestPermission();
+          if (canRequest) {
+            const granted = await ensureNotificationPermissions();
+            setPermissionGranted(granted);
+            await AsyncStorage.setItem(PERMISSION_REQUESTED_KEY, 'true');
+            if (!granted) {
+              setEnabledLocal(false);
+              return;
+            }
           }
         }
-      }
 
-      if (settings) {
-        await updateSettings({
-          ...settings,
-          streakRemindersEnabled: value,
-        });
+        if (settings) {
+          await updateSettings({
+            ...settings,
+            streakRemindersEnabled: value,
+          });
+        }
+      } catch (error) {
+        if (__DEV__) console.error('Failed to update streak reminder setting:', error);
+        setEnabledLocal(!value); // Revert on failure
       }
     },
     [settings, updateSettings]
@@ -89,21 +98,27 @@ export function useStreakReminderSettings() {
 
   const setReminderTime = useCallback(
     async (time: string) => {
+      const previousTime = reminderTime;
       setReminderTimeLocal(time);
-      if (settings) {
-        await updateSettings({
-          ...settings,
-          streakReminderTime: time,
-        });
+      try {
+        if (settings) {
+          await updateSettings({
+            ...settings,
+            streakReminderTime: time,
+          });
+        }
+      } catch (error) {
+        if (__DEV__) console.error('Failed to update reminder time:', error);
+        setReminderTimeLocal(previousTime); // Revert on failure
       }
     },
-    [settings, updateSettings]
+    [settings, updateSettings, reminderTime]
   );
 
   return {
     enabled,
-    reminderTime,
     permissionGranted,
+    reminderTime,
     setEnabled,
     setReminderTime,
   };

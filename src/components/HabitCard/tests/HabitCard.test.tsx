@@ -23,7 +23,7 @@ const renderWithProviders = (component: React.ReactElement) => {
 };
 
 describe('HabitCard - Phase 2', () => {
-  const defaultProps = {
+  const defaultProps: Record<string, unknown> = {
     color: '#10B981',
     icon: '🧘',
     id: 'test-habit-1',

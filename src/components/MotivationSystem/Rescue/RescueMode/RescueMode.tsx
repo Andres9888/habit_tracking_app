@@ -72,6 +72,7 @@ export function RescueMode({
 
   return (
     <Modal
+      accessibilityViewIsModal
       respectReduceMotion={!reduceMotion}
       variant='fullScreen'
       visible={visible}
@@ -82,8 +83,8 @@ export function RescueMode({
         style={{ paddingTop: insets.top }}
       >
         <LinearGradient
-          colors={['#fff1f2', '#fafaf9']}
           className='absolute inset-0'
+          colors={['#fff1f2', '#fafaf9']}
         />
         <RescueModeHeader onClose={onClose} />
 

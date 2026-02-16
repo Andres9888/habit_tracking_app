@@ -1,4 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
+import { X } from 'lucide-react-native';
 
 interface SheetHeaderProps {
   displayDate: string;
@@ -10,7 +11,7 @@ interface SheetHeaderProps {
 
 /**
  * Header component for DayHabitsBottomSheet
- * Shows date, completion count, and Done button
+ * Shows date, completion count, and close button (top-right)
  */
 export function SheetHeader({
   displayDate,
@@ -36,12 +37,12 @@ export function SheetHeader({
       </View>
       <Pressable
         accessibilityHint='Close habit list'
-        accessibilityLabel='Done'
+        accessibilityLabel='Close'
         accessibilityRole='button'
-        className='rounded-lg px-3 py-1.5 active:bg-stone-100'
+        className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
         onPress={onDonePress}
       >
-        <Text className='text-[14px] font-semibold text-amber-600'>Done</Text>
+        <X className='text-stone-600' size={24} />
       </Pressable>
     </View>
   );

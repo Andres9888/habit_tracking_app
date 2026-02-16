@@ -22,7 +22,7 @@ export function VoiceNotesSection(props: VoiceNotesSectionProps) {
     onSaveRecording, onPremiumRequired, shouldAnimate = false, reduceMotion = false, sectionIndex = 0,
   } = props;
   const hasVoiceNotes = voiceNoteCount > 0;
-  const hook = useVoiceNotesSection({ voiceNoteCount, isPremium, onSaveRecording, onPremiumRequired });
+  const hook = useVoiceNotesSection({ isPremium, onPremiumRequired, onSaveRecording, voiceNoteCount });
   const { status, isRecording, isPaused, formattedDuration, isMaxDurationReached, isApproachingMaxDuration } = hook;
   const { secondsUntilMaxDuration, cancelRecording, pauseRecording, resumeRecording, openSettings, canRecord } = hook;
   const { handleStartRecording, handleStopRecording, handleSectionPress } = hook;
