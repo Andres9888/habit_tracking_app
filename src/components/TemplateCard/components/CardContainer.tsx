@@ -4,7 +4,8 @@
  * Pressable container with animations for TemplateCard
  */
 import React from 'react';
-import { Pressable, View, ViewStyle } from 'react-native';
+import { Pressable, View, type ViewStyle } from 'react-native';
+import type { AnimatedStyle } from 'react-native-reanimated';
 
 import Animated from 'react-native-reanimated';
 
@@ -19,9 +20,9 @@ interface CardContainerProps {
   isLocked: boolean;
   isImported: boolean;
   iconColor: string;
-  containerStyle: ViewStyle;
-  shadowStyle: ViewStyle;
-  glowStyle: ViewStyle;
+  containerStyle: AnimatedStyle<ViewStyle>;
+  shadowStyle: AnimatedStyle<ViewStyle>;
+  glowStyle: AnimatedStyle<ViewStyle>;
   style?: ViewStyle;
   children: React.ReactNode;
   onPress: () => void;

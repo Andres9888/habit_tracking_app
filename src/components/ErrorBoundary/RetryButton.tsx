@@ -12,7 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -23,8 +23,9 @@ interface RetryButtonProps {
 }
 
 export function RetryButton({ onRetry }: RetryButtonProps) {
-  const { triggerMediumImpact } = useHapticFeedback();
+  const { triggerLightImpact } = useHapticFeedback();
   const scale = useSharedValue(1);
+  const { colors } = useThemeColors();
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -39,7 +40,7 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
   };
 
   const handlePress = () => {
-    triggerMediumImpact();
+    triggerLightImpact();
     onRetry();
   };
 
@@ -62,7 +63,7 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
       onPressOut={handlePressOut}
     >
       <Text
-        style={{ color: colors.text.inverse, fontSize: 16, fontWeight: '600' }}
+        style={{ color: colors.text.inverse, fontSize: 17, fontWeight: '600' }}
       >
         Try Again
       </Text>

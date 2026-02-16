@@ -13,12 +13,12 @@ export const VARIANT_CONFIG: Record<EmptyStateVariant, VariantConfig> = {
   noData: {
     ctaLabel: 'Go to Habits',
     description:
-      'You need at least 7 days of data to see meaningful analytics.',
-    headline: 'Keep tracking',
+      'Keep tracking for 7 days to unlock meaningful analytics.',
+    headline: 'Almost there!',
     icon: '📊',
   },
   noHabits: {
-    ctaLabel: 'Create Custom Habit',
+    ctaLabel: 'Create Your First Habit',
     description: 'Or start with a popular template:',
     headline: 'Ready to build a new habit?',
     icon: '🚀',
@@ -34,7 +34,7 @@ export const VARIANT_CONFIG: Record<EmptyStateVariant, VariantConfig> = {
     ctaLabel: 'Start Free Trial',
     description: 'Unlock advanced analytics and insights with Premium.',
     headline: 'Premium Feature',
-    icon: '🔒',
+    icon: '✨',
   },
 };
 

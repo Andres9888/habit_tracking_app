@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   streakEmoji: {
-    fontSize: 12,
+    fontSize: 13,
   },
   streakText: {
     fontSize: 13,

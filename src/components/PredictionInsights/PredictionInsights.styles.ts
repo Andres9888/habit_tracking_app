@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   bulletPoint: {
-    borderRadius: 3,
+    borderRadius: 4,
     height: 6,
     marginTop: 6,
     width: 6,

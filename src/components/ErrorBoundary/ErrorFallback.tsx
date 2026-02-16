@@ -3,10 +3,11 @@
 import React, { useRef, useState } from 'react';
 import { Linking, Pressable, Text, View } from 'react-native';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { RetryButton } from './RetryButton';
 import { SecondaryActions } from './SecondaryActions';
 import { SuggestionsCard } from './SuggestionsCard';
-import { styles } from './errorFallbackStyles';
+import { useStyles } from './errorFallbackStyles';
 
 const SUPPORT_EMAIL = 'support@chainday.app';
 const MAX_RETRIES = 3;
@@ -26,6 +27,8 @@ export function ErrorFallback({
 }: ErrorFallbackProps) {
   const retryCountRef = useRef(0);
   const [showLogout, setShowLogout] = useState(false);
+  const { colors } = useThemeColors();
+  const styles = useStyles();
 
   const handleRetry = () => {
     retryCountRef.current += 1;
@@ -58,7 +61,12 @@ export function ErrorFallback({
       <Text style={styles.description}>{desc}</Text>
       <SuggestionsCard />
       {showLogout && onLogout ? (
-        <Pressable style={styles.logoutButton} onPress={onLogout}>
+        <Pressable
+          accessibilityLabel='Sign out to resolve persistent error'
+          accessibilityRole='button'
+          style={styles.logoutButton}
+          onPress={onLogout}
+        >
           <Text style={styles.logoutText}>Sign Out</Text>
         </Pressable>
       ) : (

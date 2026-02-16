@@ -18,7 +18,7 @@ import { ShimmerSkeleton } from './ShimmerSkeleton';
 export function LoadingSkeleton() {
   return (
     <View
-      accessibilityLabel='Loading'
+      accessibilityLabel='Loading your habits...'
       accessibilityRole='progressbar'
       style={styles.container}
     >
