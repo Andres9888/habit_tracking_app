@@ -59,26 +59,35 @@ export async function scheduleReminder({
 }: ScheduleReminderParams): Promise<boolean> {
   if (Platform.OS === 'web') return true;
 
-  const scheduled = await scheduleHabitReminder({
-    body: 'Time to check in on your habit progress!',
-    habitId,
-    reminderTime,
-    skipPermissionCheck: true,
-    title: habitName,
-  });
+  try {
+    const scheduled = await scheduleHabitReminder({
+      body: 'Time to check in on your habit progress!',
+      habitId,
+      reminderTime,
+      skipPermissionCheck: true,
+      title: habitName,
+    });
 
-  if (!scheduled) {
-    Alert.alert(
-      'Reminder Not Scheduled',
-      'We could not schedule this reminder on this device. Your reminder settings were saved.'
-    );
+    if (!scheduled) {
+      Alert.alert(
+        'Reminder Not Scheduled',
+        'We could not schedule this reminder on this device. Your reminder settings were saved.'
+      );
+    }
+
+    return scheduled;
+  } catch (error) {
+    if (__DEV__) console.error('Failed to schedule reminder:', error);
+    return false;
   }
-
-  return scheduled;
 }
 
 /** Cancel a reminder for a habit */
 export async function cancelReminder(habitId: Id<'habits'>): Promise<void> {
   if (Platform.OS === 'web') return;
-  await cancelHabitReminder(habitId);
+  try {
+    await cancelHabitReminder(habitId);
+  } catch (error) {
+    if (__DEV__) console.error('Failed to cancel reminder:', error);
+  }
 }

@@ -32,7 +32,7 @@ describe('StateReconciler Singleton', () => {
       reconciler.reconcile([
         {
           date: '2026-01-15',
-          habitId: 'habit1' as any,
+          habitId: 'habit1' as unknown,
           id: 'op1',
           success: true,
         },
@@ -51,7 +51,7 @@ describe('StateReconciler Singleton', () => {
       reconciler2.reconcile([
         {
           date: '2026-01-15',
-          habitId: 'habit1' as any,
+          habitId: 'habit1' as unknown,
           id: 'op1',
           success: true,
         },
@@ -71,7 +71,7 @@ describe('StateReconciler Singleton', () => {
       reconciler1.reconcile([
         {
           date: '2026-01-15',
-          habitId: 'habit1' as any,
+          habitId: 'habit1' as unknown,
           id: 'op1',
           success: true,
         },

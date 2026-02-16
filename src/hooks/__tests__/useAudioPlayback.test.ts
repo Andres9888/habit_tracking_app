@@ -35,9 +35,9 @@ const mockCreateAsync = jest.fn();
 
 jest.mock('expo-av', () => ({
   Audio: {
-    setAudioModeAsync: (options: any) => mockSetAudioModeAsync(options),
+    setAudioModeAsync: (options: unknown) => mockSetAudioModeAsync(options),
     Sound: {
-      createAsync: (source: any, status: any, callback: any) =>
+      createAsync: (source: unknown, status: unknown, callback: unknown) =>
         mockCreateAsync(source, status, callback),
     },
   },
@@ -55,7 +55,7 @@ jest.mock('expo-av', () => ({
 import { useAudioPlayback, PLAYBACK_SPEEDS } from '../useAudioPlayback';
 
 describe('useAudioPlayback', () => {
-  let statusCallback: ((status: any) => void) | null = null;
+  let statusCallback: ((status: unknown) => void) | null = null;
 
   beforeEach(() => {
     jest.clearAllMocks();

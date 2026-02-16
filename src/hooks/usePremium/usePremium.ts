@@ -12,7 +12,6 @@
  * }
  */
 
-import { PACKAGE_TYPE } from 'react-native-purchases';
 import type { UsePremiumReturn, SubscriptionStatus } from './types';
 import { usePremiumData } from './usePremiumData';
 import { usePremiumActions } from './usePremiumActions';
@@ -38,19 +37,21 @@ export function usePremium(): UsePremiumReturn {
     customerInfo?.entitlements.active[PREMIUM_ENTITLEMENT_ID];
   const isPremium = premiumEntitlement !== undefined;
 
+  const isTrialPeriod = premiumEntitlement?.periodType?.toString() === 'TRIAL';
+
   // Derive subscription status
   const status: SubscriptionStatus = (() => {
     if (isLoading) return 'loading';
     if (error) return 'error';
     if (!customerInfo) return 'free';
-    if (premiumEntitlement?.periodType === 'TRIAL') return 'trialing';
+    if (isTrialPeriod) return 'trialing';
     if (isPremium) return 'active';
     return 'free';
   })();
 
   // Find monthly package and price
   const monthlyPackage =
-    packages?.find((p) => p.packageType === PACKAGE_TYPE.MONTHLY) ?? null;
+    packages?.find((p) => p.packageType?.toString() === 'MONTHLY') ?? null;
   const priceString = monthlyPackage?.product.priceString ?? null;
 
   // Subscription info
@@ -65,7 +66,7 @@ export function usePremium(): UsePremiumReturn {
     isLoading,
     isLoadingOfferings,
     isPremium,
-    isTrialActive: premiumEntitlement?.periodType === 'TRIAL',
+    isTrialActive: isTrialPeriod,
     managementUrl: customerInfo?.managementURL ?? null,
     monthlyPackage,
     packages,
