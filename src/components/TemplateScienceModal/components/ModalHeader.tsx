@@ -6,8 +6,8 @@ import React from 'react';
 import { Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { X, Share2 } from 'lucide-react-native';
-import { colors } from '../../../theme/colors';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { headerStyles } from '../styles';
 import type { HeaderProps } from '../TemplateScienceModal.types';
 
@@ -24,6 +24,7 @@ export const ModalHeader = ({
   templateName,
 }: HeaderProps) => {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
 
   return (
     <Animated.View style={[headerStyles.header, headerAnimatedStyle]}>
@@ -32,10 +33,11 @@ export const ModalHeader = ({
         accessibilityLabel='Share template'
         accessibilityRole='button'
         style={[headerStyles.shareButton, shareButtonAnimatedStyle]}
+        hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
         onPress={onShare}
         {...pressHandlers}
       >
-        <Share2 color={colors.gray[500]} size={20} strokeWidth={2} />
+        <Share2 color={colors.text.secondary} size={20} strokeWidth={2} />
       </AnimatedPressable>
 
       <Animated.View style={headerTitleAnimatedStyle}>
@@ -55,10 +57,11 @@ export const ModalHeader = ({
         accessibilityLabel='Close habit details'
         accessibilityRole='button'
         style={[headerStyles.closeButton, closeButtonAnimatedStyle]}
+        hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
         onPress={onClose}
         {...pressHandlers}
       >
-        <X color={colors.gray[500]} size={24} strokeWidth={2} />
+        <X color={colors.text.secondary} size={24} strokeWidth={2} />
       </AnimatedPressable>
     </Animated.View>
   );

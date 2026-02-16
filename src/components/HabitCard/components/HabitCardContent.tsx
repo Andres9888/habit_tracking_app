@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * HabitCardContent Component
  * Inner content of the HabitCard including name, icon, streak, and progress
@@ -6,7 +7,7 @@
  * @see docs/offline-habit-sync.md T028 - PendingSyncBadge integration
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import Animated, {
   type AnimatedStyle,
@@ -53,7 +54,7 @@ interface HabitCardContentProps {
   difficulty?: 'easy' | 'medium' | 'hard';
 }
 
-export function HabitCardContent({
+function HabitCardContentComponent({
   name,
   icon,
   strength,
@@ -150,3 +151,5 @@ export function HabitCardContent({
     </Animated.View>
   );
 }
+
+export const HabitCardContent = memo(HabitCardContentComponent);

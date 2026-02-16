@@ -53,7 +53,6 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
 
   const habitData = useHabitData({
     dayPhase: form.dayPhase,
-    difficulty: form.difficulty,
     fullHabitName: form.fullHabitName,
     reminderSound: form.reminderSound,
     reminderTime: form.reminderTime,
@@ -73,17 +72,20 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
 
   const handleCreate = useCallback(async () => {
     if (!form.habitName.trim() || !form.fullHabitName) return;
-    const { hasReminders } = await checkReminderPermissions(
-      form.remindersEnabled
-    );
-    const data = { ...habitData, difficulty: form.difficulty, hasReminders };
+    try {
+      const { hasReminders } = await checkReminderPermissions(
+        form.remindersEnabled
+      );
+      const data = { ...habitData, hasReminders };
 
-    await (isEditMode && habitToEdit
-      ? handleEdit({ ...data, habitToEdit })
-      : createNewHabit(data));
-    cleanup();
+      await (isEditMode && habitToEdit
+        ? handleEdit({ ...data, habitToEdit })
+        : createNewHabit(data));
+      cleanup();
+    } catch (error) {
+      if (__DEV__) console.error('Failed to save habit:', error);
+    }
   }, [
-    form.difficulty,
     form.habitName,
     form.fullHabitName,
     form.remindersEnabled,

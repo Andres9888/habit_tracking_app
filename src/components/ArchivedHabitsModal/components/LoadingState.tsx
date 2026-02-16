@@ -1,18 +1,26 @@
 /**
  * LoadingState - Skeleton loader for archived habits
  * Uses the central SkeletonLoader with gradient shimmer.
+ * Supports dark mode via useSkeletonTheme.
  */
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 import { SkeletonLoader } from '../../SkeletonLoader';
+import { useSkeletonTheme } from '../../SkeletonLoader/useSkeletonTheme';
 
 export const LoadingState: React.FC = () => {
+  const { surfaceBg, borderColor } = useSkeletonTheme();
   return (
     <View style={styles.container}>
       {[1, 2, 3].map((key) => (
-        <View key={key} style={styles.cardSkeleton}>
+        <View
+          key={key}
+          style={[
+            styles.cardSkeleton,
+            { backgroundColor: surfaceBg, borderColor },
+          ]}
+        >
           <View style={styles.header}>
             <SkeletonLoader borderRadius={24} height={48} width={48} />
             <View style={styles.textBlock}>
@@ -46,8 +54,6 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   cardSkeleton: {
-    backgroundColor: colors.gray[50],
-    borderColor: colors.gray[200],
     borderRadius: 12,
     borderWidth: 1,
     marginBottom: spacing.md,
