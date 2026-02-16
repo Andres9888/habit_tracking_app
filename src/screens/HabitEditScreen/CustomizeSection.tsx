@@ -11,6 +11,7 @@ import { View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
+import { CategoryPicker } from '../../components/CreateHabitModal/components/CategoryPicker';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 
@@ -20,10 +21,12 @@ interface CustomizeSectionProps {
   habitName: string;
   selectedEmoji: string | null;
   selectedColor: string;
+  selectedCategory?: string;
   remindersEnabled: boolean;
   reminderTime: Date;
   onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
+  onCategorySelect: (category: string | undefined) => void;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
 }
@@ -32,10 +35,12 @@ export function CustomizeSection({
   habitName,
   selectedEmoji,
   selectedColor,
+  selectedCategory,
   remindersEnabled,
   reminderTime,
   onEmojiSelect,
   onColorSelect,
+  onCategorySelect,
   onReminderToggle,
   onReminderTimeChange,
 }: CustomizeSectionProps) {
@@ -60,6 +65,14 @@ export function CustomizeSection({
       </Animated.View>
 
       <Animated.View entering={entrance(120)}>
+        <CategoryPicker
+          hideLabel
+          selectedCategory={selectedCategory}
+          onSelectCategory={onCategorySelect}
+        />
+      </Animated.View>
+
+      <Animated.View entering={entrance(180)}>
         <EnhancedReminderSelector
           enabled={remindersEnabled}
           reminderTime={reminderTime}

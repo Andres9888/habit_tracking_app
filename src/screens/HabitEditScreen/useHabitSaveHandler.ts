@@ -15,6 +15,7 @@ interface UseSaveHandlerProps {
   habitId: Id<'habits'> | null;
   habitName: string;
   selectedEmoji: string | null;
+  selectedCategory?: string;
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
@@ -25,6 +26,7 @@ export function useHabitSaveHandler({
   habitId,
   habitName,
   selectedEmoji,
+  selectedCategory,
   selectedColor,
   remindersEnabled,
   reminderTime,
@@ -82,6 +84,7 @@ export function useHabitSaveHandler({
         remindersEnabled: enableReminders,
         reminderSound: enableReminders ? 'default' : undefined,
         reminderTime: enableReminders ? reminderTimeString : undefined,
+        tags: selectedCategory ? [selectedCategory] : undefined,
       });
 
       onSuccess();
@@ -95,6 +98,7 @@ export function useHabitSaveHandler({
     isSaving,
     habitId,
     habitName,
+    selectedCategory,
     selectedEmoji,
     selectedColor,
     remindersEnabled,

@@ -56,6 +56,7 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     fullHabitName: form.fullHabitName,
     reminderSound: form.reminderSound,
     reminderTime: form.reminderTime,
+    selectedCategory: form.selectedCategory,
     selectedColor: form.selectedColor,
     selectedEmoji: form.selectedEmoji,
   });

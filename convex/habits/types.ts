@@ -21,6 +21,7 @@ export const createHabitArgs = {
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  tags: v.optional(v.array(v.string())),
 };
 
 /** Update habit args validator */
@@ -43,5 +44,6 @@ export const updateHabitArgs = {
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  tags: v.optional(v.array(v.string())),
   why: v.optional(v.string()),
 };

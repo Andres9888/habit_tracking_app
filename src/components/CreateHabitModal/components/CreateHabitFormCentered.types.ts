@@ -10,6 +10,8 @@ export interface CreateHabitFormCenteredProps {
   colors: readonly string[];
   selectedColor: string;
   onColorSelect: (color: string) => void;
+  selectedCategory?: string;
+  onCategorySelect: (category: string | undefined) => void;
   reminderEnabled: boolean;
   /** Reminder time as Date object for EnhancedReminderSelector */
   reminderTime: Date;

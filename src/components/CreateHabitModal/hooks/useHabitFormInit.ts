@@ -20,6 +20,7 @@ interface FormSetters {
   setFrequency: (freq: string) => void;
   setDayPhase: (phase: HubermanPhase | null) => void;
   setReminderOptionState: (option: ReminderOption) => void;
+  setSelectedCategory: (category: string | undefined) => void;
 }
 
 interface UseHabitFormInitOptions {
@@ -43,6 +44,7 @@ export const useHabitFormInit = ({
     setRemindersEnabled,
     setReminderSound,
     setReminderTime,
+    setSelectedCategory,
     setSelectedColor,
     setSelectedEmoji,
   } = setters;
@@ -66,5 +68,6 @@ export const useHabitFormInit = ({
         habitToEdit.reminderTime
       )
     );
+    setSelectedCategory(habitToEdit.tags?.[0]);
   }, [habitToEdit?._id]);
 };

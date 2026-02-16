@@ -80,8 +80,10 @@ function HabitEditScreenContent({
                     habitName={state.habitName}
                     remindersEnabled={state.remindersEnabled}
                     reminderTime={state.reminderTime}
+                    selectedCategory={state.selectedCategory}
                     selectedColor={state.selectedColor}
                     selectedEmoji={state.selectedEmoji}
+                    onCategorySelect={state.handleCategorySelect}
                     onColorSelect={state.handleColorSelect}
                     onEmojiSelect={state.handleEmojiSelect}
                     onReminderTimeChange={state.handleReminderTimeChange}

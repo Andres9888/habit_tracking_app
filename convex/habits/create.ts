@@ -49,6 +49,7 @@ export const create = mutation({
       strength: 0,
       strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),
+      tags: args.tags,
       userId,
     });
   },

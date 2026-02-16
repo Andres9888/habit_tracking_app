@@ -55,8 +55,13 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
       habitToEdit?.reminderTime
     )
   );
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+    habitToEdit?.tags?.[0]
+  );
 
   return {
+    selectedCategory,
+    setSelectedCategory,
     dayPhase,
     frequency,
     habitName,

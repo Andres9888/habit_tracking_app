@@ -19,6 +19,7 @@ interface HabitData {
   hasReminders: boolean;
   reminderSound?: string | null;
   reminderTime: Date;
+  selectedCategory?: string;
   selectedColor: string;
   selectedEmoji: string | null;
 }
@@ -39,6 +40,7 @@ export function useCreateHabitHandlers() {
     hasReminders,
     fullHabitName,
     reminderTime,
+    selectedCategory,
     selectedEmoji,
     selectedColor,
     dayPhase,
@@ -81,6 +83,7 @@ export function useCreateHabitHandlers() {
         reminderTime: finalHasReminders
           ? formatReminderTime(reminderTime)
           : undefined,
+        tags: selectedCategory ? [selectedCategory] : undefined,
       });
     } catch (error) {
       if (__DEV__) console.error('Failed to edit habit:', error);
@@ -92,6 +95,7 @@ export function useCreateHabitHandlers() {
     hasReminders,
     fullHabitName,
     reminderTime,
+    selectedCategory,
     selectedEmoji,
     selectedColor,
     dayPhase,
@@ -114,6 +118,7 @@ export function useCreateHabitHandlers() {
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
         reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
+        tags: selectedCategory ? [selectedCategory] : undefined,
       });
 
       // Mark first habit creation for deferred notification permission request

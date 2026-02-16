@@ -13,6 +13,7 @@ interface FormState {
   setHabitName: (name: string) => void;
   setSelectedEmoji: (emoji: string | null) => void;
   setSelectedColor: (color: string) => void;
+  setSelectedCategory: (category: string | undefined) => void;
   setRemindersEnabled: (enabled: boolean) => void;
   setReminderTime: (time: Date) => void;
 }
@@ -45,6 +46,13 @@ export function useCenteredFormCallbacks({
       form.setSelectedColor(color);
     },
     [form.setSelectedColor]
+  );
+
+  const handleCategorySelect = useCallback(
+    (category: string | undefined) => {
+      form.setSelectedCategory(category);
+    },
+    [form.setSelectedCategory]
   );
 
   const handleNameChange = useCallback(
@@ -96,6 +104,7 @@ export function useCenteredFormCallbacks({
   }, [handleCreate]);
 
   return {
+    handleCategorySelect,
     handleColorSelect,
     handleEmojiSelect,
     handleNameChange,
