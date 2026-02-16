@@ -3,19 +3,19 @@
  * Run this to bypass the UI: npx convex run testStrength:forceInitialize
  */
 
-import { mutation, query } from './_generated/server';
+import { internalMutation, internalQuery } from './_generated/server';
 import { calculateHabitStrength, getStrengthLevel } from './habitStrength';
 
-export const forceInitialize = mutation({
+export const forceInitialize = internalMutation({
   handler: async (ctx) => {
-    console.log('🚀 Starting manual initialization...');
+    // Starting manual initialization
 
     const habits = await ctx.db
       .query('habits')
       .filter((q) => q.neq(q.field('archived'), true))
       .collect();
 
-    console.log(`Found ${habits.length} habits to initialize`);
+    // Processing habits
 
     for (const habit of habits) {
       // Get all tracking for this habit
@@ -24,11 +24,10 @@ export const forceInitialize = mutation({
         .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
         .collect();
 
-      console.log(`\n📊 Habit: ${habit.name}`);
-      console.log(`   Tracking entries: ${tracking.length}`);
+      // Processing habit tracking
 
       if (tracking.length === 0) {
-        console.log('   ⚠️ No tracking data, setting to 0%');
+        // No tracking data, setting to 0%
         await ctx.db.patch(habit._id, {
           strength: 0,
           strengthLevel: 'starting',
@@ -74,10 +73,7 @@ export const forceInitialize = mutation({
 
       const level = getStrengthLevel(strength);
 
-      console.log(
-        `   ✅ Final strength: ${(strength * 100).toFixed(1)}% (${level})`
-      );
-      console.log(`   Days processed: ${daysProcessed}`);
+      // Strength calculated
 
       await ctx.db.patch(habit._id, {
         strength,
@@ -86,12 +82,12 @@ export const forceInitialize = mutation({
       });
     }
 
-    console.log('\n✅ Initialization complete!');
+    // Initialization complete
     return { habitsProcessed: habits.length, success: true };
   },
 });
 
-export const checkStatus = query({
+export const checkStatus = internalQuery({
   handler: async (ctx) => {
     const habits = await ctx.db
       .query('habits')

@@ -27,6 +27,7 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
   const { colors } = useErrorTheme();
   const { triggerMediumImpact } = useHapticFeedback();
   const scale = useSharedValue(1);
+  const { colors } = useThemeColors();
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -41,7 +42,7 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
   };
 
   const handlePress = () => {
-    triggerMediumImpact();
+    triggerLightImpact();
     onRetry();
   };
 

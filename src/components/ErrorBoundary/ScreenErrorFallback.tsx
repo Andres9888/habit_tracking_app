@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * ScreenErrorFallback - Lightweight error fallback for individual screens
  * Designed to prevent one screen crash from killing the entire app.

@@ -3,6 +3,7 @@
 import React, { useRef, useState } from 'react';
 import { Linking, Pressable, Text, View } from 'react-native';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { RetryButton } from './RetryButton';
 import { SecondaryActions } from './SecondaryActions';
 import { SuggestionsCard } from './SuggestionsCard';
@@ -27,6 +28,8 @@ export function ErrorFallback({
   const { colors } = useErrorTheme();
   const retryCountRef = useRef(0);
   const [showLogout, setShowLogout] = useState(false);
+  const { colors } = useThemeColors();
+  const styles = useStyles();
 
   const handleRetry = () => {
     retryCountRef.current += 1;
