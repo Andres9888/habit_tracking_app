@@ -66,10 +66,10 @@ export const InsightChip = React.memo(function InsightChip({
         <View className='flex-row items-center gap-2'>
           <Text className='text-lg'>{chip.icon}</Text>
           <View>
-            <Text className='text-base font-bold" style={{ color: colors.text.primary }}>
+            <Text className='text-base font-bold' style={{ color: colors.text.primary }}>
               {chip.value}
             </Text>
-            <Text className='text-[10px]" style={{ color: colors.text.tertiary }}>{chip.label}</Text>
+            <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>{chip.label}</Text>
           </View>
         </View>
       </View>
