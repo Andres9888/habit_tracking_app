@@ -87,7 +87,7 @@ export function useHabitSaveHandler({
       onSuccess();
     } catch (error) {
       if (__DEV__) console.error('Failed to save habit:', error);
-      showSaveError();
+      showSaveError(() => void handleSave());
     } finally {
       setIsSaving(false);
     }

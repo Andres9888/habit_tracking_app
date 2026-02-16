@@ -45,6 +45,7 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
   return (
     <AnimatedPressable
       accessible
+      accessibilityHint={`Tap to filter templates by ${label} category`}
       accessibilityLabel={`Filter by ${label}, ${count} habits`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
