@@ -41,36 +41,6 @@ jest.mock('../../../hooks/useHapticFeedback', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const { View, Text, Pressable } = require('react-native');
-
-  const Animated = {
-    View,
-    Text,
-    createAnimatedComponent: (Component: React.ComponentType) => Component,
-  };
-
-  return {
-    __esModule: true,
-    default: Animated,
-    ...Animated,
-    useSharedValue: (initialValue: number) => ({ value: initialValue }),
-    useAnimatedStyle: () => ({}),
-    useAnimatedProps: () => ({}),
-    withTiming: (value: number) => value,
-    withDelay: (_delay: number, value: number) => value,
-    withSpring: (value: number) => value,
-    withRepeat: (animation: unknown) => animation,
-    withSequence: (...animations: unknown[]) => animations[0],
-    Easing: {
-      out: () => () => 0,
-      inOut: () => () => 0,
-      cubic: () => 0,
-      ease: () => 0,
-    },
-  };
-});
-
 // Mock react-native-svg
 jest.mock('react-native-svg', () => {
   const React = require('react');

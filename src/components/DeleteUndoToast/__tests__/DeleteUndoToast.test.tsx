@@ -9,20 +9,6 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.default.call = () => {};
-  return {
-    ...Reanimated,
-    useAnimatedStyle: () => ({}),
-    useSharedValue: (initial: number) => ({ value: initial }),
-    withSpring: (toValue: number) => toValue,
-    withTiming: (toValue: number) => toValue,
-    runOnJS: (fn: () => void) => fn,
-    Easing: { linear: 'linear' },
-  };
-});
-
 // Wrapper to provide gesture handler context
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <GestureHandlerRootView style={{ flex: 1 }}>

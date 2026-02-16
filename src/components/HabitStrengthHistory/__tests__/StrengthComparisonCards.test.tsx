@@ -16,29 +16,6 @@ import { render } from '@testing-library/react-native';
 import { StrengthComparisonCards } from '../StrengthComparisonCards';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-
-  // Mock useReducedMotion to return TRUE in tests so animations don't affect values
-  // This ensures displayed values show immediately without animation
-  Reanimated.useReducedMotion = jest.fn(() => true);
-
-  // Mock FadeIn entering animation
-  Reanimated.FadeIn = {
-    delay: jest.fn(() => ({
-      duration: jest.fn(() => ({})),
-    })),
-  };
-
-  // Mock runOnJS to execute the function immediately
-  Reanimated.runOnJS = jest.fn((fn) => fn);
-
-  // Mock useAnimatedReaction as a no-op to avoid infinite loops
-  // When useReducedMotion is true, the component sets the value directly via useState
-  Reanimated.useAnimatedReaction = jest.fn(() => {});
-
-  return Reanimated;
-});
 
 // Mock react-native-svg
 jest.mock('react-native-svg', () => {

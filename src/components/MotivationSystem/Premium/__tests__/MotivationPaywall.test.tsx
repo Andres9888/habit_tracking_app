@@ -23,30 +23,6 @@ jest.mock('expo-linear-gradient', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
-  return {
-    default: {
-      View,
-      createAnimatedComponent: (component: unknown) => component,
-    },
-    useSharedValue: (initial: unknown) => ({ value: initial }),
-    useAnimatedStyle: () => ({}),
-    withTiming: (value: unknown) => value,
-    withSpring: (value: unknown) => value,
-    withRepeat: (value: unknown) => value,
-    withSequence: (...args: unknown) => args[0],
-    Easing: { inOut: () => (v: unknown) => v, ease: (v: unknown) => v },
-    FadeIn: {},
-    FadeOut: {},
-    SlideInDown: {},
-    SlideOutDown: {},
-    interpolate: jest.fn(),
-    Extrapolation: { CLAMP: 'clamp' },
-    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
-  };
-});
-
 // Mock haptic feedback
 jest.mock('@/hooks/useHapticFeedback', () => ({
   useHapticFeedback: () => ({

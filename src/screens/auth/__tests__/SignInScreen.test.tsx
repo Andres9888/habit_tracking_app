@@ -7,28 +7,6 @@ import SignInScreen from '../SignInScreen';
 jest.spyOn(Keyboard, 'dismiss').mockImplementation(() => {});
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  const React = require('react');
-  const { View } = require('react-native');
-
-  return {
-    ...Reanimated,
-    useSharedValue: (initialValue: number) => ({ value: initialValue }),
-    useAnimatedStyle: (callback: () => object) => callback(),
-    withTiming: (toValue: number) => toValue,
-    withSpring: (toValue: number) => toValue,
-    withRepeat: (animation: unknown) => animation,
-    withSequence: (...args: unknown[]) => args[args.length - 1],
-    runOnJS: (fn: Function) => fn,
-    default: {
-      ...Reanimated.default,
-      View: React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => (
-        <View ref={ref} {...props} />
-      )),
-    },
-  };
-});
 
 // Mock dependencies
 jest.mock('@clerk/clerk-expo', () => ({

@@ -2,20 +2,6 @@ import { render, act } from '@testing-library/react-native';
 import { SuccessOverlay } from '../SuccessOverlay';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  return {
-    ...Reanimated,
-    useSharedValue: (initialValue: number) => ({ value: initialValue }),
-    useAnimatedStyle: (callback: () => object) => callback(),
-    withTiming: (toValue: number) => toValue,
-    withSpring: (toValue: number) => toValue,
-    withDelay: (_: number, animation: unknown) => animation,
-    withSequence: (...args: unknown[]) => args[args.length - 1],
-    runOnJS: (fn: Function) => fn,
-  };
-});
-
 describe('SuccessOverlay', () => {
   beforeEach(() => {
     jest.useFakeTimers();

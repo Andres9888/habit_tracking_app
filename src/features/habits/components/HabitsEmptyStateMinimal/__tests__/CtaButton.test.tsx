@@ -17,15 +17,6 @@ import { COPY } from '../constants';
 import { CtaButton } from '../CtaButton';
 
 // Mock reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-
-  // Mock useReducedMotion to return false by default
-  Reanimated.useReducedMotion = jest.fn(() => false);
-
-  return Reanimated;
-});
-
 // Mock LinearGradient
 jest.mock('expo-linear-gradient', () => ({
   LinearGradient: 'LinearGradient',

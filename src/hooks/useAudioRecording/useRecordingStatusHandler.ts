@@ -4,7 +4,7 @@
  * Story T10.2: Audio recording integration (expo-av)
  */
 
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Audio } from 'expo-av';
 import type { RecordingState } from './types';
 import type {
@@ -29,9 +29,16 @@ export function useRecordingStatusHandler(
   const warningFiredRef = useRef<boolean>(false);
   const wasRecordingBeforeInterruptionRef = useRef<boolean>(false);
 
+  // Use a ref to track current state to avoid stale closures in the
+  // recording status callback (which is captured once at createAsync time).
+  const currentStateRef = useRef<RecordingState>(currentState);
+  useEffect(() => {
+    currentStateRef.current = currentState;
+  }, [currentState]);
+
   const handleInterruption = useCallback(
     (reason: 'phone-call' | 'other-app' | 'system') => {
-      if (currentState !== 'recording') return;
+      if (currentStateRef.current !== 'recording') return;
       wasRecordingBeforeInterruptionRef.current = true;
       setStatus((prev) => ({
         ...prev,
@@ -41,7 +48,7 @@ export function useRecordingStatusHandler(
       }));
       onInterrupted?.(reason);
     },
-    [currentState, onInterrupted, setStatus]
+    [onInterrupted, setStatus]
   );
 
   const onRecordingStatusUpdate = useCallback(
@@ -51,7 +58,7 @@ export function useRecordingStatusHandler(
         !recordingStatus.isRecording &&
         recordingStatus.durationMillis &&
         recordingStatus.durationMillis > 0 &&
-        currentState === 'recording'
+        currentStateRef.current === 'recording'
       ) {
         handleInterruption('system');
         return;
@@ -97,7 +104,6 @@ export function useRecordingStatusHandler(
       if (durationSeconds >= maxDurationSeconds) onMaxDurationReached?.();
     },
     [
-      currentState,
       maxDurationSeconds,
       warningThresholdSeconds,
       onMaxDurationReached,

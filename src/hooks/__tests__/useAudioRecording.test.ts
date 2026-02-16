@@ -38,6 +38,7 @@ jest.mock('expo-av', () => ({
     Recording: {
       createAsync: mockCreateAsync,
     },
+    RecordingStatus: {},
     AndroidOutputFormat: {
       MPEG_4: 'MPEG_4',
     },
@@ -50,6 +51,15 @@ jest.mock('expo-av', () => ({
     IOSAudioQuality: {
       HIGH: 'HIGH',
     },
+  },
+  InterruptionModeIOS: {
+    DoNotMix: 1,
+    DuckOthers: 2,
+    MixWithOthers: 0,
+  },
+  InterruptionModeAndroid: {
+    DoNotMix: 1,
+    DuckOthers: 2,
   },
 }));
 

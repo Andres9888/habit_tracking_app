@@ -10,13 +10,6 @@ import { render, screen, fireEvent } from '@testing-library/react-native';
 import { CompletionToast } from '../CompletionToast';
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
-  Reanimated.default.addWhitelistedNativeProps = jest.fn();
-  Reanimated.default.addWhitelistedUIProps = jest.fn();
-  return Reanimated;
-});
-
 // Mock safe area context
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ bottom: 34, left: 0, right: 0, top: 47 }),

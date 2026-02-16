@@ -52,18 +52,6 @@ jest.mock('react-native-gesture-handler', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = ReanimatedMock;
-  Reanimated.default.call = () => {};
-  return {
-    ...Reanimated,
-    runOnJS: jest.fn((fn) => fn),
-    useAnimatedStyle: jest.fn(() => ({})),
-    useSharedValue: jest.fn(() => ({ value: 0 })),
-    withSpring: jest.fn((toValue) => toValue),
-  };
-});
-
 // Mock theme
 jest.mock('../../theme', () => ({
   useAppTheme: () => ({

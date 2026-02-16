@@ -28,21 +28,6 @@ jest.mock('../../../../hooks/useHapticFeedback', () => ({
 }));
 
 // Mock react-native-reanimated
-jest.mock('react-native-reanimated', () => {
-  const { TextInput, View } = require('react-native');
-  return {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    default: {
-      View,
-      createAnimatedComponent: (Component: typeof TextInput) => Component,
-      addWhitelistedNativeProps: jest.fn(),
-    },
-    useAnimatedStyle: () => ({}),
-    useSharedValue: (initial: number) => ({ value: initial }),
-    withTiming: (value: number) => value,
-  };
-});
-
 describe('HabitNameField - V9 Design System', () => {
   const mockOnChange = jest.fn();
 

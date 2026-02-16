@@ -58,36 +58,6 @@ jest.mock('../../../hooks/useHapticFeedback', () => ({
 }));
 
 // Mock Reanimated for animations and gestures
-jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
-  const Animated = require('react-native').Animated;
-
-  return {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    FadeIn: { duration: () => ({ delay: () => ({}) }) },
-    FadeInUp: { duration: () => ({ delay: () => ({}) }) },
-    FadeOut: { duration: () => ({}) },
-    LinearTransition: {
-      duration: () => ({}),
-      springify: () => ({
-        damping: () => ({
-          stiffness: () => ({}),
-        }),
-      }),
-    },
-    default: {
-      View,
-      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
-      addWhitelistedNativeProps: jest.fn(),
-    },
-    addWhitelistedNativeProps: jest.fn(),
-    useSharedValue: (initial: unknown) => ({ value: initial }),
-    useAnimatedStyle: (callback: unknown) => callback(),
-    runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
-    withSpring: (value: unknown) => value,
-    withTiming: (value: unknown) => value,
-  };
-});
 
 // Mock gesture-handler
 jest.mock('react-native-gesture-handler', () => {
