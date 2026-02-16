@@ -5,6 +5,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface PasswordResetButtonsProps {
   email: string;
@@ -23,6 +24,7 @@ export function PasswordResetButtons({
 }: PasswordResetButtonsProps) {
   const isDisabled = isLoading || !email.trim();
   const scale = useSharedValue(1);
+  const { colors } = useThemeColors();
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
@@ -34,7 +36,8 @@ export function PasswordResetButtons({
         accessibilityLabel='Send reset email'
         accessibilityRole='button'
         accessibilityState={{ busy: isLoading, disabled: isDisabled }}
-        className={`items-center rounded-2xl bg-stone-900 py-4 ${isDisabled ? 'opacity-40' : ''}`}
+        className={`items-center rounded-2xl py-4 ${isDisabled ? 'opacity-40' : ''}`}
+        style={{ backgroundColor: colors.gray[900] }}
         disabled={isDisabled}
         style={[
           animatedStyle,
@@ -47,10 +50,10 @@ export function PasswordResetButtons({
         ]}
         onPress={onSubmit}
         onPressIn={() => {
-          scale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
+          scale.value = withSpring(0.97, { damping: 18, stiffness: 150 });
         }}
         onPressOut={() => {
-          scale.value = withSpring(1, { damping: 18, stiffness: 240 });
+          scale.value = withSpring(1, { damping: 18, stiffness: 150 });
         }}
       >
         {isLoading ? (
@@ -65,7 +68,8 @@ export function PasswordResetButtons({
         accessibilityHint='Closes this dialog without sending reset email'
         accessibilityLabel='Cancel password reset'
         accessibilityRole='button'
-        className='items-center rounded-2xl border border-stone-200 bg-white py-4 active:bg-stone-50'
+        className='items-center rounded-2xl border py-4'
+        style={{ borderColor: colors.border, backgroundColor: colors.card }}
         disabled={isLoading}
         onPress={onCancel}
       >

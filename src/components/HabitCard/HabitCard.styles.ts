@@ -8,9 +8,9 @@
  * ACCESSIBILITY: Uses shared focus ring system (src/utils/accessibility/focusRing.ts)
  */
 
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle } from 'react-native';
 import { spacing, borderRadius } from '@/theme/spacing';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, typography } from '@/theme/typography';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 import { statusStyles } from './HabitCard.statusStyles';
 
@@ -62,17 +62,16 @@ const coreStyles = StyleSheet.create({
   },
   // Meta text for habit strength
   habitMeta: {
+    ...typography.caption,
     color: REDESIGN_COLORS.metaText,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
     letterSpacing: -0.08,
-    lineHeight: 18,
     marginTop: 2,
-  },
+  } as TextStyle,
   habitName: {
+    ...typography.body,
     color: REDESIGN_COLORS.secondaryText,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
     fontWeight: '600',
     letterSpacing: -0.41,
     lineHeight: 22,
@@ -80,11 +79,11 @@ const coreStyles = StyleSheet.create({
   icon: { fontSize: 28 },
   // Streak text with proper contrast
   streakText: {
+    ...typography.bodySmall,
     color: REDESIGN_COLORS.streakText,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
     fontWeight: '600',
-  },
+  } as TextStyle,
   strengthFill: { bottom: 0, left: 0, position: 'absolute', top: 0 },
   topRow: {
     alignItems: 'center',

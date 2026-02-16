@@ -7,6 +7,7 @@
 /* eslint-disable max-lines, max-lines-per-function */
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { colors } from '../../theme/colors';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
@@ -189,7 +190,8 @@ interface PageData {
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    subtitle: 'Complete your habits daily and watch your chain grow — every link counts.',
+    subtitle:
+      'Complete your habits daily and watch your chain grow — every link counts.',
     title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
@@ -202,7 +204,8 @@ const PAGES: PageData[] = [
   },
   {
     id: 'templates',
-    subtitle: 'Pick from science-backed templates or create your own in seconds.',
+    subtitle:
+      'Pick from science-backed templates or create your own in seconds.',
     title: '200+ Ready-Made Templates',
     Visual: TemplateGrid,
   },
@@ -228,7 +231,8 @@ function DotIndicators({ currentIndex }: { currentIndex: number }) {
           style={[
             styles.dot,
             {
-              backgroundColor: i === currentIndex ? colors.primary[600] : colors.gray[300],
+              backgroundColor:
+                i === currentIndex ? colors.primary[600] : colors.gray[300],
               width: i === currentIndex ? 24 : 8,
             },
           ]}
@@ -264,7 +268,10 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
       // If storage fails, still proceed to avoid blocking user
       // They might see onboarding again on next launch, but that's acceptable
       if (__DEV__) {
-        console.error('[OnboardingScreen] Failed to save completion state:', error);
+        console.error(
+          '[OnboardingScreen] Failed to save completion state:',
+          error
+        );
       }
       onComplete();
     } finally {
@@ -333,7 +340,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Skip button */}
       <Animated.View
         entering={shouldReduceMotion ? undefined : FadeIn.delay(600)}
@@ -445,7 +452,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ctaButton: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 32,
@@ -473,7 +480,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   nextButton: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 12,
     elevation: 4,
     paddingHorizontal: 48,
@@ -511,7 +518,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   strengthBar: {
-    backgroundColor: '#059669',
+    backgroundColor: colors.primary[600],
     borderRadius: 8,
     height: 32,
   },
@@ -526,7 +533,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   strengthLabelActive: {
-    color: '#047857',
+    color: colors.primary[700],
     fontWeight: '700',
   },
   strengthRow: {
@@ -565,7 +572,7 @@ const styles = StyleSheet.create({
     width: 56,
   },
   title: {
-    color: '#047857',
+    color: colors.primary[700],
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,
