@@ -1,10 +1,10 @@
 /**
  * ShareCardFooter Component
- * Footer section with science badge and app info
+ * Footer section with science badge and app info with logo
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { shareCardFooterStyles as styles } from '../styles';
 
 interface ShareCardFooterProps {
@@ -25,7 +25,14 @@ export function ShareCardFooter({
       </View>
 
       <View style={styles.appInfo}>
-        <Text style={styles.appName}>Chain Day</Text>
+        <View style={styles.appLogoRow}>
+          <Image
+            source={require('../../../../assets/icon.png')}
+            style={styles.appLogo}
+            resizeMode="contain"
+          />
+          <Text style={styles.appName}>Chain Day</Text>
+        </View>
         {showUserName && userName && (
           <Text style={styles.userName}>by {userName}</Text>
         )}

@@ -12,6 +12,15 @@ export const shareCardFooterStyles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
   },
+  appLogo: {
+    height: 32,
+    width: 32,
+  },
+  appLogoRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
   appName: {
     color: colors.text.inverse,
     fontSize: 17,
