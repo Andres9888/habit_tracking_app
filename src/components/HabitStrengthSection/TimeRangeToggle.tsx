@@ -24,6 +24,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useThemeColors } from '../../theme';
 import { TIME_RANGE_OPTIONS } from './constants';
 import type { TimeRange, TimeRangeToggleProps } from './types';
 
@@ -37,6 +38,11 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
   onChange,
 }: TimeRangeToggleProps) {
   const reduceMotion = useReduceMotion();
+  const { isDark } = useThemeColors();
+  const trackBg = isDark ? 'rgba(255,255,255,0.08)' : '#f5f5f4';
+  const pillBg = isDark ? 'rgba(255,255,255,0.15)' : '#ffffff';
+  const selectedTextColor = isDark ? '#f5f5f4' : '#1c1917';
+  const unselectedTextColor = isDark ? '#a8a29e' : '#78716c';
 
   // Calculate selected index for indicator position (default to 0 if not found)
   const selectedIndex = Math.max(0, TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value));
@@ -76,13 +82,15 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
     <View
       accessibilityLabel="Time range selection"
       accessibilityRole="tablist"
-      className="flex-row rounded-full bg-stone-100 p-0.5"
+      className="flex-row rounded-full p-0.5"
+      style={{ backgroundColor: trackBg }}
     >
       {/* Animated indicator background */}
       <AnimatedView
-        className="absolute rounded-full bg-white shadow-sm"
+        className="absolute rounded-full shadow-sm"
         style={[
           {
+            backgroundColor: pillBg,
             height: 28,
             left: 2,
             top: 2,
@@ -107,9 +115,8 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
             onPress={() => handlePress(option.value)}
           >
             <Text
-              className={`text-xs font-semibold ${
-                isSelected ? 'text-stone-900' : 'text-stone-500'
-              }`}
+              className='text-xs font-semibold'
+              style={{ color: isSelected ? selectedTextColor : unselectedTextColor }}
             >
               {option.label}
             </Text>

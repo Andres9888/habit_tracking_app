@@ -15,10 +15,18 @@ export const iconShadow = {
   shadowRadius: 16,
 } as const;
 
-export const streakShadow = {
+export const streakShadowLight = {
   backgroundColor: '#ecfdf5',
   shadowColor: colors.primary[600],
   shadowOffset: { height: 2, width: 0 },
   shadowOpacity: 0.1,
+  shadowRadius: 8,
+} as const;
+
+export const streakShadowDark = {
+  backgroundColor: 'rgba(5, 150, 105, 0.15)',
+  shadowColor: colors.primary[600],
+  shadowOffset: { height: 2, width: 0 },
+  shadowOpacity: 0.2,
   shadowRadius: 8,
 } as const;

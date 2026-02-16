@@ -9,6 +9,7 @@ import { Text, View } from 'react-native';
 
 import { TrendingDown, TrendingUp } from 'lucide-react-native';
 
+import { useThemeColors } from '../../../theme';
 import { COLORS, STRENGTH_COLORS, STRENGTH_LABELS } from '../constants';
 import type { StatusDisplayProps } from './types';
 
@@ -20,9 +21,11 @@ export function StatusDisplay({
   delta,
   deltaLabel,
 }: StatusDisplayProps) {
+  const { colors: themeColors, isDark } = useThemeColors();
   // Guard against invalid label - default to 'weak'
   const safeLabel = label && STRENGTH_COLORS[label] ? label : 'weak';
   const colors = STRENGTH_COLORS[safeLabel];
+  const mutedText = isDark ? themeColors.text.tertiary : '#78716c';
 
   // Guard against NaN/undefined delta - default to 0
   const safeDelta =
@@ -64,7 +67,7 @@ export function StatusDisplay({
         >
           {deltaText}
         </Text>
-        <Text className='text-sm text-stone-500'>{deltaLabel}</Text>
+        <Text className='text-sm' style={{ color: mutedText }}>{deltaLabel}</Text>
       </View>
     </View>
   );

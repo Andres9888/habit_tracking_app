@@ -13,6 +13,7 @@ import { Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useThemeColors } from '../../theme';
 import { shadows } from '../../theme/spacing';
 import { COLORS } from './constants';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
@@ -29,6 +30,10 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   habitStrength,
 }: HabitStrengthSectionProps) {
   const reduceMotion = useReduceMotion();
+  const { colors: themeColors, isDark } = useThemeColors();
+  const cardBg = isDark ? themeColors.card : '#ffffff';
+  const textPrimary = isDark ? themeColors.text.primary : '#1c1917';
+  const textMuted = isDark ? themeColors.text.tertiary : '#a8a29e';
   const {
     chartData,
     currentStrength,
@@ -42,9 +47,9 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 
   if (isCalculating) {
     return (
-      <View className='rounded-2xl bg-white p-5 shadow-sm'>
+      <View className='rounded-2xl p-5 shadow-sm' style={{ backgroundColor: cardBg }}>
         <View className='h-48 items-center justify-center'>
-          <Text className='text-stone-400'>Calculating strength...</Text>
+          <Text style={{ color: textMuted }}>Calculating strength...</Text>
         </View>
       </View>
     );
@@ -52,13 +57,13 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 
   if (isEmpty) {
     return (
-      <View className='rounded-2xl bg-white p-5 shadow-sm'>
-        <Text className='mb-2 text-lg font-bold text-stone-800'>
+      <View className='rounded-2xl p-5 shadow-sm' style={{ backgroundColor: cardBg }}>
+        <Text className='mb-2 text-lg font-bold' style={{ color: textPrimary }}>
           Habit Strength
         </Text>
         <View className='items-center justify-center py-8'>
           <Text className='mb-2 text-4xl'>🌱</Text>
-          <Text className='text-center text-stone-500'>
+          <Text className='text-center' style={{ color: textMuted }}>
             Complete your first day to start building strength!
           </Text>
         </View>
@@ -68,17 +73,18 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 
   return (
     <Animated.View
-      className='overflow-hidden rounded-2xl bg-white shadow-sm'
+      className='overflow-hidden rounded-2xl shadow-sm'
       entering={reduceMotion ? undefined : FadeInDown.delay(100).springify().damping(18)}
       style={{
         ...shadows.card,
+        backgroundColor: cardBg,
         shadowColor: COLORS.textPrimary,
-        shadowOpacity: 0.05,
+        shadowOpacity: isDark ? 0.3 : 0.05,
       }}
     >
       <View className='p-5'>
         <View className='mb-4 flex-row items-center justify-between'>
-          <Text className='text-lg font-bold text-stone-800'>
+          <Text className='text-lg font-bold' style={{ color: textPrimary }}>
             Habit Strength
           </Text>
           <TimeRangeToggle value={timeRange} onChange={setTimeRange} />

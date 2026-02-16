@@ -1,7 +1,8 @@
 /** HabitDetailContent - Dark mode + a11y optimized */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { Flame, Trophy, CheckCircle2 } from 'lucide-react-native';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
@@ -60,6 +61,10 @@ export function HabitDetailContent({
   const borderColor = isDark ? colors.border : '#DDD8D2';
   const labelColor = isDark ? colors.text.tertiary : '#9C958D';
 
+  const currentStreak = habit.currentStreak ?? 0;
+  const bestStreak = habit.bestStreak ?? 0;
+  const totalCompletions = completedDates.size;
+
   return (
     <ScrollView
       bounces
@@ -67,6 +72,88 @@ export function HabitDetailContent({
       contentContainerClassName='pb-8 px-4'
       showsVerticalScrollIndicator={false}
     >
+      {/* QUICK STATS */}
+      <Animated.View
+        className='mt-2 flex-row gap-2'
+        entering={anim(60)}
+      >
+        <View
+          className='flex-1 items-center rounded-2xl px-3 py-3'
+          style={{
+            backgroundColor: cardBg,
+            elevation: 4,
+            shadowColor,
+            shadowOffset: { height: 4, width: 0 },
+            shadowOpacity: isDark ? 0.3 : 0.08,
+            shadowRadius: 16,
+          }}
+        >
+          <Flame size={18} color='#f97316' strokeWidth={2.5} />
+          <Text
+            className='mt-1 text-xl font-bold'
+            style={{ color: isDark ? colors.text.primary : '#1c1917' }}
+          >
+            {currentStreak}
+          </Text>
+          <Text
+            className='text-[11px] font-medium tracking-wide'
+            style={{ color: labelColor }}
+          >
+            CURRENT
+          </Text>
+        </View>
+        <View
+          className='flex-1 items-center rounded-2xl px-3 py-3'
+          style={{
+            backgroundColor: cardBg,
+            elevation: 4,
+            shadowColor,
+            shadowOffset: { height: 4, width: 0 },
+            shadowOpacity: isDark ? 0.3 : 0.08,
+            shadowRadius: 16,
+          }}
+        >
+          <Trophy size={18} color='#eab308' strokeWidth={2.5} />
+          <Text
+            className='mt-1 text-xl font-bold'
+            style={{ color: isDark ? colors.text.primary : '#1c1917' }}
+          >
+            {bestStreak}
+          </Text>
+          <Text
+            className='text-[11px] font-medium tracking-wide'
+            style={{ color: labelColor }}
+          >
+            BEST
+          </Text>
+        </View>
+        <View
+          className='flex-1 items-center rounded-2xl px-3 py-3'
+          style={{
+            backgroundColor: cardBg,
+            elevation: 4,
+            shadowColor,
+            shadowOffset: { height: 4, width: 0 },
+            shadowOpacity: isDark ? 0.3 : 0.08,
+            shadowRadius: 16,
+          }}
+        >
+          <CheckCircle2 size={18} color='#059669' strokeWidth={2.5} />
+          <Text
+            className='mt-1 text-xl font-bold'
+            style={{ color: isDark ? colors.text.primary : '#1c1917' }}
+          >
+            {totalCompletions}
+          </Text>
+          <Text
+            className='text-[11px] font-medium tracking-wide'
+            style={{ color: labelColor }}
+          >
+            TOTAL
+          </Text>
+        </View>
+      </Animated.View>
+
       {/* STRENGTH section */}
       {habit.createdAt && (
         <>

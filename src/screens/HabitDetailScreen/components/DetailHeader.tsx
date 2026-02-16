@@ -6,7 +6,7 @@ import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { HeaderCompleteToggle } from '../../../components/HeaderCompleteToggle';
 import { useThemeColors } from '../../../theme';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
-import { iconShadow, streakShadow } from './DetailHeader.constants';
+import { iconShadow, streakShadowLight, streakShadowDark } from './DetailHeader.constants';
 import { HeaderButton } from './HeaderButton';
 
 export function DetailHeader({
@@ -81,10 +81,10 @@ export function DetailHeader({
               .delay(200)
               .springify()
               .damping(18)}
-            style={streakShadow}
+            style={isDark ? streakShadowDark : streakShadowLight}
           >
             <Text style={{ fontSize: 17 }}>🔥</Text>
-            <Text className='text-[17px] font-semibold text-emerald-700'>
+            <Text className='text-[17px] font-semibold' style={{ color: isDark ? '#6ee7b7' : '#047857' }}>
               {habit.currentStreak} day streak
             </Text>
           </Animated.View>
