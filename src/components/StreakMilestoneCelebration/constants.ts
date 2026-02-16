@@ -13,9 +13,9 @@ export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
  * Trigger celebration when user reaches these streak days
  */
 export const STREAK_MILESTONES = [
-  { color: '#10b981', days: 7, emoji: '🎊', title: 'First Week!' },
+  { color: '#10b981', days: 7, emoji: '🎊', title: 'First Week — Amazing!' },
   { color: '#f59e0b', days: 30, emoji: '🏆', title: 'One Month Strong!' },
-  { color: '#8b5cf6', days: 100, emoji: '👑', title: 'Century Club!' },
+  { color: '#8b5cf6', days: 100, emoji: '👑', title: 'Welcome to the Century Club!' },
 ] as const;
 
 export type StreakMilestone = (typeof STREAK_MILESTONES)[number];

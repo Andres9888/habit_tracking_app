@@ -14,6 +14,10 @@ export type { TrendData as TrendDataPoint };
 export type { HeatmapData as ComplianceDay };
 export type { WeeklyInsights };
 export type { HabitInsightsResult };
+export type { StrengthDistributionData } from '../../components/StrengthDistributionChart/StrengthDistributionChart.types';
+export type { TrendData as TrendDataPoint } from '../../components/TrendLineChart/types';
+export type { HeatmapData as ComplianceDay } from '../../components/ComplianceHeatmap/ComplianceHeatmap.types';
+export type { WeeklyInsights } from '../../components/WeeklyInsightsCard';
 
 export interface StatCardProps {
   title: string;

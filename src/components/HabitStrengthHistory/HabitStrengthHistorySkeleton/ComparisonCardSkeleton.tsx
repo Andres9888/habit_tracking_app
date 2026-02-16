@@ -8,6 +8,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { SkeletonLoader } from '../../SkeletonLoader/SkeletonLoader';
+import { useSkeletonTheme } from '../../SkeletonLoader/useSkeletonTheme';
 
 interface ComparisonCardSkeletonProps {
   index: number;
@@ -18,9 +19,11 @@ export function ComparisonCardSkeleton({
   index,
   reduceMotion = false,
 }: ComparisonCardSkeletonProps) {
+  const { surfaceBg } = useSkeletonTheme();
   return (
     <View
-      className='flex-1 items-center rounded-xl bg-stone-50 p-3'
+      className='flex-1 items-center rounded-xl p-3'
+      style={{ backgroundColor: surfaceBg }}
       testID={`skeleton-card-${index}`}
     >
       <SkeletonLoader

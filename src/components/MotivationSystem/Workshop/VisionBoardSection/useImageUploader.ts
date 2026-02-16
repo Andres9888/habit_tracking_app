@@ -10,6 +10,7 @@ import { useImagePicker } from '../../../../hooks/useImagePicker';
 import { useImageUpload } from '../../../../hooks/useImageUpload';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import { MAX_IMAGES } from './types';
+import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 
 interface UseImageUploaderProps {
   isPremium: boolean;
@@ -69,7 +70,7 @@ export function useImageUploader({
         if (__DEV__) console.error('Failed to add image:', error);
         Alert.alert(
           'Upload Failed',
-          'There was a problem adding your image. Please try again.'
+          ERROR_MESSAGES.DATA_OPS.UPLOAD_IMAGE_FAILED
         );
       } finally {
         setIsUploading(false);
