@@ -35,6 +35,26 @@ export const MILESTONE_MESSAGES: Record<number, ContextualMessageData> = {
     message: "One month! You're in the top 1% of habit builders.",
     type: 'celebrate',
   },
+  60: {
+    emoji: '🌟',
+    message: 'Two months! This habit is part of who you are.',
+    type: 'celebrate',
+  },
+  90: {
+    emoji: '🏅',
+    message: 'A full quarter! Your discipline is extraordinary.',
+    type: 'celebrate',
+  },
+  100: {
+    emoji: '💯',
+    message: 'Century Club! Only the most dedicated reach this.',
+    type: 'celebrate',
+  },
+  365: {
+    emoji: '👑',
+    message: 'ONE YEAR! You are truly legendary.',
+    type: 'celebrate',
+  },
 };
 
 export const MESSAGE_STYLES: Record<

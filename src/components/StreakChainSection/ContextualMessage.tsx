@@ -22,6 +22,8 @@ export function ContextualMessage({
   currentStreak,
   bestStreak,
   todayCompleted,
+  previousStreak,
+  daysSinceLastCompletion,
 }: ContextualMessageProps) {
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(8);
@@ -29,7 +31,9 @@ export function ContextualMessage({
   const { message, emoji, type } = getContextualMessage(
     currentStreak,
     bestStreak,
-    todayCompleted
+    todayCompleted,
+    previousStreak,
+    daysSinceLastCompletion
   );
 
   useEffect(() => {

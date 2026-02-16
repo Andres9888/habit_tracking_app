@@ -14,8 +14,11 @@ export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
  */
 export const STREAK_MILESTONES = [
   { color: '#10b981', days: 7, emoji: '🎊', title: 'First Week — Amazing!' },
+  { color: '#14b8a6', days: 14, emoji: '🔥', title: 'Two Weeks — Unstoppable!' },
   { color: '#f59e0b', days: 30, emoji: '🏆', title: 'One Month Strong!' },
-  { color: '#8b5cf6', days: 100, emoji: '👑', title: 'Welcome to the Century Club!' },
+  { color: '#8b5cf6', days: 60, emoji: '💎', title: 'Two Months — Diamond Status!' },
+  { color: '#ec4899', days: 100, emoji: '👑', title: 'Welcome to the Century Club!' },
+  { color: '#eab308', days: 365, emoji: '🌟', title: 'One Year — Legendary!' },
 ] as const;
 
 export type StreakMilestone = (typeof STREAK_MILESTONES)[number];
@@ -63,10 +66,13 @@ export function checkStreakMilestoneCrossed(
 export const CONFETTI_COLORS = [
   '#10b981', // Emerald-500 (7-day)
   '#34d399', // Emerald-400
+  '#14b8a6', // Teal-500 (14-day)
   '#f59e0b', // Amber-500 (30-day)
   '#fcd34d', // Amber-300
-  '#8b5cf6', // Violet-500 (100-day)
+  '#8b5cf6', // Violet-500 (60-day)
   '#a78bfa', // Violet-400
+  '#ec4899', // Pink-500 (100-day)
+  '#eab308', // Yellow-500 (365-day)
   '#fef3c7', // Amber-100 (sparkle)
 ];
 

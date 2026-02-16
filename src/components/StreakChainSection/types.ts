@@ -26,6 +26,10 @@ export interface ContextualMessageProps {
   currentStreak: number;
   bestStreak: number;
   todayCompleted: boolean;
+  /** The user's previous streak before the current gap (if any). Used for comeback messaging. */
+  previousStreak?: number;
+  /** Number of days since the user last completed this habit. */
+  daysSinceLastCompletion?: number;
 }
 
 export interface TierConfig {

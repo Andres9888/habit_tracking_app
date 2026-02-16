@@ -12,8 +12,52 @@ export { MESSAGE_STYLES } from './messageConstants';
 export function getContextualMessage(
   currentStreak: number,
   bestStreak: number,
-  todayCompleted: boolean
+  todayCompleted: boolean,
+  previousStreak?: number,
+  daysSinceLastCompletion?: number
 ): ContextualMessageData {
+  // Comeback messaging — user returned after a gap
+  if (
+    currentStreak === 0 &&
+    !todayCompleted &&
+    daysSinceLastCompletion !== undefined &&
+    daysSinceLastCompletion >= 2
+  ) {
+    if (previousStreak && previousStreak >= 7) {
+      return {
+        emoji: '💪',
+        message: `Welcome back! You had a ${previousStreak}-day streak — let's beat it!`,
+        type: 'motivation',
+      };
+    }
+    if (daysSinceLastCompletion >= 7) {
+      return {
+        emoji: '👋',
+        message: "Hey, we missed you! Today's a fresh start.",
+        type: 'start',
+      };
+    }
+    return {
+      emoji: '🔄',
+      message: 'Everyone takes breaks. Pick up right where you left off!',
+      type: 'start',
+    };
+  }
+
+  // Comeback — user just completed after a gap
+  if (
+    currentStreak <= 1 &&
+    todayCompleted &&
+    daysSinceLastCompletion !== undefined &&
+    daysSinceLastCompletion >= 2
+  ) {
+    return {
+      emoji: '🎉',
+      message: "You're back! The comeback starts now!",
+      type: 'celebrate',
+    };
+  }
+
   // New record achieved
   if (currentStreak > 0 && currentStreak > bestStreak) {
     return { emoji: '🎉', message: 'New personal record!', type: 'record' };
