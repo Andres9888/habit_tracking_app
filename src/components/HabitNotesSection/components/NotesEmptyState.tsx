@@ -19,7 +19,7 @@ interface NotesEmptyStateProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -48,7 +48,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
           animatedStyle,
           {
             alignItems: 'center',
-            backgroundColor: isDark ? '#451A03' : '#FFFBEB',
+            backgroundColor: colors.amber[50],
             borderRadius: 16,
             paddingVertical: 32,
             shadowColor: colors.text.primary,
@@ -65,7 +65,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
         <View
           style={{
             alignItems: 'center',
-            backgroundColor: isDark ? '#78350F' : '#FDE68A',
+            backgroundColor: colors.amber[100],
             borderRadius: 12,
             height: 56,
             justifyContent: 'center',
@@ -74,7 +74,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
           }}
         >
           <StickyNote
-            color={isDark ? '#FCD34D' : '#D97706'}
+            color={colors.amber[700]}
             size={28}
             strokeWidth={1.5}
           />
@@ -96,7 +96,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
         <View
           style={{
             alignItems: 'center',
-            backgroundColor: isDark ? '#D97706' : '#F59E0B',
+            backgroundColor: colors.amber[600],
             borderRadius: 20,
             flexDirection: 'row',
             gap: 6,

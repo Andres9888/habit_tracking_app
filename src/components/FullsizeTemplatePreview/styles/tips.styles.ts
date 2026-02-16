@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 export const tipsStyles = StyleSheet.create({
   tipIconContainer: {
@@ -26,7 +27,7 @@ export const tipsStyles = StyleSheet.create({
     fontWeight: '700',
   },
   tipsBox: {
-    backgroundColor: '#fefce8',
+    backgroundColor: '#fefce8', // overridden by useTipsStyles
     borderColor: '#fef08a',
     borderRadius: borderRadius.large,
     borderWidth: 2,
@@ -59,3 +60,27 @@ export const tipsStyles = StyleSheet.create({
     lineHeight: 22,
   },
 });
+
+export function useTipsStyles() {
+  const { colors } = useThemeColors();
+  return {
+    ...tipsStyles,
+    tipsBox: {
+      ...tipsStyles.tipsBox,
+      backgroundColor: colors.tip[50],
+      borderColor: colors.tip.border,
+    },
+    tipsDivider: {
+      ...tipsStyles.tipsDivider,
+      backgroundColor: colors.tip.border,
+    },
+    tipsLabel: {
+      ...tipsStyles.tipsLabel,
+      color: colors.tip.textDark,
+    },
+    tipText: {
+      ...tipsStyles.tipText,
+      color: colors.tip.text,
+    },
+  };
+}

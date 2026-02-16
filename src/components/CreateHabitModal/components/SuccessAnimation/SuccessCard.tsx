@@ -5,6 +5,7 @@
  */
 
 import { Animated, Pressable, Text } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface SuccessCardProps {
   cardOpacity: Animated.Value;
@@ -31,12 +32,19 @@ export const SuccessCard = ({
   habitName,
   onComplete,
 }: SuccessCardProps) => {
+  const { colors } = useThemeColors();
+
   return (
     <Animated.View
-      className='mx-8 items-center rounded-3xl bg-white px-8 py-10'
       style={{
+        alignItems: 'center',
+        backgroundColor: colors.card,
+        borderRadius: 24,
+        marginHorizontal: 32,
         opacity: cardOpacity,
-        shadowColor: '#1c1917',
+        paddingHorizontal: 32,
+        paddingVertical: 40,
+        shadowColor: colors.text.primary,
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 16,
@@ -45,41 +53,70 @@ export const SuccessCard = ({
     >
       {/* Animated Icon */}
       <Animated.View
-        className='mb-6 h-24 w-24 items-center justify-center rounded-3xl'
         style={{
-          backgroundColor: selectedColor || '#DBEAFE',
+          alignItems: 'center',
+          backgroundColor: selectedColor || colors.info[100],
+          borderRadius: 24,
+          height: 96,
+          justifyContent: 'center',
+          marginBottom: 24,
           transform: [{ scale: iconScale }],
+          width: 96,
         }}
       >
-        <Text className='text-5xl'>{selectedEmoji || '🎯'}</Text>
+        <Text style={{ fontSize: 48 }}>{selectedEmoji || '🎯'}</Text>
       </Animated.View>
 
       {/* Success Text */}
-      <Animated.View className='items-center' style={{ opacity: textOpacity }}>
-        <Text className='mb-2 text-center text-2xl font-bold tracking-tight text-stone-800'>
+      <Animated.View style={{ alignItems: 'center', opacity: textOpacity }}>
+        <Text
+          style={{
+            color: colors.text.primary,
+            fontSize: 24,
+            fontWeight: '700',
+            letterSpacing: -0.5,
+            marginBottom: 8,
+            textAlign: 'center',
+          }}
+        >
           {habitName}
         </Text>
-        <Text className='text-center text-lg text-stone-500'>created! 🎉</Text>
-        <Text className='mt-4 text-center text-sm text-stone-400'>
+        <Text style={{ color: colors.text.secondary, fontSize: 18, textAlign: 'center' }}>
+          created! 🎉
+        </Text>
+        <Text
+          style={{
+            color: colors.text.tertiary,
+            fontSize: 14,
+            marginTop: 16,
+            textAlign: 'center',
+          }}
+        >
           Your streak starts now
         </Text>
       </Animated.View>
 
       {/* CTA Button */}
       <Animated.View
-        className='mt-8 w-full'
         style={{
+          marginTop: 32,
           opacity: buttonOpacity,
           transform: [{ translateY: buttonTranslateY }],
+          width: '100%',
         }}
       >
         <Pressable
           accessibilityLabel='Start tracking habit'
           accessibilityRole='button'
-          className='items-center rounded-2xl bg-stone-900 py-4'
+          style={{
+            alignItems: 'center',
+            backgroundColor: colors.gray[900],
+            borderRadius: 16,
+            paddingVertical: 16,
+          }}
           onPress={onComplete}
         >
-          <Text className='text-base font-semibold text-white'>
+          <Text style={{ color: colors.text.inverse, fontSize: 16, fontWeight: '600' }}>
             Let's get started! →
           </Text>
         </Pressable>

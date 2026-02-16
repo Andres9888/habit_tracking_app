@@ -5,6 +5,7 @@
 
 import { memo } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { REMINDER_OPTIONS } from './constants';
 import { useButtonAnimations } from './useButtonAnimations';
 import type { ReminderOptionButtonProps } from './types';
@@ -15,6 +16,7 @@ function ReminderOptionButtonComponent({
   onPress,
   reduceMotion,
 }: ReminderOptionButtonProps) {
+  const { colors } = useThemeColors();
   const optionInfo = REMINDER_OPTIONS[option];
   const { scaleAnim, slideAnim, handlePressIn, handlePressOut } =
     useButtonAnimations(reduceMotion);
@@ -38,11 +40,11 @@ function ReminderOptionButtonComponent({
         className='items-center justify-center rounded-xl px-2 py-3'
         style={[
           {
-            backgroundColor: isSelected ? '#ECFDF5' : '#fafaf9',
-            borderColor: isSelected ? '#10B981' : '#e7e5e4',
+            backgroundColor: isSelected ? colors.success[50] : colors.selection.bgSubtle,
+            borderColor: isSelected ? colors.selection.border : colors.border,
             borderWidth: isSelected ? 2 : 1,
             elevation: isSelected ? 2 : 0,
-            shadowColor: '#1c1917',
+            shadowColor: colors.text.primary,
             shadowOffset: { height: isSelected ? 2 : 0, width: 0 },
             shadowOpacity: isSelected ? 0.1 : 0,
             shadowRadius: isSelected ? 3 : 0,
@@ -53,14 +55,14 @@ function ReminderOptionButtonComponent({
         <Text className='mb-0.5 text-lg'>{optionInfo.emoji}</Text>
         <Text
           className='text-xs font-medium'
-          style={{ color: isSelected ? '#047857' : '#78716c' }}
+          style={{ color: isSelected ? colors.primary[700] : colors.text.tertiary }}
         >
           {optionInfo.label}
         </Text>
         {optionInfo.time && (
           <Text
             className='text-[10px]'
-            style={{ color: isSelected ? '#047857' : '#a8a29e' }}
+            style={{ color: isSelected ? colors.primary[700] : colors.text.tertiary }}
           >
             {optionInfo.time}
           </Text>

@@ -22,7 +22,7 @@ export function EmptyStrengthState({
   reduceMotion,
   onInfoPress,
 }: EmptyStrengthStateProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const entering = reduceMotion
     ? FadeIn.duration(SECTION_FADE_DURATION)
     : FadeInUp.duration(SECTION_SLIDE_DURATION).delay(SECTION_SLIDE_DELAY);
@@ -69,7 +69,7 @@ export function EmptyStrengthState({
         <View
           style={{
             alignItems: 'center',
-            backgroundColor: isDark ? '#451A03' : '#FEF3C7',
+            backgroundColor: colors.amber[50],
             borderRadius: 24,
             height: 48,
             justifyContent: 'center',
@@ -77,7 +77,7 @@ export function EmptyStrengthState({
             width: 48,
           }}
         >
-          <Zap color={isDark ? '#FCD34D' : '#D97706'} size={24} />
+          <Zap color={colors.amber[700]} size={24} />
         </View>
         <Text
           style={{

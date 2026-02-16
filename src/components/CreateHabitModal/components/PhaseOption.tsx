@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 import { colors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { HubermanPhase } from '../../../constants/hubermanPhases';
 import { HUBERMAN_PHASES } from '../../../constants/hubermanPhases';
 import { AnimatedPressable } from '../../ui';
@@ -15,6 +16,7 @@ export const PhaseOption = ({
   isSelected,
   onPress,
 }: PhaseOptionProps) => {
+  const { colors: themeColors } = useThemeColors();
   const phase = HUBERMAN_PHASES[phaseId];
 
   return (
@@ -24,7 +26,7 @@ export const PhaseOption = ({
       accessibilityState={{ selected: isSelected }}
       className='flex-row items-center rounded-xl border-2 px-3 py-3'
       style={{
-        backgroundColor: isSelected ? '#EFF6FF' : '#F5F5F5',
+        backgroundColor: isSelected ? colors.secondary[100] : themeColors.gray[50],
         borderColor: isSelected ? colors.secondary[500] : 'transparent',
       }}
       onPress={() => onPress(phaseId)}
@@ -35,14 +37,14 @@ export const PhaseOption = ({
           <Text
             className='text-sm font-semibold'
             style={{
-              color: isSelected ? colors.secondary[500] : colors.text.primary,
+              color: isSelected ? colors.secondary[500] : themeColors.text.primary,
             }}
           >
             {phase.shortLabel}
           </Text>
-          <Text className='ml-2 text-xs text-stone-500'>{phase.timeRange}</Text>
+          <Text className='ml-2 text-xs' style={{ color: themeColors.text.secondary }}>{phase.timeRange}</Text>
         </View>
-        <Text className='mt-0.5 text-xs text-stone-500'>
+        <Text className='mt-0.5 text-xs' style={{ color: themeColors.text.secondary }}>
           {phase.description}
         </Text>
       </View>
@@ -51,7 +53,7 @@ export const PhaseOption = ({
           className='h-5 w-5 items-center justify-center rounded-full'
           style={{ backgroundColor: colors.secondary[500] }}
         >
-          <Text className='text-xs text-white'>✓</Text>
+          <Text className='text-xs' style={{ color: themeColors.text.inverse }}>✓</Text>
         </View>
       )}
     </AnimatedPressable>

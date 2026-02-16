@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows, borderRadius } from '../../../theme/spacing';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 export const footerStyles = StyleSheet.create({
   customizeLink: {
@@ -46,7 +47,7 @@ export const footerStyles = StyleSheet.create({
   successButton: {
     ...shadows.modal,
     alignItems: 'center',
-    backgroundColor: '#22c55e',
+    backgroundColor: '#22c55e', // overridden by useFooterStyles → colors.success[500]
     borderRadius: borderRadius.large,
     flexDirection: 'row',
     gap: 10,
@@ -56,7 +57,7 @@ export const footerStyles = StyleSheet.create({
     shadowOpacity: 0.3,
   },
   successButtonGlow: {
-    backgroundColor: '#22c55e',
+    backgroundColor: '#22c55e', // overridden by useFooterStyles → colors.success[500]
     borderRadius: borderRadius.xl,
     bottom: -8,
     elevation: 8,
@@ -78,3 +79,32 @@ export const footerStyles = StyleSheet.create({
     position: 'relative',
   },
 });
+
+export function useFooterStyles() {
+  const { colors } = useThemeColors();
+  return {
+    ...footerStyles,
+    customizeLinkText: {
+      ...footerStyles.customizeLinkText,
+      color: colors.text.secondary,
+    },
+    importButtonText: {
+      ...footerStyles.importButtonText,
+      color: colors.text.inverse,
+    },
+    successButton: {
+      ...footerStyles.successButton,
+      backgroundColor: colors.success[500],
+      shadowColor: colors.success[500],
+    },
+    successButtonGlow: {
+      ...footerStyles.successButtonGlow,
+      backgroundColor: colors.success[500],
+      shadowColor: colors.success[500],
+    },
+    successButtonText: {
+      ...footerStyles.successButtonText,
+      color: colors.text.inverse,
+    },
+  };
+}

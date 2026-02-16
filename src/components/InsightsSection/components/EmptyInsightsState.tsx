@@ -11,7 +11,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import type { EmptyInsightsStateProps } from '../InsightsSection.types';
 
 export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return (
     <Animated.View
@@ -39,14 +39,14 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
           <View
             style={{
               alignItems: 'center',
-              backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
+              backgroundColor: colors.purple[50],
               borderRadius: 8,
               height: 32,
               justifyContent: 'center',
               width: 32,
             }}
           >
-            <BarChart3 color={isDark ? '#C4B5FD' : '#A78BFA'} size={16} />
+            <BarChart3 color={colors.purple.text} size={16} />
           </View>
           <Text style={{ color: colors.text.secondary, fontSize: 17, fontWeight: '700' }}>
             Insights

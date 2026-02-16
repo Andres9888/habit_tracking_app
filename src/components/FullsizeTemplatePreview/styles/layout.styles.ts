@@ -4,6 +4,8 @@
 
 import { StyleSheet } from 'react-native';
 
+import { useThemeColors } from '../../../theme/ThemeContext';
+
 export const layoutStyles = StyleSheet.create({
   bottomSpacer: {
     height: 140,
@@ -24,7 +26,7 @@ export const layoutStyles = StyleSheet.create({
     zIndex: 1000,
   },
   container: {
-    backgroundColor: '#FAFAF9',
+    backgroundColor: '#FAFAF9', // overridden by useLayoutStyles → colors.gray[50]
     flex: 1,
   },
   contentContainer: {
@@ -45,3 +47,14 @@ export const layoutStyles = StyleSheet.create({
     top: 0,
   },
 });
+
+export function useLayoutStyles() {
+  const { colors } = useThemeColors();
+  return {
+    ...layoutStyles,
+    container: {
+      ...layoutStyles.container,
+      backgroundColor: colors.gray[50],
+    },
+  };
+}

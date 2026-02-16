@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   infoBox: {
-    backgroundColor: '#e3f2fd',
+    backgroundColor: '#e3f2fd', // Diagnostic tool — static light-mode-only colors acceptable
     borderRadius: 8,
     marginTop: 24,
     padding: 12,
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   statusBox: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5', // Diagnostic tool — static light-mode-only colors acceptable
     borderRadius: 8,
     marginBottom: 16,
     padding: 16,

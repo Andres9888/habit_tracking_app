@@ -7,7 +7,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 export const DISMISS_THRESHOLD = 50;
 
 export function useToastStyles() {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return StyleSheet.create({
     container: {
@@ -27,7 +27,7 @@ export function useToastStyles() {
     },
     iconContainer: {
       alignItems: 'center',
-      backgroundColor: isDark ? '#7F1D1D' : '#fee2e2',
+      backgroundColor: colors.danger[50],
       borderRadius: borderRadius.medium,
       height: 36,
       justifyContent: 'center',
@@ -45,11 +45,11 @@ export function useToastStyles() {
       color: colors.text.secondary,
     },
     progressBar: {
-      backgroundColor: isDark ? '#EF4444' : '#dc2626',
+      backgroundColor: colors.danger[500],
       height: '100%',
     },
     progressContainer: {
-      backgroundColor: isDark ? '#7F1D1D' : '#fee2e2',
+      backgroundColor: colors.danger[50],
       borderBottomLeftRadius: borderRadius.xl,
       borderBottomRightRadius: borderRadius.xl,
       height: 3,
@@ -58,18 +58,18 @@ export function useToastStyles() {
     },
     toast: {
       backgroundColor: colors.card,
-      borderColor: isDark ? '#991B1B' : '#fecaca',
+      borderColor: colors.danger[100],
       borderRadius: borderRadius.xl,
       borderWidth: 1,
       ...shadows.alert,
       maxWidth: 400,
       overflow: 'hidden',
-      shadowColor: isDark ? '#000' : '#dc2626',
+      shadowColor: colors.overlay.backdrop,
       width: '100%',
     },
     undoButton: {
       alignItems: 'center',
-      backgroundColor: isDark ? '#7F1D1D' : '#fee2e2',
+      backgroundColor: colors.danger[50],
       borderRadius: borderRadius.medium,
       flexDirection: 'row',
       gap: 6,
@@ -77,10 +77,10 @@ export function useToastStyles() {
       paddingVertical: 10,
     },
     undoButtonPressed: {
-      backgroundColor: isDark ? '#991B1B' : '#fecaca',
+      backgroundColor: colors.danger[100],
     },
     undoText: {
-      color: isDark ? '#FCA5A5' : '#dc2626',
+      color: colors.danger.text,
       fontSize: 13,
       fontWeight: '700',
       letterSpacing: 0.3,

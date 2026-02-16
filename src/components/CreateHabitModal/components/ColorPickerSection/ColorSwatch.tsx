@@ -7,6 +7,7 @@ import { useCallback, useRef } from 'react';
 import { Animated, View } from 'react-native';
 import { Motion } from '../../../../constants/motion';
 import { AnimatedPressable } from '../../../ui';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface ColorSwatchProps {
   color: string;
@@ -40,6 +41,7 @@ export const ColorSwatch = ({
   onPressIn,
   onPressOut,
 }: ColorSwatchProps) => {
+  const { colors } = useThemeColors();
   const scale = useRef(new Animated.Value(isSelected ? 1.15 : 1)).current;
 
   const handlePressIn = useCallback(() => {
@@ -86,7 +88,7 @@ export const ColorSwatch = ({
         >
           <View
             style={{
-              backgroundColor: isSelected ? '#fff' : 'transparent',
+              backgroundColor: isSelected ? colors.card : 'transparent',
               borderRadius: 999,
               padding: isSelected ? 3 : 0,
             }}

@@ -9,6 +9,7 @@ import {
   HUBERMAN_PHASES,
   type HubermanPhase,
 } from '../../../../constants/hubermanPhases';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface TimeOfDayButtonProps {
   phase: HubermanPhase;
@@ -21,6 +22,7 @@ export const TimeOfDayButton = ({
   isSelected,
   onPress,
 }: TimeOfDayButtonProps) => {
+  const { colors } = useThemeColors();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const phaseInfo = HUBERMAN_PHASES[phase];
 
@@ -56,8 +58,8 @@ export const TimeOfDayButton = ({
         className='items-center justify-center rounded-xl px-3 py-3'
         style={[
           {
-            backgroundColor: isSelected ? '#22C55E' : '#fafaf9',
-            borderColor: isSelected ? '#16A34A' : '#e7e5e4',
+            backgroundColor: isSelected ? colors.primary[500] : colors.selection.bgSubtle,
+            borderColor: isSelected ? colors.primary[600] : colors.border,
             borderWidth: 1.5,
             transform: [{ scale: scaleAnim }],
           },
@@ -66,7 +68,7 @@ export const TimeOfDayButton = ({
         <Text className='mb-1 text-lg'>{phaseInfo.icon}</Text>
         <Text
           className='text-sm font-semibold'
-          style={{ color: isSelected ? '#FFFFFF' : '#1c1917' }}
+          style={{ color: isSelected ? colors.text.inverse : colors.text.primary }}
         >
           {phaseInfo.shortLabel}
         </Text>

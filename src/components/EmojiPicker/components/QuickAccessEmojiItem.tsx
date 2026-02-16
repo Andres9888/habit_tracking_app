@@ -1,6 +1,7 @@
 import { memo, useCallback, useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
 import { shadows } from '../../../theme/spacing';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { QuickAccessEmojiItemProps } from '../EmojiPicker.types';
 
 export const QuickAccessEmojiItem = memo(
@@ -10,6 +11,7 @@ export const QuickAccessEmojiItem = memo(
     onPress,
     accessibilityLabelSuffix = '',
   }: QuickAccessEmojiItemProps) => {
+    const { colors } = useThemeColors();
     const scaleAnim = useRef(new Animated.Value(isSelected ? 1.1 : 1)).current;
 
     const handlePressIn = useCallback(() => {
@@ -47,8 +49,8 @@ export const QuickAccessEmojiItem = memo(
             {
               ...shadows.subtle,
               alignItems: 'center',
-              backgroundColor: isSelected ? '#f5f5f4' : 'white',
-              borderColor: isSelected ? '#10b981' : 'transparent',
+              backgroundColor: isSelected ? colors.selection.bg : colors.chip.unselectedBg,
+              borderColor: isSelected ? colors.selection.border : 'transparent',
               borderRadius: 12,
               borderWidth: isSelected ? 2 : 0,
               height: 44,

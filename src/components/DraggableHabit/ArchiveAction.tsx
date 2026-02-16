@@ -10,7 +10,7 @@ interface ArchiveActionProps {
 }
 
 export function ArchiveAction({ dragX }: ArchiveActionProps) {
-  const { isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const trans = dragX.interpolate({
     extrapolate: 'clamp',
     inputRange: [-100, 0],
@@ -37,7 +37,7 @@ export function ArchiveAction({ dragX }: ArchiveActionProps) {
       <View
         style={{
           alignItems: 'center',
-          backgroundColor: isDark ? '#D97706' : '#f59e0b',
+          backgroundColor: colors.amber[600],
           borderBottomRightRadius: borderRadius.xl,
           borderTopRightRadius: borderRadius.xl,
           height: '100%',

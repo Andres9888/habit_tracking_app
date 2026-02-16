@@ -6,12 +6,13 @@ import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 export const scienceStyles = StyleSheet.create({
   researchLinkButton: {
     alignItems: 'center',
     alignSelf: 'flex-start',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: '#EFF6FF', // overridden by useScienceStyles
     borderColor: '#BFDBFE',
     borderRadius: borderRadius.medium,
     borderWidth: 1,
@@ -27,7 +28,7 @@ export const scienceStyles = StyleSheet.create({
     fontWeight: '600',
   },
   scienceBox: {
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#f0fdf4', // overridden by useScienceStyles
     borderColor: '#bbf7d0',
     borderRadius: borderRadius.large,
     borderWidth: 2,
@@ -63,3 +64,36 @@ export const scienceStyles = StyleSheet.create({
     lineHeight: 24,
   },
 });
+
+export function useScienceStyles() {
+  const { colors } = useThemeColors();
+  return {
+    ...scienceStyles,
+    researchLinkButton: {
+      ...scienceStyles.researchLinkButton,
+      backgroundColor: colors.info[50],
+      borderColor: colors.info.border,
+    },
+    researchLinkText: {
+      ...scienceStyles.researchLinkText,
+      color: colors.info.text,
+    },
+    scienceBox: {
+      ...scienceStyles.scienceBox,
+      backgroundColor: colors.success[50],
+      borderColor: colors.success[100],
+    },
+    scienceDivider: {
+      ...scienceStyles.scienceDivider,
+      backgroundColor: colors.success[100],
+    },
+    scienceLabel: {
+      ...scienceStyles.scienceLabel,
+      color: colors.success.text,
+    },
+    scienceQuote: {
+      ...scienceStyles.scienceQuote,
+      color: colors.success.text,
+    },
+  };
+}

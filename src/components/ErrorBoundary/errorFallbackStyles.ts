@@ -7,7 +7,7 @@ import { StyleSheet } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export const useStyles = () => {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return StyleSheet.create({
     actions: { flexDirection: 'row', gap: 16, marginTop: 16 },
@@ -28,7 +28,7 @@ export const useStyles = () => {
     },
     emoji: { fontSize: 48, marginBottom: 16 },
     errorMessage: {
-      color: isDark ? '#FCA5A5' : '#dc2626',
+      color: colors.danger.text,
       fontFamily: 'monospace',
       fontSize: 13,
       marginTop: 24,
@@ -44,7 +44,7 @@ export const useStyles = () => {
     link: { padding: 8 },
     linkText: { color: colors.primary[600], fontSize: 13, fontWeight: '500' },
     logoutButton: {
-      backgroundColor: isDark ? '#B91C1C' : '#dc2626',
+      backgroundColor: colors.danger[600],
       borderRadius: 12,
       paddingHorizontal: 24,
       paddingVertical: 12,

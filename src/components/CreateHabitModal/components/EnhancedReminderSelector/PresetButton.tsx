@@ -5,6 +5,7 @@
 
 import { memo, useCallback, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { PresetButtonProps } from './types';
 
 const useButtonAnimation = (reduceMotion: boolean) => {
@@ -42,6 +43,7 @@ function PresetButtonComponent({
   onPress,
   reduceMotion,
 }: PresetButtonProps) {
+  const { colors } = useThemeColors();
   const { scaleAnim, handlePressIn, handlePressOut } =
     useButtonAnimation(reduceMotion);
 
@@ -59,8 +61,8 @@ function PresetButtonComponent({
       <Animated.View
         className='items-center justify-center rounded-xl px-3'
         style={{
-          backgroundColor: isSelected ? '#ECFDF5' : '#f5f5f4',
-          borderColor: isSelected ? '#10B981' : 'transparent',
+          backgroundColor: isSelected ? colors.success[50] : colors.selection.bgSubtle,
+          borderColor: isSelected ? colors.primary[500] : 'transparent',
           borderWidth: isSelected ? 2 : 1,
           height: 48,
           transform: [{ scale: scaleAnim }],
@@ -70,7 +72,7 @@ function PresetButtonComponent({
           <Text className='text-base'>{preset.emoji}</Text>
           <Text
             className='text-sm font-semibold'
-            style={{ color: isSelected ? '#059669' : '#57534e' }}
+            style={{ color: isSelected ? colors.primary[600] : colors.text.secondary }}
           >
             {preset.label}
           </Text>
@@ -78,7 +80,7 @@ function PresetButtonComponent({
         {preset.time && (
           <Text
             className='mt-0.5 text-xs'
-            style={{ color: isSelected ? '#047857' : '#a8a29e' }}
+            style={{ color: isSelected ? colors.primary[700] : colors.text.tertiary }}
           >
             {preset.time}
           </Text>

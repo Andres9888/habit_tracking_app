@@ -1,10 +1,12 @@
 import { memo, useCallback, useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { EMOJIS_PER_ROW } from '../EmojiPicker.constants';
 import type { EmojiItemProps } from '../EmojiPicker.types';
 
 export const EmojiItem = memo(
   ({ emoji, isSelected, onPress }: EmojiItemProps) => {
+    const { colors } = useThemeColors();
     const scaleAnim = useRef(new Animated.Value(1)).current;
 
     const handlePressIn = useCallback(() => {
@@ -42,8 +44,8 @@ export const EmojiItem = memo(
           style={[
             {
               alignItems: 'center',
-              backgroundColor: isSelected ? '#f5f5f4' : '#fafaf9',
-              borderColor: isSelected ? '#10b981' : 'transparent',
+              backgroundColor: isSelected ? colors.selection.bg : colors.selection.bgSubtle,
+              borderColor: isSelected ? colors.selection.border : 'transparent',
               borderRadius: 12,
               borderWidth: isSelected ? 2 : 0,
               flex: 1,

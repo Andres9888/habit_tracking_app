@@ -4,7 +4,8 @@
 
 import React from 'react';
 import Animated from 'react-native-reanimated';
-import { layoutStyles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { useLayoutStyles } from '../styles';
 import type { ViewStyle } from 'react-native';
 
 interface SuccessGlowOverlayProps {
@@ -12,12 +13,15 @@ interface SuccessGlowOverlayProps {
 }
 
 export function SuccessGlowOverlay({ animatedStyle }: SuccessGlowOverlayProps) {
+  const { colors } = useThemeColors();
+  const layout = useLayoutStyles();
+
   return (
     <Animated.View
       pointerEvents='none'
       style={[
-        layoutStyles.successGlowOverlay,
-        { backgroundColor: '#22c55e' },
+        layout.successGlowOverlay,
+        { backgroundColor: colors.success[500] },
         animatedStyle,
       ]}
     />
