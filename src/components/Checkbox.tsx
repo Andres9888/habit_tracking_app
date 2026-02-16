@@ -62,6 +62,7 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
   return (
     <AnimatedPressable
       ref={ref}
+      accessibilityHint='Double tap to toggle this checkbox'
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='checkbox'
       accessibilityState={{ checked: isActive, disabled }}

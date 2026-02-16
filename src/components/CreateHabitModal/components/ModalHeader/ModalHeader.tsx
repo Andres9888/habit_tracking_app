@@ -53,6 +53,9 @@ export const ModalHeader = ({
         accessibilityLabel={STRINGS.CREATE_HABIT.close}
         accessibilityRole='button'
         className='h-11 w-11 items-center justify-center rounded-full'
+        style={({ pressed }) => ({
+          backgroundColor: pressed ? 'rgba(0, 0, 0, 0.05)' : 'transparent',
+        })}
         onPress={onClose}
       >
         <X color={colors.gray[500]} size={24} strokeWidth={2} />
