@@ -12,6 +12,7 @@ import Animated from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 import { CompactStrengthRing } from './CompactStrengthRing';
 import { StatsRow } from './StatsRow';

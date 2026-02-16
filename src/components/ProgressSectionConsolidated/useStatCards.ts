@@ -41,14 +41,14 @@ export function useStatCards({
         backgroundColor: STAT_CARD_COLORS.streak.bgHex,
         icon: '🔥',
         id: 'streak',
-        label: currentStreak === 1 ? 'Day Streak' : 'Day Streak',
+        label: 'Current Streak',
         value: currentStreak === 1 ? '1' : `${currentStreak}`,
       },
       {
         backgroundColor: STAT_CARD_COLORS.monthly.bgHex,
         icon: '📅',
         id: 'monthly',
-        label: 'This Month',
+        label: 'Completed This Month',
         showTrend: monthlyChange !== undefined && monthlyChange !== 0,
         trend: monthlyChange,
         value: `${monthlyCompleted}/${monthlyTotal}`,
@@ -63,7 +63,8 @@ export function useStatCards({
         backgroundColor: STAT_CARD_COLORS.bestDay.bgHex,
         icon: '🏆',
         id: 'bestDay',
-        label: `Best Day (${Math.round(bestDay.rate)}%)`,
+        label: 'Best Day',
+        subLabel: `${Math.round(bestDay.rate)}% completion`,
         value: bestDay.name.slice(0, 3),
       });
     }
@@ -74,7 +75,8 @@ export function useStatCards({
         backgroundColor: STAT_CARD_COLORS.focusDay.bgHex,
         icon: '⚡',
         id: 'focusDay',
-        label: `Focus Day (${Math.round(focusDay.rate)}%)`,
+        label: 'Focus Day',
+        subLabel: `${Math.round(focusDay.rate)}% completion`,
         value: focusDay.name.slice(0, 3),
       });
     }

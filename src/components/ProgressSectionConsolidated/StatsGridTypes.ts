@@ -29,6 +29,8 @@ export interface StatItemConfig {
   value: string;
   /** Label text */
   label: string;
+  /** Optional secondary label for additional context */
+  subLabel?: string;
   /** Background color (Tailwind class or hex) */
   backgroundColor: string;
   /** Optional trend indicator value */

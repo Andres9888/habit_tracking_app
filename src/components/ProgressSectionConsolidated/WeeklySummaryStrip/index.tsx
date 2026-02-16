@@ -18,6 +18,7 @@ import Animated, {
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { Springs } from '../../../constants/motion';
 
 import type { WeeklySummaryStripProps } from '../WeeklySummaryStripTypes';
@@ -34,6 +35,7 @@ export const WeeklySummaryStrip = React.memo(function WeeklySummaryStrip({
   weekData,
 }: WeeklySummaryStripProps) {
   const reduceMotion = useReduceMotion();
+  const { colors } = useThemeColors();
   const today = useMemo(() => new Date(), []);
 
   const currentWeekCompleted = useMemo(
@@ -108,7 +110,7 @@ export const WeeklySummaryStrip = React.memo(function WeeklySummaryStrip({
           <CardContent {...cardContentProps} />
         </LinearGradient>
       ) : (
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }]}>
           <CardContent {...cardContentProps} />
         </View>
       )}

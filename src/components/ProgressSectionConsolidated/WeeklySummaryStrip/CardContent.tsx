@@ -8,6 +8,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 import type { TrendDirection, WeekDayData } from '../WeeklySummaryStripTypes';
 import { DayCell } from './DayCell';
@@ -40,13 +41,15 @@ export const CardContent = React.memo(function CardContent({
   trend,
   weekData,
 }: CardContentProps) {
+  const { colors } = useThemeColors();
+  
   return (
     <View style={styles.content}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.titleContainer}>
-            <Text style={styles.headerTitle}>
+            <Text style={[styles.headerTitle, { color: colors.text.primary }]}>
               This Week {isPerfectWeek && '🏆'}
             </Text>
             {/* Sparkle animation for perfect week */}
@@ -62,7 +65,7 @@ export const CardContent = React.memo(function CardContent({
           ) : null}
         </View>
         <View style={styles.headerRight}>
-          <Text style={styles.comparisonText}>
+          <Text style={[styles.comparisonText, { color: colors.text.secondary }]}>
             {currentWeekCompleted}/7 vs {lastWeekCompleted}/7
           </Text>
           <Ionicons
