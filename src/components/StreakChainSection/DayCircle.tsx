@@ -34,7 +34,7 @@ export function DayCircle({
     const delay = index * 35;
     scale.value = withDelay(
       delay,
-      withSpring(1, { damping: 12, stiffness: 200 })
+      withSpring(1, { damping: 18, stiffness: 150 })
     );
     opacity.value = withDelay(delay, withTiming(1, { duration: 120 }));
 
@@ -78,8 +78,18 @@ export function DayCircle({
       ? 'text-emerald-600'
       : 'text-stone-400';
 
+  const a11yLabel = isToday
+    ? `${label}, today${todayCompleted ? ', completed' : ', not yet completed'}`
+    : `${label}${completed ? ', completed' : ', not completed'}`;
+
   return (
-    <Animated.View className='flex-1 items-center' style={animatedStyle}>
+    <Animated.View
+      accessible
+      accessibilityLabel={a11yLabel}
+      accessibilityRole="image"
+      className='flex-1 items-center'
+      style={animatedStyle}
+    >
       <View
         className={`mb-1.5 h-10 w-10 items-center justify-center rounded-full ${circleClass}`}
       >

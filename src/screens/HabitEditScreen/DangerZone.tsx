@@ -1,9 +1,7 @@
 /**
- * DangerZone Component
+ * DangerZone Component — Dark mode aware
  *
- * Destructive actions section for habit management.
- * Provides archive (recoverable) and delete (permanent) options
- * with appropriate visual warnings.
+ * Destructive actions with confirmation dialogs.
  */
 
 import { Alert, View, Text, Pressable } from 'react-native';
@@ -14,6 +12,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme';
 
 interface DangerZoneProps {
   onArchive: () => void;
@@ -23,6 +22,7 @@ interface DangerZoneProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
+  const { isDark } = useThemeColors();
   const archiveScale = useSharedValue(1);
   const deleteScale = useSharedValue(1);
 
@@ -58,25 +58,29 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
     );
   };
 
+  // Dark mode: use slightly lighter tinted backgrounds
+  const archiveBg = isDark ? '#422006' : '#FFFBEB';
+  const archiveBorder = isDark ? '#92400E' : '#FDE68A';
+  const deleteBg = isDark ? '#450A0A' : '#FEF2F2';
+  const deleteBorder = isDark ? '#991B1B' : '#FECACA';
+
+  const springConfig = { damping: 18, stiffness: 150 };
+
   return (
     <View className='flex-col gap-3'>
       <AnimatedPressable
         accessibilityLabel='Archive habit'
         accessibilityRole='button'
-        className='flex-row items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 py-4'
-        style={archiveStyle}
+        className='flex-row items-center justify-center gap-2 rounded-xl py-4'
+        style={[archiveStyle, { backgroundColor: archiveBg, borderWidth: 1, borderColor: archiveBorder }]}
         onPress={handleArchive}
-        onPressIn={() => {
-          archiveScale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
-        }}
-        onPressOut={() => {
-          archiveScale.value = withSpring(1, { damping: 18, stiffness: 240 });
-        }}
+        onPressIn={() => { archiveScale.value = withSpring(0.97, springConfig); }}
+        onPressOut={() => { archiveScale.value = withSpring(1, springConfig); }}
       >
         <Archive color='#d97706' size={18} strokeWidth={2} />
         <Text
-          className='font-semibold text-amber-700'
-          style={{ fontSize: 17, letterSpacing: -0.41 }}
+          className='font-semibold'
+          style={{ fontSize: 17, letterSpacing: -0.41, color: isDark ? '#FBBF24' : '#B45309' }}
         >
           Archive Habit
         </Text>
@@ -85,20 +89,16 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
       <AnimatedPressable
         accessibilityLabel='Delete habit'
         accessibilityRole='button'
-        className='flex-row items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 py-4'
-        style={deleteStyle}
+        className='flex-row items-center justify-center gap-2 rounded-xl py-4'
+        style={[deleteStyle, { backgroundColor: deleteBg, borderWidth: 1, borderColor: deleteBorder }]}
         onPress={handleDelete}
-        onPressIn={() => {
-          deleteScale.value = withSpring(0.97, { damping: 18, stiffness: 240 });
-        }}
-        onPressOut={() => {
-          deleteScale.value = withSpring(1, { damping: 18, stiffness: 240 });
-        }}
+        onPressIn={() => { deleteScale.value = withSpring(0.97, springConfig); }}
+        onPressOut={() => { deleteScale.value = withSpring(1, springConfig); }}
       >
         <Trash2 color='#dc2626' size={18} strokeWidth={2} />
         <Text
-          className='font-semibold text-red-600'
-          style={{ fontSize: 17, letterSpacing: -0.41 }}
+          className='font-semibold'
+          style={{ fontSize: 17, letterSpacing: -0.41, color: isDark ? '#F87171' : '#DC2626' }}
         >
           Delete Habit
         </Text>

@@ -30,7 +30,7 @@ export function parseHabitDateKey(key: string): {
   habitId: string;
   date: string;
 } {
-  const [habitId, date] = key.split(':');
+  const [habitId = '', date = ''] = key.split(':');
   return { date, habitId };
 }
 

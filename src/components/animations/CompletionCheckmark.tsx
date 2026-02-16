@@ -69,7 +69,7 @@ export function CompletionCheckmark({
     const timeout = setTimeout(() => {
       scale.value = withSequence(
         withSpring(1.2, SPRING_BOUNCY),
-        withSpring(1, { damping: 15, stiffness: 200 })
+        withSpring(1, { damping: 18, stiffness: 150 })
       );
       opacity.value = withTiming(1, { duration: 150 });
     }, delay);
