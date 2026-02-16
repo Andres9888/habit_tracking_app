@@ -87,16 +87,27 @@ export const COPY = {
   // Secondary links
   browseTemplates: 'Browse templates',
 
+  // Templates bridge CTA
+  browseTemplatesCard: 'Not sure where to start? Browse 50+ habit templates →',
+
   createCustom: 'Create custom habit',
 
   // Primary CTA
   ctaButton: 'Start Building →',
+
+  // Dynamic CTA when chip/input is filled
+  ctaButtonDynamic: (habitName: string) => `Add "${habitName}" →`,
 
   // Question headline - line break after "thing" for rhythm
   headline: "What's one small thing\nyou want to do daily?",
 
   // Input placeholder - motivating and descriptive
   inputPlaceholder: 'What habit do you want to build?',
+
+  // Motivational stat
+  motivationalStat:
+    'People who start with one small habit are 3× more likely to build lasting routines.',
+
   // Success state
   successHeadline: "You're growing!",
   successSubtext: (habitName: string) => `"${habitName}" added — your chain starts now!`,

@@ -1,3 +1,4 @@
+import { Text } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
@@ -34,8 +35,10 @@ export function HeroSection({
           style={[
             {
               color: COLORS.stone800,
-              fontWeight: '700',
-              lineHeight: 32,
+              fontSize: 28,
+              fontWeight: '800',
+              letterSpacing: -0.5,
+              lineHeight: 34,
               marginTop: 16,
               textAlign: 'center',
               width: '100%',
@@ -45,6 +48,22 @@ export function HeroSection({
         >
           {COPY.headline}
         </Animated.Text>
+      </AnimatedEntrance>
+
+      <AnimatedEntrance delay={ENTRANCE_DELAYS.headline + 50}>
+        <Text
+          style={{
+            color: COLORS.stone500,
+            fontSize: 13,
+            fontStyle: 'italic',
+            lineHeight: 18,
+            marginTop: 8,
+            paddingHorizontal: 16,
+            textAlign: 'center',
+          }}
+        >
+          {COPY.motivationalStat}
+        </Text>
       </AnimatedEntrance>
     </Animated.View>
   );
