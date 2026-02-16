@@ -1,11 +1,15 @@
 /**
  * Constants Module
  *
- * Central export point for all app constants with explicit exports
- * for better tree-shaking support.
- * 
- * Changed from barrel exports (export * from) to explicit named exports
- * to enable webpack/metro to properly tree-shake unused constants.
+ * Central export point for all app constants.
+ *
+ * Uses explicit named exports for better tree-shaking support.
+ * - App: Application-wide magic numbers and configuration
+ * - Auth: Authentication configuration
+ * - HubermanPhases: Daily energy optimization phases
+ * - Motion: Animation timing and springs
+ * - STRINGS: UI text strings
+ * - UIValues: UI-related magic numbers (opacity, scale, animation durations)
  */
 
 // App constants
@@ -84,3 +88,4 @@ export type { HubermanPhase, PhaseInfo } from './hubermanPhases';
 // Motion and strings (default exports)
 export { default as Motion } from './motion';
 export { default as STRINGS } from './strings';
+export * from './ui-values';
