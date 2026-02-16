@@ -17,8 +17,8 @@ export function showSaveError(onRetry?: () => void) {
     'Save Failed',
     ERROR_MESSAGES.DATA_OPS.SAVE_FAILED,
     onRetry
-      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
-      : [{ text: 'OK' }]
+      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry Save', onPress: onRetry }]
+      : [{ text: 'Dismiss' }]
   );
 }
 
@@ -31,8 +31,8 @@ export function showCreateError(onRetry?: () => void) {
     "Couldn't Create Habit",
     ERROR_MESSAGES.DATA_OPS.CREATE_HABIT_FAILED,
     onRetry
-      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
-      : [{ text: 'OK' }]
+      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Try Again', onPress: onRetry }]
+      : [{ text: 'Dismiss' }]
   );
 }
 
@@ -45,8 +45,8 @@ export function showSyncError(onRetry?: () => void) {
     'Sync Failed',
     ERROR_MESSAGES.SYNC.FAILED,
     onRetry
-      ? [{ text: 'OK' }, { text: 'Retry Now', onPress: onRetry }]
-      : [{ text: 'OK' }]
+      ? [{ text: 'Dismiss' }, { text: 'Retry Sync', onPress: onRetry }]
+      : [{ text: 'Dismiss' }]
   );
 }
 
@@ -60,8 +60,8 @@ export function showGenericError(message?: string, onRetry?: () => void) {
     'Something Went Wrong',
     message || ERROR_MESSAGES.UI.GENERIC_ERROR,
     onRetry
-      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
-      : [{ text: 'OK' }]
+      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Try Again', onPress: onRetry }]
+      : [{ text: 'Dismiss' }]
   );
 }
 
@@ -74,8 +74,8 @@ export function showNetworkError(onRetry?: () => void) {
     'Connection Issue',
     ERROR_MESSAGES.NETWORK.CONNECTION_ISSUE,
     onRetry
-      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
-      : [{ text: 'OK' }]
+      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Try Again', onPress: onRetry }]
+      : [{ text: 'Dismiss' }]
   );
 }
 
@@ -89,7 +89,7 @@ export function showRetryableError(message: string, onRetry?: () => void) {
     'Error',
     message,
     onRetry
-      ? [{ text: 'Cancel', style: 'cancel' as const }, { text: 'Retry', onPress: onRetry }]
-      : [{ text: 'OK' }]
+      ? [{ text: 'Cancel', style: 'cancel' as const }, { text: 'Try Again', onPress: onRetry }]
+      : [{ text: 'Dismiss' }]
   );
 }

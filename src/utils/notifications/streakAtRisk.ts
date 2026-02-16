@@ -53,13 +53,13 @@ export async function scheduleStreakAtRiskNotification({
 
     await Notifications.scheduleNotificationAsync({
       content: {
-        body: `Don't break your ${streakText}! Tap to complete ${habitName} before midnight.`,
+        body: `You've got this! Complete ${habitName} before midnight to keep your ${streakText} alive.`,
         data: {
           habitId,
           type: 'streakAtRisk',
         },
         sound: 'default',
-        title: `${habitEmoji} ${habitName} — Streak at risk!`,
+        title: `${habitEmoji} ${habitName} — Don't break your streak!`,
       },
       identifier: `${STREAK_RISK_PREFIX}${habitId}`,
       trigger: {

@@ -89,7 +89,7 @@ export function EditHeader({
             color: canSave && !isSaving ? '#FFFFFF' : disabledText,
           }}
         >
-          {isSaving ? 'Saving…' : 'Save'}
+          {isSaving ? 'Saving…' : 'Save Changes'}
         </Text>
       </AnimatedPressable>
     </Animated.View>

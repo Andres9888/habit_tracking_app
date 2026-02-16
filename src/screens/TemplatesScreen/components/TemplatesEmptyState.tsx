@@ -31,7 +31,7 @@ export function TemplatesEmptyState({
           variant='primary'
           onPress={onSeedTemplates}
         >
-          {isSeeding ? 'Loading Habits...' : 'Load Habits'}
+          {isSeeding ? 'Loading Habits...' : 'Load Habit Templates'}
         </Button>
       </View>
     </View>

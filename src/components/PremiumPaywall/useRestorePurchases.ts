@@ -29,16 +29,16 @@ export function useRestorePurchases({ onClose, onRestorePurchases }: UseRestoreP
       if (success) {
         triggerSuccess();
         Alert.alert('✓ Purchases Restored', 'Your premium subscription has been restored!', [
-          { onPress: () => onClose(), text: 'Great!' },
+          { onPress: () => onClose(), text: 'Continue' },
         ]);
       } else {
-        Alert.alert('No Purchases Found', "We couldn't find any previous purchases.", [
-          { text: 'OK' },
+        Alert.alert('No Purchases Found', "We couldn't find any previous purchases on this account.", [
+          { text: 'Got It' },
         ]);
       }
     } catch {
       triggerError?.();
-      Alert.alert('Restore Failed', 'Please try again or contact support.', [{ text: 'OK' }]);
+      Alert.alert('Restore Failed', 'Unable to restore purchases. Please try again or contact support.', [{ text: 'Dismiss' }]);
     } finally {
       setIsRestoring(false);
     }

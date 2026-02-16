@@ -57,10 +57,10 @@ export const ERROR_MESSAGES = {
   // NETWORK ERRORS
   // ============================================
   NETWORK: {
-    CONNECTION_ISSUE: 'No internet connection. Check your connection and try again.',
-    CONNECTION_TIMEOUT: 'Taking too long to connect. Check your connection and try again.',
-    SERVER_ERROR: 'Our servers are taking a quick break. Try again in a moment.',
-    FETCH_FAILED: 'Couldn\'t reach the server. Check your connection and try again.',
+    CONNECTION_ISSUE: 'Unable to connect. Check your internet and try again.',
+    CONNECTION_TIMEOUT: 'Connection timed out. Try again in a moment.',
+    SERVER_ERROR: 'Our servers are taking a quick break. Try again in a few minutes.',
+    FETCH_FAILED: 'Can't reach the server right now. Check your connection and try again.',
   },
 
   // ============================================
@@ -71,37 +71,37 @@ export const ERROR_MESSAGES = {
     SAVE_FAILED:
       "Couldn't save your changes. Check your connection and try again.",
     CREATE_FAILED:
-      'Something went wrong while creating. Check your connection and try again.',
-    DELETE_FAILED: "Couldn't complete that. Try again in a moment.",
-    UPDATE_FAILED: 'Couldn\'t update your changes. Try again in a moment.',
-    LOAD_FAILED: 'Couldn\'t load that. Check your connection and try again.',
+      'Something went wrong. Check your connection and try again.',
+    DELETE_FAILED: "Unable to complete this action. Please try again.",
+    UPDATE_FAILED: 'Update failed. Please try again.',
+    LOAD_FAILED: 'Unable to load. Please try again.',
 
     // Habit-specific
     CREATE_HABIT_FAILED: 'Couldn\'t create your habit. Check your connection and try again.',
     SAVE_HABIT_FAILED:
-      "Couldn't save your habit. Check your connection and try again.",
+      "Couldn't save your changes. Check your connection and try again.",
     DELETE_HABIT_FAILED:
-      'Couldn\'t delete that habit. Try again in a moment.',
+      'Unable to delete this habit. Try again in a moment.',
     ARCHIVE_HABIT_FAILED:
-      'Couldn\'t archive that habit. Try again in a moment.',
+      'Unable to archive this habit. Try again in a moment.',
     TOGGLE_HABIT_FAILED:
-      'Couldn\'t update that habit. Try again in a moment.',
-    REORDER_HABITS_FAILED: 'Couldn\'t reorder your habits. Try again in a moment.',
+      'Couldn't update your habit. Please try again.',
+    REORDER_HABITS_FAILED: 'Unable to reorder. Try again in a moment.',
 
     // Note-specific
-    SAVE_NOTE_FAILED: 'Couldn\'t save your note. Try again in a moment.',
-    DELETE_NOTE_FAILED: 'Couldn\'t delete that note. Try again in a moment.',
+    SAVE_NOTE_FAILED: 'Couldn't save your note. Try again.',
+    DELETE_NOTE_FAILED: 'Unable to delete this note. Try again.',
 
     // Template-specific
     IMPORT_TEMPLATE_FAILED:
-      'Couldn\'t import that template. Try again in a moment.',
-    LOAD_TEMPLATES_FAILED: 'Couldn\'t load templates. Check your connection and try again.',
+      'Couldn't import this template. Try again.',
+    LOAD_TEMPLATES_FAILED: 'Unable to load templates. Check your connection.',
 
     // Image/media-specific
-    UPLOAD_IMAGE_FAILED: 'Couldn\'t upload that image. Try again in a moment.',
-    DELETE_IMAGE_FAILED: "Couldn't remove that image. Try again in a moment.",
-    IMAGE_NOT_FOUND: 'That image couldn\'t be found.',
-    SHARE_CARD_FAILED: 'Couldn\'t share that card. Try again in a moment.',
+    UPLOAD_IMAGE_FAILED: 'Image upload failed. Try again.',
+    DELETE_IMAGE_FAILED: "Couldn't remove the image. Try again.",
+    IMAGE_NOT_FOUND: 'This image no longer exists.',
+    SHARE_CARD_FAILED: 'Unable to share. Try again.',
   },
 
   // ============================================
@@ -127,17 +127,17 @@ export const ERROR_MESSAGES = {
   // PERMISSION/AUTHORIZATION ERRORS
   // ============================================
   PERMISSIONS: {
-    NOT_AUTHORIZED: 'You don\'t have permission to do that.',
-    NOT_AUTHORIZED_HABIT: 'Couldn\'t find that habit.',
-    NOT_AUTHORIZED_VOICE_NOTE: 'Couldn\'t find that voice note.',
-    NOT_AUTHORIZED_IMAGE: 'Couldn\'t delete that image.',
-    NOT_AUTHORIZED_AFFIRMATION: 'Couldn\'t modify that affirmation.',
-    NOT_AUTHORIZED_VISION_BOARD: 'Couldn\'t add images to that habit.',
+    NOT_AUTHORIZED: 'You don't have permission to do this.',
+    NOT_AUTHORIZED_HABIT: 'You can't view this habit.',
+    NOT_AUTHORIZED_VOICE_NOTE: 'You can't view this voice note.',
+    NOT_AUTHORIZED_IMAGE: 'You can't delete this image.',
+    NOT_AUTHORIZED_AFFIRMATION: 'You can't modify this affirmation.',
+    NOT_AUTHORIZED_VISION_BOARD: 'You can't add images to this habit.',
 
     // Resource limits
-    VOICE_NOTE_LIMIT_REACHED: 'Voice note limit reached.',
-    VISION_BOARD_LIMIT_REACHED: 'Vision board image limit reached.',
-    UNAUTHORIZED: 'Please sign in to continue.',
+    VOICE_NOTE_LIMIT_REACHED: 'You've reached your voice note limit.',
+    VISION_BOARD_LIMIT_REACHED: 'You've reached your vision board image limit.',
+    UNAUTHORIZED: 'Sign in to continue.',
   },
 
   // ============================================

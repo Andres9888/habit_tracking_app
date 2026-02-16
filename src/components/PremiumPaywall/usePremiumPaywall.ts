@@ -87,7 +87,7 @@ export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePur
       Alert.alert(
         'Premium Activation Failed',
         'We couldn\u2019t activate your premium subscription. Please check your payment method and try again.',
-        [{ text: 'OK' }]
+        [{ text: 'Dismiss' }]
       );
     } finally {
       setIsProcessing(false);

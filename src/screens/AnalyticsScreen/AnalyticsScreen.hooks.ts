@@ -88,16 +88,16 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
         await exportData(exportDataObj, format);
 
         Alert.alert(
-          'Success',
-          `Data exported successfully as ${format.toUpperCase()}`,
-          [{ text: 'OK' }]
+          'Export Complete',
+          `Your data has been exported as ${format.toUpperCase()}`,
+          [{ text: 'Done' }]
         );
       } catch (error) {
         if (__DEV__) console.error('Export error:', error);
         Alert.alert(
           'Export Failed',
-          error instanceof Error ? error.message : 'Unable to export data',
-          [{ text: 'OK' }]
+          error instanceof Error ? error.message : 'Unable to export data. Please try again.',
+          [{ text: 'Dismiss' }]
         );
       }
     },
