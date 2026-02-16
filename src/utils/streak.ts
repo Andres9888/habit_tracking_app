@@ -1,15 +1,42 @@
+/**
+ * Streak Calculation Utilities
+ *
+ * Computes current streak for habit tracking.
+ * Uses a 1-day grace period (matching server-side calculation) so that
+ * a streak ending yesterday displays as active, but a streak ending
+ * earlier displays as 0.
+ *
+ * @module streak
+ * @category Streak Calculation
+ */
+
 import { format, parseISO } from 'date-fns';
 import { STREAK_MAX_LOOKBACK_DAYS } from '@/constants';
 
 /**
- * Compute a streak by starting at the most recent completed day (<= today)
- * and counting backwards through consecutive completed days.
- * Ensures a single isolated completion counts as a 1-day streak.
+ * Compute the current streak from a set of completed dates.
+ *
+ * The streak starts at the most recent completed day and counts backward
+ * through consecutive completed days. A single isolated completion counts as 1.
  *
  * The streak is only "current" if the most recent completion is today or
  * yesterday (1-day grace period, matching the server-side calculation).
  * Without this check, a streak that ended days ago would still display
  * its full length on the client while the server reports 0.
+ *
+ * @param completedDates - Set of date strings in YYYY-MM-DD format
+ * @param today - Reference date to calculate streak from (defaults to now)
+ * @returns Current streak count (0 if streak has expired)
+ *
+ * @example
+ * const completed = new Set(['2024-01-10', '2024-01-11', '2024-01-12']);
+ * computeCurrentStreakFromDates(completed, new Date('2024-01-13'))
+ * // returns 3 (consecutive days)
+ *
+ * @example
+ * const completed = new Set(['2024-01-05', '2024-01-06']);
+ * computeCurrentStreakFromDates(completed, new Date('2024-01-10'))
+ * // returns 0 (streak expired - more than 1 day gap)
  */
 export const computeCurrentStreakFromDates = (
   completedDates: Set<string>,

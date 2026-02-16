@@ -77,20 +77,37 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
     );
   }
 
+  // In dark mode, use a translucent amber tint so the badge doesn't look washed out
+  const streakBadgeBg = isDark
+    ? 'rgba(245, 158, 11, 0.15)'
+    : milestoneColors.amberLight;
+  const streakTextColor = isDark
+    ? milestoneColors.amber
+    : theme.custom.colors.warning[700];
+  const bestBadgeActiveBg = isDark
+    ? 'rgba(245, 158, 11, 0.15)'
+    : milestoneColors.amberLight;
+  const bestBadgeActiveBorder = isDark
+    ? 'rgba(252, 211, 77, 0.4)'
+    : milestoneColors.amberBorder;
+  const bestBadgeActiveText = isDark
+    ? milestoneColors.amber
+    : milestoneColors.amberText;
+
   return (
     <View style={streakStyles.streakRow}>
       <AnimatedStreakText streak={currentStreak}>
         <View
           style={[
             streakStyles.streakBadge,
-            { backgroundColor: milestoneColors.amberLight },
+            { backgroundColor: streakBadgeBg },
           ]}
         >
           <Text style={streakStyles.streakFireIcon}>🔥</Text>
           <Text
             style={[
               streakStyles.streakText,
-              { color: theme.custom.colors.warning[700] },
+              { color: streakTextColor },
             ]}
           >
             {currentStreak} Day{currentStreak === 1 ? '' : 's'} Streak
@@ -106,11 +123,11 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
             {
               backgroundColor:
                 currentStreak >= bestStreak
-                  ? milestoneColors.amberLight
-                  : themeColors.gray[100],
+                  ? bestBadgeActiveBg
+                  : themeColors.gray[isDark ? 800 : 100],
               borderColor:
                 currentStreak >= bestStreak
-                  ? milestoneColors.amberBorder
+                  ? bestBadgeActiveBorder
                   : themeColors.border,
             },
           ]}
@@ -122,7 +139,7 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
               {
                 color:
                   currentStreak >= bestStreak
-                    ? milestoneColors.amberText
+                    ? bestBadgeActiveText
                     : themeColors.text.secondary,
               },
             ]}

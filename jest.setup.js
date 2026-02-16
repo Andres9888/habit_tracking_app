@@ -15,8 +15,37 @@ if (typeof global.structuredClone === 'undefined') {
 // Mock Expo modules
 jest.mock('expo-font');
 jest.mock('expo-asset');
-jest.mock('expo-status-bar', () => ({
-  StatusBar: 'StatusBar',
+// expo-status-bar may not be installed; safe to skip
+try {
+  require.resolve('expo-status-bar');
+  jest.mock('expo-status-bar', () => ({
+    StatusBar: 'StatusBar',
+  }));
+} catch {
+  // module not installed, no mock needed
+}
+
+// Mock expo-network
+jest.mock('expo-network', () => ({
+  getNetworkStateAsync: jest.fn(async () => ({
+    isConnected: true,
+    isInternetReachable: true,
+    type: 'WIFI',
+  })),
+  addNetworkStateListener: jest.fn((cb) => ({
+    remove: jest.fn(),
+  })),
+  NetworkStateType: {
+    NONE: 'NONE',
+    WIFI: 'WIFI',
+    CELLULAR: 'CELLULAR',
+    BLUETOOTH: 'BLUETOOTH',
+    ETHERNET: 'ETHERNET',
+    WIMAX: 'WIMAX',
+    VPN: 'VPN',
+    OTHER: 'OTHER',
+    UNKNOWN: 'UNKNOWN',
+  },
 }));
 
 // Mock react-native-gesture-handler
@@ -131,10 +160,15 @@ jest.mock('expo-notifications', () => ({
   setNotificationHandler: jest.fn(),
 }));
 
-// Mock react-native-calendars
-jest.mock('react-native-calendars', () => ({
-  Calendar: 'Calendar',
-}));
+// Mock react-native-calendars (may not be installed)
+try {
+  require.resolve('react-native-calendars');
+  jest.mock('react-native-calendars', () => ({
+    Calendar: 'Calendar',
+  }));
+} catch {
+  // module not installed, no mock needed
+}
 
 // Mock lucide-react-native
 jest.mock('lucide-react-native', () => {
@@ -247,50 +281,62 @@ jest.mock('react-native-reanimated', () => {
     },
 
     // Entering/Exiting animations
-    FadeIn: {
-      delay: jest.fn().mockReturnThis(),
-      duration: jest.fn().mockReturnThis(),
-      springify: jest.fn().mockReturnThis(),
-    },
-    FadeInDown: {
-      delay: jest.fn().mockReturnThis(),
-      duration: jest.fn().mockReturnThis(),
-      springify: jest.fn().mockReturnThis(),
-    },
-    FadeOut: {
-      delay: jest.fn().mockReturnThis(),
-      duration: jest.fn().mockReturnThis(),
-    },
-    SlideInRight: {
-      duration: jest.fn().mockReturnThis(),
-    },
-    SlideOutLeft: {
-      duration: jest.fn().mockReturnThis(),
-    },
-    SlideInLeft: {
-      duration: jest.fn().mockReturnThis(),
-    },
-    SlideOutRight: {
-      duration: jest.fn().mockReturnThis(),
-    },
+    ...(() => {
+      // Create a chainable animation mock that supports any method chain
+      const createChainableAnimation = () => {
+        const chain = {};
+        const methods = ['delay', 'duration', 'springify', 'damping', 'stiffness', 'mass',
+          'withInitialValues', 'withCallback', 'easing', 'randomDelay', 'reduceMotion',
+          'build'];
+        methods.forEach(m => {
+          chain[m] = jest.fn(() => createChainableAnimation());
+        });
+        return chain;
+      };
+      return {
+        FadeIn: createChainableAnimation(),
+        FadeInDown: createChainableAnimation(),
+        FadeInUp: createChainableAnimation(),
+        FadeOut: createChainableAnimation(),
+        FadeOutDown: createChainableAnimation(),
+        FadeOutUp: createChainableAnimation(),
+        SlideInRight: createChainableAnimation(),
+        SlideOutLeft: createChainableAnimation(),
+        SlideInLeft: createChainableAnimation(),
+        SlideOutRight: createChainableAnimation(),
+        SlideInDown: createChainableAnimation(),
+        SlideInUp: createChainableAnimation(),
+        SlideOutDown: createChainableAnimation(),
+        SlideOutUp: createChainableAnimation(),
+        ZoomIn: createChainableAnimation(),
+        ZoomOut: createChainableAnimation(),
+        BounceIn: createChainableAnimation(),
+        BounceOut: createChainableAnimation(),
+        StretchInX: createChainableAnimation(),
+        StretchOutX: createChainableAnimation(),
+      };
+    })(),
 
     // Layout animations
-    LinearTransition: {
-      springify: jest.fn(() => ({
-        damping: jest.fn().mockReturnThis(),
-        stiffness: jest.fn().mockReturnThis(),
-        mass: jest.fn().mockReturnThis(),
-      })),
-      duration: jest.fn().mockReturnThis(),
-      delay: jest.fn().mockReturnThis(),
-      easing: jest.fn().mockReturnThis(),
-    },
-    Layout: {
-      springify: jest.fn().mockReturnThis(),
-      duration: jest.fn().mockReturnThis(),
-      delay: jest.fn().mockReturnThis(),
-      easing: jest.fn().mockReturnThis(),
-    },
+    ...(() => {
+      const createChainableLayout = () => {
+        const chain = {};
+        ['springify', 'damping', 'stiffness', 'mass', 'duration', 'delay', 'easing',
+         'withInitialValues', 'withCallback', 'reduceMotion'].forEach(m => {
+          chain[m] = jest.fn(() => createChainableLayout());
+        });
+        return chain;
+      };
+      return {
+        LinearTransition: createChainableLayout(),
+        Layout: createChainableLayout(),
+        SequencedTransition: createChainableLayout(),
+        FadingTransition: createChainableLayout(),
+        JumpingTransition: createChainableLayout(),
+        CurvedTransition: createChainableLayout(),
+        EntryExitTransition: createChainableLayout(),
+      };
+    })(),
 
     // runOnJS - CRITICAL: Must be defined as a function that executes callbacks
     runOnJS: (fn) => fn,
@@ -339,6 +385,28 @@ jest.mock('react-native-reanimated', () => {
     },
   };
 });
+
+// Mock reanimated-color-picker (may not be installed)
+try {
+  require.resolve('reanimated-color-picker');
+  jest.mock('reanimated-color-picker', () => {
+    const View = require('react-native').View;
+    return {
+      __esModule: true,
+      default: View,
+      Panel1: View,
+      Panel2: View,
+      Panel3: View,
+      HueSlider: View,
+      OpacitySlider: View,
+      Swatches: View,
+      Preview: View,
+      ColorPicker: View,
+    };
+  });
+} catch {
+  // not installed
+}
 
 // Mock @shopify/react-native-skia if needed
 jest.mock('@shopify/react-native-skia', () => ({

@@ -46,6 +46,7 @@ export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableGestureClose={false}
       variant='bottomSheet'
       visible={visible}

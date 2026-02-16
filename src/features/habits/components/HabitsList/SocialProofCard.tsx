@@ -1,6 +1,8 @@
 /**
- * SocialProofCard Component
- * Displays testimonial quote
+ * SocialProofCard — testimonial card in the monetization flow.
+ *
+ * Displays a user quote and attribution from {@link SOCIAL_PROOF} to build
+ * trust and encourage trial conversion.  Purely presentational; no props.
  */
 
 import { Text, View } from 'react-native';

@@ -3,7 +3,8 @@
  * StyleSheet for swipe action buttons
  */
 
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle } from 'react-native';
+import { typography } from '@/theme/typography';
 import { ACTION_WIDTH } from './HabitCard.constants';
 
 export const actionStyles = StyleSheet.create({
@@ -22,8 +23,8 @@ export const actionStyles = StyleSheet.create({
     top: 0,
   },
   actionText: {
+    ...typography.bodySmall,
     color: '#FFFFFF',
-    fontSize: 15,
     fontWeight: '600',
-  },
+  } as TextStyle,
 });

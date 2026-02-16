@@ -75,10 +75,10 @@ export function EditHeader({
         ]}
         onPress={handleSave}
         onPressIn={() => {
-          scale.value = withSpring(0.95, { damping: 18, stiffness: 240 });
+          scale.value = withSpring(0.95, { damping: 18, stiffness: 150 });
         }}
         onPressOut={() => {
-          scale.value = withSpring(1, { damping: 18, stiffness: 240 });
+          scale.value = withSpring(1, { damping: 18, stiffness: 150 });
         }}
       >
         {isSaving && <ActivityIndicator color='#ffffff' size='small' />}
