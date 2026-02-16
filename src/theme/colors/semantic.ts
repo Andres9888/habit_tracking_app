@@ -3,7 +3,7 @@
  * Frontend Redesign Spec 2026-02-14
  *
  * Color Role Separation:
- * - Primary/CTA: Forest green (#22805A/#1B6B4A) — brand buttons, main actions
+ * - Primary/CTA: Forest green (#059669/#047857) — brand buttons, main actions
  * - Success: Green (#15793C) — checkmarks, completions, positive states
  * - Streak/Progress: Burnished gold (#8B6208) — chains, streaks, momentum
  * - Info: Blue (#3872B8) — informational states

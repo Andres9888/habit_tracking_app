@@ -39,6 +39,7 @@ import {
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { colors } from '../../theme/colors';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -286,7 +287,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   footerLink: {
-    color: '#047857',
+    color: colors.primary[700],
     textDecorationLine: 'underline',
   },
   footerText: {
