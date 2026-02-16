@@ -1,40 +1,62 @@
 /**
  * Empty state shown when no habits exist
- * Standardized: FadeInUp animation, proper typography
+ * Standardized: animation (respects reduce-motion), proper typography, dark mode, accessible
  */
 
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { ClipboardList } from 'lucide-react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
-
-const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+import Animated from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { useReducedMotionEntry } from '../../EmptyState/useReducedMotionEntry';
 
 export function EmptyState() {
+  const { colors } = useThemeColors();
+  const { entry } = useReducedMotionEntry();
+
   return (
-    <View className='items-center px-6 py-10'>
+    <View
+      accessible
+      accessibilityLabel='No habits yet. Create your first habit to start tracking.'
+      accessibilityRole='text'
+      style={{ alignItems: 'center', paddingHorizontal: 24, paddingVertical: 40 }}
+    >
       <Animated.View
-        className='mb-4 h-14 w-14 items-center justify-center rounded-xl bg-stone-100'
-        entering={anim(0)}
+        entering={entry(0)}
         style={{
-          shadowColor: '#1c1917',
+          alignItems: 'center',
+          backgroundColor: colors.gray[100],
+          borderRadius: 12,
+          height: 56,
+          justifyContent: 'center',
+          marginBottom: 16,
+          shadowColor: colors.text.primary,
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.06,
           shadowRadius: 12,
+          width: 56,
         }}
       >
-        <ClipboardList color='#78716c' size={28} strokeWidth={1.5} />
+        <ClipboardList color={colors.text.tertiary} size={28} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
-        className='mb-1 text-center font-semibold text-stone-700'
-        entering={anim(60)}
-        style={{ fontSize: 17 }}
+        entering={entry(60)}
+        style={{
+          color: colors.text.primary,
+          fontSize: 17,
+          fontWeight: '600',
+          marginBottom: 4,
+          textAlign: 'center',
+        }}
       >
         No Habits Yet
       </Animated.Text>
       <Animated.Text
-        className='text-center text-[13px] text-stone-500'
-        entering={anim(120)}
+        entering={entry(120)}
+        style={{
+          color: colors.text.secondary,
+          fontSize: 13,
+          textAlign: 'center',
+        }}
       >
         Create your first habit to start tracking
       </Animated.Text>

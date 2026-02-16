@@ -44,7 +44,7 @@ jest.mock('react-native-reanimated', () => {
     View,
     Text: require('react-native').Text,
     createAnimatedComponent: (Component: React.ComponentType) => {
-      const AnimatedComponent = React.forwardRef((props: any, ref: any) =>
+      const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) =>
         React.createElement(Component, { ...props, ref })
       );
       AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
@@ -78,7 +78,7 @@ jest.mock('react-native-reanimated', () => {
 
 // Mock Modal component
 jest.mock('../../Modal', () => ({
-  Modal: ({ children, visible, onClose }: any) => {
+  Modal: ({ children, visible, onClose }: unknown) => {
     if (!visible) return null;
     return children;
   },
@@ -89,7 +89,7 @@ jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const createMockIcon = (name: string) => (props: any) =>
+  const createMockIcon = (name: string) => (props: Record<string, unknown>) =>
     React.createElement(View, { testID: `icon-${name}`, ...props });
 
   return {

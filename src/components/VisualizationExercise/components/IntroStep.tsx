@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * IntroStep Component
  * Introduction screen explaining the visualization exercise
@@ -19,7 +20,10 @@ import type { IntroStepProps } from '../types';
 
 export function IntroStep({ habitName, onNext }: IntroStepProps) {
   return (
-    <Animated.View className='flex-1 gap-6' entering={FadeInDown.springify().damping(18)}>
+    <Animated.View
+      className='flex-1 gap-6'
+      entering={FadeInDown.springify().damping(18)}
+    >
       {/* Header */}
       <View className='items-center gap-4'>
         <View className='h-20 w-20 items-center justify-center rounded-3xl'>
