@@ -11,7 +11,7 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
 
@@ -31,7 +31,7 @@ export function UpgradePrompt({
   return (
     <Animated.View
       className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
-      entering={FadeIn.duration(ANIMATION_DURATION.medium)}
+      entering={FadeInDown.duration(280).springify().damping(18)}
     >
       <Pressable
         accessibilityHint='Tap outside to dismiss'

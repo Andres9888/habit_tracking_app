@@ -1,6 +1,6 @@
 /** PasswordResetSuccess - OPTIMIZED: FadeIn animation, better styling */
 import { Text, View } from 'react-native';
-import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -12,7 +12,7 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
     <View className='gap-4 py-2'>
       <Animated.View
         className='items-center justify-center rounded-2xl bg-emerald-50 p-6'
-        entering={FadeIn.duration(300)}
+        entering={FadeInDown.duration(280).springify().damping(18)}
         style={{
           shadowColor: '#1c1917',
           shadowOffset: { height: 4, width: 0 },
