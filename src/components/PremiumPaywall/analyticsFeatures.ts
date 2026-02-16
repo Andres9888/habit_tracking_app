@@ -7,33 +7,33 @@ import type { AnalyticsFeatureItem } from './PremiumPaywall.types';
 export const ANALYTICS_FEATURES: readonly AnalyticsFeatureItem[] = [
   {
     description:
-      'Track unlimited habits and build routines in every area of your life',
+      'Track every habit across health, work, learning, and more — no limits.',
     icon: 'infinite',
     title: 'Unlimited Habits',
   },
   {
     description:
-      'See which habits are strongest and which need more attention',
+      'Instantly see which habits are strongest and which need attention.',
     icon: 'stats-chart',
     title: 'Habit Strength Insights',
   },
   {
-    description: 'Visualize your progress with beautiful habit calendars',
+    description: 'Beautiful calendar heatmaps that make your consistency visible.',
     icon: 'calendar',
     title: 'Progress Heatmaps',
   },
   {
-    description: 'Get personalized tips to build unbreakable habits',
+    description: 'Personalized tips based on your patterns to keep you on track.',
     icon: 'bulb',
     title: 'AI-Powered Insights',
   },
   {
-    description: 'Track trends over time with detailed analytics',
+    description: 'Spot trends, compare streaks, and understand your long-term growth.',
     icon: 'trending-up',
     title: 'Advanced Analytics',
   },
   {
-    description: 'Export your complete habit data as CSV or JSON',
+    description: 'Own your data — export everything as CSV or JSON anytime.',
     icon: 'download',
     title: 'Data Export',
   },

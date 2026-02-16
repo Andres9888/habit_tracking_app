@@ -28,7 +28,7 @@ jest.mock('lucide-react-native', () => ({
 
 // Mock clsx
 jest.mock('clsx', () => ({
-  clsx: (...args: any[]) => args.filter(Boolean).join(' '),
+  clsx: (...args: unknown[]) => args.filter(Boolean).join(' '),
 }));
 
 const createMockNote = (overrides: Partial<Doc<'notes'>> = {}): Doc<'notes'> => ({

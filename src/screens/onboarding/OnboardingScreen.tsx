@@ -6,7 +6,7 @@
  */
 /* eslint-disable max-lines, max-lines-per-function */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useThemeColors } from '../../theme/ThemeContext';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
@@ -27,6 +27,8 @@ import Animated, {
   useReducedMotion,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { safeSetBoolean } from '@/utils/storage';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 import { colors as coreColors } from '../../theme/colors';
@@ -124,7 +126,7 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
             style={[
               styles.strengthBar,
               {
-                backgroundColor: interpolateColor(i / 4),
+                backgroundColor: interpolateColor(i / 4, colors.primary),
                 opacity: 0.15 + i * 0.2125,
                 width: `${20 + i * 20}%`,
               },
@@ -212,21 +214,21 @@ interface PageData {
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    subtitle: 'Complete your habits daily to build unbreakable chains',
+    subtitle: 'Complete your habits daily and watch your chain grow — every link counts.',
     title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
   {
     id: 'strength',
     subtitle:
-      'Your habits get stronger over time — backed by behavioral science research',
+      'Your habits get stronger over time — backed by behavioral science.',
     title: 'Science-Backed Strength',
     Visual: StrengthMeter,
   },
   {
     id: 'templates',
-    subtitle: 'Choose from science-backed habit templates or create your own',
-    title: '200+ Templates to Start',
+    subtitle: 'Pick from science-backed templates or create your own in seconds.',
+    title: '200+ Ready-Made Templates',
     Visual: TemplateGrid,
   },
 ];
@@ -270,7 +272,8 @@ interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
-export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
+function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
+  const { colors } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
@@ -283,7 +286,15 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
     setIsLoading(true);
     void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
     try {
-      await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
+      // Mark onboarding as complete in AsyncStorage
+      await safeSetBoolean(ONBOARDING_KEY, true);
+      onComplete();
+    } catch (error) {
+      // If storage fails, still proceed to avoid blocking user
+      // They might see onboarding again on next launch, but that's acceptable
+      if (__DEV__) {
+        console.error('[OnboardingScreen] Failed to save completion state:', error);
+      }
       onComplete();
     } finally {
       setIsLoading(false);
@@ -588,3 +599,11 @@ const styles = StyleSheet.create({
 });
 
 export { ONBOARDING_KEY };
+
+export function OnboardingScreen(props: OnboardingScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Onboarding">
+      <OnboardingScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}

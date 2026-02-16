@@ -60,7 +60,12 @@ export function NetworkStatusProvider({
   );
 
   useEffect(() => {
-    void Network.getNetworkStateAsync().then(handleStatusUpdate);
+    void Network.getNetworkStateAsync()
+      .then(handleStatusUpdate)
+      .catch((error) => {
+        if (__DEV__) console.warn('Error getting initial network state:', error);
+        setIsChecking(false);
+      });
     const subscription = Network.addNetworkStateListener(handleStatusUpdate);
     return () => subscription.remove();
   }, [handleStatusUpdate]);
