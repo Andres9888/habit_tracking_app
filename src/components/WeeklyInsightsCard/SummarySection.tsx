@@ -28,7 +28,13 @@ export function SummarySection({
   const changeIcon = isPositive ? 'trending-up' : 'trending-down';
 
   return (
-    <AnimatedPressable style={styles.section} onPress={onToggle}>
+    <AnimatedPressable
+      accessibilityLabel={`This Week's Summary. Overall change: ${insights.weekOverWeekChange > 0 ? '+' : ''}${Math.round(insights.weekOverWeekChange)}%`}
+      accessibilityRole='button'
+      accessibilityState={{ expanded: isExpanded }}
+      style={styles.section}
+      onPress={onToggle}
+    >
       <View style={styles.sectionHeader}>
         <View style={styles.sectionHeaderLeft}>
           <Ionicons color={colors.primary[500]} name='calendar' size={20} />

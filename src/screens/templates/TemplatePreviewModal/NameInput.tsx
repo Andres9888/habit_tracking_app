@@ -15,6 +15,7 @@ export function NameInput({
   disabled,
   onChangeName,
 }: NameInputProps) {
+  const theme = useAppTheme();
   const { colors } = useThemeColors();
 
   return (
@@ -31,6 +32,16 @@ export function NameInput({
         accessibilityLabel='Habit name'
         editable={!disabled}
         placeholder='Enter habit name'
+        placeholderTextColor={colors.text.tertiary}
+        style={[
+          styles.input,
+          {
+            backgroundColor: colors.gray[50],
+            borderColor: colors.gray[200],
+            color: colors.text.primary,
+            fontFamily: theme.custom.fontFamilies.primary.text,
+          },
+        ]}
         value={customName}
         onChangeText={onChangeName}
       />

@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
+import { forwardRef } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -11,6 +12,8 @@ interface FormInputProps extends TextInputProps {
   labelRight?: ReactNode;
   /** Optional validation error message to display */
   error?: string;
+  /** Show required field indicator (*) next to label */
+  required?: boolean;
 }
 
 export function FormInput({
@@ -54,6 +57,7 @@ export function FormInput({
         style={animatedStyle}
       >
         <TextInput
+          ref={ref}
           accessibilityLabel={label}
           className='px-5 py-4 text-[17px] font-medium leading-[22px]'
           placeholderTextColor={isDark ? '#6B7280' : '#a1a1aa'}
@@ -66,4 +70,4 @@ export function FormInput({
       {error && <Text className='px-1 text-sm text-red-500'>{error}</Text>}
     </View>
   );
-}
+});

@@ -62,6 +62,7 @@ export default function NoteEditor({
               placeholder='YYYY-MM-DD'
               value={date}
               onChangeText={setDate}
+              onSubmitEditing={() => bodyRef.current?.focus()}
             />
 
             <HabitSelector

@@ -9,6 +9,7 @@ import type { WriteLetterModalProps } from './WriteLetterModal.types';
 import { useWriteLetterModal } from './useWriteLetterModal';
 import { WriteLetterHeader } from './WriteLetterHeader';
 import { WriteLetterFooter } from './WriteLetterFooter';
+import { useThemeColors } from '../../../../../../theme/ThemeContext';
 import { WriteStep } from './WriteStep';
 import { ScheduleStep } from './ScheduleStep';
 
@@ -18,6 +19,7 @@ export function WriteLetterModal({
   onSave,
   isSaving,
 }: WriteLetterModalProps) {
+  const { colors } = useThemeColors();
   const hook = useWriteLetterModal({ isSaving, onClose, onSave, visible });
 
   return (
@@ -29,7 +31,8 @@ export function WriteLetterModal({
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1 bg-white'
+        className='flex-1'
+        style={{ backgroundColor: colors.background }}
       >
         <WriteLetterHeader step={hook.step} onClose={onClose} />
 
