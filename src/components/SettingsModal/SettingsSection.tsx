@@ -42,7 +42,13 @@ export function SettingsSection({
           {title}
         </Text>
         {subtitle && (
-          <Text className='rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-800 dark:bg-amber-900 dark:text-amber-200'>
+          <Text
+            className='rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase'
+            style={{
+              backgroundColor: isDark ? '#422006' : '#fef3c7',
+              color: isDark ? '#fbbf24' : '#92400e',
+            }}
+          >
             {subtitle}
           </Text>
         )}

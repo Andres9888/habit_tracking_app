@@ -7,6 +7,7 @@ import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { VariantConfig } from './PremiumPaywall.types';
 import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 
@@ -25,13 +26,29 @@ export function BenefitsCTAFooter({
   onStartTrial,
   onRestore,
 }: BenefitsCTAFooterProps) {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='absolute bottom-0 left-0 right-0 border-t border-stone-200 bg-white px-4 pb-8 pt-4'>
+    <View
+      className='absolute bottom-0 left-0 right-0 border-t px-4 pb-8 pt-4'
+      style={{
+        backgroundColor: colors.card,
+        borderColor: colors.border,
+      }}
+    >
       <View className='mb-3 items-center'>
-        <Text className='text-2xl font-bold text-stone-800'>
+        <Text
+          className='text-2xl font-bold'
+          style={{ color: colors.text.primary }}
+        >
           {handlers.priceLabel ?? '$6.99/month'}
         </Text>
-        <Text className='text-sm text-stone-500'>7-day free trial • Cancel anytime</Text>
+        <Text
+          className='text-sm'
+          style={{ color: colors.text.secondary }}
+        >
+          7-day free trial • Cancel anytime
+        </Text>
       </View>
       <Pressable
         accessibilityHint='Opens subscription options'
@@ -57,7 +74,10 @@ export function BenefitsCTAFooter({
         </Animated.View>
       </Pressable>
       {handlers.priceLabel && (
-        <Text className='mt-2 text-center text-xs text-stone-500'>
+        <Text
+          className='mt-2 text-center text-xs'
+          style={{ color: colors.text.secondary }}
+        >
           then {handlers.priceLabel} after trial
         </Text>
       )}
