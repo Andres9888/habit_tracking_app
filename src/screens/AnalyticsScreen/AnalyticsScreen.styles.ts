@@ -1,5 +1,19 @@
 /**
- * Styles for AnalyticsScreen
+ * @fileoverview Styles for AnalyticsScreen
+ * 
+ * **Style organization:**
+ * - container: Main ScrollView wrapper
+ * - contentContainer: ScrollView content padding
+ * - header: Screen title and subtitle
+ * - section: Reusable section wrapper with spacing
+ * - statsGrid: Grid layout for stat cards
+ * - exportButton: Primary action button at bottom
+ * 
+ * **Design system compliance:**
+ * - Typography scale: heading1 (34px), heading3 (22px), body (17px), button (17px)
+ * - Spacing: Theme spacing tokens (xs, sm, md, lg, xl, 2xl)
+ * - Colors: Theme colors (primary, text, surface)
+ * - Border radius: 12px for buttons
  */
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';

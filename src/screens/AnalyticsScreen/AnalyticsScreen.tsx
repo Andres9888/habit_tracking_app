@@ -1,7 +1,42 @@
 /* eslint-disable max-lines */
 /**
- * AnalyticsScreen - Main analytics dashboard screen
- * Shows habit statistics, charts, and insights
+ * @fileoverview AnalyticsScreen - Premium analytics dashboard
+ * 
+ * **What it shows:**
+ * - Analytics header with title and description
+ * - Overview statistics card (total habits, active/archived, completion rate)
+ * - Top/bottom performing habits
+ * - Charts section:
+ *   - Habit strength distribution (pie chart)
+ *   - 30-day trend (line chart)
+ *   - Weekly compliance (bar chart)
+ * - Insights section (weekly insights + ranked habits)
+ * - Export button (CSV/JSON data export)
+ * - Empty state when no habits exist
+ * - Paywall for non-premium users
+ * 
+ * **How users get here:**
+ * - Main tab navigation (Analytics tab)
+ * - Bottom navigation bar
+ * 
+ * **Key interactions:**
+ * - Pull-to-refresh → Reloads analytics data
+ * - Tap habit in ranked list → Opens HabitDetailScreen
+ * - Export button → Opens format selection modal (CSV/JSON)
+ * - Premium paywall (non-premium users) → Shows trial/upgrade options
+ * - All sections animate in with 60ms stagger
+ * 
+ * **Premium gating:**
+ * - Non-premium users see paywall modal on mount
+ * - "Start Trial" button in paywall
+ * - Full analytics only available to premium subscribers
+ * 
+ * **Technical notes:**
+ * - Uses custom hook: useAnalyticsScreen (data fetching, handlers)
+ * - Skeleton loader shown during initial load
+ * - Memoized ranked habits list
+ * - RefreshControl integration
+ * - Animated entrance (FadeInDown with delays: 280, 340, 400, 460, 520ms)
  */
 import React, { useMemo } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';

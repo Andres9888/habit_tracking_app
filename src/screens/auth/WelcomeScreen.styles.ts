@@ -1,5 +1,25 @@
 /**
- * WelcomeScreen styles
+ * @fileoverview WelcomeScreen styles
+ * 
+ * **Style organization:**
+ * - container: Main view background (#FAF8F5 warm off-white)
+ * - content: Flex layout with space-between (hero at top, actions at bottom)
+ * - heroSection: Logo, title, subtitle (centered, gap: 12)
+ * - actionSection: Buttons stack (gap: 12)
+ * - backButton: Absolute positioned back button (top-left)
+ * 
+ * **Key styles:**
+ * - title: 34px bold, -0.5 letter-spacing (display scale)
+ * - subtitle: 17px body text (secondary color)
+ * - iconContainer: 80x80 rounded square, subtle shadow
+ * - primaryButton: Green (#047857), elevated with shadow
+ * - textLink: Inline link with label + action split
+ * 
+ * **Design system:**
+ * - Typography: 34/17/15 (title/body/small)
+ * - Border radius: 16px (icon), 12px (button)
+ * - Shadows: 4px offset, 16px blur, 0.08-0.2 opacity
+ * - Colors: Primary green, warm neutrals (#57534e, #1c1917)
  */
 
 import { StyleSheet } from 'react-native';

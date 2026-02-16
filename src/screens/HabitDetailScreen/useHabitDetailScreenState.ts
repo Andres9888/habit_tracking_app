@@ -1,6 +1,35 @@
 import { getLocalDateString } from '@/utils/getLocalDateString';
 /**
- * useHabitDetailScreenState - State management for the habit detail screen
+ * @fileoverview useHabitDetailScreenState - State management for HabitDetailScreen
+ * 
+ * **Purpose:**
+ * Manages UI state, completion tracking, and notes for a single habit detail view
+ * 
+ * **Responsibilities:**
+ * - Tracks modal visibility (notes editor, notes list)
+ * - Manages completed dates set (for calendar view)
+ * - Calculates derived state (completion count, strength %, days tracking)
+ * - Fetches and indexes habit notes by date
+ * - Manages undo states (pending delete/archive)
+ * - Determines if habit is completed today
+ * 
+ * **Key state:**
+ * - completedDates: Set<string> of ISO date strings (completed days)
+ * - notesByDate: Record<string, string> for quick note lookup
+ * - isCompletedToday: boolean flag for today's completion
+ * - Modal states: isNotesEditorOpen, isNotesListOpen, editingNoteId
+ * 
+ * **Performance optimizations:**
+ * - Memoized completedDates key to prevent unnecessary recalculations
+ * - Only recalculates when tracking data actually changes
+ * - Efficient Set-based completed dates lookup
+ * 
+ * **Props:**
+ * - habitCreatedAt: Timestamp for "days tracking" calculation
+ * - habitId: ID for fetching notes
+ * - habitStrength: 0-1 value for strength percentage
+ * - tracking: Array of completion entries
+ * - visible: Controls whether to fetch notes (performance optimization)
  */
 
 import { useMemo, useState } from 'react';

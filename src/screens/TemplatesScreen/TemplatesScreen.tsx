@@ -1,6 +1,44 @@
 /**
- * Templates Screen - Main orchestration component
- * Browse and import science-backed habit templates
+ * @fileoverview TemplatesScreen - Science-backed habit template browser
+ * 
+ * **What it shows:**
+ * - Browse View (default):
+ *   - Tab bar (All / By Category)
+ *   - Search bar with research filter toggle
+ *   - Sort options button
+ *   - Template cards grid (all or grouped by category)
+ *   - Scroll shadows (top/bottom)
+ * - Category/Search View:
+ *   - Category header or search results header
+ *   - Filtered template list
+ *   - Active filters indicator
+ * - Empty state (when no templates seeded yet)
+ * - Loading skeleton (during initial load)
+ * 
+ * **How users get here:**
+ * - Main tab navigation (Templates tab)
+ * - Browse tab from bottom nav
+ * 
+ * **Key interactions:**
+ * - Search → Filters templates by name/description
+ * - Category selection → Shows templates in that category
+ * - "Research-backed only" toggle → Filters to science-backed templates
+ * - Sort options → Name, Popularity, Science-backed
+ * - Template card tap → Opens preview modal
+ * - "Import" button → Adds template as new habit (with optional customization)
+ * - Tab switch (All ↔ By Category) → Changes view layout
+ * 
+ * **View modes:**
+ * - 'browse' - Default view with all templates
+ * - 'category' - Filtered by selected category
+ * - 'search' - Filtered by search query
+ * 
+ * **Technical notes:**
+ * - 102 lines (main orchestration component)
+ * - Delegates to BrowseView and CategorySearchView sub-views
+ * - Uses custom hook: useTemplatesScreenProps (centralizes all state/handlers)
+ * - Complex prop drilling (consider context or composition pattern)
+ * - Handles seeding flow for empty template database
  */
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';

@@ -1,5 +1,46 @@
 /* eslint-disable max-lines */
-/** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
+/**
+ * @fileoverview HabitEditScreen - Habit editing modal (bottom sheet)
+ * 
+ * **What it shows:**
+ * - Edit header (Cancel, Save buttons, save state indicator)
+ * - Name input section (habit name text field)
+ * - Customize section:
+ *   - Color picker (6 color options)
+ *   - Emoji picker (grid of emoji options)
+ *   - Reminder toggle and time picker
+ * - Danger zone:
+ *   - Archive button (soft delete, can be restored)
+ *   - Delete button (permanent deletion)
+ * 
+ * **How users get here:**
+ * - From HabitDetailScreen "Edit" button
+ * - Passes habitId prop to load existing habit data
+ * 
+ * **Key interactions:**
+ * - Edit habit name → Updates as user types
+ * - Select color → Updates habit color
+ * - Select emoji → Updates habit icon
+ * - Toggle reminders → Enables/disables daily reminder
+ * - Set reminder time → Schedules local notification
+ * - Cancel → Discards changes, closes modal (triggers haptic)
+ * - Save → Validates (min 2 chars), saves changes, closes modal
+ * - Archive → Confirms, archives habit, closes modal
+ * - Delete → Confirms, deletes habit, closes modal
+ * 
+ * **Validation:**
+ * - Habit name must be ≥2 characters
+ * - Save button disabled until valid
+ * 
+ * **Technical notes:**
+ * - 119 lines (main orchestration component)
+ * - Custom hook: useHabitEditScreen (loads habit, manages state, save/delete handlers)
+ * - Skeleton loader during initial habit fetch
+ * - Animated entrance with FadeInUp stagger (280, 340, 400ms)
+ * - Keyboard-avoiding layout
+ * - Modal animation: slide up from bottom
+ * - Matches CreateHabit modal styling (bottom sheet, rounded top corners)
+ */
 import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';

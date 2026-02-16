@@ -1,8 +1,43 @@
 /**
- * Onboarding Screen Component
- * 3-screen carousel shown once after first sign-up.
- * Screens: Chain visualization, Strength meter, Templates grid.
- * Sets AsyncStorage flag to prevent re-showing.
+ * @fileoverview OnboardingScreen - First-time user onboarding carousel
+ * 
+ * **What it shows:**
+ * - 3-page horizontal carousel introducing core concepts:
+ *   1. Chain Visualization - Animated chain links showing streak concept
+ *   2. Strength Meter - 5-stage habit strength progression
+ *   3. Templates Grid - Preview of science-backed habit templates
+ * - Progress dots at bottom
+ * - "Next" button (pages 1-2) or "Get Started" button (page 3)
+ * - Skip button (top-right) on all pages
+ * 
+ * **How users get here:**
+ * - Shown once after first successful sign-up
+ * - Only displays if @chainday_onboarding_complete flag is not set in AsyncStorage
+ * 
+ * **Key interactions:**
+ * - Swipe left/right to navigate between pages
+ * - "Next" button advances to next page
+ * - "Get Started" or "Skip" → Completes onboarding, sets flag, navigates to app
+ * - Haptic feedback on page changes
+ * - Animated page transitions with 60ms element stagger
+ * 
+ * **Technical notes:**
+ * - **598 LINES - VERY LARGE!** Needs refactoring into smaller components
+ * - Contains 3 major sections as inline components:
+ *   - ChainVisualization (7 animated links)
+ *   - StrengthMeter (5 stages with icons)
+ *   - TemplatesGrid (6 template cards)
+ * - Uses FlatList horizontal pagination
+ * - Respects reduced motion accessibility preference
+ * - AsyncStorage persistence to prevent re-showing
+ * - Complex animation orchestration (FadeInDown with delays)
+ * 
+ * **Refactoring suggestions:**
+ * - Extract ChainVisualization to separate component file
+ * - Extract StrengthMeter to separate component file
+ * - Extract TemplatesGrid to separate component file
+ * - Move styles to separate .styles.ts file
+ * - Extract onboarding page data to constants file
  */
 /* eslint-disable max-lines, max-lines-per-function */
 

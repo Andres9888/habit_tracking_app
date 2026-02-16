@@ -1,7 +1,29 @@
 /* eslint-disable max-lines */
 /**
- * WelcomeScreen - Auth landing page
- * Clean design consistent with app style
+ * @fileoverview WelcomeScreen - Initial authentication landing page
+ * 
+ * **What it shows:**
+ * - App branding (Chain Day logo and tagline)
+ * - Social sign-in options (Apple, Google)
+ * - Email sign-up and sign-in options
+ * - Legal footer with Terms & Privacy links
+ * 
+ * **How users get here:**
+ * - First time app launch (no authenticated session)
+ * - After signing out
+ * - When auth session expires
+ * 
+ * **Key interactions:**
+ * - Social OAuth sign-in (Apple/Google) → Creates account or signs in
+ * - "Create Free Account" → Navigates to SignUpScreen (email flow)
+ * - "Sign in" link → Navigates to SignInScreen (email flow)
+ * - Back button (when in signup/signin mode) → Returns to welcome
+ * 
+ * **Technical notes:**
+ * - Manages 3 auth modes: 'welcome', 'signin', 'signup'
+ * - Uses entrance animations (icon, title, subtitle, buttons stagger)
+ * - Handles OAuth errors with dismissible error banner
+ * - Respects safe area insets for notched devices
  */
 
 import React, { useState } from 'react';

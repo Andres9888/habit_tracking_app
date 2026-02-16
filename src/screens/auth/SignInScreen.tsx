@@ -1,6 +1,33 @@
 /**
- * SignInScreen - Premium sign in experience
- * Clean design with chain branding and smooth animations
+ * @fileoverview SignInScreen - Email/password authentication screen
+ * 
+ * **What it shows:**
+ * - Chain Day branding with gradient logo
+ * - Welcome back message
+ * - Social sign-in options (Apple, Google)
+ * - Email and password form inputs
+ * - "Forgot password?" link
+ * - Legal footer (Terms & Privacy)
+ * 
+ * **How users get here:**
+ * - From WelcomeScreen "Sign in" link
+ * - Direct navigation with props (onNavigateToSignUp callback)
+ * 
+ * **Key interactions:**
+ * - Social OAuth (Apple/Google) → Authenticates user
+ * - Email/password form → Signs in existing user
+ * - "Forgot password?" → Opens password reset modal
+ * - Form validation (email format, required fields)
+ * - Auto-focus email input (when autoFocusEmail prop is true)
+ * - Enter key navigation: email → password → submit
+ * 
+ * **Technical notes:**
+ * - 374 lines (LARGE - consider refactoring components)
+ * - Entrance animations with 60ms stagger (logo → header → content)
+ * - Keyboard-avoiding layout for iOS/Android
+ * - Real-time email validation on blur
+ * - Disable all controls during loading states
+ * - Gradient background (#fafaf9 → #f5f5f4)
  */
 
 /* eslint-disable max-lines */

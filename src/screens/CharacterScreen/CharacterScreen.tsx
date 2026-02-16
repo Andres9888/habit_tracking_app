@@ -1,3 +1,33 @@
+/**
+ * @fileoverview CharacterScreen - RPG-style character progression view
+ * 
+ * **What it shows:**
+ * - Screen header with back button
+ * - Character card (avatar, level, XP progress bar)
+ * - Attributes section (Strength, Discipline, Wisdom, Vitality)
+ * - Stats section (numerical stats like Total XP, Habits Completed, etc.)
+ * - Recent achievements section (unlocked achievement badges)
+ * 
+ * **How users get here:**
+ * - From main navigation (Character/Profile tab)
+ * - Modal or detail view with onBack callback
+ * 
+ * **Key interactions:**
+ * - Back button → Calls onBack prop (closes modal/navigates)
+ * - Scroll to view all sections
+ * - Achievement badges display recently earned achievements
+ * - Animated entrance with 60ms stagger per section
+ * 
+ * **Data source:**
+ * - Currently uses MOCK_CHARACTER_DATA from constants
+ * - TODO: Replace with real user character data from backend
+ * 
+ * **Technical notes:**
+ * - 52 lines (compact, well-organized)
+ * - Clean component composition (5 sub-components)
+ * - Animated entrance (FadeInDown: 280, 340, 400, 460, 520ms delays)
+ * - Safe area insets for header padding
+ */
 import { View, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

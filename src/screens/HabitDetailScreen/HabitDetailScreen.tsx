@@ -1,5 +1,47 @@
 /* eslint-disable max-lines */
-/** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
+/**
+ * @fileoverview HabitDetailScreen - Full-screen habit detail modal
+ * 
+ * **What it shows:**
+ * - Detail header (habit name, emoji, edit button, close button)
+ * - Hero section with completion toggle and current streak
+ * - Calendar view (monthly, shows completed dates with visual markers)
+ * - Quick stats strip (streak, strength, completion rate)
+ * - Notes by date (if any notes exist for selected dates)
+ * - Action buttons (Archive, Delete)
+ * 
+ * **How users get here:**
+ * - Tap habit card in main habits list
+ * - From analytics screen habit links
+ * - Deep link to specific habit
+ * 
+ * **Key interactions:**
+ * - Calendar day tap → Toggle completion for that date
+ * - Edit button → Opens HabitEditScreen modal
+ * - Close button → Closes modal (calls onClose)
+ * - Archive → Confirms, then archives habit (calls onArchive)
+ * - Delete → Confirms, then deletes habit (calls onDelete)
+ * - Add note → Opens notes editor modal
+ * - View notes → Opens notes list modal
+ * - Undo toast (after toggle) → Reverts recent completion change
+ * 
+ * **Modals within modals:**
+ * - Notes editor modal
+ * - Notes list modal
+ * - Confirmation modals (archive, delete)
+ * 
+ * **Technical notes:**
+ * - 123 lines (main orchestration component)
+ * - Three custom hooks:
+ *   - useHabitDetailScreenState (UI state, completion data)
+ *   - useCalendarHandlers (day press, archive, delete logic)
+ *   - useNotesHandlers (notes CRUD operations)
+ * - Linear gradient background (light/dark theme variants)
+ * - Keyboard-avoiding layout for notes input
+ * - Safe area insets handling
+ * - Loading state with skeleton
+ * - Modal animation: slide up from bottom
+ */
 import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';

@@ -1,5 +1,25 @@
 /**
- * Business logic hooks for AnalyticsScreen
+ * @fileoverview useAnalyticsScreen - Business logic hook for AnalyticsScreen
+ * 
+ * **Purpose:**
+ * Centralizes all data fetching, state management, and event handlers for AnalyticsScreen
+ * 
+ * **Responsibilities:**
+ * - Fetches analytics data from Convex (overview stats, charts, insights)
+ * - Manages refresh state and pull-to-refresh logic
+ * - Handles premium paywall visibility
+ * - Manages export menu state and export flow (CSV/JSON)
+ * - Provides habit press navigation (TODO: implement)
+ * 
+ * **Data sources:**
+ * - api.analytics.getOverviewStats - Total habits, completion rate, ranked habits
+ * - api.analytics.getStrengthDistribution - Habit strength breakdown
+ * - api.analytics.get30DayTrend - 30-day completion trend line chart
+ * - api.analytics.getComplianceData - Weekly compliance bar chart
+ * - api.analytics.getWeeklyInsights - Week-over-week insights
+ * 
+ * **Returns:**
+ * All analytics data, loading states, handlers, and modal visibility controls
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Alert } from 'react-native';

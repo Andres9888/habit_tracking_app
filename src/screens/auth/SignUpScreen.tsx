@@ -1,5 +1,40 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
+/**
+ * @fileoverview SignUpScreen - New user registration screen
+ * 
+ * **What it shows:**
+ * - Chain Day branding header
+ * - Social sign-up options (Apple, Google)
+ * - Email and password registration form
+ * - Real-time password strength indicator
+ * - "Already have an account? Sign in" link
+ * 
+ * **How users get here:**
+ * - From WelcomeScreen "Create Free Account" button
+ * - Direct navigation with onNavigateToSignIn callback
+ * 
+ * **Key interactions:**
+ * - Social OAuth (Apple/Google) → Creates new account
+ * - Email/password form → Creates new account with email verification
+ * - After submission → Shows VerificationView for email code entry
+ * - Password strength bar updates as user types
+ * - Form validation (email format, password strength, required fields)
+ * - Enter key navigation: email → password → submit
+ * 
+ * **State flow:**
+ * 1. Initial form view (email + password)
+ * 2. Submit → pendingVerification = true
+ * 3. VerificationView shown (6-digit code entry)
+ * 4. Verification success → User authenticated
+ * 
+ * **Technical notes:**
+ * - 201 lines (just over 200 line threshold)
+ * - Gradient background with LinearGradient
+ * - Keyboard-avoiding layout
+ * - Real-time validation (onBlur for email, onChange for password)
+ * - Animated entrance with FadeInUp stagger
+ */
 import { useRef } from 'react';
 import { ScrollView, View, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
