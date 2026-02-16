@@ -80,9 +80,11 @@ const QuickPicksRowComponent = ({
         accessibilityRole='list'
         contentContainerStyle={{ paddingHorizontal: 1 }}
         data={QUICK_PICK_TEMPLATES}
+        initialNumToRender={5}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
+        windowSize={3}
       />
     </View>
   );

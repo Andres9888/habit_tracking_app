@@ -12,6 +12,7 @@ import {
   ALLOWED_STORAGE_DOMAINS,
   MAX_LABEL_LENGTH,
 } from './lib/inputValidation';
+import { canAddVoiceNote } from './subscriptions/premiumCheck';
 
 /**
  * Create a new voice note
@@ -37,6 +38,17 @@ export const create = mutation({
     // SEC-001: Ownership verification
     if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to add voice notes to this habit');
+    }
+
+    // SEC-005: Premium gating - check if user can add more voice notes
+    // Free tier: 1 voice note per habit, Premium: unlimited
+    const voiceNoteAccess = await canAddVoiceNote(
+      ctx,
+      identity.subject,
+      args.habitId
+    );
+    if (!voiceNoteAccess.allowed) {
+      throw new Error(voiceNoteAccess.reason ?? 'Voice note limit reached');
     }
 
     if (args.duration <= 0) throw new Error('Duration must be positive');

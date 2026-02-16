@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   pullIndicator: {
-    borderRadius: 2,
+    borderRadius: 4,
     height: 4,
     width: 40,
   },

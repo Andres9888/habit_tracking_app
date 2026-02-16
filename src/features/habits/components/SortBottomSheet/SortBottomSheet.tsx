@@ -6,23 +6,12 @@ import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import {
-  CLOSE_ICON_SIZE,
-  DARK_SURFACE_COLOR,
-  LIGHT_SURFACE_COLOR,
-  SCREEN_HEIGHT,
-  SHEET_BOTTOM_PADDING,
-  SHEET_ELEVATION,
-  SHEET_MAX_HEIGHT_RATIO,
-  SHEET_SHADOW_OFFSET,
-  SHEET_SHADOW_OPACITY,
-  SHEET_SHADOW_RADIUS,
-  SORT_OPTIONS,
-} from './constants';
+import { SCREEN_HEIGHT, SORT_OPTIONS } from './constants';
 import { QuickPickChips } from './QuickPickChips';
 import { SortOptionRow } from './SortOptionRow';
 import type { SortBottomSheetProps } from './types';
 import { useSortBottomSheet } from './useSortBottomSheet';
+import { SCREEN, SHADOW_OPACITY } from '../../../../constants';
 
 /** iOS-style bottom sheet for selecting habit sort order */
 export function SortBottomSheet({
@@ -66,13 +55,13 @@ export function SortBottomSheet({
             style={[
               {
                 backgroundColor: themeColors.card,
-                elevation: SHEET_ELEVATION,
-                maxHeight: SCREEN_HEIGHT * SHEET_MAX_HEIGHT_RATIO,
-                paddingBottom: insets.bottom + SHEET_BOTTOM_PADDING,
+                elevation: 20,
+                maxHeight: SCREEN_HEIGHT * SCREEN.maxHeightPercent,
+                paddingBottom: insets.bottom + 16,
                 shadowColor: isDark ? '#000000' : '#1c1917',
-                shadowOffset: SHEET_SHADOW_OFFSET,
-                shadowOpacity: SHEET_SHADOW_OPACITY,
-                shadowRadius: SHEET_SHADOW_RADIUS,
+                shadowOffset: { height: 4, width: 0 },
+                shadowOpacity: SHADOW_OPACITY.minimal,
+                shadowRadius: 16,
               },
               sheetStyle,
             ]}
@@ -95,13 +84,11 @@ export function SortBottomSheet({
                 accessibilityHint='Close sort options'
                 accessibilityLabel='Close'
                 accessibilityRole='button'
-                className='h-10 w-10 items-center justify-center rounded-full'
-                style={{
-                  backgroundColor: isDark ? DARK_SURFACE_COLOR : LIGHT_SURFACE_COLOR,
-                }}
+                className='h-11 w-11 items-center justify-center rounded-full'
+                style={{ backgroundColor: isDark ? '#1f2937' : '#f5f5f4' }}
                 onPress={handleDismiss}
               >
-                <X color={themeColors.text.secondary} size={CLOSE_ICON_SIZE} />
+                <X color={themeColors.text.secondary} size={24} />
               </Pressable>
             </View>
 

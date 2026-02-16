@@ -60,6 +60,7 @@ export function SortOptionRow({
 
   return (
     <Pressable
+      accessibilityHint={`Select ${title} sort option`}
       accessibilityLabel={`${title}. ${description}`}
       accessibilityRole='radio'
       accessibilityState={{ checked: selected }}

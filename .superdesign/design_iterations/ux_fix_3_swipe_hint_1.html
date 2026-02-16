@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P0 Fix #3 — Swipe Hint Animation</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          sans-serif;
+        background: #1a1a2e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 40px 20px;
+        color: #fff;
+      }
+      .label {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #3b82f6;
+        margin-bottom: 8px;
+      }
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: -0.02em;
+      }
+      .subtitle {
+        font-size: 15px;
+        color: #9ca3af;
+        margin-bottom: 40px;
+        max-width: 600px;
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      .phone-pair {
+        display: flex;
+        gap: 60px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .phone-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .phone-label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #6b7280;
+        padding: 4px 12px;
+        border: 1px solid #374151;
+        border-radius: 20px;
+      }
+      .phone-label.bad {
+        color: #ef4444;
+        border-color: #7f1d1d;
+      }
+      .phone-label.good {
+        color: #10b981;
+        border-color: #064e3b;
+      }
+
+      .phone {
+        width: 375px;
+        height: 720px;
+        background: #faf8f5;
+        border-radius: 40px;
+        border: 6px solid #2d2a26;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      }
+      .status-bar {
+        height: 50px;
+        background: #faf8f5;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 6px;
+      }
+      .notch {
+        width: 120px;
+        height: 28px;
+        background: #2d2a26;
+        border-radius: 0 0 16px 16px;
+      }
+      .screen-content {
+        padding: 16px;
+        height: calc(100% - 50px);
+        overflow-y: auto;
+        position: relative;
+      }
+
+      .section-header {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #78716c;
+        margin: 16px 0 8px;
+        padding-left: 4px;
+      }
+
+      .habit-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 1px 4px rgba(28, 25, 23, 0.08);
+        position: relative;
+        overflow: visible;
+      }
+      .habit-emoji {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .habit-info {
+        flex: 1;
+      }
+      .habit-name {
+        font-size: 17px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.02em;
+      }
+      .habit-meta {
+        font-size: 13px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #d1d5db;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .habit-check.done {
+        background: #10b981;
+        border-color: #10b981;
+        color: #fff;
+        font-size: 14px;
+      }
+
+      /* Swipe hint animation on the first card */
+      .hint-card {
+        animation: swipeHint 3s ease-in-out 1s infinite;
+        overflow: hidden;
+        border-radius: 16px;
+      }
+      @keyframes swipeHint {
+        0% {
+          transform: translateX(0);
+        }
+        15% {
+          transform: translateX(-60px);
+        }
+        30% {
+          transform: translateX(-60px);
+        }
+        45% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      .hint-actions {
+        position: absolute;
+        right: -60px;
+        top: 0;
+        bottom: 0;
+        width: 60px;
+        display: flex;
+        animation: revealHint 3s ease-in-out 1s infinite;
+      }
+      @keyframes revealHint {
+        0% {
+          opacity: 0;
+          transform: translateX(0);
+        }
+        15% {
+          opacity: 1;
+          transform: translateX(-60px);
+        }
+        30% {
+          opacity: 1;
+          transform: translateX(-60px);
+        }
+        45% {
+          opacity: 0;
+          transform: translateX(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(0);
+        }
+      }
+
+      .hint-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 500;
+        color: #fff;
+        gap: 2px;
+      }
+      .hint-btn.edit {
+        background: #3b82f6;
+        border-radius: 0;
+      }
+      .hint-btn.more {
+        background: #78716c;
+        border-radius: 0 16px 16px 0;
+      }
+
+      /* Hand cursor animation */
+      .swipe-hand {
+        position: absolute;
+        font-size: 28px;
+        animation: handMove 3s ease-in-out 1s infinite;
+        z-index: 5;
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+      }
+      @keyframes handMove {
+        0% {
+          transform: translate(0, 0);
+          opacity: 0;
+        }
+        5% {
+          opacity: 1;
+        }
+        15% {
+          transform: translate(-60px, 0);
+          opacity: 1;
+        }
+        30% {
+          transform: translate(-60px, 0);
+          opacity: 1;
+        }
+        45% {
+          transform: translate(0, 0);
+          opacity: 0;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* Tooltip */
+      .hint-tooltip {
+        position: absolute;
+        background: #2d2a26;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: 10px;
+        white-space: nowrap;
+        animation: tooltipFade 3s ease-in-out 1s infinite;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 6;
+      }
+      .hint-tooltip::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 12px;
+        height: 6px;
+        background: #2d2a26;
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+      }
+      @keyframes tooltipFade {
+        0% {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        12% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        35% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        45% {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* Drag handle hint */
+      .drag-card {
+        animation: dragHint 4s ease-in-out 2.5s infinite;
+      }
+      @keyframes dragHint {
+        0% {
+          transform: translateY(0);
+          box-shadow: 0 1px 4px rgba(28, 25, 23, 0.08);
+        }
+        10% {
+          transform: translateY(-4px) scale(1.02);
+          box-shadow: 0 8px 20px rgba(28, 25, 23, 0.15);
+        }
+        30% {
+          transform: translateY(50px) scale(1.02);
+          box-shadow: 0 8px 20px rgba(28, 25, 23, 0.15);
+        }
+        45% {
+          transform: translateY(0px) scale(1);
+          box-shadow: 0 1px 4px rgba(28, 25, 23, 0.08);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      .drag-handle {
+        width: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        margin-right: -4px;
+      }
+      .drag-dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #d1d5db;
+      }
+      .drag-handle-active .drag-dot {
+        background: #10b981;
+      }
+
+      .annotation {
+        position: absolute;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px dashed;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 10;
+      }
+      .annotation.good {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+        border-color: #10b981;
+      }
+
+      .drag-hand {
+        position: absolute;
+        font-size: 28px;
+        animation: dragHandMove 4s ease-in-out 2.5s infinite;
+        z-index: 5;
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+      }
+      @keyframes dragHandMove {
+        0% {
+          transform: translate(0, 0);
+          opacity: 0;
+        }
+        5% {
+          opacity: 1;
+        }
+        10% {
+          transform: translate(0, -4px);
+          opacity: 1;
+        }
+        30% {
+          transform: translate(0, 50px);
+          opacity: 1;
+        }
+        45% {
+          transform: translate(0, 0);
+          opacity: 0;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .drag-tooltip {
+        position: absolute;
+        background: #2d2a26;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: 10px;
+        white-space: nowrap;
+        animation: tooltipFade 4s ease-in-out 2.5s infinite;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 6;
+      }
+      .drag-tooltip::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        right: 20px;
+        width: 12px;
+        height: 6px;
+        background: #2d2a26;
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+      }
+
+      /* Placeholder slot during drag */
+      .drag-placeholder {
+        border: 2px dashed #d1d5db;
+        border-radius: 16px;
+        height: 76px;
+        margin-bottom: 12px;
+        animation: placeholderPulse 4s ease-in-out 2.5s infinite;
+        opacity: 0;
+      }
+      @keyframes placeholderPulse {
+        0% {
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        30% {
+          opacity: 1;
+        }
+        45% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">P0 Fix #3</div>
+    <div class="title">Gesture Discovery Hints</div>
+    <div class="subtitle">
+      Without visual hints, <85% of users never discover swipe-to-reveal or
+      drag-to-reorder. These animated hints play once on first launch, stored in
+      AsyncStorage.
+    </div>
+
+    <div class="phone-pair">
+      <!-- Swipe hint -->
+      <div class="phone-col">
+        <div class="phone-label good">Swipe Hint — First Launch</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div class="section-header">Today</div>
+
+            <!-- Hint card with swipe animation -->
+            <div style="position: relative; overflow: visible">
+              <div
+                class="hint-tooltip"
+                style="top: -40px; left: 50%; transform: translateX(-50%)"
+              >
+                Swipe left for actions
+              </div>
+              <div
+                style="
+                  position: relative;
+                  overflow: hidden;
+                  border-radius: 16px;
+                  margin-bottom: 12px;
+                "
+              >
+                <div class="habit-card hint-card" style="margin: 0">
+                  <div class="habit-emoji" style="background: #d1fae5">🧘</div>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning Meditation</div>
+                    <div class="habit-meta">42% strength · 12-day streak</div>
+                  </div>
+                  <div class="habit-check"></div>
+                  <div class="hint-actions">
+                    <div class="hint-btn edit">✏️<span>Edit</span></div>
+                    <div class="hint-btn more">•••<span>More</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="swipe-hand" style="bottom: 10px; right: 60px">👆</div>
+            </div>
+
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #dbeafe">💧</div>
+              <div class="habit-info">
+                <div class="habit-name">Drink Water</div>
+                <div class="habit-meta">67% strength · 24-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #fef3c7">📖</div>
+              <div class="habit-info">
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-meta">28% strength · 5-day streak</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #fce7f3">🏃</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Run</div>
+                <div class="habit-meta">55% strength · 8-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+
+            <div
+              style="
+                text-align: center;
+                margin-top: 16px;
+                color: #9ca3af;
+                font-size: 12px;
+              "
+            >
+              Plays once on first launch, then never again
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drag hint -->
+      <div class="phone-col">
+        <div class="phone-label good">Drag Hint — After 3+ Habits</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div class="section-header">Today</div>
+
+            <div class="habit-card">
+              <div class="drag-handle">
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+              </div>
+              <div class="habit-emoji" style="background: #d1fae5">🧘</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-meta">42% strength · 12-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+
+            <!-- Drag target -->
+            <div style="position: relative">
+              <div class="drag-tooltip" style="top: -40px; right: 10px">
+                Hold & drag to reorder
+              </div>
+              <div
+                class="habit-card drag-card"
+                style="z-index: 3; position: relative"
+              >
+                <div class="drag-handle drag-handle-active">
+                  <div class="drag-dot"></div>
+                  <div class="drag-dot"></div>
+                  <div class="drag-dot"></div>
+                  <div class="drag-dot"></div>
+                  <div class="drag-dot"></div>
+                  <div class="drag-dot"></div>
+                </div>
+                <div class="habit-emoji" style="background: #dbeafe">💧</div>
+                <div class="habit-info">
+                  <div class="habit-name">Drink Water</div>
+                  <div class="habit-meta">67% strength · 24-day streak</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+              <div class="drag-hand" style="bottom: 8px; left: 24px">👆</div>
+            </div>
+
+            <div class="drag-placeholder"></div>
+
+            <div class="habit-card">
+              <div class="drag-handle">
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+              </div>
+              <div class="habit-emoji" style="background: #fef3c7">📖</div>
+              <div class="habit-info">
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-meta">28% strength · 5-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+
+            <div class="habit-card">
+              <div class="drag-handle">
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+                <div class="drag-dot"></div>
+              </div>
+              <div class="habit-emoji" style="background: #fce7f3">🏃</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Run</div>
+                <div class="habit-meta">55% strength · 8-day streak</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+
+            <div
+              class="annotation good"
+              style="
+                position: relative;
+                display: inline-block;
+                margin-top: 12px;
+                left: 50%;
+                transform: translateX(-50%);
+              "
+            >
+              Visible drag handles appear when reorder is enabled
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -22,7 +22,7 @@ export const CELEBRATION_MILESTONES: MilestoneCelebrationConfig[] = [
     days: 3,
     message: '🎉 You hit 3 days!',
     name: 'Habit Starter',
-    subtext: "You're building momentum!",
+    subtext: "You're building real momentum!",
   },
   {
     badge: '⭐',
@@ -50,7 +50,7 @@ export const CELEBRATION_MILESTONES: MilestoneCelebrationConfig[] = [
     days: 30,
     message: '🎉 You hit 30 days!',
     name: 'Monthly Master',
-    subtext: 'A full month - incredible!',
+    subtext: 'A full month — incredible!',
   },
   {
     badge: '💎',
@@ -78,7 +78,7 @@ export const CELEBRATION_MILESTONES: MilestoneCelebrationConfig[] = [
     days: 365,
     message: '🎉 You hit 365 days!',
     name: 'Year Hero',
-    subtext: "A whole year - you're legendary!",
+    subtext: "A whole year — you're legendary!",
   },
 ];
 

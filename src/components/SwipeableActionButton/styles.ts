@@ -23,9 +23,9 @@ export const styles = StyleSheet.create({
   swipeIconContainer: {
     alignItems: 'center',
     borderRadius: 8,
-    height: 36,
+    height: 44,
     justifyContent: 'center',
-    width: 36,
+    width: 44,
   },
   swipeLabel: {
     fontSize: typography.tabBar.fontSize,

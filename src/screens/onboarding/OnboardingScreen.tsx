@@ -1,12 +1,12 @@
 /**
- * OnboardingScreen
- *
+ * Onboarding Screen Component
  * 3-screen carousel shown once after first sign-up.
  * Screens: Chain visualization, Strength meter, Templates grid.
  * Sets AsyncStorage flag to prevent re-showing.
  */
+/* eslint-disable max-lines, max-lines-per-function */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useThemeColors } from '../../theme/ThemeContext';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
@@ -27,21 +27,44 @@ import Animated, {
   useReducedMotion,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { safeSetBoolean } from '@/utils/storage';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
 
 // ─── Chain Visualization ─────────────────────────────────────────────
 
-function ChainLink({ delay, index, reduceMotion }: { delay: number; index: number; reduceMotion: boolean }) {
-  const colors = ['#059669', '#047857', '#10B981', '#047857', '#059669', '#10B981', '#047857'];
+function ChainLink({
+  delay,
+  index,
+  reduceMotion,
+}: {
+  delay: number;
+  index: number;
+  reduceMotion: boolean;
+}) {
+  const { colors } = useThemeColors();
+  const chainColors = [
+    colors.primary[600],
+    colors.primary[700],
+    colors.primary[400],
+    colors.primary[700],
+    colors.primary[600],
+    colors.primary[400],
+    colors.primary[700],
+  ];
   return (
     <Animated.View
-      entering={reduceMotion ? undefined : FadeInDown.delay(delay).springify().damping(18)}
+      entering={
+        reduceMotion
+          ? undefined
+          : FadeInDown.delay(delay).springify().damping(18)
+      }
       style={[
         styles.chainLink,
         {
-          backgroundColor: colors[index % colors.length],
+          backgroundColor: chainColors[index % chainColors.length],
           transform: [{ rotate: '0deg' }], // Uniform rotation (placeholder for future alternating style)
         },
       ]}
@@ -55,7 +78,12 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
   return (
     <View style={styles.chainContainer}>
       {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-        <ChainLink key={i} delay={400 + i * 120} index={i} reduceMotion={reduceMotion} />
+        <ChainLink
+          key={i}
+          delay={400 + i * 120}
+          index={i}
+          reduceMotion={reduceMotion}
+        />
       ))}
     </View>
   );
@@ -64,28 +92,38 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
 // ─── Strength Meter ──────────────────────────────────────────────────
 
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
+  const { colors } = useThemeColors();
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
   return (
     <View style={styles.strengthContainer}>
       {stages.map((stage, i) => (
         <Animated.View
           key={stage}
-          entering={reduceMotion ? undefined : FadeInDown.delay(400 + i * 200)
-            .springify()
-            .damping(18)}
+          entering={
+            reduceMotion
+              ? undefined
+              : FadeInDown.delay(400 + i * 200)
+                  .springify()
+                  .damping(18)
+          }
           style={styles.strengthRow}
         >
           <View
             style={[
               styles.strengthBar,
               {
-                backgroundColor: interpolateColor(i / 4),
+                backgroundColor: interpolateColor(i / 4, colors.primary),
                 opacity: 0.15 + i * 0.2125,
                 width: `${20 + i * 20}%`,
               },
             ]}
           />
-          <Text style={[styles.strengthLabel, i === 4 && styles.strengthLabelActive]}>
+          <Text
+            style={[
+              styles.strengthLabel,
+              i === 4 && styles.strengthLabelActive,
+            ]}
+          >
             {stage}
           </Text>
         </Animated.View>
@@ -94,18 +132,27 @@ function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-function interpolateColor(t: number): string {
-  if (t < 0.5) return '#10B981';
-  if (t < 0.75) return '#059669';
-  return '#047857';
+function interpolateColor(t: number, primary: Record<number, string>): string {
+  if (t < 0.5) return primary[400];
+  if (t < 0.75) return primary[600];
+  return primary[700];
 }
 
 // ─── Template Grid ───────────────────────────────────────────────────
 
 const TEMPLATE_ICONS = [
-  '🧘', '💧', '📖', '🏃',
-  '😴', '🥗', '✍️', '🧠',
-  '💊', '🎯', '🌅', '🏋️',
+  '🧘',
+  '💧',
+  '📖',
+  '🏃',
+  '😴',
+  '🥗',
+  '✍️',
+  '🧠',
+  '💊',
+  '🎯',
+  '🌅',
+  '🏋️',
 ];
 
 function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
@@ -114,9 +161,13 @@ function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
       {TEMPLATE_ICONS.map((emoji, i) => (
         <Animated.View
           key={i}
-          entering={reduceMotion ? undefined : FadeIn.delay(300 + i * 60)
-            .springify()
-            .damping(18)}
+          entering={
+            reduceMotion
+              ? undefined
+              : FadeIn.delay(300 + i * 60)
+                  .springify()
+                  .damping(18)
+          }
           style={styles.templateItem}
         >
           <Text style={styles.templateEmoji}>{emoji}</Text>
@@ -138,21 +189,21 @@ interface PageData {
 const PAGES: PageData[] = [
   {
     id: 'chain',
-    subtitle: 'Complete your habits daily to build unbreakable chains',
+    subtitle: 'Complete your habits daily and watch your chain grow — every link counts.',
     title: "Don't Break the Chain",
     Visual: ChainVisualization,
   },
   {
     id: 'strength',
     subtitle:
-      'Your habits get stronger over time — backed by behavioral science research',
+      'Your habits get stronger over time — backed by behavioral science.',
     title: 'Science-Backed Strength',
     Visual: StrengthMeter,
   },
   {
     id: 'templates',
-    subtitle: 'Choose from science-backed habit templates or create your own',
-    title: '200+ Templates to Start',
+    subtitle: 'Pick from science-backed templates or create your own in seconds.',
+    title: '200+ Ready-Made Templates',
     Visual: TemplateGrid,
   },
 ];
@@ -160,15 +211,24 @@ const PAGES: PageData[] = [
 // ─── Dot Indicators ──────────────────────────────────────────────────
 
 function DotIndicators({ currentIndex }: { currentIndex: number }) {
+  const { colors } = useThemeColors();
   return (
-    <View style={styles.dotsContainer}>
+    <View
+      accessible
+      accessibilityLabel={`Page ${currentIndex + 1} of ${PAGES.length}`}
+      accessibilityRole='tablist'
+      style={styles.dotsContainer}
+    >
       {PAGES.map((_, i) => (
         <Animated.View
           key={i}
+          accessibilityLabel={`Page ${i + 1}${i === currentIndex ? ', current' : ''}`}
+          accessibilityRole='tab'
+          accessibilityState={{ selected: i === currentIndex }}
           style={[
             styles.dot,
             {
-              backgroundColor: i === currentIndex ? '#059669' : '#D1D5DB',
+              backgroundColor: i === currentIndex ? colors.primary[600] : colors.gray[300],
               width: i === currentIndex ? 24 : 8,
             },
           ]}
@@ -184,7 +244,8 @@ interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
-export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
+function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
+  const { colors } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
@@ -196,7 +257,15 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
     setIsLoading(true);
     void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
     try {
-      await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
+      // Mark onboarding as complete in AsyncStorage
+      await safeSetBoolean(ONBOARDING_KEY, true);
+      onComplete();
+    } catch (error) {
+      // If storage fails, still proceed to avoid blocking user
+      // They might see onboarding again on next launch, but that's acceptable
+      if (__DEV__) {
+        console.error('[OnboardingScreen] Failed to save completion state:', error);
+      }
       onComplete();
     } finally {
       setIsLoading(false);
@@ -211,7 +280,10 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const handleNext = useCallback(() => {
     void Haptics.impactAsync(ImpactFeedbackStyle.Light);
     if (currentIndex < PAGES.length - 1) {
-      flatListRef.current?.scrollToIndex({ animated: true, index: currentIndex + 1 });
+      flatListRef.current?.scrollToIndex({
+        animated: true,
+        index: currentIndex + 1,
+      });
     }
   }, [currentIndex]);
 
@@ -223,7 +295,9 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
     }
   ).current;
 
-  const viewabilityConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+  const viewabilityConfig = useRef({
+    viewAreaCoveragePercentThreshold: 50,
+  }).current;
 
   const isLastPage = currentIndex === PAGES.length - 1;
 
@@ -234,13 +308,21 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
           <item.Visual reduceMotion={!!shouldReduceMotion} />
         </View>
         <Animated.Text
-          entering={shouldReduceMotion ? undefined : FadeInUp.delay(200).springify().damping(18)}
+          entering={
+            shouldReduceMotion
+              ? undefined
+              : FadeInUp.delay(200).springify().damping(18)
+          }
           style={styles.title}
         >
           {item.title}
         </Animated.Text>
         <Animated.Text
-          entering={shouldReduceMotion ? undefined : FadeInUp.delay(350).springify().damping(18)}
+          entering={
+            shouldReduceMotion
+              ? undefined
+              : FadeInUp.delay(350).springify().damping(18)
+          }
           style={styles.subtitle}
         >
           {item.subtitle}
@@ -258,8 +340,8 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         style={[styles.skipContainer, { top: insets.top + 12 }]}
       >
         <Pressable
-          accessibilityLabel="Skip onboarding"
-          accessibilityRole="button"
+          accessibilityLabel='Skip onboarding'
+          accessibilityRole='button'
           hitSlop={24}
           style={styles.skipButton}
           onPress={handleSkip}
@@ -292,25 +374,33 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         <DotIndicators currentIndex={currentIndex} />
 
         {isLastPage ? (
-          <Animated.View entering={shouldReduceMotion ? undefined : FadeInDown.springify().damping(18)}>
+          <Animated.View
+            entering={
+              shouldReduceMotion
+                ? undefined
+                : FadeInDown.springify().damping(18)
+            }
+          >
             <Pressable
-              accessibilityLabel="Get started building your first habit"
-              accessibilityRole="button"
+              accessibilityLabel='Get started building your first habit'
+              accessibilityRole='button'
               disabled={isLoading}
               style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
               onPress={() => void handleComplete()}
             >
               {isLoading ? (
-                <ActivityIndicator color="#FFFFFF" />
+                <ActivityIndicator color='#FFFFFF' />
               ) : (
-                <Text style={styles.ctaText}>Let's Build Your First Habit →</Text>
+                <Text style={styles.ctaText}>
+                  Let's Build Your First Habit →
+                </Text>
               )}
             </Pressable>
           </Animated.View>
         ) : (
           <Pressable
-            accessibilityLabel="Next onboarding page"
-            accessibilityRole="button"
+            accessibilityLabel='Next onboarding page'
+            accessibilityRole='button'
             style={styles.nextButton}
             onPress={handleNext}
           >
@@ -338,7 +428,7 @@ const styles = StyleSheet.create({
   },
   chainLink: {
     alignItems: 'center',
-    borderRadius: 18,
+    borderRadius: 16,
     height: 52,
     justifyContent: 'center',
     marginHorizontal: -2,
@@ -346,7 +436,7 @@ const styles = StyleSheet.create({
   },
   chainLinkInner: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 10,
+    borderRadius: 12,
     height: 36,
     width: 20,
   },
@@ -431,7 +521,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   strengthLabel: {
-    color: '#9CA3AF',
+    color: '#57534e',
     fontSize: 13,
     fontWeight: '500',
   },
@@ -491,3 +581,11 @@ const styles = StyleSheet.create({
 });
 
 export { ONBOARDING_KEY };
+
+export function OnboardingScreen(props: OnboardingScreenProps) {
+  return (
+    <ScreenErrorBoundary screenName="Onboarding">
+      <OnboardingScreenContent {...props} />
+    </ScreenErrorBoundary>
+  );
+}
