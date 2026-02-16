@@ -66,7 +66,7 @@ export function useHabitsListHandlers(options: UseHabitsListHandlersOptions) {
         }
       } catch (error) {
         if (__DEV__) console.error('Failed to create habit:', error);
-        showCreateError();
+        showCreateError(() => void handleQuickCreateHabit(habitName));
       }
     },
     [

@@ -15,6 +15,7 @@ interface DismissButtonProps {
 export function DismissButton({ onPress }: DismissButtonProps) {
   return (
     <Pressable
+      accessibilityHint='Tap to dismiss the error message'
       accessibilityLabel='Dismiss error message'
       accessibilityRole='button'
       hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}

@@ -5,9 +5,9 @@
 import { useState, useCallback } from 'react';
 import type {
   AffirmationData,
-  AffirmationScheduleConfig,
   AffirmationsSectionProps,
 } from './AffirmationsSection.types';
+import type { AffirmationScheduleData } from '../AffirmationScheduleModal/types';
 
 interface UseAffirmationScheduleProps {
   isPremium: boolean;
@@ -45,7 +45,7 @@ export function useAffirmationSchedule({
   }, []);
 
   const handleSaveSchedule = useCallback(
-    async (schedule: AffirmationScheduleConfig) => {
+    async (schedule: AffirmationScheduleData) => {
       if (!schedulingAffirmation || !onScheduleAffirmation) return;
       setIsScheduleSaving(true);
       try {
