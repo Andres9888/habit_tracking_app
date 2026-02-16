@@ -20,6 +20,7 @@ interface SettingsRowProps {
   onToggle?: (value: boolean) => void;
   showBorder?: boolean;
   highContrastMode?: boolean;
+  destructive?: boolean;
 }
 
 export function SettingsRow({
@@ -33,9 +34,11 @@ export function SettingsRow({
   onToggle,
   showBorder = true,
   highContrastMode = false,
+  destructive = false,
 }: SettingsRowProps) {
   const { isDark } = useThemeColors();
   const colors = getSettingsRowColors(highContrastMode, isDark);
+  const labelColor = destructive ? '#dc2626' : colors.label;
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
   const handleToggle = (v: boolean) => {
@@ -68,7 +71,7 @@ export function SettingsRow({
       </View>
       <Text
         className='flex-1 text-[17px] font-semibold'
-        style={{ color: colors.label }}
+        style={{ color: labelColor }}
       >
         {label}
       </Text>

@@ -41,6 +41,7 @@ export function AccountInfo({
       />
       {onDeleteAccount ? (
         <SettingsRow
+          destructive
           highContrastMode={highContrast}
           icon={<Trash2 color='#dc2626' size={16} />}
           iconBackgroundColor='#fecaca'

@@ -40,7 +40,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               >
                 <Text
                   className='text-[10px] font-bold uppercase'
-                  style={{ color: '#f59e0b' }}
+                  style={{ color: isDark ? '#fbbf24' : '#b45309' }}
                 >
                   Active
                 </Text>
