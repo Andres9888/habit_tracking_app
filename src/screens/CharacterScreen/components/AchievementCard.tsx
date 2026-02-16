@@ -13,9 +13,11 @@ export function AchievementCard({
   achievement,
   delay = 0,
 }: AchievementCardProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   return (
     <Animated.View
+      accessibilityLabel={`Achievement: ${achievement.title}. ${achievement.description}`}
+      accessibilityRole='summary'
       className='flex-row items-center gap-4 rounded-3xl border px-6 py-6'
       entering={FadeInDown.delay(delay).springify().damping(18)}
       style={{
@@ -27,7 +29,10 @@ export function AchievementCard({
         shadowRadius: 16,
       }}
     >
-      <View className='h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm'>
+      <View
+        className='h-12 w-12 items-center justify-center rounded-full shadow-sm'
+        style={{ backgroundColor: isDark ? 'rgba(245, 158, 11, 0.2)' : '#ffedd5' }}
+      >
         <Trophy color='#f59e0b' size={24} />
       </View>
       <View className='flex-1 flex-col'>

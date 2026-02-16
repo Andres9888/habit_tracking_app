@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { Heart, Dumbbell, Brain, Zap } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { AttributeCard } from './AttributeCard';
 import { ATTRIBUTE_CONFIGS } from '../constants';
 import type { CharacterAttributes } from '../types';
@@ -13,12 +14,15 @@ const STAGGER_DELAY = 60;
 const BASE_DELAY = 180;
 
 export function AttributesSection({ attributes }: AttributesSectionProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='mb-6 flex-col gap-3'>
       <Animated.Text
-        className='px-1 font-semibold text-[#1c1917]'
+        accessibilityRole='header'
+        className='px-1 font-semibold'
         entering={FadeInDown.delay(BASE_DELAY).springify().damping(18)}
-        style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22 }}
+        style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22, color: colors.text.primary }}
       >
         Attributes
       </Animated.Text>

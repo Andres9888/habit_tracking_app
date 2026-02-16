@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { AchievementCard } from './AchievementCard';
 import type { Achievement } from '../types';
 
@@ -13,12 +14,15 @@ const BASE_DELAY = 660;
 export function AchievementsSection({
   achievements,
 }: AchievementsSectionProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='mb-8 flex-col gap-3'>
       <Animated.Text
-        className='px-1 font-semibold text-[#1c1917]'
+        accessibilityRole='header'
+        className='px-1 font-semibold'
         entering={FadeInDown.delay(BASE_DELAY).springify().damping(18)}
-        style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22 }}
+        style={{ fontSize: 17, letterSpacing: -0.41, lineHeight: 22, color: colors.text.primary }}
       >
         Recent Achievements
       </Animated.Text>

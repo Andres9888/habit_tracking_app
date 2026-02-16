@@ -12,6 +12,8 @@ export function StatCard({
   const { colors } = useThemeColors();
   return (
     <Animated.View
+      accessibilityLabel={`${label}: ${value}`}
+      accessibilityRole='summary'
       className='flex-1 flex-col items-center gap-1 rounded-2xl border px-4 py-4'
       entering={FadeInDown.delay(delay).springify().damping(18)}
       style={{

@@ -18,6 +18,8 @@ export function AttributeCard({
 
   return (
     <Animated.View
+      accessibilityLabel={`${name}: ${value} out of ${maxValue}`}
+      accessibilityRole='summary'
       className='overflow-hidden rounded-3xl border'
       entering={FadeInDown.delay(delay).springify().damping(18)}
       style={{
