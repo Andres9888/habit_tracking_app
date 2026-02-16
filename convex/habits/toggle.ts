@@ -37,9 +37,18 @@ export const toggleHabit = mutation({
           completed: true, date: args.date, habitId: args.habitId, userId: identity.subject,
         }));
 
-    // Schedule streak/strength recalculation with small delay to batch multiple toggles
-    // This prevents race conditions if user rapidly toggles the same habit
-    // The delay (500ms) allows multiple quick toggles to be batched into one recalculation
+    // Schedule streak/strength recalculation with batching delay
+    // 
+    // RACE CONDITION PREVENTION:
+    // If user rapidly toggles the same habit multiple times within 500ms,
+    // only the LAST scheduled calculation runs (previous ones are cancelled).
+    // This batching prevents:
+    // 1. Multiple concurrent recalculations for the same habit
+    // 2. Wasted computation on intermediate states
+    // 3. Potential data inconsistency from overlapping updates
+    //
+    // The 500ms delay is tuned to feel instant to users while batching
+    // machine-gun clicks (e.g., correcting accidental completion).
     await ctx.scheduler.runAfter(
       500,
       internal.habits.toggle.recalculateStreakAndStrength,

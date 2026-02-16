@@ -4,6 +4,7 @@
  * Dashboard overview and rankings statistics.
  */
 
+import { v } from 'convex/values';
 import { query } from './_generated/server';
 import {
   calculateHabitStrength,
@@ -12,10 +13,18 @@ import {
 
 /**
  * Get overview statistics for the analytics dashboard
+ *
+ * Returns aggregated habit strength, rankings, and top/bottom performers.
+ * Includes all active habits in rankedHabits array by default.
+ *
+ * @param args.limit - Optional max number of habits to return in rankedHabits (default: all)
+ * @returns Overview stats with averageStrength, rankedHabits, strongest/weakest habit
  */
 export const getOverviewStats = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
     // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -76,7 +85,12 @@ export const getOverviewStats = query({
     );
     const averageStrength = totalStrength / habitsWithStrength.length;
 
-    const rankedHabits = habitsWithStrength.map((habit) => ({
+    // Apply optional limit for rankedHabits (useful for large habit lists)
+    const habitsToRank = args.limit
+      ? habitsWithStrength.slice(0, args.limit)
+      : habitsWithStrength;
+
+    const rankedHabits = habitsToRank.map((habit) => ({
       currentStreak: habit.currentStreak,
       emoji: habit.icon || '🎯',
       id: habit._id,
