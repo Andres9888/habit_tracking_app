@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { AttributeCardProps } from '../types';
 
 export function AttributeCard({
@@ -13,13 +14,16 @@ export function AttributeCard({
   delay = 0,
 }: AttributeCardProps & { delay?: number }) {
   const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
+  const { colors } = useThemeColors();
 
   return (
     <Animated.View
-      className='overflow-hidden rounded-3xl border border-stone-100 bg-white'
+      className='overflow-hidden rounded-3xl border'
       entering={FadeInDown.delay(delay).springify().damping(18)}
       style={{
-        shadowColor: '#1c1917',
+        backgroundColor: colors.card,
+        borderColor: colors.cardBorder,
+        shadowColor: colors.text.primary,
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 16,
@@ -41,19 +45,19 @@ export function AttributeCard({
         <View className='flex-col gap-3 px-6 pt-6'>
           <View className='flex-row items-center justify-between'>
             <View className='flex-row items-center gap-3'>
-              <View className='h-10 w-10 items-center justify-center rounded-full bg-white shadow-md'>
+              <View className='h-10 w-10 items-center justify-center rounded-full shadow-md' style={{ backgroundColor: colors.card }}>
                 {icon}
               </View>
-              <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
+              <Text className='text-base font-normal leading-6 tracking-[-0.3125px]' style={{ color: colors.text.primary }}>
                 {name}
               </Text>
             </View>
-            <Text className='text-base font-normal leading-6 tracking-[-0.3125px] text-[#101828]'>
+            <Text className='text-base font-normal leading-6 tracking-[-0.3125px]' style={{ color: colors.text.primary }}>
               {value}
             </Text>
           </View>
 
-          <View className='h-2 w-full overflow-hidden rounded-full bg-stone-100'>
+          <View className='h-2 w-full overflow-hidden rounded-full' style={{ backgroundColor: colors.gray[200] }}>
             <View style={{ width: `${percentage}%` }}>
               <LinearGradient
                 colors={gradientColors}

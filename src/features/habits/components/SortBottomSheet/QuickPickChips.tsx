@@ -1,6 +1,6 @@
-import { Platform, Pressable, ScrollView, Text } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { Pressable, ScrollView, Text } from 'react-native';
 
+import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { HabitSortMode } from '../../types';
 import {
@@ -19,6 +19,7 @@ interface QuickPickChipsProps {
 
 export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
   const { colors: themeColors, isDark } = useThemeColors();
+  const { trigger } = useHaptics();
 
   return (
     <ScrollView
@@ -46,11 +47,7 @@ export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
               minHeight: 44,
             }}
             onPress={() => {
-              if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
-                  () => {}
-                );
-              }
+              trigger('tap');
               onSelect(option.value);
             }}
           >

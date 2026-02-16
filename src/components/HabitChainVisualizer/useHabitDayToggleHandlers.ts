@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { Animated } from 'react-native';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
 interface UseHabitDayToggleHandlersParams {
   buttonScale: Animated.Value;
@@ -12,6 +13,8 @@ export const useHabitDayToggleHandlers = ({
   completed,
   onPress,
 }: UseHabitDayToggleHandlersParams) => {
+  const { triggerSuccess, triggerLightImpact } = useHapticFeedback();
+
   const handlePressIn = useCallback(() => {
     Animated.spring(buttonScale, {
       friction: 20,
@@ -33,6 +36,13 @@ export const useHabitDayToggleHandlers = ({
   }, [buttonScale, completed]);
 
   const handlePress = useCallback(() => {
+    // Haptic feedback: success when completing, light tap when uncompleting
+    if (completed) {
+      triggerLightImpact();
+    } else {
+      triggerSuccess();
+    }
+
     Animated.sequence([
       Animated.spring(buttonScale, {
         friction: 6,
@@ -48,7 +58,7 @@ export const useHabitDayToggleHandlers = ({
       }),
     ]).start();
     onPress();
-  }, [buttonScale, onPress]);
+  }, [buttonScale, completed, onPress, triggerSuccess, triggerLightImpact]);
 
   return { handlePress, handlePressIn, handlePressOut };
 };

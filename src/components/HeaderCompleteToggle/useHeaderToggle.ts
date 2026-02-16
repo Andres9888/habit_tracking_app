@@ -3,17 +3,17 @@ import { getTodayString } from '../../utils/getLocalDateString';
  * Hook for HeaderCompleteToggle toggle logic
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import {
   useSharedValue,
   withSequence,
   withTiming,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
 interface UseHeaderToggleProps {
   completedToday: boolean;
@@ -34,6 +34,16 @@ export function useHeaderToggle({
   const reduceMotion = useReduceMotion();
 
   const buttonScale = useSharedValue(1);
+  const { triggerSuccess, triggerLightImpact } = useHapticFeedback();
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const toggleCompletionMutation = useToggleHabitWithTimezone();
   const today = getTodayString();
@@ -48,12 +58,12 @@ export function useHeaderToggle({
 
     setIsToggling(true);
 
-    // Haptic feedback
-    Haptics.impactAsync(
-      localCompleted
-        ? Haptics.ImpactFeedbackStyle.Light
-        : Haptics.ImpactFeedbackStyle.Medium
-    );
+    // Haptic feedback: success pattern when completing, light tap when uncompleting
+    if (localCompleted) {
+      triggerLightImpact();
+    } else {
+      triggerSuccess();
+    }
 
     // Button animation
     buttonScale.value = withSequence(
@@ -67,7 +77,8 @@ export function useHeaderToggle({
 
     if (!wasCompleted && !reduceMotion) {
       setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 500);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setShowConfetti(false), 500);
       onComplete?.();
     } else if (wasCompleted) {
       onUncomplete?.();
@@ -93,6 +104,8 @@ export function useHeaderToggle({
     buttonScale,
     onComplete,
     onUncomplete,
+    triggerSuccess,
+    triggerLightImpact,
   ]);
 
   return {

@@ -1,6 +1,17 @@
 /**
- * HabitsList State Hook
- * Manages local UI state for the HabitsList component
+ * useHabitsListState — local UI state for the HabitsList tree.
+ *
+ * ### State shape
+ * | Group | Fields | Purpose |
+ * |-------|--------|---------|
+ * | **Bottom sheets** | `isSortSheetOpen`, `isDaySheetOpen`, `selectedDay` | Track which sheet is visible and its payload |
+ * | **Habit creation** | `justCreatedHabitId`, `isInSuccessCelebration`, `shouldTriggerHabitEntrance` | Transient flags that drive the create-then-animate flow |
+ * | **Seen tracking** | `seenHabitIdsRef` | Mutable ref of habit IDs whose entrance animation already played |
+ * | **Animated values** | `header*`, `calendar*`, `habitRow*` (opacity + translateY) | RN `Animated.Value`s for staggered entrance transitions |
+ *
+ * ### Derived callbacks
+ * `handleDayPress`, `handleOpenSortSheet`, etc. are thin wrappers that keep
+ * consumers free from knowing which setter to call.
  */
 
 import { useCallback, useState, useRef } from 'react';
