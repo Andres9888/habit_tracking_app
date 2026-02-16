@@ -8,10 +8,19 @@
  *
  * All three tracks short-circuit to static values when `reduceMotion` is true.
  * `trackWidth` is measured via `onLayout` so the progress bar works at any width.
+ *
+ * Performance: Uses Reanimated for smooth UI-thread animations
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withRepeat,
+  withSequence,
+  Easing,
+} from 'react-native-reanimated';
 
 interface UseMonetizationAnimationsOptions {
   freeHabitLimit: number;
@@ -26,9 +35,9 @@ export function useMonetizationAnimations({
   hasReachedHabitLimit,
   reduceMotion,
 }: UseMonetizationAnimationsOptions) {
-  const progress = useRef(new Animated.Value(0)).current;
-  const ctaPulse = useRef(new Animated.Value(1)).current;
-  const shimmer = useRef(new Animated.Value(0.4)).current;
+  const progress = useSharedValue(0);
+  const ctaPulse = useSharedValue(1);
+  const shimmer = useSharedValue(0.4);
   const [trackWidth, setTrackWidth] = useState(0);
 
   const usageRatio = useMemo(
@@ -37,72 +46,61 @@ export function useMonetizationAnimations({
     [freeHabitLimit, habitSlotsUsed]
   );
 
+  // Progress bar animation
   useEffect(() => {
+    const targetWidth = trackWidth * usageRatio;
     if (reduceMotion) {
-      progress.setValue(trackWidth * usageRatio);
+      progress.value = targetWidth;
       return;
     }
-    const handle = Animated.timing(progress, {
+    progress.value = withTiming(targetWidth, {
       duration: 420,
       easing: Easing.out(Easing.cubic),
-      toValue: trackWidth * usageRatio,
-      useNativeDriver: false,
     });
-    handle.start();
-    return () => {
-      handle.stop();
-    };
   }, [progress, trackWidth, usageRatio, reduceMotion]);
 
+  // CTA pulse animation
   useEffect(() => {
     if (reduceMotion || !hasReachedHabitLimit) {
-      ctaPulse.stopAnimation();
-      ctaPulse.setValue(1);
+      ctaPulse.value = 1;
       return;
     }
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(ctaPulse, {
+    ctaPulse.value = withRepeat(
+      withSequence(
+        withTiming(1.04, {
           duration: 720,
           easing: Easing.inOut(Easing.ease),
-          toValue: 1.04,
-          useNativeDriver: true,
         }),
-        Animated.timing(ctaPulse, {
+        withTiming(1, {
           duration: 720,
           easing: Easing.inOut(Easing.ease),
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-      ])
+        })
+      ),
+      -1, // infinite
+      false
     );
-    loop.start();
-    return () => loop.stop();
   }, [ctaPulse, hasReachedHabitLimit, reduceMotion]);
 
+  // Shimmer animation
   useEffect(() => {
     if (reduceMotion) {
-      shimmer.setValue(1);
+      shimmer.value = 1;
       return;
     }
-    const wave = Animated.loop(
-      Animated.sequence([
-        Animated.timing(shimmer, {
+    shimmer.value = withRepeat(
+      withSequence(
+        withTiming(0.9, {
           duration: 960,
           easing: Easing.inOut(Easing.ease),
-          toValue: 0.9,
-          useNativeDriver: true,
         }),
-        Animated.timing(shimmer, {
+        withTiming(0.4, {
           duration: 960,
           easing: Easing.inOut(Easing.ease),
-          toValue: 0.4,
-          useNativeDriver: true,
-        }),
-      ])
+        })
+      ),
+      -1, // infinite
+      false
     );
-    wave.start();
-    return () => wave.stop();
   }, [shimmer, reduceMotion]);
 
   const handleTrackLayout = useCallback(
@@ -112,5 +110,23 @@ export function useMonetizationAnimations({
     []
   );
 
-  return { ctaPulse, handleTrackLayout, progress, shimmer, trackWidth };
+  const progressStyle = useAnimatedStyle(() => ({
+    width: progress.value,
+  }));
+
+  const ctaPulseStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: ctaPulse.value }],
+  }));
+
+  const shimmerStyle = useAnimatedStyle(() => ({
+    opacity: shimmer.value,
+  }));
+
+  return {
+    ctaPulseStyle,
+    handleTrackLayout,
+    progressStyle,
+    shimmerStyle,
+    trackWidth,
+  };
 }

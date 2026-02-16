@@ -20,29 +20,36 @@ import {
 
 /**
  * Common spring configurations for consistent feel
+ * Design system standard: damping: 18, mass: 1, stiffness: 150
  */
 export const SPRING_CONFIGS = {
   /** Bouncy playful animation — celebrations only */
   bouncy: {
     damping: 10,
+    mass: 1,
     stiffness: 180,
   } as WithSpringConfig,
 
-  /** Gentle entrance animation — smooth reveals, minimal bounce */
+  /** Gentle entrance animation — smooth reveals, minimal bounce
+   * This is the design system standard for all animations
+   */
   entrance: {
     damping: 18,
+    mass: 1,
     stiffness: 150,
   } as WithSpringConfig,
 
   /** Smooth gentle spring — subtle, no overshoot */
   smooth: {
     damping: 20,
+    mass: 1,
     stiffness: 100,
   } as WithSpringConfig,
 
   /** Snappy interaction feedback — button presses (design system standard) */
   snappy: {
     damping: 18,
+    mass: 1,
     stiffness: 150,
   } as WithSpringConfig,
 } as const;
