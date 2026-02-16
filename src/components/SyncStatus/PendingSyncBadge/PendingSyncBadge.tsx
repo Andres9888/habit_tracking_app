@@ -15,9 +15,11 @@ import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Cloud } from 'lucide-react-native';
 
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { PendingSyncBadgeProps } from './types';
-import { styles, ICON_SIZES, ICON_COLOR } from './styles';
 import { usePendingSyncBadge } from './usePendingSyncBadge';
+
+const ICON_SIZES = { small: 8, medium: 10 } as const;
 
 export function PendingSyncBadge({
   visible = false,
@@ -25,15 +27,19 @@ export function PendingSyncBadge({
   style,
   testID = 'pending-sync-badge',
 }: PendingSyncBadgeProps) {
+  const { isDark } = useThemeColors();
   const { animatedStyle, shouldRender } = usePendingSyncBadge({ visible });
 
   if (!shouldRender) {
     return null;
   }
 
+  const palette = isDark
+    ? { bg: '#451a03', border: '#78350f', icon: '#fbbf24' }
+    : { bg: '#fef3c7', border: '#fcd34d', icon: '#d97706' };
+
   const iconSize = ICON_SIZES[size];
-  const badgeSizeStyle =
-    size === 'small' ? styles.badgeSmall : styles.badgeMedium;
+  const badgeSize = size === 'small' ? { height: 14, width: 14, borderRadius: 4 } : { height: 18, width: 18, borderRadius: 6 };
 
   return (
     <Animated.View
@@ -41,11 +47,20 @@ export function PendingSyncBadge({
       accessibilityHint='This habit has changes waiting to sync'
       accessibilityLabel='Pending sync'
       accessibilityRole='image'
-      style={[styles.container, animatedStyle, style]}
+      style={[{ alignItems: 'center', justifyContent: 'center' }, animatedStyle, style]}
       testID={testID}
     >
-      <View style={[styles.badge, badgeSizeStyle]}>
-        <Cloud color={ICON_COLOR} size={iconSize} strokeWidth={2.5} />
+      <View
+        style={{
+          alignItems: 'center',
+          backgroundColor: palette.bg,
+          borderColor: palette.border,
+          borderWidth: 1,
+          justifyContent: 'center',
+          ...badgeSize,
+        }}
+      >
+        <Cloud color={palette.icon} size={iconSize} strokeWidth={2.5} />
       </View>
     </Animated.View>
   );

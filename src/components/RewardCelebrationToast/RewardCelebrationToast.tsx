@@ -4,6 +4,7 @@ import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useRewardToastAnimation } from './useRewardToastAnimation';
 import { useRewardToastContent } from './useRewardToastContent';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface RewardCelebrationToastProps {
   message: string;
@@ -27,70 +28,165 @@ export const RewardCelebrationToast = ({
   const { translateY, opacity } = useRewardToastAnimation(visible);
   const { title, premiumCTA } = useRewardToastContent(streak);
   const { triggerLightImpact } = useHapticFeedback({});
+  const { colors, isDark } = useThemeColors();
+
+  const cardBg = isDark ? colors.card : '#ffffff';
+  const titleColor = isDark ? colors.text.primary : '#1c1917';
+  const bodyColor = isDark ? colors.text.secondary : '#44403c';
+  const gradientColors = isDark
+    ? (['#1e1033', '#0f1729'] as const)
+    : (['#faf5ff', '#eff6ff'] as const);
+  const borderColor = isDark ? colors.border : '#d6d3d1';
+  const secondaryTextColor = isDark ? colors.text.secondary : '#57534e';
+  const dismissColor = isDark ? colors.text.tertiary : '#78716c';
+  const shadowStyle = isDark
+    ? {}
+    : { shadowColor: '#93c5fd', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 12 };
 
   return (
     <AnimatedContainer
       accessibilityLiveRegion='polite'
-      className='absolute bottom-6 left-4 right-4'
+      style={{
+        position: 'absolute',
+        bottom: 24,
+        left: 16,
+        right: 16,
+        opacity,
+        transform: [{ translateY }],
+      }}
       pointerEvents='box-none'
-      style={{ opacity, transform: [{ translateY }] }}
     >
-      <View className='rounded-3xl bg-white p-5 shadow-lg shadow-blue-100'>
-        <Text className='text-[17px] font-bold leading-[24px] text-[#1c1917]'>
+      <View
+        style={{
+          borderRadius: 24,
+          backgroundColor: cardBg,
+          padding: 20,
+          ...shadowStyle,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 17,
+            fontWeight: '700',
+            lineHeight: 24,
+            color: titleColor,
+          }}
+        >
           {title}
         </Text>
-        <Text className='mt-2 text-[17px] leading-[22px] text-stone-700'>
+        <Text
+          style={{
+            marginTop: 8,
+            fontSize: 17,
+            lineHeight: 22,
+            color: bodyColor,
+          }}
+        >
           {message}
         </Text>
-        <View className='mt-3 rounded-2xl p-3'>
+        <View style={{ marginTop: 12, borderRadius: 16, overflow: 'hidden' }}>
           <LinearGradient
-            className='absolute inset-0 rounded-2xl'
-            colors={['#faf5ff', '#eff6ff']}
-            end={{ x: 1, y: 1 }}
+            colors={gradientColors as unknown as string[]}
             start={{ x: 0, y: 0 }}
-          />
-          <Text className='text-[13px] font-semibold text-[#7c3aed]'>
-            ✨ {premiumCTA.benefit}
-          </Text>
+            end={{ x: 1, y: 1 }}
+            style={{ padding: 12, borderRadius: 16 }}
+          >
+            <Text
+              style={{
+                fontSize: 13,
+                fontWeight: '600',
+                color: '#7c3aed',
+              }}
+            >
+              ✨ {premiumCTA.benefit}
+            </Text>
+          </LinearGradient>
         </View>
-        <View className='mt-4 flex-row items-center justify-between gap-3'>
+        <View
+          style={{
+            marginTop: 16,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+          }}
+        >
           <AnimatedPressable
             accessibilityHint='Share this streak to motivate friends'
             accessibilityLabel='Share streak'
-            className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-4 py-2.5'
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 999,
+              borderWidth: 1,
+              borderColor,
+              paddingHorizontal: 16,
+              paddingVertical: 10,
+            }}
             onPress={() => {
               triggerLightImpact();
               onSecondaryAction();
             }}
           >
-            <Text className='text-[17px] font-semibold leading-[22px] text-stone-600'>
+            <Text
+              style={{
+                fontSize: 17,
+                fontWeight: '600',
+                lineHeight: 22,
+                color: secondaryTextColor,
+              }}
+            >
               Share
             </Text>
           </AnimatedPressable>
           <AnimatedPressable
             accessibilityHint={`${premiumCTA.text}: ${premiumCTA.benefit}`}
             accessibilityLabel={premiumCTA.text}
-            className='flex-1 items-center justify-center rounded-full px-4 py-2.5'
-            style={{ backgroundColor: '#7c3aed' }}
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 999,
+              paddingHorizontal: 16,
+              paddingVertical: 10,
+              backgroundColor: '#7c3aed',
+            }}
             onPress={() => {
               triggerLightImpact();
               onPrimaryAction();
             }}
           >
-            <Text className='text-[17px] font-semibold leading-[22px] text-white'>
+            <Text
+              style={{
+                fontSize: 17,
+                fontWeight: '600',
+                lineHeight: 22,
+                color: '#ffffff',
+              }}
+            >
               {premiumCTA.text}
             </Text>
           </AnimatedPressable>
         </View>
         <AnimatedPressable
           accessibilityLabel='Dismiss reward toast'
-          className='mt-3 items-center'
+          style={{ marginTop: 12, alignItems: 'center' }}
           onPress={() => {
             triggerLightImpact();
             onDismiss();
           }}
         >
-          <Text className='text-[13px] font-medium uppercase leading-[18px] tracking-wider text-stone-500'>
+          <Text
+            style={{
+              fontSize: 13,
+              fontWeight: '500',
+              textTransform: 'uppercase',
+              lineHeight: 18,
+              letterSpacing: 0.8,
+              color: dismissColor,
+            }}
+          >
             Not now
           </Text>
         </AnimatedPressable>
