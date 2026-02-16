@@ -11,13 +11,13 @@
  * @returns Date object set to Monday 00:00:00 of that week
  */
 export function getWeekStart(date: Date): Date {
-  const d = new Date(date);
-  const dayOfWeek = d.getDay();
+  const result = new Date(date);
+  const dayOfWeek = result.getDay();
   // Convert Sunday (0) to 7 for Monday-start weeks
   const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-  d.setDate(d.getDate() - daysFromMonday);
-  d.setHours(0, 0, 0, 0);
-  return d;
+  result.setDate(result.getDate() - daysFromMonday);
+  result.setHours(0, 0, 0, 0);
+  return result;
 }
 
 /**

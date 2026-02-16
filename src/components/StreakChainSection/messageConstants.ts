@@ -7,32 +7,32 @@ import type { ContextualMessageData, MessageType } from './types';
 export const MILESTONE_MESSAGES: Record<number, ContextualMessageData> = {
   1: {
     emoji: '🌱',
-    message: 'Day 1 complete! Build that momentum!',
+    message: 'Day 1 — the hardest step is done!',
     type: 'motivation',
   },
   3: {
     emoji: '💪',
-    message: '3 days strong! Habit forming!',
+    message: "3 days strong — your habit is taking shape!",
     type: 'celebrate',
   },
   7: {
     emoji: '🔥',
-    message: "A full week! You're on fire!",
+    message: "A full week! You're officially on fire!",
     type: 'celebrate',
   },
   14: {
     emoji: '⭐',
-    message: 'Two weeks! Incredible consistency!',
+    message: 'Two weeks of consistency — this is real!',
     type: 'celebrate',
   },
   21: {
     emoji: '👑',
-    message: 'Three weeks! Habit is forming!',
+    message: '21 days — science says this is a habit now!',
     type: 'celebrate',
   },
   30: {
     emoji: '💎',
-    message: 'One month! Legendary streak!',
+    message: "One month! You're in the top 1% of habit builders.",
     type: 'celebrate',
   },
 };

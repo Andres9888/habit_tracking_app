@@ -1,37 +1,31 @@
 /**
  * Date calculation helpers for streak tracking
- *
- * All date comparisons use YYYY-MM-DD strings or UTC-explicit parsing
- * to avoid timezone bugs on servers running in UTC (e.g. Convex).
  */
 
 /**
- * Parse a YYYY-MM-DD string to a UTC Date (midnight UTC).
- * Always appends 'Z' to ensure consistent UTC interpretation
- * regardless of server timezone.
+ * Calculate the difference in days between two dates
+ * @param date1 - First date
+ * @param date2 - Second date
+ * @returns Number of days difference
  */
-function parseUTC(dateStr: string): Date {
-  return new Date(dateStr + 'T00:00:00Z');
-}
+export function differenceInDays(date1: Date, date2: Date): number {
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
 
-/**
- * Calculate the difference in days between two YYYY-MM-DD date strings.
- * Uses UTC parsing to avoid timezone/DST issues.
- *
- * @param dateStr1 - First date in YYYY-MM-DD format
- * @param dateStr2 - Second date in YYYY-MM-DD format
- * @returns Number of days difference (positive if dateStr1 > dateStr2)
- */
-export function differenceInDays(dateStr1: string, dateStr2: string): number {
-  const d1 = parseUTC(dateStr1);
-  const d2 = parseUTC(dateStr2);
+  // Normalize to midnight
+  d1.setHours(0, 0, 0, 0);
+  d2.setHours(0, 0, 0, 0);
+
   const diffMs = d1.getTime() - d2.getTime();
+  // Use Math.round to handle DST transitions correctly.
+  // On spring-forward, consecutive midnight-to-midnight is 23 hours;
+  // Math.floor(23/24) would incorrectly return 0 instead of 1.
   return Math.round(diffMs / (1000 * 60 * 60 * 24));
 }
 
 /**
  * Calculate the best streak from a list of completed dates
- * @param completedDates - Sorted array of completed dates (descending), YYYY-MM-DD
+ * @param completedDates - Sorted array of completed dates (descending)
  * @returns The longest streak found
  */
 export function calculateBestStreakFromDates(completedDates: string[]): number {
@@ -45,7 +39,9 @@ export function calculateBestStreakFromDates(completedDates: string[]): number {
   let currentRun = 1;
 
   for (let i = 1; i < sortedAsc.length; i++) {
-    const diff = differenceInDays(sortedAsc[i], sortedAsc[i - 1]);
+    const prevDate = new Date(sortedAsc[i - 1] + 'T00:00:00');
+    const currDate = new Date(sortedAsc[i] + 'T00:00:00');
+    const diff = differenceInDays(currDate, prevDate);
 
     if (diff === 1) {
       currentRun++;

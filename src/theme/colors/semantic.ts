@@ -1,19 +1,23 @@
 /**
  * Semantic Color Tokens
- * Extended color groups for specific UI contexts
+ * Frontend Redesign Spec 2026-02-14
+ *
+ * Color Role Separation:
+ * - Primary/CTA: Forest green (#22805A/#1B6B4A) — brand buttons, main actions
+ * - Success: Green (#15793C) — checkmarks, completions, positive states
+ * - Streak/Progress: Burnished gold (#8B6208) — chains, streaks, momentum
+ * - Info: Blue (#3872B8) — informational states
  */
 
 /**
  * Warm Stone Palette
- * Used by global.css, tailwind.config.js, and HabitCard
- * Provides the warm, inviting neutral tones that distinguish
- * the app from standard cool-gray Tailwind defaults.
+ * Provides warm, organic neutral tones for the warm-minimal aesthetic.
  */
 export const warmPalette = {
-  background: '#faf9f7', // Consolidated: was #FAF8F5, now matches core.ts
-  border: '#E5E2DE',
-  cardBg: '#ffffff', // Consolidated: was #f0eeeb, now matches light.card
-  foreground: '#2D2A26',
+  background: '#F5F1ED', // Canvas (L0) — warm parchment
+  border: '#DDD8D2',
+  cardBg: '#EDEAE5', // Surface (L1) — subtle lift
+  foreground: '#2D2A26', // Primary text
   neutral: '#C4BFB7',
 } as const;
 

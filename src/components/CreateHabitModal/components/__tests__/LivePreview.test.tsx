@@ -148,9 +148,7 @@ describe('LivePreview Component - V11', () => {
         backgroundColor: '#3b82f6',
       });
 
-      rerender(
-        <LivePreview emoji='📖' color='#ef4444' habitName='Read' />
-      );
+      rerender(<LivePreview emoji='📖' color='#ef4444' habitName='Read' />);
 
       emojiContainer = getByText('📖').parent;
       expect(emojiContainer?.props.style).toMatchObject({
@@ -299,11 +297,7 @@ describe('LivePreview Component - V11', () => {
   describe('Integration Scenarios', () => {
     it('should reflect complete habit configuration', () => {
       const { getByText } = render(
-        <LivePreview
-          emoji='💪'
-          color='#ef4444'
-          habitName='Morning workout'
-        />
+        <LivePreview emoji='💪' color='#ef4444' habitName='Morning workout' />
       );
 
       expect(getByText('💪')).toBeTruthy();
@@ -355,13 +349,15 @@ describe('LivePreview Component - V11', () => {
       }
 
       // Should not crash and final state should be correct
-      expect(() => rerender(
-        <LivePreview
-          emoji='📖'
-          color='#3b82f6'
-          habitName={'Read' + 'a'.repeat(49)}
-        />
-      )).not.toThrow();
+      expect(() =>
+        rerender(
+          <LivePreview
+            emoji='📖'
+            color='#3b82f6'
+            habitName={'Read' + 'a'.repeat(49)}
+          />
+        )
+      ).not.toThrow();
     });
   });
 });

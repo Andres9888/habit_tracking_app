@@ -9,7 +9,7 @@ export const headerStyles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
     backgroundColor: colors.gray[100],
-    borderRadius: 22,
+    borderRadius: 24,
     height: 44,
     justifyContent: 'center',
     width: 44,
@@ -38,7 +38,7 @@ export const headerStyles = StyleSheet.create({
   shareButton: {
     alignItems: 'center',
     backgroundColor: colors.gray[100],
-    borderRadius: 22,
+    borderRadius: 24,
     height: 44,
     justifyContent: 'center',
     width: 44,

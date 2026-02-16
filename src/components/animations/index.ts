@@ -18,3 +18,5 @@ export {
   STAGGER_DELAY,
   BASE_CHECKMARK_DELAY,
 } from './constants';
+export { useAnimatedCounter } from './useAnimatedCounter';
+export { SuccessShimmer } from './SuccessShimmer';

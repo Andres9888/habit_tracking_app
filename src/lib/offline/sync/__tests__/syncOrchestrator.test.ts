@@ -5,7 +5,7 @@
  * FIFO processing, event emission, and error handling.
  */
 
-import { SyncOrchestrator } from '../syncOrchestrator';
+import { SyncOrchestrator } from '../SyncOrchestrator';
 import type { OfflineQueueManagerAPI } from '../../queueManager';
 import { OfflineSyncManager } from '../../syncManager';
 import type { OfflineQueueState, OfflineOperation } from '../../queue';
@@ -26,7 +26,7 @@ describe('SyncOrchestrator', () => {
     id: `op_${Date.now()}_${Math.random()}`,
     payload: {
       date: '2026-01-30',
-      habitId: 'habit_123' as any,
+      habitId: 'habit_123' as unknown,
       toCompleted: true,
     },
     retryCount: 0,

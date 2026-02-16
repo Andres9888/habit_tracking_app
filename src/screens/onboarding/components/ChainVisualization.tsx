@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   chainLink: {
     alignItems: 'center',
-    borderRadius: 18,
+    borderRadius: 16,
     height: 52,
     justifyContent: 'center',
     marginHorizontal: -2,
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   chainLinkInner: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 10,
+    borderRadius: 12,
     height: 36,
     width: 20,
   },

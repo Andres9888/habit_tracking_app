@@ -6,6 +6,7 @@ import { ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
 
 interface SettingsRowProps {
@@ -14,6 +15,7 @@ interface SettingsRowProps {
   label: string;
   type: 'toggle' | 'navigation' | 'selection' | 'info';
   value?: boolean | string;
+  badge?: number;
   onPress?: () => void;
   onToggle?: (value: boolean) => void;
   showBorder?: boolean;
@@ -26,12 +28,14 @@ export function SettingsRow({
   label,
   type,
   value,
+  badge,
   onPress,
   onToggle,
   showBorder = true,
   highContrastMode = false,
 }: SettingsRowProps) {
-  const colors = getSettingsRowColors(highContrastMode);
+  const { isDark } = useThemeColors();
+  const colors = getSettingsRowColors(highContrastMode, isDark);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
   const handleToggle = (v: boolean) => {
@@ -93,7 +97,22 @@ export function SettingsRow({
         </View>
       )}
       {type === 'navigation' && (
-        <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
+        <View className='flex-row items-center gap-2'>
+          {badge != null && badge > 0 && (
+            <View
+              className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
+              style={{ backgroundColor: isDark ? '#374151' : '#e7e5e4' }}
+            >
+              <Text
+                className='text-[12px] font-bold'
+                style={{ color: isDark ? '#9CA3AF' : '#57534e' }}
+              >
+                {badge}
+              </Text>
+            </View>
+          )}
+          <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
+        </View>
       )}
     </View>
   );

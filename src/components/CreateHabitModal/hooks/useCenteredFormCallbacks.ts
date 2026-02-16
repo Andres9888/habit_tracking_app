@@ -61,7 +61,9 @@ export function useCenteredFormCallbacks({
   const handleValidationError = useCallback(() => {
     setShowNameError(true);
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => {});
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(
+        () => {}
+      );
     }
   }, [setShowNameError]);
 
