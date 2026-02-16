@@ -1,6 +1,5 @@
 import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import type {} from '../types';
 
 export function useHabitData(extendedDateStrings: string[]) {
   // Guard against empty or invalid date strings array
@@ -22,10 +21,10 @@ export function useHabitData(extendedDateStrings: string[]) {
   const endDate = safeDateStrings.at(-1);
 
   // Guard: Skip tracking query if no valid date range
-  const trackingQuery =
-    startDate && endDate
-      ? useQuery(api.habits.getTracking, { endDate, startDate })
-      : useQuery(api.habits.getTracking, { dates: safeDateStrings });
+  const trackingQuery = useQuery(
+    api.habits.getTracking,
+    startDate && endDate ? { endDate, startDate } : { dates: safeDateStrings }
+  );
 
   // Guard: When Convex is unreachable, trackingQuery will be undefined
   const tracking = Array.isArray(trackingQuery) ? trackingQuery : [];

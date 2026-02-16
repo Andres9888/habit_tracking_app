@@ -48,16 +48,29 @@ export function VisualizationModalSection({
       visible={showVisualizationExercise}
       onClose={handleClose}
     >
-      <View className='flex-1' style={{ backgroundColor: colors.background, paddingTop: insets.top + 16 }}>
-        <View className='flex-row items-center justify-between border-b px-5 pb-4' style={{ borderColor: colors.cardBorder }}>
-          <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>Mental Boost</Text>
+      <View
+        className='flex-1'
+        style={{
+          backgroundColor: colors.background,
+          paddingTop: insets.top + 16,
+        }}
+      >
+        <View
+          className='flex-row items-center justify-between border-b px-5 pb-4'
+          style={{ borderColor: colors.cardBorder }}
+        >
+          <Text
+            className='text-lg font-bold'
+            style={{ color: colors.text.primary }}
+          >
+            Mental Boost
+          </Text>
           <AnimatedPressable
             accessibilityHint='Close the mental boost exercise'
             accessibilityLabel='Close mental boost'
             accessibilityRole='button'
             className='h-10 w-10 items-center justify-center rounded-full'
-            style={{ backgroundColor: colors.gray[100] }}
-            style={closeAnimatedStyle}
+            style={[{ backgroundColor: colors.gray[100] }, closeAnimatedStyle]}
             onPress={handleClose}
             onPressIn={() => {
               closeScale.value = withSpring(0.9, {

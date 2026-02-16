@@ -51,11 +51,13 @@ export function FilledImageCell({
       >
         {image.imageUrl ? (
           <Image
-            accessibilityLabel={image.caption || `Vision board image ${index + 1}`}
-            contentFit="cover"
+            accessibilityLabel={
+              image.caption || `Vision board image ${index + 1}`
+            }
+            contentFit='cover'
             source={{ uri: image.imageUrl }}
             style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
-            cachePolicy="memory-disk"
+            cachePolicy='memory-disk'
             transition={200}
             placeholder={{ blurhash: 'LGF5?xYk^6#M@-5c,1J5@[or[Q6.' }}
           />
@@ -66,7 +68,11 @@ export function FilledImageCell({
         )}
         {image.caption && (
           <View className='absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1'>
-            <Text className='text-xs text-white' numberOfLines={2} maxFontSizeMultiplier={2.0}>
+            <Text
+              className='text-xs text-white'
+              numberOfLines={2}
+              maxFontSizeMultiplier={2}
+            >
               {image.caption}
             </Text>
           </View>

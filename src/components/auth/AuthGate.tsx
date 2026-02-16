@@ -12,12 +12,7 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
@@ -202,17 +197,17 @@ export function AuthGate() {
   }
 
   // Determine which screen to show
-  const screenKey = !isSignedIn
-    ? 'welcome'
-    : !onboardingComplete
-      ? 'onboarding'
-      : 'app';
+  const screenKey = isSignedIn
+    ? onboardingComplete
+      ? 'app'
+      : 'onboarding'
+    : 'welcome';
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {screenKey === 'welcome' && (
         <Animated.View
-          key="welcome"
+          key='welcome'
           entering={FadeIn.duration(300)}
           exiting={FadeOut.duration(300)}
           style={{ flex: 1 }}
@@ -222,7 +217,7 @@ export function AuthGate() {
       )}
       {screenKey === 'onboarding' && (
         <Animated.View
-          key="onboarding"
+          key='onboarding'
           entering={FadeIn.duration(300)}
           exiting={FadeOut.duration(300)}
           style={{ flex: 1 }}
@@ -232,7 +227,7 @@ export function AuthGate() {
       )}
       {screenKey === 'app' && (
         <Animated.View
-          key="app"
+          key='app'
           entering={FadeIn.duration(300)}
           style={{ flex: 1 }}
         >

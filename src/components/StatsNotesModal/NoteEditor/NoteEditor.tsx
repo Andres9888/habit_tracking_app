@@ -91,13 +91,13 @@ export default function NoteEditor({
             className={`text-xs ${
               characterCount > 1000 ? 'text-red-500' : 'text-stone-500'
             }`}
-            maxFontSizeMultiplier={2.0}
+            maxFontSizeMultiplier={2}
           >
             {characterCount} / 1000 characters
           </Text>
         </View>
 
-        <AccessibleErrorMessage message={error} urgency="polite" />
+        <AccessibleErrorMessage message={error} urgency='polite' />
       </View>
 
       <NoteEditorActions

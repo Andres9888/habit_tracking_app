@@ -22,8 +22,9 @@ export function PasswordResetForm({
         </Text>
         <View
           className={`rounded-2xl border-2 ${error ? 'border-red-500' : ''}`}
-          style={{ backgroundColor: colors.card, borderColor: error ? undefined : colors.border }}
           style={{
+            backgroundColor: colors.card,
+            borderColor: error ? undefined : colors.border,
             shadowColor: error ? '#ef4444' : '#1c1917',
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,

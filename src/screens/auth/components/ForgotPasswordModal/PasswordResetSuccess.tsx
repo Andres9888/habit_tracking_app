@@ -39,8 +39,8 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
           accessibilityLabel='Close modal'
           accessibilityRole='button'
           className='items-center rounded-2xl py-4'
-          style={{ backgroundColor: colors.gray[900] }}
           style={{
+            backgroundColor: colors.gray[900],
             shadowColor: '#1c1917',
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,

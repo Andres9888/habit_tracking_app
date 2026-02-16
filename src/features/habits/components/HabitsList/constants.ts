@@ -2,10 +2,6 @@
  * HabitsList Constants
  */
 
-import { ENTRANCE_STAGGER_DELAY } from '@/constants';
-
-export { ENTRANCE_STAGGER_DELAY };
-
 export const PREMIUM_BENEFITS = [
   {
     description:
@@ -13,8 +9,7 @@ export const PREMIUM_BENEFITS = [
     title: 'Unlimited habits',
   },
   {
-    description:
-      'Gentle nudges at the right time to keep your streaks alive.',
+    description: 'Gentle nudges at the right time to keep your streaks alive.',
     title: 'Smart reminders',
   },
   {
@@ -29,3 +24,5 @@ export const SOCIAL_PROOF = {
   quote:
     '"Upgrading gave me the structure I needed. I finally track every routine and stay consistent."',
 };
+
+export { ENTRANCE_STAGGER_DELAY } from '@/constants';

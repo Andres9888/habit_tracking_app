@@ -24,16 +24,26 @@ export function RecentNotePreview({ note, onEdit }: RecentNotePreviewProps) {
       accessibilityLabel={`Most recent note: ${note.body.slice(0, 50)}`}
       accessibilityRole='button'
       className='rounded-xl border p-4'
-      style={{ borderColor: colors.cardBorder, backgroundColor: colors.gray[50] }}
+      style={{
+        borderColor: colors.cardBorder,
+        backgroundColor: colors.gray[50],
+      }}
       onPress={handlePress}
     >
       <View className='mb-2 flex-row items-center justify-between'>
-        <Text className='text-xs font-medium' style={{ color: colors.text.tertiary }}>
+        <Text
+          className='text-xs font-medium'
+          style={{ color: colors.text.tertiary }}
+        >
           {format(new Date(note.date), 'MMM d, yyyy')}
         </Text>
         <Edit3 color={colors.text.tertiary} size={14} />
       </View>
-      <Text className='text-sm leading-5" numberOfLines={3} style={{ color: colors.text.primary }}>
+      <Text
+        className='text-sm leading-5'
+        numberOfLines={3}
+        style={{ color: colors.text.primary }}
+      >
         {note.body}
       </Text>
     </Pressable>

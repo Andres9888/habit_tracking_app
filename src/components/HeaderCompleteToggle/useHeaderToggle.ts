@@ -50,10 +50,10 @@ export function useHeaderToggle({
     setIsToggling(true);
 
     // Haptic feedback: success pattern when completing, light tap when uncompleting
-    if (!localCompleted) {
-      triggerSuccess();
-    } else {
+    if (localCompleted) {
       triggerLightImpact();
+    } else {
+      triggerSuccess();
     }
 
     // Button animation

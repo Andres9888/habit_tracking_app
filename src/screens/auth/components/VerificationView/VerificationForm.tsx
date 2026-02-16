@@ -24,8 +24,8 @@ export function VerificationForm({
   return (
     <View
       className='rounded-2xl p-6'
-      style={{ backgroundColor: colors.card }}
       style={{
+        backgroundColor: colors.card,
         elevation: 4,
         shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },

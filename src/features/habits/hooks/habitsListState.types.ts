@@ -16,9 +16,6 @@ import type {
   RewardToastData,
 } from '../types';
 
-/** Result of toggling a habit completion */
-export type ToggleMutationResult = { success: boolean; error?: string };
-
 export interface HabitsListState {
   celebrationsEnabled: boolean;
   completionSoundEnabled: boolean;
@@ -64,3 +61,5 @@ export interface HabitsListState {
   }) => Promise<ToggleMutationResult>;
   isPremiumUser: boolean;
 }
+
+export { type ToggleMutationResult } from '../../../lib/optimistic';

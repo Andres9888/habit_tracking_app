@@ -26,14 +26,21 @@ export const StatCard = memo(function StatCard({
     <View
       accessible={!isInteractive}
       accessibilityHint={
-        !isInteractive && onPress ? 'Double tap to view habit details' : undefined
+        !isInteractive && onPress
+          ? 'Double tap to view habit details'
+          : undefined
       }
-      accessibilityLabel={!isInteractive ? accessibilityLabel : undefined}
-      accessibilityRole={!isInteractive ? (onPress ? 'button' : 'text') : undefined}
+      accessibilityLabel={isInteractive ? undefined : accessibilityLabel}
+      accessibilityRole={
+        isInteractive ? undefined : onPress ? 'button' : 'text'
+      }
       style={styles.statCard}
     >
       {loading ? (
-        <View accessibilityLabel={`Loading ${title}...`} style={styles.statCardLoading}>
+        <View
+          accessibilityLabel={`Loading ${title}...`}
+          style={styles.statCardLoading}
+        >
           <View style={styles.skeletonTitle} />
           <View style={styles.skeletonValue} />
           {subtitle && <View style={styles.skeletonSubtitle} />}

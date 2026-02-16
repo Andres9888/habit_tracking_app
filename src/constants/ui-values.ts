@@ -96,6 +96,9 @@ export const SCALE = {
 
   /** Very large scale for animations */
   extraLarge: 2,
+
+  /** Fully transparent (opacity 0) */
+  transparent: 0,
 } as const;
 
 // ============================================================================

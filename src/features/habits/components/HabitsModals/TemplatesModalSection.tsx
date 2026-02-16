@@ -52,8 +52,7 @@ export function TemplatesModalSection({
             accessibilityLabel='Close templates'
             accessibilityRole='button'
             className='h-10 w-10 items-center justify-center rounded-full shadow-md'
-            style={{ backgroundColor: colors.card }}
-            style={closeAnimatedStyle}
+            style={[{ backgroundColor: colors.card }, closeAnimatedStyle]}
             onPress={handleClose}
             onPressIn={() => {
               closeScale.value = withSpring(0.9, {

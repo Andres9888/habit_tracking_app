@@ -3,7 +3,7 @@ import { useSignIn } from '@clerk/clerk-expo';
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
-import { validateEmail } from '../../../utils/validation';
+import { validateEmail } from '../../../utils/validation/emailValidation';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 
 export function useSignInFlow() {
@@ -24,7 +24,10 @@ export function useSignInFlow() {
     // Validate email before submitting
     const emailResult = emailField.validateNow();
     if (!emailResult.isValid) {
-      Alert.alert('Validation Error', ERROR_MESSAGES.AUTH.SIGN_IN_INVALID_EMAIL);
+      Alert.alert(
+        'Validation Error',
+        ERROR_MESSAGES.AUTH.SIGN_IN_INVALID_EMAIL
+      );
       return;
     }
 

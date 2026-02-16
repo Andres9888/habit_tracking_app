@@ -3,7 +3,8 @@ import { useSignUp } from '@clerk/clerk-expo';
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
-import { validateEmail, validatePassword } from '../../../utils/validation';
+import { validateEmail } from '../../../utils/validation/emailValidation';
+import { validatePassword } from '../../../utils/validation/passwordValidation';
 import { getClerkErrorMessage } from '../utils/getClerkErrorMessage';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 
@@ -51,7 +52,10 @@ export function useSignUpFlow() {
       setPendingVerification(true);
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
-      Alert.alert('Error', getClerkErrorMessage(error, ERROR_MESSAGES.AUTH.SIGN_UP_FAILED));
+      Alert.alert(
+        'Error',
+        getClerkErrorMessage(error, ERROR_MESSAGES.AUTH.SIGN_UP_FAILED)
+      );
     } finally {
       setIsLoading(false);
     }
@@ -80,13 +84,19 @@ export function useSignUpFlow() {
         await setActive({ session: attempt.createdSessionId });
       } else {
         if (__DEV__) console.error(JSON.stringify(attempt, null, 2));
-        Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_UP_VERIFICATION_INCOMPLETE);
+        Alert.alert(
+          'Error',
+          ERROR_MESSAGES.AUTH.SIGN_UP_VERIFICATION_INCOMPLETE
+        );
       }
     } catch (error: unknown) {
       if (__DEV__) console.error(JSON.stringify(error, null, 2));
       Alert.alert(
         'Error',
-        getClerkErrorMessage(error, ERROR_MESSAGES.AUTH.SIGN_UP_VERIFICATION_INCOMPLETE)
+        getClerkErrorMessage(
+          error,
+          ERROR_MESSAGES.AUTH.SIGN_UP_VERIFICATION_INCOMPLETE
+        )
       );
     } finally {
       setIsLoading(false);
