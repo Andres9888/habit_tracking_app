@@ -77,8 +77,7 @@ export async function scheduleAffirmationDelivery({
       );
     }
 
-    // eslint-disable-next-line no-console
-    console.info('scheduleAffirmationDelivery success', {
+    if (__DEV__) console.info('scheduleAffirmationDelivery success', {
       affirmationId,
       frequency,
       notificationId,

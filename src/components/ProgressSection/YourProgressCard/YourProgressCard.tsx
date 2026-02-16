@@ -34,7 +34,12 @@ export function YourProgressCard({
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
+    void AccessibilityInfo.isReduceMotionEnabled()
+      .then(setReduceMotion)
+      .catch((error) => {
+        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
+        setReduceMotion(false);
+      });
   }, []);
 
   const { animatedStrength, emojiAnimatedStyle } = useProgressAnimations(
