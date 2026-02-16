@@ -3,13 +3,14 @@
  */
 
 import type { ViewStyle } from 'react-native';
+import { colors } from '../../../../theme/colors';
 import { BORDER_RADIUS, TOUCH_TARGETS } from './constants';
 
 export function getCtaButtonStyle(isDisabled: boolean): ViewStyle {
   return {
     alignItems: 'center',
     // Using emerald-700 for WCAG AA contrast (5.21:1 with white text)
-    backgroundColor: '#047857',
+    backgroundColor: colors.primary[700],
     borderRadius: BORDER_RADIUS.cta,
     elevation: isDisabled ? 0 : 4,
     height: TOUCH_TARGETS.ctaHeight,
@@ -18,7 +19,7 @@ export function getCtaButtonStyle(isDisabled: boolean): ViewStyle {
     overflow: 'hidden',
     paddingVertical: 16,
     // Shadow for depth
-    shadowColor: '#047857',
+    shadowColor: colors.primary[700],
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 8,

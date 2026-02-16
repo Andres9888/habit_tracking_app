@@ -6,6 +6,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
+import { colors } from '../../../../../theme/colors';
 import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from '../constants';
 import type { SuggestionChip } from '../types';
 import { useChipAnimations } from './useChipAnimations';
@@ -39,12 +40,12 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     backgroundColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      ['#ffffff', '#047857']
+      ['#ffffff', colors.primary[700]]
     ),
     borderColor: interpolateColor(
       selectionProgress.value,
       [0, 1],
-      [COLORS.stone200, '#047857']
+      [COLORS.stone200, colors.primary[700]]
     ),
     opacity: entranceOpacity.value,
     shadowOpacity: shadowOpacity.value,

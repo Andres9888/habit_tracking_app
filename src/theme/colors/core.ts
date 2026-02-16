@@ -57,13 +57,14 @@ export const colors = {
   },
 
   // Primary Colors (Forest Green — single saturated color)
+  // Design system: #047857 (text), #059669 (buttons)
   primary: {
-    100: '#D4F0E2', // Light tinted backgrounds
-    300: '#6FCF9A', // Decorative, confetti
-    400: '#3FBD7E', // Lighter, hover states
-    500: '#2A9D6E', // Success indicators, focus rings
-    600: '#22805A', // Buttons, CTA fills
-    700: '#1B6B4A', // High-contrast text on colored surfaces
+    100: '#D1FAE5', // Light tinted backgrounds
+    300: '#6EE7B7', // Decorative, confetti
+    400: '#34D399', // Lighter, hover states
+    500: '#10B981', // Success indicators, focus rings
+    600: '#059669', // Buttons, CTA fills
+    700: '#047857', // High-contrast text on colored surfaces
   },
 
   // Secondary Colors (Trust & Calm)
@@ -85,7 +86,7 @@ export const colors = {
 
   // Habit Strength Level Colors
   strength: {
-    automatic: '#22805A', // 80-100% — matches primary.600
+    automatic: '#059669', // 80-100% — matches primary.600
     automaticLight: '#D4F0E2',
     building: '#16a34a',
     buildingLight: '#dcfce7',

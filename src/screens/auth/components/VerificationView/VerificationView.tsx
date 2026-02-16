@@ -3,6 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { VerificationForm } from './VerificationForm';
+import { colors } from "../../../../theme/colors";
 
 interface VerificationViewProps {
   emailAddress: string;
@@ -88,7 +89,7 @@ export function VerificationView({
           >
             <Text
               style={{
-                color: cooldown > 0 ? '#a8a29e' : '#047857',
+                color: cooldown > 0 ? '#a8a29e' : colors.primary[700],
                 fontSize: 15,
                 fontWeight: '600',
               }}

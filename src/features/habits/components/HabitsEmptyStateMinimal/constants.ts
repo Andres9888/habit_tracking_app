@@ -5,6 +5,7 @@
  * Reference: docs/specs/empty-habit-screen/minimal-redesign.md
  */
 
+import { colors } from '../../../../theme/colors';
 import type { SuggestionChip } from './types';
 
 /**
@@ -118,7 +119,7 @@ export const COLORS = {
   emerald500: '#10B981',
 
   // WCAG AA compliant primary action (5.21:1 contrast with white)
-  emerald700: '#047857',
+  emerald700: colors.primary[700],
 
   // Caret color
   emeraldCaret: '#10B981',

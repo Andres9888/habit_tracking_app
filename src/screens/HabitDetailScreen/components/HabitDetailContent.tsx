@@ -6,6 +6,7 @@ import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import { useThemeColors } from '../../../theme';
+import { colors } from '../../../theme/colors';
 import type { Habit } from '../../../features/habits/types';
 
 interface HabitDetailContentProps {
@@ -110,7 +111,7 @@ export function HabitDetailContent({
         <ErrorBoundary>
           <MonthlyCalendarGrid
             completedDates={completedDates}
-            habitColor={habit.color ?? habit.iconColor ?? '#047857'}
+            habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
             habitCreatedAt={habit.createdAt}
             habitId={habit._id}
             onDayPress={onDayPress}
