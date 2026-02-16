@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Notes UX: Before & After</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Roboto', sans-serif; background: #f5f5f5; padding: 40px 20px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { font-size: 34px; margin-bottom: 12px; color: #1c1c1e; }
+    .subtitle { font-size: 17px; color: #6b7280; margin-bottom: 40px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 60px; }
+    .section-title { font-size: 22px; font-weight: 600; margin-bottom: 20px; text-align: center; }
+    .before { color: #dc2626; }
+    .after { color: #047857; }
+    .mockup { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .mockup.dark { background: #1c1c1e; }
+    
+    /* Voice Note Card */
+    .voice-card { border-left: 4px solid #14b8a6; background: #fafaf9; border-radius: 16px; padding: 20px; }
+    .voice-card.dark { background: #27272a; border-left-color: #14b8a6; }
+    .voice-card.before.dark { background: #fafaf9; } /* Wrong - no dark support */
+    
+    .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .mic-icon { width: 20px; height: 20px; color: #047857; }
+    .card-title { font-size: 17px; font-weight: 600; color: #292524; }
+    .card-title.dark { color: #fafaf9; }
+    .card-title.before.dark { color: #292524; } /* Wrong */
+    .premium-badge { background: #fef3c7; color: #92400e; font-size: 13px; padding: 2px 8px; border-radius: 999px; font-weight: 500; }
+    
+    .card-subtitle { font-size: 13px; color: #78716c; margin-bottom: 16px; }
+    .card-subtitle.dark { color: #a8a29e; }
+    .card-subtitle.before.dark { color: #78716c; } /* Wrong */
+    
+    /* Recording UI */
+    .recording-controls { margin-top: 16px; padding-top: 16px; border-top: 1px solid #e7e5e4; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .recording-controls.dark { border-top-color: #44403c; }
+    .recording-controls.before.dark { border-top-color: #e7e5e4; } /* Wrong */
+    
+    .record-button { width: 64px; height: 64px; background: #14b8a6; border-radius: 50%; display: flex; align-items: center; justify-center; box-shadow: 0 2px 8px rgba(20, 184, 166, 0.3); position: relative; }
+    .pulse { position: absolute; inset: 0; background: #14b8a6; border-radius: 50%; opacity: 0.4; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0; } 50% { transform: scale(1.3); opacity: 0.4; } }
+    
+    .duration { font-size: 17px; font-weight: 600; color: #292524; }
+    .duration.dark { color: #fafaf9; }
+    .duration.before.dark { color: #292524; } /* Wrong */
+    
+    /* Playback UI */
+    .playback { background: #fafaf9; border-radius: 12px; padding: 16px; margin-top: 16px; }
+    .playback.dark { background: rgba(39, 39, 42, 0.5); }
+    .playback.before.dark { background: #fafaf9; } /* Wrong */
+    
+    .playback-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .playback-title { font-size: 13px; font-weight: 500; color: #44403c; flex: 1; }
+    .playback-title.dark { color: #e7e5e4; }
+    .playback-title.before.dark { color: #44403c; } /* Wrong */
+    
+    .day1-badge { background: #fef3c7; color: #92400e; font-size: 13px; padding: 2px 8px; border-radius: 999px; font-weight: 500; }
+    .day1-badge.dark { background: rgba(146, 64, 14, 0.4); color: #fcd34d; }
+    .day1-badge.before.dark { background: #fef3c7; color: #92400e; } /* Wrong */
+    
+    .playback-controls { display: flex; align-items: center; gap: 12px; }
+    .play-button { width: 40px; height: 40px; background: #14b8a6; border-radius: 50%; display: flex; align-items: center; justify-center; }
+    .progress-bar { flex: 1; height: 4px; background: #d6d3d1; border-radius: 999px; position: relative; }
+    .progress-bar.dark { background: #44403c; }
+    .progress-bar.before.dark { background: #d6d3d1; } /* Wrong */
+    .progress-fill { position: absolute; left: 0; top: 0; height: 100%; background: #14b8a6; border-radius: 999px; width: 40%; }
+    
+    .time { font-size: 13px; color: #78716c; }
+    .time.dark { color: #a8a29e; }
+    .time.before.dark { color: #78716c; } /* Wrong */
+    
+    /* Error State */
+    .error { background: #fef2f2; border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 12px; }
+    .error.dark { background: rgba(127, 29, 29, 0.3); }
+    .error.before.dark { background: #fef2f2; } /* Wrong */
+    
+    .error-icon { width: 40px; height: 40px; background: #fecaca; border-radius: 50%; display: flex; align-items: center; justify-center; color: #ef4444; }
+    .error-icon.dark { background: rgba(127, 29, 29, 0.5); color: #fca5a5; }
+    .error-icon.before.dark { background: #fecaca; color: #ef4444; } /* Wrong */
+    
+    .error-text { flex: 1; }
+    .error-title { font-size: 13px; font-weight: 600; color: #b91c1c; margin-bottom: 4px; }
+    .error-title.dark { color: #fca5a5; }
+    .error-title.before.dark { color: #b91c1c; } /* Wrong */
+    .error-msg { font-size: 13px; color: #dc2626; }
+    .error-msg.dark { color: #fca5a5; }
+    .error-msg.before.dark { color: #dc2626; } /* Wrong */
+    
+    .retry-btn { background: #fecaca; color: #b91c1c; font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer; }
+    .retry-btn.dark { background: rgba(127, 29, 29, 0.6); color: #fca5a5; }
+    .retry-btn.before.dark { background: #fecaca; color: #b91c1c; } /* Wrong */
+    
+    .notes { margin-top: 40px; padding: 24px; background: white; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .notes h3 { font-size: 22px; margin-bottom: 16px; color: #047857; }
+    .notes ul { list-style: none; }
+    .notes li { padding: 8px 0; padding-left: 24px; position: relative; color: #44403c; font-size: 17px; }
+    .notes li:before { content: '✓'; position: absolute; left: 0; color: #047857; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Voice Notes UX Review: Before & After</h1>
+    <p class="subtitle">Dark mode support + accessibility enhancements | Sonnet (Claude Sonnet 4.5)</p>
+    
+    <div class="comparison">
+      <div>
+        <h2 class="section-title before">❌ Before (Light Mode)</h2>
+        <div class="mockup">
+          <div class="voice-card">
+            <div class="card-header">
+              <svg class="mic-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z"/><path d="M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z"/></svg>
+              <span class="card-title">Voice Notes</span>
+              <span class="premium-badge">PREMIUM</span>
+            </div>
+            <p class="card-subtitle">Record your motivation for powerful recall</p>
+            
+            <div class="recording-controls">
+              <div class="record-button">
+                <div class="pulse"></div>
+                <svg width="28" height="28" fill="white" viewBox="0 0 20 20"><path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z"/></svg>
+              </div>
+              <div class="duration">0:23</div>
+            </div>
+          </div>
+          
+          <div class="playback">
+            <div class="playback-header">
+              <span class="playback-title">My Day 1 Motivation</span>
+              <span class="day1-badge">Day 1</span>
+            </div>
+            <div class="playback-controls">
+              <div class="play-button">
+                <svg width="18" height="18" fill="white" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill"></div>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:8px;">
+              <span class="time">0:23</span>
+              <span class="time">-1:15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h2 class="section-title after">✅ After (Light Mode)</h2>
+        <div class="mockup">
+          <div class="voice-card">
+            <div class="card-header">
+              <svg class="mic-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z"/><path d="M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z"/></svg>
+              <span class="card-title">Voice Notes</span>
+              <span class="premium-badge">PREMIUM</span>
+            </div>
+            <p class="card-subtitle">Record your motivation for powerful recall</p>
+            
+            <div class="recording-controls">
+              <div class="record-button">
+                <div class="pulse"></div>
+                <svg width="28" height="28" fill="white" viewBox="0 0 20 20"><path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z"/></svg>
+              </div>
+              <div class="duration">0:23</div>
+            </div>
+          </div>
+          
+          <div class="playback">
+            <div class="playback-header">
+              <span class="playback-title">My Day 1 Motivation</span>
+              <span class="day1-badge">Day 1</span>
+            </div>
+            <div class="playback-controls">
+              <div class="play-button">
+                <svg width="18" height="18" fill="white" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill"></div>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:8px;">
+              <span class="time">0:23</span>
+              <span class="time">-1:15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="comparison">
+      <div>
+        <h2 class="section-title before">❌ Before (Dark Mode)</h2>
+        <div class="mockup dark">
+          <div class="voice-card before dark">
+            <div class="card-header">
+              <svg class="mic-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z"/><path d="M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z"/></svg>
+              <span class="card-title before dark">Voice Notes</span>
+              <span class="premium-badge">PREMIUM</span>
+            </div>
+            <p class="card-subtitle before dark">Record your motivation for powerful recall</p>
+            
+            <div class="recording-controls before dark">
+              <div class="record-button">
+                <svg width="28" height="28" fill="white" viewBox="0 0 20 20"><path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z"/></svg>
+              </div>
+              <div class="duration before dark">0:23</div>
+            </div>
+          </div>
+          
+          <div class="error before dark" style="margin-top:16px;">
+            <div class="error-icon before dark">⚠️</div>
+            <div class="error-text">
+              <div class="error-title before dark">Playback Error</div>
+              <div class="error-msg before dark">Unable to play audio</div>
+            </div>
+            <button class="retry-btn before dark">Retry</button>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h2 class="section-title after">✅ After (Dark Mode)</h2>
+        <div class="mockup dark">
+          <div class="voice-card dark">
+            <div class="card-header">
+              <svg class="mic-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z"/><path d="M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z"/></svg>
+              <span class="card-title dark">Voice Notes</span>
+              <span class="premium-badge">PREMIUM</span>
+            </div>
+            <p class="card-subtitle dark">Record your motivation for powerful recall</p>
+            
+            <div class="recording-controls dark">
+              <div class="record-button">
+                <svg width="28" height="28" fill="white" viewBox="0 0 20 20"><path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z"/></svg>
+              </div>
+              <div class="duration dark">0:23</div>
+            </div>
+          </div>
+          
+          <div class="error dark" style="margin-top:16px;">
+            <div class="error-icon dark">⚠️</div>
+            <div class="error-text">
+              <div class="error-title dark">Playback Error</div>
+              <div class="error-msg dark">Unable to play audio</div>
+            </div>
+            <button class="retry-btn dark">Retry</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="notes">
+      <h3>✅ What's Fixed</h3>
+      <ul>
+        <li>Complete dark mode support - all text, backgrounds, borders adapted</li>
+        <li>Enhanced accessibility - hints, labels, progress bar announcements</li>
+        <li>Better visual contrast in error states</li>
+        <li>Loading indicators visible in dark mode</li>
+        <li>All components follow design system (SF Pro, #047857 green, 16px radius)</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
