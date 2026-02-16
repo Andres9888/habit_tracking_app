@@ -1,16 +1,8 @@
-/** SettingsHeader - OPTIMIZED: FadeInDown, AnimatedPressable, X button */
-import { X } from 'lucide-react-native';
+/** SettingsHeader - Theme-aware header with shared close button */
 import { Text, View } from 'react-native';
-import Animated, {
-  FadeInDown,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { ModalCloseButton } from '../ui/ModalCloseButton';
 import type { SettingsColors } from './types';
-
-const AnimatedPressable = Animated.createAnimatedComponent(View);
 
 interface SettingsHeaderProps {
   colors: SettingsColors;
@@ -23,19 +15,9 @@ export function SettingsHeader({
   paddingTop,
   onClose,
 }: SettingsHeaderProps) {
-  const scale = useSharedValue(1);
-  const animStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onClose();
-  };
-
   return (
     <Animated.View
-      className='bg-background px-5 pb-4'
+      className='px-5 pb-4'
       entering={FadeInDown.duration(280).springify().damping(18)}
       style={{ backgroundColor: colors.background, paddingTop }}
     >
@@ -47,24 +29,7 @@ export function SettingsHeader({
         >
           Settings
         </Text>
-        <AnimatedPressable
-          accessibilityLabel='Close settings'
-          accessibilityRole='button'
-          className='h-10 w-10 items-center justify-center rounded-full'
-          style={[animStyle, { backgroundColor: colors.card }]}
-          onTouchCancel={() => {
-            scale.value = withSpring(1, { damping: 15 });
-          }}
-          onTouchEnd={() => {
-            scale.value = withSpring(1, { damping: 15 });
-            handlePress();
-          }}
-          onTouchStart={() => {
-            scale.value = withSpring(0.9, { damping: 15 });
-          }}
-        >
-          <X color={colors.icon} size={20} strokeWidth={2.5} />
-        </AnimatedPressable>
+        <ModalCloseButton label='Close settings' onClose={onClose} />
       </View>
     </Animated.View>
   );

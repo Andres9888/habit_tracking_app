@@ -1,12 +1,13 @@
 /**
  * BrandedLoadingScreen Component
  * Shows Chain Day branding during auth loading with a 10-second timeout.
+ * Supports dark mode via useThemeColors.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import { LoadingTimeoutCard } from './LoadingTimeoutCard';
 
@@ -15,6 +16,7 @@ const LOADING_TIMEOUT_MS = 10_000;
 export function BrandedLoadingScreen() {
   const [timedOut, setTimedOut] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { colors, isDark } = useThemeColors();
 
   useEffect(() => {
     timerRef.current = setTimeout(() => setTimedOut(true), LOADING_TIMEOUT_MS);
@@ -29,12 +31,19 @@ export function BrandedLoadingScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.content}>
-        <View style={styles.iconContainer}>
+        <View
+          style={[
+            styles.iconContainer,
+            { backgroundColor: isDark ? '#064E3B' : '#ecfdf5' },
+          ]}
+        >
           <Text style={styles.iconText}>🔗</Text>
         </View>
-        <Text style={styles.appName}>Chain Day</Text>
+        <Text style={[styles.appName, { color: colors.text.primary }]}>
+          Chain Day
+        </Text>
         {timedOut ? (
           <LoadingTimeoutCard onRetry={handleRetry} />
         ) : (
@@ -55,7 +64,6 @@ export function BrandedLoadingScreen() {
 
 const styles = StyleSheet.create({
   appName: {
-    color: colors.primary[700],
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: 0.5,
@@ -63,14 +71,12 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
-    backgroundColor: colors.light.background,
     flex: 1,
     justifyContent: 'center',
   },
   content: { alignItems: 'center' },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: colors.primary[100],
     borderRadius: 24,
     height: 64,
     justifyContent: 'center',
