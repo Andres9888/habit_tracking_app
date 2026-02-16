@@ -3,11 +3,10 @@
  */
 
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import type { HeatmapData } from './ComplianceHeatmap.types';
 import { LEVEL_COLORS } from './ComplianceHeatmap.constants';
 import { styles } from './ComplianceHeatmap.styles';
-import { AnimatedPressable } from '../ui';
 
 interface HeatmapCellProps {
   day: HeatmapData;
@@ -22,7 +21,10 @@ export function HeatmapCell({ day, onPress }: HeatmapCellProps) {
   };
 
   return (
-    <AnimatedPressable
+    <TouchableOpacity
+      accessibilityLabel={day.date ? `${day.date}, ${Math.round(day.completionRate)}% completion` : undefined}
+      accessibilityRole={day.date ? 'button' : 'none'}
+      activeOpacity={0.7}
       disabled={!day.date}
       style={[
         styles.cell,
@@ -35,6 +37,6 @@ export function HeatmapCell({ day, onPress }: HeatmapCellProps) {
       {day.completionRate > 0 && (
         <Text style={styles.cellText}>{Math.round(day.completionRate)}</Text>
       )}
-    </AnimatedPressable>
+    </TouchableOpacity>
   );
 }

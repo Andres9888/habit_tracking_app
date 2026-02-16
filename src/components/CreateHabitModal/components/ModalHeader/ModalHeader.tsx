@@ -1,7 +1,7 @@
 /**
  * Modal header with close/save actions
  */
-import { View, Keyboard } from 'react-native';
+import { View, Pressable, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCallback } from 'react';
 import STRINGS from '../../../../constants/strings';
@@ -12,7 +12,6 @@ import { useShakeAnimation } from './useShakeAnimation';
 import { DoneButton } from './DoneButton';
 import { SaveButton } from './SaveButton';
 import type { ModalHeaderProps } from './types';
-import { AnimatedPressable } from '../../../ui';
 
 export const ModalHeader = ({
   isEditMode,
@@ -49,14 +48,17 @@ export const ModalHeader = ({
       className='flex-row items-center justify-between px-4 pb-2'
       style={{ paddingTop: headerPadding }}
     >
-      <AnimatedPressable
+      <Pressable
         accessibilityLabel={STRINGS.CREATE_HABIT.close}
         accessibilityRole='button'
         className='h-11 w-11 items-center justify-center rounded-full'
+        style={({ pressed }) => ({
+          backgroundColor: pressed ? 'rgba(0, 0, 0, 0.05)' : 'transparent',
+        })}
         onPress={onClose}
       >
         <X color={colors.gray[500]} size={24} strokeWidth={2} />
-      </AnimatedPressable>
+      </Pressable>
 
       <View className='flex-1' />
 

@@ -4,13 +4,13 @@
  */
 
 import React from 'react';
-import { View, Text, Modal, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Eye, X } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { VisualizationGuide } from '../../../NotesSection/VisualizationGuide';
-import { AnimatedPressable } from '../../../ui';
 
 interface VisualizationModalProps {
   visible: boolean;
@@ -22,6 +22,7 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
   onClose,
 }) => {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useThemeColors();
 
   return (
     <Modal
@@ -33,12 +34,12 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
       <View className='flex-1'>
         <LinearGradient
           className='absolute inset-0'
-          colors={['#f5f3ff', '#ffffff', '#fafaf9']}
+          colors={isDark ? [colors.background, colors.surface] : ['#f5f3ff', '#ffffff', '#fafaf9']}
         />
         <Animated.View
-          className='flex-row items-center justify-between border-b border-stone-100 bg-white/95 px-5 pb-4'
+          className='flex-row items-center justify-between border-b px-5 pb-4'
           entering={FadeIn.delay(100)}
-          style={{ paddingTop: insets.top + 8 }}
+          style={{ borderColor: colors.border, backgroundColor: isDark ? colors.surface : 'rgba(255,255,255,0.95)', paddingTop: insets.top + 8 }}
         >
           <View className='flex-row items-center gap-3'>
             <View className='h-10 w-10 items-center justify-center rounded-xl'>
@@ -51,22 +52,23 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
               <Eye color='#ffffff' size={20} />
             </View>
             <View>
-              <Text className='text-lg font-bold text-stone-900'>
+              <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
                 Visualization Guide
               </Text>
-              <Text className='text-xs text-stone-500'>
+              <Text className='text-xs' style={{ color: colors.text.tertiary }}>
                 Science-backed goal techniques
               </Text>
             </View>
           </View>
-          <AnimatedPressable
+          <TouchableOpacity
             accessibilityLabel='Close visualization guide'
             accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+            className='h-10 w-10 items-center justify-center rounded-full'
+            style={{ backgroundColor: colors.gray[200] }}
             onPress={onClose}
           >
-            <X color='#57534e' size={24} />
-          </AnimatedPressable>
+            <X color={colors.text.secondary} size={24} />
+          </TouchableOpacity>
         </Animated.View>
 
         <ScrollView
