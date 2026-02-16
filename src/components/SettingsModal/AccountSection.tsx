@@ -8,11 +8,11 @@ import { Alert, Linking, Platform, Share } from 'react-native';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { PremiumStatus } from './sections/PremiumStatus';
+import { FeedbackModal } from '../FeedbackModal';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
 const WHATS_NEW_URL = 'https://andres9888.github.io/chainday-landing/changelog.html';
-const SUPPORT_EMAIL = 'support@chainday.app';
 const PRIVACY_URL =
   'https://andres9888.github.io/chainday-landing/privacy.html';
 const TERMS_URL = 'https://andres9888.github.io/chainday-landing/terms.html';
@@ -28,6 +28,7 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
   const { user } = useUser();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const userEmail = user?.primaryEmailAddress?.emailAddress;
 
   const handleDeleteAccount = useCallback(() => {
@@ -114,6 +115,10 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
     []
   );
 
+  const handleFeedback = useCallback(() => {
+    setShowFeedbackModal(true);
+  }, []);
+
   return (
     <>
       <AccountInfo
@@ -133,13 +138,17 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
         highContrast={isHighContrastActive}
         onRate={handleRateApp}
         onShare={handleShare}
-        onSupport={openUrl(`mailto:${SUPPORT_EMAIL}?subject=Chain Day`)}
+        onFeedback={handleFeedback}
         onWhatsNew={handleWhatsNew}
       />
       <LegalLinks
         highContrast={isHighContrastActive}
         onPrivacy={openUrl(PRIVACY_URL)}
         onTerms={openUrl(TERMS_URL)}
+      />
+      <FeedbackModal
+        visible={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
       />
     </>
   );
