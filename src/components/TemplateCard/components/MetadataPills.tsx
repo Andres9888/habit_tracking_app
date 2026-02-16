@@ -57,7 +57,7 @@ export function MetadataPills({
       )}
 
       {youtubeLink && (
-        <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: '#FF000030' }]}>
+        <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
           <Text style={[theme.custom.typography.caption, { color: themeColors.text.secondary }]}>
             ▶️ Video
           </Text>

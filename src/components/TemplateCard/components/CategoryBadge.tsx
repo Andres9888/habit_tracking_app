@@ -24,7 +24,7 @@ export function CategoryBadge({
   isPremium,
 }: CategoryBadgeProps) {
   const theme = useAppTheme();
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   return (
     <View style={styles.badgeRow}>
@@ -44,8 +44,8 @@ export function CategoryBadge({
       )}
 
       {isPremium && (
-        <View style={styles.inlinePremiumBadge}>
-          <Text style={styles.inlinePremiumText}>Premium</Text>
+        <View style={[styles.inlinePremiumBadge, isDark && { backgroundColor: colors.gray[700] }]}>
+          <Text style={[styles.inlinePremiumText, isDark && { color: '#a78bfa' }]}>Premium</Text>
         </View>
       )}
     </View>

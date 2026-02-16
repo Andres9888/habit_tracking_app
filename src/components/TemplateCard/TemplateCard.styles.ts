@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   card: {
     ...shadows.card,
-    backgroundColor: '#fff',
+    // backgroundColor applied dynamically via useThemeColors().colors.card in CardContainer
     borderRadius: borderRadius.large,
     marginHorizontal: spacing.lg,
     marginVertical: spacing.sm,

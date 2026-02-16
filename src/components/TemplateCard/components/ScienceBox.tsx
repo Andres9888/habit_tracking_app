@@ -19,18 +19,19 @@ export function ScienceBox({ scientificReference }: ScienceBoxProps) {
   const theme = useAppTheme();
   const { colors, isDark } = useThemeColors();
 
+  const scienceTextColor = isDark ? colors.primary[400] : '#166534';
+  const scienceBgColor = isDark ? colors.primary[100] : '#f0fdf4';
+  const scienceBorderColor = isDark ? colors.primary[300] : '#bbf7d0';
+
   return (
-    <View style={[styles.scienceBox, isDark && {
-      backgroundColor: colors.primary[100],
-      borderColor: colors.primary[300],
-    }]}>
+    <View style={[styles.scienceBox, { backgroundColor: scienceBgColor, borderColor: scienceBorderColor }]}>
       <View style={styles.scienceHeader}>
         <Text style={styles.scienceIcon}>🔬</Text>
-        <Text style={[styles.scienceHeaderText, { color: isDark ? colors.primary[400] : '#166534' }]}>Science Behind This Habit</Text>
+        <Text style={[styles.scienceHeaderText, { color: scienceTextColor }]}>Science Behind This Habit</Text>
       </View>
       <Text
         numberOfLines={2}
-        style={[theme.custom.typography.caption, styles.scienceText, { color: isDark ? colors.primary[500] : '#166534' }]}
+        style={[theme.custom.typography.caption, styles.scienceText, { color: scienceTextColor }]}
       >
         {scientificReference}
       </Text>

@@ -26,13 +26,13 @@ export function ActionButtons({
   onPreview,
   showPreviewCTA,
 }: ActionButtonsProps) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
 
   if (isImported) {
     return (
-      <Animated.View style={[styles.successButton, checkmarkStyle]}>
-        <Check color='#fff' size={18} strokeWidth={3} />
-        <Text style={styles.successButtonText}>Added to Habits</Text>
+      <Animated.View style={[styles.successButton, isDark && { backgroundColor: themeColors.primary[600] }, checkmarkStyle]}>
+        <Check color={themeColors.text.inverse} size={18} strokeWidth={3} />
+        <Text style={[styles.successButtonText, { color: themeColors.text.inverse }]}>Added to Habits</Text>
       </Animated.View>
     );
   }
@@ -63,7 +63,7 @@ export function ActionButtons({
         size='medium'
         style={[
           styles.importButton,
-          { backgroundColor: isLocked ? '#6B7280' : iconColor },
+          { backgroundColor: isLocked ? themeColors.gray[500] : iconColor },
         ]}
         variant='primary'
         onPress={onImportPress}

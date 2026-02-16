@@ -7,6 +7,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing } from '../../../theme/spacing';
 import { ActionButtons } from './ActionButtons';
 import { CategoryBadge } from './CategoryBadge';
@@ -36,6 +37,7 @@ export function TemplateCardContent({
   youtubeLink,
 }: TemplateCardContentProps) {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
 
   return (
     <View style={styles.content}>
@@ -49,7 +51,7 @@ export function TemplateCardContent({
       </View>
       <Text
         numberOfLines={1}
-        style={[theme.custom.typography.heading3, styles.nameText]}
+        style={[theme.custom.typography.heading3, styles.nameText, { color: colors.text.primary }]}
       >
         {name}
       </Text>
@@ -62,7 +64,7 @@ export function TemplateCardContent({
       />
       <Text
         numberOfLines={3}
-        style={[theme.custom.typography.bodySmall, styles.descriptionText]}
+        style={[theme.custom.typography.bodySmall, styles.descriptionText, { color: colors.text.secondary }]}
       >
         {description}
       </Text>
