@@ -12,20 +12,40 @@ import { query } from './_generated/server';
 export const getStrengthDistribution = query({
   args: {},
   handler: async (ctx) => {
+    // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      const empty = { count: 0, emoji: '', percentage: 0 };
       return {
-        automatic: { ...empty, emoji: '⚡' },
-        building: { ...empty, emoji: '🌿' },
-        developing: { ...empty, emoji: '🌳' },
-        starting: { ...empty, emoji: '🌱' },
-        strong: { ...empty, emoji: '💪' },
+        automatic: {
+          count: 0,
+          emoji: '⚡',
+          percentage: 0,
+        },
+        building: {
+          count: 0,
+          emoji: '🌿',
+          percentage: 0,
+        },
+        developing: {
+          count: 0,
+          emoji: '🌳',
+          percentage: 0,
+        },
+        starting: {
+          count: 0,
+          emoji: '🌱',
+          percentage: 0,
+        },
+        strong: {
+          count: 0,
+          emoji: '💪',
+          percentage: 0,
+        },
         total: 0,
       };
     }
 
-    // PERF FIX: Use by_userId index instead of full table scan
+    // SEC-001: Query only current user's habits to prevent cross-user data leakage
     const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))

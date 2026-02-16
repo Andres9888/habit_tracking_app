@@ -14,7 +14,6 @@ import type { PreviewContentProps } from './PreviewContent.types';
 
 export function PreviewContent({
   animatedStyles,
-  closeButtonScale,
   confettiRef,
   createPressHandlers,
   customizeButtonScale,
@@ -36,8 +35,6 @@ export function PreviewContent({
         closeButtonAnimatedOpacityStyle={
           animatedStyles.closeButtonAnimatedOpacityStyle
         }
-        closeButtonPressHandlers={createPressHandlers(closeButtonScale, 0.9)}
-        closeButtonStyle={animatedStyles.closeButtonStyle}
         topInset={insets.top}
         onClose={handlers.handleClose}
       />

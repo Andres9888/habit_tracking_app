@@ -16,6 +16,7 @@ import {
 export const getOverviewStats = query({
   args: {},
   handler: async (ctx) => {
+    // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       return {
@@ -27,7 +28,7 @@ export const getOverviewStats = query({
       };
     }
 
-    // PERF FIX: Use by_userId index instead of full table scan
+    // SEC-001: Query only current user's habits to prevent cross-user data leakage
     const habits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))

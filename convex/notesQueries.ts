@@ -12,12 +12,12 @@ export const list = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
 
-    // PERF FIX: Use by_user_and_date index instead of full table scan
-    return await ctx.db
+    const notes = await ctx.db
       .query('notes')
-      .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
       .order('desc')
       .collect();
+    return notes;
   },
   returns: notesArrayValidator,
 });
@@ -31,23 +31,14 @@ export const search = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
 
-    let notes;
+    let notes = await ctx.db
+      .query('notes')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+      .order('desc')
+      .collect();
+
     if (args.habitId) {
-      // PERF FIX: Use by_habit index for direct habit lookups
-      notes = await ctx.db
-        .query('notes')
-        .withIndex('by_habit', (q) => q.eq('habitId', args.habitId!))
-        .order('desc')
-        .collect();
-      // Filter to user's notes only
-      notes = notes.filter((n) => n.userId === identity.subject);
-    } else {
-      // PERF FIX: Use by_user_and_date index instead of full table scan
-      notes = await ctx.db
-        .query('notes')
-        .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
-        .order('desc')
-        .collect();
+      notes = notes.filter((note) => note.habitId === args.habitId);
     }
 
     if (args.searchText && args.searchText.trim()) {
@@ -67,7 +58,13 @@ export const get = query({
     noteId: v.id('notes'),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.noteId);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const note = await ctx.db.get(args.noteId);
+    if (!note) return null;
+    if (note.userId && note.userId !== identity.subject) return null;
+    return note;
   },
   returns: nullableNoteValidator,
 });

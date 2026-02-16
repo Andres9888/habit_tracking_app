@@ -36,6 +36,7 @@ export const ReminderSection = ({
 
         {/* Label and time - tappable when enabled */}
         <AnimatedPressable
+          accessibilityHint='Tap to change reminder time'
           accessibilityLabel={`Reminder time: ${formatReminderTime(reminderTime)}. Tap to change.`}
           accessibilityRole='button'
           accessibilityState={{ disabled: !remindersEnabled }}
@@ -60,6 +61,7 @@ export const ReminderSection = ({
 
         {/* Toggle switch on right */}
         <Switch
+          accessibilityHint='Toggle habit reminder on or off'
           accessibilityLabel='Toggle reminder'
           accessibilityRole='switch'
           accessibilityState={{ checked: remindersEnabled }}
