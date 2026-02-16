@@ -8,6 +8,7 @@ import { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { SCALE, ANIMATION_DURATION } from '../../../../constants';
 
 interface LockedHabitCardProps {
   onUpgradePress: () => void;
@@ -19,9 +20,9 @@ export function LockedHabitCard({
   reduceMotion = false,
 }: LockedHabitCardProps) {
   const { colors: themeColors, isDark } = useThemeColors();
-  const entranceScale = useRef(new Animated.Value(0.94)).current;
+  const entranceScale = useRef(new Animated.Value(SCALE.pressSmall)).current;
   const opacity = useRef(new Animated.Value(0)).current;
-  const pressScale = useRef(new Animated.Value(1)).current;
+  const pressScale = useRef(new Animated.Value(SCALE.normal)).current;
 
   useEffect(() => {
     if (reduceMotion) {
@@ -37,9 +38,9 @@ export function LockedHabitCard({
         useNativeDriver: true,
       }),
       Animated.timing(opacity, {
-        duration: 260,
+        duration: ANIMATION_DURATION.extraLong,
         easing: Easing.out(Easing.cubic),
-        toValue: 1,
+        toValue: SCALE.normal,
         useNativeDriver: true,
       }),
     ]).start();
@@ -47,26 +48,26 @@ export function LockedHabitCard({
 
   const handlePressIn = () => {
     if (reduceMotion) {
-      pressScale.setValue(0.97);
+      pressScale.setValue(SCALE.pressLarge);
       return;
     }
     Animated.spring(pressScale, {
       damping: 18,
       stiffness: 240,
-      toValue: 0.97,
+      toValue: SCALE.pressLarge,
       useNativeDriver: true,
     }).start();
   };
 
   const handlePressOut = () => {
     if (reduceMotion) {
-      pressScale.setValue(1);
+      pressScale.setValue(SCALE.normal);
       return;
     }
     Animated.spring(pressScale, {
       damping: 18,
       stiffness: 240,
-      toValue: 1,
+      toValue: SCALE.normal,
       useNativeDriver: true,
     }).start();
   };
