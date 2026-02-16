@@ -4,6 +4,9 @@ import { query } from './_generated/server';
  * Fetch all available habit categories
  * Returns a list of category filters including 'All' and all unique categories from templates
  *
+ * SEC-PUBLIC: This query is intentionally public to allow browsing
+ * template categories before login. Derived from public template data.
+ *
  * @returns Array of category objects with id, label, and icon
  * @example
  * ```ts
