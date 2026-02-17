@@ -8,6 +8,9 @@
 export { OfflineIndicator } from './OfflineIndicator';
 export type { OfflineIndicatorProps } from './OfflineIndicator';
 
+export { OfflineBanner } from './OfflineBanner';
+export type { OfflineBannerProps } from './OfflineBanner';
+
 export { SyncingIndicator } from './SyncingIndicator';
 export type { SyncingIndicatorProps } from './SyncingIndicator';
 

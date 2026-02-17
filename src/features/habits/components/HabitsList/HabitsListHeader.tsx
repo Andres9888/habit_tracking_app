@@ -18,7 +18,8 @@ import React, { memo } from 'react';
 import { Animated, View } from 'react-native';
 import { HabitsHeader } from '../HabitsHeader';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
-import { OfflineIndicator } from '../../../../components/SyncStatus';
+import { OfflineBanner } from '../../../../components/SyncStatus';
+import { useOfflineQueue } from '../../../../lib/offline';
 import {
   TrialCountdownBanner,
   useTrialCountdown,
@@ -39,14 +40,23 @@ function HabitsListHeaderComponent(
   // Trial countdown banner
   const { shouldShowBanner, daysRemaining } = useTrialCountdown();
 
+  // Offline queue state
+  const { operations, syncState } = useOfflineQueue();
+  const pendingCount = operations.length;
+  const isSyncing = syncState?.status === 'syncing';
+
   return (
     <View className='gap-4 pb-4 pt-14'>
-      <View className='absolute left-0 right-0 top-4 z-10 flex-row justify-center'>
-        <OfflineIndicator
-          testID='habits-offline-indicator'
-          visible={computed.isOffline}
-        />
-      </View>
+      <OfflineBanner
+        testID='habits-offline-banner'
+        visible={computed.isOffline || pendingCount > 0}
+        pendingCount={pendingCount}
+        isSyncing={isSyncing}
+        onSyncPress={() => {
+          // Sync will automatically trigger when connection is restored
+          // This button is mainly for manual retry if needed
+        }}
+      />
       <Animated.View
         style={{
           opacity: props.headerOpacity,
