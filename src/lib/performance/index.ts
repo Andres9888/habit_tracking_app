@@ -34,3 +34,23 @@ export { RenderTracker } from './RenderTracker';
 // Network monitoring
 export { NetworkMonitor } from './NetworkMonitor';
 export { createTrackedFetch } from './trackedFetch';
+
+// Centralized Performance Monitor (NEW)
+export {
+  getPerformanceMonitor,
+  initPerformanceMonitoring,
+} from './PerformanceMonitor';
+export type {
+  ScreenRenderMetrics,
+  ConvexQueryMetrics,
+  FrameDropMetrics,
+} from './PerformanceMonitor';
+
+// React Hooks
+export {
+  useScreenRenderTracking,
+  useScreenRenderTrackingManual,
+  useConvexQueryTracking,
+  useConvexQueryTrackingManual,
+  useUserActionTracking,
+} from './hooks';

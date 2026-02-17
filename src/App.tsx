@@ -3,13 +3,14 @@
  *
  * Main application entry point that sets up the provider hierarchy:
  * - Sentry: Error tracking and monitoring
+ * - Performance Monitor: App health, crash-free rate, and performance metrics
  * - Clerk: Authentication
  * - Convex: Real-time database
  * - RevenueCat: Subscription management
  * - React Native Paper: UI theming
  *
  * Performance optimizations:
- * - Sentry init deferred with requestIdleCallback
+ * - Sentry & PerformanceMonitor init deferred with requestIdleCallback
  * - Non-critical providers lazy loaded after first paint
  * - Provider chain optimized to minimize blocking
  */
@@ -23,8 +24,10 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
+import { AppHealthMonitor } from './components/monitoring';
 import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
+import { initPerformanceMonitoring } from './lib/performance';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
@@ -33,9 +36,15 @@ import theme from './theme';
 // requestIdleCallback (or setTimeout fallback) defers this work until
 // the main thread is idle, keeping the first paint fast.
 if (typeof requestIdleCallback === 'function') {
-  requestIdleCallback(() => initSentry());
+  requestIdleCallback(() => {
+    initSentry();
+    initPerformanceMonitoring();
+  });
 } else {
-  setTimeout(() => initSentry(), 0);
+  setTimeout(() => {
+    initSentry();
+    initPerformanceMonitoring();
+  }, 0);
 }
 
 const clerkKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -92,6 +101,7 @@ function LazyProviders({ children }: PropsWithChildren) {
 function CoreProviders({ children }: PropsWithChildren) {
   return (
     <SentryErrorBoundary>
+      <AppHealthMonitor />
       <SafeAreaProvider>
         <PaperProvider theme={theme}>
           <ClerkProvider publishableKey={clerkKey} tokenCache={tokenCache}>

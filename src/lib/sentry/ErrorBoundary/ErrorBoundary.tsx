@@ -6,6 +6,7 @@
 import * as Sentry from '@sentry/react-native';
 import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 import { isSentryInitialized } from '../init/index';
+import { getPerformanceMonitor } from '../../performance';
 import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
@@ -33,6 +34,14 @@ export class SentryErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    // Mark session as crashed for crash-free rate tracking
+    try {
+      const monitor = getPerformanceMonitor();
+      monitor.markSessionCrashed();
+    } catch {
+      // Ignore errors in performance monitoring during crash handling
+    }
+
     // Report to Sentry
     if (isSentryInitialized()) {
       Sentry.captureException(error, {
