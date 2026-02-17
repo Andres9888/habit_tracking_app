@@ -1,5 +1,12 @@
 import { useState } from 'react';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, ShareCardData } from '../types';
+
+export interface CompletionNoteContext {
+  habitId: Id<'habits'>;
+  habitName: string;
+  date: string;
+}
 
 export interface HabitSelectionState {
   selectedHabit: Habit | null;
@@ -16,6 +23,8 @@ export interface HabitSelectionState {
   setHabitDetailInitialTab: (t: 'progress' | 'motivation' | 'manage') => void;
   shareCardData: ShareCardData | null;
   setShareCardData: (d: ShareCardData | null) => void;
+  completionNoteContext: CompletionNoteContext | null;
+  setCompletionNoteContext: (c: CompletionNoteContext | null) => void;
 }
 
 /**
@@ -37,15 +46,19 @@ export function useHabitSelectionState(): HabitSelectionState {
   const [shareCardData, setShareCardData] = useState<ShareCardData | null>(
     null
   );
+  const [completionNoteContext, setCompletionNoteContext] =
+    useState<CompletionNoteContext | null>(null);
 
   return {
     activationModalHabit,
+    completionNoteContext,
     habitDetailInitialTab,
     habitToEdit,
     habitToPause,
     quickActionsHabit,
     selectedHabit,
     setActivationModalHabit,
+    setCompletionNoteContext,
     setHabitDetailInitialTab,
     setHabitToEdit,
     setHabitToPause,

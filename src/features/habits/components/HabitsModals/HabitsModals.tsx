@@ -4,6 +4,7 @@ import { CreateHabitModalSection } from './CreateHabitModalSection';
 import { QuickActionsSection } from './QuickActionsSection';
 import { SettingsModalSection } from './SettingsModalSection';
 import { ShareAndPauseModals } from './ShareAndPauseModals';
+import { CompletionNoteModal } from '../../../../components/CompletionNoteModal';
 import {
   getCalendarAndDetailProps,
   getQuickActionsProps,
@@ -84,6 +85,13 @@ export function HabitsModals({ state }: HabitsModalsProps) {
           toggleHabit={state.toggleHabit}
         />
       </Suspense>
+      <CompletionNoteModal
+        visible={state.showCompletionNote}
+        habitId={state.completionNoteContext?.habitId ?? null}
+        habitName={state.completionNoteContext?.habitName ?? ''}
+        date={state.completionNoteContext?.date ?? ''}
+        onClose={() => state.setShowCompletionNote(false)}
+      />
     </>
   );
 }

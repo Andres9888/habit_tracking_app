@@ -25,6 +25,8 @@ export interface ModalVisibilityState {
   setShowVisualizationExercise: (v: boolean) => void;
   showActivationModal: boolean;
   setShowActivationModal: (v: boolean) => void;
+  showCompletionNote: boolean;
+  setShowCompletionNote: (v: boolean) => void;
 }
 
 /**
@@ -45,6 +47,7 @@ export function useModalVisibilityState(): ModalVisibilityState {
   const [showVisualizationExercise, setShowVisualizationExercise] =
     useState(false);
   const [showActivationModal, setShowActivationModal] = useState(false);
+  const [showCompletionNote, setShowCompletionNote] = useState(false);
 
   return {
     isCreateHabitOpen,
@@ -56,6 +59,7 @@ export function useModalVisibilityState(): ModalVisibilityState {
     setIsHabitDetailOpen,
     setIsSettingsOpen,
     setShowActivationModal,
+    setShowCompletionNote,
     setShowEditScreen,
     setShowHapticTest,
     setShowPauseModal,
@@ -64,6 +68,7 @@ export function useModalVisibilityState(): ModalVisibilityState {
     setShowTemplatesScreen,
     setShowVisualizationExercise,
     showActivationModal,
+    showCompletionNote,
     showEditScreen,
     showHapticTest,
     showPauseModal,

@@ -122,10 +122,23 @@ export function useHabitsModalsState({
 
   const handleToggleHabit = useCallback(
     async (args: { habitId: Id<'habits'>; date: string }) => {
+      const wasCompleted = isCompleted(args.habitId, args.date);
+      const habit = habits.find((h) => h._id === args.habitId);
+      
       // Use optimistic toggle with offline queue support
       await optimisticToggleHabit(args);
+      
+      // Show completion note prompt if marking as complete (not uncompleting)
+      if (!wasCompleted && habit) {
+        selection.setCompletionNoteContext({
+          habitId: args.habitId,
+          habitName: habit.name,
+          date: args.date,
+        });
+        visibility.setShowCompletionNote(true);
+      }
     },
-    [optimisticToggleHabit]
+    [optimisticToggleHabit, isCompleted, habits, selection, visibility]
   );
 
   return buildModalsStateReturnValue(visibility, selection, handlers, {

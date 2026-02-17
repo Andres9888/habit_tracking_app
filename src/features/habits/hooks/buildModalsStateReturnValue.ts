@@ -26,6 +26,7 @@ export function buildModalsStateReturnValue(
     activationModalHabit: selection.activationModalHabit,
     // State properties
     celebrationsEnabled: extra.celebrationsEnabled,
+    completionNoteContext: selection.completionNoteContext,
     // Handlers from extracted hook
 closeCreateHabit: handlers.closeCreateHabit,
     
@@ -165,6 +166,8 @@ showHabitCalendar: visibility.isHabitCalendarOpen,
     openVisualizationExercise: handlers.openVisualizationExercise,
 
     setShowHabitStrengthPercentage: () => {},
+    setShowCompletionNote: visibility.setShowCompletionNote,
+    showCompletionNote: visibility.showCompletionNote,
     toggleHabit: extra.handleToggleHabit,
   } as unknown as HabitsModalsState;
 }
