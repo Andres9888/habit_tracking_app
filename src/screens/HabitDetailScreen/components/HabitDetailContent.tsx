@@ -117,6 +117,8 @@ export function HabitDetailContent({
             habitCreatedAt={habit.createdAt}
             habitId={habit._id}
             notesByDate={notesByDate}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            vacationPeriods={(habit as any).vacationPeriods}
             onDayPress={onDayPress}
           />
         </ErrorBoundary>

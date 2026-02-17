@@ -7,6 +7,11 @@ import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { useHabitSaveHandler } from './useHabitSaveHandler';
 import { useHabitActions } from './useHabitActions';
 
+interface VacationPeriod {
+  end: string;
+  start: string;
+}
+
 interface UseHabitEditScreenProps {
   habitId: Id<'habits'> | null;
   onClose: () => void;
@@ -16,12 +21,16 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
   const { triggerSelection, triggerSuccess } = useHapticFeedback();
 
   const habit = useQuery(api.habits.get, habitId ? { habitId } : 'skip');
+  const settings = useQuery(api.settings.get);
+  const isPremium = settings?.hasPremium ?? false;
 
   const [habitName, setHabitName] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>('💪');
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
+  const [vacationMode, setVacationMode] = useState(false);
+  const [vacationPeriods, setVacationPeriods] = useState<VacationPeriod[]>([]);
 
   useEffect(() => {
     if (habit) {
@@ -34,6 +43,10 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setVacationMode((habit as any).vacationMode ?? false);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setVacationPeriods(((habit as any).vacationPeriods as VacationPeriod[] | undefined) ?? []);
     }
   }, [habit]);
 
@@ -84,6 +97,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     handleReminderTimeChange,
     handleReminderToggle,
     isLoading: habitId != null && habit === undefined,
+    isPremium,
     remindersEnabled,
     handleSave,
     selectedEmoji,
@@ -92,5 +106,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     reminderTime,
     selectedColor,
     triggerSelection,
+    vacationMode,
+    vacationPeriods,
   };
 }

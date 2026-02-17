@@ -104,4 +104,19 @@ export const styles = StyleSheet.create({
   todayText: {
     fontWeight: '700',
   },
+  // Vacation mode indicator — subtle diagonal stripe overlay
+  vacationOverlay: {
+    borderRadius: 8,
+    bottom: 0,
+    left: 0,
+    opacity: 0.18,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
+  vacationPalmIcon: {
+    bottom: 2,
+    position: 'absolute',
+    right: 1,
+  },
 });

@@ -12,6 +12,7 @@ import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
 import { DangerZone } from './DangerZone';
 import { SectionLabel } from './SectionLabel';
+import { VacationModeSection } from './VacationModeSection';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
@@ -88,10 +89,25 @@ function HabitEditScreenContent({
                     onReminderToggle={state.handleReminderToggle}
                   />
                 </Animated.View>
-                <SectionLabel delay={340} text='DANGER ZONE' variant='danger' />
+                <SectionLabel delay={340} text='STREAK INSURANCE' />
+                <Animated.View
+                  className='mx-4'
+                  entering={FadeInUp.delay(370).springify().damping(18)}
+                >
+                  <VacationModeSection
+                    habitId={habitId}
+                    isPremium={state.isPremium}
+                    vacationMode={state.vacationMode}
+                    vacationPeriods={state.vacationPeriods}
+                    onUpgradePress={() => {
+                      /* TODO: wire upgrade sheet */
+                    }}
+                  />
+                </Animated.View>
+                <SectionLabel delay={400} text='DANGER ZONE' variant='danger' />
                 <Animated.View
                   className='mx-4 rounded-2xl p-4'
-                  entering={FadeInUp.delay(400).springify().damping(18)}
+                  entering={FadeInUp.delay(460).springify().damping(18)}
                   style={{
                     backgroundColor: themeColors.card,
                     elevation: 4,

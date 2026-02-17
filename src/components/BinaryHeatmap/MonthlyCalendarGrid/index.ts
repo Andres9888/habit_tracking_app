@@ -3,4 +3,4 @@
  */
 
 export { MonthlyCalendarGrid, default } from './MonthlyCalendarGrid';
-export type { MonthlyCalendarGridProps, DayData } from './types';
+export type { MonthlyCalendarGridProps, DayData, VacationPeriod } from './types';

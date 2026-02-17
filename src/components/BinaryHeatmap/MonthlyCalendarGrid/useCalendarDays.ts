@@ -18,7 +18,7 @@ import {
   endOfWeek,
   isValid,
 } from 'date-fns';
-import type { DayData } from './types';
+import type { DayData, VacationPeriod } from './types';
 
 /** Safely format a date, returning empty string on error */
 function safeFormat(date: Date, formatStr: string): string {
@@ -36,12 +36,14 @@ interface UseCalendarDaysParams {
   currentMonth: Date;
   completedDates: Set<string>;
   habitCreatedAt?: number;
+  vacationPeriods?: VacationPeriod[];
 }
 
 export function useCalendarDays({
   currentMonth,
   completedDates,
   habitCreatedAt,
+  vacationPeriods,
 }: UseCalendarDaysParams) {
   // Memoize today's date string to prevent new Date object on every render
   const todayString = useMemo(() => safeFormat(startOfToday(), 'yyyy-MM-dd'), []);
@@ -70,6 +72,13 @@ export function useCalendarDays({
           : false;
         // A day is "missed" if it's in the past, not before creation, not completed, and not in the future
         const isMissed = !isFuture && !isBeforeCreation && !isCompleted && isCurrentMonth;
+        // A day is a "vacation" day if it falls within a vacation period
+        const isVacation = Boolean(
+          dateString &&
+            vacationPeriods?.some(
+              ({ start, end }) => dateString >= start && dateString <= end
+            )
+        );
 
         return {
           date,
@@ -79,11 +88,12 @@ export function useCalendarDays({
           isCompleted,
           isCurrentMonth,
           isFuture,
-          isToday,
           isMissed,
+          isToday,
+          isVacation,
         };
       });
-  }, [currentMonth, todayString, completedDates, habitCreatedAt]);
+  }, [currentMonth, todayString, completedDates, habitCreatedAt, vacationPeriods]);
 
   // Chunk days into weeks for row-based rendering
   const weeks = useMemo(() => {

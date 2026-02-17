@@ -13,6 +13,26 @@
 import { format, parseISO } from 'date-fns';
 import { STREAK_MAX_LOOKBACK_DAYS } from '@/constants';
 
+/** A single vacation period with ISO date strings */
+export interface VacationPeriod {
+  end: string;
+  start: string;
+}
+
+/**
+ * Check whether a given date string falls within any vacation period.
+ * Vacation days are excluded from streak computation (neither break nor grow).
+ */
+export function isVacationDay(
+  dateString: string,
+  vacationPeriods: VacationPeriod[] | undefined
+): boolean {
+  if (!vacationPeriods || vacationPeriods.length === 0) return false;
+  return vacationPeriods.some(
+    ({ start, end }) => dateString >= start && dateString <= end
+  );
+}
+
 /**
  * Compute the current streak from a set of completed dates.
  *
@@ -40,7 +60,8 @@ import { STREAK_MAX_LOOKBACK_DAYS } from '@/constants';
  */
 export const computeCurrentStreakFromDates = (
   completedDates: Set<string>,
-  today: Date
+  today: Date,
+  vacationPeriods?: VacationPeriod[]
 ): number => {
   if (!completedDates || completedDates.size === 0) {
     return 0;
@@ -59,28 +80,47 @@ export const computeCurrentStreakFromDates = (
   }
 
   // Check that the streak is still active: last completion must be today or
-  // yesterday. This matches the server-side calculateStreakFromHistory which
+  // yesterday (or the gap is covered by vacation days).
+  // This matches the server-side calculateStreakFromHistory which
   // returns currentStreak=0 when daysSinceLastCompletion > 1.
   const latestDate = parseISO(latestCompleted);
   const todayDate = parseISO(todayString);
   const msDiff = todayDate.getTime() - latestDate.getTime();
   const daysSinceLastCompletion = Math.round(msDiff / (1000 * 60 * 60 * 24));
 
+  // Allow grace through vacation days: walk the gap and check if all
+  // non-completed days are covered by vacation
   if (daysSinceLastCompletion > 1) {
-    return 0;
+    let allGapDaysAreVacation = true;
+    for (let d = 1; d < daysSinceLastCompletion; d++) {
+      const checkDate = new Date(latestDate);
+      checkDate.setDate(checkDate.getDate() + d);
+      const checkString = format(checkDate, 'yyyy-MM-dd');
+      if (!isVacationDay(checkString, vacationPeriods)) {
+        allGapDaysAreVacation = false;
+        break;
+      }
+    }
+    if (!allGapDaysAreVacation) {
+      return 0;
+    }
   }
 
   let streak = 0;
   const currentDate = parseISO(latestCompleted);
 
-  // Count consecutive days backward from the latest completion
-  // Stop when a gap is found
-  // Safety guard to avoid unexpected infinite loops
+  // Count consecutive days backward from the latest completion.
+  // Vacation days are skipped — they don't break or extend the streak.
   const maxLookbackDays = STREAK_MAX_LOOKBACK_DAYS;
   for (let i = 0; i < maxLookbackDays; i++) {
     const dateString = format(currentDate, 'yyyy-MM-dd');
     if (completedDates.has(dateString)) {
       streak += 1;
+      currentDate.setDate(currentDate.getDate() - 1);
+      continue;
+    }
+    // Skip vacation days without breaking the streak
+    if (isVacationDay(dateString, vacationPeriods)) {
       currentDate.setDate(currentDate.getDate() - 1);
       continue;
     }

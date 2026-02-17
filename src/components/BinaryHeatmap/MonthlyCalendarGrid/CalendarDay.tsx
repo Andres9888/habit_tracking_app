@@ -2,13 +2,13 @@
  * CalendarDay Component
  *
  * Individual day cell for the monthly calendar.
- * Shows filled green circles for completed days and empty circles for missed days.
+ * Shows a 🏖️ vacation indicator when the day falls in a vacation period (Streak Insurance).
  */
 
 import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import type { DayData } from './types';
-import { COLORS } from './colors';
+import { COLORS, hexToRgba } from './colors';
 import { styles } from './styles';
 
 interface CalendarDayProps {
@@ -32,33 +32,12 @@ export const CalendarDay = memo(function CalendarDay({
   const showCompleted = Boolean(
     day?.isCompleted && day?.isCurrentMonth && !day?.isFuture
   );
-  const showMissed = Boolean(
-    day?.isMissed && day?.isCurrentMonth && !day?.isFuture
-  );
   const isToday = Boolean(day?.isToday);
-
-  // Determine circle style based on completion status
-  const getCircleStyle = () => {
-    if (showCompleted) {
-      // Filled green circle for completed days
-      return {
-        backgroundColor: COLORS.GREEN_COMPLETED,
-      };
-    }
-    if (showMissed) {
-      // Empty circle with green border for missed days
-      return {
-        backgroundColor: 'transparent',
-        borderWidth: 2,
-        borderColor: COLORS.GREEN_COMPLETED,
-      };
-    }
-    return {};
-  };
+  const isVacation = Boolean(day?.isVacation && day?.isCurrentMonth);
 
   return (
     <Pressable
-      accessibilityLabel={`Day ${day?.dayNumber ?? ''}${showCompleted ? ', completed' : ''}${isToday ? ', today' : ''}`}
+      accessibilityLabel={`Day ${day?.dayNumber ?? ''}${showCompleted ? ', completed' : ''}${isToday ? ', today' : ''}${isVacation ? ', vacation' : ''}`}
       accessibilityRole='button'
       accessibilityState={{
         disabled: Boolean(day?.isFuture || day?.isBeforeCreation),
@@ -71,7 +50,8 @@ export const CalendarDay = memo(function CalendarDay({
       <View
         style={[
           styles.dayCell,
-          showCompleted && { backgroundColor: `${COLORS.GREEN_COMPLETED}26` },
+          showCompleted && { backgroundColor: hexToRgba(habitColor, 0.15) },
+          isVacation && !showCompleted && { backgroundColor: hexToRgba('#F59E0B', 0.12) },
           isToday && { borderColor: habitColor, borderWidth: 2 },
         ]}
       >
@@ -84,8 +64,11 @@ export const CalendarDay = memo(function CalendarDay({
         >
           {day?.dayNumber ?? ''}
         </Text>
-        {(showCompleted || showMissed) && (
-          <View style={[styles.streakCircle, getCircleStyle()]} />
+        {showCompleted && (
+          <View style={[styles.dot, { backgroundColor: habitColor }]} />
+        )}
+        {isVacation && !showCompleted && (
+          <Text style={[styles.vacationPalmIcon, { fontSize: 7 }]}>🏖️</Text>
         )}
       </View>
     </Pressable>

@@ -23,6 +23,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   habitColor,
   habitCreatedAt,
   notesByDate = {},
+  vacationPeriods,
   onDayPress,
 }: MonthlyCalendarGridProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -30,6 +31,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
     completedDates,
     currentMonth,
     habitCreatedAt,
+    vacationPeriods,
   });
 
   const goToPreviousMonth = useCallback(() => {

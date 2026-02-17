@@ -247,6 +247,19 @@ const applicationTables = {
     // WOOP - Wish-Outcome-Obstacle-Plan (Oettingen, 2014)
     // Mental contrasting + implementation intentions = 2x goal achievement
     woopWish: v.optional(v.string()),
+
+    // Streak Insurance - Vacation Mode (Premium)
+    // Protects streaks during vacations: streak pauses (doesn't break or grow)
+    vacationMode: v.optional(v.boolean()),
+    // Array of vacation periods [{start: 'YYYY-MM-DD', end: 'YYYY-MM-DD'}]
+    vacationPeriods: v.optional(
+      v.array(
+        v.object({
+          end: v.string(),
+          start: v.string(),
+        })
+      )
+    ),
   }).index('by_userId', ['userId']),
 
   // Letters to Self - Time-locked messages from past self to future self

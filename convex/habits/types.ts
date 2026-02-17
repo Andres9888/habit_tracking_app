@@ -43,5 +43,14 @@ export const updateHabitArgs = {
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  vacationMode: v.optional(v.boolean()),
+  vacationPeriods: v.optional(
+    v.array(
+      v.object({
+        end: v.string(),
+        start: v.string(),
+      })
+    )
+  ),
   why: v.optional(v.string()),
 };
