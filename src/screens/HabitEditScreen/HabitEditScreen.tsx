@@ -10,6 +10,7 @@ import { EditHeader } from './EditHeader';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
+import { CategoryPicker } from '../../components/CategoryPicker';
 import { DangerZone } from './DangerZone';
 import { SectionLabel } from './SectionLabel';
 import { useHabitEditScreen } from './useHabitEditScreen';
@@ -69,6 +70,12 @@ function HabitEditScreenContent({
                   <NameInputSection
                     habitName={state.habitName}
                     onChangeText={state.setHabitName}
+                  />
+                </View>
+                <View className='px-6 pt-2'>
+                  <CategoryPicker
+                    selectedCategory={state.selectedCategory}
+                    onSelect={state.handleCategorySelect}
                   />
                 </View>
                 <SectionLabel delay={220} text='CUSTOMIZE' />

@@ -6,7 +6,9 @@
  * plucked from the full `HabitsListProps`, local UI state, and handler bag.
  */
 
+import { View } from 'react-native';
 import { HabitsListHeader } from './HabitsListHeader';
+import { CategoryFilterChips } from '../../../../components/CategoryFilterChips';
 import type { HabitsListProps } from './HabitsList.types';
 
 interface RenderHabitsListHeaderOptions {
@@ -32,28 +34,37 @@ export function renderHabitsListHeader({
     onUpgradeIntent,
   } = props;
   return (
-    <HabitsListHeader
-      calendarOpacity={state.calendarOpacity}
-      calendarTranslateY={state.calendarTranslateY}
-      canNavigateForward={canNavigateForward}
-      getHabitStatus={list.getHabitStatus}
-      habits={list.habits}
-      headerOpacity={state.headerOpacity}
-      headerTranslateY={state.headerTranslateY}
-      isPremiumUser={list.isPremiumUser}
-      justCreatedHabitId={state.justCreatedHabitId}
-      openSettings={modals.openSettings}
-      openTemplatesScreen={modals.openTemplatesScreen}
-      reduceMotionPreference={list.reduceMotionPreference}
-      showWeekCompletionBar={list.showWeekCompletionBar}
-      weekDates={weekDates}
-      weekDateStrings={list.weekDateStrings}
-      onAddHabitPress={handlers.handleAddHabitPress}
-      onDayPress={state.handleDayPress}
-      onNextWeek={onNextWeek}
-      onOpenSortSheet={state.handleOpenSortSheet}
-      onPreviousWeek={onPreviousWeek}
-      onUpgradePress={onUpgradeIntent}
-    />
+    <View>
+      <HabitsListHeader
+        calendarOpacity={state.calendarOpacity}
+        calendarTranslateY={state.calendarTranslateY}
+        canNavigateForward={canNavigateForward}
+        getHabitStatus={list.getHabitStatus}
+        habits={list.habits}
+        headerOpacity={state.headerOpacity}
+        headerTranslateY={state.headerTranslateY}
+        isPremiumUser={list.isPremiumUser}
+        justCreatedHabitId={state.justCreatedHabitId}
+        openSettings={modals.openSettings}
+        openTemplatesScreen={modals.openTemplatesScreen}
+        reduceMotionPreference={list.reduceMotionPreference}
+        showWeekCompletionBar={list.showWeekCompletionBar}
+        weekDates={weekDates}
+        weekDateStrings={list.weekDateStrings}
+        onAddHabitPress={handlers.handleAddHabitPress}
+        onDayPress={state.handleDayPress}
+        onNextWeek={onNextWeek}
+        onOpenSortSheet={state.handleOpenSortSheet}
+        onPreviousWeek={onPreviousWeek}
+        onUpgradePress={onUpgradeIntent}
+      />
+      {list.habits.length > 0 && (
+        <CategoryFilterChips
+          categoryCounts={list.categoryCounts}
+          selectedFilter={list.categoryFilter}
+          onFilterChange={list.setCategoryFilter}
+        />
+      )}
+    </View>
   );
 }

@@ -21,6 +21,7 @@ interface ResetFormSetters {
   setShowTimePicker: (show: boolean) => void;
   setReminderSound: (sound: string) => void;
   setFrequency: (freq: string) => void;
+  setSelectedCategory: (cat: string | null) => void;
   setDayPhase: (phase: HubermanPhase | null) => void;
   setReminderOptionState: (option: ReminderOption) => void;
 }
@@ -35,6 +36,7 @@ export const useHabitFormReset = (setters: ResetFormSetters) => {
     setReminderOptionState,
     setReminderSound,
     setReminderTime,
+    setSelectedCategory,
     setSelectedColor,
     setSelectedEmoji,
     setShowTimePicker,
@@ -45,6 +47,7 @@ export const useHabitFormReset = (setters: ResetFormSetters) => {
     setHabitName('');
     setSelectedEmoji(null);
     setSelectedColor(DEFAULT_COLOR);
+    setSelectedCategory(null);
     setColorPickerVisible(false);
     setRemindersEnabled(false);
     setReminderTime(parseReminderTime());
@@ -62,6 +65,7 @@ export const useHabitFormReset = (setters: ResetFormSetters) => {
     setReminderOptionState,
     setReminderSound,
     setReminderTime,
+    setSelectedCategory,
     setSelectedColor,
     setSelectedEmoji,
     setShowTimePicker,

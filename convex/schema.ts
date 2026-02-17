@@ -207,6 +207,9 @@ const applicationTables = {
     // Last time strength was calculated
     strengthUpdatedAt: v.optional(v.number()),
 
+    // Habit category for filtering (e.g., 'health', 'productivity')
+    category: v.optional(v.string()),
+
     tags: v.optional(v.array(v.string())),
 
     totalCompletions: v.optional(v.number()),

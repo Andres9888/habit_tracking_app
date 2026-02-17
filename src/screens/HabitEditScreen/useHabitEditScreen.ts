@@ -20,6 +20,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
   const [habitName, setHabitName] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>('💪');
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
 
@@ -32,6 +33,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
       setHabitName(name || habit.name || '');
       setSelectedEmoji(emoji || '💪');
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
+      setSelectedCategory(habit.category ?? null);
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
     }
@@ -46,6 +48,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     },
     remindersEnabled,
     reminderTime,
+    selectedCategory,
     selectedColor,
     selectedEmoji,
   });
@@ -75,8 +78,13 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     setReminderTime(time);
   }, []);
 
+  const handleCategorySelect = useCallback((categoryId: string | null) => {
+    setSelectedCategory(categoryId);
+  }, []);
+
   return {
     habitName,
+    handleCategorySelect,
     handleColorSelect,
     handleDelete,
     handleEmojiSelect,
@@ -86,6 +94,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     isLoading: habitId != null && habit === undefined,
     remindersEnabled,
     handleSave,
+    selectedCategory,
     selectedEmoji,
     isSaving,
     setHabitName,

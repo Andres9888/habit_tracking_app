@@ -18,6 +18,7 @@ interface FormSetters {
   setReminderTime: (time: Date) => void;
   setReminderSound: (sound: string) => void;
   setFrequency: (freq: string) => void;
+  setSelectedCategory: (cat: string | null) => void;
   setDayPhase: (phase: HubermanPhase | null) => void;
   setReminderOptionState: (option: ReminderOption) => void;
 }
@@ -43,6 +44,7 @@ export const useHabitFormInit = ({
     setRemindersEnabled,
     setReminderSound,
     setReminderTime,
+    setSelectedCategory,
     setSelectedColor,
     setSelectedEmoji,
   } = setters;
@@ -55,6 +57,7 @@ export const useHabitFormInit = ({
     setHabitName(parsed.name);
     setSelectedEmoji(parsed.emoji);
     setSelectedColor(habitToEdit.iconColor ?? DEFAULT_COLOR);
+    setSelectedCategory(habitToEdit.category ?? null);
     setRemindersEnabled(habitToEdit.remindersEnabled ?? false);
     setReminderTime(parseReminderTime(habitToEdit.reminderTime));
     setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);

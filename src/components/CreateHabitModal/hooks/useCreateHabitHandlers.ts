@@ -19,6 +19,7 @@ interface HabitData {
   hasReminders: boolean;
   reminderSound?: string | null;
   reminderTime: Date;
+  selectedCategory?: string | null;
   selectedColor: string;
   selectedEmoji: string | null;
 }
@@ -41,6 +42,7 @@ export function useCreateHabitHandlers() {
     reminderTime,
     selectedEmoji,
     selectedColor,
+    selectedCategory,
     dayPhase,
     reminderSound,
   }: EditHabitData): Promise<void> {
@@ -69,6 +71,7 @@ export function useCreateHabitHandlers() {
       }
 
       await updateHabit({
+        category: selectedCategory ?? undefined,
         habitId: habitToEdit._id,
         icon: selectedEmoji ?? undefined,
         color: selectedColor,
@@ -94,6 +97,7 @@ export function useCreateHabitHandlers() {
     reminderTime,
     selectedEmoji,
     selectedColor,
+    selectedCategory,
     dayPhase,
     reminderSound,
   }: HabitData): Promise<void> {
@@ -106,6 +110,7 @@ export function useCreateHabitHandlers() {
 
     try {
       const habitId = await createHabit({
+        category: selectedCategory ?? undefined,
         icon: selectedEmoji ?? undefined,
         iconColor: selectedColor,
         name: sanitizedName,

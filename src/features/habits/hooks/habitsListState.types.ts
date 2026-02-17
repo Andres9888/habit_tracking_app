@@ -20,6 +20,8 @@ import type {
 export type ToggleMutationResult = { success: boolean; error?: string };
 
 export interface HabitsListState {
+  categoryCounts: Record<string, number>;
+  categoryFilter: string;
   celebrationsEnabled: boolean;
   completionSoundEnabled: boolean;
   completionSoundType: CompletionSoundType;
@@ -57,6 +59,7 @@ export interface HabitsListState {
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
   rewardToast: RewardToastData | null;
+  setCategoryFilter: (filter: string) => void;
   /** Toggle habit completion with offline queue support (T011) */
   toggleHabit: (args: {
     habitId: Id<'habits'>;

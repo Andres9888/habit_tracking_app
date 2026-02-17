@@ -15,6 +15,7 @@ interface UseSaveHandlerProps {
   habitId: Id<'habits'> | null;
   habitName: string;
   selectedEmoji: string | null;
+  selectedCategory: string | null;
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
@@ -25,6 +26,7 @@ export function useHabitSaveHandler({
   habitId,
   habitName,
   selectedEmoji,
+  selectedCategory,
   selectedColor,
   remindersEnabled,
   reminderTime,
@@ -74,6 +76,7 @@ export function useHabitSaveHandler({
       }
 
       await updateHabit({
+        category: selectedCategory ?? undefined,
         habitId,
         icon: selectedEmoji ?? undefined,
         color: selectedColor,
@@ -96,6 +99,7 @@ export function useHabitSaveHandler({
     habitId,
     habitName,
     selectedEmoji,
+    selectedCategory,
     selectedColor,
     remindersEnabled,
     reminderTime,

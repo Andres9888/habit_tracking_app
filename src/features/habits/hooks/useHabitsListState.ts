@@ -72,11 +72,34 @@ export function useHabitsListState(): HabitsListState {
     today
   );
 
-  const habits = useHabitsSorting({
+  const sortedHabits = useHabitsSorting({
     getStreak,
     habitsFromQuery,
     habitSortMode,
   });
+
+  // Category filter state
+  const [categoryFilter, setCategoryFilter] = useState('all');
+
+  // Compute category counts from sorted (unfiltered) habits
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const habit of sortedHabits) {
+      const cat = (habit as Habit & { category?: string }).category;
+      if (cat) {
+        counts[cat] = (counts[cat] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }, [sortedHabits]);
+
+  // Apply category filter
+  const habits = useMemo(() => {
+    if (categoryFilter === 'all') return sortedHabits;
+    return sortedHabits.filter(
+      (h) => (h as Habit & { category?: string }).category === categoryFilter
+    );
+  }, [sortedHabits, categoryFilter]);
 
   const archiveState = useHabitsArchive(habits);
   const rewardState = useRewardToast(celebrationsEnabled, getStreak);
@@ -136,6 +159,8 @@ export function useHabitsListState(): HabitsListState {
 
   return {
     canNavigateForward: weekDatesState.canNavigateForward,
+    categoryCounts,
+    categoryFilter,
     celebrationsEnabled,
     completionSoundEnabled,
     completionSoundType,
@@ -163,6 +188,7 @@ export function useHabitsListState(): HabitsListState {
     isPremiumUser,
     openCreateHabitScreen,
     reduceMotionPreference,
+    setCategoryFilter,
     toggleHabit,
   };
 }
