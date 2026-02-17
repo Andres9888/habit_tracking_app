@@ -127,6 +127,10 @@ const applicationTables = {
     // "7:00 AM" or "Morning"
     cueTime: v.optional(v.string()),
 
+    // Difficulty level affects XP and strength gains
+    // 'easy' | 'medium' | 'hard' | 'epic'
+    difficulty: v.optional(v.string()),
+
     // Streak Tracking System (Story 1.3)
     currentStreak: v.optional(v.number()),
 

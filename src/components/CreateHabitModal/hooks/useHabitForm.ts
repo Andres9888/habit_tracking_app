@@ -101,6 +101,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
   return {
     closeColorPicker,
     dayPhase: state.dayPhase,
+    difficulty: state.difficulty,
     frequency: state.frequency,
     fullHabitName,
     habitName: habitNameValidation.value,
@@ -117,6 +118,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     selectedColor: state.selectedColor,
     selectedEmoji: state.selectedEmoji,
     setDayPhase: state.setDayPhase,
+    setDifficulty: state.setDifficulty,
     setFrequency: state.setFrequency,
     setHabitName: setHabitNameWithValidation,
     setReminderOption,

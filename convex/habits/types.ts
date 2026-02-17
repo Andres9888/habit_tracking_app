@@ -10,6 +10,7 @@ export { fullHabitValidator, trackingRecordValidator } from './validators';
 /** Create habit args validator */
 export const createHabitArgs = {
   cueAfterBehavior: v.optional(v.string()),
+  difficulty: v.optional(v.string()),
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),
   icon: v.optional(v.string()),
@@ -26,6 +27,7 @@ export const createHabitArgs = {
 /** Update habit args validator */
 export const updateHabitArgs = {
   cueAfterBehavior: v.optional(v.string()),
+  difficulty: v.optional(v.string()),
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),
   daysOfWeek: v.optional(v.array(v.number())),

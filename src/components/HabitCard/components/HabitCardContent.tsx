@@ -15,6 +15,7 @@ import { StrengthProgressBar } from '../../StrengthProgressBar/StrengthProgressB
 import { PendingSyncBadge } from '../../SyncStatus';
 import { styles } from '../HabitCard.styles';
 import { streakStyles } from '../HabitCard.streakStyles';
+import { DifficultyBadge } from './DifficultyBadge';
 import { StatusIndicator } from './StatusIndicator';
 import { StreakBadge } from './StreakBadge';
 import type { HabitCardContentProps } from './HabitCardContent.types';
@@ -35,6 +36,8 @@ function HabitCardContentComponent({
   hasPendingOfflineOps = false,
   chainScale,
   chainRotate,
+  difficulty,
+  isDark: isDarkProp,
 }: HabitCardContentProps) {
   const { colors: themeColors } = useThemeColors();
   return (
@@ -46,12 +49,13 @@ function HabitCardContentComponent({
             numberOfLines={1}
             style={[
               theme.custom.typography.heading3,
-              { color: themeColors.text.primary },
+              { color: themeColors.text.primary, flexShrink: 1 },
               completed && styles.completedText,
             ]}
           >
             {name}
           </Text>
+          <DifficultyBadge difficulty={difficulty} isDark={isDarkProp} />
         </View>
         <View style={styles.statusContainer}>
           <PendingSyncBadge

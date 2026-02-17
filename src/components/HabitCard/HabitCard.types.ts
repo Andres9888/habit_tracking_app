@@ -42,6 +42,9 @@ export interface HabitCardProps {
   /** Is at risk (prediction <40%) */
   atRisk?: boolean;
 
+  /** Habit difficulty level ('easy' | 'medium' | 'hard' | 'epic') */
+  difficulty?: string;
+
   /** Disabled state */
   disabled?: boolean;
 

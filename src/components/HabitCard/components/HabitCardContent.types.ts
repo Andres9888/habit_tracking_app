@@ -24,4 +24,8 @@ export interface HabitCardContentProps {
   chainScale?: SharedValue<number>;
   /** Animated rotation for chain link animation - T014 */
   chainRotate?: SharedValue<number>;
+  /** Habit difficulty level */
+  difficulty?: string;
+  /** Whether dark mode is active */
+  isDark?: boolean;
 }

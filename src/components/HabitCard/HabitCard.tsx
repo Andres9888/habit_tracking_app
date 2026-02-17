@@ -35,6 +35,7 @@ function HabitCardComponent(props: HabitCardProps) {
     icon = '📝',
     strength,
     atRisk = false,
+    difficulty,
     disabled = false,
     onEdit,
     onDelete,
@@ -102,9 +103,11 @@ function HabitCardComponent(props: HabitCardProps) {
             completed={habit.completed}
             completionIcon={completionIcon}
             currentStreak={habit.currentStreak}
+            difficulty={difficulty}
             entranceContentStyle={habit.entrance.contentStyle as AnimatedStyle}
             hasPendingOfflineOps={habit.hasPendingOfflineOps}
             icon={icon}
+            isDark={habit.isDark}
             name={name}
             rippleAnimatedStyle={habit.animations.rippleAnimatedStyle}
             strength={strength}

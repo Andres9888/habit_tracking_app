@@ -48,6 +48,24 @@ export function calculateHabitStreaks(
 }
 
 /**
+ * Difficulty multipliers for XP and strength gains.
+ * Higher difficulty = higher reward to incentivize challenging habits.
+ */
+export const DIFFICULTY_MULTIPLIERS: Record<string, number> = {
+  easy: 0.5,
+  medium: 1.0,
+  hard: 1.5,
+  epic: 2.5,
+};
+
+/**
+ * Get the XP multiplier for a given difficulty level.
+ */
+export function getDifficultyMultiplier(difficulty?: string): number {
+  return DIFFICULTY_MULTIPLIERS[difficulty ?? 'medium'] ?? 1.0;
+}
+
+/**
  * Calculate total XP from tracking data
  */
 export function calculateTotalXP(
@@ -62,8 +80,13 @@ export function calculateTotalXP(
     const habit = habits.find((h) => h._id === tracking.habitId);
     if (!habit) continue;
 
-    // Base XP: 10 per completion
-    let xp = 10;
+    // Difficulty multiplier
+    const multiplier = getDifficultyMultiplier(
+      (habit as unknown as { difficulty?: string }).difficulty
+    );
+
+    // Base XP: 10 per completion, scaled by difficulty
+    let xp = Math.round(10 * multiplier);
 
     // Streak bonus: +2 XP per day in current streak
     const streak = habitStreaks.get(habit._id) || 0;

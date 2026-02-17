@@ -32,6 +32,8 @@ export function CreateHabitScrollContent({
         <CreateHabitFormCentered
           autoFocus
           colors={HABIT_COLORS}
+          difficulty={form.difficulty}
+          onDifficultyChange={form.setDifficulty}
           habitName={form.habitName}
           reminderEnabled={form.remindersEnabled}
           reminderTime={form.reminderTime}

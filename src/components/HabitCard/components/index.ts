@@ -3,6 +3,7 @@
  */
 
 export { ChainLinkAnimation } from './ChainLinkAnimation';
+export { DifficultyBadge } from './DifficultyBadge';
 export { ConfettiBurst } from './ConfettiBurst';
 export { HabitCardContent } from './HabitCardContent';
 export { StatusIndicator, type CompletionIconType } from './StatusIndicator';

@@ -32,6 +32,7 @@ export const create = mutation({
       bestStreak: 0,
       createdAt: Date.now(),
       cueAfterBehavior: validated.cueAfterBehavior,
+      difficulty: args.difficulty ?? 'medium',
       cueLocation: validated.cueLocation,
       cueTime: validated.cueTime,
       currentStreak: 0,

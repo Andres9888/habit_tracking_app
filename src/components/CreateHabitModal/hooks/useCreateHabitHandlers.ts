@@ -15,6 +15,7 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitData {
   dayPhase: string | null;
+  difficulty?: string;
   fullHabitName: string;
   hasReminders: boolean;
   reminderSound?: string | null;
@@ -91,6 +92,7 @@ export function useCreateHabitHandlers() {
   async function handleCreate({
     hasReminders,
     fullHabitName,
+    difficulty,
     reminderTime,
     selectedEmoji,
     selectedColor,
@@ -106,6 +108,7 @@ export function useCreateHabitHandlers() {
 
     try {
       const habitId = await createHabit({
+        difficulty: difficulty ?? 'medium',
         icon: selectedEmoji ?? undefined,
         iconColor: selectedColor,
         name: sanitizedName,

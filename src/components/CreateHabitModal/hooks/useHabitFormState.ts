@@ -12,6 +12,7 @@ import {
 } from '../../../constants/hubermanPhases';
 import type { ReminderOption } from '../components/ReminderSelector';
 import { getReminderOptionFromTime } from './reminderUtils';
+import type { Difficulty } from '../components/DifficultySelector';
 
 const DEFAULT_SOUND = 'Default';
 
@@ -49,6 +50,10 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
   const [dayPhase, setDayPhase] = useState<HubermanPhase | null>(
     getPhaseFromPreferredTime(habitToEdit?.preferredTime)
   );
+  const [difficulty, setDifficulty] = useState<Difficulty>(
+    (habitToEdit as unknown as { difficulty?: Difficulty })?.difficulty ?? 'medium'
+  );
+
   const [reminderOption, setReminderOptionState] = useState<ReminderOption>(
     getReminderOptionFromTime(
       habitToEdit?.remindersEnabled,
@@ -58,6 +63,7 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
 
   return {
     dayPhase,
+    difficulty,
     frequency,
     habitName,
     isColorPickerVisible,
@@ -70,6 +76,7 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     selectedEmoji,
     setColorPickerVisible,
     setDayPhase,
+    setDifficulty,
     setFrequency,
     setHabitName,
     setReminderOptionState,

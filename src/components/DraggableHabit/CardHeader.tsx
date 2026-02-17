@@ -9,6 +9,7 @@
 import React from 'react';
 import { Animated, View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { DifficultyBadge } from '../HabitCard/components/DifficultyBadge';
 import { PhaseTag } from '../PhaseTag';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getIconBackground } from './colorUtils';
@@ -44,7 +45,7 @@ export function CardHeader({
   showHabitStrengthPercentage,
   streak,
 }: CardHeaderProps) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const iconBg = getIconBackground(
     accentColor,
     highContrastMode,
@@ -79,6 +80,10 @@ export function CardHeader({
           >
             {name || habit.name}
           </Text>
+          <DifficultyBadge
+            difficulty={(habit as unknown as { difficulty?: string }).difficulty}
+            isDark={isDark}
+          />
           {habit.preferredTime && (
             <PhaseTag compact preferredTime={habit.preferredTime} />
           )}
