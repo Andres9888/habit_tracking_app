@@ -6,3 +6,4 @@ export { CharacterCard } from './CharacterCard';
 export { ScreenHeader } from './ScreenHeader';
 export { StatCard } from './StatCard';
 export { StatsSection } from './StatsSection';
+export { TrophyRoomSection } from './TrophyRoomSection';

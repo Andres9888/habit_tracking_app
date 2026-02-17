@@ -8,6 +8,7 @@ import {
   AttributesSection,
   StatsSection,
   AchievementsSection,
+  TrophyRoomSection,
 } from './components';
 import { MOCK_CHARACTER_DATA } from './constants';
 import type { CharacterScreenProps } from './types';
@@ -32,7 +33,8 @@ function CharacterScreenContent({ onBack }: CharacterScreenProps) {
           <Animated.View entering={FadeInDown.delay(460).springify().damping(18)}>
             <StatsSection stats={characterData.stats} />
           </Animated.View>
-          <Animated.View entering={FadeInDown.delay(520).springify().damping(18)}>
+          <TrophyRoomSection />
+          <Animated.View entering={FadeInDown.delay(640).springify().damping(18)}>
             <AchievementsSection
               achievements={characterData.recentAchievements}
             />
