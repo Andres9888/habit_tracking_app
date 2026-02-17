@@ -1,13 +1,14 @@
 /** DetailHeader - Dark mode + a11y optimized */
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text } from 'react-native';
-import { X, Edit3 } from 'lucide-react-native';
+import { X, Edit3, Share2 } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { HeaderCompleteToggle } from '../../../components/HeaderCompleteToggle';
 import { useThemeColors } from '../../../theme';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
 import { iconShadow, streakShadow } from './DetailHeader.constants';
 import { HeaderButton } from './HeaderButton';
+import { ShareHabitModal } from '../../../components/HabitShare';
 
 export function DetailHeader({
   habit,
@@ -16,6 +17,7 @@ export function DetailHeader({
   onEdit,
 }: DetailHeaderProps) {
   const { colors, isDark } = useThemeColors();
+  const [shareModalVisible, setShareModalVisible] = useState(false);
   const iconColor = isDark ? colors.text.secondary : '#57534e';
   const textPrimary = isDark ? colors.text.primary : '#1c1917';
   const habitName = habit.icon
@@ -41,12 +43,22 @@ export function DetailHeader({
             habitName={habit.name}
           />
           <HeaderButton
+            icon={<Share2 color={iconColor} size={20} strokeWidth={2.5} />}
+            label='Share habit'
+            onPress={() => setShareModalVisible(true)}
+          />
+          <HeaderButton
             icon={<Edit3 color={iconColor} size={20} strokeWidth={2.5} />}
             label='Edit habit'
             onPress={onEdit}
           />
         </View>
       </Animated.View>
+      <ShareHabitModal
+        visible={shareModalVisible}
+        habit={habit}
+        onClose={() => setShareModalVisible(false)}
+      />
       <Animated.View
         className='items-center px-4 pb-6'
         entering={FadeInDown.duration(280).delay(100).springify().damping(18)}

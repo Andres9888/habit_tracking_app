@@ -4,9 +4,10 @@
  */
 
 import { useCallback } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { toast } from 'sonner';
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -18,6 +19,7 @@ import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { useDeepLinking } from '../../hooks/useDeepLinking';
 
 const styles = StyleSheet.create({
   fabContainer: {
@@ -42,6 +44,18 @@ function HabitsAppContent() {
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
+  });
+
+  // Handle deep linking for habit imports
+  useDeepLinking({
+    onHabitImport: (habitId) => {
+      toast.success('Habit imported successfully! 🎉');
+      triggerSelection();
+    },
+    onError: (error) => {
+      Alert.alert('Import Failed', error);
+      triggerWarning();
+    },
   });
 
   const {
