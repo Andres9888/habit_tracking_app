@@ -3,8 +3,8 @@
  * Orchestrates the habits list, modals, overlays, and floating action button.
  */
 
-import { useCallback } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { useCallback, useState } from 'react';
+import { View, StyleSheet, Pressable, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -26,6 +26,25 @@ const styles = StyleSheet.create({
     right: 24,
   },
   flex1: { flex: 1 },
+  yearInReviewButton: {
+    alignItems: 'center',
+    backgroundColor: '#FAF8F5',
+    borderRadius: 20,
+    bottom: 100,
+    elevation: 4,
+    height: 40,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    width: 40,
+  },
+  yearInReviewEmoji: {
+    fontSize: 20,
+  },
 });
 
 /**
@@ -39,6 +58,7 @@ const styles = StyleSheet.create({
 function HabitsAppContent() {
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
+  const [showYearInReview, setShowYearInReview] = useState(false);
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
@@ -96,6 +116,17 @@ function HabitsAppContent() {
         )}
 
         {list.habits.length > 0 && (
+          <Pressable
+            accessibilityLabel="Year in Review"
+            accessibilityRole="button"
+            style={styles.yearInReviewButton}
+            onPress={() => setShowYearInReview(true)}
+          >
+            <Text style={styles.yearInReviewEmoji}>✨</Text>
+          </Pressable>
+        )}
+
+        {list.habits.length > 0 && (
           <View style={styles.fabContainer}>
             <FloatingActionButton
               celebrationsEnabled={list.celebrationsEnabled}
@@ -109,6 +140,8 @@ function HabitsAppContent() {
           list={list}
           modals={modals}
           paywallVisible={paywallVisible}
+          showYearInReview={showYearInReview}
+          onCloseYearInReview={() => setShowYearInReview(false)}
           onPaywallClose={handlePaywallClose}
           onPaywallSuccess={handlePaywallSuccess}
         />

@@ -160,6 +160,7 @@ import type * as voiceNotesQueries from "../voiceNotesQueries.js";
 import type * as voiceNotesStreakQuery from "../voiceNotesStreakQuery.js";
 import type * as webhooks_revenuecat from "../webhooks/revenuecat.js";
 import type * as webhooks_revenuecatSignature from "../webhooks/revenuecatSignature.js";
+import type * as yearInReview from "../yearInReview.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -317,6 +318,7 @@ declare const fullApi: ApiFromModules<{
   voiceNotesStreakQuery: typeof voiceNotesStreakQuery;
   "webhooks/revenuecat": typeof webhooks_revenuecat;
   "webhooks/revenuecatSignature": typeof webhooks_revenuecatSignature;
+  yearInReview: typeof yearInReview;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
