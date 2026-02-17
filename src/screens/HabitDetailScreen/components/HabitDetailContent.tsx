@@ -1,10 +1,13 @@
 /** HabitDetailContent - Dark mode + a11y optimized */
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import { ProgressPhotos } from '../../../components/ProgressPhotos';
+import { PremiumPaywall } from '../../../components/PremiumPaywall';
+import { usePremium } from '../../../hooks/usePremium';
 import { useThemeColors } from '../../../theme';
 import { colors } from '../../../theme/colors';
 import type { Habit } from '../../../features/habits/types';
@@ -55,12 +58,20 @@ export function HabitDetailContent({
   onDayPress,
 }: HabitDetailContentProps) {
   const { colors, isDark } = useThemeColors();
+  const { isPremium } = usePremium();
+  const [showPremiumPaywall, setShowPremiumPaywall] = useState(false);
+  
   const cardBg = isDark ? colors.card : '#FFFFFF';
   const shadowColor = isDark ? '#000000' : '#1c1917';
   const borderColor = isDark ? colors.border : '#DDD8D2';
   const labelColor = isDark ? colors.text.tertiary : '#9C958D';
 
+  const handlePremiumRequired = () => {
+    setShowPremiumPaywall(true);
+  };
+
   return (
+    <>
     <ScrollView
       bounces
       className='flex-1'
@@ -121,6 +132,36 @@ export function HabitDetailContent({
           />
         </ErrorBoundary>
       </Animated.View>
+
+      {/* PROGRESS PHOTOS section */}
+      <SectionLabel borderColor={borderColor} delay={480} text='PROGRESS PHOTOS' textColor={labelColor} />
+      <Animated.View
+        className='rounded-2xl p-4'
+        entering={anim(540)}
+        style={{
+          backgroundColor: cardBg,
+          elevation: 4,
+          shadowColor,
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: isDark ? 0.3 : 0.08,
+          shadowRadius: 16,
+        }}
+      >
+        <ErrorBoundary>
+          <ProgressPhotos
+            habitId={habit._id}
+            isPremium={isPremium}
+            onPremiumRequired={handlePremiumRequired}
+          />
+        </ErrorBoundary>
+      </Animated.View>
     </ScrollView>
+
+    {/* Premium Paywall Modal */}
+    <PremiumPaywall
+      isVisible={showPremiumPaywall}
+      onClose={() => setShowPremiumPaywall(false)}
+    />
+  </>
   );
 }

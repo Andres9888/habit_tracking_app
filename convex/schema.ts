@@ -603,6 +603,41 @@ const applicationTables = {
     .index('by_habit', ['habitId'])
     .index('by_user', ['userId'])
     .index('by_habit_and_date', ['habitId', 'createdAt']),
+
+  // Progress Photos - Visual progress tracking for habit transformation
+  // Scientific Basis:
+  // - Visual evidence triggers dopamine release and reinforces behavior
+  // - Before/after comparisons create powerful motivation through contrast
+  // - Photo documentation increases accountability and commitment
+  // Business Model:
+  // - Free: 5 photos per habit, Premium: unlimited
+  // - Photo storage costs justify premium tier
+  // - High perceived value for fitness/health habits
+  progressPhotos: defineTable({
+    // Optional caption or note about the photo
+    caption: v.optional(v.string()),
+
+    // Timestamp when photo was taken
+    createdAt: v.number(),
+
+    // Associated habit
+    habitId: v.id('habits'),
+
+    // Cached image URL for convenience (may expire)
+    imageUrl: v.optional(v.string()),
+
+    // Convex file storage ID (use storage.getUrl to get URL)
+    storageId: v.id('_storage'),
+
+    // Last updated timestamp
+    updatedAt: v.optional(v.number()),
+
+    // User who added the photo
+    userId: v.optional(v.string()),
+  })
+    .index('by_habit', ['habitId'])
+    .index('by_user', ['userId'])
+    .index('by_habit_and_date', ['habitId', 'createdAt']),
 };
 
 export default defineSchema({
