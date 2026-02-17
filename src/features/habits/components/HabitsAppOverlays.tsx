@@ -1,10 +1,15 @@
 /**
  * HabitsAppOverlays - Bottom-of-tree overlay components
  * Groups modals, toasts, and paywall into a single render unit
+ *
+ * Paywall is now driven by the A/B test framework (paywall_screen experiment):
+ *   Variant A — RevenueCat native paywall (control)
+ *   Variant B — Social proof ("10,000+ chains built" + testimonials)
+ *   Variant C — Fear-of-loss ("Your X-day streak is at risk without Premium")
  */
 
 import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
-import { RevenueCatPaywall } from '../../../components/RevenueCatPaywall';
+import { PaywallABTest } from '../../../components/PremiumPaywall/PaywallABTest';
 import { HabitsModals } from './HabitsModals';
 import WebToaster from './WebToaster';
 import { TOAST_DURATION_MS } from '@/constants';
@@ -16,6 +21,11 @@ interface HabitsAppOverlaysProps {
   paywallVisible: boolean;
   onPaywallClose: () => void;
   onPaywallSuccess: () => void;
+  /**
+   * The user's current streak in days — passed to Variant C for personalisation.
+   * Falls back to 7 inside PaywallABTest if omitted.
+   */
+  streakDays?: number;
 }
 
 export function HabitsAppOverlays({
@@ -24,6 +34,7 @@ export function HabitsAppOverlays({
   paywallVisible,
   onPaywallClose,
   onPaywallSuccess,
+  streakDays,
 }: HabitsAppOverlaysProps) {
   return (
     <>
@@ -40,8 +51,9 @@ export function HabitsAppOverlays({
         }}
       />
 
-      <RevenueCatPaywall
+      <PaywallABTest
         visible={paywallVisible}
+        streakDays={streakDays}
         onClose={onPaywallClose}
         onPurchaseSuccess={onPaywallSuccess}
         onRestoreSuccess={onPaywallSuccess}

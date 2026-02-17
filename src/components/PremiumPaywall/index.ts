@@ -16,3 +16,11 @@ export type {
   PremiumPaywallProps,
   PaywallVariant,
 } from './PremiumPaywall.types';
+
+// ── A/B Test exports ──────────────────────────────────────────────────
+export { PaywallABTest } from './PaywallABTest';
+export type { PaywallABTestProps } from './PaywallABTest';
+export { PaywallVariantB } from './PaywallVariantB';
+export { PaywallVariantC } from './PaywallVariantC';
+export { usePaywallExperiment, PAYWALL_EXPERIMENT_ID } from './usePaywallExperiment';
+export type { PaywallABVariant, PaywallExperiment } from './usePaywallExperiment';
