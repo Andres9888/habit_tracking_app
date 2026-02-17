@@ -3,7 +3,7 @@
  * Orchestrates the habits list, modals, overlays, and floating action button.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -18,6 +18,7 @@ import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { useNotificationPermissionFlow } from '../../hooks/useNotificationPermissionFlow';
 
 const styles = StyleSheet.create({
   fabContainer: {
@@ -61,6 +62,40 @@ function HabitsAppContent() {
     triggerWarning,
   });
 
+  // Smart notification permission flow — defers OS prompt until the user
+  // has completed their first habit (see docs/smart-notification-permission.md)
+  const {
+    prePermissionVisible,
+    isRequestingPermission,
+    onEnableNotifications,
+    onSkipNotifications,
+    onHabitCompleted,
+  } = useNotificationPermissionFlow();
+
+  /**
+   * Wrap list.toggleHabit to trigger the notification permission flow
+   * after the user completes a habit for the first time. We check status
+   * BEFORE the toggle so we know the direction of the change.
+   */
+  const toggleHabitWithNotifFlow = useCallback(
+    async (args: Parameters<typeof list.toggleHabit>[0]) => {
+      const wasDone = list.getHabitStatus(args.habitId, args.date) === 'done';
+      const result = await list.toggleHabit(args);
+      // Only trigger after a mark-as-done (not an un-completion)
+      if (!wasDone) {
+        void onHabitCompleted(args.habitId);
+      }
+      return result;
+    },
+    [list, onHabitCompleted]
+  );
+
+  /** list with the wrapped toggleHabit — shape matches HabitsListState exactly */
+  const listWithNotifFlow = useMemo(
+    () => ({ ...list, toggleHabit: toggleHabitWithNotifFlow }),
+    [list, toggleHabitWithNotifFlow]
+  );
+
   /** Wrapper for the FAB — delegates to `handleCreateHabitRequest` (async). */
   const onFabPress = useCallback((): void => {
     void handleCreateHabitRequest();
@@ -81,7 +116,7 @@ function HabitsAppContent() {
           <Animated.View entering={FadeInDown.duration(280).springify().damping(18)} style={styles.flex1}>
             <HabitsList
               canNavigateForward={list.canNavigateForward}
-              list={list}
+              list={listWithNotifFlow}
               modals={modals}
               upgradePromptVisible={upgradePromptVisible}
               weekDates={list.weekDates}
@@ -108,7 +143,11 @@ function HabitsAppContent() {
         <HabitsAppOverlays
           list={list}
           modals={modals}
+          notifPrePermissionVisible={prePermissionVisible}
+          notifIsRequestingPermission={isRequestingPermission}
           paywallVisible={paywallVisible}
+          onNotifEnable={onEnableNotifications}
+          onNotifSkip={onSkipNotifications}
           onPaywallClose={handlePaywallClose}
           onPaywallSuccess={handlePaywallSuccess}
         />
