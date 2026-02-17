@@ -434,6 +434,18 @@ const applicationTables = {
     userId: v.optional(v.string()), // Reference to created habit
   }).index('by_template', ['templateId']),
 
+  streakRecoveries: defineTable({
+    habitId: v.id('habits'),
+    /** The missed date that was recovered (YYYY-MM-DD) */
+    recoveredDate: v.string(),
+    usedAt: v.number(),
+    userId: v.string(),
+    /** Month key for counting limits, e.g. "2026-02" */
+    yearMonth: v.string(),
+  })
+    .index('by_user_and_month', ['userId', 'yearMonth'])
+    .index('by_habit_and_date', ['habitId', 'recoveredDate']),
+
   tracking: defineTable({
     completed: v.boolean(),
     date: v.string(),

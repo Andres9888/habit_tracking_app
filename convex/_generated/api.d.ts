@@ -117,6 +117,7 @@ import type * as settings_types from "../settings/types.js";
 import type * as settings_validators from "../settings/validators.js";
 import type * as settings from "../settings.js";
 import type * as storage from "../storage.js";
+import type * as streakRecovery from "../streakRecovery.js";
 import type * as streakUtils_dateHelpers from "../streakUtils/dateHelpers.js";
 import type * as streakUtils_historyCalculation from "../streakUtils/historyCalculation.js";
 import type * as streakUtils_index from "../streakUtils/index.js";
@@ -274,6 +275,7 @@ declare const fullApi: ApiFromModules<{
   "settings/validators": typeof settings_validators;
   settings: typeof settings;
   storage: typeof storage;
+  streakRecovery: typeof streakRecovery;
   "streakUtils/dateHelpers": typeof streakUtils_dateHelpers;
   "streakUtils/historyCalculation": typeof streakUtils_historyCalculation;
   "streakUtils/index": typeof streakUtils_index;
