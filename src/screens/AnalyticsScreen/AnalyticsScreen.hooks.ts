@@ -9,6 +9,7 @@ import { exportData, prepareExportData } from '../../utils/exportData';
 import { usePremium } from '../../hooks/usePremium/usePremium';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { maybeRequestReviewFromAnalytics } from '@/utils/storeReview';
+import { useStatCardData } from '../../hooks/useStatCardData';
 import type {
   ExportFormat,
   UseAnalyticsScreenReturn,
@@ -19,6 +20,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const { isPremium: isPremiumUser } = usePremium();
   const [showPaywall, setShowPaywall] = useState(!isPremiumUser);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showStatCards, setShowStatCards] = useState(false);
   const { triggerLightImpact } = useHapticFeedback();
   const hasCheckedReview = useRef(false);
 
@@ -32,6 +34,12 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
 
   const isLoading = !overviewStats;
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Stat card data derived from existing queries — no extra network calls
+  const { streakData, monthlyData, yearData } = useStatCardData({
+    complianceData,
+    overviewStats,
+  });
 
   // Maybe request review after viewing positive stats (once per session)
   useEffect(() => {
@@ -79,6 +87,10 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     setShowExportMenu(true);
   }, [isPremiumUser]);
 
+  const handleShareStatsPress = useCallback(() => {
+    setShowStatCards(true);
+  }, []);
+
   const handleExport = useCallback(
     async (format: ExportFormat) => {
       setShowExportMenu(false);
@@ -113,18 +125,24 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     handleExport,
     handleExportPress,
     handleHabitPress,
+    handleShareStatsPress,
     handleStartTrial,
     isLoading,
     isPremiumUser,
+    monthlyData,
     onRefresh,
     overviewStats,
     refreshing,
     setShowExportMenu,
     setShowPaywall,
+    setShowStatCards,
     showExportMenu,
     showPaywall,
+    showStatCards,
+    streakData,
     strengthDistribution,
     trendData,
     weeklyInsights: weeklyInsights ?? undefined,
+    yearData,
   };
 };

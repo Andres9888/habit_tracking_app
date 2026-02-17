@@ -3,7 +3,7 @@
  * AnalyticsScreen - Main analytics dashboard screen
  * Shows habit statistics, charts, and insights
  */
-import React, { useMemo } from 'react';
+import React, { lazy, Suspense, useMemo } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
@@ -21,7 +21,12 @@ import {
   InsightsSections,
   ExportButton,
   ExportMenu,
+  ShareStatsButton,
 } from './components';
+
+const StatCardGenerator = lazy(
+  () => import('../../components/StatCardGenerator')
+);
 
 function AnalyticsScreenContent() {
   const { colors: themeColors } = useThemeColors();
@@ -29,6 +34,7 @@ function AnalyticsScreenContent() {
     refreshing,
     showPaywall,
     showExportMenu,
+    showStatCards,
     isPremiumUser,
     isLoading,
     overviewStats,
@@ -36,13 +42,18 @@ function AnalyticsScreenContent() {
     trendData,
     complianceData,
     weeklyInsights,
+    streakData,
+    monthlyData,
+    yearData,
     onRefresh,
     handleHabitPress,
     handleExportPress,
+    handleShareStatsPress,
     handleExport,
     handleStartTrial,
     setShowPaywall,
     setShowExportMenu,
+    setShowStatCards,
   } = useAnalyticsScreen();
 
   // All React hooks must be called before any early returns
@@ -125,6 +136,12 @@ function AnalyticsScreenContent() {
           <Animated.View
             entering={FadeInDown.delay(520).springify().damping(18)}
           >
+            <ShareStatsButton onPress={handleShareStatsPress} />
+          </Animated.View>
+
+          <Animated.View
+            entering={FadeInDown.delay(560).springify().damping(18)}
+          >
             <ExportButton onPress={() => void handleExportPress()} />
           </Animated.View>
         </>
@@ -135,6 +152,18 @@ function AnalyticsScreenContent() {
         onClose={() => setShowExportMenu(false)}
         onExport={(format) => void handleExport(format)}
       />
+
+      {showStatCards && (
+        <Suspense fallback={null}>
+          <StatCardGenerator
+            monthlyData={monthlyData}
+            streakData={streakData}
+            visible={showStatCards}
+            yearData={yearData}
+            onClose={() => setShowStatCards(false)}
+          />
+        </Suspense>
+      )}
     </ScrollView>
   );
 }

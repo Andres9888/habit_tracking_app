@@ -6,6 +6,11 @@ import type { StrengthDistributionData } from '../../components/StrengthDistribu
 import type { TrendData } from '../../components/TrendLineChart/types';
 import type { HeatmapData } from '../../components/ComplianceHeatmap/ComplianceHeatmap.types';
 import type { WeeklyInsights } from '../../components/WeeklyInsightsCard';
+import type {
+  StreakCardData,
+  MonthlyRecapCardData,
+  YearInReviewCardData,
+} from '../../components/StatCardGenerator/StatCardGenerator.types';
 
 // Re-export canonical chart types for consumers
 export type { StrengthDistributionData } from '../../components/StrengthDistributionChart/StrengthDistributionChart.types';
@@ -58,6 +63,7 @@ export interface UseAnalyticsScreenReturn {
   refreshing: boolean;
   showPaywall: boolean;
   showExportMenu: boolean;
+  showStatCards: boolean;
   isPremiumUser: boolean;
   isLoading: boolean;
 
@@ -68,12 +74,19 @@ export interface UseAnalyticsScreenReturn {
   complianceData: HeatmapData[] | undefined;
   weeklyInsights: WeeklyInsights | undefined;
 
+  // Stat card data
+  streakData: StreakCardData;
+  monthlyData: MonthlyRecapCardData;
+  yearData: YearInReviewCardData;
+
   // Handlers
   onRefresh: () => Promise<void>;
   handleHabitPress: (habitId: string) => void;
   handleExportPress: () => void;
+  handleShareStatsPress: () => void;
   handleExport: (format: ExportFormat) => Promise<void>;
   handleStartTrial: () => void;
   setShowPaywall: (show: boolean) => void;
   setShowExportMenu: (show: boolean) => void;
+  setShowStatCards: (show: boolean) => void;
 }
