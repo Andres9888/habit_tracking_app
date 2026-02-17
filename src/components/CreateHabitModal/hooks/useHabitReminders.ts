@@ -8,7 +8,7 @@ import { Alert, Platform } from 'react-native';
 import {
   cancelHabitReminder,
   ensureNotificationPermissions,
-  scheduleHabitReminder,
+  scheduleSmartHabitReminder,
 } from '../../../utils/notifications';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
@@ -60,12 +60,17 @@ export async function scheduleReminder({
   if (Platform.OS === 'web') return true;
 
   try {
-    const scheduled = await scheduleHabitReminder({
-      body: 'Time to check in on your habit progress!',
+    const scheduled = await scheduleSmartHabitReminder({
       habitId,
+      title: habitName,
+      body: '', // Will be generated dynamically
       reminderTime,
       skipPermissionCheck: true,
-      title: habitName,
+      context: {
+        habitName,
+        currentStreak: 0, // New habit, no streak yet
+        // Smart notifications will use time-aware + encouraging messages for new habits
+      },
     });
 
     if (!scheduled) {

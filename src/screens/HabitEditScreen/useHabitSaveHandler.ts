@@ -2,12 +2,12 @@ import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
-import type { Id } from '../../../convex/_generated/dataModel';
+import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import {
   cancelHabitReminder,
   ensureNotificationPermissions,
   formatReminderTime,
-  scheduleHabitReminder,
+  scheduleSmartHabitReminder,
 } from '../../utils/notifications';
 import { showSaveError } from '../../utils/errorAlerts';
 
@@ -19,6 +19,7 @@ interface UseSaveHandlerProps {
   remindersEnabled: boolean;
   reminderTime: Date;
   onSuccess: () => void;
+  habit?: Doc<'habits'> | null; // Add habit data for smart notifications
 }
 
 export function useHabitSaveHandler({
@@ -29,6 +30,7 @@ export function useHabitSaveHandler({
   remindersEnabled,
   reminderTime,
   onSuccess,
+  habit,
 }: UseSaveHandlerProps) {
   const updateHabit = useMutation(api.habits.update);
   const [isSaving, setIsSaving] = useState(false);
@@ -52,12 +54,18 @@ export function useHabitSaveHandler({
         enableReminders = hasPermission;
 
         if (hasPermission) {
-          const scheduled = await scheduleHabitReminder({
-            body: 'Time to check in on your habit progress!',
+          const scheduled = await scheduleSmartHabitReminder({
             habitId: String(habitId),
+            title: fullName,
+            body: '', // Will be generated dynamically
             reminderTime,
             skipPermissionCheck: true,
-            title: fullName,
+            context: {
+              habitName: fullName,
+              currentStreak: habit?.currentStreak,
+              bestStreak: habit?.bestStreak,
+              lastCompletedDate: habit?.lastCompletedDate,
+            },
           });
           enableReminders = scheduled;
         }

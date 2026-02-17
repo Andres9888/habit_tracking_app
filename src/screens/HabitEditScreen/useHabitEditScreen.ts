@@ -48,6 +48,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     reminderTime,
     selectedColor,
     selectedEmoji,
+    habit,
   });
 
   const { handleDelete, handleArchive } = useHabitActions({

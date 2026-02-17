@@ -14,7 +14,11 @@ export {
 export { ensureNotificationPermissions } from './permissions';
 
 // Re-export habit reminders
-export { cancelHabitReminder, scheduleHabitReminder } from './habitReminders';
+export {
+  cancelHabitReminder,
+  scheduleHabitReminder,
+  scheduleSmartHabitReminder,
+} from './habitReminders';
 
 // Re-export time utilities
 export {
@@ -68,6 +72,7 @@ export type {
   ScheduleLetterUnlockParams,
   ScheduledLetterNotification,
 } from './types';
+export type { NotificationContext } from './smartMessages';
 export type {
   AffirmationFrequency,
   ScheduleAffirmationDeliveryParams,
