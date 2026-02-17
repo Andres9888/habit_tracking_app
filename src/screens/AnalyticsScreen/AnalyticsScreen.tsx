@@ -17,6 +17,7 @@ import {
   AnalyticsHeader,
   EmptyState,
   OverviewStats,
+  PersonalizedInsights,
   ChartSections,
   InsightsSections,
   ExportButton,
@@ -104,6 +105,12 @@ function AnalyticsScreenContent() {
           <Animated.View
             entering={FadeInDown.delay(400).springify().damping(18)}
           >
+            <PersonalizedInsights />
+          </Animated.View>
+
+          <Animated.View
+            entering={FadeInDown.delay(460).springify().damping(18)}
+          >
             <ChartSections
               complianceData={complianceData}
               isLoading={isLoading}
@@ -113,7 +120,7 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(460).springify().damping(18)}
+            entering={FadeInDown.delay(520).springify().damping(18)}
           >
             <InsightsSections
               rankedHabits={rankedHabits}
@@ -123,7 +130,7 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(520).springify().damping(18)}
+            entering={FadeInDown.delay(580).springify().damping(18)}
           >
             <ExportButton onPress={() => void handleExportPress()} />
           </Animated.View>
