@@ -18,6 +18,8 @@ import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { TooltipOverlay } from '../../components/TooltipTour';
+import { useOnboardingTour } from '../../components/TooltipTour/useOnboardingTour';
 
 const styles = StyleSheet.create({
   fabContainer: {
@@ -42,6 +44,12 @@ function HabitsAppContent() {
   const { triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
+  });
+
+  // Trigger onboarding tour after first habit is created
+  useOnboardingTour({
+    habitCount: list.habits.length,
+    isEnabled: !list.isHabitsLoading,
   });
 
   const {
@@ -112,6 +120,9 @@ function HabitsAppContent() {
           onPaywallClose={handlePaywallClose}
           onPaywallSuccess={handlePaywallSuccess}
         />
+
+        {/* Onboarding tooltip tour */}
+        <TooltipOverlay />
       </View>
     </GestureHandlerRootView>
   );

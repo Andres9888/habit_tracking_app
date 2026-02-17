@@ -27,6 +27,7 @@ import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
 import { ThemeColorProvider } from './theme/ThemeContext';
+import { TooltipTourProvider } from './components/TooltipTour';
 import theme from './theme';
 
 // Initialize Sentry after first frame to avoid blocking app launch.
@@ -98,9 +99,11 @@ function CoreProviders({ children }: PropsWithChildren) {
             <SentryUserSync>
               <ConvexClerkProvider>
                 <ThemeColorProvider>
-                  <LazyProviders>
-                    {children}
-                  </LazyProviders>
+                  <TooltipTourProvider>
+                    <LazyProviders>
+                      {children}
+                    </LazyProviders>
+                  </TooltipTourProvider>
                 </ThemeColorProvider>
               </ConvexClerkProvider>
             </SentryUserSync>
