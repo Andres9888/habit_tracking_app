@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react-native';
 import { Pressable, Text } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { ViewStyle } from 'react-native';
@@ -21,6 +22,7 @@ export function AddHabitButton({
   onPressIn,
   onPressOut,
 }: AddHabitButtonProps) {
+  const { isDark } = useThemeColors();
   return (
     <Animated.View style={animatedStyle}>
       <Pressable
@@ -38,7 +40,7 @@ export function AddHabitButton({
           start={{ x: 0, y: 0 }}
           style={{
             elevation: 3,
-            shadowColor: '#1c1917',
+            shadowColor: isDark ? '#000000' : '#1c1917',
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: SHADOW_OPACITY.minimal,
             shadowRadius: 16,

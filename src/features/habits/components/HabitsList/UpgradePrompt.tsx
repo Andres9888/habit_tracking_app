@@ -11,6 +11,7 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
@@ -22,6 +23,21 @@ interface UpgradePromptProps {
 }
 
 export function UpgradePrompt({
+  onClose,
+  onUpgradePress,
+  visible,
+}: UpgradePromptProps) {
+  const { colors, isDark } = useThemeColors();
+
+  if (!visible) return null;
+  onClose,
+  onUpgradePress,
+  visible,
+}: UpgradePromptProps) {
+  const { colors, isDark } = useThemeColors();
+  const overlayBg = isDark ? 'rgba(0, 0, 0, 0.7)' : 'bg-stone-900/50';
+
+  if (!visible) return null;
   onClose,
   onUpgradePress,
   visible,
@@ -46,7 +62,7 @@ export function UpgradePrompt({
       >
         <LinearGradient
           className='absolute inset-0 rounded-t-3xl'
-          colors={['#ffffff', 'rgba(255, 251, 235, 0.3)']}
+          colors={[colors.card, isDark ? 'rgba(255, 251, 235, 0.05)' : 'rgba(255, 251, 235, 0.3)']}
         />
         <View className='gap-4'>
           <View className='items-center pb-2'>
@@ -86,11 +102,17 @@ export function UpgradePrompt({
             accessibilityHint='Dismiss this upgrade prompt'
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
-            className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
-            style={({ pressed }) => ({ opacity: pressed ? OPACITY.high : OPACITY.full })}
+            className='items-center rounded-full border-2 px-5 py-3'
+            style={({ pressed }) => [
+              { opacity: pressed ? OPACITY.high : OPACITY.full },
+              {
+                backgroundColor: isDark ? colors.card : 'rgba(255, 255, 255, 0.8)',
+                borderColor: colors.border,
+              },
+            ]}
             onPress={onClose}
           >
-            <Text className='text-[15px] font-normal text-stone-600'>
+            <Text style={{ color: colors.text.secondary }} className='text-[15px] font-normal'>
               Maybe later
             </Text>
           </Pressable>
