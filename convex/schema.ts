@@ -615,6 +615,39 @@ const applicationTables = {
     .index('by_habit', ['habitId'])
     .index('by_user', ['userId'])
     .index('by_habit_and_date', ['habitId', 'createdAt']),
+
+  // Streak Recoveries - Premium feature to restore broken streaks
+  // Premium users get 3 recoveries per habit per month, free users get 1
+  // Cost scales with streak length (1 week = 1 coin, 1 month = 3 coins)
+  streakRecoveries: defineTable({
+    // The recovered streak length
+    recoveredStreakLength: v.number(),
+
+    // Cost in premium coins spent for recovery
+    cost: v.number(),
+
+    // Timestamp when streak was recovered
+    createdAt: v.number(),
+
+    // Associated habit
+    habitId: v.id('habits'),
+
+    // Date from which the streak was broken (format: YYYY-MM-DD)
+    brokenDate: v.string(),
+
+    // ISO year-month for monthly limit tracking (e.g., "2025-01")
+    monthKey: v.string(),
+
+    // Last updated timestamp
+    updatedAt: v.optional(v.number()),
+
+    // User who recovered the streak
+    userId: v.optional(v.string()),
+  })
+    .index('by_habit', ['habitId'])
+    .index('by_user', ['userId'])
+    .index('by_habit_and_month', ['habitId', 'monthKey'])
+    .index('by_user_and_date', ['userId', 'createdAt']),
 };
 
 export default defineSchema({
