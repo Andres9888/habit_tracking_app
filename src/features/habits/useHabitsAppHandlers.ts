@@ -36,6 +36,8 @@ interface UseHabitsAppHandlersResult {
   handleUpgradeConfirm: () => void;
   handleUpgradeDismiss: () => void;
   handleUpgradeIntent: () => void;
+  /** Directly open the paywall (used by trial upgrade flow). */
+  openPaywall: () => void;
   paywallVisible: boolean;
   upgradePromptVisible: boolean;
 }
@@ -116,6 +118,13 @@ export function useHabitsAppHandlers({
     triggerWarning,
   ]);
 
+  /** Directly open the paywall — used by the trial banner and expired screen. */
+  const openPaywall = useCallback(() => {
+    logInteraction('premium_trial_upgrade_cta', { source: 'trial_flow' });
+    triggerSelection();
+    setPaywallVisible(true);
+  }, [triggerSelection]);
+
   return {
     handleCreateHabitRequest,
     handlePaywallClose,
@@ -123,6 +132,7 @@ export function useHabitsAppHandlers({
     handleUpgradeConfirm,
     handleUpgradeDismiss,
     handleUpgradeIntent,
+    openPaywall,
     paywallVisible,
     upgradePromptVisible,
   };

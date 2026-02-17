@@ -18,6 +18,9 @@ import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { TrialCountdownBanner } from './components/TrialCountdownBanner';
+import { TrialExpiredScreen } from '../../screens/TrialExpiredScreen';
+import { usePremiumTrial } from '../../hooks/usePremiumTrial';
 
 const styles = StyleSheet.create({
   fabContainer: {
@@ -53,6 +56,7 @@ function HabitsAppContent() {
     handleUpgradeIntent,
     paywallVisible,
     upgradePromptVisible,
+    openPaywall,
   } = useHabitsAppHandlers({
     hasReachedHabitLimit: list.hasReachedHabitLimit,
     isPremiumUser: list.isPremiumUser,
@@ -60,6 +64,22 @@ function HabitsAppContent() {
     triggerSelection,
     triggerWarning,
   });
+
+  // ── Premium Trial ──────────────────────────────────────────────────
+  const {
+    showTrialBanner,
+    showExpiredScreen,
+    daysRemaining,
+    dismissExpiredScreen,
+  } = usePremiumTrial({ isPremium: list.isPremiumUser });
+
+  /** Open the paywall from the trial banner or expired screen. */
+  const handleTrialUpgrade = useCallback((): void => {
+    // If the expired screen is showing, let it close first, then open paywall
+    dismissExpiredScreen();
+    openPaywall?.();
+  }, [dismissExpiredScreen, openPaywall]);
+  // ──────────────────────────────────────────────────────────────────
 
   /** Wrapper for the FAB — delegates to `handleCreateHabitRequest` (async). */
   const onFabPress = useCallback((): void => {
@@ -74,6 +94,14 @@ function HabitsAppContent() {
     <GestureHandlerRootView style={styles.flex1}>
       <View style={[styles.flex1, { backgroundColor: colors.background }]}>
         <SyncStatusOverlays />
+
+        {/* Trial countdown banner — sits below the status bar, above the list */}
+        {showTrialBanner && (
+          <TrialCountdownBanner
+            daysRemaining={daysRemaining}
+            onUpgradePress={handleTrialUpgrade}
+          />
+        )}
 
         {showHabitsSkeleton ? (
           <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
@@ -111,6 +139,13 @@ function HabitsAppContent() {
           paywallVisible={paywallVisible}
           onPaywallClose={handlePaywallClose}
           onPaywallSuccess={handlePaywallSuccess}
+        />
+
+        {/* Trial expired conversion screen */}
+        <TrialExpiredScreen
+          visible={showExpiredScreen}
+          onUpgradePress={handleTrialUpgrade}
+          onDismiss={dismissExpiredScreen}
         />
       </View>
     </GestureHandlerRootView>
