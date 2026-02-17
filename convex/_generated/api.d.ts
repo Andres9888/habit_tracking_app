@@ -66,6 +66,7 @@ import type * as habits_archive from "../habits/archive.js";
 import type * as habits_create from "../habits/create.js";
 import type * as habits_get from "../habits/get.js";
 import type * as habits_getTracking from "../habits/getTracking.js";
+import type * as habits_import from "../habits/import.js";
 import type * as habits_list from "../habits/list.js";
 import type * as habits_pause from "../habits/pause.js";
 import type * as habits_remove from "../habits/remove.js";
@@ -223,6 +224,7 @@ declare const fullApi: ApiFromModules<{
   "habits/create": typeof habits_create;
   "habits/get": typeof habits_get;
   "habits/getTracking": typeof habits_getTracking;
+  "habits/import": typeof habits_import;
   "habits/list": typeof habits_list;
   "habits/pause": typeof habits_pause;
   "habits/remove": typeof habits_remove;

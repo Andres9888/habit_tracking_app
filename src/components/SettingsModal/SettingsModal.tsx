@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { api } from '../../../convex/_generated/api';
 import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
+import { ImportHabitsModal } from '../ImportHabitsModal';
 import { SettingsModalSkeleton } from '../SkeletonLoader';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
@@ -74,6 +75,21 @@ function SettingsModalContent({
     );
   }
 
+  if (view === 'import') {
+    return (
+      <ImportHabitsModal
+        visible={visible}
+        onClose={() => {
+          setView('settings');
+          handleClose();
+        }}
+        onImportComplete={() => {
+          setView('settings');
+        }}
+      />
+    );
+  }
+
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={handleClose}>
       accessibilityViewIsModal
@@ -111,6 +127,7 @@ function SettingsModalContent({
               onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
+              onOpenImportHabits={() => setView('import')}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
             />

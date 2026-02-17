@@ -10,6 +10,7 @@ import {
   Sun,
   Volume2,
   Lock,
+  Download,
 } from 'lucide-react-native';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -256,6 +257,14 @@ export function SettingsContent(p: SettingsContentProps) {
         {/* Data Section - Habit management */}
         <Animated.View entering={anim(240)}>
           <SettingsSection highContrastMode={hc} title='Data'>
+            <SettingsRow
+              highContrastMode={hc}
+              icon={<Download color='#047857' size={16} />}
+              iconBackgroundColor='#d1fae5'
+              label='Import Habits'
+              type='navigation'
+              onPress={p.onOpenImportHabits}
+            />
             <SettingsRow
               badge={p.archivedHabitsCount}
               highContrastMode={hc}

@@ -19,7 +19,7 @@ const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
 export const useSettingsModalLogic = ({
   onClose,
 }: UseSettingsModalLogicProps) => {
-  const [view, setView] = useState<'settings' | 'archived' | 'paused'>(
+  const [view, setView] = useState<'settings' | 'archived' | 'paused' | 'import'>(
     'settings'
   );
   const settings = useQuery(api.settings.get);
