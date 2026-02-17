@@ -1,8 +1,10 @@
+/* eslint-disable max-lines */
 /** HabitDetailContent - Dark mode + a11y optimized */
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
+import { ChainVisualizationBanner } from '../../../components/ChainVisualizationBanner';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import { useThemeColors } from '../../../theme';
@@ -60,6 +62,17 @@ export function HabitDetailContent({
   const borderColor = isDark ? colors.border : '#DDD8D2';
   const labelColor = isDark ? colors.text.tertiary : '#9C958D';
 
+  const accentColor = habit.color ?? habit.iconColor ?? colors.primary[600] ?? '#059669';
+
+  const handleRepairGap = useCallback(
+    (missedDate: string) => {
+      // Trigger the same flow as tapping a missed day on the calendar
+      const isCompleted = completedDates.has(missedDate);
+      onDayPress(missedDate, isCompleted);
+    },
+    [completedDates, onDayPress],
+  );
+
   return (
     <ScrollView
       bounces
@@ -67,7 +80,26 @@ export function HabitDetailContent({
       contentContainerClassName='pb-8 px-4'
       showsVerticalScrollIndicator={false}
     >
-      {/* STRENGTH section */}
+      {/* ──────────── CHAIN section ──────────── */}
+      <SectionLabel
+        borderColor={borderColor}
+        delay={120}
+        text='CHAIN'
+        textColor={labelColor}
+      />
+      <Animated.View entering={anim(160)}>
+        <ErrorBoundary>
+          <ChainVisualizationBanner
+            accentColor={accentColor}
+            completedDates={completedDates}
+            habitCreatedAt={habit.createdAt}
+            habitName={habit.name}
+            onRepairGap={handleRepairGap}
+          />
+        </ErrorBoundary>
+      </Animated.View>
+
+      {/* ──────────── STRENGTH section ──────────── */}
       {habit.createdAt && (
         <>
           <SectionLabel borderColor={borderColor} delay={240} text='STRENGTH' textColor={labelColor} />
@@ -86,7 +118,7 @@ export function HabitDetailContent({
             <ErrorBoundary>
               <HabitStrengthSection
                 completedDates={completedDates}
-                habitColor={habit.color ?? habit.iconColor}
+                habitColor={accentColor}
                 habitCreatedAt={habit.createdAt}
                 habitId={habit._id}
                 habitStrength={habit.strength}
@@ -96,7 +128,7 @@ export function HabitDetailContent({
         </>
       )}
 
-      {/* HISTORY section */}
+      {/* ──────────── HISTORY section ──────────── */}
       <SectionLabel borderColor={borderColor} delay={360} text='HISTORY' textColor={labelColor} />
       <Animated.View
         className='rounded-2xl p-4'
@@ -113,7 +145,7 @@ export function HabitDetailContent({
         <ErrorBoundary>
           <MonthlyCalendarGrid
             completedDates={completedDates}
-            habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
+            habitColor={accentColor}
             habitCreatedAt={habit.createdAt}
             habitId={habit._id}
             notesByDate={notesByDate}
