@@ -23,6 +23,7 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
+import { NetworkErrorBanner } from './components/NetworkErrorBanner';
 import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
@@ -115,6 +116,7 @@ export default function App() {
   return (
     <CoreProviders>
       <AuthGate />
+      <NetworkErrorBanner />
     </CoreProviders>
   );
 }

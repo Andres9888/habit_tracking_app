@@ -25,7 +25,7 @@ interface RetryButtonProps {
 export function RetryButton({ onRetry }: RetryButtonProps) {
   const { triggerLightImpact } = useHapticFeedback();
   const scale = useSharedValue(1);
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -52,9 +52,13 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
       style={[
         {
           backgroundColor: colors.primary[500],
-          borderRadius: 8,
+          borderRadius: 12,
           paddingHorizontal: 24,
           paddingVertical: 12,
+          shadowColor: isDark ? '#000' : colors.primary[500],
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: isDark ? 0.4 : 0.2,
+          shadowRadius: 8,
         },
         animatedStyle,
       ]}
@@ -63,7 +67,7 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
       onPressOut={handlePressOut}
     >
       <Text
-        style={{ color: colors.text.inverse, fontSize: 17, fontWeight: '600' }}
+        style={{ color: '#FFF', fontSize: 17, fontWeight: '600' }}
       >
         Try Again
       </Text>

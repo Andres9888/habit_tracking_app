@@ -21,7 +21,7 @@ export function ScreenErrorFallback({
   onRetry,
   onGoBack,
 }: ScreenErrorFallbackProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
@@ -39,10 +39,12 @@ export function ScreenErrorFallback({
       marginBottom: 16,
     },
     errorDetails: {
-      backgroundColor: colors.card,
-      borderRadius: 8,
+      backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card,
+      borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+      borderRadius: 12,
+      borderWidth: 1,
       marginTop: 24,
-      padding: 12,
+      padding: 16,
       width: '100%',
     },
     errorStack: {
@@ -63,13 +65,13 @@ export function ScreenErrorFallback({
       marginTop: 24,
       paddingHorizontal: 32,
       paddingVertical: 14,
-      shadowColor: colors.primary[500],
+      shadowColor: isDark ? '#000' : colors.primary[500],
       shadowOffset: { height: 4, width: 0 },
-      shadowOpacity: 0.2,
+      shadowOpacity: isDark ? 0.4 : 0.2,
       shadowRadius: 8,
     },
     primaryButtonText: {
-      color: colors.text.inverse,
+      color: '#FFF',
       fontSize: 17,
       fontWeight: '600',
     },
