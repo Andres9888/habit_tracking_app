@@ -1,112 +1,156 @@
 /**
  * DailyQuote Component
- * Shows a motivational quote that changes daily
+ * 
+ * Displays a motivational quote that rotates daily based on the day of the year.
+ * Features:
+ * - Subtle design below the header
+ * - Share functionality
+ * - Dark mode support
+ * - Design system compliant (typography, colors, shadows, animations)
  */
 
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { Quote, RefreshCw } from 'lucide-react-native';
-import { QUOTES } from './quotes';
+import React, { useCallback } from 'react';
+import { View, Text, Pressable, StyleSheet, Share, Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { typography } from '../../theme/typography';
+import { getTodayQuote } from '../../data/dailyQuotes';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface DailyQuoteProps {
-  /** Override the quote (optional) */
-  quote?: { text: string; author: string };
-  /** Show refresh button */
-  showRefresh?: boolean;
-  /** Callback when refresh is pressed */
-  onRefresh?: () => void;
+  /**
+   * Whether to reduce motion for accessibility
+   */
+  reduceMotion?: boolean;
 }
 
-function getDayOfYear(): number {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now.getTime() - start.getTime();
-  const oneDay = 1000 * 60 * 60 * 24;
-  return Math.floor(diff / oneDay);
-}
-
-export function DailyQuote({
-  quote: overrideQuote,
-  showRefresh,
-  onRefresh,
-}: DailyQuoteProps) {
+export function DailyQuote({ reduceMotion = false }: DailyQuoteProps) {
   const { colors } = useThemeColors();
+  const quote = getTodayQuote();
 
-  const quote = useMemo(() => {
-    if (overrideQuote) return overrideQuote;
-    // Use day of year to select quote (consistent per day)
-    const dayOfYear = getDayOfYear();
-    return QUOTES[dayOfYear % QUOTES.length];
-  }, [overrideQuote]);
+  const handleShare = useCallback(async () => {
+    try {
+      await Share.share({
+        message: `"${quote}"\n\n— Daily motivation from Chain Day`,
+        // iOS only: title, url
+        ...(Platform.OS === 'ios' && {
+          title: 'Daily Motivation',
+        }),
+      });
+    } catch (error) {
+      // User cancelled or error occurred
+      console.error('Error sharing quote:', error);
+    }
+  }, [quote]);
 
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        author: {
-          color: colors.gray[500],
-          fontSize: 13,
-          fontWeight: '500',
-        },
-        container: {
-          backgroundColor: colors.gray[50],
-          borderLeftColor: colors.gray[400],
-          borderLeftWidth: 3,
-          borderRadius: 16,
-          marginHorizontal: 16,
-          marginVertical: 8,
-          padding: 16,
-        },
-        footer: {
-          alignItems: 'center',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        },
-        iconContainer: {
-          marginBottom: 8,
-        },
-        quoteText: {
-          color: colors.gray[600],
-          fontSize: 13,
-          fontStyle: 'italic',
-          lineHeight: 22,
-        },
-        refreshButton: {
-          alignItems: 'center' as const,
-          height: 44,
-          justifyContent: 'center' as const,
-          width: 44,
-        },
-      }),
-    [colors]
-  );
+  const dynamicStyles = {
+    container: {
+      backgroundColor: colors.card,
+      borderColor: colors.border,
+    },
+    quoteText: {
+      color: colors.text.secondary,
+    },
+    shareButton: {
+      backgroundColor: colors.background,
+    },
+    shareIcon: {
+      color: colors.primary[600],
+    },
+  };
 
   return (
-    <Animated.View entering={FadeIn.delay(100)} style={styles.container}>
-      <View style={styles.iconContainer}>
-        <Quote color={colors.gray[400]} size={16} />
-      </View>
+    <AnimatedPressable
+      entering={reduceMotion ? undefined : FadeInDown.duration(280).delay(60).springify().damping(18)}
+      style={[styles.container, dynamicStyles.container]}
+      onPress={handleShare}
+      accessibilityLabel={`Daily quote: ${quote}. Tap to share.`}
+      accessibilityRole="button"
+      accessibilityHint="Double tap to share this quote"
+    >
+      <View style={styles.content}>
+        {/* Quote Icon */}
+        <View style={styles.iconContainer}>
+          <Text style={styles.quoteIcon}>💭</Text>
+        </View>
 
-      <Text style={styles.quoteText}>"{quote.text}"</Text>
+        {/* Quote Text */}
+        <Text 
+          style={[styles.quoteText, typography.caption, dynamicStyles.quoteText]}
+          numberOfLines={3}
+        >
+          {quote}
+        </Text>
 
-      <View style={styles.footer}>
-        <Text style={styles.author}>— {quote.author}</Text>
-        {showRefresh && onRefresh && (
-          <Pressable
-            accessibilityLabel='Refresh quote'
-            accessibilityRole='button'
-            hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
-            style={styles.refreshButton}
-            onPress={onRefresh}
-          >
-            <RefreshCw color={colors.gray[400]} size={14} />
-          </Pressable>
-        )}
+        {/* Share Button */}
+        <Pressable
+          style={[styles.shareButton, dynamicStyles.shareButton]}
+          onPress={handleShare}
+          hitSlop={8}
+          accessibilityLabel="Share quote"
+          accessibilityRole="button"
+        >
+          <Ionicons 
+            name="share-outline" 
+            size={16} 
+            color={dynamicStyles.shareIcon.color}
+          />
+        </Pressable>
       </View>
-    </Animated.View>
+    </AnimatedPressable>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginHorizontal: 16,
+    marginBottom: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    // Design system shadow: 4px offset, 16px blur, 0.08 opacity
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 4, // Android
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  iconContainer: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexShrink: 0,
+  },
+  quoteIcon: {
+    fontSize: 20,
+  },
+  quoteText: {
+    flex: 1,
+    lineHeight: 18,
+  },
+  shareButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexShrink: 0,
+    // Subtle shadow on button
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+});
 
 export default DailyQuote;

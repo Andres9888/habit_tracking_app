@@ -4,8 +4,9 @@
  * Contains (top-to-bottom):
  * 1. **OfflineIndicator** (US3) — shown when the device loses connectivity.
  * 2. **HabitsHeader** — title, completion summary, action buttons (add, sort, settings, templates).
- * 3. **CalendarTimeline** — week-view dots with day completion heat and navigation arrows.
- * 4. **TrialCountdownBanner** — shown during an active free-trial period.
+ * 3. **DailyQuote** — motivational quote that rotates daily.
+ * 4. **CalendarTimeline** — week-view dots with day completion heat and navigation arrows.
+ * 5. **TrialCountdownBanner** — shown during an active free-trial period.
  *
  * Animated values (`headerOpacity/TranslateY`, `calendarOpacity/TranslateY`) drive
  * the staggered entrance choreography orchestrated by `useHabitsListAnimations`.
@@ -23,6 +24,7 @@ import {
   TrialCountdownBanner,
   useTrialCountdown,
 } from '../../../../components/TrialCountdownBanner';
+import { DailyQuote } from '../../../../components/DailyQuote';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
@@ -64,6 +66,10 @@ function HabitsListHeaderComponent(
           totalHabits={computed.totalHabits}
         />
       </Animated.View>
+
+      {/* Daily Motivational Quote */}
+      <DailyQuote reduceMotion={props.reduceMotionPreference} />
+
       {computed.shouldShowTimeline && (
         <Animated.View
           style={{

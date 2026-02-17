@@ -1,3 +1,2 @@
-export { DailyQuote, default } from './DailyQuote';
-export { QUOTES } from './quotes';
-export type { QuoteData } from './quotes';
+export { DailyQuote } from './DailyQuote';
+export { getTodayQuote, getQuoteForDate, DAILY_QUOTES } from '../../data/dailyQuotes';
