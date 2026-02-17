@@ -24,7 +24,7 @@ const COOLDOWN_DAYS = RATING_COOLDOWN_DAYS;
 const MIN_COMPLETIONS = MIN_COMPLETIONS_FOR_RATING;
 
 /** Streak milestones that should trigger a review prompt */
-const REVIEW_ELIGIBLE_MILESTONES = new Set([7, 14, 30]);
+const REVIEW_ELIGIBLE_MILESTONES = new Set([3, 7, 14, 30]);
 
 /**
  * Increment the completion counter. Call on every habit completion.

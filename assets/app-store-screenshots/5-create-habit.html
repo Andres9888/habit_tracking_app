@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChainDay - Create Habit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px;
+        }
+        .phone-frame {
+            width: 393px;
+            height: 852px;
+            background: #000;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5), 0 30px 60px -30px rgba(0,0,0,0.6);
+            position: relative;
+        }
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 35px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 10;
+        }
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%);
+            border-radius: 45px;
+            overflow: hidden;
+            position: relative;
+        }
+        .status-bar {
+            height: 54px;
+            background: #fafafa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            padding-top: 10px;
+        }
+        .status-bar span {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .modal {
+            width: 100%;
+            background: white;
+            border-radius: 24px 24px 0 0;
+            padding: 24px;
+            max-height: 85%;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .modal-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        .close-btn {
+            font-size: 28px;
+            color: #666;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: #667eea;
+        }
+        .form-input::placeholder {
+            color: #999;
+        }
+        .icon-picker {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+        .icon-option {
+            width: 48px;
+            height: 48px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .icon-option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .color-picker {
+            display: flex;
+            gap: 10px;
+        }
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .color-option.selected {
+            box-shadow: 0 0 0 3px #667eea;
+        }
+        .time-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #f5f5f5;
+            border-radius: 12px;
+        }
+        .time-selector span {
+            font-size: 16px;
+            color: #666;
+        }
+        .create-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+        .suggestions {
+            margin-bottom: 20px;
+        }
+        .suggestions h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .chip {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="screen">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>100% 🔋</span>
+            </div>
+            <div class="modal-overlay">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h2>Create Habit</h2>
+                        <span class="close-btn">×</span>
+                    </div>
+                    <div class="suggestions">
+                        <h3>Suggested for Morning</h3>
+                        <div class="suggestion-chips">
+                            <div class="chip">☕ Morning Coffee</div>
+                            <div class="chip">🏃 Morning Run</div>
+                            <div class="chip">🧘 Meditation</div>
+                            <div class="chip">📖 Journaling</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Habit Name</label>
+                        <input type="text" class="form-input" placeholder="e.g., Morning Run" value="Morning Run">
+                    </div>
+                    <div class="form-group">
+                        <label>Choose Icon</label>
+                        <div class="icon-picker">
+                            <div class="icon-option">🏃</div>
+                            <div class="icon-option selected">🧘</div>
+                            <div class="icon-option">📚</div>
+                            <div class="icon-option">💧</div>
+                            <div class="icon-option">🥗</div>
+                            <div class="icon-option">💪</div>
+                            <div class="icon-option">🎵</div>
+                            <div class="icon-option">✍️</div>
+                            <div class="icon-option">🌅</div>
+                            <div class="icon-option">🌙</div>
+                            <div class="icon-option">🎯</div>
+                            <div class="icon-option">📱</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Color Theme</label>
+                        <div class="color-picker">
+                            <div class="color-option selected" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Reminder Time</label>
+                        <div class="time-selector">
+                            <span>⏰</span>
+                            <span style="flex: 1;">7:00 AM</span>
+                            <span style="color: #667eea; font-weight: 600;">Change</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes (Optional)</label>
+                        <input type="text" class="form-input" placeholder="Add a note...">
+                    </div>
+                    <button class="create-btn">Create Habit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

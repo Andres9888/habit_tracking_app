@@ -105,7 +105,7 @@ export const MIN_PASSWORD_LENGTH = 8;
 // ============================================================================
 
 /** Cooldown period between rating prompts (days) */
-export const RATING_COOLDOWN_DAYS = 90;
+export const RATING_COOLDOWN_DAYS = 30;
 
 /** Minimum completions before prompting for rating */
 export const MIN_COMPLETIONS_FOR_RATING = 5;

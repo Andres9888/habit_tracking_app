@@ -24,8 +24,16 @@
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent."
-      }
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "bundleName": "ChainDay - Habit Tracker",
+      "displayName": "ChainDay"
     },
+    "description": "Transform your life with beautiful habit tracking. ChainDay makes building habits stick with powerful chain visualizations, streak tracking, and smart daily suggestions.\n\nKEY FEATURES:\n\n✨ Chain Visualization\nWatch your habits grow as connected chains. Visual motivation that makes you never want to break the streak.\n\n📊 Habit Strength Algorithm\nTrack how strong your habits actually are. The more consistent you are, the stronger they become.\n\n🎯 Time-Based Suggestions\nGet smart habit suggestions based on your time of day - morning energy boosters, afternoon focus, evening relaxation.\n\n🎮 Gamification & Achievements\nEarn XP, level up, and unlock achievements as you build your routine. Progress feels rewarding.\n\n📅 Week & Calendar Views\nSee your progress at a glance with beautiful weekly overviews and calendar visualizations.\n\n🔔 Smart Reminders\nSet custom notifications for each habit. Gentle nudges at the right time keep you on track.\n\n📝 Notes & Journaling\nAdd notes to each habit to reflect on your journey and track what works best.\n\n🌙 Vision Board\nCreate a visual representation of your goals and inspirations to stay motivated.\n\n🔒 Privacy First\nYour data stays secure. We never sell your information or track you for advertising.\n\nPERFECT FOR:\n- Building morning and evening routines\n- Fitness and workout tracking\n- Meditation and mindfulness habits\n- Reading and learning goals\n- Healthy eating and hydration\n- Skill development\n- Daily productivity\n- Sleep optimization\n\nWHY CHAINDAY?\nSimple, beautiful, and designed for real life. No complex setup, no overwhelming features - just what you need to build habits that actually stick.\n\nStart your streak today. Download ChainDay and see how far you can go!",
+    "keywords": "habit,tracker,streak,daily,routine,goal,productivity,fitness,meditation,consistency,chain,visual,calendar,reminder,journal,habit tracker,daily routine,streak tracker,habit app,goal tracker,routine builder",
+    "privacyUrl": "https://chainday.app/privacy",
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -49,6 +57,15 @@
     "extra": {
       "eas": {
         "projectId": "f5f9ab03-e5dc-4cb3-84d4-5ef71fc110e5"
+      },
+      "reviewPrompt": {
+        "enabled": true,
+        "triggers": {
+          "completions": 5,
+          "streakDays": 3
+        },
+        "cooldownDays": 30,
+        "message": "🎉 You're on a roll! If you love ChainDay, please leave a review to help others discover it."
       }
     },
     "plugins": [
