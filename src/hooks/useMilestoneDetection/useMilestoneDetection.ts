@@ -31,6 +31,62 @@ import type {
 } from './types';
 import { checkMilestoneCrossed } from './utils';
 
+/**
+ * Hook for detecting milestone achievements when habit strength levels up.
+ * Compares previous and current strength to detect threshold crossings.
+ *
+ * @description
+ * Milestone thresholds (strength levels):
+ * - Budding: 0-19%
+ * - Growing: 20-39%
+ * - Developing: 40-59%
+ * - Strong: 60-79%
+ * - Unbreakable: 80-100%
+ *
+ * Features:
+ * - Detects strength level crossings (e.g., 38% → 42% = milestone achieved)
+ * - Prevents duplicate celebrations for same milestone
+ * - Tracks shown milestones per habit via ref
+ * - Provides clearMilestone() to dismiss celebration
+ *
+ * @param habitId - Unique identifier for the habit
+ * @param habitName - Display name for the habit (shown in celebration)
+ * @param currentStrength - Current strength percentage (0-100)
+ * @returns Object with milestone state and control function
+ * @returns returns.milestone - Current milestone achievement (null if none)
+ * @returns returns.clearMilestone - Function to dismiss milestone celebration
+ *
+ * @example
+ * ```tsx
+ * function HabitCompletionFlow({ habit }) {
+ *   const { currentStrength } = useHabitStrength(
+ *     habit.completedDates,
+ *     habit.createdAt
+ *   );
+ *
+ *   const { milestone, clearMilestone } = useMilestoneDetection(
+ *     habit._id,
+ *     habit.name,
+ *     currentStrength
+ *   );
+ *
+ *   return (
+ *     <>
+ *       <HabitDetails habit={habit} strength={currentStrength} />
+ *       {milestone && (
+ *         <MilestoneCelebration
+ *           visible
+ *           level={milestone.level}
+ *           strength={milestone.strength}
+ *           habitName={milestone.habitName}
+ *           onClose={clearMilestone}
+ *         />
+ *       )}
+ *     </>
+ *   );
+ * }
+ * ```
+ */
 export function useMilestoneDetection(
   habitId: string | undefined,
   habitName: string | undefined,

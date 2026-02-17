@@ -26,7 +26,27 @@ export interface UsePlaybackControlsReturn {
 }
 
 /**
- * Hook for playback controls
+ * Hook for basic audio playback controls.
+ * Internal hook used by useAudioPlayback.
+ *
+ * @description
+ * Provides play, pause, toggle, and replay functions.
+ * All functions handle errors gracefully and update playback state.
+ *
+ * @param deps - Dependencies from parent hook
+ * @param deps.soundRef - Ref to Audio.Sound instance
+ * @param deps.currentState - Current playback state
+ * @param deps.setStatus - Status state setter
+ * @param options - Configuration options
+ * @param options.onError - Error callback
+ * @returns Object with playback control functions
+ *
+ * @example
+ * ```tsx
+ * const { play, pause, togglePlayPause, replay } = usePlaybackControls(deps, {
+ *   onError: (error) => console.error('Playback error:', error)
+ * });
+ * ```
  */
 export function usePlaybackControls(
   deps: UsePlaybackControlsDeps,

@@ -11,6 +11,10 @@ import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from 'expo-av';
  * Hook that provides audio mode configuration for recording
  * Handles interruption settings so recording pauses during phone calls or other app audio
  */
+/**
+ * Internal hook for audio recording.
+ * @description Part of useAudioRecording implementation.
+ */
 export function useAudioMode() {
   /**
    * Configure audio mode for recording

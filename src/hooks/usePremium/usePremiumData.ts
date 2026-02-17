@@ -29,6 +29,46 @@ interface PremiumData {
   setError: (error: string | null) => void;
 }
 
+/**
+ * ⚠️ Hook >100 lines (126 lines) - Consider refactoring
+ *
+ * Hook for fetching and managing RevenueCat premium subscription data.
+ * Internal hook used by usePremium to handle SDK initialization and data fetching.
+ *
+ * @description
+ * Manages the RevenueCat SDK lifecycle:
+ * - Waits for SDK initialization (with retry logic)
+ * - Fetches customer info (subscription status)
+ * - Fetches available purchase packages (pricing tiers)
+ * - Listens for customer info updates (new purchases, restorations)
+ * - Handles race condition with PurchasesProvider
+ *
+ * Loading states:
+ * - isLoading: Overall loading (true until customer info fetched)
+ * - isLoadingOfferings: Offerings loading (can be true while isLoading false)
+ *
+ * @returns Object with premium data and loaders
+ * @returns returns.customerInfo - Current customer subscription status
+ * @returns returns.packages - Available purchase packages (monthly/annual)
+ * @returns returns.isLoading - Whether customer info is loading
+ * @returns returns.isLoadingOfferings - Whether packages are loading
+ * @returns returns.error - Error message if fetch failed
+ * @returns returns.setCustomerInfo - Update customer info state
+ * @returns returns.setError - Update error state
+ *
+ * @example
+ * ```tsx
+ * // Internal use within usePremium
+ * const {
+ *   customerInfo,
+ *   packages,
+ *   isLoading,
+ *   error
+ * } = usePremiumData();
+ *
+ * const isPremium = customerInfo?.entitlements.active['premium'] !== undefined;
+ * ```
+ */
 export function usePremiumData(): PremiumData {
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
   const [packages, setPackages] = useState<PurchasesPackage[] | null>(null);

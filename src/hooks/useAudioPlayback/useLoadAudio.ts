@@ -31,7 +31,38 @@ export interface UseLoadAudioReturn {
 }
 
 /**
- * Hook for loading and unloading audio
+ * Hook for loading and unloading audio from URIs.
+ * Internal hook used by useAudioPlayback to manage Sound instances.
+ *
+ * @description
+ * Handles the lifecycle of Audio.Sound instances:
+ * - Loads audio from URI using expo-av
+ * - Configures audio mode for playback
+ * - Sets up status update callbacks
+ * - Unloads previous audio before loading new
+ * - Cleans up resources on unload
+ *
+ * @param deps - Dependencies from parent hook
+ * @param deps.soundRef - Ref to current Audio.Sound instance
+ * @param deps.wasPlayingBeforeInterruptionRef - Ref tracking interruption state
+ * @param deps.setStatus - Status state setter
+ * @param deps.configureAudioMode - Function to configure audio session
+ * @param deps.onPlaybackStatusUpdate - Callback for status updates
+ * @param options - Configuration options
+ * @param options.autoPlayOnLoad - Whether to start playing immediately after load
+ * @param options.onError - Error callback
+ * @returns Object with loadAudio and unloadAudio functions
+ *
+ * @example
+ * ```tsx
+ * // Internal use within useAudioPlayback
+ * const { loadAudio, unloadAudio } = useLoadAudio(deps, {
+ *   autoPlayOnLoad: false,
+ *   onError: (error) => console.error('Load failed:', error)
+ * });
+ *
+ * await loadAudio('file:///path/to/audio.m4a');
+ * ```
  */
 export function useLoadAudio(
   deps: UseLoadAudioDeps,

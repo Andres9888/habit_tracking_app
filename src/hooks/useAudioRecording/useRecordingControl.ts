@@ -20,6 +20,10 @@ interface UseRecordingControlDeps {
   onError?: (error: Error) => void;
 }
 
+/**
+ * Internal hook for audio recording.
+ * @description Part of useAudioRecording implementation.
+ */
 export function useRecordingControl(deps: UseRecordingControlDeps) {
   const {
     setStatus,

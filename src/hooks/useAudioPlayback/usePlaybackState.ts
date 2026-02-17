@@ -21,6 +21,10 @@ export interface UsePlaybackStateReturn {
 /**
  * Hook for managing audio playback state
  */
+/**
+ * Internal hook for audio playback.
+ * @description Part of useAudioPlayback implementation.
+ */
 export function usePlaybackState(): UsePlaybackStateReturn {
   const [status, setStatus] = useState<PlaybackStatus>(INITIAL_PLAYBACK_STATUS);
 

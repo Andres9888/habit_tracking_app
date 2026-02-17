@@ -15,6 +15,10 @@ interface UseRecordingPermissionOptions {
   onPermissionDenied?: (canAskAgain: boolean) => void;
 }
 
+/**
+ * Internal hook for audio recording.
+ * @description Part of useAudioRecording implementation.
+ */
 export function useRecordingPermission(
   setStatus: SetStatus,
   options?: UseRecordingPermissionOptions

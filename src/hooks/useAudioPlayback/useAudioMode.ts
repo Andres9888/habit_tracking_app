@@ -16,6 +16,10 @@ export interface UseAudioModeReturn {
  *
  * Sets up interruption handling so playback pauses during phone calls or other app audio.
  */
+/**
+ * Internal hook for audio playback.
+ * @description Part of useAudioPlayback implementation.
+ */
 export function useAudioMode(): UseAudioModeReturn {
   const configureAudioMode = useCallback(async (): Promise<void> => {
     await Audio.setAudioModeAsync({

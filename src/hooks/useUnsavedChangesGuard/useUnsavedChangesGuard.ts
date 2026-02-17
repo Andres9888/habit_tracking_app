@@ -27,6 +27,79 @@ import { useBackHandler } from './useBackHandler';
  * Provides confirmation dialog before discarding unsaved changes.
  * Works with any form field that has a current and original value.
  */
+
+/**
+ * Hook for guarding against accidental data loss in forms.
+ * Shows confirmation dialog when user tries to leave with unsaved changes.
+ *
+ * @description
+ * Features:
+ * - Detects changes by comparing current vs original value
+ * - Shows native Alert dialog with customizable text
+ * - Supports both callback and async/await patterns
+ * - Optional hardware back button interception (Android)
+ * - Handles all primitive types and objects (deep comparison)
+ * - Can be disabled when not needed
+ *
+ * Use cases:
+ * - Habit edit forms
+ * - Note/letter editors
+ * - Settings screens
+ * - Any form with destructive navigation
+ *
+ * @param options - Configuration options
+ * @param options.currentValue - Current form value
+ * @param options.originalValue - Original value before edits
+ * @param options.alertTitle - Dialog title (default: "Unsaved Changes")
+ * @param options.alertMessage - Dialog message (default: "You have unsaved changes...")
+ * @param options.discardButtonLabel - Discard button text (default: "Discard")
+ * @param options.keepEditingButtonLabel - Cancel button text (default: "Keep Editing")
+ * @param options.enabled - Whether guard is active (default: true)
+ * @param options.onDiscard - Callback when user confirms discard
+ * @param options.interceptBackButton - Whether to intercept Android back (default: false)
+ * @returns Object with unsaved state and confirmation functions
+ *
+ * @example
+ * ```tsx
+ * function HabitEditForm({ habit, onClose }) {
+ *   const [name, setName] = useState(habit.name);
+ *
+ *   const {
+ *     hasUnsavedChanges,
+ *     confirmDiscard,
+ *     confirmDiscardAsync
+ *   } = useUnsavedChangesGuard({
+ *     currentValue: name,
+ *     originalValue: habit.name,
+ *     onDiscard: onClose,
+ *     interceptBackButton: true
+ *   });
+ *
+ *   const handleClose = () => {
+ *     if (hasUnsavedChanges) {
+ *       confirmDiscard(); // Shows alert, calls onDiscard if confirmed
+ *     } else {
+ *       onClose();
+ *     }
+ *   };
+ *
+ *   // Or use async version:
+ *   const handleNavigation = async () => {
+ *     const canProceed = await confirmDiscardAsync();
+ *     if (canProceed) navigate('/home');
+ *   };
+ *
+ *   return (
+ *     <View>
+ *       <TextInput value={name} onChangeText={setName} />
+ *       <Button onPress={handleClose}>
+ *         Close {hasUnsavedChanges && '*'}
+ *       </Button>
+ *     </View>
+ *   );
+ * }
+ * ```
+ */
 export function useUnsavedChangesGuard({
   currentValue,
   originalValue,

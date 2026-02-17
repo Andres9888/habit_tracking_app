@@ -20,7 +20,66 @@ import { useImagePickerHandlers } from './useImagePickerHandlers';
 import type { ImageSource, PickedImage, UseImagePickerReturn } from './types';
 
 /**
- * Custom hook for image picking with expo-image-picker
+ * Hook for picking images from camera or photo library.
+ * Handles permissions, error states, and provides multiple selection methods.
+ *
+ * @description
+ * Provides three ways to pick images:
+ * 1. pickFromCamera() - Take a new photo
+ * 2. pickFromLibrary() - Choose from existing photos
+ * 3. pickWithChoice() - Show action sheet to choose camera or library
+ *
+ * Features:
+ * - Automatic permission requests with user-friendly alerts
+ * - Permission status tracking
+ * - Loading states during picker operations
+ * - Error handling with descriptive messages
+ * - Configurable aspect ratio and quality
+ * - Returns standardized image format (URI, dimensions, MIME type)
+ *
+ * @returns Object with picker methods and state
+ * @returns returns.pickFromCamera - Function to launch camera
+ * @returns returns.pickFromLibrary - Function to open photo library
+ * @returns returns.pickWithChoice - Function to show camera/library choice dialog
+ * @returns returns.image - Currently selected image (null if none)
+ * @returns returns.isLoading - Whether picker is currently open
+ * @returns returns.error - Error message if picker failed
+ * @returns returns.hasCameraPermission - Camera permission status
+ * @returns returns.hasLibraryPermission - Photo library permission status
+ * @returns returns.requestPermissions - Manual permission request function
+ * @returns returns.clearImage - Function to clear selected image
+ * @returns returns.clearError - Function to clear error state
+ *
+ * @example
+ * ```tsx
+ * function VisionBoardImagePicker() {
+ *   const {
+ *     pickWithChoice,
+ *     image,
+ *     isLoading,
+ *     error,
+ *     clearImage
+ *   } = useImagePicker();
+ *
+ *   const handlePick = async () => {
+ *     const result = await pickWithChoice();
+ *     if (result) {
+ *       console.log('Selected image:', result.uri);
+ *       uploadImage(result);
+ *     }
+ *   };
+ *
+ *   return (
+ *     <View>
+ *       <Button onPress={handlePick} disabled={isLoading}>
+ *         {isLoading ? 'Opening...' : 'Pick Image'}
+ *       </Button>
+ *       {image && <Image source={{ uri: image.uri }} />}
+ *       {error && <Text style={styles.error}>{error}</Text>}
+ *     </View>
+ *   );
+ * }
+ * ```
  */
 export function useImagePicker(): UseImagePickerReturn {
   const [image, setImage] = useState<PickedImage | null>(null);

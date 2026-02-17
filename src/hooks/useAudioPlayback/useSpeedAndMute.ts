@@ -26,6 +26,10 @@ export interface UseSpeedAndMuteReturn {
 /**
  * Hook for speed and mute controls
  */
+/**
+ * Internal hook for audio playback.
+ * @description Part of useAudioPlayback implementation.
+ */
 export function useSpeedAndMute(
   deps: UseSpeedAndMuteDeps,
   options: UseSpeedAndMuteOptions

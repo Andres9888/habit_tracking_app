@@ -15,6 +15,31 @@ interface RenderCountOptions {
 /**
  * Hook to track component render count and timing.
  * Useful for identifying components that re-render excessively.
+ *
+ * @description
+ * Monitors every render of a component, tracking:
+ * - Total render count since mount
+ * - Time between renders
+ * - Warns when render count exceeds threshold (development only)
+ *
+ * @param componentName - Unique identifier for the component
+ * @param options - Configuration options
+ * @param options.log - Whether to log each render to console (default: false)
+ * @param options.warnThreshold - Render count that triggers warning (default: 50)
+ * @returns Current render count
+ *
+ * @example
+ * ```tsx
+ * function ExpensiveComponent({ data }) {
+ *   const renderCount = useRenderCount('ExpensiveComponent', {
+ *     log: __DEV__,
+ *     warnThreshold: 20
+ *   });
+ *
+ *   // If this logs >20, investigate why component re-renders
+ *   return <View>{data.map(...)}</View>;
+ * }
+ * ```
  */
 export function useRenderCount(
   componentName: string,

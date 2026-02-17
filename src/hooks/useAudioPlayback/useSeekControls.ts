@@ -28,7 +28,28 @@ export interface UseSeekControlsReturn {
 }
 
 /**
- * Hook for seek controls
+ * ⚠️ Hook >100 lines (122 lines) - Consider refactoring
+ *
+ * Hook for audio seeking controls.
+ * Internal hook used by useAudioPlayback.
+ *
+ * @description
+ * Provides seeking functions:
+ * - seekToProgress: Jump to percentage (0.0-1.0)
+ * - seekToSeconds: Jump to absolute position
+ * - seekForward: Skip ahead (default: 15s)
+ * - seekBackward: Skip back (default: 15s)
+ *
+ * @param deps - Dependencies from parent hook
+ * @param options - Configuration options
+ * @returns Object with seek control functions
+ *
+ * @example
+ * ```tsx
+ * const { seekToProgress, seekForward, seekBackward } = useSeekControls(deps, options);
+ * await seekToProgress(0.5); // Jump to 50%
+ * await seekForward(30); // Skip ahead 30s
+ * ```
  */
 export function useSeekControls(
   deps: UseSeekControlsDeps,
