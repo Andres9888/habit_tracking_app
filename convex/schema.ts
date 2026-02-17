@@ -603,6 +603,41 @@ const applicationTables = {
     .index('by_habit', ['habitId'])
     .index('by_user', ['userId'])
     .index('by_habit_and_date', ['habitId', 'createdAt']),
+
+  // Accountability Partners - Pair with a friend for mutual motivation
+  // Scientific Basis: Social accountability increases habit adherence by 65% (ASTC, 2015)
+  // Sharing commitments creates external expectation (Cialdini's commitment/consistency)
+  // Business Model: Social features drive organic growth via deep-link sharing
+  accountabilityPartners: defineTable({
+    // The habit being shared
+    habitId: v.id('habits'),
+    // User who initiated the partnership
+    inviterUserId: v.string(),
+    // User who accepted the invite
+    partnerUserId: v.string(),
+    // Partner's habit (their version or linked habit)
+    partnerHabitId: v.optional(v.id('habits')),
+    // Partnership status
+    status: v.union(
+      v.literal('pending'),
+      v.literal('active'),
+      v.literal('declined'),
+      v.literal('removed')
+    ),
+    // Invite token for deep link pairing
+    inviteToken: v.optional(v.string()),
+    // Last nudge sent timestamp (rate limiting)
+    lastNudgeSentAt: v.optional(v.number()),
+    // Last celebration timestamp
+    lastCelebrationAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_habit', ['habitId'])
+    .index('by_inviter', ['inviterUserId'])
+    .index('by_partner', ['partnerUserId'])
+    .index('by_invite_token', ['inviteToken'])
+    .index('by_habit_and_status', ['habitId', 'status']),
 };
 
 export default defineSchema({

@@ -2,6 +2,8 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { AccountabilityCard } from '../../../components/AccountabilityCard';
+import { useAccountabilityInvite } from '../../../components/AccountabilityCard/useAccountabilityInvite';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
@@ -55,6 +57,9 @@ export function HabitDetailContent({
   onDayPress,
 }: HabitDetailContentProps) {
   const { colors, isDark } = useThemeColors();
+  const today = new Date().toISOString().split('T')[0];
+  const completedToday = completedDates.has(today);
+  const { shareInvite } = useAccountabilityInvite(habit._id, habit.name);
   const cardBg = isDark ? colors.card : '#FFFFFF';
   const shadowColor = isDark ? '#000000' : '#1c1917';
   const borderColor = isDark ? colors.border : '#DDD8D2';
@@ -96,11 +101,21 @@ export function HabitDetailContent({
         </>
       )}
 
+      {/* PARTNER section */}
+      <SectionLabel borderColor={borderColor} delay={300} text='PARTNER' textColor={labelColor} />
+      <ErrorBoundary>
+        <AccountabilityCard
+          completedToday={completedToday}
+          habitId={habit._id}
+          onInvitePartner={shareInvite}
+        />
+      </ErrorBoundary>
+
       {/* HISTORY section */}
-      <SectionLabel borderColor={borderColor} delay={360} text='HISTORY' textColor={labelColor} />
+      <SectionLabel borderColor={borderColor} delay={420} text='HISTORY' textColor={labelColor} />
       <Animated.View
         className='rounded-2xl p-4'
-        entering={anim(420)}
+        entering={anim(480)}
         style={{
           backgroundColor: cardBg,
           elevation: 4,
