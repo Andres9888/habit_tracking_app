@@ -7,7 +7,7 @@
  */
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
-import { categoryValidator } from './types';
+import { categoryValidator, difficultyValidator, seasonalCollectionValidator } from './types';
 
 /**
  * Query: List all templates, optionally filtered by category
@@ -122,5 +122,177 @@ export const listTemplateNames = query({
       createdAt: t.createdAt,
       name: t.name,
     }));
+  },
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Marketplace Queries
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Query: Get featured templates for the marketplace
+ */
+export const getFeaturedTemplates = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 8;
+    
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_featured')
+      .collect();
+
+    return templates.filter(t => t.featured === true).slice(0, limit);
+  },
+});
+
+/**
+ * Query: Get templates by seasonal collection
+ */
+export const getSeasonalTemplates = query({
+  args: {
+    collection: seasonalCollectionValidator,
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 10;
+    
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_seasonal')
+      .collect();
+
+    return templates
+      .filter(t => t.seasonalCollection === args.collection)
+      .slice(0, limit);
+  },
+});
+
+/**
+ * Query: Get all seasonal collections with templates
+ */
+export const getAllSeasonalCollections = query({
+  args: {},
+  handler: async (ctx) => {
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_seasonal')
+      .collect();
+
+    // Group templates by seasonal collection
+    const collections: Record<string, any[]> = {};
+    for (const template of templates) {
+      if (template.seasonalCollection) {
+        if (!collections[template.seasonalCollection]) {
+          collections[template.seasonalCollection] = [];
+        }
+        collections[template.seasonalCollection].push(template);
+      }
+    }
+
+    return collections;
+  },
+});
+
+/**
+ * Query: Search templates by name, description, or keywords
+ */
+export const searchTemplates = query({
+  args: {
+    query: v.string(),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 20;
+    const searchQuery = args.query.toLowerCase().trim();
+    
+    if (!searchQuery) return [];
+
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_createdAt')
+      .collect();
+
+    return templates
+      .filter(t => {
+        const nameMatch = t.name.toLowerCase().includes(searchQuery);
+        const descMatch = t.description.toLowerCase().includes(searchQuery);
+        const categoryMatch = t.category.toLowerCase().includes(searchQuery);
+        return nameMatch || descMatch || categoryMatch;
+      })
+      .slice(0, limit);
+  },
+});
+
+/**
+ * Query: Get templates by difficulty level
+ */
+export const getTemplatesByDifficulty = query({
+  args: {
+    difficulty: difficultyValidator,
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 10;
+    
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_createdAt')
+      .collect();
+
+    return templates
+      .filter(t => t.difficulty === args.difficulty)
+      .slice(0, limit);
+  },
+});
+
+/**
+ * Query: Get top-rated templates
+ */
+export const getTopRatedTemplates = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 10;
+    
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_rating')
+      .collect();
+
+    return templates
+      .filter(t => t.averageRating !== undefined && t.averageRating >= 4.0)
+      .sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0))
+      .slice(0, limit);
+  },
+});
+
+/**
+ * Query: Get marketplace templates (templates with multiple habits)
+ */
+export const getMarketplaceTemplates = query({
+  args: {
+    category: v.optional(categoryValidator),
+    difficulty: v.optional(difficultyValidator),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 50;
+    
+    let templates = await ctx.db
+      .query('templates')
+      .withIndex('by_createdAt')
+      .collect();
+
+    templates = templates.filter(t => t.isMarketplaceTemplate === true);
+
+    if (args.category) {
+      templates = templates.filter(t => t.category === args.category);
+    }
+
+    if (args.difficulty) {
+      templates = templates.filter(t => t.difficulty === args.difficulty);
+    }
+
+    return templates.slice(0, limit);
   },
 });

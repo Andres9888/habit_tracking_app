@@ -19,6 +19,22 @@
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Mutation exports
+// ─────────────────────────────────────────────────────────────────────────────
+export { importTemplate } from './templates/importTemplate';
+export { clearTemplates, dedupeTemplates } from './templates/clearAndDedupe';
+export { updateYoutubeLinks } from './templates/updateLinks';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Marketplace mutation exports
+// ─────────────────────────────────────────────────────────────────────────────
+export {
+  rateTemplate,
+  getUserTemplateRating,
+  importMarketplaceTemplate,
+} from './templates/marketplace';
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Query exports
 // ─────────────────────────────────────────────────────────────────────────────
 export {
@@ -28,14 +44,14 @@ export {
   getUsageStats,
   list,
   listTemplateNames,
+  getFeaturedTemplates,
+  getSeasonalTemplates,
+  getAllSeasonalCollections,
+  searchTemplates,
+  getTemplatesByDifficulty,
+  getTopRatedTemplates,
+  getMarketplaceTemplates,
 } from './templates/queries';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Mutation exports
-// ─────────────────────────────────────────────────────────────────────────────
-export { importTemplate } from './templates/importTemplate';
-export { clearTemplates, dedupeTemplates } from './templates/clearAndDedupe';
-export { updateYoutubeLinks } from './templates/updateLinks';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Seed mutation exports (data-heavy)
@@ -47,3 +63,8 @@ export {
   seedTemplates,
   seedUniqueTemplates,
 } from './templatesDataSeed';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Marketplace seed exports
+// ─────────────────────────────────────────────────────────────────────────────
+export { seedMarketplaceTemplates } from './templates/marketplaceSeed';

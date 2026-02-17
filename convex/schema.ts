@@ -421,10 +421,66 @@ const applicationTables = {
 
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),
+
+    // === Marketplace Fields ===
+    // Difficulty level: easy, medium, hard
+    difficulty: v.optional(v.union(v.literal('easy'), v.literal('medium'), v.literal('hard'))),
+
+    // Estimated time to complete all habits in template (in minutes)
+    estimatedTime: v.optional(v.number()),
+
+    // Whether this template is featured in the marketplace
+    featured: v.optional(v.boolean()),
+
+    // Seasonal collection: new_year, summer, study, fall, etc.
+    seasonalCollection: v.optional(
+      v.union(
+        v.literal('new_year'),
+        v.literal('summer'),
+        v.literal('study'),
+        v.literal('fall'),
+        v.literal('winter')
+      )
+    ),
+
+    // Array of habit templates included in this template
+    // For marketplace templates that contain multiple habits
+    habits: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          description: v.optional(v.string()),
+          frequency: v.string(),
+          icon: v.string(),
+          iconColor: v.string(),
+          cueTime: v.optional(v.string()),
+          cueLocation: v.optional(v.string()),
+          cueAfterBehavior: v.optional(v.string()),
+          tips: v.optional(v.array(v.string())),
+          identity: v.optional(v.string()),
+          why: v.optional(v.string()),
+        })
+      )
+    ),
+
+    // Average rating (1-5 stars)
+    averageRating: v.optional(v.number()),
+
+    // Number of ratings
+    ratingCount: v.optional(v.number()),
+
+    // Collections this template belongs to (e.g., "beginner_friendly", "quick_wins")
+    collections: v.optional(v.array(v.string())),
+
+    // Whether this is a marketplace template (vs single habit template)
+    isMarketplaceTemplate: v.optional(v.boolean()),
   })
     .index('by_category', ['category'])
-    .index('by_createdAt', ['createdAt']),
-  // PERF: Added by_createdAt index to avoid full table scans when listing all templates
+    .index('by_createdAt', ['createdAt'])
+    .index('by_featured', ['featured'])
+    .index('by_seasonal', ['seasonalCollection'])
+    .index('by_rating', ['averageRating']),
+  // PERF: Added indexes for marketplace queries
 
   // Track template usage analytics
   templateUsage: defineTable({
@@ -433,6 +489,18 @@ const applicationTables = {
     templateId: v.id('templates'),
     userId: v.optional(v.string()), // Reference to created habit
   }).index('by_template', ['templateId']),
+
+  // Template ratings - User ratings for marketplace templates
+  templateRatings: defineTable({
+    createdAt: v.number(),
+    rating: v.number(), // 1-5 stars
+    templateId: v.id('templates'),
+    updatedAt: v.number(),
+    userId: v.optional(v.string()),
+  })
+    .index('by_template', ['templateId'])
+    .index('by_user', ['userId'])
+    .index('by_user_and_template', ['userId', 'templateId']),
 
   tracking: defineTable({
     completed: v.boolean(),
