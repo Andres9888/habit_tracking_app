@@ -2,7 +2,7 @@
  * Content view for populated HabitPreview
  */
 import { Animated, Text, View } from 'react-native';
-import STRINGS from '../../../../constants/strings';
+import { t } from '@/i18n';
 import { getTimeOfDayLabel } from './helpers';
 import type { HubermanPhase } from '../../../../constants/hubermanPhases';
 
@@ -65,7 +65,7 @@ export const PreviewContent = ({
           </Text>
         ) : (
           <Text className='text-lg font-semibold text-stone-400'>
-            {STRINGS.CREATE_HABIT.namePlaceholder}
+            {t('habits.habitNamePlaceholder')}
           </Text>
         )}
         <Text className='text-sm text-stone-500'>

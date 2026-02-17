@@ -14,7 +14,7 @@ import { memo, useCallback } from 'react';
 import { AccessibilityInfo, Text, View } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
-import STRINGS from '../../../../constants/strings';
+import { t } from '@/i18n';
 import { REMINDER_OPTIONS, REMINDER_OPTION_ORDER } from './constants';
 import { ReminderOptionButton } from './ReminderOptionButton';
 import type { ReminderOption, ReminderSelectorProps } from './types';
@@ -34,11 +34,8 @@ function ReminderSelectorComponent({
       // Announce selection for screen readers
       const optionInfo = REMINDER_OPTIONS[option];
       const announcement = optionInfo.time
-        ? STRINGS.CREATE_HABIT.reminderAnnouncementWithTime(
-            optionInfo.label,
-            optionInfo.time
-          )
-        : STRINGS.CREATE_HABIT.reminderAnnouncementDisabled;
+        ? `Selected ${optionInfo.label} reminder at ${optionInfo.time}`
+        : t('reminders.disabled');
       AccessibilityInfo.announceForAccessibility(announcement);
     },
     [onSelectOption, triggerSelection]
@@ -51,7 +48,7 @@ function ReminderSelectorComponent({
         className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
         style={{ letterSpacing: 0.5 }}
       >
-        {STRINGS.CREATE_HABIT.remindersLabel}
+        {t('reminders.label')}
       </Text>
       <View className='flex-row gap-2'>
         {REMINDER_OPTION_ORDER.map((option) => (

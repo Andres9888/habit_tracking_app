@@ -5,7 +5,7 @@
 
 import { Text, View } from 'react-native';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
-import STRINGS from '../../../../constants/strings';
+import { t } from '@/i18n';
 import { ColorButton } from './ColorButton';
 import { CustomColorButton } from './CustomColorButton';
 import type { ColorPickerSectionProps } from './types';
@@ -46,7 +46,7 @@ export const ColorPickerContent = ({
           className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
           style={{ letterSpacing: 0.5 }}
         >
-          {STRINGS.CREATE_HABIT.colorLabel}
+          {t('habits.colorLabel')}
         </Text>
       )}
       <View className='mb-2'>{renderRow(row1, 'color-picker-row-1')}</View>

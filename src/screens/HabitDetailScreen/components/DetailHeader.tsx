@@ -8,6 +8,7 @@ import { useThemeColors } from '../../../theme';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
 import { iconShadow, streakShadow } from './DetailHeader.constants';
 import { HeaderButton } from './HeaderButton';
+import { t } from '@/i18n';
 
 export function DetailHeader({
   habit,
@@ -30,7 +31,7 @@ export function DetailHeader({
       >
         <HeaderButton
           icon={<X color={iconColor} size={22} strokeWidth={2.5} />}
-          label='Close'
+          label={t('common.close')}
           onPress={onClose}
         />
         <View className='flex-1' />
@@ -42,7 +43,7 @@ export function DetailHeader({
           />
           <HeaderButton
             icon={<Edit3 color={iconColor} size={20} strokeWidth={2.5} />}
-            label='Edit habit'
+            label={t('detail.editHabit')}
             onPress={onEdit}
           />
         </View>
@@ -85,7 +86,7 @@ export function DetailHeader({
           >
             <Text style={{ fontSize: 17 }}>🔥</Text>
             <Text className='text-[17px] font-semibold text-emerald-700'>
-              {habit.currentStreak} day streak
+              {habit.currentStreak} {t('habits.dayStreak')}
             </Text>
           </Animated.View>
         )}

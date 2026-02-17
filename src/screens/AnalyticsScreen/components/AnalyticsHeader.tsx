@@ -8,6 +8,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing } from '../../../theme/spacing';
+import { t } from '@/i18n';
 
 export const AnalyticsHeader: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -26,15 +27,15 @@ export const AnalyticsHeader: React.FC = () => {
         entering={FadeInDown.delay(0).springify().damping(18)}
         style={[styles.headerTitle, { color: colors.text.primary }]}
       >
-        Analytics
+        {t('analytics.title')}
       </Animated.Text>
       <Animated.Text
-        accessibilityLabel='Track your habit journey'
+        accessibilityLabel={t('analytics.subtitle')}
         accessibilityRole='text'
         entering={FadeInDown.delay(50).springify().damping(18)}
         style={[styles.headerSubtitle, { color: colors.text.secondary }]}
       >
-        Track your habit journey
+        {t('analytics.subtitle')}
       </Animated.Text>
     </View>
   );

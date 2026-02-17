@@ -10,6 +10,7 @@ import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
 import HabitRankingsList from '../../../components/HabitRankingsList';
 import type { WeeklyInsights } from '../AnalyticsScreen.types';
 import type { RankedHabit } from '../AnalyticsScreen.types';
+import { t } from '@/i18n';
 
 interface InsightsSectionsProps {
   weeklyInsights: WeeklyInsights | undefined;
@@ -25,7 +26,7 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
   return (
     <>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Weekly Insights</Text>
+        <Text style={styles.sectionTitle}>{t('analytics.weeklyInsights')}</Text>
         <WeeklyInsightsCard
           insights={weeklyInsights ?? null}
           onArchivePress={() => {
@@ -36,7 +37,7 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Habit Rankings</Text>
+        <Text style={styles.sectionTitle}>{t('analytics.habitRankings')}</Text>
         <HabitRankingsList
           habits={rankedHabits.map((h) => ({
             id: h.id,

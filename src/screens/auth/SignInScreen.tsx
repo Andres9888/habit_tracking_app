@@ -26,6 +26,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { t } from '@/i18n';
 import {
   AuthDivider,
   AuthError,
@@ -201,8 +202,8 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
                 editable={!isAnyLoading}
                 error={emailError}
                 keyboardType='email-address'
-                label='Email'
-                placeholder='your@email.com'
+                label={t('auth.email')}
+                placeholder={t('auth.emailPlaceholder')}
                 returnKeyType='next'
                 value={emailAddress}
                 onBlur={onEmailBlur}
@@ -219,7 +220,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
                     onPress={() => setShowForgotPassword(true)}
                   />
                 }
-                placeholder='Enter your password'
+                placeholder={t('auth.passwordPlaceholder')}
                 returnKeyType='go'
                 value={password}
                 onChangeText={setPassword}
@@ -229,8 +230,8 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
               <SubmitButton
                 disabled={!canSubmit || isAnyLoading}
                 isLoading={isLoading}
-                label='Sign In'
-                loadingLabel='Signing in…'
+                label={t('auth.signIn')}
+                loadingLabel={t('common.loading')}
                 testID='auth-sign-in-button'
                 onPress={() => void handleSignIn()}
               />

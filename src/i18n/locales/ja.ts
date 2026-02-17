@@ -1,0 +1,285 @@
+/**
+ * Japanese translations
+ *
+ * Community contributions welcome! Copy en.ts and translate values.
+ */
+import type { TranslationKeys } from './en';
+
+type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};
+
+const ja: DeepPartial<TranslationKeys> = {
+  common: {
+    cancel: 'キャンセル',
+    close: '閉じる',
+    save: '保存',
+    saving: '保存中…',
+    delete: '削除',
+    archive: 'アーカイブ',
+    back: '戻る',
+    continue: '続ける',
+    error: 'エラー',
+    success: '成功',
+    tryAgain: 'もう一度お試しください。',
+    loading: '読み込み中',
+    search: '検索',
+    done: '完了',
+    ok: 'OK',
+    skip: 'スキップ',
+    next: '次へ',
+    of: '/',
+    doneLabel: '完了',
+  },
+
+  auth: {
+    email: 'メールアドレス',
+    password: 'パスワード',
+    emailPlaceholder: 'メールアドレスを入力',
+    passwordPlaceholder: 'パスワードを入力',
+    createPassword: 'パスワードを作成',
+    signIn: 'サインイン',
+    signUp: 'サインアップ',
+    signOut: 'サインアウト',
+    signOutConfirm: 'サインアウトしてもよろしいですか？',
+    continueWithApple: 'Appleで続ける',
+    continueWithGoogle: 'Googleで続ける',
+    forgotPassword: 'パスワードをお忘れですか？',
+    validationErrorEmail: '有効なメールアドレスを入力してください',
+    failedSignUp: 'サインアップに失敗しました',
+    failedSignIn: 'サインインに失敗しました',
+    failedSignOut: 'サインアウトに失敗しました。',
+    deleteAccount: 'アカウント削除',
+    deleteAccountConfirm:
+      'アカウントとすべてのデータが完全に削除されます。この操作は元に戻せません。',
+    failedDeleteAccount:
+      'アカウントの削除に失敗しました。もう一度お試しいただくか、サポートにお問い合わせください。',
+  },
+
+  onboarding: {
+    skipOnboarding: 'オンボーディングをスキップ',
+    nextPage: '次のページ',
+    getStartedCta: '最初の習慣を作ろう →',
+    getStartedA11y: '最初の習慣を作り始める',
+    chainTitle: '鎖を途切れさせるな',
+    chainSubtitle: '毎日の習慣を達成して、鎖を伸ばそう — 一つ一つが大切です。',
+    strengthTitle: '科学に基づいた強さ',
+    strengthSubtitle:
+      '習慣は時間とともに強くなります — 行動科学に裏付けられています。',
+    templatesTitle: '200以上のテンプレート',
+    templatesSubtitle:
+      '科学に基づいたテンプレートから選ぶか、数秒で自分だけの習慣を作りましょう。',
+    buildChains: '毎日の習慣を達成して、途切れない鎖を作ろう',
+    scienceBacked: '科学に基づいた強さ',
+    chooseTemplates: '科学に基づいたテンプレートから選ぶか、自分で作りましょう',
+  },
+
+  habits: {
+    habit: '習慣',
+    createHabit: '習慣を作成',
+    createAction: '習慣を作成',
+    editHabit: '習慣を編集',
+    habitName: '習慣名',
+    habitNamePlaceholder: '例：10分読書する',
+    habitNameHelper: 'ヒント：具体的に — 時間、きっかけ、場所。',
+    iconLabel: 'アイコン',
+    colorLabel: '色',
+    customColor: 'カスタムカラー',
+    motivationHighlight: '今日からストリークを始めよう',
+    motivationSuffix: ' — 継続は力なり 🔥',
+    deleteConfirmTitle: '習慣を削除',
+    deleteConfirmMessage: 'この習慣を削除してもよろしいですか？',
+    archiveConfirmTitle: '習慣をアーカイブ',
+    archiveConfirmMessage: 'この習慣をアーカイブしてもよろしいですか？',
+    failedDelete: '習慣の削除に失敗しました。もう一度お試しください。',
+    failedArchive: '習慣のアーカイブに失敗しました。もう一度お試しください。',
+    failedUpdate: '習慣の更新に失敗しました。もう一度お試しください。',
+    noHabitsYet: 'まだ習慣がありません',
+    getStarted: '最初の習慣を作って始めましょう！',
+    dayStreak: '日間連続',
+    today: '今日',
+  },
+
+  templates: {
+    browseTemplates: '厳選された習慣を閲覧',
+    heroTitle: 'テンプレートから始める',
+    heroSubtitle: '厳選されたルーティンを閲覧して自動入力。',
+    prompt: '既製のルーティンをお探しですか？',
+    orCreateYourOwn: 'または自分で作成',
+    searchPlaceholder: '習慣を検索...',
+    enterHabitName: '習慣名を入力',
+    sortPopular: '人気',
+    sortNewest: '新着',
+    sortAZ: 'A-Z',
+    template: 'テンプレート',
+  },
+
+  reminders: {
+    label: '毎日のリマインダー',
+    helper: '選んだ時間にのみ通知します。',
+    time: 'リマインダー時間',
+    disabled: 'リマインダー無効',
+    sound: 'サウンド',
+  },
+
+  streaks: {
+    dayStreak: '日間連続',
+    thisMonth: '今月',
+    bestStreak: '最高記録',
+    completionRate: '達成率',
+  },
+
+  strength: {
+    starting: '開始',
+    building: '構築中',
+    developing: '発展中',
+    strong: '強い',
+    automatic: '自動化',
+  },
+
+  character: {
+    vitality: '活力',
+    strength: '強さ',
+    wisdom: '知恵',
+    energy: 'エネルギー',
+    weekWarrior: 'ウィークウォリアー',
+    habitHero: '習慣ヒーロー',
+  },
+
+  analytics: {
+    title: '分析',
+    subtitle: '習慣の旅を追跡',
+    export: 'エクスポート',
+    totalHabits: '合計習慣数',
+    averageStrength: '平均強度',
+    strongestHabit: '最強の習慣',
+    weakestHabit: '最弱の習慣',
+    weeklyInsights: '週間インサイト',
+    habitRankings: '習慣ランキング',
+    noHabitsTitle: 'まだ習慣がありません',
+    noHabitsMessage: '習慣を作成すると分析が表示されます。',
+  },
+
+  settings: {
+    title: '設定',
+    theme: 'テーマ',
+    system: 'システム',
+    light: 'ライト',
+    dark: 'ダーク',
+    soundChime: 'チャイム',
+    soundPop: 'ポップ',
+    soundSuccess: '成功',
+    shareTitle: 'Chain Day — より良い習慣を築こう',
+    preferences: '設定',
+    appearance: '外観',
+    sounds: 'サウンド',
+    premium: 'プレミアム',
+    data: 'データ',
+    archivedHabits: 'アーカイブ済み習慣',
+    closeSettings: '設定を閉じる',
+    checkboxStyle: '完了済み習慣のチェックボックススタイル',
+    circularDayMarkers: '丸型の日付マーカー',
+    gradientFill: '習慣の強度にグラデーション',
+    playSoundOnCompletion: '習慣達成時にサウンドを再生',
+    unlockSounds: '習慣達成時の満足感のあるサウンドを解除',
+    shareApp: 'アプリを共有',
+    rateApp: 'アプリを評価',
+    whatsNew: '新機能',
+    sendFeedback: 'フィードバックを送信',
+    privacyPolicy: 'プライバシーポリシー',
+    termsOfService: '利用規約',
+    about: 'アプリについて',
+    version: 'バージョン',
+    signOut: 'サインアウト',
+    signOutConfirm: 'サインアウトしてもよろしいですか？',
+    streakReminders: 'ストリークリマインダー',
+    legal: '法的情報',
+  },
+
+  notes: {
+    datePlaceholder: 'YYYY-MM-DD',
+    notePlaceholder: 'ノートをここに書いてください...',
+    searchPlaceholder: 'ノートを検索...',
+  },
+
+  frequency: {
+    daily: '毎日',
+    weekly: '毎週',
+    custom: 'カスタム',
+  },
+
+  categories: {
+    creativity: 'クリエイティビティ',
+    financial: '財務',
+    general: '一般',
+    learning: '学習',
+    mindfulness: 'マインドフルネス',
+    productivity: '生産性',
+    sleep: '睡眠',
+    social: 'ソーシャル',
+  },
+
+  dateTime: {
+    am: '午前',
+    pm: '午後',
+    today: '今日',
+    days: {
+      sunday: '日曜日',
+      monday: '月曜日',
+      tuesday: '火曜日',
+      wednesday: '水曜日',
+      thursday: '木曜日',
+      friday: '金曜日',
+      saturday: '土曜日',
+    },
+    daysShort: {
+      sun: '日',
+      mon: '月',
+      tue: '火',
+      wed: '水',
+      thu: '木',
+      fri: '金',
+      sat: '土',
+    },
+    months: {
+      january: '1月',
+      february: '2月',
+      march: '3月',
+      april: '4月',
+      may: '5月',
+      june: '6月',
+      july: '7月',
+      august: '8月',
+      september: '9月',
+      october: '10月',
+      november: '11月',
+      december: '12月',
+    },
+    monthsShort: {
+      jan: '1月',
+      feb: '2月',
+      mar: '3月',
+      apr: '4月',
+      may: '5月',
+      jun: '6月',
+      jul: '7月',
+      aug: '8月',
+      sep: '9月',
+      oct: '10月',
+      nov: '11月',
+      dec: '12月',
+    },
+  },
+
+  detail: {
+    editHabit: '習慣を編集',
+    close: '閉じる',
+  },
+
+  habitEdit: {
+    title: '習慣を編集',
+    saveChanges: '変更を保存',
+  },
+};
+
+export default ja;

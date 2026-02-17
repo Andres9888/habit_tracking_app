@@ -9,6 +9,7 @@ import { AppleLogo } from '../../../../components/auth/logos/AppleLogo';
 import { GoogleLogo } from '../../../../components/auth/logos/GoogleLogo';
 import { LoadingSpinner } from './LoadingSpinner';
 import { SocialSignInButtonProps } from './types';
+import { t } from '@/i18n';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -16,14 +17,14 @@ const PROVIDER_CONFIG = {
   apple: {
     bgColor: 'bg-black',
     borderColor: 'border-black',
-    label: 'Continue with Apple',
+    label: t('auth.continueWithApple'),
     spinnerColor: '#FFFFFF',
     textColor: 'text-white',
   },
   google: {
     bgColor: 'bg-white dark:bg-gray-800',
     borderColor: 'border-stone-200',
-    label: 'Continue with Google',
+    label: t('auth.continueWithGoogle'),
     spinnerColor: '#44403c',
     textColor: 'text-stone-800',
   },

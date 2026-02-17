@@ -14,6 +14,7 @@ import {
   dateToTimeString,
   formatDisplayTime,
 } from './timeHelpers';
+import { t } from '@/i18n';
 
 interface StreakRemindersSectionProps {
   highContrastMode: boolean;
@@ -42,12 +43,12 @@ export function StreakRemindersSection({
   };
 
   return (
-    <SettingsSection highContrastMode={highContrastMode} title='Notifications'>
+    <SettingsSection highContrastMode={highContrastMode} title={t('settings.streakReminders')}>
       <SettingsRow
         highContrastMode={highContrastMode}
         icon={<Bell color='#ea580c' size={16} />}
         iconBackgroundColor='#fed7aa'
-        label='Streak Reminders'
+        label={t('settings.streakReminders')}
         type='toggle'
         value={enabled}
         onToggle={(v) => void onToggle(v)}
@@ -58,7 +59,7 @@ export function StreakRemindersSection({
             highContrastMode={highContrastMode}
             icon={<Clock color='#0284c7' size={16} />}
             iconBackgroundColor='#bae6fd'
-            label='Reminder Time'
+            label={t('reminders.time')}
             type='selection'
             value={formatDisplayTime(reminderTime)}
             onPress={() => setShowTimePicker(!showTimePicker)}

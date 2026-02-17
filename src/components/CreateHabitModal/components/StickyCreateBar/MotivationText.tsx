@@ -6,7 +6,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import STRINGS from '../../../../constants/strings';
+import { t } from '@/i18n';
 
 export function MotivationText() {
   const { colors } = useThemeColors();
@@ -14,15 +14,15 @@ export function MotivationText() {
   return (
     <View
       accessible
-      accessibilityLabel={`${STRINGS.CREATE_HABIT.motivationHighlight}${STRINGS.CREATE_HABIT.motivationSuffix}`}
+      accessibilityLabel={`${t('habits.motivationHighlight')}${t('habits.motivationSuffix')}`}
       accessibilityRole='text'
       className='mb-3 items-center'
     >
       <Text className='text-[13px]' style={{ color: colors.text.secondary }}>
         <Text className='font-semibold' style={{ color: '#059669' }}>
-          {STRINGS.CREATE_HABIT.motivationHighlight}
+          {t('habits.motivationHighlight')}
         </Text>
-        {STRINGS.CREATE_HABIT.motivationSuffix}
+        {t('habits.motivationSuffix')}
       </Text>
     </View>
   );

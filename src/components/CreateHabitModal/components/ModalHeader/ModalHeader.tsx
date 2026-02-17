@@ -4,8 +4,8 @@
 import { View, Pressable, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCallback } from 'react';
-import STRINGS from '../../../../constants/strings';
 import { X } from 'lucide-react-native';
+import { t } from '@/i18n';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { useShakeAnimation } from './useShakeAnimation';
@@ -50,7 +50,7 @@ export const ModalHeader = ({
       style={{ paddingTop: headerPadding }}
     >
       <Pressable
-        accessibilityLabel={STRINGS.CREATE_HABIT.close}
+        accessibilityLabel={t('common.close')}
         accessibilityRole='button'
         className='h-11 w-11 items-center justify-center rounded-full'
         style={({ pressed }) => ({

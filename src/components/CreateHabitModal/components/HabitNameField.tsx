@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import STRINGS from '../../../constants/strings';
+import { t } from '@/i18n';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import {
   MAX_LENGTH,
@@ -52,7 +52,7 @@ const HabitNameFieldComponent = ({
         autoFocus={autoFocus}
         className='h-14 rounded-xl bg-white px-4 text-base text-stone-800'
         maxLength={MAX_LENGTH}
-        placeholder={STRINGS.CREATE_HABIT.namePlaceholder}
+        placeholder={t('habits.habitNamePlaceholder')}
         placeholderTextColor='#a8a29e'
         returnKeyType='done'
         style={animatedInputStyle}

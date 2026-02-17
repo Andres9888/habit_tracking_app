@@ -25,6 +25,7 @@ import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
 import { styles } from './WelcomeScreen.styles';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { colors } from '../../theme/colors';
+import { t } from '@/i18n';
 
 // Lazy load auth screens - only bundle when user wants to sign in/up
 const SignInScreen = lazy(() => import('./SignInScreen'));
@@ -106,7 +107,7 @@ function WelcomeScreenContent() {
             style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
             onPress={() => setMode('signup')}
           >
-            <Text style={styles.primaryButtonText}>Create Free Account</Text>
+            <Text style={styles.primaryButtonText}>{t('auth.signUp')}</Text>
           </AnimatedPressable>
           <AnimatedPressable
             accessibilityHint='Navigate to sign in screen'

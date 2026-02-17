@@ -12,6 +12,7 @@ import { ProBadge } from './ProBadge';
 import { useHeaderAnimations } from './useHeaderAnimations';
 import { useHeaderHandlers } from './useHeaderHandlers';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { t, i18nMonthNameShort } from '@/i18n';
 
 const ENTERING = FadeInDown.duration(280).springify().damping(18);
 
@@ -25,7 +26,9 @@ const DATE_STYLE = {
 /** Format today's date as "Today · Mon D" per spec */
 const formatTodayDate = (): string => {
   const now = new Date();
-  return `Today · ${now.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}`;
+  const month = i18nMonthNameShort(now.getMonth());
+  const day = now.getDate();
+  return `${t('dateTime.today')} · ${month} ${day}`;
 };
 
 // eslint-disable-next-line max-lines-per-function
@@ -108,7 +111,7 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
                 className='text-[13px]'
                 style={[{ color: themeColors.text.secondary }, STREAK_STYLE]}
               >
-                {completedToday} of {totalHabits} done
+                {`${completedToday} ${t('common.of')} ${totalHabits} ${t('common.doneLabel')}`}
               </Text>
             )}
           </View>

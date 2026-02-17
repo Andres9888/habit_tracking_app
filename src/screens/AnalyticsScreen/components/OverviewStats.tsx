@@ -7,6 +7,7 @@ import { View, StyleSheet } from 'react-native';
 import { spacing } from '../../../theme/spacing';
 import { StatCard } from './StatCard';
 import type { AnalyticsOverviewStats } from '../AnalyticsScreen.types';
+import { t } from '@/i18n';
 
 interface OverviewStatsProps {
   stats: AnalyticsOverviewStats | undefined;
@@ -43,12 +44,12 @@ export const OverviewStats = memo(function OverviewStats({
     >
       <StatCard
         loading={isLoading}
-        title='Total Habits'
+        title={t('analytics.totalHabits')}
         value={stats?.totalHabits ?? '-'}
       />
       <StatCard
         loading={isLoading}
-        title='Average Strength'
+        title={t('analytics.averageStrength')}
         value={stats ? formatStrengthPercentage(stats.averageStrength) : '-'}
       />
       <StatCard
@@ -59,7 +60,7 @@ export const OverviewStats = memo(function OverviewStats({
             ? formatStrengthPercentage(stats.strongestHabit?.strength ?? 0)
             : undefined
         }
-        title='Strongest Habit'
+        title={t('analytics.strongestHabit')}
         value={stats?.strongestHabit?.name ?? '-'}
         onPress={stats?.strongestHabit ? handleStrongestPress : undefined}
       />
@@ -71,7 +72,7 @@ export const OverviewStats = memo(function OverviewStats({
             ? formatStrengthPercentage(stats.weakestHabit?.strength ?? 0)
             : undefined
         }
-        title='Weakest Habit'
+        title={t('analytics.weakestHabit')}
         value={stats?.weakestHabit?.name ?? '-'}
         onPress={stats?.weakestHabit ? handleWeakestPress : undefined}
       />

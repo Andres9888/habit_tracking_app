@@ -2,6 +2,7 @@ import React from 'react';
 import { ExternalLink } from 'lucide-react-native';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
+import { t } from '@/i18n';
 
 interface Props {
   highContrast: boolean;
@@ -11,12 +12,12 @@ interface Props {
 
 export function LegalLinks({ highContrast, onPrivacy, onTerms }: Props) {
   return (
-    <SettingsSection highContrastMode={highContrast} title='Legal'>
+    <SettingsSection highContrastMode={highContrast} title={t('settings.legal')}>
       <SettingsRow
         highContrastMode={highContrast}
         icon={<ExternalLink color='#78716c' size={16} />}
         iconBackgroundColor='#e7e5e4'
-        label='Privacy Policy'
+        label={t('settings.privacyPolicy')}
         type='navigation'
         onPress={onPrivacy}
       />
@@ -24,7 +25,7 @@ export function LegalLinks({ highContrast, onPrivacy, onTerms }: Props) {
         highContrastMode={highContrast}
         icon={<ExternalLink color='#78716c' size={16} />}
         iconBackgroundColor='#e7e5e4'
-        label='Terms of Service'
+        label={t('settings.termsOfService')}
         showBorder={false}
         type='navigation'
         onPress={onTerms}

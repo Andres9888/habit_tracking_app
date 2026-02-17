@@ -22,6 +22,7 @@ import { useSignUpFlow } from './hooks/useSignUpFlow';
 import { PasswordStrengthBar } from './components/PasswordStrengthBar';
 import { SignUpHeader } from './components/SignUpHeader';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { t } from '@/i18n';
 
 interface SignUpScreenProps {
   onNavigateToSignIn?: () => void;
@@ -138,7 +139,7 @@ function SignUpScreenContent({
                   editable={!isAnyLoading}
                   error={emailError}
                   keyboardType='email-address'
-                  label='Email'
+                  label={t('auth.email')}
                   placeholder='Enter your email'
                   returnKeyType='next'
                   value={emailAddress}
@@ -152,7 +153,7 @@ function SignUpScreenContent({
                     autoComplete='password-new'
                     editable={!isAnyLoading}
                     error={passwordError}
-                    placeholder='Create a password'
+                    placeholder={t('auth.createPassword')}
                     returnKeyType='go'
                     value={password}
                     onBlur={onPasswordBlur}

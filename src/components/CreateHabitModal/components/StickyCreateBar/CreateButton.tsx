@@ -7,7 +7,7 @@ import React from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
-import STRINGS from '../../../../constants/strings';
+import { t } from '@/i18n';
 import { colors } from '../../../../theme/colors';
 
 interface CreateButtonProps {
@@ -43,7 +43,7 @@ export function CreateButton({
           accessibilityLabel={
             disabled
               ? 'Create habit, disabled. Enter at least 2 characters.'
-              : STRINGS.CREATE_HABIT.createAction
+              : t('habits.createAction')
           }
           accessibilityRole='button'
           accessibilityState={{ disabled }}
@@ -67,7 +67,7 @@ export function CreateButton({
           >
             <Check color={colors.text.inverse} size={20} strokeWidth={2.5} />
             <Text className='ml-2 text-[17px] font-semibold text-white'>
-              {STRINGS.CREATE_HABIT.createAction}
+              {t('habits.createAction')}
             </Text>
           </LinearGradient>
         </Pressable>

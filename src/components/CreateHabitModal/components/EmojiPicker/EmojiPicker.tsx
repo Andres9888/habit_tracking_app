@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
-import STRINGS from '../../../../constants/strings';
+import { t } from '@/i18n';
 import { EmojiPickerSheet } from '../../../EmojiPickerV2';
 import { EmojiGrid } from './EmojiGrid';
 import { useSuggestedEmojis } from './useSuggestedEmojis';
@@ -66,7 +66,7 @@ function EmojiPickerComponent({
           className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
           style={{ letterSpacing: 0.5 }}
         >
-          {STRINGS.CREATE_HABIT.iconLabel}
+          {t('habits.iconLabel')}
         </Text>
       )}
 

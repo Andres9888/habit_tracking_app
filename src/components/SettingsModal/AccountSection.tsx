@@ -10,6 +10,7 @@ import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { PremiumStatus } from './sections/PremiumStatus';
 import { FeedbackModal } from '../FeedbackModal';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
+import { t } from '@/i18n';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
 const WHATS_NEW_URL = 'https://andres9888.github.io/chainday-landing/changelog.html';
@@ -33,8 +34,8 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
 
   const handleDeleteAccount = useCallback(() => {
     Alert.alert(
-      'Delete Account',
-      'This will permanently delete your account and all your data. This action cannot be undone.',
+      t('auth.deleteAccount'),
+      t('auth.deleteAccountConfirm'),
       [
         { style: 'cancel', text: 'Cancel' },
         {
@@ -58,7 +59,7 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
   }, [user]);
 
   const handleSignOut = useCallback(() => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+    Alert.alert(t('auth.signOut'), t('auth.signOutConfirm')), [
       { style: 'cancel', text: 'Cancel' },
       {
         onPress: () => {
@@ -68,7 +69,7 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
             .finally(() => setIsSigningOut(false));
         },
         style: 'destructive',
-        text: 'Sign Out',
+        text: t('auth.signOut'),
       },
     ]);
   }, [signOut]);

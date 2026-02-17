@@ -5,7 +5,7 @@
 import { Animated, Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import STRINGS from '../../../../constants/strings';
+import { t } from '@/i18n';
 
 interface SaveButtonProps {
   isEditMode: boolean;
@@ -33,7 +33,7 @@ export const SaveButton = ({
       <AnimatedPressable
         accessibilityHint={canSave ? '' : 'Enter a habit name first'}
         accessibilityLabel={
-          isEditMode ? 'Save habit changes' : STRINGS.CREATE_HABIT.createAction
+          isEditMode ? t('habitEdit.saveChanges') : t('habits.createAction')
         }
         accessibilityRole='button'
         accessibilityState={{ disabled: !canSave }}
@@ -50,8 +50,8 @@ export const SaveButton = ({
       >
         <Text className='text-[15px] font-semibold text-white'>
           {isEditMode
-            ? STRINGS.CREATE_HABIT.save
-            : STRINGS.CREATE_HABIT.createAction}
+            ? t('common.save')
+            : t('habits.createAction')}
         </Text>
       </AnimatedPressable>
     </Animated.View>

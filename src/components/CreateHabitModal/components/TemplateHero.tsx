@@ -1,7 +1,7 @@
 import { Animated, Text, View } from 'react-native';
 import { BookOpen, ChevronRight } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import STRINGS from '../../../constants/strings';
+import { t } from '@/i18n';
 
 interface TemplateHeroProps {
   isEditMode: boolean;
@@ -20,7 +20,7 @@ export const TemplateHero = ({
   const label = isOpen ? 'Hide template browser' : 'Start from template';
   const subtitle = isOpen
     ? 'Hide template browser'
-    : STRINGS.CREATE_HABIT.templateHeroSubtitle;
+    : t('templates.heroSubtitle');
 
   return (
     <AnimatedPressable
@@ -38,7 +38,7 @@ export const TemplateHero = ({
       </View>
       <View className='h-[80px] flex-1'>
         <Text className='text-lg font-bold text-[#111827]'>
-          {STRINGS.CREATE_HABIT.templateHeroTitle}
+          {t('templates.heroTitle')}
         </Text>
         <Text className='mt-1 text-[13px] font-normal text-stone-500'>
           {subtitle}

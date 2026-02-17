@@ -2,6 +2,7 @@ import React from 'react';
 import { Star, Share2, MessageSquare, Sparkles } from 'lucide-react-native';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
+import { t } from '@/i18n';
 
 interface Props {
   highContrast: boolean;
@@ -19,12 +20,12 @@ export function AppActions({
   onWhatsNew,
 }: Props) {
   return (
-    <SettingsSection highContrastMode={highContrast} title='App'>
+    <SettingsSection highContrastMode={highContrast} title={t('settings.about')}>
       <SettingsRow
         highContrastMode={highContrast}
         icon={<Star color='#f59e0b' size={16} />}
         iconBackgroundColor='#fef3c7'
-        label='Rate Chain Day'
+        label={t('settings.rateApp')}
         type='navigation'
         onPress={onRate}
       />
@@ -32,7 +33,7 @@ export function AppActions({
         highContrastMode={highContrast}
         icon={<Share2 color='#10b981' size={16} />}
         iconBackgroundColor='#d1fae5'
-        label='Share with Friends'
+        label={t('settings.shareApp')}
         type='navigation'
         onPress={onShare}
       />
@@ -40,7 +41,7 @@ export function AppActions({
         highContrastMode={highContrast}
         icon={<MessageSquare color='#8b5cf6' size={16} />}
         iconBackgroundColor='#ede9fe'
-        label='Send Feedback'
+        label={t('settings.sendFeedback')}
         type='navigation'
         onPress={onFeedback}
       />
@@ -48,7 +49,7 @@ export function AppActions({
         highContrastMode={highContrast}
         icon={<Sparkles color='#a855f7' size={16} />}
         iconBackgroundColor='#f3e8ff'
-        label="What's New"
+        label={t('settings.whatsNew')}
         showBorder={false}
         type='navigation'
         onPress={onWhatsNew}
