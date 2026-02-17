@@ -89,6 +89,44 @@ const applicationTables = {
     title: v.string(),
   }).index('by_category', ['category']),
 
+  // Journal Entries - Longer-form reflections tied to habits
+  // Scientific Basis:
+  // - Expressive writing improves health outcomes (Pennebaker, 1997)
+  // - Structured reflection increases self-awareness and behavior change
+  // - Mood tracking correlates with habit consistency (Daylio, 50M+ downloads)
+  // Business Model:
+  // - Free: 3 entries per habit, Premium: unlimited
+  // - High engagement feature that deepens user investment
+  journalEntries: defineTable({
+    createdAt: v.number(),
+
+    // Associated habit
+    habitId: v.id('habits'),
+
+    // Mood tag: 😤 frustrated | 😐 neutral | 😊 happy | 🔥 fire
+    mood: v.union(
+      v.literal('frustrated'),
+      v.literal('neutral'),
+      v.literal('happy'),
+      v.literal('fire')
+    ),
+
+    // Main journal content (rich text / free-form)
+    textContent: v.string(),
+
+    updatedAt: v.number(),
+
+    userId: v.optional(v.string()),
+
+    // Prompted question responses
+    whatWasHard: v.optional(v.string()),
+    whatWentWell: v.optional(v.string()),
+    whatWillChange: v.optional(v.string()),
+  })
+    .index('by_habit', ['habitId'])
+    .index('by_user', ['userId'])
+    .index('by_habit_and_date', ['habitId', 'createdAt']),
+
   habits: defineTable({
     // Memory Accessibility System (Tobias, 2009; Zhang et al., 2021)
     // Memory accessibility (0-1), starts at 1.0

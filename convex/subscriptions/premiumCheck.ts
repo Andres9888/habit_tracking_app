@@ -20,6 +20,8 @@ export const FREE_TIER_LIMITS = {
   VOICE_NOTES_PER_HABIT: 1,
   /** Vision board: 4 images per habit */
   VISION_BOARD_IMAGES_PER_HABIT: 4,
+  /** Journal entries: 3 free entries per habit */
+  JOURNAL_ENTRIES_PER_HABIT: 3,
 } as const;
 
 /**

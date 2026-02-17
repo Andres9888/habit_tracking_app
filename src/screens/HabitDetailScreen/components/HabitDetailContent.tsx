@@ -5,6 +5,7 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import { JournalSection } from './JournalSection';
 import { useThemeColors } from '../../../theme';
 import { colors } from '../../../theme/colors';
 import type { Habit } from '../../../features/habits/types';
@@ -119,6 +120,14 @@ export function HabitDetailContent({
             notesByDate={notesByDate}
             onDayPress={onDayPress}
           />
+        </ErrorBoundary>
+      </Animated.View>
+
+      {/* JOURNAL section */}
+      <SectionLabel borderColor={borderColor} delay={480} text='JOURNAL' textColor={labelColor} />
+      <Animated.View entering={anim(540)}>
+        <ErrorBoundary>
+          <JournalSection habitId={habit._id} />
         </ErrorBoundary>
       </Animated.View>
     </ScrollView>
