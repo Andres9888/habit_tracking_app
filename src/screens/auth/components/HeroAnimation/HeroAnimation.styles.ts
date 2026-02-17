@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
   },
   emojiContainer: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4',
+    backgroundColor: undefined, // Set dynamically via theme
     borderRadius: 60,
     height: 120,
     justifyContent: 'center',

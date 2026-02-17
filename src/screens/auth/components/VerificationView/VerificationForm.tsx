@@ -19,7 +19,7 @@ export function VerificationForm({
   onVerify,
 }: Props) {
   const handleVerify = useCallback(() => void onVerify(code), [code, onVerify]);
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   return (
     <View
@@ -27,7 +27,7 @@ export function VerificationForm({
       style={{ backgroundColor: colors.card }}
       style={{
         elevation: 4,
-        shadowColor: '#1c1917',
+        shadowColor: isDark ? '#000000' : '#1c1917',
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 16,

@@ -16,8 +16,8 @@ export function DetailHeader({
   onEdit,
 }: DetailHeaderProps) {
   const { colors, isDark } = useThemeColors();
-  const iconColor = isDark ? colors.text.secondary : '#57534e';
-  const textPrimary = isDark ? colors.text.primary : '#1c1917';
+  const iconColor = colors.text.secondary;
+  const textPrimary = colors.text.primary;
   const habitName = habit.icon
     ? (habit.name ?? '').replace(/^\p{Emoji}\s*/u, '')
     : (habit.name ?? 'Habit');

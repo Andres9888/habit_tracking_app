@@ -6,7 +6,7 @@ import { TextInput, View } from 'react-native';
 import { Search, X } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 
 interface SearchBarProps {
   onChangeText: (text: string) => void;
@@ -22,6 +22,7 @@ export function SearchBar({
   value,
 }: SearchBarProps) {
   const { colors, isDark } = useThemeColors();
+  const styles = useTemplatesStyles();
   const placeholderColor = colors.text.tertiary;
 
   return (

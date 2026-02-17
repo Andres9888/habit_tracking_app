@@ -1,52 +1,67 @@
 /**
- * Templates Screen Styles
+ * Templates Screen Styles — theme-aware
  *
- * Styles are organized by domain for maintainability.
- * The combined `styles` export maintains backward compatibility.
+ * All style modules now accept SemanticColors for dark mode support.
+ * Use `useTemplatesStyles()` hook in components for automatic theme binding.
  */
 
-export { browseStyles } from './browseStyles';
-export { categoryStyles } from './categoryStyles';
-export { controlStyles } from './controlStyles';
-export { customizeStyles } from './customizeStyles';
-export { formStyles } from './formStyles';
+import { useMemo } from 'react';
+import { useThemeColors } from '@/theme/ThemeContext';
+import type { SemanticColors } from '@/theme/darkColors';
+
+// Style creators
+export { createBrowseStyles } from './browseStyles';
+export { createCategoryStyles } from './categoryStyles';
+export { createControlStyles } from './controlStyles';
+export { createCustomizeStyles } from './customizeStyles';
+export { createFormStyles } from './formStyles';
 export { gridStyles } from './gridStyles';
-export { layoutStyles } from './layoutStyles';
-export { previewStyles } from './previewStyles';
-export { scrollStyles } from './scrollStyles';
-export { searchStyles } from './searchStyles';
-export { skeletonStyles } from './skeletonStyles';
-export { sortStyles } from './sortStyles';
+export { createLayoutStyles } from './layoutStyles';
+export { createPreviewStyles } from './previewStyles';
+export { createScrollStyles } from './scrollStyles';
+export { createSearchStyles } from './searchStyles';
+export { createSkeletonStyles } from './skeletonStyles';
+export { createSortStyles } from './sortStyles';
 export { tabStyles } from './tabStyles';
 
-// Import for combined styles
-import { browseStyles } from './browseStyles';
-import { categoryStyles } from './categoryStyles';
-import { controlStyles } from './controlStyles';
-import { customizeStyles } from './customizeStyles';
-import { formStyles } from './formStyles';
+// Imports for combined styles
+import { createBrowseStyles } from './browseStyles';
+import { createCategoryStyles } from './categoryStyles';
+import { createControlStyles } from './controlStyles';
+import { createCustomizeStyles } from './customizeStyles';
+import { createFormStyles } from './formStyles';
 import { gridStyles } from './gridStyles';
-import { layoutStyles } from './layoutStyles';
-import { previewStyles } from './previewStyles';
-import { scrollStyles } from './scrollStyles';
-import { searchStyles } from './searchStyles';
-import { skeletonStyles } from './skeletonStyles';
-import { sortStyles } from './sortStyles';
+import { createLayoutStyles } from './layoutStyles';
+import { createPreviewStyles } from './previewStyles';
+import { createScrollStyles } from './scrollStyles';
+import { createSearchStyles } from './searchStyles';
+import { createSkeletonStyles } from './skeletonStyles';
+import { createSortStyles } from './sortStyles';
 import { tabStyles } from './tabStyles';
 
-// Combined styles export for backward compatibility
-export const styles = {
-  ...browseStyles,
-  ...categoryStyles,
-  ...controlStyles,
-  ...customizeStyles,
-  ...formStyles,
-  ...gridStyles,
-  ...layoutStyles,
-  ...previewStyles,
-  ...scrollStyles,
-  ...searchStyles,
-  ...skeletonStyles,
-  ...sortStyles,
-  ...tabStyles,
-} as const;
+/** Create all template styles with the given theme colors */
+export function createAllStyles(c: SemanticColors) {
+  return {
+    ...createBrowseStyles(c),
+    ...createCategoryStyles(c),
+    ...createControlStyles(c),
+    ...createCustomizeStyles(c),
+    ...createFormStyles(c),
+    ...gridStyles,
+    ...createLayoutStyles(c),
+    ...createPreviewStyles(c),
+    ...createScrollStyles(c),
+    ...createSearchStyles(c),
+    ...createSkeletonStyles(c),
+    ...createSortStyles(c),
+    ...tabStyles,
+  } as const;
+}
+
+/** Hook that returns all template styles bound to current theme */
+export function useTemplatesStyles() {
+  const { colors } = useThemeColors();
+  return useMemo(() => createAllStyles(colors), [colors]);
+}
+
+// Use useTemplatesStyles() or createAllStyles(colors) in components

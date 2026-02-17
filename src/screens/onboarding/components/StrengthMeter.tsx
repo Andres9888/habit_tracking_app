@@ -1,16 +1,18 @@
-import { colors } from '../../../theme/colors';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 const STAGES = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
 
-function interpolateColor(t: number): string {
-  if (t < 0.5) return '#10B981';
-  if (t < 0.75) return colors.primary[600];
-  return colors.primary[700];
-}
-
 export function StrengthMeter() {
+  const { colors } = useThemeColors();
+
+  const interpolateColor = (t: number): string => {
+    if (t < 0.5) return colors.primary[500];
+    if (t < 0.75) return colors.primary[600];
+    return colors.primary[700];
+  };
+
   return (
     <View style={styles.container}>
       {STAGES.map((stage, i) => (
@@ -31,7 +33,13 @@ export function StrengthMeter() {
               },
             ]}
           />
-          <Text style={[styles.label, i === 4 && styles.labelActive]}>
+          <Text
+            style={[
+              styles.label,
+              { color: colors.text.tertiary },
+              i === 4 && { color: colors.primary[700], fontWeight: '700' },
+            ]}
+          >
             {stage}
           </Text>
         </Animated.View>
@@ -42,7 +50,6 @@ export function StrengthMeter() {
 
 const styles = StyleSheet.create({
   bar: {
-    backgroundColor: colors.primary[600],
     borderRadius: 8,
     height: 32,
   },
@@ -52,13 +59,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   label: {
-    color: '#6B7280',
     fontSize: 13,
     fontWeight: '500',
-  },
-  labelActive: {
-    color: colors.primary[700],
-    fontWeight: '700',
   },
   row: {
     alignItems: 'center',

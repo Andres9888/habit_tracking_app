@@ -13,7 +13,7 @@ export function PasswordResetForm({
   onSubmit,
   onCancel,
 }: PasswordResetFormProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   return (
     <View className='gap-4'>
       <View className='gap-2'>
@@ -24,7 +24,7 @@ export function PasswordResetForm({
           className={`rounded-2xl border-2 ${error ? 'border-red-500' : ''}`}
           style={{ backgroundColor: colors.card, borderColor: error ? undefined : colors.border }}
           style={{
-            shadowColor: error ? '#ef4444' : '#1c1917',
+            shadowColor: error ? '#ef4444' : (isDark ? '#000000' : '#1c1917'),
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,
             shadowRadius: 16,
@@ -41,7 +41,7 @@ export function PasswordResetForm({
             editable={!isLoading}
             keyboardType='email-address'
             placeholder='you@example.com'
-            placeholderTextColor='#a1a1aa'
+            placeholderTextColor={isDark ? colors.text.tertiary : '#a1a1aa'}
             returnKeyType='send'
             value={email}
             onChangeText={onEmailChange}

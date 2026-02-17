@@ -1,22 +1,25 @@
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '@/theme/darkColors';
 
-export const searchStyles = StyleSheet.create({
-  searchBar: {
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#e7e5e4',
-    borderRadius: 12,
-    borderWidth: 1.5,
-    flexDirection: 'row',
-    gap: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 11,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 17,
-  },
-  searchSection: {
-    paddingHorizontal: 20,
-  },
-});
+export const createSearchStyles = (c: SemanticColors) =>
+  StyleSheet.create({
+    searchBar: {
+      alignItems: 'center',
+      backgroundColor: c.card,
+      borderColor: c.border,
+      borderRadius: 12,
+      borderWidth: 1.5,
+      flexDirection: 'row',
+      gap: 10,
+      paddingHorizontal: 14,
+      paddingVertical: 11,
+    },
+    searchInput: {
+      color: c.text.primary,
+      flex: 1,
+      fontSize: 17,
+    },
+    searchSection: {
+      paddingHorizontal: 20,
+    },
+  });

@@ -10,6 +10,7 @@ import Animated, {
   withDelay,
   withSpring,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface SocialProofBadgeProps {
   count?: string;
@@ -22,6 +23,7 @@ export function SocialProofBadge({
   message = 'people building better habits',
   delay = 400,
 }: SocialProofBadgeProps) {
+  const { colors, isDark } = useThemeColors();
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(10);
 
@@ -36,9 +38,15 @@ export function SocialProofBadge({
   }));
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
+    <Animated.View
+      style={[
+        styles.container,
+        { backgroundColor: isDark ? colors.card : '#fffbeb' },
+        animatedStyle,
+      ]}
+    >
       <Text style={styles.star}>⭐</Text>
-      <Text style={styles.text}>
+      <Text style={[styles.text, { color: isDark ? colors.text.secondary : '#92400e' }]}>
         <Text style={styles.count}>{count}</Text> {message}
       </Text>
     </Animated.View>
@@ -48,15 +56,10 @@ export function SocialProofBadge({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#fffbeb',
     borderRadius: 9999,
     flexDirection: 'row',
-    // pill badge
     gap: 8,
-
     justifyContent: 'center',
-
-    // amber-50
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
@@ -64,12 +67,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   star: {
-    fontSize: 13, // caption scale
+    fontSize: 13,
   },
   text: {
-    // caption scale
-    color: '#92400e',
-    fontSize: 13, // amber-800
+    fontSize: 13,
   },
 });
 

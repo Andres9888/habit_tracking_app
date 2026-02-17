@@ -10,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
-import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 /**
  * Props for the AnimatedLogo component
@@ -35,6 +35,7 @@ interface AnimatedLogoProps {
  * <AnimatedLogo size={80} />
  */
 export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
+  const { colors, isDark } = useThemeColors();
   const scale = useSharedValue(1);
   const translateY = useSharedValue(0);
   const reduceMotion = useReducedMotion();
@@ -88,7 +89,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
             borderRadius: 16,
             elevation: 4,
             height: size,
-            shadowColor: '#1c1917',
+            shadowColor: isDark ? '#000000' : '#1c1917',
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,
             shadowRadius: 16,
@@ -97,7 +98,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
         ]}
       >
         <LinearGradient
-          colors={['#059669', '#10b981', '#34d399']}
+          colors={[colors.primary[600], colors.primary[500], colors.primary[400]]}
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
           style={{

@@ -4,7 +4,7 @@
 
 import { Pressable, View } from 'react-native';
 import Toast from '../../../components/Toast';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 import {
   CategoryHeader,
   FilterControls,
@@ -16,6 +16,7 @@ import type { CategorySearchViewProps } from './CategorySearchView.types';
 import { TemplatesList } from './TemplatesList';
 
 export function CategorySearchView(p: CategorySearchViewProps) {
+  const styles = useTemplatesStyles();
   const { handlers: h, filteredTemplates: templates } = p;
   const toggle = () => p.setResearchOnly((v) => !v);
 

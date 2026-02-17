@@ -5,7 +5,7 @@
 import { Pressable, Text, type LayoutChangeEvent } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { BrowseTab } from '../TemplatesScreen.types';
 
@@ -29,6 +29,7 @@ export function TabBar({
   tabIndicatorStyle,
 }: TabBarProps) {
   const { colors, isDark } = useThemeColors();
+  const styles = useTemplatesStyles();
 
   const handleCategoriesPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

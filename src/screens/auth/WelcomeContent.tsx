@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Link } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { AuthDivider, AuthError, SocialSignInButton } from './components';
-import { styles } from './WelcomeScreen.styles';
+import { createStyles } from './WelcomeScreen.styles';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface WelcomeContentProps {
   insets: { top: number };
@@ -35,11 +36,14 @@ export function WelcomeContent({
   onSignUp,
   onSignIn,
 }: WelcomeContentProps) {
+  const { colors } = useThemeColors();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+
   return (
     <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
       <View style={styles.heroSection}>
         <Animated.View style={[styles.iconContainer, iconStyle]}>
-          <Link color='#1c1917' size={40} strokeWidth={2} />
+          <Link color={colors.text.primary} size={40} strokeWidth={2} />
         </Animated.View>
         <Animated.Text style={[styles.title, titleStyle]}>
           Chain Day

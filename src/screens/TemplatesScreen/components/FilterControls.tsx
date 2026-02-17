@@ -11,7 +11,7 @@ import {
   SORT_OPTIONS,
   type SortOption,
 } from '../../templates/constants';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 
 interface FilterControlsProps {
   onResearchToggle: () => void;
@@ -29,6 +29,7 @@ export function FilterControls({
   sortOption,
 }: FilterControlsProps) {
   const { colors, isDark } = useThemeColors();
+  const styles = useTemplatesStyles();
   const defaultIconColor = colors.text.primary;
   const iconColor = showSortOptions ? '#fff' : defaultIconColor;
 

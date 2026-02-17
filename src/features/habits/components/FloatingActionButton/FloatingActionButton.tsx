@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react-native';
 import { Animated, Pressable } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useFocusRing } from '../../../../utils/accessibility';
 import { useFABAnimations } from './useFABAnimations';
 import { useFABHandlers } from './useFABHandlers';
@@ -12,6 +13,7 @@ export function FloatingActionButton({
   celebrationsEnabled = true,
   reduceMotionPreference = false,
 }: FloatingActionButtonProps) {
+  const { colors } = useThemeColors();
   const { bounce, pressScale, rippleOpacity, rippleScale } = useFABAnimations(
     celebrationsEnabled,
     reduceMotionPreference
@@ -45,9 +47,9 @@ export function FloatingActionButton({
       accessibilityLabel='Add habit'
       accessibilityRole='button'
       testID='home-create-habit-fab'
-      className='h-14 w-14 items-center justify-center rounded-full bg-[#059669] shadow-lg'
+      className='h-14 w-14 items-center justify-center rounded-full shadow-lg'
       {...focusHandlers}
-      style={[animatedStyle, focusStyle]}
+      style={[animatedStyle, focusStyle, { backgroundColor: colors.primary[600] }]}
       onPress={handlePress}
     >
       <Animated.View
@@ -59,7 +61,7 @@ export function FloatingActionButton({
           transform: [{ scale: rippleScale }],
         }}
       />
-      <Plus color='#ffffff' size={24} strokeWidth={2.5} />
+      <Plus color={colors.text.inverse} size={24} strokeWidth={2.5} />
     </AnimatedPressable>
   );
 }

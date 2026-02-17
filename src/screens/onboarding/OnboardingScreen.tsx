@@ -8,9 +8,10 @@
 
 import { useThemeColors } from '../../theme/ThemeContext';
 import { colors } from '../../theme/colors';
+import type { SemanticColors } from '@/theme/darkColors';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -34,6 +35,14 @@ import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ONBOARDING_KEY = '@chainday_onboarding_complete';
 
+// Forward declaration — createStyles is defined at bottom of file
+// eslint-disable-next-line @typescript-eslint/no-use-before-define
+const useOnboardingStyles = () => {
+  const { colors: c } = useThemeColors();
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  return useMemo(() => createStyles(c), [c]);
+};
+
 // ─── Chain Visualization ─────────────────────────────────────────────
 
 function ChainLink({
@@ -45,6 +54,7 @@ function ChainLink({
   index: number;
   reduceMotion: boolean;
 }) {
+  const styles = useOnboardingStyles();
   const { colors } = useThemeColors();
   const chainColors = [
     colors.primary[600],
@@ -76,6 +86,7 @@ function ChainLink({
 }
 
 function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
+  const styles = useOnboardingStyles();
   return (
     <View style={styles.chainContainer}>
       {[0, 1, 2, 3, 4, 5, 6].map((i) => (
@@ -93,6 +104,7 @@ function ChainVisualization({ reduceMotion }: { reduceMotion: boolean }) {
 // ─── Strength Meter ──────────────────────────────────────────────────
 
 function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
+  const styles = useOnboardingStyles();
   const { colors } = useThemeColors();
   const stages = ['Starting', 'Building', 'Growing', 'Strong', 'Automatic'];
   return (
@@ -157,6 +169,7 @@ const TEMPLATE_ICONS = [
 ];
 
 function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
+  const styles = useOnboardingStyles();
   return (
     <View style={styles.templateGrid}>
       {TEMPLATE_ICONS.map((emoji, i) => (
@@ -214,6 +227,7 @@ const PAGES: PageData[] = [
 // ─── Dot Indicators ──────────────────────────────────────────────────
 
 function DotIndicators({ currentIndex }: { currentIndex: number }) {
+  const styles = useOnboardingStyles();
   const { colors } = useThemeColors();
   return (
     <View
@@ -249,6 +263,7 @@ interface OnboardingScreenProps {
 }
 
 function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
+  const styles = useOnboardingStyles();
   const { colors } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -396,7 +411,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
               onPress={() => void handleComplete()}
             >
               {isLoading ? (
-                <ActivityIndicator color='#FFFFFF' />
+                <ActivityIndicator color={colors.text.inverse} />
               ) : (
                 <Text style={styles.ctaText}>
                   Let's Build Your First Habit →
@@ -421,171 +436,172 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
 
 // ─── Styles ──────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
-  bottomContainer: {
-    alignItems: 'center',
-    gap: 24,
-    paddingBottom: 60,
-    paddingHorizontal: 32,
-  },
-  chainContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: -4,
-  },
-  chainLink: {
-    alignItems: 'center',
-    borderRadius: 16,
-    height: 52,
-    justifyContent: 'center',
-    marginHorizontal: -2,
-    width: 36,
-  },
-  chainLinkInner: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    height: 36,
-    width: 20,
-  },
-  container: {
-    backgroundColor: '#FAF8F5',
-    flex: 1,
-  },
-  ctaButton: {
-    backgroundColor: colors.primary[600],
-    borderRadius: 12,
-    elevation: 4,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-  },
-  ctaButtonDisabled: {
-    opacity: 0.7,
-  },
-  ctaText: {
-    color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '600',
-  },
-  dot: {
-    borderRadius: 4,
-    height: 8,
-  },
-  dotsContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-  },
-  nextButton: {
-    backgroundColor: colors.primary[600],
-    borderRadius: 12,
-    elevation: 4,
-    paddingHorizontal: 48,
-    paddingVertical: 16,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-  },
-  nextText: {
-    color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '600',
-  },
-  page: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 32,
-  },
-  skipButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 44,
-    minWidth: 44,
-  },
-  skipContainer: {
-    position: 'absolute',
-    right: 24,
-    zIndex: 10,
-  },
-  skipText: {
-    color: '#6B7280',
-    fontSize: 17,
-    fontWeight: '500',
-  },
-  strengthBar: {
-    backgroundColor: colors.primary[600],
-    borderRadius: 8,
-    height: 32,
-  },
-  strengthContainer: {
-    gap: 12,
-    paddingHorizontal: 16,
-    width: '100%',
-  },
-  strengthLabel: {
-    color: '#57534e',
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  strengthLabelActive: {
-    color: colors.primary[700],
-    fontWeight: '700',
-  },
-  strengthRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 12,
-  },
-  subtitle: {
-    color: '#6B7280',
-    fontSize: 17,
-    lineHeight: 24,
-    paddingHorizontal: 16,
-    textAlign: 'center',
-  },
-  templateEmoji: {
-    fontSize: 22,
-  },
-  templateGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-    justifyContent: 'center',
-    width: 280,
-  },
-  templateItem: {
-    alignItems: 'center',
-    backgroundColor: '#F0FDF4',
-    borderRadius: 16,
-    elevation: 2,
-    height: 56,
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    width: 56,
-  },
-  title: {
-    color: colors.primary[700],
-    fontSize: 34,
-    fontWeight: '700',
-    letterSpacing: -0.5,
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  visualContainer: {
-    alignItems: 'center',
-    height: 280,
-    justifyContent: 'center',
-    marginBottom: 40,
-  },
-});
+const createStyles = (c: SemanticColors) =>
+  StyleSheet.create({
+    bottomContainer: {
+      alignItems: 'center',
+      gap: 24,
+      paddingBottom: 60,
+      paddingHorizontal: 32,
+    },
+    chainContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: -4,
+    },
+    chainLink: {
+      alignItems: 'center',
+      borderRadius: 16,
+      height: 52,
+      justifyContent: 'center',
+      marginHorizontal: -2,
+      width: 36,
+    },
+    chainLinkInner: {
+      backgroundColor: c.card,
+      borderRadius: 12,
+      height: 36,
+      width: 20,
+    },
+    container: {
+      backgroundColor: c.background,
+      flex: 1,
+    },
+    ctaButton: {
+      backgroundColor: c.primary[600],
+      borderRadius: 12,
+      elevation: 4,
+      paddingHorizontal: 32,
+      paddingVertical: 16,
+      shadowColor: c.text.primary,
+      shadowOffset: { height: 4, width: 0 },
+      shadowOpacity: 0.08,
+      shadowRadius: 16,
+    },
+    ctaButtonDisabled: {
+      opacity: 0.7,
+    },
+    ctaText: {
+      color: c.text.inverse,
+      fontSize: 17,
+      fontWeight: '600',
+    },
+    dot: {
+      borderRadius: 4,
+      height: 8,
+    },
+    dotsContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: 8,
+    },
+    nextButton: {
+      backgroundColor: c.primary[600],
+      borderRadius: 12,
+      elevation: 4,
+      paddingHorizontal: 48,
+      paddingVertical: 16,
+      shadowColor: c.text.primary,
+      shadowOffset: { height: 4, width: 0 },
+      shadowOpacity: 0.08,
+      shadowRadius: 16,
+    },
+    nextText: {
+      color: c.text.inverse,
+      fontSize: 17,
+      fontWeight: '600',
+    },
+    page: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+      paddingHorizontal: 32,
+    },
+    skipButton: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: 44,
+      minWidth: 44,
+    },
+    skipContainer: {
+      position: 'absolute',
+      right: 24,
+      zIndex: 10,
+    },
+    skipText: {
+      color: c.text.tertiary,
+      fontSize: 17,
+      fontWeight: '500',
+    },
+    strengthBar: {
+      backgroundColor: c.primary[600],
+      borderRadius: 8,
+      height: 32,
+    },
+    strengthContainer: {
+      gap: 12,
+      paddingHorizontal: 16,
+      width: '100%',
+    },
+    strengthLabel: {
+      color: c.text.secondary,
+      fontSize: 13,
+      fontWeight: '500',
+    },
+    strengthLabelActive: {
+      color: c.primary[700],
+      fontWeight: '700',
+    },
+    strengthRow: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: 12,
+    },
+    subtitle: {
+      color: c.text.tertiary,
+      fontSize: 17,
+      lineHeight: 24,
+      paddingHorizontal: 16,
+      textAlign: 'center',
+    },
+    templateEmoji: {
+      fontSize: 22,
+    },
+    templateGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 16,
+      justifyContent: 'center',
+      width: 280,
+    },
+    templateItem: {
+      alignItems: 'center',
+      backgroundColor: c.primary[100],
+      borderRadius: 16,
+      elevation: 2,
+      height: 56,
+      justifyContent: 'center',
+      shadowColor: c.text.primary,
+      shadowOffset: { height: 4, width: 0 },
+      shadowOpacity: 0.08,
+      shadowRadius: 16,
+      width: 56,
+    },
+    title: {
+      color: c.primary[700],
+      fontSize: 34,
+      fontWeight: '700',
+      letterSpacing: -0.5,
+      marginBottom: 12,
+      textAlign: 'center',
+    },
+    visualContainer: {
+      alignItems: 'center',
+      height: 280,
+      justifyContent: 'center',
+      marginBottom: 40,
+    },
+  });
 
 export { ONBOARDING_KEY };
 

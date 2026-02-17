@@ -5,7 +5,7 @@
 import { View } from 'react-native';
 import Button from '../../../components/Button/Button';
 import EmptyState from '../../../components/EmptyState';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 
 interface TemplatesEmptyStateProps {
   isSeeding: boolean;
@@ -16,6 +16,7 @@ export function TemplatesEmptyState({
   isSeeding,
   onSeedTemplates,
 }: TemplatesEmptyStateProps) {
+  const styles = useTemplatesStyles();
   return (
     <View style={styles.container}>
       <EmptyState

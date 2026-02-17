@@ -9,7 +9,7 @@ import Animated, {
   type AnimatedStyle,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 
 interface BrowseHeaderProps {
   animatedStyle: AnimatedStyle;
@@ -17,6 +17,7 @@ interface BrowseHeaderProps {
 
 export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
   const { colors } = useThemeColors();
+  const styles = useTemplatesStyles();
 
   return (
     <Animated.View style={[styles.header, animatedStyle]}>

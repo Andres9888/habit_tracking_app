@@ -6,7 +6,7 @@ import { Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronDown } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 
 interface ScrollShadowsProps {
   showBottomShadow: boolean;
@@ -18,6 +18,7 @@ export function ScrollShadows({
   showTopShadow,
 }: ScrollShadowsProps) {
   const { colors, isDark } = useThemeColors();
+  const styles = useTemplatesStyles();
   const bgOpaque = isDark
     ? 'rgba(17,24,39,0.96)'
     : 'rgba(248,247,245,0.96)';

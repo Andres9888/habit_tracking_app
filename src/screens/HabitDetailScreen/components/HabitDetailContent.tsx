@@ -6,7 +6,6 @@ import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import { useThemeColors } from '../../../theme';
-import { colors } from '../../../theme/colors';
 import type { Habit } from '../../../features/habits/types';
 
 interface HabitDetailContentProps {
@@ -55,10 +54,10 @@ export function HabitDetailContent({
   onDayPress,
 }: HabitDetailContentProps) {
   const { colors, isDark } = useThemeColors();
-  const cardBg = isDark ? colors.card : '#FFFFFF';
+  const cardBg = colors.card;
   const shadowColor = isDark ? '#000000' : '#1c1917';
-  const borderColor = isDark ? colors.border : '#DDD8D2';
-  const labelColor = isDark ? colors.text.tertiary : '#9C958D';
+  const borderColor = colors.border;
+  const labelColor = colors.text.tertiary;
 
   return (
     <ScrollView

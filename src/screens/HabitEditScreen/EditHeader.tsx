@@ -44,8 +44,8 @@ export function EditHeader({
     onSave();
   };
 
-  const disabledBg = isDark ? colors.gray[300] : '#D6D3D1';
-  const disabledText = isDark ? colors.text.tertiary : '#78716C';
+  const disabledBg = colors.gray[300];
+  const disabledText = colors.text.tertiary;
 
   return (
     <Animated.View
@@ -59,7 +59,7 @@ export function EditHeader({
         className='h-11 w-11 items-center justify-center rounded-full active:opacity-70'
         onPress={handleCancel}
       >
-        <X color={isDark ? colors.text.secondary : '#44403c'} size={24} strokeWidth={2} />
+        <X color={colors.text.secondary} size={24} strokeWidth={2} />
       </Pressable>
       <View className='flex-1' />
       <AnimatedPressable
@@ -80,13 +80,13 @@ export function EditHeader({
           scale.value = withSpring(1, { damping: 18, stiffness: 150 });
         }}
       >
-        {isSaving && <ActivityIndicator color='#ffffff' size='small' />}
+        {isSaving && <ActivityIndicator color={colors.text.inverse} size='small' />}
         <Text
           className='font-semibold'
           style={{
             fontSize: 17,
             letterSpacing: -0.41,
-            color: canSave && !isSaving ? '#FFFFFF' : disabledText,
+            color: canSave && !isSaving ? colors.text.inverse : disabledText,
           }}
         >
           {isSaving ? 'Saving…' : 'Save'}

@@ -10,7 +10,7 @@ import {
   CATEGORY_COLORS,
   DEFAULT_CATEGORY_COLORS,
 } from '../../templates/constants';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 import type { Category } from '../../templates/constants';
 import type { CategoryDoc, ViewMode } from '../TemplatesScreen.types';
 
@@ -33,6 +33,7 @@ export function CategoryHeader({
 }: CategoryHeaderProps) {
   const theme = useAppTheme();
   const { colors: themeColors } = useThemeColors();
+  const styles = useTemplatesStyles();
   const catColors =
     CATEGORY_COLORS[selectedCategory] || DEFAULT_CATEGORY_COLORS;
   const categoryIcon =

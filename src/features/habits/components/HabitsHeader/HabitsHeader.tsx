@@ -42,7 +42,7 @@ function HabitsHeaderComponent(props: HabitsHeaderProps) {
     showCompletionSummary = true,
     totalHabits = 0,
   } = props;
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const { showBadge, dismissBadge } = useTemplateBadge({ totalHabits });
   const anim = useHeaderAnimations();
   const handlers = useHeaderHandlers({

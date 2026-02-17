@@ -8,17 +8,17 @@ import {
 } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 
-// Emerald-500 for focus state (brand color)
-const EMERALD_500 = '#10b981';
+// Emerald-500 for focus state — resolved dynamically via useThemeColors
 
 export function usePasswordInputAnimations() {
   const [isFocused, setIsFocused] = useState(false);
-  const { isDark } = useThemeColors();
+  const { isDark, colors } = useThemeColors();
   const focusProgress = useSharedValue(0);
+  const EMERALD_500 = colors.primary[500];
 
   const defaultBg = isDark ? 'rgba(30, 30, 30, 0.5)' : 'rgba(250, 250, 249, 0.5)';
-  const focusedBg = isDark ? '#1e1e1e' : '#ffffff';
-  const defaultBorder = isDark ? '#3a3a3a' : '#e7e5e4';
+  const focusedBg = isDark ? colors.card : '#ffffff';
+  const defaultBorder = isDark ? colors.border : '#e7e5e4';
 
   const handleFocus = useCallback(() => {
     setIsFocused(true);

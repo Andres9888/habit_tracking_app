@@ -6,7 +6,7 @@
 import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface PasswordStrengthBarProps {
   password: string;
@@ -21,7 +21,7 @@ const STRENGTH_CONFIG: Record<
   weak: { color: '#ef4444', label: 'Weak', width: '25%' },
   fair: { color: '#f59e0b', label: 'Fair', width: '50%' },
   good: { color: '#22c55e', label: 'Good', width: '75%' },
-  strong: { color: colors.primary[700], label: 'Strong', width: '100%' },
+  strong: { color: '#047857', label: 'Strong', width: '100%' },
 };
 
 function getStrength(password: string): Strength {
@@ -41,12 +41,13 @@ function getStrength(password: string): Strength {
 export function PasswordStrengthBar({ password }: PasswordStrengthBarProps) {
   const strength = useMemo(() => getStrength(password), [password]);
   const config = STRENGTH_CONFIG[strength];
+  const { colors, isDark } = useThemeColors();
 
   if (!password) return null;
 
   return (
     <Animated.View entering={FadeInDown.duration(280).springify().damping(18)} style={styles.container}>
-      <View style={styles.track}>
+      <View style={[styles.track, { backgroundColor: isDark ? colors.gray[300] : '#e7e5e4' }]}>
         <View
           style={[
             styles.fill,
@@ -80,7 +81,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   track: {
-    backgroundColor: '#e7e5e4',
     borderRadius: 2,
     flex: 1,
     height: 4,

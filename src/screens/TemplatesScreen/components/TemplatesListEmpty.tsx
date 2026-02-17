@@ -5,7 +5,7 @@
 import { View } from 'react-native';
 import Button from '../../../components/Button/Button';
 import EmptyState from '../../../components/EmptyState';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 
 interface TemplatesListEmptyProps {
   hasActiveFilters: boolean;
@@ -16,6 +16,7 @@ export function TemplatesListEmpty({
   hasActiveFilters,
   onResetFilters,
 }: TemplatesListEmptyProps) {
+  const styles = useTemplatesStyles();
   return (
     <View style={styles.emptyStateWrapper}>
       <EmptyState

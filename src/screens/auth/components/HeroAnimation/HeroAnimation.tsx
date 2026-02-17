@@ -14,6 +14,7 @@ import Animated, {
   Easing,
   interpolate,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { AnimatedDot } from './AnimatedDot';
 import { styles } from './HeroAnimation.styles';
 
@@ -24,6 +25,7 @@ const STAGES = [
 ];
 
 export function HeroAnimation() {
+  const { colors, isDark } = useThemeColors();
   const progress = useSharedValue(0);
   const scale = useSharedValue(1);
 
@@ -65,7 +67,7 @@ export function HeroAnimation() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.emojiContainer}>
+      <View style={[styles.emojiContainer, { backgroundColor: isDark ? colors.card : '#f5f5f4' }]}>
         <Animated.Text style={[styles.emoji, styles.absoluteEmoji, stage0Style]}>{STAGES[0].emoji}</Animated.Text>
         <Animated.Text style={[styles.emoji, styles.absoluteEmoji, stage1Style]}>{STAGES[1].emoji}</Animated.Text>
         <Animated.Text style={[styles.emoji, styles.absoluteEmoji, stage2Style]}>{STAGES[2].emoji}</Animated.Text>

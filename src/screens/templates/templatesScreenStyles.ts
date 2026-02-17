@@ -1,25 +1,11 @@
 /**
  * Templates Screen Styles - Re-export for backward compatibility
  *
- * Styles have been decomposed into domain-specific modules.
- * Import from './styles' directly for better tree-shaking.
+ * Now theme-aware. Use `useTemplatesStyles()` hook in components.
  *
- * @see ./styles/index.ts for the decomposed structure
+ * @see ./styles/index.ts
  */
 
-export {
-  styles,
-  browseStyles,
-  categoryStyles,
-  controlStyles,
-  customizeStyles,
-  formStyles,
-  gridStyles,
-  layoutStyles,
-  previewStyles,
-  scrollStyles,
-  searchStyles,
-  skeletonStyles,
-  sortStyles,
-  tabStyles,
-} from './styles';
+export { useTemplatesStyles, createAllStyles } from './styles';
+export { gridStyles } from './styles';
+export { tabStyles } from './styles';

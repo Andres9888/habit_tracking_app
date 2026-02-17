@@ -5,7 +5,7 @@
 import { Pressable, Text } from 'react-native';
 import { Filter } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 
 interface ResearchFilterButtonProps {
   label?: string;
@@ -19,6 +19,7 @@ export function ResearchFilterButton({
   researchOnly,
 }: ResearchFilterButtonProps) {
   const { colors } = useThemeColors();
+  const styles = useTemplatesStyles();
   const defaultColor = colors.text.primary;
 
   return (

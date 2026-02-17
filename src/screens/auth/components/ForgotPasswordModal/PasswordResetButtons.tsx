@@ -24,7 +24,7 @@ export function PasswordResetButtons({
 }: PasswordResetButtonsProps) {
   const isDisabled = isLoading || !email.trim();
   const scale = useSharedValue(1);
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
@@ -42,7 +42,7 @@ export function PasswordResetButtons({
         style={[
           animatedStyle,
           {
-            shadowColor: '#1c1917',
+            shadowColor: isDark ? '#000000' : '#1c1917',
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,
             shadowRadius: 16,
@@ -57,7 +57,7 @@ export function PasswordResetButtons({
         }}
       >
         {isLoading ? (
-          <ActivityIndicator color='#ffffff' size='small' />
+          <ActivityIndicator color={colors.text.inverse} size='small' />
         ) : (
           <Text className='text-[17px] font-semibold text-white'>
             Send reset email

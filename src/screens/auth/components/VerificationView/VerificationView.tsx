@@ -27,7 +27,7 @@ export function VerificationView({
   const [code, setCode] = useState('');
   const [cooldown, setCooldown] = useState(RESEND_COOLDOWN_S);
   const insets = useSafeAreaInsets();
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   // Countdown timer for resend cooldown
   useEffect(() => {
@@ -74,7 +74,7 @@ export function VerificationView({
           entering={anim(180)}
           style={{ alignItems: 'center', marginTop: 24 }}
         >
-          <Text style={{ color: '#78716c', fontSize: 13 }}>
+          <Text style={{ color: colors.text.tertiary, fontSize: 13 }}>
             Didn't receive the code?
           </Text>
           <Pressable
@@ -91,7 +91,7 @@ export function VerificationView({
           >
             <Text
               style={{
-                color: cooldown > 0 ? '#a8a29e' : colors.primary[700],
+                color: cooldown > 0 ? colors.text.tertiary : colors.primary[700],
                 fontSize: 13,
                 fontWeight: '600',
               }}

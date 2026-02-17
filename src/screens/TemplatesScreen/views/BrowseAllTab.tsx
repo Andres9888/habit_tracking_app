@@ -7,7 +7,7 @@ import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import TemplateCard from '../../../components/TemplateCard';
 import type { SortOption } from '../../templates/constants';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 import { FilterControls } from '../components';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
 
@@ -30,6 +30,7 @@ interface BrowseAllTabProps {
 }
 
 export function BrowseAllTab(p: BrowseAllTabProps) {
+  const styles = useTemplatesStyles();
   const toggle = () => p.setResearchOnly((prev) => !prev);
 
   return (

@@ -1,4 +1,5 @@
 import { StyleSheet, View } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface DotIndicatorsProps {
   count: number;
@@ -6,6 +7,7 @@ interface DotIndicatorsProps {
 }
 
 export function DotIndicators({ count, currentIndex }: DotIndicatorsProps) {
+  const { colors, isDark } = useThemeColors();
   return (
     <View
       accessible
@@ -22,7 +24,7 @@ export function DotIndicators({ count, currentIndex }: DotIndicatorsProps) {
           style={[
             styles.dot,
             {
-              backgroundColor: i === currentIndex ? '#059669' : '#D1D5DB',
+              backgroundColor: i === currentIndex ? colors.primary[600] : colors.gray[300],
               width: i === currentIndex ? 24 : 8,
             },
           ]}

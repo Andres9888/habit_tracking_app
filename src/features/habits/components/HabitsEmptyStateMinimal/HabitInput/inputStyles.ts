@@ -3,7 +3,7 @@
  */
 
 import { ViewStyle, TextStyle } from 'react-native';
-import { BORDER_RADIUS, TOUCH_TARGETS } from '../constants';
+import { BORDER_RADIUS, TOUCH_TARGETS, COLORS } from '../constants';
 
 interface ContainerStyleParams {
   isFocused: boolean;

@@ -8,7 +8,7 @@
  * - Reduces initial bundle size for welcome screen
  */
 
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, lazy, Suspense, useMemo } from 'react';
 import { Text, View, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
@@ -22,9 +22,9 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
-import { styles } from './WelcomeScreen.styles';
+import { createStyles } from './WelcomeScreen.styles';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import { colors } from '../../theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 // Lazy load auth screens - only bundle when user wants to sign in/up
 const SignInScreen = lazy(() => import('./SignInScreen'));
@@ -39,6 +39,8 @@ function WelcomeScreenContent() {
     useOAuthSignIn();
   const { iconStyle, titleStyle, subtitleStyle, buttonsStyle } =
     useWelcomeAnimations();
+  const { colors } = useThemeColors();
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   if (mode === 'signin') {
     return (
@@ -71,7 +73,7 @@ function WelcomeScreenContent() {
       <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
         <View style={styles.heroSection}>
           <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <Link color='#1c1917' size={40} strokeWidth={2} />
+            <Link color={colors.text.primary} size={40} strokeWidth={2} />
           </Animated.View>
           <Animated.Text style={[styles.title, titleStyle]}>
             Chain Day

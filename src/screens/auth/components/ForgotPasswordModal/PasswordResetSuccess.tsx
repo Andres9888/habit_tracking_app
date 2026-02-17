@@ -7,21 +7,21 @@ import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { PasswordResetSuccessProps } from './types';
 
 export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   return (
     <View className='gap-4 py-2'>
       <Animated.View
         className='items-center justify-center rounded-2xl bg-emerald-50 p-6'
         entering={FadeInDown.duration(280).springify().damping(18)}
         style={{
-          shadowColor: '#1c1917',
+          shadowColor: isDark ? '#000000' : '#1c1917',
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
         }}
       >
         <View className='mb-3 h-16 w-16 items-center justify-center rounded-full bg-emerald-500'>
-          <Check color='#ffffff' size={32} strokeWidth={3} />
+          <Check color={colors.text.inverse} size={32} strokeWidth={3} />
         </View>
         <Text className='text-center text-[17px] font-semibold text-emerald-900'>
           Email Sent!
@@ -41,7 +41,7 @@ export function PasswordResetSuccess({ onClose }: PasswordResetSuccessProps) {
           className='items-center rounded-2xl py-4'
           style={{ backgroundColor: colors.gray[900] }}
           style={{
-            shadowColor: '#1c1917',
+            shadowColor: isDark ? '#000000' : '#1c1917',
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,
             shadowRadius: 16,

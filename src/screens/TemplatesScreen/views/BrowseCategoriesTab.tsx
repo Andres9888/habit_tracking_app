@@ -6,7 +6,7 @@ import { ScrollView, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import CollapsibleCategorySection from '../../../components/CollapsibleCategorySection';
-import { styles } from '../../templates/templatesScreenStyles';
+import { useTemplatesStyles } from '../../templates/templatesScreenStyles';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
 
 interface CategoryData {
@@ -45,6 +45,7 @@ export function BrowseCategoriesTab({
   scrollViewRef,
   templatesByCategory,
 }: BrowseCategoriesTabProps) {
+  const styles = useTemplatesStyles();
   return (
     <Animated.View style={[{ flex: 1 }, contentAnimatedStyle]}>
       <ScrollView

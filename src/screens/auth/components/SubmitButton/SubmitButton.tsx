@@ -1,4 +1,5 @@
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import Animated, {
   useAnimatedStyle,
   useReducedMotion,
@@ -25,6 +26,7 @@ export function SubmitButton({
   onPress,
   testID,
 }: SubmitButtonProps) {
+  const { colors, isDark } = useThemeColors();
   const isDisabled = isLoading || disabled;
   const reduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
@@ -59,7 +61,7 @@ export function SubmitButton({
       style={[
         animatedStyle,
         {
-          shadowColor: '#1c1917',
+          shadowColor: isDark ? '#000000' : '#1c1917',
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
@@ -74,7 +76,7 @@ export function SubmitButton({
       </Text>
       <View className='ml-2 w-5 items-center justify-center'>
         {isLoading ? (
-          <ActivityIndicator color='#FFFFFF' size='small' />
+          <ActivityIndicator color={colors.text.inverse} size='small' />
         ) : (
           <Text className='text-lg text-white'>→</Text>
         )}

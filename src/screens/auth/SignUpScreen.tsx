@@ -31,7 +31,7 @@ function SignUpScreenContent({
   onNavigateToSignIn,
 }: SignUpScreenProps) {
   const insets = useSafeAreaInsets();
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const passwordRef = useRef<TextInput>(null);
   const {
     emailAddress,
@@ -105,7 +105,7 @@ function SignUpScreenContent({
                 borderRadius: 16,
                 elevation: 4,
                 padding: 24,
-                shadowColor: '#1c1917',
+                shadowColor: isDark ? '#000000' : '#1c1917',
                 shadowOffset: { height: 4, width: 0 },
                 shadowOpacity: 0.08,
                 shadowRadius: 16,

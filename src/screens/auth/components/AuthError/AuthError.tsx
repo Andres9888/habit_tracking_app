@@ -1,11 +1,15 @@
-/** AuthError - OPTIMIZED: FadeIn animation, better styling, haptics */
+/** AuthError - OPTIMIZED: FadeIn animation, better styling, haptics, dark mode */
 import { Text, View } from 'react-native';
 import { AlertCircle, X } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { AuthErrorProps } from './types';
 
 export function AuthError({ message, onDismiss }: AuthErrorProps) {
+  const { isDark } = useThemeColors();
+  const errorRed = isDark ? '#F87171' : '#dc2626';
+
   return (
     <Animated.View
       accessibilityLiveRegion='assertive'
@@ -13,18 +17,30 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
       className='mb-4 flex-row items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4'
       entering={FadeInDown.duration(280).springify().damping(18)}
       exiting={FadeOut.duration(150)}
-      style={{
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
-      }}
+      style={[
+        isDark && {
+          backgroundColor: 'rgba(254, 202, 202, 0.1)',
+          borderColor: 'rgba(254, 202, 202, 0.3)',
+        },
+        {
+          shadowColor: isDark ? '#000000' : '#1c1917',
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
+        },
+      ]}
     >
-      <View className='mt-0.5 h-8 w-8 items-center justify-center rounded-full bg-red-100'>
-        <AlertCircle color='#dc2626' size={18} strokeWidth={2.5} />
+      <View
+        className='mt-0.5 h-8 w-8 items-center justify-center rounded-full bg-red-100'
+        style={isDark ? { backgroundColor: 'rgba(254, 202, 202, 0.15)' } : undefined}
+      >
+        <AlertCircle color={errorRed} size={18} strokeWidth={2.5} />
       </View>
       <View className='flex-1'>
-        <Text className='text-[17px] font-medium leading-[22px] text-red-800'>
+        <Text
+          className='text-[17px] font-medium leading-[22px] text-red-800'
+          style={isDark ? { color: '#FCA5A5' } : undefined}
+        >
           {message}
         </Text>
       </View>
@@ -35,7 +51,7 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
         className='h-8 w-8 items-center justify-center rounded-full active:bg-red-100'
         onPress={onDismiss}
       >
-        <X color='#dc2626' size={18} strokeWidth={2} />
+        <X color={errorRed} size={18} strokeWidth={2} />
       </AnimatedPressable>
     </Animated.View>
   );
