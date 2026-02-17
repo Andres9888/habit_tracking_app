@@ -16,6 +16,10 @@ export interface CreateHabitFormCenteredProps {
   onReminderToggle: (enabled: boolean) => void;
   /** Called when reminder time changes (preset or custom selection) */
   onReminderTimeChange: (time: Date) => void;
+  frequency: string;
+  daysOfWeek: number[];
+  onFrequencyChange: (frequency: string) => void;
+  onDaysOfWeekChange: (days: number[]) => void;
   onSubmit: () => void;
   autoFocus?: boolean;
   /** Whether to show validation error for empty habit name */

@@ -24,4 +24,8 @@ export interface HabitCardContentProps {
   chainScale?: SharedValue<number>;
   /** Animated rotation for chain link animation - T014 */
   chainRotate?: SharedValue<number>;
+  /** Habit frequency string (e.g. 'daily', 'specific_days', 'x_per_week:3') */
+  frequency?: string;
+  /** Days of week for specific_days frequency */
+  daysOfWeek?: number[];
 }

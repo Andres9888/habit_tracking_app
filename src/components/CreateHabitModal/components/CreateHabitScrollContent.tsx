@@ -32,6 +32,8 @@ export function CreateHabitScrollContent({
         <CreateHabitFormCentered
           autoFocus
           colors={HABIT_COLORS}
+          daysOfWeek={form.daysOfWeek}
+          frequency={form.frequency}
           habitName={form.habitName}
           reminderEnabled={form.remindersEnabled}
           reminderTime={form.reminderTime}
@@ -39,7 +41,9 @@ export function CreateHabitScrollContent({
           selectedEmoji={form.selectedEmoji}
           showNameError={showNameError}
           onColorSelect={callbacks.handleColorSelect}
+          onDaysOfWeekChange={form.setDaysOfWeek}
           onEmojiSelect={callbacks.handleEmojiSelect}
+          onFrequencyChange={form.setFrequency}
           onHabitNameChange={callbacks.handleNameChange}
           onReminderTimeChange={callbacks.handleReminderTimeChange}
           onReminderToggle={callbacks.handleReminderToggle}

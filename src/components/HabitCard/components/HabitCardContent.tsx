@@ -17,6 +17,7 @@ import { styles } from '../HabitCard.styles';
 import { streakStyles } from '../HabitCard.streakStyles';
 import { StatusIndicator } from './StatusIndicator';
 import { StreakBadge } from './StreakBadge';
+import { FrequencyBadge } from './FrequencyBadge';
 import type { HabitCardContentProps } from './HabitCardContent.types';
 
 function HabitCardContentComponent({
@@ -35,6 +36,8 @@ function HabitCardContentComponent({
   hasPendingOfflineOps = false,
   chainScale,
   chainRotate,
+  frequency,
+  daysOfWeek,
 }: HabitCardContentProps) {
   const { colors: themeColors } = useThemeColors();
   return (
@@ -71,6 +74,7 @@ function HabitCardContentComponent({
         </View>
       </View>
       <StreakBadge bestStreak={bestStreak} currentStreak={currentStreak} />
+      <FrequencyBadge daysOfWeek={daysOfWeek} frequency={frequency} />
       <Animated.View
         pointerEvents='none'
         style={[streakStyles.rippleOverlay, rippleAnimatedStyle]}

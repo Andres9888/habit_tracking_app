@@ -4,6 +4,7 @@
 
 export { ChainLinkAnimation } from './ChainLinkAnimation';
 export { ConfettiBurst } from './ConfettiBurst';
+export { FrequencyBadge } from './FrequencyBadge';
 export { HabitCardContent } from './HabitCardContent';
 export { StatusIndicator, type CompletionIconType } from './StatusIndicator';
 export { StreakBadge } from './StreakBadge';

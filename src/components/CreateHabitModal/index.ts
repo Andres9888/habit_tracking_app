@@ -13,3 +13,4 @@ export { HeroNameInput } from './components/HeroNameInput';
 export { LivePreview } from './components/LivePreview';
 export { StyleSection } from './components/StyleSection';
 export { SimpleReminderSection } from './components/SimpleReminderSection';
+export { FrequencyPicker } from './components/FrequencyPicker';

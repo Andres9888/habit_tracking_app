@@ -27,6 +27,12 @@ export interface HabitCardProps {
   /** Habit color (hex) */
   color?: string;
 
+  /** Habit frequency schedule (e.g. 'daily', 'specific_days', 'x_per_week:3') */
+  frequency?: string;
+
+  /** Days of week for specific_days frequency (0=Sun..6=Sat) */
+  daysOfWeek?: number[];
+
   /** Habit strength (0-100) */
   strength: number;
 

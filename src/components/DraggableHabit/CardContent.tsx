@@ -14,6 +14,7 @@ import { View } from 'react-native';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { CardHeader } from './CardHeader';
+import { FrequencyBadge } from '../HabitCard/components/FrequencyBadge';
 import { NewRecordBadge } from './NewRecordBadge';
 import { StrengthProgressBar } from './StrengthProgressBar';
 import { WeekCompleteIndicator } from './WeekCompleteIndicator';
@@ -40,6 +41,12 @@ export function CardContent(props: CardContentProps) {
           showHabitStrengthPercentage={props.showHabitStrengthPercentage}
           streak={props.streak}
         />
+        <View className='px-4'>
+          <FrequencyBadge
+            daysOfWeek={props.habit.daysOfWeek}
+            frequency={props.habit.frequency}
+          />
+        </View>
         {props.showNewRecord && (
           <NewRecordBadge
             newRecordOpacity={props.newRecordOpacity}

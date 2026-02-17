@@ -15,6 +15,8 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitData {
   dayPhase: string | null;
+  daysOfWeek?: number[];
+  frequency?: string;
   fullHabitName: string;
   hasReminders: boolean;
   reminderSound?: string | null;
@@ -42,6 +44,8 @@ export function useCreateHabitHandlers() {
     selectedEmoji,
     selectedColor,
     dayPhase,
+    daysOfWeek,
+    frequency,
     reminderSound,
   }: EditHabitData): Promise<void> {
     // Validate habit name
@@ -73,6 +77,8 @@ export function useCreateHabitHandlers() {
         icon: selectedEmoji ?? undefined,
         color: selectedColor,
         iconColor: selectedColor,
+        daysOfWeek: daysOfWeek ?? undefined,
+        frequency: frequency ?? undefined,
         name: sanitizedName,
         notes: habitToEdit.notes ?? '',
         preferredTime: dayPhase ?? undefined,
@@ -95,6 +101,8 @@ export function useCreateHabitHandlers() {
     selectedEmoji,
     selectedColor,
     dayPhase,
+    daysOfWeek,
+    frequency,
     reminderSound,
   }: HabitData): Promise<void> {
     // Validate habit name
@@ -108,6 +116,8 @@ export function useCreateHabitHandlers() {
       const habitId = await createHabit({
         icon: selectedEmoji ?? undefined,
         iconColor: selectedColor,
+        daysOfWeek: daysOfWeek ?? undefined,
+        frequency: frequency ?? undefined,
         name: sanitizedName,
         notes: '',
         preferredTime: dayPhase ?? undefined,

@@ -40,6 +40,8 @@ function HabitCardComponent(props: HabitCardProps) {
     onDelete,
     style,
     completionIcon = 'checkbox',
+    frequency,
+    daysOfWeek,
   } = props;
 
   const habit = useHabitCard(props);
@@ -102,7 +104,9 @@ function HabitCardComponent(props: HabitCardProps) {
             completed={habit.completed}
             completionIcon={completionIcon}
             currentStreak={habit.currentStreak}
+            daysOfWeek={daysOfWeek}
             entranceContentStyle={habit.entrance.contentStyle as AnimatedStyle}
+            frequency={frequency}
             hasPendingOfflineOps={habit.hasPendingOfflineOps}
             icon={icon}
             name={name}
