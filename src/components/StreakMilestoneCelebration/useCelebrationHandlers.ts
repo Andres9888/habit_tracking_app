@@ -5,9 +5,15 @@ import {
 } from './constants';
 import { persistMilestoneShown } from './useMilestoneCheck';
 import {
-  maybeRequestReview,
   incrementCompletionCount,
+  MILESTONE_50_SENTINEL,
 } from '../../utils/storeReview';
+import { useReviewPrompt } from '../../hooks/useReviewPrompt';
+import {
+  REVIEW_STREAK_DAYS,
+  buildStreakReviewMessage,
+  streakToMilestoneLevel,
+} from './celebrationUtils';
 import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
 
 interface CelebrationData {
@@ -30,6 +36,8 @@ export function useCelebrationHandlers(userName: string) {
   const [showShareCard, setShowShareCard] = useState(false);
   const [shareData, setShareData] = useState<ShareCardData | null>(null);
 
+  const reviewPrompt = useReviewPrompt();
+
   const checkAndCelebrate = useCallback(
     (
       habitId: string,
@@ -38,54 +46,47 @@ export function useCelebrationHandlers(userName: string) {
       previousStreak: number,
       currentStreak: number
     ) => {
-      void incrementCompletionCount();
-      const milestone = checkStreakMilestoneCrossed(previousStreak, currentStreak);
+      void incrementCompletionCount().then((count) => {
+        if (count === MILESTONE_50_SENTINEL) {
+          void reviewPrompt.requestReview(
+            "You've completed 50 habits — incredible dedication! 🏆",
+          );
+        }
+      });
 
+      const milestone = checkStreakMilestoneCrossed(previousStreak, currentStreak);
       if (milestone) {
-        setCelebrationData({
-          habitEmoji,
-          habitId,
-          habitName,
-          milestone,
-          streakDays: currentStreak,
-        });
+        setCelebrationData({ habitEmoji, habitId, habitName, milestone, streakDays: currentStreak });
       }
     },
-    []
+    [reviewPrompt.requestReview],
   );
 
   const handleClose = useCallback(() => {
     if (celebrationData) {
-      persistMilestoneShown(
-        celebrationData.habitId,
-        celebrationData.milestone.days,
-      );
-      setTimeout(() => {
-        void maybeRequestReview(celebrationData.milestone.days);
-      }, 500);
+      void persistMilestoneShown(celebrationData.habitId, celebrationData.milestone.days);
+      if (REVIEW_STREAK_DAYS.has(celebrationData.milestone.days)) {
+        const message = buildStreakReviewMessage(celebrationData.milestone.days);
+        // Delay to let the celebration modal finish closing before the sentiment prompt appears
+        void setTimeout(() => {
+          void reviewPrompt.requestReview(message);
+        }, 500);
+      }
     }
     setCelebrationData(null);
-  }, [celebrationData]);
+  }, [celebrationData, reviewPrompt.requestReview]);
 
   const handleShare = useCallback(() => {
-    if (celebrationData) {
-      const milestoneLevel: MilestoneLevel =
-        celebrationData.milestone.days >= 100
-          ? 'automatic'
-          : celebrationData.milestone.days >= 30
-            ? 'strong'
-            : 'developing';
-
-      setShareData({
-        habitName: celebrationData.habitName,
-        milestoneLevel,
-        strengthPercentage: Math.round(
-          (celebrationData.streakDays / celebrationData.milestone.days) * 100
-        ),
-        userName,
-      });
-      setShowShareCard(true);
-    }
+    if (!celebrationData) return;
+    setShareData({
+      habitName: celebrationData.habitName,
+      milestoneLevel: streakToMilestoneLevel(celebrationData.milestone.days),
+      strengthPercentage: Math.round(
+        (celebrationData.streakDays / celebrationData.milestone.days) * 100
+      ),
+      userName,
+    });
+    setShowShareCard(true);
   }, [celebrationData, userName]);
 
   const handleShareClose = useCallback(() => {
@@ -96,6 +97,7 @@ export function useCelebrationHandlers(userName: string) {
 
   return {
     celebrationData,
+    reviewPrompt,
     shareData,
     showShareCard,
     checkAndCelebrate,

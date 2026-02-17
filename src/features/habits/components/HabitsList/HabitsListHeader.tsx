@@ -23,6 +23,7 @@ import {
   TrialCountdownBanner,
   useTrialCountdown,
 } from '../../../../components/TrialCountdownBanner';
+import { PerfectDayReviewObserver } from '../../../../components/PerfectDayReviewObserver';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
@@ -92,6 +93,13 @@ function HabitsListHeaderComponent(
           onUpgrade={props.onUpgradePress}
         />
       )}
+
+      {/* Perfect-day review observer — triggers sentiment-gated review after 3 perfect days */}
+      <PerfectDayReviewObserver
+        completedToday={computed.completedToday}
+        todayIso={computed.todayString}
+        totalHabits={computed.totalHabits}
+      />
     </View>
   );
 }

@@ -110,6 +110,21 @@ export const RATING_COOLDOWN_DAYS = 90;
 /** Minimum completions before prompting for rating */
 export const MIN_COMPLETIONS_FOR_RATING = 5;
 
+/**
+ * Maximum number of review prompts allowed per year.
+ * Apple guidelines state the system may throttle beyond 3 per 365 days.
+ */
+export const MAX_REVIEW_PROMPTS_PER_YEAR = 3;
+
+/** Total habit completions milestone that triggers a review prompt */
+export const REVIEW_MILESTONE_COMPLETIONS = 50;
+
+/**
+ * Number of "perfect days" (all habits done) required before
+ * triggering a review prompt via the perfect-day path.
+ */
+export const REVIEW_PERFECT_DAY_COUNT = 3;
+
 // ============================================================================
 // STREAK CALCULATION
 // ============================================================================

@@ -4,12 +4,20 @@
  * Global provider for managing streak milestone celebrations
  *
  * Exposes a trigger function that can be called from anywhere
- * when a habit completion might cross a milestone threshold
+ * when a habit completion might cross a milestone threshold.
+ *
+ * Also manages the sentiment-gated App Store review flow:
+ * - 7-day streak → sentiment prompt → native review (positive) or feedback (negative)
+ * - 50 total completions → sentiment prompt → native review or feedback
+ *
+ * Builds on the sentiment gate introduced in PR #955.
  */
 
 import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { StreakMilestoneCelebration } from './StreakMilestoneCelebration';
 import { ShareCardGenerator } from '../ShareCardGenerator';
+import { ReviewSentimentPrompt } from '../ReviewSentimentPrompt';
+import { FeedbackModal } from '../FeedbackModal';
 import { useCelebrationHandlers } from './useCelebrationHandlers';
 
 interface StreakMilestoneContextValue {
@@ -37,6 +45,7 @@ export function StreakMilestoneProvider({
 }: StreakMilestoneProviderProps) {
   const {
     celebrationData,
+    reviewPrompt,
     shareData,
     showShareCard,
     checkAndCelebrate,
@@ -75,6 +84,24 @@ export function StreakMilestoneProvider({
           data={shareData}
           visible={showShareCard}
           onClose={handleShareClose}
+        />
+      )}
+
+      {/* Sentiment-gated review prompt (PR #955 + review-optimization) */}
+      <ReviewSentimentPrompt
+        contextMessage={reviewPrompt.contextMessage}
+        visible={reviewPrompt.sentimentVisible}
+        onDismiss={reviewPrompt.handleSentimentClose}
+        onNegative={reviewPrompt.handleNegative}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onPositive={reviewPrompt.handlePositive}
+      />
+
+      {/* Private feedback form — shown when user selects "Not really" */}
+      {reviewPrompt.showFeedback && (
+        <FeedbackModal
+          visible={reviewPrompt.showFeedback}
+          onClose={reviewPrompt.handleFeedbackClose}
         />
       )}
     </StreakMilestoneContext.Provider>

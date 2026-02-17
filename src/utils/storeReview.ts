@@ -1,173 +1,111 @@
 /**
- * Store Review Utility
- *
- * Manages App Store rating prompt timing.
- * Triggers the native rating dialog after milestone celebrations,
- * with guards for cooldown (90 days) and minimum usage (5 completions).
+ * Store Review — eligibility gates + trigger functions.
+ * Triggers: 7-day streak, 3× perfect day, 50 total completions.
+ * Guards: platform, min 5 completions, 90-day cooldown, max 3/year.
+ * Storage helpers in storeReviewStorage.ts. Sentiment gate in useReviewPrompt.
  */
-
 import * as StoreReview from 'expo-store-review';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import {
-  MIN_COMPLETIONS_FOR_RATING,
-  RATING_COOLDOWN_DAYS,
+  MIN_COMPLETIONS_FOR_RATING, RATING_COOLDOWN_DAYS,
+  MAX_REVIEW_PROMPTS_PER_YEAR, REVIEW_MILESTONE_COMPLETIONS, REVIEW_PERFECT_DAY_COUNT,
 } from '@/constants';
+import {
+  KEY_LAST_PROMPT, KEY_COMPLETION_COUNT, KEY_MILESTONE_50_FIRED,
+  KEY_PERFECT_DAY_COUNT, KEY_PERFECT_DAY_LAST_DATE,
+  readInt, writeInt, getRecentPromptTimestamps, savePromptTimestamps,
+} from './storeReviewStorage';
 
-const STORE_REVIEW_LAST_PROMPT_KEY = '@store_review_last_prompt';
-const STORE_REVIEW_COMPLETION_COUNT_KEY = '@store_review_completion_count';
-
-/** Minimum days between rating prompts */
-const COOLDOWN_DAYS = RATING_COOLDOWN_DAYS;
-
-/** Minimum total completions before prompting */
-const MIN_COMPLETIONS = MIN_COMPLETIONS_FOR_RATING;
-
-/** Streak milestones that should trigger a review prompt */
-const REVIEW_ELIGIBLE_MILESTONES = new Set([7, 14, 30]);
+export const MILESTONE_50_SENTINEL = -50;
+const REVIEW_ELIGIBLE_STREAKS = new Set([7, 14, 30]);
 
 /**
- * Increment the completion counter. Call on every habit completion.
+ * Increment total completion counter.
+ * Returns MILESTONE_50_SENTINEL the first time the count crosses 50.
  */
 export async function incrementCompletionCount(): Promise<number> {
-  try {
-    const raw = await AsyncStorage.getItem(STORE_REVIEW_COMPLETION_COUNT_KEY);
-    const count = (raw ? Number.parseInt(raw, 10) : 0) + 1;
-    await AsyncStorage.setItem(
-      STORE_REVIEW_COMPLETION_COUNT_KEY,
-      String(count),
-    );
-    return count;
-  } catch {
-    return 0;
-  }
-}
-
-/**
- * Get the current completion count.
- */
-async function getCompletionCount(): Promise<number> {
-  try {
-    const raw = await AsyncStorage.getItem(STORE_REVIEW_COMPLETION_COUNT_KEY);
-    return raw ? Number.parseInt(raw, 10) : 0;
-  } catch {
-    return 0;
-  }
-}
-
-/**
- * Check if enough time has passed since the last prompt.
- */
-async function isCooldownExpired(): Promise<boolean> {
-  try {
-    const raw = await AsyncStorage.getItem(STORE_REVIEW_LAST_PROMPT_KEY);
-    if (!raw) return true;
-
-    const lastPrompt = Number.parseInt(raw, 10);
-    const daysSince = (Date.now() - lastPrompt) / (1000 * 60 * 60 * 24);
-    return daysSince >= COOLDOWN_DAYS;
-  } catch {
-    return true;
-  }
-}
-
-/**
- * Record that a prompt was shown.
- */
-async function recordPromptShown(): Promise<void> {
-  try {
-    await AsyncStorage.setItem(
-      STORE_REVIEW_LAST_PROMPT_KEY,
-      String(Date.now()),
-    );
-  } catch {
-    // Silent fail — non-critical
-  }
-}
-
-/**
- * Attempt to show the store review prompt after a milestone celebration.
- *
- * Guards:
- * - Only on eligible milestones (7, 14, 30 days)
- * - At least 5 total completions
- * - At least 90 days since last prompt
- * - Store review must be available on the platform
- *
- * @param milestoneDays - The streak milestone that was just celebrated
- */
-export async function maybeRequestReview(
-  milestoneDays: number,
-): Promise<void> {
-  try {
-    // Only prompt on specific milestones
-    if (!REVIEW_ELIGIBLE_MILESTONES.has(milestoneDays)) {
-      return;
+  const prev = await readInt(KEY_COMPLETION_COUNT);
+  const next = prev + 1;
+  await writeInt(KEY_COMPLETION_COUNT, next);
+  if (next >= REVIEW_MILESTONE_COMPLETIONS && prev < REVIEW_MILESTONE_COMPLETIONS) {
+    const fired = await AsyncStorage.getItem(KEY_MILESTONE_50_FIRED);
+    if (!fired) {
+      await AsyncStorage.setItem(KEY_MILESTONE_50_FIRED, '1');
+      return MILESTONE_50_SENTINEL;
     }
+  }
+  return next;
+}
 
-    // Check platform support
-    if (Platform.OS === 'web') return;
-    const isAvailable = await StoreReview.isAvailableAsync();
-    if (!isAvailable) return;
+export async function getCompletionCount(): Promise<number> {
+  return readInt(KEY_COMPLETION_COUNT);
+}
 
-    // Check minimum completions
-    const completions = await getCompletionCount();
-    if (completions < MIN_COMPLETIONS) return;
+/** Returns `true` the first time the 3rd unique perfect day is recorded. */
+export async function recordPerfectDay(todayIso: string): Promise<boolean> {
+  try {
+    const lastDate = await AsyncStorage.getItem(KEY_PERFECT_DAY_LAST_DATE);
+    if (lastDate === todayIso) return false;
+    await AsyncStorage.setItem(KEY_PERFECT_DAY_LAST_DATE, todayIso);
+    const prev = await readInt(KEY_PERFECT_DAY_COUNT);
+    const next = prev + 1;
+    await writeInt(KEY_PERFECT_DAY_COUNT, next);
+    return next === REVIEW_PERFECT_DAY_COUNT;
+  } catch {
+    return false;
+  }
+}
 
-    // Check cooldown
-    const cooldownOk = await isCooldownExpired();
-    if (!cooldownOk) return;
+export async function getPerfectDayCount(): Promise<number> {
+  return readInt(KEY_PERFECT_DAY_COUNT);
+}
 
-    // All checks passed — request review
+/** Check whether all guards pass for showing a review prompt right now. */
+export async function canRequestReview(): Promise<boolean> {
+  try {
+    if (Platform.OS === 'web') return false;
+    if (!(await StoreReview.isAvailableAsync())) return false;
+    if ((await getCompletionCount()) < MIN_COMPLETIONS_FOR_RATING) return false;
+    const lastRaw = await AsyncStorage.getItem(KEY_LAST_PROMPT);
+    if (lastRaw) {
+      const days = (Date.now() - Number.parseInt(lastRaw, 10)) / 86_400_000;
+      if (days < RATING_COOLDOWN_DAYS) return false;
+    }
+    const recent = await getRecentPromptTimestamps();
+    return recent.length < MAX_REVIEW_PROMPTS_PER_YEAR;
+  } catch {
+    return false;
+  }
+}
+
+/** Record a prompt — updates 90-day cooldown + yearly history. */
+export async function recordPromptShown(): Promise<void> {
+  try {
+    const now = Date.now();
+    await AsyncStorage.setItem(KEY_LAST_PROMPT, String(now));
+    await savePromptTimestamps([...(await getRecentPromptTimestamps()), now]);
+  } catch { /* silent */ }
+}
+
+/** Legacy direct trigger after a streak milestone. Prefer useReviewPrompt for new code. */
+export async function maybeRequestReview(milestoneDays: number): Promise<void> {
+  try {
+    if (!REVIEW_ELIGIBLE_STREAKS.has(milestoneDays)) return;
+    if (!(await canRequestReview())) return;
     await recordPromptShown();
     await StoreReview.requestReview();
-  } catch {
-    // Silent fail — never break the app for a rating prompt
-  }
+  } catch { /* silent */ }
 }
 
-/**
- * Attempt to show the store review prompt after viewing positive analytics.
- *
- * Triggers when user views analytics with strong performance metrics.
- *
- * Guards:
- * - Average completion rate >= 70%
- * - At least 3 active habits
- * - At least 5 total completions
- * - At least 90 days since last prompt
- * - Store review must be available on the platform
- *
- * @param avgCompletionRate - Average completion rate (0-100)
- * @param totalHabits - Total number of habits
- */
+/** Legacy direct trigger after positive analytics. Prefer useReviewPrompt for new code. */
 export async function maybeRequestReviewFromAnalytics(
-  avgCompletionRate: number,
-  totalHabits: number,
+  avgCompletionRate: number, totalHabits: number,
 ): Promise<void> {
   try {
-    // Only prompt on strong performance
-    if (avgCompletionRate < 70 || totalHabits < 3) {
-      return;
-    }
-
-    // Check platform support
-    if (Platform.OS === 'web') return;
-    const isAvailable = await StoreReview.isAvailableAsync();
-    if (!isAvailable) return;
-
-    // Check minimum completions
-    const completions = await getCompletionCount();
-    if (completions < MIN_COMPLETIONS) return;
-
-    // Check cooldown
-    const cooldownOk = await isCooldownExpired();
-    if (!cooldownOk) return;
-
-    // All checks passed — request review
+    if (avgCompletionRate < 70 || totalHabits < 3) return;
+    if (!(await canRequestReview())) return;
     await recordPromptShown();
     await StoreReview.requestReview();
-  } catch {
-    // Silent fail — never break the app for a rating prompt
-  }
+  } catch { /* silent */ }
 }
