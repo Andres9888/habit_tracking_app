@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Mode Improvements - Before/After</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 34px;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            font-size: 17px;
+            margin-bottom: 40px;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1024px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .panel h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .badge.new {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        /* Phone mockup */
+        .phone {
+            background: #f9fafb;
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .phone::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: #d1d5db;
+            border-radius: 2px;
+        }
+
+        .phone-screen {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 20px;
+            min-height: 500px;
+        }
+
+        /* Old subtle indicator */
+        .old-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fafaf9;
+            border: 1px solid #e7e5e4;
+            border-radius: 16px;
+            padding: 6px 10px;
+            margin-bottom: 16px;
+        }
+
+        .old-indicator-icon {
+            width: 20px;
+            height: 20px;
+            background: #f5f5f4;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .old-indicator-text {
+            font-size: 13px;
+            color: #78716c;
+            font-weight: 500;
+        }
+
+        /* New prominent banner */
+        .new-banner {
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.28s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .new-banner-icon {
+            width: 32px;
+            height: 32px;
+            background: #fef2f2;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .new-banner-content {
+            flex: 1;
+        }
+
+        .new-banner-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 2px;
+        }
+
+        .new-banner-count {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7280;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .new-banner-sync {
+            width: 36px;
+            height: 36px;
+            background: #f0fdf4;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .new-banner-sync:hover {
+            transform: scale(1.05);
+        }
+
+        /* Syncing state */
+        .syncing-banner {
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .syncing-icon {
+            width: 32px;
+            height: 32px;
+            background: #f0fdf4;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: rotate 1s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Habit cards */
+        .habit-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .habit-checkbox {
+            width: 44px;
+            height: 44px;
+            border: 2px solid #d1d5db;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .habit-checkbox.completed {
+            background: #047857;
+            border-color: #047857;
+            color: white;
+        }
+
+        .pending-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 14px;
+            height: 14px;
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .habit-info {
+            flex: 1;
+        }
+
+        .habit-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .habit-streak {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        /* Dark mode panel */
+        .dark-mode {
+            background: #111827;
+        }
+
+        .dark-mode .phone-screen {
+            background: #1f2937;
+        }
+
+        .dark-mode .new-banner {
+            background: #1f2937;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+
+        .dark-mode .new-banner-icon {
+            background: #7f1d1d;
+        }
+
+        .dark-mode .new-banner-title {
+            color: #f9fafb;
+        }
+
+        .dark-mode .new-banner-count {
+            color: #9ca3af;
+        }
+
+        .dark-mode .new-banner-sync {
+            background: #064e3b;
+        }
+
+        .dark-mode .habit-card {
+            background: #374151;
+        }
+
+        .dark-mode .habit-name {
+            color: #f9fafb;
+        }
+
+        .dark-mode .habit-streak {
+            color: #9ca3af;
+        }
+
+        /* Features list */
+        .features {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .features h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .feature-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: #d1fae5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .feature-text strong {
+            color: #047857;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Offline Mode UX Improvements</h1>
+        <p class="subtitle">Enhanced offline experience with clear visual feedback and automatic sync</p>
+
+        <div class="comparison">
+            <!-- Before -->
+            <div class="panel">
+                <h2>
+                    <span class="badge">Before</span>
+                    Subtle Indicator
+                </h2>
+                <div class="phone">
+                    <div class="phone-screen">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div class="old-indicator" style="display: inline-flex;">
+                                <div class="old-indicator-icon">📡</div>
+                                <span class="old-indicator-text">Offline</span>
+                            </div>
+                        </div>
+                        
+                        <div class="habit-card">
+                            <div class="habit-checkbox completed">
+                                ✓
+                            </div>
+                            <div class="habit-info">
+                                <div class="habit-name">Morning Meditation</div>
+                                <div class="habit-streak">5 day streak 🔥</div>
+                            </div>
+                        </div>
+
+                        <div class="habit-card">
+                            <div class="habit-checkbox">
+                            </div>
+                            <div class="habit-info">
+                                <div class="habit-name">Evening Walk</div>
+                                <div class="habit-streak">3 day streak</div>
+                            </div>
+                        </div>
+
+                        <p style="margin-top: 24px; font-size: 13px; color: #6b7280; text-align: center;">
+                            ❌ Easy to miss<br>
+                            ❌ No queue visibility<br>
+                            ❌ No sync feedback
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- After -->
+            <div class="panel">
+                <h2>
+                    <span class="badge new">After</span>
+                    Clear Banner + Visual Feedback
+                </h2>
+                <div class="phone">
+                    <div class="phone-screen">
+                        <div class="new-banner">
+                            <div class="new-banner-icon">☁️</div>
+                            <div class="new-banner-content">
+                                <div class="new-banner-title">You're offline</div>
+                                <div class="new-banner-count">3 changes pending</div>
+                            </div>
+                            <div class="new-banner-sync">🔄</div>
+                        </div>
+                        
+                        <div class="habit-card">
+                            <div class="habit-checkbox completed">
+                                ✓
+                                <div class="pending-badge">☁️</div>
+                            </div>
+                            <div class="habit-info">
+                                <div class="habit-name">Morning Meditation</div>
+                                <div class="habit-streak">5 day streak 🔥</div>
+                            </div>
+                        </div>
+
+                        <div class="habit-card">
+                            <div class="habit-checkbox">
+                                <div class="pending-badge">☁️</div>
+                            </div>
+                            <div class="habit-info">
+                                <div class="habit-name">Evening Walk</div>
+                                <div class="habit-streak">3 day streak</div>
+                            </div>
+                        </div>
+
+                        <p style="margin-top: 24px; font-size: 13px; color: #047857; text-align: center; font-weight: 600;">
+                            ✓ Prominent banner<br>
+                            ✓ Pending count visible<br>
+                            ✓ Per-item indicators
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dark Mode -->
+        <div class="comparison">
+            <div class="panel dark-mode">
+                <h2 style="color: white;">
+                    <span class="badge new">Dark Mode</span>
+                    Full Dark Theme Support
+                </h2>
+                <div class="phone" style="background: #111827;">
+                    <div class="phone-screen">
+                        <div class="new-banner">
+                            <div class="new-banner-icon">☁️</div>
+                            <div class="new-banner-content">
+                                <div class="new-banner-title">You're offline</div>
+                                <div class="new-banner-count">2 changes pending</div>
+                            </div>
+                            <div class="new-banner-sync">🔄</div>
+                        </div>
+                        
+                        <div class="habit-card">
+                            <div class="habit-checkbox completed">
+                                ✓
+                                <div class="pending-badge">☁️</div>
+                            </div>
+                            <div class="habit-info">
+                                <div class="habit-name">Read 30 mins</div>
+                                <div class="habit-streak">12 day streak 🔥</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Syncing state -->
+            <div class="panel">
+                <h2>
+                    <span class="badge new">Syncing</span>
+                    Animated Sync Feedback
+                </h2>
+                <div class="phone">
+                    <div class="phone-screen">
+                        <div class="syncing-banner">
+                            <div class="syncing-icon">🔄</div>
+                            <div class="new-banner-content">
+                                <div class="new-banner-title">Syncing...</div>
+                                <div class="new-banner-count">2 items remaining</div>
+                            </div>
+                        </div>
+                        
+                        <div class="habit-card">
+                            <div class="habit-checkbox completed">
+                                ✓
+                            </div>
+                            <div class="habit-info">
+                                <div class="habit-name">Morning Meditation</div>
+                                <div class="habit-streak">5 day streak 🔥</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features">
+            <h2>✨ Key Improvements</h2>
+            <ul class="feature-list">
+                <li class="feature-item">
+                    <div class="feature-icon">📣</div>
+                    <div class="feature-text">
+                        <strong>Clear offline banner</strong> – Prominent notification that you're offline, replacing the subtle indicator
+                    </div>
+                </li>
+                <li class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-text">
+                        <strong>Pending count</strong> – See exactly how many changes are waiting to sync
+                    </div>
+                </li>
+                <li class="feature-item">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-text">
+                        <strong>Visual indicators</strong> – Pulsing badges on individual habit cards show queued actions
+                    </div>
+                </li>
+                <li class="feature-item">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-text">
+                        <strong>Sync animation</strong> – Rotating icon shows when sync is in progress
+                    </div>
+                </li>
+                <li class="feature-item">
+                    <div class="feature-icon">🌙</div>
+                    <div class="feature-text">
+                        <strong>Dark mode</strong> – Full support with adaptive colors and contrast
+                    </div>
+                </li>
+                <li class="feature-item">
+                    <div class="feature-icon">📐</div>
+                    <div class="feature-text">
+                        <strong>Design system</strong> – 13pt caption, 12px radius, springify(18), all standards met
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
