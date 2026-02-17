@@ -9,6 +9,8 @@
 
 import { View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { FrequencyPicker } from '../../components/FrequencyPicker';
+import type { FrequencyValue } from '../../components/FrequencyPicker';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
@@ -22,10 +24,12 @@ interface CustomizeSectionProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
+  frequencyValue?: FrequencyValue;
   onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
+  onFrequencyChange?: (value: FrequencyValue) => void;
 }
 
 export function CustomizeSection({
@@ -34,10 +38,12 @@ export function CustomizeSection({
   selectedColor,
   remindersEnabled,
   reminderTime,
+  frequencyValue,
   onEmojiSelect,
   onColorSelect,
   onReminderToggle,
   onReminderTimeChange,
+  onFrequencyChange,
 }: CustomizeSectionProps) {
   return (
     <View className='flex-1'>
@@ -59,7 +65,16 @@ export function CustomizeSection({
         />
       </Animated.View>
 
-      <Animated.View entering={entrance(120)}>
+      {frequencyValue && onFrequencyChange && (
+        <Animated.View entering={entrance(90)}>
+          <FrequencyPicker
+            value={frequencyValue}
+            onChange={onFrequencyChange}
+          />
+        </Animated.View>
+      )}
+
+      <Animated.View entering={entrance(150)}>
         <EnhancedReminderSelector
           enabled={remindersEnabled}
           reminderTime={reminderTime}

@@ -22,6 +22,7 @@ import type { HabitCardContentProps } from './HabitCardContent.types';
 function HabitCardContentComponent({
   name,
   icon,
+  frequencyLabel,
   strength,
   currentStreak,
   bestStreak,
@@ -42,16 +43,30 @@ function HabitCardContentComponent({
       <View style={styles.topRow}>
         <View style={styles.habitInfo}>
           <Text style={styles.icon}>{icon}</Text>
-          <Text
-            numberOfLines={1}
-            style={[
-              theme.custom.typography.heading3,
-              { color: themeColors.text.primary },
-              completed && styles.completedText,
-            ]}
-          >
-            {name}
-          </Text>
+          <View style={{ flexShrink: 1 }}>
+            <Text
+              numberOfLines={1}
+              style={[
+                theme.custom.typography.heading3,
+                { color: themeColors.text.primary },
+                completed && styles.completedText,
+              ]}
+            >
+              {name}
+            </Text>
+            {frequencyLabel ? (
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontSize: 12,
+                  color: themeColors.text.tertiary,
+                  marginTop: 1,
+                }}
+              >
+                {frequencyLabel}
+              </Text>
+            ) : null}
+          </View>
         </View>
         <View style={styles.statusContainer}>
           <PendingSyncBadge

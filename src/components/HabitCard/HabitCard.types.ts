@@ -27,6 +27,9 @@ export interface HabitCardProps {
   /** Habit color (hex) */
   color?: string;
 
+  /** Human-readable frequency subtitle (e.g. "Mon, Wed, Fri") */
+  frequencyLabel?: string | null;
+
   /** Habit strength (0-100) */
   strength: number;
 

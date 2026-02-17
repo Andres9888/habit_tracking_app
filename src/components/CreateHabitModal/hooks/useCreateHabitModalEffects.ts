@@ -39,30 +39,42 @@ export function useVisibilityReset({
 
 interface HabitDataParams {
   dayPhase: string | null;
+  daysOfWeek?: number[];
+  everyXDays?: number;
+  frequency?: string;
   fullHabitName: string;
   reminderSound: string | null;
   reminderTime: Date;
   selectedColor: string;
   selectedEmoji: string | null;
+  timesPerWeek?: number;
 }
 
 export function useHabitData(params: HabitDataParams) {
   return useMemo(
     () => ({
       dayPhase: params.dayPhase,
+      daysOfWeek: params.daysOfWeek,
+      everyXDays: params.everyXDays,
+      frequency: params.frequency,
       fullHabitName: params.fullHabitName,
       reminderSound: params.reminderSound,
       reminderTime: params.reminderTime,
       selectedColor: params.selectedColor,
       selectedEmoji: params.selectedEmoji,
+      timesPerWeek: params.timesPerWeek,
     }),
     [
       params.dayPhase,
+      params.daysOfWeek,
+      params.everyXDays,
+      params.frequency,
       params.fullHabitName,
       params.reminderSound,
       params.reminderTime,
       params.selectedColor,
       params.selectedEmoji,
+      params.timesPerWeek,
     ]
   );
 }

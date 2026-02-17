@@ -77,6 +77,7 @@ function HabitEditScreenContent({
                   entering={FadeInUp.delay(280).springify().damping(18)}
                 >
                   <CustomizeSection
+                    frequencyValue={state.frequencyValue}
                     habitName={state.habitName}
                     remindersEnabled={state.remindersEnabled}
                     reminderTime={state.reminderTime}
@@ -84,6 +85,7 @@ function HabitEditScreenContent({
                     selectedEmoji={state.selectedEmoji}
                     onColorSelect={state.handleColorSelect}
                     onEmojiSelect={state.handleEmojiSelect}
+                    onFrequencyChange={state.handleFrequencyChange}
                     onReminderTimeChange={state.handleReminderTimeChange}
                     onReminderToggle={state.handleReminderToggle}
                   />

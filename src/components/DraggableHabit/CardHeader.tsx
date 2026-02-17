@@ -11,6 +11,7 @@ import { Animated, View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { PhaseTag } from '../PhaseTag';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { formatFrequency } from '../../utils/formatFrequency';
 import { getIconBackground } from './colorUtils';
 import type { CardColors, Habit } from './types';
 import {
@@ -52,6 +53,12 @@ export function CardHeader({
   );
   const showBestStreak =
     bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage;
+  const frequencyLabel = formatFrequency(
+    habit.frequency,
+    habit.daysOfWeek,
+    habit.timesPerWeek,
+    habit.everyXDays
+  );
 
   return (
     <View className='relative mb-3 flex-row items-center justify-between px-3'>
@@ -96,6 +103,14 @@ export function CardHeader({
             style={{ color: themeColors.text.tertiary }}
           >
             Best: {bestStreak} days
+          </Text>
+        )}
+        {frequencyLabel && (
+          <Text
+            className='mt-0.5 text-[12px] font-medium'
+            style={{ color: themeColors.text.tertiary }}
+          >
+            🔁 {frequencyLabel}
           </Text>
         )}
       </View>

@@ -44,7 +44,16 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     habitToEdit?.reminderSound ?? DEFAULT_SOUND
   );
   const [frequency, setFrequency] = useState<string>(
-    habitToEdit?.frequency ?? ''
+    habitToEdit?.frequency ?? 'daily'
+  );
+  const [daysOfWeek, setDaysOfWeek] = useState<number[]>(
+    habitToEdit?.daysOfWeek ?? []
+  );
+  const [timesPerWeek, setTimesPerWeek] = useState<number>(
+    habitToEdit?.timesPerWeek ?? 3
+  );
+  const [everyXDays, setEveryXDays] = useState<number>(
+    habitToEdit?.everyXDays ?? 2
   );
   const [dayPhase, setDayPhase] = useState<HubermanPhase | null>(
     getPhaseFromPreferredTime(habitToEdit?.preferredTime)
@@ -58,6 +67,8 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
 
   return {
     dayPhase,
+    daysOfWeek,
+    everyXDays,
     frequency,
     habitName,
     isColorPickerVisible,
@@ -70,7 +81,11 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     selectedEmoji,
     setColorPickerVisible,
     setDayPhase,
+    setDaysOfWeek,
+    setEveryXDays,
     setFrequency,
+    setTimesPerWeek,
+    timesPerWeek,
     setHabitName,
     setReminderOptionState,
     setRemindersEnabled,

@@ -1,6 +1,8 @@
 import { memo } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { FrequencyPicker } from '../../FrequencyPicker';
+import type { FrequencyValue } from '../../FrequencyPicker';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
@@ -25,6 +27,8 @@ const CreateHabitFormCenteredComponent = ({
   onSubmit,
   autoFocus = false,
   showNameError = false,
+  frequencyValue,
+  onFrequencyChange,
 }: CreateHabitFormCenteredProps) => {
   const { colors: themeColors, isDark } = useThemeColors();
 
@@ -117,6 +121,14 @@ const CreateHabitFormCenteredComponent = ({
           selectedColor={selectedColor}
           onSelectColor={onColorSelect}
         />
+
+        {/* Frequency picker */}
+        {frequencyValue && onFrequencyChange && (
+          <FrequencyPicker
+            value={frequencyValue}
+            onChange={onFrequencyChange}
+          />
+        )}
 
         {/* Reminder selector with presets and custom time */}
         <EnhancedReminderSelector

@@ -2,7 +2,13 @@
  * Types for CreateHabitFormCentered
  */
 
+import type { FrequencyValue } from '../../FrequencyPicker';
+
 export interface CreateHabitFormCenteredProps {
+  /** Current frequency value */
+  frequencyValue?: FrequencyValue;
+  /** Called when frequency changes */
+  onFrequencyChange?: (value: FrequencyValue) => void;
   habitName: string;
   onHabitNameChange: (value: string) => void;
   selectedEmoji: string | null;

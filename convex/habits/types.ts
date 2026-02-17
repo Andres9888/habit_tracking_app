@@ -12,6 +12,9 @@ export const createHabitArgs = {
   cueAfterBehavior: v.optional(v.string()),
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),
+  daysOfWeek: v.optional(v.array(v.number())),
+  everyXDays: v.optional(v.number()),
+  frequency: v.optional(v.string()),
   icon: v.optional(v.string()),
   color: v.optional(v.string()),
   iconColor: v.optional(v.string()),
@@ -21,6 +24,7 @@ export const createHabitArgs = {
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  timesPerWeek: v.optional(v.number()),
 };
 
 /** Update habit args validator */
@@ -29,8 +33,10 @@ export const updateHabitArgs = {
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),
   daysOfWeek: v.optional(v.array(v.number())),
+  everyXDays: v.optional(v.number()),
   frequency: v.optional(v.string()),
   goalDuration: v.optional(v.number()),
+  timesPerWeek: v.optional(v.number()),
   goalUnit: v.optional(v.string()),
   habitId: v.id('habits'),
   icon: v.optional(v.string()),

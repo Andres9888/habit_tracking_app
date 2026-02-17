@@ -133,9 +133,16 @@ const applicationTables = {
     // "daily", "weekly", "custom"
     daysOfWeek: v.optional(v.array(v.number())),
 
+    // Number of days between completions for "every_x_days" frequency
+    everyXDays: v.optional(v.number()),
+
     // "Regret, shame, broken promise"
     // Background color for icon
+    // Frequency: "daily" | "specific_days" | "times_per_week" | "every_x_days"
     frequency: v.optional(v.string()),
+
+    // Target completions per week for "times_per_week" frequency
+    timesPerWeek: v.optional(v.number()),
 
     // "default", etc.
     goalDuration: v.optional(v.number()),

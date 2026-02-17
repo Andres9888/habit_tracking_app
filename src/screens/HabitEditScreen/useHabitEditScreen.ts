@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
+import type { FrequencyValue } from '../../components/FrequencyPicker';
 import { createDateFromTimeString, getDefaultReminderTime } from '../../utils/notifications';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { useHabitSaveHandler } from './useHabitSaveHandler';
@@ -22,6 +23,10 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
+  const [frequency, setFrequency] = useState<string>('daily');
+  const [daysOfWeek, setDaysOfWeek] = useState<number[]>([]);
+  const [timesPerWeek, setTimesPerWeek] = useState<number>(3);
+  const [everyXDays, setEveryXDays] = useState<number>(2);
 
   useEffect(() => {
     if (habit) {
@@ -34,6 +39,10 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
+      setFrequency(habit.frequency ?? 'daily');
+      setDaysOfWeek(habit.daysOfWeek ?? []);
+      setTimesPerWeek(habit.timesPerWeek ?? 3);
+      setEveryXDays(habit.everyXDays ?? 2);
     }
   }, [habit]);
 
@@ -46,6 +55,10 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     },
     remindersEnabled,
     reminderTime,
+    frequency,
+    daysOfWeek,
+    timesPerWeek,
+    everyXDays,
     selectedColor,
     selectedEmoji,
   });
@@ -75,10 +88,29 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     setReminderTime(time);
   }, []);
 
+  const frequencyValue: FrequencyValue = useMemo(
+    () => ({
+      frequency: (frequency || 'daily') as FrequencyValue['frequency'],
+      daysOfWeek,
+      timesPerWeek,
+      everyXDays,
+    }),
+    [frequency, daysOfWeek, timesPerWeek, everyXDays]
+  );
+
+  const handleFrequencyChange = useCallback((val: FrequencyValue) => {
+    setFrequency(val.frequency);
+    if (val.daysOfWeek !== undefined) setDaysOfWeek(val.daysOfWeek);
+    if (val.timesPerWeek !== undefined) setTimesPerWeek(val.timesPerWeek);
+    if (val.everyXDays !== undefined) setEveryXDays(val.everyXDays);
+  }, []);
+
   return {
+    frequencyValue,
     habitName,
     handleColorSelect,
     handleDelete,
+    handleFrequencyChange,
     handleEmojiSelect,
     handleArchive,
     handleReminderTimeChange,

@@ -15,12 +15,16 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitData {
   dayPhase: string | null;
+  daysOfWeek?: number[];
+  everyXDays?: number;
+  frequency?: string;
   fullHabitName: string;
   hasReminders: boolean;
   reminderSound?: string | null;
   reminderTime: Date;
   selectedColor: string;
   selectedEmoji: string | null;
+  timesPerWeek?: number;
 }
 
 interface EditHabitData extends HabitData {
@@ -42,7 +46,11 @@ export function useCreateHabitHandlers() {
     selectedEmoji,
     selectedColor,
     dayPhase,
+    daysOfWeek,
+    everyXDays,
+    frequency,
     reminderSound,
+    timesPerWeek,
   }: EditHabitData): Promise<void> {
     // Validate habit name
     const validation = validateHabitName(fullHabitName);
@@ -72,6 +80,9 @@ export function useCreateHabitHandlers() {
         habitId: habitToEdit._id,
         icon: selectedEmoji ?? undefined,
         color: selectedColor,
+        daysOfWeek: daysOfWeek,
+        everyXDays: everyXDays,
+        frequency: frequency ?? 'daily',
         iconColor: selectedColor,
         name: sanitizedName,
         notes: habitToEdit.notes ?? '',
@@ -81,6 +92,7 @@ export function useCreateHabitHandlers() {
         reminderTime: finalHasReminders
           ? formatReminderTime(reminderTime)
           : undefined,
+        timesPerWeek: timesPerWeek,
       });
     } catch (error) {
       if (__DEV__) console.error('Failed to edit habit:', error);
@@ -95,7 +107,11 @@ export function useCreateHabitHandlers() {
     selectedEmoji,
     selectedColor,
     dayPhase,
+    daysOfWeek,
+    everyXDays,
+    frequency,
     reminderSound,
+    timesPerWeek,
   }: HabitData): Promise<void> {
     // Validate habit name
     const validation = validateHabitName(fullHabitName);
@@ -106,6 +122,9 @@ export function useCreateHabitHandlers() {
 
     try {
       const habitId = await createHabit({
+        daysOfWeek: daysOfWeek,
+        everyXDays: everyXDays,
+        frequency: frequency ?? 'daily',
         icon: selectedEmoji ?? undefined,
         iconColor: selectedColor,
         name: sanitizedName,
@@ -114,6 +133,7 @@ export function useCreateHabitHandlers() {
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
         reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
+        timesPerWeek: timesPerWeek,
       });
 
       // Mark first habit creation for deferred notification permission request

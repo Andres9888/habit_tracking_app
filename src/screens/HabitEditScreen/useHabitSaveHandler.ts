@@ -18,6 +18,10 @@ interface UseSaveHandlerProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
+  frequency?: string;
+  daysOfWeek?: number[];
+  timesPerWeek?: number;
+  everyXDays?: number;
   onSuccess: () => void;
 }
 
@@ -28,6 +32,10 @@ export function useHabitSaveHandler({
   selectedColor,
   remindersEnabled,
   reminderTime,
+  frequency,
+  daysOfWeek,
+  timesPerWeek,
+  everyXDays,
   onSuccess,
 }: UseSaveHandlerProps) {
   const updateHabit = useMutation(api.habits.update);
@@ -77,11 +85,15 @@ export function useHabitSaveHandler({
         habitId,
         icon: selectedEmoji ?? undefined,
         color: selectedColor,
+        daysOfWeek,
+        everyXDays,
+        frequency: frequency ?? 'daily',
         iconColor: selectedColor,
         name: fullName,
         remindersEnabled: enableReminders,
         reminderSound: enableReminders ? 'default' : undefined,
         reminderTime: enableReminders ? reminderTimeString : undefined,
+        timesPerWeek,
       });
 
       onSuccess();
@@ -99,6 +111,10 @@ export function useHabitSaveHandler({
     selectedColor,
     remindersEnabled,
     reminderTime,
+    frequency,
+    daysOfWeek,
+    timesPerWeek,
+    everyXDays,
     updateHabit,
     onSuccess,
   ]);

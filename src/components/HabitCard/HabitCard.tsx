@@ -103,6 +103,7 @@ function HabitCardComponent(props: HabitCardProps) {
             completionIcon={completionIcon}
             currentStreak={habit.currentStreak}
             entranceContentStyle={habit.entrance.contentStyle as AnimatedStyle}
+            frequencyLabel={props.frequencyLabel}
             hasPendingOfflineOps={habit.hasPendingOfflineOps}
             icon={icon}
             name={name}

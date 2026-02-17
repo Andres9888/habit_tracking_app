@@ -5,6 +5,8 @@ import type { CompletionIconType } from './StatusIndicator';
 export interface HabitCardContentProps {
   name: string;
   icon: string;
+  /** Human-readable frequency subtitle (e.g. "Mon, Wed, Fri") */
+  frequencyLabel?: string | null;
   strength: number;
   currentStreak: number;
   bestStreak: number;

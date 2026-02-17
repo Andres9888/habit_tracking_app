@@ -46,6 +46,14 @@ export interface Habit {
   strengthUpdatedAt?: number;
   /** Highest streak ever achieved for this habit. */
   bestStreak?: number;
+  /** Frequency: "daily" | "specific_days" | "times_per_week" | "every_x_days" */
+  frequency?: string;
+  /** Days of week for specific_days (0=Sun, 6=Sat) */
+  daysOfWeek?: number[];
+  /** Target completions per week */
+  timesPerWeek?: number;
+  /** Interval in days for every_x_days */
+  everyXDays?: number;
 }
 
 /**
