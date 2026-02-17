@@ -29,3 +29,12 @@ export { getComplianceData } from './analyticsCompliance';
 
 // Weekly insights
 export { getWeeklyInsights, generateWeeklyInsights } from './analyticsWeekly';
+
+// Advanced analytics
+export {
+  getGitHubHeatmapData,
+  getStreakTrends,
+  getDayAnalysis,
+  getStreakIntervals,
+  getAnalyticsExportData,
+} from './analyticsAdvanced';
