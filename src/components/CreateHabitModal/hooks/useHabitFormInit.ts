@@ -20,6 +20,7 @@ interface FormSetters {
   setFrequency: (freq: string) => void;
   setDayPhase: (phase: HubermanPhase | null) => void;
   setReminderOptionState: (option: ReminderOption) => void;
+  setDuration: (duration: number | null) => void;
 }
 
 interface UseHabitFormInitOptions {
@@ -45,6 +46,7 @@ export const useHabitFormInit = ({
     setReminderTime,
     setSelectedColor,
     setSelectedEmoji,
+    setDuration,
   } = setters;
 
   // Initialize form only when habitToEdit changes (edit mode)
@@ -60,6 +62,7 @@ export const useHabitFormInit = ({
     setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);
     setFrequency(habitToEdit.frequency ?? '');
     setDayPhase(getPhaseFromPreferredTime(habitToEdit.preferredTime));
+    setDuration(habitToEdit.duration ?? null);
     setReminderOptionState(
       getReminderOptionFromTime(
         habitToEdit.remindersEnabled,

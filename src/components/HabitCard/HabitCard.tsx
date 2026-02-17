@@ -40,6 +40,7 @@ function HabitCardComponent(props: HabitCardProps) {
     onDelete,
     style,
     completionIcon = 'checkbox',
+    duration,
   } = props;
 
   const habit = useHabitCard(props);
@@ -105,6 +106,7 @@ function HabitCardComponent(props: HabitCardProps) {
             entranceContentStyle={habit.entrance.contentStyle as AnimatedStyle}
             hasPendingOfflineOps={habit.hasPendingOfflineOps}
             icon={icon}
+            isMicro={duration !== undefined && duration !== null && duration <= 5}
             name={name}
             rippleAnimatedStyle={habit.animations.rippleAnimatedStyle}
             strength={strength}

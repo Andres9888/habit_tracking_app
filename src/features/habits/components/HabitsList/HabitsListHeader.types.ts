@@ -9,7 +9,7 @@
 import type { Animated } from 'react-native';
 
 export interface HabitsListHeaderProps {
-  habits: Array<{ _id: string }>;
+  habits: Array<{ _id: string; duration?: number | null }>;
   weekDateStrings: string[];
   weekDates: Date[];
   canNavigateForward: boolean;
@@ -30,4 +30,6 @@ export interface HabitsListHeaderProps {
   onUpgradePress: () => void;
   openSettings: () => void;
   openTemplatesScreen: () => void;
+  /** Render function for habit cards (needed for QuickWinsSection) */
+  renderItem?: (habit: any, index: number) => React.ReactNode;
 }

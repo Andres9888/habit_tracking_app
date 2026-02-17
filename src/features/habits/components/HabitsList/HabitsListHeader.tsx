@@ -23,6 +23,7 @@ import {
   TrialCountdownBanner,
   useTrialCountdown,
 } from '../../../../components/TrialCountdownBanner';
+import { QuickWinsSection } from './QuickWinsSection';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
@@ -38,6 +39,11 @@ function HabitsListHeaderComponent(
 
   // Trial countdown banner
   const { shouldShowBanner, daysRemaining } = useTrialCountdown();
+
+  // Filter micro-habits (duration <= 5 min)
+  const microHabits = props.habits.filter(
+    (habit) => habit.duration !== undefined && habit.duration !== null && habit.duration <= 5
+  );
 
   return (
     <View className='gap-4 pb-4 pt-14'>
@@ -83,6 +89,14 @@ function HabitsListHeaderComponent(
             onPreviousWeek={props.onPreviousWeek}
           />
         </Animated.View>
+      )}
+
+      {/* Quick Wins Section - Micro-habits */}
+      {props.renderItem && microHabits.length > 0 && (
+        <QuickWinsSection
+          microHabits={microHabits as any}
+          renderHabitItem={props.renderItem as any}
+        />
       )}
 
       {/* Trial Countdown Banner */}

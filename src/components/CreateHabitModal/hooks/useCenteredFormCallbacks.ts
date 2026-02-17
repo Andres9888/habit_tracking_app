@@ -15,6 +15,7 @@ interface FormState {
   setSelectedColor: (color: string) => void;
   setRemindersEnabled: (enabled: boolean) => void;
   setReminderTime: (time: Date) => void;
+  setDuration: (duration: number | null) => void;
 }
 
 interface UseCenteredFormCallbacksProps {
@@ -87,6 +88,13 @@ export function useCenteredFormCallbacks({
     [form.setReminderTime]
   );
 
+  const handleDurationSelect = useCallback(
+    (duration: number | null) => {
+      form.setDuration(duration);
+    },
+    [form.setDuration]
+  );
+
   const handleSubmit = useCallback(() => {
     void handleCreate();
   }, [handleCreate]);
@@ -97,6 +105,7 @@ export function useCenteredFormCallbacks({
 
   return {
     handleColorSelect,
+    handleDurationSelect,
     handleEmojiSelect,
     handleNameChange,
     handleReminderTimeChange,

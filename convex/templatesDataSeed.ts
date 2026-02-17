@@ -25,6 +25,7 @@ type TemplateInsert = {
     | 'social';
   createdAt: number;
   description: string;
+  duration?: number;
   frequency: string;
   icon: string;
   iconColor: string;
@@ -180,6 +181,7 @@ export const seedTemplates = internalMutation({
       createdAt: now,
       description:
         'Start your day with mindful meditation. Research shows just 5 minutes daily can reduce stress and improve focus.',
+      duration: 5,
       frequency: 'daily',
       icon: '🧘',
       iconColor: '#10B981',
@@ -216,6 +218,7 @@ export const seedTemplates = internalMutation({
       createdAt: now,
       description:
         'Drink a full glass of water immediately after waking. Rehydrates body and kickstarts metabolism.',
+      duration: 2,
       frequency: 'daily',
       icon: '💧',
       iconColor: '#60A5FA',
@@ -265,6 +268,7 @@ export const seedTemplates = internalMutation({
       createdAt: now,
       description:
         'Take a 2-3 minute cold shower. Builds resilience, improves circulation, and boosts alertness.',
+      duration: 3,
       frequency: 'daily',
       icon: '❄️',
       iconColor: '#3B82F6',
@@ -280,6 +284,7 @@ export const seedTemplates = internalMutation({
       createdAt: now,
       description:
         'Make your bed immediately after waking. Creates a sense of accomplishment and order to start the day.',
+      duration: 2,
       frequency: 'daily',
       icon: '🛏️',
       iconColor: '#8B5CF6',

@@ -4,6 +4,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
+import { DurationSelector } from './DurationSelector';
 import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.types';
 
 /**
@@ -22,6 +23,8 @@ const CreateHabitFormCenteredComponent = ({
   reminderTime,
   onReminderToggle,
   onReminderTimeChange,
+  selectedDuration,
+  onDurationSelect,
   onSubmit,
   autoFocus = false,
   showNameError = false,
@@ -116,6 +119,12 @@ const CreateHabitFormCenteredComponent = ({
           colors={colors}
           selectedColor={selectedColor}
           onSelectColor={onColorSelect}
+        />
+
+        {/* Duration selector for micro-habits */}
+        <DurationSelector
+          selectedDuration={selectedDuration}
+          onDurationSelect={onDurationSelect}
         />
 
         {/* Reminder selector with presets and custom time */}

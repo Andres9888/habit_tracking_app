@@ -30,6 +30,9 @@ export interface HabitCardProps {
   /** Habit strength (0-100) */
   strength: number;
 
+  /** Habit duration in minutes (for micro-habit badge) */
+  duration?: number | null;
+
   /** Current streak (Story 1.4) */
   currentStreak?: number;
 

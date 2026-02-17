@@ -15,6 +15,7 @@ interface RenderHabitsListHeaderOptions {
   handlers: ReturnType<
     typeof import('./useHabitsListHandlers').useHabitsListHandlers
   >;
+  renderItem: (habit: any, params: any) => React.ReactNode;
 }
 
 export function renderHabitsListHeader({
@@ -30,6 +31,7 @@ export function renderHabitsListHeader({
     onNextWeek,
     onPreviousWeek,
     onUpgradeIntent,
+    renderItem,
   } = props;
   return (
     <HabitsListHeader
@@ -45,6 +47,7 @@ export function renderHabitsListHeader({
       openSettings={modals.openSettings}
       openTemplatesScreen={modals.openTemplatesScreen}
       reduceMotionPreference={list.reduceMotionPreference}
+      renderItem={renderItem}
       showWeekCompletionBar={list.showWeekCompletionBar}
       weekDates={weekDates}
       weekDateStrings={list.weekDateStrings}

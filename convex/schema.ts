@@ -143,6 +143,10 @@ const applicationTables = {
     // Goal value
     goalUnit: v.optional(v.string()),
 
+    // Micro-Habits: Duration-based approach (2-minute rule)
+    // Duration in minutes: 2, 5, 10, 15, 30, 60, or custom value
+    duration: v.optional(v.number()),
+
     // HDP - validated optimal: 0.15-0.2 (default: 0.175)
     habitDecayParam: v.optional(v.number()),
 
@@ -399,6 +403,9 @@ const applicationTables = {
 
     // Background color for icon
     frequency: v.string(),
+
+    // Habit duration in minutes (for micro-habits)
+    duration: v.optional(v.number()),
 
     icon: v.string(),
 

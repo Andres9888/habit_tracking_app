@@ -19,6 +19,7 @@ export function TemplateCardContent({
   category,
   checkmarkStyle,
   description,
+  duration,
   frequency,
   icon,
   iconColor,
@@ -54,6 +55,7 @@ export function TemplateCardContent({
         {name}
       </Text>
       <MetadataPills
+        duration={duration}
         frequency={frequency}
         iconColor={iconColor}
         popularityScore={popularityScore}

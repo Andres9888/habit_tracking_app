@@ -62,8 +62,8 @@ export function HabitsListContent({
   );
 
   const listHeaderComponent = useMemo(
-    () => renderHabitsListHeader({ handlers, props, state }),
-    [handlers, props, state]
+    () => renderHabitsListHeader({ handlers, props, state, renderItem }),
+    [handlers, props, state, renderItem]
   );
 
   const renderHabitItem = useCallback(

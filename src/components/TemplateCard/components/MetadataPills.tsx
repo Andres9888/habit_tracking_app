@@ -12,6 +12,7 @@ import { borderRadius, spacing } from '../../../theme/spacing';
 import { formatFrequency } from '../TemplateCard.constants';
 
 interface MetadataPillsProps {
+  duration?: number | null;
   frequency?: string;
   iconColor: string;
   popularityScore?: number;
@@ -20,6 +21,7 @@ interface MetadataPillsProps {
 }
 
 export function MetadataPills({
+  duration,
   frequency,
   iconColor,
   popularityScore,
@@ -30,7 +32,13 @@ export function MetadataPills({
   const { colors: themeColors } = useThemeColors();
   const formattedFrequency = formatFrequency(frequency);
 
+  const formatDuration = (mins: number): string => {
+    if (mins < 60) return `${mins} min`;
+    return `${Math.floor(mins / 60)}h ${mins % 60 > 0 ? `${mins % 60}m` : ''}`;
+  };
+
   const hasMetadata =
+    duration ||
     formattedFrequency ||
     scientificLink ||
     youtubeLink ||
@@ -40,6 +48,27 @@ export function MetadataPills({
 
   return (
     <View style={styles.metadataRow}>
+      {duration && (
+        <View
+          style={[
+            styles.metadataPill,
+            {
+              backgroundColor: duration <= 5 ? '#d1fae5' : themeColors.surface,
+              borderColor: duration <= 5 ? '#059669' : `${iconColor}30`,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              theme.custom.typography.caption,
+              { color: duration <= 5 ? '#047857' : themeColors.text.secondary },
+            ]}
+          >
+            {duration <= 5 ? '⚡ ' : ''}{formatDuration(duration)}
+          </Text>
+        </View>
+      )}
+
       {formattedFrequency && (
         <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
           <Text style={[theme.custom.typography.caption, { color: themeColors.text.secondary }]}>

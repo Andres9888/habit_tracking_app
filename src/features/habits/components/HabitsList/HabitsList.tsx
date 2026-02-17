@@ -80,7 +80,7 @@ export function HabitsList(props: HabitsListProps) {
     <HabitsListContent
       handlers={handlers}
       handleSuccessTransitionComplete={handleSuccessTransitionComplete}
-      props={props}
+      props={{ ...props, renderItem }}
       renderItem={renderItem}
       state={state}
     />

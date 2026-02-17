@@ -24,4 +24,6 @@ export interface HabitCardContentProps {
   chainScale?: SharedValue<number>;
   /** Animated rotation for chain link animation - T014 */
   chainRotate?: SharedValue<number>;
+  /** Whether this is a micro-habit (2-5 min duration) */
+  isMicro?: boolean;
 }

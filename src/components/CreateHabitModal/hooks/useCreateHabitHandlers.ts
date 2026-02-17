@@ -15,6 +15,7 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitData {
   dayPhase: string | null;
+  duration: number | null;
   fullHabitName: string;
   hasReminders: boolean;
   reminderSound?: string | null;
@@ -43,6 +44,7 @@ export function useCreateHabitHandlers() {
     selectedColor,
     dayPhase,
     reminderSound,
+    duration,
   }: EditHabitData): Promise<void> {
     // Validate habit name
     const validation = validateHabitName(fullHabitName);
@@ -81,6 +83,7 @@ export function useCreateHabitHandlers() {
         reminderTime: finalHasReminders
           ? formatReminderTime(reminderTime)
           : undefined,
+        duration: duration ?? undefined,
       });
     } catch (error) {
       if (__DEV__) console.error('Failed to edit habit:', error);
@@ -96,6 +99,7 @@ export function useCreateHabitHandlers() {
     selectedColor,
     dayPhase,
     reminderSound,
+    duration,
   }: HabitData): Promise<void> {
     // Validate habit name
     const validation = validateHabitName(fullHabitName);
@@ -114,6 +118,7 @@ export function useCreateHabitHandlers() {
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
         reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
+        duration: duration ?? undefined,
       });
 
       // Mark first habit creation for deferred notification permission request

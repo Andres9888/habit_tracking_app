@@ -55,6 +55,9 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
       habitToEdit?.reminderTime
     )
   );
+  const [selectedDuration, setSelectedDuration] = useState<number | null>(
+    habitToEdit?.duration ?? null
+  );
 
   return {
     dayPhase,
@@ -67,9 +70,11 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     reminderSound,
     reminderTime,
     selectedColor,
+    selectedDuration,
     selectedEmoji,
     setColorPickerVisible,
     setDayPhase,
+    setDuration: setSelectedDuration,
     setFrequency,
     setHabitName,
     setReminderOptionState,

@@ -23,6 +23,10 @@ export interface HabitsListProps {
   weekDates: Date[];
   onNextWeek: () => void;
   onPreviousWeek: () => void;
+  /** Render function for habit items (passed to QuickWinsSection) */
+  renderItem?: ReturnType<
+    typeof import('../../hooks/useHabitRenderItem').useHabitRenderItem
+  >;
 }
 
 export interface HabitsListContentProps {

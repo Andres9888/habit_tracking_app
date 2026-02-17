@@ -17,6 +17,7 @@ import { styles } from '../HabitCard.styles';
 import { streakStyles } from '../HabitCard.streakStyles';
 import { StatusIndicator } from './StatusIndicator';
 import { StreakBadge } from './StreakBadge';
+import { MicroBadge } from './MicroBadge';
 import type { HabitCardContentProps } from './HabitCardContent.types';
 
 function HabitCardContentComponent({
@@ -35,6 +36,7 @@ function HabitCardContentComponent({
   hasPendingOfflineOps = false,
   chainScale,
   chainRotate,
+  isMicro = false,
 }: HabitCardContentProps) {
   const { colors: themeColors } = useThemeColors();
   return (
@@ -52,6 +54,7 @@ function HabitCardContentComponent({
           >
             {name}
           </Text>
+          {isMicro && <MicroBadge isMicro size="small" />}
         </View>
         <View style={styles.statusContainer}>
           <PendingSyncBadge
