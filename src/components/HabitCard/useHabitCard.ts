@@ -19,6 +19,7 @@ import { useHabitCardState, useStreakMilestoneIntegration } from './hooks';
 import { useHabitCardValues } from './useHabitCardValues';
 import { getStrengthColor, getBackgroundColor } from './HabitCard.utils';
 import type { HabitCardProps } from './HabitCard.types';
+import { useMindfulnessTimer } from '../MindfulnessTimer/useMindfulnessTimer';
 
 export function useHabitCard(props: HabitCardProps) {
   const {
@@ -55,6 +56,27 @@ export function useHabitCard(props: HabitCardProps) {
     offlineSyncEnabled,
     serverTracking,
   });
+
+  // Mindfulness timer integration
+  const mindfulness = useMindfulnessTimer({
+    habitName: name,
+    habitIcon: icon,
+    completed: habitState.completed,
+  });
+
+  // Wrapped toggle that intercepts mindfulness habits
+  const wrappedToggleOptimistic = useCallback(() => {
+    if (mindfulness.shouldIntercept()) return; // Timer shown instead
+    habitState.toggleOptimistic();
+  }, [mindfulness, habitState]);
+
+  const wrappedToggleCompletionMutation = useCallback(
+    async (args: { date: string; habitId: typeof id }) => {
+      if (mindfulness.isMindfulnessHabit && !habitState.completed) return; // Handled by timer
+      return habitState.toggleCompletionMutation(args);
+    },
+    [mindfulness.isMindfulnessHabit, habitState]
+  );
 
   // Integrate streak milestone celebrations
   useStreakMilestoneIntegration({
@@ -96,8 +118,8 @@ export function useHabitCard(props: HabitCardProps) {
     onPress,
     reduceMotion,
     today: habitState.today,
-    toggleCompletionMutation: habitState.toggleCompletionMutation,
-    toggleOptimistic: habitState.toggleOptimistic,
+    toggleCompletionMutation: wrappedToggleCompletionMutation,
+    toggleOptimistic: wrappedToggleOptimistic,
     translateX: values.translateX,
     triggerCompletionCelebration: () => {
       animations.triggerCompletionCelebration();
@@ -105,6 +127,23 @@ export function useHabitCard(props: HabitCardProps) {
     },
     triggerUncheckAnimation: animations.triggerUncheckAnimation,
   });
+
+  // Called when mindfulness timer completes — triggers habit completion
+  const completeMindfulnessHabit = useCallback(async () => {
+    mindfulness.dismissTimer();
+    habitState.toggleOptimistic();
+    animations.triggerCompletionCelebration();
+    triggerCompletionWithToast();
+    try {
+      await habitState.toggleCompletionMutation({
+        date: habitState.today,
+        habitId: id,
+      });
+    } catch (error) {
+      if (__DEV__) console.error('Mindfulness completion failed:', error);
+      habitState.toggleOptimistic(); // revert
+    }
+  }, [mindfulness, habitState, animations, triggerCompletionWithToast, id]);
 
   useHabitCardEffects({
     checkmarkRotate: animations.checkmarkRotate,
@@ -135,6 +174,11 @@ export function useHabitCard(props: HabitCardProps) {
     entrance,
     hasPendingOfflineOps: habitState.hasPendingOfflineOps,
     isDark,
+    mindfulness: {
+      showTimer: mindfulness.showTimer,
+      dismissTimer: mindfulness.dismissTimer,
+      completeMindfulnessHabit,
+    },
     setShowCompletionToast: values.setShowCompletionToast,
     setShowConfetti: values.setShowConfetti,
     setShowFloatingXP: values.setShowFloatingXP,

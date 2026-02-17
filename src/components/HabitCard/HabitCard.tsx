@@ -14,6 +14,7 @@ import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import { CompletionToast } from '../CompletionToast';
 import { SuccessShimmer } from '../animations/SuccessShimmer';
+import { MindfulnessTimer } from '../MindfulnessTimer';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
 import { useHabitCard } from './useHabitCard';
@@ -130,6 +131,12 @@ function HabitCardComponent(props: HabitCardProps) {
         streak={habit.currentStreak + 1}
         visible={habit.showCompletionToast}
         onDismiss={() => habit.setShowCompletionToast(false)}
+      />
+      <MindfulnessTimer
+        visible={habit.mindfulness.showTimer}
+        habitName={name}
+        onComplete={habit.mindfulness.completeMindfulnessHabit}
+        onDismiss={habit.mindfulness.dismissTimer}
       />
     </View>
   );
