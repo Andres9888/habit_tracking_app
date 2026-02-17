@@ -130,12 +130,18 @@ const applicationTables = {
     // Streak Tracking System (Story 1.3)
     currentStreak: v.optional(v.number()),
 
-    // "daily", "weekly", "custom"
+    // Legacy frequency field: "daily", "weekly", "custom" (retained for compatibility)
+    frequency: v.optional(v.string()),
+
+    // New frequency configuration (JSON string with type and options)
+    // Format: {"type":"daily"|"weekly"|"days"|"interval","daysOfWeek":[0-6],"timesPerWeek":1-7,"intervalDays":2|3|7|14|30}
+    frequencyConfig: v.optional(v.string()),
+
+    // Legacy daysOfWeek field: [0-6] for Sunday-Saturday (retained for compatibility)
     daysOfWeek: v.optional(v.array(v.number())),
 
     // "Regret, shame, broken promise"
     // Background color for icon
-    frequency: v.optional(v.string()),
 
     // "default", etc.
     goalDuration: v.optional(v.number()),

@@ -33,6 +33,8 @@ export interface CalendarTimelineProps {
   isDayPressEnabled?: boolean;
   /** Disable tap on future dates (default: true) */
   disableFutureDayPress?: boolean;
+  /** Set of scheduled dates (date strings YYYY-MM-DD) for non-daily habits */
+  scheduledDates?: Set<string>;
 }
 
 export type CompletionStatus = 'complete' | 'partial' | 'none' | 'future';
@@ -55,6 +57,8 @@ export interface DayCellProps {
   onDayPress?: (date: Date) => void;
   isDayPressEnabled: boolean;
   disableFutureDayPress: boolean;
+  /** Whether this day is scheduled for a non-daily habit */
+  isScheduled?: boolean;
 }
 
 export interface CalendarColors {

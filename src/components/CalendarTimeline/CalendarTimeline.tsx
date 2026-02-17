@@ -22,6 +22,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   onDayPress,
   isDayPressEnabled,
   disableFutureDayPress = true,
+  scheduledDates,
 }) => {
   const { isToday, isFuture } = useCalendarTimelineLogic();
   const { isDark, colors: themeColors } = useThemeColors();
@@ -35,6 +36,12 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
     if (dayStatus.completed === dayStatus.total) return 'complete';
     if (dayStatus.completed > 0) return 'partial';
     return 'none';
+  };
+
+  const isScheduled = (date: Date): boolean => {
+    if (!scheduledDates) return false;
+    const dateString = format(date, 'yyyy-MM-dd');
+    return scheduledDates.has(dateString);
   };
 
   if (dates.length === 0) {
@@ -89,6 +96,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             isUpcoming={isFuture(date)}
             reduceMotion={reduceMotion}
             onDayPress={onDayPress}
+            isScheduled={isScheduled(date)}
           />
         ))}
       </View>

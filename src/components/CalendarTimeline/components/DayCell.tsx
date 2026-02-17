@@ -24,6 +24,7 @@ export const DayCell: React.FC<DayCellProps> = ({
   onDayPress,
   isDayPressEnabled,
   disableFutureDayPress,
+  isScheduled = false,
 }) => {
   const weekday = format(date, 'EEE');
   const dayNumber = format(date, 'd');
@@ -49,6 +50,7 @@ export const DayCell: React.FC<DayCellProps> = ({
     isUpcoming,
     reduceMotion,
     weekday,
+    isScheduled,
   };
 
   if (onDayPress) {

@@ -17,6 +17,7 @@ import { styles } from '../HabitCard.styles';
 import { streakStyles } from '../HabitCard.streakStyles';
 import { StatusIndicator } from './StatusIndicator';
 import { StreakBadge } from './StreakBadge';
+import { FrequencyBadge } from './FrequencyBadge';
 import type { HabitCardContentProps } from './HabitCardContent.types';
 
 function HabitCardContentComponent({
@@ -35,6 +36,7 @@ function HabitCardContentComponent({
   hasPendingOfflineOps = false,
   chainScale,
   chainRotate,
+  habit,
 }: HabitCardContentProps) {
   const { colors: themeColors } = useThemeColors();
   return (
@@ -42,16 +44,19 @@ function HabitCardContentComponent({
       <View style={styles.topRow}>
         <View style={styles.habitInfo}>
           <Text style={styles.icon}>{icon}</Text>
-          <Text
-            numberOfLines={1}
-            style={[
-              theme.custom.typography.heading3,
-              { color: themeColors.text.primary },
-              completed && styles.completedText,
-            ]}
-          >
-            {name}
-          </Text>
+          <View style={{ flex: 1 }}>
+            <Text
+              numberOfLines={1}
+              style={[
+                theme.custom.typography.heading3,
+                { color: themeColors.text.primary },
+                completed && styles.completedText,
+              ]}
+            >
+              {name}
+            </Text>
+            {habit && <FrequencyBadge habit={habit} />}
+          </View>
         </View>
         <View style={styles.statusContainer}>
           <PendingSyncBadge

@@ -21,6 +21,8 @@ export const createHabitArgs = {
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  // Frequency configuration (JSON string)
+  frequency: v.optional(v.string()),
 };
 
 /** Update habit args validator */

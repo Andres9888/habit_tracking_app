@@ -28,6 +28,9 @@ export const create = mutation({
       .collect();
     const maxOrder = findMaxOrder(allHabits);
 
+    // Handle frequency config - default to daily if not provided
+    const frequencyConfig = args.frequency || JSON.stringify({ type: 'daily' });
+
     return await ctx.db.insert('habits', {
       bestStreak: 0,
       createdAt: Date.now(),
@@ -50,6 +53,9 @@ export const create = mutation({
       strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),
       userId,
+      frequencyConfig,
+      // Set legacy frequency field to "daily" for backward compatibility
+      frequency: 'daily',
     });
   },
   returns: v.id('habits'),

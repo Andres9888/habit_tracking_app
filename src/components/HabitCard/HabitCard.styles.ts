@@ -54,6 +54,20 @@ const coreStyles = StyleSheet.create({
   },
   content: { flex: 1, justifyContent: 'center', padding: spacing.base },
   disabled: { opacity: 0.5 },
+  frequencyBadgeContainer: {
+    marginTop: 2,
+  },
+  frequencyBadgeText: {
+    ...typography.caption,
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 11,
+    fontWeight: '500',
+    letterSpacing: -0.2,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    overflow: 'hidden',
+  } as TextStyle,
   habitInfo: {
     alignItems: 'center',
     flex: 1,

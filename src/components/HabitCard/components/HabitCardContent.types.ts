@@ -1,6 +1,7 @@
 import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
 import type { AppTheme } from '../../../theme';
 import type { CompletionIconType } from './StatusIndicator';
+import type { Habit } from '../../../features/habits/types';
 
 export interface HabitCardContentProps {
   name: string;
@@ -24,4 +25,6 @@ export interface HabitCardContentProps {
   chainScale?: SharedValue<number>;
   /** Animated rotation for chain link animation - T014 */
   chainRotate?: SharedValue<number>;
+  /** Habit document for frequency display */
+  habit?: Habit;
 }

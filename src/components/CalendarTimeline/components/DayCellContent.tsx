@@ -26,6 +26,7 @@ interface DayCellContentProps {
   };
   reduceMotion: boolean;
   pressed?: boolean;
+  isScheduled?: boolean;
 }
 
 /** The visual content of a day cell (weekday, number, completion dot) */
@@ -39,6 +40,7 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
   colors,
   reduceMotion,
   pressed = false,
+  isScheduled = false,
 }) => (
   <>
     <Text
@@ -56,8 +58,10 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
           : colors.dayBackground,
         borderColor: isCurrentDay
           ? TODAY_HIGHLIGHT.border
-          : (colors.highContrastBorder ?? 'transparent'),
-        borderWidth: isCurrentDay ? 2 : (colors.borderWidth ?? 0),
+          : isScheduled
+            ? colors.icon + '40'
+            : (colors.highContrastBorder ?? 'transparent'),
+        borderWidth: isCurrentDay ? 2 : (isScheduled ? 1 : (colors.borderWidth ?? 0)),
         ...(isCurrentDay && TODAY_SHADOW),
         ...(pressed && !reduceMotion && { transform: [{ scale: 0.95 }] }),
         ...(pressed && { opacity: 0.7 }),
@@ -78,7 +82,7 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
       </Text>
     </View>
 
-    {hasCompletionData && (
+    {hasCompletionData ? (
       <View className='mt-1 h-2 items-center justify-center'>
         <CompletionDot
           isToday={isCurrentDay}
@@ -86,6 +90,17 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
           status={completionStatus}
         />
       </View>
-    )}
+    ) : isScheduled ? (
+      <View className='mt-1 h-2 items-center justify-center'>
+        <View
+          style={{
+            width: 4,
+            height: 4,
+            borderRadius: 2,
+            backgroundColor: colors.icon + '60',
+          }}
+        />
+      </View>
+    ) : null}
   </>
 );

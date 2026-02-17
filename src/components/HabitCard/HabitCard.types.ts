@@ -112,4 +112,7 @@ export interface HabitCardProps {
    * @see docs/offline-habit-sync.md T014
    */
   completionIcon?: CompletionIconType;
+
+  /** Full habit document for frequency display */
+  habit?: Habit;
 }
