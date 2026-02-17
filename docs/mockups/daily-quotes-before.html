@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Before: Habits Screen Without Daily Quotes</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: #F5F1ED;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .device {
+      width: 390px;
+      background: #F5F1ED;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .screen {
+      background: #F5F1ED;
+      padding: 56px 0 0 0;
+      min-height: 844px;
+    }
+    .header {
+      padding: 0 16px 16px 16px;
+    }
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .title {
+      font-size: 34px;
+      font-weight: 700;
+      color: #2D2A26;
+      letter-spacing: -0.85px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #FFF;
+      border: 1px solid #DDD8D2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .summary {
+      font-size: 17px;
+      color: #6B6560;
+      margin-bottom: 16px;
+    }
+    .calendar {
+      background: #FFF;
+      border: 1px solid #DDD8D2;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 0 16px 16px 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .calendar-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #2D2A26;
+    }
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #F5F1ED;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .days {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .day {
+      flex: 1;
+      text-align: center;
+    }
+    .day-label {
+      font-size: 13px;
+      color: #6B6560;
+      margin-bottom: 8px;
+    }
+    .day-dot {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #059669;
+    }
+    .day-dot.incomplete {
+      background: #DDD8D2;
+    }
+    .habits-list {
+      padding: 0 16px;
+    }
+    .habit-card {
+      background: #FFF;
+      border: 1px solid #DDD8D2;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .habit-name {
+      font-size: 17px;
+      font-weight: 600;
+      color: #2D2A26;
+      margin-bottom: 8px;
+    }
+    .habit-days {
+      display: flex;
+      gap: 8px;
+    }
+    .habit-day {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: #F5F1ED;
+      border: 1px solid #DDD8D2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .habit-day.completed {
+      background: #059669;
+      border-color: #059669;
+      color: white;
+    }
+    .label {
+      background: #059669;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="device">
+    <div class="screen">
+      <div class="label" style="margin-left: 16px;">BEFORE</div>
+      
+      <div class="header">
+        <div class="title-row">
+          <h1 class="title">Habits</h1>
+          <div class="header-actions">
+            <button class="icon-btn">⚙️</button>
+            <button class="icon-btn">📋</button>
+          </div>
+        </div>
+        <div class="summary">2 of 4 completed today</div>
+      </div>
+
+      <div class="calendar">
+        <div class="calendar-header">
+          <button class="nav-btn">←</button>
+          <span class="calendar-title">Feb 10-16</span>
+          <button class="nav-btn">→</button>
+        </div>
+        <div class="days">
+          <div class="day">
+            <div class="day-label">M</div>
+            <div class="day-dot"></div>
+          </div>
+          <div class="day">
+            <div class="day-label">T</div>
+            <div class="day-dot"></div>
+          </div>
+          <div class="day">
+            <div class="day-label">W</div>
+            <div class="day-dot"></div>
+          </div>
+          <div class="day">
+            <div class="day-label">T</div>
+            <div class="day-dot incomplete"></div>
+          </div>
+          <div class="day">
+            <div class="day-label">F</div>
+            <div class="day-dot"></div>
+          </div>
+          <div class="day">
+            <div class="day-label">S</div>
+            <div class="day-dot incomplete"></div>
+          </div>
+          <div class="day">
+            <div class="day-label">S</div>
+            <div class="day-dot incomplete"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="habits-list">
+        <div class="habit-card">
+          <div class="habit-name">🏃 Morning Run</div>
+          <div class="habit-days">
+            <div class="habit-day completed">✓</div>
+            <div class="habit-day completed">✓</div>
+            <div class="habit-day completed">✓</div>
+            <div class="habit-day"></div>
+            <div class="habit-day"></div>
+            <div class="habit-day"></div>
+            <div class="habit-day"></div>
+          </div>
+        </div>
+        
+        <div class="habit-card">
+          <div class="habit-name">📚 Read 30 min</div>
+          <div class="habit-days">
+            <div class="habit-day completed">✓</div>
+            <div class="habit-day completed">✓</div>
+            <div class="habit-day"></div>
+            <div class="habit-day"></div>
+            <div class="habit-day"></div>
+            <div class="habit-day"></div>
+            <div class="habit-day"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
