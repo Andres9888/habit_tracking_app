@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: '700',
     letterSpacing: 0.35,
     lineHeight: 34,
