@@ -53,7 +53,7 @@ export function UpgradePrompt({
             <Text className='text-[32px]'>🚀</Text>
           </View>
           <Text className='text-center text-[24px] font-bold tracking-tight text-stone-900'>
-            You're on a roll! Ready for more?
+            Ready to build more habits?
           </Text>
           <Text className='text-center text-[15px] font-normal leading-[20px] text-stone-500'>
             Track unlimited habits across all areas of your life. Premium

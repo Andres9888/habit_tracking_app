@@ -2,6 +2,7 @@ import { Text, View } from 'react-native';
 import { Check } from 'lucide-react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { AnimatedPressable } from '../../ui';
 
 interface ActionButtonsProps {
@@ -21,19 +22,48 @@ export function ActionButtons({
   onRestorePress,
   onDeletePress,
 }: ActionButtonsProps) {
+  const { isDark } = useThemeColors();
+
+  const restoreButtonStyle = showSuccess
+    ? {
+        backgroundColor: isDark ? '#064e3b' : '#ecfdf5',
+        borderColor: isDark ? '#059669' : '#10b981',
+      }
+    : isRestoring
+      ? {
+          borderColor: isDark ? '#60a5fa' : '#93c5fd',
+          opacity: 0.7,
+        }
+      : {
+          borderColor: isDark ? '#3b82f6' : '#2563eb',
+        };
+
+  const restoreTextColor = showSuccess
+    ? isDark
+      ? 'text-emerald-300'
+      : 'text-emerald-600'
+    : isRestoring
+      ? isDark
+        ? 'text-blue-300'
+        : 'text-blue-300'
+      : isDark
+        ? 'text-blue-400'
+        : 'text-blue-500';
+
+  const deleteButtonStyle = {
+    borderColor: isDark ? '#f87171' : '#f87171',
+  };
+
+  const deleteTextColor = isDark ? 'text-red-400' : 'text-red-400';
+
   return (
     <View className='flex-row gap-2'>
       <AnimatedPressable
         accessibilityLabel={`Restore ${habitName}`}
         accessibilityRole='button'
-        className={`flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 py-2.5 ${
-          showSuccess
-            ? 'border-emerald-500 bg-emerald-50'
-            : isRestoring
-              ? 'border-blue-300 opacity-70'
-              : 'border-blue-500'
-        }`}
+        className='flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 py-2.5'
         disabled={isRestoring}
+        style={restoreButtonStyle}
         onPress={onRestorePress}
       >
         {showSuccess ? (
@@ -41,21 +71,22 @@ export function ActionButtons({
             className='flex-row items-center gap-2'
             style={successIconStyle}
           >
-            <View className='h-5 w-5 items-center justify-center rounded-full bg-emerald-500'>
+            <View
+              className='h-5 w-5 items-center justify-center rounded-full'
+              style={{
+                backgroundColor: isDark ? '#059669' : '#10b981',
+              }}
+            >
               <Check color={colors.text.inverse} size={14} strokeWidth={3} />
             </View>
-            <Text className='text-xs font-bold tracking-wide text-emerald-600'>
+            <Text className={`text-xs font-bold tracking-wide ${restoreTextColor}`}>
               RESTORED!
             </Text>
           </Animated.View>
         ) : (
           <>
-            <Text className={isRestoring ? 'text-blue-300' : 'text-blue-500'}>
-              ↩
-            </Text>
-            <Text
-              className={`text-xs font-bold tracking-wide ${isRestoring ? 'text-blue-300' : 'text-blue-500'}`}
-            >
+            <Text className={restoreTextColor}>↩</Text>
+            <Text className={`text-xs font-bold tracking-wide ${restoreTextColor}`}>
               {isRestoring ? 'RESTORING...' : 'RESTORE'}
             </Text>
           </>
@@ -64,14 +95,15 @@ export function ActionButtons({
       <AnimatedPressable
         accessibilityLabel={`Permanently delete ${habitName}`}
         accessibilityRole='button'
-        className={`flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 border-red-400 py-2.5 ${
+        className={`flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 py-2.5 ${
           isRestoring ? 'opacity-50' : ''
         }`}
         disabled={isRestoring}
+        style={deleteButtonStyle}
         onPress={onDeletePress}
       >
-        <Text className='text-red-400'>🗑</Text>
-        <Text className='text-xs font-bold tracking-wide text-red-400'>
+        <Text className={deleteTextColor}>🗑</Text>
+        <Text className={`text-xs font-bold tracking-wide ${deleteTextColor}`}>
           DELETE
         </Text>
       </AnimatedPressable>

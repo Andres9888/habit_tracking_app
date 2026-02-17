@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   label: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '600',
   },
   track: {
