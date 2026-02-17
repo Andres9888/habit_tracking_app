@@ -18,6 +18,7 @@ import { SettingsSection } from './SettingsSection';
 import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
 import { AboutSection } from './sections';
+import { ReferralSection } from '../../features/referral/ReferralSection';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 
@@ -269,8 +270,13 @@ export function SettingsContent(p: SettingsContentProps) {
           </SettingsSection>
         </Animated.View>
 
-        {/* About Section - Version info */}
+        {/* Referral Section - Share & earn premium */}
         <Animated.View entering={anim(300)}>
+          <ReferralSection highContrastMode={hc} />
+        </Animated.View>
+
+        {/* About Section - Version info */}
+        <Animated.View entering={anim(360)}>
           <AboutSection
             buildNumber='1'
             highContrast={hc}

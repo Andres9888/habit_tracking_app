@@ -605,6 +605,51 @@ const applicationTables = {
     .index('by_habit_and_date', ['habitId', 'createdAt']),
 };
 
+// Referral System Tables
+// Enables organic growth through user-to-user referrals
+// Both referrer and referred user get 1 week of premium free
+const referralTables = {
+  // Each user gets a unique referral code
+  referralCodes: defineTable({
+    userId: v.string(), // Clerk ID
+    code: v.string(), // Unique 8-char alphanumeric code
+    createdAt: v.number(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_code', ['code']),
+
+  // Tracks each referral event
+  referrals: defineTable({
+    referrerUserId: v.string(), // Clerk ID of user who shared
+    referredUserId: v.string(), // Clerk ID of user who signed up
+    referralCode: v.string(),
+    status: v.union(
+      v.literal('pending'), // Referred user signed up but not yet confirmed
+      v.literal('completed'), // Both rewards granted
+      v.literal('expired') // Reward period ended
+    ),
+    rewardGrantedAt: v.optional(v.number()),
+    rewardExpiresAt: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index('by_referrer', ['referrerUserId'])
+    .index('by_referred', ['referredUserId'])
+    .index('by_code', ['referralCode']),
+
+  // Premium rewards from referrals (separate from subscription)
+  referralRewards: defineTable({
+    userId: v.string(), // Clerk ID
+    referralId: v.id('referrals'),
+    type: v.union(v.literal('referrer'), v.literal('referred')),
+    premiumStartAt: v.number(),
+    premiumEndAt: v.number(),
+    createdAt: v.number(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_user_active', ['userId', 'premiumEndAt']),
+};
+
 export default defineSchema({
   ...applicationTables,
+  ...referralTables,
 });

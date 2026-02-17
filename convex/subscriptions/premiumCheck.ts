@@ -38,7 +38,18 @@ export async function hasPremiumAccess(
     .withIndex('by_userId', (q) => q.eq('userId', userId))
     .first();
 
-  return settings?.hasPremium ?? false;
+  if (settings?.hasPremium) return true;
+
+  // Check for active referral premium rewards
+  const now = Date.now();
+  const referralRewards = await ctx.db
+    .query('referralRewards')
+    .withIndex('by_user', (q) => q.eq('userId', userId))
+    .collect();
+
+  if (referralRewards.some((r) => r.premiumEndAt > now)) return true;
+
+  return false;
 }
 
 /**
