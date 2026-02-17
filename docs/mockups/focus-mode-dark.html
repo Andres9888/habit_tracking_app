@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Mode - Dark Mode</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      background: #0F172A;
+      padding: 40px 20px;
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .screen {
+      background: #111827;
+      border-radius: 24px;
+      padding: 24px;
+      width: 390px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 34px;
+      font-weight: 700;
+      color: #F9FAFB;
+      margin-bottom: 8px;
+      letter-spacing: -0.85px;
+    }
+
+    .subtitle {
+      font-size: 17px;
+      color: #9CA3AF;
+      margin-bottom: 32px;
+    }
+
+    .habit-card {
+      background: #1F2937;
+      border: 2px solid #10B981;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      transition: transform 0.15s ease;
+    }
+
+    .habit-card:hover {
+      transform: scale(1.02);
+    }
+
+    .habit-icon {
+      font-size: 40px;
+    }
+
+    .habit-info {
+      flex: 1;
+    }
+
+    .habit-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: #F9FAFB;
+      margin-bottom: 4px;
+    }
+
+    .habit-complete {
+      font-size: 13px;
+      color: #34D399;
+    }
+
+    .focus-btn {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10B981;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .focus-btn:hover {
+      background: rgba(16, 185, 129, 0.3);
+    }
+
+    /* Focus Mode Overlay */
+    .focus-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: #6B7280;
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+    }
+
+    .focus-card {
+      background: #1F2937;
+      border: 3px solid #10B981;
+      border-radius: 16px;
+      padding: 32px;
+      width: 90%;
+      max-width: 480px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .focus-icon {
+      font-size: 72px;
+      margin-bottom: 16px;
+    }
+
+    .focus-title {
+      font-size: 34px;
+      font-weight: 700;
+      color: #F9FAFB;
+      margin-bottom: 32px;
+      letter-spacing: -0.85px;
+    }
+
+    .timer {
+      font-size: 22px;
+      font-weight: 700;
+      color: #10B981;
+      margin-bottom: 16px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-btn {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10B981;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 32px;
+    }
+
+    .complete-btn {
+      background: #10B981;
+      color: #fff;
+      padding: 18px;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+      margin-bottom: 16px;
+      transition: transform 0.15s ease;
+    }
+
+    .complete-btn:hover {
+      transform: scale(1.03);
+    }
+
+    .motivation {
+      font-size: 17px;
+      color: #9CA3AF;
+      margin-top: 8px;
+    }
+
+    .label {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 14px;
+      color: #9CA3AF;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Before: Habits List -->
+  <div>
+    <div class="screen">
+      <h1>Your Habits</h1>
+      <p class="subtitle">Tap any habit to focus</p>
+
+      <div class="habit-card">
+        <div class="habit-icon">🧘</div>
+        <div class="habit-info">
+          <div class="habit-name">Morning Meditation</div>
+        </div>
+        <button class="focus-btn">Focus</button>
+      </div>
+
+      <div class="habit-card" style="border-color: #06B6D4;">
+        <div class="habit-icon">📚</div>
+        <div class="habit-info">
+          <div class="habit-name">Read 30 Minutes</div>
+        </div>
+        <button class="focus-btn" style="background: rgba(6, 182, 212, 0.2); color: #06B6D4;">Focus</button>
+      </div>
+
+      <div class="habit-card" style="border-color: #F59E0B;">
+        <div class="habit-icon">💪</div>
+        <div class="habit-info">
+          <div class="habit-name">Exercise</div>
+        </div>
+        <button class="focus-btn" style="background: rgba(245, 158, 11, 0.2); color: #F59E0B;">Focus</button>
+      </div>
+
+      <div class="habit-card" style="border-color: #A78BFA;">
+        <div class="habit-icon">📝</div>
+        <div class="habit-info">
+          <div class="habit-name">Write in Journal</div>
+          <div class="habit-complete">✓ Completed today</div>
+        </div>
+        <button class="focus-btn" style="background: rgba(167, 139, 250, 0.2); color: #A78BFA;">Focus</button>
+      </div>
+    </div>
+    <div class="label">Before: Habits List (Dark Mode)</div>
+  </div>
+
+  <!-- After: Focus Mode Active -->
+  <div>
+    <div class="screen" style="position: relative; overflow: hidden;">
+      <h1>Your Habits</h1>
+      <p class="subtitle">Tap any habit to focus</p>
+
+      <div class="habit-card" style="opacity: 0.2;">
+        <div class="habit-icon">🧘</div>
+        <div class="habit-info">
+          <div class="habit-name">Morning Meditation</div>
+        </div>
+        <button class="focus-btn">Focus</button>
+      </div>
+
+      <!-- Focus Mode Overlay -->
+      <div class="focus-overlay">
+        <button class="close-btn">✕</button>
+        <div class="focus-card">
+          <div class="focus-icon">🧘</div>
+          <div class="focus-title">Morning Meditation</div>
+
+          <div class="timer">25:00</div>
+          <button class="timer-btn">Start Timer</button>
+
+          <button class="complete-btn">Mark Complete</button>
+
+          <div class="motivation">
+            Focus on this one thing. You've got this! 💪
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="label">After: Focus Mode Active (Dark Mode)</div>
+  </div>
+</body>
+</html>

@@ -38,6 +38,7 @@ function HabitCardComponent(props: HabitCardProps) {
     disabled = false,
     onEdit,
     onDelete,
+    onFocus,
     style,
     completionIcon = 'checkbox',
   } = props;
@@ -54,6 +55,7 @@ function HabitCardComponent(props: HabitCardProps) {
         translateX={habit.translateX}
         onDelete={onDelete}
         onEdit={onEdit}
+        onFocus={onFocus}
       />
       <GestureDetector gesture={habit.composedGesture}>
         <Animated.View

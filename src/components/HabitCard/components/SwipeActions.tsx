@@ -16,6 +16,7 @@ interface SwipeActionsProps {
   actionsAnimatedStyle: { opacity: number };
   onEdit?: () => void;
   onDelete?: () => void;
+  onFocus?: () => void;
 }
 
 export const SwipeActions = memo(function SwipeActions({
@@ -24,6 +25,7 @@ export const SwipeActions = memo(function SwipeActions({
   actionsAnimatedStyle,
   onEdit,
   onDelete,
+  onFocus,
 }: SwipeActionsProps) {
   const theme = useAppTheme();
 
@@ -31,6 +33,22 @@ export const SwipeActions = memo(function SwipeActions({
     <Animated.View
       style={[actionStyles.actionsContainer, actionsAnimatedStyle]}
     >
+      <Pressable
+        accessibilityLabel={`Focus on ${name}`}
+        accessibilityRole='button'
+        className='active:opacity-80'
+        style={[
+          actionStyles.actionButton,
+          { backgroundColor: theme.custom.colors.primary[600] || '#047857' },
+        ]}
+        onPress={() => {
+          translateX.value = withSpring(0);
+          onFocus?.();
+        }}
+      >
+        <Text style={actionStyles.actionText}>Focus</Text>
+      </Pressable>
+
       <Pressable
         accessibilityLabel={`Edit ${name}`}
         accessibilityRole='button'

@@ -57,6 +57,9 @@ export interface HabitCardProps {
   /** On delete handler (swipe action) */
   onDelete?: () => void;
 
+  /** On focus handler (swipe action - opens focus mode) */
+  onFocus?: () => void;
+
   /** Custom style */
   style?: ViewStyle;
 
