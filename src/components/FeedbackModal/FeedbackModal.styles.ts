@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import type { SemanticColors } from '../../theme/darkColors';
 
 const WHITE = '#FFFFFF';
 
@@ -111,3 +112,19 @@ export const styles = StyleSheet.create({
     flex: 2,
   },
 });
+
+/** Theme-aware overrides */
+export function themedFeedbackStyles(tc: SemanticColors) {
+  return {
+    container: { backgroundColor: tc.background },
+    headerTitle: { color: tc.text.primary },
+    headerSubtitle: { color: tc.text.secondary },
+    sectionLabel: { color: tc.text.primary },
+    typeCard: { borderColor: tc.gray[200], backgroundColor: tc.card },
+    typeCardSelected: { backgroundColor: tc.gray[50] },
+    typeLabel: { color: tc.text.primary },
+    typeDescription: { color: tc.text.secondary },
+    input: { borderColor: tc.gray[300], color: tc.text.primary, backgroundColor: tc.card },
+    charCount: { color: tc.text.secondary },
+  } as const;
+}

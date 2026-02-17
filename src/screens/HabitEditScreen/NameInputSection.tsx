@@ -53,7 +53,7 @@ export function NameInputSection({
           style={{
             lineHeight: 28,
             color: colors.text.primary,
-            backgroundColor: isDark ? colors.card : '#FFFFFF',
+            backgroundColor: colors.card,
             borderColor: isFocused ? colors.primary[600] : colors.border,
           }}
           value={habitName}

@@ -396,7 +396,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
               onPress={() => void handleComplete()}
             >
               {isLoading ? (
-                <ActivityIndicator color='#FFFFFF' />
+                <ActivityIndicator color={colors.text.inverse} />
               ) : (
                 <Text style={styles.ctaText}>
                   Let's Build Your First Habit →

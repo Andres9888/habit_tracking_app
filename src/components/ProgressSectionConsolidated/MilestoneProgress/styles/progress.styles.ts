@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../../theme/spacing';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '../../../../theme/darkColors';
 
 export const progressStyles = StyleSheet.create({
   badgeIcon: {
@@ -80,3 +81,15 @@ export const progressStyles = StyleSheet.create({
     fontSize: typography.tabBar.fontSize,
   },
 });
+
+/** Theme-aware overrides */
+export function themedProgressStyles(colors: SemanticColors) {
+  return {
+    container: { backgroundColor: colors.card, borderColor: colors.gray[200] },
+    daysAway: { color: colors.text.secondary },
+    headerTitle: { color: colors.text.primary },
+    milestoneName: { color: colors.text.tertiary },
+    progressBarTrack: { backgroundColor: colors.gray[200] },
+    progressLabelText: { color: colors.text.tertiary },
+  } as const;
+}

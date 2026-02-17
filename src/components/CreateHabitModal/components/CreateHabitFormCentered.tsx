@@ -53,7 +53,7 @@ const CreateHabitFormCenteredComponent = ({
           style={{
             lineHeight: 28,
             color: themeColors.text.primary,
-            backgroundColor: isDark ? themeColors.card : '#FFFFFF',
+            backgroundColor: themeColors.card,
             borderColor: showNameError
               ? '#f87171'
               : isDark

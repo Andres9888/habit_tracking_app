@@ -29,7 +29,7 @@ export function StandardMeter(props: StandardMeterProps) {
     progressAnimatedStyle,
   } = props;
   const { colors: themeColors, isDark } = useThemeColors();
-  const borderColor = isDark ? themeColors.gray[200] : '#ffffff';
+  const borderColor = isDark ? themeColors.gray[200] : themeColors.card;
   const ringBg = percentage > 0 ? colors.fill : themeColors.gray[200];
 
   return (

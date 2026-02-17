@@ -8,7 +8,7 @@ interface StatsSummaryBarProps {
 }
 
 export function StatsSummaryBar({ habitCount, onDeleteAll }: StatsSummaryBarProps) {
-  const { isDark } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   if (habitCount === 0) return null;
 
@@ -16,7 +16,7 @@ export function StatsSummaryBar({ habitCount, onDeleteAll }: StatsSummaryBarProp
     <View
       className='mb-4 flex-row items-center justify-between rounded-xl px-4 py-3'
       style={{
-        backgroundColor: isDark ? '#1f2937' : '#fafaf9',
+        backgroundColor: colors.card,
       }}
     >
       <View className='flex-row items-center gap-2'>

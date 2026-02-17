@@ -18,8 +18,8 @@ export function useFormInputAnimations() {
 
   // Dark/light default colors
   const defaultBg = isDark ? 'rgba(30, 30, 30, 0.5)' : 'rgba(250, 250, 249, 0.5)';
-  const focusedBg = isDark ? '#1e1e1e' : '#ffffff';
-  const defaultBorder = isDark ? '#3a3a3a' : '#e7e5e4';
+  const focusedBg = colors.card;
+  const defaultBorder = colors.border;
 
   const handleFocus = useCallback(() => {
     setIsFocused(true);

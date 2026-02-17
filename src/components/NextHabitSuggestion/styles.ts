@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../theme/darkColors';
 
 export const styles = StyleSheet.create({
   badge: {
@@ -93,3 +94,13 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
+
+/** Theme-aware overrides */
+export function themedNextHabitStyles(tc: SemanticColors) {
+  return {
+    container: { backgroundColor: tc.card },
+    habitName: { color: tc.text.primary },
+    habitHint: { color: tc.text.tertiary },
+    progress: { color: tc.text.tertiary },
+  } as const;
+}

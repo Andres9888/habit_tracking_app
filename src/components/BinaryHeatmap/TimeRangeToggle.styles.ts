@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   buttonActive: {
     ...shadows.subtle,
-    backgroundColor: '#ffffff', // overridden by useThemedToggleStyles
+    backgroundColor: '#ffffff', // overridden by useThemedToggleStyles at runtime
     shadowOpacity: 0.1,
   },
   buttonText: {

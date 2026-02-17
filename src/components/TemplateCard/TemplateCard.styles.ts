@@ -7,6 +7,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows, spacing } from '../../theme/spacing';
+import type { SemanticColors } from '../../theme/darkColors';
 
 export const styles = StyleSheet.create({
   accentBar: {
@@ -36,3 +37,10 @@ export const styles = StyleSheet.create({
     top: 0,
   },
 });
+
+/** Theme-aware overrides — apply on top of styles */
+export function themedTemplateCardStyles(colors: SemanticColors) {
+  return {
+    card: { backgroundColor: colors.card },
+  } as const;
+}

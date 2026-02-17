@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const searchStyles = StyleSheet.create({
   searchBar: {
@@ -20,3 +21,11 @@ export const searchStyles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
+
+/** Theme-aware overrides — apply on top of searchStyles */
+export function themedSearchStyles(colors: SemanticColors) {
+  return {
+    searchBar: { backgroundColor: colors.card, borderColor: colors.border },
+    searchInput: { color: colors.text.primary },
+  } as const;
+}

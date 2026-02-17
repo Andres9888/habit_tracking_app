@@ -84,7 +84,7 @@ export function useSignInStyles() {
 export const styles = StyleSheet.create({
   appName: {
     ...typography.displayLarge,
-    color: '#1c1917',
+    color: themeColors.text.primary,
     textAlign: 'center',
   } as TextStyle,
   authContent: { gap: 24 },
@@ -95,11 +95,11 @@ export const styles = StyleSheet.create({
   footerLink: { color: colors.primary[700], textDecorationLine: 'underline' },
   footerText: {
     ...typography.caption,
-    color: '#57534e',
+    color: themeColors.text.secondary,
     textAlign: 'center',
   } as TextStyle,
   formCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: themeColors.card,
     borderRadius: 16,
     elevation: 4,
     padding: 24,
@@ -129,21 +129,21 @@ export const styles = StyleSheet.create({
   socialButtons: { gap: 12 },
   tagline: {
     ...typography.body,
-    color: '#57534e',
+    color: themeColors.text.secondary,
     marginTop: 6,
     textAlign: 'center',
   } as TextStyle,
   welcomeSection: { marginBottom: 32 },
   welcomeSubtitle: {
     ...typography.body,
-    color: '#57534e',
+    color: themeColors.text.secondary,
     lineHeight: 24,
     paddingHorizontal: 16,
     textAlign: 'center',
   } as TextStyle,
   welcomeTitle: {
     ...typography.heading1,
-    color: '#1c1917',
+    color: themeColors.text.primary,
     marginBottom: 8,
     textAlign: 'center',
   } as TextStyle,

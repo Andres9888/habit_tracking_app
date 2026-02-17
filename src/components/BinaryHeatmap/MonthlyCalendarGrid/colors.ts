@@ -4,6 +4,8 @@
  * Stone color palette and color utilities.
  */
 
+import type { SemanticColors } from '../../../theme/darkColors';
+
 export const COLORS = {
   BORDER: '#e7e5e4',
   CARD_BG: '#ffffff',
@@ -16,6 +18,22 @@ export const COLORS = {
   GREEN_COMPLETED_LIGHT: '#059669', // button green
   GREEN_EMPTY: '#d1fae5', // empty circle for missed days
 };
+
+/** Theme-aware color overrides — use in components with useThemeColors() */
+export function themedCalendarColors(colors: SemanticColors) {
+  return {
+    ...COLORS,
+    BORDER: colors.border,
+    CARD_BG: colors.card,
+    TEXT_MUTED: colors.gray[300],
+    TEXT_PRIMARY: colors.text.primary,
+    TEXT_SECONDARY: colors.text.secondary,
+    TEXT_TERTIARY: colors.text.tertiary,
+    GREEN_COMPLETED: colors.primary[700],
+    GREEN_COMPLETED_LIGHT: colors.primary[600],
+    GREEN_EMPTY: colors.primary[100],
+  };
+}
 
 /**
  * Converts hex color to rgba with alpha

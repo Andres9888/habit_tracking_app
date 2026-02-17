@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const formStyles = StyleSheet.create({
   charCount: {
@@ -62,3 +63,15 @@ export const formStyles = StyleSheet.create({
     marginTop: 8,
   },
 });
+
+/** Theme-aware overrides — apply on top of formStyles */
+export function themedFormStyles(colors: SemanticColors) {
+  return {
+    charCount: { color: colors.text.tertiary },
+    colorSwatchActive: { borderColor: colors.text.primary },
+    inputLabel: { color: colors.text.secondary },
+    nameInput: { backgroundColor: colors.card, borderColor: colors.border },
+    reminderChip: { borderColor: colors.border },
+    reminderChipActive: { backgroundColor: colors.text.primary, borderColor: colors.text.primary },
+  } as const;
+}

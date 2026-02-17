@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const skeletonStyles = StyleSheet.create({
   skeletonBadge: {
@@ -47,3 +48,15 @@ export const skeletonStyles = StyleSheet.create({
     marginHorizontal: 20,
   },
 });
+
+/** Theme-aware overrides — apply on top of skeletonStyles */
+export function themedSkeletonStyles(colors: SemanticColors) {
+  return {
+    skeletonBadge: { backgroundColor: colors.gray[200] },
+    skeletonCard: { backgroundColor: colors.card },
+    skeletonIcon: { backgroundColor: colors.gray[200] },
+    skeletonLine: { backgroundColor: colors.gray[200] },
+    skeletonLineLarge: { backgroundColor: colors.gray[200] },
+    skeletonSearch: { backgroundColor: colors.gray[200] },
+  } as const;
+}

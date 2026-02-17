@@ -67,7 +67,7 @@ function StickyCreateBarComponent({
       />
       <View
         className='px-4 pb-2'
-        style={{ backgroundColor: isDark ? themeColors.surface : '#FAF8F5' }}
+        style={{ backgroundColor: themeColors.surface }}
       >
         <MotivationText />
         <CreateButton

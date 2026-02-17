@@ -37,7 +37,7 @@ export function TabButton({ isActive, label, onPress }: TabButtonProps) {
   }, [scale]);
 
   // Theme-aware text colors
-  const activeTextColor = '#ffffff';
+  const activeTextColor = colors.text.inverse;
   const inactiveTextColor = colors.text.secondary;
 
   return (

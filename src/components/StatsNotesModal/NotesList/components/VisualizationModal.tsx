@@ -46,7 +46,7 @@ export const VisualizationModal: React.FC<VisualizationModalProps> = ({
           entering={FadeIn.delay(100)}
           style={{
             borderColor: colors.border,
-            backgroundColor: isDark ? colors.surface : 'rgba(255,255,255,0.95)',
+            backgroundColor: colors.surface,
             paddingTop: insets.top + 8,
           }}
         >

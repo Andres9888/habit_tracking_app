@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useStreakChainLogic } from './StreakChain.hooks';
 import type { StreakChainProps } from './StreakChain.types';
 
@@ -26,6 +27,8 @@ export default function StreakChain({
     statuses,
     size
   );
+
+  const { colors } = useThemeColors();
 
   return (
     <View className='pb-3 pt-1'>
@@ -54,7 +57,7 @@ export default function StreakChain({
               <View
                 className='items-center justify-center'
                 style={{
-                  backgroundColor: isDone ? '#3B82F6' : '#E5E7EB',
+                  backgroundColor: isDone ? '#3B82F6' : colors.gray[200],
                   borderRadius: circleSize / 2,
                   height: circleSize,
                   opacity: isFuture ? 0.5 : 1,
@@ -62,7 +65,7 @@ export default function StreakChain({
                 }}
               >
                 <Feather
-                  color={isDone ? '#FFFFFF' : '#64748B'}
+                  color={isDone ? '#FFFFFF' : colors.text.tertiary}
                   name='link-2'
                   size={iconSize}
                 />
@@ -72,7 +75,7 @@ export default function StreakChain({
                 <View
                   className='mx-1.5 h-0.5 w-[18px] rounded-sm'
                   style={{
-                    backgroundColor: connectorActive ? '#93C5FD' : '#E5E7EB',
+                    backgroundColor: connectorActive ? '#93C5FD' : colors.gray[200],
                   }}
                 />
               )}

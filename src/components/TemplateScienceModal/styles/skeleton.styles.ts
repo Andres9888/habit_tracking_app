@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import type { SemanticColors } from '../../theme/darkColors';
 
 export const skeletonStyles = StyleSheet.create({
   skeletonCard: {
@@ -40,3 +41,11 @@ export const skeletonStyles = StyleSheet.create({
     marginTop: 16,
   },
 });
+
+/** Theme-aware overrides */
+export function themedSkeletonLoadingStyles(tc: SemanticColors) {
+  return {
+    skeletonCard: { backgroundColor: tc.card, borderColor: tc.border },
+    skeletonFooter: { backgroundColor: tc.gray[50], borderTopColor: tc.border },
+  } as const;
+}

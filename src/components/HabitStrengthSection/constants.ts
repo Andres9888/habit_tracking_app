@@ -118,6 +118,20 @@ export const COLORS = {
   textSecondary: '#78716c', // stone-100
 };
 
+/** Theme-aware color overrides */
+export function themedStrengthColors(themeColors: import('../../theme/darkColors').SemanticColors) {
+  return {
+    ...COLORS,
+    border: themeColors.border,
+    cardBackground: themeColors.card,
+    gridLine: themeColors.gray[300],
+    ringTrack: themeColors.gray[100],
+    textMuted: themeColors.text.tertiary,
+    textPrimary: themeColors.text.primary,
+    textSecondary: themeColors.text.secondary,
+  };
+}
+
 // ============================================================================
 // Animation Timing
 // ============================================================================

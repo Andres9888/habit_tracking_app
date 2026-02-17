@@ -47,7 +47,7 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
             animatedStyle,
             errorStyle,
             {
-              backgroundColor: isDark ? themeColors.card : '#ffffff',
+              backgroundColor: themeColors.card,
               borderColor: error ? '#ef4444' : themeColors.border,
             },
           ]}

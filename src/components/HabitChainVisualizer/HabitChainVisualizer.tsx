@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { ChainConnector } from './ChainConnector';
 import { ChainDayList } from './ChainDayList';
 import { useChainVisualizerState } from './useChainVisualizerState';
@@ -23,7 +24,8 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
   weekDateStrings,
   weekStatus,
 }) => {
-  const connectorColor = highContrastMode ? '#facc15' : '#e0e0e0';
+  const { colors } = useThemeColors();
+  const connectorColor = highContrastMode ? '#facc15' : colors.gray[200];
   const state = useChainVisualizerState({
     celebrationsEnabled,
     habitId,

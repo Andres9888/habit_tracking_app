@@ -55,7 +55,7 @@ export const FormInput = forwardRef(function FormInput(
         style={[
           animatedStyle,
           {
-            backgroundColor: isDark ? themeColors.card : '#ffffff',
+            backgroundColor: themeColors.card,
             borderColor: error ? '#ef4444' : themeColors.border,
           },
         ]}

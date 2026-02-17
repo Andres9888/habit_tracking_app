@@ -24,19 +24,23 @@ export const getCompletedShadowStyle = (
 export const getBackgroundColor = (
   completed: boolean,
   accentColor: string,
-  highContrastMode: boolean
+  highContrastMode: boolean,
+  emptyColor?: string,
 ) => {
   if (completed) return accentColor;
-  return highContrastMode ? '#000000' : '#f5f5f5';
+  if (highContrastMode) return '#000000';
+  return emptyColor ?? '#f5f5f5';
 };
 
 export const getBorderColor = (
   completed: boolean,
   isToday: boolean,
   accentColor: string,
-  highContrastMode: boolean
+  highContrastMode: boolean,
+  defaultBorderColor?: string,
 ) => {
   if (completed) return accentColor;
   if (isToday) return GOLDEN_GLOW_COLOR;
-  return highContrastMode ? '#facc15' : '#78716c';
+  if (highContrastMode) return '#facc15';
+  return defaultBorderColor ?? '#78716c';
 };

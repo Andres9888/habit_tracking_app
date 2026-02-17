@@ -3,6 +3,7 @@ import type {
   CompletionStatus,
 } from './CalendarTimeline.types';
 import { shadows } from '../../theme/spacing';
+import type { SemanticColors } from '../../theme/darkColors';
 
 export const DEFAULT_COLORS: CalendarColors = {
   currentDayBackground: '#1c1917', // stone-900 for strong today indicator
@@ -42,6 +43,21 @@ export const getColors = (highContrastMode: boolean, isDark = false): CalendarCo
   }
   return DEFAULT_COLORS;
 };
+
+/** Theme-aware getColors using semantic tokens */
+export function getThemedColors(highContrastMode: boolean, themeColors: SemanticColors, isDark: boolean): CalendarColors {
+  if (highContrastMode) return HIGH_CONTRAST_COLORS;
+  return {
+    currentDayBackground: isDark ? themeColors.text.primary : '#1c1917',
+    currentDayText: themeColors.text.inverse,
+    dayBackground: themeColors.card,
+    dayBorder: isDark ? themeColors.border : 'transparent',
+    dayText: themeColors.text.secondary,
+    icon: themeColors.gray[500],
+    primaryText: themeColors.text.primary,
+    secondaryText: themeColors.text.tertiary,
+  };
+}
 
 /** Color values for completion status dots */
 export const COMPLETION_DOT_COLORS: Record<CompletionStatus, string> = {

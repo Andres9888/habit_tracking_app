@@ -55,9 +55,9 @@ export function HabitDetailContent({
   onDayPress,
 }: HabitDetailContentProps) {
   const { colors, isDark } = useThemeColors();
-  const cardBg = isDark ? colors.card : '#FFFFFF';
+  const cardBg = colors.card;
   const shadowColor = isDark ? '#000000' : '#1c1917';
-  const borderColor = isDark ? colors.border : '#DDD8D2';
+  const borderColor = colors.border;
   const labelColor = isDark ? colors.text.tertiary : '#9C958D';
 
   return (

@@ -5,6 +5,7 @@
 import { StyleSheet, TextStyle } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '@/theme/typography';
+import type { SemanticColors } from '../../theme/darkColors';
 
 export const styles = StyleSheet.create({
   actionSection: {
@@ -91,3 +92,14 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   } as TextStyle,
 });
+
+/** Theme-aware overrides */
+export function themedWelcomeStyles(tc: SemanticColors) {
+  return {
+    container: { backgroundColor: tc.background },
+    featureCard: { backgroundColor: tc.card },
+    subtitle: { color: tc.text.secondary },
+    tagline: { color: tc.text.secondary },
+    title: { color: tc.text.primary },
+  } as const;
+}

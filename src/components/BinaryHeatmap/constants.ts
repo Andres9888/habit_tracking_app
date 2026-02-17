@@ -1,3 +1,5 @@
+import type { SemanticColors } from '../../theme/darkColors';
+
 /**
  * Constants for BinaryHeatmap Component
  *
@@ -113,6 +115,22 @@ export const COLORS = {
   TOOLTIP_BACKGROUND: '#1c1917', // stone-900
   TOOLTIP_TEXT: '#ffffff',
 } as const;
+
+/** Theme-aware color overrides */
+export function themedHeatmapColors(colors: SemanticColors) {
+  return {
+    ...COLORS,
+    CARD_BACKGROUND: colors.card,
+    CELL_BEFORE_CREATION: colors.gray[50],
+    CELL_EMPTY: colors.gray[200],
+    CELL_FUTURE: colors.gray[100],
+    TEXT_PRIMARY: colors.text.primary,
+    TEXT_SECONDARY: colors.text.secondary,
+    TEXT_TERTIARY: colors.text.tertiary,
+    TOOLTIP_BACKGROUND: colors.gray[900],
+    TOOLTIP_TEXT: colors.gray[50],
+  };
+}
 
 /**
  * Day of week labels (Sunday = 0)

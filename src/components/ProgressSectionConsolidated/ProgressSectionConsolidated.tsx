@@ -13,6 +13,7 @@ import { View } from 'react-native';
 
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { shadows } from '../../theme/spacing';
 import { ActionableTipCard } from './ActionableTipCard';
 import { MilestoneProgress } from './MilestoneProgress';
@@ -49,6 +50,7 @@ export function ProgressSectionConsolidated({
     monthlyTotal,
     streakRecords,
   } = useProgressSectionStats({ habitCreatedAt, tracking });
+  const { colors } = useThemeColors();
 
   return (
     <Animated.View
@@ -61,8 +63,8 @@ export function ProgressSectionConsolidated({
         className='overflow-hidden rounded-2xl p-4'
         style={{
           ...shadows.card,
-          backgroundColor: '#ffffff',
-          borderColor: 'rgba(214, 211, 209, 0.6)', // stone-300/60
+          backgroundColor: colors.card,
+          borderColor: colors.cardBorder,
           borderWidth: 1,
         }}
       >

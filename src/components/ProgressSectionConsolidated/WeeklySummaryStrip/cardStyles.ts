@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows } from '../../../theme/spacing';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const cardStyles = StyleSheet.create({
   card: {
@@ -27,3 +28,11 @@ export const cardStyles = StyleSheet.create({
     padding: 16,
   },
 });
+
+/** Theme-aware overrides */
+export function themedCardStyles(colors: SemanticColors) {
+  return {
+    card: { backgroundColor: colors.card },
+    cardGradient: { borderColor: colors.primary[300] },
+  } as const;
+}

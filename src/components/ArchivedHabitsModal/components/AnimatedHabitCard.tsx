@@ -22,7 +22,7 @@ export function AnimatedHabitCard({
   onRestore,
   onDelete,
 }: AnimatedHabitCardProps) {
-  const { isDark } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const {
     isRestoring,
     showSuccess,
@@ -49,8 +49,8 @@ export function AnimatedHabitCard({
         style={[
           CARD_SHADOW,
           {
-            backgroundColor: isDark ? '#1f2937' : '#ffffff',
-            borderColor: isDark ? '#374151' : '#e7e5e4',
+            backgroundColor: colors.card,
+            borderColor: colors.cardBorder,
           },
         ]}
       >
