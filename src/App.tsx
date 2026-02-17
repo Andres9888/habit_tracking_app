@@ -63,11 +63,17 @@ function LazyProviders({ children }: PropsWithChildren) {
     return <>{children}</>;
   }
 
-  // Dynamic imports for heavy providers
+  // Note: These could be converted to async import() but would require Suspense
+  // For now, ESLint rule is disabled for this specific pattern
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { PurchasesProvider } = require('./components/providers/PurchasesProvider');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { StreakMilestoneProvider } = require('./components/StreakMilestoneCelebration');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { NetworkStatusProvider } = require('./contexts/NetworkStatusContext');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { SyncStatusProvider } = require('./contexts/SyncStatusContext');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { OfflineProvider } = require('./providers/OfflineProvider');
 
   return (

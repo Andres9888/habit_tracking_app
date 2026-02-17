@@ -16,18 +16,22 @@ interface StandardMeterProps {
   progressAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
 }
 
-export function StandardMeter({
-  percentage,
-  completedToday,
-  totalHabits,
-  colors,
-  message,
-  celebrationAnimatedStyle,
-  glowAnimatedStyle,
-  flameAnimatedStyle,
-  progressAnimatedStyle,
-}: StandardMeterProps) {
+export function StandardMeter(props: StandardMeterProps) {
+  const {
+    percentage,
+    completedToday,
+    totalHabits,
+    colors,
+    message,
+    celebrationAnimatedStyle,
+    glowAnimatedStyle,
+    flameAnimatedStyle,
+    progressAnimatedStyle,
+  } = props;
   const { colors: themeColors, isDark } = useThemeColors();
+  const borderColor = isDark ? themeColors.gray[200] : '#ffffff';
+  const ringBg = percentage > 0 ? colors.fill : themeColors.gray[200];
+
   return (
     <Animated.View
       className='flex-row items-center gap-4 rounded-2xl px-4 py-3'
@@ -43,21 +47,14 @@ export function StandardMeter({
         celebrationAnimatedStyle,
       ]}
     >
-      {/* Progress ring */}
       <View className='relative'>
         <View
           className='h-14 w-14 items-center justify-center rounded-full border-4'
-          style={{
-            backgroundColor: 'transparent',
-            borderColor: isDark ? themeColors.gray[200] : '#ffffff',
-          }}
+          style={{ backgroundColor: 'transparent', borderColor }}
         >
           <View
             className='h-10 w-10 items-center justify-center rounded-full'
-            style={{
-              backgroundColor:
-                percentage > 0 ? colors.fill : themeColors.gray[200],
-            }}
+            style={{ backgroundColor: ringBg }}
           >
             <Animated.Text className='text-lg' style={flameAnimatedStyle}>
               {message.emoji}
@@ -85,9 +82,7 @@ export function StandardMeter({
         <View className='mt-2'>
           <View
             className='h-1.5 overflow-hidden rounded-full'
-            style={{
-              backgroundColor: isDark ? themeColors.gray[200] : '#ffffff',
-            }}
+            style={{ backgroundColor: borderColor }}
           >
             <Animated.View
               className='h-full rounded-full'

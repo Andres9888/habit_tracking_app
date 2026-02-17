@@ -43,18 +43,10 @@ export function ActionButtons({
       ? 'text-emerald-300'
       : 'text-emerald-600'
     : isRestoring
-      ? isDark
-        ? 'text-blue-300'
-        : 'text-blue-300'
+      ? 'text-blue-300'
       : isDark
         ? 'text-blue-400'
         : 'text-blue-500';
-
-  const deleteButtonStyle = {
-    borderColor: isDark ? '#f87171' : '#f87171',
-  };
-
-  const deleteTextColor = isDark ? 'text-red-400' : 'text-red-400';
 
   return (
     <View className='flex-row gap-2'>
@@ -73,9 +65,7 @@ export function ActionButtons({
           >
             <View
               className='h-5 w-5 items-center justify-center rounded-full'
-              style={{
-                backgroundColor: isDark ? '#059669' : '#10b981',
-              }}
+              style={{ backgroundColor: isDark ? '#059669' : '#10b981' }}
             >
               <Check color={colors.text.inverse} size={14} strokeWidth={3} />
             </View>
@@ -99,11 +89,11 @@ export function ActionButtons({
           isRestoring ? 'opacity-50' : ''
         }`}
         disabled={isRestoring}
-        style={deleteButtonStyle}
+        style={{ borderColor: '#f87171' }}
         onPress={onDeletePress}
       >
-        <Text className={deleteTextColor}>🗑</Text>
-        <Text className={`text-xs font-bold tracking-wide ${deleteTextColor}`}>
+        <Text className='text-red-400'>🗑</Text>
+        <Text className='text-xs font-bold tracking-wide text-red-400'>
           DELETE
         </Text>
       </AnimatedPressable>
