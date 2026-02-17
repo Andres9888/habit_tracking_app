@@ -6,7 +6,9 @@
  * plucked from the full `HabitsListProps`, local UI state, and handler bag.
  */
 
+import { Fragment } from 'react';
 import { HabitsListHeader } from './HabitsListHeader';
+import { DailyChallengeSection } from '../../../challenges/components/DailyChallengeSection';
 import type { HabitsListProps } from './HabitsList.types';
 
 interface RenderHabitsListHeaderOptions {
@@ -32,6 +34,7 @@ export function renderHabitsListHeader({
     onUpgradeIntent,
   } = props;
   return (
+    <Fragment>
     <HabitsListHeader
       calendarOpacity={state.calendarOpacity}
       calendarTranslateY={state.calendarTranslateY}
@@ -55,5 +58,10 @@ export function renderHabitsListHeader({
       onPreviousWeek={onPreviousWeek}
       onUpgradePress={onUpgradeIntent}
     />
+    <DailyChallengeSection
+      isPremiumUser={list.isPremiumUser}
+      reduceMotion={list.reduceMotionPreference}
+    />
+    </Fragment>
   );
 }
