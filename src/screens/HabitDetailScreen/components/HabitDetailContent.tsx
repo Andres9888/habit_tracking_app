@@ -5,6 +5,8 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import { StreakHeatmap } from '../../../components/StreakHeatmap';
+import { computeCurrentStreakFromDates } from '../../../utils/streak';
 import { useThemeColors } from '../../../theme';
 import { colors } from '../../../theme/colors';
 import type { Habit } from '../../../features/habits/types';
@@ -96,11 +98,36 @@ export function HabitDetailContent({
         </>
       )}
 
-      {/* HISTORY section */}
-      <SectionLabel borderColor={borderColor} delay={360} text='HISTORY' textColor={labelColor} />
+      {/* STREAK MAP section */}
+      <SectionLabel borderColor={borderColor} delay={300} text='STREAK MAP' textColor={labelColor} />
       <Animated.View
         className='rounded-2xl p-4'
-        entering={anim(420)}
+        entering={anim(360)}
+        style={{
+          backgroundColor: cardBg,
+          elevation: 4,
+          shadowColor,
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: isDark ? 0.3 : 0.08,
+          shadowRadius: 16,
+        }}
+      >
+        <ErrorBoundary>
+          <StreakHeatmap
+            completedDates={completedDates}
+            currentStreak={computeCurrentStreakFromDates(completedDates, new Date())}
+            habitColor={habit.color ?? habit.iconColor}
+            showChainLinks
+            weeks={16}
+          />
+        </ErrorBoundary>
+      </Animated.View>
+
+      {/* HISTORY section */}
+      <SectionLabel borderColor={borderColor} delay={420} text='HISTORY' textColor={labelColor} />
+      <Animated.View
+        className='rounded-2xl p-4'
+        entering={anim(480)}
         style={{
           backgroundColor: cardBg,
           elevation: 4,
