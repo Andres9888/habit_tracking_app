@@ -24,7 +24,27 @@
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent."
-      }
+      },
+      "shortcuts": [
+        {
+          "title": "Complete Top Habit",
+          "subtitle": "Mark your highest priority habit as done",
+          "icon": "checkmark.circle.fill",
+          "type": "complete-top-habit"
+        },
+        {
+          "title": "Add New Habit",
+          "subtitle": "Create a new habit to track",
+          "icon": "plus.circle.fill",
+          "type": "add-habit"
+        },
+        {
+          "title": "View Streaks",
+          "subtitle": "See your current streaks",
+          "icon": "flame.fill",
+          "type": "view-streaks"
+        }
+      ]
     },
     "android": {
       "adaptiveIcon": {

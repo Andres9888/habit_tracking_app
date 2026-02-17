@@ -23,6 +23,7 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
+import { useQuickActions } from './hooks/useQuickActions';
 import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
@@ -118,6 +119,9 @@ function CoreProviders({ children }: PropsWithChildren) {
 }
 
 export default function App() {
+  // Set up quick actions for iOS home screen shortcuts
+  useQuickActions();
+
   return (
     <CoreProviders>
       <AuthGate />
