@@ -1,4 +1,5 @@
 import { colors } from '@/theme/colors';
+import { darkColors } from '@/theme/darkColors';
 
 import type { SettingsColors } from './types';
 
@@ -25,14 +26,14 @@ export const DEFAULT_COLORS: SettingsColors = {
 };
 
 export const DARK_COLORS: SettingsColors = {
-  accent: '#F9FAFB',
-  background: '#111827',
-  card: '#1F2937',
-  cardBorder: '#374151',
-  headerText: '#F9FAFB',
-  icon: '#F9FAFB',
-  mutedText: '#9CA3AF',
-  versionText: '#9CA3AF',
+  accent: darkColors.text.primary,        // #F9FAFB
+  background: darkColors.background,      // #111827
+  card: darkColors.card,                  // #1F2937
+  cardBorder: darkColors.border,          // #374151
+  headerText: darkColors.text.primary,    // #F9FAFB
+  icon: darkColors.text.primary,          // #F9FAFB
+  mutedText: darkColors.text.secondary,   // #9CA3AF
+  versionText: darkColors.text.secondary, // #9CA3AF
 };
 
 export function getSettingsColors(

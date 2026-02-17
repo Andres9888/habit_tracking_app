@@ -147,8 +147,8 @@ export function SettingsContent(p: SettingsContentProps) {
             />
             <SettingsRow
               highContrastMode={hc}
-              icon={<Droplets color='#059669' size={16} />}
-              iconBackgroundColor='#d1fae5'
+              icon={<Droplets color={themeColors.primary[600]} size={16} />}
+              iconBackgroundColor={themeColors.primary[100]}
               label='Gradient fill for habit strength'
               showBorder={false}
               type='toggle'
@@ -210,9 +210,7 @@ export function SettingsContent(p: SettingsContentProps) {
                             className='flex-1 flex-row items-center justify-center gap-1.5 rounded-lg px-2 py-2'
                             style={{
                               backgroundColor: selected
-                                ? isDark
-                                  ? '#374151'
-                                  : '#e5e7eb'
+                                ? themeColors.border
                                 : 'transparent',
                             }}
                             onPress={() =>
@@ -259,8 +257,8 @@ export function SettingsContent(p: SettingsContentProps) {
             <SettingsRow
               badge={p.archivedHabitsCount}
               highContrastMode={hc}
-              icon={<BookOpen color='#78716c' size={16} />}
-              iconBackgroundColor='#e7e5e4'
+              icon={<BookOpen color={themeColors.text.secondary} size={16} />}
+              iconBackgroundColor={themeColors.gray[200]}
               label='Archived Habits'
               showBorder={false}
               type='navigation'

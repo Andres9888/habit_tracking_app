@@ -44,11 +44,12 @@ export function CardHeader({
   showHabitStrengthPercentage,
   streak,
 }: CardHeaderProps) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const iconBg = getIconBackground(
     accentColor,
     highContrastMode,
-    colors.iconContainer
+    colors.iconContainer,
+    isDark
   );
   const showBestStreak =
     bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage;

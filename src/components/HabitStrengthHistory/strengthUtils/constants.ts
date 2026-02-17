@@ -1,4 +1,5 @@
 import type { StrengthColors, StrengthLabel } from '../types';
+import { colors } from '../../../theme/colors';
 
 // Algorithm constants (based on Loop Habit Tracker)
 export const DEFAULT_GROWTH_RATE = 0.05; // ~5% growth per completion
@@ -19,18 +20,18 @@ export const STRONG_THRESHOLD = 70;
  */
 export const STRENGTH_COLOR_MAP: Record<StrengthLabel, StrengthColors> = {
   developing: {
-    background: '#fffbeb', // Amber-50
-    primary: '#b45309', // Amber-700 (WCAG AA: 5.02:1)
-    ring: '#fcd34d', // Amber-300
+    background: '#fffbeb',          // Amber-50
+    primary: '#b45309',             // Amber-700 (WCAG AA: 5.02:1)
+    ring: '#fcd34d',                // Amber-300
   },
   strong: {
-    background: '#ecfdf5', // Emerald-50
-    primary: '#047857', // Emerald-700 (WCAG AA: 5.48:1)
-    ring: '#6ee7b7', // Emerald-300
+    background: colors.primary[100], // #D1FAE5 — Emerald-50 equivalent
+    primary: colors.primary[700],    // #047857 (WCAG AA: 5.48:1)
+    ring: colors.primary[300],       // #6EE7B7
   },
   weak: {
-    background: '#fef2f2', // Red-50
-    primary: '#dc2626', // Red-600 (WCAG AA: 4.83:1)
-    ring: '#fca5a5', // Red-300
+    background: '#fef2f2',           // Red-50
+    primary: colors.error,           // #B53030 (WCAG AA 5.45:1)
+    ring: '#fca5a5',                 // Red-300
   },
 };

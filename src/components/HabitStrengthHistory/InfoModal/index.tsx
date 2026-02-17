@@ -60,7 +60,7 @@ function Header({ onClose }: { onClose: () => void }) {
 }
 
 function Content() {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   return (
     <ScrollView
       className='flex-1 px-4'
@@ -71,31 +71,31 @@ function Content() {
         the proven exponential smoothing algorithm.
       </Text>
       <InfoCard
-        bgColor='#ecfdf5'
+        bgColor={isDark ? '#064E3B' : '#ecfdf5'}
         description='Each completion increases strength by 5% of the remaining gap to 100%.'
-        descriptionColor='#059669'
+        descriptionColor={isDark ? '#34D399' : '#059669'}
         Icon={TrendingUp}
-        iconColor='#059669'
+        iconColor={isDark ? '#34D399' : '#059669'}
         title='When You Complete'
-        titleColor='#047857'
+        titleColor={isDark ? '#6EE7B7' : '#047857'}
       />
       <InfoCard
-        bgColor='#fef2f2'
+        bgColor={isDark ? '#450a0a' : '#fef2f2'}
         description='Missing a day reduces strength by 5%. Consistent misses weaken the habit.'
-        descriptionColor='#dc2626'
+        descriptionColor={isDark ? '#fca5a5' : '#dc2626'}
         Icon={TrendingDown}
-        iconColor='#dc2626'
+        iconColor={isDark ? '#fca5a5' : '#dc2626'}
         title='When You Miss'
-        titleColor='#b91c1c'
+        titleColor={isDark ? '#fca5a5' : '#b91c1c'}
       />
       <InfoCard
-        bgColor='#fffbeb'
+        bgColor={isDark ? '#422006' : '#fffbeb'}
         description='With perfect consistency, it takes 60-90 days to reach near 100% strength.'
-        descriptionColor='#d97706'
+        descriptionColor={isDark ? '#fcd34d' : '#d97706'}
         Icon={Target}
-        iconColor='#d97706'
+        iconColor={isDark ? '#fcd34d' : '#d97706'}
         title='Building to 100%'
-        titleColor='#b45309'
+        titleColor={isDark ? '#fbbf24' : '#b45309'}
       />
       <TipsSection />
     </ScrollView>

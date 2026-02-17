@@ -5,6 +5,8 @@
  * Supports both standard and high-contrast modes.
  */
 
+import { darkColors, lightColors } from '../../theme/darkColors';
+
 /**
  * Color theme for calendar timeline
  */
@@ -32,27 +34,27 @@ export interface CalendarTimelineColors {
  */
 const STANDARD_COLORS: CalendarTimelineColors = {
   currentDayBackground: '#1a1a1a',
-  currentDayText: '#ffffff',
+  currentDayText: lightColors.text.inverse,
   dayBackground: '#ffffff',
   dayBorder: 'transparent',
   dayText: '#1a1a1a',
   icon: '#1a1a1a',
   primaryText: '#1a1a1a',
-  secondaryText: '#6B7280',
+  secondaryText: lightColors.gray[400],
 };
 
 /**
- * Dark mode color scheme
+ * Dark mode color scheme — references darkColors tokens directly
  */
 const DARK_COLORS: CalendarTimelineColors = {
-  currentDayBackground: '#F9FAFB',
-  currentDayText: '#111827',
-  dayBackground: '#1F2937',
-  dayBorder: '#374151',
-  dayText: '#E5E7EB',
-  icon: '#D1D5DB',
-  primaryText: '#F9FAFB',
-  secondaryText: '#9CA3AF',
+  currentDayBackground: darkColors.text.primary,     // #F9FAFB
+  currentDayText: darkColors.text.inverse,            // #111827
+  dayBackground: darkColors.card,                     // #1F2937
+  dayBorder: darkColors.border,                       // #374151
+  dayText: darkColors.gray[700],                      // #E5E7EB
+  icon: darkColors.gray[600],                         // #D1D5DB
+  primaryText: darkColors.text.primary,               // #F9FAFB
+  secondaryText: darkColors.text.secondary,           // #9CA3AF
 };
 
 /**

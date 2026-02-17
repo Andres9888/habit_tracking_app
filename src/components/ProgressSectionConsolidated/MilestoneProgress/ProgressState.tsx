@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { styles } from './MilestoneProgress.styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { getProgressStyles } from './styles/progress.styles';
 import type { Milestone } from '../MilestoneProgressTypes';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
@@ -29,6 +30,9 @@ export const ProgressState = React.memo(function ProgressState({
   nextMilestone,
   previousMilestone,
 }: ProgressStateProps) {
+  const { colors } = useThemeColors();
+  const styles = getProgressStyles(colors);
+
   return (
     <Animated.View
       accessibilityLabel={accessibilityLabel}

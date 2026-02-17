@@ -6,6 +6,7 @@
  */
 
 import type { StrengthLabel } from '../HabitStrengthHistory/types';
+import { colors } from '../../theme/colors';
 
 // ============================================================================
 // Layout & Sizing
@@ -81,41 +82,34 @@ export const STRENGTH_COLORS: Record<
   },
 };
 
-/** Neutral colors */
+/** Neutral colors — light mode defaults (override with useThemeColors() in components) */
 export const COLORS = {
-  // stone-400
   /** Border/divider color */
-  border: '#e7e5e4',
+  border: colors.gray[200],         // #DDD8D2
 
   /** Card background */
   cardBackground: '#ffffff',
 
-  // stone-200
   /** Grid line color */
-  gridLine: '#d6d3d1',
+  gridLine: colors.gray[300],       // #C4BFB7
 
-  // green-500 (success semantic color)
-  /** Negative delta color */
-  negative: '#ef4444',
+  /** Negative delta color (red-500) */
+  negative: colors.error,           // #B53030
 
-  // stone-300
-  /** Positive delta color */
-  positive: '#15793C',
+  /** Positive delta color (success green) */
+  positive: colors.success,         // #15793C
 
-  // red-500
   /** Ring track color */
-  ringTrack: '#f5f5f4',
+  ringTrack: colors.gray[50],       // #FAF8F5
 
-  // stone-500
   /** Text muted */
-  textMuted: '#a8a29e',
+  textMuted: colors.gray[400],      // #6E6660
 
   /** Text primary */
-  textPrimary: '#1c1917',
+  textPrimary: colors.text.primary, // #2D2A26
 
-  // stone-900
   /** Text secondary */
-  textSecondary: '#78716c', // stone-100
+  textSecondary: colors.text.secondary, // #6B6560
 };
 
 // ============================================================================

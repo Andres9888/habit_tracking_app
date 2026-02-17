@@ -80,38 +80,54 @@ export const TIME_RANGE_CONFIG = {
 } as const;
 
 /**
- * Default colors (using design system tokens)
+ * Default colors (light mode — reference theme tokens where possible).
+ * Components should call useThemeColors() for dark mode overrides.
  */
 export const COLORS = {
-  /** Card background */
+  /** Card background (light mode) */
   CARD_BACKGROUND: '#ffffff',
 
-  // stone-100
-  /** Before creation cell background */
+  /** Before creation cell background (stone-50) */
   CELL_BEFORE_CREATION: '#fafaf9',
 
-  /** Empty/missed cell background */
+  /** Empty/missed cell background (stone-200) */
   CELL_EMPTY: '#e7e5e4',
 
-  // stone-200
-  /** Future cell background */
+  /** Future cell background (stone-100) */
   CELL_FUTURE: '#f5f5f4',
 
-  /** Text colors */
+  /** Primary text color (matches lightColors.text.primary family) */
   TEXT_PRIMARY: '#1f2937',
 
-  // gray-800
+  /** Secondary text color (stone-500) */
   TEXT_SECONDARY: '#78716c',
 
-  // stone-500
+  /** Tertiary text color (gray-500) */
   TEXT_TERTIARY: '#6B7280',
-  // stone-50
-  /** Today cell ring color (will use habit color at runtime) */
-  TODAY_RING_WIDTH: 2, // gray-400
 
-  /** Tooltip */
-  TOOLTIP_BACKGROUND: '#1c1917', // stone-900
+  /** Today cell ring border width */
+  TODAY_RING_WIDTH: 2,
+
+  /** Tooltip background (stone-900) */
+  TOOLTIP_BACKGROUND: '#1c1917',
   TOOLTIP_TEXT: '#ffffff',
+} as const;
+
+/**
+ * Dark mode color overrides for BinaryHeatmap.
+ * Components using COLORS should switch to these when isDark is true.
+ */
+export const COLORS_DARK = {
+  CARD_BACKGROUND: '#1F2937',    // darkColors.card
+  CELL_BEFORE_CREATION: '#111827', // darkColors.background
+  CELL_EMPTY: '#374151',           // darkColors.border
+  CELL_FUTURE: '#1F2937',          // darkColors.card
+  TEXT_PRIMARY: '#F9FAFB',         // darkColors.text.primary
+  TEXT_SECONDARY: '#9CA3AF',       // darkColors.text.secondary
+  TEXT_TERTIARY: '#6B7280',        // unchanged (neutral)
+  TODAY_RING_WIDTH: 2,
+  TOOLTIP_BACKGROUND: '#F9FAFB',   // darkColors.text.primary (inverted tooltip)
+  TOOLTIP_TEXT: '#111827',         // darkColors.background
 } as const;
 
 /**

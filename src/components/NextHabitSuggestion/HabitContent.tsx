@@ -4,7 +4,8 @@ import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ArrowRight, Zap } from 'lucide-react-native';
 import type { ViewStyle } from 'react-native';
 import type { NextHabitSuggestionProps } from './types';
-import { styles } from './styles';
+import { getNextHabitStyles } from './styles';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface HabitContentProps {
   habit: NonNullable<NextHabitSuggestionProps['habit']>;
@@ -21,6 +22,9 @@ export function HabitContent({
   cardStyle,
   glowStyle,
 }: HabitContentProps) {
+  const { colors } = useThemeColors();
+  const styles = getNextHabitStyles(colors);
+
   if (!habit) return null;
   return (
     <Animated.View style={[styles.container, cardStyle]}>
@@ -43,7 +47,7 @@ export function HabitContent({
             </Text>
             <Text style={styles.habitHint}>Tap to mark complete</Text>
           </View>
-          <ArrowRight color='#a8a29e' size={20} />
+          <ArrowRight color={colors.text.tertiary} size={20} />
         </View>
       </View>
     </Animated.View>

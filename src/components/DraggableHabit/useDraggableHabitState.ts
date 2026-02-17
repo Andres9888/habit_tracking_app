@@ -18,6 +18,7 @@ type WeekStatus = DraggableHabitProps['weekStatus'];
 interface DraggableHabitStateOptions {
   habit: HabitData;
   highContrastMode: boolean;
+  isDark?: boolean;
   previousStreak?: number;
   streak: number;
   weekStatus: WeekStatus;
@@ -26,6 +27,7 @@ interface DraggableHabitStateOptions {
 export const useDraggableHabitState = ({
   habit,
   highContrastMode,
+  isDark = false,
   previousStreak,
   streak,
   weekStatus,
@@ -41,7 +43,7 @@ export const useDraggableHabitState = ({
       streak > bestStreak &&
       streak > (previousStreak || 0);
     const strengthPercent = getStrengthPercent(habit.strength);
-    const colors = getCardColors(highContrastMode);
+    const colors = getCardColors(highContrastMode, isDark);
 
     return {
       bestStreak,
@@ -50,7 +52,7 @@ export const useDraggableHabitState = ({
       isWeekComplete,
       strengthPercent,
     };
-  }, [habit, highContrastMode, previousStreak, streak, weekStatus]);
+  }, [habit, highContrastMode, isDark, previousStreak, streak, weekStatus]);
 
   return {
     accentColor,

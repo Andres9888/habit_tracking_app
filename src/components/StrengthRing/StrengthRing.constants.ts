@@ -2,41 +2,42 @@
  * StrengthRing Constants - Level configs, colors, and size configurations
  */
 import type { LevelInfo, SizeConfig } from './StrengthRing.types';
+import { colors } from '../../theme/colors';
 
 export const LEVELS: Record<string, LevelInfo> = {
   automatic: {
-    color: '#059669', // emerald-600
-    colorLight: '#d1fae5', // emerald-100
+    color: colors.strength.automatic,      // #059669
+    colorLight: colors.strength.automaticLight, // #D4F0E2
     emoji: '⚡',
     label: 'Automatic',
   },
   building: {
-    color: '#16a34a', // green-600
-    colorLight: '#dcfce7', // green-100
+    color: colors.strength.building,       // #16a34a
+    colorLight: colors.strength.buildingLight, // #dcfce7
     emoji: '🌿',
     label: 'Building',
   },
   developing: {
-    color: '#0d9488', // teal-600
-    colorLight: '#ccfbf1', // teal-100
+    color: colors.strength.developing,     // #0d9488
+    colorLight: colors.strength.developingLight, // #ccfbf1
     emoji: '🌳',
     label: 'Developing',
   },
   starting: {
-    color: '#4D7A0A', // lime-600
-    colorLight: '#ecfccb', // lime-100
+    color: colors.strength.starting,       // #4D7A0A
+    colorLight: colors.strength.startingLight, // #ecfccb
     emoji: '🌱',
     label: 'Starting',
   },
   strong: {
-    color: '#0891b2', // cyan-600
-    colorLight: '#cffafe', // cyan-100
+    color: colors.strength.strong,         // #0891b2
+    colorLight: colors.strength.strongLight, // #cffafe
     emoji: '💪',
     label: 'Strong',
   },
 };
 
-export const BACKGROUND_COLOR = '#e5e7eb'; // stone-200
+export const BACKGROUND_COLOR = colors.gray[200]; // #DDD8D2 (light border/track)
 
 export const SIZE_CONFIG: Record<string, SizeConfig> = {
   large: { fontSize: 24, ringSize: 96, strokeWidth: 10 },
@@ -46,9 +47,9 @@ export const SIZE_CONFIG: Record<string, SizeConfig> = {
 };
 
 export const TREND_CONFIG = {
-  down: { color: '#ef4444', symbol: '↓' }, // red-500
-  stable: { color: '#78716c', symbol: '→' }, // stone-500
-  up: { color: '#15793C', symbol: '↑' }, // green-500
+  down: { color: colors.error, symbol: '↓' },     // #B53030
+  stable: { color: colors.text.secondary, symbol: '→' }, // #6B6560
+  up: { color: colors.success, symbol: '↑' },     // #15793C
 };
 
 /** Get level info based on strength percentage */

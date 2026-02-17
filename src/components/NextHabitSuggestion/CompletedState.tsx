@@ -1,12 +1,16 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { styles } from './styles';
+import { getNextHabitStyles } from './styles';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 interface CompletedStateProps {
   totalCount: number;
 }
 
 export function CompletedState({ totalCount }: CompletedStateProps) {
+  const { colors } = useThemeColors();
+  const styles = getNextHabitStyles(colors);
+
   return (
     <View style={styles.completedContainer}>
       <Text style={styles.completedEmoji}>🎉</Text>

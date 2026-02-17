@@ -42,6 +42,7 @@ import { useStrengthAnimation } from './useStrengthAnimation';
 import { usePressHandlers } from './usePressHandlers';
 import { useDraggableHabitState } from './useDraggableHabitState';
 import { useCardStrengthFill } from './useCardStrengthFill';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { DraggableHabitCard } from './DraggableHabitCard';
 import type { DraggableHabitProps } from './types';
 
@@ -73,10 +74,14 @@ function DraggableHabit(props: DraggableHabitProps) {
     weekStatus,
   } = props;
 
+  // 0. Theme — get isDark early so card colors react to dark mode
+  const { isDark: themeIsDark } = useThemeColors();
+
   // 1. Derive visual state (colors, emoji, record detection)
   const state = useDraggableHabitState({
     habit,
     highContrastMode,
+    isDark: themeIsDark,
     previousStreak,
     streak,
     weekStatus,

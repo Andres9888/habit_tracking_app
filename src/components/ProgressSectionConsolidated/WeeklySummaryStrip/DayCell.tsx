@@ -13,10 +13,11 @@ import type { WeekDayData, DayVisualState } from '../WeeklySummaryStripTypes';
 import {
   DAY_ABBREVIATIONS,
   DAY_NAMES,
-  DAY_STATE_CONFIGS,
 } from '../WeeklySummaryStripTypes';
+import { getDayStateConfigs } from './dayStateConfigs';
 import { styles } from './WeeklySummaryStripStyles';
 import { usePulseAnimation } from './usePulseAnimation';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface DayCellProps {
   day: WeekDayData;
@@ -33,7 +34,9 @@ export const DayCell = React.memo(function DayCell({
   onPress,
   reduceMotion,
 }: DayCellProps) {
-  const config = DAY_STATE_CONFIGS[visualState];
+  const { isDark } = useThemeColors();
+  const dayStateConfigs = getDayStateConfigs(isDark);
+  const config = dayStateConfigs[visualState];
   const { pulseAnimatedStyle } = usePulseAnimation({
     reduceMotion,
     visualState,

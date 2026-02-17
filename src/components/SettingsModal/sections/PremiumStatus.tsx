@@ -29,7 +29,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-            style={{ backgroundColor: '#fef3c7' }}
+            style={{ backgroundColor: isDark ? '#422006' : '#fef3c7' }}
           >
             <Crown color='#f59e0b' size={16} />
           </View>
@@ -87,7 +87,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
         <View className='flex-row items-center px-4 py-4'>
           <View
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-            style={{ backgroundColor: '#ede9fe' }}
+            style={{ backgroundColor: isDark ? '#2e1065' : '#ede9fe' }}
           >
             <Zap color='#8b5cf6' size={16} />
           </View>

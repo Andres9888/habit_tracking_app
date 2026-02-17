@@ -2,19 +2,39 @@
  * MonthlyCalendarGrid Colors
  *
  * Stone color palette and color utilities.
+ * Use COLORS for light mode, COLORS_DARK for dark mode.
+ * Components should use useThemeColors() + isDark to select the correct set.
  */
 
+import { colors } from '../../../theme/colors';
+import { darkColors } from '../../../theme/darkColors';
+
 export const COLORS = {
-  BORDER: '#e7e5e4',
-  CARD_BG: '#ffffff',
-  TEXT_MUTED: '#d6d3d1',
-  TEXT_PRIMARY: '#1c1917',
-  TEXT_SECONDARY: '#78716c',
-  TEXT_TERTIARY: '#a8a29e',
-  // Green colors for streak calendar
-  GREEN_COMPLETED: '#047857', // primary green
-  GREEN_COMPLETED_LIGHT: '#059669', // button green
-  GREEN_EMPTY: '#d1fae5', // empty circle for missed days
+  BORDER: '#e7e5e4',                            // stone-200
+  CARD_BG: '#ffffff',                           // pure white card
+  TEXT_MUTED: '#d6d3d1',                        // stone-300
+  TEXT_PRIMARY: '#1c1917',                      // stone-900
+  TEXT_SECONDARY: '#78716c',                    // stone-500
+  TEXT_TERTIARY: '#a8a29e',                     // stone-400
+  // Green colors for streak calendar — reference theme tokens
+  GREEN_COMPLETED: colors.primary[700],         // #047857
+  GREEN_COMPLETED_LIGHT: colors.primary[600],   // #059669
+  GREEN_EMPTY: colors.primary[100],             // #D1FAE5
+};
+
+/**
+ * Dark mode color overrides for MonthlyCalendarGrid.
+ */
+export const COLORS_DARK = {
+  BORDER: darkColors.border,                    // #374151
+  CARD_BG: darkColors.card,                     // #1F2937
+  TEXT_MUTED: darkColors.gray[300],             // #4B5563
+  TEXT_PRIMARY: darkColors.text.primary,        // #F9FAFB
+  TEXT_SECONDARY: darkColors.text.secondary,    // #9CA3AF
+  TEXT_TERTIARY: darkColors.gray[500],          // #9CA3AF
+  GREEN_COMPLETED: darkColors.primary[500],     // #34D399
+  GREEN_COMPLETED_LIGHT: darkColors.primary[400], // #10B981
+  GREEN_EMPTY: darkColors.primary[100],         // #064E3B
 };
 
 /**
