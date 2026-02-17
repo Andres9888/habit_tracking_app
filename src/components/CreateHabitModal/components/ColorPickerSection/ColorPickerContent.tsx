@@ -1,9 +1,10 @@
 /**
- * ColorPickerContent - predefined palette split across two rows
- * Per spec: 36×36px visual, 48×48px tap, centered rows
+ * ColorPickerContent - Horizontal scrollable color palette
+ * Displays 16 curated colors in two rows with horizontal scroll
+ * Per spec: 44px swatches with 52px tap targets, organized in scrollable rows
  */
 
-import { Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import STRINGS from '../../../../constants/strings';
 import { ColorButton } from './ColorButton';
@@ -18,24 +19,28 @@ export const ColorPickerContent = ({
   hideLabel = false,
 }: ColorPickerSectionProps) => {
   const reduceMotion = useReduceMotion();
-  const row1 = colors.slice(0, 6);
-  const row2 = colors.slice(6);
+  const row1 = colors.slice(0, 8);  // First 8 colors
+  const row2 = colors.slice(8);     // Remaining 8 colors
 
   const renderRow = (rowColors: string[], testId: string) => (
-    <View
-      style={{ flexDirection: 'row', gap: 4, justifyContent: 'center' }}
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ paddingHorizontal: 4 }}
       testID={testId}
     >
-      {rowColors.map((color) => (
-        <ColorButton
-          key={color}
-          color={color}
-          isSelected={selectedColor === color}
-          reduceMotion={reduceMotion}
-          onSelect={onSelectColor}
-        />
-      ))}
-    </View>
+      <View style={{ flexDirection: 'row', gap: 4 }}>
+        {rowColors.map((color) => (
+          <ColorButton
+            key={color}
+            color={color}
+            isSelected={selectedColor === color}
+            reduceMotion={reduceMotion}
+            onSelect={onSelectColor}
+          />
+        ))}
+      </View>
+    </ScrollView>
   );
 
   return (

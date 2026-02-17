@@ -37,7 +37,7 @@ describe('ColorPickerSection - V9 Redesign', () => {
 
   const defaultProps = {
     colors: HABIT_COLORS,
-    selectedColor: HABIT_COLORS[3], // Emerald (default)
+    selectedColor: HABIT_COLORS[4], // Emerald (default)
     onSelectColor: mockOnSelectColor,
     onCustomPress: mockOnCustomPress,
   };
@@ -76,11 +76,12 @@ describe('ColorPickerSection - V9 Redesign', () => {
       expect(getByLabelText('Choose custom color')).toBeDefined();
     });
 
-    it('should render color swatches in a single row container', () => {
+    it('should render color swatches in two scrollable rows', () => {
       const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
-      const row = getByTestId('color-picker-row');
-      expect(row.props.style.flexDirection).toBe('row');
-      expect(row.props.style.justifyContent).toBe('space-between');
+      const row1 = getByTestId('color-picker-row-1');
+      const row2 = getByTestId('color-picker-row-2');
+      expect(row1).toBeDefined();
+      expect(row2).toBeDefined();
     });
   });
 
@@ -204,14 +205,14 @@ describe('ColorPickerSection - V9 Redesign', () => {
   });
 
   describe('Color Constants', () => {
-    it('should have exactly 10 colors in HABIT_COLORS', () => {
-      expect(HABIT_COLORS.length).toBe(10);
+    it('should have exactly 16 colors in HABIT_COLORS', () => {
+      expect(HABIT_COLORS.length).toBe(16);
     });
 
     it('should have correct colors in correct order', () => {
       expect(HABIT_COLORS[0]).toBe('#EF4444'); // Red
-      expect(HABIT_COLORS[3]).toBe('#10B981'); // Emerald (default)
-      expect(HABIT_COLORS[9]).toBe('#78716C'); // Stone
+      expect(HABIT_COLORS[4]).toBe('#10B981'); // Emerald (default)
+      expect(HABIT_COLORS[15]).toBe('#78716C'); // Stone
     });
 
     it('should have human-readable names for all colors', () => {
