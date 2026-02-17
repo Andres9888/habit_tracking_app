@@ -21,6 +21,14 @@ export const createHabitArgs = {
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  timeGroup: v.optional(
+    v.union(
+      v.literal('morning'),
+      v.literal('afternoon'),
+      v.literal('evening'),
+      v.literal('anytime')
+    )
+  ),
 };
 
 /** Update habit args validator */
@@ -43,5 +51,13 @@ export const updateHabitArgs = {
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  timeGroup: v.optional(
+    v.union(
+      v.literal('morning'),
+      v.literal('afternoon'),
+      v.literal('evening'),
+      v.literal('anytime')
+    )
+  ),
   why: v.optional(v.string()),
 };

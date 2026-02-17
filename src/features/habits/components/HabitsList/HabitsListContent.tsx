@@ -23,6 +23,8 @@ import {
   renderHabitRow,
 } from './HabitsListRenders';
 import { HabitsListModals } from './HabitsListModals';
+import { GroupedHabitsList } from './GroupedHabitsList';
+import { useHabitTimeGroups } from './TimeGroupSection';
 import type { Habit } from '../../types';
 import type { HabitsListContentProps } from './HabitsList.types';
 
@@ -35,6 +37,20 @@ export function HabitsListContent({
 }: HabitsListContentProps) {
   const { list, modals, onUpgradeIntent } = props;
   const { upgradePromptVisible, onUpgradeDismiss, onUpgradeConfirm } = props;
+
+  const isGroupedView = list.habitSortMode === 'day_phase';
+
+  // Today's date string for group completion tracking
+  const todayString = useMemo(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }, []);
+
+  const timeGroups = useHabitTimeGroups({
+    habits: list.habits,
+    todayString,
+    getHabitStatus: list.getHabitStatus,
+  });
 
   const contentContainerStyle = useMemo(
     () => ({
@@ -86,19 +102,29 @@ export function HabitsListContent({
 
   return (
     <View className='flex-1 bg-transparent'>
-      <DraggableFlatList<Habit>
-        activationDistance={handlers.isReorderingEnabled ? 12 : 9999}
-        contentContainerStyle={contentContainerStyle}
-        data={list.habits}
-        keyExtractor={handlers.keyExtractor}
-        ListEmptyComponent={listEmptyComponent}
-        ListFooterComponent={listFooterComponent}
-        ListHeaderComponent={listHeaderComponent}
-        renderItem={renderHabitItem}
-        showsVerticalScrollIndicator={false}
-        onDragBegin={handlers.handleDragBegin}
-        onDragEnd={list.handleDragEnd}
-      />
+      {isGroupedView && list.habits.length > 0 ? (
+        <GroupedHabitsList
+          groups={timeGroups}
+          renderItem={renderItem}
+          ListHeaderComponent={listHeaderComponent}
+          ListFooterComponent={listFooterComponent}
+          contentPadding={list.contentPadding}
+        />
+      ) : (
+        <DraggableFlatList<Habit>
+          activationDistance={handlers.isReorderingEnabled ? 12 : 9999}
+          contentContainerStyle={contentContainerStyle}
+          data={list.habits}
+          keyExtractor={handlers.keyExtractor}
+          ListEmptyComponent={listEmptyComponent}
+          ListFooterComponent={listFooterComponent}
+          ListHeaderComponent={listHeaderComponent}
+          renderItem={renderHabitItem}
+          showsVerticalScrollIndicator={false}
+          onDragBegin={handlers.handleDragBegin}
+          onDragEnd={list.handleDragEnd}
+        />
+      )}
       <HabitsListModals
         handlers={handlers}
         list={list}

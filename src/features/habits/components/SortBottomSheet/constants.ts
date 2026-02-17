@@ -36,10 +36,10 @@ export const SORT_OPTIONS: SortOptionConfig[] = [
   },
   {
     chipLabel: 'Day Phase',
-    description: 'Push → Pivot → Pull',
+    description: 'Grouped by Morning · Afternoon · Evening',
     Icon: Sun,
     iconBgColors: ['#fbbf24', '#f97316'],
-    label: 'Day Phase',
+    label: 'Time of Day',
     value: 'day_phase',
   },
   {

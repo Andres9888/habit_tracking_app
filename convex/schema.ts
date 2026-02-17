@@ -209,6 +209,17 @@ const applicationTables = {
 
     tags: v.optional(v.array(v.string())),
 
+    // Time-of-day group for habit list grouping (manual override)
+    // Auto-derived from preferredTime/reminderTime when not set
+    timeGroup: v.optional(
+      v.union(
+        v.literal('morning'),
+        v.literal('afternoon'),
+        v.literal('evening'),
+        v.literal('anytime')
+      )
+    ),
+
     totalCompletions: v.optional(v.number()),
 
     totalMisses: v.optional(v.number()),
