@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Review Screen - Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Roboto', sans-serif;
+            background: linear-gradient(180deg, #FAF8F5 0%, #F5F2ED 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 428px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        .header {
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-family: 'Literata', serif;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.85px;
+            line-height: 41px;
+            color: #1A1816;
+            margin-bottom: 4px;
+        }
+
+        .header .date-range {
+            font-size: 17px;
+            line-height: 24px;
+            color: #6B6560;
+            margin-top: 8px;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.35px;
+            line-height: 28px;
+            color: #1A1816;
+            margin-bottom: 16px;
+        }
+
+        .completion-stats {
+            text-align: center;
+            padding: 16px 0;
+        }
+
+        .percentage {
+            font-family: 'Literata', serif;
+            font-size: 64px;
+            font-weight: 700;
+            color: #047857;
+            line-height: 1.2;
+            margin: 16px 0;
+        }
+
+        .stats-label {
+            font-size: 17px;
+            line-height: 24px;
+            color: #6B6560;
+            margin-top: 8px;
+        }
+
+        .change-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 12px;
+            padding: 6px 12px;
+            background: #D1FAE5;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #047857;
+        }
+
+        .change-indicator.negative {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .habit-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .habit-row:last-child {
+            border-bottom: none;
+        }
+
+        .habit-name {
+            font-size: 17px;
+            line-height: 24px;
+            color: #1A1816;
+            flex: 1;
+        }
+
+        .habit-change {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 24px;
+        }
+
+        .habit-change.positive {
+            color: #047857;
+        }
+
+        .habit-change.negative {
+            color: #DC2626;
+        }
+
+        .section-header {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.35px;
+            line-height: 28px;
+            color: #1A1816;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-divider {
+            margin: 24px 0;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-label {
+            font-size: 17px;
+            line-height: 24px;
+            color: #6B6560;
+            margin-bottom: 12px;
+        }
+
+        .text-input {
+            width: 100%;
+            min-height: 80px;
+            padding: 16px;
+            background: #FAF8F5;
+            border: 1px solid #DDD6CE;
+            border-radius: 12px;
+            font-size: 17px;
+            line-height: 24px;
+            color: #1A1816;
+            font-family: inherit;
+            resize: none;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #047857;
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px 24px;
+            background: #047857;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 0.08px;
+            line-height: 24px;
+            color: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .button:hover {
+            background: #059669;
+            transform: scale(1.02);
+        }
+
+        .button.outline {
+            background: transparent;
+            border: 2px solid #047857;
+            color: #047857;
+        }
+
+        .button.outline:hover {
+            background: #D1FAE5;
+        }
+
+        .preview-card {
+            background: #FAF8F5;
+            border: 2px solid #047857;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .preview-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            line-height: 26px;
+            color: #1A1816;
+            margin-bottom: 8px;
+        }
+
+        .preview-card .big-number {
+            font-family: 'Literata', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #047857;
+            margin: 12px 0;
+        }
+
+        .preview-card .subtitle {
+            font-size: 17px;
+            line-height: 24px;
+            color: #6B6560;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 24px;
+            color: #948B84;
+            font-style: italic;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:nth-child(1) { animation-delay: 0ms; }
+        .card:nth-child(2) { animation-delay: 60ms; }
+        .card:nth-child(3) { animation-delay: 120ms; }
+        .card:nth-child(4) { animation-delay: 180ms; }
+        .card:nth-child(5) { animation-delay: 240ms; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Week 7 Review</h1>
+            <p class="date-range">Feb 9 - Feb 16</p>
+        </div>
+
+        <!-- Completion Rate Card -->
+        <div class="card">
+            <h2 class="card-title">Completion Rate</h2>
+            <div class="completion-stats">
+                <div class="percentage">87%</div>
+                <p class="stats-label">61 of 70 completed</p>
+                <div class="change-indicator">
+                    ↗ 12% vs last week
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Card -->
+        <div class="card">
+            <h2 class="section-header">🌟 Best Performers</h2>
+            <div class="habit-row">
+                <div class="habit-name">🏃 Morning Run</div>
+                <div class="habit-change positive">+5 completions</div>
+            </div>
+            <div class="habit-row">
+                <div class="habit-name">📚 Read 30 min</div>
+                <div class="habit-change positive">+4 completions</div>
+            </div>
+            <div class="habit-row">
+                <div class="habit-name">💧 Drink Water</div>
+                <div class="habit-change positive">+3 completions</div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2 class="section-header">⚠️ Needs Attention</h2>
+            <div class="habit-row">
+                <div class="habit-name">🧘 Meditation</div>
+                <div class="habit-change negative">-2 completions</div>
+            </div>
+            <div class="habit-row">
+                <div class="habit-name">📝 Journal</div>
+                <div class="habit-change negative">-1 completion</div>
+            </div>
+        </div>
+
+        <!-- Intention Card -->
+        <div class="card">
+            <h2 class="section-header">🎯 Set Your Intention</h2>
+            <div class="input-group">
+                <p class="input-label">What do you want to focus on next week?</p>
+                <textarea 
+                    class="text-input" 
+                    placeholder="e.g., Stay consistent with morning routine..."
+                    rows="3"
+                >Focus on consistency over perfection. Keep the meditation streak alive!</textarea>
+            </div>
+            <button class="button">Save Intention</button>
+        </div>
+
+        <!-- Share Card -->
+        <div class="card">
+            <h2 class="section-header">📤 Share Your Progress</h2>
+            <div class="preview-card">
+                <h3>Week 7 Review</h3>
+                <div class="big-number">87%</div>
+                <p class="subtitle">61 habits completed</p>
+            </div>
+            <button class="button outline">Share Summary</button>
+        </div>
+    </div>
+</body>
+</html>
