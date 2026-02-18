@@ -93,16 +93,20 @@ export function LockedHabitCard({
       <Animated.View
         className='gap-4 rounded-3xl border border-dashed p-5'
         style={{
-          borderColor: isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(196, 181, 253, 1)',
+          borderColor: isDark
+            ? 'rgba(139, 92, 246, 0.3)'
+            : 'rgba(196, 181, 253, 1)',
           opacity,
           transform: [{ scale: entranceScale }, { scale: pressScale }],
         }}
       >
         <LinearGradient
           className='absolute inset-0 rounded-3xl'
-          colors={isDark
-            ? ['rgba(88, 28, 135, 0.2)', 'rgba(120, 53, 15, 0.1)']
-            : ['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
+          colors={
+            isDark
+              ? ['rgba(88, 28, 135, 0.2)', 'rgba(120, 53, 15, 0.1)']
+              : ['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']
+          }
         />
         <View className='items-center gap-2'>
           <Text className='text-[24px]'>✨</Text>
