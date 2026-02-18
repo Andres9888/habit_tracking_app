@@ -74,7 +74,8 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   }, [triggerLightImpact]);
 
   const handleHabitPress = useCallback((_habitId: string) => {
-    // TODO: navigate to habit detail
+    // Navigation to habit detail would be implemented by consumer component
+    // when onHabitPress callback is needed
   }, []);
 
   const handleExportPress = useCallback(() => {

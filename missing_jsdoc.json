@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Id",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/_generated/dataModel.d.ts"
+  },
+  {
+    "name": "DataModel",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/_generated/dataModel.d.ts"
+  },
+  {
+    "name": "DatabaseWriter",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/_generated/server.d.ts"
+  },
+  {
+    "name": "AffirmationType",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/affirmations/types.ts"
+  },
+  {
+    "name": "getStreaksForHabitsBatch",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/analytics/streakHelpers.ts"
+  },
+  {
+    "name": "CharacterStats",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/character/types.ts"
+  },
+  {
+    "name": "addDays",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/habitStrength/dateUtils.ts"
+  },
+  {
+    "name": "formatDateKey",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/habitStrength/dateUtils.ts"
+  },
+  {
+    "name": "isValidDateKey",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/habitStrength/dateUtils.ts"
+  },
+  {
+    "name": "parseDateKeyToLocalDate",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/habitStrength/dateUtils.ts"
+  },
+  {
+    "name": "logisticBaseline",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/habitStrength/logistic.ts"
+  },
+  {
+    "name": "generateHabitStrengthSnapshot",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/habitStrength/snapshot.ts"
+  },
+  {
+    "name": "StrengthLevel",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/habitStrength/types.ts"
+  },
+  {
+    "name": "HabitTrackingRecord",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/habitStrength/types.ts"
+  },
+  {
+    "name": "HabitStrengthSnapshot",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/habitStrength/types.ts"
+  },
+  {
+    "name": "StrengthLevelInfo",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/habitStrength/types.ts"
+  },
+  {
+    "name": "ValidationResult",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/lib/inputValidation.ts"
+  },
+  {
+    "name": "AtRiskHabit",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/predictions/types.ts"
+  },
+  {
+    "name": "HabitPrediction",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/predictions/types.ts"
+  },
+  {
+    "name": "DayPrediction",
+    "hasJSDoc": false,
+    "filePath": "/Users/Andres/habit_tracking_app/convex/predictions/types.ts"
+  }
+]
