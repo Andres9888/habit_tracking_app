@@ -37,9 +37,9 @@ export function PasswordResetButtons({
         accessibilityRole='button'
         accessibilityState={{ busy: isLoading, disabled: isDisabled }}
         className={`items-center rounded-2xl py-4 ${isDisabled ? 'opacity-40' : ''}`}
-        style={{ backgroundColor: colors.gray[900] }}
         disabled={isDisabled}
         style={[
+          { backgroundColor: colors.gray[900] },
           animatedStyle,
           {
             shadowColor: '#1c1917',

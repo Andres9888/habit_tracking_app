@@ -85,6 +85,9 @@ export {
 
 export type { HubermanPhase, PhaseInfo } from './hubermanPhases';
 
+// External URLs
+export { EXTERNAL_URLS } from './urls';
+
 // Motion and strings (default exports)
 export { default as Motion } from './motion';
 export { default as STRINGS } from './strings';

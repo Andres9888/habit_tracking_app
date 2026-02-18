@@ -9,13 +9,7 @@ import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { PremiumStatus } from './sections/PremiumStatus';
 import { FeedbackModal } from '../FeedbackModal';
-import { ERROR_MESSAGES } from '../../constants/errorMessages';
-
-const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
-const WHATS_NEW_URL = 'https://andres9888.github.io/chainday-landing/changelog.html';
-const PRIVACY_URL =
-  'https://andres9888.github.io/chainday-landing/privacy.html';
-const TERMS_URL = 'https://andres9888.github.io/chainday-landing/terms.html';
+import { ERROR_MESSAGES, EXTERNAL_URLS } from '../../constants';
 
 interface AccountSectionProps {
   isHighContrastActive: boolean;
@@ -90,18 +84,18 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
           // Fall through
         }
       }
-      void Linking.openURL(APP_STORE_URL);
+      void Linking.openURL(EXTERNAL_URLS.APP_STORE);
     })();
   }, []);
 
   const handleShare = useCallback(() => {
     void Share.share({
       message: Platform.select({
-        default: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${APP_STORE_URL}`,
-        ios: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${APP_STORE_URL}`,
+        default: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${EXTERNAL_URLS.APP_STORE}`,
+        ios: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${EXTERNAL_URLS.APP_STORE}`,
       }),
       title: 'Chain Day — Build Better Habits',
-      url: Platform.OS === 'ios' ? APP_STORE_URL : undefined,
+      url: Platform.OS === 'ios' ? EXTERNAL_URLS.APP_STORE : undefined,
     });
   }, []);
 
@@ -111,7 +105,7 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
   );
 
   const handleWhatsNew = useCallback(
-    () => void Linking.openURL(WHATS_NEW_URL),
+    () => void Linking.openURL(EXTERNAL_URLS.CHANGELOG),
     []
   );
 
@@ -143,8 +137,8 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
       />
       <LegalLinks
         highContrast={isHighContrastActive}
-        onPrivacy={openUrl(PRIVACY_URL)}
-        onTerms={openUrl(TERMS_URL)}
+        onPrivacy={openUrl(EXTERNAL_URLS.PRIVACY)}
+        onTerms={openUrl(EXTERNAL_URLS.TERMS)}
       />
       <FeedbackModal
         visible={showFeedbackModal}

@@ -13,7 +13,10 @@ export function AchievementCard({
   achievement,
   delay = 0,
 }: AchievementCardProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  const badgeBgColor = isDark ? '#333D2B' : '#FEF3C7';
+  const trophyColor = '#F59E0B';
+
   return (
     <Animated.View
       className='flex-row items-center gap-4 rounded-3xl border px-6 py-6'
@@ -27,8 +30,11 @@ export function AchievementCard({
         shadowRadius: 16,
       }}
     >
-      <View className='h-12 w-12 items-center justify-center rounded-full bg-orange-100 shadow-sm'>
-        <Trophy color='#f59e0b' size={24} />
+      <View
+        className='h-12 w-12 items-center justify-center rounded-full shadow-sm'
+        style={{ backgroundColor: badgeBgColor }}
+      >
+        <Trophy color={trophyColor} size={24} />
       </View>
       <View className='flex-1 flex-col'>
         <Text
