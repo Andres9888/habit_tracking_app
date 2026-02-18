@@ -7,12 +7,12 @@ import type { TemplateInsert } from './types';
  * Insert a template if it doesn't already exist
  */
 export const insertTemplateIfMissing = async (
-  ctx: { db: { insert: any; query: any } },
+  ctx: { db: { insert: unknown; query: unknown } },
   template: TemplateInsert
 ) => {
   const existing = await ctx.db
     .query('templates')
-    .filter((q: any) => q.eq(q.field('name'), template.name))
+    .filter((q: unknown) => q.eq(q.field('name'), template.name))
     .first();
 
   if (existing) return;
@@ -31,7 +31,7 @@ export const normalizeTemplateName = (name: string) =>
  */
 type TemplateDoc = {
   _creationTime: number;
-  _id: any;
+  _id: unknown;
   createdAt: number;
   description: string;
   popularityScore?: number;

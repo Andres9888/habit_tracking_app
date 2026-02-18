@@ -15,7 +15,9 @@ import { config as loadEnvConfig } from 'dotenv';
  *  - FIGMA_TOKEN (second fallback)
  */
 
-const FIGMA_API_BASE_URL = 'https://api.figma.com/v1';
+// FIGMA_API_BASE_URL moved to convex/config/apiConstants.ts
+// See: convex/config/apiConstants.ts#FIGMA_API for the centralized configuration
+const FIGMA_API_BASE_URL = process.env.FIGMA_API_BASE_URL || 'https://api.figma.com/v1';
 const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
 
 function hydrateFigmaTokenFromLocalEnv() {
@@ -153,7 +155,7 @@ class FigmaAPI {
 
   getNodes(fileKey, options = {}) {
     if (!options.ids || !options.ids.length) {
-      throw new Error("Parameter 'ids' is required for figma_get_nodes.");
+      throw new Error("Parameter 'ids' is required for Figma get nodes.");
     }
 
     return this.request(`/files/${fileKey}/nodes`, options);
@@ -161,7 +163,7 @@ class FigmaAPI {
 
   getImages(fileKey, options = {}) {
     if (!options.ids || !options.ids.length) {
-      throw new Error("Parameter 'ids' is required for figma_get_images.");
+      throw new Error("Parameter 'ids' is required for Figma get images.");
     }
 
     return this.request(`/images/${fileKey}`, options);

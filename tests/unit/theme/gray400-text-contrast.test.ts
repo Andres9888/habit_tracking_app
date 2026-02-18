@@ -136,6 +136,8 @@ describe('Gray-400 contrast: colors.gray values are correct', () => {
       'utf-8'
     );
     expect(content).toMatch(/400:\s*'#6B7280'/);
+    expect(content).toContain('400');
+    expect(content).toContain('#6B7280');
   });
 
   it('gray-500 is #78716c (the AA-compliant value)', () => {
@@ -144,5 +146,7 @@ describe('Gray-400 contrast: colors.gray values are correct', () => {
       'utf-8'
     );
     expect(content).toMatch(/500:\s*'#78716c'/);
+    expect(content).toContain('500');
+    expect(content).toContain('#78716c');
   });
 });

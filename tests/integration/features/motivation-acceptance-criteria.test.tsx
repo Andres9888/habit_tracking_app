@@ -64,7 +64,7 @@ jest.mock('lucide-react-native', () => {
     {
       get: (_target, prop) => {
         if (prop === '__esModule') return true;
-        return function MockIcon(props: any) {
+        return function MockIcon(props: unknown) {
           return React.createElement(View, {
             testID: `lucide-icon-${String(prop)}`,
             ...props,
@@ -77,7 +77,7 @@ jest.mock('lucide-react-native', () => {
 
 // Mock clsx
 jest.mock('clsx', () => ({
-  clsx: (...args: any[]) =>
+  clsx: (...args: unknown[]) =>
     args
       .flat()
       .filter((a) => typeof a === 'string')
@@ -92,22 +92,22 @@ jest.mock('react-native-reanimated', () => {
   return {
     default: {
       View,
-      createAnimatedComponent: (Component: any) => Component,
+      createAnimatedComponent: (Component: unknown) => Component,
     },
-    useSharedValue: (initial: any) => ({ value: initial }),
+    useSharedValue: (initial: unknown) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
-    withSpring: (value: any) => value,
-    withTiming: (value: any, _config?: any, _callback?: any) => {
+    withSpring: (value: unknown) => value,
+    withTiming: (value: unknown, _config?: unknown, _callback?: unknown) => {
       // Note: We intentionally don't call the callback to avoid infinite loops
       // in pulsing animations. The callback triggers runOnJS which would restart
       // the animation, causing a stack overflow in tests.
       return value;
     },
-    withSequence: (...values: any[]) => values[values.length - 1],
-    withRepeat: (animation: any) => animation,
+    withSequence: (...values: unknown[]) => values[values.length - 1],
+    withRepeat: (animation: unknown) => animation,
     interpolate: (value: number, input: number[], output: number[]) =>
       output[0],
-    runOnJS: (fn: any) => fn,
+    runOnJS: (fn: unknown) => fn,
     View,
     FadeIn: { duration: () => ({ delay: () => ({}) }) },
     FadeOut: { duration: () => ({}) },

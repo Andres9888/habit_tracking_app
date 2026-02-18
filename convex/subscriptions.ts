@@ -12,7 +12,7 @@ export const getByClerkId = query({
   handler: async (ctx, { clerkId }) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity || identity.subject !== clerkId) {
-      throw new Error('Unauthorized: can only query your own subscription');
+      throw new Error('Not authorized: can only query your own subscription');
     }
     return await ctx.db
       .query('subscriptions')

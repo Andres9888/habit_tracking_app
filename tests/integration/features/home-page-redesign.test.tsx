@@ -28,12 +28,12 @@ jest.mock('@clerk/clerk-expo', () => ({
       emailAddresses: [{ emailAddress: 'test@example.com' }],
     },
   })),
-  ClerkProvider: ({ children }: any) => children,
+  ClerkProvider: ({ children }: unknown) => children,
 }));
 
 // Mock react-native-gesture-handler
 jest.mock('react-native-gesture-handler', () => ({
-  GestureHandlerRootView: ({ children }: any) => children,
+  GestureHandlerRootView: ({ children }: unknown) => children,
 }));
 
 // Mock sonner
@@ -114,7 +114,7 @@ describe('Story 1.2: Home Page Redesign', () => {
 
   describe('AC3: Habit Cards', () => {
     const mockHabit = {
-      _id: 'test-id' as any,
+      _id: 'test-id' as unknown,
       name: '🏃 Morning Run',
       createdAt: Date.now(),
       _creationTime: Date.now(),
@@ -128,7 +128,7 @@ describe('Story 1.2: Home Page Redesign', () => {
       'planned',
       'done',
       'done',
-    ] as any;
+    ] as unknown;
     const mockWeekDateStrings = [
       '2025-01-01',
       '2025-01-02',
@@ -256,7 +256,7 @@ describe('Story 1.2: Home Page Redesign', () => {
       'done',
       'done',
       'done',
-    ] as any;
+    ] as unknown;
     const partialCompleted = [
       'done',
       'done',
@@ -265,7 +265,7 @@ describe('Story 1.2: Home Page Redesign', () => {
       'planned',
       'done',
       'done',
-    ] as any;
+    ] as unknown;
     const noneCompleted = [
       'planned',
       'planned',
@@ -274,7 +274,7 @@ describe('Story 1.2: Home Page Redesign', () => {
       'planned',
       'planned',
       'planned',
-    ] as any;
+    ] as unknown;
 
     it('should render 7 circular nodes', () => {
       const { getAllByRole } = render(
@@ -406,7 +406,7 @@ describe('Story 1.2: Home Page Redesign', () => {
 
     it('should have chain circle toggle hints', () => {
       const mockWeekDateStrings = ['2025-01-01'];
-      const mockWeekStatus = ['done'] as any;
+      const mockWeekStatus = ['done'] as unknown;
       const { getAllByHintText } = render(
         <HabitChainVisualizer
           habitId='test-id'

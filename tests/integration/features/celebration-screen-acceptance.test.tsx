@@ -56,7 +56,7 @@ jest.mock('lucide-react-native', () => {
     {
       get: (_target, prop) => {
         if (prop === '__esModule') return true;
-        return function MockIcon(props: any) {
+        return function MockIcon(props: unknown) {
           return React.createElement(View, {
             testID: `lucide-icon-${String(prop)}`,
             ...props,
@@ -69,7 +69,7 @@ jest.mock('lucide-react-native', () => {
 
 // Mock clsx
 jest.mock('clsx', () => ({
-  clsx: (...args: any[]) =>
+  clsx: (...args: unknown[]) =>
     args
       .flat()
       .filter((a) => typeof a === 'string')
@@ -84,22 +84,22 @@ jest.mock('react-native-reanimated', () => {
   return {
     default: {
       View,
-      createAnimatedComponent: (Component: any) => Component,
+      createAnimatedComponent: (Component: unknown) => Component,
     },
-    useSharedValue: (initial: any) => ({ value: initial }),
+    useSharedValue: (initial: unknown) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
-    withSpring: (value: any) => value,
-    withTiming: (value: any, _config?: any, _callback?: any) => value,
-    withDelay: (_delay: any, value: any) => value,
-    withSequence: (...values: any[]) => values[values.length - 1],
-    withRepeat: (value: any) => value,
+    withSpring: (value: unknown) => value,
+    withTiming: (value: unknown, _config?: unknown, _callback?: unknown) => value,
+    withDelay: (_delay: unknown, value: unknown) => value,
+    withSequence: (...values: unknown[]) => values[values.length - 1],
+    withRepeat: (value: unknown) => value,
     interpolate: (value: number, input: number[], output: number[]) =>
       output[0],
-    runOnJS: (_fn: any) => () => {},
+    runOnJS: (_fn: unknown) => () => {},
     Extrapolation: { CLAMP: 'clamp' },
     Easing: {
-      out: (fn: any) => fn,
-      in: (fn: any) => fn,
+      out: (fn: unknown) => fn,
+      in: (fn: unknown) => fn,
       cubic: (x: number) => x,
     },
     View,
@@ -113,7 +113,7 @@ jest.mock('react-native-safe-area-context', () => ({
 
 // Mock the Modal component
 jest.mock('../../../src/components/Modal', () => ({
-  Modal: ({ children, visible, onClose }: any) =>
+  Modal: ({ children, visible, onClose }: unknown) =>
     visible ? <>{children}</> : null,
 }));
 
@@ -126,7 +126,7 @@ jest.mock(
       onEmojiSelect,
       onNoteChange,
       onSubmit,
-    }: any) => {
+    }: unknown) => {
       const { View, Text, Pressable, TextInput } = require('react-native');
       return (
         <View testID='quick-reflection'>

@@ -47,12 +47,12 @@ describe('HabitCard reduced motion — celebration', () => {
     const setXPPosition = jest.fn();
 
     const trigger = createCelebrationTrigger({
-      cardScale: cardScale as any,
-      checkmarkRotate: checkmarkRotate as any,
-      checkmarkScale: checkmarkScale as any,
+      cardScale: cardScale as unknown,
+      checkmarkRotate: checkmarkRotate as unknown,
+      checkmarkScale: checkmarkScale as unknown,
       reduceMotion: true,
-      rippleOpacity: rippleOpacity as any,
-      rippleScale: rippleScale as any,
+      rippleOpacity: rippleOpacity as unknown,
+      rippleScale: rippleScale as unknown,
       setShowConfetti,
       setShowFloatingXP,
       setXPPosition,
@@ -83,12 +83,12 @@ describe('HabitCard reduced motion — celebration', () => {
     const { withTiming } = require('react-native-reanimated');
 
     const trigger = createCelebrationTrigger({
-      cardScale: cardScale as any,
-      checkmarkRotate: checkmarkRotate as any,
-      checkmarkScale: checkmarkScale as any,
+      cardScale: cardScale as unknown,
+      checkmarkRotate: checkmarkRotate as unknown,
+      checkmarkScale: checkmarkScale as unknown,
       reduceMotion: false,
-      rippleOpacity: rippleOpacity as any,
-      rippleScale: rippleScale as any,
+      rippleOpacity: rippleOpacity as unknown,
+      rippleScale: rippleScale as unknown,
       setShowConfetti,
       setShowFloatingXP,
       setXPPosition,
@@ -107,8 +107,8 @@ describe('HabitCard reduced motion — celebration', () => {
     const checkmarkRotate = makeMockSharedValue(0);
 
     const trigger = createUncheckTrigger(
-      checkmarkScale as any,
-      checkmarkRotate as any,
+      checkmarkScale as unknown,
+      checkmarkRotate as unknown,
       true
     );
 
@@ -126,8 +126,8 @@ describe('HabitCard reduced motion — celebration', () => {
     withTiming.mockClear();
 
     const trigger = createUncheckTrigger(
-      checkmarkScale as any,
-      checkmarkRotate as any,
+      checkmarkScale as unknown,
+      checkmarkRotate as unknown,
       false
     );
 
@@ -141,13 +141,13 @@ describe('HabitCard reduced motion — panGesture', () => {
   it('createPanGesture accepts reduceMotion parameter', () => {
     const translateX = { value: 0 };
     // Should not throw
-    const gesture = createPanGesture(translateX as any, true);
+    const gesture = createPanGesture(translateX as unknown, true);
     expect(gesture).toBeDefined();
   });
 
   it('createPanGesture defaults reduceMotion to false', () => {
     const translateX = { value: 0 };
-    const gesture = createPanGesture(translateX as any);
+    const gesture = createPanGesture(translateX as unknown);
     expect(gesture).toBeDefined();
   });
 });
@@ -159,7 +159,7 @@ describe('HabitCard reduced motion — tapGesture interface', () => {
       cardScale: { value: 1 },
       completed: false,
       disabled: false,
-      id: 'test' as any,
+      id: 'test' as unknown,
       isToggling: false,
       reduceMotion: true,
       today: '2025-01-01',

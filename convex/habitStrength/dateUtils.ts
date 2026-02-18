@@ -46,7 +46,7 @@ export function parseDateKeyToLocalDate(dateKey: string): Date {
 
   // Validate we didn't roll the date (e.g. 2025-13-40)
   if (formatDateKey(parsed) !== dateKey) {
-    throw new Error('Invalid date value; expected YYYY-MM-DD');
+    throw new Error('Invalid date value. Expected YYYY-MM-DD');
   }
 
   return parsed;

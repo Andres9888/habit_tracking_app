@@ -99,7 +99,7 @@ jest.mock('lucide-react-native', () => {
     {
       get: (_target, prop) => {
         if (prop === '__esModule') return true;
-        return function MockIcon(props: any) {
+        return function MockIcon(props: unknown) {
           return React.createElement(View, {
             testID: `lucide-icon-${String(prop)}`,
             ...props,
@@ -112,7 +112,7 @@ jest.mock('lucide-react-native', () => {
 
 // Mock clsx
 jest.mock('clsx', () => ({
-  clsx: (...args: any[]) =>
+  clsx: (...args: unknown[]) =>
     args
       .flat()
       .filter((a) => typeof a === 'string')
@@ -127,23 +127,23 @@ jest.mock('react-native-reanimated', () => {
   return {
     default: {
       View,
-      createAnimatedComponent: (Component: any) => Component,
+      createAnimatedComponent: (Component: unknown) => Component,
     },
-    useSharedValue: (initial: any) => ({ value: initial }),
+    useSharedValue: (initial: unknown) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
-    withSpring: (value: any) => value,
-    withTiming: (value: any, _config?: any, _callback?: any) => value,
-    withDelay: (_delay: any, value: any) => value,
-    withSequence: (...values: any[]) => values[values.length - 1],
-    withRepeat: (value: any) => value,
+    withSpring: (value: unknown) => value,
+    withTiming: (value: unknown, _config?: unknown, _callback?: unknown) => value,
+    withDelay: (_delay: unknown, value: unknown) => value,
+    withSequence: (...values: unknown[]) => values[values.length - 1],
+    withRepeat: (value: unknown) => value,
     interpolate: (value: number, input: number[], output: number[]) =>
       output[0],
-    runOnJS: (fn: any) => fn,
+    runOnJS: (fn: unknown) => fn,
     cancelAnimation: jest.fn(),
     Extrapolation: { CLAMP: 'clamp' },
     Easing: {
-      out: (fn: any) => fn,
-      in: (fn: any) => fn,
+      out: (fn: unknown) => fn,
+      in: (fn: unknown) => fn,
       ease: (t: number) => t,
       cubic: (x: number) => x,
     },
@@ -165,7 +165,7 @@ jest.mock('react-native', () => {
   return {
     ...RN,
     Alert: {
-      alert: (...args: any[]) => mockAlert(...args),
+      alert: (...args: unknown[]) => mockAlert(...args),
     },
   };
 });
@@ -1071,7 +1071,7 @@ describe('AC7: Delete Functionality - Confirmation and cascade delete', () => {
 
       const alertCall = mockAlert.mock.calls[0];
       const buttons = alertCall[2];
-      expect(buttons.find((b: any) => b.style === 'cancel')).toBeTruthy();
+      expect(buttons.find((b: unknown) => b.style === 'cancel')).toBeTruthy();
     });
 
     it('has destructive delete option', () => {
@@ -1084,7 +1084,7 @@ describe('AC7: Delete Functionality - Confirmation and cascade delete', () => {
 
       const alertCall = mockAlert.mock.calls[0];
       const buttons = alertCall[2];
-      expect(buttons.find((b: any) => b.style === 'destructive')).toBeTruthy();
+      expect(buttons.find((b: unknown) => b.style === 'destructive')).toBeTruthy();
     });
   });
 
@@ -1095,7 +1095,7 @@ describe('AC7: Delete Functionality - Confirmation and cascade delete', () => {
       // Mock Alert to immediately call the delete callback
       mockAlert.mockImplementationOnce((title, message, buttons) => {
         const deleteButton = buttons.find(
-          (b: any) => b.style === 'destructive'
+          (b: unknown) => b.style === 'destructive'
         );
         deleteButton?.onPress?.();
       });
@@ -1118,7 +1118,7 @@ describe('AC7: Delete Functionality - Confirmation and cascade delete', () => {
 
       mockAlert.mockImplementationOnce((title, message, buttons) => {
         const deleteButton = buttons.find(
-          (b: any) => b.style === 'destructive'
+          (b: unknown) => b.style === 'destructive'
         );
         deleteButton?.onPress?.();
       });
@@ -1414,7 +1414,7 @@ describe('AC11: Complete User Flow - Add, View, Edit, Delete', () => {
     const onDeleteImage = jest.fn().mockResolvedValue(undefined);
 
     mockAlert.mockImplementationOnce((title, message, buttons) => {
-      const deleteButton = buttons.find((b: any) => b.style === 'destructive');
+      const deleteButton = buttons.find((b: unknown) => b.style === 'destructive');
       deleteButton?.onPress?.();
     });
 

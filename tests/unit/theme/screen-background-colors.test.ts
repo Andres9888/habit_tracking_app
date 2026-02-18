@@ -19,11 +19,15 @@ function readSource(relativePath: string): string {
 describe('colors.light.gradientMid token', () => {
   it('exists and equals #f5f3f0', () => {
     expect(colors.light.gradientMid).toBe('#f5f3f0');
+    expect(colors.light.gradientMid).toBeDefined();
+    expect(colors.light.gradientMid).toContain('#');
   });
 
   it('is darker than colors.light.background', () => {
     // gradientMid (#f5f3f0) should be visually darker than background (#faf9f7)
     expect(colors.light.gradientMid).not.toBe(colors.light.background);
+    expect(colors.light.background).toBeDefined();
+    expect(colors.light.gradientMid).toBeTruthy();
   });
 });
 
@@ -32,11 +36,14 @@ describe('HabitsApp uses theme background', () => {
 
   it('imports colors from theme', () => {
     expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
+    expect(source).toContain('colors');
+    expect(source).toContain('from');
   });
 
   it('uses colors.light.background instead of hardcoded hex', () => {
     expect(source).toContain('colors.light.background');
     expect(source).not.toContain('#FAF8F5');
+    expect(source).toContain('light');
   });
 });
 

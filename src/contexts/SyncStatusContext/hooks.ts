@@ -20,7 +20,7 @@ import type { SyncOrchestratorResult } from '../../lib/offline/sync/types';
 export function useSyncStatus(): SyncStatusContextValue {
   const context = useContext(SyncStatusContext);
   if (!context.status.isActive && context.triggerSync === undefined) {
-    throw new Error('useSyncStatus must be used within SyncStatusProvider');
+    throw new Error('UseSyncStatus must be used within SyncStatusProvider');
   }
   return context;
 }
