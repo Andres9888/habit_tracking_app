@@ -59,6 +59,7 @@ export const HeatmapTooltip = memo(function HeatmapTooltip({
 
   return (
     <Modal
+      accessibilityViewIsModal
       transparent
       animationType='none'
       visible={visible}

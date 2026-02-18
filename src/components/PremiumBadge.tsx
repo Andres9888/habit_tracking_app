@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, type ViewStyle } from 'react-native';
 import { Lock, Flame, Sparkles } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { shadows, borderRadius } from '../theme/spacing';
@@ -19,7 +19,7 @@ type PremiumBadgeVariant = 'pro' | 'popular' | 'new';
 
 interface PremiumBadgeProps {
   variant?: PremiumBadgeVariant;
-  style?: any;
+  style?: ViewStyle;
 }
 
 export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
@@ -34,7 +34,7 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
 
   if (variant === 'new') {
     return (
-      <View style={[styles.badge, styles.newBadge, style]}>
+      <View style={[styles.badge, styles.newBadge]}>
         <Sparkles color='#3b82f6' size={12} strokeWidth={2.5} />
         <Text style={[styles.badgeText, { color: '#3b82f6' }]}>New</Text>
       </View>

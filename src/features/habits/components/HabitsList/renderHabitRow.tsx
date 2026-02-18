@@ -1,5 +1,10 @@
 /**
- * renderHabitRow - Individual habit row renderer for HabitsList
+ * renderHabitRow — FlatList `renderItem` wrapper for individual habit rows.
+ *
+ * Wraps the output of `useHabitRenderItem` in an `Animated.View` that applies
+ * entrance opacity/translateY animations **only** to the most recently created
+ * habit (identified by `justCreatedHabitId`).  All other rows render without
+ * the animated wrapper to avoid unnecessary native-driver overhead.
  */
 
 import React from 'react';

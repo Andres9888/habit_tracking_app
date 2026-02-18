@@ -1,14 +1,21 @@
 /**
  * useCalendarHandlers
  * Calendar toggle and undo/redo handlers for habit detail screen
+ *
+ * Features:
+ * - Haptic feedback on interactions
+ * - Accessible error handling
+ * - Screen reader announcements for state changes
+ * - Timezone-aware habit toggling
  */
 
 import { useCallback } from 'react';
-import { Alert } from 'react-native';
+import { Alert, AccessibilityInfo } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import type { Habit } from './HabitDetailScreen.types';
+import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 interface UseCalendarHandlersProps {
   habit: Habit | null;
@@ -44,31 +51,71 @@ export const useCalendarHandlers = ({
       if (inputDate > todayDate) return;
 
       setIsTogglingCalendar(true);
+      Haptics.impactAsync(
+        wasCompleted
+          ? Haptics.ImpactFeedbackStyle.Light
+          : Haptics.ImpactFeedbackStyle.Medium
+      );
+
+      const dateFormatted = new Date(date).toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+      });
+      const newState = wasCompleted ? 'marked incomplete' : 'marked complete';
+
       toggleHabitMutation({ date, habitId: habit._id })
+        .then(() => {
+          // Announce state change to screen readers
+          const announcement = `${habit.name} on ${dateFormatted} ${newState}.`;
+          if (__DEV__) console.log('A11y announcement:', announcement);
+          // Use setTimeout to ensure the DOM has updated
+          setTimeout(() => {
+            AccessibilityInfo.announceForAccessibility(announcement);
+          }, 200);
+        })
         .catch((error: unknown) => {
           if (__DEV__) console.error('Failed to toggle habit:', error);
-          Alert.alert('Error', 'Failed to update habit. Please try again.');
+          Alert.alert('Error', ERROR_MESSAGES.DATA_OPS.TOGGLE_HABIT_FAILED);
         })
         .finally(() => setIsTogglingCalendar(false));
     },
-    [isTogglingCalendar, habit?._id, toggleHabitMutation, setIsTogglingCalendar]
+    [isTogglingCalendar, habit?._id, habit?.name, toggleHabitMutation, setIsTogglingCalendar]
   );
 
   const handleSwipeDelete = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPendingDelete(true);
-  }, [setPendingDelete]);
+    // Announce pending deletion for screen readers
+    setTimeout(() => {
+      AccessibilityInfo.announceForAccessibility(
+        `${habit?.name} marked for deletion. Undo available.`
+      );
+    }, 100);
+  }, [setPendingDelete, habit?.name]);
 
   const handleSwipeArchive = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPendingArchive(true);
-  }, [setPendingArchive]);
+    // Announce pending archive for screen readers
+    setTimeout(() => {
+      AccessibilityInfo.announceForAccessibility(
+        `${habit?.name} marked for archiving. Undo available.`
+      );
+    }, 100);
+  }, [setPendingArchive, habit?.name]);
 
   const handleConfirmDelete = useCallback(() => {
     setPendingDelete(false);
     if (habit) {
       onDelete?.(habit._id);
       onClose();
+      // Announce deletion completion
+      setTimeout(() => {
+        AccessibilityInfo.announceForAccessibility(
+          `${habit.name} has been deleted.`
+        );
+      }, 100);
     }
   }, [habit, onDelete, onClose, setPendingDelete]);
 
@@ -77,6 +124,12 @@ export const useCalendarHandlers = ({
     if (habit) {
       onArchive?.(habit._id);
       onClose();
+      // Announce archive completion
+      setTimeout(() => {
+        AccessibilityInfo.announceForAccessibility(
+          `${habit.name} has been archived.`
+        );
+      }, 100);
     }
   }, [habit, onArchive, onClose, setPendingArchive]);
 

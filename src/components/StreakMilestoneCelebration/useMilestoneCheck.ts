@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * useMilestoneCheck Hook
  * Detects when a streak crosses a milestone threshold
@@ -29,6 +30,26 @@ function getStorageKey(habitId: string): string {
   return `${STORAGE_KEY_PREFIX}${habitId}`;
 }
 
+function parseShownMilestones(raw: string | null): number[] {
+  if (!raw) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed.filter(
+      (value): value is number =>
+        typeof value === 'number' && Number.isFinite(value)
+    );
+  } catch {
+    return [];
+  }
+}
+
 /**
  * Hook to detect and manage streak milestone celebrations
  */
@@ -47,9 +68,7 @@ export function useMilestoneCheck({
     async function loadShownMilestones() {
       try {
         const stored = await AsyncStorage.getItem(getStorageKey(habitId));
-        if (stored) {
-          setShownMilestones(JSON.parse(stored));
-        }
+        setShownMilestones(parseShownMilestones(stored));
       } catch (error) {
         if (__DEV__) console.warn('Failed to load shown milestones:', error);
       }
@@ -77,10 +96,11 @@ export function useMilestoneCheck({
       // Trigger success haptic feedback
       if (Platform.OS === 'ios' || Platform.OS === 'android') {
         setTimeout(() => {
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-            .catch(() => {
-              // Silently fail - haptics are non-critical
-            });
+          Haptics.notificationAsync(
+            Haptics.NotificationFeedbackType.Success
+          ).catch(() => {
+            // Silently fail - haptics are non-critical
+          });
         }, ANIMATION_TIMING.HAPTIC_DELAY);
       }
     }
@@ -146,7 +166,7 @@ export async function checkAndTriggerMilestone(
   // Check if already shown
   try {
     const stored = await AsyncStorage.getItem(getStorageKey(habitId));
-    const shownMilestones: number[] = stored ? JSON.parse(stored) : [];
+    const shownMilestones = parseShownMilestones(stored);
 
     if (shownMilestones.includes(crossedMilestone.days)) {
       return null;
@@ -154,8 +174,9 @@ export async function checkAndTriggerMilestone(
 
     // Trigger haptic
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-        .catch(() => {});
+      await Haptics.notificationAsync(
+        Haptics.NotificationFeedbackType.Success
+      ).catch(() => {});
     }
 
     return crossedMilestone;
@@ -174,7 +195,7 @@ export async function persistMilestoneShown(
 ): Promise<void> {
   try {
     const stored = await AsyncStorage.getItem(getStorageKey(habitId));
-    const shownMilestones: number[] = stored ? JSON.parse(stored) : [];
+    const shownMilestones = parseShownMilestones(stored);
 
     if (!shownMilestones.includes(milestoneDays)) {
       shownMilestones.push(milestoneDays);

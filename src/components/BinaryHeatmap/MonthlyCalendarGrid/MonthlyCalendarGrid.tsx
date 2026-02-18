@@ -2,10 +2,12 @@
  * MonthlyCalendarGrid Component
  *
  * Full monthly calendar view with habit-colored completion indicators.
+ * Shows filled green circles for completed days and empty circles for missed days.
+ * Tapping a day shows completion notes if any exist.
  */
 
 import React, { memo, useState, useCallback } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { addMonths, subMonths } from 'date-fns';
 import type { MonthlyCalendarGridProps } from './types';
 import { styles } from './styles';
@@ -20,6 +22,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   completedDates,
   habitColor,
   habitCreatedAt,
+  notesByDate = {},
   onDayPress,
 }: MonthlyCalendarGridProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -39,9 +42,28 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
 
   const handleDayPress = useCallback(
     (dateString: string, isCompleted: boolean) => {
-      onDayPress?.(dateString, isCompleted);
+      // Check if there's a note for this day
+      const note = notesByDate[dateString];
+      if (note) {
+        // Show note in alert
+        Alert.alert(
+          `Notes for ${dateString}`,
+          note,
+          [
+            { text: 'Got It', style: 'default' },
+            {
+              text: 'Edit Note',
+              onPress: () => onDayPress?.(dateString, isCompleted),
+            },
+          ],
+          { cancelable: true }
+        );
+      } else {
+        // No note, just call the original handler
+        onDayPress?.(dateString, isCompleted);
+      }
     },
-    [onDayPress]
+    [notesByDate, onDayPress]
   );
 
   return (

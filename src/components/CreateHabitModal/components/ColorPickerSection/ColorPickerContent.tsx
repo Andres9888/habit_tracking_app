@@ -1,5 +1,5 @@
 /**
- * ColorPickerContent - 12 colors in 2 rows of 6
+ * ColorPickerContent - predefined palette split across two rows
  * Per spec: 36×36px visual, 48×48px tap, centered rows
  */
 
@@ -19,7 +19,7 @@ export const ColorPickerContent = ({
 }: ColorPickerSectionProps) => {
   const reduceMotion = useReduceMotion();
   const row1 = colors.slice(0, 6);
-  const row2 = colors.slice(6, 12);
+  const row2 = colors.slice(6);
 
   const renderRow = (rowColors: string[], testId: string) => (
     <View

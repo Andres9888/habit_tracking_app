@@ -1,16 +1,17 @@
-import type { SharedValue } from 'react-native-reanimated';
+import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 
 export interface HabitsHeaderProps {
   completedToday?: number;
   /** Force show header even when totalHabits is 0 (used during empty->list transition) */
   forceShow?: boolean;
-  /** Whether user has premium subscription */
+  /** Whether the current user has an active premium subscription */
   isPremiumUser?: boolean;
   openCreateHabitScreen: () => void;
   openSettings: () => void;
   openSortSheet: () => void;
   openTemplatesScreen: () => void;
-  /** Called when user taps PRO badge to upgrade */
+  /** Callback when the user taps the PRO upgrade badge */
   onUpgradePress?: () => void;
   reduceMotion?: boolean;
   showCompletionSummary?: boolean;
@@ -26,6 +27,18 @@ export interface HeaderAnimations {
   templatesButtonAnimatedStyle: { transform: { scale: number }[] };
   settingsButtonScale: SharedValue<number>;
   settingsButtonAnimatedStyle: { transform: { scale: number }[] };
+}
+
+export interface IconButtonGroupProps {
+  templatesAnimatedStyle: AnimatedStyle<ViewStyle>;
+  showBadge: boolean;
+  onTemplatesPress: () => void;
+  onTemplatesPressIn: () => void;
+  onTemplatesPressOut: () => void;
+  settingsAnimatedStyle: AnimatedStyle<ViewStyle>;
+  onSettingsPress: () => void;
+  onSettingsPressIn: () => void;
+  onSettingsPressOut: () => void;
 }
 
 export interface HeaderHandlers {

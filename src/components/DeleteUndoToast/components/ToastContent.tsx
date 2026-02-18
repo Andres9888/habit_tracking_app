@@ -1,7 +1,8 @@
 import { View, Text, Pressable } from 'react-native';
 import { Trash2, Undo2 } from 'lucide-react-native';
 
-import { styles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { useToastStyles } from '../styles';
 
 interface ToastContentProps {
   itemName: string;
@@ -13,10 +14,14 @@ interface ToastContentProps {
  * Contains icon, message, and undo button
  */
 export function ToastContent({ itemName, onUndo }: ToastContentProps) {
+  const { isDark } = useThemeColors();
+  const styles = useToastStyles();
+  const redIconColor = isDark ? '#FCA5A5' : '#dc2626';
+
   return (
     <View style={styles.content}>
       <View style={styles.iconContainer}>
-        <Trash2 color='#dc2626' size={18} strokeWidth={2} />
+        <Trash2 color={redIconColor} size={18} strokeWidth={2} />
       </View>
 
       <Text numberOfLines={1} style={styles.message}>
@@ -33,7 +38,7 @@ export function ToastContent({ itemName, onUndo }: ToastContentProps) {
         ]}
         onPress={onUndo}
       >
-        <Undo2 color='#dc2626' size={14} strokeWidth={2.5} />
+        <Undo2 color={redIconColor} size={14} strokeWidth={2.5} />
         <Text style={styles.undoText}>UNDO</Text>
       </Pressable>
     </View>

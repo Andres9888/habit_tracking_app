@@ -28,14 +28,23 @@ export const toggleHabit = mutation({
 
     const newCompletedStatus = existing ? !existing.completed : true;
     await (existing
-      ? ctx.db.patch(existing._id, { completed: newCompletedStatus })
+      ? ctx.db.patch(existing._id, {
+          completed: newCompletedStatus,
+          // Backfill userId on legacy records missing it
+          ...(existing.userId ? {} : { userId: identity.subject }),
+        })
       : ctx.db.insert('tracking', {
           completed: true, date: args.date, habitId: args.habitId, userId: identity.subject,
         }));
 
-    await ctx.scheduler.runAfter(0, internal.habits.toggle.recalculateStreakAndStrength, {
-      date: args.date, habitId: args.habitId, timezone: args.timezone,
-    });
+    // Schedule streak/strength recalculation with small delay to batch multiple toggles
+    // This prevents race conditions if user rapidly toggles the same habit
+    // The delay (500ms) allows multiple quick toggles to be batched into one recalculation
+    await ctx.scheduler.runAfter(
+      500,
+      internal.habits.toggle.recalculateStreakAndStrength,
+      { date: args.date, habitId: args.habitId, timezone: args.timezone }
+    );
     return null;
   },
   returns: v.null(),
@@ -61,7 +70,12 @@ export const recalculateStreakAndStrength = internalMutation({
     const snapshot = calculateMomentumStrengthSnapshot({
       habitCreatedAt: habit.createdAt, throughDate: evaluationDateKey, tracking,
     });
-    const streakData = calculateStreakFromHistory(tracking, evaluationDateKey);
+    
+    // Pass pause info to streak calculation to exclude paused periods
+    const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
+      pausedAt: habit.pausedAt,
+      resumedAt: habit.resumedAt,
+    });
 
     await ctx.db.patch(args.habitId, {
       bestStreak: streakData.bestStreak, currentStreak: streakData.currentStreak,

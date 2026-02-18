@@ -12,12 +12,13 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { QuickStartTemplate } from './types';
 import { styles } from './styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const SPRING_CONFIG = { damping: 15, stiffness: 200 };
+const SPRING_CONFIG = { damping: 18, stiffness: 150 };
 
 interface TemplateChipProps {
   template: QuickStartTemplate;
@@ -25,6 +26,7 @@ interface TemplateChipProps {
 }
 
 export function TemplateChip({ template, onPress }: TemplateChipProps) {
+  const { colors } = useThemeColors();
   const { triggerLightImpact } = useHapticFeedback();
   const scale = useSharedValue(1);
 
@@ -49,13 +51,13 @@ export function TemplateChip({ template, onPress }: TemplateChipProps) {
     <AnimatedPressable
       accessibilityLabel={`Create ${template.name} habit`}
       accessibilityRole='button'
-      style={[styles.templateChip, animatedStyle]}
+      style={[styles.templateChip, { backgroundColor: colors.gray[100] }, animatedStyle]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
       <Text style={styles.templateEmoji}>{template.emoji}</Text>
-      <Text style={styles.templateName}>{template.name}</Text>
+      <Text style={[styles.templateName, { color: colors.text.primary }]}>{template.name}</Text>
     </AnimatedPressable>
   );
 }

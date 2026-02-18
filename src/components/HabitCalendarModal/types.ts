@@ -11,7 +11,7 @@ export interface Habit {
   reminderTime?: string;
   preferredTime?: string;
   createdAt?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface TrackingEntry {

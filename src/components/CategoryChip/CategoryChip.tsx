@@ -6,7 +6,7 @@
  * Features: Category-specific colors, gradient on selection, animated transitions
  */
 
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
@@ -19,7 +19,7 @@ import { useCategoryChipHandlers } from './useCategoryChipHandlers';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const CategoryChip: React.FC<CategoryChipProps> = ({
+function CategoryChipComponent({
   id,
   label,
   icon,
@@ -27,7 +27,11 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
   isSelected,
   onPress,
   animationIndex = 0,
-}) => {
+}: CategoryChipProps) {
+  // Wrap onPress in useCallback to prevent unnecessary re-renders when parent re-renders
+  const handlePress = useCallback(() => {
+    onPress?.(id);
+  }, [id, onPress]);
   const {
     backgroundStyle,
     colors,
@@ -39,12 +43,13 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
     textStyle,
   } = useCategoryChipAnimations({ animationIndex, id, isSelected });
 
-  const { handlePress, handlePressIn, handlePressOut } =
-    useCategoryChipHandlers(pressScale, onPress);
+  const { handlePressIn, handlePressOut } =
+    useCategoryChipHandlers(pressScale, handlePress);
 
   return (
     <AnimatedPressable
       accessible
+      accessibilityHint={`Tap to filter templates by ${label} category`}
       accessibilityLabel={`Filter by ${label}, ${count} habits`}
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
@@ -87,6 +92,8 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
       </Animated.View>
     </AnimatedPressable>
   );
-};
+}
+
+export const CategoryChip = memo(CategoryChipComponent);
 
 export default CategoryChip;

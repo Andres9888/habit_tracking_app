@@ -4,8 +4,11 @@
  */
 
 import { v } from 'convex/values';
-import { mutation, query } from './_generated/server';
+import { internalMutation, mutation, query } from './_generated/server';
 import type { Id } from './_generated/dataModel';
+
+// Frequency constants
+const FREQUENCY_DAILY = 'daily';
 
 type TemplateInsert = {
   category:
@@ -148,9 +151,10 @@ export const getById = query({
 });
 
 /**
- * Mutation: Seed initial templates (for setup/migration)
+ * Internal Mutation: Seed initial templates (for setup/migration)
+ * SEC: Internal only - run via Convex dashboard, not accessible to users
  */
-export const seedTemplates = mutation({
+export const seedTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -179,7 +183,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Start your day with mindful meditation. Research shows just 5 minutes daily can reduce stress and improve focus.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧘',
       iconColor: '#10B981',
       name: '5-Minute Meditation',
@@ -201,7 +205,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Write 3 pages of stream-of-consciousness thoughts first thing. Clears mental clutter and boosts creativity.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '✍️',
       iconColor: '#3B82F6',
       name: 'Morning Pages',
@@ -215,7 +219,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Drink a full glass of water immediately after waking. Rehydrates body and kickstarts metabolism.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💧',
       iconColor: '#60A5FA',
       name: 'Hydration First',
@@ -235,7 +239,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'View sunlight within 30 minutes of waking. Regulates circadian rhythm and improves sleep quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌅',
       iconColor: '#F59E0B',
       name: 'Sunrise Viewing',
@@ -250,7 +254,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Perform 5-10 sun salutations to wake up your body and mind. Improves circulation, flexibility, and energy.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌞',
       iconColor: '#F59E0B',
       name: 'Sun Salutation Flow',
@@ -264,7 +268,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Take a 2-3 minute cold shower. Builds resilience, improves circulation, and boosts alertness.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '❄️',
       iconColor: '#3B82F6',
       name: 'Cold Shower',
@@ -279,7 +283,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Make your bed immediately after waking. Creates a sense of accomplishment and order to start the day.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🛏️',
       iconColor: '#8B5CF6',
       name: 'Make Your Bed',
@@ -294,7 +298,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'High-intensity circuit training backed by science. 12 exercises, 30 seconds each, maximum results in minimum time.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🏃',
       iconColor: '#EF4444',
       name: '7-Minute Workout',
@@ -315,7 +319,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Walk 10,000 steps daily. Proven to reduce cardiovascular disease risk and improve mental health.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👟',
       iconColor: '#8B5CF6',
       name: '10,000 Steps',
@@ -349,7 +353,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Daily stretching for flexibility and injury prevention. Just 10 minutes improves range of motion.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🤸',
       iconColor: '#EC4899',
       name: 'Stretching Routine',
@@ -364,7 +368,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Eliminate added sugars from diet. Reduces inflammation, improves energy, and supports weight management.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🚫',
       iconColor: '#DC2626',
       name: 'No Added Sugar',
@@ -392,7 +396,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice yoga for 20-30 minutes. Improves flexibility, reduces stress, and enhances mental clarity.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧘‍♀️',
       iconColor: '#EC4899',
       name: 'Daily Yoga Practice',
@@ -406,7 +410,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Consume 25-35g of fiber daily from whole foods. Supports gut health, digestion, and metabolic function.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌾',
       iconColor: '#16A34A',
       name: 'High Fiber Diet',
@@ -420,7 +424,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Track daily water intake to reach 8-10 glasses. Essential for hydration, cognitive function, and energy.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🥤',
       iconColor: '#0284C7',
       name: 'Hydration Tracking',
@@ -436,7 +440,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         '90-minute focused work block with no distractions. Maximize cognitive output and creative problem-solving.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧠',
       iconColor: '#7C3AED',
       name: 'Deep Work Session',
@@ -456,7 +460,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Work in 25-minute focused intervals with 5-minute breaks. Maintains high focus and prevents burnout.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⏱️',
       iconColor: '#F97316',
       name: 'Pomodoro Technique',
@@ -469,7 +473,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Identify and complete your single most important task before noon. Ensures progress on key priorities.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎯',
       iconColor: '#0EA5E9',
       name: 'MIT - Most Important Task',
@@ -483,7 +487,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Process all emails to zero daily. Reduces mental load and prevents email overwhelm.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📧',
       iconColor: '#06B6D4',
       name: 'Inbox Zero',
@@ -496,7 +500,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         "Plan tomorrow's top 3 tasks before bed. Reduces morning decision fatigue and anxiety.",
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📝',
       iconColor: '#6366F1',
       name: 'Evening Planning',
@@ -509,7 +513,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Block specific time periods for focused work without interruptions. Improves productivity and work quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📅',
       iconColor: '#059669',
       name: 'Time Blocking',
@@ -522,7 +526,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Spend 30 minutes daily learning something new. Builds knowledge and keeps your brain sharp.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📚',
       iconColor: '#7C3AED',
       name: 'Daily Learning',
@@ -550,7 +554,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Take regular 5-minute breaks every hour during work. Prevents burnout and maintains sustained focus.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⏰',
       iconColor: '#F59E0B',
       name: 'Work Breaks',
@@ -565,7 +569,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         "Write down 3 things you're grateful for. Increases happiness, optimism, and life satisfaction.",
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🙏',
       iconColor: '#F59E0B',
       name: 'Gratitude Journaling',
@@ -587,7 +591,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         '5 minutes of controlled breathing. Activates parasympathetic nervous system, reduces stress instantly.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌬️',
       iconColor: '#14B8A6',
       name: 'Breathwork Practice',
@@ -602,7 +606,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Reflect on your day: what went well, what to improve. Builds self-awareness and continuous growth.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌙',
       iconColor: '#6366F1',
       name: 'Evening Reflection',
@@ -615,7 +619,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'One hour completely screen-free before bed. Improves sleep quality and mental restoration.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📵',
       iconColor: '#10B981',
       name: 'Digital Detox Hour',
@@ -630,7 +634,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         '20-minute nature walk. Reduces cortisol, lowers blood pressure, and enhances mood significantly.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌲',
       iconColor: '#059669',
       name: 'Walking in Nature',
@@ -644,7 +648,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice progressive muscle relaxation for 10 minutes. Releases physical tension and reduces anxiety.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💆',
       iconColor: '#EC4899',
       name: 'Progressive Muscle Relaxation',
@@ -657,7 +661,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice loving-kindness meditation. Cultivates compassion for yourself and others, improving relationships.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '❤️',
       iconColor: '#EF4444',
       name: 'Loving-Kindness Meditation',
@@ -671,7 +675,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Keep a daily journal of positive experiences and accomplishments. Builds optimism and resilience.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '✨',
       iconColor: '#F59E0B',
       name: 'Positive Journaling',
@@ -685,7 +689,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice mindful eating - eat slowly and pay attention to flavors, textures, and satisfaction cues.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🍽️',
       iconColor: '#059669',
       name: 'Mindful Eating',
@@ -700,7 +704,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'View 2-10 minutes of morning sunlight within 30-60 minutes of waking. Critical for circadian rhythm regulation and dopamine production.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '☀️',
       iconColor: '#F59E0B',
       name: 'Morning Sunlight Viewing',
@@ -721,7 +725,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Delay caffeine intake by 90-120 minutes after waking. Allows natural adenosine clearance and prevents afternoon crash.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⏰',
       iconColor: '#B45309',
       name: 'Delay Caffeine 90 Minutes',
@@ -776,7 +780,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice 10-20 minutes of Non-Sleep Deep Rest (NSDR) daily. Restores focus, accelerates learning, and improves sleep.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🛌',
       iconColor: '#7DD3FC',
       name: 'NSDR Practice',
@@ -793,7 +797,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Perform 1-3 physiological sighs when stressed. Rapidly lowers autonomic arousal and steadies mood.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😮‍💨',
       iconColor: '#34D399',
       name: 'Physiological Sigh',
@@ -810,7 +814,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Dim lights 2-3 hours before sleep. Avoid overhead lights and use low-angle lights. Supports melatonin production.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💡',
       iconColor: '#FDE047',
       name: 'Evening Light Dimming',
@@ -826,7 +830,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Keep bedroom temperature 65-68°F (18-20°C) for optimal sleep. Cooler temperatures support deep sleep stages.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌡️',
       iconColor: '#0EA5E9',
       name: 'Cool Sleep Temperature',
@@ -841,7 +845,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Consume 30-60g of protein within 30 minutes of waking. Supports neurotransmitter production and muscle maintenance.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🍳',
       iconColor: '#F97316',
       name: 'Morning Protein Protocol',
@@ -856,7 +860,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Follow consistent meal timing within a 10-12 hour eating window. Supports circadian alignment and metabolic health.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🍽️',
       iconColor: '#10B981',
       name: 'Time-Restricted Eating',
@@ -872,7 +876,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice intermittent fasting with 16:8 schedule (16 hours fasting, 8 hours eating). Enhances autophagy and metabolic flexibility.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⏰',
       iconColor: '#7C3AED',
       name: '16:8 Intermittent Fasting',
@@ -905,7 +909,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Track and optimize sleep quality. Maintain consistent sleep/wake times, keep bedroom cool, and avoid screens before bed.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😴',
       iconColor: '#1E40AF',
       name: 'Sleep Optimization',
@@ -920,7 +924,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Spend 1-2 hours in complete darkness before sleep. Enhances melatonin production and sleep quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌙',
       iconColor: '#0F172A',
       name: 'Darkness Before Sleep',
@@ -935,7 +939,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Maintain indoor temperature 65-68°F during sleep. Cooler temperatures promote deeper, more restorative sleep.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌡️',
       iconColor: '#06B6D4',
       name: 'Optimal Sleep Temperature',
@@ -951,7 +955,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Call a friend or family member daily. Strong social connections are crucial for mental health and longevity.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📞',
       iconColor: '#8B5CF6',
       name: 'Daily Social Call',
@@ -970,7 +974,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Send a message to someone you care about. Small acts of connection strengthen relationships over time.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💬',
       iconColor: '#06B6D4',
       name: 'Reach Out Daily',
@@ -984,7 +988,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Spend quality time with your partner without distractions. Strengthens emotional bonds and intimacy.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💑',
       iconColor: '#EC4899',
       name: 'Quality Partner Time',
@@ -1039,7 +1043,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Go to bed at the same time every night. Consistent sleep schedule improves sleep quality and circadian rhythm.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🛏️',
       iconColor: '#1E3A8A',
       name: 'Consistent Bedtime',
@@ -1058,7 +1062,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Stop screen use 60 minutes before bed. Blue light disrupts melatonin production and delays sleep onset.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📱',
       iconColor: '#DC2626',
       name: 'No Screens Before Bed',
@@ -1073,7 +1077,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice 4-7-8 breathing before sleep. Activates relaxation response and promotes faster sleep onset.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😴',
       iconColor: '#6366F1',
       name: '4-7-8 Breathing',
@@ -1087,7 +1091,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Limit caffeine after 2 PM. Caffeine has a 5-6 hour half-life that can disrupt sleep architecture.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '☕',
       iconColor: '#92400E',
       name: 'No Afternoon Caffeine',
@@ -1101,7 +1105,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Use blackout curtains for complete darkness. Light exposure during sleep reduces sleep quality and REM.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌑',
       iconColor: '#0F172A',
       name: 'Sleep in Complete Darkness',
@@ -1115,7 +1119,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Take a warm bath 90 minutes before bed. Increases core body temperature drop that signals sleep time.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🛁',
       iconColor: '#3B82F6',
       name: 'Pre-Sleep Warm Bath',
@@ -1129,7 +1133,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Sleep 7-9 hours per night. Adequate sleep is essential for cognitive function, health, and longevity.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💤',
       iconColor: '#4338CA',
       name: '7-9 Hours Sleep',
@@ -1150,7 +1154,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Avoid alcohol 3-4 hours before bed. Alcohol disrupts REM sleep and causes sleep fragmentation.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🚫',
       iconColor: '#991B1B',
       name: 'No Evening Alcohol',
@@ -1164,7 +1168,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice spaced repetition for 20 minutes. Review material at increasing intervals for long-term retention.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🔄',
       iconColor: '#7C3AED',
       name: 'Spaced Repetition',
@@ -1179,7 +1183,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Learn one new word daily in a foreign language. Consistent vocabulary building accelerates language acquisition.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌍',
       iconColor: '#059669',
       name: 'Daily Language Practice',
@@ -1193,7 +1197,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Teach someone what you learned today. Teaching reinforces understanding and reveals knowledge gaps.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👨‍🏫',
       iconColor: '#DC2626',
       name: 'Feynman Technique',
@@ -1206,7 +1210,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice active recall for 15 minutes. Test yourself without looking at notes to strengthen memory.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧩',
       iconColor: '#2563EB',
       name: 'Active Recall',
@@ -1220,7 +1224,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Read for 30 minutes daily. Regular reading improves vocabulary, comprehension, and cognitive function.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📖',
       iconColor: '#B45309',
       name: 'Daily Reading',
@@ -1233,7 +1237,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Listen to educational podcasts or audiobooks during commute. Transforms dead time into learning opportunities.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎧',
       iconColor: '#DC2626',
       name: 'Audio Learning',
@@ -1247,7 +1251,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice a musical instrument for 20 minutes. Music training enhances cognitive abilities and neuroplasticity.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎵',
       iconColor: '#EC4899',
       name: 'Music Practice',
@@ -1261,7 +1265,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Take handwritten notes while learning. Writing by hand improves retention and comprehension.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '✍️',
       iconColor: '#0EA5E9',
       name: 'Handwritten Notes',
@@ -1275,7 +1279,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Watch one educational video daily. Visual learning enhances understanding of complex concepts.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📺',
       iconColor: '#F59E0B',
       name: 'Educational Videos',
@@ -1302,7 +1306,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Track every expense daily. Awareness of spending patterns is the first step to financial control.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💰',
       iconColor: '#059669',
       name: 'Expense Tracking',
@@ -1316,7 +1320,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Save 10% of income automatically. Pay yourself first before spending on anything else.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🏦',
       iconColor: '#2563EB',
       name: 'Automatic Savings',
@@ -1356,7 +1360,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Use the 24-hour rule for purchases over $50. Delayed gratification reduces impulse buying.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⏰',
       iconColor: '#F59E0B',
       name: '24-Hour Purchase Rule',
@@ -1370,7 +1374,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Pack lunch instead of eating out. Home-prepared meals save thousands annually and improve health.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🍱',
       iconColor: '#16A34A',
       name: 'Bring Lunch',
@@ -1397,7 +1401,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Read financial news or books for 15 minutes. Financial literacy is key to building and protecting wealth.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📰',
       iconColor: '#0EA5E9',
       name: 'Financial Education',
@@ -1439,7 +1443,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Engage in freewriting for 10 minutes. Stream-of-consciousness writing unlocks creative thinking.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '✍️',
       iconColor: '#8B5CF6',
       name: 'Morning Freewriting',
@@ -1452,7 +1456,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Sketch or doodle for 15 minutes. Visual expression enhances creative problem-solving.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎨',
       iconColor: '#EC4899',
       name: 'Daily Sketching',
@@ -1465,7 +1469,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Brainstorm 10 ideas on any topic. Idea generation is a muscle that strengthens with practice.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💡',
       iconColor: '#F59E0B',
       name: 'Idea Generation',
@@ -1478,7 +1482,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Take photos during daily walk. Photography trains observation and perspective-taking.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📸',
       iconColor: '#0EA5E9',
       name: 'Daily Photography',
@@ -1505,7 +1509,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Practice divergent thinking exercises. Generate multiple solutions to problems to enhance creativity.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧠',
       iconColor: '#06B6D4',
       name: 'Divergent Thinking',
@@ -1518,7 +1522,7 @@ export const seedTemplates = mutation({
       createdAt: now,
       description:
         'Combine two unrelated ideas daily. Cross-pollination of concepts sparks innovation.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🔀',
       iconColor: '#10B981',
       name: 'Idea Mashup',
@@ -1578,7 +1582,7 @@ export const seedTemplates = mutation({
 /**
  * Mutation: Import a template to create a new habit
  */
-export const importTemplate = mutation({
+export const importTemplate = internalMutation({
   args: {
     customizations: v.optional(
       v.object({
@@ -1681,7 +1685,7 @@ export const getUsageStats = query({
 /**
  * Mutation: Clear all templates (for cleanup/reset)
  */
-export const clearTemplates = mutation({
+export const clearTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const templates = await ctx.db.query('templates').collect();
@@ -1698,7 +1702,7 @@ export const clearTemplates = mutation({
  * - Re-points templateUsage.templateId to the kept template
  * - Deletes extra templates
  */
-export const dedupeTemplates = mutation({
+export const dedupeTemplates = internalMutation({
   args: { dryRun: v.optional(v.boolean()) },
   handler: async (ctx, args) => {
     const dryRun = args.dryRun ?? false;
@@ -1771,7 +1775,11 @@ export const dedupeTemplates = mutation({
  * Mutation: Seed additional science-backed templates (Phase 3.1)
  * 45 new habits covering: Physical Resilience, Cognitive, Nutrition, Digital Wellness, Social
  */
-export const seedAdditionalTemplates = mutation({
+/**
+ * Internal Mutation: Seed additional templates
+ * SEC: Internal only - run via Convex dashboard, not accessible to users
+ */
+export const seedAdditionalTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -1803,7 +1811,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Stand up and move for 2-3 minutes every hour. Prolonged sitting increases cardiovascular disease risk even with regular exercise.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧍',
       iconColor: '#10B981',
       name: 'Standing Every Hour',
@@ -1818,7 +1826,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Check and correct your posture 3x daily. Good posture reduces back pain, improves breathing, and boosts confidence.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🪑',
       iconColor: '#6366F1',
       name: 'Posture Check',
@@ -1832,7 +1840,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Walk barefoot on grass, sand, or earth for 10-20 minutes. Grounding reduces inflammation and improves sleep quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🦶',
       iconColor: '#84CC16',
       name: 'Barefoot Grounding',
@@ -1847,7 +1855,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Every 20 minutes, look at something 20 feet away for 20 seconds. Reduces digital eye strain and prevents myopia progression.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👁️',
       iconColor: '#0EA5E9',
       name: '20-20-20 Eye Rule',
@@ -1861,7 +1869,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Practice breathing through your nose throughout the day. Nasal breathing filters air, produces nitric oxide, and activates the parasympathetic nervous system.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👃',
       iconColor: '#14B8A6',
       name: 'Nasal Breathing',
@@ -1890,7 +1898,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Practice single-leg stands, heel-to-toe walking, or balance board exercises. Balance training reduces fall risk and improves coordination at any age.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⚖️',
       iconColor: '#8B5CF6',
       name: 'Balance Training',
@@ -1904,7 +1912,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Train grip strength with dead hangs, farmer carries, or grip exercises. Grip strength is a powerful predictor of all-cause mortality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '✊',
       iconColor: '#F97316',
       name: 'Grip Strength Training',
@@ -1919,7 +1927,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Take a hot bath (104°F/40°C) for 15-20 minutes. Passive heat therapy provides cardiovascular benefits similar to moderate exercise.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🛀',
       iconColor: '#F43F5E',
       name: 'Heat Therapy Bath',
@@ -1933,7 +1941,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Hang from a bar for 30-60 seconds daily. Decompresses spine, improves shoulder mobility, and builds grip strength.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🙆',
       iconColor: '#0891B2',
       name: 'Daily Hanging',
@@ -1947,7 +1955,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Walk for 10 minutes after a meal. Post-meal walking reduces blood sugar spikes and supports metabolic health.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🚶',
       iconColor: '#22C55E',
       name: 'Post-Meal Walk (10 Minutes)',
@@ -1981,7 +1989,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Spend 15 minutes on puzzles, crosswords, or brain training games. Novel cognitive challenges build neuroplasticity and cognitive reserve.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧩',
       iconColor: '#A855F7',
       name: 'Brain Games',
@@ -1995,7 +2003,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Schedule 15-30 minutes to write down worries, then close the notebook. Containing worry to a specific time reduces generalized anxiety.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📓',
       iconColor: '#64748B',
       name: 'Scheduled Worry Time',
@@ -2009,7 +2017,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Systematically scan your body from head to toe, noticing sensations. Reduces chronic pain, increases body awareness, and calms the nervous system.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🫥',
       iconColor: '#06B6D4',
       name: 'Body Scan Meditation',
@@ -2037,7 +2045,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Practice Dual N-Back training for 20 minutes. One of the few brain training methods shown to improve fluid intelligence and working memory.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🔢',
       iconColor: '#7C3AED',
       name: 'Dual N-Back Training',
@@ -2056,7 +2064,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Sleep under a weighted blanket (10% of body weight). Deep pressure stimulation reduces anxiety and improves sleep quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🛋️',
       iconColor: '#4338CA',
       name: 'Weighted Blanket Sleep',
@@ -2070,7 +2078,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Use white or pink noise while sleeping. Background noise masks disruptions and improves sleep onset and quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🔊',
       iconColor: '#94A3B8',
       name: 'Sleep Sound Machine',
@@ -2084,7 +2092,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Take 200-400mg magnesium glycinate or threonate 30-60 minutes before bed. Magnesium supports GABA activity and improves sleep quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💊',
       iconColor: '#10B981',
       name: 'Evening Magnesium',
@@ -2099,7 +2107,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Use your bed only for sleep (and intimacy). If you can’t sleep, get up and return only when sleepy. This re-trains your brain to associate bed with sleep.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🛌',
       iconColor: '#1E40AF',
       name: 'Stimulus Control (CBT-I)',
@@ -2133,7 +2141,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Consume fermented foods daily (yogurt, kefir, kimchi, sauerkraut, kombucha). Increases gut microbiome diversity and reduces inflammation.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🥬',
       iconColor: '#84CC16',
       name: 'Daily Fermented Foods',
@@ -2162,7 +2170,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Eat vegetables or salad before carbohydrates at meals. Eating greens first blunts blood sugar spikes by up to 73%.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🥗',
       iconColor: '#22C55E',
       name: 'Eat Greens First',
@@ -2176,7 +2184,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Stop eating at least 3 hours before bedtime. Late eating disrupts sleep architecture and increases acid reflux risk.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🍽️',
       iconColor: '#EF4444',
       name: 'No Late Night Eating',
@@ -2190,7 +2198,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Chew each bite 20-30 times before swallowing. Thorough chewing improves digestion, nutrient absorption, and naturally reduces calorie intake.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😋',
       iconColor: '#F97316',
       name: 'Mindful Chewing',
@@ -2204,7 +2212,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Aim for ~25–30g of high-quality protein per meal. This supports muscle protein synthesis and long-term metabolic health.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🍗',
       iconColor: '#F97316',
       name: 'Protein Per Meal (25–30g)',
@@ -2219,7 +2227,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Floss or use an interdental brush once daily after brushing. Helps reduce gingivitis when added to toothbrushing.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🦷',
       iconColor: '#0EA5E9',
       name: 'Interdental Cleaning',
@@ -2234,7 +2242,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Wash hands with soap at key times (before eating, after bathroom, after transit). Hand hygiene reduces respiratory illness transmission.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧼',
       iconColor: '#10B981',
       name: 'Hand Hygiene (Key Times)',
@@ -2249,7 +2257,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Apply sunscreen to exposed skin (especially face/neck) as part of your morning routine. Daily use lowers skin cancer risk over time.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧴',
       iconColor: '#FBBF24',
       name: 'Daily Sunscreen',
@@ -2268,7 +2276,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Care for indoor plants daily. Tending plants reduces stress, improves air quality, and provides a sense of accomplishment.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🪴',
       iconColor: '#22C55E',
       name: 'House Plant Care',
@@ -2282,7 +2290,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Remove, donate, or discard one item from your space daily. Physical clutter increases cortisol and reduces focus.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🗑️',
       iconColor: '#64748B',
       name: 'Daily Declutter',
@@ -2296,7 +2304,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Open windows for 10-15 minutes to ventilate your space. Fresh air reduces indoor CO2 levels, improving cognitive function by up to 50%.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🪟',
       iconColor: '#38BDF8',
       name: 'Fresh Air Break',
@@ -2311,7 +2319,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Watch comedy, read jokes, or spend time with funny friends. Laughter reduces cortisol, boosts immunity, and improves cardiovascular health.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😂',
       iconColor: '#FBBF24',
       name: 'Daily Laughter',
@@ -2325,7 +2333,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Spend quality time with a pet—petting, playing, or walking. Human-animal interaction increases oxytocin and reduces stress hormones.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🐕',
       iconColor: '#F97316',
       name: 'Pet Time',
@@ -2343,7 +2351,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Practice listening without interrupting or planning your response. Deep listening improves relationships and builds empathy.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👂',
       iconColor: '#8B5CF6',
       name: 'Deep Listening',
@@ -2357,7 +2365,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Perform one random act of kindness daily. Helping others increases your own happiness and reduces depression symptoms.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💝',
       iconColor: '#EC4899',
       name: 'Random Act of Kindness',
@@ -2371,7 +2379,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Have at least one face-to-face conversation daily. In-person interaction provides stronger wellbeing benefits than digital communication.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👥',
       iconColor: '#3B82F6',
       name: 'Face-to-Face Time',
@@ -2385,7 +2393,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         "Practice saying no to requests that don't align with your priorities. Healthy boundaries reduce stress and prevent burnout.",
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🚫',
       iconColor: '#DC2626',
       name: 'Boundary Practice',
@@ -2399,7 +2407,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Give at least one sincere compliment daily. Giving compliments activates reward centers in your own brain and strengthens relationships.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⭐',
       iconColor: '#FBBF24',
       name: 'Daily Compliment',
@@ -2417,7 +2425,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Keep phones away from the table during meals. Phone-free meals improve digestion, strengthen relationships, and increase enjoyment.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📵',
       iconColor: '#EF4444',
       name: 'Phone-Free Meals',
@@ -2431,7 +2439,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Limit social media to 30 minutes daily. Reducing social media use decreases anxiety and depression while improving life satisfaction.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📱',
       iconColor: '#6366F1',
       name: 'Social Media Limit',
@@ -2446,7 +2454,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Focus on one task at a time without switching. Multitasking reduces productivity by up to 40% and impairs attention.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎯',
       iconColor: '#059669',
       name: 'Single-Tasking',
@@ -2460,7 +2468,7 @@ export const seedAdditionalTemplates = mutation({
       createdAt: now,
       description:
         'Keep your phone on airplane mode for the first hour after waking. Protects your attention and prevents reactive morning mode.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '✈️',
       iconColor: '#0EA5E9',
       name: 'Airplane Mode Morning',
@@ -2496,7 +2504,11 @@ export const seedAdditionalTemplates = mutation({
  * Mutation: Seed new science-backed templates (Phase 3.2)
  * Unique habits covering: Dental Health, Bone Health, Hearing Health, Immune Support, Preventive Care, Goal Setting
  */
-export const seedNewScienceTemplates = mutation({
+/**
+ * Internal Mutation: Seed new science-backed templates
+ * SEC: Internal only - run via Convex dashboard, not accessible to users
+ */
+export const seedNewScienceTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -2534,7 +2546,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Floss or use interdental brushes daily. Interdental cleaning reduces gum inflammation by 47% and prevents periodontal disease.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🦷',
       iconColor: '#FFFFFF',
       name: 'Daily Flossing',
@@ -2567,7 +2579,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Track daily calcium intake (1000-1200mg). Adequate calcium prevents osteoporosis and maintains bone density throughout life.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🦴',
       iconColor: '#F3F4F6',
       name: 'Calcium Intake Tracking',
@@ -2601,7 +2613,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Use ear protection in loud environments (concerts, construction, etc.). Prevents noise-induced hearing loss, which is permanent and cumulative.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👂',
       iconColor: '#F59E0B',
       name: 'Hearing Protection',
@@ -2617,7 +2629,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Keep audio devices at 60% volume or lower. Listening at safe levels prevents hearing damage from personal devices.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎧',
       iconColor: '#8B5CF6',
       name: 'Safe Listening Volume',
@@ -2635,7 +2647,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Monitor vitamin D levels and supplement if needed (600-800 IU daily). Vitamin D supports immune function and circadian rhythms.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '☀️',
       iconColor: '#FBBF24',
       name: 'Vitamin D Supplementation',
@@ -2667,7 +2679,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Apply broad-spectrum SPF 30+ sunscreen daily. Prevents skin cancer, premature aging, and UV damage even on cloudy days.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧴',
       iconColor: '#FDE047',
       name: 'Daily Sun Protection',
@@ -2685,7 +2697,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Perform joint mobility exercises daily. Maintains range of motion, prevents stiffness, and reduces injury risk.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🔄',
       iconColor: '#10B981',
       name: 'Joint Mobility Routine',
@@ -2703,7 +2715,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Build most meals around vegetables, legumes/whole grains, and healthy fats (e.g., olive oil). Mediterranean-style eating is consistently associated with better cardiometabolic outcomes.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🥗',
       iconColor: '#10B981',
       name: 'Mediterranean Plate',
@@ -2719,7 +2731,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Start meals with non-starchy vegetables before higher-starch foods. Food order can reduce post-meal glucose and insulin responses.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🥦',
       iconColor: '#22C55E',
       name: 'Veggies First',
@@ -2751,7 +2763,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Eat a small handful of nuts most days. Meta-analyses associate nut intake with lower cardiovascular risk and improved lipid profiles.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🥜',
       iconColor: '#A16207',
       name: 'Daily Nuts Serving',
@@ -2767,7 +2779,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Swap one refined-grain item (white bread/rice) for whole grains (oats, brown rice, whole-wheat). Whole-grain intake is linked to lower risk of type 2 diabetes and cardiovascular disease.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌾',
       iconColor: '#CA8A04',
       name: 'Whole Grain Swap',
@@ -2885,7 +2897,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Do 5 minutes of mobility (hips/shoulders/ankles) during the day. Micro-bouts of movement help reduce stiffness and break up sedentary time.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🤸',
       iconColor: '#14B8A6',
       name: '5-Minute Mobility Snack',
@@ -2919,7 +2931,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Track your energy levels throughout the day. Identifying peak energy times allows you to schedule important work during high-energy windows.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⚡',
       iconColor: '#FBBF24',
       name: 'Energy Level Tracking',
@@ -2937,7 +2949,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Pick your top 3 priorities and write them down. Plan-making reduces intrusive thoughts from unfinished goals and improves follow-through.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎯',
       iconColor: '#7C3AED',
       name: 'Daily Top 3 Priorities',
@@ -2953,7 +2965,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Check email/messages at set times (e.g., 2-3 windows/day) instead of constantly. Reducing interruptions supports focus and lowers stress.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📨',
       iconColor: '#0EA5E9',
       name: 'Batch Check Messages',
@@ -2969,7 +2981,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Do a quick 2-minute tidy of one small area (desk, counter). Clutter is associated with increased stress and reduced focus.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧹',
       iconColor: '#F97316',
       name: 'Two-Minute Tidy',
@@ -2989,7 +3001,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice box breathing (4-4-4-4) when stressed. Activates parasympathetic nervous system and reduces cortisol within minutes.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📦',
       iconColor: '#14B8A6',
       name: 'Box Breathing',
@@ -3004,7 +3016,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Take a 10-minute technology-free break daily. Unplugged breaks restore attention and reduce mental fatigue.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌿',
       iconColor: '#059669',
       name: 'Tech-Free Break',
@@ -3022,7 +3034,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Review learned material before sleep. Sleep consolidates memories, making pre-sleep review 20% more effective.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌙',
       iconColor: '#4338CA',
       name: 'Pre-Sleep Review',
@@ -3054,7 +3066,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Ask one deep question in conversations. Meaningful questions deepen relationships and increase connection satisfaction.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '❓',
       iconColor: '#8B5CF6',
       name: 'Deep Questions',
@@ -3068,7 +3080,7 @@ export const seedNewScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice receiving feedback gracefully without defensiveness. Accepting feedback improves relationships and accelerates personal growth.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💬',
       iconColor: '#06B6D4',
       name: 'Receive Feedback Gracefully',
@@ -3117,7 +3129,7 @@ export const listTemplateNames = query({
 /**
  * Mutation: Update existing templates with YouTube links
  */
-export const updateYoutubeLinks = mutation({
+export const updateYoutubeLinks = internalMutation({
   args: {},
   handler: async (ctx) => {
     const youtubeLinks: Record<string, string> = {
@@ -3227,7 +3239,7 @@ export const updateYoutubeLinks = mutation({
  * 50+ new habits across NEW categories: Longevity, Mental Health, Recovery, Breathing
  * Plus additional habits in existing categories based on peer-reviewed research
  */
-export const seedScienceTemplates = mutation({
+export const seedScienceTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -3271,7 +3283,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'The sitting-rising test (sitting on floor and standing without hands) predicts mortality. Practice floor sitting daily to maintain this ability.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧘',
       iconColor: '#8B5CF6',
       name: 'Floor Sitting Practice',
@@ -3286,7 +3298,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Take stairs exclusively instead of elevators. Climbing 7+ floors daily associated with 33% lower all-cause mortality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🪜',
       iconColor: '#059669',
       name: 'Always Take Stairs',
@@ -3300,7 +3312,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Stand on one leg for 10 seconds with eyes open. Inability to do this in older adults predicts doubled mortality risk within 10 years.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🦩',
       iconColor: '#EC4899',
       name: 'Single-Leg Balance Test',
@@ -3315,7 +3327,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Walk at a pace of 3+ mph (brisk walking). Walking speed is a strong predictor of longevity - faster walkers live significantly longer.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🚶‍♂️',
       iconColor: '#3B82F6',
       name: 'Brisk Walking Pace',
@@ -3343,7 +3355,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice getting up and down from the ground using different movement patterns. Maintains functional capacity critical for independence.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⬆️',
       iconColor: '#7C3AED',
       name: 'Ground Transitions',
@@ -3357,7 +3369,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Eat 25-30g protein per meal (especially breakfast). Maintains muscle mass and prevents age-related sarcopenia.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🥩',
       iconColor: '#B91C1C',
       name: 'Protein Per Meal Goal',
@@ -3389,7 +3401,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'When struggling, pause and say: "This is a moment of suffering. Suffering is part of life. May I be kind to myself." More effective than self-esteem building.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💗',
       iconColor: '#EC4899',
       name: 'Self-Compassion Break',
@@ -3404,7 +3416,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Label thoughts as "I notice I\'m having the thought that..." Creates distance from negative thoughts and reduces their impact.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🏷️',
       iconColor: '#6366F1',
       name: 'Cognitive Defusion',
@@ -3433,7 +3445,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         "Do one small task you've been avoiding. Behavioral activation is as effective as antidepressants for mild-moderate depression.",
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '✅',
       iconColor: '#10B981',
       name: 'Behavioral Activation',
@@ -3461,7 +3473,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Schedule 15-30 minutes to write down all worries, then close the notebook. Containing worry to a specific time reduces generalized anxiety.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📓',
       iconColor: '#64748B',
       name: 'Scheduled Worry Time',
@@ -3475,7 +3487,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Plan one small pleasurable activity daily. Pleasant activity scheduling is a core component of evidence-based depression treatment.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎉',
       iconColor: '#22C55E',
       name: 'Pleasant Activity Scheduling',
@@ -3489,7 +3501,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'When anxious, ask: "What would I tell a friend in this situation?" Perspective-taking reduces emotional intensity and catastrophizing.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🪞',
       iconColor: '#0EA5E9',
       name: 'Self-Distancing',
@@ -3503,7 +3515,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Name your emotions specifically (not just "bad" but "disappointed" or "frustrated"). Specific emotion labeling reduces amygdala activation.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😶',
       iconColor: '#A855F7',
       name: 'Emotion Granularity',
@@ -3517,7 +3529,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice opposite action: when you feel like withdrawing, reach out; when angry, speak gently. Core DBT skill for emotion regulation.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '↔️',
       iconColor: '#14B8A6',
       name: 'Opposite Action',
@@ -3535,7 +3547,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Wake at the same time every day, including weekends. Consistent wake time is more important than bedtime for circadian stability.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⏰',
       iconColor: '#F97316',
       name: 'Consistent Wake Time',
@@ -3549,7 +3561,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'End hot showers with 30-60 seconds of cold water. This contrast therapy reduces sick days by 29% and improves recovery.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🚿',
       iconColor: '#38BDF8',
       name: 'Contrast Shower',
@@ -3564,7 +3576,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Sleep under a weighted blanket (8-12% of body weight). Deep pressure stimulation reduces anxiety and improves sleep quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🛋️',
       iconColor: '#4338CA',
       name: 'Weighted Blanket Sleep',
@@ -3578,7 +3590,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Watch the sunset for 10+ minutes when possible. Signals your circadian system that the day is ending, preparing body for sleep.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌅',
       iconColor: '#F59E0B',
       name: 'Evening Sunset Viewing',
@@ -3592,7 +3604,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Use foam roller or massage gun for 10-15 minutes. Self-myofascial release improves range of motion and reduces muscle soreness.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧴',
       iconColor: '#7C3AED',
       name: 'Self-Massage/Foam Rolling',
@@ -3606,7 +3618,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Take a 10-30 minute nap before 3 PM. Short naps improve cognitive function, alertness, and mood without affecting nighttime sleep.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💤',
       iconColor: '#6366F1',
       name: 'Power Nap',
@@ -3620,7 +3632,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Use pink or white noise while sleeping. Background noise masks disruptions and improves both sleep onset and sleep quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🔊',
       iconColor: '#94A3B8',
       name: 'Sleep Sound Machine',
@@ -3648,7 +3660,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice yoga nidra or NSDR (non-sleep deep rest) for 10-20 minutes. Accelerates learning, restores dopamine, and improves sleep.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🛌',
       iconColor: '#7DD3FC',
       name: 'Yoga Nidra/NSDR',
@@ -3662,7 +3674,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Take 200-400mg magnesium glycinate or threonate 30-60 minutes before bed. Supports GABA activity and improves sleep quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💊',
       iconColor: '#10B981',
       name: 'Evening Magnesium',
@@ -3681,7 +3693,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Inhale 4 counts, hold 4, exhale 4, hold empty 4. Navy SEAL technique proven to rapidly reduce stress and cortisol levels.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⬜',
       iconColor: '#3B82F6',
       name: 'Box Breathing (4-4-4-4)',
@@ -3696,7 +3708,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Double inhale through nose, long exhale through mouth. The fastest way to calm down - works in 1-3 breaths.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😮‍💨',
       iconColor: '#34D399',
       name: 'Physiological Sigh',
@@ -3711,7 +3723,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice breathing through your nose throughout the day. Nasal breathing filters air, produces nitric oxide, and activates parasympathetic system.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👃',
       iconColor: '#14B8A6',
       name: 'Nasal Breathing',
@@ -3725,7 +3737,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Hum for 5 minutes daily (like "om" or any tune). Increases nasal nitric oxide production by 15x, improving sinus health and oxygenation.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎵',
       iconColor: '#8B5CF6',
       name: 'Daily Humming',
@@ -3739,7 +3751,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice breath holds after exhale to increase CO2 tolerance. Improves exercise capacity, reduces anxiety, and enhances breath control.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⏱️',
       iconColor: '#F97316',
       name: 'CO2 Tolerance Training',
@@ -3752,7 +3764,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Inhale 4 counts, hold 7, exhale 8. Activates parasympathetic response and promotes sleep onset.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😴',
       iconColor: '#6366F1',
       name: '4-7-8 Relaxing Breath',
@@ -3766,7 +3778,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice controlled hyperventilation followed by breath retention. Reduces inflammation, improves immune response, and builds mental resilience.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '❄️',
       iconColor: '#0EA5E9',
       name: 'Wim Hof Breathing',
@@ -3781,7 +3793,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Perform cyclic breathing: rapid inhales followed by passive exhales for 1-3 minutes. Increases alertness and energy without caffeine.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⚡',
       iconColor: '#FBBF24',
       name: 'Energizing Breath (Kapalabhati)',
@@ -3795,7 +3807,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Breathe in a 5.5 second inhale, 5.5 second exhale rhythm (5.5 breaths per minute). The optimal breathing rate for heart rate variability.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💓',
       iconColor: '#EC4899',
       name: 'Resonant Breathing',
@@ -3809,7 +3821,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Tape mouth with medical tape during sleep. Prevents mouth breathing, reduces snoring, and improves sleep quality.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😷',
       iconColor: '#64748B',
       name: 'Mouth Taping Sleep',
@@ -3827,7 +3839,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Walk for 10-15 minutes after meals. Reduces blood glucose spikes by 22%, improving metabolic health and energy levels.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🚶',
       iconColor: '#10B981',
       name: 'Post-Meal Walk',
@@ -3842,7 +3854,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice backward walking for 5-10 minutes. Improves balance, reduces knee pain by 40%, and activates different muscle patterns.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '⬅️',
       iconColor: '#F59E0B',
       name: 'Backward Walking',
@@ -3856,7 +3868,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Do brief intense exercise bursts (1-2 min) several times throughout the day. "Exercise snacks" reduce mortality risk 4-5x.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💥',
       iconColor: '#EF4444',
       name: 'Movement Snacks',
@@ -3871,7 +3883,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Take 1 tablespoon apple cider vinegar diluted in water before meals. Reduces post-meal blood glucose spikes by up to 34%.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🍎',
       iconColor: '#84CC16',
       name: 'Pre-Meal Vinegar',
@@ -3886,7 +3898,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Cool and reheat starchy foods (potatoes, rice, pasta) before eating. Creates resistant starch that feeds beneficial gut bacteria.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🥔',
       iconColor: '#A16207',
       name: 'Resistant Starch',
@@ -3900,7 +3912,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Distribute protein intake: 20-40g every 3-4 hours rather than one large serving. Optimizes muscle protein synthesis throughout the day.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🍳',
       iconColor: '#F97316',
       name: 'Protein Pacing',
@@ -3918,7 +3930,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'When someone shares good news, respond with enthusiasm, questions, and celebration. Strongest predictor of relationship satisfaction.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎊',
       iconColor: '#22C55E',
       name: 'Active Constructive Responding',
@@ -3932,7 +3944,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Share one honest, vulnerable feeling with someone you trust. Vulnerability builds deeper connection and trust in relationships.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💭',
       iconColor: '#8B5CF6',
       name: 'Vulnerability Practice',
@@ -3946,7 +3958,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice soft eye contact for 3+ seconds during conversations. Increases oxytocin and perceived trustworthiness in both people.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👀',
       iconColor: '#06B6D4',
       name: 'Eye Contact Practice',
@@ -3960,7 +3972,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Ask open-ended questions and reflect back what you hear without planning your response. Deep listening builds empathy and connection.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👂',
       iconColor: '#7C3AED',
       name: 'Reflective Listening',
@@ -3978,7 +3990,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         "Work in 90-minute cycles matching your brain's ultradian rhythm. Natural focus waxes and wanes in ~90-minute cycles throughout the day.",
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🔄',
       iconColor: '#7C3AED',
       name: 'Ultradian Work Cycles',
@@ -3992,7 +4004,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Keep phone on airplane mode for the first 60 minutes after waking. Protects your attention and prevents reactive morning mode.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '✈️',
       iconColor: '#0EA5E9',
       name: 'Airplane Mode Morning',
@@ -4006,7 +4018,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Set phone to grayscale mode. Removing color reduces compulsive phone use by 30% by eliminating color-based reward triggers.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📱',
       iconColor: '#64748B',
       name: 'Grayscale Phone Mode',
@@ -4020,7 +4032,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Open windows for 10-15 minutes daily. Fresh air reduces indoor CO2 levels, improving cognitive function by up to 50%.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🪟',
       iconColor: '#38BDF8',
       name: 'Fresh Air Ventilation',
@@ -4039,7 +4051,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Use your non-dominant hand for routine tasks like brushing teeth. Activates underused neural pathways and builds cognitive reserve.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🤚',
       iconColor: '#06B6D4',
       name: 'Non-Dominant Hand Training',
@@ -4053,7 +4065,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Practice Dual N-Back training for 20 minutes. One of the few brain training methods shown to improve fluid intelligence.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🔢',
       iconColor: '#7C3AED',
       name: 'Dual N-Back Training',
@@ -4068,7 +4080,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Review what you learned today within 24 hours. Same-day review increases retention from 20% to 80%.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📖',
       iconColor: '#059669',
       name: 'Same-Day Review',
@@ -4082,7 +4094,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Interleave practice of different skills rather than blocked practice. Interleaving improves long-term retention and transfer.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🔀',
       iconColor: '#F59E0B',
       name: 'Interleaved Practice',
@@ -4100,7 +4112,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Do 30-50 bilateral eye movements (look left-right) upon waking. Activates both brain hemispheres and improves alertness.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👁️',
       iconColor: '#3B82F6',
       name: 'Bilateral Eye Movements',
@@ -4114,7 +4126,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Write your #1 priority for the day before checking any devices. Protects your agenda from reactive mode.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '1️⃣',
       iconColor: '#EF4444',
       name: 'Priority First',
@@ -4128,7 +4140,7 @@ export const seedScienceTemplates = mutation({
       createdAt: now,
       description:
         'Splash cold water on face immediately after waking. Triggers the mammalian dive reflex, instantly increasing alertness.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💦',
       iconColor: '#38BDF8',
       name: 'Cold Face Splash',
@@ -4148,7 +4160,7 @@ export const seedScienceTemplates = mutation({
  * Mutation: Seed unique non-duplicate templates (Phase 3.3)
  * 50+ truly unique habits in underserved categories: Career, Hobbies, Environment, Somatic, Purpose, Self-Care
  */
-export const seedUniqueTemplates = mutation({
+export const seedUniqueTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -4211,7 +4223,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Document one lesson learned or insight from work daily. Creates a personal knowledge base and accelerates expertise development.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '📓',
       iconColor: '#7C3AED',
       name: 'Work Insights Journal',
@@ -4225,7 +4237,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Practice public speaking for 10 minutes daily (record yourself, present to mirror). Fear of public speaking can be overcome through gradual exposure.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎤',
       iconColor: '#DC2626',
       name: 'Public Speaking Practice',
@@ -4257,7 +4269,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Engage in pure play without goals or outcomes for 20 minutes. Unstructured play reduces stress and enhances creative problem-solving.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎲',
       iconColor: '#EC4899',
       name: 'Unstructured Play Time',
@@ -4299,7 +4311,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Spend 15 minutes gardening or tending plants. Horticultural therapy reduces cortisol and improves mood within minutes.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌱',
       iconColor: '#22C55E',
       name: 'Gardening Therapy',
@@ -4313,7 +4325,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Sing for 10 minutes daily (shower, car, karaoke). Singing releases oxytocin, reduces stress hormones, and improves lung function.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎤',
       iconColor: '#A855F7',
       name: 'Daily Singing',
@@ -4327,7 +4339,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Dance freely for 10 minutes without choreography. Spontaneous movement reduces depression and improves body image.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '💃',
       iconColor: '#F43F5E',
       name: 'Free Dance Session',
@@ -4341,7 +4353,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Color in an adult coloring book for 20 minutes. Art therapy reduces anxiety comparable to meditation in many studies.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🖍️',
       iconColor: '#0EA5E9',
       name: 'Coloring Practice',
@@ -4415,7 +4427,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Practice cloud watching for 10 minutes. Sky gazing activates the default mode network and promotes creative thinking.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '☁️',
       iconColor: '#94A3B8',
       name: 'Cloud Watching',
@@ -4433,7 +4445,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Shake your body vigorously for 3-5 minutes (like an animal after stress). TRE/shaking releases stored muscular tension.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🫨',
       iconColor: '#F97316',
       name: 'Tension Release Shaking',
@@ -4447,7 +4459,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Practice self-massage on hands, feet, or face for 5 minutes. Self-massage reduces cortisol and increases parasympathetic activity.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🙌',
       iconColor: '#EC4899',
       name: 'Self-Massage Ritual',
@@ -4461,7 +4473,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Stretch your jaw, massage temples, and relax facial muscles for 2 minutes. Facial tension correlates with overall stress levels.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😌',
       iconColor: '#8B5CF6',
       name: 'Facial Relaxation',
@@ -4475,7 +4487,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Stand with bare feet on ground and notice all sensations for 2 minutes. Interoceptive awareness improves emotional regulation.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🦶',
       iconColor: '#A16207',
       name: 'Foot Grounding',
@@ -4489,7 +4501,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Roll a tennis ball under your feet for 5 minutes. Plantar fascia massage releases full-body tension through fascial connections.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🎾',
       iconColor: '#84CC16',
       name: 'Foot Rolling',
@@ -4581,7 +4593,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Apply body lotion mindfully after showering. The ritual of self-care increases body acceptance and self-compassion.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧴',
       iconColor: '#FBBF24',
       name: 'Mindful Moisturizing',
@@ -4623,7 +4635,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Change into comfortable clothes when arriving home. Clothing transitions help create psychological boundaries between work and rest.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👕',
       iconColor: '#6366F1',
       name: 'Comfort Clothes Transition',
@@ -4637,7 +4649,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Light a candle and sit in candlelight for 10 minutes. Low, warm light reduces cortisol and promotes melatonin production.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🕯️',
       iconColor: '#F59E0B',
       name: 'Candlelight Relaxation',
@@ -4654,7 +4666,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Share "highs and lows" of the day with partner/family at dinner. Regular sharing rituals strengthen family bonds.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🍽️',
       iconColor: '#F97316',
       name: 'Highs and Lows Ritual',
@@ -4668,7 +4680,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Give a 6-second hug to someone you love. Extended hugs release oxytocin and deepen emotional connection.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🤗',
       iconColor: '#EC4899',
       name: '6-Second Hug',
@@ -4728,7 +4740,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Learn 3 words in a new language daily. Bilingualism delays dementia onset by 4-5 years on average.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🗣️',
       iconColor: '#059669',
       name: 'Language Word Learning',
@@ -4756,7 +4768,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Solve one logic puzzle daily (sudoku, chess puzzles, riddles). Regular mental challenges maintain fluid intelligence.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧩',
       iconColor: '#7C3AED',
       name: 'Daily Logic Puzzle',
@@ -4802,7 +4814,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Practice aromatherapy with essential oils for 5 minutes. Certain scents (lavender, peppermint) measurably affect mood and cognition.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌸',
       iconColor: '#D946EF',
       name: 'Aromatherapy Practice',
@@ -4830,7 +4842,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Do 10 squats every time you use the bathroom. "Habit stacking" makes exercise automatic and adds up to 50+ squats daily.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🚽',
       iconColor: '#10B981',
       name: 'Bathroom Squats',
@@ -4844,7 +4856,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Drink a glass of water before every meal. Pre-meal water intake reduces calorie consumption by 75-90 calories per meal.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🥛',
       iconColor: '#38BDF8',
       name: 'Pre-Meal Water',
@@ -4858,7 +4870,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Stand and do calf raises while brushing teeth. Two minutes twice daily adds up to 14 minutes of exercise weekly.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🦵',
       iconColor: '#F97316',
       name: 'Toothbrush Calf Raises',
@@ -4876,7 +4888,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Open curtains and look outside for 30 seconds before checking phone. Prioritizes natural stimulus over digital for circadian alignment.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🪟',
       iconColor: '#FBBF24',
       name: 'Morning Window Gaze',
@@ -4890,7 +4902,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Smile at yourself in the mirror for 1 minute upon waking. Facial feedback hypothesis: smiling triggers positive emotions.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '😊',
       iconColor: '#FBBF24',
       name: 'Morning Mirror Smile',
@@ -4904,7 +4916,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Do 5 minutes of light movement (stretching, walking) immediately after waking. Gentle movement clears adenosine and increases alertness.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🌅',
       iconColor: '#F97316',
       name: 'Wake-Up Movement',
@@ -4922,7 +4934,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Write "brain dump" of all thoughts on paper before bed. Externalizing worries reduces sleep onset latency by 15+ minutes.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🧠',
       iconColor: '#6366F1',
       name: 'Evening Brain Dump',
@@ -4936,7 +4948,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Prepare clothes and bag for next day before bed. Reduces morning decision fatigue and creates closure ritual for the day.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👔',
       iconColor: '#8B5CF6',
       name: 'Next-Day Prep',
@@ -4950,7 +4962,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Wear blue light blocking glasses 2-3 hours before bed. Blocks 90%+ of melatonin-suppressing light from screens.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '👓',
       iconColor: '#F59E0B',
       name: 'Blue Light Blocking',
@@ -4968,7 +4980,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Practice gratitude for 3 things you already own before any purchase. Gratitude reduces materialism and impulsive buying.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🙏',
       iconColor: '#059669',
       name: 'Pre-Purchase Gratitude',
@@ -4982,7 +4994,7 @@ export const seedUniqueTemplates = mutation({
       createdAt: now,
       description:
         'Transfer spare change from purchases to savings (round-up savings). Micro-savings add up to hundreds annually without noticing.',
-      frequency: 'daily',
+      frequency: FREQUENCY_DAILY,
       icon: '🪙',
       iconColor: '#84CC16',
       name: 'Round-Up Savings',
