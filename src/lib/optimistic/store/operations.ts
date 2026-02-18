@@ -67,7 +67,7 @@ export function createOperations(
       };
 
       state.operations.set(id, operation);
-      state.pendingReorder = payload.habitIds;
+      state.pendingReorder = [...payload.habitIds];
       notify();
 
       return id;
