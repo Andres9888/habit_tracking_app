@@ -3,10 +3,12 @@
  *
  * Defines HTTP endpoints for external integrations like webhooks.
  * These endpoints are accessible at: https://<deployment>.convex.site/<path>
+ * See: convex/config/apiConstants.ts#CONVEX_API for endpoint definitions
  */
 
 import { httpRouter } from 'convex/server';
 import { revenuecatWebhook } from './webhooks/revenuecat';
+import { CONVEX_API } from './config/apiConstants';
 
 const http = httpRouter();
 
@@ -16,7 +18,7 @@ const http = httpRouter();
  * SEC-002: Server-side premium validation
  *
  * Configure this URL in RevenueCat Dashboard:
- * https://<deployment-name>.convex.site/revenuecat-webhook
+ * https://<deployment-name>.convex.site${CONVEX_API.WEBHOOK_REVENUECAT}
  *
  * Required events to enable:
  * - INITIAL_PURCHASE
@@ -28,7 +30,7 @@ const http = httpRouter();
  * - BILLING_ISSUE
  */
 http.route({
-  path: '/revenuecat-webhook',
+  path: CONVEX_API.WEBHOOK_REVENUECAT,
   method: 'POST',
   handler: revenuecatWebhook,
 });

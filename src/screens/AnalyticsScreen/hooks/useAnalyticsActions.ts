@@ -57,7 +57,7 @@ export const useAnalyticsActions = ({
   }, []);
 
   const handleHabitPress = useCallback((_habitId: string) => {
-    // TODO: navigate to habit detail
+    // Navigation to habit detail is handled by the consumer component's onHabitPress callback
   }, []);
 
   return {
