@@ -10,6 +10,7 @@ import Animated, {
   withDelay,
   withSpring,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface SocialProofBadgeProps {
   count?: string;
@@ -24,6 +25,7 @@ export function SocialProofBadge({
 }: SocialProofBadgeProps) {
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(10);
+  const { colors: themeColors } = useThemeColors();
 
   useEffect(() => {
     opacity.value = withDelay(delay, withSpring(1));
@@ -35,10 +37,27 @@ export function SocialProofBadge({
     transform: [{ translateY: translateY.value }],
   }));
 
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      backgroundColor: themeColors.primary[100],
+      borderRadius: 9999,
+      flexDirection: 'row',
+      gap: 8,
+      justifyContent: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+    },
+    text: {
+      color: themeColors.primary[700],
+      fontSize: 13,
+    },
+  });
+
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
+    <Animated.View style={[dynamicStyles.container, animatedStyle]}>
       <Text style={styles.star}>⭐</Text>
-      <Text style={styles.text}>
+      <Text style={dynamicStyles.text}>
         <Text style={styles.count}>{count}</Text> {message}
       </Text>
     </Animated.View>
@@ -46,30 +65,11 @@ export function SocialProofBadge({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#fffbeb',
-    borderRadius: 9999,
-    flexDirection: 'row',
-    // pill badge
-    gap: 8,
-
-    justifyContent: 'center',
-
-    // amber-50
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
   count: {
     fontWeight: '600',
   },
   star: {
-    fontSize: 13, // caption scale
-  },
-  text: {
-    // caption scale
-    color: '#92400e',
-    fontSize: 13, // amber-800
+    fontSize: 13,
   },
 });
 

@@ -28,7 +28,7 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
       usePasswordInputAnimations();
 
     const errorStyle = error ? { borderColor: '#ef4444', borderWidth: 1 } : {};
-    const iconColor = isDark ? themeColors.text.secondary : '#57534e';
+    const iconColor = themeColors.text.secondary;
 
     return (
       <View className='gap-2'>
@@ -47,7 +47,7 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
             animatedStyle,
             errorStyle,
             {
-              backgroundColor: isDark ? themeColors.card : '#ffffff',
+              backgroundColor: themeColors.card,
               borderColor: error ? '#ef4444' : themeColors.border,
             },
           ]}
@@ -69,7 +69,7 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
             autoComplete='password'
             className='flex-1 px-3 py-4 text-[17px] font-medium leading-[22px]'
             placeholder={placeholder}
-            placeholderTextColor={isDark ? themeColors.text.tertiary : '#a8a29e'}
+            placeholderTextColor={themeColors.text.tertiary}
             secureTextEntry={isSecure}
             style={{ color: themeColors.text.primary }}
             value={value}

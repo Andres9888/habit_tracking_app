@@ -1,9 +1,10 @@
 /**
  * ChartSections - Analytics chart components (Strength, Trend, Heatmap)
+ * OPTIMIZED: Uses useThemeColors() for dark mode support
  */
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
@@ -27,6 +28,8 @@ export const ChartSections = memo(function ChartSections({
   complianceData,
   isLoading = false,
 }: ChartSectionsProps) {
+  const { colors } = useThemeColors();
+  
   const strengthAccessibilityLabel = strengthDistribution
     ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
     : 'Loading chart';
@@ -47,7 +50,7 @@ export const ChartSections = memo(function ChartSections({
         <Text
           accessibilityLabel='Strength Distribution Chart'
           accessibilityRole='header'
-          style={styles.sectionTitle}
+          style={[styles.sectionTitle, { color: colors.text.primary }]}
         >
           Strength Distribution
         </Text>

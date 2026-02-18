@@ -55,7 +55,7 @@ export const FormInput = forwardRef(function FormInput(
         style={[
           animatedStyle,
           {
-            backgroundColor: isDark ? themeColors.card : '#ffffff',
+            backgroundColor: themeColors.card,
             borderColor: error ? '#ef4444' : themeColors.border,
           },
         ]}
@@ -64,7 +64,7 @@ export const FormInput = forwardRef(function FormInput(
           ref={ref}
           accessibilityLabel={label}
           className='px-5 py-4 text-[17px] font-medium leading-[22px]'
-          placeholderTextColor={isDark ? themeColors.text.tertiary : '#a1a1aa'}
+          placeholderTextColor={themeColors.text.tertiary}
           style={{ color: themeColors.text.primary }}
           onBlur={handleBlurWrapper}
           onFocus={handleFocus}
