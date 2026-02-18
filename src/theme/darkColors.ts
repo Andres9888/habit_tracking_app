@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- This is a data file defining color palettes for both light and dark modes, which is inherently large. */
 /**
  * Dark Mode Color Palette
  *
@@ -70,6 +71,9 @@ export const darkColors = {
 
   /** Card border — slightly lighter than surface (gray-700) */
   cardBorder: '#374151',
+
+  /** Accent color for highlights, icons, and activity indicators */
+  accent: '#34D399',
 
   /**
    * Gray Scale (Inverted)
@@ -146,6 +150,9 @@ export const lightColors = {
 
   /** Card border — same as general border */
   cardBorder: '#DDD8D2',
+
+  /** Accent color for highlights, icons, and activity indicators */
+  accent: '#059669',
 
   /**
    * Gray Scale (Standard)
@@ -239,6 +246,9 @@ export interface SemanticColors {
 
   /** Card border color */
   cardBorder: string;
+
+  /** Accent color for highlights, icons, and activity indicators */
+  accent: string;
 
   /** Text colors by emphasis level */
   text: {
