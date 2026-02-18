@@ -3,20 +3,24 @@
  * Note: dark mode colors are applied inline via useThemeColors()
  */
 
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const RESPONSIVE_BUTTON_SIZE = Math.max(SCREEN_WIDTH * 0.1, 44);
+const RESPONSIVE_ICON_SIZE = Math.min(SCREEN_WIDTH * 0.2, 80);
 
 export const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
     borderRadius: 16,
-    height: 44,
+    height: RESPONSIVE_BUTTON_SIZE,
     justifyContent: 'center',
-    width: 44,
+    width: RESPONSIVE_BUTTON_SIZE,
   },
   colorOption: {
     borderRadius: 16,
-    height: 44,
-    width: 44,
+    height: RESPONSIVE_BUTTON_SIZE,
+    width: RESPONSIVE_BUTTON_SIZE,
   },
   colorPickerContainer: {
     flexDirection: 'row',
@@ -49,10 +53,10 @@ export const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     borderRadius: 24,
-    height: 80,
+    height: RESPONSIVE_ICON_SIZE,
     justifyContent: 'center',
     marginBottom: 16,
-    width: 80,
+    width: RESPONSIVE_ICON_SIZE,
   },
   iconText: {
     fontSize: 40,

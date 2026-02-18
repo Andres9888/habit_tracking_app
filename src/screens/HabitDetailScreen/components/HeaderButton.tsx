@@ -1,6 +1,6 @@
 /** HeaderButton - Animated button with scale + haptic feedback */
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -21,6 +21,8 @@ interface HeaderButtonProps {
 }
 
 const SPRING = { damping: 18, stiffness: 150 };
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const RESPONSIVE_BUTTON_HEIGHT = Math.max(SCREEN_WIDTH * 0.09, 36);
 
 export function HeaderButton({
   onPress,
@@ -93,14 +95,14 @@ export function HeaderButton({
   );
 }
 
-const headerButtonStyles = StyleSheet.create({
+const s = StyleSheet.create({
   textButton: {
     alignItems: 'center',
     borderRadius: 20,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
-    height: 36,
+    height: RESPONSIVE_BUTTON_HEIGHT,
     paddingHorizontal: 14,
   },
   textLabel: {

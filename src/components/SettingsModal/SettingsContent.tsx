@@ -16,6 +16,7 @@ import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
 import { AboutSection } from './sections';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { usePrefetchNavigation } from '../../hooks/usePrefetchNavigation';
 import { SORT_LABEL_MAP } from './SortPicker.constants';
 import type { HabitSortMode } from '../../features/habits/types';
 import type { SettingsContentProps } from './types';

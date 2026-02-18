@@ -4,9 +4,13 @@
  * X icon for clear button in text input.
  */
 
-import { View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 
 import { COLORS } from '../constants';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const RESPONSIVE_ICON_SIZE = Math.max(SCREEN_WIDTH * 0.04, 20);
+const CROSS_WIDTH = RESPONSIVE_ICON_SIZE / 2;
 
 export function ClearIcon() {
   return (
@@ -15,9 +19,9 @@ export function ClearIcon() {
         alignItems: 'center',
         backgroundColor: COLORS.stone200,
         borderRadius: 12,
-        height: 20,
+        height: RESPONSIVE_ICON_SIZE,
         justifyContent: 'center',
-        width: 20,
+        width: RESPONSIVE_ICON_SIZE,
       }}
     >
       <View
@@ -26,7 +30,7 @@ export function ClearIcon() {
           height: 2,
           position: 'absolute',
           transform: [{ rotate: '45deg' }],
-          width: 10,
+          width: CROSS_WIDTH,
         }}
       />
       <View
@@ -35,7 +39,7 @@ export function ClearIcon() {
           height: 2,
           position: 'absolute',
           transform: [{ rotate: '-45deg' }],
-          width: 10,
+          width: CROSS_WIDTH,
         }}
       />
     </View>

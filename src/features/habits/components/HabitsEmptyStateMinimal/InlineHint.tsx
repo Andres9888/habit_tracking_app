@@ -71,6 +71,7 @@ export function InlineHint({
             paddingHorizontal: 16,
             paddingVertical: 12,
           })}
+          onPressIn={prefetchTemplatesAndCategories}
           onPress={onBrowseTemplates}
         >
           <Text

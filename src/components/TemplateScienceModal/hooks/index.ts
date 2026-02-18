@@ -7,3 +7,4 @@ export { useScrollAnimations } from './useScrollAnimations';
 export { useButtonAnimations } from './useButtonAnimations';
 export { useAnimatedStyles } from './useAnimatedStyles';
 export { useModalHandlers } from './useModalHandlers';
+export type { AnimationValues } from './animatedStyles.types';
