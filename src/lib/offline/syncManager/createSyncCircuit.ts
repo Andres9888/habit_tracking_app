@@ -10,7 +10,11 @@ import type { OfflineSyncManagerConfig, SyncEventListener } from './types';
 export function createSyncCircuit(
   config: OfflineSyncManagerConfig,
   emit: (type: SyncEventType, data?: Record<string, unknown>) => void
-): { circuitBreaker: CircuitBreaker; retryStrategy: RetryStrategy } {
+): {
+  circuitBreaker: CircuitBreaker;
+  retryStrategy: RetryStrategy;
+  cleanup: () => void;
+} {
   const retryStrategy: RetryStrategy = {
     ...DEFAULT_RETRY_STRATEGY,
     ...config.retryStrategy,
@@ -19,7 +23,7 @@ export function createSyncCircuit(
     ...DEFAULT_CIRCUIT_CONFIG,
     ...config.circuitBreaker,
   });
-  circuitBreaker.subscribe(({ state }) => {
+  const unsubscribe = circuitBreaker.subscribe(({ state }) => {
     switch (state) {
       case 'open': {
         emit('circuit:open');
@@ -35,5 +39,5 @@ export function createSyncCircuit(
       }
     }
   });
-  return { circuitBreaker, retryStrategy };
+  return { circuitBreaker, retryStrategy, cleanup: unsubscribe };
 }

@@ -6,6 +6,8 @@ import type { ActivationModalSectionProps } from './HabitsModals.types';
 function buildActivationHabitData(
   habit: NonNullable<ActivationModalSectionProps['activationModalHabit']>
 ) {
+  const totalCompletions = (habit as Record<string, unknown>).completedDays as number ?? 0;
+
   return {
     cueAfterBehavior: habit.cueAfterBehavior,
     cueLocation: habit.cueLocation,
@@ -14,7 +16,7 @@ function buildActivationHabitData(
     icon: habit.icon,
     id: habit._id,
     name: habit.name,
-    totalCompletions: (habit as Record<string, unknown>).completedDays as number ?? 0,
+    totalCompletions,
     vizFailureBody: habit.vizFailureBody,
     vizFailureEmotion: habit.vizFailureEmotion,
     vizFailureMind: habit.vizFailureMind,

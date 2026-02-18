@@ -1,3 +1,11 @@
+/**
+ * CardHeader — Top row of a habit card: icon (with pulse), title, phase tag, chevron.
+ *
+ * Uses a 5-column grid where the icon occupies column 1 and the title overlay
+ * spans columns 2–5 via absolute positioning (see {@link TITLE_OVERLAY_STYLE}).
+ * Optionally shows "Best: N days" subtitle when the best streak exceeds current.
+ */
+
 import React from 'react';
 import { Animated, View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
@@ -19,6 +27,7 @@ interface CardHeaderProps {
   habit: Habit;
   highContrastMode: boolean;
   iconPulse: Animated.Value;
+  isPaused: boolean;
   name: string;
   showHabitStrengthPercentage: boolean;
   streak: number;
@@ -32,6 +41,7 @@ export function CardHeader({
   habit,
   highContrastMode,
   iconPulse,
+  isPaused,
   name,
   showHabitStrengthPercentage,
   streak,
@@ -73,6 +83,16 @@ export function CardHeader({
           </Text>
           {habit.preferredTime && (
             <PhaseTag compact preferredTime={habit.preferredTime} />
+          )}
+          {isPaused && (
+            <View
+              className='rounded-full px-2 py-0.5'
+              style={{ backgroundColor: '#8b5cf6' }}
+            >
+              <Text className='text-[11px] font-semibold text-white'>
+                Paused
+              </Text>
+            </View>
           )}
           <View className='ml-auto'>
             <ChevronRight

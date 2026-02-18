@@ -64,6 +64,7 @@ export default function FullsizeTemplatePreview({
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableBackdropClose={isImporting}
       variant='fullScreen'
       visible={visible}
@@ -86,3 +87,5 @@ export default function FullsizeTemplatePreview({
     </Modal>
   );
 }
+
+export default React.memo(FullsizeTemplatePreviewComponent);

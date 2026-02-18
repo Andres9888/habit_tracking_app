@@ -8,6 +8,7 @@ import { api } from '../../../convex/_generated/api';
 import { exportData, prepareExportData } from '../../utils/exportData';
 import { usePremium } from '../../hooks/usePremium/usePremium';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { maybeRequestReviewFromAnalytics } from '@/utils/storeReview';
 import type {
   ExportFormat,
   UseAnalyticsScreenReturn,
@@ -19,6 +20,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const [showPaywall, setShowPaywall] = useState(!isPremiumUser);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const { triggerLightImpact } = useHapticFeedback();
+  const hasCheckedReview = useRef(false);
 
   // Fetch analytics data from Convex
   const overviewStats = useQuery(api.analytics.getOverviewStats);
@@ -30,6 +32,31 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
 
   const isLoading = !overviewStats;
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /**
+   * Maybe request review after viewing positive stats (once per session)
+   * This feature encourages users to rate the app after seeing their progress.
+   * We use a ref to ensure we only show this once per session to avoid being annoying.
+   * The calculation computes the average daily completion rate across all tracked days
+   * to estimate user engagement level.
+   */
+  useEffect(() => {
+    if (
+      !hasCheckedReview.current &&
+      !isLoading &&
+      overviewStats &&
+      complianceData &&
+      complianceData.length > 0
+    ) {
+      hasCheckedReview.current = true;
+      // Calculate average completion rate from heatmap data across all tracked days
+      const avgCompletionRate =
+        complianceData.reduce((sum, day) => sum + day.completionRate, 0) /
+        complianceData.length;
+      const totalHabits = overviewStats.totalHabits || 0;
+      void maybeRequestReviewFromAnalytics(avgCompletionRate, totalHabits);
+    }
+  }, [isLoading, overviewStats, complianceData]);
 
   // Cleanup refresh timer on unmount
   useEffect(() => {
@@ -58,6 +85,14 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     setShowExportMenu(true);
   }, [isPremiumUser]);
 
+  /**
+   * Handle data export in the requested format (CSV or JSON)
+   * This function:
+   * 1. Closes the export menu modal
+   * 2. Prepares analytics data for export
+   * 3. Calls the export utility with format preference
+   * 4. Shows success/error alerts with appropriate messaging
+   */
   const handleExport = useCallback(
     async (format: ExportFormat) => {
       setShowExportMenu(false);

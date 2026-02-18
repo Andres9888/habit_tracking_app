@@ -25,7 +25,12 @@ export function NotesListModal({
   const { colors, isDark } = useThemeColors();
 
   return (
-    <RNModal animationType='slide' visible={isOpen} onRequestClose={onClose}>
+    <RNModal
+      animationType='slide'
+      visible={isOpen}
+      onRequestClose={onClose}
+      accessibilityViewIsModal
+    >
       <View
         className='flex-1'
         style={{
@@ -47,7 +52,9 @@ export function NotesListModal({
             accessibilityLabel='Close notes'
             accessibilityRole='button'
             className='h-11 w-11 items-center justify-center rounded-full active:opacity-70'
-            style={{ backgroundColor: isDark ? colors.gray[200] : colors.gray[100] }}
+            style={{
+              backgroundColor: isDark ? colors.gray[200] : colors.gray[100],
+            }}
             onPress={onClose}
           >
             <X color={isDark ? colors.text.secondary : '#57534e'} size={24} />

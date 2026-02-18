@@ -1,3 +1,14 @@
+/**
+ * CardContent — The main content area inside DraggableHabitCard.
+ *
+ * Layout (top to bottom):
+ * 1. {@link CardHeader} — icon, title, phase tag, best-streak subtitle
+ * 2. {@link NewRecordBadge} — conditional "New Personal Record!" banner
+ * 3. {@link StrengthProgressBar} or a thin divider line
+ * 4. {@link HabitChainVisualizer} — 7-day dot chain with toggle
+ * 5. {@link WeekCompleteIndicator} — "✨ Perfect Week ✨" badge
+ */
+
 import React from 'react';
 import { View } from 'react-native';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
@@ -25,6 +36,7 @@ export function CardContent(props: CardContentProps) {
           habit={props.habit}
           highContrastMode={props.highContrastMode}
           iconPulse={props.iconPulse}
+          isPaused={props.isPaused}
           name={props.name}
           showHabitStrengthPercentage={props.showHabitStrengthPercentage}
           streak={props.streak}

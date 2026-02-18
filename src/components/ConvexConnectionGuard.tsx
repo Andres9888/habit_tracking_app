@@ -44,8 +44,8 @@ export function ConvexConnectionGuard({ children }: PropsWithChildren) {
       >
         <Text
           style={{
-            color: colors.text,
-            fontSize: 20,
+            color: colors.text.primary,
+            fontSize: 22,
             fontWeight: '600',
             marginBottom: 12,
             textAlign: 'center',
@@ -55,14 +55,14 @@ export function ConvexConnectionGuard({ children }: PropsWithChildren) {
         </Text>
         <Text
           style={{
-            color: colors.textSecondary,
-            fontSize: 16,
+            color: colors.text.secondary,
+            fontSize: 17,
             marginBottom: 24,
             textAlign: 'center',
           }}
         >
-          Unable to connect to the server. Please check your internet
-          connection and try again.
+          Unable to connect to the server. Please check your internet connection
+          and try again.
         </Text>
         <ActivityIndicator color={colors.accent} size='large' />
       </View>

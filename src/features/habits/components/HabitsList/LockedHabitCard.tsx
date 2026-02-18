@@ -1,7 +1,13 @@
 /* eslint-disable max-lines */
 /**
- * LockedHabitCard Component
- * Animated upgrade prompt card for free tier limit
+ * LockedHabitCard — inline upgrade nudge shown in the list footer.
+ *
+ * Part of the **monetization flow**: rendered by {@link HabitsListFooter} when
+ * a free-tier user has reached the habit limit.  Displays a dashed-border card
+ * with a "Start Free Trial" CTA.
+ *
+ * **Animations:** entrance spring (scale + fade) and press spring (scale).
+ * Both respect the `reduceMotion` preference.
  */
 
 import { useEffect, useRef } from 'react';
@@ -33,7 +39,8 @@ export function LockedHabitCard({
     Animated.parallel([
       Animated.spring(entranceScale, {
         damping: 18,
-        stiffness: 150,
+        mass: 1,
+        stiffness: 150, // Design system standard
         toValue: 1,
         useNativeDriver: true,
       }),
@@ -53,6 +60,7 @@ export function LockedHabitCard({
     }
     Animated.spring(pressScale, {
       damping: 18,
+      mass: 1,
       stiffness: 150,
       toValue: SCALE.pressLarge,
       useNativeDriver: true,
@@ -66,6 +74,7 @@ export function LockedHabitCard({
     }
     Animated.spring(pressScale, {
       damping: 18,
+      mass: 1,
       stiffness: 150,
       toValue: SCALE.normal,
       useNativeDriver: true,
@@ -84,16 +93,20 @@ export function LockedHabitCard({
       <Animated.View
         className='gap-4 rounded-3xl border border-dashed p-5'
         style={{
-          borderColor: isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(196, 181, 253, 1)',
+          borderColor: isDark
+            ? 'rgba(139, 92, 246, 0.3)'
+            : 'rgba(196, 181, 253, 1)',
           opacity,
           transform: [{ scale: entranceScale }, { scale: pressScale }],
         }}
       >
         <LinearGradient
           className='absolute inset-0 rounded-3xl'
-          colors={isDark
-            ? ['rgba(88, 28, 135, 0.2)', 'rgba(120, 53, 15, 0.1)']
-            : ['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']}
+          colors={
+            isDark
+              ? ['rgba(88, 28, 135, 0.2)', 'rgba(120, 53, 15, 0.1)']
+              : ['rgba(245, 243, 255, 0.8)', 'rgba(255, 251, 235, 0.4)']
+          }
         />
         <View className='items-center gap-2'>
           <Text className='text-[24px]'>✨</Text>

@@ -2,8 +2,9 @@
  * WelcomeScreen styles
  */
 
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle } from 'react-native';
 import { colors } from '../../theme/colors';
+import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   actionSection: {
@@ -45,6 +46,11 @@ export const styles = StyleSheet.create({
     shadowRadius: 16,
     width: 80,
   },
+  loadingContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
   primaryButton: {
     alignItems: 'center',
     backgroundColor: colors.primary[600],
@@ -57,34 +63,31 @@ export const styles = StyleSheet.create({
     shadowRadius: 16,
   },
   primaryButtonText: {
+    ...typography.button,
     color: '#ffffff',
-    fontSize: 17,
-    fontWeight: '600',
-  },
+  } as TextStyle,
   subtitle: {
+    ...typography.body,
     color: '#57534e',
-    fontSize: 17,
     textAlign: 'center',
-  },
+  } as TextStyle,
   textLink: {
     flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: 12,
   },
   textLinkAction: {
+    ...typography.bodySmall,
     color: colors.primary[700],
-    fontSize: 15,
     fontWeight: '600',
-  },
+  } as TextStyle,
   textLinkLabel: {
+    ...typography.bodySmall,
     color: '#57534e',
-    fontSize: 15,
-  },
+  } as TextStyle,
   title: {
+    ...typography.displayLarge,
     color: '#1c1917',
-    fontSize: 34,
-    fontWeight: '700',
-    letterSpacing: -0.5,
     textAlign: 'center',
-  },
+  } as TextStyle,
 });

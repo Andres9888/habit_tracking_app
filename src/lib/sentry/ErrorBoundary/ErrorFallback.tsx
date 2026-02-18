@@ -1,10 +1,11 @@
 /**
  * Error Fallback Component
  * Displays user-friendly error message with retry option.
+ * Shows when ErrorBoundary catches an unhandled error.
  */
 
-import React from 'react';
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { StyleSheet, Text, View, Pressable, Linking } from 'react-native';
 
 import { useThemeColors } from '../../../theme/ThemeContext';
 
@@ -13,8 +14,31 @@ interface ErrorFallbackProps {
   onRetry: () => void;
 }
 
+const SUPPORT_EMAIL = 'support@chainday.app';
+const MAX_RETRIES = 3;
+
 export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
   const { colors } = useThemeColors();
+  const retryCountRef = useRef(0);
+  const [showContactSupport, setShowContactSupport] = useState(false);
+
+  const handleRetry = () => {
+    retryCountRef.current += 1;
+    if (retryCountRef.current >= MAX_RETRIES) {
+      setShowContactSupport(true);
+    }
+    onRetry();
+  };
+
+  const handleContactSupport = () => {
+    const subject = encodeURIComponent('Chain Day — App Error');
+    const body = encodeURIComponent(
+      `Error: ${error?.message ?? 'Unknown'}\n\nPlease describe what you were doing when this happened:`
+    );
+    void Linking.openURL(
+      `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`
+    );
+  };
 
   const styles = StyleSheet.create({
     button: {
@@ -37,7 +61,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
     },
     content: {
       alignItems: 'center',
-      maxWidth: 300,
+      maxWidth: 320,
     },
     emoji: {
       fontSize: 48,
@@ -57,8 +81,26 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
       color: colors.text.secondary,
       fontSize: 14,
       lineHeight: 20,
-      marginBottom: 24,
+      marginBottom: 8,
       textAlign: 'center',
+    },
+    safetyNote: {
+      color: colors.text.primary,
+      fontSize: 14,
+      fontWeight: '600',
+      marginBottom: 16,
+      textAlign: 'center',
+    },
+    supportButton: {
+      marginTop: 12,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+    },
+    supportButtonText: {
+      color: colors.text.secondary,
+      fontSize: 13,
+      fontWeight: '500',
+      textDecorationLine: 'underline',
     },
     title: {
       color: colors.text.primary,
@@ -70,12 +112,15 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
   });
 
   return (
-    <View style={styles.container}>
+    <View accessibilityRole='alert' style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.emoji}>😔</Text>
-        <Text style={styles.title}>Something went wrong</Text>
+        <Text style={styles.emoji}>😊</Text>
+        <Text accessibilityRole='header' style={styles.title}>
+          Oops! Something went wrong
+        </Text>
+        <Text style={styles.safetyNote}>Don't worry — your data is safe.</Text>
         <Text style={styles.message}>
-          We've been notified and are working to fix this.
+          We encountered an issue, but nothing was lost. Try refreshing the app.
         </Text>
         {__DEV__ && error && (
           <Text style={styles.errorDetail}>{error.message}</Text>
@@ -84,10 +129,21 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
           accessibilityLabel='Try again'
           accessibilityRole='button'
           style={styles.button}
-          onPress={onRetry}
+          onPress={handleRetry}
         >
           <Text style={styles.buttonText}>Try Again</Text>
         </Pressable>
+        {showContactSupport && (
+          <Pressable
+            accessibilityHint='Opens email to contact support team'
+            accessibilityLabel='Contact support'
+            accessibilityRole='button'
+            style={styles.supportButton}
+            onPress={handleContactSupport}
+          >
+            <Text style={styles.supportButtonText}>Contact Support</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );

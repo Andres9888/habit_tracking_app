@@ -24,14 +24,16 @@ export function VerificationForm({
   return (
     <View
       className='rounded-2xl p-6'
-      style={{ backgroundColor: colors.card }}
-      style={{
-        elevation: 4,
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
-      }}
+      style={[
+        { backgroundColor: colors.card },
+        {
+          elevation: 4,
+          shadowColor: '#1c1917',
+          shadowOffset: { height: 4, width: 0 },
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
+        },
+      ]}
     >
       <FormInput
         keyboardType='number-pad'

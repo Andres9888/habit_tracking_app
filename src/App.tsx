@@ -8,25 +8,24 @@
  * - RevenueCat: Subscription management
  * - React Native Paper: UI theming
  *
- * The provider order matters for dependency injection.
+ * Performance optimizations:
+ * - Sentry init deferred with requestIdleCallback
+ * - Non-critical providers lazy loaded after first paint
+ * - Provider chain optimized to minimize blocking
  */
 
 import '../global.css';
 
 import { ClerkProvider } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
+import { useState, useEffect } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
-import { PurchasesProvider } from './components/providers/PurchasesProvider';
-import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration';
-import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
-import { SyncStatusProvider } from './contexts/SyncStatusContext';
 import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
-import { OfflineProvider } from './providers/OfflineProvider';
 import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
 
@@ -46,7 +45,57 @@ if (!clerkKey) {
   );
 }
 
-function Providers({ children }: PropsWithChildren) {
+/**
+ * Lazy-loaded providers that don't block critical rendering path.
+ * These are loaded after the initial paint to improve startup time.
+ */
+function LazyProviders({ children }: PropsWithChildren) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Load non-critical providers after a short delay
+    // This ensures the critical path renders first
+    const timer = setTimeout(() => setMounted(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!mounted) {
+    return <>{children}</>;
+  }
+
+  // Note: These could be converted to async import() but would require Suspense
+  // For now, ESLint rule is disabled for this specific pattern
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { PurchasesProvider } = require('./components/providers/PurchasesProvider');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { StreakMilestoneProvider } = require('./components/StreakMilestoneCelebration');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { NetworkStatusProvider } = require('./contexts/NetworkStatusContext');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { SyncStatusProvider } = require('./contexts/SyncStatusContext');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { OfflineProvider } = require('./providers/OfflineProvider');
+
+  return (
+    <NetworkStatusProvider>
+      <OfflineProvider>
+        <SyncStatusProvider>
+          <PurchasesProvider>
+            <StreakMilestoneProvider>
+              {children}
+            </StreakMilestoneProvider>
+          </PurchasesProvider>
+        </SyncStatusProvider>
+      </OfflineProvider>
+    </NetworkStatusProvider>
+  );
+}
+
+/**
+ * Core providers needed for authentication and data access.
+ * These are loaded immediately as they're required for the app to function.
+ */
+function CoreProviders({ children }: PropsWithChildren) {
   return (
     <SentryErrorBoundary>
       <SafeAreaProvider>
@@ -55,17 +104,9 @@ function Providers({ children }: PropsWithChildren) {
             <SentryUserSync>
               <ConvexClerkProvider>
                 <ThemeColorProvider>
-                  <NetworkStatusProvider>
-                    <OfflineProvider>
-                      <SyncStatusProvider>
-                        <PurchasesProvider>
-                          <StreakMilestoneProvider>
-                            {children}
-                          </StreakMilestoneProvider>
-                        </PurchasesProvider>
-                      </SyncStatusProvider>
-                    </OfflineProvider>
-                  </NetworkStatusProvider>
+                  <LazyProviders>
+                    {children}
+                  </LazyProviders>
                 </ThemeColorProvider>
               </ConvexClerkProvider>
             </SentryUserSync>
@@ -78,8 +119,8 @@ function Providers({ children }: PropsWithChildren) {
 
 export default function App() {
   return (
-    <Providers>
+    <CoreProviders>
       <AuthGate />
-    </Providers>
+    </CoreProviders>
   );
 }

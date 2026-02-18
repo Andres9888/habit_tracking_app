@@ -1,11 +1,3 @@
-/**
- * HabitDetailTabs Component
- *
- * Tab bar navigation for the Habit Detail screen.
- * Uses a pill/segment control style with smooth sliding animation.
- * Theme-aware with proper dark mode support.
- */
-
 import React, { useCallback, useEffect } from 'react';
 import { View, LayoutChangeEvent } from 'react-native';
 import Animated, {
@@ -68,17 +60,14 @@ export function HabitDetailTabs({
   const handleTabPress = useCallback(
     (tab: TabType) => {
       if (tab !== activeTab) {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         onTabChange(tab);
       }
     },
     [activeTab, onTabChange]
   );
 
-  // Theme-aware colors
   const containerBgColor = isDark ? colors.gray[700] : colors.gray[100];
-  const pillBgColor = colors.primary[500];
-  const pillShadowColor = colors.primary[300];
 
   return (
     <View
@@ -95,8 +84,8 @@ export function HabitDetailTabs({
           style={[
             pillStyle,
             {
-              backgroundColor: pillBgColor,
-              shadowColor: pillShadowColor,
+              backgroundColor: colors.primary[500],
+              shadowColor: colors.primary[300],
               shadowOffset: { height: 3, width: 0 },
               shadowOpacity: 0.15,
               shadowRadius: 8,
@@ -117,5 +106,3 @@ export function HabitDetailTabs({
     </View>
   );
 }
-
-export default HabitDetailTabs;

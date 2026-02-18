@@ -44,15 +44,50 @@ export const fontWeights = {
 };
 
 /**
- * Type Scale
- * Body baseline: 16px
- * Scale ratios: displayLarge = 2.375×, H1 = 1.875×, H2 = 1.5×, H3 = 1.25×
+ * Type Scale (Design System: 34/22/17/13)
+ * Display: 34, Title: 22, Body: 17, Caption: 13
  */
 export const typography: Record<string, TextStyle> = {
-  // Body (Primary text) — 16px
+  // Display Large (Onboarding headlines) — 34px Literata
+  displayLarge: {
+    fontFamily: fontFamilies.primary.display,
+    fontSize: 34,
+    fontWeight: fontWeights.bold,
+    letterSpacing: -0.85,
+    lineHeight: 41,
+  },
+
+  // Heading 1 (Screen titles) — 22px Literata
+  heading1: {
+    fontFamily: fontFamilies.primary.display,
+    fontSize: 22,
+    fontWeight: fontWeights.bold,
+    letterSpacing: -0.35,
+    lineHeight: 28,
+  },
+
+  // Heading 2 (Section titles) — 22px DM Sans
+  heading2: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 22,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: -0.35,
+    lineHeight: 28,
+  },
+
+  // Heading 3 (Card titles, habit names) — 20px DM Sans
+  heading3: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 20,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: -0.2,
+    lineHeight: 26,
+  },
+
+  // Body (Primary text) — 17px
   body: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: fontWeights.regular,
     letterSpacing: 0,
     lineHeight: 24,
@@ -64,61 +99,25 @@ export const typography: Record<string, TextStyle> = {
     fontSize: 14,
     fontWeight: fontWeights.regular,
     letterSpacing: 0,
-    lineHeight: 21,
+    lineHeight: 20,
   },
 
-  // Button Text — 16px semibold
+  // Button Text — 17px semibold
   button: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: fontWeights.semibold,
     letterSpacing: 0.08,
     lineHeight: 24,
   },
 
-  // Caption (Meta info, timestamps) — 12px
+  // Caption (Meta info, timestamps) — 13px
   caption: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: fontWeights.medium,
     letterSpacing: 0.12,
     lineHeight: 18,
-  },
-
-  // Display Large (Onboarding headlines) — 38px Literata
-  displayLarge: {
-    fontFamily: fontFamilies.primary.display,
-    fontSize: 38,
-    fontWeight: fontWeights.bold,
-    letterSpacing: -0.95,
-    lineHeight: 45,
-  },
-
-  // Heading 1 (Screen titles) — 30px Literata
-  heading1: {
-    fontFamily: fontFamilies.primary.display,
-    fontSize: 30,
-    fontWeight: fontWeights.bold,
-    letterSpacing: -0.6,
-    lineHeight: 36,
-  },
-
-  // Heading 2 (Section titles) — 24px DM Sans
-  heading2: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 24,
-    fontWeight: fontWeights.semibold,
-    letterSpacing: -0.36,
-    lineHeight: 30,
-  },
-
-  // Heading 3 (Card titles, habit names) — 20px DM Sans
-  heading3: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 20,
-    fontWeight: fontWeights.semibold,
-    letterSpacing: -0.2,
-    lineHeight: 26,
   },
 
   // Monospace (Numbers, percentages, data) — 16px

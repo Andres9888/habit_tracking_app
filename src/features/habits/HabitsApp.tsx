@@ -1,41 +1,28 @@
 /**
  * HabitsApp - Main habits screen
- * Orchestrates the habits list, modals, overlays, and floating action button.
+ * Orchestrates the habits list, modals, overlays, and bottom action bar.
  */
 
-import { useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 import { HabitsList } from './components/HabitsList';
-import FloatingActionButton from './components/FloatingActionButton';
+import { BottomActionBar } from './components/BottomActionBar';
 import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+import { useBottomBarProps } from './useBottomBarProps';
 
-const styles = StyleSheet.create({
-  fabContainer: {
-    bottom: 32,
-    position: 'absolute',
-    right: 24,
-  },
-  flex1: { flex: 1 },
-});
+const ENTERING = FadeInDown.duration(280).springify().damping(18);
+const styles = StyleSheet.create({ flex1: { flex: 1 } });
 
-/**
- * HabitsAppContent — the core orchestrator for the habits screen.
- *
- * Composes list state, modal state, haptic feedback, and premium/paywall
- * handlers into a single render tree. Delegates each concern to dedicated
- * hooks (`useHabitsApp`, `useHabitsAppHandlers`, `useHapticFeedback`) so
- * this component remains a thin wiring layer.
- */
+// eslint-disable-next-line max-lines-per-function
 function HabitsAppContent() {
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
@@ -44,16 +31,7 @@ function HabitsAppContent() {
     preference: list.reduceMotionPreference,
   });
 
-  const {
-    handleCreateHabitRequest,
-    handlePaywallClose,
-    handlePaywallSuccess,
-    handleUpgradeConfirm,
-    handleUpgradeDismiss,
-    handleUpgradeIntent,
-    paywallVisible,
-    upgradePromptVisible,
-  } = useHabitsAppHandlers({
+  const handlers = useHabitsAppHandlers({
     hasReachedHabitLimit: list.hasReachedHabitLimit,
     isPremiumUser: list.isPremiumUser,
     openCreateHabitScreen: modals.openCreateHabitScreen,
@@ -61,66 +39,53 @@ function HabitsAppContent() {
     triggerWarning,
   });
 
-  /** Wrapper for the FAB — delegates to `handleCreateHabitRequest` (async). */
-  const onFabPress = useCallback((): void => {
-    void handleCreateHabitRequest();
-  }, [handleCreateHabitRequest]);
+  const bottomBar = useBottomBarProps({
+    handleCreateHabitRequest: handlers.handleCreateHabitRequest,
+    list,
+    modals,
+  });
 
-  const showHabitsSkeleton = list.isHabitsLoading && list.habits.length === 0;
+  const showSkeleton = list.isHabitsLoading && list.habits.length === 0;
 
   return (
-    // GestureHandlerRootView is required here for swipe gestures inside HabitsList.
-    // AuthGate also wraps one; react-native-gesture-handler supports nesting safely.
     <GestureHandlerRootView style={styles.flex1}>
       <View style={[styles.flex1, { backgroundColor: colors.background }]}>
         <SyncStatusOverlays />
-
-        {showHabitsSkeleton ? (
+        {showSkeleton ? (
           <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
         ) : (
-          <Animated.View entering={FadeIn.duration(300)} style={styles.flex1}>
+          <Animated.View entering={ENTERING} style={styles.flex1}>
             <HabitsList
               canNavigateForward={list.canNavigateForward}
               list={list}
               modals={modals}
-              upgradePromptVisible={upgradePromptVisible}
+              upgradePromptVisible={handlers.upgradePromptVisible}
               weekDates={list.weekDates}
-              onCreateHabitRequest={handleCreateHabitRequest}
+              onCreateHabitRequest={handlers.handleCreateHabitRequest}
               onNextWeek={list.handleNextWeek}
               onPreviousWeek={list.handlePreviousWeek}
-              onUpgradeConfirm={handleUpgradeConfirm}
-              onUpgradeDismiss={handleUpgradeDismiss}
-              onUpgradeIntent={handleUpgradeIntent}
+              onUpgradeConfirm={handlers.handleUpgradeConfirm}
+              onUpgradeDismiss={handlers.handleUpgradeDismiss}
+              onUpgradeIntent={handlers.handleUpgradeIntent}
             />
           </Animated.View>
         )}
-
-        {list.habits.length > 0 && (
-          <View style={styles.fabContainer}>
-            <FloatingActionButton
-              celebrationsEnabled={list.celebrationsEnabled}
-              openCreateHabitScreen={onFabPress}
-              reduceMotionPreference={list.reduceMotionPreference}
-            />
-          </View>
-        )}
-
+        {list.habits.length > 0 && <BottomActionBar {...bottomBar} />}
         <HabitsAppOverlays
           list={list}
           modals={modals}
-          paywallVisible={paywallVisible}
-          onPaywallClose={handlePaywallClose}
-          onPaywallSuccess={handlePaywallSuccess}
+          paywallVisible={handlers.paywallVisible}
+          onPaywallClose={handlers.handlePaywallClose}
+          onPaywallSuccess={handlers.handlePaywallSuccess}
         />
       </View>
     </GestureHandlerRootView>
   );
 }
 
-/** Top-level export wrapped in an error boundary. */
 export function HabitsApp() {
   return (
-    <ScreenErrorBoundary screenName="Habits">
+    <ScreenErrorBoundary screenName='Habits'>
       <HabitsAppContent />
     </ScreenErrorBoundary>
   );

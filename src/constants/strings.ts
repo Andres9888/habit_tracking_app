@@ -16,15 +16,15 @@ export const STRINGS = {
     motivationSuffix: ' — consistency is key 🔥',
     nameHelper: 'Tip: Be specific — include a time, trigger, or place.',
     nameLabel: 'Habit name',
-    namePlaceholder: 'e.g., Read 10 minutes daily',
+    namePlaceholder: 'e.g., Read for 10 minutes before bed',
     // V9 additions
-orCreateYourOwn: 'or create your own',
-    
-reminderAnnouncementDisabled: 'Reminders disabled',
-    
-reminderAnnouncementWithTime: (label: string, time: string) =>
+    orCreateYourOwn: 'or create your own',
+
+    reminderAnnouncementDisabled: 'Reminders disabled',
+
+    reminderAnnouncementWithTime: (label: string, time: string) =>
       `Selected ${label} reminder at ${time}`,
-    
+
     remindersHelper: "We'll only remind you at your chosen time.",
 
     remindersLabel: 'Daily reminder',

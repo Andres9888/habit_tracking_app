@@ -5,7 +5,7 @@
 
 import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../../theme/colors';
 
 interface PasswordStrengthBarProps {
@@ -45,7 +45,7 @@ export function PasswordStrengthBar({ password }: PasswordStrengthBarProps) {
   if (!password) return null;
 
   return (
-    <Animated.View entering={FadeIn.duration(200)} style={styles.container}>
+    <Animated.View entering={FadeInDown.duration(280).springify().damping(18)} style={styles.container}>
       <View style={styles.track}>
         <View
           style={[
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   label: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '600',
   },
   track: {

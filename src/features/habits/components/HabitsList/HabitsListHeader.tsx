@@ -1,8 +1,14 @@
 /**
- * HabitsListHeader - Redesigned per home-screen-redesign-spec.md
+ * HabitsListHeader — animated header rendered above the habit rows.
+ *
+ * Contains (top-to-bottom):
+ * 1. **OfflineIndicator** — shown when the device loses connectivity.
+ * 2. **HabitsHeader** — minimal date-only title.
+ * 3. **CalendarTimeline** — week-view dots with day completion heat.
+ * 4. **TrialCountdownBanner** — shown during an active free-trial period.
+ *
+ * Action buttons have moved to the BottomActionBar.
  */
-
-/* eslint-disable max-lines-per-function */
 
 import React, { memo } from 'react';
 import { Animated, View } from 'react-native';
@@ -26,7 +32,6 @@ function HabitsListHeaderComponent(
     weekDateStrings: props.weekDateStrings,
   });
 
-  // Trial countdown banner
   const { shouldShowBanner, daysRemaining } = useTrialCountdown();
 
   return (
@@ -44,13 +49,7 @@ function HabitsListHeaderComponent(
         }}
       >
         <HabitsHeader
-          completedToday={computed.completedToday}
           forceShow={props.justCreatedHabitId !== null}
-          openCreateHabitScreen={props.onAddHabitPress}
-          openSettings={props.openSettings}
-          openSortSheet={props.onOpenSortSheet}
-          openTemplatesScreen={props.openTemplatesScreen}
-          showCompletionSummary={props.showWeekCompletionBar}
           totalHabits={computed.totalHabits}
         />
       </Animated.View>
@@ -75,7 +74,6 @@ function HabitsListHeaderComponent(
         </Animated.View>
       )}
 
-      {/* Trial Countdown Banner */}
       {shouldShowBanner && daysRemaining !== null && (
         <TrialCountdownBanner
           daysRemaining={daysRemaining}

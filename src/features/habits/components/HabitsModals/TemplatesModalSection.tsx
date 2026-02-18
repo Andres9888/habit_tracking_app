@@ -1,4 +1,5 @@
-import { Pressable, View } from 'react-native';
+import { lazy, Suspense } from 'react';
+import { Pressable, View, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
@@ -11,13 +12,17 @@ import CustomModal from '../../../../components/Modal';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import TemplatesScreen from '../../../../screens/TemplatesScreen';
+import { TemplateListSkeleton } from '../../../../components/SkeletonLoader';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
+
+// Lazy load TemplatesScreen - only bundle when modal is opened
+const TemplatesScreen = lazy(() => import('../../../../screens/TemplatesScreen'));
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
  * Templates modal section - displays templates screen in full-screen modal
+ * Performance: TemplatesScreen is lazy loaded to reduce initial bundle size
  */
 export function TemplatesModalSection({
   showTemplatesScreen,
@@ -45,7 +50,9 @@ export function TemplatesModalSection({
     >
       <View className='flex-1' style={{ paddingTop: insets.top }}>
         <ErrorBoundary>
-          <TemplatesScreen />
+          <Suspense fallback={<TemplateListSkeleton />}>
+            <TemplatesScreen />
+          </Suspense>
         </ErrorBoundary>
         <View className='absolute right-4' style={{ top: insets.top + 8 }}>
           <AnimatedPressable
@@ -53,8 +60,7 @@ export function TemplatesModalSection({
             accessibilityLabel='Close templates'
             accessibilityRole='button'
             className='h-10 w-10 items-center justify-center rounded-full shadow-md'
-            style={{ backgroundColor: colors.card }}
-            style={closeAnimatedStyle}
+            style={[{ backgroundColor: colors.card }, closeAnimatedStyle]}
             onPress={handleClose}
             onPressIn={() => {
               closeScale.value = withSpring(0.9, {
