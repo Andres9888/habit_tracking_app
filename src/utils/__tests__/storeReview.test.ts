@@ -3,7 +3,7 @@
  * Tests for managing store review prompts and eligibility checks
  */
 
-import * as StoreReview from 'expo-store-review';
+import StoreReview from 'expo-store-review';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import {
@@ -12,7 +12,6 @@ import {
   maybeRequestReviewFromAnalytics,
 } from '../storeReview';
 
-jest.mock('expo-store-review');
 jest.mock('@react-native-async-storage/async-storage');
 jest.mock('react-native', () => ({
   Platform: {
@@ -21,6 +20,9 @@ jest.mock('react-native', () => ({
 }));
 
 describe('storeReview', () => {
+  const STORE_REVIEW_COMPLETION_COUNT_KEY = '@store_review_completion_count';
+  const STORE_REVIEW_LAST_PROMPT_KEY = '@store_review_last_prompt';
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useFakeTimers();

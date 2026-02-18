@@ -48,6 +48,16 @@ jest.mock('expo-network', () => ({
   },
 }));
 
+// Mock expo-store-review
+jest.mock('expo-store-review', () => ({
+  isAvailableAsync: jest.fn(async () => true),
+  requestReview: jest.fn(async () => undefined),
+  StoreReview: {
+    isAvailableAsync: jest.fn(async () => true),
+    requestReview: jest.fn(async () => undefined),
+  },
+}));
+
 // Mock react-native-gesture-handler
 jest.mock('react-native-gesture-handler', () => {
   const View = require('react-native').View;
@@ -285,10 +295,21 @@ jest.mock('react-native-reanimated', () => {
       // Create a chainable animation mock that supports any method chain
       const createChainableAnimation = () => {
         const chain = {};
-        const methods = ['delay', 'duration', 'springify', 'damping', 'stiffness', 'mass',
-          'withInitialValues', 'withCallback', 'easing', 'randomDelay', 'reduceMotion',
-          'build'];
-        methods.forEach(m => {
+        const methods = [
+          'delay',
+          'duration',
+          'springify',
+          'damping',
+          'stiffness',
+          'mass',
+          'withInitialValues',
+          'withCallback',
+          'easing',
+          'randomDelay',
+          'reduceMotion',
+          'build',
+        ];
+        methods.forEach((m) => {
           chain[m] = jest.fn(() => createChainableAnimation());
         });
         return chain;
@@ -321,8 +342,18 @@ jest.mock('react-native-reanimated', () => {
     ...(() => {
       const createChainableLayout = () => {
         const chain = {};
-        ['springify', 'damping', 'stiffness', 'mass', 'duration', 'delay', 'easing',
-         'withInitialValues', 'withCallback', 'reduceMotion'].forEach(m => {
+        [
+          'springify',
+          'damping',
+          'stiffness',
+          'mass',
+          'duration',
+          'delay',
+          'easing',
+          'withInitialValues',
+          'withCallback',
+          'reduceMotion',
+        ].forEach((m) => {
           chain[m] = jest.fn(() => createChainableLayout());
         });
         return chain;
