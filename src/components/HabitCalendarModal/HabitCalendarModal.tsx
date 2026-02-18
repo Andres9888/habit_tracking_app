@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Modal, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -8,9 +9,11 @@ import { ModalHeader } from './ModalHeader';
 import { StatusRibbon } from './StatusRibbon';
 import HeatmapCalendar from './HeatmapCalendar';
 import HabitCalendarView from '../HabitCalendarView';
-import HabitEditScreen from '../../screens/HabitEditScreen';
 import { useHabitCalendarModal } from './useHabitCalendarModal';
 import type { HabitCalendarModalProps } from './types';
+
+// Lazy load HabitEditScreen - heavy screen with many dependencies
+const HabitEditScreen = lazy(() => import('../../screens/HabitEditScreen'));
 
 export default function HabitCalendarModal({
   visible,
@@ -48,25 +51,14 @@ export default function HabitCalendarModal({
             recentMissBadge={state.recentMissBadge}
             scheduleLabel={state.scheduleLabel}
             streak={streak}
-            onEdit={state.handleEditPress}
-            onMarkToday={state.handleQuickLogPress}
+            streakOnRisk={state.streakOnRisk}
           />
 
-          <View className='mt-5'>
-            <StatsCard
-              bestStreak={state.bestStreak}
-              completionPercentage={state.completionPercentage}
-              currentStreak={streak}
-              emoji={state.emoji}
-              habitName={habit.name}
-              habitNotes={habit.notes}
-              showHeader={false}
-            />
-          </View>
+          <StatsCard habit={habit} isTodayCompleted={state.isTodayCompleted} />
 
-          <View className='mt-8'>
-            <CalendarTabs activeView={state.calendarView} onViewChange={state.setCalendarView} />
-            {state.calendarView === 'month' ? (
+          <View className='my-6'>
+            <CalendarTabs onSelectCalendar={state.setUseCalendarView} useCalendarView={state.useCalendarView} />
+            {state.useCalendarView ? (
               <HabitCalendarView habitId={habit._id} toggleHabit={toggleHabit} tracking={tracking} />
             ) : (
               <HeatmapCalendar habitId={habit._id} monthsToShow={6} tracking={tracking} />
@@ -79,14 +71,18 @@ export default function HabitCalendarModal({
         </ScrollView>
       </SafeAreaView>
 
-      <HabitEditScreen
-        habitId={habit._id}
-        visible={state.showEditScreen}
-        onClose={state.handleCloseEdit}
-        onOpenAffirmationsEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
-        onOpenCueEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
-        onOpenVisionBoard={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
-      />
+      {state.showEditScreen && (
+        <Suspense fallback={null}>
+          <HabitEditScreen
+            habitId={habit._id}
+            visible={state.showEditScreen}
+            onClose={state.handleCloseEdit}
+            onOpenAffirmationsEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
+            onOpenCueEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
+            onOpenVisionBoard={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
+          />
+        </Suspense>
+      )}
     </Modal>
   );
 }
