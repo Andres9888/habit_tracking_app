@@ -27,15 +27,9 @@ export function createPressHandlers(
 
   const handlePressIn = () => {
     if (reducedMotion) {
-      pressScale.value = withSpring(
-        CARD_PRESS_SCALE,
-        CARD_PRESS_SPRING_CONFIG
-      );
+      pressScale.value = withSpring(CARD_PRESS_SCALE, CARD_PRESS_SPRING_CONFIG);
     } else {
-      pressScale.value = withSpring(
-        CARD_PRESS_SCALE,
-        CARD_PRESS_SPRING_CONFIG
-      );
+      pressScale.value = withSpring(CARD_PRESS_SCALE, CARD_PRESS_SPRING_CONFIG);
       shadowElevation.value = withTiming(8, { duration: 100 });
       pressRotation.value = withSpring(-0.5, { damping: 20, stiffness: 400 });
       chevronTranslate.value = withSpring(2, { damping: 15, stiffness: 300 });
@@ -65,12 +59,6 @@ export function createImportHandler(
   onImport: (() => void) | undefined
 ) {
   return () => {
-    if (__DEV__)
-      console.warn('[IMPORT] createImportHandler fired', {
-        hasOnImport: !!onImport,
-        isImported,
-        isImporting,
-      });
     if (isImporting || isImported || !onImport) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     onImport();
