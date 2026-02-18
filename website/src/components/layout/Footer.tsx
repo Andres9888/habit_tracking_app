@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { memo } from "react";
 
 const footerLinks = {
   product: [
@@ -17,7 +18,7 @@ const footerLinks = {
   ],
 };
 
-export function Footer() {
+function FooterComponent() {
   return (
     <footer className="bg-zinc-50 dark:bg-zinc-900">
       <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
@@ -100,3 +101,5 @@ export function Footer() {
     </footer>
   );
 }
+
+export const Footer = memo(FooterComponent);

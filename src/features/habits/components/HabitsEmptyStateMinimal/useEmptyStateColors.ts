@@ -34,22 +34,22 @@ export function useEmptyStateColors() {
 
     // Character counter colors
     counterNormal: colors.text.tertiary,
-    counterWarning: '#F59E0B', // amber-500 (WCAG AA on both backgrounds)
-    counterError: isDark ? '#F87171' : '#EF4444', // red-400 / red-500
+    counterWarning: isDark ? '#FBBF24' : '#F59E0B',
+    counterError: isDark ? '#F87171' : '#EF4444',
 
     // Chip colors
-    chipBackground: isDark ? colors.card : '#ffffff',
-    chipBackgroundSelected: isDark ? colors.primary[300] : '#047857', // emerald-700
-    chipBorder: isDark ? colors.border : '#E7E5E4', // stone-200
-    chipBorderSelected: isDark ? colors.primary[300] : '#047857',
-    chipText: isDark ? colors.text.primary : '#44403C', // stone-700
-    chipTextSelected: '#ffffff',
-    chipShadow: isDark ? colors.gray[900] : '#1c1917',
+    chipBackground: colors.card,
+    chipBackgroundSelected: colors.primary[700],
+    chipBorder: colors.border,
+    chipBorderSelected: colors.primary[700],
+    chipText: colors.text.primary,
+    chipTextSelected: colors.text.inverse,
+    chipShadow: colors.gray[900],
 
     // Button colors
-    ctaBackground: isDark ? colors.primary[300] : '#047857', // emerald-700
-    ctaText: '#ffffff',
-    ctaDisabled: isDark ? colors.gray[300] : '#A8A29E',
+    ctaBackground: colors.primary[700],
+    ctaText: colors.text.inverse,
+    ctaDisabled: colors.gray[300],
 
     // Secondary link colors
     linkBackground: isDark

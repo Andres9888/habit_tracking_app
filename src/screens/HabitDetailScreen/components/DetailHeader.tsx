@@ -41,6 +41,7 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
       >
         {habit.icon && (
           <View
+            accessibilityLabel={`Habit icon: ${habit.icon}`}
             className='mb-4 h-20 w-20 items-center justify-center rounded-2xl'
             style={{
               ...iconShadow,
@@ -48,7 +49,15 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
               shadowColor: (habit.color ?? habit.iconColor) || '#f59e0b',
             }}
           >
-            <Text style={{ fontSize: 40 }}>{habit.icon}</Text>
+            <Text
+              accessibilityLabel={`${habit.icon} emoji`}
+              style={{ 
+                fontSize: 40,
+                color: isDark ? '#ffffff' : '#000000',
+              }}
+            >
+              {habit.icon}
+            </Text>
           </View>
         )}
         <Text

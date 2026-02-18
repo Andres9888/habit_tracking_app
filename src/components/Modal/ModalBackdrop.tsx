@@ -3,8 +3,7 @@
  * Animated backdrop overlay with tap-to-close functionality
  */
 
-import React from 'react';
-import { StyleSheet, Pressable, type ViewStyle } from 'react-native';
+import { StyleSheet, Pressable } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 

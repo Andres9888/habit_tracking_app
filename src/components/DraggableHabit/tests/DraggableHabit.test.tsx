@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import DraggableHabit from '../DraggableHabit';
