@@ -10,7 +10,9 @@ import { useColorScheme as useSystemColorScheme } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { darkColors, lightColors } from './darkColors';
+import { darkSettingsColors, lightSettingsColors } from './settingsColors';
 import type { SemanticColors } from './darkColors';
+import type { SettingsColors } from './settingsColors';
 
 type DarkModePref = 'system' | 'light' | 'dark';
 
@@ -18,12 +20,14 @@ interface ThemeContextValue {
   colors: SemanticColors;
   isDark: boolean;
   mode: DarkModePref;
+  settings: SettingsColors;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
   colors: lightColors,
   isDark: false,
   mode: 'system',
+  settings: lightSettingsColors,
 });
 
 export function ThemeColorProvider({
@@ -47,6 +51,7 @@ export function ThemeColorProvider({
       colors: isDark ? darkColors : lightColors,
       isDark,
       mode,
+      settings: isDark ? darkSettingsColors : lightSettingsColors,
     };
   }, [settings?.darkMode, systemScheme]);
 
