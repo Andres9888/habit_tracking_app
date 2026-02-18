@@ -34,7 +34,9 @@ function HabitDetailScreenContent({
 }: HabitDetailScreenProps) {
   const insets = useSafeAreaInsets();
   const { isDark } = useThemeColors();
-  const bgGradient = isDark ? DETAIL_BG_GRADIENT_DARK : DETAIL_BG_GRADIENT_LIGHT;
+  const bgGradient = isDark
+    ? DETAIL_BG_GRADIENT_DARK
+    : DETAIL_BG_GRADIENT_LIGHT;
   const screenState = useHabitDetailScreenState({
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
@@ -83,7 +85,6 @@ function HabitDetailScreenContent({
                 >
                   <DetailHeader
                     habit={habit}
-                    isCompletedToday={screenState.isCompletedToday}
                     onClose={onClose}
                     onEdit={notesHandlers.handleEdit}
                   />
@@ -117,7 +118,7 @@ function HabitDetailScreenContent({
 
 export default function HabitDetailScreen(props: HabitDetailScreenProps) {
   return (
-    <ScreenErrorBoundary screenName="Habit Details" onGoBack={props.onClose}>
+    <ScreenErrorBoundary screenName='Habit Details' onGoBack={props.onClose}>
       <HabitDetailScreenContent {...props} />
     </ScreenErrorBoundary>
   );

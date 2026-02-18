@@ -5,6 +5,7 @@
  * Implements OWASP security recommendations to prevent XSS, injection, etc.
  */
 
+import { VALIDATION_ERRORS } from './inputValidation.constants';
 // =============================================================================
 // Constants
 // =============================================================================
@@ -95,7 +96,7 @@ export function validateHabitName(
   const trimmed = name.trim();
 
   if (!trimmed) {
-    return { isValid: false, error: 'Habit name cannot be empty' };
+    return { isValid: false, error: VALIDATION_ERRORS.HABIT_NAME_EMPTY };
   }
 
   if (trimmed.length > MAX_HABIT_NAME_LENGTH) {

@@ -57,7 +57,9 @@ jest.mock('../../../lib/offline/sync/useSyncOrchestrator', () => ({
         eventListeners.push(listener);
         return () => {
           const idx = eventListeners.indexOf(listener);
-          if (idx > -1) eventListeners.splice(idx, 1);
+          if (idx > -1) {
+            eventListeners.splice(0, eventListeners.length, ...eventListeners.slice(0, idx), ...eventListeners.slice(idx + 1));
+          }
         };
       },
       start: jest.fn(),

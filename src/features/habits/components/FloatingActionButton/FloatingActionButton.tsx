@@ -3,6 +3,7 @@ import { Animated, Pressable } from 'react-native';
 import { useFocusRing } from '../../../../utils/accessibility';
 import { useFABAnimations } from './useFABAnimations';
 import { useFABHandlers } from './useFABHandlers';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { FloatingActionButtonProps } from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -12,6 +13,7 @@ export function FloatingActionButton({
   celebrationsEnabled = true,
   reduceMotionPreference = false,
 }: FloatingActionButtonProps) {
+  const { colors } = useThemeColors();
   const { bounce, pressScale, rippleOpacity, rippleScale } = useFABAnimations(
     celebrationsEnabled,
     reduceMotionPreference
@@ -59,7 +61,7 @@ export function FloatingActionButton({
           transform: [{ scale: rippleScale }],
         }}
       />
-      <Plus color='#ffffff' size={24} strokeWidth={2.5} />
+      <Plus color={colors.text.inverse} size={24} strokeWidth={2.5} />
     </AnimatedPressable>
   );
 }

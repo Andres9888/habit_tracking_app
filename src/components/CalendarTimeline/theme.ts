@@ -5,6 +5,8 @@
  * Supports both standard and high-contrast modes.
  */
 
+import { DARK_SURFACE_COLOR } from '@/constants/colors';
+
 /**
  * Color theme for calendar timeline
  */

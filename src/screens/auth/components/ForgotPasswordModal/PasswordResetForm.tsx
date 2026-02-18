@@ -2,6 +2,7 @@
 import { Text, TextInput, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { MAX_EMAIL_LENGTH } from '../../../../constants';
 import type { PasswordResetFormProps } from './types';
 import { PasswordResetButtons } from './PasswordResetButtons';
 
@@ -22,13 +23,18 @@ export function PasswordResetForm({
         </Text>
         <View
           className={`rounded-2xl border-2 ${error ? 'border-red-500' : ''}`}
-          style={{ backgroundColor: colors.card, borderColor: error ? undefined : colors.border }}
-          style={{
-            shadowColor: error ? '#ef4444' : '#1c1917',
-            shadowOffset: { height: 4, width: 0 },
-            shadowOpacity: 0.08,
-            shadowRadius: 16,
-          }}
+          style={[
+            {
+              backgroundColor: colors.card,
+              borderColor: error ? undefined : colors.border,
+            },
+            {
+              shadowColor: error ? '#ef4444' : '#1c1917',
+              shadowOffset: { height: 4, width: 0 },
+              shadowOpacity: 0.08,
+              shadowRadius: 16,
+            },
+          ]}
         >
           <TextInput
             accessible
@@ -40,6 +46,7 @@ export function PasswordResetForm({
             className='px-4 py-4 text-[17px] font-medium text-stone-900'
             editable={!isLoading}
             keyboardType='email-address'
+            maxLength={MAX_EMAIL_LENGTH}
             placeholder='you@example.com'
             placeholderTextColor='#a1a1aa'
             returnKeyType='send'
