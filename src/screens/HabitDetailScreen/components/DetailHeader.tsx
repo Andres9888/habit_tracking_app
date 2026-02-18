@@ -52,6 +52,8 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
           </View>
         )}
         <Text
+          accessibilityLabel={`Habit: ${habitName}`}
+          accessibilityRole='header'
           className='text-center font-bold'
           style={{
             fontSize: 34,
@@ -69,10 +71,19 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
               .delay(200)
               .springify()
               .damping(18)}
-            style={streakShadow}
+            style={[
+              streakShadow,
+              {
+                backgroundColor: isDark ? '#064e3b' : '#ecfdf5',
+                shadowColor: isDark ? '#34d399' : '#059669',
+              },
+            ]}
           >
             <Text style={{ fontSize: 17 }}>🔥</Text>
-            <Text className='text-[17px] font-semibold text-emerald-700'>
+            <Text
+              className='text-[17px] font-semibold'
+              style={{ color: isDark ? '#6ee7b7' : '#047857' }}
+            >
               {habit.currentStreak} day streak
             </Text>
           </Animated.View>
