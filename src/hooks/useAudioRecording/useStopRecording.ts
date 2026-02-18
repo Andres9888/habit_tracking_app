@@ -54,10 +54,7 @@ export function useStopRecording(deps: UseStopRecordingDeps) {
 
       return uri;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Failed to stop recording';
-      setStatus((prev) => ({ ...prev, errorMessage, state: 'error' }));
-      onError?.(error instanceof Error ? error : new Error(errorMessage));
+      handleAsyncErrorWithStatus(setStatus, error, 'Failed to stop recording', onError);
       return null;
     }
   }, [
@@ -97,10 +94,7 @@ export function useStopRecording(deps: UseStopRecordingDeps) {
         wasInterrupted: false,
       }));
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Failed to cancel recording';
-      setStatus((prev) => ({ ...prev, errorMessage, state: 'error' }));
-      onError?.(error instanceof Error ? error : new Error(errorMessage));
+      handleAsyncErrorWithStatus(setStatus, error, 'Failed to cancel recording', onError);
     }
   }, [onError, setStatus, resetRefs, resetAudioMode, recordingRef]);
 

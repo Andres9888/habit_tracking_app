@@ -5,9 +5,10 @@
  *
  * @see docs/offline-habit-sync.md T014 - Chain animation for offline completions
  * @see docs/offline-habit-sync.md T028 - PendingSyncBadge integration
+ * ACCESSIBILITY: Added aria-live region for completion state announcements (2026-02-17)
  */
 
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -37,6 +38,18 @@ function HabitCardContentComponent({
   chainRotate,
 }: HabitCardContentProps) {
   const { colors: themeColors } = useThemeColors();
+  
+  // Create live region announcement for completion state changes
+  const liveRegionText = useMemo(() => {
+    if (completed && bestStreak > 0) {
+      return `Completed! Streak increased to ${currentStreak + 1} days.`;
+    }
+    if (completed) {
+      return 'Completed!';
+    }
+    return '';
+  }, [completed, currentStreak, bestStreak]);
+  
   return (
     <Animated.View style={[styles.content, entranceContentStyle]}>
       <View style={styles.topRow}>
@@ -84,6 +97,14 @@ function HabitCardContentComponent({
           strength={strength}
         />
       </View>
+      {/* Live region announcement for screen readers on completion state change */}
+      <Text
+        accessibilityLiveRegion='assertive'
+        accessibilityRole='status'
+        style={{ display: 'none' }}
+      >
+        {liveRegionText}
+      </Text>
     </Animated.View>
   );
 }

@@ -1,12 +1,9 @@
 /**
  * HabitsApp - Main habits screen
- * Orchestrates the habits list, modals, overlays, and bottom action bar.
+ * Orchestrates the habits list, modals, overlays, and floating action button.
  */
 
-<<<<<<< HEAD
-=======
 import { useCallback, useMemo } from 'react';
->>>>>>> fef12ccb (feat: smart notification permission flow (defer to first habit completion))
 import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -15,21 +12,31 @@ import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 import { HabitsList } from './components/HabitsList';
-import { BottomActionBar } from './components/BottomActionBar';
+import FloatingActionButton from './components/FloatingActionButton';
 import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
-<<<<<<< HEAD
-import { useBottomBarProps } from './useBottomBarProps';
-=======
 import { useNotificationPermissionFlow } from '../../hooks/useNotificationPermissionFlow';
->>>>>>> fef12ccb (feat: smart notification permission flow (defer to first habit completion))
 
-const ENTERING = FadeInDown.duration(280).springify().damping(18);
-const styles = StyleSheet.create({ flex1: { flex: 1 } });
+const styles = StyleSheet.create({
+  fabContainer: {
+    bottom: 32,
+    position: 'absolute',
+    right: 24,
+  },
+  flex1: { flex: 1 },
+});
 
+/**
+ * HabitsAppContent — the core orchestrator for the habits screen.
+ *
+ * Composes list state, modal state, haptic feedback, and premium/paywall
+ * handlers into a single render tree. Delegates each concern to dedicated
+ * hooks (`useHabitsApp`, `useHabitsAppHandlers`, `useHapticFeedback`) so
+ * this component remains a thin wiring layer.
+ */
 // eslint-disable-next-line max-lines-per-function
 function HabitsAppContent() {
   const { colors } = useThemeColors();
@@ -39,7 +46,16 @@ function HabitsAppContent() {
     preference: list.reduceMotionPreference,
   });
 
-  const handlers = useHabitsAppHandlers({
+  const {
+    handleCreateHabitRequest,
+    handlePaywallClose,
+    handlePaywallSuccess,
+    handleUpgradeConfirm,
+    handleUpgradeDismiss,
+    handleUpgradeIntent,
+    paywallVisible,
+    upgradePromptVisible,
+  } = useHabitsAppHandlers({
     hasReachedHabitLimit: list.hasReachedHabitLimit,
     isPremiumUser: list.isPremiumUser,
     openCreateHabitScreen: modals.openCreateHabitScreen,
@@ -47,13 +63,6 @@ function HabitsAppContent() {
     triggerWarning,
   });
 
-<<<<<<< HEAD
-  const bottomBar = useBottomBarProps({
-    handleCreateHabitRequest: handlers.handleCreateHabitRequest,
-    list,
-    modals,
-  });
-=======
   // Smart notification permission flow — defers OS prompt until the user
   // has completed their first habit (see docs/smart-notification-permission.md)
   const {
@@ -92,42 +101,49 @@ function HabitsAppContent() {
   const onFabPress = useCallback((): void => {
     void handleCreateHabitRequest();
   }, [handleCreateHabitRequest]);
->>>>>>> fef12ccb (feat: smart notification permission flow (defer to first habit completion))
 
-  const showSkeleton = list.isHabitsLoading && list.habits.length === 0;
+  const showHabitsSkeleton = list.isHabitsLoading && list.habits.length === 0;
 
   return (
+    // GestureHandlerRootView is required here for swipe gestures inside HabitsList.
+    // AuthGate also wraps one; react-native-gesture-handler supports nesting safely.
     <GestureHandlerRootView style={styles.flex1}>
       <View style={[styles.flex1, { backgroundColor: colors.background }]}>
         <SyncStatusOverlays />
-        {showSkeleton ? (
+
+        {showHabitsSkeleton ? (
           <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
         ) : (
-          <Animated.View entering={ENTERING} style={styles.flex1}>
+          <Animated.View entering={FadeInDown.duration(280).springify().damping(18)} style={styles.flex1}>
             <HabitsList
               canNavigateForward={list.canNavigateForward}
               list={listWithNotifFlow}
               modals={modals}
-              upgradePromptVisible={handlers.upgradePromptVisible}
+              upgradePromptVisible={upgradePromptVisible}
               weekDates={list.weekDates}
-              onCreateHabitRequest={handlers.handleCreateHabitRequest}
+              onCreateHabitRequest={handleCreateHabitRequest}
               onNextWeek={list.handleNextWeek}
               onPreviousWeek={list.handlePreviousWeek}
-              onUpgradeConfirm={handlers.handleUpgradeConfirm}
-              onUpgradeDismiss={handlers.handleUpgradeDismiss}
-              onUpgradeIntent={handlers.handleUpgradeIntent}
+              onUpgradeConfirm={handleUpgradeConfirm}
+              onUpgradeDismiss={handleUpgradeDismiss}
+              onUpgradeIntent={handleUpgradeIntent}
             />
           </Animated.View>
         )}
-        {list.habits.length > 0 && <BottomActionBar {...bottomBar} />}
+
+        {list.habits.length > 0 && (
+          <View style={styles.fabContainer}>
+            <FloatingActionButton
+              celebrationsEnabled={list.celebrationsEnabled}
+              openCreateHabitScreen={onFabPress}
+              reduceMotionPreference={list.reduceMotionPreference}
+            />
+          </View>
+        )}
+
         <HabitsAppOverlays
           list={list}
           modals={modals}
-<<<<<<< HEAD
-          paywallVisible={handlers.paywallVisible}
-          onPaywallClose={handlers.handlePaywallClose}
-          onPaywallSuccess={handlers.handlePaywallSuccess}
-=======
           notifPrePermissionVisible={prePermissionVisible}
           notifIsRequestingPermission={isRequestingPermission}
           paywallVisible={paywallVisible}
@@ -135,16 +151,16 @@ function HabitsAppContent() {
           onNotifSkip={onSkipNotifications}
           onPaywallClose={handlePaywallClose}
           onPaywallSuccess={handlePaywallSuccess}
->>>>>>> fef12ccb (feat: smart notification permission flow (defer to first habit completion))
         />
       </View>
     </GestureHandlerRootView>
   );
 }
 
+/** Top-level export wrapped in an error boundary. */
 export function HabitsApp() {
   return (
-    <ScreenErrorBoundary screenName='Habits'>
+    <ScreenErrorBoundary screenName="Habits">
       <HabitsAppContent />
     </ScreenErrorBoundary>
   );

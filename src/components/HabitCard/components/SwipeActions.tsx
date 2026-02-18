@@ -28,6 +28,8 @@ export const SwipeActions = memo(function SwipeActions({
   onDelete,
 }: SwipeActionsProps) {
   const theme = useAppTheme();
+  const { focusStyle: editFocusStyle, focusHandlers: editFocusHandlers } = useFocusRing({ compact: true });
+  const { focusStyle: deleteFocusStyle, focusHandlers: deleteFocusHandlers } = useFocusRing({ compact: true });
 
   return (
     <Animated.View
@@ -40,7 +42,9 @@ export const SwipeActions = memo(function SwipeActions({
         style={[
           actionStyles.actionButton,
           { backgroundColor: theme.custom.colors.secondary[500] },
+          editFocusStyle,
         ]}
+        {...editFocusHandlers}
         onPress={() => {
           translateX.value = withSpring(0);
           onEdit?.();
@@ -56,7 +60,9 @@ export const SwipeActions = memo(function SwipeActions({
         style={[
           actionStyles.actionButton,
           { backgroundColor: theme.custom.colors.error },
+          deleteFocusStyle,
         ]}
+        {...deleteFocusHandlers}
         onPress={() => {
           translateX.value = withSpring(0);
           onDelete?.();
