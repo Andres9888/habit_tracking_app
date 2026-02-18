@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
+import { useCallback } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -54,18 +55,18 @@ export function SortOptionRow({
   const { colors: themeColors, isDark } = useThemeColors();
   const { trigger } = useHaptics();
 
-  const handlePress = () => {
+  const handlePress = useCallback(() => {
     trigger('tap');
     onPress();
-  };
+  }, [trigger, onPress]);
 
   return (
     <Pressable
       accessibilityHint={`Select ${title} sort option`}
       accessibilityLabel={`${title}. ${description}`}
-      accessibilityRole='radio'
+      accessibilityRole="radio"
       accessibilityState={{ checked: selected }}
-      className='mb-1 flex-row items-center gap-3 rounded-xl px-3 py-3'
+      className="mb-1 flex-row items-center gap-3 rounded-xl px-3 py-3"
       style={{
         backgroundColor: selected
           ? isDark
@@ -78,7 +79,7 @@ export function SortOptionRow({
       onPress={handlePress}
     >
       <LinearGradient
-        className='h-10 w-10 items-center justify-center rounded-xl'
+        className="h-10 w-10 items-center justify-center rounded-xl"
         colors={iconBgColors}
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
@@ -90,15 +91,15 @@ export function SortOptionRow({
         />
       </LinearGradient>
 
-      <View className='flex-1'>
+      <View className="flex-1">
         <Text
-          className='text-[15px] font-medium'
+          className="text-[15px] font-medium"
           style={{ color: themeColors.text.primary }}
         >
           {title}
         </Text>
         <Text
-          className='text-[13px] font-normal'
+          className="text-[13px] font-normal"
           style={{ color: themeColors.text.secondary }}
         >
           {description}
@@ -107,7 +108,7 @@ export function SortOptionRow({
 
       {selected && (
         <View
-          className='h-6 w-6 items-center justify-center rounded-full'
+          className="h-6 w-6 items-center justify-center rounded-full"
           style={{ backgroundColor: themeColors.primary[500] }}
         >
           <Check
