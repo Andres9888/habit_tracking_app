@@ -13,6 +13,12 @@ export function startOfDay(date: Date): Date {
   return result;
 }
 
+/**
+ * Adds a specified number of days to a Date, returning new date at start of day
+ * @param date - The starting date
+ * @param amount - Number of days to add (can be negative)
+ * @returns New Date object at 00:00:00
+ */
 export function addDays(date: Date, amount: number): Date {
   const result = new Date(date);
   result.setDate(result.getDate() + amount);
@@ -20,6 +26,11 @@ export function addDays(date: Date, amount: number): Date {
   return result;
 }
 
+/**
+ * Formats a Date into ISO-like YYYY-MM-DD string key
+ * @param date - Date to format
+ * @returns String in format YYYY-MM-DD
+ */
 export function formatDateKey(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
