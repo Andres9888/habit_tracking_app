@@ -1,19 +1,17 @@
-/** DetailHeader - Optimized: AnimatedPressable, fixed letter spacing, unified shadows */
+/** DetailHeader - Dark mode + a11y optimized */
 import React from 'react';
 import { View, Text } from 'react-native';
 import { X, Edit3 } from 'lucide-react-native';
-import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
-import { HeaderCompleteToggle } from '../../../components/HeaderCompleteToggle';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
 import { iconShadow, streakShadow } from './DetailHeader.constants';
 import { HeaderButton } from './HeaderButton';
 
-export function DetailHeader({
-  habit,
-  isCompletedToday,
-  onClose,
-  onEdit,
-}: DetailHeaderProps) {
+export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
+  const { colors, isDark } = useThemeColors();
+  const iconColor = isDark ? colors.text.secondary : '#57534e';
+  const textPrimary = isDark ? colors.text.primary : '#1c1917';
   const habitName = habit.icon
     ? (habit.name ?? '').replace(/^\p{Emoji}\s*/u, '')
     : (habit.name ?? 'Habit');
@@ -22,26 +20,20 @@ export function DetailHeader({
     <View>
       <Animated.View
         className='flex-row items-center justify-between px-4 pb-2'
-        entering={FadeIn.duration(200).delay(50)}
+        entering={FadeInDown.duration(280).springify().damping(18)}
       >
         <HeaderButton
-          icon={<X color='#57534e' size={22} strokeWidth={2.5} />}
+          icon={<X color={iconColor} size={22} strokeWidth={2.5} />}
           label='Close'
           onPress={onClose}
         />
         <View className='flex-1' />
-        <View className='flex-row items-center gap-3'>
-          <HeaderCompleteToggle
-            completedToday={isCompletedToday}
-            habitId={habit._id}
-            habitName={habit.name}
-          />
-          <HeaderButton
-            icon={<Edit3 color='#57534e' size={20} strokeWidth={2.5} />}
-            label='Edit habit'
-            onPress={onEdit}
-          />
-        </View>
+        <HeaderButton
+          icon={<Edit3 size={15} strokeWidth={2.5} />}
+          label='Edit habit'
+          text='Edit Habit'
+          onPress={onEdit}
+        />
       </Animated.View>
       <Animated.View
         className='items-center px-4 pb-6'
@@ -52,16 +44,23 @@ export function DetailHeader({
             className='mb-4 h-20 w-20 items-center justify-center rounded-2xl'
             style={{
               ...iconShadow,
-              backgroundColor: habit.iconColor || '#fef3c7',
-              shadowColor: habit.iconColor || '#f59e0b',
+              backgroundColor: (habit.color ?? habit.iconColor) || '#fef3c7',
+              shadowColor: (habit.color ?? habit.iconColor) || '#f59e0b',
             }}
           >
             <Text style={{ fontSize: 40 }}>{habit.icon}</Text>
           </View>
         )}
         <Text
-          className='text-center font-bold text-stone-900'
-          style={{ fontSize: 34, letterSpacing: -0.5, lineHeight: 41 }}
+          accessibilityLabel={`Habit: ${habitName}`}
+          accessibilityRole='header'
+          className='text-center font-bold'
+          style={{
+            fontSize: 34,
+            letterSpacing: -0.5,
+            lineHeight: 41,
+            color: textPrimary,
+          }}
         >
           {habitName}
         </Text>
@@ -72,10 +71,19 @@ export function DetailHeader({
               .delay(200)
               .springify()
               .damping(18)}
-            style={streakShadow}
+            style={[
+              streakShadow,
+              {
+                backgroundColor: isDark ? '#064e3b' : '#ecfdf5',
+                shadowColor: isDark ? '#34d399' : '#059669',
+              },
+            ]}
           >
             <Text style={{ fontSize: 17 }}>🔥</Text>
-            <Text className='text-[17px] font-semibold text-emerald-700'>
+            <Text
+              className='text-[17px] font-semibold'
+              style={{ color: isDark ? '#6ee7b7' : '#047857' }}
+            >
               {habit.currentStreak} day streak
             </Text>
           </Animated.View>

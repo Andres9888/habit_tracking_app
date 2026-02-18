@@ -19,12 +19,8 @@ export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 export const SHEET_SPRING_CONFIG = {
   damping: 18,
   mass: 1,
-  stiffness: 120,
+  stiffness: 150,
 };
-
-/** Gesture threshold for dismissal */
-export const DISMISS_THRESHOLD = 100;
-export const VELOCITY_THRESHOLD = 800;
 
 export const SORT_OPTIONS: SortOptionConfig[] = [
   {
@@ -92,3 +88,21 @@ export const SORT_OPTIONS: SortOptionConfig[] = [
 
 /** Quick pick chips - a subset of options for fast access */
 export const QUICK_PICK_OPTIONS = SORT_OPTIONS.filter((opt) => opt.chipLabel);
+
+export { DISMISS_THRESHOLD, VELOCITY_THRESHOLD } from '@/constants';
+
+// Icon sizing
+export const CHECK_ICON_SIZE = 14;
+export const CHECK_ICON_STROKE_WIDTH = 2.5;
+export const SORT_OPTION_ICON_SIZE = 18;
+export const SORT_OPTION_ICON_STROKE_WIDTH = 2.25;
+
+// Colors
+export const WHITE_ICON_COLOR = '#ffffff';
+export const DARK_SURFACE_COLOR = '#1f2937';
+export const LIGHT_SURFACE_COLOR = '#f5f5f4';
+
+// Backdrop animation
+export const BACKDROP_FADE_IN_DURATION_MS = 200;
+export const BACKDROP_FADE_OUT_DURATION_MS = 150;
+export const BACKDROP_VISIBLE_OPACITY = 0.5;

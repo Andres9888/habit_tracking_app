@@ -1,5 +1,10 @@
 /**
- * renderHabitsListHeader - Header renderer for HabitsList
+ * renderHabitsListHeader — FlatList `ListHeaderComponent` factory.
+ *
+ * Builds a {@link HabitsListHeader} element that contains the date title,
+ * calendar timeline, offline indicator, and trial countdown banner.
+ *
+ * Action buttons have moved to BottomActionBar.
  */
 
 import { HabitsListHeader } from './HabitsListHeader';
@@ -16,11 +21,9 @@ interface RenderHabitsListHeaderOptions {
 export function renderHabitsListHeader({
   props,
   state,
-  handlers,
 }: RenderHabitsListHeaderOptions) {
   const {
     list,
-    modals,
     weekDates,
     canNavigateForward,
     onNextWeek,
@@ -36,18 +39,12 @@ export function renderHabitsListHeader({
       habits={list.habits}
       headerOpacity={state.headerOpacity}
       headerTranslateY={state.headerTranslateY}
-      isPremiumUser={list.isPremiumUser}
       justCreatedHabitId={state.justCreatedHabitId}
-      openSettings={modals.openSettings}
-      openTemplatesScreen={modals.openTemplatesScreen}
       reduceMotionPreference={list.reduceMotionPreference}
-      showWeekCompletionBar={list.showWeekCompletionBar}
       weekDates={weekDates}
       weekDateStrings={list.weekDateStrings}
-      onAddHabitPress={handlers.handleAddHabitPress}
       onDayPress={state.handleDayPress}
       onNextWeek={onNextWeek}
-      onOpenSortSheet={state.handleOpenSortSheet}
       onPreviousWeek={onPreviousWeek}
       onUpgradePress={onUpgradeIntent}
     />

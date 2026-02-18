@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, Modal, Pressable, ScrollView } from 'react-native';
 import { X, TrendingUp, TrendingDown, Target } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { InfoCard } from './InfoCard';
 import { TipsSection } from './TipsSection';
 
@@ -17,17 +18,19 @@ interface Props {
 
 export function HabitStrengthInfoModal({ visible, onClose }: Props) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useThemeColors();
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='slide'
       presentationStyle='pageSheet'
       visible={visible}
       onRequestClose={onClose}
     >
       <View
-        className='flex-1 bg-white'
-        style={{ paddingTop: insets.top || 16 }}
+        className='flex-1'
+        style={{ paddingTop: insets.top || 16, backgroundColor: colors.background }}
       >
         <Header onClose={onClose} />
         <Content />
@@ -37,29 +40,33 @@ export function HabitStrengthInfoModal({ visible, onClose }: Props) {
 }
 
 function Header({ onClose }: { onClose: () => void }) {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='flex-row items-center justify-between border-b border-stone-100 px-4 pb-4'>
-      <Text className='text-xl font-bold text-stone-900'>
+    <View className='flex-row items-center justify-between border-b px-4 pb-4' style={{ borderColor: colors.border }}>
+      <Text className='text-xl font-bold' style={{ color: colors.text.primary }}>
         How Strength Works
       </Text>
       <Pressable
         accessibilityLabel='Close'
-        className='h-10 w-10 items-center justify-center rounded-full bg-stone-100'
+        className='h-10 w-10 items-center justify-center rounded-full'
+        style={{ backgroundColor: colors.gray[200] }}
         onPress={onClose}
       >
-        <X color='#57534e' size={20} />
+        <X color={colors.text.secondary} size={20} />
       </Pressable>
     </View>
   );
 }
 
 function Content() {
+  const { colors } = useThemeColors();
   return (
     <ScrollView
       className='flex-1 px-4'
       contentContainerStyle={{ paddingBottom: 32, paddingTop: 20 }}
     >
-      <Text className='mb-6 text-base leading-6 text-stone-600'>
+      <Text className='mb-6 text-base leading-6' style={{ color: colors.text.secondary }}>
         Habit Strength shows how ingrained your habit has become. It's based on
         the proven exponential smoothing algorithm.
       </Text>

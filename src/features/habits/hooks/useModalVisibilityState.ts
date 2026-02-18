@@ -3,6 +3,8 @@ import { useState } from 'react';
 export interface ModalVisibilityState {
   isSettingsOpen: boolean;
   setIsSettingsOpen: (v: boolean) => void;
+  isSortSheetOpen: boolean;
+  setIsSortSheetOpen: (v: boolean) => void;
   isCreateHabitOpen: boolean;
   setIsCreateHabitOpen: (v: boolean) => void;
   isHabitCalendarOpen: boolean;
@@ -33,6 +35,7 @@ export interface ModalVisibilityState {
  */
 export function useModalVisibilityState(): ModalVisibilityState {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isSortSheetOpen, setIsSortSheetOpen] = useState(false);
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
   const [isHabitCalendarOpen, setIsHabitCalendarOpen] = useState(false);
   const [isHabitDetailOpen, setIsHabitDetailOpen] = useState(false);
@@ -51,10 +54,12 @@ export function useModalVisibilityState(): ModalVisibilityState {
     isHabitCalendarOpen,
     isHabitDetailOpen,
     isSettingsOpen,
+    isSortSheetOpen,
     setIsCreateHabitOpen,
     setIsHabitCalendarOpen,
     setIsHabitDetailOpen,
     setIsSettingsOpen,
+    setIsSortSheetOpen,
     setShowActivationModal,
     setShowEditScreen,
     setShowHapticTest,

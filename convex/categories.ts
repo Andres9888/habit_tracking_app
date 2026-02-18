@@ -4,6 +4,13 @@ import { query } from './_generated/server';
  * Fetch all available habit categories
  * Returns a list of category filters including 'All' and all unique categories from templates
  *
+ * SEC-PUBLIC: This query is intentionally public to allow browsing
+ * template categories before login. Derived from public template data.
+ *
+ * PERF NOTE: This query fetches all templates but only extracts categories.
+ * Since template count is small (~200) and categories rarely change,
+ * consider caching this on the client side for better performance.
+ *
  * @returns Array of category objects with id, label, and icon
  * @example
  * ```ts
@@ -14,8 +21,12 @@ import { query } from './_generated/server';
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    // Fetch all templates to get unique categories
-    const templates = await ctx.db.query('templates').collect();
+    // PERF: Use by_createdAt index to avoid full table scan
+    // We still need all templates to get unique categories, but index scan is faster
+    const templates = await ctx.db
+      .query('templates')
+      .withIndex('by_createdAt')
+      .collect();
 
     // Early return if no templates exist
     if (templates.length === 0) {
@@ -23,15 +34,12 @@ export const list = query({
     }
 
     // Extract unique categories from templates
-    const uniqueCategories = Array.from(
-      new Set(templates.map((template) => template.category))
-    ).sort();
+    const uniqueCategories = [
+      ...new Set(templates.map((template) => template.category)),
+    ].sort();
 
     // Define category metadata (icon and label for each category)
-    const categoryMetadata: Record<
-      string,
-      { icon: string; label: string }
-    > = {
+    const categoryMetadata: Record<string, { icon: string; label: string }> = {
       andrew_huberman: { icon: '🔬', label: 'Huberman' },
       breathing: { icon: '🌬️', label: 'Breathing' },
       creativity: { icon: '🎨', label: 'Creativity' },
@@ -52,7 +60,9 @@ export const list = query({
     const categories = uniqueCategories.map((categoryId) => {
       const metadata = categoryMetadata[categoryId] || {
         icon: '📌',
-        label: categoryId.charAt(0).toUpperCase() + categoryId.slice(1).replace(/_/g, ' '),
+        label:
+          categoryId.charAt(0).toUpperCase() +
+          categoryId.slice(1).replaceAll('_', ' '),
       };
 
       return {
@@ -63,10 +73,6 @@ export const list = query({
     });
 
     // Always include 'All' as the first category (alphabetical properties)
-    return [
-      { icon: '✨', id: 'all' as const, label: 'All' },
-      ...categories,
-    ];
+    return [{ icon: '✨', id: 'all' as const, label: 'All' }, ...categories];
   },
 });
-

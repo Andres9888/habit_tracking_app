@@ -9,7 +9,7 @@ export const browseStyles = StyleSheet.create({
   },
   backButtonText: {
     color: '#374151',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
   },
   browseContent: {

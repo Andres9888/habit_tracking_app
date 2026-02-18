@@ -4,6 +4,7 @@
  */
 
 import type { LucideIcon } from 'lucide-react-native';
+import type { AffirmationScheduleData } from '../AffirmationScheduleModal/types';
 
 // Affirmation types for categorization
 export type AffirmationType = 'identity' | 'motivational' | 'instructional';
@@ -50,7 +51,7 @@ export interface AffirmationsSectionProps {
   /** Callback when schedule is configured (premium) */
   onScheduleAffirmation?: (
     id: string,
-    schedule: AffirmationScheduleConfig
+    schedule: AffirmationScheduleData
   ) => Promise<void>;
   /** Callback when schedule is cancelled */
   onCancelSchedule?: (id: string) => Promise<void>;

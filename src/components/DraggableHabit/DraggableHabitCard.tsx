@@ -1,4 +1,27 @@
-import React from 'react';
+/**
+ * @module DraggableHabitCard
+ *
+ * Pure rendering layer for a single habit card.
+ *
+ * Receives fully-resolved props (animated values, colors, handlers) from
+ * the parent {@link DraggableHabit} orchestrator and renders the visual
+ * structure:
+ *
+ * ```
+ * Swipeable (optional — only when onArchive is provided)
+ *   └─ Pressable
+ *       └─ Animated.View (card shell: fade, translateY, scale)
+ *           ├─ Accent left border strip (entrance animation)
+ *           ├─ StrengthFillBackground (watercolor gradient)
+ *           ├─ Archive flash overlay
+ *           ├─ Highlight glow border overlay
+ *           └─ CardContent (header + progress bar + chain + week badge)
+ * ```
+ *
+ * Wrapped in `React.memo` to avoid FlatList re-render cascades.
+ */
+
+import React, { memo, useMemo } from 'react';
 import { Animated, Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated from 'react-native-reanimated';
@@ -12,7 +35,7 @@ import { borderRadius } from '../../theme/spacing';
 
 export type { DraggableHabitCardProps } from './DraggableHabitCard.types';
 
-export function DraggableHabitCard(props: DraggableHabitCardProps) {
+function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
   const effectiveAccentColor = getEffectiveAccentColor(props.accentColor);
   const borderAccentColor = getBorderAccentColor(
     props.highContrastMode,
@@ -27,13 +50,22 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
     translateY: props.translateY,
   });
 
+  // PERF: Memoize pressable style to prevent recreating function on every render
+  const pressableStyle = useMemo(
+    () =>
+      ({ pressed }: { pressed: boolean }) => ({
+        opacity: pressed ? 0.92 : 1,
+      }),
+    []
+  );
+
   const habitCard = (
     <ReAnimated.View style={props.entranceCardStyle}>
       <Pressable
-        accessibilityHint='Tap to view habit details, long press for quick actions'
+        accessibilityHint={`Tap to view details${props.onArchive ? ', swipe left to archive' : ''}${props.onLongPress ? ', long press to reorder' : ''}`}
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
-        style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
+        style={pressableStyle}
         onLongPress={props.handleLongPress}
         onPress={() => props.onPress?.(props.habit)}
         onPressIn={props.handlePressIn}
@@ -108,3 +140,5 @@ export function DraggableHabitCard(props: DraggableHabitCardProps) {
     </Swipeable>
   );
 }
+
+export const DraggableHabitCard = memo(DraggableHabitCardComponent);

@@ -1,8 +1,32 @@
 /**
- * Reusable Press Animation Hook - OPTIMIZED: Added haptic feedback
+ * Reusable Press Animation Hook
  *
- * Provides smooth scale animation + haptics for pressable components.
- * Respects reduced motion preferences.
+ * Provides smooth scale animation with optional haptic feedback for pressable components.
+ * Automatically respects reduced motion accessibility preferences.
+ *
+ * Features:
+ * - Smooth spring-based scale animation on press
+ * - Optional haptic feedback (iOS & Android)
+ * - Reduced motion support
+ * - Customizable press scale and spring configuration
+ *
+ * @param config - Configuration options
+ * @returns Object containing animated style and press handlers
+ *
+ * @example
+ * ```tsx
+ * const { animatedStyle, pressHandlers } = usePressAnimation({
+ *   pressScale: 0.95,
+ *   enableHaptics: true,
+ *   hapticStyle: 'light',
+ * });
+ *
+ * <Pressable {...pressHandlers}>
+ *   <Animated.View style={[styles.button, animatedStyle]}>
+ *     <Text>Press me</Text>
+ *   </Animated.View>
+ * </Pressable>
+ * ```
  */
 
 import { useCallback } from 'react';
@@ -14,10 +38,11 @@ import {
 import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
 import { Springs } from '../constants/motion';
+import { CARD_PRESS_SCALE } from '../utils/animations/cardPressAnimation';
 
 export interface PressAnimationConfig {
   /**
-   * Scale value when pressed (default: 0.96)
+   * Scale value when pressed (default: 0.97)
    */
   pressScale?: number;
 
@@ -77,7 +102,7 @@ export function usePressAnimation(
   config: PressAnimationConfig = {}
 ): UsePressAnimationReturn {
   const {
-    pressScale = 0.96,
+    pressScale = CARD_PRESS_SCALE,
     respectReducedMotion: _respectReducedMotion = true,
     springConfig = Springs.button,
     enableHaptics = true,
@@ -107,9 +132,19 @@ export function usePressAnimation(
     [pressScale, springConfig, scale, triggerHaptic]
   )();
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    const isPressed = scale.value < 1;
+    return {
+      transform: [
+        { scale: scale.value },
+        // Gentle lift on press — premium depth feedback
+        { translateY: isPressed ? -1 : 0 },
+      ],
+      // Elevate shadow on press for card-lift micro-interaction
+      shadowOpacity: isPressed ? 0.12 : undefined,
+      shadowRadius: isPressed ? 20 : undefined,
+    };
+  });
 
   return {
     animatedStyle,

@@ -6,7 +6,7 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
 import { useMemo, useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
-import type { Id, Doc } from '../../../convex/_generated/dataModel';
+import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
 
 interface UseHabitDetailScreenStateProps {
@@ -88,6 +88,17 @@ export const useHabitDetailScreenState = ({
     ? habitNotes.find((n) => n._id === editingNoteId)
     : null;
 
+  // Create notesByDate map for quick lookup by date
+  const notesByDate = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const note of habitNotes) {
+      if (note.date) {
+        map[note.date] = note.body;
+      }
+    }
+    return map;
+  }, [habitNotes]);
+
   return {
     completedDates,
     daysTracking,
@@ -98,6 +109,7 @@ export const useHabitDetailScreenState = ({
     isNotesEditorOpen,
     isNotesListOpen,
     isTogglingCalendar,
+    notesByDate,
     pendingArchive,
     pendingDelete,
     setEditingNoteId,

@@ -64,9 +64,20 @@ export function SuccessState({
 
   return (
     <Pressable
-      accessibilityHint='Skip the celebration and view your habit list'
-      accessibilityLabel='Tap to continue to your habits'
-      accessibilityRole='button'
+      accessible={autoTransition && !!onTransitionComplete}
+      accessibilityHint={
+        autoTransition && onTransitionComplete
+          ? 'Double tap to skip celebration and continue immediately'
+          : undefined
+      }
+      accessibilityLabel={
+        autoTransition && onTransitionComplete
+          ? 'Success celebration. Tap anywhere to continue.'
+          : 'Success celebration'
+      }
+      accessibilityRole={
+        autoTransition && onTransitionComplete ? 'button' : 'none'
+      }
       style={{ flex: 1 }}
       onPress={handleTapToSkip}
     >

@@ -42,7 +42,6 @@ export interface HeroSectionProps {
 
 export interface DetailHeaderProps {
   habit: Habit;
-  isCompletedToday: boolean;
   onClose: () => void;
   onEdit: () => void;
 }

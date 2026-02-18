@@ -1,10 +1,3 @@
-/**
- * HabitDetailTabs Component
- *
- * Tab bar navigation for the Habit Detail screen.
- * Uses a pill/segment control style with smooth sliding animation.
- */
-
 import React, { useCallback, useEffect } from 'react';
 import { View, LayoutChangeEvent } from 'react-native';
 import Animated, {
@@ -15,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { TabType, HabitDetailTabsProps } from './HabitDetailTabs.types';
 import {
   TABS,
@@ -28,6 +22,7 @@ export function HabitDetailTabs({
   activeTab,
   onTabChange,
 }: HabitDetailTabsProps) {
+  const { colors, isDark } = useThemeColors();
   const containerWidth = useSharedValue(0);
   const indicatorPosition = useSharedValue(
     TABS.findIndex((t) => t.id === activeTab)
@@ -65,12 +60,14 @@ export function HabitDetailTabs({
   const handleTabPress = useCallback(
     (tab: TabType) => {
       if (tab !== activeTab) {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         onTabChange(tab);
       }
     },
     [activeTab, onTabChange]
   );
+
+  const containerBgColor = isDark ? colors.gray[700] : colors.gray[100];
 
   return (
     <View
@@ -78,14 +75,17 @@ export function HabitDetailTabs({
       className='mx-4 my-3'
       onLayout={handleLayout}
     >
-      <View className='relative rounded-xl bg-stone-100 p-1'>
+      <View
+        className='relative rounded-xl p-1'
+        style={{ backgroundColor: containerBgColor }}
+      >
         <Animated.View
           className='absolute bottom-1 top-1 rounded-lg shadow-sm'
           style={[
             pillStyle,
             {
-              backgroundColor: '#059669',
-              shadowColor: '#059669',
+              backgroundColor: colors.primary[500],
+              shadowColor: colors.primary[300],
               shadowOffset: { height: 3, width: 0 },
               shadowOpacity: 0.15,
               shadowRadius: 8,
@@ -106,5 +106,3 @@ export function HabitDetailTabs({
     </View>
   );
 }
-
-export default HabitDetailTabs;

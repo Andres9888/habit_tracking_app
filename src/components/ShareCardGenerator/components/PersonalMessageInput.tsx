@@ -41,6 +41,7 @@ export function PersonalMessageInput({
             color: theme.custom.colors.gray[900],
           },
         ]}
+        returnKeyType='done'
         value={value}
         onChangeText={onChangeText}
       />

@@ -9,22 +9,22 @@ export const STRINGS = {
   CREATE_HABIT: {
     close: 'Close',
     colorLabel: 'Color',
-    createAction: 'Create habit',
+    createAction: 'Create Habit',
     customColor: 'Custom color',
     iconLabel: 'Icon',
     motivationHighlight: 'Start your streak today',
-    motivationSuffix: ' — consistency is key \u{1F525}',
-    nameHelper: 'Tip: Be specific — time, trigger, place.',
+    motivationSuffix: ' — consistency is key 🔥',
+    nameHelper: 'Tip: Be specific — include a time, trigger, or place.',
     nameLabel: 'Habit name',
-    namePlaceholder: 'e.g., Read 10 minutes',
+    namePlaceholder: 'e.g., Read for 10 minutes before bed',
     // V9 additions
-orCreateYourOwn: 'or create your own',
-    
-reminderAnnouncementDisabled: 'Reminders disabled',
-    
-reminderAnnouncementWithTime: (label: string, time: string) =>
+    orCreateYourOwn: 'or create your own',
+
+    reminderAnnouncementDisabled: 'Reminders disabled',
+
+    reminderAnnouncementWithTime: (label: string, time: string) =>
       `Selected ${label} reminder at ${time}`,
-    
+
     remindersHelper: "We'll only remind you at your chosen time.",
 
     remindersLabel: 'Daily reminder',
@@ -37,11 +37,11 @@ reminderAnnouncementWithTime: (label: string, time: string) =>
 
     templateCTA: 'Browse curated habits',
 
-    templateHeroSubtitle: 'Browse curated routines and auto‑fill details.',
+    templateHeroSubtitle: 'Browse curated routines and auto-fill the details.',
 
     title: 'Create Habit',
     templateHeroTitle: 'Start from Template',
-    templatePrompt: 'Prefer a ready-made routine?',
+    templatePrompt: 'Want a ready-made routine?',
   },
 } as const;
 

@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Recent Improvements (2026-02)
+
+#### Security & Privacy
+- **Crash Protection Audit**: Guarded 15 crash-risk patterns across the codebase (#901)
+- **Security Audit v3**: Comprehensive security audit with all issues resolved (#890)
+- **Privacy Compliance**: Fixed PII leakage issues and added privacy compliance documentation (#891)
+
+#### Accessibility
+- **Deep Accessibility Audit**: Modal and interactive component improvements (#884)
+- **Empty State A11y**: Comprehensive accessibility improvements for empty habit screen (#839)
+
+#### UI/UX Polish
+- **Typography**: Aligned with design system 34/22/17/13 scale (#894)
+- **Dark Mode**: Migrated 20+ modal/card/widget files to useThemeColors() (#834)
+- **Micro-interactions**: Polish with consistent spring physics (#876)
+- **Empty State**: Optimized for maximum habit creation conversion (#835)
+- **Habit Card**: Dark mode polish and swipe discoverability (#869)
+- **Settings**: Polish UX with better organization and clarity (#875)
+
+#### Performance & Technical
+- **Offline Support**: Comprehensive offline support for all habit operations (#856)
+- **Memory Leaks**: Prevented memory leaks from timers and async operations (#855)
+- **ESLint Sweep**: Fixed linting issues across src (#853)
+- **Bundle Optimization**: Various bundle size optimizations
+
+#### Documentation
+- **JSDoc**: Comprehensive JSDoc added to hooks, utils, components (#866, #868, #872, #879)
+- **Theme Documentation**: Documented theme layer for readability (#861)
+- **Readability**: Improved readability of HabitsApp layer (#857)
+
 ### Added - Create Habit Modal V11 Redesign (2026-01-03)
 
 Complete redesign of the Create Habit Modal to reduce cognitive load, increase completion rates, and improve user experience through progressive disclosure, real-time feedback, and intelligent defaults.

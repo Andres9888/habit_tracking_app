@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows } from '../../../theme/spacing';
+import type { SemanticColors } from '../../../theme/darkColors';
 
 export const footerStyles = StyleSheet.create({
   backButton: {
@@ -12,7 +13,6 @@ export const footerStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   backButtonText: {
-    color: '#6B7280',
     fontSize: 15,
     fontWeight: '600',
   },
@@ -34,3 +34,9 @@ export const footerStyles = StyleSheet.create({
     shadowOpacity: 0.15,
   },
 });
+
+export function themedFooterStyles(colors: SemanticColors) {
+  return {
+    backButtonText: { color: colors.text.secondary },
+  } as const;
+}

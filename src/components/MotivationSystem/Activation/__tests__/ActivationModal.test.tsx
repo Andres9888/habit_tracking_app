@@ -41,7 +41,7 @@ jest.mock('lucide-react-native', () => ({
 
 // Mock clsx
 jest.mock('clsx', () => ({
-  clsx: (...args: any[]) => args.filter(Boolean).join(' '),
+  clsx: (...args: unknown[]) => args.filter(Boolean).join(' '),
 }));
 
 // Mock react-native-reanimated
@@ -50,23 +50,23 @@ jest.mock('react-native-reanimated', () => {
   return {
     default: {
       View,
-      createAnimatedComponent: (Component: any) => Component,
+      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
     },
-    useSharedValue: (initial: any) => ({ value: initial }),
+    useSharedValue: (initial: unknown) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
-    withSpring: (value: any) => value,
+    withSpring: (value: unknown) => value,
     // Don't call callback to prevent infinite recursion in looping animations
-    withTiming: (value: any, _config?: any, _callback?: any) => value,
-    withDelay: (_delay: any, value: any) => value,
-    withSequence: (...values: any[]) => values[values.length - 1],
+    withTiming: (value: unknown, _config?: unknown, _callback?: unknown) => value,
+    withDelay: (_delay: unknown, value: unknown) => value,
+    withSequence: (...values: unknown[]) => values[values.length - 1],
     interpolate: (value: number, input: number[], output: number[]) =>
       output[0],
     // runOnJS should return a no-op to prevent recursive calls
-    runOnJS: (_fn: any) => () => {},
+    runOnJS: (_fn: unknown) => () => {},
     Extrapolation: { CLAMP: 'clamp' },
     Easing: {
-      out: (fn: any) => fn,
-      in: (fn: any) => fn,
+      out: (fn: (...args: unknown[]) => unknown) => fn,
+      in: (fn: (...args: unknown[]) => unknown) => fn,
       cubic: (x: number) => x,
     },
     View,
@@ -80,7 +80,7 @@ jest.mock('react-native-safe-area-context', () => ({
 
 // Mock the Modal component
 jest.mock('../../../Modal', () => ({
-  Modal: ({ children, visible, onClose }: any) =>
+  Modal: ({ children, visible, onClose }: unknown) =>
     visible ? <>{children}</> : null,
 }));
 

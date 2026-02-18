@@ -7,9 +7,9 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MAX_RECENT_EMOJIS } from '@/constants';
 
 const STORAGE_KEY = '@habit_app:recent_emojis';
-const MAX_RECENT = 10;
 
 function sanitizeRecentEmojis(value: unknown): string[] {
   if (!Array.isArray(value)) {
@@ -20,7 +20,7 @@ function sanitizeRecentEmojis(value: unknown): string[] {
     .filter((item): item is string => typeof item === 'string')
     .map((item) => item.trim())
     .filter((item) => item.length > 0)
-    .slice(0, MAX_RECENT);
+    .slice(0, MAX_RECENT_EMOJIS);
 }
 
 /**
@@ -59,7 +59,7 @@ export async function addRecentEmoji(emoji: string): Promise<void> {
     // Remove emoji if it already exists to avoid duplicates
     const filtered = current.filter((e) => e !== normalizedEmoji);
     // Add to front of list
-    const updated = [normalizedEmoji, ...filtered].slice(0, MAX_RECENT);
+    const updated = [normalizedEmoji, ...filtered].slice(0, MAX_RECENT_EMOJIS);
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (error) {
     if (__DEV__) console.error('Error saving recent emoji:', error);

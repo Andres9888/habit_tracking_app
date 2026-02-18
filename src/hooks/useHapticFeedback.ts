@@ -1,30 +1,55 @@
+/**
+ * useHapticFeedback Hook
+ *
+ * Legacy-compatible hook that wraps the centralized haptics patterns library.
+ * Prefer `useHaptics` from '@/utils/haptics' for new code.
+ *
+ * Updated by Opus to use centralized HapticPatterns.
+ */
+
 import { useMemo } from 'react';
-import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
 
+import { HapticPatterns } from '../utils/haptics/patterns';
 import { useReduceMotion } from './useReduceMotion';
-
-type HapticKind = 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error';
 
 interface UseHapticFeedbackOptions {
   isEnabled?: boolean;
   preference?: boolean;
 }
 
-const noop = async () => {};
-
-const INPUT_TO_FEEDBACK: Record<HapticKind, () => Promise<void>> = {
-  error: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error),
-  heavy: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
-  light: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
-  medium: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
-  success: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
-  warning: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning),
+const noop = () => {
+  // No-op when haptics disabled
 };
 
 const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
 
-export const useHapticFeedback = ({ isEnabled = true, preference }: UseHapticFeedbackOptions = {}) => {
+const safeCall = (fn: () => Promise<void>) => {
+  fn().catch(() => {
+    // Silently fail - haptics are non-critical UX enhancements
+  });
+};
+
+/**
+ * Legacy haptic feedback hook providing various impact styles.
+ * Wraps the centralized haptics patterns library for backward compatibility.
+ * Prefer using `useHaptics` from '@/utils/haptics' for new code.
+ *
+ * @param options - Configuration options
+ * @param options.isEnabled - Whether haptics are enabled (default: true)
+ * @param options.preference - Override for reduced motion preference
+ * @returns Object containing various haptic trigger functions
+ *
+ * @example
+ * ```ts
+ * const { triggerSuccess, triggerWarning } = useHapticFeedback();
+ * await triggerSuccess();
+ * ```
+ */
+export const useHapticFeedback = ({
+  isEnabled = true,
+  preference,
+}: UseHapticFeedbackOptions = {}) => {
   const reduceMotion = useReduceMotion({ preference });
 
   return useMemo(() => {
@@ -40,23 +65,16 @@ export const useHapticFeedback = ({ isEnabled = true, preference }: UseHapticFee
       };
     }
 
-    const safeCall = (fn: () => Promise<void>) => {
-      fn().catch(() => {
-        // Silently fail - haptics are non-critical UX enhancements
-      });
-    };
-
     return {
-      triggerError: () => safeCall(INPUT_TO_FEEDBACK.error),
-      triggerHeavyImpact: () => safeCall(INPUT_TO_FEEDBACK.heavy),
-      triggerLightImpact: () => safeCall(INPUT_TO_FEEDBACK.light),
-      triggerMediumImpact: () => safeCall(INPUT_TO_FEEDBACK.medium),
-      triggerSelection: () => safeCall(() => Haptics.selectionAsync()),
-      triggerSuccess: () => safeCall(INPUT_TO_FEEDBACK.success),
-      triggerWarning: () => safeCall(INPUT_TO_FEEDBACK.warning),
+      triggerError: () => safeCall(HapticPatterns.error),
+      triggerHeavyImpact: () => safeCall(HapticPatterns.heavy),
+      triggerLightImpact: () => safeCall(HapticPatterns.tap),
+      triggerMediumImpact: () => safeCall(HapticPatterns.toggle),
+      triggerSelection: () => safeCall(HapticPatterns.selection),
+      triggerSuccess: () => safeCall(HapticPatterns.success),
+      triggerWarning: () => safeCall(HapticPatterns.warning),
     };
   }, [reduceMotion, isEnabled]);
 };
 
 export default useHapticFeedback;
-

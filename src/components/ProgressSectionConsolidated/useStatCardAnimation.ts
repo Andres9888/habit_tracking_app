@@ -12,6 +12,10 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import { Springs } from '../../constants/motion';
+import {
+  CARD_PRESS_SCALE,
+  CARD_REST_SCALE,
+} from '../../utils/animations/cardPressAnimation';
 
 const CARD_STAGGER_DELAY = 50;
 const CARD_ENTRANCE_DURATION = 280;
@@ -51,12 +55,12 @@ export function useStatCardAnimation({
 
   const handlePressIn = () => {
     if (!isInteractive) return;
-    pressScale.value = withSpring(0.95, Springs.button);
+    pressScale.value = withSpring(CARD_PRESS_SCALE, Springs.button);
   };
 
   const handlePressOut = () => {
     if (!isInteractive) return;
-    pressScale.value = withSpring(1, Springs.button);
+    pressScale.value = withSpring(CARD_REST_SCALE, Springs.button);
   };
 
   const containerStyle = useAnimatedStyle(() => ({
