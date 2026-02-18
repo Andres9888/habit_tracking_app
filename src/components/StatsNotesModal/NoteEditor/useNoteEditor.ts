@@ -38,7 +38,9 @@ export function useNoteEditor({
 
   const createNote = useMutation(api.notes.create);
   const updateNote = useMutation(api.notes.update);
-  const habits = useQuery(api.habits.list) ?? [];
+  const habitsData = useQuery(api.habits.list);
+  const habits = habitsData ?? [];
+  const isLoadingHabits = habitsData === undefined;
 
   const characterCount = body.length;
   const isValid = body.trim().length > 0 && characterCount <= 1000;
@@ -76,6 +78,7 @@ export function useNoteEditor({
     habits,
     handleSave,
     isEditing,
+    isLoadingHabits,
     isSaving,
     isValid,
     selectedHabitId,

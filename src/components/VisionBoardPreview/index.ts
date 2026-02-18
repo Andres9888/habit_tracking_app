@@ -10,3 +10,4 @@ export type {
   VisionBoardPreviewProps,
   VisionBoardItem,
 } from './VisionBoardPreview.types';
+export type { UseVisionBoardGesturesParams } from './useVisionBoardGestures.types';

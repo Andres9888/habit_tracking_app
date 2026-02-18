@@ -7,6 +7,7 @@
 
 import { View, Pressable, Text } from 'react-native';
 import { BookOpen, Settings, Plus } from 'lucide-react-native';
+import { usePrefetchNavigation } from '../../../../hooks/usePrefetchNavigation';
 import { NotificationBadge } from '../../../../components/NotificationBadge';
 import { useIsDark } from '../../../../theme/ThemeContext';
 import { styles } from './BottomActionBar.styles';
@@ -29,6 +30,8 @@ export function ActionButtons({
   const isDark = useIsDark();
   const iconColor = isDark ? '#D1D5DB' : '#44403c';
   const borderColor = isDark ? 'rgba(23,23,23,0.97)' : 'rgba(255,255,255,0.97)';
+  const { prefetchTemplatesAndCategories, prefetchSettings } =
+    usePrefetchNavigation();
 
   return (
     <View style={styles.rightSection}>
@@ -47,6 +50,7 @@ export function ActionButtons({
             justifyContent: 'center' as const,
             paddingHorizontal: 8,
           })}
+          onPressIn={prefetchTemplatesAndCategories}
           onPress={() => {
             onDismissTemplateBadge();
             onOpenTemplates();
@@ -69,6 +73,7 @@ export function ActionButtons({
           isDark ? styles.iconButtonDark : styles.iconButtonLight,
           pressed && styles.iconButtonPressed,
         ]}
+        onPressIn={prefetchSettings}
         onPress={onOpenSettings}
       >
         <Settings color={iconColor} size={14} strokeWidth={2.25} />

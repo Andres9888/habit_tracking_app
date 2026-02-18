@@ -1,5 +1,6 @@
 import type { SharedValue } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { usePrefetchNavigation } from '../../../../hooks/usePrefetchNavigation';
 import { createButtonHandlers } from './useButtonHandler';
 
 interface UseHeaderHandlersProps {
@@ -17,6 +18,9 @@ interface UseHeaderHandlersProps {
 /**
  * Hook that creates press handlers for all header buttons.
  * Uses the reusable createButtonHandlers factory.
+ * 
+ * Includes prefetch on onPressIn for navigation targets to improve
+ * perceived performance by starting data fetching early.
  */
 export function useHeaderHandlers({
   addButtonScale,
@@ -30,6 +34,8 @@ export function useHeaderHandlers({
   dismissBadge,
 }: UseHeaderHandlersProps) {
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
+  const { prefetchTemplatesAndCategories, prefetchSettings } =
+    usePrefetchNavigation();
 
   const add = createButtonHandlers(
     {
@@ -52,12 +58,19 @@ export function useHeaderHandlers({
         openTemplatesScreen();
       },
       scale: templatesButtonScale,
+      // Prefetch templates when user starts pressing the button
+      onPressIn: prefetchTemplatesAndCategories,
     },
     triggerLightImpact,
     triggerSelection
   );
   const settings = createButtonHandlers(
-    { onPress: openSettings, scale: settingsButtonScale },
+    {
+      onPress: openSettings,
+      scale: settingsButtonScale,
+      // Prefetch settings when user starts pressing the button
+      onPressIn: prefetchSettings,
+    },
     triggerLightImpact,
     triggerSelection
   );

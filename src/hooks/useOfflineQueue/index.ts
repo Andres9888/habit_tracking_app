@@ -26,6 +26,7 @@ export type {
   UseOfflineQueueOptions,
   UseOfflineQueueReturn,
 } from './types';
+export type { UseQueueOperationsProps } from './useQueueOperations.types';
 
 // Storage operations (exported for testing)
 export {

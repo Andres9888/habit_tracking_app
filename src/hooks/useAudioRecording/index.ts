@@ -17,3 +17,4 @@ export type {
   UseAudioRecordingReturn,
   InterruptionReason,
 } from './types';
+export type { SetStatus, UseRecordingStatusHandlerOptions } from './useRecordingStatusHandler.types';

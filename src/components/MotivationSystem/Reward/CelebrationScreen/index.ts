@@ -7,3 +7,4 @@
 
 export { CelebrationScreen, default } from './CelebrationScreen';
 export type { CelebrationScreenProps, CelebrationHabitData } from './types';
+export type { CelebrationScreenContentPropsExtended } from './CelebrationScreenContent.types';

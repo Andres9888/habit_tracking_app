@@ -5,9 +5,10 @@
  */
 
 import { useRef } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Text, TextInput, View } from 'react-native';
 import { colors } from '@/theme/colors';
 import { AccessibleErrorMessage } from '@/components/ui/AccessibleErrorMessage';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HabitSelector } from './HabitSelector';
 import { NoteEditorActions } from './NoteEditorActions';
@@ -23,6 +24,7 @@ export default function NoteEditor({
   onSave,
 }: NoteEditorProps) {
   const bodyRef = useRef<TextInput>(null);
+  const { colors: themeColors } = useThemeColors();
   const {
     body,
     setBody,
@@ -31,6 +33,7 @@ export default function NoteEditor({
     selectedHabitId,
     setSelectedHabitId,
     habits,
+    isLoadingHabits,
     isSaving,
     error,
     characterCount,
@@ -44,6 +47,14 @@ export default function NoteEditor({
     noteId,
     onSaveComplete: onSave,
   });
+  
+  if (isLoadingHabits) {
+    return (
+      <View className='items-center justify-center py-12'>
+        <ActivityIndicator color={themeColors.colors.accent} size='large' />
+      </View>
+    );
+  }
 
   return (
     <View className='gap-4'>

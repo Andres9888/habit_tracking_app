@@ -7,3 +7,4 @@
 
 export { MilestoneProgress, default } from './MilestoneProgress';
 export type { MilestoneProgressProps } from '../MilestoneProgressTypes';
+export type { AnimationValues, UseAnimationEffectsParams } from './useAnimationEffects.types';

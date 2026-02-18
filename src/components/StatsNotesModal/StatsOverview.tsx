@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import HabitStats from './HabitStats';
 import { StatCard } from './StatCard';
@@ -11,8 +11,17 @@ export default function StatsOverview() {
     weeklyCompletionPercent,
     longestStreak,
     activeHabits,
+    isLoading,
   } = useStatsOverviewData();
   const { colors } = useThemeColors();
+  
+  if (isLoading) {
+    return (
+      <View className='items-center justify-center py-12'>
+        <ActivityIndicator color={colors.accent} size='large' />
+      </View>
+    );
+  }
 
   return (
     <View className='gap-8'>
