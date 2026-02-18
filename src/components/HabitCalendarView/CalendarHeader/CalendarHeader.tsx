@@ -12,7 +12,7 @@ interface CalendarHeaderProps {
 
 /**
  * CalendarHeader - Month navigation header for HabitCalendarView
- * 
+ *
  * Features:
  * - Dark mode support via ThemeContext
  * - "Today" quick jump button
@@ -29,10 +29,7 @@ export function CalendarHeader({
 
   return (
     <View className='flex-row items-center justify-between'>
-      <Text
-        className='text-lg font-bold'
-        style={{ color: colors.gray[900] }}
-      >
+      <Text className='text-lg font-bold' style={{ color: colors.gray[900] }}>
         {format(currentMonth, 'MMMM yyyy')}
       </Text>
 

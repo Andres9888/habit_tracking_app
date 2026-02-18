@@ -5,7 +5,7 @@ const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /**
  * DayNamesRow - Row of day abbreviations (Sun-Sat) for the calendar
- * 
+ *
  * Features:
  * - Dark mode support via ThemeContext
  * - Semantic color system for accessibility

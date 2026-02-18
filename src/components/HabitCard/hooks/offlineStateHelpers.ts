@@ -21,8 +21,7 @@ export function filterPendingForHabit(
 ): ToggleCompletionOperation[] {
   return operations
     .filter(
-      (op): op is ToggleCompletionOperation =>
-        op.type === 'toggleCompletion'
+      (op): op is ToggleCompletionOperation => op.type === 'toggleCompletion'
     )
     .filter(
       (op) =>

@@ -7,7 +7,6 @@
  * - Accessible error handling
  * - Screen reader announcements for state changes
  * - Timezone-aware habit toggling
- * - Undo support for delete and archive actions
  */
 
 import { useCallback } from 'react';
