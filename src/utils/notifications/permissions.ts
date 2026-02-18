@@ -3,6 +3,11 @@
  *
  * Handles requesting and checking notification permissions.
  * Manages platform-specific permission flows (iOS/Android).
+ *
+ * NOTE: Direct permission requests (ensureNotificationPermissions) should only
+ * be triggered at meaningful moments. For the smart deferred flow that shows a
+ * pre-permission screen after first habit completion, see:
+ *   src/hooks/useNotificationPermissionFlow/
  */
 
 import * as Notifications from 'expo-notifications';
@@ -35,6 +40,27 @@ function isNotificationsPermissionGranted(permissions: unknown): boolean {
   }
 
   return false;
+}
+
+/**
+ * Check current OS notification permission status without prompting.
+ * Returns 'granted', 'denied', or 'not_determined'.
+ */
+export async function getOSNotificationPermissionStatus(): Promise<
+  'granted' | 'denied' | 'not_determined'
+> {
+  if (Platform.OS === 'web') {
+    return 'denied';
+  }
+  try {
+    const perms = await Notifications.getPermissionsAsync();
+    if (isNotificationsPermissionGranted(perms)) return 'granted';
+    const status = (perms as { status?: unknown }).status;
+    if (status === 'denied') return 'denied';
+    return 'not_determined';
+  } catch {
+    return 'not_determined';
+  }
 }
 
 export async function ensureNotificationPermissions(): Promise<boolean> {

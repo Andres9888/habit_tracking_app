@@ -3,6 +3,10 @@
  * Orchestrates the habits list, modals, overlays, and bottom action bar.
  */
 
+<<<<<<< HEAD
+=======
+import { useCallback, useMemo } from 'react';
+>>>>>>> fef12ccb (feat: smart notification permission flow (defer to first habit completion))
 import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -17,7 +21,11 @@ import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
+<<<<<<< HEAD
 import { useBottomBarProps } from './useBottomBarProps';
+=======
+import { useNotificationPermissionFlow } from '../../hooks/useNotificationPermissionFlow';
+>>>>>>> fef12ccb (feat: smart notification permission flow (defer to first habit completion))
 
 const ENTERING = FadeInDown.duration(280).springify().damping(18);
 const styles = StyleSheet.create({ flex1: { flex: 1 } });
@@ -39,11 +47,52 @@ function HabitsAppContent() {
     triggerWarning,
   });
 
+<<<<<<< HEAD
   const bottomBar = useBottomBarProps({
     handleCreateHabitRequest: handlers.handleCreateHabitRequest,
     list,
     modals,
   });
+=======
+  // Smart notification permission flow — defers OS prompt until the user
+  // has completed their first habit (see docs/smart-notification-permission.md)
+  const {
+    prePermissionVisible,
+    isRequestingPermission,
+    onEnableNotifications,
+    onSkipNotifications,
+    onHabitCompleted,
+  } = useNotificationPermissionFlow();
+
+  /**
+   * Wrap list.toggleHabit to trigger the notification permission flow
+   * after the user completes a habit for the first time. We check status
+   * BEFORE the toggle so we know the direction of the change.
+   */
+  const toggleHabitWithNotifFlow = useCallback(
+    async (args: Parameters<typeof list.toggleHabit>[0]) => {
+      const wasDone = list.getHabitStatus(args.habitId, args.date) === 'done';
+      const result = await list.toggleHabit(args);
+      // Only trigger after a mark-as-done (not an un-completion)
+      if (!wasDone) {
+        void onHabitCompleted(args.habitId);
+      }
+      return result;
+    },
+    [list, onHabitCompleted]
+  );
+
+  /** list with the wrapped toggleHabit — shape matches HabitsListState exactly */
+  const listWithNotifFlow = useMemo(
+    () => ({ ...list, toggleHabit: toggleHabitWithNotifFlow }),
+    [list, toggleHabitWithNotifFlow]
+  );
+
+  /** Wrapper for the FAB — delegates to `handleCreateHabitRequest` (async). */
+  const onFabPress = useCallback((): void => {
+    void handleCreateHabitRequest();
+  }, [handleCreateHabitRequest]);
+>>>>>>> fef12ccb (feat: smart notification permission flow (defer to first habit completion))
 
   const showSkeleton = list.isHabitsLoading && list.habits.length === 0;
 
@@ -57,7 +106,7 @@ function HabitsAppContent() {
           <Animated.View entering={ENTERING} style={styles.flex1}>
             <HabitsList
               canNavigateForward={list.canNavigateForward}
-              list={list}
+              list={listWithNotifFlow}
               modals={modals}
               upgradePromptVisible={handlers.upgradePromptVisible}
               weekDates={list.weekDates}
@@ -74,9 +123,19 @@ function HabitsAppContent() {
         <HabitsAppOverlays
           list={list}
           modals={modals}
+<<<<<<< HEAD
           paywallVisible={handlers.paywallVisible}
           onPaywallClose={handlers.handlePaywallClose}
           onPaywallSuccess={handlers.handlePaywallSuccess}
+=======
+          notifPrePermissionVisible={prePermissionVisible}
+          notifIsRequestingPermission={isRequestingPermission}
+          paywallVisible={paywallVisible}
+          onNotifEnable={onEnableNotifications}
+          onNotifSkip={onSkipNotifications}
+          onPaywallClose={handlePaywallClose}
+          onPaywallSuccess={handlePaywallSuccess}
+>>>>>>> fef12ccb (feat: smart notification permission flow (defer to first habit completion))
         />
       </View>
     </GestureHandlerRootView>

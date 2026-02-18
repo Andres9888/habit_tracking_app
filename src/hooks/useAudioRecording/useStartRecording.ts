@@ -6,6 +6,7 @@
 
 import { useCallback, RefObject } from 'react';
 import { Audio } from 'expo-av';
+import { handleAsyncErrorWithStatus } from '../../utils/errorHandling';
 import type { RecordingStatus } from './types';
 import { RECORDING_OPTIONS, STATUS_UPDATE_INTERVAL_MS } from './constants';
 
@@ -77,10 +78,7 @@ export function useStartRecording(deps: UseStartRecordingDeps) {
 
       setStatus((prev) => ({ ...prev, state: 'recording' }));
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Failed to start recording';
-      setStatus((prev) => ({ ...prev, errorMessage, state: 'error' }));
-      onError?.(error instanceof Error ? error : new Error(errorMessage));
+      handleAsyncErrorWithStatus(setStatus, error, 'Failed to start recording', onError);
     }
   }, [
     hasPermission,

@@ -19,6 +19,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import type { PickedImage } from './useImagePicker';
+import type { StorageUploadResponse } from '../types/api';
 
 /** Maximum image dimension (width or height) - balances quality and performance */
 const MAX_IMAGE_DIMENSION = 1200;
@@ -148,7 +149,8 @@ export function useImageUpload(): UseImageUploadReturn {
         }
 
         // Step 5: Parse the storage ID from the response
-        const { storageId } = await uploadResponse.json();
+        const responseData = (await uploadResponse.json()) as StorageUploadResponse;
+        const { storageId } = responseData;
 
         // The URL will be the upload response but we typically get
         // the final URL via a query. For now, return the storage ID.

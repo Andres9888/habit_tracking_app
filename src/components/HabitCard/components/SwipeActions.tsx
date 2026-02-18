@@ -1,6 +1,7 @@
 /**
  * SwipeActions Component
  * Edit and Delete action buttons revealed on swipe
+ * ACCESSIBILITY: Added focus ring support for keyboard navigation (2026-02-17)
  */
 
 import React, { memo } from 'react';
@@ -8,6 +9,7 @@ import { Pressable, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { withSpring, type SharedValue } from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
+import { useFocusRing } from '../../../utils/accessibility';
 import { actionStyles } from '../HabitCard.actionStyles';
 
 interface SwipeActionsProps {

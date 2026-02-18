@@ -40,6 +40,8 @@ export const DayCell: React.FC<DayCellProps> = ({
   );
   const accessibilityHint = getAccessibilityHint(canPressDay, isDayDisabled);
 
+  const { focusStyle, focusHandlers } = useFocusRing({ disabled: isDayDisabled, compact: true });
+
   const contentProps = {
     colors,
     completionStatus,
@@ -59,9 +61,10 @@ export const DayCell: React.FC<DayCellProps> = ({
         accessibilityLabel={accessibilityLabel}
         accessibilityRole='button'
         accessibilityState={{ disabled: isDayDisabled }}
-        className='flex-1 items-center gap-0.5'
+        className='flex-1 items-center gap-0.5 rounded-lg'
         disabled={isDayDisabled}
-        style={{ opacity: isDayDisabled ? 0.5 : 1 }}
+        style={{ opacity: isDayDisabled ? 0.5 : 1, ...focusStyle }}
+        {...focusHandlers}
         onPress={() => onDayPress(date)}
       >
         {({ pressed }) => (

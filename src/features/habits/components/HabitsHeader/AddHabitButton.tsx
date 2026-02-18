@@ -4,6 +4,7 @@ import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { ViewStyle } from 'react-native';
 import { SHADOW_OPACITY } from '../../../../constants';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface AddHabitButtonProps {
   animatedStyle: AnimatedStyle<ViewStyle>;
