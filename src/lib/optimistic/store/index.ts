@@ -25,7 +25,7 @@ function createOptimisticStore(): OptimisticStoreAPI {
     for (const listener of listeners) listener();
   };
 
-  const operations = createOperations(state, listeners, notify);
+  const operations = createOperations(state, notify);
   const stateManagement = createStateManagement(state, notify);
 
   return {

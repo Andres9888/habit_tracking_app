@@ -2,6 +2,7 @@
 import { Text, TextInput, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { MAX_EMAIL_LENGTH } from '../../../../constants';
 import type { PasswordResetFormProps } from './types';
 import { PasswordResetButtons } from './PasswordResetButtons';
 
@@ -45,6 +46,7 @@ export function PasswordResetForm({
             className='px-4 py-4 text-[17px] font-medium text-stone-900'
             editable={!isLoading}
             keyboardType='email-address'
+            maxLength={MAX_EMAIL_LENGTH}
             placeholder='you@example.com'
             placeholderTextColor='#a1a1aa'
             returnKeyType='send'

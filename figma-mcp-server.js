@@ -426,7 +426,7 @@ export default class FigmaMCPServer {
       this.buffer += chunk;
 
       let newlineIndex;
-      while ((newlineIndex = this.buffer.indexOf('\n')) !== -1) {
+      while (this.buffer.includes('\n') && (newlineIndex = this.buffer.indexOf('\n')) !== -1) {
         const rawMessage = this.buffer.slice(0, newlineIndex).trim();
         this.buffer = this.buffer.slice(newlineIndex + 1);
 

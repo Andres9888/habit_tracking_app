@@ -21,6 +21,8 @@ export function sanitizeArgs(
     const lowerKey = key.toLowerCase();
     if (SENSITIVE_KEYS.some((s) => lowerKey.includes(s))) {
       sanitized[key] = '[REDACTED]';
+    } else if (Array.isArray(value)) {
+      sanitized[key] = `[Array(${value.length})]`;
     } else if (typeof value === 'object' && value !== null) {
       sanitized[key] = '[object]';
     } else if (typeof value === 'string' && value.length > 100) {

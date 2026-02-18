@@ -18,7 +18,8 @@ import { DEFAULT_SENTRY_CONFIG } from './types';
 function getDsn(): string | null {
   const dsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
   if (!dsn || dsn === '') {
-    if (__DEV__) console.log('[Sentry] No DSN configured - monitoring disabled');
+    if (__DEV__)
+      console.log('[Sentry] No DSN configured - monitoring disabled');
     return null;
   }
   return dsn;
