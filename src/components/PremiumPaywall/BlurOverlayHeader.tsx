@@ -5,7 +5,6 @@
 import React from 'react';
 import { View } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import { colors } from '../../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 
 interface BlurOverlayHeaderProps {
@@ -19,11 +18,12 @@ export function BlurOverlayHeader({ disabled, onPress }: BlurOverlayHeaderProps)
       <AnimatedPressable
         accessibilityLabel='Close paywall'
         accessibilityRole='button'
-        className='h-10 w-10 items-center justify-center rounded-full bg-white/90'
+        className='h-10 w-10 items-center justify-center rounded-full'
+        style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
         disabled={disabled}
         onPress={onPress}
       >
-        <Ionicons color={colors.text.primary} name='close' size={24} />
+        <Ionicons color='#000000' name='close' size={24} />
       </AnimatedPressable>
     </View>
   );
