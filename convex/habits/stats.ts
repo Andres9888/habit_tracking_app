@@ -15,7 +15,7 @@ export const getStats = query({
     // SEC-001: Ownership verification — prevent cross-user data leakage
     const habit = await ctx.db.get(args.habitId);
     if (!habit || habit.userId !== identity.subject) {
-      throw new Error('Not authorized to view stats for this habit');
+      throw new Error('Not authorized to view this habit stats');
     }
 
     const tracking = await ctx.db
