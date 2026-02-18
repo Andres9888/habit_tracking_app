@@ -96,8 +96,7 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
       }
     );
   } catch (error) {
-    console.error('[RevenueCat] Webhook error:', error);
-    // Return 500 so RevenueCat retries failed events
+    // Error in webhook processing; returning 500 so RevenueCat retries failed events
     return Response.json(
       { error: 'Processing error' },
       {
