@@ -167,6 +167,21 @@ export const lightColors = {
   },
 
   /**
+   * Settings Icon Colors
+   *
+   * Used in SettingsContent for preference toggles.
+   * Light backgrounds with colored icons for visibility.
+   */
+  settings: {
+    checkbox: { icon: '#0284c7', bg: '#bae6fd' },
+    circle: { icon: '#8b5cf6', bg: '#ddd6fe' },
+    gradient: { icon: '#059669', bg: '#d1fae5' },
+    sound: { icon: '#f59e0b', bg: '#fef3c7' },
+    sort: { icon: '#6366f1', bg: '#e0e7ff' },
+    archive: { icon: '#78716c', bg: '#e7e5e4' },
+  },
+
+  /**
    * Primary Green (Forest Tones)
    *
    * Brand color — forest green.
