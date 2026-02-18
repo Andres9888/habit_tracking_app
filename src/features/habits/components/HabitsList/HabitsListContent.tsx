@@ -1,6 +1,21 @@
+/**
+ * HabitsListContent — the actual list body rendered by {@link HabitsList}.
+ *
+ * Wraps `react-native-draggable-flatlist` and wires up the four FlatList
+ * render slots (header, footer, empty, item) plus the modal layer.
+ *
+ * Each render slot is produced by a dedicated factory function (see
+ * `HabitsListRenders`) and memoised here to avoid unnecessary re-renders.
+ *
+ * This component owns no state or side-effects; everything is injected via
+ * {@link HabitsListContentProps}.
+ */
+
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import DraggableFlatList from 'react-native-draggable-flatlist';
+import DraggableFlatList, {
+  type RenderItemParams,
+} from 'react-native-draggable-flatlist';
 import {
   renderHabitsListHeader,
   renderHabitsListFooter,
@@ -52,7 +67,7 @@ export function HabitsListContent({
   );
 
   const renderHabitItem = useCallback(
-    (p: any) =>
+    (p: RenderItemParams<Habit>) =>
       renderHabitRow({
         habitRowOpacity: state.habitRowOpacity,
         habitRowTranslateY: state.habitRowTranslateY,

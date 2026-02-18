@@ -33,11 +33,10 @@ const mockCreateAsync = jest.fn();
 
 jest.mock('expo-av', () => ({
   Audio: {
-    requestPermissionsAsync: () => mockRequestPermissionsAsync(),
-    setAudioModeAsync: (options: any) => mockSetAudioModeAsync(options),
+    requestPermissionsAsync: mockRequestPermissionsAsync,
+    setAudioModeAsync: mockSetAudioModeAsync,
     Recording: {
-      createAsync: (options: any, callback: any, interval: any) =>
-        mockCreateAsync(options, callback, interval),
+      createAsync: mockCreateAsync,
     },
     AndroidOutputFormat: {
       MPEG_4: 'MPEG_4',

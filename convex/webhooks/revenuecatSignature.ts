@@ -13,6 +13,10 @@
 // Note: Environment variables are accessed differently in Convex HTTP actions
 const REVENUECAT_WEBHOOK_SECRET = process.env.REVENUECAT_WEBHOOK_SECRET ?? '';
 
+// Allow bypassing signature verification in development
+// This should NEVER be true in production
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 /**
  * Verifies that a webhook request came from RevenueCat
  *
@@ -24,15 +28,19 @@ export async function verifyRevenueCatSignature(
   body: string,
   signature: string
 ): Promise<boolean> {
-  // If no secret is configured, skip verification (development mode)
-  // IMPORTANT: Always configure the secret in production!
+  // If no secret is configured, we must reject in production
+  // SECURITY: Only allow bypass in explicit development mode
   if (!REVENUECAT_WEBHOOK_SECRET) {
-    console.warn(
-      '[RevenueCat] WARNING: No webhook secret configured, skipping verification'
+    if (isDevelopment) {
+      console.warn(
+        '[RevenueCat] DEV MODE: No webhook secret configured, skipping verification'
+      );
+      return true;
+    }
+    console.error(
+      '[RevenueCat] CRITICAL: No webhook secret configured in production - rejecting webhook'
     );
-    // In production, you should return false here
-    // For now, we allow it to support local development
-    return true;
+    return false;
   }
 
   if (!signature) {
@@ -50,7 +58,7 @@ export async function verifyRevenueCatSignature(
     const key = await crypto.subtle.importKey(
       'raw',
       keyData,
-      { name: 'HMAC', hash: 'SHA-256' },
+      { hash: 'SHA-256', name: 'HMAC' },
       false,
       ['sign']
     );
@@ -59,7 +67,7 @@ export async function verifyRevenueCatSignature(
     const signatureBytes = await crypto.subtle.sign('HMAC', key, data);
 
     // Convert to hex string
-    const computedSignature = Array.from(new Uint8Array(signatureBytes))
+    const computedSignature = [...new Uint8Array(signatureBytes)]
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('');
 
@@ -81,7 +89,7 @@ function timingSafeEqual(a: string, b: string): boolean {
 
   let result = 0;
   for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    result |= (a.codePointAt(i) || 0) ^ (b.codePointAt(i) || 0);
   }
   return result === 0;
 }

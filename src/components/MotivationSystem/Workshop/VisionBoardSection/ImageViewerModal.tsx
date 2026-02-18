@@ -1,15 +1,16 @@
 /**
  * ImageViewerModal Component - Full-size image viewer with caption editing and delete
+ * Uses expo-image for optimized memory management (App Store compliance)
  */
 
 import React from 'react';
 import {
   View,
   Modal,
-  Image,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { ViewerHeader } from './ViewerHeader';
 import { CaptionArea } from './CaptionArea';
 import { useImageViewer } from './useImageViewer';
@@ -36,6 +37,7 @@ export function ImageViewerModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='fade'
       presentationStyle='fullScreen'
       visible={visible}
@@ -54,10 +56,12 @@ export function ImageViewerModal({
         <View className='flex-1 items-center justify-center'>
           {image.imageUrl && (
             <Image
-              accessibilityIgnoresInvertColors
-              resizeMode='contain'
+              accessibilityLabel='Full size vision board image'
+              contentFit="contain"
               source={{ uri: image.imageUrl }}
               style={{ height: SCREEN_WIDTH, width: SCREEN_WIDTH }}
+              cachePolicy="memory-disk"
+              transition={200}
             />
           )}
         </View>

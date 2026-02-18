@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Account section for settings modal
  */
@@ -6,22 +7,49 @@ import React, { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
-
-const APP_STORE_URL = 'https://apps.apple.com/app/chain-day';
-const SUPPORT_EMAIL = 'support@chainday.app';
-const PRIVACY_URL =
-  'https://andres9888.github.io/chainday-landing/privacy.html';
-const TERMS_URL = 'https://andres9888.github.io/chainday-landing/terms.html';
+import { PremiumStatus } from './sections/PremiumStatus';
+import { FeedbackModal } from '../FeedbackModal';
+import { ERROR_MESSAGES, EXTERNAL_URLS } from '../../constants';
 
 interface AccountSectionProps {
   isHighContrastActive: boolean;
+  isPremium?: boolean;
+  onPremiumUpsell?: () => void;
 }
 
-export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
+export function AccountSection({ isHighContrastActive, isPremium = false, onPremiumUpsell }: AccountSectionProps) {
   const { signOut } = useClerk();
   const { user } = useUser();
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const userEmail = user?.primaryEmailAddress?.emailAddress;
+
+  const handleDeleteAccount = useCallback(() => {
+    Alert.alert(
+      'Delete Account',
+      'This will permanently delete your account and all your data. This action cannot be undone.',
+      [
+        { style: 'cancel', text: 'Cancel' },
+        {
+          onPress: () => {
+            setIsDeletingAccount(true);
+            void (async () => {
+              try {
+                await user?.delete();
+              } catch {
+                Alert.alert('Error', 'Failed to delete account. Please try again or contact support.');
+              } finally {
+                setIsDeletingAccount(false);
+              }
+            })();
+          },
+          style: 'destructive',
+          text: 'Delete',
+        },
+      ]
+    );
+  }, [user]);
 
   const handleSignOut = useCallback(() => {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -30,7 +58,7 @@ export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
         onPress: () => {
           setIsSigningOut(true);
           void signOut()
-            .catch(() => Alert.alert('Error', 'Failed to sign out.'))
+            .catch(() => Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_OUT_FAILED))
             .finally(() => setIsSigningOut(false));
         },
         style: 'destructive',
@@ -56,18 +84,18 @@ export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
           // Fall through
         }
       }
-      void Linking.openURL(APP_STORE_URL);
+      void Linking.openURL(EXTERNAL_URLS.APP_STORE);
     })();
   }, []);
 
   const handleShare = useCallback(() => {
     void Share.share({
       message: Platform.select({
-        default: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${APP_STORE_URL}`,
-        ios: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${APP_STORE_URL}`,
+        default: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${EXTERNAL_URLS.APP_STORE}`,
+        ios: `I'm building better habits with Chain Day 🔗⛓️ — a simple app that turns daily consistency into visible streaks. Try it free!\n\n${EXTERNAL_URLS.APP_STORE}`,
       }),
       title: 'Chain Day — Build Better Habits',
-      url: Platform.OS === 'ios' ? APP_STORE_URL : undefined,
+      url: Platform.OS === 'ios' ? EXTERNAL_URLS.APP_STORE : undefined,
     });
   }, []);
 
@@ -76,24 +104,45 @@ export function AccountSection({ isHighContrastActive }: AccountSectionProps) {
     []
   );
 
+  const handleWhatsNew = useCallback(
+    () => void Linking.openURL(EXTERNAL_URLS.CHANGELOG),
+    []
+  );
+
+  const handleFeedback = useCallback(() => {
+    setShowFeedbackModal(true);
+  }, []);
+
   return (
     <>
       <AccountInfo
         email={userEmail}
         highContrast={isHighContrastActive}
+        isDeletingAccount={isDeletingAccount}
         isLoading={isSigningOut}
+        onDeleteAccount={handleDeleteAccount}
         onSignOut={handleSignOut}
+      />
+      <PremiumStatus
+        highContrast={isHighContrastActive}
+        isPremium={isPremium}
+        onUpgrade={onPremiumUpsell}
       />
       <AppActions
         highContrast={isHighContrastActive}
         onRate={handleRateApp}
         onShare={handleShare}
-        onSupport={openUrl(`mailto:${SUPPORT_EMAIL}?subject=Chain Day`)}
+        onFeedback={handleFeedback}
+        onWhatsNew={handleWhatsNew}
       />
       <LegalLinks
         highContrast={isHighContrastActive}
-        onPrivacy={openUrl(PRIVACY_URL)}
-        onTerms={openUrl(TERMS_URL)}
+        onPrivacy={openUrl(EXTERNAL_URLS.PRIVACY)}
+        onTerms={openUrl(EXTERNAL_URLS.TERMS)}
+      />
+      <FeedbackModal
+        visible={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
       />
     </>
   );

@@ -1,108 +1,50 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines, max-lines-per-function */
 /** SettingsContent - Stagger animations, stone-100 bg, 12px version */
 import {
-  Moon,
+  ArrowUpDown,
   BookOpen,
   Check,
   Circle,
   Droplets,
-  Monitor,
-  Sun,
+  Volume2,
 } from 'lucide-react-native';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
+import { AboutSection } from './sections';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { SORT_LABEL_MAP } from './SortPicker.constants';
+import type { HabitSortMode } from '../../features/habits/types';
 import type { SettingsContentProps } from './types';
 
 const anim = (delay: number) => FadeInDown.delay(delay).springify().damping(18);
 
-const DARK_MODE_OPTIONS: Array<{
-  key: 'system' | 'light' | 'dark';
-  label: string;
-  Icon: typeof Monitor;
-}> = [
-  { Icon: Monitor, key: 'system', label: 'System' },
-  { Icon: Sun, key: 'light', label: 'Light' },
-  { Icon: Moon, key: 'dark', label: 'Dark' },
-];
-
 export function SettingsContent(p: SettingsContentProps) {
   const { colors, isHighContrastActive: hc } = p;
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
+  const bottomPadding = Math.max((p.bottomInset ?? 0) + 16, 24);
 
   return (
     <ScrollView
       className='flex-1 px-4'
+      contentContainerStyle={{ paddingBottom: bottomPadding, paddingTop: 4 }}
       showsVerticalScrollIndicator={false}
       style={{
         backgroundColor: hc ? colors.background : themeColors.background,
       }}
     >
-      <View className='gap-5 pb-8'>
+      <View className='gap-5'>
+        {/* Preferences Section - Visual settings */}
         <Animated.View entering={anim(0)}>
-          <SettingsSection highContrastMode={hc} title='Visual Preferences'>
-            <View className='px-4 pb-4 pt-4'>
-              <Text
-                className='mb-2 text-[13px] font-semibold'
-                style={{ color: themeColors.text.secondary }}
-              >
-                Appearance
-              </Text>
-              <View
-                className='flex-row rounded-xl p-1'
-                style={{
-                  backgroundColor: themeColors.surface,
-                  borderColor: themeColors.border,
-                  borderWidth: 1,
-                }}
-              >
-                {DARK_MODE_OPTIONS.map(({ key, label, Icon }) => {
-                  const selected = p.darkModePreference === key;
-                  return (
-                    <Pressable
-                      key={key}
-                      className='flex-1 flex-row items-center justify-center gap-1.5 rounded-lg px-2 py-2'
-                      style={{
-                        backgroundColor: selected
-                          ? isDark
-                            ? '#374151'
-                            : '#e5e7eb'
-                          : 'transparent',
-                      }}
-                      onPress={() => void p.onChangeDarkModePreference(key)}
-                    >
-                      <Icon
-                        color={
-                          selected
-                            ? themeColors.text.primary
-                            : themeColors.text.secondary
-                        }
-                        size={14}
-                      />
-                      <Text
-                        className='text-[13px] font-semibold'
-                        style={{
-                          color: selected
-                            ? themeColors.text.primary
-                            : themeColors.text.secondary,
-                        }}
-                      >
-                        {label}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
-            </View>
+          <SettingsSection highContrastMode={hc} title='Preferences'>
             <SettingsRow
               highContrastMode={hc}
-              icon={<Check color='#0284c7' size={16} />}
-              iconBackgroundColor='#bae6fd'
-              label='Use checkbox completion icon'
+              icon={<Check color={themeColors.settings.checkbox.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.checkbox.bg}
+              label='Checkbox style for completed habits'
               type='toggle'
               value={p.habitCompletionIcon === 'checkbox'}
               onToggle={(v) =>
@@ -111,26 +53,37 @@ export function SettingsContent(p: SettingsContentProps) {
             />
             <SettingsRow
               highContrastMode={hc}
-              icon={<Circle color='#8b5cf6' size={16} />}
-              iconBackgroundColor='#ddd6fe'
-              label='Use circles for habit days'
+              icon={<Circle color={themeColors.settings.circle.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.circle.bg}
+              label='Circular day markers'
               type='toggle'
               value={p.dayShape === 'circle'}
               onToggle={(v) => void p.onChangeDayShape(v ? 'circle' : 'square')}
             />
             <SettingsRow
               highContrastMode={hc}
-              icon={<Droplets color='#059669' size={16} />}
-              iconBackgroundColor='#d1fae5'
-              label='Show strength gradient fill'
-              showBorder={false}
+              icon={<Droplets color={themeColors.settings.gradient.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.gradient.bg}
+              label='Gradient fill for habit strength'
               type='toggle'
               value={p.showGradientFill}
               onToggle={(v) => void p.onChangeShowGradientFill(v)}
             />
+            <SettingsRow
+              highContrastMode={hc}
+              icon={<Volume2 color={themeColors.settings.sound.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.sound.bg}
+              label='Play sound on habit completion'
+              showBorder={false}
+              type='toggle'
+              value={p.completionSoundEnabled}
+              onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
+            />
           </SettingsSection>
         </Animated.View>
-        <Animated.View entering={anim(50)}>
+
+        {/* Notifications Section */}
+        <Animated.View entering={anim(60)}>
           <StreakRemindersSection
             enabled={p.streakRemindersEnabled}
             highContrastMode={hc}
@@ -141,12 +94,26 @@ export function SettingsContent(p: SettingsContentProps) {
             onToggle={p.onToggleStreakReminders}
           />
         </Animated.View>
-        <Animated.View entering={anim(100)}>
-          <SettingsSection highContrastMode={hc} title='Habit Management'>
+
+        {/* Data Section - Habit management */}
+        <Animated.View entering={anim(120)}>
+          <SettingsSection highContrastMode={hc} title='Data'>
             <SettingsRow
               highContrastMode={hc}
-              icon={<BookOpen color='#78716c' size={16} />}
-              iconBackgroundColor='#e7e5e4'
+              icon={<ArrowUpDown color={themeColors.settings.sort.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.sort.bg}
+              label='Sort Order'
+              type='selection'
+              value={
+                SORT_LABEL_MAP[p.habitSortMode as HabitSortMode] ?? 'Custom'
+              }
+              onPress={p.onOpenSortPicker}
+            />
+            <SettingsRow
+              badge={p.archivedHabitsCount}
+              highContrastMode={hc}
+              icon={<BookOpen color={themeColors.settings.archive.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.archive.bg}
               label='Archived Habits'
               showBorder={false}
               type='navigation'
@@ -154,17 +121,20 @@ export function SettingsContent(p: SettingsContentProps) {
             />
           </SettingsSection>
         </Animated.View>
-        <Animated.View entering={anim(150)}>
-          <AccountSection isHighContrastActive={hc} />
+
+        {/* Account Section */}
+        <Animated.View entering={anim(180)}>
+          <AccountSection
+            isHighContrastActive={hc}
+            isPremium={p.isPremium}
+            onPremiumUpsell={p.onPremiumUpsell}
+          />
         </Animated.View>
-      </View>
-      <View className='items-center pb-8 pt-4'>
-        <Text
-          className='text-center text-[13px] leading-[18px]'
-          style={{ color: colors.versionText }}
-        >
-          Chain Day v1.0.0
-        </Text>
+
+        {/* About Section - Version info */}
+        <Animated.View entering={anim(240)}>
+          <AboutSection buildNumber='1' highContrast={hc} version='1.0.0' />
+        </Animated.View>
       </View>
     </ScrollView>
   );

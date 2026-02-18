@@ -45,6 +45,7 @@ export function Modal({
 
   return (
     <RNModal
+      accessibilityViewIsModal
       statusBarTranslucent
       transparent
       animationType='none'

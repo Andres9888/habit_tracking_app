@@ -3,6 +3,7 @@ import { Animated, Pressable } from 'react-native';
 import { useFocusRing } from '../../../../utils/accessibility';
 import { useFABAnimations } from './useFABAnimations';
 import { useFABHandlers } from './useFABHandlers';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { FloatingActionButtonProps } from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -12,6 +13,7 @@ export function FloatingActionButton({
   celebrationsEnabled = true,
   reduceMotionPreference = false,
 }: FloatingActionButtonProps) {
+  const { colors } = useThemeColors();
   const { bounce, pressScale, rippleOpacity, rippleScale } = useFABAnimations(
     celebrationsEnabled,
     reduceMotionPreference
@@ -44,6 +46,7 @@ export function FloatingActionButton({
       accessibilityHint='Open create habit modal'
       accessibilityLabel='Add habit'
       accessibilityRole='button'
+      testID='home-create-habit-fab'
       className='h-14 w-14 items-center justify-center rounded-full bg-[#059669] shadow-lg'
       {...focusHandlers}
       style={[animatedStyle, focusStyle]}
@@ -53,12 +56,12 @@ export function FloatingActionButton({
         className='absolute h-14 w-14 rounded-full'
         pointerEvents='none'
         style={{
-          backgroundColor: 'rgba(59,130,246,0.28)',
+          backgroundColor: 'rgba(5,150,105,0.28)',
           opacity: rippleOpacity,
           transform: [{ scale: rippleScale }],
         }}
       />
-      <Plus color='#ffffff' size={24} strokeWidth={2.5} />
+      <Plus color={colors.text.inverse} size={24} strokeWidth={2.5} />
     </AnimatedPressable>
   );
 }

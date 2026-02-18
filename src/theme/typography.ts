@@ -1,10 +1,11 @@
 /**
  * Typography System - Habit Tracking App
- * Based on UX Specification Section 5.2
+ * Frontend Redesign Spec 2026-02-14
  *
- * Uses SF Pro (iOS native font)
- * All sizes in points (pt) for iOS consistency
- * Supports iOS Dynamic Type (accessibility)
+ * Serif + Sans-serif pairing: Literata (display/H1) + DM Sans (all other text)
+ * Monospace: JetBrains Mono
+ *
+ * Fallbacks: SF Pro Display / SF Pro Text (iOS), Roboto (Android)
  */
 
 import { TextStyle } from 'react-native';
@@ -12,29 +13,28 @@ import { TextStyle } from 'react-native';
 /**
  * Font Families
  *
- * Primary: SF Pro (iOS native)
- * - SF Pro Display (headings, large text)
- * - SF Pro Text (body copy, UI elements)
+ * Primary display: Literata (serif, headings — emotional weight)
+ * Primary text: DM Sans (sans-serif, body — clarity)
+ * Monospace: JetBrains Mono (data, numbers)
  *
- * Fallback: System Font Stack
- * - iOS: SF Pro
- * - Android (future): Roboto
- *
- * Monospace (data, numbers): SF Mono
+ * Fallbacks for platforms where custom fonts aren't loaded:
+ * - iOS: SF Pro Display / SF Pro Text
+ * - Android: Roboto
  */
 export const fontFamilies = {
-  monospace: 'SF Mono',
+  monospace: 'JetBrainsMono',
   primary: {
-    display: 'SF Pro Display', // iOS native
-    text: 'SF Pro Text', // iOS native
+    display: 'Literata', // Serif — display/H1 headings
+    text: 'DMSans', // Sans-serif — body, UI, H2/H3
   },
-  serif: 'Georgia', // Used by LettersSection for formal content
+  serif: 'Literata', // Alias for display font
   system: '-apple-system', // Fallback to system font
 } as const;
 
 /**
  * Font Weights
- * Using iOS standard weight names and numeric values
+ * DM Sans supports 400, 500, 600, 700
+ * Literata supports 400, 500, 600, 700
  */
 export const fontWeights = {
   bold: '700' as const,
@@ -44,97 +44,97 @@ export const fontWeights = {
 };
 
 /**
- * Type Scale
- * All measurements in points (pt) for iOS
+ * Type Scale (Design System: 34/22/17/13)
+ * Display: 34, Title: 22, Body: 17, Caption: 13
  */
 export const typography: Record<string, TextStyle> = {
-  // Body (Primary text)
-  body: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: fontWeights.regular,
-    letterSpacing: -0.41,
-    lineHeight: 22,
-  },
-
-  // Body Small (Secondary info)
-  bodySmall: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
-    fontWeight: fontWeights.regular,
-    letterSpacing: -0.24,
-    lineHeight: 20,
-  },
-
-  // Button Text
-  button: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: fontWeights.semibold,
-    letterSpacing: -0.41,
-    lineHeight: 22,
-  },
-
-  // Caption (Meta info, timestamps)
-  caption: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: fontWeights.regular,
-    letterSpacing: -0.08,
-    lineHeight: 18,
-  },
-
-  // Display Large (Onboarding headlines)
+  // Display Large (Onboarding headlines) — 34px Literata
   displayLarge: {
     fontFamily: fontFamilies.primary.display,
     fontSize: 34,
     fontWeight: fontWeights.bold,
-    letterSpacing: 0.37,
+    letterSpacing: -0.85,
     lineHeight: 41,
   },
 
-  // Heading 1 (Screen titles)
+  // Heading 1 (Screen titles) — 22px Literata
   heading1: {
     fontFamily: fontFamilies.primary.display,
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: fontWeights.bold,
-    letterSpacing: 0.36,
-    lineHeight: 34,
+    letterSpacing: -0.35,
+    lineHeight: 28,
   },
 
-  // Heading 2 (Section titles)
+  // Heading 2 (Section titles) — 22px DM Sans
   heading2: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 22,
     fontWeight: fontWeights.semibold,
-    letterSpacing: 0.35,
+    letterSpacing: -0.35,
     lineHeight: 28,
   },
 
-  // Heading 3 (Card titles, habit names)
+  // Heading 3 (Card titles, habit names) — 20px DM Sans
   heading3: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
+    fontSize: 20,
     fontWeight: fontWeights.semibold,
-    letterSpacing: -0.41,
-    lineHeight: 22,
+    letterSpacing: -0.2,
+    lineHeight: 26,
   },
 
-  // Monospace (Numbers, percentages, data)
-  monospace: {
-    fontFamily: fontFamilies.monospace,
+  // Body (Primary text) — 17px
+  body: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: fontWeights.regular,
     letterSpacing: 0,
-    lineHeight: 22,
+    lineHeight: 24,
   },
 
-  // Tab Bar Labels
+  // Body Small (Secondary info) — 14px
+  bodySmall: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 14,
+    fontWeight: fontWeights.regular,
+    letterSpacing: 0,
+    lineHeight: 20,
+  },
+
+  // Button Text — 17px semibold
+  button: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 17,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: 0.08,
+    lineHeight: 24,
+  },
+
+  // Caption (Meta info, timestamps) — 13px
+  caption: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 13,
+    fontWeight: fontWeights.medium,
+    letterSpacing: 0.12,
+    lineHeight: 18,
+  },
+
+  // Monospace (Numbers, percentages, data) — 16px
+  monospace: {
+    fontFamily: fontFamilies.monospace,
+    fontSize: 16,
+    fontWeight: fontWeights.regular,
+    letterSpacing: 0,
+    lineHeight: 24,
+  },
+
+  // Tab Bar Labels — 10px
   tabBar: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 10,
     fontWeight: fontWeights.medium,
-    letterSpacing: 0.12,
+    letterSpacing: 0.1,
     lineHeight: 12,
   },
 } as const;

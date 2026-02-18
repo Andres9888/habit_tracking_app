@@ -1,16 +1,16 @@
 /**
  * useCelebrationHaptics Hook
- * Enhanced haptic feedback for celebrations and milestones
- * 
- * Provides special haptic patterns for:
- * - Completing all habits for the day
- * - Hitting streak milestones (7, 14, 21, 30 days)
- * - First habit of the day
+ *
+ * Enhanced haptic feedback for celebrations and milestones.
+ * Now powered by the centralized HapticPatterns library.
+ *
+ * Updated by Opus to use centralized patterns.
  */
 
 import { useCallback, useMemo } from 'react';
-import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
+
+import { HapticPatterns } from '../utils/haptics/patterns';
 import { useReduceMotion } from './useReduceMotion';
 
 interface UseCelebrationHapticsOptions {
@@ -20,99 +20,87 @@ interface UseCelebrationHapticsOptions {
 
 const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
 
-// Helper to wait between haptic pulses
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+/** Safely run a haptic pattern, swallowing errors. */
+const safeRun = async (fn: () => Promise<void>) => {
+  try {
+    await fn();
+  } catch {
+    // Haptics are non-critical
+  }
+};
 
-export function useCelebrationHaptics({ 
-  isEnabled = true, 
-  preference 
+/**
+ * Enhanced haptic feedback hook for celebrations and milestones.
+ * Provides various triggers for different celebration scenarios with
+ * automatic Respect for Reduced Motion accessibility settings.
+ *
+ * @param options - Configuration options
+ * @param options.isEnabled - Whether haptics are enabled (default: true)
+ * @param options.preference - Override for reduced motion preference
+ * @returns Object containing various haptic trigger functions
+ *
+ * @example
+ * ```ts
+ * const { triggerCompletion, triggerStreakMilestone } = useCelebrationHaptics();
+ *
+ * // Trigger on habit completion
+ * await triggerCompletion();
+ *
+ * // Trigger on milestone (e.g., 30 day streak)
+ * await triggerStreakMilestone(30);
+ * ```
+ */
+export function useCelebrationHaptics({
+  isEnabled = true,
+  preference,
 }: UseCelebrationHapticsOptions = {}) {
   const reduceMotion = useReduceMotion({ preference });
-  const shouldVibrate = isEnabled && !reduceMotion && isHapticsSupported;
+  const active = isEnabled && !reduceMotion && isHapticsSupported;
 
-  // Single completion - light tap
   const triggerCompletion = useCallback(async () => {
-    if (!shouldVibrate) return;
-    try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } catch { /* Haptics may fail silently */ }
-  }, [shouldVibrate]);
+    if (active) await safeRun(HapticPatterns.tap);
+  }, [active]);
 
-  // First habit of the day - medium tap with success
   const triggerFirstCompletion = useCallback(async () => {
-    if (!shouldVibrate) return;
-    try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      await wait(100);
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    } catch { /* Haptics may fail silently */ }
-  }, [shouldVibrate]);
+    if (active) await safeRun(HapticPatterns.streak);
+  }, [active]);
 
-  // All habits complete - celebration pattern
   const triggerAllComplete = useCallback(async () => {
-    if (!shouldVibrate) return;
-    try {
-      // Triple pulse celebration
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      await wait(80);
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      await wait(80);
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-      await wait(150);
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    } catch { /* Haptics may fail silently */ }
-  }, [shouldVibrate]);
+    if (active) await safeRun(HapticPatterns.celebration);
+  }, [active]);
 
-  // Streak milestone (7, 14, 21, 30+ days) - special pattern
-  const triggerStreakMilestone = useCallback(async (days: number) => {
-    if (!shouldVibrate) return;
-    try {
-      if (days >= 30) {
-        // Major milestone - intense celebration
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        await wait(100);
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        await wait(100);
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        await wait(150);
-        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      } else if (days >= 21) {
-        // 21 days - habit formed!
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        await wait(80);
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        await wait(150);
-        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      } else if (days >= 7) {
-        // First week
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        await wait(100);
-        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      }
-    } catch { /* Haptics may fail silently */ }
-  }, [shouldVibrate]);
+  const triggerStreakMilestone = useCallback(
+    async (days: number) => {
+      if (!active) return;
+      await safeRun(
+        days >= 30
+          ? HapticPatterns.celebrationMajor
+          : HapticPatterns.celebration
+      );
+    },
+    [active]
+  );
 
-  // Undo action - warning tap
   const triggerUndo = useCallback(async () => {
-    if (!shouldVibrate) return;
-    try {
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    } catch { /* Haptics may fail silently */ }
-  }, [shouldVibrate]);
+    if (active) await safeRun(HapticPatterns.warning);
+  }, [active]);
 
-  return useMemo(() => ({
-    triggerAllComplete,
-    triggerCompletion,
-    triggerFirstCompletion,
-    triggerStreakMilestone,
-    triggerUndo,
-  }), [
-    triggerCompletion,
-    triggerFirstCompletion,
-    triggerAllComplete,
-    triggerStreakMilestone,
-    triggerUndo,
-  ]);
+  return useMemo(
+    () => ({
+      triggerAllComplete,
+      triggerCompletion,
+      triggerFirstCompletion,
+      triggerStreakMilestone,
+      triggerUndo,
+    }),
+    [
+      triggerCompletion,
+      triggerFirstCompletion,
+      triggerAllComplete,
+      triggerStreakMilestone,
+      triggerUndo,
+    ]
+  );
 }
 
 export default useCelebrationHaptics;

@@ -17,6 +17,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function MiniCardContainer({
   name,
+  subtitle,
   description,
   icon,
   iconColor,
@@ -73,6 +74,11 @@ export function MiniCardContainer({
         <Text numberOfLines={1} style={styles.name}>
           {name}
         </Text>
+        {subtitle ? (
+          <Text numberOfLines={1} style={styles.subtitle}>
+            {subtitle}
+          </Text>
+        ) : null}
         {description && (
           <Text numberOfLines={2} style={styles.description}>
             {description}

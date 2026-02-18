@@ -20,6 +20,7 @@ import { ScienceCallout } from './ScienceCallout';
 import { TextInputSection } from './TextInputSection';
 import { ExamplesSection } from './ExamplesSection';
 import { SaveButton } from './SaveButton';
+import { useThemeColors } from '../../../../../../theme/ThemeContext';
 import type { AffirmationEditorModalProps } from './AffirmationEditorModal.types';
 
 export function AffirmationEditorModal({
@@ -32,6 +33,7 @@ export function AffirmationEditorModal({
   isSaving,
   isPremium,
 }: AffirmationEditorModalProps) {
+  const { colors } = useThemeColors();
   const [text, setText] = useState(initialText ?? '');
   const [type, setType] = useState<AffirmationType | undefined>(initialType);
 
@@ -59,6 +61,7 @@ export function AffirmationEditorModal({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='slide'
       presentationStyle='pageSheet'
       visible={visible}
@@ -66,7 +69,8 @@ export function AffirmationEditorModal({
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1 bg-white'
+        className='flex-1'
+        style={{ backgroundColor: colors.background }}
       >
         <EditorHeader isEditing={isEditing} onClose={onClose} />
 

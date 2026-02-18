@@ -100,6 +100,13 @@ export type ToggleSyncExecutor = (
 ) => Promise<void>;
 
 /**
+ * Generic executor function for syncing any operation type
+ */
+export type SyncExecutor = (
+  operation: import('../queue').OfflineOperation
+) => Promise<void>;
+
+/**
  * Factory for creating sync executors with Convex mutations
  */
 export interface SyncExecutorFactory {

@@ -1,9 +1,16 @@
 /**
- * HabitsListHeader - Redesigned per home-screen-redesign-spec.md
+ * HabitsListHeader — animated header rendered above the habit rows.
+ *
+ * Contains (top-to-bottom):
+ * 1. **OfflineIndicator** — shown when the device loses connectivity.
+ * 2. **HabitsHeader** — minimal date-only title.
+ * 3. **CalendarTimeline** — week-view dots with day completion heat.
+ * 4. **TrialCountdownBanner** — shown during an active free-trial period.
+ *
+ * Action buttons have moved to the BottomActionBar.
  */
 
-/* eslint-disable max-lines-per-function */
-
+import React, { memo } from 'react';
 import { Animated, View } from 'react-native';
 import { HabitsHeader } from '../HabitsHeader';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
@@ -15,7 +22,7 @@ import {
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
-export function HabitsListHeader(
+function HabitsListHeaderComponent(
   props: HabitsListHeaderProps
 ): React.ReactElement {
   const computed = useHabitsListHeaderComputed({
@@ -25,7 +32,6 @@ export function HabitsListHeader(
     weekDateStrings: props.weekDateStrings,
   });
 
-  // Trial countdown banner
   const { shouldShowBanner, daysRemaining } = useTrialCountdown();
 
   return (
@@ -43,13 +49,7 @@ export function HabitsListHeader(
         }}
       >
         <HabitsHeader
-          completedToday={computed.completedToday}
           forceShow={props.justCreatedHabitId !== null}
-          openCreateHabitScreen={props.onAddHabitPress}
-          openSettings={props.openSettings}
-          openSortSheet={props.onOpenSortSheet}
-          openTemplatesScreen={props.openTemplatesScreen}
-          showCompletionSummary={props.showWeekCompletionBar}
           totalHabits={computed.totalHabits}
         />
       </Animated.View>
@@ -74,7 +74,6 @@ export function HabitsListHeader(
         </Animated.View>
       )}
 
-      {/* Trial Countdown Banner */}
       {shouldShowBanner && daysRemaining !== null && (
         <TrialCountdownBanner
           daysRemaining={daysRemaining}
@@ -84,3 +83,5 @@ export function HabitsListHeader(
     </View>
   );
 }
+
+export const HabitsListHeader = memo(HabitsListHeaderComponent);

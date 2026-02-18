@@ -6,21 +6,29 @@
  */
 
 import { v } from 'convex/values';
-import { mutation, query } from './_generated/server';
+import { internalMutation, query } from './_generated/server';
 
+/**
+ * List articles - INTENTIONALLY PUBLIC
+ * Articles are educational content meant to be accessible to all users,
+ * including those not logged in. No authentication required.
+ */
 export const list = query({
   args: { category: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    const articlesQuery = ctx.db.query('articles');
-
+    // SEC-PUBLIC: This query is intentionally public for educational content
     if (args.category !== undefined) {
-      return await articlesQuery
+      return await ctx.db
+        .query('articles')
         .withIndex('by_category', (q) => q.eq('category', args.category!))
         .order('desc')
         .collect();
     }
 
-    return await articlesQuery.order('desc').collect();
+    // PERF: Without category filter, we need to scan all articles
+    // Since articles are small in number, this is acceptable
+    // Could add a by_createdAt index if article count grows
+    return await ctx.db.query('articles').order('desc').collect();
   },
   returns: v.array(
     v.object({
@@ -34,12 +42,13 @@ export const list = query({
   ),
 });
 
-// Add some initial articles
-export const seed = mutation({
+// Add some initial articles (internal only — run via dashboard)
+export const seed = internalMutation({
   args: {},
   handler: async (ctx) => {
-    const articles = await ctx.db.query('articles').collect();
-    if (articles.length > 0) return null;
+    // PERF: Use .first() instead of .collect() to check if articles exist
+    const existingArticle = await ctx.db.query('articles').first();
+    if (existingArticle) return null;
 
     const initialArticles = [
       {

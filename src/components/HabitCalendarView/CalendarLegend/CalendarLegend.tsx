@@ -1,35 +1,82 @@
 import { Text, View } from 'react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
-const LEGEND_ITEMS = [
-  {
-    indicatorClassName: 'bg-emerald-500',
-    label: 'Completed',
-    textClassName: 'text-emerald-700',
-  },
-  {
-    indicatorClassName: 'bg-rose-400',
-    label: 'Missed',
-    textClassName: 'text-rose-500',
-  },
-  {
-    indicatorClassName: 'bg-emerald-500',
-    label: 'Today',
-    textClassName: 'text-emerald-600',
-  },
-  {
-    indicatorClassName: 'bg-stone-300',
-    label: 'Upcoming',
-    textClassName: 'text-stone-400',
-  },
-];
+interface LegendItem {
+  label: string;
+  indicatorColor: string;
+  textColor: string;
+}
 
+/**
+ * Gets legend items with theme-aware colors for dark mode support.
+ * Uses semantic colors from the theme system.
+ */
+function getLegendItems(colors: any): LegendItem[] {
+  return [
+    {
+      label: 'Completed',
+      indicatorColor: colors.success?.[500] || '#10B981',
+      textColor: colors.success?.[700] || '#047857',
+    },
+    {
+      label: 'Missed',
+      indicatorColor: colors.error?.[400] || '#F87171',
+      textColor: colors.error?.[500] || '#EF4444',
+    },
+    {
+      label: 'Today',
+      indicatorColor: colors.success?.[500] || '#10B981',
+      textColor: colors.success?.[600] || '#059669',
+    },
+    {
+      label: 'Upcoming',
+      indicatorColor: colors.gray?.[300] || '#D1D5DB',
+      textColor: colors.gray?.[400] || '#9CA3AF',
+    },
+  ];
+}
+
+/**
+ * CalendarLegend - Visual legend explaining calendar color meanings
+ * 
+ * Features:
+ * - Dark mode support via ThemeContext
+ * - Semantic color system for accessibility
+ * - Screen reader support with ARIA roles
+ * - Explains all four status states
+ */
 export function CalendarLegend() {
+  const { colors } = useThemeColors();
+  const legendItems = getLegendItems(colors);
+
   return (
-    <View className='flex-row flex-wrap items-center justify-center gap-4 pb-1 pt-2'>
-      {LEGEND_ITEMS.map(({ indicatorClassName, label, textClassName }) => (
-        <View key={label} className='flex-row items-center gap-1.5'>
-          <View className={`h-2.5 w-2.5 rounded-full ${indicatorClassName}`} />
-          <Text className={`text-[10px] font-medium ${textClassName}`}>
+    <View
+      accessibilityLabel='Calendar legend'
+      accessibilityRole='list'
+      className='flex-row flex-wrap items-center justify-center gap-4 pb-1 pt-2'
+    >
+      {legendItems.map(({ label, indicatorColor, textColor }) => (
+        <View
+          key={label}
+          accessibilityRole='listitem'
+          className='flex-row items-center gap-1.5'
+        >
+          <View
+            accessibilityLabel={label}
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              backgroundColor: indicatorColor,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 10,
+              fontWeight: '500',
+              color: textColor,
+            }}
+          >
             {label}
           </Text>
         </View>

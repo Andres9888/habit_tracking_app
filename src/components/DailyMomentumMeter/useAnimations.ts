@@ -1,111 +1,127 @@
-import { useRef, useEffect } from 'react';
-import { Animated, Easing } from 'react-native';
+import { useEffect } from 'react';
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withRepeat,
+  withSequence,
+  withTiming,
+  Easing,
+  interpolate,
+} from 'react-native-reanimated';
+import { SPRING_CONFIGS } from '@/utils/animations/helpers';
 
 interface AnimationValues {
-  progressAnim: Animated.Value;
-  celebrationScale: Animated.Value;
-  glowOpacity: Animated.Value;
-  flameScale: Animated.Value;
-  progressWidth: Animated.AnimatedInterpolation<string | number>;
+  progressAnim: number;
+  celebrationScale: number;
+  glowOpacity: number;
+  flameScale: number;
+  progressAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
+  celebrationAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
+  glowAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
+  flameAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
 }
 
 export function useAnimations(
   percentage: number,
   reduceMotion: boolean
 ): AnimationValues {
-  const progressAnim = useRef(new Animated.Value(0)).current;
-  const celebrationScale = useRef(new Animated.Value(1)).current;
-  const glowOpacity = useRef(new Animated.Value(0)).current;
-  const flameScale = useRef(new Animated.Value(1)).current;
+  const progressAnim = useSharedValue(0);
+  const celebrationScale = useSharedValue(1);
+  const glowOpacity = useSharedValue(0);
+  const flameScale = useSharedValue(1);
 
   // Animate progress on change
   useEffect(() => {
     if (reduceMotion) {
-      progressAnim.setValue(percentage);
+      progressAnim.value = percentage;
       return;
     }
 
-    Animated.spring(progressAnim, {
-      friction: 8,
-      tension: 40,
-      toValue: percentage,
-      useNativeDriver: false,
-    }).start();
+    progressAnim.value = withSpring(percentage, SPRING_CONFIGS.smooth);
   }, [percentage, reduceMotion, progressAnim]);
 
   // Celebration animation at 100%
   useEffect(() => {
     if (percentage === 100 && !reduceMotion) {
       // Pulse celebration
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(celebrationScale, {
+      celebrationScale.value = withRepeat(
+        withSequence(
+          withTiming(1.03, {
             duration: 1200,
             easing: Easing.inOut(Easing.ease),
-            toValue: 1.03,
-            useNativeDriver: true,
           }),
-          Animated.timing(celebrationScale, {
+          withTiming(1, {
             duration: 1200,
             easing: Easing.inOut(Easing.ease),
-            toValue: 1,
-            useNativeDriver: true,
-          }),
-        ])
-      ).start();
+          })
+        ),
+        -1,
+        false
+      );
 
       // Glow animation
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(glowOpacity, {
+      glowOpacity.value = withRepeat(
+        withSequence(
+          withTiming(1, {
             duration: 1500,
             easing: Easing.inOut(Easing.ease),
-            toValue: 1,
-            useNativeDriver: true,
           }),
-          Animated.timing(glowOpacity, {
+          withTiming(0.5, {
             duration: 1500,
             easing: Easing.inOut(Easing.ease),
-            toValue: 0.5,
-            useNativeDriver: true,
-          }),
-        ])
-      ).start();
+          })
+        ),
+        -1,
+        false
+      );
 
       // Flame bounce
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(flameScale, {
+      flameScale.value = withRepeat(
+        withSequence(
+          withTiming(1.15, {
             duration: 600,
             easing: Easing.inOut(Easing.ease),
-            toValue: 1.15,
-            useNativeDriver: true,
           }),
-          Animated.timing(flameScale, {
+          withTiming(1, {
             duration: 600,
             easing: Easing.inOut(Easing.ease),
-            toValue: 1,
-            useNativeDriver: true,
-          }),
-        ])
-      ).start();
+          })
+        ),
+        -1,
+        false
+      );
     } else {
-      celebrationScale.setValue(1);
-      glowOpacity.setValue(0);
-      flameScale.setValue(1);
+      celebrationScale.value = 1;
+      glowOpacity.value = 0;
+      flameScale.value = 1;
     }
   }, [percentage, reduceMotion, celebrationScale, glowOpacity, flameScale]);
 
-  const progressWidth = progressAnim.interpolate({
-    inputRange: [0, 100],
-    outputRange: ['0%', '100%'],
-  });
+  const progressAnimatedStyle = useAnimatedStyle(() => ({
+    width: `${interpolate(progressAnim.value, [0, 100], [0, 100])}%`,
+  }));
+
+  const celebrationAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: celebrationScale.value }],
+  }));
+
+  const glowAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: glowOpacity.value,
+  }));
+
+  const flameAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: flameScale.value }],
+  }));
 
   return {
-    celebrationScale,
-    flameScale,
-    glowOpacity,
-    progressAnim,
-    progressWidth,
+    celebrationAnimatedStyle,
+    celebrationScale: celebrationScale.value,
+    flameAnimatedStyle,
+    flameScale: flameScale.value,
+    glowAnimatedStyle,
+    glowOpacity: glowOpacity.value,
+    progressAnim: progressAnim.value,
+    progressAnimatedStyle,
   };
 }
