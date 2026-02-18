@@ -3,9 +3,12 @@ import { Text, View } from 'react-native';
 import { AlertCircle, X } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { AuthErrorProps } from './types';
 
 export function AuthError({ message, onDismiss }: AuthErrorProps) {
+  const { colors: themeColors } = useThemeColors();
+  
   return (
     <Animated.View
       accessibilityLiveRegion='assertive'
@@ -14,7 +17,7 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
       entering={FadeInDown.duration(280).springify().damping(18)}
       exiting={FadeOut.duration(150)}
       style={{
-        shadowColor: '#1c1917',
+        shadowColor: themeColors.text.primary,
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 16,

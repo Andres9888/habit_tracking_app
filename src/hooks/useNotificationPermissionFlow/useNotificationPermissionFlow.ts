@@ -41,8 +41,9 @@ export function useNotificationPermissionFlow(): UseNotificationPermissionFlowRe
     useState<NotificationPermissionStatus>('not_asked');
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
 
-  // Track processed completions to avoid double-triggering
-  const processedRef = useRef(false);
+  // Track habit completion processing to prevent race conditions
+  // Use a set of in-flight habit IDs rather than a single boolean
+  const processingRef = useRef(new Set<string>());
 
   // Load persisted state on mount; also sync with actual OS status so we
   // don't show the flow if the user already granted/denied via OS settings.
@@ -79,35 +80,36 @@ export function useNotificationPermissionFlow(): UseNotificationPermissionFlowRe
    * It checks whether to show the pre-permission screen.
    */
   const onHabitCompleted = useCallback(
-    async (_habitId: string): Promise<void> => {
+    async (habitId: string): Promise<void> => {
       // Skip on web — push notifications not supported
       if (Platform.OS === 'web') return;
 
-      // Load fresh status each time to avoid stale closure
-      const currentStatus = await loadPermissionStatus();
+      // Guard against double invocation for the same habit
+      if (processingRef.current.has(habitId)) return;
+      processingRef.current.add(habitId);
 
-      // Only show the flow if we've never addressed permissions before
-      if (currentStatus !== 'not_asked') return;
+      try {
+        // Load fresh status each time to avoid stale closure
+        const currentStatus = await loadPermissionStatus();
 
-      // Guard against double invocation in the same render cycle
-      if (processedRef.current) return;
-      processedRef.current = true;
+        // Only show the flow if we've never addressed permissions before
+        if (currentStatus !== 'not_asked') return;
 
-      const alreadyCompletedBefore = await hasCompletedFirstHabit();
+        const alreadyCompletedBefore = await hasCompletedFirstHabit();
 
-      // Record that the user has now completed a habit
-      await markFirstHabitCompleted();
+        // Record that the user has now completed a habit
+        await markFirstHabitCompleted();
 
-      if (!alreadyCompletedBefore) {
-        // First ever completion — show the pre-permission screen
-        await savePermissionStatus('pre_screen_shown');
-        setPermissionStatus('pre_screen_shown');
-        setPrePermissionVisible(true);
+        if (!alreadyCompletedBefore) {
+          // First ever completion — show the pre-permission screen
+          await savePermissionStatus('pre_screen_shown');
+          setPermissionStatus('pre_screen_shown');
+          setPrePermissionVisible(true);
+        }
+      } finally {
+        // Always clean up the processing guard
+        processingRef.current.delete(habitId);
       }
-
-      // Reset guard so subsequent completions can re-check (but status
-      // will already be past 'not_asked' so they'll no-op quickly)
-      processedRef.current = false;
     },
     []
   );
@@ -147,10 +149,15 @@ export function useNotificationPermissionFlow(): UseNotificationPermissionFlowRe
   /**
    * User tapped "Maybe Later" — dismiss without requesting.
    */
-  const onSkipNotifications = useCallback((): void => {
-    savePermissionStatus('skipped').catch(() => undefined);
-    setPermissionStatus('skipped');
-    setPrePermissionVisible(false);
+  const onSkipNotifications = useCallback(async (): Promise<void> => {
+    try {
+      await savePermissionStatus('skipped');
+      setPermissionStatus('skipped');
+    } catch {
+      // Non-critical; state will still be updated
+    } finally {
+      setPrePermissionVisible(false);
+    }
   }, []);
 
   return {

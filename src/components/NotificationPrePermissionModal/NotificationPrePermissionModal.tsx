@@ -46,8 +46,8 @@ const SPRING_CONFIG = { damping: 18, mass: 1, stiffness: 200 };
 interface NotificationPrePermissionModalProps {
   visible: boolean;
   isRequestingPermission: boolean;
-  onEnable: () => void;
-  onSkip: () => void;
+  onEnable: () => Promise<void>;
+  onSkip: () => Promise<void>;
 }
 
 export function NotificationPrePermissionModal({
@@ -59,6 +59,16 @@ export function NotificationPrePermissionModal({
   const { colors } = useThemeColors();
   const bellScale = useSharedValue(0);
   const bellRotate = useSharedValue(-20);
+  const [isSkipping, setIsSkipping] = React.useState(false);
+
+  const handleSkip = React.useCallback(async () => {
+    setIsSkipping(true);
+    try {
+      await onSkip();
+    } finally {
+      setIsSkipping(false);
+    }
+  }, [onSkip]);
 
   // Announce to screen readers when visible
   useEffect(() => {
@@ -165,11 +175,12 @@ export function NotificationPrePermissionModal({
 
           <TouchableOpacity
             style={styles.skipButton}
-            onPress={onSkip}
-            disabled={isRequestingPermission}
+            onPress={handleSkip}
+            disabled={isRequestingPermission || isSkipping}
             accessible
             accessibilityRole="button"
             accessibilityLabel="Maybe Later"
+            accessibilityState={{ disabled: isRequestingPermission || isSkipping }}
           >
             <Text style={styles.skipButtonText}>Maybe Later</Text>
           </TouchableOpacity>

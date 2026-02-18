@@ -17,7 +17,7 @@ export interface UseNotificationPermissionFlowResult {
   /** Call when the user taps "Enable Notifications" on the pre-permission screen */
   onEnableNotifications: () => Promise<void>;
   /** Call when the user taps "Maybe Later" on the pre-permission screen */
-  onSkipNotifications: () => void;
+  onSkipNotifications: () => Promise<void>;
   /** Call after a habit is completed — triggers flow if conditions are met */
   onHabitCompleted: (habitId: string) => Promise<void>;
   /** Whether we're currently requesting permission */

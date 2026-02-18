@@ -66,7 +66,7 @@ export const ChartSections = memo(function ChartSections({
         <Text
           accessibilityLabel='30-Day Trend Chart'
           accessibilityRole='header'
-          style={styles.sectionTitle}
+          style={[styles.sectionTitle, { color: colors.text.primary }]}
         >
           30-Day Trend
         </Text>
@@ -86,7 +86,7 @@ export const ChartSections = memo(function ChartSections({
         <Text
           accessibilityLabel='Compliance Heatmap Chart'
           accessibilityRole='header'
-          style={styles.sectionTitle}
+          style={[styles.sectionTitle, { color: colors.text.primary }]}
         >
           Compliance Heatmap
         </Text>
@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...typography.heading3,
-    color: colors.text.primary,
     marginBottom: spacing.md,
   },
 });
