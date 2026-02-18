@@ -3,7 +3,7 @@
  * Navigation for dashboard sections.
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { DashboardTab } from '../types';
 
@@ -20,7 +20,10 @@ const TABS: { icon: string; key: DashboardTab; label: string }[] = [
   { icon: '⚛️', key: 'renders', label: 'Renders' },
 ];
 
-export function TabBar({ activeTab, onTabChange }: TabBarProps) {
+export const TabBar = memo(function TabBar({
+  activeTab,
+  onTabChange,
+}: TabBarProps) {
   return (
     <View style={styles.container}>
       {TABS.map((tab) => (
@@ -42,7 +45,7 @@ export function TabBar({ activeTab, onTabChange }: TabBarProps) {
       ))}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   activeLabel: {

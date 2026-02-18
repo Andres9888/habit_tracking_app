@@ -20,52 +20,71 @@ interface HabitFilterProps {
   onFilterChange: (filter: Id<'habits'> | 'all') => void;
 }
 
-export const HabitFilter: React.FC<HabitFilterProps> = ({
-  habits,
-  selectedFilter,
-  onFilterChange,
-}) => {
-  const { colors } = useThemeColors();
-  return (
-    <View className='gap-2'>
-      <Text className='text-xs font-semibold uppercase tracking-[2px]' style={{ color: colors.text.tertiary }}>
-        FILTER BY HABIT
-      </Text>
-      <View className='flex-row flex-wrap gap-2'>
-        <AnimatedPressable
-          accessibilityLabel='Show all notes'
-          accessibilityRole='button'
-          accessibilityState={{ selected: selectedFilter === 'all' }}
-          className='rounded-xl px-3 py-2'
-          style={{ backgroundColor: selectedFilter === 'all' ? colors.gray[900] : colors.gray[100] }}
-          onPress={() => onFilterChange('all')}
+export const HabitFilter: React.FC<HabitFilterProps> = React.memo(
+  ({ habits, selectedFilter, onFilterChange }) => {
+    const { colors } = useThemeColors();
+    return (
+      <View className='gap-2'>
+        <Text
+          className='text-xs font-semibold uppercase tracking-[2px]'
+          style={{ color: colors.text.tertiary }}
         >
-          <Text
-            className='text-sm font-medium'
-            style={{ color: selectedFilter === 'all' ? colors.text.inverse : colors.text.primary }}
-          >
-            All
-          </Text>
-        </AnimatedPressable>
-        {habits.map((habit) => (
+          FILTER BY HABIT
+        </Text>
+        <View className='flex-row flex-wrap gap-2'>
           <AnimatedPressable
-            key={habit._id}
-            accessibilityLabel={`Filter by ${habit.name}`}
+            accessibilityLabel='Show all notes'
             accessibilityRole='button'
-            accessibilityState={{ selected: selectedFilter === habit._id }}
+            accessibilityState={{ selected: selectedFilter === 'all' }}
             className='rounded-xl px-3 py-2'
-            style={{ backgroundColor: selectedFilter === habit._id ? colors.gray[900] : colors.gray[100] }}
-            onPress={() => onFilterChange(habit._id)}
+            style={{
+              backgroundColor:
+                selectedFilter === 'all' ? colors.gray[900] : colors.gray[100],
+            }}
+            onPress={() => onFilterChange('all')}
           >
             <Text
               className='text-sm font-medium'
-              style={{ color: selectedFilter === habit._id ? colors.text.inverse : colors.text.primary }}
+              style={{
+                color:
+                  selectedFilter === 'all'
+                    ? colors.text.inverse
+                    : colors.text.primary,
+              }}
             >
-              {habit.name}
+              All
             </Text>
           </AnimatedPressable>
-        ))}
+          {habits.map((habit) => (
+            <AnimatedPressable
+              key={habit._id}
+              accessibilityLabel={`Filter by ${habit.name}`}
+              accessibilityRole='button'
+              accessibilityState={{ selected: selectedFilter === habit._id }}
+              className='rounded-xl px-3 py-2'
+              style={{
+                backgroundColor:
+                  selectedFilter === habit._id
+                    ? colors.gray[900]
+                    : colors.gray[100],
+              }}
+              onPress={() => onFilterChange(habit._id)}
+            >
+              <Text
+                className='text-sm font-medium'
+                style={{
+                  color:
+                    selectedFilter === habit._id
+                      ? colors.text.inverse
+                      : colors.text.primary,
+                }}
+              >
+                {habit.name}
+              </Text>
+            </AnimatedPressable>
+          ))}
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  }
+);

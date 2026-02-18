@@ -1,4 +1,5 @@
 /** StatsNotesHeader - Header + tabs for StatsNotesModal (theme-aware) */
+import { memo } from 'react';
 import { Pressable, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
@@ -13,7 +14,11 @@ interface Props {
   onTabChange: (tab: 'stats' | 'notes') => void;
 }
 
-export function StatsNotesHeader({ activeTab, onClose, onTabChange }: Props) {
+export const StatsNotesHeader = memo(function StatsNotesHeader({
+  activeTab,
+  onClose,
+  onTabChange,
+}: Props) {
   const { colors } = useThemeColors();
 
   // Theme-aware active tab color
@@ -51,7 +56,11 @@ export function StatsNotesHeader({ activeTab, onClose, onTabChange }: Props) {
             accessibilityRole='tab'
             accessibilityState={{ selected: activeTab === tab }}
             className='flex-1 items-center py-3'
-            style={activeTab === tab ? { borderBottomWidth: 2, borderBottomColor: activeBorderColor } : undefined}
+            style={
+              activeTab === tab
+                ? { borderBottomWidth: 2, borderBottomColor: activeBorderColor }
+                : undefined
+            }
             onPress={() => onTabChange(tab)}
           >
             <Text
@@ -68,4 +77,4 @@ export function StatsNotesHeader({ activeTab, onClose, onTabChange }: Props) {
       </Animated.View>
     </>
   );
-}
+});
