@@ -45,7 +45,7 @@ describe('validateHabitName', () => {
   });
 
   it('handles null/undefined gracefully', () => {
-    const result = validateHabitName(null as any);
+    const result = validateHabitName(null as unknown);
     expect(result.isValid).toBe(false);
     expect(result.error).toContain('required');
   });
@@ -106,7 +106,7 @@ describe('validateHabitsArray', () => {
   });
 
   it('handles non-arrays gracefully', () => {
-    const result = validateHabitsArray(null as any);
+    const result = validateHabitsArray(null as unknown);
     expect(result.isValid).toBe(false);
     expect(result.limited).toEqual([]);
   });

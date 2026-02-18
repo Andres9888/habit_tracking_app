@@ -105,8 +105,8 @@ const EXPECTED_SPRING_CONFIGS = {
 // Track animation calls for performance analysis
 const animationCallTracker = {
   useSharedValueCalls: 0,
-  withSpringCalls: [] as any[],
-  withTimingCalls: [] as any[],
+  withSpringCalls: [] as unknown[],
+  withTimingCalls: [] as unknown[],
   withSequenceCalls: 0,
   withRepeatCalls: 0,
   withDelayCalls: [] as number[],
@@ -145,7 +145,7 @@ jest.mock('lucide-react-native', () => {
     {
       get: (_target, prop) => {
         if (prop === '__esModule') return true;
-        return function MockIcon(props: any) {
+        return function MockIcon(props: unknown) {
           return React.createElement(View, {
             testID: `lucide-icon-${String(prop)}`,
             ...props,
@@ -158,7 +158,7 @@ jest.mock('lucide-react-native', () => {
 
 // Mock clsx
 jest.mock('clsx', () => ({
-  clsx: (...args: any[]) =>
+  clsx: (...args: unknown[]) =>
     args
       .flat()
       .filter((a) => typeof a === 'string')
@@ -174,9 +174,9 @@ jest.mock('react-native-reanimated', () => {
   return {
     default: {
       View,
-      createAnimatedComponent: (Component: any) => Component,
+      createAnimatedComponent: (Component: unknown) => Component,
     },
-    useSharedValue: (initial: any) => {
+    useSharedValue: (initial: unknown) => {
       tracker.useSharedValueCalls++;
       return { value: initial };
     },
@@ -187,23 +187,23 @@ jest.mock('react-native-reanimated', () => {
         return {};
       }
     },
-    withSpring: (value: any, config?: any) => {
+    withSpring: (value: unknown, config?: unknown) => {
       tracker.withSpringCalls.push(config);
       return value;
     },
-    withTiming: (value: any, config?: any, callback?: any) => {
+    withTiming: (value: unknown, config?: unknown, callback?: unknown) => {
       tracker.withTimingCalls.push(config);
       return value;
     },
-    withDelay: (delay: number, animation: any) => {
+    withDelay: (delay: number, animation: unknown) => {
       tracker.withDelayCalls.push(delay);
       return animation;
     },
-    withSequence: (...values: any[]) => {
+    withSequence: (...values: unknown[]) => {
       tracker.withSequenceCalls++;
       return values[values.length - 1];
     },
-    withRepeat: (animation: any, count?: number, reverse?: boolean) => {
+    withRepeat: (animation: unknown, count?: number, reverse?: boolean) => {
       tracker.withRepeatCalls++;
       return animation;
     },
@@ -214,14 +214,14 @@ jest.mock('react-native-reanimated', () => {
       const ratio = (value - input[idx - 1]) / (input[idx] - input[idx - 1]);
       return output[idx - 1] + ratio * (output[idx] - output[idx - 1]);
     },
-    runOnJS: (fn: any) => {
+    runOnJS: (fn: unknown) => {
       tracker.runOnJSCalls++;
-      return (...args: any[]) => fn(...args);
+      return (...args: unknown[]) => fn(...args);
     },
     Extrapolation: { CLAMP: 'clamp' },
     Easing: {
-      out: (fn: any) => fn,
-      in: (fn: any) => fn,
+      out: (fn: unknown) => fn,
+      in: (fn: unknown) => fn,
       cubic: (x: number) => x,
     },
     View,
@@ -235,7 +235,7 @@ jest.mock('react-native-safe-area-context', () => ({
 
 // Mock Modal component
 jest.mock('../../../src/components/Modal', () => ({
-  Modal: ({ children, visible }: any) => (visible ? <>{children}</> : null),
+  Modal: ({ children, visible }: unknown) => (visible ? <>{children}</> : null),
 }));
 
 // Mock motion constants

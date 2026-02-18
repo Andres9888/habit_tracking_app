@@ -31,7 +31,7 @@ function testAnimatedSection(
   isDeepComponent = false
 ) {
   describe(`${name} AnimatedSection`, () => {
-    let AnimatedSection: any;
+    let AnimatedSection: unknown;
 
     beforeEach(() => {
       jest.resetModules();

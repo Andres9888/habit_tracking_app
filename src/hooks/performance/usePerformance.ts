@@ -29,7 +29,7 @@ export function usePerformance(): PerformanceContextValue {
   const context = useContext(PerformanceContext);
 
   if (!context) {
-    throw new Error('usePerformance must be used within a PerformanceProvider');
+    throw new Error('UsePerformance must be used within a PerformanceProvider');
   }
 
   return context;

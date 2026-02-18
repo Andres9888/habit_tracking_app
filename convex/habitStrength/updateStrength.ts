@@ -27,7 +27,7 @@ export const updateHabitStrength = mutation({
       throw new Error('Not authorized to update this habit');
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(args.date)) {
-      throw new Error('Invalid date format; expected YYYY-MM-DD');
+      throw new Error('Invalid date format. Expected YYYY-MM-DD');
     }
     const previousStrength = habit.strength ?? 0;
     const userId = identity.subject;

@@ -40,12 +40,12 @@ type TemplateInsert = {
 };
 
 const _insertTemplateIfMissing = async (
-  ctx: { db: { insert: any; query: any } },
+  ctx: { db: { insert: unknown; query: unknown } },
   template: TemplateInsert
 ) => {
   const existing = await ctx.db
     .query('templates')
-    .filter((q: any) => q.eq(q.field('name'), template.name))
+    .filter((q: unknown) => q.eq(q.field('name'), template.name))
     .first();
 
   if (existing) return;
@@ -164,7 +164,7 @@ export const seedTemplates = internalMutation({
     const insertWithTracking = async (template: TemplateInsert) => {
       const existing = await ctx.db
         .query('templates')
-        .filter((q: any) => q.eq(q.field('name'), template.name))
+        .filter((q: unknown) => q.eq(q.field('name'), template.name))
         .first();
 
       if (existing) {
@@ -1789,7 +1789,7 @@ export const seedAdditionalTemplates = internalMutation({
     const insertWithTracking = async (template: TemplateInsert) => {
       const existing = await ctx.db
         .query('templates')
-        .filter((q: any) => q.eq(q.field('name'), template.name))
+        .filter((q: unknown) => q.eq(q.field('name'), template.name))
         .first();
 
       if (existing) {
@@ -4172,7 +4172,7 @@ export const seedUniqueTemplates = internalMutation({
     const insertWithTracking = async (template: TemplateInsert) => {
       const existing = await ctx.db
         .query('templates')
-        .filter((q: any) => q.eq(q.field('name'), template.name))
+        .filter((q: unknown) => q.eq(q.field('name'), template.name))
         .first();
 
       if (existing) {

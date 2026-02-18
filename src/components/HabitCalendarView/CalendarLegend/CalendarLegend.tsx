@@ -11,7 +11,7 @@ interface LegendItem {
  * Gets legend items with theme-aware colors for dark mode support.
  * Uses semantic colors from the theme system.
  */
-function getLegendItems(colors: any): LegendItem[] {
+function getLegendItems(colors: unknown): LegendItem[] {
   return [
     {
       label: 'Completed',

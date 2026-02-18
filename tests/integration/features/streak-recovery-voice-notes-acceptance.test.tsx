@@ -75,7 +75,7 @@ jest.mock('lucide-react-native', () => {
     {
       get: (_target, prop) => {
         if (prop === '__esModule') return true;
-        return function MockIcon(props: any) {
+        return function MockIcon(props: unknown) {
           return React.createElement(View, {
             testID: `lucide-icon-${String(prop)}`,
             ...props,
@@ -93,16 +93,16 @@ jest.mock('react-native-reanimated', () => {
 
   return {
     default: {
-      createAnimatedComponent: (component: any) => component,
+      createAnimatedComponent: (component: unknown) => component,
     },
     useAnimatedStyle: () => ({}),
-    useSharedValue: (value: any) => ({ value }),
-    withSpring: (value: any) => value,
-    withTiming: (value: any) => value,
-    withDelay: (_delay: number, value: any) => value,
-    withSequence: (...values: any[]) => values[values.length - 1],
-    withRepeat: (value: any) => value,
-    runOnJS: (fn: any) => fn,
+    useSharedValue: (value: unknown) => ({ value }),
+    withSpring: (value: unknown) => value,
+    withTiming: (value: unknown) => value,
+    withDelay: (_delay: number, value: unknown) => value,
+    withSequence: (...values: unknown[]) => values[values.length - 1],
+    withRepeat: (value: unknown) => value,
+    runOnJS: (fn: unknown) => fn,
     Animated: { View },
     View: View,
   };
@@ -110,7 +110,7 @@ jest.mock('react-native-reanimated', () => {
 
 // Mock clsx
 jest.mock('clsx', () => ({
-  clsx: (...args: any[]) => args.filter(Boolean).join(' '),
+  clsx: (...args: unknown[]) => args.filter(Boolean).join(' '),
 }));
 
 // Mock VoiceNotePlaybackUI
@@ -122,7 +122,7 @@ jest.mock(
       onPlayStart,
       onPlayFinish,
       label,
-    }: any) => {
+    }: unknown) => {
       const React = require('react');
       const { View, Text, Pressable } = require('react-native');
       return React.createElement(
@@ -149,7 +149,7 @@ jest.mock(
 
 // Mock Modal
 jest.mock('../../../src/components/Modal', () => ({
-  Modal: ({ visible, children }: any) => {
+  Modal: ({ visible, children }: unknown) => {
     const React = require('react');
     const { View } = require('react-native');
     if (!visible) return null;

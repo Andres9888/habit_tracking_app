@@ -14,8 +14,8 @@ import { calculateMomentumStrengthSnapshot } from '../habitStrength';
  * Internal function to recalculate streak and strength after pause/resume
  */
 async function recalculateOnPauseChange(
-  ctx: any,
-  habitId: any,
+  ctx: unknown,
+  habitId: unknown,
   timezone?: string
 ): Promise<void> {
   const habit = await ctx.db.get(habitId);
@@ -33,7 +33,7 @@ async function recalculateOnPauseChange(
   }
   const evaluationDateKey = maxDateKey(today, maxTrackingDateKey);
 
-  const tracking = allTracking.map((r: any) => ({ completed: r.completed, date: r.date }));
+  const tracking = allTracking.map((r: unknown) => ({ completed: r.completed, date: r.date }));
   const snapshot = calculateMomentumStrengthSnapshot({
     habitCreatedAt: habit.createdAt,
     throughDate: evaluationDateKey,

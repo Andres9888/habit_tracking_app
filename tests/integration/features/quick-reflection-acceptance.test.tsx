@@ -35,12 +35,12 @@ jest.mock('expo-haptics', () => ({
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');
   // Mock withTiming to immediately execute callback
-  Reanimated.withTiming = (toValue: number, _config: any, callback?: () => void) => {
+  Reanimated.withTiming = (toValue: number, _config: unknown, callback?: () => void) => {
     if (callback) callback();
     return toValue;
   };
   Reanimated.withSpring = (toValue: number) => toValue;
-  Reanimated.withSequence = (...values: any[]) => values[values.length - 1];
+  Reanimated.withSequence = (...values: unknown[]) => values[values.length - 1];
   return Reanimated;
 });
 

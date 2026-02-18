@@ -45,7 +45,7 @@ export const create = mutation({
     // Validate date format as YYYY-MM-DD
     const isValidDate = DATE_FORMAT_REGEX.test(args.date);
     if (!isValidDate) {
-      throw new Error('Invalid date format; expected YYYY-MM-DD');
+      throw new Error('Invalid date format. Expected YYYY-MM-DD');
     }
 
     const now = Date.now();

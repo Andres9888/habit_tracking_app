@@ -91,9 +91,9 @@ jest.mock('lucide-react-native', () => {
   return new Proxy(
     {},
     {
-      get: (_target: any, prop: string) => {
+      get: (_target: unknown, prop: string) => {
         if (prop === '__esModule') return true;
-        return function MockIcon(props: any) {
+        return function MockIcon(props: unknown) {
           return React.createElement(View, {
             testID: `icon-${String(prop)}`,
             accessibilityLabel: props.accessibilityLabel,
@@ -106,7 +106,7 @@ jest.mock('lucide-react-native', () => {
 });
 
 jest.mock('clsx', () => ({
-  clsx: (...args: any[]) =>
+  clsx: (...args: unknown[]) =>
     args
       .flat()
       .filter((a) => typeof a === 'string')
@@ -117,8 +117,8 @@ jest.mock('clsx', () => ({
 jest.mock('react-native-reanimated', () => {
   const View = require('react-native').View;
   return {
-    default: { View, createAnimatedComponent: (C: any) => C },
-    useSharedValue: (initial: any) => ({ value: initial }),
+    default: { View, createAnimatedComponent: (C: unknown) => C },
+    useSharedValue: (initial: unknown) => ({ value: initial }),
     useAnimatedStyle: (fn: () => any) => {
       try {
         return fn();
@@ -126,15 +126,15 @@ jest.mock('react-native-reanimated', () => {
         return {};
       }
     },
-    withSpring: (v: any) => v,
-    withTiming: (v: any, _c?: any, _cb?: any) => v, // Don't call callback to prevent infinite loops
-    withDelay: (_d: number, a: any) => a,
-    withSequence: (...v: any[]) => v[v.length - 1],
-    withRepeat: (a: any) => a,
+    withSpring: (v: unknown) => v,
+    withTiming: (v: unknown, _c?: unknown, _cb?: unknown) => v, // Don't call callback to prevent infinite loops
+    withDelay: (_d: number, a: unknown) => a,
+    withSequence: (...v: unknown[]) => v[v.length - 1],
+    withRepeat: (a: unknown) => a,
     interpolate: (v: number, _i: number[], o: number[]) => o[0],
-    runOnJS: (fn: any) => () => {}, // Return no-op to prevent infinite loops
+    runOnJS: (fn: unknown) => () => {}, // Return no-op to prevent infinite loops
     Extrapolation: { CLAMP: 'clamp' },
-    Easing: { out: (f: any) => f, in: (f: any) => f, cubic: (x: number) => x },
+    Easing: { out: (f: unknown) => f, in: (f: unknown) => f, cubic: (x: number) => x },
     View,
   };
 });
@@ -144,7 +144,7 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 jest.mock('../../../src/components/Modal', () => ({
-  Modal: ({ children, visible }: any) => (visible ? <>{children}</> : null),
+  Modal: ({ children, visible }: unknown) => (visible ? <>{children}</> : null),
 }));
 
 jest.mock('../../../src/constants/motion', () => ({
@@ -159,7 +159,7 @@ jest.mock('../../../src/constants/motion', () => ({
 jest.mock(
   '../../../src/components/MotivationSystem/Workshop/VoiceNotePlaybackUI',
   () => ({
-    VoiceNotePlaybackUI: (props: any) => {
+    VoiceNotePlaybackUI: (props: unknown) => {
       const React = require('react');
       const { View, Pressable, Text } = require('react-native');
       return React.createElement(
@@ -317,7 +317,7 @@ const COLOR_CONTRAST_DOCUMENTATION = {
 /**
  * Validates that a component has accessible button semantics
  */
-function expectAccessibleButton(element: any, expectedLabel?: string) {
+function expectAccessibleButton(element: unknown, expectedLabel?: string) {
   expect(element.props.accessibilityRole).toBe('button');
   if (expectedLabel) {
     expect(element.props.accessibilityLabel).toBe(expectedLabel);
@@ -329,7 +329,7 @@ function expectAccessibleButton(element: any, expectedLabel?: string) {
 /**
  * Validates tap target is at least 44x44 or has hitSlop compensation
  */
-function expectMinimumTapTarget(element: any) {
+function expectMinimumTapTarget(element: unknown) {
   const hasHitSlop = element.props.hitSlop !== undefined;
   const hasMinWidth = element.props.style?.minWidth >= MINIMUM_TAP_TARGET_SIZE;
   const hasMinHeight =

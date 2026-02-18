@@ -125,7 +125,7 @@ describe('Theme Integration - Phase 1', () => {
     });
 
     it('should provide access to custom design tokens', () => {
-      let capturedTheme: any;
+      let capturedTheme: unknown;
 
       function CaptureTheme() {
         capturedTheme = useAppTheme();

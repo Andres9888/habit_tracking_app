@@ -10,7 +10,7 @@ import { HabitChange } from './types';
  */
 export function calculateHabitChanges(
   habit: { _id: Id<'habits'>; name: string; icon?: string },
-  trackings: any[],
+  trackings: unknown[],
   oneWeekAgo: Date,
   twoWeeksAgo: Date,
   currentStreak: number

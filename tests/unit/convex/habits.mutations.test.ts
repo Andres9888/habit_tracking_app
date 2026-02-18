@@ -386,7 +386,7 @@ describe('Habit Query Filters', () => {
 
     it('should return empty array for empty dates input', () => {
       const _emptyDates: string[] = [];
-      const result: any[] = [];
+      const result: unknown[] = [];
 
       // Mutation: if (args.dates.length === 0) return [];
       expect(result).toEqual([]);
