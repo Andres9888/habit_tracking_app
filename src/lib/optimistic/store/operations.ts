@@ -10,7 +10,6 @@ import type {
   ReorderOperationPayload,
   PauseOperationPayload,
 } from '../types';
-import type { StoreListener } from './types';
 import { generateId, getToggleKey } from './helpers';
 
 export function createOperations(
@@ -67,7 +66,7 @@ export function createOperations(
       };
 
       state.operations.set(id, operation);
-      state.pendingReorder = payload.habitIds;
+      state.pendingReorder = [...payload.habitIds];
       notify();
 
       return id;

@@ -6,8 +6,7 @@ import { v } from 'convex/values';
 import { internal } from '../_generated/api';
 import { internalMutation, mutation } from '../_generated/server';
 import { calculateMomentumStrengthSnapshot } from '../habitStrength';
-import { calculateFrequencyAwareStreak, calculateStreakFromHistory } from '../streakUtils';
-import type { FrequencyConfig } from '../streakUtils';
+import { calculateStreakFromHistory } from '../streakUtils';
 import { getTodayForTimezone, isFutureDate, isValidDateFormat, maxDateKey } from './utils';
 
 export const toggleHabit = mutation({
@@ -71,20 +70,12 @@ export const recalculateStreakAndStrength = internalMutation({
     const snapshot = calculateMomentumStrengthSnapshot({
       habitCreatedAt: habit.createdAt, throughDate: evaluationDateKey, tracking,
     });
-
-    // Use frequency-aware streak calculation if habit has a non-daily frequency
-    const freq = habit.frequency ?? 'daily';
-    const hasFrequencyConfig = freq !== 'daily';
-    const freqConfig: FrequencyConfig = {
-      frequency: freq,
-      daysOfWeek: habit.daysOfWeek,
-      timesPerWeek: habit.timesPerWeek,
-      everyXDays: habit.everyXDays,
-    };
-    const habitCreatedDate = new Date(habit.createdAt).toISOString().slice(0, 10);
-    const streakData = hasFrequencyConfig
-      ? calculateFrequencyAwareStreak(tracking, evaluationDateKey, freqConfig, habitCreatedDate)
-      : calculateStreakFromHistory(tracking, evaluationDateKey);
+    
+    // Pass pause info to streak calculation to exclude paused periods
+    const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
+      pausedAt: habit.pausedAt,
+      resumedAt: habit.resumedAt,
+    });
 
     await ctx.db.patch(args.habitId, {
       bestStreak: streakData.bestStreak, currentStreak: streakData.currentStreak,

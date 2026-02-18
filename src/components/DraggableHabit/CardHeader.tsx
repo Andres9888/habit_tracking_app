@@ -28,6 +28,7 @@ interface CardHeaderProps {
   habit: Habit;
   highContrastMode: boolean;
   iconPulse: Animated.Value;
+  isPaused: boolean;
   name: string;
   showHabitStrengthPercentage: boolean;
   streak: number;
@@ -41,6 +42,7 @@ export function CardHeader({
   habit,
   highContrastMode,
   iconPulse,
+  isPaused,
   name,
   showHabitStrengthPercentage,
   streak,
@@ -88,6 +90,16 @@ export function CardHeader({
           </Text>
           {habit.preferredTime && (
             <PhaseTag compact preferredTime={habit.preferredTime} />
+          )}
+          {isPaused && (
+            <View
+              className='rounded-full px-2 py-0.5'
+              style={{ backgroundColor: '#8b5cf6' }}
+            >
+              <Text className='text-[11px] font-semibold text-white'>
+                Paused
+              </Text>
+            </View>
           )}
           <View className='ml-auto'>
             <ChevronRight

@@ -3,7 +3,7 @@
  * SettingsModal Component
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Modal, View } from 'react-native';
 import { useQuery } from 'convex/react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,15 +20,14 @@ import type { SettingsModalProps } from './types';
 
 function SettingsModalContent({
   completionSoundEnabled = false,
-  completionSoundType = 'chime',
   dayShape = 'square',
   habitCompletionIcon = 'chain',
   isHighContrastActive = false,
   onChangeCompletionSoundEnabled = () => {},
-  onChangeCompletionSoundType = () => {},
   onChangeDayShape = () => {},
   onChangeHabitCompletionIcon = () => {},
   onClose,
+  onOpenSortSheet,
   visible,
   streakRemindersEnabled = false,
   streakReminderTime = '20:00',
@@ -40,6 +39,7 @@ function SettingsModalContent({
 }: SettingsModalProps) {
   const {
     darkModePreference,
+    habitSortMode,
     setDarkModePreference,
     showGradientFill,
     setShowGradientFill,
@@ -55,6 +55,11 @@ function SettingsModalContent({
   const colors = getSettingsColors(isHighContrastActive, isDark);
   const archivedHabits = useQuery(api.habits.listArchived);
   const archivedHabitsCount = archivedHabits?.length ?? 0;
+
+  const handleOpenSortSheet = useCallback(() => {
+    handleClose();
+    setTimeout(() => onOpenSortSheet?.(), 350);
+  }, [handleClose, onOpenSortSheet]);
 
   if (!visible) return null;
 
@@ -75,8 +80,12 @@ function SettingsModalContent({
   }
 
   return (
-    <Modal animationType='slide' visible={visible} onRequestClose={handleClose}>
+    <Modal
       accessibilityViewIsModal
+      animationType='slide'
+      visible={visible}
+      onRequestClose={handleClose}
+    >
       <View
         className='flex-1 bg-background'
         style={{ backgroundColor: colors.background }}
@@ -92,25 +101,24 @@ function SettingsModalContent({
             />
             <SettingsContent
               archivedHabitsCount={archivedHabitsCount}
+              bottomInset={insets.bottom}
               colors={colors}
               completionSoundEnabled={completionSoundEnabled}
-              completionSoundType={completionSoundType}
-              darkModePreference={darkModePreference}
               dayShape={dayShape}
               habitCompletionIcon={habitCompletionIcon}
+              habitSortMode={habitSortMode}
               isHighContrastActive={isHighContrastActive}
               isPremium={isPremium}
               showGradientFill={showGradientFill}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
               onChangeCompletionSoundEnabled={onChangeCompletionSoundEnabled}
-              onChangeCompletionSoundType={onChangeCompletionSoundType}
-              onChangeDarkModePreference={setDarkModePreference}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
               onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
+              onOpenSortPicker={handleOpenSortSheet}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
             />

@@ -56,9 +56,20 @@ export const CalendarDay = memo(function CalendarDay({
     return {};
   };
 
+  const getAccessibilityHint = () => {
+    if (day?.isFuture || day?.isBeforeCreation) {
+      return 'Not available';
+    }
+    if (showCompleted) {
+      return 'Press to mark as incomplete';
+    }
+    return 'Press to mark as complete';
+  };
+
   return (
     <Pressable
-      accessibilityLabel={`Day ${day?.dayNumber ?? ''}${showCompleted ? ', completed' : ''}${isToday ? ', today' : ''}`}
+      accessibilityLabel={`Day ${day?.dayNumber ?? ''}${showCompleted ? ', completed' : showMissed ? ', missed' : ''}${isToday ? ', today' : ''}`}
+      accessibilityHint={getAccessibilityHint()}
       accessibilityRole='button'
       accessibilityState={{
         disabled: Boolean(day?.isFuture || day?.isBeforeCreation),

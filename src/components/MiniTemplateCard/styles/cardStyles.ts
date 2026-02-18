@@ -48,6 +48,13 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     fontSize: typography.body.fontSize,
     fontWeight: '700',
     lineHeight: 21,
-    marginBottom: 6,
+    marginBottom: 2,
+  },
+  subtitle: {
+    color: '#6B7280',
+    fontSize: 12,
+    fontWeight: '500',
+    lineHeight: 16,
+    marginBottom: 4,
   },
 };

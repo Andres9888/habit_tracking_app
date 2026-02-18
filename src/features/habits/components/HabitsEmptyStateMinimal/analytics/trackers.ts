@@ -22,11 +22,12 @@ class ConsoleTimeBasedChipAnalyticsTracker implements TimeBasedChipAnalyticsTrac
   track(event: TimeBasedChipEvent): void {
     if (!this.enabled) return;
 
-    if (__DEV__) // eslint-disable-next-line no-console
-    console.log('[Analytics] Time-Based Chips:', {
-      ...event,
-      timestamp: new Date(event.timestamp).toISOString(),
-    });
+    if (__DEV__)
+      // eslint-disable-next-line no-console
+      console.log('[Analytics] Time-Based Chips:', {
+        ...event,
+        timestamp: new Date(event.timestamp).toISOString(),
+      });
   }
 }
 
@@ -63,6 +64,7 @@ export function trackTimeBasedChipEvent(event: TimeBasedChipEvent): void {
   try {
     analyticsTracker.track(event);
   } catch (error) {
-    if (__DEV__ && __DEV__) console.error('[Analytics] Error tracking time-based chip event:', error);
+    if (__DEV__)
+      console.error('[Analytics] Error tracking time-based chip event:', error);
   }
 }
