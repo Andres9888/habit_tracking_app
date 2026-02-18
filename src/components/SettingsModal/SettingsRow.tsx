@@ -39,12 +39,12 @@ export function SettingsRow({
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
   const handleToggle = (v: boolean) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onToggle?.(v);
   };
 
   const handleNavPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress?.();
   };
 
@@ -68,6 +68,8 @@ export function SettingsRow({
       </View>
       <Text
         className='flex-1 text-[17px] font-semibold'
+        numberOfLines={type === 'toggle' || type === 'navigation' ? 2 : 1}
+        ellipsizeMode='tail'
         style={{ color: colors.label }}
       >
         {label}
@@ -95,6 +97,20 @@ export function SettingsRow({
           </Text>
           <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
         </View>
+      )}
+      {type === 'info' && typeof value === 'string' && (
+        <Text
+          className='ml-3 text-[15px] font-medium'
+          numberOfLines={1}
+          style={{
+            color: colors.value,
+            flexShrink: 1,
+            maxWidth: '45%',
+            textAlign: 'right',
+          }}
+        >
+          {value}
+        </Text>
       )}
       {type === 'navigation' && (
         <View className='flex-row items-center gap-2'>

@@ -30,13 +30,16 @@ export function MiniTemplateCard(props: MiniTemplateCardProps) {
     isImported,
     isImporting,
     name = 'Untitled',
+    subtitle,
     onImport,
     onPress,
   } = props;
 
   const reducedMotion = useReduceMotion();
   const iconColor =
-    iconColorProp && typeof iconColorProp === 'string' && iconColorProp.trim() !== ''
+    iconColorProp &&
+    typeof iconColorProp === 'string' &&
+    iconColorProp.trim() !== ''
       ? iconColorProp
       : DEFAULT_ICON_COLOR;
 
@@ -80,6 +83,7 @@ export function MiniTemplateCard(props: MiniTemplateCardProps) {
       isImported={isImported}
       isImporting={isImporting}
       name={name}
+      subtitle={subtitle}
       scienceBadgeStyle={scienceBadgeStyle}
       onImport={onImport ? handleImport : undefined}
       onPress={handlePress}

@@ -5,7 +5,7 @@
 
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Linking,
   Text,
@@ -19,13 +19,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withDelay,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import {
   AuthDivider,
   AuthError,
@@ -38,6 +32,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { EXTERNAL_URLS } from '@/constants';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { colors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -245,7 +240,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
                 accessibilityRole='link'
                 style={styles.footerLink}
                 onPress={() =>
-                  void Linking.openURL('https://chainday.app/terms')
+                  void Linking.openURL(EXTERNAL_URLS.TERMS)
                 }
               >
                 Terms
@@ -255,7 +250,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
                 accessibilityRole='link'
                 style={styles.footerLink}
                 onPress={() =>
-                  void Linking.openURL('https://chainday.app/privacy')
+                  void Linking.openURL(EXTERNAL_URLS.PRIVACY)
                 }
               >
                 Privacy Policy
@@ -318,7 +313,7 @@ function useScreenStyles() {
       marginBottom: 16,
     },
     logoEmoji: {
-      fontSize: 40,
+      fontSize: 34,
     },
     logoGradient: {
       alignItems: 'center',
@@ -357,7 +352,7 @@ function useScreenStyles() {
     },
     welcomeTitle: {
       color: themeColors.text.primary,
-      fontSize: 28,
+      fontSize: 22,
       fontWeight: '700',
       marginBottom: 8,
       textAlign: 'center',

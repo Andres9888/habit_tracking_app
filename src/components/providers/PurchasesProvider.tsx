@@ -3,6 +3,10 @@
  *
  * Initializes RevenueCat SDK when user is authenticated.
  * Must be placed inside ClerkProvider and ConvexClerkProvider.
+ *
+ * Performance optimizations:
+ * - Defers initialization with requestIdleCallback to avoid blocking startup
+ * - Only initializes when idle or after a short timeout
  */
 
 import { useEffect } from 'react';
@@ -20,11 +24,22 @@ interface PurchasesProviderProps {
 export function PurchasesProvider({ children }: PurchasesProviderProps) {
   const { isSignedIn, user } = useUser();
 
-  // Initialize RevenueCat on mount (works for anonymous users too)
+  // Initialize RevenueCat after idle callback to avoid blocking startup
   useEffect(() => {
-    initializePurchases().catch((error) => {
-      if (__DEV__) console.warn('[PurchasesProvider] Failed to initialize:', error);
-    });
+    const initPurchases = () => {
+      initializePurchases().catch((error) => {
+        if (__DEV__) console.warn('[PurchasesProvider] Failed to initialize:', error);
+      });
+    };
+
+    if (typeof requestIdleCallback === 'function') {
+      const handle = requestIdleCallback(initPurchases, { timeout: 2000 });
+      return () => cancelIdleCallback(handle);
+    } else {
+      // Fallback: defer for 500ms
+      const timer = setTimeout(initPurchases, 500);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   // Identify user when they sign in

@@ -38,9 +38,9 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Alert.alert(
       'Archive Habit',
-      'This habit will be hidden from your daily list. You can restore it later from Settings.',
+      'This habit will be hidden from your daily list. You can restore it anytime from Settings.',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Keep Active', style: 'cancel' },
         { text: 'Archive', style: 'destructive', onPress: onArchive },
       ],
     );
@@ -52,8 +52,8 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
       'Delete Habit',
       'This will permanently delete this habit and all its history. This cannot be undone.',
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: onDelete },
+        { text: 'Keep Habit', style: 'cancel' },
+        { text: 'Delete Forever', style: 'destructive', onPress: onDelete },
       ],
     );
   };

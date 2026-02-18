@@ -1,7 +1,6 @@
 export interface SettingsModalProps {
   celebrationsEnabled?: boolean;
   completionSoundEnabled?: boolean;
-  completionSoundType?: 'chime' | 'pop' | 'success';
   dayShape?: 'circle' | 'square';
   habitCompletionIcon?: 'chain' | 'checkbox';
   onChangeDayShape?: (value: 'circle' | 'square') => void | Promise<void>;
@@ -11,9 +10,6 @@ export interface SettingsModalProps {
   ) => void | Promise<void>;
   onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;
   onChangeCompletionSoundEnabled?: (value: boolean) => void | Promise<void>;
-  onChangeCompletionSoundType?: (
-    value: 'chime' | 'pop' | 'success'
-  ) => void | Promise<void>;
   onChangeCompact?: (value: boolean) => void | Promise<void>;
   showHabitStrengthPercentage?: boolean;
   onChangeShowHabitStrengthPercentage?: (
@@ -24,6 +20,7 @@ export interface SettingsModalProps {
   isHighContrastActive?: boolean;
   isCompact?: boolean;
   onOpenHapticTest?: () => void;
+  onOpenSortSheet?: () => void;
   onClose: () => void;
   showCharacterScreen?: boolean;
   visible: boolean;
@@ -51,17 +48,11 @@ export interface SettingsColors {
 export interface SettingsContentProps {
   colors: SettingsColors;
   isHighContrastActive: boolean;
-  darkModePreference: 'system' | 'light' | 'dark';
-  onChangeDarkModePreference: (
-    value: 'system' | 'light' | 'dark'
-  ) => void | Promise<void>;
+  bottomInset?: number;
   completionSoundEnabled: boolean;
-  completionSoundType: 'chime' | 'pop' | 'success';
   onChangeCompletionSoundEnabled: (value: boolean) => void | Promise<void>;
-  onChangeCompletionSoundType: (
-    value: 'chime' | 'pop' | 'success'
-  ) => void | Promise<void>;
   habitCompletionIcon: 'chain' | 'checkbox';
+  habitSortMode: string;
   dayShape: 'circle' | 'square';
   onChangeHabitCompletionIcon: (
     value: 'chain' | 'checkbox'
@@ -70,6 +61,7 @@ export interface SettingsContentProps {
   onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
+  onOpenSortPicker: () => void;
   showGradientFill: boolean;
   // Streak reminders
   streakRemindersEnabled: boolean;

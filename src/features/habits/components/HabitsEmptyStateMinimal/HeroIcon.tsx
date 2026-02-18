@@ -22,7 +22,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { BREATHING_ANIMATION, HERO_GLOW } from './animations';
-import { BORDER_RADIUS, COLORS } from './constants';
+import { BORDER_RADIUS } from './constants';
 import { SeedlingIcon } from './SeedlingIcon';
 import type { HeroIconProps } from './types';
 import { useEmptyStateColors } from './useEmptyStateColors';

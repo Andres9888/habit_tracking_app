@@ -7,6 +7,7 @@ import { HabitStatsBadges } from './HabitStatsBadges';
 import { ActionButtons } from './ActionButtons';
 import { StrengthBackground } from './StrengthBackground';
 import { shadows } from '../../../theme/spacing';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { AnimatedHabitCardProps } from '../types';
 
 const CARD_SHADOW = {
@@ -21,6 +22,7 @@ export function AnimatedHabitCard({
   onRestore,
   onDelete,
 }: AnimatedHabitCardProps) {
+  const { isDark } = useThemeColors();
   const {
     isRestoring,
     showSuccess,
@@ -36,15 +38,21 @@ export function AnimatedHabitCard({
   });
 
   const strength = (habit.strength ?? 0) * 100;
-  const strengthInfo = getStrengthInfo(strength);
+  const strengthInfo = getStrengthInfo(strength, isDark);
   const gradientColor = getStrengthGradientColor(strength);
   const archiveDate = habit.archivedAt || habit._creationTime;
 
   return (
     <Animated.View style={animatedStyle}>
       <View
-        className='overflow-hidden rounded-2xl border border-stone-200 bg-white'
-        style={CARD_SHADOW}
+        className='overflow-hidden rounded-2xl border'
+        style={[
+          CARD_SHADOW,
+          {
+            backgroundColor: isDark ? '#1f2937' : '#ffffff',
+            borderColor: isDark ? '#374151' : '#e7e5e4',
+          },
+        ]}
       >
         <StrengthBackground gradientColor={gradientColor} strength={strength} />
 

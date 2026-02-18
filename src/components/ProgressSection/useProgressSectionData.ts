@@ -26,7 +26,7 @@ export function useProgressSectionData({
 }: UseProgressSectionDataArgs) {
   const createdAtNumber = typeof habitCreatedAt === 'number'
     ? habitCreatedAt
-    : habitCreatedAt == null
+    : habitCreatedAt === null || habitCreatedAt === undefined
       ? undefined
       : new Date(habitCreatedAt).getTime();
 

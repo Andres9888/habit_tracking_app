@@ -91,11 +91,11 @@ export const useHabitDetailScreenState = ({
   // Create notesByDate map for quick lookup by date
   const notesByDate = useMemo(() => {
     const map: Record<string, string> = {};
-    habitNotes.forEach((note) => {
+    for (const note of habitNotes) {
       if (note.date) {
         map[note.date] = note.body;
       }
-    });
+    }
     return map;
   }, [habitNotes]);
 

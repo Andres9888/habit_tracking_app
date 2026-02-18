@@ -9,7 +9,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
-import { colors } from '../../theme/colors';
 
 interface EditHeaderProps {
   paddingTop: number;

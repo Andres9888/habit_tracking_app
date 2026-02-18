@@ -100,7 +100,9 @@ export function usePremiumUpsell(): PremiumUpsellState {
   // Cleanup all timers on unmount
   useEffect(() => {
     return () => {
-      timersRef.current.forEach(clearTimeout);
+      for (const timer of timersRef.current) {
+        clearTimeout(timer);
+      }
     };
   }, []);
 
