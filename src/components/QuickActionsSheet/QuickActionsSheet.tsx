@@ -52,6 +52,15 @@ export const QuickActionsSheet = ({
     }
   }, [visible, translateY]);
 
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (actionTimerRef.current) {
+        clearTimeout(actionTimerRef.current);
+      }
+    };
+  }, []);
+
   const handleDismiss = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onClose();
@@ -87,12 +96,15 @@ export const QuickActionsSheet = ({
     return null;
   }
 
-  const handleAction = (action?: () => void) => {
+  const handleAction = useCallback((action?: () => void) => {
     onClose();
-    setTimeout(() => {
+    if (actionTimerRef.current) {
+      clearTimeout(actionTimerRef.current);
+    }
+    actionTimerRef.current = setTimeout(() => {
       action?.();
     }, 150);
-  };
+  }, [onClose]);
 
   return (
     <Modal

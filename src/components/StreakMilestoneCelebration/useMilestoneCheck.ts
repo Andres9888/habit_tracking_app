@@ -94,8 +94,9 @@ export function useMilestoneCheck({
       setShowCelebration(true);
 
       // Trigger success haptic feedback
+      let hapticTimer: ReturnType<typeof setTimeout> | null = null;
       if (Platform.OS === 'ios' || Platform.OS === 'android') {
-        setTimeout(() => {
+        hapticTimer = setTimeout(() => {
           Haptics.notificationAsync(
             Haptics.NotificationFeedbackType.Success
           ).catch(() => {
@@ -103,6 +104,12 @@ export function useMilestoneCheck({
           });
         }, ANIMATION_TIMING.HAPTIC_DELAY);
       }
+      
+      return () => {
+        if (hapticTimer) {
+          clearTimeout(hapticTimer);
+        }
+      };
     }
   }, [currentStreak, previousStreak, shownMilestones]);
 

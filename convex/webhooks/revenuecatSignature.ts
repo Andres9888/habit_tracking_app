@@ -37,14 +37,18 @@ export async function verifyRevenueCatSignature(
       );
       return true;
     }
-    console.error(
-      '[RevenueCat] CRITICAL: No webhook secret configured in production - rejecting webhook'
-    );
+    if (process.env.NODE_ENV !== 'development') {
+      console.error(
+        '[RevenueCat] CRITICAL: No webhook secret configured in production - rejecting webhook'
+      );
+    }
     return false;
   }
 
   if (!signature) {
-    console.error('[RevenueCat] No signature provided');
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[RevenueCat] No signature provided');
+    }
     return false;
   }
 
@@ -74,7 +78,9 @@ export async function verifyRevenueCatSignature(
     // Compare signatures (timing-safe comparison)
     return timingSafeEqual(computedSignature, signature);
   } catch (error) {
-    console.error('[RevenueCat] Signature verification error:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[RevenueCat] Signature verification error:', error);
+    }
     return false;
   }
 }
