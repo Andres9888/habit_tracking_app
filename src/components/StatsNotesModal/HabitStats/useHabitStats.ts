@@ -10,7 +10,8 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import type { HabitStatsData } from './HabitStats.types';
 
 export function useHabitStats() {
-  const habits = useQuery(api.habits.list) ?? [];
+  const habitsData = useQuery(api.habits.list);
+  const habits = habitsData ?? [];
   const [selectedHabitId, setSelectedHabitId] = useState<Id<'habits'> | null>(
     habits[0]?._id ?? null
   );
@@ -33,10 +34,13 @@ export function useHabitStats() {
     [today]
   );
 
-  const tracking30 =
-    useQuery(api.habits.getTracking, { dates: last30Days }) ?? [];
-  const tracking7 =
-    useQuery(api.habits.getTracking, { dates: last7Days }) ?? [];
+  const tracking30Data =
+    useQuery(api.habits.getTracking, { dates: last30Days });
+  const tracking30 = tracking30Data ?? [];
+  const tracking7Data =
+    useQuery(api.habits.getTracking, { dates: last7Days });
+  const tracking7 = tracking7Data ?? [];
+  const isLoading = habitsData === undefined || tracking30Data === undefined || tracking7Data === undefined;
 
   const selectedHabit = habits.find((h) => h._id === selectedHabitId);
 
@@ -94,6 +98,7 @@ export function useHabitStats() {
   return {
     habits,
     habitStats,
+    isLoading,
     selectedHabit,
     selectedHabitId,
     setSelectedHabitId,

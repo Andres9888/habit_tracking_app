@@ -150,6 +150,8 @@ export {
 
 export { useKeyboardVisible } from './useKeyboardVisible';
 
+export { usePrefetchNavigation } from './usePrefetchNavigation';
+
 export {
   useUnsavedChangesGuard,
   type UseUnsavedChangesGuardOptions,

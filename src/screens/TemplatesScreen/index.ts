@@ -12,3 +12,4 @@ export type {
   TemplateId,
   ViewMode,
 } from './TemplatesScreen.types';
+export type { UseTemplateHandlersOptions } from "./TemplatesScreen.handlers.types";
