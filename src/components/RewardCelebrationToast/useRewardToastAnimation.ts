@@ -2,7 +2,13 @@ import { useEffect, useRef } from 'react';
 import { Animated, Easing, AccessibilityInfo } from 'react-native';
 import { useState } from 'react';
 
-export function useRewardToastAnimation(visible: boolean) {
+interface UseRewardToastAnimationProps {
+  visible: boolean;
+}
+
+export function useRewardToastAnimation({
+  visible,
+}: UseRewardToastAnimationProps) {
   const translateY = useRef(new Animated.Value(160)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const [reduceMotion, setReduceMotion] = useState(false);
