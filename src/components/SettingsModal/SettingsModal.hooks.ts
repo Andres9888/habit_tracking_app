@@ -19,7 +19,7 @@ const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
 export const useSettingsModalLogic = ({
   onClose,
 }: UseSettingsModalLogicProps) => {
-  const [view, setView] = useState<'settings' | 'archived' | 'paused'>(
+  const [view, setView] = useState<'settings' | 'archived' | 'paused' | 'sort'>(
     'settings'
   );
   const settings = useQuery(api.settings.get);
@@ -85,12 +85,19 @@ export const useSettingsModalLogic = ({
     await update({ showGradientFill: value });
   };
 
+  const habitSortMode = (settings?.habitSortMode as string) ?? 'manual';
+  const setHabitSortMode = async (value: string) => {
+    await update({ habitSortMode: value });
+  };
+
   return {
     darkModePreference,
+    habitSortMode,
     handleClose,
     highContrastMode,
     reduceMotion,
     setDarkModePreference,
+    setHabitSortMode,
     setHighContrastMode,
     setReduceMotion,
     setShowGradientFill,

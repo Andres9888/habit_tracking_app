@@ -44,12 +44,14 @@ module.exports = {
   interpolate: (value, inputRange, outputRange) => {
     if (value <= inputRange[0]) return outputRange[0];
     if (value >= inputRange[inputRange.length - 1]) return outputRange[outputRange.length - 1];
-    for (let i = 0; i < inputRange.length - 1; i++) {
+    let result = outputRange[0];
+    inputRange.slice(0, -1).forEach((_, i) => {
       if (value >= inputRange[i] && value <= inputRange[i + 1]) {
         const ratio = (value - inputRange[i]) / (inputRange[i + 1] - inputRange[i]);
-        return outputRange[i] + ratio * (outputRange[i + 1] - outputRange[i]);
-      }
-    }
+        result = outputRange[i] + ratio * (outputRange[i + 1] - outputRange[i]);
+      return result;
+    return result;);
+    return result;
     return outputRange[0];
   },
   interpolateColor: (value, inputRange, outputRange) => outputRange[Math.round(value)],

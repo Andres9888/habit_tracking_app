@@ -25,10 +25,10 @@ export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
           entering={FadeInDown.delay(0).springify().damping(18)}
           style={{
             color: colors.text.primary,
-            fontSize: 22,
-            fontWeight: '600',
-            letterSpacing: 0.35,
-            lineHeight: 28,
+            fontSize: 28,
+            fontWeight: '800',
+            letterSpacing: -0.5,
+            lineHeight: 34,
           }}
         >
           Import Habits
@@ -43,7 +43,7 @@ export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
             marginTop: 4,
           }}
         >
-          Science-backed habits to get you started
+          Science-backed templates to build great habits
         </Animated.Text>
       </View>
     </Animated.View>

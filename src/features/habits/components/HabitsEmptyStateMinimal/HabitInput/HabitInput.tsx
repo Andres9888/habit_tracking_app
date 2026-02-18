@@ -34,8 +34,8 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     const placeholder = useAnimatedPlaceholder({ inputValue: value });
 
     const showClearButton = value.length > 0;
-    const showCharacterCounter = isFocused || value.length > 0;
-    const characterCounterColor = useMemo(
+    const showCounter = isFocused || showClearButton;
+    const counterColor = useMemo(
       () =>
         getCharacterCounterColor(
           value.length,
@@ -73,7 +73,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           autoCapitalize='sentences'
           autoCorrect={false}
           maxLength={CHARACTER_LIMIT.max}
-          placeholder={COPY.inputPlaceholder}
+          placeholder={placeholder.isActive ? '' : COPY.inputPlaceholder}
           placeholderTextColor={colors.inputPlaceholder}
           returnKeyType='done'
           selectionColor={colors.inputCaret}
@@ -96,11 +96,11 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
             <ClearIcon />
           </Pressable>
         )}
-        {showCharacterCounter && (
+        {showCounter && (
           <Text
             accessibilityElementsHidden
             importantForAccessibility='no'
-            style={characterCounterStyle(characterCounterColor)}
+            style={characterCounterStyle(counterColor)}
           >
             {value.length}/{CHARACTER_LIMIT.max}
           </Text>

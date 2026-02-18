@@ -130,7 +130,7 @@ export function useHabitsListState(): HabitsListState {
 
   // Stable content padding reference to avoid object re-creation every render
   const contentPadding = useMemo(
-    () => ({ paddingBottom: 96, paddingHorizontal: 24, paddingTop: 0 }),
+    () => ({ paddingBottom: 120, paddingHorizontal: 24, paddingTop: 0 }),
     []
   );
 

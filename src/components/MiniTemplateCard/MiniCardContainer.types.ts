@@ -6,6 +6,7 @@ import type { ViewStyle } from 'react-native';
 
 export interface MiniCardContainerProps {
   name: string;
+  subtitle?: string;
   description?: string;
   icon: string;
   iconColor: string;

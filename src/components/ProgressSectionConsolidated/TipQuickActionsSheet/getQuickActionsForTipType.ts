@@ -11,26 +11,20 @@ import {
   getDefaultActions,
 } from './quickActionsByType';
 
+type ActionHandler = (focusDayName?: string, currentStreak?: number) => QuickAction[];
+
+const quickActionHandlers: Record<TipType, ActionHandler> = {
+  focusDay: (focusDayName) => getFocusDayActions(focusDayName),
+  lowStreak: () => getLowStreakActions(),
+  goodStreak: (_, currentStreak) => getGoodStreakActions(currentStreak),
+  weekStreak: () => getWeekStreakActions(),
+};
+
 export function getQuickActionsForTipType(
   tipType: TipType,
   focusDayName?: string,
   currentStreak?: number
 ): QuickAction[] {
-  switch (tipType) {
-    case 'focusDay': {
-      return getFocusDayActions(focusDayName);
-    }
-    case 'lowStreak': {
-      return getLowStreakActions();
-    }
-    case 'goodStreak': {
-      return getGoodStreakActions(currentStreak);
-    }
-    case 'weekStreak': {
-      return getWeekStreakActions();
-    }
-    default: {
-      return getDefaultActions();
-    }
-  }
+  const handler = quickActionHandlers[tipType] ?? (() => getDefaultActions());
+  return handler(focusDayName, currentStreak);
 }

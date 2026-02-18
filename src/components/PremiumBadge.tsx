@@ -34,7 +34,7 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
 
   if (variant === 'new') {
     return (
-      <View style={[styles.badge, styles.newBadge, style]}>
+      <View style={[styles.badge, styles.newBadge]}>
         <Sparkles color='#3b82f6' size={12} strokeWidth={2.5} />
         <Text style={[styles.badgeText, { color: '#3b82f6' }]}>New</Text>
       </View>

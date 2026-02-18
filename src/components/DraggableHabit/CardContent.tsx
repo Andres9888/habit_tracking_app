@@ -36,6 +36,7 @@ export function CardContent(props: CardContentProps) {
           habit={props.habit}
           highContrastMode={props.highContrastMode}
           iconPulse={props.iconPulse}
+          isPaused={props.isPaused}
           name={props.name}
           showHabitStrengthPercentage={props.showHabitStrengthPercentage}
           streak={props.streak}

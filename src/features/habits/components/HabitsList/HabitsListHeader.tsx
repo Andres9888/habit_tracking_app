@@ -2,17 +2,13 @@
  * HabitsListHeader — animated header rendered above the habit rows.
  *
  * Contains (top-to-bottom):
- * 1. **OfflineIndicator** (US3) — shown when the device loses connectivity.
- * 2. **HabitsHeader** — title, completion summary, action buttons (add, sort, settings, templates).
- * 3. **CalendarTimeline** — week-view dots with day completion heat and navigation arrows.
+ * 1. **OfflineIndicator** — shown when the device loses connectivity.
+ * 2. **HabitsHeader** — minimal date-only title.
+ * 3. **CalendarTimeline** — week-view dots with day completion heat.
  * 4. **TrialCountdownBanner** — shown during an active free-trial period.
  *
- * Animated values (`headerOpacity/TranslateY`, `calendarOpacity/TranslateY`) drive
- * the staggered entrance choreography orchestrated by `useHabitsListAnimations`.
- * Memoised via `React.memo` to skip re-renders when props are reference-equal.
+ * Action buttons have moved to the BottomActionBar.
  */
-
-/* eslint-disable max-lines-per-function */
 
 import React, { memo } from 'react';
 import { Animated, View } from 'react-native';
@@ -36,7 +32,6 @@ function HabitsListHeaderComponent(
     weekDateStrings: props.weekDateStrings,
   });
 
-  // Trial countdown banner
   const { shouldShowBanner, daysRemaining } = useTrialCountdown();
 
   return (
@@ -54,13 +49,7 @@ function HabitsListHeaderComponent(
         }}
       >
         <HabitsHeader
-          completedToday={computed.completedToday}
           forceShow={props.justCreatedHabitId !== null}
-          openCreateHabitScreen={props.onAddHabitPress}
-          openSettings={props.openSettings}
-          openSortSheet={props.onOpenSortSheet}
-          openTemplatesScreen={props.openTemplatesScreen}
-          showCompletionSummary={props.showWeekCompletionBar}
           totalHabits={computed.totalHabits}
         />
       </Animated.View>
@@ -85,7 +74,6 @@ function HabitsListHeaderComponent(
         </Animated.View>
       )}
 
-      {/* Trial Countdown Banner */}
       {shouldShowBanner && daysRemaining !== null && (
         <TrialCountdownBanner
           daysRemaining={daysRemaining}

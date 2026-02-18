@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- This is a data file defining color palettes for both light and dark modes, which is inherently large. */
 /**
  * Dark Mode Color Palette
  *
@@ -70,6 +71,9 @@ export const darkColors = {
 
   /** Card border — slightly lighter than surface (gray-700) */
   cardBorder: '#374151',
+
+  /** Accent color for highlights, icons, and activity indicators */
+  accent: '#34D399',
 
   /**
    * Gray Scale (Inverted)
@@ -147,6 +151,9 @@ export const lightColors = {
   /** Card border — same as general border */
   cardBorder: '#DDD8D2',
 
+  /** Accent color for highlights, icons, and activity indicators */
+  accent: '#059669',
+
   /**
    * Gray Scale (Standard)
    *
@@ -164,6 +171,21 @@ export const lightColors = {
     700: '#3D3833', // Headings
     800: '#2D2A26', // Primary text
     900: '#1A1816', // Darkest — pure black alternative
+  },
+
+  /**
+   * Settings Icon Colors
+   *
+   * Used in SettingsContent for preference toggles.
+   * Light backgrounds with colored icons for visibility.
+   */
+  settings: {
+    checkbox: { icon: '#0284c7', bg: '#bae6fd' },
+    circle: { icon: '#8b5cf6', bg: '#ddd6fe' },
+    gradient: { icon: '#059669', bg: '#d1fae5' },
+    sound: { icon: '#f59e0b', bg: '#fef3c7' },
+    sort: { icon: '#6366f1', bg: '#e0e7ff' },
+    archive: { icon: '#78716c', bg: '#e7e5e4' },
   },
 
   /**
@@ -224,6 +246,9 @@ export interface SemanticColors {
 
   /** Card border color */
   cardBorder: string;
+
+  /** Accent color for highlights, icons, and activity indicators */
+  accent: string;
 
   /** Text colors by emphasis level */
   text: {
