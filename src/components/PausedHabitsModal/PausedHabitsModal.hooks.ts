@@ -9,7 +9,9 @@ import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 
 export function usePausedHabitsModalLogic() {
-  const pausedHabits = useQuery(api.habits.listPaused) ?? [];
+  const pausedHabitsData = useQuery(api.habits.listPaused);
+  const pausedHabits = pausedHabitsData ?? [];
+  const isLoading = pausedHabitsData === undefined;
   const resumeHabit = useMutation(api.habits.resume);
 
   const handleResume = async (habitId: Id<'habits'>, habitName: string) => {
@@ -32,6 +34,7 @@ export function usePausedHabitsModalLogic() {
 
   return {
     handleResume,
+    isLoading,
     pausedHabits,
   };
 }

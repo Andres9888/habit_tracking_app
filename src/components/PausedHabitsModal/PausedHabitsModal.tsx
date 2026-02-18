@@ -3,7 +3,13 @@
  * Uses FlatList for virtualized rendering of paused habits.
  */
 import { useCallback } from 'react';
-import { FlatList, Pressable, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import { ChevronLeft, X } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -25,7 +31,7 @@ export default function PausedHabitsModal({
 }: PausedHabitsModalProps) {
   const insets = useSafeAreaInsets();
   const { colors: themeColors } = useThemeColors();
-  const { pausedHabits, handleResume } = usePausedHabitsModalLogic();
+  const { pausedHabits, handleResume, isLoading } = usePausedHabitsModalLogic();
 
   const renderItem = useCallback(
     ({ item, index }: { item: (typeof pausedHabits)[0]; index: number }) => (
@@ -40,7 +46,10 @@ export default function PausedHabitsModal({
   );
 
   return (
-    <View className='flex-1' style={{ backgroundColor: themeColors.background }}>
+    <View
+      className='flex-1'
+      style={{ backgroundColor: themeColors.background }}
+    >
       <View style={{ paddingTop: insets.top + 8 }}>
         <Animated.View
           className='mb-6 flex-row items-center justify-between px-4'
@@ -53,7 +62,11 @@ export default function PausedHabitsModal({
             style={{ backgroundColor: themeColors.gray[100] }}
             onPress={onBack}
           >
-            <ChevronLeft color={themeColors.text.secondary} size={24} strokeWidth={2} />
+            <ChevronLeft
+              color={themeColors.text.secondary}
+              size={24}
+              strokeWidth={2}
+            />
           </Pressable>
           <Text
             className='flex-1 text-center font-bold'
@@ -72,19 +85,25 @@ export default function PausedHabitsModal({
           </Pressable>
         </Animated.View>
       </View>
-      <FlatList
-        className='flex-1 px-4'
-        contentContainerStyle={{ gap: 12, paddingBottom: insets.bottom + 16 }}
-        data={pausedHabits}
-        initialNumToRender={10}
-        keyExtractor={keyExtractor}
-        ListEmptyComponent={PausedEmptyState}
-        maxToRenderPerBatch={10}
-        removeClippedSubviews
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        windowSize={5}
-      />
+      {isLoading ? (
+        <View className='flex-1 items-center justify-center'>
+          <ActivityIndicator color={themeColors.accent} size='large' />
+        </View>
+      ) : (
+        <FlatList
+          className='flex-1 px-4'
+          contentContainerStyle={{ gap: 12, paddingBottom: insets.bottom + 16 }}
+          data={pausedHabits}
+          initialNumToRender={10}
+          keyExtractor={keyExtractor}
+          ListEmptyComponent={PausedEmptyState}
+          maxToRenderPerBatch={10}
+          removeClippedSubviews
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          windowSize={5}
+        />
+      )}
     </View>
   );
 }
