@@ -19,8 +19,6 @@ export default function HabitRankingsList({
     (habitId: string) => {
       if (onHabitPress) {
         onHabitPress(habitId);
-      } else {
-        // TODO: navigate to habit detail
       }
     },
     [onHabitPress]

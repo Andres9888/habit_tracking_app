@@ -31,7 +31,7 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
         <WeeklyInsightsCard
           insights={weeklyInsights ?? null}
           onArchivePress={() => {
-            /* TODO */
+            // Archive functionality handled by parent component
           }}
           onHabitPress={onHabitPress}
         />

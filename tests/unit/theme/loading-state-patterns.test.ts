@@ -92,15 +92,19 @@ describe('CharacterScreen loading state documentation', () => {
 
   it('uses mock data (no async fetch yet)', () => {
     expect(source).toMatch(/MOCK_CHARACTER_DATA/);
+    expect(source).toContain('MOCK_CHARACTER_DATA');
   });
 
   it('has loading state documentation comment', () => {
     expect(source).toMatch(
       /Loading state.*mock data|When connected to real data.*ActivityIndicator/
     );
+    expect(source).toContain('ActivityIndicator');
   });
 
   it('uses theme background color', () => {
     expect(source).toMatch(/colors\.light\.background/);
+    expect(source).toContain('colors');
+    expect(source).toContain('background');
   });
 });

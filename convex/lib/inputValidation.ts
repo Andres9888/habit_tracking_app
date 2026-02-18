@@ -76,6 +76,10 @@ export function containsDangerousPatterns(input: string): boolean {
 // Validation Functions
 // =============================================================================
 
+/**
+ * Result of a validation operation
+ * Indicates whether input is valid, and provides error or sanitized output
+ */
 export interface ValidationResult {
   isValid: boolean;
   error?: string;

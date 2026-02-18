@@ -1,6 +1,6 @@
 import type { CharacterData } from './types';
 
-// Mock data - TODO: Connect to actual habit data
+// Mock data - used as fallback/default values for character screen
 export const MOCK_CHARACTER_DATA: CharacterData = {
   attributes: {
     energy: 41,

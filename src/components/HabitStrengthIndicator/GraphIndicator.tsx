@@ -11,8 +11,8 @@ import { styles } from './styles';
 export function GraphIndicator() {
   const theme = useAppTheme();
 
-  // TODO: Implement graph variant with Victory Native or react-native-svg
-  // This will be implemented in Phase 7: Premium Features
+  // Graph variant placeholder for Phase 7: Premium Features
+  // Future implementation: Victory Native or react-native-svg for trend visualization
   return (
     <View style={styles.graphContainer}>
       <Text

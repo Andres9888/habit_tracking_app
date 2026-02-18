@@ -22,6 +22,10 @@ export interface HabitTrackingRecord {
   completed: boolean;
 }
 
+/**
+ * Complete snapshot of habit strength at a point in time
+ * Contains both baseline (age-based) and compliance (completion-based) metrics
+ */
 export interface HabitStrengthSnapshot {
   strength: number;
   strengthLevel: StrengthLevel;
@@ -33,6 +37,10 @@ export interface HabitStrengthSnapshot {
   lastEvaluatedDate: Date;
 }
 
+/**
+ * Display information for a strength level
+ * Includes UI properties like emoji, label, description, and color code
+ */
 export interface StrengthLevelInfo {
   level: StrengthLevel;
   emoji: string;

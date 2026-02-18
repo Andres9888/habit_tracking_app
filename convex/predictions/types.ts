@@ -10,6 +10,10 @@ export type RiskLevel = 'low' | 'medium' | 'high';
 export type TrendDirection = 'improving' | 'stable' | 'declining';
 export type ConfidenceLevel = 'low' | 'medium' | 'high';
 
+/**
+ * Habit identified as at-risk of being abandoned
+ * Contains current metrics and predicted failure probability
+ */
 export interface AtRiskHabit {
   _id: Id<'habits'>;
   name: string;
@@ -20,6 +24,10 @@ export interface AtRiskHabit {
   riskLevel: 'high' | 'medium';
 }
 
+/**
+ * Prediction data for a single habit
+ * Includes strength, accessibility, failure probability, and confidence metrics
+ */
 export interface HabitPrediction {
   habitId: Id<'habits'>;
   habitName: string;
@@ -30,6 +38,10 @@ export interface HabitPrediction {
   riskLevel: RiskLevel;
 }
 
+/**
+ * Daily completion prediction for a habit
+ * Predicts probability of completion on a specific date
+ */
 export interface DayPrediction {
   date: string;
   probability: number;
