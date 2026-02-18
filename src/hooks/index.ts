@@ -167,3 +167,9 @@ export {
 // ============================================================================
 
 export { useRetryableAction } from './useRetryableAction';
+
+export {
+  useDebounce,
+  useDebouncedCallback,
+  useDebouncedState,
+} from './useDebounce';

@@ -2,7 +2,7 @@
  * Browse mode - View All tab content
  */
 
-import { FlatList, Pressable, View } from 'react-native';
+import { FlatList, Pressable, View, Text } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import TemplateCard from '../../../components/TemplateCard';
@@ -27,6 +27,17 @@ interface BrowseAllTabProps {
   setShowSortOptions: React.Dispatch<React.SetStateAction<boolean>>;
   showSortOptions: boolean;
   sortOption: SortOption;
+}
+
+function BrowseAllTabEmpty() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
+      <Text style={{ color: '#78716C', fontSize: 16, textAlign: 'center' }}>
+        No templates found{'\n'}
+        <Text style={{ fontSize: 14 }}>Try adjusting your filters</Text>
+      </Text>
+    </View>
+  );
 }
 
 export function BrowseAllTab(p: BrowseAllTabProps) {

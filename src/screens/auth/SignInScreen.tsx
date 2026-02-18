@@ -351,6 +351,9 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
  */
 function useScreenStyles() {
   const { colors: themeColors } = useThemeColors();
+  const { width: SCREEN_WIDTH } = Dimensions.get('window');
+  const RESPONSIVE_LOGO_SIZE = Math.min(SCREEN_WIDTH * 0.2, 80);
+  
   return StyleSheet.create({
     appName: {
       color: themeColors.text.primary,

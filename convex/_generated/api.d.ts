@@ -45,6 +45,7 @@ import type * as character_getCharacterStats from "../character/getCharacterStat
 import type * as character_index from "../character/index.js";
 import type * as character_types from "../character/types.js";
 import type * as character from "../character.js";
+import type * as config_apiConstants from "../config/apiConstants.js";
 import type * as debugHabitStrength from "../debugHabitStrength.js";
 import type * as diagnose from "../diagnose.js";
 import type * as habitStrength_allHabitsStats from "../habitStrength/allHabitsStats.js";
@@ -202,6 +203,7 @@ declare const fullApi: ApiFromModules<{
   "character/index": typeof character_index;
   "character/types": typeof character_types;
   character: typeof character;
+  "config/apiConstants": typeof config_apiConstants;
   debugHabitStrength: typeof debugHabitStrength;
   diagnose: typeof diagnose;
   "habitStrength/allHabitsStats": typeof habitStrength_allHabitsStats;

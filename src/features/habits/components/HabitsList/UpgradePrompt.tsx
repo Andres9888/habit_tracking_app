@@ -10,7 +10,8 @@
  * The backdrop is tappable to dismiss.
  */
 
-import { Pressable, Text, View } from 'react-native';
+import { useEffect } from 'react';
+import { Pressable, Text, View, Keyboard } from 'react-native';
 import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -32,6 +33,23 @@ export function UpgradePrompt({
   visible,
 }: UpgradePromptProps) {
   const { colors, isDark } = useThemeColors();
+
+  // Keyboard event handling with proper cleanup
+  useEffect(() => {
+    if (!visible) return;
+
+    const handleKeyPress = () => {
+      Keyboard.dismiss();
+    };
+
+    const showSubscription = Keyboard.addListener('keyboardDidShow', handleKeyPress);
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', handleKeyPress);
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, [visible]);
 
   if (!visible) return null;
 

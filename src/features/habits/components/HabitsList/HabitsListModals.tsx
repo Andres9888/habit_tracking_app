@@ -8,9 +8,14 @@
  * Note: SortBottomSheet was moved to HabitsModals (accessible from Settings).
  */
 
-import { DayHabitsBottomSheet } from '../../../../components/DayHabitsBottomSheet';
-import { UpgradePrompt } from './UpgradePrompt';
+import { lazy, Suspense } from 'react';
 import type { HabitsListProps } from './HabitsList.types';
+
+// Lazy load heavy modal components - only load when modal is opened
+const DayHabitsBottomSheet = lazy(() =>
+  import('../../../../components/DayHabitsBottomSheet')
+);
+const UpgradePrompt = lazy(() => import('./UpgradePrompt'));
 
 export interface HabitsListModalsProps {
   list: HabitsListProps['list'];
@@ -36,20 +41,28 @@ export function HabitsListModals(props: HabitsListModalsProps) {
 
   return (
     <>
-      <UpgradePrompt
-        visible={upgradePromptVisible}
-        onClose={onUpgradeDismiss}
-        onUpgradePress={onUpgradeConfirm}
-      />
-      <DayHabitsBottomSheet
-        date={state.selectedDay}
-        getHabitStatus={getHabitStatus}
-        habits={habits}
-        reduceMotion={reduceMotionPreference}
-        toggleHabit={toggleHabit}
-        visible={state.isDaySheetOpen}
-        onClose={state.handleCloseDaySheet}
-      />
+      {upgradePromptVisible && (
+        <Suspense fallback={null}>
+          <UpgradePrompt
+            visible={upgradePromptVisible}
+            onClose={onUpgradeDismiss}
+            onUpgradePress={onUpgradeConfirm}
+          />
+        </Suspense>
+      )}
+      {state.isDaySheetOpen && (
+        <Suspense fallback={null}>
+          <DayHabitsBottomSheet
+            date={state.selectedDay}
+            getHabitStatus={getHabitStatus}
+            habits={habits}
+            reduceMotion={reduceMotionPreference}
+            toggleHabit={toggleHabit}
+            visible={state.isDaySheetOpen}
+            onClose={state.handleCloseDaySheet}
+          />
+        </Suspense>
+      )}
     </>
   );
 }

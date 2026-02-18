@@ -5,7 +5,7 @@
  * Displays habits with low predicted completion probability (<40%).
  * Provides intervention suggestions and quick actions to improve retention.
  */
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { useAppTheme } from '../../theme';
@@ -21,8 +21,29 @@ export function HabitsAtRiskWidget({ onHabitPress }: HabitsAtRiskWidgetProps) {
     threshold: 0.4,
   });
 
+  const isLoading = atRiskHabits === undefined;
   const { colors: themeColors } = useThemeColors();
   const themed = themedAtRiskStyles(themeColors);
+
+  // Show loading indicator while fetching at-risk predictions
+  if (isLoading) {
+    return (
+      <View style={[styles.container, themed.container, { minHeight: 100 }]}>
+        <View style={styles.header}>
+          <Text
+            style={[styles.title, { color: theme.custom.colors.warning[700] }]}
+          >
+            ⚠️ Habits at Risk
+          </Text>
+        </View>
+        <ActivityIndicator
+          color={theme.custom.colors.warning[500]}
+          size='small'
+          style={{ marginTop: 12 }}
+        />
+      </View>
+    );
+  }
 
   if (!atRiskHabits || atRiskHabits.length === 0) {
     return null;

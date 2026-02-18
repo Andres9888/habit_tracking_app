@@ -6,3 +6,4 @@
  */
 
 export { default } from './DraggableHabit';
+export type { DraggableHabitCardProps, StrengthEmojiAnimatedStyle, ProgressAnimatedStyle } from './DraggableHabitCard.types';
