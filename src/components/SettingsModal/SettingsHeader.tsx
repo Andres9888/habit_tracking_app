@@ -2,6 +2,7 @@
 import { Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
+import { t } from '../../i18n';
 import type { SettingsColors } from './types';
 
 interface SettingsHeaderProps {
@@ -27,9 +28,9 @@ export function SettingsHeader({
           className='text-[22px] font-bold tracking-tight'
           style={{ color: colors.headerText, letterSpacing: -0.5 }}
         >
-          Settings
+          {t('settings.title')}
         </Text>
-        <ModalCloseButton label='Close settings' onClose={onClose} />
+        <ModalCloseButton label={t('common.close')} onClose={onClose} />
       </View>
     </Animated.View>
   );

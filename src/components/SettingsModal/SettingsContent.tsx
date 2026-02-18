@@ -17,6 +17,7 @@ import { AccountSection } from './AccountSection';
 import { AboutSection } from './sections';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_LABEL_MAP } from './SortPicker.constants';
+import { t } from '../../i18n';
 import type { HabitSortMode } from '../../features/habits/types';
 import type { SettingsContentProps } from './types';
 
@@ -39,12 +40,12 @@ export function SettingsContent(p: SettingsContentProps) {
       <View className='gap-5'>
         {/* Preferences Section - Visual settings */}
         <Animated.View entering={anim(0)}>
-          <SettingsSection highContrastMode={hc} title='Preferences'>
+          <SettingsSection highContrastMode={hc} title={t('settings.preferences')}>
             <SettingsRow
               highContrastMode={hc}
               icon={<Check color='#0284c7' size={16} />}
               iconBackgroundColor='#bae6fd'
-              label='Checkbox style for completed habits'
+              label={t('settings.checkboxStyleLabel')}
               type='toggle'
               value={p.habitCompletionIcon === 'checkbox'}
               onToggle={(v) =>
@@ -55,7 +56,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<Circle color='#8b5cf6' size={16} />}
               iconBackgroundColor='#ddd6fe'
-              label='Circular day markers'
+              label={t('settings.circularDayMarkersLabel')}
               type='toggle'
               value={p.dayShape === 'circle'}
               onToggle={(v) => void p.onChangeDayShape(v ? 'circle' : 'square')}
@@ -64,7 +65,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<Droplets color='#059669' size={16} />}
               iconBackgroundColor='#d1fae5'
-              label='Gradient fill for habit strength'
+              label={t('settings.gradientFillLabel')}
               type='toggle'
               value={p.showGradientFill}
               onToggle={(v) => void p.onChangeShowGradientFill(v)}
@@ -73,7 +74,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<Volume2 color='#f59e0b' size={16} />}
               iconBackgroundColor='#fef3c7'
-              label='Play sound on habit completion'
+              label={t('settings.soundOnCompletionLabel')}
               showBorder={false}
               type='toggle'
               value={p.completionSoundEnabled}
@@ -97,12 +98,12 @@ export function SettingsContent(p: SettingsContentProps) {
 
         {/* Data Section - Habit management */}
         <Animated.View entering={anim(120)}>
-          <SettingsSection highContrastMode={hc} title='Data'>
+          <SettingsSection highContrastMode={hc} title={t('settings.data')}>
             <SettingsRow
               highContrastMode={hc}
               icon={<ArrowUpDown color='#6366f1' size={16} />}
               iconBackgroundColor='#e0e7ff'
-              label='Sort Order'
+              label={t('settings.sortOrder')}
               type='selection'
               value={
                 SORT_LABEL_MAP[p.habitSortMode as HabitSortMode] ?? 'Custom'
@@ -114,7 +115,7 @@ export function SettingsContent(p: SettingsContentProps) {
               highContrastMode={hc}
               icon={<BookOpen color='#78716c' size={16} />}
               iconBackgroundColor='#e7e5e4'
-              label='Archived Habits'
+              label={t('settings.archivedHabits')}
               showBorder={false}
               type='navigation'
               onPress={p.onOpenArchivedHabits}
