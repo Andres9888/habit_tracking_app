@@ -1,14 +1,15 @@
 import { useCallback } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
-type AnyMutationFn = (...args: any[]) => Promise<any>;
+// Generic mutation function type for better type safety
+type MutationFn<Args, Result = void> = (args: Args) => Promise<Result>;
 
 export function useWrappedMutations(
-  toggleHabit: AnyMutationFn,
-  pauseHabit: AnyMutationFn,
-  removeHabit: AnyMutationFn,
-  updateSettings: AnyMutationFn,
-  archiveHabit: AnyMutationFn
+  toggleHabit: MutationFn<{ habitId: Id<'habits'>; date: string }>,
+  pauseHabit: MutationFn<{ habitId: Id<'habits'> }>,
+  removeHabit: MutationFn<{ habitId: Id<'habits'> }>,
+  updateSettings: MutationFn<unknown>, // Generic settings object
+  archiveHabit: MutationFn<{ habitId: Id<'habits'> }>
 ) {
   const wrappedToggleHabit = useCallback(
     async (args: { habitId: Id<'habits'>; date: string }) => {
