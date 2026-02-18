@@ -1,4 +1,4 @@
-import { Animated, Text, View } from 'react-native';
+import { memo, Animated, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
@@ -16,14 +16,14 @@ interface RewardCelebrationToastProps {
 
 const AnimatedContainer = Animated.createAnimatedComponent(View);
 
-export const RewardCelebrationToast = ({
+function RewardCelebrationToastComponent({
   message,
   onDismiss,
   onPrimaryAction,
   onSecondaryAction,
   streak,
   visible,
-}: RewardCelebrationToastProps) => {
+}: RewardCelebrationToastProps) {
   const { translateY, opacity } = useRewardToastAnimation(visible);
   const { title, premiumCTA } = useRewardToastContent(streak);
   const { triggerLightImpact } = useHapticFeedback({});
@@ -97,6 +97,8 @@ export const RewardCelebrationToast = ({
       </View>
     </AnimatedContainer>
   );
-};
+}
+
+export const RewardCelebrationToast = memo(RewardCelebrationToastComponent);
 
 export default RewardCelebrationToast;

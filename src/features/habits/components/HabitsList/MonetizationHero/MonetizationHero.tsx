@@ -26,13 +26,18 @@ export function MonetizationHero({
   onUpgradePress,
   reduceMotion = false,
 }: MonetizationHeroProps) {
-  const { progressStyle, ctaPulseStyle, shimmerStyle, trackWidth, handleTrackLayout } =
-    useMonetizationAnimations({
-      freeHabitLimit,
-      habitSlotsUsed,
-      hasReachedHabitLimit,
-      reduceMotion,
-    });
+  const {
+    progressStyle,
+    ctaPulseStyle,
+    shimmerStyle,
+    trackWidth,
+    handleTrackLayout,
+  } = useMonetizationAnimations({
+    freeHabitLimit,
+    habitSlotsUsed,
+    hasReachedHabitLimit,
+    reduceMotion,
+  });
 
   return (
     <View
