@@ -44,7 +44,7 @@ export function validateHabitName(name: string): {
   error?: string;
 } {
   // Guard against null/undefined
-  if (name == null) {
+  if (name === null || name === undefined) {
     return {
       error: 'Habit name is required',
       isValid: false,
