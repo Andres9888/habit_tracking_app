@@ -26,14 +26,16 @@ export class OfflineSyncManager {
   private isSyncing = false;
   private stats = { failedCount: 0, syncedCount: 0 };
   private lastSyncAt?: number;
+  private circuitCleanup: (() => void) | null = null;
 
   constructor(config: OfflineSyncManagerConfig = {}) {
-    const { circuitBreaker, retryStrategy } = createSyncCircuit(
+    const { circuitBreaker, retryStrategy, cleanup } = createSyncCircuit(
       config,
       this.emit.bind(this)
     );
     this.circuitBreaker = circuitBreaker;
     this.retryStrategy = retryStrategy;
+    this.circuitCleanup = cleanup;
   }
 
   getStatus(): SyncStatus {
@@ -110,6 +112,11 @@ export class OfflineSyncManager {
   }
   resetStats(): void {
     this.stats = { failedCount: 0, syncedCount: 0 };
+  }
+
+  destroy(): void {
+    this.circuitCleanup?.();
+    this.listeners.clear();
   }
 
   private emit(type: SyncEventType, data?: Record<string, unknown>): void {

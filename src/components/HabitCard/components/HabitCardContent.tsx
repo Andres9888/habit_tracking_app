@@ -53,28 +53,19 @@ function HabitCardContentComponent({
             {name}
           </Text>
         </View>
-        <View style={styles.statusContainer}>
-          <PendingSyncBadge
-            size='small'
-            testID='habit-card-pending-sync-badge'
-            visible={hasPendingOfflineOps}
-          />
-          <StatusIndicator
-            atRisk={atRisk}
-            chainRotate={chainRotate}
-            chainScale={chainScale}
-            checkmarkAnimatedStyle={checkmarkAnimatedStyle}
-            completed={completed}
-            completionIcon={completionIcon}
-            hasPendingOfflineOps={hasPendingOfflineOps}
-          />
-        </View>
+        <StatusAndStreakSection
+          atRisk={atRisk}
+          bestStreak={bestStreak}
+          chainRotate={chainRotate}
+          chainScale={chainScale}
+          checkmarkAnimatedStyle={checkmarkAnimatedStyle}
+          completed={completed}
+          completionIcon={completionIcon}
+          currentStreak={currentStreak}
+          hasPendingOfflineOps={hasPendingOfflineOps}
+          rippleAnimatedStyle={rippleAnimatedStyle}
+        />
       </View>
-      <StreakBadge bestStreak={bestStreak} currentStreak={currentStreak} />
-      <Animated.View
-        pointerEvents='none'
-        style={[streakStyles.rippleOverlay, rippleAnimatedStyle]}
-      />
       <View style={styles.bottomRow}>
         <StrengthProgressBar
           showEmoji

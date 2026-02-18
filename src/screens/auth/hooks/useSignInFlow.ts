@@ -5,6 +5,7 @@ import { Alert } from 'react-native';
 import { useFieldValidation } from '../../../utils/validation/useFieldValidation';
 import { validateEmail } from '../../../utils/validation';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';
+import { ClerkAuthStatus } from '../types/clerkStatus';
 
 export function useSignInFlow() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -35,7 +36,7 @@ export function useSignInFlow() {
         password,
       });
 
-      if (signInAttempt.status === 'complete') {
+      if (signInAttempt.status === ClerkAuthStatus.Complete) {
         await setActive({ session: signInAttempt.createdSessionId });
       } else {
         Alert.alert(

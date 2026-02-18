@@ -2,6 +2,7 @@ import { useSSO } from '@clerk/clerk-expo';
 import * as WebBrowser from 'expo-web-browser';
 import { useCallback, useEffect, useState } from 'react';
 import { mapOAuthError, MappedError } from '../utils';
+import { ClerkAuthStatus } from '../types/clerkStatus';
 
 // Warm up browser for better UX on Android
 WebBrowser.maybeCompleteAuthSession();

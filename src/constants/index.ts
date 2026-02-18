@@ -88,6 +88,9 @@ export type { HubermanPhase, PhaseInfo } from './hubermanPhases';
 // External URLs
 export { EXTERNAL_URLS } from './urls';
 
+// Validation constants
+export { DATE_FORMAT_REGEX } from './validation';
+
 // Motion and strings (default exports)
 export { default as Motion } from './motion';
 export { default as STRINGS } from './strings';

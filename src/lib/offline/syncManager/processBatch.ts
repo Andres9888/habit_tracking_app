@@ -24,7 +24,7 @@ export async function processBatch<T>(
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
     if (
-      item.retryContext.nextRetryAt &&
+      item.retryContext?.nextRetryAt &&
       Date.now() < item.retryContext.nextRetryAt
     ) {
       skipped.push(item);

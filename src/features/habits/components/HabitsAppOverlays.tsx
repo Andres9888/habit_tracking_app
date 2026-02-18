@@ -25,6 +25,10 @@ export function HabitsAppOverlays({
   onPaywallClose,
   onPaywallSuccess,
 }: HabitsAppOverlaysProps) {
+  const handleArchiveUndo = (): void => {
+    void list.handleArchiveUndo();
+  };
+
   return (
     <>
       <WebToaster />
@@ -35,9 +39,7 @@ export function HabitsAppOverlays({
         habitName={list.archiveUndoHabitName}
         visible={list.archiveUndoVisible}
         onDismiss={list.dismissArchiveUndo}
-        onUndo={(): void => {
-          void list.handleArchiveUndo();
-        }}
+        onUndo={handleArchiveUndo}
       />
 
       <RevenueCatPaywall

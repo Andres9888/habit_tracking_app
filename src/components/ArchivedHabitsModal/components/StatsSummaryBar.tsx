@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { DARK_SURFACE_COLOR } from '@/constants/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { AnimatedPressable } from '../../ui';
 
@@ -16,7 +17,7 @@ export function StatsSummaryBar({ habitCount, onDeleteAll }: StatsSummaryBarProp
     <View
       className='mb-4 flex-row items-center justify-between rounded-xl px-4 py-3'
       style={{
-        backgroundColor: isDark ? '#1f2937' : '#fafaf9',
+        backgroundColor: isDark ? DARK_SURFACE_COLOR : '#fafaf9',
       }}
     >
       <View className='flex-row items-center gap-2'>

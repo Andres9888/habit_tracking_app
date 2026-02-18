@@ -49,7 +49,7 @@ export function AnimatedHabitCard({
         style={[
           CARD_SHADOW,
           {
-            backgroundColor: isDark ? '#1f2937' : '#ffffff',
+            backgroundColor: isDark ? DARK_SURFACE_COLOR : '#ffffff',
             borderColor: isDark ? '#374151' : '#e7e5e4',
           },
         ]}
