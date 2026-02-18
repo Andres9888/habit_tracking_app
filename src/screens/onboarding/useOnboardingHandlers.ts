@@ -1,0 +1,69 @@
+/**
+ * useOnboardingHandlers — navigation and completion handlers for onboarding.
+ */
+
+import { useCallback, useRef, useState } from 'react';
+import { FlatList, type ViewToken } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { ImpactFeedbackStyle } from 'expo-haptics';
+import { safeSetBoolean } from '@/utils/storage';
+import { ONBOARDING_KEY, PAGES } from './onboarding.data';
+
+export function useOnboardingHandlers(onComplete: () => void) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
+
+  const handleComplete = useCallback(async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
+    try {
+      await safeSetBoolean(ONBOARDING_KEY, true);
+      onComplete();
+    } catch {
+      onComplete();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [onComplete, isLoading]);
+
+  const handleSkip = useCallback(() => {
+    void Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    void handleComplete();
+  }, [handleComplete]);
+
+  const handleNext = useCallback(() => {
+    void Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    if (currentIndex < PAGES.length - 1) {
+      flatListRef.current?.scrollToIndex({
+        animated: true,
+        index: currentIndex + 1,
+      });
+    }
+  }, [currentIndex]);
+
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      if (viewableItems.length > 0 && viewableItems[0].index != null) {
+        setCurrentIndex(viewableItems[0].index);
+      }
+    }
+  ).current;
+
+  const viewabilityConfig = useRef({
+    viewAreaCoveragePercentThreshold: 50,
+  }).current;
+
+  return {
+    currentIndex,
+    flatListRef,
+    handleComplete,
+    handleNext,
+    handleSkip,
+    isLastPage: currentIndex === PAGES.length - 1,
+    isLoading,
+    onViewableItemsChanged,
+    viewabilityConfig,
+  };
+}
