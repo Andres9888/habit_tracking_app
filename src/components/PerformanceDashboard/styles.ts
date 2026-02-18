@@ -1,13 +1,16 @@
 /**
  * Performance Dashboard Styles
  * StyleSheet definitions for the dashboard component.
+ *
+ * Note: Dynamic theme colors are applied via useThemeColors() in the component.
+ * Static styles use fallback colors for light mode; theme context overrides at runtime.
  */
 
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   closeButton: {
-    color: 'rgba(255,255,255,0.6)',
+    color: 'rgba(0,0,0,0.6)',
     fontSize: 20,
     fontWeight: '300',
     marginLeft: 8,
@@ -20,27 +23,27 @@ export const styles = StyleSheet.create({
     gap: 8,
   },
   dashboard: {
-    backgroundColor: 'rgba(23, 23, 23, 0.95)',
-    borderColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderColor: 'rgba(0,0,0,0.1)',
     borderRadius: 12,
     borderWidth: 1,
     padding: 12,
-    shadowColor: '#1c1917',
+    shadowColor: '#000000',
     shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.1,
     shadowRadius: 8,
   },
   expandButton: {
     padding: 4,
   },
   expandIcon: {
-    color: 'rgba(255,255,255,0.6)',
+    color: 'rgba(0,0,0,0.6)',
     fontSize: 10,
   },
   fab: {
     alignItems: 'center',
-    backgroundColor: 'rgba(23, 23, 23, 0.95)',
-    borderColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderColor: 'rgba(0,0,0,0.1)',
     borderRadius: 16,
     borderWidth: 1,
     flexDirection: 'row',
@@ -48,14 +51,14 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     position: 'absolute',
-    shadowColor: '#1c1917',
+    shadowColor: '#000000',
     shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.15,
     shadowRadius: 4,
     zIndex: 9999,
   },
   fabText: {
-    color: '#ffffff',
+    color: '#000000',
     fontFamily: 'monospace',
     fontSize: 12,
     fontWeight: '600',
@@ -76,12 +79,12 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   headerTitle: {
-    color: '#ffffff',
+    color: '#000000',
     fontSize: 14,
     fontWeight: '600',
   },
   miniLabel: {
-    color: 'rgba(255,255,255,0.5)',
+    color: 'rgba(0,0,0,0.5)',
     fontSize: 9,
     fontWeight: '500',
   },
@@ -95,7 +98,7 @@ export const styles = StyleSheet.create({
     paddingTop: 4,
   },
   miniValue: {
-    color: '#ffffff',
+    color: '#000000',
     fontFamily: 'monospace',
     fontSize: 11,
     fontWeight: '600',

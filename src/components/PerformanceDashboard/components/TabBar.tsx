@@ -46,14 +46,14 @@ export function TabBar({ activeTab, onTabChange }: TabBarProps) {
 
 const styles = StyleSheet.create({
   activeLabel: {
-    color: '#ffffff',
+    color: '#000000',
   },
   activeTab: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(0,0,0,0.08)',
     borderRadius: 8,
   },
   container: {
-    borderBottomColor: 'rgba(255,255,255,0.1)',
+    borderBottomColor: 'rgba(0,0,0,0.1)',
     borderBottomWidth: 1,
     flexDirection: 'row',
     gap: 2,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   label: {
-    color: 'rgba(255,255,255,0.6)',
+    color: 'rgba(0,0,0,0.6)',
     fontSize: 9,
     fontWeight: '500',
   },

@@ -35,7 +35,7 @@ export function MetricCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(0,0,0,0.05)',
     borderRadius: 8,
     flex: 1,
     minWidth: 80,
@@ -49,18 +49,18 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   label: {
-    color: 'rgba(255,255,255,0.7)',
+    color: 'rgba(0,0,0,0.7)',
     fontSize: 10,
     fontWeight: '500',
     textTransform: 'uppercase',
   },
   subtitle: {
-    color: 'rgba(255,255,255,0.5)',
+    color: 'rgba(0,0,0,0.5)',
     fontSize: 9,
     marginTop: 2,
   },
   value: {
-    color: '#ffffff',
+    color: '#000000',
     fontFamily: 'monospace',
     fontSize: 17,
     fontWeight: '700',

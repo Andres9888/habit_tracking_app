@@ -26,12 +26,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    color: 'rgba(255,255,255,0.5)',
+    color: 'rgba(0,0,0,0.5)',
     fontSize: 9,
     fontWeight: '500',
   },
   value: {
-    color: '#ffffff',
+    color: '#000000',
     fontFamily: 'monospace',
     fontSize: 11,
     fontWeight: '600',

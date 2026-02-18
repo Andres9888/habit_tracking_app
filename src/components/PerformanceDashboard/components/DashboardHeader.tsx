@@ -51,7 +51,7 @@ export function DashboardHeader({
 
 const styles = StyleSheet.create({
   closeButton: {
-    color: 'rgba(255,255,255,0.6)',
+    color: 'rgba(0,0,0,0.6)',
     fontSize: 20,
     fontWeight: '300',
     marginLeft: 8,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   expandIcon: {
-    color: 'rgba(255,255,255,0.6)',
+    color: 'rgba(0,0,0,0.6)',
     fontSize: 10,
   },
   header: {
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   headerTitle: {
-    color: '#ffffff',
+    color: '#000000',
     fontSize: 14,
     fontWeight: '600',
   },

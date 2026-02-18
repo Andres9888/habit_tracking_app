@@ -37,8 +37,8 @@ export function DashboardFAB({
 const styles = StyleSheet.create({
   fab: {
     alignItems: 'center',
-    backgroundColor: 'rgba(23, 23, 23, 0.95)',
-    borderColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderColor: 'rgba(0,0,0,0.1)',
     borderRadius: 16,
     borderWidth: 1,
     flexDirection: 'row',
@@ -46,14 +46,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     position: 'absolute',
-    shadowColor: '#1c1917',
+    shadowColor: '#000000',
     shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.15,
     shadowRadius: 4,
     zIndex: 9999,
   },
   fabText: {
-    color: '#ffffff',
+    color: '#000000',
     fontFamily: 'monospace',
     fontSize: 12,
     fontWeight: '600',
