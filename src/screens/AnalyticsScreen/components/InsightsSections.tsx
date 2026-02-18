@@ -22,10 +22,12 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
   rankedHabits,
   onHabitPress,
 }) => {
+  const { colors } = useThemeColors();
+
   return (
     <>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Weekly Insights</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Weekly Insights</Text>
         <WeeklyInsightsCard
           insights={weeklyInsights ?? null}
           onArchivePress={() => {

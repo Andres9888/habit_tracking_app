@@ -73,6 +73,7 @@ export interface ShareAndPauseModalsProps {
 export interface TemplatesModalSectionProps {
   showTemplatesScreen: boolean;
   closeTemplatesScreen: () => void;
+  reduceMotionPreference: boolean;
 }
 
 /** Props for the QuickActionsSection component */

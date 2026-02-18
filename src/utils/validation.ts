@@ -9,9 +9,11 @@
  * @category Validation
  */
 
-const MAX_HABIT_NAME_LENGTH = 200;
-const MIN_HABIT_NAME_LENGTH = 1;
-const MAX_HABITS_RENDER_LIMIT = 500; // Performance guard
+import {
+  MAX_HABIT_NAME_LENGTH,
+  MIN_HABIT_NAME_LENGTH,
+  MAX_HABITS_RENDER_LIMIT,
+} from '@/constants';
 
 /**
  * Validate and sanitize habit name.
@@ -241,4 +243,64 @@ export function safeParseNumber(
   if (max !== undefined && parsed > max) return max;
 
   return parsed;
+}
+
+/**
+ * Validate email address format.
+ *
+ * @param email - Email address to validate
+ * @returns Validation result with isValid and optional error message
+ */
+export function validateEmail(
+  email: string | undefined
+): {
+  isValid: boolean;
+  error?: string;
+} {
+  if (!email || email.trim().length === 0) {
+    return {
+      error: 'Email is required',
+      isValid: false,
+    };
+  }
+
+  // Basic email validation regex (RFC 5322 simplified)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return {
+      error: 'Please enter a valid email address',
+      isValid: false,
+    };
+  }
+
+  return { isValid: true };
+}
+
+/**
+ * Validate password strength.
+ *
+ * @param password - Password to validate
+ * @returns Validation result with isValid and optional error message
+ */
+export function validatePassword(
+  password: string | undefined
+): {
+  isValid: boolean;
+  error?: string;
+} {
+  if (!password || password.length === 0) {
+    return {
+      error: 'Password is required',
+      isValid: false,
+    };
+  }
+
+  if (password.length < 8) {
+    return {
+      error: 'Password must be at least 8 characters',
+      isValid: false,
+    };
+  }
+
+  return { isValid: true };
 }
