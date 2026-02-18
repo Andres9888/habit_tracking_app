@@ -14,6 +14,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
+import { useThemeColors } from '../../../../theme';
 
 interface UpgradePromptProps {
   onClose: () => void;
@@ -26,6 +27,8 @@ export function UpgradePrompt({
   onUpgradePress,
   visible,
 }: UpgradePromptProps) {
+  const { colors, isDark } = useThemeColors();
+
   if (!visible) return null;
 
   return (
@@ -46,7 +49,7 @@ export function UpgradePrompt({
       >
         <LinearGradient
           className='absolute inset-0 rounded-t-3xl'
-          colors={['#ffffff', 'rgba(255, 251, 235, 0.3)']}
+          colors={[colors.card, isDark ? `${colors.card}30` : 'rgba(255, 251, 235, 0.3)']}
         />
         <View className='gap-4'>
           <View className='items-center pb-2'>
