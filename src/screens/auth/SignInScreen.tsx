@@ -38,6 +38,7 @@ import {
 } from './components';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useSignInFlow } from './hooks/useSignInFlow';
+import { EXTERNAL_URLS } from '@/constants';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { colors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -245,7 +246,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
                 accessibilityRole='link'
                 style={styles.footerLink}
                 onPress={() =>
-                  void Linking.openURL('https://chainday.app/terms')
+                  void Linking.openURL(EXTERNAL_URLS.TERMS)
                 }
               >
                 Terms
@@ -255,7 +256,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
                 accessibilityRole='link'
                 style={styles.footerLink}
                 onPress={() =>
-                  void Linking.openURL('https://chainday.app/privacy')
+                  void Linking.openURL(EXTERNAL_URLS.PRIVACY)
                 }
               >
                 Privacy Policy

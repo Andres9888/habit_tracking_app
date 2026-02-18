@@ -8,28 +8,35 @@
 import type {
   OfflineOperation,
   PendingToggleOperation,
+  ToggleCompletionOperation,
 } from '../../../lib/offline';
 
 /**
  * Filter operations for a specific habit
+ * Returns only toggleCompletion operations that are pending or syncing
  */
 export function filterPendingForHabit(
   operations: OfflineOperation[],
   habitId: string
-): OfflineOperation[] {
-  return operations.filter(
-    (op) =>
-      op.type === 'toggleCompletion' &&
-      op.payload.habitId === habitId &&
-      (op.status === 'pending' || op.status === 'syncing')
-  );
+): ToggleCompletionOperation[] {
+  return operations
+    .filter(
+      (op): op is ToggleCompletionOperation =>
+        op.type === 'toggleCompletion'
+    )
+    .filter(
+      (op) =>
+        op.payload.habitId === habitId &&
+        (op.status === 'pending' || op.status === 'syncing')
+    );
 }
 
 /**
  * Convert offline operations to PendingToggleOperation format
+ * Assumes all operations are toggleCompletion operations
  */
 export function toPendingToggleOps(
-  operations: OfflineOperation[]
+  operations: ToggleCompletionOperation[]
 ): PendingToggleOperation[] {
   return operations.map((op) => ({
     date: op.payload.date,

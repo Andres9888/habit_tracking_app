@@ -68,7 +68,7 @@ interface MutationResult {
   /** ID of offline queue operation (if queued) */
   offlineOperationId?: string;
   /** Server result (if executed immediately) */
-  result?: any;
+  result?: unknown;
   /** Temporary ID for optimistic updates (create operations only) */
   tempId?: string;
 }

@@ -1,3 +1,17 @@
+/**
+ * CalendarTimeline Styles and Colors
+ *
+ * Centralized color and style definitions for the CalendarTimeline component.
+ * Supports light mode, dark mode, and high-contrast mode for accessibility.
+ *
+ * NOTE: Consolidation opportunity - There's also a theme.ts file with similar
+ * color definitions. Consider consolidating these in a future refactor to
+ * eliminate duplication. Both provide the same functionality for now.
+ *
+ * @see CalendarTimeline.tsx for implementation
+ * @see theme.ts for alternative color definitions
+ */
+
 import type {
   CalendarColors,
   CompletionStatus,
