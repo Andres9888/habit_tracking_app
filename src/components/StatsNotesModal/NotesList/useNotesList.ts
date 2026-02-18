@@ -8,12 +8,15 @@ import { useMutation, useQuery } from 'convex/react';
 import * as Haptics from 'expo-haptics';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export function useNotesList(initialHabitId?: Id<'habits'>) {
   const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 300);
   const [selectedHabitFilter, setSelectedHabitFilter] = useState<
     Id<'habits'> | 'all'
   >(initialHabitId ?? 'all');
+  const debouncedHabitFilter = useDebounce(selectedHabitFilter, 300);
   const [editingNoteId, setEditingNoteId] = useState<Id<'notes'> | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [showVisualizationGuide, setShowVisualizationGuide] = useState(false);

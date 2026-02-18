@@ -21,6 +21,12 @@ export type {
   ToggleSyncExecutor,
 } from '../types';
 
+// Hook Types
+export type {
+  UseSyncOrchestratorOptions,
+  UseSyncOrchestratorReturn,
+} from '../useSyncOrchestrator.types';
+
 // Process Queue Types
 export type {
   ProcessOperationResult,

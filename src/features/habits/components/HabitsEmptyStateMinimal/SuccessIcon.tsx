@@ -5,13 +5,18 @@
  * The progress ring shows countdown to auto-transition.
  */
 
-import { Text, View, ViewStyle } from 'react-native';
+import { Dimensions, Text, View, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 
 import { PROGRESS_RING, PARTICLE_BURST } from './animations';
 import { COLORS } from './constants';
 import { ParticleBurst } from './ParticleBurst';
 import { ProgressRing } from './ProgressRing';
+
+/** Responsive sizing based on screen width */
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const RESPONSIVE_ICON_SIZE = Math.min(SCREEN_WIDTH * 0.25, 96);
+const RESPONSIVE_BORDER_RADIUS = RESPONSIVE_ICON_SIZE / 2;
 
 interface SuccessIconProps {
   emoji: string;
@@ -82,14 +87,14 @@ export function SuccessIcon({
         style={{
           alignItems: 'center',
           backgroundColor: COLORS.successBackground,
-          borderRadius: 48,
-          height: 96,
+          borderRadius: RESPONSIVE_BORDER_RADIUS,
+          height: RESPONSIVE_ICON_SIZE,
           justifyContent: 'center',
-          width: 96,
+          width: RESPONSIVE_ICON_SIZE,
           zIndex: 10,
         }}
       >
-        <Text style={{ fontSize: 48 }}>{emoji}</Text>
+        <Text style={{ fontSize: RESPONSIVE_ICON_SIZE * 0.5 }}>{emoji}</Text>
       </View>
     </Animated.View>
   );

@@ -1,4 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const RESPONSIVE_BUTTON_SIZE = Math.max(SCREEN_WIDTH * 0.08, 38);
 
 export const styles = StyleSheet.create({
   buttonPressed: {
@@ -22,15 +25,15 @@ export const styles = StyleSheet.create({
     borderColor: '#e7e5e4',
     borderRadius: 12,
     borderWidth: 1,
-    height: 38,
+    height: RESPONSIVE_BUTTON_SIZE,
     justifyContent: 'center',
-    width: 38,
+    width: RESPONSIVE_BUTTON_SIZE,
   },
   templatesButton: {
     alignItems: 'center',
     borderRadius: 12,
     flexDirection: 'row',
-    height: 38,
+    height: RESPONSIVE_BUTTON_SIZE,
     justifyContent: 'center',
     paddingHorizontal: 12,
   },

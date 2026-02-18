@@ -9,7 +9,7 @@
  */
 
 import { useCallback, useMemo, useState } from 'react';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Habit, HabitSettings, HabitSortMode } from '../types';
 import { useHabitsWeekDates } from './useHabitsWeekDates';
@@ -24,6 +24,7 @@ import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTim
 import { useCompletionSound } from '../../../hooks/useCompletionSound';
 import { validateHabitsArray } from '../../../utils/validation';
 import type { HabitsListState } from './types';
+import { useMediumQuery } from '../../../hooks/useQueryWithCache';
 
 import { FREE_HABIT_LIMIT } from '@/constants';
 

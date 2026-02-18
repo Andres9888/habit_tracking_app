@@ -100,6 +100,9 @@ function DraggableHabit(props: DraggableHabitProps) {
       preference: reduceMotionPreference,
     });
 
+  // 3.5. Prefetch navigation data on press
+  const { prefetchHabitDetail } = usePrefetchNavigation();
+
   // 4. Card animations (fade, scale, glow, new-record badge)
   const animations = useDraggableHabitAnimations({
     isJustCreated,
@@ -117,6 +120,15 @@ function DraggableHabit(props: DraggableHabitProps) {
   const { isDark, showGradientFill, strengthFillStyle } = useCardStrengthFill(
     state.strengthPercent,
     reduceMotionPreference
+  );
+
+  // Wrap onPress to prefetch detail data when tapped
+  const wrappedOnPress = useCallback(
+    (habitParam: typeof habit) => {
+      prefetchHabitDetail(habitParam._id);
+      onPress?.(habitParam);
+    },
+    [onPress, prefetchHabitDetail]
   );
 
   // 7. Press / long-press / swipe handlers
@@ -160,7 +172,7 @@ function DraggableHabit(props: DraggableHabitProps) {
       weekStatus={weekStatus}
       onArchive={onArchive}
       onPause={onPause}
-      onPress={onPress}
+      onPress={wrappedOnPress}
       onResume={onResume}
       onWeekComplete={onWeekComplete}
     />

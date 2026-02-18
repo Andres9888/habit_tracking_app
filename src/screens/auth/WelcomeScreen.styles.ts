@@ -2,9 +2,12 @@
  * WelcomeScreen styles
  */
 
-import { StyleSheet, TextStyle } from 'react-native';
+import { Dimensions, StyleSheet, TextStyle } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '@/theme/typography';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const RESPONSIVE_ICON_SIZE = Math.min(SCREEN_WIDTH * 0.2, 80);
 
 export const styles = StyleSheet.create({
   actionSection: {
@@ -37,14 +40,14 @@ export const styles = StyleSheet.create({
     backgroundColor: '#f5f5f4',
     borderRadius: 16,
     elevation: 4,
-    height: 80,
+    height: RESPONSIVE_ICON_SIZE,
     justifyContent: 'center',
     marginBottom: 8,
     shadowColor: '#1c1917',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
-    width: 80,
+    width: RESPONSIVE_ICON_SIZE,
   },
   loadingContainer: {
     alignItems: 'center',

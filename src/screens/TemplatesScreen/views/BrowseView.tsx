@@ -5,6 +5,7 @@
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import Toast from '../../../components/Toast';
+import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { styles } from '../../templates/templatesScreenStyles';
 import { BrowseHeader, SearchBar, TabBar, TemplateModals } from '../components';
 import { BrowseAllTab } from './BrowseAllTab';
@@ -16,7 +17,8 @@ export function BrowseView(p: BrowseViewProps) {
   const catCount = cats?.filter((c) => c.id !== 'all').length || 0;
 
   return (
-    <View style={styles.container}>
+    <ErrorBoundary screenName="BrowseView">
+      <View style={styles.container}>
       <BrowseHeader animatedStyle={a.headerAnimatedStyle} />
       <Animated.View style={[styles.searchSection, a.searchAnimatedStyle]}>
         <SearchBar
@@ -86,6 +88,7 @@ export function BrowseView(p: BrowseViewProps) {
         visible={p.showToast}
         onDismiss={() => p.setShowToast(false)}
       />
-    </View>
+      </View>
+    </ErrorBoundary>
   );
 }

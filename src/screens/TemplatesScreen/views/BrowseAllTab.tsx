@@ -95,5 +95,6 @@ export function BrowseAllTab(p: BrowseAllTabProps) {
         />
       )}
     </Animated.View>
+    </ErrorBoundary>
   );
 }

@@ -24,11 +24,13 @@ import {
 } from 'react-native';
 import { Modal } from '../Modal';
 import { Button } from '../Button/Button';
-import { Bug, Lightbulb, MessageSquare } from 'lucide-react-native';
+import { Bug, Lightbulb, MessageSquare, CheckCircle2, AlertCircle, Mail } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import type { FeedbackModalProps, FeedbackType } from './FeedbackModal.types';
 import { styles } from './FeedbackModal.styles';
+import { getDescriptionPlaceholder } from './FeedbackModalHelpers';
 import { MAX_SHORT_TEXT_LENGTH, MAX_LONG_TEXT_LENGTH } from '@/constants';
+import { validateEmail } from '@/utils/validation';
 
 const SUPPORT_EMAIL = 'support@chainday.app';
 
@@ -196,6 +198,8 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
                 Title <Text style={styles.required}>*</Text>
               </Text>
               <TextInput
+                accessibilityLabel='Feedback title'
+                accessibilityHint='Provide a brief title for your feedback'
                 style={styles.input}
                 placeholder='Brief summary of your feedback'
                 placeholderTextColor={colors.gray[400]}
@@ -214,6 +218,8 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
                 Description <Text style={styles.required}>*</Text>
               </Text>
               <TextInput
+                accessibilityLabel='Feedback description'
+                accessibilityHint='Provide detailed information about your feedback'
                 style={[styles.input, styles.textArea]}
                 placeholder={getDescriptionPlaceholder(selectedType)}
                 placeholderTextColor={colors.gray[400]}
@@ -234,6 +240,8 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
                 Email (optional, for follow-up)
               </Text>
               <TextInput
+                accessibilityLabel='Email for follow-up'
+                accessibilityHint='Optionally provide your email address for follow-up responses'
                 style={styles.input}
                 placeholder='your.email@example.com'
                 placeholderTextColor={colors.gray[400]}
