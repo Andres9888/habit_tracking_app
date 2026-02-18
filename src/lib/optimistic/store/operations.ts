@@ -10,7 +10,6 @@ import type {
   ReorderOperationPayload,
   PauseOperationPayload,
 } from '../types';
-import type { StoreListener } from './types';
 import { generateId, getToggleKey } from './helpers';
 
 export function createOperations(
