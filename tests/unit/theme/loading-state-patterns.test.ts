@@ -18,6 +18,7 @@ describe('HabitDetailScreen loading state', () => {
 
   it('imports DetailLoadingState from components', () => {
     expect(source).toMatch(/DetailLoadingState/);
+    expect(source).toContain('DetailLoadingState');
   });
 
   it('renders DetailLoadingState in the else branch (habit falsy)', () => {
@@ -44,6 +45,7 @@ describe('DetailLoadingState component', () => {
 
   it('uses ActivityIndicator', () => {
     expect(source).toMatch(/ActivityIndicator/);
+    expect(source).toContain('ActivityIndicator');
   });
 
   it('uses theme color for spinner', () => {
