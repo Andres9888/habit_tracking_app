@@ -24,7 +24,7 @@ function RewardCelebrationToastComponent({
   streak,
   visible,
 }: RewardCelebrationToastProps) {
-  const { translateY, opacity } = useRewardToastAnimation(visible);
+  const { translateY, opacity } = useRewardToastAnimation({ visible });
   const { title, premiumCTA } = useRewardToastContent(streak);
   const { triggerLightImpact } = useHapticFeedback({});
 
