@@ -23,17 +23,20 @@ describe('HabitDetailScreen loading state', () => {
   it('renders DetailLoadingState in the else branch (habit falsy)', () => {
     // Ternary: {habit ? <content> : <DetailLoadingState />}
     expect(source).toMatch(/\) : \([\s\S]*?<DetailLoadingState/);
+    expect(source).toContain('habit ?');
   });
 
   it('wraps loading state inside a Modal via ternary', () => {
     expect(source).toMatch(
       /<Modal[\s\S]*?\{habit \?[\s\S]*?<DetailLoadingState[\s\S]*?<\/Modal>/
     );
+    expect(source).toContain('<Modal');
   });
 
   it('does NOT return bare null when habit is missing', () => {
     // Should not have a plain "return null" for the !habit case
     expect(source).not.toMatch(/if\s*\(!habit\)\s*return\s+null/);
+    expect(source).not.toContain('if (!habit) return null');
   });
 });
 
@@ -44,22 +47,27 @@ describe('DetailLoadingState component', () => {
 
   it('uses ActivityIndicator', () => {
     expect(source).toMatch(/ActivityIndicator/);
+    expect(source).toContain('ActivityIndicator');
   });
 
   it('uses theme color for spinner', () => {
     expect(source).toMatch(/colors\.gray\[500\]/);
+    expect(source).toContain('gray');
   });
 
   it('uses theme background color', () => {
     expect(source).toMatch(/colors\.light\.background/);
+    expect(source).toContain('light');
   });
 
   it('has accessibility role progressbar', () => {
     expect(source).toMatch(/accessibilityRole='progressbar'/);
+    expect(source).toContain('accessibilityRole');
   });
 
   it('has accessibility label', () => {
     expect(source).toMatch(/accessibilityLabel='Loading habit details'/);
+    expect(source).toContain('accessibilityLabel');
   });
 });
 
@@ -70,6 +78,7 @@ describe('DetailLoadingState barrel export', () => {
     expect(source).toMatch(
       /export\s*\{.*DetailLoadingState.*\}\s*from\s*['"]\.\/DetailLoadingState['"]/
     );
+    expect(source).toContain('DetailLoadingState');
   });
 });
 
@@ -80,6 +89,7 @@ describe('HabitEditScreen modal null pattern (intentional)', () => {
     expect(source).toMatch(
       /if\s*\(!visible\s*\|\|\s*!habitId\)\s*return\s+null/
     );
+    expect(source).toContain('return null');
   });
 
   it('has documentation comment explaining the null pattern', () => {
@@ -102,5 +112,6 @@ describe('CharacterScreen loading state documentation', () => {
 
   it('uses theme background color', () => {
     expect(source).toMatch(/colors\.light\.background/);
+    expect(source).toContain('light');
   });
 });

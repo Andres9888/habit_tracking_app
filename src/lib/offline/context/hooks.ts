@@ -16,7 +16,7 @@ export function useOfflineSync(): OfflineSyncContextValue {
   const context = useContext(OfflineSyncContext);
   if (!context) {
     throw new Error(
-      'useOfflineSync must be used within an OfflineSyncProvider'
+      'UseOfflineSync must be used within an OfflineSyncProvider'
     );
   }
   return context;

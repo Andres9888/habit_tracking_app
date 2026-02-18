@@ -117,7 +117,7 @@ export const update = mutation({
     // SEC: Ownership verification — ensure item belongs to user's habit
     const habit = await ctx.db.get(existing.habitId);
     if (!habit || habit.userId !== identity.subject) {
-      throw new Error('Vision board item not found');
+      throw new Error('Not authorized to update this vision board item');
     }
 
     // SEC-003: Input validation - title (short text with XSS protection)
@@ -173,7 +173,7 @@ export const remove = mutation({
     // SEC: Ownership verification — ensure item belongs to user's habit
     const habit = await ctx.db.get(existing.habitId);
     if (!habit || habit.userId !== identity.subject) {
-      throw new Error('Vision board item not found');
+      throw new Error('Not authorized to delete this vision board item');
     }
 
     await ctx.db.delete(args.id);

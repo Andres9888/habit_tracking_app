@@ -56,7 +56,7 @@ export const create = mutation({
 
     const fileMetadata = await ctx.db.system.get(args.storageId);
     if (!fileMetadata) {
-      throw new Error('Storage file not found');
+      throw new Error('Uploaded file not found');
     }
 
     // SEC-003: Input validation - caption

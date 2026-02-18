@@ -32,7 +32,7 @@ export const getCompletionStatus = query({
     }
     if (habit.userId !== identity.subject) {
       throw new Error(
-        'Not authorized to view completion status for this habit'
+        'Not authorized to check this habit completion status'
       );
     }
 

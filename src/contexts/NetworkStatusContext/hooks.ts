@@ -35,7 +35,7 @@ export function useNetworkStatus(): NetworkStatusContextValue {
 
   if (!context) {
     throw new Error(
-      'useNetworkStatus must be used within a NetworkStatusProvider'
+      'UseNetworkStatus must be used within a NetworkStatusProvider'
     );
   }
 

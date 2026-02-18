@@ -16,7 +16,7 @@ export const archive = mutation({
     requireAuth(identity, 'archive habits');
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
-    if (habit.userId !== identity!.subject) throw new Error('Not authorized');
+    if (habit.userId !== identity!.subject) throw new Error('Not authorized to archive this habit');
     await ctx.db.patch(args.habitId, {
       archived: true,
       archivedAt: Date.now(),
@@ -33,7 +33,7 @@ export const unarchive = mutation({
     requireAuth(identity, 'unarchive habits');
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
-    if (habit.userId !== identity!.subject) throw new Error('Not authorized');
+    if (habit.userId !== identity!.subject) throw new Error('Not authorized to unarchive this habit');
     const activeHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))

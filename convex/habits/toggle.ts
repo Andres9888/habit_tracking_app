@@ -14,8 +14,8 @@ export const toggleHabit = mutation({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error('Unauthenticated: Must be logged in to toggle habits');
-    if (!isValidDateFormat(args.date)) throw new Error('Invalid date format; expected YYYY-MM-DD');
-    if (isFutureDate(args.date)) throw new Error('Cannot track habits for future dates');
+    if (!isValidDateFormat(args.date)) throw new Error('Invalid date format. Expected YYYY-MM-DD');
+    if (isFutureDate(args.date)) throw new Error('Cannot track habits on future dates');
 
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');

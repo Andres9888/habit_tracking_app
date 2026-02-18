@@ -24,8 +24,7 @@ export function parseAffirmationsResponse(
   try {
     parsed = JSON.parse(jsonStr);
   } catch (error) {
-    console.error('Failed to parse AI response as JSON:', error);
-    throw new Error('Invalid response format: JSON parse error');
+    throw new Error('Invalid response format: Unable to parse JSON');
   }
 
   if (!parsed || typeof parsed !== 'object') {

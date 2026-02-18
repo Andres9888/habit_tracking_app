@@ -44,7 +44,7 @@ export function isValidDateKey(dateKey: string): boolean {
 
 export function parseDateKeyToLocalDate(dateKey: string): Date {
   if (!isValidDateKey(dateKey)) {
-    throw new Error('Invalid date format; expected YYYY-MM-DD');
+    throw new Error('Invalid date format. Expected YYYY-MM-DD');
   }
 
   const [yearStr, monthStr, dayStr] = dateKey.split('-');
@@ -57,7 +57,7 @@ export function parseDateKeyToLocalDate(dateKey: string): Date {
 
   // Validate we didn't roll the date (e.g. 2025-13-40)
   if (formatDateKey(parsed) !== dateKey) {
-    throw new Error('Invalid date value; expected YYYY-MM-DD');
+    throw new Error('Invalid date value. Expected YYYY-MM-DD');
   }
 
   return parsed;
