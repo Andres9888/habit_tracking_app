@@ -72,19 +72,25 @@ export default function PausedHabitsModal({
           </Pressable>
         </Animated.View>
       </View>
-      <FlatList
-        className='flex-1 px-4'
-        contentContainerStyle={{ gap: 12, paddingBottom: insets.bottom + 16 }}
-        data={pausedHabits}
-        initialNumToRender={10}
-        keyExtractor={keyExtractor}
-        ListEmptyComponent={PausedEmptyState}
-        maxToRenderPerBatch={10}
-        removeClippedSubviews
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        windowSize={5}
-      />
+      {isLoading ? (
+        <View className='flex-1 items-center justify-center'>
+          <ActivityIndicator color={themeColors.accent} size='large' />
+        </View>
+      ) : (
+        <FlatList
+          className='flex-1 px-4'
+          contentContainerStyle={{ gap: 12, paddingBottom: insets.bottom + 16 }}
+          data={pausedHabits}
+          initialNumToRender={10}
+          keyExtractor={keyExtractor}
+          ListEmptyComponent={PausedEmptyState}
+          maxToRenderPerBatch={10}
+          removeClippedSubviews
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          windowSize={5}
+        />
+      )}
     </View>
   );
 }

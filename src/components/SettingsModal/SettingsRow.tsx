@@ -17,6 +17,7 @@ interface SettingsRowProps {
   value?: boolean | string;
   badge?: number;
   onPress?: () => void;
+  onPressIn?: () => void;
   onToggle?: (value: boolean) => void;
   showBorder?: boolean;
   highContrastMode?: boolean;
@@ -30,6 +31,7 @@ export function SettingsRow({
   value,
   badge,
   onPress,
+  onPressIn,
   onToggle,
   showBorder = true,
   highContrastMode = false,
@@ -140,6 +142,7 @@ export function SettingsRow({
       accessibilityLabel={label}
       accessibilityRole='button'
       style={focusStyle}
+      onPressIn={onPressIn}
       onPress={handleNavPress}
       {...focusHandlers}
     >

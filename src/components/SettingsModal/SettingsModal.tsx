@@ -53,8 +53,10 @@ function SettingsModalContent({
   const insets = useSafeAreaInsets();
   const { isDark } = useThemeColors();
   const colors = getSettingsColors(isHighContrastActive, isDark);
-  const archivedHabits = useQuery(api.habits.listArchived);
-  const archivedHabitsCount = archivedHabits?.length ?? 0;
+  const archivedHabitsData = useQuery(api.habits.listArchived);
+  const archivedHabits = archivedHabitsData ?? [];
+  const archivedHabitsCount = archivedHabits.length;
+  const isArchivedHabitsLoading = archivedHabitsData === undefined;
 
   const handleOpenSortSheet = useCallback(() => {
     handleClose();

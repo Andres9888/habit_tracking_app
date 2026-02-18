@@ -1,9 +1,13 @@
 /* eslint-disable max-lines */
 /** SignInScreen Styles - Type scale: 34/22/17/13, proper contrast, depth */
-import { StyleSheet, TextStyle } from 'react-native';
+import { Dimensions, StyleSheet, TextStyle } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '@/theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const RESPONSIVE_ICON_SIZE = Math.min(SCREEN_WIDTH * 0.22, 88);
+const RESPONSIVE_LOGO_SIZE = Math.min(SCREEN_WIDTH * 0.2, 80);
 
 export function useSignInStyles() {
   const { colors: themeColors, isDark } = useThemeColors();
@@ -45,14 +49,14 @@ export function useSignInStyles() {
       backgroundColor: themeColors.primary[600],
       borderRadius: 24,
       elevation: 4,
-      height: 88,
+      height: RESPONSIVE_ICON_SIZE,
       justifyContent: 'center',
       marginBottom: 20,
       shadowColor: themeColors.text.primary,
       shadowOffset: { height: 4, width: 0 },
       shadowOpacity: 0.08,
       shadowRadius: 16,
-      width: 88,
+      width: RESPONSIVE_ICON_SIZE,
     },
     inputFocused: { borderColor: themeColors.primary[700], borderWidth: 2 },
     scrollContent: { flexGrow: 1, paddingHorizontal: 24 },
@@ -115,14 +119,14 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primary[600],
     borderRadius: 24,
     elevation: 4,
-    height: 88,
+    height: RESPONSIVE_ICON_SIZE,
     justifyContent: 'center',
     marginBottom: 20,
     shadowColor: '#1c1917',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
-    width: 88,
+    width: RESPONSIVE_ICON_SIZE,
   },
   inputFocused: { borderColor: colors.primary[700], borderWidth: 2 },
   scrollContent: { flexGrow: 1, paddingHorizontal: 24 },
