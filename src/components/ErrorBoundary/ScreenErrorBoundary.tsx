@@ -2,6 +2,9 @@
  * ScreenErrorBoundary — drop-in wrapper for any screen.
  * Provides retry (reset error state) and optional go-back navigation.
  *
+ * Note: Error Boundary requires a class component for the error catching.
+ * This file uses a class component internally but exposes a function component interface.
+ *
  * Usage:
  *   <ScreenErrorBoundary screenName="Analytics" onGoBack={navigation.goBack}>
  *     <AnalyticsContent />
@@ -24,7 +27,11 @@ interface ScreenErrorBoundaryState {
   error: Error | null;
 }
 
-export class ScreenErrorBoundary extends Component<
+/**
+ * Internal class component that handles error catching
+ * Using class component is required by React to catch errors
+ */
+class ErrorCatcher extends Component<
   ScreenErrorBoundaryProps,
   ScreenErrorBoundaryState
 > {
@@ -65,4 +72,25 @@ export class ScreenErrorBoundary extends Component<
     }
     return this.props.children;
   }
+}
+
+/**
+ * Function component wrapper that forwards props to the ErrorCatcher
+ * This allows the component to be used as a regular function component
+ */
+export function ScreenErrorBoundary({
+  children,
+  screenName,
+  onGoBack,
+  onError,
+}: ScreenErrorBoundaryProps): ReactNode {
+  return (
+    <ErrorCatcher
+      screenName={screenName}
+      onGoBack={onGoBack}
+      onError={onError}
+    >
+      {children}
+    </ErrorCatcher>
+  );
 }
