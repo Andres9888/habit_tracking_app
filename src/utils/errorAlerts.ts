@@ -5,8 +5,28 @@
  * All alerts now accept an optional `onRetry` callback so users can
  * recover from transient failures without navigating away.
  */
-import { Alert } from 'react-native';
+import { Alert, AlertButton } from 'react-native';
 import { ERROR_MESSAGES } from '../constants/errorMessages';
+
+/**
+ * Helper to build alert buttons with optional retry action.
+ * @param onRetry - Optional callback to retry the failed action
+ * @param retryButtonLabel - Label for retry button (default: 'Retry')
+ * @returns Array of alert buttons
+ */
+function buildAlertButtons(
+  onRetry?: () => void,
+  retryButtonLabel: string = 'Retry',
+): AlertButton[] {
+  if (!onRetry) {
+    return [{ text: 'OK' }];
+  }
+
+  return [
+    { text: 'Cancel', style: 'cancel' },
+    { text: retryButtonLabel, onPress: onRetry },
+  ];
+}
 
 /**
  * Show an alert for save failures.
@@ -16,9 +36,7 @@ export function showSaveError(onRetry?: () => void) {
   Alert.alert(
     'Save Failed',
     ERROR_MESSAGES.DATA_OPS.SAVE_FAILED,
-    onRetry
-      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
-      : [{ text: 'OK' }]
+    buildAlertButtons(onRetry),
   );
 }
 
@@ -30,9 +48,7 @@ export function showCreateError(onRetry?: () => void) {
   Alert.alert(
     "Couldn't Create Habit",
     ERROR_MESSAGES.DATA_OPS.CREATE_HABIT_FAILED,
-    onRetry
-      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
-      : [{ text: 'OK' }]
+    buildAlertButtons(onRetry),
   );
 }
 
@@ -46,7 +62,7 @@ export function showSyncError(onRetry?: () => void) {
     ERROR_MESSAGES.SYNC.FAILED,
     onRetry
       ? [{ text: 'OK' }, { text: 'Retry Now', onPress: onRetry }]
-      : [{ text: 'OK' }]
+      : [{ text: 'OK' }],
   );
 }
 
@@ -59,9 +75,7 @@ export function showGenericError(message?: string, onRetry?: () => void) {
   Alert.alert(
     'Something Went Wrong',
     message || ERROR_MESSAGES.UI.GENERIC_ERROR,
-    onRetry
-      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
-      : [{ text: 'OK' }]
+    buildAlertButtons(onRetry),
   );
 }
 
@@ -73,9 +87,7 @@ export function showNetworkError(onRetry?: () => void) {
   Alert.alert(
     'Connection Issue',
     ERROR_MESSAGES.NETWORK.CONNECTION_ISSUE,
-    onRetry
-      ? [{ text: 'Cancel', style: 'cancel' }, { text: 'Retry', onPress: onRetry }]
-      : [{ text: 'OK' }]
+    buildAlertButtons(onRetry),
   );
 }
 
@@ -88,8 +100,6 @@ export function showRetryableError(message: string, onRetry?: () => void) {
   Alert.alert(
     'Error',
     message,
-    onRetry
-      ? [{ text: 'Cancel', style: 'cancel' as const }, { text: 'Retry', onPress: onRetry }]
-      : [{ text: 'OK' }]
+    buildAlertButtons(onRetry),
   );
 }
