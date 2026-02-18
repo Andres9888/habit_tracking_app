@@ -8,7 +8,7 @@
 import { View, Pressable, Text } from 'react-native';
 import { BookOpen, Settings, Plus } from 'lucide-react-native';
 import { NotificationBadge } from '../../../../components/NotificationBadge';
-import { useIsDark } from '../../../../theme/ThemeContext';
+import { useIsDark, useThemeColors } from '../../../../theme/ThemeContext';
 import { styles } from './BottomActionBar.styles';
 
 interface ActionButtonsProps {
@@ -27,6 +27,7 @@ export function ActionButtons({
   onDismissTemplateBadge,
 }: ActionButtonsProps) {
   const isDark = useIsDark();
+  const { colors: themeColors } = useThemeColors();
   const iconColor = isDark ? '#D1D5DB' : '#44403c';
   const borderColor = isDark ? 'rgba(23,23,23,0.97)' : 'rgba(255,255,255,0.97)';
 
@@ -52,8 +53,8 @@ export function ActionButtons({
             onOpenTemplates();
           }}
         >
-          <BookOpen color='#ffffff' size={12} strokeWidth={2.25} />
-          <Text style={{ color: '#fff', fontSize: 11, fontWeight: '600' }}>
+          <BookOpen color={themeColors.text.inverse} size={12} strokeWidth={2.25} />
+          <Text style={{ color: themeColors.text.inverse, fontSize: 11, fontWeight: '600' }}>
             Templates
           </Text>
         </Pressable>
@@ -91,7 +92,7 @@ export function ActionButtons({
         })}
         onPress={onAddHabit}
       >
-        <Plus color='#ffffff' size={22} strokeWidth={2.5} />
+        <Plus color={themeColors.text.inverse} size={22} strokeWidth={2.5} />
       </Pressable>
     </View>
   );

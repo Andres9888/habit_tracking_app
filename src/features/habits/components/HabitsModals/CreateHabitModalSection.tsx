@@ -1,14 +1,16 @@
 import { lazy, Suspense } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { CreateHabitModalSectionProps } from './HabitsModals.types';
 
 // Lazy load CreateHabitModal - 1.1MB component, only load when modal is opened
 const CreateHabitModal = lazy(() => import('../../../../components/CreateHabitModal'));
 
 function LoadingFallback() {
+  const { colors: themeColors } = useThemeColors();
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000000aa' }}>
-      <ActivityIndicator size="large" color="#059669" />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.67)' }}>
+      <ActivityIndicator size="large" color={themeColors.primary[500]} />
     </View>
   );
 }

@@ -1,12 +1,14 @@
 import { Pressable, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Crown } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface ProBadgeProps {
   onPress: () => void;
 }
 
 export function ProBadge({ onPress }: ProBadgeProps) {
+  const { colors: themeColors } = useThemeColors();
   return (
     <Pressable
       accessibilityHint='Open upgrade screen'
@@ -20,8 +22,8 @@ export function ProBadge({ onPress }: ProBadgeProps) {
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       >
-        <Crown color='#ffffff' size={12} strokeWidth={2.5} />
-        <Text className='text-[11px] font-bold tracking-wide text-white'>
+        <Crown color={themeColors.text.inverse} size={12} strokeWidth={2.5} />
+        <Text className='text-[11px] font-bold tracking-wide' style={{ color: themeColors.text.inverse }}>
           PRO
         </Text>
       </LinearGradient>

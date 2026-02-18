@@ -102,8 +102,8 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
               onPressIn={anim.onTemplatesPressIn}
               onPressOut={anim.onTemplatesPressOut}
             >
-              <BookOpen color='#ffffff' size={12} strokeWidth={2.25} />
-              <Text style={{ color: '#fff', fontSize: 11, fontWeight: '600' }}>
+              <BookOpen color={themeColors.text.inverse} size={12} strokeWidth={2.25} />
+              <Text style={{ color: themeColors.text.inverse, fontSize: 11, fontWeight: '600' }}>
                 Templates
               </Text>
             </Pressable>
@@ -146,7 +146,7 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
               onPressIn={anim.onAddPressIn}
               onPressOut={anim.onAddPressOut}
             >
-              <Plus color='#ffffff' size={22} strokeWidth={2.5} />
+              <Plus color={themeColors.text.inverse} size={22} strokeWidth={2.5} />
             </Pressable>
           </Animated.View>
         </View>

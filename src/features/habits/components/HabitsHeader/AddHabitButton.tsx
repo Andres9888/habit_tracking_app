@@ -4,6 +4,7 @@ import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { ViewStyle } from 'react-native';
 import { SHADOW_OPACITY } from '../../../../constants';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface AddHabitButtonProps {
   animatedStyle: AnimatedStyle<ViewStyle>;
@@ -21,6 +22,7 @@ export function AddHabitButton({
   onPressIn,
   onPressOut,
 }: AddHabitButtonProps) {
+  const { colors: themeColors } = useThemeColors();
   return (
     <Animated.View style={animatedStyle}>
       <Pressable
@@ -44,8 +46,8 @@ export function AddHabitButton({
             shadowRadius: 16,
           }}
         >
-          <Plus color='#ffffff' size={18} strokeWidth={2.25} />
-          <Text className='text-[15px] font-normal leading-[20px] tracking-tight text-white'>
+          <Plus color={themeColors.text.inverse} size={18} strokeWidth={2.25} />
+          <Text className='text-[15px] font-normal leading-[20px] tracking-tight' style={{ color: themeColors.text.inverse }}>
             Add Habit
           </Text>
         </LinearGradient>

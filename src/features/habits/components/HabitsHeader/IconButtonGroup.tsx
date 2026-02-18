@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { NotificationBadge } from '../../../../components/NotificationBadge';
-import { useIsDark } from '../../../../theme/ThemeContext';
+import { useIsDark, useThemeColors } from '../../../../theme/ThemeContext';
 import { styles } from './IconButtonGroup.styles';
 import type { IconButtonGroupProps } from './types';
 
@@ -23,6 +23,7 @@ export function IconButtonGroup({
   onSettingsPressOut,
 }: IconButtonGroupProps) {
   const isDark = useIsDark();
+  const { colors: themeColors } = useThemeColors();
   const iconColor = isDark ? '#D1D5DB' : '#44403c';
   const darkBorder = isDark ? styles.containerDark : undefined;
 
@@ -59,8 +60,8 @@ export function IconButtonGroup({
             onPressIn={onTemplatesPressIn}
             onPressOut={onTemplatesPressOut}
           >
-            <BookOpen color='#ffffff' size={16} strokeWidth={2.25} />
-            <Text style={styles.label}>Templates</Text>
+            <BookOpen color={themeColors.text.inverse} size={16} strokeWidth={2.25} />
+            <Text style={[styles.label, { color: themeColors.text.inverse }]}>Templates</Text>
           </Pressable>
           <NotificationBadge count={1} visible={showBadge} />
         </View>
