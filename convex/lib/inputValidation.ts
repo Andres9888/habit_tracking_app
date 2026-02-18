@@ -198,7 +198,8 @@ export function validateUrl(
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(trimmed);
-  } catch {
+  } catch (error) {
+    console.error(`Failed to parse ${fieldName}:`, trimmed, error);
     return { isValid: false, error: `${fieldName} is not a valid URL` };
   }
 

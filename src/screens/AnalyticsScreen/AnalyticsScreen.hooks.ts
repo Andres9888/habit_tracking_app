@@ -9,6 +9,7 @@ import { exportData, prepareExportData } from '../../utils/exportData';
 import { usePremium } from '../../hooks/usePremium/usePremium';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { maybeRequestReviewFromAnalytics } from '@/utils/storeReview';
+import { logInteraction } from '../../lib/analytics/interactions';
 import type {
   ExportFormat,
   UseAnalyticsScreenReturn,

@@ -66,9 +66,7 @@ function LazyProviders({ children }: PropsWithChildren) {
   // Note: These could be converted to async import() but would require Suspense
   // For now, ESLint rule is disabled for this specific pattern
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const {
-    PurchasesProvider,
-  } = require('./components/providers/PurchasesProvider');
+  const { PurchasesProvider } = require('./components/providers/PurchasesProvider');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const {
     StreakMilestoneProvider,

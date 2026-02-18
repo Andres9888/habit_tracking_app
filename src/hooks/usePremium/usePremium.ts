@@ -51,7 +51,7 @@ export function usePremium(): UsePremiumReturn {
 
   // Find monthly package and price
   const monthlyPackage =
-    packages?.find((p) => p.packageType?.toString() === 'MONTHLY') ?? null;
+    packages?.find((p) => p.packageType === 'MONTHLY') ?? null;
   const priceString = monthlyPackage?.product.priceString ?? null;
 
   // Subscription info
