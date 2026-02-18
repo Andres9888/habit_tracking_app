@@ -79,7 +79,14 @@ export function HeaderButton({
       accessibilityLabel={label}
       accessibilityRole='button'
       className='h-11 w-11 items-center justify-center rounded-full'
-      style={[buttonShadow, animStyle, { backgroundColor: colors.card }]}
+      style={[
+        buttonShadow,
+        animStyle,
+        {
+          backgroundColor: colors.card,
+          shadowColor: colors.text.primary,
+        },
+      ]}
       onPress={handlePress}
       onPressIn={() => {
         scale.value = withSpring(0.92, SPRING);
