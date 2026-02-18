@@ -19,6 +19,12 @@ export const affirmationTypeValidator = v.union(
   v.literal('instructional')
 );
 
+/**
+ * Type of affirmation categorized by psychological approach
+ * - identity: "I am..." statements based on self-affirmation theory
+ * - motivational: Encouraging statements about capability and progress
+ * - instructional: Guiding statements about action and approach
+ */
 export type AffirmationType = 'identity' | 'motivational' | 'instructional';
 
 /**

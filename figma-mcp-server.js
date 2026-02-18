@@ -153,7 +153,7 @@ class FigmaAPI {
 
   getNodes(fileKey, options = {}) {
     if (!options.ids || !options.ids.length) {
-      throw new Error("Parameter 'ids' is required for figma_get_nodes.");
+      throw new Error("Parameter 'ids' is required for Figma get nodes.");
     }
 
     return this.request(`/files/${fileKey}/nodes`, options);
@@ -161,7 +161,7 @@ class FigmaAPI {
 
   getImages(fileKey, options = {}) {
     if (!options.ids || !options.ids.length) {
-      throw new Error("Parameter 'ids' is required for figma_get_images.");
+      throw new Error("Parameter 'ids' is required for Figma get images.");
     }
 
     return this.request(`/images/${fileKey}`, options);

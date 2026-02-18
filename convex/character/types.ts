@@ -23,6 +23,10 @@ export const characterStatsValidator = v.object({
   xpToNextLevel: v.number(),
 });
 
+/**
+ * User's character progression stats and attributes
+ * Includes core attributes, level progression, and current statistics
+ */
 export interface CharacterStats {
   attributes: {
     energy: number;

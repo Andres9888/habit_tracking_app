@@ -31,6 +31,12 @@ export function isValidDateKey(dateKey: string): boolean {
   return /^\d{4}-\d{2}-\d{2}$/.test(dateKey);
 }
 
+/**
+ * Parses a YYYY-MM-DD date key string into a Date object at start of day
+ * @param dateKey - Date string in YYYY-MM-DD format
+ * @returns Date object at 00:00:00
+ * @throws Error if format is invalid or date values are out of range
+ */
 export function parseDateKeyToLocalDate(dateKey: string): Date {
   if (!isValidDateKey(dateKey)) {
     throw new Error('Invalid date format; expected YYYY-MM-DD');
