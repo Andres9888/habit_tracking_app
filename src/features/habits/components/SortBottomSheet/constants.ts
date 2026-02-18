@@ -89,7 +89,7 @@ export const SORT_OPTIONS: SortOptionConfig[] = [
 /** Quick pick chips - a subset of options for fast access */
 export const QUICK_PICK_OPTIONS = SORT_OPTIONS.filter((opt) => opt.chipLabel);
 
-export { DISMISS_THRESHOLD, VELOCITY_THRESHOLD } from '@/constants';
+export { DISMISS_THRESHOLD, VELOCITY_THRESHOLD, DARK_SURFACE_COLOR } from '@/constants';
 
 // Icon sizing
 export const CHECK_ICON_SIZE = 14;
@@ -99,7 +99,6 @@ export const SORT_OPTION_ICON_STROKE_WIDTH = 2.25;
 
 // Colors
 export const WHITE_ICON_COLOR = '#ffffff';
-export const DARK_SURFACE_COLOR = '#1f2937';
 export const LIGHT_SURFACE_COLOR = '#f5f5f4';
 
 // Backdrop animation

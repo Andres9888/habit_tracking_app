@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, unstable_batchedUpdates as batch } from 'react';
 import { Keyboard, TextInput } from 'react-native';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useChipSelection } from './useChipSelection';
@@ -59,10 +59,12 @@ export function useHabitCreationFlow({
   }, [chipSelection, inputRef]);
 
   const handleAddAnother = useCallback(() => {
-    setSuccessHabitName(null);
-    setSuccessEmoji(null);
-    setIsCreating(false);
-    chipSelection.resetSelection();
+    batch(() => {
+      setSuccessHabitName(null);
+      setSuccessEmoji(null);
+      setIsCreating(false);
+      chipSelection.resetSelection();
+    });
     setTimeout(() => inputRef.current?.focus(), 100);
   }, [chipSelection, inputRef]);
 

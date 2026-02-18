@@ -7,6 +7,7 @@
  * Action buttons have moved to BottomActionBar.
  */
 
+import { useMemo } from 'react';
 import { HabitsListHeader } from './HabitsListHeader';
 import type { HabitsListProps } from './HabitsList.types';
 
@@ -30,12 +31,19 @@ export function renderHabitsListHeader({
     onPreviousWeek,
     onUpgradeIntent,
   } = props;
+
+  // Memoize the getHabitStatus selector to prevent unnecessary re-renders of HabitsListHeader
+  const memoizedGetHabitStatus = useMemo(
+    () => list.getHabitStatus,
+    [list.getHabitStatus]
+  );
+
   return (
     <HabitsListHeader
       calendarOpacity={state.calendarOpacity}
       calendarTranslateY={state.calendarTranslateY}
       canNavigateForward={canNavigateForward}
-      getHabitStatus={list.getHabitStatus}
+      getHabitStatus={memoizedGetHabitStatus}
       habits={list.habits}
       headerOpacity={state.headerOpacity}
       headerTranslateY={state.headerTranslateY}

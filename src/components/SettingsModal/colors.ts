@@ -1,3 +1,4 @@
+import { DARK_SURFACE_COLOR } from '@/constants/colors';
 import { colors } from '@/theme/colors';
 
 import type { SettingsColors } from './types';
