@@ -20,55 +20,55 @@ export function useEmptyStateColors() {
     textTertiary: colors.text.tertiary, // Lower contrast
 
     // Hero icon colors
-    heroIconBackground: isDark ? colors.primary[100] : '#D1FAE5', // emerald-100
-    heroIconOverlay: isDark ? colors.primary[300] : '#F0FDF4', // green-50
+    heroIconBackground: colors.primary[100],
+    heroIconOverlay: colors.primary[300],
     heroIconShadow: colors.primary[500],
 
     // Input colors
-    inputBackground: isDark ? colors.card : '#ffffff',
-    inputBorder: isDark ? colors.border : '#E7E5E4', // stone-200
-    inputBorderFocused: isDark ? colors.primary[400] : '#3B82F6', // blue-500
-    inputPlaceholder: isDark ? colors.gray[500] : '#A8A29E', // stone-400
+    inputBackground: colors.card,
+    inputBorder: colors.border,
+    inputBorderFocused: colors.primary[500],
+    inputPlaceholder: colors.gray[400],
     inputText: colors.text.primary,
     inputCaret: colors.primary[400],
 
     // Character counter colors
     counterNormal: colors.text.tertiary,
-    counterWarning: '#F59E0B', // amber-500 (WCAG AA on both backgrounds)
-    counterError: isDark ? '#F87171' : '#EF4444', // red-400 / red-500
+    counterWarning: isDark ? '#FBBF24' : '#F59E0B',
+    counterError: isDark ? '#F87171' : '#EF4444',
 
     // Chip colors
-    chipBackground: isDark ? colors.card : '#ffffff',
-    chipBackgroundSelected: isDark ? colors.primary[300] : '#047857', // emerald-700
-    chipBorder: isDark ? colors.border : '#E7E5E4', // stone-200
-    chipBorderSelected: isDark ? colors.primary[300] : '#047857',
-    chipText: isDark ? colors.text.primary : '#44403C', // stone-700
-    chipTextSelected: '#ffffff',
-    chipShadow: isDark ? colors.gray[900] : '#1c1917',
+    chipBackground: colors.card,
+    chipBackgroundSelected: colors.primary[700],
+    chipBorder: colors.border,
+    chipBorderSelected: colors.primary[700],
+    chipText: colors.text.primary,
+    chipTextSelected: colors.text.inverse,
+    chipShadow: colors.gray[900],
 
     // Button colors
-    ctaBackground: isDark ? colors.primary[300] : '#047857', // emerald-700
-    ctaText: '#ffffff',
-    ctaDisabled: isDark ? colors.gray[300] : '#A8A29E',
+    ctaBackground: colors.primary[700],
+    ctaText: colors.text.inverse,
+    ctaDisabled: colors.gray[300],
 
     // Secondary link colors
     linkBackground: isDark
       ? `rgba(${hexToRgb(colors.primary[300])}, 0.15)`
-      : 'rgba(209, 250, 229, 0.5)',
-    linkBackgroundPressed: isDark ? colors.primary[100] : '#D1FAE5',
+      : `rgba(${hexToRgb(colors.primary[100])}, 0.5)`,
+    linkBackgroundPressed: colors.primary[100],
     linkBorder: isDark
       ? `rgba(${hexToRgb(colors.primary[400])}, 0.3)`
-      : 'rgba(167, 243, 208, 0.8)',
-    linkText: isDark ? colors.primary[500] : '#047857', // emerald-700
+      : `rgba(${hexToRgb(colors.primary[100])}, 0.8)`,
+    linkText: colors.primary[600],
 
     // Error colors
-    errorBackground: isDark ? 'rgba(254, 202, 202, 0.1)' : '#FEF2F2', // red-50
-    errorBorder: isDark ? 'rgba(254, 202, 202, 0.3)' : '#FECACA', // red-200
-    errorText: isDark ? '#FCA5A5' : '#DC2626', // red-300 / red-600
-    errorIcon: isDark ? '#F87171' : '#EF4444', // red-400 / red-500
+    errorBackground: isDark ? 'rgba(254, 202, 202, 0.1)' : colors.gray[50],
+    errorBorder: isDark ? 'rgba(254, 202, 202, 0.3)' : 'rgba(254, 202, 202, 0.8)',
+    errorText: isDark ? '#FCA5A5' : '#DC2626',
+    errorIcon: isDark ? '#F87171' : '#EF4444',
 
     // Success colors
-    successBackground: isDark ? colors.primary[100] : '#D1FAE5', // emerald-100
+    successBackground: colors.primary[100],
 
     // Utility
     isDark,
