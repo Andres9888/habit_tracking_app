@@ -87,3 +87,5 @@ export default function FullsizeTemplatePreview({
     </Modal>
   );
 }
+
+export default React.memo(FullsizeTemplatePreviewComponent);
