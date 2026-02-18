@@ -1,11 +1,12 @@
 /**
  * ExportMenu - Modal for selecting data export format
+ * OPTIMIZED: Uses useThemeColors() for dark mode support
  */
 import React from 'react';
 import { View, Text, Pressable, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { ExportFormat } from '../AnalyticsScreen.types';
 import { styles } from './ExportMenu.styles';
 
@@ -20,6 +21,8 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
   onClose,
   onExport,
 }) => {
+  const { colors } = useThemeColors();
+  
   return (
     <Modal
       accessibilityViewIsModal
@@ -34,13 +37,13 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
         style={styles.modalOverlay}
         onPress={onClose}
       >
-        <View style={styles.exportMenu}>
-          <Text style={styles.exportMenuTitle}>Choose Export Format</Text>
+        <View style={[styles.exportMenu, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.exportMenuTitle, { color: colors.text.primary }]}>Choose Export Format</Text>
           <AnimatedPressable
             accessibilityHint='Exports data in spreadsheet format'
             accessibilityLabel='Export as CSV'
             accessibilityRole='button'
-            style={styles.exportMenuItem}
+            style={[styles.exportMenuItem, { backgroundColor: colors.background }]}
             onPress={() => onExport('csv')}
           >
             <Ionicons
@@ -49,8 +52,8 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
               size={24}
             />
             <View style={styles.exportMenuItemContent}>
-              <Text style={styles.exportMenuItemTitle}>CSV</Text>
-              <Text style={styles.exportMenuItemDescription}>
+              <Text style={[styles.exportMenuItemTitle, { color: colors.text.primary }]}>CSV</Text>
+              <Text style={[styles.exportMenuItemDescription, { color: colors.text.secondary }]}>
                 Spreadsheet format (Excel, Google Sheets)
               </Text>
             </View>
@@ -59,7 +62,7 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
             accessibilityHint='Exports data in developer-friendly format'
             accessibilityLabel='Export as JSON'
             accessibilityRole='button'
-            style={styles.exportMenuItem}
+            style={[styles.exportMenuItem, { backgroundColor: colors.background }]}
             onPress={() => onExport('json')}
           >
             <Ionicons

@@ -1,6 +1,7 @@
 import { colors } from '../../../theme/colors';
 import { StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 const COLORS = [
   colors.primary[600],
@@ -12,7 +13,7 @@ const COLORS = [
   colors.primary[700],
 ];
 
-function ChainLink({ delay, index }: { delay: number; index: number }) {
+function ChainLink({ delay, index, innerColor }: { delay: number; index: number; innerColor: string }) {
   return (
     <Animated.View
       entering={FadeInDown.delay(delay).springify().damping(18)}
@@ -21,16 +22,18 @@ function ChainLink({ delay, index }: { delay: number; index: number }) {
         { backgroundColor: COLORS[index % COLORS.length] },
       ]}
     >
-      <View style={styles.chainLinkInner} />
+      <View style={[styles.chainLinkInner, { backgroundColor: innerColor }]} />
     </Animated.View>
   );
 }
 
 export function ChainVisualization() {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View style={styles.chainContainer}>
       {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-        <ChainLink key={i} delay={400 + i * 120} index={i} />
+        <ChainLink key={i} delay={400 + i * 120} index={i} innerColor={themeColors.card} />
       ))}
     </View>
   );
@@ -50,7 +53,6 @@ const styles = StyleSheet.create({
     width: 36,
   },
   chainLinkInner: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     height: 36,
     width: 20,
