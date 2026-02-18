@@ -76,7 +76,7 @@ export function calculateMomentumStrengthSnapshot({
   }
 
   const completionDates = new Set(
-    tracking.filter((r) => r.completed).map((r) => r.date)
+    tracking.flatMap((r) => r.completed ? [r.date] : [])
   );
 
   const daysProcessed =

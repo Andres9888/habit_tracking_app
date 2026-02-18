@@ -68,7 +68,6 @@ function LazyProviders({ children }: PropsWithChildren) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { PurchasesProvider } = require('./components/providers/PurchasesProvider');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { StreakMilestoneProvider } = require('./components/StreakMilestoneCelebration');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { NetworkStatusProvider } = require('./contexts/NetworkStatusContext');
   // eslint-disable-next-line @typescript-eslint/no-require-imports

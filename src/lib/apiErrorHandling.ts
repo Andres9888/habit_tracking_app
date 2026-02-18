@@ -26,69 +26,90 @@ export interface ApiResult<T> {
 }
 
 /**
+ * Check if an error is a user/validation error based on message patterns
+ */
+function isUserValidationError(message: string): boolean {
+  return (
+    message.includes('Unauthenticated') ||
+    message.includes('Not authorized') ||
+    message.includes('Invalid') ||
+    message.includes('required') ||
+    message.includes('cannot be empty') ||
+    message.includes('format') ||
+    message.includes('exceed')
+  );
+}
+
+/**
+ * Parse a Convex ConvexError into a standardized format
+ */
+function parseConvexError(error: Error): ApiError {
+  const message = error.message || '';
+
+  // User/validation errors - safe to show to user
+  if (isUserValidationError(message)) {
+    return {
+      code: 'VALIDATION_ERROR',
+      message: extractUserMessage(message),
+      isUserError: true,
+      originalError: error,
+    };
+  }
+
+  // System errors - show generic message, log details
+  return {
+    code: 'API_ERROR',
+    message: 'An error occurred while processing your request. Please try again.',
+    isUserError: false,
+    originalError: error,
+  };
+}
+
+/**
+ * Parse a standard JavaScript Error into a standardized format
+ */
+function parseJavaScriptError(error: Error): ApiError {
+  // Network errors
+  if (error.message.includes('Network') || error.message.includes('ECONNREFUSED')) {
+    return {
+      code: 'NETWORK_ERROR',
+      message: 'Unable to connect. Please check your internet connection.',
+      isUserError: true,
+      originalError: error,
+    };
+  }
+
+  // Timeout errors
+  if (error.message.includes('timeout') || error.message.includes('Timeout')) {
+    return {
+      code: 'TIMEOUT_ERROR',
+      message: 'Request timed out. Please try again.',
+      isUserError: true,
+      originalError: error,
+    };
+  }
+
+  // Generic error
+  return {
+    code: 'UNKNOWN_ERROR',
+    message: 'An unexpected error occurred. Please try again later.',
+    isUserError: false,
+    originalError: error,
+  };
+}
+
+/**
  * Parse a Convex or generic API error into a standardized format
  */
 export function parseApiError(error: unknown): ApiError {
   // Convex ConvexError
   if (error instanceof Error && error.name === 'ConvexError') {
-    const message = error.message || '';
-
-    // User/validation errors - safe to show to user
-    if (
-      message.includes('Unauthenticated') ||
-      message.includes('Not authorized') ||
-      message.includes('Invalid') ||
-      message.includes('required') ||
-      message.includes('cannot be empty') ||
-      message.includes('format') ||
-      message.includes('exceed')
-    ) {
-      return {
-        code: 'VALIDATION_ERROR',
-        message: extractUserMessage(message),
-        isUserError: true,
-        originalError: error,
-      };
-    }
-
-    // System errors - show generic message, log details
-    return {
-      code: 'API_ERROR',
-      message: 'An error occurred while processing your request. Please try again.',
-      isUserError: false,
-      originalError: error,
-    };
+    return parseConvexError(error);
   }
 
   // Standard JavaScript errors
   if (error instanceof Error) {
-    // Network errors
-    if (error.message.includes('Network') || error.message.includes('ECONNREFUSED')) {
-      return {
-        code: 'NETWORK_ERROR',
-        message: 'Unable to connect. Please check your internet connection.',
-        isUserError: true,
-        originalError: error,
-      };
-    }
-
-    // Timeout errors
-    if (error.message.includes('timeout') || error.message.includes('Timeout')) {
-      return {
-        code: 'TIMEOUT_ERROR',
-        message: 'Request timed out. Please try again.',
-        isUserError: true,
-        originalError: error,
-      };
-    }
-
-    // Generic error
-    return {
-      code: 'UNKNOWN_ERROR',
-      message: 'An unexpected error occurred. Please try again later.',
-      isUserError: false,
-      originalError: error,
-    };
+    return parseJavaScriptError(error);
   }
 
   // Unknown error type

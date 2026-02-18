@@ -335,20 +335,18 @@ export default class FigmaMCPServer {
   }
 
   formatResult(id, result) {
-    return (
-      JSON.stringify({
-        jsonrpc: '2.0',
-        id,
-        result: {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        },
-      }) + '\n'
-    );
+    return `${JSON.stringify({
+      jsonrpc: '2.0',
+      id,
+      result: {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      },
+    })}\n`;
   }
 
   formatError(id, error) {
