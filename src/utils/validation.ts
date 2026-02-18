@@ -9,9 +9,11 @@
  * @category Validation
  */
 
-const MAX_HABIT_NAME_LENGTH = 200;
-const MIN_HABIT_NAME_LENGTH = 1;
-const MAX_HABITS_RENDER_LIMIT = 500; // Performance guard
+import {
+  MAX_HABIT_NAME_LENGTH,
+  MIN_HABIT_NAME_LENGTH,
+  MAX_HABITS_RENDER_LIMIT,
+} from '@/constants';
 
 /**
  * Validate and sanitize habit name.
