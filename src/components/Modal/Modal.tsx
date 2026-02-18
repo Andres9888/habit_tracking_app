@@ -3,7 +3,6 @@
  * Variants: Bottom Sheet, Full Screen, Center Alert
  */
 
-import React from 'react';
 import { Modal as RNModal, View } from 'react-native';
 import type { ModalProps } from './Modal.types';
 import { styles } from './Modal.styles';

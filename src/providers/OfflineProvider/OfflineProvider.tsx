@@ -67,8 +67,7 @@ export function OfflineProvider({
       return;
     }
     restoreQueue();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skipAutoRestore]);
+  }, [skipAutoRestore, restoreQueue]);
 
   const value = useMemo(
     (): OfflineContextValue => ({

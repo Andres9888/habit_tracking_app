@@ -9,7 +9,6 @@
  * @see SC-001 - Habit completion feedback in under 200ms
  */
 
-import React from 'react';
 import Animated, {
   useAnimatedStyle,
   interpolate,
