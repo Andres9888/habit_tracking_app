@@ -13,3 +13,7 @@
  */
 
 export * from './exports';
+export type {
+  UseSyncOrchestratorOptions,
+  UseSyncOrchestratorReturn,
+} from './useSyncOrchestrator.types';

@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { ActivityIndicator, View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import NoteEditor from '../NoteEditor';
 import type { NotesListProps } from './NotesList.types';
 import { useNotesList } from './useNotesList';
@@ -21,8 +22,18 @@ export default function NotesList({
   hideHabitFilter = false,
   initialHabitId,
 }: NotesListProps) {
+  const { colors: themeColors } = useThemeColors();
   const state = useNotesList(initialHabitId);
-  const { isAdding, setIsAdding, editingNote, setEditingNoteId } = state;
+  const { isAdding, setIsAdding, editingNote, setEditingNoteId, isLoading } =
+    state;
+
+  if (isLoading) {
+    return (
+      <View className='items-center justify-center py-12'>
+        <ActivityIndicator color={themeColors.accent} size='large' />
+      </View>
+    );
+  }
 
   if (isAdding) {
     return (
