@@ -59,10 +59,12 @@ export function useHabitCreationFlow({
   }, [chipSelection, inputRef]);
 
   const handleAddAnother = useCallback(() => {
-    setSuccessHabitName(null);
-    setSuccessEmoji(null);
-    setIsCreating(false);
-    chipSelection.resetSelection();
+    batch(() => {
+      setSuccessHabitName(null);
+      setSuccessEmoji(null);
+      setIsCreating(false);
+      chipSelection.resetSelection();
+    });
     setTimeout(() => inputRef.current?.focus(), 100);
   }, [chipSelection, inputRef]);
 
