@@ -69,7 +69,7 @@ export function HeaderButton({
             color: iconColor,
           })}
         </View>
-        <Text style={[s.textLabel, { color: iconColor }]}>{text}</Text>
+        <Text style={[headerButtonStyles.textLabel, { color: iconColor }]}>{text}</Text>
       </AnimatedPressable>
     );
   }

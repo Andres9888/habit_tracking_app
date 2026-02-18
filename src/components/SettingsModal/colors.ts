@@ -27,7 +27,7 @@ export const DEFAULT_COLORS: SettingsColors = {
 export const DARK_COLORS: SettingsColors = {
   accent: '#F9FAFB',
   background: '#111827',
-  card: '#1F2937',
+  card: DARK_SURFACE_COLOR,
   cardBorder: '#374151',
   headerText: '#F9FAFB',
   icon: '#F9FAFB',

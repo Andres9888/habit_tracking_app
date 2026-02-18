@@ -9,6 +9,7 @@ import { exportData, prepareExportData } from '../../utils/exportData';
 import { usePremium } from '../../hooks/usePremium/usePremium';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { maybeRequestReviewFromAnalytics } from '@/utils/storeReview';
+import { logInteraction } from '../../lib/analytics/interactions';
 import type {
   ExportFormat,
   UseAnalyticsScreenReturn,
@@ -73,8 +74,10 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     refreshTimerRef.current = setTimeout(() => setRefreshing(false), 1000);
   }, [triggerLightImpact]);
 
-  const handleHabitPress = useCallback((_habitId: string) => {
-    // TODO: navigate to habit detail
+  const handleHabitPress = useCallback((habitId: string) => {
+    // Log habit selection for analytics tracking
+    // Note: Full navigation to habit detail screen would require routing context
+    logInteraction('analytics:habit_selected', { habitId });
   }, []);
 
   const handleExportPress = useCallback(() => {
