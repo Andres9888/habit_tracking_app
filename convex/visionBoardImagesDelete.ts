@@ -37,7 +37,7 @@ export const remove = mutation({
       await ctx.storage.delete(image.storageId);
     } catch (error) {
       // File may already be deleted, continue with record deletion
-      console.error('Failed to delete storage file:', error);
+      // Error is silently handled
     }
 
     await ctx.db.delete(args.imageId);

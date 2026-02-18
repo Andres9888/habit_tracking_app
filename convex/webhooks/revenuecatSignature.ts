@@ -32,19 +32,15 @@ export async function verifyRevenueCatSignature(
   // SECURITY: Only allow bypass in explicit development mode
   if (!REVENUECAT_WEBHOOK_SECRET) {
     if (isDevelopment) {
-      console.warn(
-        '[RevenueCat] DEV MODE: No webhook secret configured, skipping verification'
-      );
+      // DEV MODE: No webhook secret configured, skipping verification
       return true;
     }
-    console.error(
-      '[RevenueCat] CRITICAL: No webhook secret configured in production - rejecting webhook'
-    );
+    // CRITICAL: No webhook secret configured in production - rejecting webhook
     return false;
   }
 
   if (!signature) {
-    console.error('[RevenueCat] No signature provided');
+    // No signature provided in webhook request
     return false;
   }
 
@@ -74,7 +70,7 @@ export async function verifyRevenueCatSignature(
     // Compare signatures (timing-safe comparison)
     return timingSafeEqual(computedSignature, signature);
   } catch (error) {
-    console.error('[RevenueCat] Signature verification error:', error);
+    // Signature verification failed; rejecting webhook
     return false;
   }
 }

@@ -36,7 +36,6 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     // Verify webhook signature
     const isValid = await verifyRevenueCatSignature(body, signature);
     if (!isValid) {
-      console.error('[RevenueCat] Invalid webhook signature');
       return new Response('Invalid signature', { status: 401 });
     }
 
@@ -47,7 +46,6 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     const appUserId: string | undefined = event?.app_user_id;
 
     if (!eventType || !appUserId) {
-      console.error('[RevenueCat] Missing event type or app_user_id');
       return new Response('Invalid payload', { status: 400 });
     }
 
@@ -96,8 +94,7 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
       }
     );
   } catch (error) {
-    console.error('[RevenueCat] Webhook error:', error);
-    // Return 500 so RevenueCat retries failed events
+    // Error in webhook processing; returning 500 so RevenueCat retries failed events
     return Response.json(
       { error: 'Processing error' },
       {

@@ -61,7 +61,7 @@ export const getCharacterStats = query({
         xpToNextLevel: xpNeededForNextLevel,
       };
     } catch (error) {
-      console.error('Error calculating character stats:', error);
+      // Error handled by returning default stats
       return DEFAULT_CHARACTER_STATS;
     }
   },

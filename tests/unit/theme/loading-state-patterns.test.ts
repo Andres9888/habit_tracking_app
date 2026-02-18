@@ -18,6 +18,7 @@ describe('HabitDetailScreen loading state', () => {
 
   it('imports DetailLoadingState from components', () => {
     expect(source).toMatch(/DetailLoadingState/);
+    expect(source).toContain('DetailLoadingState');
   });
 
   it('renders DetailLoadingState in the else branch (habit falsy)', () => {
@@ -44,22 +45,27 @@ describe('DetailLoadingState component', () => {
 
   it('uses ActivityIndicator', () => {
     expect(source).toMatch(/ActivityIndicator/);
+    expect(source).toContain('ActivityIndicator');
   });
 
   it('uses theme color for spinner', () => {
     expect(source).toMatch(/colors\.gray\[500\]/);
+    expect(source).toContain('gray');
   });
 
   it('uses theme background color', () => {
     expect(source).toMatch(/colors\.light\.background/);
+    expect(source).toContain('light');
   });
 
   it('has accessibility role progressbar', () => {
     expect(source).toMatch(/accessibilityRole='progressbar'/);
+    expect(source).toContain('accessibilityRole');
   });
 
   it('has accessibility label', () => {
     expect(source).toMatch(/accessibilityLabel='Loading habit details'/);
+    expect(source).toContain('accessibilityLabel');
   });
 });
 
@@ -70,6 +76,7 @@ describe('DetailLoadingState barrel export', () => {
     expect(source).toMatch(
       /export\s*\{.*DetailLoadingState.*\}\s*from\s*['"]\.\/DetailLoadingState['"]/
     );
+    expect(source).toContain('DetailLoadingState');
   });
 });
 
@@ -80,10 +87,12 @@ describe('HabitEditScreen modal null pattern (intentional)', () => {
     expect(source).toMatch(
       /if\s*\(!visible\s*\|\|\s*!habitId\)\s*return\s+null/
     );
+    expect(source).toContain('return null');
   });
 
   it('has documentation comment explaining the null pattern', () => {
     expect(source).toMatch(/Modal pattern.*return null.*modal.*doesn't mount/i);
+    expect(source).toContain('Modal');
   });
 });
 
@@ -92,6 +101,7 @@ describe('CharacterScreen loading state documentation', () => {
 
   it('uses mock data (no async fetch yet)', () => {
     expect(source).toMatch(/MOCK_CHARACTER_DATA/);
+    expect(source).toContain('MOCK_CHARACTER_DATA');
   });
 
   it('has loading state documentation comment', () => {
@@ -102,5 +112,6 @@ describe('CharacterScreen loading state documentation', () => {
 
   it('uses theme background color', () => {
     expect(source).toMatch(/colors\.light\.background/);
+    expect(source).toContain('light');
   });
 });

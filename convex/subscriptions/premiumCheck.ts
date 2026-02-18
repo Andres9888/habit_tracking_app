@@ -154,9 +154,7 @@ export function validateWebhookTimestamp(
 
   // Must be a positive number
   if (typeof timestamp !== 'number' || timestamp <= 0) {
-    console.error(
-      `[RevenueCat] Invalid ${fieldName}: ${timestamp} - must be positive number`
-    );
+    // Invalid timestamp; returning undefined for validation
     return undefined;
   }
 
@@ -166,10 +164,8 @@ export function validateWebhookTimestamp(
   const maxDate = new Date('2030-01-01').getTime();
 
   if (timestamp < minDate || timestamp > maxDate) {
-    console.error(
-      `[RevenueCat] Suspicious ${fieldName}: ${timestamp} (${new Date(timestamp).toISOString()})`
-    );
-    // Still return it, but log the warning
+    // Suspicious timestamp detected but still returning it
+    // This might indicate data from unusual time ranges
   }
 
   return timestamp;

@@ -200,7 +200,7 @@ export function validateUrl(
   try {
     parsedUrl = new URL(trimmed);
   } catch (error) {
-    console.error(`Failed to parse ${fieldName}:`, trimmed, error);
+    // URL parsing failed; returning validation error
     return { isValid: false, error: `${fieldName} is not a valid URL` };
   }
 
