@@ -31,7 +31,14 @@ export function useWrappedMutations(
   );
   const wrappedUpdateSettings = useCallback(
     async (s: Parameters<typeof updateSettings>[0]) => {
-      await updateSettings(s);
+      try {
+        await updateSettings(s);
+      } catch (error) {
+        if (__DEV__) console.error('Failed to update settings:', error);
+        throw new Error(
+          'Unable to save your settings. Please try again or contact support if the problem persists.'
+        );
+      }
     },
     [updateSettings]
   );

@@ -13,7 +13,11 @@
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
+import {
+  OPACITY,
+  ANIMATION_DURATION,
+  ANIMATION_VALUES,
+} from '../../../../constants';
 import { useThemeColors } from '../../../../theme';
 
 interface UpgradePromptProps {
@@ -45,11 +49,16 @@ export function UpgradePrompt({
       />
       <Animated.View
         className='w-full rounded-t-3xl px-6 py-8'
-        entering={SlideInDown.duration(ANIMATION_DURATION.medium).damping(ANIMATION_VALUES.springDamping)}
+        entering={SlideInDown.duration(ANIMATION_DURATION.medium).damping(
+          ANIMATION_VALUES.springDamping
+        )}
       >
         <LinearGradient
           className='absolute inset-0 rounded-t-3xl'
-          colors={[colors.card, isDark ? `${colors.card}30` : 'rgba(255, 251, 235, 0.3)']}
+          colors={[
+            colors.card,
+            isDark ? `${colors.card}30` : 'rgba(255, 251, 235, 0.3)',
+          ]}
         />
         <View className='gap-4'>
           <View className='items-center pb-2'>
@@ -72,7 +81,9 @@ export function UpgradePrompt({
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
             className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
-            style={({ pressed }) => ({ opacity: pressed ? OPACITY.strong : OPACITY.full })}
+            style={({ pressed }) => ({
+              opacity: pressed ? OPACITY.strong : OPACITY.full,
+            })}
             onPress={onUpgradePress}
           >
             <LinearGradient
@@ -90,7 +101,9 @@ export function UpgradePrompt({
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
             className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
-            style={({ pressed }) => ({ opacity: pressed ? OPACITY.high : OPACITY.full })}
+            style={({ pressed }) => ({
+              opacity: pressed ? OPACITY.high : OPACITY.full,
+            })}
             onPress={onClose}
           >
             <Text className='text-[15px] font-normal text-stone-600'>
