@@ -70,7 +70,12 @@ export const recalculateStreakAndStrength = internalMutation({
     const snapshot = calculateMomentumStrengthSnapshot({
       habitCreatedAt: habit.createdAt, throughDate: evaluationDateKey, tracking,
     });
-    const streakData = calculateStreakFromHistory(tracking, evaluationDateKey);
+    
+    // Pass pause info to streak calculation to exclude paused periods
+    const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
+      pausedAt: habit.pausedAt,
+      resumedAt: habit.resumedAt,
+    });
 
     await ctx.db.patch(args.habitId, {
       bestStreak: streakData.bestStreak, currentStreak: streakData.currentStreak,

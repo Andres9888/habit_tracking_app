@@ -79,7 +79,8 @@ export {
 
 export {
   useStreakReminders,
-  type UseStreakRemindersReturn,
+  useStreakReminderSettings,
+  type StreakReminderHabit,
 } from './useStreakReminders';
 
 // ============================================================================
@@ -116,8 +117,8 @@ export {
 
 export {
   useOfflineQueue,
-  type OfflineOperation,
-  type OfflineQueueStatus,
+  type OfflineSubmissionType,
+  type QueuedSubmission,
   type UseOfflineQueueReturn,
 } from './useOfflineQueue';
 
@@ -136,8 +137,11 @@ export {
 
 export {
   useRescueTrigger,
-  type RescueTriggerOptions,
-  type UseRescueTriggerReturn,
+  isInQuietHoursWindow,
+  type RescueEligibleHabit,
+  type QuietHoursConfig,
+  type RescueTriggerConfig,
+  type RescueTriggerResult,
 } from './useRescueTrigger';
 
 // ============================================================================

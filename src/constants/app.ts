@@ -27,6 +27,9 @@ export const AUTO_DISMISS_DELAY_MS = 5000;
 /** Toast/snackbar default duration */
 export const TOAST_DURATION_MS = 5000;
 
+/** Delay before lazy providers are mounted (ms) */
+export const LAZY_PROVIDER_MOUNT_DELAY_MS = 100;
+
 // ============================================================================
 // FAB (Floating Action Button) Animation Durations (ms)
 // ============================================================================

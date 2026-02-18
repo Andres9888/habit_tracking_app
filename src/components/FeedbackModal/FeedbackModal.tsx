@@ -215,13 +215,7 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
               </Text>
               <TextInput
                 style={[styles.input, styles.textArea]}
-                placeholder={
-                  selectedType === 'bug'
-                    ? 'What happened? What did you expect to happen? Steps to reproduce...'
-                    : selectedType === 'feature'
-                      ? "Describe the feature you'd like to see and how it would help you..."
-                      : 'Share your thoughts, suggestions, or any other feedback...'
-                }
+                placeholder={getDescriptionPlaceholder(selectedType)}
                 placeholderTextColor={colors.gray[400]}
                 value={description}
                 onChangeText={setDescription}

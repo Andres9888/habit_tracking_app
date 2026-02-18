@@ -5,6 +5,7 @@
 import { memo } from 'react';
 import { Switch, Text, View } from 'react-native';
 import { Bell } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme';
 import { shadows } from '../../../../theme/spacing';
 
 interface ToggleRowProps {
@@ -13,16 +14,27 @@ interface ToggleRowProps {
 }
 
 function ToggleRowComponent({ enabled, onToggle }: ToggleRowProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View
-      className='flex-row items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4'
-      style={shadows.subtle}
+      className='flex-row items-center justify-between rounded-2xl border px-4 py-4'
+      style={[
+        shadows.subtle,
+        {
+          borderColor: colors.border,
+          backgroundColor: colors.card,
+        },
+      ]}
     >
       <View className='flex-row items-center gap-3'>
-        <View className='h-10 w-10 items-center justify-center rounded-full bg-amber-100'>
-          <Bell color='#f59e0b' size={18} />
+        <View
+          className='h-10 w-10 items-center justify-center rounded-full'
+          style={{ backgroundColor: colors.warning[50] }}
+        >
+          <Bell color={colors.warning[600]} size={18} />
         </View>
-        <Text className='text-base font-medium text-stone-900'>
+        <Text className='text-base font-medium' style={{ color: colors.text.primary }}>
           Daily Reminder
         </Text>
       </View>
@@ -30,10 +42,10 @@ function ToggleRowComponent({ enabled, onToggle }: ToggleRowProps) {
       <Switch
         accessibilityLabel={enabled ? 'Disable reminder' : 'Enable reminder'}
         accessibilityRole='switch'
-        ios_backgroundColor='#d6d3d1'
+        ios_backgroundColor={colors.border}
         testID='reminder-toggle'
         thumbColor='#ffffff'
-        trackColor={{ false: '#d6d3d1', true: '#10B981' }}
+        trackColor={{ false: colors.border, true: colors.primary[600] }}
         value={enabled}
         onValueChange={onToggle}
       />

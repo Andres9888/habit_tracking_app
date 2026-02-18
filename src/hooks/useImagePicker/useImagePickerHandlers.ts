@@ -54,7 +54,13 @@ export function useImagePickerHandlers({
                 void pickFromCamera(options)
                   .then(resolve)
                   .catch((error) => {
-                    if (__DEV__) console.warn('Error picking from camera:', error);
+                    if (__DEV__) {
+                      console.error(
+                        '[useImagePickerHandlers] Camera pick failed:',
+                        error
+                      );
+                    }
+                    setError('Failed to take photo. Please try again.');
                     resolve(null);
                   });
               },
@@ -65,7 +71,13 @@ export function useImagePickerHandlers({
                 void pickFromLibrary(options)
                   .then(resolve)
                   .catch((error) => {
-                    if (__DEV__) console.warn('Error picking from library:', error);
+                    if (__DEV__) {
+                      console.error(
+                        '[useImagePickerHandlers] Library pick failed:',
+                        error
+                      );
+                    }
+                    setError('Failed to select image. Please try again.');
                     resolve(null);
                   });
               },
@@ -75,7 +87,7 @@ export function useImagePickerHandlers({
           ]
         );
       }),
-    [pickFromCamera, pickFromLibrary]
+    [pickFromCamera, pickFromLibrary, setError]
   );
 
   return { pickFromCamera, pickFromLibrary, pickWithChoice };

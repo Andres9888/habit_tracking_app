@@ -1,16 +1,13 @@
 /**
  * HabitsListModals — overlay layer for the HabitsList screen.
  *
- * Manages three modal surfaces:
+ * Manages two modal surfaces:
  * 1. **UpgradePrompt** — full-screen CTA shown when the user hits the free-tier limit.
- * 2. **SortBottomSheet** — lets the user pick a habit sort mode (manual, alpha, etc.).
- * 3. **DayHabitsBottomSheet** — shows habit completion status for a tapped calendar day.
+ * 2. **DayHabitsBottomSheet** — shows habit completion status for a tapped calendar day.
  *
- * Visibility is driven by state from `useHabitsListState` (sheets) and
- * `upgradePromptVisible` (upgrade prompt, controlled by the parent screen).
+ * Note: SortBottomSheet was moved to HabitsModals (accessible from Settings).
  */
 
-import { SortBottomSheet } from '../SortBottomSheet';
 import { DayHabitsBottomSheet } from '../../../../components/DayHabitsBottomSheet';
 import { UpgradePrompt } from './UpgradePrompt';
 import type { HabitsListProps } from './HabitsList.types';
@@ -35,13 +32,7 @@ export function HabitsListModals(props: HabitsListModalsProps) {
     onUpgradeDismiss,
     onUpgradeConfirm,
   } = props;
-  const {
-    habitSortMode,
-    reduceMotionPreference,
-    getHabitStatus,
-    habits,
-    toggleHabit,
-  } = list;
+  const { reduceMotionPreference, getHabitStatus, habits, toggleHabit } = list;
 
   return (
     <>
@@ -49,13 +40,6 @@ export function HabitsListModals(props: HabitsListModalsProps) {
         visible={upgradePromptVisible}
         onClose={onUpgradeDismiss}
         onUpgradePress={onUpgradeConfirm}
-      />
-      <SortBottomSheet
-        reduceMotion={reduceMotionPreference}
-        sortMode={habitSortMode}
-        visible={state.isSortSheetOpen}
-        onClose={state.handleCloseSortSheet}
-        onSelectSortMode={handlers.handleChangeHabitSortMode}
       />
       <DayHabitsBottomSheet
         date={state.selectedDay}
