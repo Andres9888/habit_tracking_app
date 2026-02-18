@@ -1,14 +1,16 @@
 /**
  * SettingsModal Component
+ * 
+ * Lazy loads ArchivedHabitsModal to reduce initial bundle size.
+ * Settings modal is only opened on user action, so lazy loading is ideal.
  */
 
-import React from 'react';
+import React, { lazy, Suspense, useMemo } from 'react';
 import { Modal, View } from 'react-native';
 import { useQuery } from 'convex/react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { api } from '../../../convex/_generated/api';
 import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
-import ArchivedHabitsModal from '../ArchivedHabitsModal';
 import { SettingsModalSkeleton } from '../SkeletonLoader';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
@@ -16,6 +18,9 @@ import { SettingsHeader } from './SettingsHeader';
 import { SettingsContent } from './SettingsContent';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsModalProps } from './types';
+
+// Lazy load ArchivedHabitsModal since it's rarely opened
+const ArchivedHabitsModal = lazy(() => import('../ArchivedHabitsModal'));
 
 function SettingsModalContent({
   dayShape = 'square',
@@ -47,7 +52,10 @@ function SettingsModalContent({
   });
   const insets = useSafeAreaInsets();
   const { isDark } = useThemeColors();
-  const colors = getSettingsColors(isHighContrastActive, isDark);
+  const colors = useMemo(
+    () => getSettingsColors(isHighContrastActive, isDark),
+    [isHighContrastActive, isDark]
+  );
   const archivedHabits = useQuery(api.habits.listArchived);
   const archivedHabitsCount = archivedHabits?.length ?? 0;
 
@@ -60,10 +68,12 @@ function SettingsModalContent({
         visible={visible}
         onRequestClose={handleClose}
       >
-        <ArchivedHabitsModal
-          onBack={() => setView('settings')}
-          onClose={handleClose}
-        />
+        <Suspense fallback={<SettingsModalSkeleton />}>
+          <ArchivedHabitsModal
+            onBack={() => setView('settings')}
+            onClose={handleClose}
+          />
+        </Suspense>
       </Modal>
     );
   }
