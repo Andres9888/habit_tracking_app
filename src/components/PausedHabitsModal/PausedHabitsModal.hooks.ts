@@ -32,6 +32,7 @@ export function usePausedHabitsModalLogic() {
 
   return {
     handleResume,
+    isLoading,
     pausedHabits,
   };
 }
