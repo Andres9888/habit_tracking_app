@@ -11,33 +11,38 @@ import {
   getShareAndPauseProps,
 } from './HabitsModals.helpers';
 
-// Lazy-load heavy modal sections — these are rarely opened but contain
-// entire screens (detail, edit, calendar, templates, visualization).
-// Deferring their parse/eval until first open speeds up initial launch.
-const CalendarAndDetailModals = lazy(() =>
-  import('./CalendarAndDetailModals').then((m) => ({
-    default: m.CalendarAndDetailModals,
-  }))
+// Helper to load modal components with error handling
+const lazyModal = (
+  importFn: () => Promise<{ [key: string]: React.ComponentType<any> }>,
+  name: string
+) =>
+  lazy(() =>
+    importFn().catch((error) => {
+      if (__DEV__) console.error(`Failed to load ${name}:`, error);
+      throw error;
+    })
+  );
+
+// Lazy-load heavy modal sections with error handling
+const CalendarAndDetailModals = lazyModal(
+  () => import('./CalendarAndDetailModals').then((m) => ({ default: m.CalendarAndDetailModals })),
+  'CalendarAndDetailModals'
 );
-const TemplatesModalSection = lazy(() =>
-  import('./TemplatesModalSection').then((m) => ({
-    default: m.TemplatesModalSection,
-  }))
+const TemplatesModalSection = lazyModal(
+  () => import('./TemplatesModalSection').then((m) => ({ default: m.TemplatesModalSection })),
+  'TemplatesModalSection'
 );
-const VisualizationModalSection = lazy(() =>
-  import('./VisualizationModalSection').then((m) => ({
-    default: m.VisualizationModalSection,
-  }))
+const VisualizationModalSection = lazyModal(
+  () => import('./VisualizationModalSection').then((m) => ({ default: m.VisualizationModalSection })),
+  'VisualizationModalSection'
 );
-const ActivationModalSection = lazy(() =>
-  import('./ActivationModalSection').then((m) => ({
-    default: m.ActivationModalSection,
-  }))
+const ActivationModalSection = lazyModal(
+  () => import('./ActivationModalSection').then((m) => ({ default: m.ActivationModalSection })),
+  'ActivationModalSection'
 );
-const HapticTestModalSection = lazy(() =>
-  import('./HapticTestModalSection').then((m) => ({
-    default: m.HapticTestModalSection,
-  }))
+const HapticTestModalSection = lazyModal(
+  () => import('./HapticTestModalSection').then((m) => ({ default: m.HapticTestModalSection })),
+  'HapticTestModalSection'
 );
 
 export function HabitsModals({ state }: HabitsModalsProps) {
