@@ -20,8 +20,8 @@ export function AnimatedDot({ index, progress }: AnimatedDotProps) {
 
 const styles = StyleSheet.create({
   dot: {
-    width: 8,
-    height: 8,
     borderRadius: 4,
+    height: 8,
+    width: 8,
   },
 });

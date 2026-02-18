@@ -23,7 +23,7 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
       return;
     }
 
-    habits.forEach((habit) => {
+    for (const habit of habits) {
       const previousStrength = previousStrengthsRef.current.get(habit._id) ?? 0;
       const currentStrength = habit.strength ?? 0;
 
@@ -36,7 +36,7 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
       }
 
       previousStrengthsRef.current.set(habit._id, currentStrength);
-    });
+    }
   }, [habits, isLoading]);
 
   useEffect(() => {
@@ -48,5 +48,5 @@ export function useHabitMilestones(habits: Habit[], isLoading: boolean) {
     setLastUpdatedHabit(null);
   };
 
-  return { milestone, clearMilestone: resetMilestone };
+  return { clearMilestone: resetMilestone, milestone };
 }

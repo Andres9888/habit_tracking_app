@@ -8,6 +8,7 @@ import { RecentEmojis } from './components/RecentEmojis';
 import { CategoryChips } from './components/CategoryChips';
 import { EmojiGrid } from './components/EmojiGrid';
 import { NoIconButton } from './components/NoIconButton';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { EmojiPickerProps } from './EmojiPicker.types';
 
 export const EmojiPicker = memo(
@@ -19,6 +20,7 @@ export const EmojiPicker = memo(
     triggerRef,
     habitName,
   }: EmojiPickerProps) => {
+    const { colors } = useThemeColors();
     const { state, handlers } = useEmojiPicker({
       habitName,
       onClose,
@@ -31,6 +33,7 @@ export const EmojiPicker = memo(
 
     return (
       <Modal
+        accessibilityViewIsModal
         transparent
         animationType='slide'
         visible={visible}
@@ -38,8 +41,8 @@ export const EmojiPicker = memo(
       >
         <View className='flex-1 bg-black/50'>
           <View
-            className='overflow-hidden rounded-t-3xl bg-[#faf9f7] shadow-2xl'
-            style={{ height: '85%', marginTop: 'auto' }}
+            className='overflow-hidden rounded-t-3xl shadow-2xl'
+            style={{ backgroundColor: colors.surface, height: '85%', marginTop: 'auto' }}
           >
             <EmojiPickerHeader onClose={handlers.handleClose} />
 

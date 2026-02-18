@@ -34,7 +34,7 @@
  * ```
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { MotivationPremiumFeature } from './PremiumFeatureLock';
 
 interface PremiumUpsellState {
@@ -95,6 +95,25 @@ export function usePremiumUpsell(): PremiumUpsellState {
   const [triggeredFeature, setTriggeredFeature] = useState<
     MotivationPremiumFeature | undefined
   >();
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // Cleanup all timers on unmount
+  useEffect(() => {
+    return () => {
+      for (const timer of timersRef.current) {
+        clearTimeout(timer);
+      }
+    };
+  }, []);
+
+  const safeTimeout = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      timersRef.current = timersRef.current.filter((t) => t !== id);
+      fn();
+    }, ms);
+    timersRef.current.push(id);
+    return id;
+  }, []);
 
   const triggerPaywall = useCallback((feature: MotivationPremiumFeature) => {
     setTriggeredFeature(feature);
@@ -109,8 +128,8 @@ export function usePremiumUpsell(): PremiumUpsellState {
   const dismissPaywall = useCallback(() => {
     setShowPaywall(false);
     // Clear triggered feature after animation completes
-    setTimeout(() => setTriggeredFeature(undefined), 300);
-  }, []);
+    safeTimeout(() => setTriggeredFeature(undefined), 300);
+  }, [safeTimeout]);
 
   const dismissBenefits = useCallback(() => {
     setShowBenefits(false);
@@ -119,8 +138,8 @@ export function usePremiumUpsell(): PremiumUpsellState {
   const benefitsToPaywall = useCallback(() => {
     setShowBenefits(false);
     // Small delay to let benefits modal close
-    setTimeout(() => setShowPaywall(true), 100);
-  }, []);
+    safeTimeout(() => setShowPaywall(true), 100);
+  }, [safeTimeout]);
 
   return {
     benefitsToPaywall,

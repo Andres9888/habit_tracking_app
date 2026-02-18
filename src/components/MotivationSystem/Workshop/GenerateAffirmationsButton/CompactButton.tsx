@@ -67,10 +67,10 @@ export function CompactButton({
       >
         {showGradient && (
           <LinearGradient
-            colors={['#7c3aed', '#a855f7']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
             className='absolute inset-0 rounded-full'
+            colors={['#7c3aed', '#a855f7']}
+            end={{ x: 1, y: 0 }}
+            start={{ x: 0, y: 0 }}
           />
         )}
         {isGenerating ? (

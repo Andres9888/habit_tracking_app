@@ -8,44 +8,44 @@ export const EXIT_ANIMATION_DURATION = 300;
 /**
  * Get strength level info based on percentage
  */
-export const getStrengthInfo = (strength: number): StrengthInfo => {
+export const getStrengthInfo = (strength: number, isDark = false): StrengthInfo => {
   if (strength >= 80) {
     return {
-      bgColor: 'bg-purple-50',
+      bgColor: isDark ? 'bg-purple-900/40' : 'bg-purple-50',
       emoji: '⚡',
       label: 'Automatic',
-      textColor: 'text-purple-700',
+      textColor: isDark ? 'text-purple-300' : 'text-purple-700',
     };
   }
   if (strength >= 60) {
     return {
-      bgColor: 'bg-emerald-50',
+      bgColor: isDark ? 'bg-emerald-900/40' : 'bg-emerald-50',
       emoji: '💪',
       label: 'Strong',
-      textColor: 'text-emerald-700',
+      textColor: isDark ? 'text-emerald-300' : 'text-emerald-700',
     };
   }
   if (strength >= 40) {
     return {
-      bgColor: 'bg-teal-50',
+      bgColor: isDark ? 'bg-teal-900/40' : 'bg-teal-50',
       emoji: '🌳',
       label: 'Developing',
-      textColor: 'text-teal-700',
+      textColor: isDark ? 'text-teal-300' : 'text-teal-700',
     };
   }
   if (strength >= 20) {
     return {
-      bgColor: 'bg-yellow-50',
+      bgColor: isDark ? 'bg-yellow-900/40' : 'bg-yellow-50',
       emoji: '🌿',
       label: 'Building',
-      textColor: 'text-yellow-700',
+      textColor: isDark ? 'text-yellow-300' : 'text-yellow-700',
     };
   }
   return {
-    bgColor: 'bg-rose-50',
+    bgColor: isDark ? 'bg-rose-900/40' : 'bg-rose-50',
     emoji: '🌱',
     label: 'Starting',
-    textColor: 'text-rose-600',
+    textColor: isDark ? 'text-rose-300' : 'text-rose-600',
   };
 };
 

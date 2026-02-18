@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { TextInputProps } from 'react-native';
 
 export interface PasswordInputProps extends Omit<
@@ -12,4 +13,6 @@ export interface PasswordInputProps extends Omit<
   placeholder?: string;
   /** Error message to display */
   error?: string;
+  /** Optional element rendered on the right side of the label row */
+  labelRight?: ReactNode;
 }

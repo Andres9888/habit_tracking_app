@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * IntroStep Component
  * Introduction screen explaining the visualization exercise
@@ -19,15 +20,18 @@ import type { IntroStepProps } from '../types';
 
 export function IntroStep({ habitName, onNext }: IntroStepProps) {
   return (
-    <Animated.View className='flex-1 gap-6' entering={FadeInDown.springify().damping(18)}>
+    <Animated.View
+      className='flex-1 gap-6'
+      entering={FadeInDown.springify().damping(18)}
+    >
       {/* Header */}
       <View className='items-center gap-4'>
         <View className='h-20 w-20 items-center justify-center rounded-3xl'>
           <LinearGradient
-            colors={['#7c3aed', '#4f46e5']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
             className='absolute inset-0 rounded-3xl'
+            colors={['#7c3aed', '#4f46e5']}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0 }}
           />
           <Brain className='text-white' size={40} />
         </View>
@@ -99,10 +103,10 @@ export function IntroStep({ habitName, onNext }: IntroStepProps) {
         }}
       >
         <LinearGradient
-          colors={['#7c3aed', '#4f46e5']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
           className='absolute inset-0 rounded-2xl'
+          colors={['#7c3aed', '#4f46e5']}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
         />
         <Text className='text-[15px] font-semibold text-white'>
           Begin Exercise

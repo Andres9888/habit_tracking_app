@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../theme/colors';
 
 export const sortStyles = StyleSheet.create({
   dropdownBackdrop: {
@@ -44,11 +45,11 @@ export const sortStyles = StyleSheet.create({
   },
   sortDropdownOptionText: {
     color: '#374151',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '500',
   },
   sortDropdownOptionTextSelected: {
-    color: '#059669',
+    color: colors.primary[600],
     fontWeight: '600',
   },
 });

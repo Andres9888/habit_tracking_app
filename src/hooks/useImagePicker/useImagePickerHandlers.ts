@@ -51,13 +51,35 @@ export function useImagePickerHandlers({
           [
             {
               onPress: () => {
-                void pickFromCamera(options).then(resolve);
+                void pickFromCamera(options)
+                  .then(resolve)
+                  .catch((error) => {
+                    if (__DEV__) {
+                      console.error(
+                        '[useImagePickerHandlers] Camera pick failed:',
+                        error
+                      );
+                    }
+                    setError('Failed to take photo. Please try again.');
+                    resolve(null);
+                  });
               },
               text: 'Take Photo',
             },
             {
               onPress: () => {
-                void pickFromLibrary(options).then(resolve);
+                void pickFromLibrary(options)
+                  .then(resolve)
+                  .catch((error) => {
+                    if (__DEV__) {
+                      console.error(
+                        '[useImagePickerHandlers] Library pick failed:',
+                        error
+                      );
+                    }
+                    setError('Failed to select image. Please try again.');
+                    resolve(null);
+                  });
               },
               text: 'Choose from Library',
             },
@@ -65,7 +87,7 @@ export function useImagePickerHandlers({
           ]
         );
       }),
-    [pickFromCamera, pickFromLibrary]
+    [pickFromCamera, pickFromLibrary, setError]
   );
 
   return { pickFromCamera, pickFromLibrary, pickWithChoice };

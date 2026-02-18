@@ -6,6 +6,7 @@ import { ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
 
 interface SettingsRowProps {
@@ -14,6 +15,7 @@ interface SettingsRowProps {
   label: string;
   type: 'toggle' | 'navigation' | 'selection' | 'info';
   value?: boolean | string;
+  badge?: number;
   onPress?: () => void;
   onToggle?: (value: boolean) => void;
   showBorder?: boolean;
@@ -26,21 +28,23 @@ export function SettingsRow({
   label,
   type,
   value,
+  badge,
   onPress,
   onToggle,
   showBorder = true,
   highContrastMode = false,
 }: SettingsRowProps) {
-  const colors = getSettingsRowColors(highContrastMode);
+  const { isDark } = useThemeColors();
+  const colors = getSettingsRowColors(highContrastMode, isDark);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
   const handleToggle = (v: boolean) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onToggle?.(v);
   };
 
   const handleNavPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress?.();
   };
 
@@ -64,6 +68,8 @@ export function SettingsRow({
       </View>
       <Text
         className='flex-1 text-[17px] font-semibold'
+        numberOfLines={type === 'toggle' || type === 'navigation' ? 2 : 1}
+        ellipsizeMode='tail'
         style={{ color: colors.label }}
       >
         {label}
@@ -92,8 +98,37 @@ export function SettingsRow({
           <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
         </View>
       )}
+      {type === 'info' && typeof value === 'string' && (
+        <Text
+          className='ml-3 text-[15px] font-medium'
+          numberOfLines={1}
+          style={{
+            color: colors.value,
+            flexShrink: 1,
+            maxWidth: '45%',
+            textAlign: 'right',
+          }}
+        >
+          {value}
+        </Text>
+      )}
       {type === 'navigation' && (
-        <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
+        <View className='flex-row items-center gap-2'>
+          {badge != null && badge > 0 && (
+            <View
+              className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
+              style={{ backgroundColor: isDark ? '#374151' : '#e7e5e4' }}
+            >
+              <Text
+                className='text-[12px] font-bold'
+                style={{ color: isDark ? '#9CA3AF' : '#57534e' }}
+              >
+                {badge}
+              </Text>
+            </View>
+          )}
+          <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
+        </View>
       )}
     </View>
   );

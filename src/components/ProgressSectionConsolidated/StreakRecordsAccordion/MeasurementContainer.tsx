@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, type LayoutChangeEvent } from 'react-native';
 import { MedalCardsRow } from './MedalCardsRow';
 import type { StreakRecord } from '../types';
 
@@ -11,7 +11,7 @@ interface MeasurementContainerProps {
   currentStreak: number;
   records: StreakRecord[];
   reduceMotion: boolean;
-  onLayout: (event: any) => void;
+  onLayout: (event: LayoutChangeEvent) => void;
 }
 
 export function MeasurementContainer({

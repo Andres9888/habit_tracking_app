@@ -9,6 +9,7 @@
 import React from 'react';
 import { View, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useThemeColors } from '../../../../../../theme/ThemeContext';
 import type { ReadLetterModalProps } from './ReadLetterModal.types';
 import { useReadLetterModal } from './useReadLetterModal';
 import { ReadLetterHeader } from './ReadLetterHeader';
@@ -23,6 +24,7 @@ export function ReadLetterModal({
   onMarkAsRead,
   reduceMotion = false,
 }: ReadLetterModalProps) {
+  const { colors, isDark } = useThemeColors();
   const hook = useReadLetterModal({
     letter,
     onMarkAsRead,
@@ -30,19 +32,21 @@ export function ReadLetterModal({
     visible,
   });
 
+
   if (!letter) return null;
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType='fade'
       presentationStyle='fullScreen'
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className='flex-1'>
+      <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <LinearGradient
-          colors={['#f5f3ff', '#ffffff']}
           className='absolute inset-0'
+          colors={isDark ? [colors.background, colors.surface] : ['#f5f3ff', '#ffffff']}
         />
         <ReadLetterHeader
           envelopeAnimatedStyle={hook.envelopeAnimatedStyle}

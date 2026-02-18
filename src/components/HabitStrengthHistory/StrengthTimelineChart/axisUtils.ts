@@ -13,13 +13,12 @@ export function generateXAxisLabels(
   dimensions: ChartDimensions
 ): XAxisLabel[] {
   const { paddingLeft, chartWidth } = dimensions;
-  const labels: XAxisLabel[] = [];
+  const labels: XAxisLabel[] = [
+    { text: 'Start', x: paddingLeft },
+    { text: 'Now', x: paddingLeft + chartWidth },
+  ];
 
   // Always show Start and Now
-  labels.push(
-    { text: 'Start', x: paddingLeft },
-    { text: 'Now', x: paddingLeft + chartWidth }
-  );
 
   // Add intermediate labels based on duration
   if (historyDays >= 365) {
@@ -63,7 +62,7 @@ export function calculateTrendDescription(data: StrengthSnapshot[]): string {
   if (data.length < 2) return 'Not enough data to determine trend';
 
   const first = data[0].strength;
-  const last = data.at(-1)!.strength;
+  const last = data.at(-1)?.strength ?? 0;
   const diff = last - first;
 
   if (diff > 10)

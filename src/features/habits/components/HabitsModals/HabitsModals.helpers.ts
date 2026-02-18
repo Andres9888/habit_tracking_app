@@ -10,6 +10,10 @@ export function getSettingsProps(state: HabitsModalsProps['state']) {
     settings: state.settings,
     showHabitStrengthPercentage: state.showHabitStrengthPercentage,
     showSettings: state.showSettings,
+    openSortSheet: state.openSortSheet,
+    closeSortSheet: state.closeSortSheet,
+    showSortSheet: state.showSortSheet,
+    reduceMotionPreference: state.reduceMotionPreference,
   };
 }
 

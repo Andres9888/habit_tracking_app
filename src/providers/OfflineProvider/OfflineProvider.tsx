@@ -67,6 +67,11 @@ export function OfflineProvider({
       return;
     }
     restoreQueue();
+    
+    // Cleanup: reset restoration state if component unmounts during restoration
+    return () => {
+      isRestoringRef.current = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skipAutoRestore]);
 

@@ -6,6 +6,7 @@ import { Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Eye, EyeOff, Lock } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { usePasswordInputAnimations } from './usePasswordInputAnimations';
 import type { PasswordInputProps } from './types';
 
@@ -16,26 +17,44 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
       onChangeText,
       placeholder = 'Enter your password',
       error,
+      labelRight,
       ...props
     },
     ref
   ) {
     const [isSecure, setIsSecure] = useState(true);
+    const { colors: themeColors, isDark } = useThemeColors();
     const { animatedStyle, handleFocus, handleBlur } =
       usePasswordInputAnimations();
 
     const errorStyle = error ? { borderColor: '#ef4444', borderWidth: 1 } : {};
+    const iconColor = isDark ? themeColors.text.secondary : '#57534e';
 
     return (
       <View className='gap-2'>
-        <Text className='text-sm font-medium text-stone-500'>Password</Text>
+        <View className='flex-row items-center justify-between'>
+          <Text
+            className='text-sm font-medium'
+            style={{ color: themeColors.text.secondary }}
+          >
+            Password
+          </Text>
+          {labelRight}
+        </View>
         <Animated.View
-          className='relative flex-row items-center rounded-3xl border'
-          style={[animatedStyle, errorStyle]}
+          className='relative flex-row items-center rounded-2xl border'
+          style={[
+            animatedStyle,
+            errorStyle,
+            {
+              backgroundColor: isDark ? themeColors.card : '#ffffff',
+              borderColor: error ? '#ef4444' : themeColors.border,
+            },
+          ]}
         >
           <View className='pl-5'>
             <Lock
-              color='#78716c'
+              color={iconColor}
               size={20}
               strokeWidth={2}
               testID='password-lock-icon'
@@ -48,10 +67,11 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
             accessibilityHint='Enter your password to sign in'
             accessibilityLabel='Password input field'
             autoComplete='password'
-            className='flex-1 px-3 py-3.5 text-base font-medium text-stone-900'
+            className='flex-1 px-3 py-4 text-[17px] font-medium leading-[22px]'
             placeholder={placeholder}
-            placeholderTextColor='#a8a29e'
+            placeholderTextColor={isDark ? themeColors.text.tertiary : '#a8a29e'}
             secureTextEntry={isSecure}
+            style={{ color: themeColors.text.primary }}
             value={value}
             onBlur={handleBlur}
             onChangeText={onChangeText}
@@ -71,14 +91,14 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
           >
             {isSecure ? (
               <Eye
-                color='#78716c'
+                color={iconColor}
                 size={20}
                 strokeWidth={2}
                 testID='eye-icon'
               />
             ) : (
               <EyeOff
-                color='#78716c'
+                color={iconColor}
                 size={20}
                 strokeWidth={2}
                 testID='eye-off-icon'

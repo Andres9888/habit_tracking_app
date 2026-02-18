@@ -1,5 +1,14 @@
 /**
- * HabitsListContent - The draggable list of habits
+ * HabitsListContent — the actual list body rendered by {@link HabitsList}.
+ *
+ * Wraps `react-native-draggable-flatlist` and wires up the four FlatList
+ * render slots (header, footer, empty, item) plus the modal layer.
+ *
+ * Each render slot is produced by a dedicated factory function (see
+ * `HabitsListRenders`) and memoised here to avoid unnecessary re-renders.
+ *
+ * This component owns no state or side-effects; everything is injected via
+ * {@link HabitsListContentProps}.
  */
 
 import { useCallback, useMemo } from 'react';
@@ -7,27 +16,15 @@ import { View } from 'react-native';
 import DraggableFlatList, {
   type RenderItemParams,
 } from 'react-native-draggable-flatlist';
-import { HabitsListModals } from './HabitsListModals';
 import {
   renderHabitsListHeader,
   renderHabitsListFooter,
   renderHabitsListEmpty,
   renderHabitRow,
 } from './HabitsListRenders';
+import { HabitsListModals } from './HabitsListModals';
 import type { Habit } from '../../types';
-import type { HabitsListProps } from './HabitsList.types';
-
-export interface HabitsListContentProps {
-  props: HabitsListProps;
-  state: ReturnType<typeof import('./useHabitsListState').useHabitsListState>;
-  handlers: ReturnType<
-    typeof import('./useHabitsListHandlers').useHabitsListHandlers
-  >;
-  renderItem: ReturnType<
-    typeof import('../../hooks/useHabitRenderItem').useHabitRenderItem
-  >;
-  handleSuccessTransitionComplete: () => void;
-}
+import type { HabitsListContentProps } from './HabitsList.types';
 
 export function HabitsListContent({
   props,
@@ -70,7 +67,7 @@ export function HabitsListContent({
   );
 
   const renderHabitItem = useCallback(
-    (p: any) =>
+    (p: RenderItemParams<Habit>) =>
       renderHabitRow({
         habitRowOpacity: state.habitRowOpacity,
         habitRowTranslateY: state.habitRowTranslateY,
@@ -113,3 +110,5 @@ export function HabitsListContent({
     </View>
   );
 }
+
+export { type HabitsListContentProps } from './HabitsList.types';

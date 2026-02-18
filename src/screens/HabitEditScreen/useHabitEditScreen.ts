@@ -25,13 +25,13 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
 
   useEffect(() => {
     if (habit) {
-      const parts = habit.name.split(' ');
-      const emoji = parts[0];
+      const parts = (habit.name ?? '').split(' ');
+      const emoji = parts[0] ?? '💪';
       const name = parts.slice(1).join(' ');
 
-      setHabitName(name || habit.name);
+      setHabitName(name || habit.name || '');
       setSelectedEmoji(emoji || '💪');
-      setSelectedColor(habit.iconColor || '#DBEAFE');
+      setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
     }
@@ -40,14 +40,14 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
   const { handleSave, isSaving } = useHabitSaveHandler({
     habitId,
     habitName,
-    selectedEmoji,
-    selectedColor,
-    remindersEnabled,
-    reminderTime,
     onSuccess: () => {
       triggerSuccess();
       onClose();
     },
+    remindersEnabled,
+    reminderTime,
+    selectedColor,
+    selectedEmoji,
   });
 
   const { handleDelete, handleArchive } = useHabitActions({
@@ -77,19 +77,20 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
 
   return {
     habitName,
-    setHabitName,
-    selectedEmoji,
-    selectedColor,
-    remindersEnabled,
-    reminderTime,
-    handleEmojiSelect,
     handleColorSelect,
-    handleReminderToggle,
-    handleReminderTimeChange,
-    handleSave,
-    isSaving,
     handleDelete,
+    handleEmojiSelect,
     handleArchive,
+    handleReminderTimeChange,
+    handleReminderToggle,
+    isLoading: habitId != null && habit === undefined,
+    remindersEnabled,
+    handleSave,
+    selectedEmoji,
+    isSaving,
+    setHabitName,
+    reminderTime,
+    selectedColor,
     triggerSelection,
   };
 }

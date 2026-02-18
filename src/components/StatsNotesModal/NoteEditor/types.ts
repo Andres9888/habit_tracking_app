@@ -16,7 +16,7 @@ export interface NoteEditorProps {
 export interface HabitSelectorProps {
   habits: Array<{ _id: Id<'habits'>; name: string }>;
   selectedHabitId: Id<'habits'> | undefined;
-  onSelectHabit: (habitId: Id<'habits'> | undefined) => void;
+  onSelectHabit: (habitId?: Id<'habits'>) => void;
 }
 
 export interface NoteEditorActionsProps {

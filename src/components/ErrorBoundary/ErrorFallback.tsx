@@ -3,16 +3,14 @@
 import React, { useRef, useState } from 'react';
 import { Linking, Pressable, Text, View } from 'react-native';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { RetryButton } from './RetryButton';
 import { SecondaryActions } from './SecondaryActions';
 import { SuggestionsCard } from './SuggestionsCard';
-import { styles } from './errorFallbackStyles';
+import { useStyles } from './errorFallbackStyles';
 
 const SUPPORT_EMAIL = 'support@chainday.app';
 const MAX_RETRIES = 3;
-
-const SUPPORT_EMAIL = 'support@chainday.app';
-const MAX_RETRIES_BEFORE_LOGOUT = 3;
 
 interface ErrorFallbackProps {
   error: Error | null;
@@ -22,10 +20,15 @@ interface ErrorFallbackProps {
 }
 
 export function ErrorFallback({
-  error, onRetry, onLogout, onOpenSettings,
+  error,
+  onRetry,
+  onLogout,
+  onOpenSettings,
 }: ErrorFallbackProps) {
   const retryCountRef = useRef(0);
   const [showLogout, setShowLogout] = useState(false);
+  const { colors } = useThemeColors();
+  const styles = useStyles();
 
   const handleRetry = () => {
     retryCountRef.current += 1;
@@ -51,12 +54,19 @@ export function ErrorFallback({
   return (
     <View accessibilityRole='alert' style={styles.container}>
       <Text style={styles.emoji}>😕</Text>
-      <Text accessibilityRole='header' style={styles.headline}>{headline}</Text>
+      <Text accessibilityRole='header' style={styles.headline}>
+        {headline}
+      </Text>
       <Text style={styles.safetyNote}>Your data is safe.</Text>
       <Text style={styles.description}>{desc}</Text>
       <SuggestionsCard />
       {showLogout && onLogout ? (
-        <Pressable style={styles.logoutButton} onPress={onLogout}>
+        <Pressable
+          accessibilityLabel='Sign out to resolve persistent error'
+          accessibilityRole='button'
+          style={styles.logoutButton}
+          onPress={onLogout}
+        >
           <Text style={styles.logoutText}>Sign Out</Text>
         </Pressable>
       ) : (

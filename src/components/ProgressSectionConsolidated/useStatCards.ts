@@ -36,10 +36,7 @@ export function useStatCards({
   monthlyChange,
 }: UseStatCardsArgs): UseStatCardsReturn {
   const statCards = useMemo<StatItemConfig[]>(() => {
-    const cards: StatItemConfig[] = [];
-
-    // Streak card (top-left of grid)
-    cards.push(
+    const cards: StatItemConfig[] = [ 
       {
         backgroundColor: STAT_CARD_COLORS.streak.bgHex,
         icon: '🔥',
@@ -56,7 +53,9 @@ export function useStatCards({
         trend: monthlyChange,
         value: `${monthlyCompleted}/${monthlyTotal}`,
       }
-    );
+    ];
+
+    // Streak card (top-left of grid)
 
     // Best Day card (bottom-left of grid)
     if (bestDay) {

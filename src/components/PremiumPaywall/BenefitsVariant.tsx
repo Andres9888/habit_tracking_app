@@ -11,10 +11,12 @@ import { BenefitsFeatureCard } from './BenefitsFeatureCard';
 import { BenefitsCTAFooter } from './BenefitsCTAFooter';
 import { MOTIVATION_FEATURES } from './motivationFeatures';
 import type { VariantConfig } from './PremiumPaywall.types';
+import { useThemeColors } from '../../theme/ThemeContext';
+import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 
 interface BenefitsVariantProps {
   config: VariantConfig;
-  handlers: any;
+  handlers: PremiumPaywallHandlers;
   triggeredByFeature?: string;
   reduceMotion: boolean;
   testID?: string;
@@ -29,6 +31,7 @@ export function BenefitsVariant({
   testID,
   visible,
 }: BenefitsVariantProps) {
+  const { colors } = useThemeColors();
   const sortedFeatures = [...MOTIVATION_FEATURES].sort((a, b) => {
     if (a.id === triggeredByFeature) return -1;
     if (b.id === triggeredByFeature) return 1;
@@ -40,6 +43,7 @@ export function BenefitsVariant({
 
   return (
     <Modal
+      accessibilityViewIsModal
       animationType={reduceMotion ? 'fade' : 'slide'}
       presentationStyle='pageSheet'
       testID={testID}
@@ -47,7 +51,7 @@ export function BenefitsVariant({
       visible={visible}
       onRequestClose={handlers.handleClose}
     >
-      <View className='flex-1 bg-stone-50'>
+      <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <BenefitsHeader config={config} onClose={handlers.handleClose} />
         <BenefitsHero config={config} />
         <ScrollView
@@ -68,8 +72,8 @@ export function BenefitsVariant({
           config={config}
           handlers={handlers}
           reduceMotion={reduceMotion}
-          onStartTrial={handleStartTrialPress}
           onRestore={handleRestorePress}
+          onStartTrial={handleStartTrialPress}
         />
       </View>
     </Modal>

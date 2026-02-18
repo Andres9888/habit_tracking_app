@@ -44,6 +44,12 @@ export const getUrl = query({
     storageId: v.id('_storage'),
   },
   handler: async (ctx, args) => {
+    // SEC-002: Authentication check - prevent anonymous access to file URLs
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to access files');
+    }
+
     return await ctx.storage.getUrl(args.storageId);
   },
   returns: v.union(v.string(), v.null()),
@@ -51,6 +57,12 @@ export const getUrl = query({
 
 /**
  * Delete a file from storage
+ * 
+ * ⚠️ DEPRECATED: This mutation lacks ownership verification.
+ * Use domain-specific delete mutations instead (e.g., visionBoardImages.remove)
+ * which verify ownership before deletion.
+ * 
+ * This is kept for backwards compatibility but should not be used.
  */
 export const deleteFile = mutation({
   args: {
@@ -63,8 +75,17 @@ export const deleteFile = mutation({
       throw new Error('Unauthenticated: Must be logged in to delete files');
     }
 
-    await ctx.storage.delete(args.storageId);
-    return null;
+    // SEC-VULNERABILITY: This mutation does not verify file ownership!
+    // Callers must verify ownership before calling this.
+    // Consider using domain-specific delete mutations that verify ownership.
+    
+    throw new Error(
+      'Direct file deletion is disabled. Use domain-specific delete mutations ' +
+      '(e.g., visionBoardImages.remove) that verify ownership.'
+    );
+    
+    // await ctx.storage.delete(args.storageId);
+    // return null;
   },
   returns: v.null(),
 });

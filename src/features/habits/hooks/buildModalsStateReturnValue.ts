@@ -6,127 +6,149 @@ import type {
   ExtraState,
 } from './buildModalsStateReturnValue.types';
 
+/**
+ * Builds the complete HabitsModalsState return value by combining visibility state,
+ * selection state, handlers, and extra state into a unified interface.
+ *
+ * @param visibility - Modal visibility state (open/close flags)
+ * @param selection - Currently selected habits for various modals
+ * @param handlers - Event handlers for modal interactions
+ * @param extra - Additional state like settings, habits list, tracking functions
+ * @returns Complete HabitsModalsState object with all modal-related state and handlers
+ */
 export function buildModalsStateReturnValue(
-  v: ModalVisibilityState,
-  s: HabitSelectionState,
-  h: HandlersReturn,
+  visibility: ModalVisibilityState,
+  selection: HabitSelectionState,
+  handlers: HandlersReturn,
   extra: ExtraState
 ): HabitsModalsState {
   return {
-    activationModalHabit: s.activationModalHabit,
+    activationModalHabit: selection.activationModalHabit,
     // State properties
     celebrationsEnabled: extra.celebrationsEnabled,
-    habitDetailInitialTab: s.habitDetailInitialTab,
-    habits: extra.habits,
-    habitToEdit: s.habitToEdit,
-    habitToPause: s.habitToPause,
-    milestone: extra.milestone,
-    quickActionsHabit: s.quickActionsHabit,
     // Handlers from extracted hook
-    closeCreateHabit: h.closeCreateHabit,
+    closeCreateHabit: handlers.closeCreateHabit,
 
-    reduceMotionPreference: extra.reduceMotionPreference,
+    closeEditScreen: handlers.closeEditScreen,
 
-    closeEditScreen: h.closeEditScreen,
+    closeQuickActions: handlers.closeQuickActions,
 
-    selectedHabit: s.selectedHabit,
+    closeShareCard: handlers.closeShareCard,
 
-    closeQuickActions: h.closeQuickActions,
+    closeActivationModal: handlers.closeActivationModal,
 
-    settings: extra.settings,
+    habitDetailInitialTab: selection.habitDetailInitialTab,
 
-    closeShareCard: h.closeShareCard,
+    closeVisualizationExercise: handlers.closeVisualizationExercise,
 
-    shareCardData: s.shareCardData,
+    habits: extra.habits,
 
-    closeActivationModal: h.closeActivationModal,
+    confirmPause: handlers.confirmPause,
 
-    showActivationModal: v.showActivationModal,
+    habitToEdit: selection.habitToEdit,
 
-    closeVisualizationExercise: h.closeVisualizationExercise,
+    habitToPause: selection.habitToPause,
 
-    showCreateHabit: v.isCreateHabitOpen,
+    milestone: extra.milestone,
 
-    confirmPause: h.confirmPause,
+    onDeleteHabit: handlers.onDeleteHabit,
 
-    showEditScreen: v.showEditScreen,
-
-    onDeleteHabit: h.onDeleteHabit,
-
-    showHabitCalendar: v.isHabitCalendarOpen,
-
-    onSettingsChange: h.onSettingsChange,
-
-    showHabitDetail: v.isHabitDetailOpen,
+    onSettingsChange: handlers.onSettingsChange,
 
     // Extra handlers
     onChangeCelebrationsEnabled: extra.onChangeCelebrationsEnabled,
 
-    showHapticTest: v.showHapticTest,
+    quickActionsHabit: selection.quickActionsHabit,
 
     handleArchive: extra.handleArchive,
 
-    showPauseModal: v.showPauseModal,
+    reduceMotionPreference: extra.reduceMotionPreference,
 
     clearMilestone: extra.clearMilestone,
 
-    showQuickActions: v.showQuickActions,
+    selectedHabit: selection.selectedHabit,
 
     getStreak: extra.getStreak,
 
-    showSettings: v.isSettingsOpen,
+    settings: extra.settings,
 
     // Inline close handlers
-    closeSettings: () => v.setIsSettingsOpen(false),
+    closeSettings: () => visibility.setIsSettingsOpen(false),
 
-    closeHabitCalendar: () => v.setIsHabitCalendarOpen(false),
+    shareCardData: selection.shareCardData,
 
-    showShareCard: v.showShareCard,
+    closeHabitCalendar: () => visibility.setIsHabitCalendarOpen(false),
 
-    closeHabitDetail: () => v.setIsHabitDetailOpen(false),
+    showActivationModal: visibility.showActivationModal,
 
-    showTemplatesScreen: v.showTemplatesScreen,
+    closeHabitDetail: () => visibility.setIsHabitDetailOpen(false),
 
-    closeHapticTest: () => v.setShowHapticTest(false),
+    showCreateHabit: visibility.isCreateHabitOpen,
 
-    showVisualizationExercise: v.showVisualizationExercise,
+    closeHapticTest: () => visibility.setShowHapticTest(false),
+
+    showEditScreen: visibility.showEditScreen,
 
     closePauseModal: () => {
-      v.setShowPauseModal(false);
-      s.setHabitToPause(null);
+      visibility.setShowPauseModal(false);
+      selection.setHabitToPause(null);
     },
 
-    showHabitStrengthPercentage: extra.showHabitStrengthPercentage,
+    showHabitCalendar: visibility.isHabitCalendarOpen,
 
-    closeTemplatesScreen: () => v.setShowTemplatesScreen(false),
+    closeTemplatesScreen: () => visibility.setShowTemplatesScreen(false),
 
-    tracking: extra.tracking,
+    showHabitDetail: visibility.isHabitDetailOpen,
 
-    onShareMilestone: h.onShareMilestone,
+    onShareMilestone: handlers.onShareMilestone,
 
-    openActivationModal: h.openActivationModal,
+    showHapticTest: visibility.showHapticTest,
 
-    openActivationModalById: h.openActivationModalById,
+    openActivationModal: handlers.openActivationModal,
 
-    openCreateHabitScreen: h.openCreateHabitScreen,
+    showPauseModal: visibility.showPauseModal,
 
-    openEditHabit: h.openEditHabit,
+    openActivationModalById: handlers.openActivationModalById,
 
-    openHabitCalendar: h.openHabitCalendar,
+    showQuickActions: visibility.showQuickActions,
 
-    openHabitDetail: h.openHabitDetail,
+    openCreateHabitScreen: handlers.openCreateHabitScreen,
+
+    showSettings: visibility.isSettingsOpen,
+
+    showSortSheet: visibility.isSortSheetOpen,
+
+    openSortSheet: () => visibility.setIsSortSheetOpen(true),
+
+    closeSortSheet: () => visibility.setIsSortSheetOpen(false),
+
+    openEditHabit: handlers.openEditHabit,
+
+    openHabitCalendar: handlers.openHabitCalendar,
+
+    showShareCard: visibility.showShareCard,
+
+    openHabitDetail: handlers.openHabitDetail,
+
+    showTemplatesScreen: visibility.showTemplatesScreen,
+
     openHapticTest: () => {
-      v.setIsSettingsOpen(false);
-      v.setShowHapticTest(true);
+      visibility.setIsSettingsOpen(false);
+      visibility.setShowHapticTest(true);
     },
-    openPauseModal: h.openPauseModal,
-    openQuickActions: h.openQuickActions,
+
+    showVisualizationExercise: visibility.showVisualizationExercise,
+
+    openPauseModal: handlers.openPauseModal,
+    showHabitStrengthPercentage: extra.showHabitStrengthPercentage,
+    openQuickActions: handlers.openQuickActions,
+    tracking: extra.tracking,
     // Inline open handlers
-    openSettings: () => v.setIsSettingsOpen(true),
+    openSettings: () => visibility.setIsSettingsOpen(true),
 
-    openTemplatesScreen: () => v.setShowTemplatesScreen(true),
+    openTemplatesScreen: () => visibility.setShowTemplatesScreen(true),
 
-    openVisualizationExercise: h.openVisualizationExercise,
+    openVisualizationExercise: handlers.openVisualizationExercise,
 
     setShowHabitStrengthPercentage: () => {},
     toggleHabit: extra.handleToggleHabit,

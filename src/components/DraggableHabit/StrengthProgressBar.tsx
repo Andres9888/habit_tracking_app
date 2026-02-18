@@ -1,16 +1,27 @@
+/**
+ * StrengthProgressBar — Visualises habit strength as an animated segmented bar.
+ *
+ * Layout (same 5-column grid as CardHeader):
+ * - Column 1: Animated tier emoji (🌱→🌿→🌳→💪→⚡)
+ * - Columns 2–4: Progress bar with dividers at 20/40/60/80%
+ * - Column 5: Animated counting percentage text
+ *
+ * All animations are driven by Reanimated styles passed in from
+ * {@link useStrengthAnimation} and {@link useCountingPercent}.
+ */
+
 import React from 'react';
 import { View, Text } from 'react-native';
 import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
 import { getStrengthEmoji } from './strengthUtils';
+import { useCountingPercent } from './useCountingPercent';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
 
 interface StrengthProgressBarProps {
   strengthPercent: number;
-  strengthEmojiAnimatedStyle: AnimatedStyle<{
-    opacity: number;
-    transform: { scale: number; rotate: string }[];
-  }>;
+  strengthEmojiAnimatedStyle: AnimatedStyle;
   progressAnimatedStyle: AnimatedStyle;
 }
 
@@ -19,6 +30,9 @@ export function StrengthProgressBar({
   strengthEmojiAnimatedStyle,
   progressAnimatedStyle,
 }: StrengthProgressBarProps) {
+  const { colors: themeColors, isDark } = useThemeColors();
+  const displayPercent = useCountingPercent(strengthPercent);
+
   return (
     <View className='relative mb-3 flex-row items-center justify-between px-3'>
       {/* Column 1: Animated plant emoji */}
@@ -26,8 +40,7 @@ export function StrengthProgressBar({
         <ReAnimated.Text
           style={[
             { fontSize: typography.heading2.fontSize, textAlign: 'center' },
-
-            strengthEmojiAnimatedStyle as any,
+            strengthEmojiAnimatedStyle,
           ]}
         >
           {getStrengthEmoji(strengthPercent)}
@@ -37,13 +50,13 @@ export function StrengthProgressBar({
       <View className='flex-1' />
       <View className='flex-1' />
       <View className='flex-1' />
-      {/* Column 5: Percentage */}
+      {/* Column 5: Animated counting percentage */}
       <View className='flex-1 items-center'>
         <Text
           className='text-[13px] font-bold'
-          style={{ color: '#65a30d', marginLeft: 12 }}
+          style={{ color: isDark ? '#A3E635' : '#4D7A0A', marginLeft: 12 }}
         >
-          {Math.round(strengthPercent)}%
+          {displayPercent}%
         </Text>
       </View>
       {/* Progress bar overlay */}
@@ -54,13 +67,13 @@ export function StrengthProgressBar({
           justifyContent: 'center',
           left: '20%',
           position: 'absolute',
-          right: '20%',
+          right: '22%',
           top: 0,
         }}
       >
         <View
           style={{
-            backgroundColor: '#e5e7eb',
+            backgroundColor: themeColors.gray[200],
             borderRadius: borderRadius.xs,
             height: 8,
             marginHorizontal: 8,
@@ -73,7 +86,7 @@ export function StrengthProgressBar({
           <ReAnimated.View
             style={[
               {
-                backgroundColor: '#65a30d',
+                backgroundColor: isDark ? '#A3E635' : '#4D7A0A',
                 borderRadius: borderRadius.xs,
                 height: '100%',
               },

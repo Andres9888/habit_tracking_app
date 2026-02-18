@@ -8,10 +8,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
 import type { VariantConfig } from './PremiumPaywall.types';
+import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 
 interface BenefitsCTAFooterProps {
   config: VariantConfig;
-  handlers: any;
+  handlers: PremiumPaywallHandlers;
   reduceMotion: boolean;
   onStartTrial: () => void;
   onRestore: () => void;
@@ -36,6 +37,7 @@ export function BenefitsCTAFooter({
         accessibilityHint='Opens subscription options'
         accessibilityLabel={config.ctaText}
         accessibilityRole='button'
+        testID='paywall-start-trial-button'
         disabled={!handlers.priceLabel}
         onPress={onStartTrial}
         onPressIn={handlers.handleButtonPressIn}
@@ -47,7 +49,7 @@ export function BenefitsCTAFooter({
             colors={[config.gradientColors[0], config.gradientColors[1]]}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
-            style={!handlers.priceLabel ? { opacity: 0.5 } : undefined}
+            style={handlers.priceLabel ? undefined : { opacity: 0.5 }}
           >
             <Text className='text-base font-semibold text-white'>{config.ctaText}</Text>
             <ChevronRight color='#ffffff' size={18} />

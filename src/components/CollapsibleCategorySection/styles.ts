@@ -7,7 +7,10 @@ import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
 
-export const styles = StyleSheet.create({
+import { useThemeColors } from '../../theme/ThemeContext';
+
+/** Static styles that don't depend on theme */
+const baseStyles = StyleSheet.create({
   chevronContainer: {
     alignItems: 'center',
     height: 28,
@@ -24,12 +27,6 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '500',
     marginTop: 2,
-  },
-  countTextHabits: {
-    color: '#78716c',
-  },
-  countTextScience: {
-    color: '#059669',
   },
   header: {
     alignItems: 'center',
@@ -64,3 +61,19 @@ export const styles = StyleSheet.create({
     paddingRight: 8,
   },
 });
+
+/** @deprecated Use useThemedStyles() for dark mode support */
+export const styles = {
+  ...baseStyles,
+  countTextHabits: { color: '#78716c' },
+  countTextScience: { color: '#059669' },
+};
+
+export function useThemedStyles() {
+  const { colors } = useThemeColors();
+  return {
+    ...baseStyles,
+    countTextHabits: { color: colors.text.secondary },
+    countTextScience: { color: colors.primary[600] },
+  };
+}

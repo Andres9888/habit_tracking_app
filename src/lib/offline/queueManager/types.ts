@@ -14,7 +14,7 @@ import type {
   ToggleCompletionPayload,
 } from '../queue';
 import type { ErrorCategory } from '../types';
-import type { BatchStatusResult } from './optimized';
+import type { BatchStatusResult } from './optimized/types';
 
 /**
  * Configuration for the OfflineQueueManager

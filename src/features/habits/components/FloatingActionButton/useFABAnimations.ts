@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
+import { FAB, RIPPLE_EFFECT } from '../../../../constants';
 
 export function useFABAnimations(
   celebrationsEnabled: boolean,
@@ -8,7 +9,7 @@ export function useFABAnimations(
   const bounce = useRef(new Animated.Value(0)).current;
   const pressScale = useRef(new Animated.Value(1)).current;
   const rippleOpacity = useRef(new Animated.Value(0)).current;
-  const rippleScale = useRef(new Animated.Value(0.6)).current;
+  const rippleScale = useRef(new Animated.Value(RIPPLE_EFFECT.initialScale)).current;
 
   useEffect(() => {
     if (!celebrationsEnabled || reduceMotionPreference) {
@@ -20,18 +21,18 @@ export function useFABAnimations(
     const animation = Animated.loop(
       Animated.sequence([
         Animated.timing(bounce, {
-          duration: 260,
+          duration: FAB.bounceInDuration,
           easing: Easing.out(Easing.cubic),
           toValue: 1,
           useNativeDriver: true,
         }),
         Animated.timing(bounce, {
-          duration: 520,
+          duration: FAB.bounceOutDuration,
           easing: Easing.inOut(Easing.ease),
           toValue: 0,
           useNativeDriver: true,
         }),
-        Animated.delay(1200),
+        Animated.delay(FAB.initialBounceDelay),
       ])
     );
 

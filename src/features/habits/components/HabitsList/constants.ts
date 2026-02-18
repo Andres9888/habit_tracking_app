@@ -1,30 +1,35 @@
 /**
  * HabitsList Constants
+ *
+ * Static data used by the monetization / upgrade UI within the HabitsList folder.
+ * Animation and timing constants live in the global `@/constants` module and are
+ * re-exported here for convenience (`ENTRANCE_STAGGER_DELAY`).
  */
 
+/** Benefit items displayed in {@link PremiumBenefitsRow}. */
 export const PREMIUM_BENEFITS = [
   {
     description:
-      'Expand beyond the three core routines and organize every area of life.',
+      'Track every area of your life — health, learning, fitness, and more.',
     title: 'Unlimited habits',
   },
   {
     description:
-      'Flexible reminder schedules keep momentum without overwhelming you.',
+      'Gentle nudges at the right time to keep your streaks alive.',
     title: 'Smart reminders',
   },
   {
     description:
-      'Detailed insights reveal streak trends and habit pairings that stick.',
+      'See which habits stick, spot trends, and understand what drives your progress.',
     title: 'Deep insights',
   },
 ];
 
+/** Testimonial content displayed in {@link SocialProofCard}. */
 export const SOCIAL_PROOF = {
   attribution: 'Maya - 42-day streak',
   quote:
-    'Upgrading unlocked the structure I needed. I finally track every routine and stay consistent.',
+    '"Upgrading gave me the structure I needed. I finally track every routine and stay consistent."',
 };
 
-// OPTIMIZED: Faster stagger for snappier feel (was 100ms)
-export const ENTRANCE_STAGGER_DELAY = 50;
+export {ENTRANCE_STAGGER_DELAY} from '@/constants';

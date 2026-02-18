@@ -1,18 +1,17 @@
 /**
  * InlineHint Component Tests
  *
- * Tests for the template discovery section:
- * - Featured category chips render with violet theme
- * - Browse templates and Create your own CTAs
- * - Compact mode renders simplified layout
- * - Callbacks fire correctly
+ * Tests for the templates bridge card and custom habit link:
+ * - Prominent templates card renders correctly
+ * - Secondary custom habit link renders
+ * - Callback functions fire correctly on press
  * - Accessibility labels and hints are present
  */
 
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 
-import { COLORS } from '../constants';
+import { COLORS, COPY } from '../constants';
 import { InlineHint } from '../InlineHint';
 
 describe('InlineHint', () => {
@@ -25,158 +24,162 @@ describe('InlineHint', () => {
     jest.clearAllMocks();
   });
 
-  describe('Full Mode Rendering', () => {
+  describe('Component Rendering', () => {
     it('should render without crashing', () => {
-      const { getByText } = render(<InlineHint {...defaultProps} />);
-      expect(getByText('or type a habit above to get started')).toBeDefined();
-    });
-
-    it('should render featured category chips', () => {
-      const { getByText } = render(<InlineHint {...defaultProps} />);
-      expect(getByText(/Morning/)).toBeDefined();
-      expect(getByText(/Health/)).toBeDefined();
-      expect(getByText(/Mindful/)).toBeDefined();
-    });
-
-    it('should render Browse templates CTA', () => {
       const { getByLabelText } = render(<InlineHint {...defaultProps} />);
-      expect(getByLabelText('Browse templates')).toBeDefined();
+      expect(getByLabelText('Browse habit templates')).toBeDefined();
     });
 
-    it('should render Create your own CTA', () => {
-      const { getByLabelText } = render(<InlineHint {...defaultProps} />);
-      expect(getByLabelText('Create your own')).toBeDefined();
-    });
-
-    it('should use violet color for Browse templates button', () => {
-      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
-
-      const browseButton = UNSAFE_getByProps({
-        accessibilityLabel: 'Browse templates',
-      });
-      const style = browseButton.props.style({ pressed: false });
-      expect(style.backgroundColor).toBe('#7c3aed');
-    });
-
-    it('should use violet border for Create your own button', () => {
-      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
-
-      const createButton = UNSAFE_getByProps({
-        accessibilityLabel: 'Create your own',
-      });
-      const style = createButton.props.style({ pressed: false });
-      expect(style.borderColor).toBe('#7c3aed');
-    });
-
-    it('should use violet color for category chip text', () => {
+    it('should render templates card with correct text', () => {
       const { getByText } = render(<InlineHint {...defaultProps} />);
-      const chip = getByText(/Morning/);
-      expect(chip.props.style).toMatchObject({ color: '#7c3aed' });
-    });
-  });
-
-  describe('Compact Mode', () => {
-    it('should render compact Browse templates button', () => {
-      const { getByLabelText } = render(
-        <InlineHint {...defaultProps} compact />
-      );
-      expect(getByLabelText('Browse templates')).toBeDefined();
+      expect(getByText(COPY.browseTemplatesCard)).toBeDefined();
     });
 
-    it('should not render category chips in compact mode', () => {
-      const { queryByText } = render(<InlineHint {...defaultProps} compact />);
-      expect(queryByText(/Morning/)).toBeNull();
+    it('should render custom habit link', () => {
+      const { getByText } = render(<InlineHint {...defaultProps} />);
+      expect(getByText('✨ create a custom habit')).toBeDefined();
+    });
+
+    it('should render templates card with emerald700 text color', () => {
+      const { getByText } = render(<InlineHint {...defaultProps} />);
+      const cardText = getByText(COPY.browseTemplatesCard);
+      expect(cardText.props.style).toMatchObject({
+        color: COLORS.emerald700,
+        fontSize: 14,
+        fontWeight: '600',
+      });
     });
   });
 
   describe('Button Press Behavior', () => {
-    it('should call onBrowseTemplates when Browse templates is pressed', () => {
+    it('should call onBrowseTemplates when templates card is pressed', () => {
       const onBrowseTemplates = jest.fn();
       const { getByLabelText } = render(
         <InlineHint {...defaultProps} onBrowseTemplates={onBrowseTemplates} />
       );
 
-      fireEvent.press(getByLabelText('Browse templates'));
+      fireEvent.press(getByLabelText('Browse habit templates'));
       expect(onBrowseTemplates).toHaveBeenCalledTimes(1);
     });
 
-    it('should call onCreateCustom when Create your own is pressed', () => {
+    it('should call onCreateCustom when custom link is pressed', () => {
       const onCreateCustom = jest.fn();
       const { getByLabelText } = render(
         <InlineHint {...defaultProps} onCreateCustom={onCreateCustom} />
       );
 
-      fireEvent.press(getByLabelText('Create your own'));
+      fireEvent.press(getByLabelText('Create custom habit'));
       expect(onCreateCustom).toHaveBeenCalledTimes(1);
     });
 
-    it('should call onBrowseTemplates when a category chip is pressed', () => {
+    it('should not call other callbacks when one button is pressed', () => {
       const onBrowseTemplates = jest.fn();
+      const onCreateCustom = jest.fn();
       const { getByLabelText } = render(
-        <InlineHint {...defaultProps} onBrowseTemplates={onBrowseTemplates} />
+        <InlineHint
+          onBrowseTemplates={onBrowseTemplates}
+          onCreateCustom={onCreateCustom}
+        />
       );
 
-      fireEvent.press(getByLabelText('Morning templates'));
+      fireEvent.press(getByLabelText('Browse habit templates'));
       expect(onBrowseTemplates).toHaveBeenCalledTimes(1);
+      expect(onCreateCustom).not.toHaveBeenCalled();
     });
   });
 
   describe('Accessibility', () => {
-    it('should have correct accessibility hint for Browse templates', () => {
+    it('should have correct accessibility labels', () => {
       const { getByLabelText } = render(<InlineHint {...defaultProps} />);
+      expect(getByLabelText('Browse habit templates')).toBeDefined();
+      expect(getByLabelText('Create custom habit')).toBeDefined();
+    });
 
-      const button = getByLabelText('Browse templates');
-      expect(button.props.accessibilityHint).toBe(
+    it('should have correct accessibility hint for templates card', () => {
+      const { getByLabelText } = render(<InlineHint {...defaultProps} />);
+      const card = getByLabelText('Browse habit templates');
+      expect(card.props.accessibilityHint).toBe(
         'Opens screen with pre-made habit templates'
       );
     });
 
-    it('should have correct accessibility hint for Create your own', () => {
+    it('should have correct accessibility hint for custom link', () => {
       const { getByLabelText } = render(<InlineHint {...defaultProps} />);
-
-      const button = getByLabelText('Create your own');
-      expect(button.props.accessibilityHint).toBe(
+      const link = getByLabelText('Create custom habit');
+      expect(link.props.accessibilityHint).toBe(
         'Opens full habit creation screen'
       );
     });
 
-    it('should have button role for all interactive elements', () => {
+    it('should have button role for both elements', () => {
       const { getByLabelText } = render(<InlineHint {...defaultProps} />);
+      expect(getByLabelText('Browse habit templates').props.accessibilityRole).toBe('button');
+      expect(getByLabelText('Create custom habit').props.accessibilityRole).toBe('button');
+    });
+  });
 
-      expect(getByLabelText('Browse templates').props.accessibilityRole).toBe(
-        'button'
-      );
-      expect(getByLabelText('Create your own').props.accessibilityRole).toBe(
-        'button'
-      );
-      expect(getByLabelText('Morning templates').props.accessibilityRole).toBe(
-        'button'
-      );
+  describe('Press State Styling', () => {
+    it('should apply pressed styles to templates card', () => {
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+      const card = UNSAFE_getByProps({
+        accessibilityLabel: 'Browse habit templates',
+      });
+
+      const pressedStyle = card.props.style({ pressed: true });
+      expect(pressedStyle.opacity).toBe(0.9);
+      expect(pressedStyle.backgroundColor).toBe(COLORS.emerald100);
+    });
+
+    it('should apply normal styles to templates card when not pressed', () => {
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+      const card = UNSAFE_getByProps({
+        accessibilityLabel: 'Browse habit templates',
+      });
+
+      const normalStyle = card.props.style({ pressed: false });
+      expect(normalStyle.opacity).toBe(1);
+      expect(normalStyle.backgroundColor).toBe(COLORS.green50);
+    });
+
+    it('should apply pressed opacity to custom link', () => {
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+      const link = UNSAFE_getByProps({
+        accessibilityLabel: 'Create custom habit',
+      });
+
+      const pressedStyle = link.props.style({ pressed: true });
+      expect(pressedStyle.opacity).toBe(0.7);
+    });
+  });
+
+  describe('Layout', () => {
+    it('should render templates card with card-style border radius', () => {
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+      const card = UNSAFE_getByProps({
+        accessibilityLabel: 'Browse habit templates',
+      });
+
+      const style = card.props.style({ pressed: false });
+      expect(style.borderRadius).toBe(16);
+      expect(style.borderWidth).toBe(1);
     });
   });
 
   describe('Design System Compliance', () => {
-    it('should use stone500 color for divider text', () => {
+    it('should use emerald700 for templates card text', () => {
       const { getByText } = render(<InlineHint {...defaultProps} />);
-
-      const dividerText = getByText('or type a habit above to get started');
-      expect(dividerText.props.style).toMatchObject({
-        color: COLORS.stone500,
-      });
+      const cardText = getByText(COPY.browseTemplatesCard);
+      expect(cardText.props.style.color).toBe(COLORS.emerald700);
     });
 
-    it('should use violet theme consistently for all template UI', () => {
-      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
-
-      const browseStyle = UNSAFE_getByProps({
-        accessibilityLabel: 'Browse templates',
-      }).props.style({ pressed: false });
-      expect(browseStyle.backgroundColor).toBe('#7c3aed');
-
-      const createStyle = UNSAFE_getByProps({
-        accessibilityLabel: 'Create your own',
-      }).props.style({ pressed: false });
-      expect(createStyle.borderColor).toBe('#7c3aed');
+    it('should use stone500 for "or" text', () => {
+      const { getByText } = render(<InlineHint {...defaultProps} />);
+      // The "or" text is part of the parent Text node
+      const orText = getByText(/^or /);
+      expect(orText.props.style).toMatchObject({
+        color: COLORS.stone500,
+        fontSize: 13,
+      });
     });
   });
 });

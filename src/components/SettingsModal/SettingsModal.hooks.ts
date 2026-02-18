@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from 'convex/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 
 interface UseSettingsModalLogicProps {
@@ -10,107 +10,100 @@ interface UseSettingsModalLogicProps {
 type DarkModePreference = 'system' | 'light' | 'dark';
 
 const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
-  if (value === 'dark' || value === 'light' || value === 'system') {
-    return value;
-  }
-
-  if (value === true) {
-    return 'dark';
-  }
-
-  if (value === false) {
-    return 'light';
-  }
-
-  return 'light'; // Default to light - dark mode not yet implemented
+  if (value === 'dark' || value === 'light' || value === 'system') return value;
+  if (value === true) return 'dark';
+  if (value === false) return 'light';
+  return 'system';
 };
 
 export const useSettingsModalLogic = ({
-  visible,
   onClose,
 }: UseSettingsModalLogicProps) => {
-  const [view, setView] = useState<'settings' | 'archived' | 'paused'>(
+  const [view, setView] = useState<'settings' | 'archived' | 'paused' | 'sort'>(
     'settings'
   );
-
-  // Get settings from Convex
   const settings = useQuery(api.settings.get);
   const updateSettings = useMutation(api.settings.update);
 
-  // Local state for settings
   const [darkModePreference, setDarkModeState] =
-    useState<DarkModePreference>('light');
+    useState<DarkModePreference>('system');
   const [reduceMotion, setReduceMotionState] = useState(false);
   const [highContrastMode, setHighContrastModeState] = useState(false);
   const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
+  const [showGradientFill, setShowGradientFillState] = useState(true);
 
-  // Sync local state with Convex settings
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     if (settings) {
       setDarkModeState(normalizeDarkModePreference(settings.darkMode));
       setReduceMotionState(settings.reduceMotion);
       setHighContrastModeState(settings.highContrastMode);
       setUseDyslexicFontState(settings.useDyslexicFont);
+      setShowGradientFillState(settings.showGradientFill);
     }
   }, [settings]);
 
-  // Reset to settings view when modal closes
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
+
   const handleClose = () => {
     onClose();
-    setTimeout(() => setView('settings'), 300); // Reset after animation
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(() => setView('settings'), 300);
   };
 
-  // Setting updaters
+  const update = useCallback(
+    async (patch: Record<string, unknown>) => {
+      if (settings) await updateSettings({ ...settings, ...patch });
+    },
+    [settings, updateSettings]
+  );
+
   const setDarkModePreference = async (value: DarkModePreference) => {
     setDarkModeState(value);
-    if (settings) {
-      await updateSettings({
-        ...settings,
-        darkMode: value,
-      });
-    }
+    await update({ darkMode: value });
   };
-
   const setReduceMotion = async (value: boolean) => {
     setReduceMotionState(value);
-    if (settings) {
-      await updateSettings({
-        ...settings,
-        reduceMotion: value,
-      });
-    }
+    await update({ reduceMotion: value });
   };
-
   const setHighContrastMode = async (value: boolean) => {
     setHighContrastModeState(value);
-    if (settings) {
-      await updateSettings({
-        ...settings,
-        highContrastMode: value,
-      });
-    }
+    await update({ highContrastMode: value });
   };
-
   const setUseDyslexicFont = async (value: boolean) => {
     setUseDyslexicFontState(value);
-    if (settings) {
-      await updateSettings({
-        ...settings,
-        useDyslexicFont: value,
-      });
-    }
+    await update({ useDyslexicFont: value });
+  };
+  const setShowGradientFill = async (value: boolean) => {
+    setShowGradientFillState(value);
+    await update({ showGradientFill: value });
+  };
+
+  const habitSortMode = (settings?.habitSortMode as string) ?? 'manual';
+  const setHabitSortMode = async (value: string) => {
+    await update({ habitSortMode: value });
   };
 
   return {
     darkModePreference,
+    habitSortMode,
     handleClose,
     highContrastMode,
     reduceMotion,
     setDarkModePreference,
+    setHabitSortMode,
     setHighContrastMode,
     setReduceMotion,
+    setShowGradientFill,
     setUseDyslexicFont,
     setView,
+    showGradientFill,
     useDyslexicFont,
     view,
   };

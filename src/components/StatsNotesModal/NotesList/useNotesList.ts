@@ -79,20 +79,20 @@ export function useNotesList(initialHabitId?: Id<'habits'>) {
 
   return {
     deletingNoteId,
+    editingNote,
     editingNoteId,
     groupedNotes,
-    isAdding,
-    editingNote,
-    searchText,
     habits,
-    selectedHabitFilter,
     handleCloseVisualizationGuide,
-    setEditingNoteId,
     handleDelete,
-    setSearchText,
     handleOpenVisualizationGuide,
-    setSelectedHabitFilter,
+    isAdding,
+    searchText,
+    selectedHabitFilter,
+    setEditingNoteId,
     setIsAdding,
+    setSearchText,
+    setSelectedHabitFilter,
     showVisualizationGuide,
   };
 }
