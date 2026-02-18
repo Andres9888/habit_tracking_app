@@ -1,11 +1,9 @@
 /**
  * FullsizeTemplatePreview - Main orchestration component
  * A fullsize preview modal for template cards
- * 
- * Uses useMemo to prevent unnecessary animation recalculations on parent re-renders.
  */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from '../Modal';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
@@ -33,58 +31,40 @@ export default function FullsizeTemplatePreview({
   const reducedMotion = useReduceMotion();
   const iconColor = template?.iconColor?.trim() || DEFAULT_ICON_COLOR;
 
-  // Memoize animation configs to prevent unnecessary recalculations
-  const entranceAnimations = useMemo(
-    () => ({
-      entranceAnimations: useEntranceAnimations({
-        reducedMotion,
-        template,
-        visible,
-      }),
-    }),
-    [reducedMotion, template, visible]
-  ).entranceAnimations;
-
-  const successAnimations = useMemo(
-    () => useSuccessAnimations({ isImported, reducedMotion }),
-    [isImported, reducedMotion]
-  );
-
-  const buttonAnimations = useMemo(
-    () => useButtonAnimations({ reducedMotion }),
-    [reducedMotion]
-  );
-
-  const handlers = useMemo(
-    () =>
-      useHandlers({
-        isImported,
-        isImporting,
-        onClose,
-        onCustomize,
-        onImport,
-        reducedMotion,
-        template,
-      }),
-    [isImported, isImporting, onClose, onCustomize, onImport, reducedMotion, template]
-  );
-
-  const animatedStyles = useMemo(
-    () =>
-      useAnimatedStyles({
-        ...entranceAnimations,
-        closeButtonScale: buttonAnimations.closeButtonScale,
-        customizeButtonScale: buttonAnimations.customizeButtonScale,
-        importButtonScale: buttonAnimations.importButtonScale,
-        ...successAnimations,
-      }),
-    [entranceAnimations, buttonAnimations, successAnimations]
-  );
+  const entranceAnimations = useEntranceAnimations({
+    reducedMotion,
+    template,
+    visible,
+  });
+  const successAnimations = useSuccessAnimations({ isImported, reducedMotion });
+  const {
+    closeButtonScale,
+    importButtonScale,
+    customizeButtonScale,
+    createPressHandlers,
+  } = useButtonAnimations({ reducedMotion });
+  const handlers = useHandlers({
+    isImported,
+    isImporting,
+    onClose,
+    onCustomize,
+    onImport,
+    reducedMotion,
+    template,
+  });
+  const animatedStyles = useAnimatedStyles({
+    ...entranceAnimations,
+    closeButtonScale,
+    customizeButtonScale,
+    importButtonScale,
+    ...successAnimations,
+  });
 
   if (!template) return null;
 
   return (
     <Modal
+      accessibilityViewIsModal
       disableBackdropClose={isImporting}
       variant='fullScreen'
       visible={visible}
@@ -92,13 +72,12 @@ export default function FullsizeTemplatePreview({
     >
       <PreviewContent
         animatedStyles={animatedStyles}
-        closeButtonScale={buttonAnimations.closeButtonScale}
         confettiRef={successAnimations.confettiRef}
-        createPressHandlers={buttonAnimations.createPressHandlers}
-        customizeButtonScale={buttonAnimations.customizeButtonScale}
+        createPressHandlers={createPressHandlers}
+        customizeButtonScale={customizeButtonScale}
         handlers={handlers}
         iconColor={iconColor}
-        importButtonScale={buttonAnimations.importButtonScale}
+        importButtonScale={importButtonScale}
         insets={insets}
         isImported={isImported}
         isImporting={isImporting}

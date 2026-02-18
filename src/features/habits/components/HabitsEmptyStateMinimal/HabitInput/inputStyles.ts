@@ -2,38 +2,44 @@
  * HabitInput Styles - Extracted style definitions
  */
 
-import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { ViewStyle, TextStyle } from 'react-native';
 import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from '../constants';
 
 interface ContainerStyleParams {
   isFocused: boolean;
+  backgroundColor: string;
+  shadowColor: string;
 }
 
 export function getContainerStyle({
   isFocused,
+  backgroundColor,
+  shadowColor,
 }: ContainerStyleParams): ViewStyle {
   return {
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor,
     borderRadius: BORDER_RADIUS.input,
     borderWidth: 2,
     elevation: isFocused ? 2 : 0,
     flexDirection: 'row',
     height: TOUCH_TARGETS.inputHeight,
     paddingHorizontal: 20,
-    shadowColor: COLORS.blue500,
+    shadowColor,
     shadowOffset: { height: 0, width: 0 },
     shadowRadius: 8,
     width: '100%',
   };
 }
 
-export const inputTextStyle: TextStyle = {
-  color: COLORS.stone800,
-  flex: 1,
-  fontSize: 17,
-  fontWeight: '500',
-};
+export function getInputTextStyle(color: string): TextStyle {
+  return {
+    color,
+    flex: 1,
+    fontSize: 17,
+    fontWeight: '500',
+  };
+}
 
 export const clearButtonPressedStyle = (pressed: boolean): ViewStyle => ({
   marginLeft: 8,
@@ -46,3 +52,11 @@ export const characterCounterStyle = (color: string): TextStyle => ({
   fontWeight: '500',
   marginLeft: 8,
 });
+
+export const placeholderOverlayStyle: TextStyle = {
+  color: COLORS.stone400,
+  fontSize: 17,
+  fontWeight: '500',
+  left: 20,
+  position: 'absolute',
+};

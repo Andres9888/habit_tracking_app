@@ -25,6 +25,7 @@ interface HabitArgs {
   cueLocation?: string;
   cueAfterBehavior?: string;
   icon?: string;
+  color?: string;
   iconColor?: string;
   preferredTime?: string;
   reminderTime?: string;
@@ -43,6 +44,7 @@ interface ValidatedHabitFields {
   cueLocation?: string;
   cueAfterBehavior?: string;
   icon?: string;
+  color?: string;
   iconColor?: string;
   preferredTime?: string;
   reminderTime?: string;
@@ -91,6 +93,9 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   const iconResult = validateEmoji(args.icon, 'Icon');
   const icon = requireValid(iconResult, args.icon);
 
+  const colorResult = validateColor(args.color, 'Habit color');
+  const color = requireValid(colorResult, args.color);
+
   const iconColorResult = validateColor(args.iconColor, 'Icon color');
   const iconColor = requireValid(iconColorResult, args.iconColor);
 
@@ -128,6 +133,7 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
     cueLocation,
     cueAfterBehavior,
     icon,
+    color,
     iconColor,
     preferredTime,
     reminderTime,
@@ -183,6 +189,11 @@ export function validateHabitUpdateFields(
   if (args.icon !== undefined) {
     const iconResult = validateEmoji(args.icon, 'Icon');
     result.icon = requireValid(iconResult, args.icon);
+  }
+
+  if (args.color !== undefined) {
+    const colorResult = validateColor(args.color, 'Habit color');
+    result.color = requireValid(colorResult, args.color);
   }
 
   if (args.iconColor !== undefined) {

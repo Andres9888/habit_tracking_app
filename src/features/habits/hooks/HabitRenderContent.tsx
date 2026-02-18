@@ -1,6 +1,11 @@
 /* eslint-disable max-lines */
 import React, { useCallback, memo } from 'react';
 import { View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import DraggableHabit from '../../../components/DraggableHabit';
 import type { Habit, HabitStatus } from '../types';
@@ -79,9 +84,36 @@ function HabitRenderContentComponent({
 
   const handleLongPress = isReorderingEnabled ? drag : undefined;
 
+  // Animated style for the active drag state
+  const activeStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(isActive ? 0.92 : 1, { duration: 150 }),
+    transform: [
+      {
+        scale: withSpring(isActive ? 1.03 : 1, { damping: 18, stiffness: 200 }),
+      },
+    ],
+    ...(isActive
+      ? {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.18,
+          shadowRadius: 16,
+          elevation: 12,
+          zIndex: 999,
+        }
+      : {
+          shadowColor: 'transparent',
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0,
+          shadowRadius: 0,
+          elevation: 0,
+          zIndex: 0,
+        }),
+  }));
+
   return (
-    <ScaleDecorator>
-      <View className='mb-5' style={{ opacity: isActive ? 0.7 : 1 }}>
+    <ScaleDecorator activeScale={1}>
+      <Animated.View className='mb-5' style={activeStyle}>
         <DraggableHabit
           celebrationsEnabled={celebrationsEnabled}
           completionIcon={completionIcon}
@@ -109,7 +141,7 @@ function HabitRenderContentComponent({
           onResume={handleResume}
           onWeekComplete={handleWeekComplete}
         />
-      </View>
+      </Animated.View>
     </ScaleDecorator>
   );
 }

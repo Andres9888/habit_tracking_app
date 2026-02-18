@@ -18,16 +18,15 @@ export const useArchivedHabitsModalLogic = () => {
     habitId: Id<'habits'>,
     habitName: string
   ): Promise<boolean> => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     try {
       await unarchiveHabit({ habitId });
-      // Success haptic feedback after restore completes
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       return true;
     } catch (error) {
       if (__DEV__) console.error('Failed to restore habit:', error);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       Alert.alert(
         'Error',
         `Failed to restore "${habitName}". Please try again.`
@@ -37,7 +36,7 @@ export const useArchivedHabitsModalLogic = () => {
   };
 
   const handlePermanentDelete = (habitId: Id<'habits'>, habitName: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
     Alert.alert(
       `Permanently Delete "${habitName}"?`,
@@ -51,12 +50,12 @@ export const useArchivedHabitsModalLogic = () => {
           onPress: async () => {
             try {
               await removeHabit({ habitId });
-              Haptics.notificationAsync(
+              void Haptics.notificationAsync(
                 Haptics.NotificationFeedbackType.Success
               );
             } catch (error) {
               if (__DEV__) console.error('Failed to delete habit:', error);
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
               Alert.alert(
                 'Error',
                 `Failed to delete "${habitName}". Please try again.`
@@ -72,7 +71,7 @@ export const useArchivedHabitsModalLogic = () => {
   };
 
   const handleDeleteAll = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
     Alert.alert(
       'Delete All Archived Habits?',
@@ -83,10 +82,10 @@ export const useArchivedHabitsModalLogic = () => {
           onPress: async () => {
             try {
               await deleteAllArchivedMutation();
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             } catch (error) {
               if (__DEV__) console.error('Failed to delete all archived:', error);
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
               Alert.alert('Error', 'Failed to delete archived habits. Please try again.');
             }
           },

@@ -1,5 +1,6 @@
 import { Modal, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { StatsCard } from './StatsCard';
 import { ActivityLog } from './ActivityLog';
 import { CalendarTabs } from './CalendarTabs';
@@ -20,6 +21,7 @@ export default function HabitCalendarModal({
   toggleHabit,
   onOpenMotivationTab,
 }: HabitCalendarModalProps) {
+  const { colors } = useThemeColors();
   const state = useHabitCalendarModal({
     habit,
     onClose,
@@ -32,7 +34,8 @@ export default function HabitCalendarModal({
 
   return (
     <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
-      <SafeAreaView className='flex-1 bg-[#F8F5F1]'>
+      accessibilityViewIsModal
+      <SafeAreaView className='flex-1' style={{ backgroundColor: colors.background }}>
         <ModalHeader name={state.name} onClose={onClose} onEdit={state.handleEditPress} />
 
         <ScrollView className='px-4' showsVerticalScrollIndicator={false}>

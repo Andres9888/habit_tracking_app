@@ -36,6 +36,7 @@ export const EmojiPickerSheet = memo(
 
     return (
       <Modal
+        accessibilityViewIsModal
         statusBarTranslucent
         transparent
         animationType='none'

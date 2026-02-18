@@ -1,6 +1,7 @@
 /** PasswordResetForm - OPTIMIZED: Better input styling, shadows */
 import { Text, TextInput, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { PasswordResetFormProps } from './types';
 import { PasswordResetButtons } from './PasswordResetButtons';
 
@@ -12,6 +13,7 @@ export function PasswordResetForm({
   onSubmit,
   onCancel,
 }: PasswordResetFormProps) {
+  const { colors } = useThemeColors();
   return (
     <View className='gap-4'>
       <View className='gap-2'>
@@ -19,13 +21,19 @@ export function PasswordResetForm({
           Email address
         </Text>
         <View
-          className={`rounded-2xl border-2 bg-white ${error ? 'border-red-500' : 'border-stone-200'}`}
-          style={{
-            shadowColor: error ? '#ef4444' : '#1c1917',
-            shadowOffset: { height: 4, width: 0 },
-            shadowOpacity: 0.08,
-            shadowRadius: 16,
-          }}
+          className={`rounded-2xl border-2 ${error ? 'border-red-500' : ''}`}
+          style={[
+            {
+              backgroundColor: colors.card,
+              borderColor: error ? undefined : colors.border,
+            },
+            {
+              shadowColor: error ? '#ef4444' : '#1c1917',
+              shadowOffset: { height: 4, width: 0 },
+              shadowOpacity: 0.08,
+              shadowRadius: 16,
+            },
+          ]}
         >
           <TextInput
             accessible

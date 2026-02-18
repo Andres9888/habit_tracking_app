@@ -20,6 +20,7 @@ export interface HabitsModalsState {
   habits: Habit[];
   settings: HabitSettings | undefined;
   showSettings: boolean;
+  showSortSheet: boolean;
   showCreateHabit: boolean;
   showEditScreen: boolean;
   showHabitCalendar: boolean;
@@ -43,6 +44,8 @@ export interface HabitsModalsState {
   showHabitStrengthPercentage: boolean;
   closeSettings: () => void;
   openSettings: () => void;
+  openSortSheet: () => void;
+  closeSortSheet: () => void;
   openCreateHabitScreen: () => void;
   onChangeCelebrationsEnabled: (value: boolean) => Promise<void>;
   setShowHabitStrengthPercentage: (value: boolean) => void;

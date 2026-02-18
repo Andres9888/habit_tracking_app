@@ -82,12 +82,12 @@ export function CelebrationHeader({
       <Text className='mb-1 text-2xl font-bold text-emerald-800'>
         {isStreakMilestone
           ? `${milestoneNumber} Day Milestone!`
-          : 'You Did It!'}
+          : 'Great job!'}
       </Text>
       <Text className='text-center text-base text-emerald-600'>
         {isStreakMilestone
           ? `Incredible dedication to "${habitName}"!`
-          : `"${habitName}" completed`}
+          : `"${habitName}" completed — keep it up!`}
       </Text>
     </View>
   );

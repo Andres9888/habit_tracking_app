@@ -73,6 +73,15 @@ export const currentUser = query({
 export const getUser = query({
   args: { userId: v.id('users') },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.userId);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const user = await ctx.db.get(args.userId);
+    if (!user) return null;
+
+    // Only allow users to view their own profile
+    if (user.clerkId !== identity.subject) return null;
+
+    return user;
   },
 });
