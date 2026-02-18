@@ -66,9 +66,13 @@ function LazyProviders({ children }: PropsWithChildren) {
   // Note: These could be converted to async import() but would require Suspense
   // For now, ESLint rule is disabled for this specific pattern
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { PurchasesProvider } = require('./components/providers/PurchasesProvider');
+  const {
+    PurchasesProvider,
+  } = require('./components/providers/PurchasesProvider');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { StreakMilestoneProvider } = require('./components/StreakMilestoneCelebration');
+  const {
+    StreakMilestoneProvider,
+  } = require('./components/StreakMilestoneCelebration');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { NetworkStatusProvider } = require('./contexts/NetworkStatusContext');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -81,9 +85,7 @@ function LazyProviders({ children }: PropsWithChildren) {
       <OfflineProvider>
         <SyncStatusProvider>
           <PurchasesProvider>
-            <StreakMilestoneProvider>
-              {children}
-            </StreakMilestoneProvider>
+            <StreakMilestoneProvider>{children}</StreakMilestoneProvider>
           </PurchasesProvider>
         </SyncStatusProvider>
       </OfflineProvider>
@@ -104,9 +106,7 @@ function CoreProviders({ children }: PropsWithChildren) {
             <SentryUserSync>
               <ConvexClerkProvider>
                 <ThemeColorProvider>
-                  <LazyProviders>
-                    {children}
-                  </LazyProviders>
+                  <LazyProviders>{children}</LazyProviders>
                 </ThemeColorProvider>
               </ConvexClerkProvider>
             </SentryUserSync>
