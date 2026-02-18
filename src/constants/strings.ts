@@ -18,7 +18,7 @@ export const STRINGS = {
     nameLabel: 'Habit name',
     namePlaceholder: 'e.g., Read for 10 minutes before bed',
     // V9 additions
-orCreateYourOwn: 'or create your own',
+    orCreateYourOwn: 'or create your own',
     
 reminderAnnouncementDisabled: 'Reminders disabled',
     

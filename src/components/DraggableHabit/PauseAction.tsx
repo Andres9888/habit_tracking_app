@@ -11,7 +11,12 @@ interface PauseActionProps {
   onResume?: () => void;
 }
 
-export function PauseAction({ dragX, isPaused, onPause, onResume }: PauseActionProps) {
+export function PauseAction({
+  dragX,
+  isPaused,
+  onPause,
+  onResume,
+}: PauseActionProps) {
   const trans = dragX.interpolate({
     extrapolate: 'clamp',
     inputRange: [-100, 0],
@@ -47,6 +52,8 @@ export function PauseAction({ dragX, isPaused, onPause, onResume }: PauseActionP
       style={{ transform: [{ translateX: trans }] }}
     >
       <Pressable
+        accessibilityLabel={actionLabel}
+        accessibilityRole='button'
         onPress={handlePress}
         style={{
           alignItems: 'center',
