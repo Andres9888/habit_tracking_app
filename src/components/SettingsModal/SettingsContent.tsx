@@ -42,8 +42,8 @@ export function SettingsContent(p: SettingsContentProps) {
           <SettingsSection highContrastMode={hc} title='Preferences'>
             <SettingsRow
               highContrastMode={hc}
-              icon={<Check color='#0284c7' size={16} />}
-              iconBackgroundColor='#bae6fd'
+              icon={<Check color={themeColors.settings.checkbox.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.checkbox.bg}
               label='Checkbox style for completed habits'
               type='toggle'
               value={p.habitCompletionIcon === 'checkbox'}
@@ -53,8 +53,8 @@ export function SettingsContent(p: SettingsContentProps) {
             />
             <SettingsRow
               highContrastMode={hc}
-              icon={<Circle color='#8b5cf6' size={16} />}
-              iconBackgroundColor='#ddd6fe'
+              icon={<Circle color={themeColors.settings.circle.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.circle.bg}
               label='Circular day markers'
               type='toggle'
               value={p.dayShape === 'circle'}
@@ -62,8 +62,8 @@ export function SettingsContent(p: SettingsContentProps) {
             />
             <SettingsRow
               highContrastMode={hc}
-              icon={<Droplets color='#059669' size={16} />}
-              iconBackgroundColor='#d1fae5'
+              icon={<Droplets color={themeColors.settings.gradient.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.gradient.bg}
               label='Gradient fill for habit strength'
               type='toggle'
               value={p.showGradientFill}
@@ -71,8 +71,8 @@ export function SettingsContent(p: SettingsContentProps) {
             />
             <SettingsRow
               highContrastMode={hc}
-              icon={<Volume2 color='#f59e0b' size={16} />}
-              iconBackgroundColor='#fef3c7'
+              icon={<Volume2 color={themeColors.settings.sound.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.sound.bg}
               label='Play sound on habit completion'
               showBorder={false}
               type='toggle'
@@ -100,8 +100,8 @@ export function SettingsContent(p: SettingsContentProps) {
           <SettingsSection highContrastMode={hc} title='Data'>
             <SettingsRow
               highContrastMode={hc}
-              icon={<ArrowUpDown color='#6366f1' size={16} />}
-              iconBackgroundColor='#e0e7ff'
+              icon={<ArrowUpDown color={themeColors.settings.sort.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.sort.bg}
               label='Sort Order'
               type='selection'
               value={
@@ -112,8 +112,8 @@ export function SettingsContent(p: SettingsContentProps) {
             <SettingsRow
               badge={p.archivedHabitsCount}
               highContrastMode={hc}
-              icon={<BookOpen color='#78716c' size={16} />}
-              iconBackgroundColor='#e7e5e4'
+              icon={<BookOpen color={themeColors.settings.archive.icon} size={16} />}
+              iconBackgroundColor={themeColors.settings.archive.bg}
               label='Archived Habits'
               showBorder={false}
               type='navigation'
