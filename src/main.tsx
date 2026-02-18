@@ -1,8 +1,17 @@
 import { ConvexProvider, ConvexReactClient } from 'convex/react';
-import React, { StrictMode } from 'react';
+import React, { StrictMode, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './index.css';
+
+// Disable default browser scroll restoration on navigation
+// This prevents the browser from automatically scrolling to saved positions
+// which can cause issues with React Native's virtualized lists on web
+useEffect(() => {
+  if (typeof window !== 'undefined' && window.history) {
+    window.history.scrollRestoration = 'manual';
+  }
+}, []);
 
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
@@ -18,7 +27,8 @@ class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: unknown, errorInfo: unknown) {
-    if (__DEV__) console.error('ErrorBoundary caught an error', error, errorInfo);
+    if (__DEV__)
+      console.error('ErrorBoundary caught an error', error, errorInfo);
   }
 
   render() {
