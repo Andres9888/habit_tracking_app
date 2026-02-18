@@ -41,6 +41,7 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
       >
         {habit.icon && (
           <View
+            accessibilityLabel={`Habit icon: ${habit.icon}`}
             className='mb-4 h-20 w-20 items-center justify-center rounded-2xl'
             style={{
               ...iconShadow,
@@ -48,7 +49,15 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
               shadowColor: (habit.color ?? habit.iconColor) || '#f59e0b',
             }}
           >
-            <Text style={{ fontSize: 40 }}>{habit.icon}</Text>
+            <Text
+              accessibilityLabel={`${habit.icon} emoji`}
+              style={{ 
+                fontSize: 40,
+                color: isDark ? '#ffffff' : '#000000',
+              }}
+            >
+              {habit.icon}
+            </Text>
           </View>
         )}
         <Text
@@ -66,6 +75,9 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
         </Text>
         {(habit.currentStreak ?? 0) > 0 && (
           <Animated.View
+            accessibilityLabel={`Current streak: ${habit.currentStreak} days`}
+            accessibilityLiveRegion='polite'
+            accessibilityRole='status'
             className='mt-3 flex-row items-center gap-1.5 rounded-full px-4 py-2'
             entering={FadeInDown.duration(240)
               .delay(200)
@@ -79,8 +91,14 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
               },
             ]}
           >
-            <Text style={{ fontSize: 17 }}>🔥</Text>
             <Text
+              accessibilityLabel='Fire emoji'
+              style={{ fontSize: 17 }}
+            >
+              🔥
+            </Text>
+            <Text
+              accessibilityLabel={`${habit.currentStreak} day${habit.currentStreak === 1 ? '' : 's'} streak`}
               className='text-[17px] font-semibold'
               style={{ color: isDark ? '#6ee7b7' : '#047857' }}
             >

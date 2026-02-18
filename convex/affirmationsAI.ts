@@ -71,7 +71,10 @@ export const generateAffirmations = action({
     const openaiApiKey = process.env.OPENAI_API_KEY;
     if (!openaiApiKey) throw new Error('OpenAI API key not configured');
 
-    const openai = new OpenAI({ apiKey: openaiApiKey });
+    const openai = new OpenAI({
+      apiKey: openaiApiKey,
+      timeout: 30000, // 30 seconds timeout for API requests
+    });
 
     const completion = await openai.chat.completions.create({
       messages: [{ content: prompt, role: 'user' }],

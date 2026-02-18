@@ -20,6 +20,13 @@ export interface CheckPreconditionsParams {
   onCancelled: (reason: string) => void;
 }
 
+/**
+ * Creates a no-op sync result indicating sync was skipped (0 operations performed)
+ */
+function createNoOpSyncResult(): SyncOrchestratorResult {
+  return createSyncResult(false, 0, 0, 0, 0);
+}
+
 export function checkPreconditions(
   params: CheckPreconditionsParams
 ): SyncOrchestratorResult | null {
@@ -37,13 +44,13 @@ export function checkPreconditions(
     onError(result);
     return result;
   }
-  if (state.isSyncing) return createSyncResult(false, 0, 0, 0, 0);
+  if (state.isSyncing) return createNoOpSyncResult();
   if (shouldSkipSync(state.lastSyncAttemptAt, minSyncIntervalMs)) {
-    return createSyncResult(false, 0, 0, 0, 0);
+    return createNoOpSyncResult();
   }
   if (!syncManager.canSync()) {
     onCancelled('Circuit breaker open');
-    return createSyncResult(false, 0, 0, 0, 0);
+    return createNoOpSyncResult();
   }
   return null;
 }

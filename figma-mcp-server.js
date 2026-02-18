@@ -335,20 +335,18 @@ export default class FigmaMCPServer {
   }
 
   formatResult(id, result) {
-    return (
-      JSON.stringify({
-        jsonrpc: '2.0',
-        id,
-        result: {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2),
-            },
-          ],
-        },
-      }) + '\n'
-    );
+    return `${JSON.stringify({
+      jsonrpc: '2.0',
+      id,
+      result: {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      },
+    })}\n`;
   }
 
   formatError(id, error) {
@@ -428,7 +426,7 @@ export default class FigmaMCPServer {
       this.buffer += chunk;
 
       let newlineIndex;
-      while ((newlineIndex = this.buffer.indexOf('\n')) !== -1) {
+      while (this.buffer.includes('\n') && (newlineIndex = this.buffer.indexOf('\n')) !== -1) {
         const rawMessage = this.buffer.slice(0, newlineIndex).trim();
         this.buffer = this.buffer.slice(newlineIndex + 1);
 
