@@ -2,19 +2,13 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { X, Edit3 } from 'lucide-react-native';
-import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
-import { HeaderCompleteToggle } from '../../../components/HeaderCompleteToggle';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
 import type { DetailHeaderProps } from '../HabitDetailScreen.types';
 import { iconShadow, streakShadow } from './DetailHeader.constants';
 import { HeaderButton } from './HeaderButton';
 
-export function DetailHeader({
-  habit,
-  isCompletedToday,
-  onClose,
-  onEdit,
-}: DetailHeaderProps) {
+export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
   const { colors, isDark } = useThemeColors();
   const iconColor = isDark ? colors.text.secondary : '#57534e';
   const textPrimary = isDark ? colors.text.primary : '#1c1917';
@@ -34,18 +28,12 @@ export function DetailHeader({
           onPress={onClose}
         />
         <View className='flex-1' />
-        <View className='flex-row items-center gap-3'>
-          <HeaderCompleteToggle
-            completedToday={isCompletedToday}
-            habitId={habit._id}
-            habitName={habit.name}
-          />
-          <HeaderButton
-            icon={<Edit3 color={iconColor} size={20} strokeWidth={2.5} />}
-            label='Edit habit'
-            onPress={onEdit}
-          />
-        </View>
+        <HeaderButton
+          icon={<Edit3 size={15} strokeWidth={2.5} />}
+          label='Edit habit'
+          text='Edit Habit'
+          onPress={onEdit}
+        />
       </Animated.View>
       <Animated.View
         className='items-center px-4 pb-6'

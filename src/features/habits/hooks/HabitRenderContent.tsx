@@ -8,7 +8,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import DraggableHabit from '../../../components/DraggableHabit';
-import { GripHandle } from './GripHandle';
 import type { Habit, HabitStatus } from '../types';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
 
@@ -84,7 +83,11 @@ function HabitRenderContentComponent({
   // Animated style for the active drag state
   const activeStyle = useAnimatedStyle(() => ({
     opacity: withTiming(isActive ? 0.92 : 1, { duration: 150 }),
-    transform: [{ scale: withSpring(isActive ? 1.03 : 1, { damping: 18, stiffness: 200 }) }],
+    transform: [
+      {
+        scale: withSpring(isActive ? 1.03 : 1, { damping: 18, stiffness: 200 }),
+      },
+    ],
     ...(isActive
       ? {
           shadowColor: '#000',
@@ -107,7 +110,6 @@ function HabitRenderContentComponent({
   return (
     <ScaleDecorator activeScale={1}>
       <Animated.View className='mb-5' style={activeStyle}>
-        {isReorderingEnabled && <GripHandle />}
         <DraggableHabit
           celebrationsEnabled={celebrationsEnabled}
           completionIcon={completionIcon}

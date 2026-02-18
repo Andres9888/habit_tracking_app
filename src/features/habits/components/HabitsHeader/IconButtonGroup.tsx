@@ -1,62 +1,15 @@
-/* eslint-disable max-lines */
-import { ArrowUpDown, BookOpen, Settings } from 'lucide-react-native';
-import { Pressable, View, StyleSheet } from 'react-native';
-import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+import { BookOpen, Settings } from 'lucide-react-native';
+import { useMemo } from 'react';
+import { Pressable, Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { NotificationBadge } from '../../../../components/NotificationBadge';
 import { useIsDark } from '../../../../theme/ThemeContext';
-import type { ViewStyle } from 'react-native';
-import { useMemo } from 'react';
-
-interface IconButtonGroupProps {
-  // Templates button
-  templatesAnimatedStyle: AnimatedStyle<ViewStyle>;
-  showBadge: boolean;
-  onTemplatesPress: () => void;
-  onTemplatesPressIn: () => void;
-  onTemplatesPressOut: () => void;
-  // Sort button
-  sortAnimatedStyle: AnimatedStyle<ViewStyle>;
-  onSortPress: () => void;
-  onSortPressIn: () => void;
-  onSortPressOut: () => void;
-  // Settings button
-  settingsAnimatedStyle: AnimatedStyle<ViewStyle>;
-  onSettingsPress: () => void;
-  onSettingsPressIn: () => void;
-  onSettingsPressOut: () => void;
-}
-
-const styles = StyleSheet.create({
-  button: {
-    height: 44,
-    width: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 9999,
-  },
-  templatesButton: {
-    height: 44,
-    width: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 9999,
-  },
-  templatesButtonUnpressed: {
-    backgroundColor: 'rgba(139, 92, 246, 0.08)',
-  },
-  templatesButtonPressed: {
-    backgroundColor: 'rgba(139, 92, 246, 0.15)',
-  },
-  buttonUnpressed: {
-    backgroundColor: 'transparent',
-  },
-  buttonPressed: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-  },
-});
+import { styles } from './IconButtonGroup.styles';
+import type { IconButtonGroupProps } from './types';
 
 /**
- * Compact icon button group containing Templates, Sort, and Settings buttons.
+ * Header button group: "Templates" labeled button + Settings icon.
+ * Uses rounded-square containers instead of pill shape.
  */
 export function IconButtonGroup({
   templatesAnimatedStyle,
@@ -64,10 +17,6 @@ export function IconButtonGroup({
   onTemplatesPress,
   onTemplatesPressIn,
   onTemplatesPressOut,
-  sortAnimatedStyle,
-  onSortPress,
-  onSortPressIn,
-  onSortPressOut,
   settingsAnimatedStyle,
   onSettingsPress,
   onSettingsPressIn,
@@ -75,9 +24,9 @@ export function IconButtonGroup({
 }: IconButtonGroupProps) {
   const isDark = useIsDark();
   const iconColor = isDark ? '#D1D5DB' : '#44403c';
-  const dividerBg = isDark ? '#374151' : undefined;
+  const darkBorder = isDark ? styles.containerDark : undefined;
 
-  const templatesButtonStyle = useMemo(
+  const templatesStyle = useMemo(
     () => (state: { pressed: boolean }) => [
       styles.templatesButton,
       state.pressed
@@ -87,23 +36,17 @@ export function IconButtonGroup({
     []
   );
 
-  const buttonStyle = useMemo(
+  const settingsStyle = useMemo(
     () => (state: { pressed: boolean }) => [
-      styles.button,
+      styles.settingsButton,
+      darkBorder,
       state.pressed ? styles.buttonPressed : styles.buttonUnpressed,
     ],
-    []
+    [darkBorder]
   );
+
   return (
-    <View
-      className='flex-row items-center rounded-full border border-stone-200 bg-white/80 p-1'
-      style={
-        isDark
-          ? { borderColor: '#374151', backgroundColor: 'rgba(31,41,55,0.8)' }
-          : undefined
-      }
-    >
-      {/* Templates Button - highlighted with subtle purple bg */}
+    <View className='flex-row items-center gap-2'>
       <Animated.View style={templatesAnimatedStyle}>
         <View style={{ position: 'relative' }}>
           <Pressable
@@ -111,55 +54,25 @@ export function IconButtonGroup({
             accessibilityLabel='Browse habit templates'
             accessibilityRole='button'
             testID='home-templates-button'
-            style={templatesButtonStyle}
+            style={templatesStyle}
             onPress={onTemplatesPress}
             onPressIn={onTemplatesPressIn}
             onPressOut={onTemplatesPressOut}
           >
-            <BookOpen
-              color={isDark ? '#a78bfa' : '#7c3aed'}
-              size={18}
-              strokeWidth={2.25}
-            />
+            <BookOpen color='#ffffff' size={16} strokeWidth={2.25} />
+            <Text style={styles.label}>Templates</Text>
           </Pressable>
           <NotificationBadge count={1} visible={showBadge} />
         </View>
       </Animated.View>
 
-      <View
-        className='mx-0.5 h-4 w-px bg-stone-200'
-        style={dividerBg ? { backgroundColor: dividerBg } : undefined}
-      />
-
-      {/* Sort Button */}
-      <Animated.View style={sortAnimatedStyle}>
-        <Pressable
-          accessibilityHint='Change habit sort order'
-          accessibilityLabel='Sort habits'
-          accessibilityRole='button'
-          testID='home-sort-button'
-          style={buttonStyle}
-          onPress={onSortPress}
-          onPressIn={onSortPressIn}
-          onPressOut={onSortPressOut}
-        >
-          <ArrowUpDown color={iconColor} size={18} strokeWidth={2.25} />
-        </Pressable>
-      </Animated.View>
-
-      <View
-        className='mx-0.5 h-4 w-px bg-stone-200'
-        style={dividerBg ? { backgroundColor: dividerBg } : undefined}
-      />
-
-      {/* Settings Button */}
       <Animated.View style={settingsAnimatedStyle}>
         <Pressable
           accessibilityHint='Open app settings'
           accessibilityLabel='Open settings'
           accessibilityRole='button'
           testID='home-settings-button'
-          style={buttonStyle}
+          style={settingsStyle}
           onPress={onSettingsPress}
           onPressIn={onSettingsPressIn}
           onPressOut={onSettingsPressOut}

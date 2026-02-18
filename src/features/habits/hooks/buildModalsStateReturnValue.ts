@@ -9,7 +9,7 @@ import type {
 /**
  * Builds the complete HabitsModalsState return value by combining visibility state,
  * selection state, handlers, and extra state into a unified interface.
- * 
+ *
  * @param visibility - Modal visibility state (open/close flags)
  * @param selection - Currently selected habits for various modals
  * @param handlers - Event handlers for modal interactions
@@ -27,18 +27,18 @@ export function buildModalsStateReturnValue(
     // State properties
     celebrationsEnabled: extra.celebrationsEnabled,
     // Handlers from extracted hook
-closeCreateHabit: handlers.closeCreateHabit,
-    
-closeEditScreen: handlers.closeEditScreen,
-    
-closeQuickActions: handlers.closeQuickActions,
-    
-closeShareCard: handlers.closeShareCard,
-    
-closeActivationModal: handlers.closeActivationModal,
-    
-habitDetailInitialTab: selection.habitDetailInitialTab,
-    
+    closeCreateHabit: handlers.closeCreateHabit,
+
+    closeEditScreen: handlers.closeEditScreen,
+
+    closeQuickActions: handlers.closeQuickActions,
+
+    closeShareCard: handlers.closeShareCard,
+
+    closeActivationModal: handlers.closeActivationModal,
+
+    habitDetailInitialTab: selection.habitDetailInitialTab,
+
     closeVisualizationExercise: handlers.closeVisualizationExercise,
 
     habits: extra.habits,
@@ -56,66 +56,46 @@ habitDetailInitialTab: selection.habitDetailInitialTab,
     onSettingsChange: handlers.onSettingsChange,
 
     // Extra handlers
-onChangeCelebrationsEnabled: extra.onChangeCelebrationsEnabled,
+    onChangeCelebrationsEnabled: extra.onChangeCelebrationsEnabled,
 
-    
-quickActionsHabit: selection.quickActionsHabit,
+    quickActionsHabit: selection.quickActionsHabit,
 
-    
-handleArchive: extra.handleArchive,
+    handleArchive: extra.handleArchive,
 
-    
-reduceMotionPreference: extra.reduceMotionPreference,
+    reduceMotionPreference: extra.reduceMotionPreference,
 
-    
-clearMilestone: extra.clearMilestone,
+    clearMilestone: extra.clearMilestone,
 
-    
-selectedHabit: selection.selectedHabit,
+    selectedHabit: selection.selectedHabit,
 
-    
-getStreak: extra.getStreak,
+    getStreak: extra.getStreak,
 
-    
-settings: extra.settings,
+    settings: extra.settings,
 
-    
-// Inline close handlers
-closeSettings: () => visibility.setIsSettingsOpen(false),
+    // Inline close handlers
+    closeSettings: () => visibility.setIsSettingsOpen(false),
 
-    
+    shareCardData: selection.shareCardData,
 
-shareCardData: selection.shareCardData,
+    closeHabitCalendar: () => visibility.setIsHabitCalendarOpen(false),
 
-    
-    
-closeHabitCalendar: () => visibility.setIsHabitCalendarOpen(false),
+    showActivationModal: visibility.showActivationModal,
 
-    
-showActivationModal: visibility.showActivationModal,
+    closeHabitDetail: () => visibility.setIsHabitDetailOpen(false),
 
-    
-closeHabitDetail: () => visibility.setIsHabitDetailOpen(false),
+    showCreateHabit: visibility.isCreateHabitOpen,
 
-    
-showCreateHabit: visibility.isCreateHabitOpen,
+    closeHapticTest: () => visibility.setShowHapticTest(false),
 
-    
-closeHapticTest: () => visibility.setShowHapticTest(false),
+    showEditScreen: visibility.showEditScreen,
 
-    
-showEditScreen: visibility.showEditScreen,
-
-    
-closePauseModal: () => {
+    closePauseModal: () => {
       visibility.setShowPauseModal(false);
       selection.setHabitToPause(null);
     },
 
-    
-showHabitCalendar: visibility.isHabitCalendarOpen,
+    showHabitCalendar: visibility.isHabitCalendarOpen,
 
-    
     closeTemplatesScreen: () => visibility.setShowTemplatesScreen(false),
 
     showHabitDetail: visibility.isHabitDetailOpen,
@@ -135,6 +115,12 @@ showHabitCalendar: visibility.isHabitCalendarOpen,
     openCreateHabitScreen: handlers.openCreateHabitScreen,
 
     showSettings: visibility.isSettingsOpen,
+
+    showSortSheet: visibility.isSortSheetOpen,
+
+    openSortSheet: () => visibility.setIsSortSheetOpen(true),
+
+    closeSortSheet: () => visibility.setIsSortSheetOpen(false),
 
     openEditHabit: handlers.openEditHabit,
 
