@@ -1,7 +1,6 @@
-// Initialize notification handler
-import './handler';
+// Keep this module lightweight.
+// Avoid importing expo-notifications eagerly at app startup.
 
-// Re-export constants
 export {
   ANDROID_AFFIRMATION_CHANNEL_ID,
   ANDROID_CHANNEL_ID,
@@ -10,64 +9,137 @@ export {
   NOTIFICATION_TYPE_LETTER_UNLOCK,
 } from './constants';
 
-// Re-export permissions
-export { ensureNotificationPermissions } from './permissions';
-
-// Re-export habit reminders
-export { cancelHabitReminder, scheduleHabitReminder } from './habitReminders';
-
-// Re-export time utilities
 export {
   createDateFromTimeString,
   formatReminderTime,
   getDefaultReminderTime,
 } from './timeUtils';
 
-// Re-export relative time utilities (separate to avoid circular deps)
 export {
   formatRelativeTime,
   getNextReminderRelativeTime,
 } from './relativeTimeFormatter';
 
-// Re-export letter unlock notifications
 export {
-  cancelLetterUnlockNotification,
-  getScheduledLetterUnlockNotifications,
-  scheduleLetterUnlockNotification,
-} from './letters';
-
-// Re-export affirmation delivery notifications
-export {
-  cancelAffirmationDelivery,
-  cancelAllAffirmationDeliveriesForHabit,
   formatDaysOfWeek,
-  getNextAffirmationDeliveryRelativeTime,
-  getScheduledAffirmationDeliveries,
-  scheduleAffirmationDelivery,
-} from './affirmations';
+  getNextWeeklyOccurrence,
+} from './affirmations/weeklyUtils';
 
-// Re-export streak-at-risk notifications
+export { getNextAffirmationDeliveryRelativeTime } from './affirmations/relativeTime';
+
+export async function ensureNotificationPermissions(): Promise<boolean> {
+  const mod = await import('./permissions');
+  return mod.ensureNotificationPermissions();
+}
+
+export async function cancelHabitReminder(habitId: string): Promise<void> {
+  const mod = await import('./habitReminders');
+  return mod.cancelHabitReminder(habitId);
+}
+
+export async function scheduleHabitReminder(
+  ...args: Parameters<typeof import('./habitReminders').scheduleHabitReminder>
+): ReturnType<typeof import('./habitReminders').scheduleHabitReminder> {
+  const mod = await import('./habitReminders');
+  return mod.scheduleHabitReminder(...args);
+}
+
+export async function cancelLetterUnlockNotification(
+  ...args: Parameters<
+    typeof import('./letters/cancel').cancelLetterUnlockNotification
+  >
+): ReturnType<
+  typeof import('./letters/cancel').cancelLetterUnlockNotification
+> {
+  const mod = await import('./letters/cancel');
+  return mod.cancelLetterUnlockNotification(...args);
+}
+
+export async function getScheduledLetterUnlockNotifications(
+  ...args: Parameters<
+    typeof import('./letters/getScheduled').getScheduledLetterUnlockNotifications
+  >
+): ReturnType<
+  typeof import('./letters/getScheduled').getScheduledLetterUnlockNotifications
+> {
+  const mod = await import('./letters/getScheduled');
+  return mod.getScheduledLetterUnlockNotifications(...args);
+}
+
+export async function scheduleLetterUnlockNotification(
+  ...args: Parameters<
+    typeof import('./letters/schedule').scheduleLetterUnlockNotification
+  >
+): ReturnType<
+  typeof import('./letters/schedule').scheduleLetterUnlockNotification
+> {
+  const mod = await import('./letters/schedule');
+  return mod.scheduleLetterUnlockNotification(...args);
+}
+
+export async function cancelAffirmationDelivery(
+  ...args: Parameters<
+    typeof import('./affirmations/cancel').cancelAffirmationDelivery
+  >
+): ReturnType<
+  typeof import('./affirmations/cancel').cancelAffirmationDelivery
+> {
+  const mod = await import('./affirmations/cancel');
+  return mod.cancelAffirmationDelivery(...args);
+}
+
+export async function cancelAllAffirmationDeliveriesForHabit(
+  ...args: Parameters<
+    typeof import('./affirmations/cancel').cancelAllAffirmationDeliveriesForHabit
+  >
+): ReturnType<
+  typeof import('./affirmations/cancel').cancelAllAffirmationDeliveriesForHabit
+> {
+  const mod = await import('./affirmations/cancel');
+  return mod.cancelAllAffirmationDeliveriesForHabit(...args);
+}
+
+export async function getScheduledAffirmationDeliveries(
+  ...args: Parameters<
+    typeof import('./affirmations/getScheduled').getScheduledAffirmationDeliveries
+  >
+): ReturnType<
+  typeof import('./affirmations/getScheduled').getScheduledAffirmationDeliveries
+> {
+  const mod = await import('./affirmations/getScheduled');
+  return mod.getScheduledAffirmationDeliveries(...args);
+}
+
+export async function scheduleAffirmationDelivery(
+  ...args: Parameters<
+    typeof import('./affirmations/schedule').scheduleAffirmationDelivery
+  >
+): ReturnType<
+  typeof import('./affirmations/schedule').scheduleAffirmationDelivery
+> {
+  const mod = await import('./affirmations/schedule');
+  return mod.scheduleAffirmationDelivery(...args);
+}
+
 export {
   cancelAllStreakAtRiskNotifications,
   cancelStreakAtRiskNotification,
   scheduleStreakAtRiskNotification,
-} from './streakAtRisk';
-export type { ScheduleStreakAtRiskParams } from './streakAtRisk';
+} from './lazyStreakAtRisk';
 
-// Re-export streak freeze notifications (premium)
 export {
   cancelAllStreakFreezeNotifications,
   cancelStreakFreezeNotification,
   scheduleStreakFreezeNotification,
-} from './streakFreeze';
-export type { ScheduleStreakFreezeParams } from './streakFreeze';
+} from './lazyStreakFreeze';
 
-// Re-export types
 export type {
   ScheduleHabitReminderParams,
   ScheduleLetterUnlockParams,
   ScheduledLetterNotification,
 } from './types';
+export type { ScheduleStreakAtRiskParams } from './streakAtRisk';
+export type { ScheduleStreakFreezeParams } from './streakFreeze';
 export type {
   AffirmationFrequency,
   ScheduleAffirmationDeliveryParams,

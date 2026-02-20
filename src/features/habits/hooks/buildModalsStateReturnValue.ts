@@ -24,6 +24,7 @@ export function buildModalsStateReturnValue(
 ): HabitsModalsState {
   return {
     activationModalHabit: selection.activationModalHabit,
+    archivedHabitsCount: extra.archivedHabitsCount,
     // State properties
     celebrationsEnabled: extra.celebrationsEnabled,
     // Handlers from extracted hook

@@ -14,20 +14,21 @@ This specification defines the integration of RevenueCat for in-app subscription
 
 ### Why RevenueCat (Not Direct StoreKit/Play Billing)
 
-| Approach | Pros | Cons | Our Choice |
-|----------|------|------|------------|
-| **RevenueCat** | Cross-platform, webhooks, analytics, receipt validation | Monthly fee at scale | **Yes** |
-| Direct StoreKit 2 | No fees, Apple-native | iOS only, complex | No |
-| Direct Play Billing | No fees, Google-native | Android only, complex | No |
-| Stripe | Web-native, familiar | Not for mobile IAP | No |
+| Approach            | Pros                                                    | Cons                  | Our Choice |
+| ------------------- | ------------------------------------------------------- | --------------------- | ---------- |
+| **RevenueCat**      | Cross-platform, webhooks, analytics, receipt validation | Monthly fee at scale  | **Yes**    |
+| Direct StoreKit 2   | No fees, Apple-native                                   | iOS only, complex     | No         |
+| Direct Play Billing | No fees, Google-native                                  | Android only, complex | No         |
+| Stripe              | Web-native, familiar                                    | Not for mobile IAP    | No         |
 
 `★ Insight ─────────────────────────────────────`
 **Why RevenueCat wins for mobile apps:**
+
 1. **Single SDK** - One codebase handles both App Store and Play Store
 2. **Server-side receipt validation** - Critical for security; client-side validation is easily bypassed
 3. **Webhook events** - Sync subscription state to your backend (Convex) in real-time
 4. **Analytics dashboard** - MRR, churn, trial conversion out of the box
-`─────────────────────────────────────────────────`
+   `─────────────────────────────────────────────────`
 
 ---
 
@@ -35,19 +36,19 @@ This specification defines the integration of RevenueCat for in-app subscription
 
 ### Existing Premium UI Components
 
-| Component | Location | Status |
-|-----------|----------|--------|
-| `MotivationPaywall` | `src/components/MotivationSystem/Premium/MotivationPaywall.tsx` | ✅ UI complete, purchase logic placeholder |
-| `PremiumFeatureLock` | `src/components/MotivationSystem/Premium/PremiumFeatureLock.tsx` | ✅ UI complete |
-| `PremiumBenefitsModal` | `src/components/MotivationSystem/Premium/PremiumBenefitsModal.tsx` | ✅ UI complete |
+| Component              | Location                                                           | Status                                     |
+| ---------------------- | ------------------------------------------------------------------ | ------------------------------------------ |
+| `MotivationPaywall`    | `src/components/MotivationSystem/Premium/MotivationPaywall.tsx`    | ✅ UI complete, purchase logic placeholder |
+| `PremiumFeatureLock`   | `src/components/MotivationSystem/Premium/PremiumFeatureLock.tsx`   | ✅ UI complete                             |
+| `PremiumBenefitsModal` | `src/components/MotivationSystem/Premium/PremiumBenefitsModal.tsx` | ✅ UI complete                             |
 
 ### Existing Backend Support
 
-| Item | Location | Status |
-|------|----------|--------|
-| `hasPremium` field | `convex/schema.ts:410` | ✅ Exists in userSettings |
-| `settings.get()` | `convex/settings.ts:109` | ✅ Returns hasPremium |
-| `settings.update()` | `convex/settings.ts:176` | ✅ Can update hasPremium |
+| Item                | Location                 | Status                    |
+| ------------------- | ------------------------ | ------------------------- |
+| `hasPremium` field  | `convex/schema.ts:410`   | ✅ Exists in userSettings |
+| `settings.get()`    | `convex/settings.ts:109` | ✅ Returns hasPremium     |
+| `settings.update()` | `convex/settings.ts:176` | ✅ Can update hasPremium  |
 
 ### Current Flow (Broken)
 
@@ -137,6 +138,7 @@ RevenueCat Webhook ──▶ Convex HTTP Action ──▶ Update userSettings.ha
 ```
 
 **Problems:**
+
 1. Price is hardcoded ("$6.99") - won't adapt to regional pricing
 2. "Start Trial" button doesn't trigger any purchase flow
 3. "Restore purchases" doesn't work
@@ -187,6 +189,7 @@ RevenueCat Webhook ──▶ Convex HTTP Action ──▶ Update userSettings.ha
 ```
 
 **Improvements:**
+
 1. Price fetched from RevenueCat (supports regional pricing)
 2. Loading state while fetching offerings
 3. Purchase flow triggers native App Store/Play Store sheet
@@ -262,6 +265,7 @@ RevenueCat Webhook ──▶ Convex HTTP Action ──▶ Update userSettings.ha
 ### 1. Dependencies
 
 **Install:**
+
 ```bash
 npx expo install react-native-purchases
 ```
@@ -271,6 +275,7 @@ npx expo install react-native-purchases
 ### 2. RevenueCat Configuration
 
 **RevenueCat Dashboard Setup:**
+
 1. Create project in RevenueCat
 2. Add iOS app (bundle ID: `com.andres9888.daily-habits`)
 3. Add Android app (package name: `com.andres9888.daily-habits`)
@@ -280,12 +285,14 @@ npx expo install react-native-purchases
 7. Configure webhook URL: `https://<convex-url>/revenuecat-webhook`
 
 **App Store Connect Setup:**
+
 1. Create subscription group: "Premium"
 2. Create subscription: "Monthly Premium" at $6.99/month
 3. Configure free trial: 7 days
 4. Link to RevenueCat
 
 **Google Play Console Setup:**
+
 1. Create subscription: "premium_monthly" at $6.99/month
 2. Configure free trial: 7 days
 3. Link service account to RevenueCat
@@ -427,7 +434,8 @@ export function usePremium(): UsePremiumReturn {
   }, []);
 
   // Monthly package helper
-  const monthlyPackage = offerings?.find(p => p.packageType === 'MONTHLY') ?? null;
+  const monthlyPackage =
+    offerings?.find((p) => p.packageType === 'MONTHLY') ?? null;
 
   // Subscription info
   const premiumEntitlement = customerInfo?.entitlements.active['premium'];
@@ -556,56 +564,56 @@ subscriptions: defineTable({
 
 ### Security Review
 
-| Item | Status | Notes |
-|------|--------|-------|
-| Webhook signature verification | ⚠️ TODO | Implement HMAC verification with shared secret |
-| Server-side entitlement check | ✅ | RevenueCat validates receipts server-side |
-| No client-side premium logic | ✅ | All premium checks go through `usePremium` hook |
-| User ID validation | ⚠️ TODO | Ensure webhook user ID matches authenticated user |
-| Rate limiting on webhook | ⚠️ TODO | Add rate limiting to prevent abuse |
+| Item                           | Status  | Notes                                             |
+| ------------------------------ | ------- | ------------------------------------------------- |
+| Webhook signature verification | ⚠️ TODO | Implement HMAC verification with shared secret    |
+| Server-side entitlement check  | ✅      | RevenueCat validates receipts server-side         |
+| No client-side premium logic   | ✅      | All premium checks go through `usePremium` hook   |
+| User ID validation             | ⚠️ TODO | Ensure webhook user ID matches authenticated user |
+| Rate limiting on webhook       | ⚠️ TODO | Add rate limiting to prevent abuse                |
 
 ### Performance Review
 
-| Item | Status | Notes |
-|------|--------|-------|
-| Offerings cached | ✅ | RevenueCat SDK caches offerings |
-| Customer info listener | ✅ | Real-time updates via listener |
-| Convex sync debounced | ⚠️ TODO | Consider debouncing premium sync |
+| Item                   | Status  | Notes                                      |
+| ---------------------- | ------- | ------------------------------------------ |
+| Offerings cached       | ✅      | RevenueCat SDK caches offerings            |
+| Customer info listener | ✅      | Real-time updates via listener             |
+| Convex sync debounced  | ⚠️ TODO | Consider debouncing premium sync           |
 | Lazy load purchase SDK | ⚠️ TODO | Consider lazy loading for faster app start |
 
 ### UX Review
 
-| Item | Status | Notes |
-|------|--------|-------|
-| Loading state | ✅ | `isLoading` flag in hook |
-| Error messages | ✅ | User-friendly error messages |
-| Restore purchases | ✅ | Available in paywall and settings |
-| Subscription management | ✅ | Opens native App Store/Play Store |
-| Offline handling | ⚠️ TODO | Cache last known premium state |
+| Item                    | Status  | Notes                             |
+| ----------------------- | ------- | --------------------------------- |
+| Loading state           | ✅      | `isLoading` flag in hook          |
+| Error messages          | ✅      | User-friendly error messages      |
+| Restore purchases       | ✅      | Available in paywall and settings |
+| Subscription management | ✅      | Opens native App Store/Play Store |
+| Offline handling        | ⚠️ TODO | Cache last known premium state    |
 
 ### App Store Compliance
 
-| Item | Status | Notes |
-|------|--------|-------|
-| Restore purchases button | ✅ | Required by Apple - present in paywall |
-| Subscription terms | ✅ | Fine print in paywall shows terms |
-| Privacy policy link | ⚠️ TODO | Add to paywall footer |
-| Terms of service link | ⚠️ TODO | Add to paywall footer |
-| Price display | ✅ | Fetched from store (localized) |
+| Item                     | Status  | Notes                                  |
+| ------------------------ | ------- | -------------------------------------- |
+| Restore purchases button | ✅      | Required by Apple - present in paywall |
+| Subscription terms       | ✅      | Fine print in paywall shows terms      |
+| Privacy policy link      | ⚠️ TODO | Add to paywall footer                  |
+| Terms of service link    | ⚠️ TODO | Add to paywall footer                  |
+| Price display            | ✅      | Fetched from store (localized)         |
 
 ### Testing Checklist
 
-| Scenario | Platform | Priority |
-|----------|----------|----------|
-| New purchase (trial) | iOS | P0 |
-| New purchase (trial) | Android | P0 |
-| Purchase after trial | Both | P0 |
-| Restore on new device | Both | P0 |
-| Cancel subscription | Both | P1 |
-| Subscription expires | Both | P1 |
-| Billing issue (grace) | Both | P2 |
-| Refund received | Both | P2 |
-| Offline purchase attempt | Both | P2 |
+| Scenario                 | Platform | Priority |
+| ------------------------ | -------- | -------- |
+| New purchase (trial)     | iOS      | P0       |
+| New purchase (trial)     | Android  | P0       |
+| Purchase after trial     | Both     | P0       |
+| Restore on new device    | Both     | P0       |
+| Cancel subscription      | Both     | P1       |
+| Subscription expires     | Both     | P1       |
+| Billing issue (grace)    | Both     | P2       |
+| Refund received          | Both     | P2       |
+| Offline purchase attempt | Both     | P2       |
 
 ---
 
@@ -613,99 +621,100 @@ subscriptions: defineTable({
 
 ### Phase 1: SDK Setup & Core Hook
 
-| ID | Task | Description | Priority | Dependencies | Status |
-|----|------|-------------|----------|--------------|--------|
-| 1.1 | Install `react-native-purchases` | Add RevenueCat SDK to project | P0 | None | `pending` |
-| 1.2 | Create RevenueCat project | Set up project in RevenueCat dashboard | P0 | None | `pending` |
-| 1.3 | Create `src/lib/purchases.ts` | SDK initialization with API keys | P0 | 1.1, 1.2 | `pending` |
-| 1.4 | Initialize SDK in `App.tsx` | Call `initializePurchases()` on app start | P0 | 1.3 | `pending` |
-| 1.5 | Create `usePremium` hook | Core hook with purchase/restore logic | P0 | 1.3 | `pending` |
-| 1.6 | Test SDK initialization | Verify SDK connects and fetches offerings | P0 | 1.4, 1.5 | `pending` |
+| ID  | Task                             | Description                               | Priority | Dependencies | Status    |
+| --- | -------------------------------- | ----------------------------------------- | -------- | ------------ | --------- |
+| 1.1 | Install `react-native-purchases` | Add RevenueCat SDK to project             | P0       | None         | `pending` |
+| 1.2 | Create RevenueCat project        | Set up project in RevenueCat dashboard    | P0       | None         | `pending` |
+| 1.3 | Create `src/lib/purchases.ts`    | SDK initialization with API keys          | P0       | 1.1, 1.2     | `pending` |
+| 1.4 | Initialize SDK in `App.tsx`      | Call `initializePurchases()` on app start | P0       | 1.3          | `pending` |
+| 1.5 | Create `usePremium` hook         | Core hook with purchase/restore logic     | P0       | 1.3          | `pending` |
+| 1.6 | Test SDK initialization          | Verify SDK connects and fetches offerings | P0       | 1.4, 1.5     | `pending` |
 
 ### Phase 2: App Store Configuration
 
-| ID | Task | Description | Priority | Dependencies | Status |
-|----|------|-------------|----------|--------------|--------|
-| 2.1 | Create iOS subscription in App Store Connect | $6.99/month with 7-day trial | P0 | None | `pending` |
-| 2.2 | Create Android subscription in Play Console | $6.99/month with 7-day trial | P0 | None | `pending` |
-| 2.3 | Link iOS product to RevenueCat | Connect App Store product to entitlement | P0 | 1.2, 2.1 | `pending` |
-| 2.4 | Link Android product to RevenueCat | Connect Play Store product to entitlement | P0 | 1.2, 2.2 | `pending` |
-| 2.5 | Configure entitlement "premium" | Map products to premium entitlement | P0 | 2.3, 2.4 | `pending` |
-| 2.6 | Test sandbox purchase (iOS) | Complete purchase in sandbox | P0 | 2.3 | `pending` |
+| ID  | Task                                         | Description                               | Priority | Dependencies | Status    |
+| --- | -------------------------------------------- | ----------------------------------------- | -------- | ------------ | --------- |
+| 2.1 | Create iOS subscription in App Store Connect | $6.99/month with 7-day trial              | P0       | None         | `pending` |
+| 2.2 | Create Android subscription in Play Console  | $6.99/month with 7-day trial              | P0       | None         | `pending` |
+| 2.3 | Link iOS product to RevenueCat               | Connect App Store product to entitlement  | P0       | 1.2, 2.1     | `pending` |
+| 2.4 | Link Android product to RevenueCat           | Connect Play Store product to entitlement | P0       | 1.2, 2.2     | `pending` |
+| 2.5 | Configure entitlement "premium"              | Map products to premium entitlement       | P0       | 2.3, 2.4     | `pending` |
+| 2.6 | Test sandbox purchase (iOS)                  | Complete purchase in sandbox              | P0       | 2.3          | `pending` |
 
 ### Phase 3: Connect Paywall UI
 
-| ID | Task | Description | Priority | Dependencies | Status |
-|----|------|-------------|----------|--------------|--------|
-| 3.1 | Update `MotivationPaywall` to use `usePremium` | Replace placeholder with real purchase | P0 | 1.5 | `pending` |
-| 3.2 | Display dynamic price from offerings | Replace hardcoded "$6.99" | P0 | 3.1 | `pending` |
-| 3.3 | Add loading state for offerings | Show spinner while fetching | P1 | 3.1 | `pending` |
-| 3.4 | Add purchase error handling | Display errors with retry | P1 | 3.1 | `pending` |
-| 3.5 | Implement restore purchases | Connect restore button to SDK | P0 | 3.1 | `pending` |
-| 3.6 | Test complete purchase flow | End-to-end on iOS simulator | P0 | 3.1-3.5 | `pending` |
+| ID  | Task                                           | Description                            | Priority | Dependencies | Status    |
+| --- | ---------------------------------------------- | -------------------------------------- | -------- | ------------ | --------- |
+| 3.1 | Update `MotivationPaywall` to use `usePremium` | Replace placeholder with real purchase | P0       | 1.5          | `pending` |
+| 3.2 | Display dynamic price from offerings           | Replace hardcoded "$6.99"              | P0       | 3.1          | `pending` |
+| 3.3 | Add loading state for offerings                | Show spinner while fetching            | P1       | 3.1          | `pending` |
+| 3.4 | Add purchase error handling                    | Display errors with retry              | P1       | 3.1          | `pending` |
+| 3.5 | Implement restore purchases                    | Connect restore button to SDK          | P0       | 3.1          | `pending` |
+| 3.6 | Test complete purchase flow                    | End-to-end on iOS simulator            | P0       | 3.1-3.5      | `pending` |
 
 ### Phase 4: Backend Webhook Integration
 
-| ID | Task | Description | Priority | Dependencies | Status |
-|----|------|-------------|----------|--------------|--------|
-| 4.1 | Add `subscriptions` table to schema | Store subscription state in Convex | P0 | None | `pending` |
-| 4.2 | Create Convex HTTP router | Set up `convex/http.ts` for webhooks | P0 | None | `pending` |
-| 4.3 | Implement webhook handler | Process RevenueCat events | P0 | 4.1, 4.2 | `pending` |
-| 4.4 | Create subscription mutations | `grantPremium`, `revokePremium`, etc. | P0 | 4.1 | `pending` |
-| 4.5 | Configure webhook in RevenueCat | Point to Convex HTTP endpoint | P0 | 4.3 | `pending` |
-| 4.6 | Test webhook delivery | Verify events sync to Convex | P0 | 4.5 | `pending` |
+| ID  | Task                                | Description                           | Priority | Dependencies | Status    |
+| --- | ----------------------------------- | ------------------------------------- | -------- | ------------ | --------- |
+| 4.1 | Add `subscriptions` table to schema | Store subscription state in Convex    | P0       | None         | `pending` |
+| 4.2 | Create Convex HTTP router           | Set up `convex/http.ts` for webhooks  | P0       | None         | `pending` |
+| 4.3 | Implement webhook handler           | Process RevenueCat events             | P0       | 4.1, 4.2     | `pending` |
+| 4.4 | Create subscription mutations       | `grantPremium`, `revokePremium`, etc. | P0       | 4.1          | `pending` |
+| 4.5 | Configure webhook in RevenueCat     | Point to Convex HTTP endpoint         | P0       | 4.3          | `pending` |
+| 4.6 | Test webhook delivery               | Verify events sync to Convex          | P0       | 4.5          | `pending` |
 
 ### Phase 5: Subscription Management UI
 
-| ID | Task | Description | Priority | Dependencies | Status |
-|----|------|-------------|----------|--------------|--------|
-| 5.1 | Create `SubscriptionScreen` | Show subscription status and management | P1 | 1.5 | `pending` |
-| 5.2 | Add subscription info to Settings | Show premium badge and manage link | P1 | 1.5 | `pending` |
-| 5.3 | Implement management URL navigation | Open App Store/Play Store subscriptions | P1 | 5.1 | `pending` |
-| 5.4 | Add expiration date display | Show when subscription renews/expires | P2 | 5.1 | `pending` |
-| 5.5 | Add trial status indicator | Show "X days left in trial" | P2 | 5.1 | `pending` |
+| ID  | Task                                | Description                             | Priority | Dependencies | Status    |
+| --- | ----------------------------------- | --------------------------------------- | -------- | ------------ | --------- |
+| 5.1 | Create `SubscriptionScreen`         | Show subscription status and management | P1       | 1.5          | `pending` |
+| 5.2 | Add subscription info to Settings   | Show premium badge and manage link      | P1       | 1.5          | `pending` |
+| 5.3 | Implement management URL navigation | Open App Store/Play Store subscriptions | P1       | 5.1          | `pending` |
+| 5.4 | Add expiration date display         | Show when subscription renews/expires   | P2       | 5.1          | `pending` |
+| 5.5 | Add trial status indicator          | Show "X days left in trial"             | P2       | 5.1          | `pending` |
 
 ### Phase 6: Polish & Production
 
-| ID | Task | Description | Priority | Dependencies | Status |
-|----|------|-------------|----------|--------------|--------|
-| 6.1 | Add webhook signature verification | Secure webhook endpoint | P0 | 4.3 | `pending` |
-| 6.2 | Add privacy policy link to paywall | App Store compliance | P0 | 3.1 | `pending` |
-| 6.3 | Add terms of service link to paywall | App Store compliance | P0 | 3.1 | `pending` |
-| 6.4 | Test on physical iOS device | Real purchase with sandbox | P0 | Phase 3 | `pending` |
-| 6.5 | Test on physical Android device | Real purchase with test account | P0 | Phase 3 | `pending` |
-| 6.6 | Production API key rotation | Switch from test to production keys | P0 | 6.4, 6.5 | `pending` |
+| ID  | Task                                 | Description                         | Priority | Dependencies | Status    |
+| --- | ------------------------------------ | ----------------------------------- | -------- | ------------ | --------- |
+| 6.1 | Add webhook signature verification   | Secure webhook endpoint             | P0       | 4.3          | `pending` |
+| 6.2 | Add privacy policy link to paywall   | App Store compliance                | P0       | 3.1          | `pending` |
+| 6.3 | Add terms of service link to paywall | App Store compliance                | P0       | 3.1          | `pending` |
+| 6.4 | Test on physical iOS device          | Real purchase with sandbox          | P0       | Phase 3      | `pending` |
+| 6.5 | Test on physical Android device      | Real purchase with test account     | P0       | Phase 3      | `pending` |
+| 6.6 | Production API key rotation          | Switch from test to production keys | P0       | 6.4, 6.5     | `pending` |
 
 ### Phase 7: QA & Launch
 
-| ID | Task | Description | Priority | Dependencies | Status |
-|----|------|-------------|----------|--------------|--------|
-| 7.1 | Full regression testing | All premium features work | P0 | Phase 6 | `pending` |
-| 7.2 | Test subscription lifecycle | Purchase → Trial → Active → Cancel → Expire | P0 | 7.1 | `pending` |
-| 7.3 | Test cross-device sync | Premium on device A shows on device B | P1 | 7.1 | `pending` |
-| 7.4 | Test offline scenarios | App handles offline gracefully | P1 | 7.1 | `pending` |
-| 7.5 | Monitor RevenueCat dashboard | Verify analytics tracking | P2 | 7.1 | `pending` |
+| ID  | Task                         | Description                                 | Priority | Dependencies | Status    |
+| --- | ---------------------------- | ------------------------------------------- | -------- | ------------ | --------- |
+| 7.1 | Full regression testing      | All premium features work                   | P0       | Phase 6      | `pending` |
+| 7.2 | Test subscription lifecycle  | Purchase → Trial → Active → Cancel → Expire | P0       | 7.1          | `pending` |
+| 7.3 | Test cross-device sync       | Premium on device A shows on device B       | P1       | 7.1          | `pending` |
+| 7.4 | Test offline scenarios       | App handles offline gracefully              | P1       | 7.1          | `pending` |
+| 7.5 | Monitor RevenueCat dashboard | Verify analytics tracking                   | P2       | 7.1          | `pending` |
 
 ---
 
 ## Task Summary
 
-| Phase | Tasks | Focus |
-|-------|-------|-------|
-| Phase 1: SDK Setup | 6 tasks | RevenueCat SDK + core hook |
-| Phase 2: Store Config | 6 tasks | App Store + Play Store products |
-| Phase 3: Paywall UI | 6 tasks | Connect UI to SDK |
-| Phase 4: Webhooks | 6 tasks | Convex backend sync |
-| Phase 5: Management UI | 5 tasks | Subscription screens |
-| Phase 6: Polish | 6 tasks | Security + compliance |
-| Phase 7: QA | 5 tasks | Testing + launch |
-| **Total** | **40 tasks** | |
+| Phase                  | Tasks        | Focus                           |
+| ---------------------- | ------------ | ------------------------------- |
+| Phase 1: SDK Setup     | 6 tasks      | RevenueCat SDK + core hook      |
+| Phase 2: Store Config  | 6 tasks      | App Store + Play Store products |
+| Phase 3: Paywall UI    | 6 tasks      | Connect UI to SDK               |
+| Phase 4: Webhooks      | 6 tasks      | Convex backend sync             |
+| Phase 5: Management UI | 5 tasks      | Subscription screens            |
+| Phase 6: Polish        | 6 tasks      | Security + compliance           |
+| Phase 7: QA            | 5 tasks      | Testing + launch                |
+| **Total**              | **40 tasks** |                                 |
 
 ---
 
 ## Quick Reference: Files to Create/Modify
 
 ### New Files
+
 ```
 src/lib/purchases.ts                          # Task 1.3 - SDK init
 src/hooks/usePremium.ts                       # Task 1.5 - Core hook
@@ -715,6 +724,7 @@ convex/subscriptions.ts                       # Task 4.4 - Subscription mutation
 ```
 
 ### Modified Files
+
 ```
 src/App.tsx                                   # Task 1.4 - SDK init
 src/components/MotivationSystem/Premium/MotivationPaywall.tsx  # Task 3.1
@@ -723,6 +733,7 @@ convex/schema.ts                              # Task 4.1 - Subscriptions table
 ```
 
 ### External Configuration
+
 ```
 RevenueCat Dashboard                          # Tasks 1.2, 2.3-2.5, 4.5
 App Store Connect                             # Task 2.1
@@ -744,23 +755,23 @@ EXPO_PUBLIC_REVENUECAT_IOS_KEY=appl_yyyyyyyyyyyyyyyyyyyyyy
 EXPO_PUBLIC_REVENUECAT_ANDROID_KEY=goog_yyyyyyyyyyyyyyyyyyyyyy
 
 # Convex environment variables (for webhook verification)
-REVENUECAT_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxx
+REVENUECAT_WEBHOOK_SECRET=<YOUR_REVENUECAT_WEBHOOK_SECRET>
 ```
 
 ---
 
 ## Risk Assessment
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| App Store rejection | Medium | High | Follow Apple guidelines exactly; add all required links |
-| Webhook delivery failure | Low | Medium | Implement retry logic; monitor webhook health |
-| User purchase not synced | Low | High | Dual-check: SDK listener + webhook backup |
-| Revenue leakage (piracy) | Low | Medium | Server-side validation only; no client-side bypass |
-| Trial abuse | Medium | Low | RevenueCat handles device fingerprinting |
+| Risk                     | Likelihood | Impact | Mitigation                                              |
+| ------------------------ | ---------- | ------ | ------------------------------------------------------- |
+| App Store rejection      | Medium     | High   | Follow Apple guidelines exactly; add all required links |
+| Webhook delivery failure | Low        | Medium | Implement retry logic; monitor webhook health           |
+| User purchase not synced | Low        | High   | Dual-check: SDK listener + webhook backup               |
+| Revenue leakage (piracy) | Low        | Medium | Server-side validation only; no client-side bypass      |
+| Trial abuse              | Medium     | Low    | RevenueCat handles device fingerprinting                |
 
 ---
 
-*Specification Version: 1.0*
-*Created: January 2026*
-*Last Updated: January 2026*
+_Specification Version: 1.0_
+_Created: January 2026_
+_Last Updated: January 2026_

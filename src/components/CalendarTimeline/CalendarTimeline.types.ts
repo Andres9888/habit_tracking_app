@@ -33,6 +33,16 @@ export interface CalendarTimelineProps {
   isDayPressEnabled?: boolean;
   /** Disable tap on future dates (default: true) */
   disableFutureDayPress?: boolean;
+  /** Number of habits completed today */
+  completedToday?: number;
+  /** Total number of habits */
+  totalHabits?: number;
+  /** Callback to jump back to today's week (shown when viewing past weeks) */
+  onJumpToToday?: () => void;
+  /** Trial bar: days remaining (renders inline gradient bar when > 0) */
+  trialDaysRemaining?: number | null;
+  /** Trial bar: upgrade callback */
+  onUpgrade?: () => void;
 }
 
 export type CompletionStatus = 'complete' | 'partial' | 'none' | 'future';

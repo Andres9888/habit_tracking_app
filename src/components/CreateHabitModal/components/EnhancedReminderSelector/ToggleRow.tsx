@@ -2,10 +2,9 @@
  * ToggleRow - Row with bell icon, label, and switch
  */
 
-import { memo } from 'react';
 import { Switch, Text, View } from 'react-native';
 import { Bell } from 'lucide-react-native';
-import { useThemeColors } from '../../../../theme';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { shadows } from '../../../../theme/spacing';
 
 interface ToggleRowProps {
@@ -13,7 +12,10 @@ interface ToggleRowProps {
   onToggle: (value: boolean) => void;
 }
 
-function ToggleRowComponent({ enabled, onToggle }: ToggleRowProps) {
+const noopToggle = (_value: boolean) => {};
+
+export function ToggleRow(props?: ToggleRowProps) {
+  const { enabled = false, onToggle = noopToggle } = props ?? {};
   const { colors } = useThemeColors();
 
   return (
@@ -30,11 +32,14 @@ function ToggleRowComponent({ enabled, onToggle }: ToggleRowProps) {
       <View className='flex-row items-center gap-3'>
         <View
           className='h-10 w-10 items-center justify-center rounded-full'
-          style={{ backgroundColor: colors.warning[50] }}
+          style={{ backgroundColor: colors.primary[100] }}
         >
-          <Bell color={colors.warning[600]} size={18} />
+          <Bell color={colors.primary[600]} size={18} />
         </View>
-        <Text className='text-base font-medium' style={{ color: colors.text.primary }}>
+        <Text
+          className='text-base font-medium'
+          style={{ color: colors.text.primary }}
+        >
           Daily Reminder
         </Text>
       </View>
@@ -52,5 +57,3 @@ function ToggleRowComponent({ enabled, onToggle }: ToggleRowProps) {
     </View>
   );
 }
-
-export const ToggleRow = memo(ToggleRowComponent);

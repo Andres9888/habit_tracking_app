@@ -23,6 +23,7 @@ export interface HabitsListHeaderProps {
   calendarTranslateY: Animated.Value;
   getHabitStatus: (habitId: string, dateString: string) => string;
   onDayPress: (date: Date) => void;
+  onJumpToToday: () => void;
   onNextWeek: () => void;
   onPreviousWeek: () => void;
   onUpgradePress: () => void;

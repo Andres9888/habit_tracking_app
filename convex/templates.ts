@@ -1,3 +1,6 @@
+import { internal } from './_generated/api';
+import { mutation } from './_generated/server';
+
 /**
  * Template Library Functions - Barrel Export
  * Phase 3 Feature: Science-backed habit templates
@@ -17,6 +20,16 @@
  *
  * @see docs/DECOMPOSITION_PATTERNS.md for decomposition guidelines
  */
+
+const requireAuthenticatedUser = async (
+  ctx: { auth: { getUserIdentity: () => Promise<unknown> } },
+  action: string
+) => {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) {
+    throw new Error(`Unauthenticated: Must be logged in to ${action}`);
+  }
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Query exports
@@ -40,10 +53,90 @@ export { updateYoutubeLinks } from './templates/updateLinks';
 // ─────────────────────────────────────────────────────────────────────────────
 // Seed mutation exports (data-heavy)
 // ─────────────────────────────────────────────────────────────────────────────
-export {
-  seedAdditionalTemplates,
-  seedNewScienceTemplates,
-  seedScienceTemplates,
-  seedTemplates,
-  seedUniqueTemplates,
-} from './templatesDataSeed';
+export const seedTemplates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    await requireAuthenticatedUser(ctx, 'seed templates');
+    const existingTemplate = await ctx.db.query('templates').first();
+    if (existingTemplate) return { queued: false };
+
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.seedTemplates,
+      {}
+    );
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.seedAdditionalTemplates,
+      {}
+    );
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.seedNewScienceTemplates,
+      {}
+    );
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.seedScienceTemplates,
+      {}
+    );
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.seedUniqueTemplates,
+      {}
+    );
+    return { queued: true };
+  },
+});
+
+export const seedAdditionalTemplates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    await requireAuthenticatedUser(ctx, 'seed additional templates');
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.seedAdditionalTemplates,
+      {}
+    );
+    return null;
+  },
+});
+
+export const seedNewScienceTemplates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    await requireAuthenticatedUser(ctx, 'seed new science templates');
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.seedNewScienceTemplates,
+      {}
+    );
+    return null;
+  },
+});
+
+export const seedScienceTemplates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    await requireAuthenticatedUser(ctx, 'seed science templates');
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.seedScienceTemplates,
+      {}
+    );
+    return null;
+  },
+});
+
+export const seedUniqueTemplates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    await requireAuthenticatedUser(ctx, 'seed unique templates');
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.seedUniqueTemplates,
+      {}
+    );
+    return null;
+  },
+});

@@ -1,10 +1,12 @@
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
+import type { SettingsModalSettingsDocument } from './types';
 
 interface UseSettingsModalLogicProps {
   visible: boolean;
   onClose: () => void;
+  settingsDocument?: SettingsModalSettingsDocument;
 }
 
 type DarkModePreference = 'system' | 'light' | 'dark';
@@ -18,11 +20,12 @@ const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
 
 export const useSettingsModalLogic = ({
   onClose,
+  settingsDocument,
 }: UseSettingsModalLogicProps) => {
   const [view, setView] = useState<'settings' | 'archived' | 'paused' | 'sort'>(
     'settings'
   );
-  const settings = useQuery(api.settings.get);
+  const settings = settingsDocument;
   const updateSettings = useMutation(api.settings.update);
 
   const [darkModePreference, setDarkModeState] =
@@ -40,7 +43,7 @@ export const useSettingsModalLogic = ({
       setReduceMotionState(settings.reduceMotion);
       setHighContrastModeState(settings.highContrastMode);
       setUseDyslexicFontState(settings.useDyslexicFont);
-      setShowGradientFillState(settings.showGradientFill);
+      setShowGradientFillState(settings.showGradientFill ?? true);
     }
   }, [settings]);
 

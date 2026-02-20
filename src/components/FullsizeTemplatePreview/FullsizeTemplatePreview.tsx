@@ -18,7 +18,7 @@ import {
 import { DEFAULT_ICON_COLOR } from './FullsizeTemplatePreview.constants';
 import type { FullsizeTemplatePreviewProps } from './FullsizeTemplatePreview.types';
 
-export default function FullsizeTemplatePreview({
+function FullsizeTemplatePreviewComponent({
   template,
   visible,
   onClose,

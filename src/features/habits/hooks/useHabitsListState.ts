@@ -158,6 +158,7 @@ export function useHabitsListState(): HabitsListState {
     habitSlotsUsed,
     handleDragEnd,
     handleHabitPress,
+    handleJumpToToday: weekDatesState.handleJumpToToday,
     handleNextWeek: weekDatesState.handleNextWeek,
     handlePreviousWeek: weekDatesState.handlePreviousWeek,
     isPremiumUser,

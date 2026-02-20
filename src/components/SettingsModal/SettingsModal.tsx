@@ -5,9 +5,7 @@
 
 import React, { useCallback } from 'react';
 import { Modal, View } from 'react-native';
-import { useQuery } from 'convex/react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { api } from '../../../convex/_generated/api';
 import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
 import { SettingsModalSkeleton } from '../SkeletonLoader';
@@ -36,6 +34,8 @@ function SettingsModalContent({
   onToggleStreakReminders = () => {},
   onChangeStreakReminderTime = () => {},
   onPremiumUpsell,
+  archivedHabitsCount = 0,
+  settingsDocument,
 }: SettingsModalProps) {
   const {
     darkModePreference,
@@ -48,13 +48,12 @@ function SettingsModalContent({
     handleClose,
   } = useSettingsModalLogic({
     onClose,
+    settingsDocument,
     visible,
   });
   const insets = useSafeAreaInsets();
   const { isDark } = useThemeColors();
   const colors = getSettingsColors(isHighContrastActive, isDark);
-  const archivedHabits = useQuery(api.habits.listArchived);
-  const archivedHabitsCount = archivedHabits?.length ?? 0;
 
   const handleOpenSortSheet = useCallback(() => {
     handleClose();

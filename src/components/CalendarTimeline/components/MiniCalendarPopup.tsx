@@ -1,0 +1,82 @@
+import React, { useState, useCallback } from 'react';
+import { View, Text, Pressable, Modal } from 'react-native';
+import { addMonths, subMonths } from 'date-fns';
+
+import { MiniCalendarGrid } from './MiniCalendarGrid';
+import { MiniCalendarNav } from './MiniCalendarNav';
+
+interface MiniCalendarPopupProps {
+  visible: boolean;
+  onClose: () => void;
+  onSelectDate: (date: Date) => void;
+  completionByDay?: Record<string, { completed: number; total: number }>;
+}
+
+/** Modal overlay with a month calendar grid and completion dots */
+export const MiniCalendarPopup: React.FC<MiniCalendarPopupProps> = ({
+  visible,
+  onClose,
+  onSelectDate,
+  completionByDay = {},
+}) => {
+  const [month, setMonth] = useState(new Date());
+  const prev = useCallback(() => setMonth((m) => subMonths(m, 1)), []);
+  const next = useCallback(() => setMonth((m) => addMonths(m, 1)), []);
+
+  const handleSelect = useCallback(
+    (date: Date) => {
+      onSelectDate(date);
+      onClose();
+    },
+    [onSelectDate, onClose]
+  );
+
+  return (
+    <Modal
+      animationType='fade'
+      transparent
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <Pressable
+        style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.4)',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        onPress={onClose}
+      >
+        <Pressable
+          style={{
+            backgroundColor: '#fff',
+            borderRadius: 16,
+            padding: 16,
+            width: 300,
+          }}
+          onPress={(e) => e.stopPropagation()}
+        >
+          <MiniCalendarNav month={month} onNext={next} onPrev={prev} />
+          <MiniCalendarGrid
+            completionByDay={completionByDay}
+            month={month}
+            onSelectDate={handleSelect}
+          />
+          <Pressable
+            style={{
+              alignSelf: 'center',
+              marginTop: 8,
+              paddingVertical: 4,
+              paddingHorizontal: 12,
+            }}
+            onPress={onClose}
+          >
+            <Text style={{ fontSize: 12, fontWeight: '600', color: '#a8a29e' }}>
+              Close
+            </Text>
+          </Pressable>
+        </Pressable>
+      </Pressable>
+    </Modal>
+  );
+};

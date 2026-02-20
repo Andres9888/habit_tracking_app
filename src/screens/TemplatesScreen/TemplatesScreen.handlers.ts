@@ -38,8 +38,6 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
   });
 
   const seed = useSeedHandlers({
-    seedAdditionalTemplates: opts.seedAdditionalTemplates,
-    seedNewScienceTemplates: opts.seedNewScienceTemplates,
     seedTemplates: opts.seedTemplates,
     setIsSeeding: opts.setIsSeeding,
     setShowToast: opts.setShowToast,

@@ -93,7 +93,7 @@ export function HeaderButton({
   );
 }
 
-const headerButtonStyles = StyleSheet.create({
+const s = StyleSheet.create({
   textButton: {
     alignItems: 'center',
     borderRadius: 20,

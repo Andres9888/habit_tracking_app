@@ -3,12 +3,18 @@
  * Groups modals, toasts, and paywall into a single render unit
  */
 
+import { lazy, Suspense } from 'react';
 import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
-import { RevenueCatPaywall } from '../../../components/RevenueCatPaywall';
 import { HabitsModals } from './HabitsModals';
 import WebToaster from './WebToaster';
 import { TOAST_DURATION_MS } from '@/constants';
 import type { HabitsListState, HabitsModalsState } from '../hooks/types';
+
+const RevenueCatPaywall = lazy(() =>
+  import('../../../components/RevenueCatPaywall').then((m) => ({
+    default: m.RevenueCatPaywall,
+  }))
+);
 
 interface HabitsAppOverlaysProps {
   list: HabitsListState;
@@ -40,12 +46,14 @@ export function HabitsAppOverlays({
         }}
       />
 
-      <RevenueCatPaywall
-        visible={paywallVisible}
-        onClose={onPaywallClose}
-        onPurchaseSuccess={onPaywallSuccess}
-        onRestoreSuccess={onPaywallSuccess}
-      />
+      <Suspense fallback={null}>
+        <RevenueCatPaywall
+          visible={paywallVisible}
+          onClose={onPaywallClose}
+          onPurchaseSuccess={onPaywallSuccess}
+          onRestoreSuccess={onPaywallSuccess}
+        />
+      </Suspense>
     </>
   );
 }

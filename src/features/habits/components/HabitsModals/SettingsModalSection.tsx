@@ -5,12 +5,14 @@ import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders'
 import { usePremium } from '../../../../hooks/usePremium';
 import { SortBottomSheet } from '../SortBottomSheet';
 import type { HabitSortMode } from '../../types';
+import type { SettingsModalSettingsDocument } from '../../../../components/SettingsModal/types';
 import type { SettingsModalSectionProps } from './HabitsModals.types';
 
 /**
  * Settings modal section - handles app settings + sort sheet
  */
 export function SettingsModalSection({
+  archivedHabitsCount,
   celebrationsEnabled,
   settings,
   showSettings,
@@ -34,12 +36,14 @@ export function SettingsModalSection({
   return (
     <>
       <SettingsModal
+        archivedHabitsCount={archivedHabitsCount}
         celebrationsEnabled={celebrationsEnabled}
         completionSoundEnabled={settings?.completionSoundEnabled ?? false}
         dayShape={settings?.dayShape ?? 'square'}
         habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
         isHighContrastActive={settings?.highContrastMode ?? false}
         isPremium={isPremium}
+        settingsDocument={settings as SettingsModalSettingsDocument | undefined}
         showCharacterScreen={settings?.showCharacterScreen ?? true}
         showHabitStrengthPercentage={showHabitStrengthPercentage}
         showNotesStats={settings?.showNotesStats ?? true}

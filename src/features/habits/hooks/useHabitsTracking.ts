@@ -67,25 +67,35 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
   const getHabitStatus = useCallback(
     (habitId: string, dateString: string): HabitStatus => {
+      const normalizedDateString = dateString.trim();
+      if (!normalizedDateString) {
+        return 'planned';
+      }
+
       // Validate date string format
-      const validation = validateDateString(dateString);
+      const validation = validateDateString(normalizedDateString);
       if (!validation.isValid) {
-        if (__DEV__) console.warn(`Invalid date string: ${dateString}`, validation.error);
+        if (__DEV__)
+          console.warn(
+            `Invalid date string: ${normalizedDateString}`,
+            validation.error
+          );
         return 'planned'; // Safe fallback
       }
 
       // Use the pre-built map (includes optimistic merges) for O(1) lookup
       const completedDates = completedDatesByHabit.get(habitId);
-      if (completedDates?.has(dateString)) {
+      if (completedDates?.has(normalizedDateString)) {
         return 'done';
       }
 
-      const parts = dateString.split('-').map(Number);
+      const parts = normalizedDateString.split('-').map(Number);
       const year = parts[0] ?? 0;
       const month = parts[1] ?? 1;
       const day = parts[2] ?? 1;
       if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) {
-        if (__DEV__) console.warn(`Non-numeric date parts: ${dateString}`);
+        if (__DEV__)
+          console.warn(`Non-numeric date parts: ${normalizedDateString}`);
         return 'planned';
       }
       const date = new Date(year, month - 1, day);
@@ -93,7 +103,8 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
 
       // Guard against invalid Date objects
       if (Number.isNaN(date.getTime())) {
-        if (__DEV__) console.warn(`Invalid date created from: ${dateString}`);
+        if (__DEV__)
+          console.warn(`Invalid date created from: ${normalizedDateString}`);
         return 'planned';
       }
 

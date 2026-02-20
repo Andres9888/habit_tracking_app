@@ -18,19 +18,36 @@ function createOptimisticStore(): OptimisticStoreAPI {
     pendingReorder: null,
     pendingToggles: new Map(),
   };
+  let snapshot: OptimisticStore = {
+    operations: new Map(),
+    pendingArchives: new Map(),
+    pendingPauses: new Map(),
+    pendingReorder: null,
+    pendingToggles: new Map(),
+  };
 
   const listeners = new Set<StoreListener>();
 
+  const buildSnapshot = (): OptimisticStore => ({
+    operations: new Map(state.operations),
+    pendingArchives: new Map(state.pendingArchives),
+    pendingPauses: new Map(state.pendingPauses),
+    pendingReorder: state.pendingReorder ? [...state.pendingReorder] : null,
+    pendingToggles: new Map(state.pendingToggles),
+  });
+
   const notify = () => {
+    snapshot = buildSnapshot();
     for (const listener of listeners) listener();
   };
 
   const operations = createOperations(state, notify);
   const stateManagement = createStateManagement(state, notify);
+  snapshot = buildSnapshot();
 
   return {
     getSnapshot(): OptimisticStore {
-      return state;
+      return snapshot;
     },
 
     subscribe(listener: StoreListener): () => void {

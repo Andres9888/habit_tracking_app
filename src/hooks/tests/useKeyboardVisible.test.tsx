@@ -8,6 +8,21 @@ import { Keyboard, Platform } from 'react-native';
 
 import { useKeyboardVisible } from '../useKeyboardVisible';
 
+const ORIGINAL_PLATFORM_OS = Platform.OS;
+
+const setPlatformOS = (platformOS: 'ios' | 'android' | 'web') => {
+  try {
+    (Platform as { OS: string }).OS = platformOS;
+    return;
+  } catch {
+    Object.defineProperty(Platform, 'OS', {
+      value: platformOS,
+      writable: true,
+      configurable: true,
+    });
+  }
+};
+
 describe('useKeyboardVisible', () => {
   let showCallback: ((event: KeyboardEvent) => void) | null = null;
   let hideCallback: (() => void) | null = null;
@@ -19,8 +34,7 @@ describe('useKeyboardVisible', () => {
     showCallback = null;
     hideCallback = null;
 
-    // Reset platform to iOS for most tests
-    Object.defineProperty(Platform, 'OS', { value: 'ios', writable: true });
+    setPlatformOS('ios');
 
     addListenerSpy = jest
       .spyOn(Keyboard, 'addListener')
@@ -196,8 +210,7 @@ describe('useKeyboardVisible on Android', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Set platform to Android
-    Object.defineProperty(Platform, 'OS', { value: 'android', writable: true });
+    setPlatformOS('android');
 
     addListenerSpy = jest
       .spyOn(Keyboard, 'addListener')
@@ -213,8 +226,7 @@ describe('useKeyboardVisible on Android', () => {
 
   afterEach(() => {
     addListenerSpy.mockRestore();
-    // Reset Platform.OS back to iOS for other tests
-    Object.defineProperty(Platform, 'OS', { value: 'ios', writable: true });
+    setPlatformOS(ORIGINAL_PLATFORM_OS);
   });
 
   it('uses keyboardDidShow/Hide events on Android', () => {

@@ -1,9 +1,14 @@
-import { lazy, Suspense } from 'react';
-import type { HabitsModalsProps } from './HabitsModals.types';
+import ErrorBoundary from '../../../../components/ErrorBoundary';
+import { ActivationModalSection } from './ActivationModalSection';
+import { CalendarAndDetailModals } from './CalendarAndDetailModals';
 import { CreateHabitModalSection } from './CreateHabitModalSection';
+import { HapticTestModalSection } from './HapticTestModalSection';
 import { QuickActionsSection } from './QuickActionsSection';
 import { SettingsModalSection } from './SettingsModalSection';
 import { ShareAndPauseModals } from './ShareAndPauseModals';
+import { TemplatesModalSection } from './TemplatesModalSection';
+import type { HabitsModalsProps } from './HabitsModals.types';
+import { VisualizationModalSection } from './VisualizationModalSection';
 import {
   getCalendarAndDetailProps,
   getQuickActionsProps,
@@ -11,79 +16,72 @@ import {
   getShareAndPauseProps,
 } from './HabitsModals.helpers';
 
-// Lazy-load heavy modal sections — these are rarely opened but contain
-// entire screens (detail, edit, calendar, templates, visualization).
-// Deferring their parse/eval until first open speeds up initial launch.
-const CalendarAndDetailModals = lazy(() =>
-  import('./CalendarAndDetailModals').then((m) => ({
-    default: m.CalendarAndDetailModals,
-  }))
-);
-const TemplatesModalSection = lazy(() =>
-  import('./TemplatesModalSection').then((m) => ({
-    default: m.TemplatesModalSection,
-  }))
-);
-const VisualizationModalSection = lazy(() =>
-  import('./VisualizationModalSection').then((m) => ({
-    default: m.VisualizationModalSection,
-  }))
-);
-const ActivationModalSection = lazy(() =>
-  import('./ActivationModalSection').then((m) => ({
-    default: m.ActivationModalSection,
-  }))
-);
-const HapticTestModalSection = lazy(() =>
-  import('./HapticTestModalSection').then((m) => ({
-    default: m.HapticTestModalSection,
-  }))
-);
-
 export function HabitsModals({ state }: HabitsModalsProps) {
+  const shouldRenderCreateHabit = state.showCreateHabit;
+  const shouldRenderCalendarAndDetail =
+    state.showHabitCalendar || state.showHabitDetail || state.showEditScreen;
+  const shouldRenderTemplates = state.showTemplatesScreen;
+  const shouldRenderVisualization = state.showVisualizationExercise;
+  const shouldRenderActivation = state.showActivationModal;
+
   return (
     <>
-      <SettingsModalSection {...getSettingsProps(state)} />
-      <CreateHabitModalSection
-        closeCreateHabit={state.closeCreateHabit}
-        habitToEdit={state.habitToEdit}
-        showCreateHabit={state.showCreateHabit}
-      />
+      <ErrorBoundary fallback={null}>
+        <SettingsModalSection {...getSettingsProps(state)} />
+      </ErrorBoundary>
+      {shouldRenderCreateHabit && (
+        <ErrorBoundary fallback={null}>
+          <CreateHabitModalSection
+            closeCreateHabit={state.closeCreateHabit}
+            habitToEdit={state.habitToEdit}
+            showCreateHabit={state.showCreateHabit}
+          />
+        </ErrorBoundary>
+      )}
       {__DEV__ && (
-        <Suspense fallback={null}>
+        <ErrorBoundary fallback={null}>
           <HapticTestModalSection
             closeHapticTest={state.closeHapticTest}
             showHapticTest={state.showHapticTest}
           />
-        </Suspense>
+        </ErrorBoundary>
       )}
-      <Suspense fallback={null}>
-        <CalendarAndDetailModals {...getCalendarAndDetailProps(state)} />
-      </Suspense>
+      {shouldRenderCalendarAndDetail && (
+        <ErrorBoundary fallback={null}>
+          <CalendarAndDetailModals {...getCalendarAndDetailProps(state)} />
+        </ErrorBoundary>
+      )}
       <ShareAndPauseModals {...getShareAndPauseProps(state)} />
-      <Suspense fallback={null}>
-        <TemplatesModalSection
-          closeTemplatesScreen={state.closeTemplatesScreen}
-          showTemplatesScreen={state.showTemplatesScreen}
-        />
-      </Suspense>
+      {shouldRenderTemplates && (
+        <ErrorBoundary fallback={null}>
+          <TemplatesModalSection
+            closeTemplatesScreen={state.closeTemplatesScreen}
+            reduceMotionPreference={state.reduceMotionPreference}
+            showTemplatesScreen={state.showTemplatesScreen}
+          />
+        </ErrorBoundary>
+      )}
       <QuickActionsSection {...getQuickActionsProps(state)} />
-      <Suspense fallback={null}>
-        <VisualizationModalSection
-          closeVisualizationExercise={state.closeVisualizationExercise}
-          selectedHabit={state.selectedHabit}
-          showVisualizationExercise={state.showVisualizationExercise}
-        />
-      </Suspense>
-      <Suspense fallback={null}>
-        <ActivationModalSection
-          activationModalHabit={state.activationModalHabit}
-          closeActivationModal={state.closeActivationModal}
-          reduceMotionPreference={state.reduceMotionPreference}
-          showActivationModal={state.showActivationModal}
-          toggleHabit={state.toggleHabit}
-        />
-      </Suspense>
+      {shouldRenderVisualization && (
+        <ErrorBoundary fallback={null}>
+          <VisualizationModalSection
+            closeVisualizationExercise={state.closeVisualizationExercise}
+            selectedHabit={state.selectedHabit}
+            showVisualizationExercise={state.showVisualizationExercise}
+          />
+        </ErrorBoundary>
+      )}
+      {shouldRenderActivation && (
+        <ErrorBoundary fallback={null}>
+          <ActivationModalSection
+            activationModalHabit={state.activationModalHabit}
+            closeActivationModal={state.closeActivationModal}
+            reduceMotionPreference={state.reduceMotionPreference}
+            showActivationModal={state.showActivationModal}
+            toggleHabit={state.toggleHabit}
+          />
+        </ErrorBoundary>
+      )}
     </>
   );
 }

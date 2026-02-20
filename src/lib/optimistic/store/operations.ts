@@ -12,11 +12,7 @@ import type {
 } from '../types';
 import { generateId, getToggleKey } from './helpers';
 
-export function createOperations(
-  state: OptimisticStore,
-  listeners: Set<StoreListener>,
-  notify: () => void
-) {
+export function createOperations(state: OptimisticStore, notify: () => void) {
   return {
     addArchive(payload: ArchiveOperationPayload): string {
       const id = generateId();

@@ -1,15 +1,22 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import { View } from 'react-native';
 import { format } from 'date-fns';
+import { GestureDetector } from 'react-native-gesture-handler';
 
-import { useCalendarTimelineLogic } from './CalendarTimeline.hooks';
+import {
+  useCalendarTimelineLogic,
+  useCompletionStatus,
+} from './CalendarTimeline.hooks';
 import { CONTAINER_SHADOW, getColors } from './CalendarTimeline.styles';
-import type {
-  CalendarTimelineProps,
-  CompletionStatus,
-} from './CalendarTimeline.types';
+import type { CalendarTimelineProps } from './CalendarTimeline.types';
+import { useTimelineSwipe } from './useTimelineSwipe';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { DayCell, WeekNavigationHeader } from './components';
+import {
+  DayCell,
+  InlineTrialBar,
+  MiniCalendarPopup,
+  WeekNavigationHeader,
+} from './components';
 
 const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   dates,
@@ -22,76 +29,90 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   onDayPress,
   isDayPressEnabled,
   disableFutureDayPress = true,
+  completedToday = 0,
+  totalHabits = 0,
+  onJumpToToday,
+  trialDaysRemaining,
+  onUpgrade,
 }) => {
   const { isToday, isFuture } = useCalendarTimelineLogic();
   const { isDark, colors: themeColors } = useThemeColors();
   const colors = getColors(highContrastMode, isDark);
+  const getCompletionStatus = useCompletionStatus(completionByDay, isFuture);
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const openCalendar = useCallback(() => setCalendarOpen(true), []);
+  const closeCalendar = useCallback(() => setCalendarOpen(false), []);
+  const timelinePanGesture = useTimelineSwipe({
+    canNavigateForward,
+    onNextWeek,
+    onPreviousWeek,
+  });
 
-  const getCompletionStatus = (date: Date): CompletionStatus => {
-    if (isFuture(date)) return 'future';
-    const dateString = format(date, 'yyyy-MM-dd');
-    const dayStatus = completionByDay[dateString];
-    if (!dayStatus || dayStatus.total === 0) return 'none';
-    if (dayStatus.completed === dayStatus.total) return 'complete';
-    if (dayStatus.completed > 0) return 'partial';
-    return 'none';
-  };
-
-  if (dates.length === 0) {
-    return null;
-  }
-
+  if (dates.length === 0) return null;
   const firstDate = dates[0];
   const lastDate = dates.at(-1);
-  if (!firstDate || !lastDate) {
-    return null;
-  }
+  if (!firstDate || !lastDate) return null;
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
   const hasCompletionData = Object.keys(completionByDay).length > 0;
-
-  // Augment colors with high contrast border info for DayCell
   const augmentedColors = {
     ...colors,
     borderWidth: highContrastMode ? 2 : 0,
     highContrastBorder: highContrastMode ? colors.dayBorder : undefined,
   };
+  const hc = highContrastMode;
+  const cardStyle = {
+    backgroundColor: hc ? 'transparent' : themeColors.card,
+    borderColor: hc ? 'transparent' : themeColors.cardBorder,
+    borderWidth: hc ? 0 : 1,
+    ...CONTAINER_SHADOW,
+  };
 
   return (
-    <View
-      className='mb-4 rounded-2xl px-3 pb-3 pt-2'
-      style={{
-        backgroundColor: highContrastMode ? 'transparent' : themeColors.card,
-        borderColor: highContrastMode ? 'transparent' : themeColors.cardBorder,
-        borderWidth: highContrastMode ? 0 : 1,
-        ...CONTAINER_SHADOW,
-      }}
-    >
+    <View className='mb-4 rounded-2xl px-3 pb-3 pt-2' style={cardStyle}>
+      {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade && (
+        <InlineTrialBar
+          daysRemaining={trialDaysRemaining}
+          onUpgrade={onUpgrade}
+        />
+      )}
       <WeekNavigationHeader
         canNavigateForward={canNavigateForward}
         colors={colors}
+        completedToday={completedToday}
         dateRangeText={dateRangeText}
+        reduceMotion={reduceMotion}
+        totalHabits={totalHabits}
+        onDateRangePress={openCalendar}
+        onJumpToToday={onJumpToToday}
         onNextWeek={onNextWeek}
         onPreviousWeek={onPreviousWeek}
       />
-
-      <View className='flex-row items-start justify-between'>
-        {dates.map((date, index) => (
-          <DayCell
-            key={`timeline-day-${index}`}
-            colors={augmentedColors}
-            completionStatus={getCompletionStatus(date)}
-            date={date}
-            disableFutureDayPress={disableFutureDayPress}
-            hasCompletionData={hasCompletionData}
-            index={index}
-            isCurrentDay={isToday(date)}
-            isDayPressEnabled={isDayPressEnabled ?? !!onDayPress}
-            isUpcoming={isFuture(date)}
-            reduceMotion={reduceMotion}
-            onDayPress={onDayPress}
-          />
-        ))}
-      </View>
+      <GestureDetector gesture={timelinePanGesture}>
+        <View className='flex-row items-start justify-between pl-1'>
+          {dates.map((date, index) => (
+            <DayCell
+              key={`timeline-day-${index}`}
+              colors={augmentedColors}
+              completionStatus={getCompletionStatus(date)}
+              date={date}
+              disableFutureDayPress={disableFutureDayPress}
+              hasCompletionData={hasCompletionData}
+              index={index}
+              isCurrentDay={isToday(date)}
+              isDayPressEnabled={isDayPressEnabled ?? !!onDayPress}
+              isUpcoming={isFuture(date)}
+              reduceMotion={reduceMotion}
+              onDayPress={onDayPress}
+            />
+          ))}
+        </View>
+      </GestureDetector>
+      <MiniCalendarPopup
+        completionByDay={completionByDay}
+        visible={calendarOpen}
+        onClose={closeCalendar}
+        onSelectDate={onDayPress ?? closeCalendar}
+      />
     </View>
   );
 };

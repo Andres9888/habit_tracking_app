@@ -14,6 +14,12 @@ description = "Safe patterns and test files"
 paths = [
     '''node_modules''',
     '''\.git''',
+    '''\.worktrees''',
+    '''coverage''',
+    '''ios\/Pods''',
+    '''website\/\.next''',
+    '''dist\/''',
+    '''superdesign\/dist''',
     '''__tests__''',
     '''__mocks__''',
     '''tests\/''',
@@ -34,6 +40,7 @@ regexes = [
     '''example[_-]?key''',
     '''PLACEHOLDER''',
     '''your[_-]?secret''',
+    '''apiLatencyP(50|95)''',
 ]
 
 # Custom rules for this codebase

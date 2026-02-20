@@ -1,10 +1,7 @@
 import { useCallback } from 'react';
-import type { CreateHabitModalProps, HabitTemplate } from '../types';
+import type { CreateHabitModalProps } from '../types';
 import { useHabitForm } from './useHabitForm';
-import { useScienceModal } from './useScienceModal';
-import { useTemplateBrowser } from './useTemplateBrowser';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
-import { extractTemplateDetails } from '../utils';
 import { checkReminderPermissions } from './useHabitReminders';
 import { useCreateHabitHandlers } from './useCreateHabitHandlers';
 import {
@@ -20,34 +17,9 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   const { triggerSuccess } = useHapticFeedback();
   const { handleEdit, handleCreate: createNewHabit } = useCreateHabitHandlers();
 
-  const applyTemplate = useCallback(
-    (template: HabitTemplate) => {
-      const { emoji, name } = extractTemplateDetails(template);
-      form.setSelectedEmoji(emoji);
-      form.setHabitName(name);
-      if (template.iconColor) form.setSelectedColor(template.iconColor);
-      if (template.frequency) form.setFrequency(template.frequency);
-    },
-    [
-      form.setSelectedEmoji,
-      form.setHabitName,
-      form.setSelectedColor,
-      form.setFrequency,
-    ]
-  );
-
-  const template = useTemplateBrowser({
-    isEditMode,
-    onTemplateSelect: applyTemplate,
-    visible,
-  });
-  const science = useScienceModal({ onSelectTemplate: applyTemplate });
-
   useVisibilityReset({
     isEditMode,
     resetForm: form.resetForm,
-    science,
-    template,
     visible,
   });
 
@@ -64,9 +36,7 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     closeColorPicker: form.closeColorPicker,
     onClose,
     resetForm: form.resetForm,
-    science,
     setShowTimePicker: form.setShowTimePicker,
-    template,
     triggerSuccess,
   });
 
@@ -97,5 +67,5 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     cleanup,
   ]);
 
-  return { form, handleCreate, isEditMode, science, template };
+  return { form, handleCreate, isEditMode };
 };

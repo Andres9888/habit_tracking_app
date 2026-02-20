@@ -1,3 +1,13 @@
+export interface SettingsModalSettingsDocument {
+  [key: string]: unknown;
+  darkMode?: unknown;
+  reduceMotion?: boolean;
+  highContrastMode?: boolean;
+  useDyslexicFont?: boolean;
+  showGradientFill?: boolean;
+  habitSortMode?: string;
+}
+
 export interface SettingsModalProps {
   celebrationsEnabled?: boolean;
   completionSoundEnabled?: boolean;
@@ -32,6 +42,8 @@ export interface SettingsModalProps {
   onChangeStreakReminderTime?: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
   isLoading?: boolean;
+  archivedHabitsCount?: number;
+  settingsDocument?: SettingsModalSettingsDocument;
 }
 
 export interface SettingsColors {

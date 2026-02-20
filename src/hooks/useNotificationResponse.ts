@@ -17,9 +17,10 @@
  */
 
 import { useEffect, useRef, useCallback } from 'react';
-import * as Notifications from 'expo-notifications';
 import type { NotificationResponse } from 'expo-notifications';
 import { NOTIFICATION_TYPE_LETTER_UNLOCK } from '../utils/notifications';
+
+type NotificationsModule = typeof import('expo-notifications');
 
 export interface NotificationResponseHandler {
   /** Called when a habit notification is tapped */
@@ -88,24 +89,49 @@ export function useNotificationResponse(handlers: NotificationResponseHandler) {
   );
 
   useEffect(() => {
-    // Subscribe to notification response events (when user taps notification)
-    const subscription = Notifications.addNotificationResponseReceivedListener(
-      handleNotificationResponse
-    );
+    let mounted = true;
+    let subscription: { remove: () => void } | null = null;
 
-    // Check for any notification that launched the app
-    void Notifications.getLastNotificationResponseAsync()
-      .then((response) => {
-        if (response) {
+    const setup = async () => {
+      let Notifications: NotificationsModule;
+
+      try {
+        Notifications = await import('expo-notifications');
+      } catch (error) {
+        if (__DEV__) {
+          console.warn(
+            '[useNotificationResponse] Failed to load notifications module:',
+            error
+          );
+        }
+        return;
+      }
+
+      if (!mounted) return;
+
+      // Subscribe to notification response events (when user taps notification)
+      subscription = Notifications.addNotificationResponseReceivedListener(
+        handleNotificationResponse
+      );
+
+      // Check for any notification that launched the app
+      try {
+        const response = await Notifications.getLastNotificationResponseAsync();
+        if (response && mounted) {
           handleNotificationResponse(response);
         }
-      })
-      .catch((error) => {
-        if (__DEV__) console.warn('Error getting last notification response:', error);
-      });
+      } catch (error) {
+        if (__DEV__) {
+          console.warn('Error getting last notification response:', error);
+        }
+      }
+    };
+
+    void setup();
 
     return () => {
-      subscription.remove();
+      mounted = false;
+      subscription?.remove();
     };
   }, [handleNotificationResponse]);
 

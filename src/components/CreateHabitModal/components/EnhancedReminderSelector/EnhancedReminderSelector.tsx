@@ -13,7 +13,6 @@
  * - Haptic feedback on selection
  */
 
-import { memo } from 'react';
 import { View } from 'react-native';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import { TimePickerModal } from '../TimePickerModal';
@@ -25,14 +24,26 @@ import { PresetButton } from './PresetButton';
 import { CustomTimeButton } from './CustomTimeButton';
 import type { EnhancedReminderSelectorProps } from './types';
 
-function EnhancedReminderSelectorComponent({
-  enabled,
-  reminderTime,
-  onToggle,
-  onTimeChange,
-  presets = DEFAULT_PRESETS,
-  showNextReminder = true,
-}: EnhancedReminderSelectorProps) {
+const noopToggle = (_enabled: boolean) => {};
+const noopTimeChange = (_time: Date) => {};
+
+function createFallbackReminderTime() {
+  const fallback = new Date();
+  fallback.setHours(9, 0, 0, 0);
+  return fallback;
+}
+
+export function EnhancedReminderSelector(
+  props?: EnhancedReminderSelectorProps
+) {
+  const {
+    enabled = false,
+    reminderTime = createFallbackReminderTime(),
+    onToggle = noopToggle,
+    onTimeChange = noopTimeChange,
+    presets = DEFAULT_PRESETS,
+    showNextReminder = true,
+  } = props ?? {};
   const reduceMotion = useReduceMotion();
 
   const {
@@ -92,5 +103,4 @@ function EnhancedReminderSelectorComponent({
   );
 }
 
-export const EnhancedReminderSelector = memo(EnhancedReminderSelectorComponent);
 export default EnhancedReminderSelector;

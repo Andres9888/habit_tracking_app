@@ -12,13 +12,9 @@
 
 import React, { memo } from 'react';
 import { Animated, View } from 'react-native';
-import { HabitsHeader } from '../HabitsHeader';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
 import { OfflineIndicator } from '../../../../components/SyncStatus';
-import {
-  TrialCountdownBanner,
-  useTrialCountdown,
-} from '../../../../components/TrialCountdownBanner';
+import { useTrialCountdown } from '../../../../components/TrialCountdownBanner';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
@@ -42,17 +38,6 @@ function HabitsListHeaderComponent(
           visible={computed.isOffline}
         />
       </View>
-      <Animated.View
-        style={{
-          opacity: props.headerOpacity,
-          transform: [{ translateY: props.headerTranslateY }],
-        }}
-      >
-        <HabitsHeader
-          forceShow={props.justCreatedHabitId !== null}
-          totalHabits={computed.totalHabits}
-        />
-      </Animated.View>
       {computed.shouldShowTimeline && (
         <Animated.View
           style={{
@@ -64,21 +49,19 @@ function HabitsListHeaderComponent(
             disableFutureDayPress
             showSeparator
             canNavigateForward={props.canNavigateForward}
+            completedToday={computed.completedToday}
             completionByDay={computed.completionByDay}
             dates={props.weekDates}
             reduceMotion={props.reduceMotionPreference}
+            totalHabits={computed.totalHabits}
+            trialDaysRemaining={shouldShowBanner ? daysRemaining : null}
             onDayPress={props.onDayPress}
+            onJumpToToday={props.onJumpToToday}
             onNextWeek={props.onNextWeek}
             onPreviousWeek={props.onPreviousWeek}
+            onUpgrade={props.onUpgradePress}
           />
         </Animated.View>
-      )}
-
-      {shouldShowBanner && daysRemaining !== null && (
-        <TrialCountdownBanner
-          daysRemaining={daysRemaining}
-          onUpgrade={props.onUpgradePress}
-        />
       )}
     </View>
   );

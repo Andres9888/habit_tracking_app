@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 
 import {
+  COMPLETE_DAY_CELL,
   FUTURE_DATE_TEXT_COLOR,
   TODAY_HIGHLIGHT,
   TODAY_SHADOW,
@@ -11,7 +12,9 @@ import type {
   CompletionStatus,
 } from '../CalendarTimeline.types';
 
+import { CheckBadge } from './CheckBadge';
 import { CompletionDot } from './CompletionDot';
+import { getDayCellStyles } from './DayCellContent.helpers';
 
 interface DayCellContentProps {
   weekday: string;
@@ -39,53 +42,57 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
   colors,
   reduceMotion,
   pressed = false,
-}) => (
-  <>
-    <Text
-      className='text-center text-[13px] font-normal leading-[18px]'
-      style={{ color: colors.secondaryText }}
-    >
-      {weekday}
-    </Text>
+}) => {
+  const isComplete = completionStatus === 'complete';
+  const cellStyles = getDayCellStyles({
+    colors,
+    isComplete,
+    isCurrentDay,
+    isUpcoming,
+  });
 
-    <View
-      className='h-9 w-9 items-center justify-center rounded-xl'
-      style={{
-        backgroundColor: isCurrentDay
-          ? TODAY_HIGHLIGHT.background
-          : colors.dayBackground,
-        borderColor: isCurrentDay
-          ? TODAY_HIGHLIGHT.border
-          : (colors.highContrastBorder ?? 'transparent'),
-        borderWidth: isCurrentDay ? 2 : (colors.borderWidth ?? 0),
-        ...(isCurrentDay && TODAY_SHADOW),
-        ...(pressed && !reduceMotion && { transform: [{ scale: 0.95 }] }),
-        ...(pressed && { opacity: 0.7 }),
-      }}
-    >
+  return (
+    <>
       <Text
-        className='text-center text-[17px] leading-[22px]'
+        className='text-center text-[10px] leading-[14px]'
         style={{
-          color: isCurrentDay
-            ? TODAY_HIGHLIGHT.text
-            : isUpcoming
-              ? FUTURE_DATE_TEXT_COLOR
-              : colors.dayText,
-          fontWeight: isCurrentDay ? '700' : '600',
+          color: colors.secondaryText,
+          fontWeight: isCurrentDay ? '700' : '400',
         }}
       >
-        {dayNumber}
+        {weekday}
       </Text>
-    </View>
 
-    {hasCompletionData && (
-      <View className='mt-1 h-2 items-center justify-center'>
-        <CompletionDot
-          isToday={isCurrentDay}
-          reduceMotion={reduceMotion}
-          status={completionStatus}
-        />
+      <View
+        className='h-9 w-9 items-center justify-center rounded-xl'
+        style={{
+          ...cellStyles.container,
+          ...(pressed && !reduceMotion && { transform: [{ scale: 0.95 }] }),
+          ...(pressed && { opacity: 0.7 }),
+        }}
+      >
+        {isComplete && <CheckBadge reduceMotion={reduceMotion} />}
+        <Text
+          className='text-center text-[13px] leading-[18px]'
+          style={{
+            color: cellStyles.text,
+            fontWeight: isComplete || isCurrentDay ? '700' : '600',
+          }}
+        >
+          {dayNumber}
+        </Text>
       </View>
-    )}
-  </>
-);
+
+      {hasCompletionData && !isComplete && (
+        <View className='mt-1 h-2 items-center justify-center'>
+          <CompletionDot
+            isToday={isCurrentDay}
+            reduceMotion={reduceMotion}
+            status={completionStatus}
+          />
+        </View>
+      )}
+      {isComplete && <View className='mt-1 h-2' />}
+    </>
+  );
+};

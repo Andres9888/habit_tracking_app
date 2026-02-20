@@ -6,24 +6,34 @@
 import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useEffect, useState } from 'react';
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 import { HabitsList } from './components/HabitsList';
 import { BottomActionBar } from './components/BottomActionBar';
-import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { HabitsAppOverlays } from './components/HabitsAppOverlays';
+import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 import { useBottomBarProps } from './useBottomBarProps';
+import { schedulePostLaunchAppPreload } from './postLaunchPreload';
 
 const ENTERING = FadeInDown.duration(280).springify().damping(18);
 const styles = StyleSheet.create({ flex1: { flex: 1 } });
 
 // eslint-disable-next-line max-lines-per-function
 function HabitsAppContent() {
+  useEffect(() => schedulePostLaunchAppPreload(), []);
+
+  const [overlaysMounted, setOverlaysMounted] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setOverlaysMounted(true), 80);
+    return () => clearTimeout(timer);
+  }, []);
+
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
   const { triggerSelection, triggerWarning } = useHapticFeedback({
@@ -62,6 +72,7 @@ function HabitsAppContent() {
               upgradePromptVisible={handlers.upgradePromptVisible}
               weekDates={list.weekDates}
               onCreateHabitRequest={handlers.handleCreateHabitRequest}
+              onJumpToToday={list.handleJumpToToday}
               onNextWeek={list.handleNextWeek}
               onPreviousWeek={list.handlePreviousWeek}
               onUpgradeConfirm={handlers.handleUpgradeConfirm}
@@ -71,13 +82,15 @@ function HabitsAppContent() {
           </Animated.View>
         )}
         {list.habits.length > 0 && <BottomActionBar {...bottomBar} />}
-        <HabitsAppOverlays
-          list={list}
-          modals={modals}
-          paywallVisible={handlers.paywallVisible}
-          onPaywallClose={handlers.handlePaywallClose}
-          onPaywallSuccess={handlers.handlePaywallSuccess}
-        />
+        {overlaysMounted && (
+          <HabitsAppOverlays
+            list={list}
+            modals={modals}
+            paywallVisible={handlers.paywallVisible}
+            onPaywallClose={handlers.handlePaywallClose}
+            onPaywallSuccess={handlers.handlePaywallSuccess}
+          />
+        )}
       </View>
     </GestureHandlerRootView>
   );

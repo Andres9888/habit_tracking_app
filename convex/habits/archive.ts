@@ -63,6 +63,21 @@ export const listArchived = query({
   returns: v.array(fullHabitValidator),
 });
 
+export const listArchivedCount = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    requireAuth(identity, 'view archived habits');
+    const archivedHabits = await ctx.db
+      .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
+      .filter((q) => q.eq(q.field('archived'), true))
+      .collect();
+    return archivedHabits.length;
+  },
+  returns: v.number(),
+});
+
 export const deleteAllArchived = mutation({
   args: {},
   handler: async (ctx) => {

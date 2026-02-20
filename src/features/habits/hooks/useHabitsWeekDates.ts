@@ -1,4 +1,10 @@
-import { addDays, eachDayOfInterval, format, startOfDay, subMonths } from 'date-fns';
+import {
+  addDays,
+  eachDayOfInterval,
+  format,
+  startOfDay,
+  subMonths,
+} from 'date-fns';
 import { useCallback, useMemo, useState } from 'react';
 
 export function useHabitsWeekDates() {
@@ -6,7 +12,8 @@ export function useHabitsWeekDates() {
   const [weekAnchor, setWeekAnchor] = useState(today);
 
   const weekDates = useMemo(
-    () => Array.from({ length: 5 }, (_, index) => addDays(weekAnchor, index - 4)),
+    () =>
+      Array.from({ length: 5 }, (_, index) => addDays(weekAnchor, index - 4)),
     [weekAnchor]
   );
 
@@ -36,12 +43,20 @@ export function useHabitsWeekDates() {
   }, []);
 
   const handleNextWeek = useCallback(() => {
-    setWeekAnchor((prev) => addDays(prev, 5));
-  }, []);
+    setWeekAnchor((prev) => {
+      const nextAnchor = addDays(prev, 5);
+      return nextAnchor.getTime() > today.getTime() ? today : nextAnchor;
+    });
+  }, [today]);
+
+  const handleJumpToToday = useCallback(() => {
+    setWeekAnchor(today);
+  }, [today]);
 
   return {
     canNavigateForward,
     extendedDateStrings,
+    handleJumpToToday,
     handleNextWeek,
     handlePreviousWeek,
     today,

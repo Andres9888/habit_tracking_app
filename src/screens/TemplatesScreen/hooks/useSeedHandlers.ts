@@ -5,8 +5,6 @@
 import { useCallback } from 'react';
 
 interface UseSeedHandlersOptions {
-  seedAdditionalTemplates: (args: Record<string, never>) => Promise<unknown>;
-  seedNewScienceTemplates: (args: Record<string, never>) => Promise<unknown>;
   seedTemplates: (args: Record<string, never>) => Promise<unknown>;
   setIsSeeding: React.Dispatch<React.SetStateAction<boolean>>;
   setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,38 +12,26 @@ interface UseSeedHandlersOptions {
 }
 
 export function useSeedHandlers(opts: UseSeedHandlersOptions) {
-  const {
-    seedAdditionalTemplates,
-    seedNewScienceTemplates,
-    seedTemplates,
-    setIsSeeding,
-    setShowToast,
-    setToastMessage,
-  } = opts;
+  const { seedTemplates, setIsSeeding, setShowToast, setToastMessage } = opts;
 
   const handleSeedTemplates = useCallback(async () => {
     setIsSeeding(true);
     try {
       await seedTemplates({});
-      await seedAdditionalTemplates({});
-      await seedNewScienceTemplates({});
       setToastMessage('Templates loaded successfully!');
       setShowToast(true);
     } catch (error) {
       if (__DEV__) console.error('Error seeding:', error);
-      setToastMessage('Failed to load templates.');
+      const isAuthError =
+        error instanceof Error && error.message.includes('Unauthenticated');
+      setToastMessage(
+        isAuthError ? 'Sign in to load templates.' : 'Failed to load templates.'
+      );
       setShowToast(true);
     } finally {
       setIsSeeding(false);
     }
-  }, [
-    seedAdditionalTemplates,
-    seedNewScienceTemplates,
-    seedTemplates,
-    setIsSeeding,
-    setShowToast,
-    setToastMessage,
-  ]);
+  }, [seedTemplates, setIsSeeding, setShowToast, setToastMessage]);
 
   return {
     handleSeedTemplates,

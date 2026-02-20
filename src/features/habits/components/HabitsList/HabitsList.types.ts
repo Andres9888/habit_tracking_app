@@ -21,6 +21,7 @@ export interface HabitsListProps {
   onUpgradeIntent: () => void;
   upgradePromptVisible: boolean;
   weekDates: Date[];
+  onJumpToToday: () => void;
   onNextWeek: () => void;
   onPreviousWeek: () => void;
 }

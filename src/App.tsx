@@ -23,6 +23,7 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
+import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration';
 import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
@@ -66,7 +67,9 @@ function LazyProviders({ children }: PropsWithChildren) {
   // Note: These could be converted to async import() but would require Suspense
   // For now, ESLint rule is disabled for this specific pattern
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { PurchasesProvider } = require('./components/providers/PurchasesProvider');
+  const {
+    PurchasesProvider,
+  } = require('./components/providers/PurchasesProvider');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { NetworkStatusProvider } = require('./contexts/NetworkStatusContext');
@@ -80,9 +83,7 @@ function LazyProviders({ children }: PropsWithChildren) {
       <OfflineProvider>
         <SyncStatusProvider>
           <PurchasesProvider>
-            <StreakMilestoneProvider>
-              {children}
-            </StreakMilestoneProvider>
+            <StreakMilestoneProvider>{children}</StreakMilestoneProvider>
           </PurchasesProvider>
         </SyncStatusProvider>
       </OfflineProvider>
@@ -103,9 +104,7 @@ function CoreProviders({ children }: PropsWithChildren) {
             <SentryUserSync>
               <ConvexClerkProvider>
                 <ThemeColorProvider>
-                  <LazyProviders>
-                    {children}
-                  </LazyProviders>
+                  <LazyProviders>{children}</LazyProviders>
                 </ThemeColorProvider>
               </ConvexClerkProvider>
             </SentryUserSync>

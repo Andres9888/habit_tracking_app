@@ -1,5 +1,4 @@
-import { lazy, Suspense } from 'react';
-import { Pressable, View, ActivityIndicator } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
@@ -12,17 +11,13 @@ import CustomModal from '../../../../components/Modal';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { TemplateListSkeleton } from '../../../../components/SkeletonLoader';
+import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
-
-// Lazy load TemplatesScreen - only bundle when modal is opened
-const TemplatesScreen = lazy(() => import('../../../../screens/TemplatesScreen'));
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
  * Templates modal section - displays templates screen in full-screen modal
- * Performance: TemplatesScreen is lazy loaded to reduce initial bundle size
  */
 export function TemplatesModalSection({
   showTemplatesScreen,
@@ -42,6 +37,10 @@ export function TemplatesModalSection({
     closeTemplatesScreen();
   };
 
+  if (!showTemplatesScreen) {
+    return null;
+  }
+
   return (
     <CustomModal
       variant='fullScreen'
@@ -50,9 +49,7 @@ export function TemplatesModalSection({
     >
       <View className='flex-1' style={{ paddingTop: insets.top }}>
         <ErrorBoundary>
-          <Suspense fallback={<TemplateListSkeleton />}>
-            <TemplatesScreen />
-          </Suspense>
+          <TemplatesScreen />
         </ErrorBoundary>
         <View className='absolute right-4' style={{ top: insets.top + 8 }}>
           <AnimatedPressable

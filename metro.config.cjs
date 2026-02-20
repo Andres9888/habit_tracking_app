@@ -28,6 +28,12 @@ try {
 
 // Enable NativeWind CSS/className support on native
 const config = withNativeWind(baseConfig, { input: './global.css' });
+const safeReactNativeUrlPolyfillAutoPath = path.join(
+  __dirname,
+  'src',
+  'lib',
+  'reactNativeUrlPolyfillAuto.js'
+);
 
 // Keep existing resolver customizations
 config.resolver.assetExts.push('ttf', 'otf', 'woff', 'woff2', 'wav');
@@ -54,6 +60,22 @@ config.resolver = {
     /\/superdesign\/.*/,
     /\/\.superdesign\/.*/,
   ],
+};
+
+const defaultResolveRequest = config.resolver.resolveRequest;
+config.resolver.resolveRequest = (context, moduleName, platform) => {
+  if (moduleName === 'react-native-url-polyfill/auto') {
+    return {
+      type: 'sourceFile',
+      filePath: safeReactNativeUrlPolyfillAutoPath,
+    };
+  }
+
+  if (typeof defaultResolveRequest === 'function') {
+    return defaultResolveRequest(context, moduleName, platform);
+  }
+
+  return context.resolveRequest(context, moduleName, platform);
 };
 
 // Server optimization

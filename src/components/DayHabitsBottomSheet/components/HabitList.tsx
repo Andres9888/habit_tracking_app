@@ -31,9 +31,13 @@ export function HabitList({
   getHabitStatus,
   onToggleHabit,
 }: HabitListProps) {
+  const hasValidDate = dateString.trim().length > 0;
+
   const renderItem = useCallback(
     ({ item: habit }: { item: Habit }) => {
-      const status = getHabitStatus(habit._id, dateString);
+      const status = hasValidDate
+        ? getHabitStatus(habit._id, dateString)
+        : 'planned';
       const isCompleted = status === 'done';
       const isLoading = togglingHabitId === habit._id;
 
@@ -47,7 +51,14 @@ export function HabitList({
         />
       );
     },
-    [dateString, togglingHabitId, reduceMotion, getHabitStatus, onToggleHabit]
+    [
+      dateString,
+      getHabitStatus,
+      hasValidDate,
+      onToggleHabit,
+      reduceMotion,
+      togglingHabitId,
+    ]
   );
 
   const keyExtractor = useCallback((item: Habit) => item._id, []);

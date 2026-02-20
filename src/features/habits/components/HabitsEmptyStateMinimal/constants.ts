@@ -105,10 +105,6 @@ export const COPY = {
   // Input placeholder - motivating and descriptive
   inputPlaceholder: 'What habit do you want to build?',
 
-  // Motivational stat
-  motivationalStat:
-    'People who start with one small habit are 3× more likely to build lasting routines.',
-
   // Success state
   successHeadline: "You're growing!",
   successSubtext: (habitName: string) =>

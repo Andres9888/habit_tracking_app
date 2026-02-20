@@ -8,7 +8,7 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 import { useHabitMutations } from './useHabitMutations';
@@ -25,6 +25,7 @@ import {
   getTodayMidnight,
   useSyncAllHabitStates,
 } from './modalsStateHelpers';
+import { getLocalDateString } from '@/utils/getLocalDateString';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import type { HabitsModalsState } from './types';
 
@@ -39,8 +40,12 @@ export function useHabitsModalsState({
 }: UseHabitsModalsStateProps): HabitsModalsState {
   const visibility = useModalVisibilityState();
   const selection = useHabitSelectionState();
-  const { settings, celebrationsEnabled, reduceMotionPreference } =
-    useHabitsSettings();
+  const {
+    archivedHabitsCount,
+    settings,
+    celebrationsEnabled,
+    reduceMotionPreference,
+  } = useHabitsSettings();
 
   const {
     pauseHabit,
@@ -52,9 +57,13 @@ export function useHabitsModalsState({
   } = useHabitMutations();
   const { milestone, clearMilestone } = useHabitMilestones(habits, false);
 
+  const todayKey = getLocalDateString();
+  const trackingDates = useMemo(() => generateDateStrings(365), [todayKey]);
+  const todayMidnight = useMemo(() => getTodayMidnight(), [todayKey]);
+
   const { tracking, getStreak, isCompleted } = useHabitsTracking(
-    generateDateStrings(365),
-    getTodayMidnight()
+    trackingDates,
+    todayMidnight
   );
 
   // Wrap toggle mutation as plain async function
@@ -129,6 +138,7 @@ export function useHabitsModalsState({
   );
 
   return buildModalsStateReturnValue(visibility, selection, handlers, {
+    archivedHabitsCount,
     celebrationsEnabled,
     clearMilestone,
     getStreak,

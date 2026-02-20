@@ -54,10 +54,14 @@ export function DayHabitsBottomSheet({
     visible,
   });
 
+  const hasValidDate = dateInfo.dateString.trim().length > 0;
+
   // Compute completion count for header
-  const completedCount = habits.filter(
-    (habit) => getHabitStatus(habit._id, dateInfo.dateString) === 'done'
-  ).length;
+  const completedCount = hasValidDate
+    ? habits.filter(
+        (habit) => getHabitStatus(habit._id, dateInfo.dateString) === 'done'
+      ).length
+    : 0;
 
   return (
     <Modal
@@ -80,7 +84,11 @@ export function DayHabitsBottomSheet({
         <GestureDetector gesture={panGesture}>
           <Animated.View
             className='rounded-t-3xl'
-            style={[getSheetContainerStyle(insets.bottom), { backgroundColor: colors.surface }, sheetStyle]}
+            style={[
+              getSheetContainerStyle(insets.bottom),
+              { backgroundColor: colors.surface },
+              sheetStyle,
+            ]}
           >
             <DragHandle />
 
@@ -92,7 +100,7 @@ export function DayHabitsBottomSheet({
               onDonePress={handleDonePress}
             />
 
-            {habits.length === 0 ? (
+            {habits.length === 0 || !hasValidDate ? (
               <EmptyState />
             ) : (
               <HabitList

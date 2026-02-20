@@ -26,6 +26,7 @@ export function renderHabitsListHeader({
     list,
     weekDates,
     canNavigateForward,
+    onJumpToToday,
     onNextWeek,
     onPreviousWeek,
     onUpgradeIntent,
@@ -44,6 +45,7 @@ export function renderHabitsListHeader({
       weekDates={weekDates}
       weekDateStrings={list.weekDateStrings}
       onDayPress={state.handleDayPress}
+      onJumpToToday={onJumpToToday}
       onNextWeek={onNextWeek}
       onPreviousWeek={onPreviousWeek}
       onUpgradePress={onUpgradeIntent}

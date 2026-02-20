@@ -90,13 +90,15 @@ function EmojiPickerComponent({
         <Text className='ml-1 text-emerald-600'>→</Text>
       </Pressable>
 
-      <EmojiPickerSheet
-        habitName={habitName || ''}
-        selectedEmoji={selectedEmoji}
-        visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
-        onSelect={handleSheetSelect}
-      />
+      {isModalVisible && (
+        <EmojiPickerSheet
+          habitName={habitName || ''}
+          selectedEmoji={selectedEmoji}
+          visible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+          onSelect={handleSheetSelect}
+        />
+      )}
     </View>
   );
 }

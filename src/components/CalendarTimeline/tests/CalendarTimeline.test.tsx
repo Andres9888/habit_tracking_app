@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { CalendarTimeline } from '../CalendarTimeline';
-import { addDays, subDays } from 'date-fns';
+import { addDays, format, subDays } from 'date-fns';
+import { Gesture } from 'react-native-gesture-handler';
 
 describe('CalendarTimeline', () => {
   const today = new Date(2024, 9, 14); // Oct 14, 2024 (Monday)
@@ -83,6 +84,87 @@ describe('CalendarTimeline', () => {
 
     // Component should render with selected date
     expect(getByText('16')).toBeTruthy(); // Wednesday's date
+  });
+
+  describe('Swipe Navigation', () => {
+    const dates = Array.from({ length: 5 }, (_, i) => addDays(today, i));
+
+    const createPanGestureMock = () => ({
+      activeOffsetX: jest.fn().mockReturnThis(),
+      failOffsetY: jest.fn().mockReturnThis(),
+      onEnd: jest.fn().mockReturnThis(),
+    });
+
+    const setupSwipe = (
+      props: Partial<React.ComponentProps<typeof CalendarTimeline>>
+    ) => {
+      const panGestureMock = createPanGestureMock();
+      jest
+        .spyOn(Gesture, 'Pan')
+        .mockReturnValue(
+          panGestureMock as unknown as ReturnType<typeof Gesture.Pan>
+        );
+
+      render(<CalendarTimeline dates={dates} {...props} />);
+
+      const onEnd = panGestureMock.onEnd.mock.calls[0]?.[0] as
+        | ((event: { translationX: number; velocityX: number }) => void)
+        | undefined;
+
+      if (!onEnd) {
+        throw new Error(
+          'Timeline pan gesture onEnd handler was not registered'
+        );
+      }
+
+      return { onEnd };
+    };
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('calls onPreviousWeek when swiped left', () => {
+      const onPreviousWeek = jest.fn();
+      const { onEnd } = setupSwipe({ onPreviousWeek });
+
+      onEnd({ translationX: -80, velocityX: 0 });
+
+      expect(onPreviousWeek).toHaveBeenCalledTimes(1);
+    });
+
+    it('calls onNextWeek when swiped right and forward navigation is enabled', () => {
+      const onNextWeek = jest.fn();
+      const { onEnd } = setupSwipe({ canNavigateForward: true, onNextWeek });
+
+      onEnd({ translationX: 80, velocityX: 0 });
+
+      expect(onNextWeek).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not call onNextWeek when swiped right and forward navigation is disabled', () => {
+      const onNextWeek = jest.fn();
+      const { onEnd } = setupSwipe({ canNavigateForward: false, onNextWeek });
+
+      onEnd({ translationX: 80, velocityX: 0 });
+
+      expect(onNextWeek).not.toHaveBeenCalled();
+    });
+
+    it('ignores horizontal movement below swipe threshold', () => {
+      const onNextWeek = jest.fn();
+      const onPreviousWeek = jest.fn();
+      const { onEnd } = setupSwipe({
+        canNavigateForward: true,
+        onNextWeek,
+        onPreviousWeek,
+      });
+
+      onEnd({ translationX: 20, velocityX: 100 });
+
+      expect(onNextWeek).not.toHaveBeenCalled();
+      expect(onPreviousWeek).not.toHaveBeenCalled();
+    });
   });
 
   describe('Day Press Handling', () => {
@@ -211,7 +293,7 @@ describe('CalendarTimeline', () => {
 
     it('includes completion status in accessibility label', () => {
       const dates = [realToday];
-      const todayString = realToday.toISOString().split('T')[0];
+      const todayString = format(realToday, 'yyyy-MM-dd');
       const completionByDay = {
         [todayString]: { completed: 2, total: 3 },
       };

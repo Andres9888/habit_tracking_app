@@ -3,38 +3,22 @@
  */
 
 import { useEffect, useCallback, useMemo } from 'react';
-import type { UseTemplateBrowser } from './useTemplateBrowser';
-import type { UseScienceModal } from './useScienceModal';
 
 interface UseModalEffectsParams {
   visible: boolean;
   isEditMode: boolean;
   resetForm: () => void;
-  template: UseTemplateBrowser;
-  science: UseScienceModal;
 }
 
 export function useVisibilityReset({
   visible,
   isEditMode,
   resetForm,
-  template,
-  science,
 }: UseModalEffectsParams) {
   useEffect(() => {
     if (!visible || isEditMode) return;
     resetForm();
-    template.reset();
-    template.closeTemplateBrowser();
-    science.close();
-  }, [
-    visible,
-    isEditMode,
-    resetForm,
-    template.reset,
-    template.closeTemplateBrowser,
-    science.close,
-  ]);
+  }, [visible, isEditMode, resetForm]);
 }
 
 interface HabitDataParams {
@@ -71,8 +55,6 @@ interface CleanupParams {
   resetForm: () => void;
   closeColorPicker: () => void;
   setShowTimePicker: (show: boolean) => void;
-  template: UseTemplateBrowser;
-  science: UseScienceModal;
   triggerSuccess: () => void;
   onClose: () => void;
 }
@@ -81,8 +63,6 @@ export function useModalCleanup({
   resetForm,
   closeColorPicker,
   setShowTimePicker,
-  template,
-  science,
   triggerSuccess,
   onClose,
 }: CleanupParams) {
@@ -90,19 +70,7 @@ export function useModalCleanup({
     resetForm();
     closeColorPicker();
     setShowTimePicker(false);
-    template.reset();
-    template.closeTemplateBrowser();
-    science.close();
     triggerSuccess();
     onClose();
-  }, [
-    resetForm,
-    closeColorPicker,
-    setShowTimePicker,
-    template.reset,
-    template.closeTemplateBrowser,
-    science.close,
-    triggerSuccess,
-    onClose,
-  ]);
+  }, [resetForm, closeColorPicker, setShowTimePicker, triggerSuccess, onClose]);
 }

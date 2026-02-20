@@ -10,12 +10,32 @@ import * as Notifications from 'expo-notifications';
  * To suppress the warning, use a development build instead of Expo Go:
  * https://docs.expo.dev/develop/development-builds/introduction/
  */
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-    shouldShowAlert: true,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+let isHandlerRegistered = false;
+
+export function ensureNotificationHandlerRegistered(): void {
+  if (isHandlerRegistered) {
+    return;
+  }
+
+  try {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+        shouldShowAlert: true,
+        shouldShowBanner: true,
+        shouldShowList: true,
+      }),
+    });
+    isHandlerRegistered = true;
+  } catch (error) {
+    if (__DEV__) {
+      console.warn(
+        '[Notifications] Failed to register notification handler:',
+        error
+      );
+    }
+  }
+}
+
+ensureNotificationHandlerRegistered();

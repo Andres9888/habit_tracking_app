@@ -108,3 +108,16 @@ export const COMPLETE_DOT_GLOW = {
   shadowOpacity: 0.5,
   shadowRadius: 4,
 };
+
+/** Complete day cell styling (100% habits done) */
+export const COMPLETE_DAY_CELL = {
+  background: '#10b981', // emerald-500
+  text: '#ffffff',
+  glow: {
+    elevation: 3,
+    shadowColor: '#10b981',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+  },
+};

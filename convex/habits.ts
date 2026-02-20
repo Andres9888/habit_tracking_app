@@ -36,7 +36,7 @@ export { toggleHabit } from './habits/toggle';
 // ─────────────────────────────────────────────────────────────────────────────
 export { get } from './habits/get';
 export { list } from './habits/list';
-export { listArchived } from './habits/archive';
+export { listArchived, listArchivedCount } from './habits/archive';
 export { listPaused } from './habits/pause';
 export { getTracking } from './habits/getTracking';
 export { getStats } from './habits/stats';

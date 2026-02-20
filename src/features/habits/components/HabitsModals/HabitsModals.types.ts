@@ -10,6 +10,7 @@ export interface HabitsModalsProps {
 
 /** Props for the SettingsModalSection component */
 export interface SettingsModalSectionProps {
+  archivedHabitsCount: number;
   celebrationsEnabled: boolean;
   settings: HabitsModalsState['settings'];
   showSettings: boolean;

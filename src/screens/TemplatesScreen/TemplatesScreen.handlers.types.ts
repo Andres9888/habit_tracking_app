@@ -13,8 +13,6 @@ export interface UseTemplateHandlersOptions {
     templateId: Id<'templates'>;
     customizations?: TemplateCustomizations;
   }) => Promise<{ success: boolean }>;
-  seedAdditionalTemplates: (args: Record<string, never>) => Promise<unknown>;
-  seedNewScienceTemplates: (args: Record<string, never>) => Promise<unknown>;
   seedTemplates: (args: Record<string, never>) => Promise<unknown>;
   setExpandedCategories: React.Dispatch<React.SetStateAction<Set<string>>>;
   setImportedTemplateIds: React.Dispatch<React.SetStateAction<Set<string>>>;

@@ -49,6 +49,7 @@ export interface HabitsListState {
   archiveUndoVisible: boolean;
   archiveUndoHabitName: string;
   handleHabitPress: (habit: Habit) => void;
+  handleJumpToToday: () => void;
   handleNextWeek: () => void;
   handlePreviousWeek: () => void;
   openCreateHabitScreen: () => void;
