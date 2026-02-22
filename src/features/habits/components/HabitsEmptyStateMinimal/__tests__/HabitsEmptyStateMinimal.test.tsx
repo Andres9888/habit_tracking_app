@@ -93,8 +93,8 @@ describe('HabitsEmptyStateMinimal', () => {
       );
       // Check for inline hint base text
       expect(getByText('or explore')).toBeDefined();
-      expect(getByText('📋 templates')).toBeDefined();
-      expect(getByText('✨ custom')).toBeDefined();
+      expect(getByText('browse templates')).toBeDefined();
+      expect(getByText('✨ create custom')).toBeDefined();
 
       // Check for accessible links
       expect(getByLabelText('Browse habit templates')).toBeDefined();
@@ -683,7 +683,7 @@ describe('HabitsEmptyStateMinimal', () => {
 
       // Check for inline hint base text
       expect(getByText('or explore')).toBeDefined();
-      expect(getByText('📋 templates')).toBeDefined();
+      expect(getByText('browse templates')).toBeDefined();
 
       // Check for accessible links
       expect(getByLabelText('Browse habit templates')).toBeDefined();

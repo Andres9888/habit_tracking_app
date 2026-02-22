@@ -1,0 +1,218 @@
+# Frontend Specification: InlineHint H4 CTA
+
+**Component**: `src/features/habits/components/HabitsEmptyStateMinimal/InlineHint.tsx`
+**Mock**: `mocks/h-variants.html` (H4 variant)
+**Created**: 2026-02-22
+**Status**: Current Implementation
+
+## Chosen Variant
+
+**H4 — Gradient + accent border**
+Emerald gradient button (lighter at right) + white card with left green accent border.
+
+## Visual Structure
+
+```
+┌──────────────────────────────────────┐
+│  ─────── or explore ───────          │ Divider
+├──────────────────────────────────────┤
+│ ┌──────────────────────────────────┐ │
+│ │ 📚  Browse templates     [200+] │ │ Gradient button (52px)
+│ └──────────────────────────────────┘ │
+│ ┌──────────────────────────────────┐ │
+│ │▌✏️  Build my own            →   │ │ White card (44px) with left accent
+│ └──────────────────────────────────┘ │
+└──────────────────────────────────────┘
+```
+
+## Token-to-Style Mapping
+
+> **Why inline styles?** The linter auto-replaces inline values with theme tokens
+> (`typography.bodySmall`, `shadows.alert`, etc.), but those tokens carry _different_
+> values than this design spec. When a component has a specific design spec that
+> diverges from the design system tokens, inline values are correct — they're
+> explicit and self-documenting against this spec. If the linter replaces them,
+> revert using this file as the source of truth.
+
+---
+
+### 1. "or explore" Divider
+
+| Property         | Mock CSS                                                                    | React Native                                                                      |
+| ---------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Container        | `display: flex; align-items: center; gap: 10px; width: 100%`                | `flexDirection: 'row', alignItems: 'center', gap: 10, width: '100%'`              |
+| Container margin | `margin-bottom: 12px`                                                       | `marginBottom: 2` (tighter in RN due to gap on parent)                            |
+| Hairline         | `height: 1px; background: rgba(0,0,0,0.08)`                                 | `height: 0.5, backgroundColor: colors.inputBorder, flex: 1`                       |
+| Text             | `font-size: 11px; font-weight: 600; color: #A8A29E; letter-spacing: 0.04em` | `fontSize: 11, fontWeight: '500', color: colors.textTertiary, letterSpacing: 0.3` |
+
+**Validation**: Text must read "or explore" (lowercase). Hairlines must extend to container edges.
+
+---
+
+### 2. "Browse templates" Gradient Button
+
+| Property        | Mock CSS                                                         | React Native                                                                                      | Lint-safe?                                                                               |
+| --------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Height          | `height: 52px`                                                   | `height: 52`                                                                                      | Yes                                                                                      |
+| Width           | `width: 100%`                                                    | `width: '100%'`                                                                                   | Yes                                                                                      |
+| Border radius   | `border-radius: 14px`                                            | `borderRadius: 14`                                                                                | Yes                                                                                      |
+| Gradient        | `linear-gradient(110deg, #047857 0%, #059669 55%, #10B981 100%)` | `LinearGradient colors={['#047857','#059669','#10B981']} start={{x:0,y:0}} end={{x:1,y:0.3}}`     | Yes                                                                                      |
+| Shadow          | `box-shadow: 0 4px 16px rgba(4,120,87,0.3)`                      | `shadowColor: '#047857', shadowOffset: {0,4}, shadowOpacity: 0.3, shadowRadius: 16, elevation: 4` | **NO** — linter replaces with `shadows.alert` (elevation 12, warm #2D2A26). MUST revert. |
+| Pressed shadow  | _(reduced intensity)_                                            | `shadowOpacity: 0.15`                                                                             | **NO** — linter replaces with `shadows.floatingActionButton`. MUST revert.               |
+| Pressed opacity | _(subtle dim)_                                                   | `opacity: 0.85`                                                                                   | Yes                                                                                      |
+| Padding         | `padding: 0 18px`                                                | `paddingHorizontal: 18`                                                                           | Yes                                                                                      |
+| Gap             | `gap: 10px`                                                      | `gap: 10`                                                                                         | Yes                                                                                      |
+
+#### Emoji
+
+| Property | Mock CSS | React Native                               |
+| -------- | -------- | ------------------------------------------ |
+| Emoji    | 📚       | `<Text style={{ fontSize: 18 }}>📚</Text>` |
+
+#### Label
+
+| Property       | Mock CSS  | React Native          | Lint-safe?                                                                                          |
+| -------------- | --------- | --------------------- | --------------------------------------------------------------------------------------------------- |
+| Font size      | `14px`    | `fontSize: 14`        | **NO** — linter replaces with `typography.bodySmall` (fontSize 14, fontWeight 400). Weight differs. |
+| Font weight    | `700`     | `fontWeight: '700'`   | See above                                                                                           |
+| Color          | `#fff`    | `color: '#fff'`       | Yes                                                                                                 |
+| Letter spacing | `-0.2px`  | `letterSpacing: -0.2` | Yes                                                                                                 |
+| Flex           | `flex: 1` | `flex: 1`             | Yes                                                                                                 |
+
+#### "200+" Badge
+
+| Property      | Mock CSS                 | React Native                                | Lint-safe?                                                                          |
+| ------------- | ------------------------ | ------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Background    | `rgba(255,255,255,0.22)` | `backgroundColor: 'rgba(255,255,255,0.22)'` | Yes                                                                                 |
+| Border radius | `8px`                    | `borderRadius: 8`                           | Yes                                                                                 |
+| Padding       | `3px 9px`                | `paddingVertical: 3, paddingHorizontal: 9`  | Yes                                                                                 |
+| Font size     | `11px`                   | `fontSize: 11`                              | **NO** — linter replaces with `typography.tabBar` (fontSize 10). MUST revert to 11. |
+| Font weight   | `800`                    | `fontWeight: '800'`                         | See above                                                                           |
+| Color         | `#fff`                   | `color: '#fff'`                             | Yes                                                                                 |
+
+---
+
+### 3. "Build my own" Card
+
+| Property      | Mock CSS                                        | React Native                                                                                   | Lint-safe?                                                                                            |
+| ------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Height        | `height: 44px`                                  | `height: 44`                                                                                   | Yes                                                                                                   |
+| Width         | `width: 100%`                                   | `width: '100%'`                                                                                | Yes                                                                                                   |
+| Background    | `#fff`                                          | `backgroundColor: '#FFFFFF'` (hardcoded, NOT `colors.inputBackground`)                         | **CRITICAL** — using `colors.inputBackground` causes card to blend with screen gradient.              |
+| Pressed bg    | _(subtle dim)_                                  | `backgroundColor: '#F5F5F4'` (stone-100)                                                       | Yes                                                                                                   |
+| Border        | `1px solid #E7E5E4`                             | `borderWidth: 1, borderColor: colors.inputBorder`                                              | Yes                                                                                                   |
+| Border radius | `12px`                                          | `borderRadius: 12`                                                                             | Yes                                                                                                   |
+| Shadow        | `box-shadow: 0 1px 3px rgba(0,0,0,0.04)`        | `shadowColor: '#000', shadowOffset: {0,1}, shadowOpacity: 0.06, shadowRadius: 3, elevation: 1` | **NO** — linter replaces with `shadows.subtle`. Opacity bumped to 0.06 for visibility on gradient bg. |
+| Layout        | `display: flex; align-items: center; gap: 10px` | `flexDirection: 'row', alignItems: 'center', gap: 10`                                          | Yes                                                                                                   |
+| Padding       | `padding: 0 14px 0 12px`                        | `paddingLeft: 16, paddingRight: 14` (extra left for accent stripe clearance)                   | Yes                                                                                                   |
+
+#### Left Accent Stripe
+
+| Property        | Mock CSS                           | React Native                                       |
+| --------------- | ---------------------------------- | -------------------------------------------------- |
+| Width           | `border-left: 3.5px solid #6EE7B7` | `width: 3.5` (via absolute View)                   |
+| Color light     | `#6EE7B7` (emerald-300)            | `backgroundColor: '#6EE7B7'`                       |
+| Color dark      | _(darker variant)_                 | `backgroundColor: '#34D399'` (emerald-400)         |
+| Position        | _(border property)_                | `position: 'absolute', top: 0, bottom: 0, left: 0` |
+| Corner rounding | _(inherits card radius)_           | `borderRadius: 2, overflow: 'hidden'`              |
+
+> **Why absolute positioning?** React Native's border property ordering means
+> `borderWidth: 1` declared after `borderLeftWidth: 3.5` resets the left width.
+> Unlike CSS specificity, RN uses declaration-order precedence. An absolute View
+> avoids this entirely.
+
+#### Label
+
+| Property       | Mock CSS    | React Native                  | Lint-safe?                                                                                        |
+| -------------- | ----------- | ----------------------------- | ------------------------------------------------------------------------------------------------- |
+| Font size      | `13px`      | `fontSize: 13`                | **NO** — linter replaces with `typography.caption` (fontSize 13, fontWeight 500). Weight differs. |
+| Font weight    | `600`       | `fontWeight: '600'`           | See above                                                                                         |
+| Color          | `#44403C`   | `color: colors.textSecondary` | Yes                                                                                               |
+| Letter spacing | _(default)_ | `letterSpacing: -0.1`         | Yes                                                                                               |
+
+#### Disclosure Arrow
+
+| Property | Mock CSS  | React Native (current)       | React Native (target)                                   |
+| -------- | --------- | ---------------------------- | ------------------------------------------------------- |
+| Content  | `→`       | `<Text>→</Text>`             | `<ChevronRight size={16} />` from `lucide-react-native` |
+| Size     | `12px`    | `fontSize: 13`               | `size={16}` (app convention)                            |
+| Color    | `#A8A29E` | `color: colors.textTertiary` | `color={colors.textTertiary}`                           |
+
+---
+
+## Linter Conflict Summary
+
+These 6 inline values will be replaced by the linter and **MUST be reverted** each time:
+
+| Location                | Linter replaces with           | Correct value (this spec)                 | Why it differs                                              |
+| ----------------------- | ------------------------------ | ----------------------------------------- | ----------------------------------------------------------- |
+| Gradient shadow         | `shadows.alert`                | `shadowColor: '#047857'` + custom offsets | `shadows.alert` uses warm #2D2A26 at elevation 12           |
+| Gradient pressed shadow | `shadows.floatingActionButton` | `shadowOpacity: 0.15`                     | Different shadow color and intensity                        |
+| "Browse templates" text | `typography.bodySmall`         | `fontSize: 14, fontWeight: '700'`         | `bodySmall` has fontWeight 400, not 700                     |
+| "200+" badge text       | `typography.tabBar`            | `fontSize: 11, fontWeight: '800'`         | `tabBar` has fontSize 10, not 11                            |
+| "Build my own" text     | `typography.caption`           | `fontSize: 13, fontWeight: '600'`         | `caption` has fontWeight 500, not 600                       |
+| "Build my own" shadow   | `shadows.subtle`               | `shadowOpacity: 0.06` + custom values     | `shadows.subtle` has opacity 0.04, too faint on gradient bg |
+
+## Validation Checklist
+
+Use this to verify the implementation matches the spec after any code change:
+
+### Visual Checks (on device)
+
+- [x] "or explore" text is centered between two hairline rules
+  - Completed 2026-02-22: Added explicit divider row in `InlineHint.tsx` with left/right flex hairlines and centered text label.
+- [x] Gradient button is full-width, 52px tall, 14px border radius
+  - Completed 2026-02-22: Updated `InlineHint.tsx` templates CTA to a dedicated gradient `Pressable` with `width: '100%'`, `height: 52`, and `borderRadius: 14` plus focused unit coverage.
+- [ ] Gradient flows left-to-right: dark emerald (#047857) to light emerald (#10B981)
+- [ ] "200+" badge has frosted-glass background (rgba white 0.22)
+- [ ] Badge text is 11px, weight 800 (NOT 10px)
+- [ ] Gradient button has emerald-tinted drop shadow (NOT warm brown shadow)
+- [ ] "Build my own" card has white background visible against screen gradient
+- [ ] Left accent stripe is 3.5px wide, emerald-300 (#6EE7B7)
+- [ ] "Build my own" text is 13px, weight 600, stone-600 color
+- [ ] Card has subtle shadow (not invisible, not heavy)
+
+### Dark Mode Checks
+
+- [ ] Gradient colors use rgba variants (slightly transparent)
+- [ ] Accent stripe uses emerald-400 (#34D399) in dark mode
+- [ ] Card background is still distinguishable from screen background
+- [ ] All text colors adapt via theme hooks
+
+### Layout Checks
+
+- [ ] Both buttons are full-width within the horizontal padding
+- [ ] 8px gap between gradient button and "Build my own" card
+- [ ] CTA section is NOT clipped by keyboard animation (maxHeight >= 200)
+- [ ] Content is visible on iPhone SE (small screen) and iPhone 16 Pro Max (large screen)
+
+### Interaction Checks (future — per spec.md)
+
+- [ ] Press scale animation (0.97x) on both CTAs
+- [ ] Light haptic on "Browse templates" press
+- [ ] Selection haptic on "Build my own" press
+- [ ] Staggered entrance animation (~100ms gap)
+
+## File Map
+
+```
+specs/002-inline-hint-cta-polish/
+├── spec.md                  # Behavioral spec (user stories, requirements, success criteria)
+├── frontend-spec.md         # THIS FILE — visual spec + validation checklist
+├── checklists/
+│   └── requirements.md      # Spec quality validation checklist
+└── mocks/
+    ├── h-variants.html      # H1-H4 variant mocks (H4 = chosen)
+    └── g-variants.html      # G1-G4 variant mocks (reference)
+```
+
+## Source Component
+
+```
+src/features/habits/components/HabitsEmptyStateMinimal/
+├── InlineHint.tsx           # This component
+├── ActionSection.tsx        # Parent wrapper (width: '100%' on Animated.View)
+├── useKeyboardLayoutAnimations.ts  # maxHeight: 200 on secondaryLinksAnimatedStyle
+├── useEmptyStateColors.ts   # Theme color hook
+└── types.ts                 # InlineHintProps interface
+```

@@ -1,54 +1,34 @@
 import { Pressable, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
+import {
+  actionsColumnStyle,
+  containerStyle,
+  dividerLineStyle,
+  dividerStyle,
+  getLinkStyle,
+  getTemplatesButtonStyle,
+  linkTextStyle,
+  templatesGradientStyle,
+  templatesLabelStyle,
+} from './InlineHint.styles';
 import type { InlineHintProps } from './types';
 import { useEmptyStateColors } from './useEmptyStateColors';
 
-const containerStyle = {
-  alignItems: 'center',
-  marginTop: 16,
-  width: '100%',
-} as const;
-const dividerStyle = {
-  alignItems: 'center',
-  flexDirection: 'row',
-  gap: 10,
-  marginBottom: 10,
-  width: '100%',
-} as const;
-const dividerLineStyle = { flex: 1, height: 0.5 } as const;
-const actionsRowStyle = {
-  flexDirection: 'row',
-  gap: 12,
-  justifyContent: 'center',
-} as const;
-const linkTextStyle = {
-  fontSize: 13,
-  fontWeight: '600',
-  lineHeight: 18,
-} as const;
-const linkBaseStyle = {
-  alignItems: 'center',
-  borderRadius: 9999,
-  borderWidth: 1,
-  justifyContent: 'center',
-  minHeight: 44,
-  paddingHorizontal: 16,
-  paddingVertical: 12,
-} as const;
+const templatesButtonPressableStyle = ({ pressed }: { pressed: boolean }) =>
+  getTemplatesButtonStyle(pressed);
 
 export function InlineHint({
   onBrowseTemplates,
   onCreateCustom,
 }: InlineHintProps) {
   const colors = useEmptyStateColors();
-  const linkStyle = ({ pressed }: { pressed: boolean }) => ({
-    ...linkBaseStyle,
-    backgroundColor: pressed
-      ? colors.linkBackgroundPressed
-      : colors.linkBackground,
-    borderColor: colors.linkBorder,
-    opacity: pressed ? 0.9 : 1,
-  });
+  const linkStyle = ({ pressed }: { pressed: boolean }) =>
+    getLinkStyle(pressed, {
+      background: colors.linkBackground,
+      border: colors.linkBorder,
+      pressedBackground: colors.linkBackgroundPressed,
+    });
 
   return (
     <View style={containerStyle}>
@@ -72,23 +52,31 @@ export function InlineHint({
           testID='inline-hint-divider-line-right'
         />
       </View>
-      <View style={actionsRowStyle}>
+      <View style={actionsColumnStyle}>
         <Pressable
           accessibilityHint='Opens screen with pre-made habit templates'
           accessibilityLabel='Browse habit templates'
           accessibilityRole='button'
-          style={linkStyle}
+          style={templatesButtonPressableStyle}
+          testID='inline-hint-browse-templates'
           onPress={onBrowseTemplates}
         >
-          <Text style={[linkTextStyle, { color: colors.linkText }]}>
-            📋 browse templates
-          </Text>
+          <LinearGradient
+            colors={['#047857', '#059669', '#10B981']}
+            end={{ x: 1, y: 0.3 }}
+            start={{ x: 0, y: 0 }}
+            style={templatesGradientStyle}
+          >
+            <Text style={{ fontSize: 18 }}>📚</Text>
+            <Text style={templatesLabelStyle}>browse templates</Text>
+          </LinearGradient>
         </Pressable>
         <Pressable
           accessibilityHint='Opens full habit creation screen'
           accessibilityLabel='Create custom habit'
           accessibilityRole='button'
           style={linkStyle}
+          testID='inline-hint-create-custom'
           onPress={onCreateCustom}
         >
           <Text style={[linkTextStyle, { color: colors.linkText }]}>
