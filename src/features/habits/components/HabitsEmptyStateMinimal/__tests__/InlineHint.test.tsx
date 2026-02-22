@@ -34,6 +34,27 @@ describe('InlineHint', () => {
       expect(getByLabelText('Create custom habit')).toBeDefined();
     });
 
+    it('renders 200+ badge with frosted-glass background', () => {
+      const { getByText, getByTestId } = render(
+        <InlineHint {...defaultProps} />
+      );
+
+      const badge = getByTestId('inline-hint-badge');
+      const badgeText = getByText('200+');
+
+      expect(badge.props.style).toMatchObject({
+        backgroundColor: 'rgba(255,255,255,0.22)',
+        borderRadius: 8,
+        paddingHorizontal: 9,
+        paddingVertical: 3,
+      });
+      expect(badgeText.props.style).toMatchObject({
+        color: '#FFFFFF',
+        fontSize: 11,
+        fontWeight: '800',
+      });
+    });
+
     it('renders a gradient templates button with expected config', () => {
       const { UNSAFE_getByType } = render(<InlineHint {...defaultProps} />);
       const gradient = UNSAFE_getByType('LinearGradient');

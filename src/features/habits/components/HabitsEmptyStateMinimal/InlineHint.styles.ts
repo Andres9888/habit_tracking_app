@@ -55,9 +55,23 @@ export const templatesGradientStyle = {
 
 export const templatesLabelStyle = {
   color: '#FFFFFF',
+  flex: 1,
   fontSize: 14,
   fontWeight: '700',
   letterSpacing: -0.2,
+} as const;
+
+export const badgeContainerStyle = {
+  backgroundColor: 'rgba(255,255,255,0.22)',
+  borderRadius: 8,
+  paddingHorizontal: 9,
+  paddingVertical: 3,
+} as const;
+
+export const badgeTextStyle = {
+  color: '#FFFFFF',
+  fontSize: 11,
+  fontWeight: '800',
 } as const;
 
 export function getLinkStyle(pressed: boolean, colors: InlineHintLinkColors) {

@@ -165,7 +165,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Completed 2026-02-22: Updated `InlineHint.tsx` templates CTA to a dedicated gradient `Pressable` with `width: '100%'`, `height: 52`, and `borderRadius: 14` plus focused unit coverage.
 - [x] Gradient flows left-to-right: dark emerald (#047857) to light emerald (#10B981)
   - Completed 2026-02-22: Verified `InlineHint.tsx` uses `LinearGradient` with colors `['#047857', '#059669', '#10B981']`, `start={{x: 0, y: 0}}`, and `end={{x: 1, y: 0.3}}`; confirmed by passing `InlineHint.test.tsx`.
-- [ ] "200+" badge has frosted-glass background (rgba white 0.22)
+- [x] "200+" badge has frosted-glass background (rgba white 0.22)
+  - Completed 2026-02-22: Added `badgeContainerStyle` with `backgroundColor: 'rgba(255,255,255,0.22)'`, `borderRadius: 8`, and padding `3/9` in `InlineHint.styles.ts`. Badge renders inside the `LinearGradient` with `200+` text. Label now has `flex: 1` to push badge to the right edge.
 - [ ] Badge text is 11px, weight 800 (NOT 10px)
 - [ ] Gradient button has emerald-tinted drop shadow (NOT warm brown shadow)
 - [ ] "Build my own" card has white background visible against screen gradient

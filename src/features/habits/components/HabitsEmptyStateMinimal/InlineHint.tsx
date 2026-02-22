@@ -3,6 +3,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import {
   actionsColumnStyle,
+  badgeContainerStyle,
+  badgeTextStyle,
   containerStyle,
   dividerLineStyle,
   dividerStyle,
@@ -69,6 +71,9 @@ export function InlineHint({
           >
             <Text style={{ fontSize: 18 }}>📚</Text>
             <Text style={templatesLabelStyle}>browse templates</Text>
+            <View style={badgeContainerStyle} testID='inline-hint-badge'>
+              <Text style={badgeTextStyle}>200+</Text>
+            </View>
           </LinearGradient>
         </Pressable>
         <Pressable
