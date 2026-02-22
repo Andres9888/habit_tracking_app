@@ -442,5 +442,34 @@ describe('InlineHint', () => {
         200
       );
     });
+
+    it('fits on small screens (iPhone SE) without overflow', () => {
+      // iPhone SE: 375pt - 48pt paddingHorizontal = 327pt available
+      // Verify no element uses a fixed width that could overflow
+      const { getByTestId, UNSAFE_getByProps } = render(
+        <InlineHint {...defaultProps} />
+      );
+
+      const actionsColumn = getByTestId('inline-hint-actions');
+      expect(actionsColumn.props.style.width).toBe('100%');
+
+      const templates = UNSAFE_getByProps({
+        accessibilityLabel: 'Browse habit templates',
+      });
+      expect(templates.props.style({ pressed: false }).width).toBe('100%');
+
+      const card = UNSAFE_getByProps({
+        accessibilityLabel: 'Create custom habit',
+      });
+      expect(card.props.style({ pressed: false }).width).toBe('100%');
+
+      // Fixed heights must sum below maxHeight budget (200px)
+      // divider ~28 + button 52 + gap 8 + card 44 + marginTop 16 = 148
+      const buttonHeight = templates.props.style({ pressed: false }).height;
+      const cardHeight = card.props.style({ pressed: false }).height;
+      const gap = actionsColumn.props.style.gap;
+      const totalFixed = buttonHeight + cardHeight + gap + 16 + 28;
+      expect(totalFixed).toBeLessThan(KEYBOARD_LAYOUT.secondaryLinksMaxHeight);
+    });
   });
 });

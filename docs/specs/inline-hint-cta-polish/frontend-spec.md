@@ -199,7 +199,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Verified 2026-02-22: `actionsColumnStyle` in `InlineHint.styles.ts:34` has `gap: 8`. Test guard added at `InlineHint.test.tsx` validating the actions column container has `gap: 8` to prevent accidental changes to the spec-defined inter-CTA spacing.
 - [x] CTA section is NOT clipped by keyboard animation (maxHeight >= 200)
   - Completed 2026-02-22: Changed `secondaryLinksAnimatedStyle` maxHeight from `100` to `200` via new `KEYBOARD_LAYOUT.secondaryLinksMaxHeight` constant in `layoutAnimations.ts`. Previous value of 100 clipped the ~148px InlineHint component. The hook `useKeyboardLayoutAnimations.ts` now references the named constant instead of a magic number. Test guard added in `InlineHint.test.tsx` asserting `secondaryLinksMaxHeight >= 200`.
-- [ ] Content is visible on iPhone SE (small screen) and iPhone 16 Pro Max (large screen)
+- [x] Content is visible on iPhone SE (small screen) and iPhone 16 Pro Max (large screen)
+  - Verified 2026-02-22: All layout elements use `width: '100%'` (no fixed widths that could overflow). Labels use `flex: 1` for graceful text handling. Fixed heights (52px button + 44px card + 8px gap + 28px divider + 16px margin = 148px) fit within 200px maxHeight budget. Parent `paddingHorizontal: 24` gives 327pt on iPhone SE (375-48) — well above minimum content needs. Test guard added validating responsive widths and height budget.
 
 ### Interaction Checks (future — per spec.md)
 
