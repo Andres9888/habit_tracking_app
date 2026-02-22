@@ -1,7 +1,3 @@
-interface BuildMyOwnCardColors {
-  borderColor: string;
-}
-
 const templatesButtonBaseStyle = {
   borderRadius: 14,
   elevation: 4,
@@ -85,7 +81,7 @@ export const accentStripeStyle = {
 
 export function getBuildMyOwnCardStyle(
   pressed: boolean,
-  colors: BuildMyOwnCardColors
+  colors: { borderColor: string }
 ) {
   return {
     alignItems: 'center',
@@ -93,12 +89,17 @@ export function getBuildMyOwnCardStyle(
     borderColor: colors.borderColor,
     borderRadius: 12,
     borderWidth: 1,
+    elevation: 1,
     flexDirection: 'row',
     gap: 10,
     height: 44,
     overflow: 'hidden',
     paddingLeft: 16,
     paddingRight: 14,
+    shadowColor: '#000000',
+    shadowOffset: { height: 1, width: 0 },
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
     width: '100%',
   };
 }

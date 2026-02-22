@@ -202,6 +202,23 @@ describe('InlineHint', () => {
       });
     });
 
+    it('"Build my own" card has subtle shadow, not shadows.subtle (0.04)', () => {
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+      const card = UNSAFE_getByProps({
+        accessibilityLabel: 'Create custom habit',
+      });
+
+      const normalStyle = card.props.style({ pressed: false });
+
+      // Guard against linter replacing with shadows.subtle (opacity 0.04)
+      // Opacity bumped to 0.06 for visibility on gradient background
+      expect(normalStyle.shadowColor).toBe('#000000');
+      expect(normalStyle.shadowOffset).toEqual({ height: 1, width: 0 });
+      expect(normalStyle.shadowOpacity).toBe(0.06);
+      expect(normalStyle.shadowRadius).toBe(3);
+      expect(normalStyle.elevation).toBe(1);
+    });
+
     it('has emerald-tinted drop shadow, not warm brown', () => {
       const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
       const templatesButton = UNSAFE_getByProps({
