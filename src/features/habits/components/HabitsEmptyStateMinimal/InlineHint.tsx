@@ -2,6 +2,7 @@ import { Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import {
+  accentStripeStyle,
   actionsColumnStyle,
   badgeContainerStyle,
   badgeTextStyle,
@@ -80,6 +81,7 @@ export function InlineHint({
           testID='inline-hint-create-custom'
           onPress={onCreateCustom}
         >
+          <View style={accentStripeStyle} testID='inline-hint-accent-stripe' />
           <Text style={{ fontSize: 18 }}>✏️</Text>
           <Text style={[buildMyOwnLabelStyle, { color: colors.textSecondary }]}>
             Build my own

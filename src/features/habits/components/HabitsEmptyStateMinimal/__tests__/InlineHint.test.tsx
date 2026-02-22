@@ -168,6 +168,23 @@ describe('InlineHint', () => {
       expect(normalStyle.width).toBe('100%');
     });
 
+    it('"Build my own" card has left accent stripe 3.5px wide emerald-300', () => {
+      const { getByTestId } = render(<InlineHint {...defaultProps} />);
+      const stripe = getByTestId('inline-hint-accent-stripe');
+
+      // Accent stripe uses absolute positioning to avoid RN border-order issues
+      // DO NOT replace with borderLeftWidth — it gets overridden by borderWidth: 1
+      expect(stripe.props.style).toMatchObject({
+        backgroundColor: '#6EE7B7',
+        borderRadius: 2,
+        bottom: 0,
+        left: 0,
+        position: 'absolute',
+        top: 0,
+        width: 3.5,
+      });
+    });
+
     it('has emerald-tinted drop shadow, not warm brown', () => {
       const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
       const templatesButton = UNSAFE_getByProps({

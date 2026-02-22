@@ -73,6 +73,16 @@ export const badgeTextStyle = {
   fontWeight: '800',
 } as const;
 
+export const accentStripeStyle = {
+  backgroundColor: '#6EE7B7',
+  borderRadius: 2,
+  bottom: 0,
+  left: 0,
+  position: 'absolute',
+  top: 0,
+  width: 3.5,
+} as const;
+
 export function getBuildMyOwnCardStyle(
   pressed: boolean,
   colors: BuildMyOwnCardColors
