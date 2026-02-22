@@ -186,7 +186,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Completed 2026-02-22: Added `gradientColors` to `useEmptyStateColors` hook returning `['rgba(4,120,87,0.85)', 'rgba(5,150,105,0.85)', 'rgba(16,185,129,0.85)']` in dark mode vs opaque hex in light mode. `InlineHint.tsx` now reads `colors.gradientColors` instead of hardcoded array. Alpha 0.85 preserves emerald vibrancy while creating depth against dark backgrounds. Test guard added to `InlineHint.test.tsx` using `jest.spyOn` to verify rgba usage in dark mode.
 - [x] Accent stripe uses emerald-400 (#34D399) in dark mode
   - Completed 2026-02-22: Added `accentStripeColor` to `useEmptyStateColors` hook returning `#34D399` (emerald-400) in dark mode vs `#6EE7B7` (emerald-300) in light mode. `InlineHint.tsx` now applies `colors.accentStripeColor` via style array override on the accent stripe View. Emerald-400's deeper saturation maintains stripe visibility on dark card backgrounds. Test guard added using `jest.spyOn` to verify `#34D399` usage in dark mode.
-- [ ] Card background is still distinguishable from screen background
+- [x] Card background is still distinguishable from screen background
+  - Completed 2026-02-22: Added `buildMyOwnCardBg` and `buildMyOwnCardBgPressed` to `useEmptyStateColors` hook returning gray-800 (`#1F2937`) and `#283548` in dark mode vs `#FFFFFF`/`#F5F5F4` in light mode. `getBuildMyOwnCardStyle` now accepts theme-aware `bg`/`bgPressed` colors instead of hardcoded values. Gray-800 sits one elevation level above screen background (gray-900 `#111827`), following Material Design's elevation-as-lightness principle. Test guard added using `jest.spyOn` to verify dark mode colors.
 - [ ] All text colors adapt via theme hooks
 
 ### Layout Checks

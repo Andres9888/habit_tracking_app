@@ -110,6 +110,8 @@ describe('InlineHint', () => {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const mod = require('../useEmptyStateColors');
       const spy = jest.spyOn(mod, 'useEmptyStateColors').mockReturnValue({
+        buildMyOwnCardBg: '#1F2937',
+        buildMyOwnCardBgPressed: '#283548',
         gradientColors: [
           'rgba(4,120,87,0.85)',
           'rgba(5,150,105,0.85)',
@@ -140,6 +142,8 @@ describe('InlineHint', () => {
       const mod = require('../useEmptyStateColors');
       const spy = jest.spyOn(mod, 'useEmptyStateColors').mockReturnValue({
         accentStripeColor: '#34D399',
+        buildMyOwnCardBg: '#1F2937',
+        buildMyOwnCardBgPressed: '#283548',
         gradientColors: [
           'rgba(4,120,87,0.85)',
           'rgba(5,150,105,0.85)',
@@ -161,6 +165,40 @@ describe('InlineHint', () => {
           expect.objectContaining({ backgroundColor: '#34D399' }),
         ])
       );
+
+      spy.mockRestore();
+    });
+
+    it('uses elevated surface card background distinguishable from screen', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const mod = require('../useEmptyStateColors');
+      const spy = jest.spyOn(mod, 'useEmptyStateColors').mockReturnValue({
+        accentStripeColor: '#34D399',
+        buildMyOwnCardBg: '#1F2937',
+        buildMyOwnCardBgPressed: '#283548',
+        gradientColors: [
+          'rgba(4,120,87,0.85)',
+          'rgba(5,150,105,0.85)',
+          'rgba(16,185,129,0.85)',
+        ],
+        inputBorder: '#374151',
+        isDark: true,
+        textSecondary: '#D1D5DB',
+        textTertiary: '#9CA3AF',
+      });
+
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+      const card = UNSAFE_getByProps({
+        accessibilityLabel: 'Create custom habit',
+      });
+
+      const normalStyle = card.props.style({ pressed: false });
+      const pressedStyle = card.props.style({ pressed: true });
+
+      // Dark mode uses gray-800 (#1F2937) elevated above screen bg (#111827)
+      // DO NOT use #FFFFFF — white card on dark bg is visually jarring
+      expect(normalStyle.backgroundColor).toBe('#1F2937');
+      expect(pressedStyle.backgroundColor).toBe('#283548');
 
       spy.mockRestore();
     });

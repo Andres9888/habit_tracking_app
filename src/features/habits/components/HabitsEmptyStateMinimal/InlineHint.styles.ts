@@ -25,10 +25,7 @@ export const dividerStyle = {
 
 export const dividerLineStyle = { flex: 1, height: 0.5 } as const;
 
-export const actionsColumnStyle = {
-  gap: 8,
-  width: '100%',
-} as const;
+export const actionsColumnStyle = { gap: 8, width: '100%' } as const;
 
 export const buildMyOwnLabelStyle = {
   flex: 1,
@@ -81,11 +78,11 @@ export const accentStripeStyle = {
 
 export function getBuildMyOwnCardStyle(
   pressed: boolean,
-  colors: { borderColor: string }
+  colors: { bg: string; bgPressed: string; borderColor: string }
 ) {
   return {
     alignItems: 'center',
-    backgroundColor: pressed ? '#F5F5F4' : '#FFFFFF',
+    backgroundColor: pressed ? colors.bgPressed : colors.bg,
     borderColor: colors.borderColor,
     borderRadius: 12,
     borderWidth: 1,

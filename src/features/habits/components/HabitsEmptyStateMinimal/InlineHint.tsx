@@ -27,7 +27,11 @@ export function InlineHint({
 }: InlineHintProps) {
   const colors = useEmptyStateColors();
   const buildMyOwnStyle = ({ pressed }: { pressed: boolean }) =>
-    getBuildMyOwnCardStyle(pressed, { borderColor: colors.inputBorder });
+    getBuildMyOwnCardStyle(pressed, {
+      bg: colors.buildMyOwnCardBg,
+      bgPressed: colors.buildMyOwnCardBgPressed,
+      borderColor: colors.inputBorder,
+    });
 
   return (
     <View style={containerStyle}>

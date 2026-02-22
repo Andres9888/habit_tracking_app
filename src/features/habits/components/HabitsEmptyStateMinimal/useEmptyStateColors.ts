@@ -79,6 +79,10 @@ export function useEmptyStateColors() {
     // Accent stripe color (emerald-400 in dark for visibility, emerald-300 in light)
     accentStripeColor: isDark ? '#34D399' : '#6EE7B7',
 
+    // Build my own card background (elevated surface in dark, white in light)
+    buildMyOwnCardBg: isDark ? '#1F2937' : '#FFFFFF',
+    buildMyOwnCardBgPressed: isDark ? '#283548' : '#F5F5F4',
+
     // Success colors
     successBackground: isDark ? colors.primary[100] : '#D1FAE5', // emerald-100
 
