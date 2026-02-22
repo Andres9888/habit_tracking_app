@@ -62,7 +62,10 @@ export function useKeyboardLayoutAnimations({
   }));
 
   const secondaryLinksAnimatedStyle = useAnimatedStyle(() => ({
-    maxHeight: withTiming(isKeyboardVisible ? 0 : 100, timingConfig),
+    maxHeight: withTiming(
+      isKeyboardVisible ? 0 : KEYBOARD_LAYOUT.secondaryLinksMaxHeight,
+      timingConfig
+    ),
     opacity: withTiming(isKeyboardVisible ? 0 : 1, timingConfig),
     overflow: 'hidden' as const,
   }));

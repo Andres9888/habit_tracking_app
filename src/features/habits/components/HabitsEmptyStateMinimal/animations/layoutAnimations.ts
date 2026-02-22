@@ -25,6 +25,7 @@ export const KEYBOARD_LAYOUT = {
   compactHeadlineFontSize: 20,
   compactHeroFontSize: 28,
   compactHeroSize: 60,
+  secondaryLinksMaxHeight: 200,
   topPadding: 100,
   transitionDuration: 280,
 } as const;

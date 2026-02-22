@@ -5,6 +5,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 
+import { KEYBOARD_LAYOUT } from '../animations';
 import { InlineHint } from '../InlineHint';
 
 jest.mock('expo-linear-gradient', () => ({
@@ -431,6 +432,15 @@ describe('InlineHint', () => {
       expect(normalStyle.elevation).toBe(4);
       // Pressed state reduces shadow intensity
       expect(pressedStyle.shadowOpacity).toBe(0.15);
+    });
+
+    it('keyboard animation maxHeight accommodates full CTA section', () => {
+      // InlineHint needs ~148px (divider 28 + button 52 + gap 8 + card 44 + margin 16)
+      // maxHeight must be >= 200 to prevent clipping when keyboard is hidden
+      // DO NOT reduce below 200 — the CTA section will be cropped
+      expect(KEYBOARD_LAYOUT.secondaryLinksMaxHeight).toBeGreaterThanOrEqual(
+        200
+      );
     });
   });
 });

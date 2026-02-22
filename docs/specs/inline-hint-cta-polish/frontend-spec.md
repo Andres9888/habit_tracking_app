@@ -197,7 +197,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Verified 2026-02-22: Both CTAs have `width: '100%'` in their style definitions (`templatesButtonBaseStyle` and `getBuildMyOwnCardStyle`). The actions column container (`actionsColumnStyle`) also uses `width: '100%'`. Added `testID='inline-hint-actions'` to the actions column View and a test validating the full-width chain from container through both buttons.
 - [x] 8px gap between gradient button and "Build my own" card
   - Verified 2026-02-22: `actionsColumnStyle` in `InlineHint.styles.ts:34` has `gap: 8`. Test guard added at `InlineHint.test.tsx` validating the actions column container has `gap: 8` to prevent accidental changes to the spec-defined inter-CTA spacing.
-- [ ] CTA section is NOT clipped by keyboard animation (maxHeight >= 200)
+- [x] CTA section is NOT clipped by keyboard animation (maxHeight >= 200)
+  - Completed 2026-02-22: Changed `secondaryLinksAnimatedStyle` maxHeight from `100` to `200` via new `KEYBOARD_LAYOUT.secondaryLinksMaxHeight` constant in `layoutAnimations.ts`. Previous value of 100 clipped the ~148px InlineHint component. The hook `useKeyboardLayoutAnimations.ts` now references the named constant instead of a magic number. Test guard added in `InlineHint.test.tsx` asserting `secondaryLinksMaxHeight >= 200`.
 - [ ] Content is visible on iPhone SE (small screen) and iPhone 16 Pro Max (large screen)
 
 ### Interaction Checks (future — per spec.md)
