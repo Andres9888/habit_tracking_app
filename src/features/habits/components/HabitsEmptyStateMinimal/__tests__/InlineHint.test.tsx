@@ -113,8 +113,12 @@ describe('InlineHint', () => {
 
     it('should have button role for both elements', () => {
       const { getByLabelText } = render(<InlineHint {...defaultProps} />);
-      expect(getByLabelText('Browse habit templates').props.accessibilityRole).toBe('button');
-      expect(getByLabelText('Create custom habit').props.accessibilityRole).toBe('button');
+      expect(
+        getByLabelText('Browse habit templates').props.accessibilityRole
+      ).toBe('button');
+      expect(
+        getByLabelText('Create custom habit').props.accessibilityRole
+      ).toBe('button');
     });
   });
 
@@ -153,6 +157,33 @@ describe('InlineHint', () => {
   });
 
   describe('Layout', () => {
+    it('should render "or explore" centered between two hairline rules', () => {
+      const { getByTestId, getByText } = render(
+        <InlineHint {...defaultProps} />
+      );
+      const divider = getByTestId('inline-hint-divider');
+      const leftHairline = getByTestId('inline-hint-divider-line-left');
+      const rightHairline = getByTestId('inline-hint-divider-line-right');
+      const dividerText = getByText('or explore');
+
+      expect(divider.props.style).toMatchObject({
+        alignItems: 'center',
+        flexDirection: 'row',
+        width: '100%',
+      });
+      expect(dividerText.props.style.textAlign).toBe('center');
+      expect(leftHairline.props.style).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ flex: 1, height: 0.5 }),
+        ])
+      );
+      expect(rightHairline.props.style).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ flex: 1, height: 0.5 }),
+        ])
+      );
+    });
+
     it('should render templates card with card-style border radius', () => {
       const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
       const card = UNSAFE_getByProps({
