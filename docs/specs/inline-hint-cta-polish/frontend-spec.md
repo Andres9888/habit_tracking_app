@@ -169,7 +169,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Completed 2026-02-22: Added `badgeContainerStyle` with `backgroundColor: 'rgba(255,255,255,0.22)'`, `borderRadius: 8`, and padding `3/9` in `InlineHint.styles.ts`. Badge renders inside the `LinearGradient` with `200+` text. Label now has `flex: 1` to push badge to the right edge.
 - [x] Badge text is 11px, weight 800 (NOT 10px)
   - Verified 2026-02-22: `badgeTextStyle` in `InlineHint.styles.ts:72-73` has `fontSize: 11, fontWeight: '800'`. Test assertion at `InlineHint.test.tsx:51-55` guards against linter replacing with `typography.tabBar` (fontSize 10).
-- [ ] Gradient button has emerald-tinted drop shadow (NOT warm brown shadow)
+- [x] Gradient button has emerald-tinted drop shadow (NOT warm brown shadow)
+  - Verified 2026-02-22: `templatesButtonBaseStyle` in `InlineHint.styles.ts:12` has `shadowColor: '#047857'` (emerald), not warm brown `#2D2A26`. Shadow props: `shadowOffset: {0,4}`, `shadowRadius: 16`, `elevation: 4`, `shadowOpacity: 0.3` (0.15 when pressed). Test guard added at `InlineHint.test.tsx` to prevent linter replacing with `shadows.alert`.
 - [ ] "Build my own" card has white background visible against screen gradient
 - [ ] Left accent stripe is 3.5px wide, emerald-300 (#6EE7B7)
 - [ ] "Build my own" text is 13px, weight 600, stone-600 color

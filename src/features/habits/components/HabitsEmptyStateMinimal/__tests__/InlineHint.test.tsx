@@ -149,5 +149,24 @@ describe('InlineHint', () => {
       expect(normalStyle.opacity).toBe(1);
       expect(pressedStyle.opacity).toBe(0.85);
     });
+
+    it('has emerald-tinted drop shadow, not warm brown', () => {
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+      const templatesButton = UNSAFE_getByProps({
+        accessibilityLabel: 'Browse habit templates',
+      });
+
+      const normalStyle = templatesButton.props.style({ pressed: false });
+      const pressedStyle = templatesButton.props.style({ pressed: true });
+
+      // Guard against linter replacing with shadows.alert (#2D2A26)
+      expect(normalStyle.shadowColor).toBe('#047857');
+      expect(normalStyle.shadowOffset).toEqual({ height: 4, width: 0 });
+      expect(normalStyle.shadowOpacity).toBe(0.3);
+      expect(normalStyle.shadowRadius).toBe(16);
+      expect(normalStyle.elevation).toBe(4);
+      // Pressed state reduces shadow intensity
+      expect(pressedStyle.shadowOpacity).toBe(0.15);
+    });
   });
 });
