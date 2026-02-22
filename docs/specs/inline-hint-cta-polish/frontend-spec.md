@@ -204,7 +204,8 @@ Use this to verify the implementation matches the spec after any code change:
 
 ### Interaction Checks (future — per spec.md)
 
-- [ ] Press scale animation (0.97x) on both CTAs
+- [x] Press scale animation (0.97x) on both CTAs
+  - Completed 2026-02-22: Created `InlineHint.hooks.ts` with `usePressAnimations()` hook that reuses `animateCardPress` from the design system (`CARD_PRESS_SCALE = 0.97`). Both CTAs are wrapped in `Animated.View` with spring-animated transform scale. `onPressIn` triggers scale to 0.97 with spring physics (damping: 18, stiffness: 150), `onPressOut` springs back to 1. Supports `useReducedMotion` for instant fallback. Test guards added to verify press handler connections and design system constant usage.
 - [ ] Light haptic on "Browse templates" press
 - [ ] Selection haptic on "Build my own" press
 - [ ] Staggered entrance animation (~100ms gap)

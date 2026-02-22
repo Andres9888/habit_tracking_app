@@ -1,6 +1,8 @@
 import { Pressable, Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import { usePressAnimations } from './InlineHint.hooks';
 import {
   accentStripeStyle,
   actionsColumnStyle,
@@ -8,14 +10,12 @@ import {
   badgeTextStyle,
   buildMyOwnLabelStyle,
   containerStyle,
-  dividerLineStyle,
-  dividerStyle,
-  dividerTextBaseStyle,
   getBuildMyOwnCardStyle,
   getTemplatesButtonStyle,
   templatesGradientStyle,
   templatesLabelStyle,
 } from './InlineHint.styles';
+import { InlineHintDivider } from './InlineHintDivider';
 import type { InlineHintProps } from './types';
 import { useEmptyStateColors } from './useEmptyStateColors';
 
@@ -27,6 +27,7 @@ export function InlineHint({
   onCreateCustom,
 }: InlineHintProps) {
   const colors = useEmptyStateColors();
+  const press = usePressAnimations();
   const buildMyOwnStyle = ({ pressed }: { pressed: boolean }) =>
     getBuildMyOwnCardStyle(pressed, {
       bg: colors.buildMyOwnCardBg,
@@ -36,66 +37,64 @@ export function InlineHint({
 
   return (
     <View style={containerStyle}>
-      <View style={dividerStyle} testID='inline-hint-divider'>
-        <View
-          style={[dividerLineStyle, { backgroundColor: colors.inputBorder }]}
-          testID='inline-hint-divider-line-left'
-        />
-        <Text style={[dividerTextBaseStyle, { color: colors.textSecondary }]}>
-          or explore
-        </Text>
-        <View
-          style={[dividerLineStyle, { backgroundColor: colors.inputBorder }]}
-          testID='inline-hint-divider-line-right'
-        />
-      </View>
+      <InlineHintDivider />
       <View style={actionsColumnStyle} testID='inline-hint-actions'>
-        <Pressable
-          accessibilityHint='Opens screen with pre-made habit templates'
-          accessibilityLabel='Browse habit templates'
-          accessibilityRole='button'
-          style={templatesButtonPressableStyle}
-          testID='inline-hint-browse-templates'
-          onPress={onBrowseTemplates}
-        >
-          <LinearGradient
-            colors={[...colors.gradientColors]}
-            end={{ x: 1, y: 0.3 }}
-            start={{ x: 0, y: 0 }}
-            style={templatesGradientStyle}
+        <Animated.View style={press.templatesAnimatedStyle}>
+          <Pressable
+            accessibilityHint='Opens screen with pre-made habit templates'
+            accessibilityLabel='Browse habit templates'
+            accessibilityRole='button'
+            style={templatesButtonPressableStyle}
+            testID='inline-hint-browse-templates'
+            onPress={onBrowseTemplates}
+            onPressIn={press.templatesPressIn}
+            onPressOut={press.templatesPressOut}
           >
-            <Text style={{ fontSize: 18 }}>📚</Text>
-            <Text style={[templatesLabelStyle, { color: colors.ctaText }]}>
-              browse templates
-            </Text>
-            <View style={badgeContainerStyle} testID='inline-hint-badge'>
-              <Text style={[badgeTextStyle, { color: colors.ctaText }]}>
-                200+
+            <LinearGradient
+              colors={[...colors.gradientColors]}
+              end={{ x: 1, y: 0.3 }}
+              start={{ x: 0, y: 0 }}
+              style={templatesGradientStyle}
+            >
+              <Text style={{ fontSize: 18 }}>📚</Text>
+              <Text style={[templatesLabelStyle, { color: colors.ctaText }]}>
+                browse templates
               </Text>
-            </View>
-          </LinearGradient>
-        </Pressable>
-        <Pressable
-          accessibilityHint='Opens full habit creation screen'
-          accessibilityLabel='Create custom habit'
-          accessibilityRole='button'
-          style={buildMyOwnStyle}
-          testID='inline-hint-create-custom'
-          onPress={onCreateCustom}
-        >
-          <View
-            style={[
-              accentStripeStyle,
-              { backgroundColor: colors.accentStripeColor },
-            ]}
-            testID='inline-hint-accent-stripe'
-          />
-          <Text style={{ fontSize: 18 }}>✏️</Text>
-          <Text style={[buildMyOwnLabelStyle, { color: colors.textSecondary }]}>
-            Build my own
-          </Text>
-          <Text style={{ color: colors.textTertiary, fontSize: 13 }}>→</Text>
-        </Pressable>
+              <View style={badgeContainerStyle} testID='inline-hint-badge'>
+                <Text style={[badgeTextStyle, { color: colors.ctaText }]}>
+                  200+
+                </Text>
+              </View>
+            </LinearGradient>
+          </Pressable>
+        </Animated.View>
+        <Animated.View style={press.buildMyOwnAnimatedStyle}>
+          <Pressable
+            accessibilityHint='Opens full habit creation screen'
+            accessibilityLabel='Create custom habit'
+            accessibilityRole='button'
+            style={buildMyOwnStyle}
+            testID='inline-hint-create-custom'
+            onPress={onCreateCustom}
+            onPressIn={press.buildMyOwnPressIn}
+            onPressOut={press.buildMyOwnPressOut}
+          >
+            <View
+              style={[
+                accentStripeStyle,
+                { backgroundColor: colors.accentStripeColor },
+              ]}
+              testID='inline-hint-accent-stripe'
+            />
+            <Text style={{ fontSize: 18 }}>✏️</Text>
+            <Text
+              style={[buildMyOwnLabelStyle, { color: colors.textSecondary }]}
+            >
+              Build my own
+            </Text>
+            <Text style={{ color: colors.textTertiary, fontSize: 13 }}>→</Text>
+          </Pressable>
+        </Animated.View>
       </View>
     </View>
   );

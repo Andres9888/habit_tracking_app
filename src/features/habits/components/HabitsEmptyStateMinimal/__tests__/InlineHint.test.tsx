@@ -5,6 +5,10 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 
+import {
+  CARD_PRESS_SCALE,
+  CARD_REST_SCALE,
+} from '../../../../../utils/animations/cardPressAnimation';
 import { KEYBOARD_LAYOUT } from '../animations';
 import { InlineHint } from '../InlineHint';
 
@@ -88,6 +92,31 @@ describe('InlineHint', () => {
 
       fireEvent.press(getByLabelText('Create custom habit'));
       expect(onCreateCustom).toHaveBeenCalledTimes(1);
+    });
+
+    it('has onPressIn/onPressOut handlers for press scale animation on both CTAs', () => {
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+
+      const templates = UNSAFE_getByProps({
+        accessibilityLabel: 'Browse habit templates',
+      });
+      const card = UNSAFE_getByProps({
+        accessibilityLabel: 'Create custom habit',
+      });
+
+      // Both CTAs must have press handlers for 0.97x scale animation
+      // DO NOT remove — these drive the spring-animated press feedback
+      expect(typeof templates.props.onPressIn).toBe('function');
+      expect(typeof templates.props.onPressOut).toBe('function');
+      expect(typeof card.props.onPressIn).toBe('function');
+      expect(typeof card.props.onPressOut).toBe('function');
+    });
+
+    it('uses design system CARD_PRESS_SCALE (0.97) for press feedback', () => {
+      // Guard: press scale must be 0.97 — the design system standard
+      // DO NOT change — matches HabitCard press feel for consistency
+      expect(CARD_PRESS_SCALE).toBe(0.97);
+      expect(CARD_REST_SCALE).toBe(1);
     });
   });
 
