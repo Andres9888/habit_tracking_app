@@ -193,7 +193,8 @@ Use this to verify the implementation matches the spec after any code change:
 
 ### Layout Checks
 
-- [ ] Both buttons are full-width within the horizontal padding
+- [x] Both buttons are full-width within the horizontal padding
+  - Verified 2026-02-22: Both CTAs have `width: '100%'` in their style definitions (`templatesButtonBaseStyle` and `getBuildMyOwnCardStyle`). The actions column container (`actionsColumnStyle`) also uses `width: '100%'`. Added `testID='inline-hint-actions'` to the actions column View and a test validating the full-width chain from container through both buttons.
 - [ ] 8px gap between gradient button and "Build my own" card
 - [ ] CTA section is NOT clipped by keyboard animation (maxHeight >= 200)
 - [ ] Content is visible on iPhone SE (small screen) and iPhone 16 Pro Max (large screen)

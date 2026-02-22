@@ -232,7 +232,9 @@ describe('InlineHint', () => {
 
       // "or explore" divider uses textSecondary from hook
       const dividerText = getByText('or explore');
-      expect(dividerText.props.style.color).toBe('#D1D5DB');
+      expect(dividerText.props.style).toEqual(
+        expect.arrayContaining([expect.objectContaining({ color: '#D1D5DB' })])
+      );
 
       // "browse templates" label uses ctaText from hook
       const browseLabel = getByText('browse templates');
@@ -276,7 +278,11 @@ describe('InlineHint', () => {
         flexDirection: 'row',
         width: '100%',
       });
-      expect(dividerText.props.style.textAlign).toBe('center');
+      expect(dividerText.props.style).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ textAlign: 'center' }),
+        ])
+      );
       expect(leftHairline.props.style).toEqual(
         expect.arrayContaining([
           expect.objectContaining({ flex: 1, height: 0.5 }),
@@ -287,6 +293,25 @@ describe('InlineHint', () => {
           expect.objectContaining({ flex: 1, height: 0.5 }),
         ])
       );
+    });
+
+    it('both buttons are full-width within the actions column', () => {
+      const { getByTestId, UNSAFE_getByProps } = render(
+        <InlineHint {...defaultProps} />
+      );
+
+      const actionsColumn = getByTestId('inline-hint-actions');
+      expect(actionsColumn.props.style).toMatchObject({ width: '100%' });
+
+      const templates = UNSAFE_getByProps({
+        accessibilityLabel: 'Browse habit templates',
+      });
+      expect(templates.props.style({ pressed: false }).width).toBe('100%');
+
+      const card = UNSAFE_getByProps({
+        accessibilityLabel: 'Create custom habit',
+      });
+      expect(card.props.style({ pressed: false }).width).toBe('100%');
     });
 
     it('uses a full-width, 52px, 14px radius style for templates button', () => {

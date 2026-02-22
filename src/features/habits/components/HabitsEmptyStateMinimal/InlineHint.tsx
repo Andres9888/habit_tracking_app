@@ -10,6 +10,7 @@ import {
   containerStyle,
   dividerLineStyle,
   dividerStyle,
+  dividerTextBaseStyle,
   getBuildMyOwnCardStyle,
   getTemplatesButtonStyle,
   templatesGradientStyle,
@@ -40,14 +41,7 @@ export function InlineHint({
           style={[dividerLineStyle, { backgroundColor: colors.inputBorder }]}
           testID='inline-hint-divider-line-left'
         />
-        <Text
-          style={{
-            color: colors.textSecondary,
-            fontSize: 13,
-            lineHeight: 18,
-            textAlign: 'center',
-          }}
-        >
+        <Text style={[dividerTextBaseStyle, { color: colors.textSecondary }]}>
           or explore
         </Text>
         <View
@@ -55,7 +49,7 @@ export function InlineHint({
           testID='inline-hint-divider-line-right'
         />
       </View>
-      <View style={actionsColumnStyle}>
+      <View style={actionsColumnStyle} testID='inline-hint-actions'>
         <Pressable
           accessibilityHint='Opens screen with pre-made habit templates'
           accessibilityLabel='Browse habit templates'

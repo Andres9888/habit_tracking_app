@@ -25,6 +25,12 @@ export const dividerStyle = {
 
 export const dividerLineStyle = { flex: 1, height: 0.5 } as const;
 
+export const dividerTextBaseStyle = {
+  fontSize: 13,
+  lineHeight: 18,
+  textAlign: 'center',
+} as const;
+
 export const actionsColumnStyle = { gap: 8, width: '100%' } as const;
 
 export const buildMyOwnLabelStyle = {
