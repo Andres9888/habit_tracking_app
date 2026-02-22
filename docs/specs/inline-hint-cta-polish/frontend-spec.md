@@ -167,7 +167,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Completed 2026-02-22: Verified `InlineHint.tsx` uses `LinearGradient` with colors `['#047857', '#059669', '#10B981']`, `start={{x: 0, y: 0}}`, and `end={{x: 1, y: 0.3}}`; confirmed by passing `InlineHint.test.tsx`.
 - [x] "200+" badge has frosted-glass background (rgba white 0.22)
   - Completed 2026-02-22: Added `badgeContainerStyle` with `backgroundColor: 'rgba(255,255,255,0.22)'`, `borderRadius: 8`, and padding `3/9` in `InlineHint.styles.ts`. Badge renders inside the `LinearGradient` with `200+` text. Label now has `flex: 1` to push badge to the right edge.
-- [ ] Badge text is 11px, weight 800 (NOT 10px)
+- [x] Badge text is 11px, weight 800 (NOT 10px)
+  - Verified 2026-02-22: `badgeTextStyle` in `InlineHint.styles.ts:72-73` has `fontSize: 11, fontWeight: '800'`. Test assertion at `InlineHint.test.tsx:51-55` guards against linter replacing with `typography.tabBar` (fontSize 10).
 - [ ] Gradient button has emerald-tinted drop shadow (NOT warm brown shadow)
 - [ ] "Build my own" card has white background visible against screen gradient
 - [ ] Left accent stripe is 3.5px wide, emerald-300 (#6EE7B7)
