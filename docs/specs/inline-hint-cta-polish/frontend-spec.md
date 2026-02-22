@@ -182,7 +182,8 @@ Use this to verify the implementation matches the spec after any code change:
 
 ### Dark Mode Checks
 
-- [ ] Gradient colors use rgba variants (slightly transparent)
+- [x] Gradient colors use rgba variants (slightly transparent)
+  - Completed 2026-02-22: Added `gradientColors` to `useEmptyStateColors` hook returning `['rgba(4,120,87,0.85)', 'rgba(5,150,105,0.85)', 'rgba(16,185,129,0.85)']` in dark mode vs opaque hex in light mode. `InlineHint.tsx` now reads `colors.gradientColors` instead of hardcoded array. Alpha 0.85 preserves emerald vibrancy while creating depth against dark backgrounds. Test guard added to `InlineHint.test.tsx` using `jest.spyOn` to verify rgba usage in dark mode.
 - [ ] Accent stripe uses emerald-400 (#34D399) in dark mode
 - [ ] Card background is still distinguishable from screen background
 - [ ] All text colors adapt via theme hooks

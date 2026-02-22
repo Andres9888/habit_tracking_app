@@ -61,7 +61,7 @@ export function InlineHint({
           onPress={onBrowseTemplates}
         >
           <LinearGradient
-            colors={['#047857', '#059669', '#10B981']}
+            colors={[...colors.gradientColors]}
             end={{ x: 1, y: 0.3 }}
             start={{ x: 0, y: 0 }}
             style={templatesGradientStyle}

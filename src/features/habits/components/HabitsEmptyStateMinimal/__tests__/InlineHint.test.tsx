@@ -105,6 +105,37 @@ describe('InlineHint', () => {
     });
   });
 
+  describe('Dark Mode', () => {
+    it('uses rgba gradient colors for depth against dark backgrounds', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const mod = require('../useEmptyStateColors');
+      const spy = jest.spyOn(mod, 'useEmptyStateColors').mockReturnValue({
+        gradientColors: [
+          'rgba(4,120,87,0.85)',
+          'rgba(5,150,105,0.85)',
+          'rgba(16,185,129,0.85)',
+        ],
+        inputBorder: '#374151',
+        isDark: true,
+        textSecondary: '#D1D5DB',
+        textTertiary: '#9CA3AF',
+      });
+
+      const { UNSAFE_getByType } = render(<InlineHint {...defaultProps} />);
+      const gradient = UNSAFE_getByType('LinearGradient');
+
+      // Dark mode gradient must use rgba for subtle transparency
+      // DO NOT replace with opaque hex — rgba creates depth on dark bg
+      expect(gradient.props.colors).toEqual([
+        'rgba(4,120,87,0.85)',
+        'rgba(5,150,105,0.85)',
+        'rgba(16,185,129,0.85)',
+      ]);
+
+      spy.mockRestore();
+    });
+  });
+
   describe('Layout', () => {
     it('renders "or explore" centered between two hairline rules', () => {
       const { getByTestId, getByText } = render(

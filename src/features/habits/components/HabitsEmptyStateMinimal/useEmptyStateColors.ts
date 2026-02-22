@@ -67,6 +67,15 @@ export function useEmptyStateColors() {
     errorText: isDark ? '#FCA5A5' : '#DC2626', // red-300 / red-600
     errorIcon: isDark ? '#F87171' : '#EF4444', // red-400 / red-500
 
+    // Gradient colors for templates button
+    gradientColors: isDark
+      ? ([
+          'rgba(4,120,87,0.85)',
+          'rgba(5,150,105,0.85)',
+          'rgba(16,185,129,0.85)',
+        ] as const)
+      : (['#047857', '#059669', '#10B981'] as const),
+
     // Success colors
     successBackground: isDark ? colors.primary[100] : '#D1FAE5', // emerald-100
 
