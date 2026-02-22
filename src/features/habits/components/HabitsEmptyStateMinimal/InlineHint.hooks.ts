@@ -50,7 +50,10 @@ export function usePressAnimations() {
 
   return {
     buildMyOwnAnimatedStyle,
-    buildMyOwnPressIn: () => handlePressIn(buildMyOwnScale),
+    buildMyOwnPressIn: () => {
+      handlePressIn(buildMyOwnScale);
+      trigger('selection');
+    },
     buildMyOwnPressOut: () => handlePressOut(buildMyOwnScale),
     templatesAnimatedStyle,
     templatesPressIn: () => {

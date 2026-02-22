@@ -208,7 +208,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Completed 2026-02-22: Created `InlineHint.hooks.ts` with `usePressAnimations()` hook that reuses `animateCardPress` from the design system (`CARD_PRESS_SCALE = 0.97`). Both CTAs are wrapped in `Animated.View` with spring-animated transform scale. `onPressIn` triggers scale to 0.97 with spring physics (damping: 18, stiffness: 150), `onPressOut` springs back to 1. Supports `useReducedMotion` for instant fallback. Test guards added to verify press handler connections and design system constant usage.
 - [x] Light haptic on "Browse templates" press
   - Completed 2026-02-22: Added `useHaptics()` to `usePressAnimations` hook in `InlineHint.hooks.ts`. The `templatesPressIn` handler now calls `trigger('tap')` which fires `ImpactFeedbackStyle.Light` via the centralized haptics system. Haptics automatically respect accessibility (reduce-motion) through the `useHaptics` hook. Test guards verify `'tap'` is triggered on Browse templates pressIn and NOT on Build my own pressIn (which gets its own haptic type separately).
-- [ ] Selection haptic on "Build my own" press
+- [x] Selection haptic on "Build my own" press
+  - Completed 2026-02-22: Added `trigger('selection')` to `buildMyOwnPressIn` handler in `InlineHint.hooks.ts`. The `'selection'` pattern maps to `Haptics.selectionAsync()` — an ultra-light "click" feedback distinct from the `'tap'` (Light impact) used on Browse templates. Updated test from asserting no haptic to verifying `'selection'` is triggered on pressIn. All 25 tests pass.
 - [ ] Staggered entrance animation (~100ms gap)
 
 ## File Map

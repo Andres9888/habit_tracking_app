@@ -133,16 +133,17 @@ describe('InlineHint', () => {
       expect(mockHapticTrigger).toHaveBeenCalledWith('tap');
     });
 
-    it('does NOT trigger haptic on Build my own pressIn', () => {
+    it('triggers selection haptic on Build my own pressIn', () => {
       mockHapticTrigger.mockClear();
       const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
       const card = UNSAFE_getByProps({
         accessibilityLabel: 'Create custom habit',
       });
 
-      // "Build my own" has its own haptic type (added separately)
+      // Selection haptic ('selection') fires on pressIn for subtle click feedback
+      // DO NOT change to 'tap' — 'selection' is the correct ultra-light type
       fireEvent(card, 'pressIn');
-      expect(mockHapticTrigger).not.toHaveBeenCalled();
+      expect(mockHapticTrigger).toHaveBeenCalledWith('selection');
     });
 
     it('uses design system CARD_PRESS_SCALE (0.97) for press feedback', () => {
