@@ -163,7 +163,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Completed 2026-02-22: Added explicit divider row in `InlineHint.tsx` with left/right flex hairlines and centered text label.
 - [x] Gradient button is full-width, 52px tall, 14px border radius
   - Completed 2026-02-22: Updated `InlineHint.tsx` templates CTA to a dedicated gradient `Pressable` with `width: '100%'`, `height: 52`, and `borderRadius: 14` plus focused unit coverage.
-- [ ] Gradient flows left-to-right: dark emerald (#047857) to light emerald (#10B981)
+- [x] Gradient flows left-to-right: dark emerald (#047857) to light emerald (#10B981)
+  - Completed 2026-02-22: Verified `InlineHint.tsx` uses `LinearGradient` with colors `['#047857', '#059669', '#10B981']`, `start={{x: 0, y: 0}}`, and `end={{x: 1, y: 0.3}}`; confirmed by passing `InlineHint.test.tsx`.
 - [ ] "200+" badge has frosted-glass background (rgba white 0.22)
 - [ ] Badge text is 11px, weight 800 (NOT 10px)
 - [ ] Gradient button has emerald-tinted drop shadow (NOT warm brown shadow)
