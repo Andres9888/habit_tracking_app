@@ -48,11 +48,14 @@ describe('InlineHint', () => {
         paddingHorizontal: 9,
         paddingVertical: 3,
       });
-      expect(badgeText.props.style).toMatchObject({
-        color: '#FFFFFF',
-        fontSize: 11,
-        fontWeight: '800',
-      });
+      // Badge text color comes from theme hook (ctaText), not hardcoded
+      // Style is an array: [badgeTextStyle, { color: ctaText }]
+      expect(badgeText.props.style).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ fontSize: 11, fontWeight: '800' }),
+          expect.objectContaining({ color: '#ffffff' }),
+        ])
+      );
     });
 
     it('renders a gradient templates button with expected config', () => {
@@ -112,6 +115,7 @@ describe('InlineHint', () => {
       const spy = jest.spyOn(mod, 'useEmptyStateColors').mockReturnValue({
         buildMyOwnCardBg: '#1F2937',
         buildMyOwnCardBgPressed: '#283548',
+        ctaText: '#FFFFFF',
         gradientColors: [
           'rgba(4,120,87,0.85)',
           'rgba(5,150,105,0.85)',
@@ -144,6 +148,7 @@ describe('InlineHint', () => {
         accentStripeColor: '#34D399',
         buildMyOwnCardBg: '#1F2937',
         buildMyOwnCardBgPressed: '#283548',
+        ctaText: '#FFFFFF',
         gradientColors: [
           'rgba(4,120,87,0.85)',
           'rgba(5,150,105,0.85)',
@@ -176,6 +181,7 @@ describe('InlineHint', () => {
         accentStripeColor: '#34D399',
         buildMyOwnCardBg: '#1F2937',
         buildMyOwnCardBgPressed: '#283548',
+        ctaText: '#FFFFFF',
         gradientColors: [
           'rgba(4,120,87,0.85)',
           'rgba(5,150,105,0.85)',
@@ -199,6 +205,56 @@ describe('InlineHint', () => {
       // DO NOT use #FFFFFF — white card on dark bg is visually jarring
       expect(normalStyle.backgroundColor).toBe('#1F2937');
       expect(pressedStyle.backgroundColor).toBe('#283548');
+
+      spy.mockRestore();
+    });
+
+    it('adapts all text colors via theme hook in dark mode', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const mod = require('../useEmptyStateColors');
+      const spy = jest.spyOn(mod, 'useEmptyStateColors').mockReturnValue({
+        accentStripeColor: '#34D399',
+        buildMyOwnCardBg: '#1F2937',
+        buildMyOwnCardBgPressed: '#283548',
+        ctaText: '#FFFFFF',
+        gradientColors: [
+          'rgba(4,120,87,0.85)',
+          'rgba(5,150,105,0.85)',
+          'rgba(16,185,129,0.85)',
+        ],
+        inputBorder: '#374151',
+        isDark: true,
+        textSecondary: '#D1D5DB',
+        textTertiary: '#9CA3AF',
+      });
+
+      const { getByText } = render(<InlineHint {...defaultProps} />);
+
+      // "or explore" divider uses textSecondary from hook
+      const dividerText = getByText('or explore');
+      expect(dividerText.props.style.color).toBe('#D1D5DB');
+
+      // "browse templates" label uses ctaText from hook
+      const browseLabel = getByText('browse templates');
+      expect(browseLabel.props.style).toEqual(
+        expect.arrayContaining([expect.objectContaining({ color: '#FFFFFF' })])
+      );
+
+      // "200+" badge uses ctaText from hook
+      const badgeLabel = getByText('200+');
+      expect(badgeLabel.props.style).toEqual(
+        expect.arrayContaining([expect.objectContaining({ color: '#FFFFFF' })])
+      );
+
+      // "Build my own" label uses textSecondary from hook
+      const buildLabel = getByText('Build my own');
+      expect(buildLabel.props.style).toEqual(
+        expect.arrayContaining([expect.objectContaining({ color: '#D1D5DB' })])
+      );
+
+      // Arrow uses textTertiary from hook
+      const arrow = getByText('→');
+      expect(arrow.props.style.color).toBe('#9CA3AF');
 
       spy.mockRestore();
     });

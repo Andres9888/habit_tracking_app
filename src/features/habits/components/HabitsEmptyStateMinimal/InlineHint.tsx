@@ -71,9 +71,13 @@ export function InlineHint({
             style={templatesGradientStyle}
           >
             <Text style={{ fontSize: 18 }}>📚</Text>
-            <Text style={templatesLabelStyle}>browse templates</Text>
+            <Text style={[templatesLabelStyle, { color: colors.ctaText }]}>
+              browse templates
+            </Text>
             <View style={badgeContainerStyle} testID='inline-hint-badge'>
-              <Text style={badgeTextStyle}>200+</Text>
+              <Text style={[badgeTextStyle, { color: colors.ctaText }]}>
+                200+
+              </Text>
             </View>
           </LinearGradient>
         </Pressable>

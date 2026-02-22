@@ -46,7 +46,6 @@ export const templatesGradientStyle = {
 } as const;
 
 export const templatesLabelStyle = {
-  color: '#FFFFFF',
   flex: 1,
   fontSize: 14,
   fontWeight: '700',
@@ -61,7 +60,6 @@ export const badgeContainerStyle = {
 } as const;
 
 export const badgeTextStyle = {
-  color: '#FFFFFF',
   fontSize: 11,
   fontWeight: '800',
 } as const;
