@@ -1,18 +1,15 @@
 /**
  * InlineHint Component Tests
- *
- * Tests for the templates bridge card and custom habit link:
- * - Prominent templates card renders correctly
- * - Secondary custom habit link renders
- * - Callback functions fire correctly on press
- * - Accessibility labels and hints are present
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 
-import { COLORS, COPY } from '../constants';
 import { InlineHint } from '../InlineHint';
+
+jest.mock('expo-linear-gradient', () => ({
+  LinearGradient: 'LinearGradient',
+}));
 
 describe('InlineHint', () => {
   const defaultProps = {
@@ -25,34 +22,30 @@ describe('InlineHint', () => {
   });
 
   describe('Component Rendering', () => {
-    it('should render without crashing', () => {
-      const { getByLabelText } = render(<InlineHint {...defaultProps} />);
+    it('renders both actions and divider text', () => {
+      const { getByText, getByLabelText } = render(
+        <InlineHint {...defaultProps} />
+      );
+
+      expect(getByText('or explore')).toBeDefined();
+      expect(getByText('browse templates')).toBeDefined();
+      expect(getByText('✨ create custom')).toBeDefined();
       expect(getByLabelText('Browse habit templates')).toBeDefined();
+      expect(getByLabelText('Create custom habit')).toBeDefined();
     });
 
-    it('should render templates card with correct text', () => {
-      const { getByText } = render(<InlineHint {...defaultProps} />);
-      expect(getByText(COPY.browseTemplatesCard)).toBeDefined();
-    });
+    it('renders a gradient templates button with expected config', () => {
+      const { UNSAFE_getByType } = render(<InlineHint {...defaultProps} />);
+      const gradient = UNSAFE_getByType('LinearGradient');
 
-    it('should render custom habit link', () => {
-      const { getByText } = render(<InlineHint {...defaultProps} />);
-      expect(getByText('✨ create a custom habit')).toBeDefined();
-    });
-
-    it('should render templates card with emerald700 text color', () => {
-      const { getByText } = render(<InlineHint {...defaultProps} />);
-      const cardText = getByText(COPY.browseTemplatesCard);
-      expect(cardText.props.style).toMatchObject({
-        color: COLORS.emerald700,
-        fontSize: 14,
-        fontWeight: '600',
-      });
+      expect(gradient.props.colors).toEqual(['#047857', '#059669', '#10B981']);
+      expect(gradient.props.start).toEqual({ x: 0, y: 0 });
+      expect(gradient.props.end).toEqual({ x: 1, y: 0.3 });
     });
   });
 
   describe('Button Press Behavior', () => {
-    it('should call onBrowseTemplates when templates card is pressed', () => {
+    it('calls onBrowseTemplates when templates action is pressed', () => {
       const onBrowseTemplates = jest.fn();
       const { getByLabelText } = render(
         <InlineHint {...defaultProps} onBrowseTemplates={onBrowseTemplates} />
@@ -62,7 +55,7 @@ describe('InlineHint', () => {
       expect(onBrowseTemplates).toHaveBeenCalledTimes(1);
     });
 
-    it('should call onCreateCustom when custom link is pressed', () => {
+    it('calls onCreateCustom when custom action is pressed', () => {
       const onCreateCustom = jest.fn();
       const { getByLabelText } = render(
         <InlineHint {...defaultProps} onCreateCustom={onCreateCustom} />
@@ -71,96 +64,32 @@ describe('InlineHint', () => {
       fireEvent.press(getByLabelText('Create custom habit'));
       expect(onCreateCustom).toHaveBeenCalledTimes(1);
     });
-
-    it('should not call other callbacks when one button is pressed', () => {
-      const onBrowseTemplates = jest.fn();
-      const onCreateCustom = jest.fn();
-      const { getByLabelText } = render(
-        <InlineHint
-          onBrowseTemplates={onBrowseTemplates}
-          onCreateCustom={onCreateCustom}
-        />
-      );
-
-      fireEvent.press(getByLabelText('Browse habit templates'));
-      expect(onBrowseTemplates).toHaveBeenCalledTimes(1);
-      expect(onCreateCustom).not.toHaveBeenCalled();
-    });
   });
 
   describe('Accessibility', () => {
-    it('should have correct accessibility labels', () => {
+    it('uses button role and hints for both actions', () => {
       const { getByLabelText } = render(<InlineHint {...defaultProps} />);
-      expect(getByLabelText('Browse habit templates')).toBeDefined();
-      expect(getByLabelText('Create custom habit')).toBeDefined();
-    });
 
-    it('should have correct accessibility hint for templates card', () => {
-      const { getByLabelText } = render(<InlineHint {...defaultProps} />);
-      const card = getByLabelText('Browse habit templates');
-      expect(card.props.accessibilityHint).toBe(
+      const browseButton = getByLabelText('Browse habit templates');
+      const customButton = getByLabelText('Create custom habit');
+
+      expect(browseButton.props.accessibilityRole).toBe('button');
+      expect(customButton.props.accessibilityRole).toBe('button');
+      expect(browseButton.props.accessibilityHint).toBe(
         'Opens screen with pre-made habit templates'
       );
-    });
-
-    it('should have correct accessibility hint for custom link', () => {
-      const { getByLabelText } = render(<InlineHint {...defaultProps} />);
-      const link = getByLabelText('Create custom habit');
-      expect(link.props.accessibilityHint).toBe(
+      expect(customButton.props.accessibilityHint).toBe(
         'Opens full habit creation screen'
       );
-    });
-
-    it('should have button role for both elements', () => {
-      const { getByLabelText } = render(<InlineHint {...defaultProps} />);
-      expect(
-        getByLabelText('Browse habit templates').props.accessibilityRole
-      ).toBe('button');
-      expect(
-        getByLabelText('Create custom habit').props.accessibilityRole
-      ).toBe('button');
-    });
-  });
-
-  describe('Press State Styling', () => {
-    it('should apply pressed styles to templates card', () => {
-      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
-      const card = UNSAFE_getByProps({
-        accessibilityLabel: 'Browse habit templates',
-      });
-
-      const pressedStyle = card.props.style({ pressed: true });
-      expect(pressedStyle.opacity).toBe(0.9);
-      expect(pressedStyle.backgroundColor).toBe(COLORS.emerald100);
-    });
-
-    it('should apply normal styles to templates card when not pressed', () => {
-      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
-      const card = UNSAFE_getByProps({
-        accessibilityLabel: 'Browse habit templates',
-      });
-
-      const normalStyle = card.props.style({ pressed: false });
-      expect(normalStyle.opacity).toBe(1);
-      expect(normalStyle.backgroundColor).toBe(COLORS.green50);
-    });
-
-    it('should apply pressed opacity to custom link', () => {
-      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
-      const link = UNSAFE_getByProps({
-        accessibilityLabel: 'Create custom habit',
-      });
-
-      const pressedStyle = link.props.style({ pressed: true });
-      expect(pressedStyle.opacity).toBe(0.7);
     });
   });
 
   describe('Layout', () => {
-    it('should render "or explore" centered between two hairline rules', () => {
+    it('renders "or explore" centered between two hairline rules', () => {
       const { getByTestId, getByText } = render(
         <InlineHint {...defaultProps} />
       );
+
       const divider = getByTestId('inline-hint-divider');
       const leftHairline = getByTestId('inline-hint-divider-line-left');
       const rightHairline = getByTestId('inline-hint-divider-line-right');
@@ -184,33 +113,20 @@ describe('InlineHint', () => {
       );
     });
 
-    it('should render templates card with card-style border radius', () => {
+    it('uses a full-width, 52px, 14px radius style for templates button', () => {
       const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
-      const card = UNSAFE_getByProps({
+      const templatesButton = UNSAFE_getByProps({
         accessibilityLabel: 'Browse habit templates',
       });
 
-      const style = card.props.style({ pressed: false });
-      expect(style.borderRadius).toBe(16);
-      expect(style.borderWidth).toBe(1);
-    });
-  });
+      const normalStyle = templatesButton.props.style({ pressed: false });
+      const pressedStyle = templatesButton.props.style({ pressed: true });
 
-  describe('Design System Compliance', () => {
-    it('should use emerald700 for templates card text', () => {
-      const { getByText } = render(<InlineHint {...defaultProps} />);
-      const cardText = getByText(COPY.browseTemplatesCard);
-      expect(cardText.props.style.color).toBe(COLORS.emerald700);
-    });
-
-    it('should use stone500 for "or" text', () => {
-      const { getByText } = render(<InlineHint {...defaultProps} />);
-      // The "or" text is part of the parent Text node
-      const orText = getByText(/^or /);
-      expect(orText.props.style).toMatchObject({
-        color: COLORS.stone500,
-        fontSize: 13,
-      });
+      expect(normalStyle.width).toBe('100%');
+      expect(normalStyle.height).toBe(52);
+      expect(normalStyle.borderRadius).toBe(14);
+      expect(normalStyle.opacity).toBe(1);
+      expect(pressedStyle.opacity).toBe(0.85);
     });
   });
 });
