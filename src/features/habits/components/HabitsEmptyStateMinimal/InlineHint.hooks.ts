@@ -16,9 +16,11 @@ import {
   CARD_PRESS_SCALE,
   CARD_REST_SCALE,
 } from '../../../../utils/animations/cardPressAnimation';
+import { useHaptics } from '../../../../utils/haptics';
 
 export function usePressAnimations() {
   const reduceMotion = useReducedMotion();
+  const { trigger } = useHaptics();
   const templatesScale = useSharedValue(CARD_REST_SCALE);
   const buildMyOwnScale = useSharedValue(CARD_REST_SCALE);
 
@@ -51,7 +53,10 @@ export function usePressAnimations() {
     buildMyOwnPressIn: () => handlePressIn(buildMyOwnScale),
     buildMyOwnPressOut: () => handlePressOut(buildMyOwnScale),
     templatesAnimatedStyle,
-    templatesPressIn: () => handlePressIn(templatesScale),
+    templatesPressIn: () => {
+      handlePressIn(templatesScale);
+      trigger('tap');
+    },
     templatesPressOut: () => handlePressOut(templatesScale),
   };
 }

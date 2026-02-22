@@ -16,6 +16,15 @@ jest.mock('expo-linear-gradient', () => ({
   LinearGradient: 'LinearGradient',
 }));
 
+const mockHapticTrigger = jest.fn();
+jest.mock('../../../../../utils/haptics', () => ({
+  useHaptics: () => ({
+    isActive: true,
+    trigger: mockHapticTrigger,
+    triggerAsync: jest.fn(),
+  }),
+}));
+
 describe('InlineHint', () => {
   const defaultProps = {
     onBrowseTemplates: jest.fn(),
@@ -110,6 +119,30 @@ describe('InlineHint', () => {
       expect(typeof templates.props.onPressOut).toBe('function');
       expect(typeof card.props.onPressIn).toBe('function');
       expect(typeof card.props.onPressOut).toBe('function');
+    });
+
+    it('triggers light haptic on Browse templates pressIn', () => {
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+      const templates = UNSAFE_getByProps({
+        accessibilityLabel: 'Browse habit templates',
+      });
+
+      // Light haptic ('tap') fires on pressIn for tactile CTA feedback
+      // DO NOT change to 'selection' — 'tap' is the correct light impact
+      fireEvent(templates, 'pressIn');
+      expect(mockHapticTrigger).toHaveBeenCalledWith('tap');
+    });
+
+    it('does NOT trigger haptic on Build my own pressIn', () => {
+      mockHapticTrigger.mockClear();
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+      const card = UNSAFE_getByProps({
+        accessibilityLabel: 'Create custom habit',
+      });
+
+      // "Build my own" has its own haptic type (added separately)
+      fireEvent(card, 'pressIn');
+      expect(mockHapticTrigger).not.toHaveBeenCalled();
     });
 
     it('uses design system CARD_PRESS_SCALE (0.97) for press feedback', () => {
