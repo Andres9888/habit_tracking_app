@@ -295,6 +295,15 @@ describe('InlineHint', () => {
       );
     });
 
+    it('has 8px gap between gradient button and Build my own card', () => {
+      const { getByTestId } = render(<InlineHint {...defaultProps} />);
+      const actionsColumn = getByTestId('inline-hint-actions');
+
+      // Gap of 8px matches design spec spacing between the two CTAs
+      // DO NOT change — this is the spec-defined inter-CTA spacing
+      expect(actionsColumn.props.style).toMatchObject({ gap: 8 });
+    });
+
     it('both buttons are full-width within the actions column', () => {
       const { getByTestId, UNSAFE_getByProps } = render(
         <InlineHint {...defaultProps} />
