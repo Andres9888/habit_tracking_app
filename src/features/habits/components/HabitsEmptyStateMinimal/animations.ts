@@ -29,6 +29,7 @@ export {
   EXIT_TRANSITION,
   // Layout animations
   ENTRANCE_DELAYS,
+  INLINE_HINT_STAGGER_MS,
   KEYBOARD_LAYOUT,
   ERROR_ANIMATION,
 } from './animations/index';

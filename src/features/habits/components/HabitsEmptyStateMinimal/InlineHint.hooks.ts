@@ -1,14 +1,19 @@
 /**
- * InlineHint Press Animation Hook
+ * InlineHint Animation Hook
  *
- * Provides 0.97x spring-animated press scale for both CTAs,
- * reusing the design system's cardPressAnimation utilities.
+ * Provides:
+ * - 0.97x spring-animated press scale for both CTAs
+ * - Staggered entrance animation (~100ms gap between CTAs)
+ * - Haptic feedback on press (tap for templates, selection for build)
  */
 
+import { useEffect } from 'react';
 import {
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
+  withDelay,
+  withSpring,
 } from 'react-native-reanimated';
 
 import {
@@ -17,12 +22,32 @@ import {
   CARD_REST_SCALE,
 } from '../../../../utils/animations/cardPressAnimation';
 import { useHaptics } from '../../../../utils/haptics';
+import { INLINE_HINT_STAGGER_MS, SPRING_CONFIGS } from './animations';
+
+const ENTRANCE_TRANSLATE_Y = 12;
 
 export function usePressAnimations() {
   const reduceMotion = useReducedMotion();
   const { trigger } = useHaptics();
   const templatesScale = useSharedValue(CARD_REST_SCALE);
   const buildMyOwnScale = useSharedValue(CARD_REST_SCALE);
+
+  const templatesEntranceY = useSharedValue(
+    reduceMotion ? 0 : ENTRANCE_TRANSLATE_Y
+  );
+  const buildMyOwnEntranceY = useSharedValue(
+    reduceMotion ? 0 : ENTRANCE_TRANSLATE_Y
+  );
+
+  useEffect(() => {
+    if (reduceMotion) return;
+
+    templatesEntranceY.value = withSpring(0, SPRING_CONFIGS.entrance);
+    buildMyOwnEntranceY.value = withDelay(
+      INLINE_HINT_STAGGER_MS,
+      withSpring(0, SPRING_CONFIGS.entrance)
+    );
+  }, [buildMyOwnEntranceY, reduceMotion, templatesEntranceY]);
 
   const handlePressIn = (scale: { value: number }) => {
     if (reduceMotion) {
@@ -41,11 +66,17 @@ export function usePressAnimations() {
   };
 
   const templatesAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: templatesScale.value }],
+    transform: [
+      { translateY: templatesEntranceY.value },
+      { scale: templatesScale.value },
+    ],
   }));
 
   const buildMyOwnAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: buildMyOwnScale.value }],
+    transform: [
+      { translateY: buildMyOwnEntranceY.value },
+      { scale: buildMyOwnScale.value },
+    ],
   }));
 
   return {

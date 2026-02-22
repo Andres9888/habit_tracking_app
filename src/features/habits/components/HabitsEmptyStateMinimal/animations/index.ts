@@ -37,6 +37,7 @@ export {
 // Layout animations
 export {
   ENTRANCE_DELAYS,
+  INLINE_HINT_STAGGER_MS,
   KEYBOARD_LAYOUT,
   ERROR_ANIMATION,
 } from './layoutAnimations';

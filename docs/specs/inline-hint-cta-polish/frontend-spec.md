@@ -210,7 +210,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Completed 2026-02-22: Added `useHaptics()` to `usePressAnimations` hook in `InlineHint.hooks.ts`. The `templatesPressIn` handler now calls `trigger('tap')` which fires `ImpactFeedbackStyle.Light` via the centralized haptics system. Haptics automatically respect accessibility (reduce-motion) through the `useHaptics` hook. Test guards verify `'tap'` is triggered on Browse templates pressIn and NOT on Build my own pressIn (which gets its own haptic type separately).
 - [x] Selection haptic on "Build my own" press
   - Completed 2026-02-22: Added `trigger('selection')` to `buildMyOwnPressIn` handler in `InlineHint.hooks.ts`. The `'selection'` pattern maps to `Haptics.selectionAsync()` — an ultra-light "click" feedback distinct from the `'tap'` (Light impact) used on Browse templates. Updated test from asserting no haptic to verifying `'selection'` is triggered on pressIn. All 25 tests pass.
-- [ ] Staggered entrance animation (~100ms gap)
+- [x] Staggered entrance animation (~100ms gap)
+  - Completed 2026-02-22: Added `INLINE_HINT_STAGGER_MS = 100` constant to `layoutAnimations.ts`. Extended `usePressAnimations` hook in `InlineHint.hooks.ts` with entrance `translateY` (12→0) spring animations: "Browse templates" enters immediately, "Build my own" follows after 100ms delay via `withDelay`. Entrance animations merge into existing `Animated.View` styles alongside press scale transforms. Respects `useReducedMotion` for accessibility. Test guard added asserting `INLINE_HINT_STAGGER_MS === 100`.
 
 ## File Map
 

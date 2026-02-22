@@ -18,6 +18,12 @@ export const ENTRANCE_DELAYS = {
 } as const;
 
 /**
+ * Staggered entrance delay between InlineHint CTAs.
+ * "Browse templates" enters first, "Build my own" follows after this gap.
+ */
+export const INLINE_HINT_STAGGER_MS = 100;
+
+/**
  * Keyboard-aware layout configuration
  * Compact mode activates when keyboard is visible to optimize screen real estate
  */

@@ -9,7 +9,7 @@ import {
   CARD_PRESS_SCALE,
   CARD_REST_SCALE,
 } from '../../../../../utils/animations/cardPressAnimation';
-import { KEYBOARD_LAYOUT } from '../animations';
+import { INLINE_HINT_STAGGER_MS, KEYBOARD_LAYOUT } from '../animations';
 import { InlineHint } from '../InlineHint';
 
 jest.mock('expo-linear-gradient', () => ({
@@ -533,6 +533,13 @@ describe('InlineHint', () => {
       const gap = actionsColumn.props.style.gap;
       const totalFixed = buttonHeight + cardHeight + gap + 16 + 28;
       expect(totalFixed).toBeLessThan(KEYBOARD_LAYOUT.secondaryLinksMaxHeight);
+    });
+
+    it('uses ~100ms stagger gap between CTA entrance animations', () => {
+      // Guard: stagger gap must be ~100ms for subtle cascade effect
+      // "Browse templates" enters first, "Build my own" follows after this delay
+      // DO NOT remove — the stagger creates a polished sequential reveal
+      expect(INLINE_HINT_STAGGER_MS).toBe(100);
     });
   });
 });
