@@ -81,7 +81,13 @@ export function InlineHint({
           testID='inline-hint-create-custom'
           onPress={onCreateCustom}
         >
-          <View style={accentStripeStyle} testID='inline-hint-accent-stripe' />
+          <View
+            style={[
+              accentStripeStyle,
+              { backgroundColor: colors.accentStripeColor },
+            ]}
+            testID='inline-hint-accent-stripe'
+          />
           <Text style={{ fontSize: 18 }}>✏️</Text>
           <Text style={[buildMyOwnLabelStyle, { color: colors.textSecondary }]}>
             Build my own

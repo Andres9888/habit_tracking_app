@@ -76,6 +76,9 @@ export function useEmptyStateColors() {
         ] as const)
       : (['#047857', '#059669', '#10B981'] as const),
 
+    // Accent stripe color (emerald-400 in dark for visibility, emerald-300 in light)
+    accentStripeColor: isDark ? '#34D399' : '#6EE7B7',
+
     // Success colors
     successBackground: isDark ? colors.primary[100] : '#D1FAE5', // emerald-100
 

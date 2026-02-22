@@ -134,6 +134,36 @@ describe('InlineHint', () => {
 
       spy.mockRestore();
     });
+
+    it('uses emerald-400 accent stripe for visibility on dark backgrounds', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const mod = require('../useEmptyStateColors');
+      const spy = jest.spyOn(mod, 'useEmptyStateColors').mockReturnValue({
+        accentStripeColor: '#34D399',
+        gradientColors: [
+          'rgba(4,120,87,0.85)',
+          'rgba(5,150,105,0.85)',
+          'rgba(16,185,129,0.85)',
+        ],
+        inputBorder: '#374151',
+        isDark: true,
+        textSecondary: '#D1D5DB',
+        textTertiary: '#9CA3AF',
+      });
+
+      const { getByTestId } = render(<InlineHint {...defaultProps} />);
+      const stripe = getByTestId('inline-hint-accent-stripe');
+
+      // Dark mode uses emerald-400 (#34D399) instead of emerald-300 (#6EE7B7)
+      // Deeper saturation maintains visibility on dark card backgrounds
+      expect(stripe.props.style).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ backgroundColor: '#34D399' }),
+        ])
+      );
+
+      spy.mockRestore();
+    });
   });
 
   describe('Layout', () => {
@@ -222,15 +252,21 @@ describe('InlineHint', () => {
 
       // Accent stripe uses absolute positioning to avoid RN border-order issues
       // DO NOT replace with borderLeftWidth — it gets overridden by borderWidth: 1
-      expect(stripe.props.style).toMatchObject({
-        backgroundColor: '#6EE7B7',
-        borderRadius: 2,
-        bottom: 0,
-        left: 0,
-        position: 'absolute',
-        top: 0,
-        width: 3.5,
-      });
+      expect(stripe.props.style).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            borderRadius: 2,
+            bottom: 0,
+            left: 0,
+            position: 'absolute',
+            top: 0,
+            width: 3.5,
+          }),
+          expect.objectContaining({
+            backgroundColor: '#6EE7B7',
+          }),
+        ])
+      );
     });
 
     it('"Build my own" card has subtle shadow, not shadows.subtle (0.04)', () => {
