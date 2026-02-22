@@ -29,7 +29,7 @@ describe('InlineHint', () => {
 
       expect(getByText('or explore')).toBeDefined();
       expect(getByText('browse templates')).toBeDefined();
-      expect(getByText('✨ create custom')).toBeDefined();
+      expect(getByText('Build my own')).toBeDefined();
       expect(getByLabelText('Browse habit templates')).toBeDefined();
       expect(getByLabelText('Create custom habit')).toBeDefined();
     });
@@ -148,6 +148,24 @@ describe('InlineHint', () => {
       expect(normalStyle.borderRadius).toBe(14);
       expect(normalStyle.opacity).toBe(1);
       expect(pressedStyle.opacity).toBe(0.85);
+    });
+
+    it('"Build my own" card has hardcoded white background, not theme token', () => {
+      const { UNSAFE_getByProps } = render(<InlineHint {...defaultProps} />);
+      const card = UNSAFE_getByProps({
+        accessibilityLabel: 'Create custom habit',
+      });
+
+      const normalStyle = card.props.style({ pressed: false });
+      const pressedStyle = card.props.style({ pressed: true });
+
+      // Hardcoded white ensures card is visible against screen gradient
+      // DO NOT replace with colors.inputBackground — it blends with bg
+      expect(normalStyle.backgroundColor).toBe('#FFFFFF');
+      expect(pressedStyle.backgroundColor).toBe('#F5F5F4');
+      expect(normalStyle.borderRadius).toBe(12);
+      expect(normalStyle.height).toBe(44);
+      expect(normalStyle.width).toBe('100%');
     });
 
     it('has emerald-tinted drop shadow, not warm brown', () => {

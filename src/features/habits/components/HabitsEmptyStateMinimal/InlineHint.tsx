@@ -5,12 +5,12 @@ import {
   actionsColumnStyle,
   badgeContainerStyle,
   badgeTextStyle,
+  buildMyOwnLabelStyle,
   containerStyle,
   dividerLineStyle,
   dividerStyle,
-  getLinkStyle,
+  getBuildMyOwnCardStyle,
   getTemplatesButtonStyle,
-  linkTextStyle,
   templatesGradientStyle,
   templatesLabelStyle,
 } from './InlineHint.styles';
@@ -25,12 +25,8 @@ export function InlineHint({
   onCreateCustom,
 }: InlineHintProps) {
   const colors = useEmptyStateColors();
-  const linkStyle = ({ pressed }: { pressed: boolean }) =>
-    getLinkStyle(pressed, {
-      background: colors.linkBackground,
-      border: colors.linkBorder,
-      pressedBackground: colors.linkBackgroundPressed,
-    });
+  const buildMyOwnStyle = ({ pressed }: { pressed: boolean }) =>
+    getBuildMyOwnCardStyle(pressed, { borderColor: colors.inputBorder });
 
   return (
     <View style={containerStyle}>
@@ -80,13 +76,15 @@ export function InlineHint({
           accessibilityHint='Opens full habit creation screen'
           accessibilityLabel='Create custom habit'
           accessibilityRole='button'
-          style={linkStyle}
+          style={buildMyOwnStyle}
           testID='inline-hint-create-custom'
           onPress={onCreateCustom}
         >
-          <Text style={[linkTextStyle, { color: colors.linkText }]}>
-            ✨ create custom
+          <Text style={{ fontSize: 18 }}>✏️</Text>
+          <Text style={[buildMyOwnLabelStyle, { color: colors.textSecondary }]}>
+            Build my own
           </Text>
+          <Text style={{ color: colors.textTertiary, fontSize: 13 }}>→</Text>
         </Pressable>
       </View>
     </View>

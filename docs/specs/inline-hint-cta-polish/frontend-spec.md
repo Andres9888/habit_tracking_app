@@ -171,7 +171,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Verified 2026-02-22: `badgeTextStyle` in `InlineHint.styles.ts:72-73` has `fontSize: 11, fontWeight: '800'`. Test assertion at `InlineHint.test.tsx:51-55` guards against linter replacing with `typography.tabBar` (fontSize 10).
 - [x] Gradient button has emerald-tinted drop shadow (NOT warm brown shadow)
   - Verified 2026-02-22: `templatesButtonBaseStyle` in `InlineHint.styles.ts:12` has `shadowColor: '#047857'` (emerald), not warm brown `#2D2A26`. Shadow props: `shadowOffset: {0,4}`, `shadowRadius: 16`, `elevation: 4`, `shadowOpacity: 0.3` (0.15 when pressed). Test guard added at `InlineHint.test.tsx` to prevent linter replacing with `shadows.alert`.
-- [ ] "Build my own" card has white background visible against screen gradient
+- [x] "Build my own" card has white background visible against screen gradient
+  - Completed 2026-02-22: Replaced pill-shaped `getLinkStyle` (borderRadius: 9999, theme-colored bg) with `getBuildMyOwnCardStyle` using hardcoded `#FFFFFF` background, 12px border radius, 44px height, and `#F5F5F4` pressed state. Card now uses `flexDirection: 'row'` layout with emoji, label, and arrow. Test guard added to prevent replacement with `colors.inputBackground`.
 - [ ] Left accent stripe is 3.5px wide, emerald-300 (#6EE7B7)
 - [ ] "Build my own" text is 13px, weight 600, stone-600 color
 - [ ] Card has subtle shadow (not invisible, not heavy)

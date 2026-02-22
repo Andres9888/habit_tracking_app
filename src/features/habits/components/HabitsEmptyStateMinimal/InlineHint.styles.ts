@@ -1,7 +1,5 @@
-interface InlineHintLinkColors {
-  background: string;
-  border: string;
-  pressedBackground: string;
+interface BuildMyOwnCardColors {
+  borderColor: string;
 }
 
 const templatesButtonBaseStyle = {
@@ -36,10 +34,11 @@ export const actionsColumnStyle = {
   width: '100%',
 } as const;
 
-export const linkTextStyle = {
+export const buildMyOwnLabelStyle = {
+  flex: 1,
   fontSize: 13,
   fontWeight: '600',
-  lineHeight: 18,
+  letterSpacing: -0.1,
 } as const;
 
 export const templatesGradientStyle = {
@@ -74,18 +73,23 @@ export const badgeTextStyle = {
   fontWeight: '800',
 } as const;
 
-export function getLinkStyle(pressed: boolean, colors: InlineHintLinkColors) {
+export function getBuildMyOwnCardStyle(
+  pressed: boolean,
+  colors: BuildMyOwnCardColors
+) {
   return {
     alignItems: 'center',
-    backgroundColor: pressed ? colors.pressedBackground : colors.background,
-    borderColor: colors.border,
-    borderRadius: 9999,
+    backgroundColor: pressed ? '#F5F5F4' : '#FFFFFF',
+    borderColor: colors.borderColor,
+    borderRadius: 12,
     borderWidth: 1,
-    justifyContent: 'center',
-    minHeight: 44,
-    opacity: pressed ? 0.9 : 1,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    flexDirection: 'row',
+    gap: 10,
+    height: 44,
+    overflow: 'hidden',
+    paddingLeft: 16,
+    paddingRight: 14,
+    width: '100%',
   };
 }
 
