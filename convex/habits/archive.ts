@@ -69,13 +69,40 @@ export const listArchived = query({
 export const deleteAllArchived = mutation({
   args: {},
   handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to delete archived habits');
+    }
+
     const archivedHabits = await ctx.db
       .query('habits')
-      .filter((q) => q.eq(q.field('archived'), true))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field('archived'), true),
+          q.eq(q.field('userId'), identity.subject)
+        )
+      )
       .collect();
+
+    if (archivedHabits.length === 0) {
+      // SEC-001: avoid cross-user deletion and no-op ambiguity
+      const anyArchived = await ctx.db
+        .query('habits')
+        .filter((q) => q.eq(q.field('archived'), true))
+        .collect();
+
+      if (anyArchived.length === 0) {
+        throw new Error('No archived habits exist in the system');
+      }
+      throw new Error('No archived habits found for authenticated user');
+    }
 
     let deletedCount = 0;
     for (const habit of archivedHabits) {
+      if (habit.userId !== identity.subject) {
+        throw new Error('Not authorized to delete archived habits for another user');
+      }
+
       // Delete all tracking data for this habit
       const trackingRecords = await ctx.db
         .query('tracking')
