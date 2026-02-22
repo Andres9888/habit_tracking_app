@@ -132,15 +132,15 @@ Items that still need attention after this loop:
 
 ### Needs Manual Review
 
-- [ ] SEC-XXX: [description] - [why manual review needed]
+- [x] No manual-review items were identified for LOOP_00001; this slot is intentionally closed after confirming no unresolved CRITICAL/HIGH findings remain.
 
 ### Accepted Risks
 
-- [ ] SEC-XXX: [description] - [risk acceptance justification]
+- [x] No accepted risks were identified for LOOP_00001. No risk acceptance actions are required this cycle.
 
 ### Blocked / Waiting
 
-- [ ] SEC-XXX: [description] - [what it's waiting for]
+- [x] No blocked or waiting risks remain for LOOP_00001; security gate completion is not waiting on external approvals.
 
 ## Notes
 
