@@ -175,7 +175,8 @@ Use this to verify the implementation matches the spec after any code change:
   - Completed 2026-02-22: Replaced pill-shaped `getLinkStyle` (borderRadius: 9999, theme-colored bg) with `getBuildMyOwnCardStyle` using hardcoded `#FFFFFF` background, 12px border radius, 44px height, and `#F5F5F4` pressed state. Card now uses `flexDirection: 'row'` layout with emoji, label, and arrow. Test guard added to prevent replacement with `colors.inputBackground`.
 - [x] Left accent stripe is 3.5px wide, emerald-300 (#6EE7B7)
   - Completed 2026-02-22: Added `accentStripeStyle` in `InlineHint.styles.ts` with `width: 3.5`, `backgroundColor: '#6EE7B7'`, `borderRadius: 2`, and absolute positioning (`top: 0, bottom: 0, left: 0`). Rendered as first child inside "Build my own" Pressable in `InlineHint.tsx`. Card's existing `overflow: 'hidden'` clips stripe to border radius. Test guard validates all stripe properties to prevent accidental removal.
-- [ ] "Build my own" text is 13px, weight 600, stone-600 color
+- [x] "Build my own" text is 13px, weight 600, stone-600 color
+  - Verified 2026-02-22: `buildMyOwnLabelStyle` in `InlineHint.styles.ts:38-41` has `fontSize: 13, fontWeight: '600', letterSpacing: -0.1`. Color applied via `colors.textSecondary` in component JSX (stone-600 #44403C in light mode). Test guard added at `InlineHint.test.tsx` to prevent linter replacing with `typography.caption` (fontWeight 500).
 - [ ] Card has subtle shadow (not invisible, not heavy)
 
 ### Dark Mode Checks

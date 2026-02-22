@@ -168,6 +168,23 @@ describe('InlineHint', () => {
       expect(normalStyle.width).toBe('100%');
     });
 
+    it('"Build my own" label is 13px weight 600, not typography.caption (500)', () => {
+      const { getByText } = render(<InlineHint {...defaultProps} />);
+      const label = getByText('Build my own');
+
+      // Guard against linter replacing with typography.caption (fontWeight 500)
+      // This spec requires fontWeight '600' — caption's 500 is too light
+      expect(label.props.style).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            fontSize: 13,
+            fontWeight: '600',
+            letterSpacing: -0.1,
+          }),
+        ])
+      );
+    });
+
     it('"Build my own" card has left accent stripe 3.5px wide emerald-300', () => {
       const { getByTestId } = render(<InlineHint {...defaultProps} />);
       const stripe = getByTestId('inline-hint-accent-stripe');
