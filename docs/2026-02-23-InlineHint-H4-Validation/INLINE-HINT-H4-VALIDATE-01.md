@@ -29,11 +29,41 @@ These 6 locations form the full-width chain. If ANY one breaks, the CTAs shrink:
 
 ## Phase 2: Fix Width Regressions (skip if Phase 1 all passed)
 
-- [ ] **Fix any failing width checkpoints.** For each checkpoint that failed in Phase 1, apply the fix. The fix is always the same pattern: add `alignSelf: 'stretch'` (and `width: '100%'` where noted) to the style. Do NOT use style arrays on `Animated.View` (e.g., `[{ width: '100%' }, animatedStyle]`) — Reanimated ignores merged styles. Instead, put width properties INSIDE `useAnimatedStyle()` return values. After fixing, re-run the Phase 1 validation to confirm all 6 checkpoints pass. If they still don't pass, read the component tree more carefully — another `Animated.View` wrapper may have been added that also needs `alignSelf: 'stretch'`.
+- [x] **Fix any failing width checkpoints.** _(Skipped — Phase 1 passed all 6/6, no regressions to fix.)_
 
 ## Phase 3: Maestro Visual Validation
 
 - [ ] **Run the Maestro E2E flow and capture screenshots.** Execute: `JAVA_HOME=~/java/jdk-21.0.10+7/Contents/Home maestro test .maestro/inline-hint-h4-validation.yaml`. The flow validates: divider visibility, both CTAs visible with correct text/emoji/badge, navigation works for both buttons, and captures 4 screenshots. If the flow fails on an `assertVisible` check, investigate whether the element testID exists in the component. If it fails on navigation, check that `onBrowseTemplates` and `onCreateCustom` callbacks are wired up in `ActionSection.tsx`. Report the result (pass/fail) and which screenshots were captured.
+
+  > **Result: FAIL — Infrastructure (2026-02-23)**
+  >
+  > `maestro test` failed 4 times with `IOSDriverTimeoutException: iOS driver not ready in time` (Maestro 2.2.0 + iOS 26.2 on iPhone 13 Pro Max simulator). Tried `MAESTRO_DRIVER_STARTUP_TIMEOUT=240000`, `--device <UDID>`, killing stale XCTest processes, and upgrading Maestro. All failed.
+  >
+  > **However, `maestro hierarchy` succeeded** — the XCTest driver connected for read-only queries but not for `maestro test`. Alternative evidence gathered:
+  >
+  > **Hierarchy analysis findings:**
+  > | Element | testID | In hierarchy? | Bounds |
+  > |---------|--------|--------------|--------|
+  > | Divider | `inline-hint-divider` | Yes | [24,596][404,614] |
+  > | Left line | `inline-hint-divider-line-left` | Yes | [24,604][173,605] |
+  > | Right line | `inline-hint-divider-line-right` | Yes | [254,604][404,605] |
+  > | Actions container | `inline-hint-actions` | Yes (empty children) | [24,624][404,669] — only 45px |
+  > | Browse templates | `inline-hint-browse-templates` | **NO** | Missing entirely |
+  > | Browse badge | `inline-hint-badge` | **NO** | Missing entirely |
+  > | Build my own | `inline-hint-create-custom` | Yes | [24,632][404,669] |
+  > | Accent stripe | `inline-hint-accent-stripe` | Yes | [24,632][27,669] |
+  >
+  > **Screenshot analysis** (captured via `xcrun simctl io`):
+  >
+  > - Saved to `.maestro/screenshots/inline-hint-h4-light-mode.png`
+  > - "or explore" divider visible
+  > - InlineHint actions area is **clipped at the bottom of the screen**
+  > - Only the Build-my-own emoji barely visible; Browse templates button NOT visible at all
+  > - The content exceeds viewport height — hero + input + chips + CTA + secondary links don't all fit
+  >
+  > **Root cause hypothesis:** The `inline-hint-browse-templates` button renders at zero height in the accessibility tree. The `inline-hint-actions` container is only 45px (expected ~104px for both buttons). This may be caused by a Reanimated `Animated.View` layout issue where `templatesAnimatedStyle` (transform-only, no explicit height) collapses the wrapper. The content is also generally clipped by the screen viewport — the empty state layout needs scrollability or condensed spacing to fit all elements.
+  >
+  > **Next steps:** Retry after upgrading to a newer Maestro version with iOS 26 support, or try on an iOS 18 simulator. Also investigate why `inline-hint-browse-templates` is missing from the accessibility tree.
 
 ## Phase 4: Visual Width Inspection
 
